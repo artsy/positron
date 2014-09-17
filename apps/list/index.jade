@@ -1,4 +1,8 @@
 extend ../../components/layout/templates/index
 
-block main
-  h1 Hi
+block content
+  .page-header
+  ul
+    for article in articles
+      li
+        h1= article.get('title')

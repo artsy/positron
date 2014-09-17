@@ -13,4 +13,5 @@ npm-debug.log
 .DS_Store
 public/assets
 dump.rdb
+.env
 node_modules

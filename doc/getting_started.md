@@ -1,6 +1,6 @@
 # Getting Started with Positron
 
-*Positron* is the Artsy Writer front-end app used to create editorial on Artsy. It's version 2 of the posting tool powered by [Spooky](https://github.com/artsy/spooky) for a back-end. This doc will assume you've set up XCode and common development tools after getting started with Gravity.
+*Positron* is the Artsy Writer front-end app used to create editorial on Artsy. It's version 2 of the posting tool powered by [Spooky](https://github.com/artsy/spooky) for a back-end. This doc will assume you've set up XCode and common development tools.
 
 ## Ezel
 
@@ -28,7 +28,7 @@ Then tell nvm to use the latest version of node by default and to update your PA
 nvm alias default 0.10
 ````
 
-## Install Node Modules & download the .env file
+## Install Node Modules
 
 ````
 npm install
@@ -41,8 +41,10 @@ npm install mocha -g
 npm install coffee-script -g
 ````
 
-## Run the Server
+## Add a Spooky Auth Token
 
-TBD: We might point to Spooky/Gravity locally or remotely.
+Copy your .env.example to an .env file and set `SPOOKY_TOKEN`. Use a remote Spooky by pulling from `heroku config --app=positron-staging` or [set up Spooky locally](https://github.com/artsy/spooky#set-up) and create a new key in the Spooky rails console via `ApiKey.create.token`.
+
+## Run the Server
 
 Client-side code and templates will automatically reload on page refresh, but server-side code will not automatically reload without restarting the server. If you would like to watch for file changes and restart the server [forever](https://github.com/nodejitsu/forever) is a popular tool.
