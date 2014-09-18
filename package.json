@@ -12,7 +12,9 @@
     "backbone": "*",
     "backbone-super-sync": "*",
     "coffee-script": "*",
-    "node-env-file": "*"
+    "node-env-file": "*",
+    "underscore": "*",
+    "moment": "*"
   },
   "devDependencies": {
     "jquery": "*",

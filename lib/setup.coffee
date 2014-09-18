@@ -9,6 +9,7 @@ Backbone = require 'backbone'
 sharify = require 'sharify'
 path = require 'path'
 fs = require 'fs'
+helperMiddleware = require './helper_middleware'
 
 module.exports = (app) ->
 
@@ -16,14 +17,20 @@ module.exports = (app) ->
   sd = sharify.data =
     API_URL: process.env.API_URL
     NODE_ENV: process.env.NODE_ENV
+    SPOOKY_URL: process.env.SPOOKY_URL
     JS_EXT: (if 'production' is process.env.NODE_ENV then '.min.js' else '.js')
     CSS_EXT: (if 'production' is process.env.NODE_ENV then '.min.css' else '.css')
 
   # Override Backbone to use server-side sync
   Backbone.sync = require 'backbone-super-sync'
+  Backbone.sync.editRequest = (req) ->
+    req.query 'token': process.env.SPOOKY_TOKEN
 
   # Mount sharify
   app.use sharify
+
+  # Mount helpers
+  app.use helperMiddleware
 
   # Development only
   if 'development' is sd.NODE_ENV
@@ -42,6 +49,8 @@ module.exports = (app) ->
 
   # Mount apps
   app.use '/', require '../apps/list'
+  # TODO: Replace with proper app that renders errors
+  app.use (err, req, res, next) -> res.status(err.status).send err.body
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../apps').forEach (fld) ->
