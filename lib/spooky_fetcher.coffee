@@ -40,13 +40,8 @@ sd = require('sharify').data
   # Crawl the links and end the request
   req.getResource (err, resource) ->
     return callback? err if err
-    data = if resource._embedded and not _.last(follows).match /]$/
-             (resource._embedded[_.last(follows)])
-           else
-             resource
-    data = if _.isArray data
-             (for obj in data
-               _.omit(obj, '_links', '_embedded'))
+    data = if _.isArray resource
+             (_.omit(obj, '_links', '_embedded') for obj in resource)
            else
               _.omit data, '_links', '_embedded'
     model = new model data
