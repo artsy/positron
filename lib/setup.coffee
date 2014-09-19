@@ -18,6 +18,11 @@ module.exports = (app) ->
     API_URL: process.env.API_URL
     NODE_ENV: process.env.NODE_ENV
     SPOOKY_URL: process.env.SPOOKY_URL
+    # TODO: This is a sensitive Spooky App token and we'll want to hide this
+    # on the server. Potential solution involves adding the on the
+    # Positron-server-side and proxying to Spooky—then maybe having Positron
+    # do user-level-auth (with Gravity?). Or adding user-level auth to Spooky.
+    SPOOKY_TOKEN: process.env.SPOOKY_TOKEN
     JS_EXT: (if 'production' is process.env.NODE_ENV then '.min.js' else '.js')
     CSS_EXT: (if 'production' is process.env.NODE_ENV then '.min.css' else '.css')
 
@@ -50,7 +55,9 @@ module.exports = (app) ->
   # Mount apps
   app.use '/', require '../apps/list'
   # TODO: Replace with proper app that renders errors
-  app.use (err, req, res, next) -> res.status(err.status).send err.body
+  app.use (err, req, res, next) ->
+    console.log err
+    res.status(err.status).send err.body
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../apps').forEach (fld) ->
