@@ -14,7 +14,8 @@
     "coffee-script": "*",
     "node-env-file": "*",
     "underscore": "*",
-    "moment": "*"
+    "moment": "*",
+    "traverson": "*"
   },
   "devDependencies": {
     "jquery": "*",
@@ -31,6 +32,7 @@
     "html5": "*",
     "sqwish": "*",
     "uglify-js": "*",
-    "caching-coffeeify": "*"
+    "caching-coffeeify": "*",
+    "rewire": "*"
   }
 }

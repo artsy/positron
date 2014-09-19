@@ -1,9 +1,8 @@
 Articles = require '../../collections/articles.coffee'
-Article = require '../../models/article.coffee'
+spooky = require '../../lib/spooky_fetcher'
 
-@index = (req, res) ->
-  new Articles().fetch
-    error: res.backboneError
-    success: (articles) ->
-      res.locals.sd.ARTICLES = articles.toJSON()
-      res.render 'index', articles: articles.models
+@index = (req, res, next) ->
+  spooky.new Articles, 'articles', (err, articles) ->
+    return next err if err
+    res.locals.sd.ARTICLES = articles.toJSON()
+    res.render 'index', articles: articles.models
