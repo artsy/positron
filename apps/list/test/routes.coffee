@@ -9,16 +9,21 @@ describe 'routes', ->
 
   beforeEach ->
     sinon.stub spooky, 'new'
-    @req = {}
+    @req = { query: {} }
     @res = { render: sinon.stub(), locals: sd: {} }
 
   afterEach ->
     spooky.new.restore()
 
-  describe '#index', ->
+  describe '#published', ->
 
     it 'fetches a page of articles', ->
-      routes.index @req, @res
+      routes.published @req, @res
       _.last(spooky.new.args[0])(null, new Backbone.Collection [fixtures.article])
       _.last(@res.render.args[0][1].articles).get('title')
         .should.containEql 'art in'
+
+    it 'pages', ->
+      @req.query.page = 2
+      routes.published @req, @res
+      spooky.new.args[0][1].should.equal 'articles.next.next.articles'
