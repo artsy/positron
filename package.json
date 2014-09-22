@@ -17,7 +17,7 @@
     "underscore": "*",
     "moment": "*",
     "traverson": "git://github.com/craigspaeth/traverson.git",
-    // Asset dependencies
+
     "jquery": "*",
     "browserify": "*",
     "stylus": "*",
