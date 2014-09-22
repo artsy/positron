@@ -6,8 +6,9 @@
 express = require "express"
 setup = require "./lib/setup"
 env = require 'node-env-file'
+fs = require 'fs'
 
-env __dirname + '/.env'
+env __dirname + '/.env' if fs.existsSync __dirname + '/.env'
 app = module.exports = express()
 setup app
 
