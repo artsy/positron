@@ -17,3 +17,10 @@
 
     root_url:
       href: "http://spooky-production.herokuapp.com/"
+
+@locals =
+  sd:
+    PATH: '/'
+  moment: require 'moment'
+  sharify:
+    script: -> '<script>var sharify = {}</script>'

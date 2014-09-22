@@ -1,0 +1,28 @@
+extend ../../components/layout/templates/index
+
+block content
+  h1.page-header
+    .max-width-container Published Posts
+  #article-list-items.max-width-container
+    ul
+      for article in articles
+        li
+          .article-list-item-left
+            img( src='http://placekitten.com/500/340' )
+          .article-list-item-right
+            .article-list-item-tags
+              if article.get('tags')
+                = article.get('tags').join(' ')
+              else
+                span.article-list-missing Missing tags
+            h1= article.get('title')
+            if article.get('lede')
+              h2= article.get('lede')
+            else
+              h2.article-list-missing Missing teaser
+            .article-list-items-dates
+              if article.get('published_at')
+                strong Published #{moment(article.get('published_at')).fromNow()}
+                | Last saved #{moment(article.get('updated_at')).fromNow()}
+              else
+                strong Last saved #{moment(article.get('updated_at')).fromNow()}

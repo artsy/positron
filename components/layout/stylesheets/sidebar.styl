@@ -3,7 +3,7 @@
 #layout-sidebar
   background black
   color white
-  position absolute
+  position fixed
   top 0
   left 0
   width sidebar-width
@@ -15,16 +15,33 @@
     margin-top 40px
     avant-garde()
     font-size 10px
+    color gray-dark-color
+    transition color 0.3s
+    &:hover, &.is-active
+      cursor pointer
+      color white
+      svg
+        fill-color white
   svg
-    height 30px
+    width 22px
     display inline-block
     margin-bottom 10px
-    *
-      fill white
+    fill-color gray-dark-color
+
+#layout-sidebar-new-post
+  margin-top 30px !important
+  svg
+    width 26px
+    margin-left 3px
+
+#layout-sidebar-help svg
+  width 14px
 
 #layout-sidebar-home
   garamond()
   font-weight bold
   svg
-    height 40px
-    margin-bottom 3px
+    width 38px
+    margin-left 10px
+    margin-bottom 5px
+    fill-color white

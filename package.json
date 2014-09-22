@@ -17,10 +17,11 @@
     "underscore": "*",
     "moment": "*",
     "traverson": "git://github.com/craigspaeth/traverson.git",
+    "moment": "*",
 
     "jquery": "*",
     "browserify": "*",
-    "stylus": "*",
+    "stylus": "0.47.x",
     "nib": "*",
     "jadeify": "*",
     "browserify-dev-middleware": "*",

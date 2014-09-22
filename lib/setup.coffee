@@ -53,7 +53,7 @@ module.exports = (app) ->
     app.use '/__api', require('../test/helpers/integration.coffee').api
 
   # Mount apps
-  app.use '/', require '../apps/list'
+  app.use '/', require '../apps/article_list'
   # TODO: Replace with proper app that renders errors
   app.use (err, req, res, next) ->
     console.log err
