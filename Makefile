@@ -33,4 +33,8 @@ assets:
 		$(BIN)/sqwish public/$(file).css -o public/$(file).min.css \
 	)
 
+# Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
+deploy:
+	git push git@heroku.com:positron-$(env).git master
+
 .PHONY: test assets
