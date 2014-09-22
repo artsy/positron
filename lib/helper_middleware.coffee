@@ -6,7 +6,6 @@
 viewHelpers = require './view_helpers'
 
 module.exports = (req, res, next) ->
-  res.backboneError = (model, response) -> next response
-  res.locals.sd.PATH = req.path
+  res.locals.sd.URL = req.url
   res.locals[key] = helper for key, helper of viewHelpers
   next()

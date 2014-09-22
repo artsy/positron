@@ -7,5 +7,5 @@ sd = require('sharify').data
 
 $ ->
   require('../components/layout/client.coffee').init()
-  switch sd.PATH
+  switch sd.URL
     when '/articles' then 'noop'
