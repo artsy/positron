@@ -1,6 +1,11 @@
 @import '../../node_modules/nib'
 
+// Widths
+default-avant-garde-font-size = 14px
+small-avant-garde-font-size = 10px
+default-garamond-font-size = 16px
 sidebar-width =110px
+whitespace-block-size = 35px
 
 // Colors
 json('colors.json')
@@ -15,3 +20,9 @@ avant-garde()
 garamond()
   font-family 'Adobe Garamond W08', 'adobe-garamond-pro', 'AGaramondPro-Regular', 'Times New Roman', 'Times', 'serif'
   font-smoothing antialiased
+
+// Helpers
+fill-color(col, delay=0.3s)
+  *
+    transition fill delay
+    fill col

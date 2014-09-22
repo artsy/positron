@@ -3,27 +3,7 @@ html(lang="en")
   head
     link( type='text/css' rel='stylesheet' href='assets/main.css' )
   body
-    nav#layout-sidebar
-      a#layout-sidebar-home
-        include ../public/icons/home.svg
-        br
-        | Artsy Writer
-      a
-        include ../public/icons/new_post.svg
-        br
-        | New Post
-      a
-        include ../public/icons/drafts.svg
-        br
-        | Drafts
-      a
-        include ../public/icons/published.svg
-        br
-        | Published
-      a
-        include ../public/icons/help.svg
-        br
-        | Help
+    include sidebar
     #layout-content
       block content
     include scripts

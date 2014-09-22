@@ -1,0 +1,18 @@
+extend ../../components/layout/templates/index
+
+block content
+  h1.page-header
+    .max-width-container Published Posts
+  #article-list-items.max-width-container
+    ul
+      for article in articles
+        li
+          .article-list-item-left
+            img( src='http://placekitten.com/500/380' )
+          .article-list-item-right
+            .article-list-item-tags Fair Coverage
+            h1= article.get('title')
+            h2= article.get('lede') || 'Missing teaser'
+            .article-list-items-dates
+              strong Published #{moment(article.get('published_at')).fromNow()}
+              | Last saved #{moment(article.get('updated_at')).fromNow()}

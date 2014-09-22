@@ -1,0 +1,21 @@
+nav#layout-sidebar
+  a#layout-sidebar-home
+    include ../public/icons/home.svg
+    br
+    | Artsy Writer
+  a#layout-sidebar-new-post
+    include ../public/icons/new_post.svg
+    br
+    | New Post
+  a
+    include ../public/icons/drafts.svg
+    br
+    | Drafts
+  a( class=(sd.PATH.match(/\/|\/articles/) ? 'is-active' : '') )
+    include ../public/icons/published.svg
+    br
+    | Published
+  a#layout-sidebar-help
+    include ../public/icons/help.svg
+    br
+    | Help
