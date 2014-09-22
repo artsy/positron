@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "positron",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -16,9 +16,8 @@
     "node-env-file": "*",
     "underscore": "*",
     "moment": "*",
-    "traverson": "git://github.com/craigspaeth/traverson.git"
-  },
-  "devDependencies": {
+    "traverson": "git://github.com/craigspaeth/traverson.git",
+
     "jquery": "*",
     "browserify": "*",
     "stylus": "*",
