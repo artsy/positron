@@ -8,4 +8,4 @@ sd = require('sharify').data
 $ ->
   require('../components/layout/client.coffee').init()
   switch sd.PATH
-    when '/articles' then require('../apps/article_list/client.coffee').init()
+    when '/articles' then 'noop'

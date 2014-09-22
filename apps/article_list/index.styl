@@ -1,26 +1,33 @@
 @import '../../components/stylus_lib'
 
 #article-list-items
-  .article-list-item-left, .article-list-item-right
-    display inline-block
-    vertical-align top
   li
     margin-top whitespace-block-size
     line-height 26px
-    .article-list-item-tags, .article-list-items-dates
-      avant-garde()
-      font-size small-avant-garde-font-size
     h1
       font-size 20px
     img
       width 130px
       margin-right 20px
-    .article-list-item-tags
-      line-height small-avant-garde-font-size
-      margin-bottom 5px
-    .article-list-items-dates
-      display inline-block
-      color gray-dark-color
-      strong
-        margin-right 10px
-        color black
+
+.article-list-item-left, .article-list-item-right
+  display inline-block
+  vertical-align top
+
+.article-list-item-tags, .article-list-items-dates
+  avant-garde()
+  font-size small-avant-garde-font-size
+
+.article-list-item-tags
+  line-height small-avant-garde-font-size
+  margin-bottom 5px
+
+.article-list-items-dates
+  display inline-block
+  color gray-dark-color
+  strong
+    margin-right 10px
+    color black
+
+.article-list-missing
+  color gray-dark-color
