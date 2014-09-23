@@ -7,11 +7,13 @@ nav#layout-sidebar
     include ../public/icons/new_post.svg
     br
     | New Post
-  a
+  a( href='/articles?state=0'
+     class=(sd.URL == '/articles?state=0' ? 'is-active' : '') )
     include ../public/icons/drafts.svg
     br
     | Drafts
-  a( class=(sd.PATH.match(/\/|\/articles/) ? 'is-active' : '') )
+  a( href='/articles?state=1'
+     class=(sd.URL == '/articles?state=1' ? 'is-active' : '') )
     include ../public/icons/published.svg
     br
     | Published

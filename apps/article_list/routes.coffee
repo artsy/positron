@@ -2,12 +2,12 @@ _ = require 'underscore'
 Articles = require '../../collections/articles.coffee'
 spooky = require '../../lib/spooky_fetcher'
 
-@published = (req, res, next) ->
+@articles = (req, res, next) ->
   if (page = parseInt(req.query.page)) > 0
     query = "articles.#{_.times(page, -> 'next').join('.')}.articles"
   else
     query = 'articles.articles'
-  spooky.new Articles, query, (err, articles) ->
+  state = req.query.state or 1
+  spooky.new Articles, query, { state: state }, (err, articles) ->
     return next err if err
-    res.locals.sd.ARTICLES = articles.toJSON()
-    res.render 'index', articles: articles.models
+    res.render 'index', articles: articles.models, state: state

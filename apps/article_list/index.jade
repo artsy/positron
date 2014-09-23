@@ -2,7 +2,10 @@ extend ../../components/layout/templates/index
 
 block content
   h1.page-header
-    .max-width-container Published Posts
+    if state == 0
+      .max-width-container Drafts
+    else
+      .max-width-container Published Posts
   #article-list-items.max-width-container
     ul
       for article in articles

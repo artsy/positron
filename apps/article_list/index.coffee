@@ -9,4 +9,4 @@ app.set 'views', __dirname
 app.set 'view engine', 'jade'
 
 app.get '/', (req, res) -> res.redirect '/articles'
-app.get '/articles', routes.published
+app.get '/articles', routes.articles
