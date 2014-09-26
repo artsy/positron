@@ -1,11 +1,22 @@
+@import '../../../node_modules/nib'
 @import '../../stylus_lib'
 @import './sidebar'
+
+global-reset()
 
 body
   garamond()
 
 #layout-content
-  padding-left sidebar-width + 20px
+  padding-left sidebar-width
 
 .page-header
   avant-garde()
+  font-size default-avant-garde-font-size
+  padding whitespace-block-size 0
+  border-bottom 1px solid gray-lighter-color
+
+.max-width-container
+  max-width 700px + (whitespace-block-size * 2)
+  padding 0 whitespace-block-size
+  margin auto

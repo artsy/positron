@@ -1,3 +1,6 @@
+CurrentUser = require '../../models/current_user'
+{ fabricate2 } = require 'antigravity'
+
 @article =
   id: 2
   cache_key: "articles/2-20140718213304818947000"
@@ -17,3 +20,11 @@
 
     root_url:
       href: "http://spooky-production.herokuapp.com/"
+
+@locals =
+  user: new CurrentUser name: 'Craig', profile: fabricate2 'profile'
+  sd:
+    PATH: '/'
+  moment: require 'moment'
+  sharify:
+    script: -> '<script>var sharify = {}</script>'

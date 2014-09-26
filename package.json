@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "positron",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -16,24 +16,31 @@
     "node-env-file": "*",
     "underscore": "*",
     "moment": "*",
-    "traverson": "git://github.com/craigspaeth/traverson.git"
-  },
-  "devDependencies": {
+    "traverson": "git://github.com/craigspaeth/traverson.git",
+    "moment": "*",
+    "passport": "*",
+    "passport-oauth2": "git://github.com/craigspaeth/passport-oauth2.git",
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "cookie-session": "*",
+
     "jquery": "*",
     "browserify": "*",
-    "stylus": "*",
+    "stylus": "0.47.x",
     "nib": "*",
     "jadeify": "*",
     "browserify-dev-middleware": "*",
+    "sqwish": "*",
+    "uglify-js": "*",
+    "caching-coffeeify": "*"
+  },
+  "devDependencies": {
+    "antigravity": "git://github.com/artsy/antigravity.git",
+    "rewire": "*",
+    "zombie": "*",
     "should": "*",
     "mocha": "*",
     "sinon": "*",
-    "benv": "*",
-    "zombie": "*",
-    "html5": "*",
-    "sqwish": "*",
-    "uglify-js": "*",
-    "caching-coffeeify": "*",
-    "rewire": "*"
+    "benv": "*"
   }
 }
