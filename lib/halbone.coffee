@@ -1,13 +1,13 @@
 #
 # A small isomorphic wrapper around Traverson that DRYs up HAL-style
-# fetching code & model creation for Backbone. Simplifies Traverson API, cleans
-# out HAL metadata keys, and injects the model with the crawled url for `save`,
-# `destroy` etc. to work as expected.
+# fetching code & model creation for Backbone. Simplifies Traverson API, and 
+# injects the model with the crawled url for `save`, `destroy` etc. to work as 
+# expected.
 #
 # Use like:
-# spooky = require('../lib/halbone')(sd.SPOOKY_URL)
-# spooky.tap (req) -> req.withRequestOptions(qs: 'token': sd.SPOOKY_TOKEN)
-# spooky.new Sections, 'articles[0].sections', (err, sections) ->
+# api = require('../lib/halbone')("http://api.com")
+# api.intercept (req) -> req.withRequestOptions(qs: 'token': sd.SPOOKY_TOKEN)
+# api.new Sections, 'articles[0].sections', (err, sections) ->
 #   sections.fetch...
 #   sections.save...
 #
@@ -18,11 +18,11 @@ traverson = require 'traverson'
 module.exports = (API_URL) ->
 
   api = traverson.jsonHal.from(API_URL)
-  tapCallback = null
+  interceptCallback = null
 
   methods =
-    tap: (callback) ->
-      tapCallback = callback
+    intercept: (callback) ->
+      interceptCallback = callback
     new: (model, labels, options, callback) ->
 
       # Build the Traverson follow query
@@ -39,7 +39,7 @@ module.exports = (API_URL) ->
 
       # Build the request
       req = api.newRequest().follow(follows).withRequestOptions(jar: true)
-      tapCallback? req
+      interceptCallback? req
 
       # Optionally exclude options and let the last arg be the callback
       if _.isFunction options
