@@ -507,7 +507,7 @@
               "dependencies": {
                 "readable-stream": {
                   "version": "1.1.13",
-                  "from": "readable-stream@1.1",
+                  "from": "readable-stream@^1.1.13-1",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
                   "dependencies": {
                     "core-util-is": {
@@ -585,7 +585,7 @@
                     },
                     "source-map": {
                       "version": "0.1.39",
-                      "from": "source-map@~0.1.7",
+                      "from": "source-map@~0.1.30",
                       "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.39.tgz",
                       "dependencies": {
                         "amdefine": {
@@ -693,7 +693,7 @@
         },
         "readable-stream": {
           "version": "1.0.32",
-          "from": "readable-stream@~1.0.26",
+          "from": "readable-stream@^1.0.27-1",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.32.tgz",
           "dependencies": {
             "core-util-is": {
