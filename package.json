@@ -32,9 +32,7 @@
     "browserify-dev-middleware": "*",
     "sqwish": "*",
     "uglify-js": "*",
-    "caching-coffeeify": "*"
-  },
-  "devDependencies": {
+    "caching-coffeeify": "*",
     "antigravity": "git://github.com/artsy/antigravity.git",
     "rewire": "*",
     "zombie": "*",
