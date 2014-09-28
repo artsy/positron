@@ -18,6 +18,11 @@
     "moment": "*",
     "traverson": "git://github.com/craigspaeth/traverson.git",
     "moment": "*",
+    "passport": "*",
+    "passport-oauth2": "git://github.com/craigspaeth/passport-oauth2.git",
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "cookie-session": "*",
 
     "jquery": "*",
     "browserify": "*",
@@ -25,15 +30,15 @@
     "nib": "*",
     "jadeify": "*",
     "browserify-dev-middleware": "*",
-    "should": "*",
-    "mocha": "*",
-    "sinon": "*",
-    "benv": "*",
-    "zombie": "*",
-    "html5": "*",
     "sqwish": "*",
     "uglify-js": "*",
     "caching-coffeeify": "*",
-    "rewire": "*"
+    "antigravity": "git://github.com/artsy/antigravity.git",
+    "rewire": "*",
+    "zombie": "*",
+    "should": "*",
+    "mocha": "*",
+    "sinon": "*",
+    "benv": "*"
   }
 }

@@ -7,5 +7,7 @@ viewHelpers = require './view_helpers'
 
 module.exports = (req, res, next) ->
   res.locals.sd.URL = req.url
+  res.locals.sd.USER = req.user?.toJSON()
+  res.locals.user = req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()

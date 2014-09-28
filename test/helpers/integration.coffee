@@ -8,25 +8,30 @@
 spawn = require("child_process").spawn
 express = require "express"
 fixtures = require './fixtures'
+antigravity = require 'antigravity'
 
 # Fake API server, edit this to stub your own API's behavior.
-@api = express()
-@api.get "/", (req, res) -> res.send
+@gravity = antigravity.server
+@spooky = express()
+@spooky.get "/", (req, res) -> res.send
   _links:
     articles:
-      href: "http://localhost:5000/__api/api/articles"
-@api.get "/api/articles", (req, res) -> res.send
+      href: "http://localhost:5000/__spooky/api/articles"
+@spooky.get "/api/articles", (req, res) -> res.send
   _embedded:
     articles: [fixtures.article]
 
 # Spawns a child process with ENV variables that will launch it in "test"
 # mode. This includes an API_URL that points to the fake API server mounted
-# under /__api.
+# under /__spooky & /__gravity.
 @startServer = (callback) =>
   return callback() if @child?
   envVars =
     NODE_ENV: "test"
-    SPOOKY_URL: "http://localhost:5000/__api"
+    SPOOKY_URL: "http://localhost:5000/__spooky"
+    ARTSY_URL: "http://localhost:5000/__gravity"
+    APP_URL: "http://localhost:5000"
+    SESSION_SECRET: "foo"
     PORT: 5000
   envVars[k] = val for k, val of process.env when not envVars[k]?
   @child = spawn "make", ["s"],

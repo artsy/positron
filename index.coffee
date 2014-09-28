@@ -3,12 +3,11 @@
 # This code should be kept to a minimum. Any setup code that gets large should
 # be abstracted into modules under /lib.
 #
-express = require "express"
-setup = require "./lib/setup"
-env = require 'node-env-file'
-fs = require 'fs'
 
-env __dirname + '/.env' if fs.existsSync __dirname + '/.env'
+require './lib/setup/config'
+setup = require "./lib/setup"
+express = require "express"
+
 app = module.exports = express()
 setup app
 

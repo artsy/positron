@@ -7,5 +7,5 @@ sd = require('sharify').data
 
 $ ->
   require('../components/layout/client.coffee').init()
-  switch sd.URL
-    when '/articles' then 'noop'
+  if sd.URL.match /// /articles.* ///
+    'noop'

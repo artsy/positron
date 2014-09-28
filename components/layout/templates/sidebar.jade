@@ -1,23 +1,30 @@
 nav#layout-sidebar
-  a#layout-sidebar-home
-    include ../public/icons/home.svg
+  a#layout-sidebar-home( href='/' )
+    include ../public/icons/layout_home.svg
     br
     | Artsy Writer
   a#layout-sidebar-new-post
-    include ../public/icons/new_post.svg
+    include ../public/icons/layout_new_post.svg
     br
     | New Post
   a( href='/articles?state=0'
      class=(sd.URL == '/articles?state=0' ? 'is-active' : '') )
-    include ../public/icons/drafts.svg
+    include ../public/icons/layout_drafts.svg
     br
     | Drafts
   a( href='/articles?state=1'
      class=(sd.URL == '/articles?state=1' ? 'is-active' : '') )
-    include ../public/icons/published.svg
+    include ../public/icons/layout_published.svg
     br
     | Published
   a#layout-sidebar-help
-    include ../public/icons/help.svg
+    include ../public/icons/layout_help.svg
     br
     | Help
+  #layout-sidebar-profile
+    img( src=(user.get('profile')._links.thumbnail.href) )
+    br
+    = user.get('name').split(' ')[0]
+    nav#layout-sidebar-profile-menu
+      a( href=sd.FORCE_URL + '/' + user.get('profile').handle ) View profile on Artsy
+      a( href='/logout' ) Sign out

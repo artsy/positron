@@ -1,7 +1,7 @@
 routes = require '../routes'
 _ = require 'underscore'
 Backbone = require 'backbone'
-spooky = require '../../../lib/spooky_fetcher'
+{ spooky } = require '../../../lib/apis'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 
@@ -31,4 +31,4 @@ describe 'routes', ->
     it 'can filter based on state', ->
       @req.query.state = 1
       routes.articles @req, @res
-      spooky.new.args[0][2].state.should.equal 1
+      spooky.new.args[0][2].params.state.should.equal 1
