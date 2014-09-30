@@ -16,18 +16,18 @@ passport.use 'artsy', new OAuth2Strategy
   clientSecret: process.env.ARTSY_SECRET
   callbackURL: process.env.APP_URL + '/auth/artsy/callback'
 , (accessToken, refreshToken, profile, done) ->
-  gravity.new CurrentUser, 'current_user',
+  gravity.get CurrentUser, 'current_user',
     headers: { 'X-Access-Token': accessToken }
   , (err, user) ->
     return done err if err
-    gravity.new Backbone.Model, 'current_user.profile',
+    gravity.get Backbone.Model, 'current_user.profile',
       headers: { 'X-Access-Token': accessToken }
     , (err, profile) ->
       return done err if err
       user.set profile: profile.toJSON(), accessToken: accessToken
       done null, user
 
-passport.serializeUser (user, done) -> 
+passport.serializeUser (user, done) ->
   done null, user.pick 'id', 'name', 'profile', 'accessToken'
 
 passport.deserializeUser (userData, done) ->
