@@ -8,7 +8,7 @@ fixtures = require '../../../test/helpers/fixtures'
 describe 'routes', ->
 
   beforeEach ->
-    sinon.stub spooky, 'new'
+    sinon.stub spooky, 'get'
     @req = { query: {} }
     @res = { render: sinon.stub(), locals: sd: {} }
 

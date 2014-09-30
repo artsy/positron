@@ -7,5 +7,4 @@ sd = require('sharify').data
     return unless e.which is 13
     id = $(e.target).attr('data-id')
     spooky.get Article, 'article', { params: id: id }, (err, article) ->
-      console.log err, article
       article.save title: $(e.target).val()

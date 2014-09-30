@@ -16,13 +16,12 @@
     "node-env-file": "*",
     "underscore": "*",
     "moment": "*",
-    "traverson": "git://github.com/craigspaeth/traverson.git",
-    "moment": "*",
     "passport": "*",
     "passport-oauth2": "git://github.com/craigspaeth/passport-oauth2.git",
     "body-parser": "*",
     "cookie-parser": "*",
     "cookie-session": "*",
+    "halbone": "git://github.com/artsy/halbone.git",
 
     "jquery": "*",
     "browserify": "*",
@@ -33,6 +32,7 @@
     "sqwish": "*",
     "uglify-js": "*",
     "caching-coffeeify": "*",
+
     "antigravity": "git://github.com/artsy/antigravity.git",
     "rewire": "*",
     "zombie": "*",
