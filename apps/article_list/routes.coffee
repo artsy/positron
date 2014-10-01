@@ -8,6 +8,6 @@ Articles = require '../../collections/articles.coffee'
   else
     query = 'articles.articles'
   state = req.query.state or 1
-  spooky.new Articles, query, params: { state: state }, (err, articles) ->
+  spooky.get Articles, query, params: { state: state }, (err, articles) ->
     return next err if err
     res.render 'index', articles: articles.models, state: state

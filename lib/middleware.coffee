@@ -5,9 +5,14 @@
 
 viewHelpers = require './view_helpers'
 
-module.exports = (req, res, next) ->
+@locals = (req, res, next) ->
   res.locals.sd.URL = req.url
   res.locals.sd.USER = req.user?.toJSON()
   res.locals.user = req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()
+
+# TODO: Replace with app that renders a nice page
+@errorHandler = (err, req, res, next) ->
+  console.log err
+  res.status(err.status).send err.message or err.toString()

@@ -2,10 +2,11 @@
 # Loads the .env file and injects into sharify to share config on the client.
 #
 
-fs = require 'fs'
-path = require 'path'
+{ resolve } = require 'path'
 env = require 'node-env-file'
-env envFile if fs.existsSync envFile = path.resolve __dirname, '../../.env'
+switch process.env.NODE_ENV
+  when 'test' then env resolve __dirname, '../../.env.test'
+  when 'development' then env resolve __dirname, '../../.env'
 sharify = require 'sharify'
 
 sharify.data =

@@ -1,5 +1,3 @@
-return # TODO: Figure out what's up with Semaphore timing out
-
 Browser = require "zombie"
 integration = require "../../../test/helpers/integration"
 

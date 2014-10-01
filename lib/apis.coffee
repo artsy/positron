@@ -2,7 +2,7 @@
 # Shortcuts to Spooky & Gravity halbone clients.
 #
 
-halbone = require './halbone'
+halbone = require 'halbone'
 sd = require('sharify').data
 
 @spooky = halbone(sd.SPOOKY_URL)

@@ -3,14 +3,14 @@
 # One of the ways it does this is by providing the methods `startServer` and
 # `closeServer` that will spawn a child process of this project. This means
 # a version of this project server will run on localhost:5000 using a fake
-# API server exposed below a `api`.
+# API server exposed below as `api`.
 #
 spawn = require("child_process").spawn
 express = require "express"
 fixtures = require './fixtures'
 antigravity = require 'antigravity'
 
-# Fake API server, edit this to stub your own API's behavior.
+# Stubbed API servers
 @gravity = antigravity.server
 @spooky = express()
 @spooky.get "/", (req, res) -> res.send
@@ -21,25 +21,14 @@ antigravity = require 'antigravity'
   _embedded:
     articles: [fixtures.article]
 
-# Spawns a child process with ENV variables that will launch it in "test"
-# mode. This includes an API_URL that points to the fake API server mounted
-# under /__spooky & /__gravity.
+# Spawns a child process with test .env.test variables
 @startServer = (callback) =>
   return callback() if @child?
-  envVars =
-    NODE_ENV: "test"
-    SPOOKY_URL: "http://localhost:5000/__spooky"
-    ARTSY_URL: "http://localhost:5000/__gravity"
-    APP_URL: "http://localhost:5000"
-    SESSION_SECRET: "foo"
-    PORT: 5000
-  envVars[k] = val for k, val of process.env when not envVars[k]?
-  @child = spawn "make", ["s"],
+  @child = spawn "make", ["test-s"],
     customFds: [0, 1, 2]
     stdio: ["ipc"]
-    env: envVars
   @child.on "message", -> callback()
-  @child.stdout.on "data", (data) -> console.log data.toString()
+  @child.stdout.pipe process.stdout
 
 # Closes the server child process, used in an `after` hook and on
 # `process.exit` in case the test suite is interupted.
@@ -48,9 +37,3 @@ antigravity = require 'antigravity'
   @child = null
 
 process.on "exit", @closeServer
-
-# You can debug your integration app and run this app server by running
-# this module directly and opening up localhost:5000.
-# e.g. `coffee test/helpers/integration.coffee`
-return unless module is require.main
-@startServer => @child.stdout.on "data", (data) -> console.log data.toString()
