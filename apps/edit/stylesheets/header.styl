@@ -1,0 +1,42 @@
+@import './lib'
+
+#edit-header
+  padding margin-size
+  position fixed
+  top 0
+  left 0
+  padding-left sidebar-width + margin-size
+  border-bottom 1px solid gray-lighter-color
+  width 100%
+  min-width 866px
+  z-index 1
+
+#edit-checklist
+  button:first-child
+    border-right 0
+  button:not(#edit-publish)
+    position relative
+    padding-right 45px
+    svg
+      fill-color gray-lighter-color
+      position absolute
+      right 15px
+      top 10px
+      height 15px
+  &.edit-checklist-complete svg
+    fill-color green-light-color
+
+#edit-publish
+  margin-left margin-size
+
+#edit-header-right
+  position absolute
+  right margin-size
+  top margin-size
+  button
+    margin-right margin-size
+    &:last-child
+      margin-right 0
+
+#edit-delete
+  border 0

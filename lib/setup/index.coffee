@@ -38,6 +38,7 @@ module.exports = (app) ->
 
   # Mount apps
   app.use '/', require '../../apps/article_list'
+  app.use '/', require '../../apps/edit'
   app.use errorHandler
 
   # Mount static middleware for sub apps, components, and project-wide

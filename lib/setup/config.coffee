@@ -6,7 +6,7 @@
 env = require 'node-env-file'
 switch process.env.NODE_ENV
   when 'test' then env resolve __dirname, '../../.env.test'
-  when 'development' then env resolve __dirname, '../../.env'
+  else env resolve __dirname, '../../.env'
 sharify = require 'sharify'
 
 sharify.data =

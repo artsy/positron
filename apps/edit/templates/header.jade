@@ -1,0 +1,15 @@
+header#edit-header
+  nav#edit-checklist
+    button.avant-garde-button Content
+      include ../../../components/layout/public/icons/check.svg
+    button.avant-garde-button Summary View
+      include ../../../components/layout/public/icons/check.svg
+    button.avant-garde-button#edit-publish( disabled ) Publish
+  #edit-header-right
+    button.avant-garde-button#edit-delete Delete
+    button.avant-garde-button#edit-save Save #{article.stateName()}
+    button.avant-garde-button#edit-preview
+      if article.get('state') == 0
+        | Preview
+      else
+        | View

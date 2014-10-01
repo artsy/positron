@@ -3,7 +3,10 @@ nav#layout-sidebar
     include ../public/icons/layout_home.svg
     br
     | Artsy Writer
-  a#layout-sidebar-new-post
+  a#layout-sidebar-new-post(
+    href='/articles/new'
+    class=(sd.URL == '/articles/new' ? 'is-active' : '')
+  )
     include ../public/icons/layout_new_post.svg
     br
     | New Post

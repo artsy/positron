@@ -29,4 +29,4 @@ describe 'middleware', ->
       err.message = "Denied!"
       middleware.errorHandler err, @req, @res, @next
       @res.status.args[0][0].should.equal 401
-      @res.send.args[0][0].should.equal "Denied!"
+      @res.send.args[0][0].should.containEql "Denied!"
