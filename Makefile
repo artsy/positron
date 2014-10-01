@@ -19,7 +19,7 @@ test: assets
 
 # Start the integration server for debugging
 test-s: assets
-	$(BIN)/coffee test/helpers/integration.coffee
+	NODE_ENV=test make s
 
 # Generate minified assets from the /assets folder and output it to /public.
 assets:

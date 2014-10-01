@@ -22,6 +22,7 @@
     "cookie-parser": "*",
     "cookie-session": "*",
     "halbone": "git://github.com/artsy/halbone.git",
+    "morgan": "*",
 
     "jquery": "*",
     "browserify": "*",

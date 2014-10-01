@@ -18,7 +18,7 @@ block content
                 = article.get('tags').join(' ')
               else
                 span.article-list-missing Missing tags
-            input.article-title( value=article.get('title') data-id=article.get('id') )
+            h1= article.get('title')
             if article.get('lede')
               h2= article.get('lede')
             else

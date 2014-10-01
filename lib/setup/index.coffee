@@ -13,9 +13,10 @@ Backbone = require 'backbone'
 sharify = require 'sharify'
 path = require 'path'
 fs = require 'fs'
-helperMiddleware = require '../helper_middleware'
+{ locals, errorHandler } = require '../middleware'
 setupEnv = require './env'
 setupAuth = require './auth'
+morgan = require 'morgan'
 
 module.exports = (app) ->
 
@@ -30,16 +31,14 @@ module.exports = (app) ->
   app.use cookieParser()
   app.use bodyParser.json()
   app.use bodyParser.urlencoded()
+  app.use morgan 'dev'
   app.use session secret: process.env.SESSION_SECRET
   setupAuth app
-  app.use helperMiddleware
+  app.use locals
 
   # Mount apps
   app.use '/', require '../../apps/article_list'
-  # TODO: Replace with proper app that renders errors
-  app.use (err, req, res, next) ->
-    console.log err
-    res.status(err.status).send err.toString()
+  app.use errorHandler
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../../apps').forEach (fld) ->
