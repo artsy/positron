@@ -9,7 +9,7 @@ header#edit-header
     a#edit-delete.avant-garde-button Delete
     a#edit-save.avant-garde-button Save #{article.stateName()}
     a#edit-preview.avant-garde-button
-      if article.get('state') == 0
+      if article.get('state') == 'draft'
         | Preview
       else
         | View

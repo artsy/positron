@@ -34,6 +34,22 @@
   &.edit-tabs-complete svg
     fill-color green-light-color
 
+#edit-save
+  position relative
+  transition none
+  &.is-saving
+    color transparent
+  &.is-saving::after
+    content 'Saving...'
+    color gray-dark-color
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    padding 12px 0
+    text-align center
+
 #edit-publish
   margin-left margin-size
 

@@ -16,12 +16,17 @@ describe 'EditView', ->
       ), =>
         benv.expose $: require('jquery')
         Backbone.$ = $
+        sinon.stub Backbone, 'sync'
         { EditView } = require '../../client'
-        @view = new EditView el: $ '#layout-content'
+        sinon.stub _, 'debounce'
+        _.debounce.callsArg 0
+        @view = new EditView el: $('#layout-content'), article: @article
         done()
 
   afterEach ->
     benv.teardown()
+    Backbone.sync.restore()
+    _.debounce.restore()
 
   describe '#toggleTabs', ->
 
@@ -29,3 +34,9 @@ describe 'EditView', ->
       @view.highlightMissingFields = sinon.stub()
       $('#edit-publish').click()
       @view.highlightMissingFields.called.should.be.ok
+
+  describe '#autosave', ->
+
+    it 'autosaves on debounce keyup', ->
+      $('#edit-title input').trigger 'keyup'
+      Backbone.sync.called.should.be.ok
