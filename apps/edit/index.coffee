@@ -10,3 +10,4 @@ app.set 'views', __dirname + '/templates'
 app.set 'view engine', 'jade'
 
 app.get '/articles/new', routes.create
+app.get '/articles/:id/edit', routes.edit
