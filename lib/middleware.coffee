@@ -15,4 +15,6 @@ viewHelpers = require './view_helpers'
 # TODO: Replace with app that renders a nice page
 @errorHandler = (err, req, res, next) ->
   console.log err
-  res.status(err.status).send err.message or err.toString()
+  res.status(err.status or 500).send(
+    "<pre>" + err.message or err.toString() + "</pre>"
+  )

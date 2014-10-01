@@ -1,0 +1,32 @@
+@import '../../../components/stylus_lib'
+
+margin-size = 10px
+
+#edit-header
+  padding margin-size
+  position fixed
+  top 0
+  left 0
+  padding-left sidebar-width + margin-size
+  border-bottom 1px solid gray-lighter-color
+  width 100%
+  z-index 1
+
+#edit-checklist
+  button:first-child
+    border-right 0
+
+#edit-publish
+  margin-left margin-size
+
+#edit-header-right
+  position absolute
+  right margin-size
+  top margin-size
+  button
+    margin-right margin-size
+    &:last-child
+      margin-right 0
+
+#edit-delete
+  border 0

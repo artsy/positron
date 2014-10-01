@@ -1,0 +1,21 @@
+@import '../../stylus_lib'
+
+.avant-garde-button
+  avant-garde()
+  padding 12px 25px
+  border 1px solid gray-lighter-color
+  background transparent
+  font-size default-avant-garde-font-size - 1
+  outline none
+  transition background-color 0.25s, color 0.25s
+  text-decoration none
+  line-height 1
+  display inline-block
+  cursor pointer
+  margin 0
+  &:hover, &:active
+    color purple-color
+  &:disabled
+    background gray-lighter-color
+    color gray-dark-color
+    cursor not-allowed
