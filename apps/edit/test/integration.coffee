@@ -9,7 +9,9 @@ describe "articles list", ->
   after ->
     integration.closeServer()
 
-  it "displays a list of articles", (done) ->
-    Browser.visit 'http://localhost:5000', (err, browser) ->
-      browser.html().should.containEql "The art in Copenhagen is soo over"
+  it "shows an empty article", (done) ->
+    Browser.visit "http://localhost:5000/articles/new", {
+      headers: 'X-Access-Token': 'foo-token'
+    }, (err, browser) ->
+      browser.html().should.containEql "Type a title"
       done()

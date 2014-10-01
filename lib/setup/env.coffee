@@ -19,5 +19,11 @@ module.exports = (app) ->
 
   # Test only
   if 'test' is sd.NODE_ENV
+    app.use (req, res, next) ->
+      if req.get 'X-Access-Token'
+        CurrentUser = require '../../models/current_user'
+        data = require('../../test/helpers/fixtures.coffee').currentUser
+        req.user = new CurrentUser data
+      next()
     app.use '/__spooky', require('../../test/helpers/integration.coffee').spooky
     app.use '/__gravity', require('../../test/helpers/integration.coffee').gravity
