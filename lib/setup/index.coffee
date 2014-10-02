@@ -13,10 +13,11 @@ Backbone = require 'backbone'
 sharify = require 'sharify'
 path = require 'path'
 fs = require 'fs'
-{ locals, errorHandler } = require '../middleware'
 setupEnv = require './env'
 setupAuth = require './auth'
 morgan = require 'morgan'
+{ locals, errorHandler } = require '../middleware'
+{ parse } = require 'url'
 
 module.exports = (app) ->
 
@@ -32,7 +33,10 @@ module.exports = (app) ->
   app.use bodyParser.json()
   app.use bodyParser.urlencoded()
   app.use morgan 'dev'
-  app.use session secret: process.env.SESSION_SECRET
+  app.use session
+    secret: process.env.SESSION_SECRET
+    domain: process.env.COOKIE_DOMAIN
+    key: 'positron.sess'
   setupAuth app
   app.use locals
 
