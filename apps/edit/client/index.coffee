@@ -75,7 +75,7 @@ sd = require('sharify').data
     article.url = url.protocol + '//' + url.host + url.pathname
     done article
   # Article is new, so we don't know it's url. We have to halbone-crawl to
-  # articles and assume that's the right POST endpoint. (Maybe there need to
+  # articles and assume that's the right POST endpoint. (Maybe there needs to
   # be a "new" link under /api/articles).
   else
     spooky.get Article, 'articles', (err, articles) ->
