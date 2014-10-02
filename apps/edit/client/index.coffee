@@ -2,6 +2,8 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 Article = require '../../../models/article.coffee'
 sd = require('sharify').data
+{ spooky } = require '../../../lib/apis.coffee'
+{ parse } = require 'url'
 
 @EditView = class EditView extends Backbone.View
 
@@ -15,6 +17,7 @@ sd = require('sharify').data
     'keyup #edit-title input': 'toggleAsterisk'
     'click #edit-tabs > a': 'toggleTabs'
     'keyup :input': 'autosave'
+    'click #edit-save:not(.is-disabled)': 'redirectToList'
 
   toggleAsterisk: ->
     fn = if $('#edit-title input').val() is '' then 'show' else 'hide'
@@ -42,6 +45,12 @@ sd = require('sharify').data
   autosave: =>
     @article.save @serialize()
 
+  redirectToList: ->
+    # TODO: We should instead drop down a notice saying
+    # "Your post has been saved under 'drafts' [ view drafts ]".
+    alert "Saved #{@article.stateName()}!"
+    window.location = '/articles?state=' + if @article.get('state') is 'draft' then 0 else 1
+
 @EditHeader = class EditHeader extends Backbone.View
 
   initialize: (options) ->
@@ -56,5 +65,21 @@ sd = require('sharify').data
     @$('#edit-save').removeClass 'is-saving'
 
 @init = ->
-  article = new Article sd.ARTICLE
-  new EditView el: $('#layout-content'), article: article
+  done = (article) ->
+    new EditView el: $('#layout-content'), article: article
+  # Article was fetched server-side. Bootstrap it and inject the url based
+  # on it's _links.self
+  if sd.ARTICLE.id?
+    article = new Article sd.ARTICLE
+    url = parse sd.ARTICLE._links.self.href
+    article.url = url.protocol + '//' + url.host + url.pathname
+    done article
+  # Article is new, so we don't know it's url. We have to halbone-crawl to
+  # articles and assume that's the right POST endpoint. (Maybe there needs to
+  # be a "new" link under /api/articles).
+  else
+    spooky.get Article, 'articles', (err, articles) ->
+      url = parse articles.url
+      article = new Article sd.ARTICLE
+      article.urlRoot = url.protocol + '//' + url.host + url.pathname
+      done article
