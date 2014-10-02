@@ -1,3 +1,4 @@
+@import '../../../components/stylus_lib'
 @import './lib'
 
 #edit-header
@@ -10,21 +11,44 @@
   width 100%
   min-width 866px
   z-index 1
+  background white
+  .avant-garde-button
+    font-size default-avant-garde-font-size - 2
 
-#edit-checklist
-  button:first-child
+#edit-tabs
+  a:first-child
     border-right 0
-  button:not(#edit-publish)
+  a:not(#edit-publish)
     position relative
     padding-right 45px
+    color gray-color
+    transition none
+    &.is-active
+      color black
     svg
       fill-color gray-lighter-color
       position absolute
       right 15px
       top 10px
       height 15px
-  &.edit-checklist-complete svg
+  &.edit-tabs-complete svg
     fill-color green-light-color
+
+#edit-save
+  position relative
+  transition none
+  &.is-saving
+    color transparent
+  &.is-saving::after
+    content 'Saving...'
+    color gray-dark-color
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    padding 12px 0
+    text-align center
 
 #edit-publish
   margin-left margin-size
@@ -33,7 +57,7 @@
   position absolute
   right margin-size
   top margin-size
-  button
+  a
     margin-right margin-size
     &:last-child
       margin-right 0

@@ -1,0 +1,23 @@
+section#edit-thumbnail
+  header
+    h1 Prepare your post for Artsy & social media
+    h2 Choose a tag, title, thumbnail and teaser that summarizes the post and grabs the user's attention
+    img( src='/images/edit_prepare_example.png')
+  form#edit-thumbnail-inputs
+    #edit-thumbnail-inputs-left
+      label
+        span.edit-required Thumbnail
+        .dashed-file-upload-container
+          | Drag & Drop or click<br> to upload your thumbnail
+          input#edit-thumbnail-image( type='file' )
+    #edit-thumbnail-inputs-right
+      label
+        span.edit-required Title
+        input.bordered-input( placeholder='Type a title' )
+      label
+        span.edit-required Teaser
+        textarea.bordered-input( placeholder='Type a title' )
+    label#edit-thumbnail-tags
+      span.edit-required Tags
+      br
+      input.bordered-input( placeholder='Type tags separated by commas' )

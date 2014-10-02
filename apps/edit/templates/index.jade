@@ -2,18 +2,6 @@ extend ../../../components/layout/templates/index
 
 block content
   include header
-  #edit-content
-    #edit-title
-      input.invisible-input( placeholder='Type a title' )
-      .edit-required
-    #edit-preamble.edit-body-contianer
-      input.invisible-input( placeholder='Preamble (optional)' )
-    #edit-author-section
-      p= user.get('name')
-      p Staff Writer
-      p= moment(article.get('created_at') || moment()).format('MMM D, YYYY h:mm a')
-    .edit-body-contianer
-      .edit-section-tool
-        .edit-section-tool-icon
-          include ../public/icons/edit_section_tool_icon.svg
-        | Add a new section
+  #edit-tab-pages
+    include content
+    include thumbnail
