@@ -13,6 +13,7 @@ Backbone = require 'backbone'
 sharify = require 'sharify'
 path = require 'path'
 fs = require 'fs'
+forceSSL = require 'express-force-ssl'
 setupEnv = require './env'
 setupAuth = require './auth'
 morgan = require 'morgan'
@@ -27,6 +28,7 @@ module.exports = (app) ->
     req.query 'token': process.env.SPOOKY_TOKEN
 
   # Mount generic middleware & run setup modules
+  app.use forceSSL if 'production' is process.env.NODE_ENV
   setupEnv app
   app.use sharify
   app.use cookieParser()
