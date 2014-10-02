@@ -11,7 +11,7 @@ sd = require('sharify').data
 
 module.exports.init = ->
   Backbone.$ = $
-  # TODO: This header seems to freeze the Rails server
+  # TODO: This header seems to freeze my Spooky server locally
   # $.ajaxSettings.headers = 'Authorization: Token token': sd.SPOOKY_TOKEN
   sync = Backbone.sync
   Backbone.sync = (method, model, options) ->

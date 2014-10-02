@@ -5,7 +5,7 @@ module.exports = class Article extends Backbone.Model
   defaults:
     state: 'draft'
 
-  # TODO: Extract this & apps/edit/client/index bootstrap code into a
+  # TODO: Extract this & apps/edit/client/index bootstrap code into
   # halbone helpers
   url: ->
     url = parse(@get('_links').self.href)

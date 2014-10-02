@@ -10,4 +10,4 @@ Articles = require '../../collections/articles.coffee'
   state = req.query.state or 1
   spooky.get Articles, query, params: { state: state }, (err, articles) ->
     return next err if err
-    res.render 'index', articles: articles.models.reverse(), state: state
+    res.render 'index', articles: articles.models, state: state
