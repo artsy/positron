@@ -23,6 +23,7 @@
     "cookie-session": "*",
     "halbone": "git://github.com/artsy/halbone.git",
     "morgan": "*",
+    "express-force-ssl": "*",
 
     "jquery": "*",
     "browserify": "*",
