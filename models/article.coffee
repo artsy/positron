@@ -10,7 +10,7 @@ module.exports = class Article extends Backbone.Model
   url: ->
     url = parse(@get('_links').self.href)
     path = url.pathname.replace('/' + @get('id'), '')
-    url.protocol + '//' + url.host + path + '/' + @get('id') + '?token=' + sd.SPOOKY_TOKEN
+    url.protocol + '//' + url.host + path + '/' + @get('id')
 
 
   stateName: ->
