@@ -4,8 +4,6 @@
 #
 
 viewHelpers = require './view_helpers'
-sd = require('sharify').data
-{ parse } = require 'url'
 
 @locals = (req, res, next) ->
   res.locals.sd.URL = req.url
