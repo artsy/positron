@@ -19,6 +19,7 @@ test: assets
 
 # Generate minified assets from the /assets folder and output it to /public.
 assets:
+	mkdir -p public/assets
 	node lib/assets.js
 
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
