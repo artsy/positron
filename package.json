@@ -30,10 +30,10 @@
     "stylus": "0.47.x",
     "nib": "*",
     "jadeify": "*",
+    "uglifyify": "*",
+    "caching-coffeeify": "*",
     "browserify-dev-middleware": "*",
     "sqwish": "*",
-    "uglify-js": "*",
-    "caching-coffeeify": "*",
 
     "antigravity": "git://github.com/artsy/antigravity.git",
     "rewire": "*",
