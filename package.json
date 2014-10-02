@@ -31,6 +31,7 @@
     "browserify": "*",
     "jadeify": "*",
     "uglifyify": "*",
+    "uglify-js": "*",
     "caching-coffeeify": "*",
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
