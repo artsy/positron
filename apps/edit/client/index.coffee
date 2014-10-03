@@ -11,13 +11,14 @@ sd = require('sharify').data
     { @article } = options
     @autosave = _.debounce @autosave, 500
     new EditHeader el: $('#edit-header'), article: @article
+    @article.on 'destroy', @redirectToList
     @toggleAsterisk()
 
   events:
     'keyup #edit-title input': 'toggleAsterisk'
     'click #edit-tabs > a': 'toggleTabs'
     'keyup :input': 'autosave'
-    'click #edit-save:not(.is-disabled)': 'redirectToList'
+    'click #edit-save:not(.is-disabled)': 'save'
 
   toggleAsterisk: ->
     fn = if $('#edit-title input').val() is '' then 'show' else 'hide'
@@ -45,11 +46,14 @@ sd = require('sharify').data
   autosave: =>
     @article.save @serialize()
 
-  redirectToList: ->
+  save: ->
     # TODO: We should instead drop down a notice saying
     # "Your post has been saved under 'drafts' [ view drafts ]".
     alert "Saved #{@article.stateName()}!"
-    window.location = '/articles?state=' + if @article.get('state') is 'draft' then 0 else 1
+    @redirectToList()
+
+  redirectToList: =>
+    location.assign '/articles?state=' + if @article.get('state') is 'draft' then 0 else 1
 
 @EditHeader = class EditHeader extends Backbone.View
 
@@ -64,22 +68,13 @@ sd = require('sharify').data
   doneSaving: =>
     @$('#edit-save').removeClass 'is-saving'
 
+  events:
+    'click #edit-delete': 'delete'
+
+  delete: ->
+    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
+    @article.destroy()
+
 @init = ->
-  done = (article) ->
+  spooky.get Article, 'articles', { bootstrap: sd.ARTICLE }, (err, article) ->
     new EditView el: $('#layout-content'), article: article
-  # Article was fetched server-side. Bootstrap it and inject the url based
-  # on it's _links.self
-  if sd.ARTICLE.id?
-    article = new Article sd.ARTICLE
-    url = parse sd.ARTICLE._links.self.href
-    article.url = url.protocol + '//' + url.host + url.pathname
-    done article
-  # Article is new, so we don't know it's url. We have to halbone-crawl to
-  # articles and assume that's the right POST endpoint. (Maybe there needs to
-  # be a "new" link under /api/articles).
-  else
-    spooky.get Article, 'articles', (err, articles) ->
-      url = parse articles.url
-      article = new Article sd.ARTICLE
-      article.urlRoot = url.protocol + '//' + url.host + url.pathname
-      done article
