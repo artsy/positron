@@ -40,3 +40,10 @@ describe 'EditView', ->
     it 'autosaves on debounce keyup', ->
       $('#edit-title input').trigger 'keyup'
       Backbone.sync.called.should.be.ok
+
+  describe 'on destroy', ->
+
+    it 'redirects to the root', ->
+      location.assign = sinon.stub()
+      @view.article.destroy()
+      location.assign.args[0][0].should.containEql '/articles?state='
