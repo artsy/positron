@@ -6,7 +6,7 @@ Article = require '../../models/article'
 @edit = (req, res, next) ->
   new Article(id: req.params.id).fetch
     headers: 'x-access-token': req.user.get('access_token')
-    error: (m, e) -> next e
+    error: res.backboneError
     success: (article) -> render res, article
 
 render = (res, article) ->

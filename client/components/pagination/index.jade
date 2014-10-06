@@ -1,0 +1,6 @@
+mixin pagination(page, totalPages)
+  ul.pagination
+    for n, i in new Array(totalPages)
+      li
+        a( href=mergeQueryParams(sd.URL, { page: i }) )
+          != i == page ? '<b>' + i + '</b>' : i

@@ -1,4 +1,5 @@
 extend ../../components/layout/templates/index
+include ../../components/pagination/index
 
 block content
   h1.page-header
@@ -30,3 +31,5 @@ block content
                   | Last saved #{moment(article.get('updated_at')).fromNow()}
                 else
                   strong Last saved #{moment(article.get('updated_at')).fromNow()}
+  #article-list-pagination
+    +pagination(page, totalPages)

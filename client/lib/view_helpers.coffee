@@ -3,5 +3,10 @@
 # This will be injected in res.locals & exposed globally client-side for Jadeify.
 #
 
-module.exports =
-  moment: require 'moment'
+url = require 'url'
+qs = require 'querystring'
+@moment = require 'moment'
+
+# There has to be a better way to do this...
+@mergeQueryParams = (uri, params) ->
+  uri + (if url.parse(uri).query? then '&' else '?') + qs.stringify(params)
