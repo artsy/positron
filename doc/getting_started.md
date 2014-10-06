@@ -1,10 +1,14 @@
 # Getting Started with Positron
 
-*Positron* is the Artsy Writer front-end app used to create editorial on Artsy. It's version 2 of the posting tool powered by [Spooky](https://github.com/artsy/spooky) for a back-end. This doc will assume you've set up XCode and common development tools.
+*Positron* is the Artsy Writer app used to create editorial on Artsy. It's version 2 of the articleing tool powered by [Ezel](http://ezeljs.com/) and a [standalone Mongo + Express API](https://github.com/artsy/positron/blob/master/doc/api.md). This doc will assume you've set up XCode and common development tools.
 
-## Ezel
+## Install Mongodb
 
-Read up on [Ezel](http://ezeljs.com/) and familarize yourself with Positron concepts by understanding the foundation it was built on.
+The easiest way is through [Homebrew](http://brew.sh/). For other installation options check out [the docs](http://www.mongodb.org/downloads).
+
+````
+brew install mongodb
+````
 
 ## Install Node.js
 
@@ -41,10 +45,34 @@ npm install mocha -g
 npm install coffee-script -g
 ````
 
-## Add a Spooky Auth Token
+## Add an ARTSY_ID & ARTSY_ARTSY_SECRET
 
-Copy your .env.example to an .env file and set `SPOOKY_TOKEN`. Use a remote Spooky by pulling from `heroku config --app=positron-staging` or [set up Spooky locally](https://github.com/artsy/spooky#set-up) and create a new key in the Spooky rails console via `ApiKey.create.token`.
+First copy the `.env.example` file to a `.env` file
+
+````
+cp .env.example .env
+````
+
+then copy the `ARTSY_ID` & `ARTSY_SECRET` env variables from staging into the new .env file.
+
+````
+heroku config --app=positron-staging
+````
+
+or ask someone in slack for an Artsy API client ID & Secret.
 
 ## Run the Server
+
+Make sure Mongo is running
+
+````
+mongod
+````
+
+then start the server.
+
+````
+make s
+````
 
 Client-side code and templates will automatically reload on page refresh, but server-side code will not automatically reload without restarting the server. If you would like to watch for file changes and restart the server [forever](https://github.com/nodejitsu/forever) is a popular tool.
