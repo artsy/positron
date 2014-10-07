@@ -57,7 +57,7 @@ querySchema = (->
     cursor = db.articles.find(query).skip(offset or 0)
     async.parallel [
       (cb) -> db.articles.count cb
-      (cb) -> cursor.count true, cb
+      (cb) -> cursor.count cb
       (cb) -> cursor.limit(limit or 10).sort(updated_at: 1).toArray cb
     ], (err, results) ->
       return callback err if err

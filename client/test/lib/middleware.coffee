@@ -1,6 +1,7 @@
 express = require 'express'
 sinon = require 'sinon'
 middleware = require '../../lib/middleware'
+Backbone = require 'backbone'
 
 describe 'middleware', ->
 
@@ -30,3 +31,10 @@ describe 'middleware', ->
       middleware.errorHandler err, @req, @res, @next
       @res.status.args[0][0].should.equal 401
       @res.send.args[0][0].should.containEql "Denied!"
+
+  describe 'helpers', ->
+
+    it 'adds a res.backboneError helper', ->
+      middleware.helpers @req, @res, @next
+      @res.backboneError new Backbone.Model(), { error: 'moo' }
+      @next.args[0][0].should.equal 'moo'

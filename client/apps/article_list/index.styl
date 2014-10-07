@@ -1,17 +1,16 @@
 @import '../../components/stylus_lib'
 
-#article-list-items
-  li
-    margin-top whitespace-block-size
-    line-height 26px
-    transition opacity 0.3s
-    &:hover
-      opacity 0.8
-    h1
-      font-size 20px
-    img
-      width 130px
-      margin-right 20px
+#article-list-items > ul > li
+  margin-top whitespace-block-size
+  line-height 26px
+  transition opacity 0.3s
+  &:hover
+    opacity 0.8
+  h1
+    font-size 20px
+  img
+    width 130px
+    margin-right 20px
 
 .article-list-item-left, .article-list-item-right
   display inline-block
@@ -34,3 +33,6 @@
 
 .article-list-missing
   color gray-dark-color
+
+#article-list-pagination
+  margin (whitespace-block-size * 2) 0

@@ -28,6 +28,7 @@
     "superagent": "*",
     "joi": "*",
     "joi-objectid": "*",
+    "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
 
     "stylus": "0.47.x",
     "nib": "*",

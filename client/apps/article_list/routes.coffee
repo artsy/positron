@@ -2,11 +2,19 @@ _ = require 'underscore'
 Articles = require '../../collections/articles.coffee'
 
 @articles = (req, res, next) ->
+  page = parseInt req.query.page
+  size = 10
   new Articles().fetch
-    data: _.extend(req.query, author_id: req.user.get('id'))
+    data:
+      offset: if page then (page - 1) * size else 0
+      limit: size
+      author_id: req.user.get('id')
+      published: published = req.query.published is 'true'
     headers: 'x-access-token': req.user.get('access_token')
-    error: (m, e) -> next e
+    error: res.backboneError
     success: (articles) ->
       res.render 'index',
         articles: articles.models
-        published: req.query.published is 'true'
+        published: published
+        page: page or 1
+        totalPages: Math.ceil(articles.count / size)

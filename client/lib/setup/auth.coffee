@@ -23,7 +23,7 @@ passport.serializeUser (user, done) ->
 passport.deserializeUser (accessToken, done) ->
   new CurrentUser().fetch
     headers: 'X-Access-Token': accessToken
-    error: (m, e) -> done e
+    error: (model, res) -> done res.error
     success: (user) -> done null, user
 
 module.exports = (app) ->

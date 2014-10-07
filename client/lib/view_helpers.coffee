@@ -3,5 +3,4 @@
 # This will be injected in res.locals & exposed globally client-side for Jadeify.
 #
 
-module.exports =
-  moment: require 'moment'
+@moment = require 'moment'

@@ -6,7 +6,7 @@ section#edit-content
     )
     .edit-required
   #edit-lead-paragraph.edit-body-contianer
-    input.invisible-input( placeholder='Lead paragraph (optional)' )
+    input.invisible-input( placeholder='Lead paragraph (optional)' value=article.get('lead_paragraph') )
   #edit-author-section
     p= user.get('name')
     p Staff Writer
