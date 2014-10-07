@@ -17,24 +17,24 @@ schema = (->
   author_id: @objectId().required()
   thumbnail_category: @string()
   thumbnail_title: @string()
-  thumbnail_teaser: @string(),
-  thumbnail_image: @string(),
+  thumbnail_teaser: @string().allow('')
+  thumbnail_image: @string()
   tags: @array().includes @string()
   title: @string()
-  published: @boolean().default false
-  lead_paragraph: @string()
+  published: @boolean().default(false)
+  lead_paragraph: @string().allow('')
   sections: @array().includes [
     @object().keys
-      type: @string().valid 'image'
+      type: @string().valid('image')
       url: @string()
     @object().keys
-      type: @string().valid 'text'
+      type: @string().valid('text')
       body: @string()
     @object().keys
-      type: @string().valid 'artworks'
-      ids: @array().includes @string()
+      type: @string().valid('artworks')
+      ids: @array().includes(@string())
     @object().keys
-      type: @string().valid 'video'
+      type: @string().valid('video')
       url: @string()
   ]
 ).call Joi
@@ -52,15 +52,13 @@ querySchema = (->
   Joi.validate query, querySchema, (err, query) ->
     query.author_id = ObjectId(query.author_id) if query.author_id
     return callback err if err
+    { limit, offset } = query
+    query = _.omit query, 'limit', 'offset'
+    cursor = db.articles.find(query).skip(offset or 0)
     async.parallel [
       (cb) -> db.articles.count cb
-      (cb) -> db.articles.count query, cb
-      (cb) ->
-        db.articles
-          .find(_.omit query, 'limit', 'offset')
-          .limit(query.limit or 10)
-          .skip(query.offset or 0)
-          .toArray cb
+      (cb) -> cursor.count true, cb
+      (cb) -> cursor.limit(limit or 10).sort(updated_at: 1).toArray cb
     ], (err, results) ->
       return callback err if err
       callback null, {
@@ -82,7 +80,7 @@ querySchema = (->
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
-    data.updated_at = moment().format()
+    data.updated_at = moment()
     data.author_id = ObjectId(data.author_id)
     db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
       callback err, _.extend _id: res.upserted?[0]?._id, data

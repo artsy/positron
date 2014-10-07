@@ -1,7 +1,11 @@
 CurrentUser = require '../../client/models/current_user'
 { ObjectId } = require 'mongojs'
+moment = require 'moment'
+
+timeCount = 0
 
 module.exports = ->
+  timeCount++
   fixtures = {}
   fixtures.articles =
     id: '54276766fd4f50996aeca2b8'
@@ -14,8 +18,8 @@ module.exports = ->
     title: 'Top Ten Booths',
     lead_paragraph: 'Just before the lines start forming...',
     published: true,
-    published_at: '1994-11-05T08:15:30-05:00',
-    updated_at: '1994-11-05T08:15:30-05:00',
+    published_at: moment().add(timeCount, 'seconds').format(),
+    updated_at: moment().add(timeCount, 'seconds').format(),
     sections: [
       {
         type: 'image',

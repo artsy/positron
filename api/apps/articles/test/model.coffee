@@ -56,6 +56,14 @@ describe 'Article', ->
           results[2].title.should.equal 'Foo Baz'
           done()
 
+    it 'sorts by updated_at by default', (done) ->
+      fabricate 'articles', [
+        { title: 'Hello Wurld', updated_at: moment().subtract(1, 'days').format() }
+      ], ->
+        Article.where {}, (err, { results }) ->
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
 
   describe '#find', ->
 
