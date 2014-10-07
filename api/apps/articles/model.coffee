@@ -58,7 +58,7 @@ querySchema = (->
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count true, cb
-      (cb) -> cursor.limit(limit or 5).toArray cb
+      (cb) -> cursor.limit(limit or 10).sort(updated_at: 1).toArray cb
     ], (err, results) ->
       return callback err if err
       callback null, {
@@ -80,10 +80,10 @@ querySchema = (->
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
-    data.updated_at = moment().format()
+    data.updated_at = moment()
     data.author_id = ObjectId(data.author_id)
     db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
-      callback err, _.extend _id: res.upserted?[0]?._id, data
+      callback err, _.extend data, _id: id
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

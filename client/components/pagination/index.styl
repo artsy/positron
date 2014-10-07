@@ -1,12 +1,27 @@
-@import '../../stylus_lib'
+@import '../stylus_lib'
 
-.pagination
-  border 2px solid gray-color
-  display inline-block
-  li
-    border-right 1px solid gray-color
+.bordered-pagination
+  margin 20px 0
+  > ul
     display inline-block
-    width 40px
-    height @width
-    text-align center
-    line-height @height
+    margin 0 10px
+    list-style none
+    border 2px solid gray-color
+    &:first-child
+      margin-left 0
+    &:last-child
+      margin-right 0
+    > li
+      display inline-block
+      border-left 1px solid gray-lighter-color
+      &:first-child
+        border none
+      > a
+        display block
+        padding 8px 15px 6px
+        text-decoration none
+        &.is-active
+          background-color gray-lightest-color
+          cursor default
+        > span
+          color gray-dark-color
