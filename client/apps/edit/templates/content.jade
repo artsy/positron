@@ -1,10 +1,10 @@
 section#edit-content
   #edit-title
+    .edit-required
     input.invisible-input(
       placeholder='Type a title'
       value=article.get('title')
     )
-    .edit-required
   #edit-lead-paragraph.edit-body-contianer
     input.invisible-input( placeholder='Lead paragraph (optional)' value=article.get('lead_paragraph') )
   #edit-author-section

@@ -16,7 +16,7 @@ describe 'articles endpoints', ->
 
   afterEach ->
     @server.close()
-    
+
   it 'creates articles', (done) ->
     request
       .post("http://localhost:5000/articles")
@@ -37,12 +37,12 @@ describe 'articles endpoints', ->
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 2
-          res.body.results[0].title.should.equal 'Flowers on Flowers'
+          res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
           done()
 
   it 'gets a single article', (done) ->
     fabricate 'articles', [
-      { 
+      {
         title: 'Cows on the prarie'
         _id: ObjectId('5086df098523e60002000012')
         author_id: @user._id

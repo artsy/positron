@@ -15,10 +15,9 @@ moment = require 'moment'
 
 schema = (->
   author_id: @objectId().required()
-  thumbnail_category: @string()
-  thumbnail_title: @string()
+  thumbnail_title: @string().allow('')
   thumbnail_teaser: @string().allow('')
-  thumbnail_image: @string()
+  thumbnail_image: @string().allow('')
   tags: @array().includes @string()
   title: @string()
   published: @boolean().default(false)
@@ -58,7 +57,7 @@ querySchema = (->
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit or 10).sort(updated_at: 1).toArray cb
+      (cb) -> cursor.limit(limit or 10).sort(updated_at: -1).toArray cb
     ], (err, results) ->
       return callback err if err
       callback null, {

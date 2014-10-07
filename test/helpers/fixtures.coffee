@@ -10,7 +10,6 @@ module.exports = ->
   fixtures.articles =
     id: '54276766fd4f50996aeca2b8'
     author_id: ObjectId('4d8cd73191a5c50ce210002a')
-    thumbnail_category: 'Fair Coverage',
     thumbnail_title: 'Top Ten Booths at miart 2014',
     thumbnail_teaser: 'Look here! Before the lines start forming...',
     thumbnail_image: 'http://kitten.com',
