@@ -17,4 +17,4 @@ Articles = require '../../collections/articles.coffee'
         articles: articles.models
         published: published
         page: page or 1
-        totalPages: Math.ceil(articles.total / size)
+        totalPages: Math.ceil(articles.count / size)

@@ -25,6 +25,6 @@ describe 'routes', ->
       @res.render.args[0][1].articles[0].get('title').should.equal 'mooo'
 
     it 'can filter based on query params', ->
-      @req.query.published = true
+      @req.query.published = 'true'
       routes.articles @req, @res
       Backbone.sync.args[0][2].data.published.should.be.ok
