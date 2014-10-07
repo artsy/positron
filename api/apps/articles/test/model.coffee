@@ -108,6 +108,7 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
       }, (err, article) ->
+        return done err if err
         (article._id?).should.be.ok
         done()
 
