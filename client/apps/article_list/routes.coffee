@@ -3,7 +3,7 @@ Articles = require '../../collections/articles.coffee'
 
 @articles = (req, res, next) ->
   page = parseInt req.query.page
-  size = 3
+  size = 10
   new Articles().fetch
     data:
       offset: if page then (page - 1) * size else 0

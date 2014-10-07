@@ -28,3 +28,14 @@ describe 'routes', ->
       @req.query.published = 'true'
       routes.articles @req, @res
       Backbone.sync.args[0][2].data.published.should.be.ok
+
+    it 'paginates', ->
+      @req.query.page = '3'
+      routes.articles @req, @res
+      Backbone.sync.args[0][2].data.offset.should.equal 20
+      Backbone.sync.args[0][2].success {
+        results: [_.extend(fixtures().articles, title: "mooo")]
+        count: 40
+      }
+      @res.render.args[0][1].page.should.equal 3
+      @res.render.args[0][1].totalPages.should.equal 4
