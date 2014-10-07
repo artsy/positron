@@ -83,7 +83,7 @@ querySchema = (->
     data.updated_at = moment()
     data.author_id = ObjectId(data.author_id)
     db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
-      callback err, _.extend _id: res.upserted?[0]?._id, data
+      callback err, _.extend _id: id, data
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

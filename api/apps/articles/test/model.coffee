@@ -64,7 +64,6 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Wurld'
           done()
 
-
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
