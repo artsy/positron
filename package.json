@@ -21,14 +21,18 @@
     "body-parser": "*",
     "cookie-parser": "*",
     "cookie-session": "*",
-    "halbone": "git://github.com/artsy/halbone.git",
     "morgan": "*",
     "express-force-ssl": "*",
+    "async": "*",
+    "mongojs": "*",
+    "superagent": "*",
+    "joi": "*",
+    "joi-objectid": "*",
 
     "stylus": "0.47.x",
     "nib": "*",
     "sqwish": "*",
-    "browserify": "*",
+    "browserify": "5.x",
     "jadeify": "*",
     "uglifyify": "*",
     "uglify-js": "*",
@@ -39,10 +43,11 @@
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
     "rewire": "*",
-    "zombie": "*",
+    "zombie": "2.0.3",
     "should": "*",
     "mocha": "*",
     "sinon": "*",
-    "benv": "*"
+    "benv": "*",
+    "rewire": "*"
   }
 }

@@ -7,19 +7,10 @@
 #
 spawn = require("child_process").spawn
 express = require "express"
-fixtures = require './fixtures'
-antigravity = require 'antigravity'
+Browser = require 'zombie'
 
-# Stubbed API servers
-@gravity = antigravity.server
-@spooky = express()
-@spooky.get "/", (req, res) -> res.send
-  _links:
-    articles:
-      href: "http://localhost:5000/__spooky/api/articles"
-@spooky.get "/api/articles", (req, res) -> res.send
-  _embedded:
-    articles: [fixtures.article]
+# Global Zombie options
+Browser.headers = 'X-Access-Token': 'test-access-token'
 
 # Spawns a child process with test .env.test variables
 @startServer = (callback) =>

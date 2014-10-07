@@ -14,13 +14,19 @@ s:
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
-	$(BIN)/mocha $(shell find test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find api/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find client/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find client/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
+
+# Run app in test mode
+test-s:
+	$(BIN)/coffee test/helpers/integration.coffee
 
 # Generate minified assets from the /assets folder and output it to /public.
 assets:
-	mkdir -p public/assets
-	$(BIN)/ezel-assets assets/ public/assets/
+	mkdir -p client/public/assets
+	$(BIN)/ezel-assets client/assets/ client/public/assets/
 
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
 deploy:
