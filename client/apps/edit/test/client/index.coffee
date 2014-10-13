@@ -47,3 +47,15 @@ describe 'EditView', ->
       location.assign = sinon.stub()
       @view.article.destroy()
       location.assign.args[0][0].should.containEql '/articles?published='
+
+  describe '#serialize', ->
+
+    it 'turns form elements into data', ->
+      @view.$('#edit-lead-paragraph input').val('foobar')
+      @view.serialize().lead_paragraph.should.equal 'foobar'
+
+    it 'cleans up tags into an array', ->
+      @view.$('#edit-thumbnail-tags input').val('foobar,baz,boo   bar,bam  ')
+      @view.serialize().tags.should.eql [
+        'foobar', 'baz', 'boo bar', 'bam'
+      ]

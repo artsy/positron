@@ -15,6 +15,7 @@
     "coffee-script": "*",
     "node-env-file": "*",
     "underscore": "*",
+    "underscore.string": "*",
     "moment": "*",
     "passport": "*",
     "passport-oauth2": "git://github.com/craigspaeth/passport-oauth2.git",
@@ -40,7 +41,7 @@
     "caching-coffeeify": "*",
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
-    "artsy-gemini-upload": "git://github.com/artsy/artsy-gemini-upload.git",
+    "gemup": "git://github.com/artsy/gemup.git",
 
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",

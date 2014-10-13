@@ -45,7 +45,7 @@ npm install mocha -g
 npm install coffee-script -g
 ````
 
-## Add an ARTSY_ID & ARTSY_ARTSY_SECRET
+## Add an private config variables
 
 First copy the `.env.example` file to a `.env` file
 
@@ -53,13 +53,13 @@ First copy the `.env.example` file to a `.env` file
 cp .env.example .env
 ````
 
-then copy the `ARTSY_ID` & `ARTSY_SECRET` env variables from staging into the new .env file.
+then copy env variables that say REPLACE from staging into the new .env file.
 
 ````
 heroku config --app=positron-staging
 ````
 
-or ask someone in slack for an Artsy API client ID & Secret.
+or ask someone in slack for the private config variables.
 
 ## Run the Server
 

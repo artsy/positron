@@ -1,8 +1,9 @@
 _ = require 'underscore'
+_s = require 'underscore.string'
 Backbone = require 'backbone'
 Article = require '../../../models/article.coffee'
-sd = require('sharify').data
-{ parse } = require 'url'
+EditHeader = require './header.coffee'
+EditThumbnail = require './thumbnail.coffee'
 
 @EditView = class EditView extends Backbone.View
 
@@ -11,6 +12,7 @@ sd = require('sharify').data
     @onKeyup = _.debounce @onKeyup, 100
     @toggleAstericks();
     new EditHeader el: $('#edit-header'), article: @article
+    new EditThumbnail el: @$('#edit-thumbnail'), article: @article
     @article.on 'destroy', @redirectToList
 
   highlightMissingFields: ->
@@ -24,12 +26,15 @@ sd = require('sharify').data
       thumbnail_image: @$('#edit-thumbnail-image :input').val()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
-      tags: @$('#edit-thumbnail-tags input').val().split(',')
+      tags: _.reject(
+        _s.clean(@$('#edit-thumbnail-tags input').val()).split(',')
+        (filled) -> not filled
+      )
     }
 
   toggleAstericks: =>
-    @$('.edit-required').each (i, el) =>
-      $(el).attr 'data-hidden', !!$(el).siblings(':input').val()
+    @$('.edit-required + :input').each (i, el) =>
+      $(el).prev('.edit-required').attr 'data-hidden', !!$(el).val()
 
   redirectToList: =>
     location.assign '/articles?published=' + @article.get('published')
@@ -58,30 +63,6 @@ sd = require('sharify').data
   onKeyup: =>
     @article.save @serialize()
     @toggleAstericks()
-
-@EditHeader = class EditHeader extends Backbone.View
-
-  initialize: (options) ->
-    { @article } = options
-    @article.on 'request', @saving
-    @article.on 'sync', @doneSaving
-
-  saving: =>
-    @$('#edit-save').addClass 'is-saving'
-
-  doneSaving: =>
-    @$('#edit-save').removeClass 'is-saving'
-
-  events:
-    'click #edit-delete': 'delete'
-
-  delete: ->
-    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
-    @article.destroy()
-
-@EditThumbnail = class EditThumbnail extends Backbone.View
-
-
 
 @init = ->
   new EditView el: $('#layout-content'), article: new Article sd.ARTICLE
