@@ -5,19 +5,21 @@ section#edit-thumbnail
     img( src='/images/edit_prepare_example.png')
   form#edit-thumbnail-inputs
     #edit-thumbnail-inputs-left
-      label
-        span.edit-required Thumbnail
-        .dashed-file-upload-container
-          | Drag & Drop or click<br> to upload your thumbnail
-          input#edit-thumbnail-image( type='file' )
+      include ./thumbnail_form
     #edit-thumbnail-inputs-right
-      label
+      label#edit-thumbnail-title
         span.edit-required Title
-        input.bordered-input( placeholder='Type a title' )
-      label
+        input.bordered-input(
+          placeholder='Type a title'
+          value=article.get('thumbnail_title')
+        )
+      label#edit-thumbnail-teaser
         span.edit-required Teaser
-        textarea.bordered-input( placeholder='Type a title' )
+        textarea.bordered-input( placeholder='Type a teaser' )
+          = article.get('thumbnail_teaser')
     label#edit-thumbnail-tags
       span.edit-required Tags
-      br
-      input.bordered-input( placeholder='Type tags separated by commas' )
+      input.bordered-input(
+        placeholder='Type tags separated by commas'
+        value=article.get('tags') && article.get('tags').join(',')
+      )

@@ -1,27 +1,48 @@
 _ = require 'underscore'
+_s = require 'underscore.string'
 Backbone = require 'backbone'
 Article = require '../../../models/article.coffee'
-sd = require('sharify').data
-{ parse } = require 'url'
+EditHeader = require './header.coffee'
+EditThumbnail = require './thumbnail.coffee'
 
 @EditView = class EditView extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @autosave = _.debounce @autosave, 500
+    @onKeyup = _.debounce @onKeyup, 100
+    @toggleAstericks();
     new EditHeader el: $('#edit-header'), article: @article
+    new EditThumbnail el: @$('#edit-thumbnail'), article: @article
     @article.on 'destroy', @redirectToList
-    @toggleAsterisk()
+
+  highlightMissingFields: ->
+    alert 'Missing data!'
+    # TODO: Iterate through empty required inputs and highlight them
+
+  serialize: ->
+    {
+      title: @$('#edit-title input').val()
+      lead_paragraph: @$('#edit-lead-paragraph input').val()
+      thumbnail_image: @$('#edit-thumbnail-image :input').val()
+      thumbnail_title: @$('#edit-thumbnail-title :input').val()
+      thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
+      tags: _.reject(
+        _s.clean(@$('#edit-thumbnail-tags input').val()).split(',')
+        (filled) -> not filled
+      )
+    }
+
+  toggleAstericks: =>
+    @$('.edit-required + :input').each (i, el) =>
+      $(el).prev('.edit-required').attr 'data-hidden', !!$(el).val()
+
+  redirectToList: =>
+    location.assign '/articles?published=' + @article.get('published')
 
   events:
-    'keyup #edit-title input': 'toggleAsterisk'
     'click #edit-tabs > a': 'toggleTabs'
-    'keyup :input': 'autosave'
     'click #edit-save:not(.is-disabled)': 'save'
-
-  toggleAsterisk: ->
-    fn = if $('#edit-title input').val() is '' then 'show' else 'hide'
-    @$('#edit-title .edit-required')[fn]()
+    'keyup :input': 'onKeyup'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -33,47 +54,15 @@ sd = require('sharify').data
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
 
-  highlightMissingFields: ->
-    alert 'Missing data!'
-    # TODO: Iterate through empty required inputs and highlight them
-
-  serialize: ->
-    {
-      title: @$('#edit-title input').val()
-      lead_paragraph: @$('#edit-lead-paragraph input').val()
-    }
-
-  autosave: =>
-    @article.save @serialize()
-
   save: ->
     # TODO: We should instead drop down a notice saying
     # "Your article has been saved under 'drafts' [ view drafts ]".
     alert "Saved #{@article.stateName()}!"
     @redirectToList()
 
-  redirectToList: =>
-    location.assign '/articles?published=' + @article.get('published')
-
-@EditHeader = class EditHeader extends Backbone.View
-
-  initialize: (options) ->
-    { @article } = options
-    @article.on 'request', @saving
-    @article.on 'sync', @doneSaving
-
-  saving: =>
-    @$('#edit-save').addClass 'is-saving'
-
-  doneSaving: =>
-    @$('#edit-save').removeClass 'is-saving'
-
-  events:
-    'click #edit-delete': 'delete'
-
-  delete: ->
-    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
-    @article.destroy()
+  onKeyup: =>
+    @article.save @serialize()
+    @toggleAstericks()
 
 @init = ->
   new EditView el: $('#layout-content'), article: new Article sd.ARTICLE

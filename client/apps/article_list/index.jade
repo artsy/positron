@@ -13,16 +13,18 @@ block content
         li
           a( href="/articles/#{article.get('id')}/edit" )
             .article-list-item-left
-              img( src='http://placekitten.com/500/340' )
+              img( src=article.get('thumbnail_image') )
             .article-list-item-right
               .article-list-item-tags
                 if article.get('tags')
-                  = article.get('tags').join(' ')
+                  ul
+                    for tag in article.get('tags')
+                      li= tag
                 else
                   span.article-list-missing Missing tags
-              h1= article.get('title')
-              if article.get('lead_paragraph')
-                h2= article.get('lead_paragraph')
+              h1= article.get('thumbnail_title')
+              if article.get('thumbnail_teaser')
+                h2= article.get('thumbnail_teaser')
               else
                 h2.article-list-missing Missing teaser
               .article-list-items-dates

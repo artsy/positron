@@ -15,27 +15,26 @@ moment = require 'moment'
 
 schema = (->
   author_id: @objectId().required()
-  thumbnail_category: @string()
-  thumbnail_title: @string()
-  thumbnail_teaser: @string().allow('')
-  thumbnail_image: @string()
-  tags: @array().includes @string()
-  title: @string()
+  thumbnail_title: @string().allow('', null)
+  thumbnail_teaser: @string().allow('', null)
+  thumbnail_image: @string().allow('', null)
+  tags: @array().includes(@string())
+  title: @string().allow('', null)
   published: @boolean().default(false)
-  lead_paragraph: @string().allow('')
+  lead_paragraph: @string().allow('', null)
   sections: @array().includes [
     @object().keys
       type: @string().valid('image')
-      url: @string()
+      url: @string().allow('', null)
     @object().keys
       type: @string().valid('text')
-      body: @string()
+      body: @string().allow('', null)
     @object().keys
       type: @string().valid('artworks')
       ids: @array().includes(@string())
     @object().keys
       type: @string().valid('video')
-      url: @string()
+      url: @string().allow('', null)
   ]
 ).call Joi
 
@@ -58,7 +57,7 @@ querySchema = (->
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit or 10).sort(updated_at: 1).toArray cb
+      (cb) -> cursor.limit(limit or 10).sort(updated_at: -1).toArray cb
     ], (err, results) ->
       return callback err if err
       callback null, {

@@ -51,14 +51,13 @@ describe 'Article', ->
         { title: 'Hello Wurld' }
         { title: 'Foo Baz' }
       ], ->
-        Article.where { offset: 9, limit: 3 }, (err, { results }) ->
-          results[1].title.should.equal 'Hello Wurld'
-          results[2].title.should.equal 'Foo Baz'
+        Article.where { offset: 1, limit: 3 }, (err, { results }) ->
+          results[0].title.should.equal 'Hello Wurld'
           done()
 
-    it 'sorts by updated_at by default', (done) ->
+    it 'sorts by -updated_at by default', (done) ->
       fabricate 'articles', [
-        { title: 'Hello Wurld', updated_at: moment().subtract(1, 'days').format() }
+        { title: 'Hello Wurld', updated_at: moment().add(1, 'days').format() }
       ], ->
         Article.where {}, (err, { results }) ->
           results[0].title.should.equal 'Hello Wurld'

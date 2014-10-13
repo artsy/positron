@@ -1,0 +1,16 @@
+label
+  span.edit-required(
+    data-hidden=article.get('thumbnail_image') ? 'true' : 'false'
+  ) Thumbnail
+  #edit-thumbnail-upload.dashed-file-upload-container
+    | Drag &&nbsp;
+    span.dashed-file-upload-container-drop Drop&nbsp;
+    | or&nbsp;
+    span.dashed-file-upload-container-click click<br>
+    | to upload your thumbnail
+    if article.get('thumbnail_image')
+      #edit-thumbnail-preview(
+        style="background-image: url(#{article.get('thumbnail_image')})"
+      )
+      #edit-thumbnail-remove ×
+    input#edit-thumbnail-image( type='file' )

@@ -5,14 +5,10 @@
 #
 
 # Inject some configuration & constant data into sharify
+_ = require 'underscore'
 sharify = require 'sharify'
-sd = sharify.data =
-  APP_URL: process.env.APP_URL
-  API_URL: process.env.API_URL
-  NODE_ENV: process.env.NODE_ENV
-  SPOOKY_URL: process.env.SPOOKY_URL
-  FORCE_URL: process.env.FORCE_URL
-  ARTSY_URL: process.env.ARTSY_URL
+sd = sharify.data = _.pick process.env,
+  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY'
 
 # Dependencies
 express = require 'express'

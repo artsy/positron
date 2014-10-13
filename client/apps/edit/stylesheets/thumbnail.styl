@@ -21,7 +21,7 @@ inputs-margin = 15px
       height 463px
       display block
       margin auto
-      margin-bottom -70px
+      margin-bottom -100px
 
 #edit-thumbnail-inputs
   width 800px
@@ -42,7 +42,7 @@ inputs-margin = 15px
   label
     avant-garde()
     font-size default-avant-garde-font-size - 2
-    span
+    > span
       padding-bottom inputs-margin - 5
       display inline-block
 
@@ -60,7 +60,7 @@ inputs-margin = 15px
     height 105px
   label:nth-of-type(2)
     display block
-    margin-top 7px
+    margin-top 16px
 
 #edit-thumbnail-tags
   margin-top inputs-margin
@@ -68,3 +68,30 @@ inputs-margin = 15px
   width 100%
   input
     width 100%
+
+#edit-thumbnail-preview
+  width calc(100% + 4px)
+  height calc(100% + 4px)
+  top -2px
+  left -2px
+  position absolute
+  background-size cover
+
+#edit-thumbnail-remove
+  background #000
+  top -2px
+  left -2px
+  height 30px
+  width @height
+  line-height @height
+  color #fff
+  position absolute
+  font-size 18px
+  font-weight bold
+  font-family Helvetica, sans-serif
+  cursor pointer
+  transition color 0.3s, background-color 0.3s
+  z-index 3
+  &:hover
+    background-color red-color
+    color white
