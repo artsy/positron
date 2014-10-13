@@ -30,6 +30,8 @@
     "joi": "*",
     "joi-objectid": "*",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
+    "react": "*",
+    "marked": "*",
 
     "stylus": "0.47.x",
     "nib": "*",
@@ -38,7 +40,7 @@
     "jadeify": "*",
     "uglifyify": "*",
     "uglify-js": "*",
-    "caching-coffeeify": "*",
+    "coffee-reactify": "*",
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
     "gemup": "git://github.com/artsy/gemup.git",

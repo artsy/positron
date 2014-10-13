@@ -4,6 +4,7 @@ Backbone = require 'backbone'
 Article = require '../../../models/article.coffee'
 EditHeader = require './header.coffee'
 EditThumbnail = require './thumbnail.coffee'
+EditSections = require './sections.cjsx'
 
 @EditView = class EditView extends Backbone.View
 
@@ -66,3 +67,4 @@ EditThumbnail = require './thumbnail.coffee'
 
 @init = ->
   new EditView el: $('#layout-content'), article: new Article sd.ARTICLE
+  EditSections.init()
