@@ -12,7 +12,7 @@ marked = require 'marked'
 
 #
 # Top-level component that manages the section tool & the various individual
-# section components that get rendered as the collection updates.
+# section components that get rendered.
 #
 @SectionList = SectionList = React.createClass
 
