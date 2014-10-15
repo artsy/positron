@@ -46,10 +46,10 @@ marked = require 'marked'
     div { className: 'edit-section-tool', 'data-state-open': @state.open },
       div { className: 'edit-section-tool-icon', onClick: @toggle }
       ul { className: 'edit-section-tool-menu' },
-        li
+        li {
           className: 'edit-section-tool-text'
           onClick: @newTextSection
-        , 'Text'
+        }, 'Text'
         li {
           className: 'edit-section-tool-artworks'
         }, 'Artworks'
