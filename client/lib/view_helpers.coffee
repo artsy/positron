@@ -4,3 +4,4 @@
 #
 
 @moment = require 'moment'
+@marked = require 'marked'
