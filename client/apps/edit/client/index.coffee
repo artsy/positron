@@ -4,12 +4,13 @@ Backbone = require 'backbone'
 Article = require '../../../models/article.coffee'
 EditHeader = require './header.coffee'
 EditThumbnail = require './thumbnail.coffee'
+EditSections = require './sections.coffee'
 
 @EditView = class EditView extends Backbone.View
 
   initialize: (options) ->
-    { @article } = options
-    @onKeyup = _.debounce @onKeyup, 100
+    { @article, @sections } = options
+    @onKeyup = _.debounce @onKeyup, 500
     @toggleAstericks();
     new EditHeader el: $('#edit-header'), article: @article
     new EditThumbnail el: @$('#edit-thumbnail'), article: @article
@@ -30,6 +31,7 @@ EditThumbnail = require './thumbnail.coffee'
         _s.clean(@$('#edit-thumbnail-tags input').val()).split(',')
         (filled) -> not filled
       )
+      sections: @sections
     }
 
   toggleAstericks: =>
@@ -43,6 +45,7 @@ EditThumbnail = require './thumbnail.coffee'
     'click #edit-tabs > a': 'toggleTabs'
     'click #edit-save:not(.is-disabled)': 'save'
     'keyup :input': 'onKeyup'
+    'click #edit-sections *': 'onKeyup'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -65,4 +68,7 @@ EditThumbnail = require './thumbnail.coffee'
     @toggleAstericks()
 
 @init = ->
-  new EditView el: $('#layout-content'), article: new Article sd.ARTICLE
+  article = new Article sd.ARTICLE
+  sections = _.clone article.get 'sections'
+  new EditView el: $('#layout-content'), article: article, sections: sections
+  EditSections.init el: $('#edit-sections'), sections: sections

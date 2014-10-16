@@ -30,6 +30,8 @@
     "joi": "*",
     "joi-objectid": "*",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
+    "react": "*",
+    "marked": "*",
 
     "stylus": "0.47.x",
     "nib": "*",

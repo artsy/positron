@@ -1,0 +1,93 @@
+#edit-sections
+  padding whitespace-block-size 0
+
+.edit-section-tool-icon
+  position relative
+  cursor pointer
+  top -6px
+  &::before
+    content '.'
+    background url(/icons/edit_section_tool_icon.svg) no-repeat center center
+    color transparent
+    width 40px
+    height 40px
+    position absolute
+    left -50px
+    top -13px
+  &::after
+    content '.'
+    border-top 2px solid black
+    width calc(100% \+ 15px)
+    position absolute
+    top 6px
+    left -15px
+    color transparent
+    display none
+
+.edit-section-tool[data-state-open="true"] .edit-section-tool-icon::after
+.edit-section-tool[data-state-open="true"] .edit-section-tool-menu
+.edit-section-tool-icon:hover::after
+  display block
+
+.edit-section-tool-menu
+  border 2px solid black
+  display none
+  li
+    width 25%
+    height 130px
+    border-right 1px solid black
+    vertical-align top
+    line-height @height
+    avant-garde()
+    font-size small-avant-garde-font-size
+    display inline-block
+    text-align center
+    cursor pointer
+    &:last-child
+      border-right none
+
+.edit-section-text
+  margin-bottom 1em
+  font-size 20px
+  p
+    line-height 26px
+
+.edit-section-text-editing
+  border 2px solid black
+  position relative
+  z-index 2
+  left -17px
+  top -62px
+  margin-bottom -92px
+  background white
+  display none
+  textarea
+    width 100%
+    padding 15px
+    font-size 20px
+    line-height 26px
+  nav
+    background black
+    avant-garde()
+    font-size small-avant-garde-font-size
+    a
+      padding 15px 20px
+      color white
+      display inline-block
+      vertical-align top
+      width 30px
+
+.edit-section-text-editing-bg
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  z-index 1
+  display none
+
+.edit-section-text-container[data-state-editing="true"]
+  .edit-section-text-editing-bg, .edit-section-text-editing
+    display block
+  .edit-section-text
+    display none
