@@ -79,7 +79,7 @@ querySchema = (->
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
-    data.updated_at = moment()
+    data.updated_at = moment().format()
     data.author_id = ObjectId(data.author_id)
     db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
       callback err, _.extend data, _id: id

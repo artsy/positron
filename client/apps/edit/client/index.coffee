@@ -9,7 +9,7 @@ EditSections = require './sections.coffee'
 @EditView = class EditView extends Backbone.View
 
   initialize: (options) ->
-    { @article, @sections } = options
+    { @article } = options
     @onKeyup = _.debounce @onKeyup, 500
     @toggleAstericks();
     new EditHeader el: $('#edit-header'), article: @article
@@ -31,7 +31,6 @@ EditSections = require './sections.coffee'
         _s.clean(@$('#edit-thumbnail-tags input').val()).split(',')
         (filled) -> not filled
       )
-      sections: @sections
     }
 
   toggleAstericks: =>
@@ -69,6 +68,5 @@ EditSections = require './sections.coffee'
 
 @init = ->
   article = new Article sd.ARTICLE
-  sections = _.clone article.get 'sections'
-  new EditView el: $('#layout-content'), article: article, sections: sections
-  EditSections.init el: $('#edit-sections'), sections: sections
+  new EditView el: $('#layout-content'), article: article
+  EditSections.init el: $('#edit-sections'), sections: article.sections

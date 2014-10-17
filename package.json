@@ -33,7 +33,7 @@
     "react": "*",
     "marked": "*",
 
-    "stylus": "0.47.x",
+    "stylus": "*",
     "nib": "*",
     "sqwish": "*",
     "browserify": "5.x",
@@ -44,6 +44,7 @@
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
     "gemup": "git://github.com/artsy/gemup.git",
+    "react-textarea-autosize": "*",
 
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
