@@ -3,8 +3,8 @@
 # section components that get rendered.
 #
 
-SectionText = require('../section_text/index.coffee') arguments...
-SectionTool = require('../section_tool/index.coffee') arguments...
+SectionText = require '../section_text/index.coffee'
+SectionTool = require '../section_tool/index.coffee'
 React = require 'react'
 { div } = React.DOM
 

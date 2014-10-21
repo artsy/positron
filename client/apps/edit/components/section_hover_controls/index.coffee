@@ -3,7 +3,7 @@
 # above and below it.
 #
 
-SectionText = -> require('../section_text/index.coffee') arguments...
+SectionText = require '../section_text/index.coffee'
 SectionTool = require '../section_tool/index.coffee'
 icons = -> require('./icons.jade') arguments...
 React = require 'react'
