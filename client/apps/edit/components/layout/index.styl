@@ -1,6 +1,24 @@
-@import '../../../components/stylus_lib'
-@import './lib'
+//
+// Generic styles used accross components, too small to warrent their own
+// component directory structure, or applied to general layout of the edit app.
+//
 
+@import '../stylus_lib'
+
+// Fields with red asktericks
+.edit-required
+  &::after
+    content '*'
+    garamond()
+    font-size 22px
+    color red-color
+    position absolute
+    margin-top -6px
+    margin-left 3px
+  &[data-hidden=true]::after
+    display none
+
+// General content layout
 #edit-content
   margin-top header-size
 

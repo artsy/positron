@@ -1,0 +1,97 @@
+@import '../stylus_lib'
+
+.edit-section-tool
+  width section-tool-size - 11px
+  position absolute
+  opacity 1
+  z-index 1
+  opacity 0
+  &:hover
+    width 100%
+    opacity 1
+    svg
+      fill-color black
+    .edit-section-tool-icon::before
+      opacity 1
+  &:last-child
+    opacity 1
+
+.edit-section-tool-icon
+  position relative
+  cursor pointer
+  top -6px
+  &::before
+    content '.'
+    border-top 2px solid black
+    width 100%
+    position absolute
+    top 6px
+    left 0
+    color transparent
+    opacity 0
+    transition opacity 0.1s
+  svg
+    z-index 1
+    fill-color gray-color
+    transition fill 0.1s
+    width section-tool-size + 10px
+    height section-tool-size + 10px
+    position absolute
+    left -18px
+    top -13px
+    rect
+      fill white !important
+
+.edit-section-tool-menu
+  border 2px solid black
+  position relative
+  left 0
+  width 100%
+  max-height 0
+  overflow hidden
+  opacity 0
+  // transition max-height 0.2s ease-out-quart, opacity 0.2s ease-out-quart
+  li
+    width 25%
+    height 130px
+    border-right 1px solid black
+    vertical-align top
+    line-height @height + 50px
+    avant-garde()
+    font-size small-avant-garde-font-size
+    display inline-block
+    text-align center
+    cursor pointer
+    position relative
+    &:last-child
+      border-right none
+    svg
+      max-width 40px
+      max-height 40px
+      position absolute
+      top 30px
+      left calc(50% - 20px)
+    .edit-menu-icon-text svg
+      margin-top 4px
+      max-width 56px
+      left calc(50% - 28px)
+    .edit-menu-icon-artworks svg
+      margin-top -3px
+    .edit-menu-icon-image svg
+      margin-top 0
+    .edit-menu-icon-video svg
+      margin-top 3px
+      max-width 46px
+      left calc(50% - 23px)
+
+.edit-section-tool[data-state-open="true"]
+  width 100%
+  position relative
+  opacity 1
+  .edit-section-tool-icon::after
+    display block
+  .edit-section-tool-menu
+    max-height 130px
+    opacity 1
+  .edit-section-tool-icon svg *
+    fill black

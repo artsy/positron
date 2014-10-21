@@ -26,7 +26,7 @@ module.exports = ->
       },
       {
         type: 'text',
-        body: '## 10. Lisson Gallery\nMia Bergeron merges the _personal_ and _universal_...',
+        body: '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...',
       },
       {
         type: 'artworks',

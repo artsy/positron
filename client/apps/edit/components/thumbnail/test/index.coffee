@@ -1,16 +1,16 @@
 _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
-Article = require '../../../../models/article'
+Article = require '../../../../../models/article'
 Backbone = require 'backbone'
-fixtures = require '../../../../../test/helpers/fixtures'
+fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
 describe 'EditThumbnail', ->
 
   beforeEach (done) ->
     benv.setup =>
-      tmpl = resolve __dirname, '../../templates/index.jade'
+      tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().article
       ), =>
@@ -18,7 +18,7 @@ describe 'EditThumbnail', ->
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditThumbnail = benv.requireWithJadeify(
-          resolve(__dirname, '../../client/thumbnail')
+          resolve(__dirname, '../index')
           ['thumbnailFormTemplate']
         )
         EditThumbnail.__set__ 'gemup', @gemup = sinon.stub()

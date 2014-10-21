@@ -6,7 +6,7 @@ express = require 'express'
 routes = require './routes'
 
 app = module.exports = express()
-app.set 'views', __dirname + '/templates'
+app.set 'views', __dirname + '/components'
 app.set 'view engine', 'jade'
 
 app.get '/articles/new', routes.create

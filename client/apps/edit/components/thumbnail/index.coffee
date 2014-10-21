@@ -1,7 +1,7 @@
 Backbone = require 'backbone'
 gemup = require 'gemup'
 sd = require('sharify').data
-thumbnailFormTemplate = -> require('../templates/thumbnail_form.jade') arguments...
+thumbnailFormTemplate = -> require('./form.jade') arguments...
 
 module.exports = class EditThumbnail extends Backbone.View
 

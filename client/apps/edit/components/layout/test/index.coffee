@@ -1,26 +1,26 @@
 _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
-Article = require '../../../../models/article'
+Article = require '../../../../../models/article'
 Backbone = require 'backbone'
-fixtures = require '../../../../../test/helpers/fixtures'
+fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
-describe 'EditView', ->
+describe 'EditLayout', ->
 
   beforeEach (done) ->
     benv.setup =>
-      tmpl = resolve __dirname, '../../templates/index.jade'
+      tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().article
       ), =>
         benv.expose $: require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
-        { EditView } = require '../../client'
+        EditLayout = require '../index.coffee'
         sinon.stub _, 'debounce'
         _.debounce.callsArg 0
-        @view = new EditView el: $('#layout-content'), article: @article
+        @view = new EditLayout el: $('#layout-content'), article: @article
         done()
 
   afterEach ->
