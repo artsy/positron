@@ -3,10 +3,11 @@
 # between empty paragraphs to insert a new section.
 #
 
-Scribe = -> require('scribe-editor') arguments...
-scribePluginToolbar = -> require('scribe-plugin-toolbar') arguments...
-scribePluginSanitizer = require './sanitizer.coffee'
-SectionHoverControls = -> require('../section_hover_controls/index.coffee') arguments...
+try
+  Scribe = require 'scribe-editor'
+  scribePluginToolbar = require 'scribe-plugin-toolbar'
+  scribePluginSanitizer = require './sanitizer.coffee'
+SectionHoverControls = require '../section_hover_controls/index.coffee'
 React = require 'react'
 { div, nav, button } = React.DOM
 
