@@ -14,7 +14,7 @@ module.exports = React.createClass
 
   onClickOff: ->
     @setEditing(false)()
-    @refs.section.onClickOff?()
+    @refs.section?.onClickOff?()
 
   setEditing: (editing) -> =>
     return if editing is @props.editing

@@ -79,9 +79,9 @@ module.exports = React.createClass
                 className: 'avant-garde-button avant-garde-button-dark'
               }, 'Add artworks from urls'
       (if @state.artworks.length
-        ul { className: 'esa-artworks-list' },
+        ul { className: 'esa-artworks-list', ref: 'artworks' },
           (for artwork, i in @state.artworks
-            li {},
+            li { key: i },
               img { src: artwork.image_url }
               p {},
                 strong {}, artwork.artist_name

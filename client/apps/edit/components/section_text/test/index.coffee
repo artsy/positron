@@ -32,10 +32,6 @@ describe 'SectionText', ->
     r.simulate.click r.find(@component, 'edit-section-text-editing-bg')
     @component.props.section.get('body').should.equal 'Hello'
 
-  it 'calls back to set the editing state upstream', ->
-    r.simulate.click r.find @component, 'edit-section-text-editable'
-    @onSetEditing.args[0][0].should.equal 4
-
   it 'removes the section if they click off and its empty', ->
     @component.props.section.destroy = sinon.stub()
     @component.props.section.set body: ''
