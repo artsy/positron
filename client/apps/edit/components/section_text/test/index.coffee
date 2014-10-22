@@ -16,7 +16,6 @@ describe 'SectionText', ->
       SectionText = benv.require resolve(__dirname, '../index')
       SectionText.__set__ 'Scribe', @Scribe = sinon.stub()
       SectionText.__set__ 'scribePluginToolbar', @scribePluginToolbar = sinon.stub()
-      SectionText.__set__ 'SectionHoverControls', @SectionHoverControls = sinon.stub()
       @component = React.renderComponent SectionText(
         section: new Backbone.Model { body: 'Foo to the bar' }
         onSetEditing: @onSetEditing = sinon.stub()
@@ -29,7 +28,7 @@ describe 'SectionText', ->
 
   it "updates the section's body on click off", ->
     $(@component.refs.editable.getDOMNode()).html 'Hello'
-    r.simulate.click r.find(@component, 'edit-section-text-editing-bg')
+    @component.onClickOff()
     @component.props.section.get('body').should.equal 'Hello'
 
   it 'removes the section if they click off and its empty', ->

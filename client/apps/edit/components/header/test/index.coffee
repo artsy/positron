@@ -22,7 +22,7 @@ describe 'EditHeader', ->
         done()
 
   afterEach ->
-    benv.teardown()
+    benv.teardown(false)
     Backbone.sync.restore()
 
   describe '#saving', ->
