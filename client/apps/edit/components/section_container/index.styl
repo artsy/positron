@@ -1,0 +1,34 @@
+@import '../stylus_lib'
+
+.edit-section-container-bg
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  z-index 1
+  display none
+
+.edit-section-hover-controls
+  position absolute
+  width 100%
+  height 100%
+  border 1px solid gray-color
+  top 0
+  left 0
+  opacity 0
+
+.edit-section-hover-controls
+  .edit-section-tool
+    position absolute
+    left -controls-padding
+    &:first-of-type
+      top -1px
+    &:last-of-type
+      bottom -4px
+
+.edit-section-container[data-state-editing=true]
+  .edit-section-container-bg
+    display block
+  .edit-section-hover-controls
+    opacity 0

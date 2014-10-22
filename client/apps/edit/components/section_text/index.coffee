@@ -3,11 +3,12 @@
 # between empty paragraphs to insert a new section.
 #
 
+# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
+# requiring it for testing in node.
 try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require './sanitizer.coffee'
-SectionHoverControls = require '../section_hover_controls/index.coffee'
 React = require 'react'
 { div, nav, button } = React.DOM
 
@@ -15,14 +16,7 @@ module.exports = React.createClass
 
   onClickOff: ->
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
-    if $(@props.section.get('body')).text() is ''
-      @props.section.destroy()
-    else
-      @setEditing(false)()
-
-  setEditing: (editing) -> =>
-    return if editing is @props.editing
-    @props.onSetEditing if editing then @props.key else null
+    @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   attachScribe: ->
     return unless @props.editing
@@ -44,24 +38,13 @@ module.exports = React.createClass
     @attachScribe()
 
   render: ->
-    div {
-      className: 'edit-section-text-container edit-section-container'
-      'data-state-editing': @props.editing
-    },
-      SectionHoverControls {
-        section: @props.section
-        onClick: @setEditing(true)
-      }
+    div { className: 'edit-section-text-container' },
       nav { ref: 'toolbar' },
         button { 'data-command-name': 'bold' }, 'B'
         button { 'data-command-name': 'italic' }, 'I'
       div {
         className: 'edit-section-text-editable'
         ref: 'editable'
-        onClick: @setEditing(true)
         dangerouslySetInnerHTML: __html: @props.section.get('body')
-      }
-      div {
-        className: 'edit-section-text-editing-bg'
-        onClick: @onClickOff
+        onClick: @props.onClick
       }
