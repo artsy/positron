@@ -1,24 +1,14 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
-Article = require '../../../models/article.coffee'
-EditHeader = require './header.coffee'
-EditThumbnail = require './thumbnail.coffee'
-EditSections = require './sections.coffee'
 
-@EditView = class EditView extends Backbone.View
+module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
     @onKeyup = _.debounce @onKeyup, 500
-    @toggleAstericks();
-    new EditHeader el: $('#edit-header'), article: @article
-    new EditThumbnail el: @$('#edit-thumbnail'), article: @article
+    @toggleAstericks()
     @article.on 'destroy', @redirectToList
-
-  highlightMissingFields: ->
-    alert 'Missing data!'
-    # TODO: Iterate through empty required inputs and highlight them
 
   serialize: ->
     {
@@ -32,6 +22,9 @@ EditSections = require './sections.coffee'
         (filled) -> not filled
       )
     }
+
+  highlightMissingFields: ->
+    alert 'missing fields'
 
   toggleAstericks: =>
     @$('.edit-required + :input').each (i, el) =>
@@ -65,8 +58,3 @@ EditSections = require './sections.coffee'
   onKeyup: =>
     @article.save @serialize()
     @toggleAstericks()
-
-@init = ->
-  article = new Article sd.ARTICLE
-  new EditView el: $('#layout-content'), article: article
-  EditSections.init el: $('#edit-sections'), sections: article.sections

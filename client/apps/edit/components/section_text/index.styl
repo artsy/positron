@@ -1,0 +1,48 @@
+@import '../stylus_lib'
+
+.edit-section-text-container
+  background white
+  nav
+    fill-container()
+    background black
+    z-index 3
+    height 40px
+    top -(@height - 1px)
+    avant-garde()
+    display none
+    button
+      color white
+      border 0
+      border-right 1px solid gray-darker-color
+      padding 12px 20px
+      background transparent
+      font-size 12px
+      cursor pointer
+      display inline-block
+      vertical-align top
+      outline none
+
+.edit-section-text-editable
+  font-size 20px
+  line-height 26px
+  z-index 2
+  position relative
+  min-height 1em
+  background white
+
+.edit-section-container[data-state-editing=true]
+  nav
+    display block
+  .edit-section-text-editing-bg
+    display block
+  .edit-section-hover-controls
+    opacity 0
+
+.edit-section-text-editing-bg
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  z-index 1
+  display none

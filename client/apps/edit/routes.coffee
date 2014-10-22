@@ -11,4 +11,4 @@ Article = require '../../models/article'
 
 render = (res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()
-  res.render 'index', article: article
+  res.render 'layout/index', article: article

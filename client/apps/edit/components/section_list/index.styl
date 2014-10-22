@@ -1,0 +1,38 @@
+@import '../stylus_lib'
+
+//
+// The list container
+//
+#edit-sections
+  padding whitespace-block-size 0
+  position relative
+  margin-bottom 100px
+  width body-width + (controls-padding * 2)
+
+//
+// Generically applied to all sections
+//
+.edit-section-container
+  position relative
+  padding controls-padding
+  margin-bottom -1px
+  &:last-child .edit-section-hover-controls .edit-section-tool:last-of-type
+    display none
+
+.edit-section-container:hover .edit-section-hover-controls
+.edit-section-container:hover + .edit-section-tool
+.edit-section-tool + .edit-section-container:hover
+  opacity 1
+  z-index 2
+
+.edit-section-container[data-state-editing=true]
+  &::after
+    content '.'
+    fill-container()
+    border 1px solid black
+    color transparent
+    width calc(100% \- 2px)
+    height @width
+  & + .edit-section-tool, .edit-section-hover-controls
+    opacity 0
+    z-index -1

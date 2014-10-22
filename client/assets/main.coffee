@@ -8,4 +8,4 @@ sd = require('sharify').data
 $ ->
   require('../components/layout/client.coffee').init()
   if sd.URL.match /// /articles/new|.*/edit ///
-    require('../apps/edit/client/index.coffee').init()
+    require('../apps/edit/client.coffee').init()

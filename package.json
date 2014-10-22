@@ -31,7 +31,6 @@
     "joi-objectid": "*",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "react": "*",
-    "marked": "*",
 
     "stylus": "*",
     "nib": "*",
@@ -44,7 +43,10 @@
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
     "gemup": "git://github.com/artsy/gemup.git",
-    "react-textarea-autosize": "*",
+    "deamdify": "*",
+    "scribe-editor": "*",
+    "scribe-plugin-toolbar": "*",
+    "html-janitor": "git://github.com/gaearon/html-janitor.git#patch-1",
 
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
