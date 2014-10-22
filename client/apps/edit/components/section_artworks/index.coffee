@@ -21,11 +21,10 @@ module.exports = React.createClass
 
   addArtworksFromUrls: (e) ->
     e.preventDefault()
-    slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
+    # slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
     # TODO: Add local API endpoint that converts urls into artwork json. We'd
     # do this in the browser, but CORS doesn't allow redirection so when we go
     # from /artworks/:slug to /artworks/:_id we get a CORS error.
-    console.log slugs
     @setState artworks: ARTWORKS_FIXTURE
     @props.section.set ids: _.pluck @state.artworks, 'id'
 
