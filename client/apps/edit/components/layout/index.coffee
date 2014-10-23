@@ -8,7 +8,7 @@ module.exports = class EditLayout extends Backbone.View
     { @article } = options
     @$window = $(window)
     @onKeyup = _.debounce @onKeyup, 2000
-    @$window.on 'scroll', _.throttle @poplockControls, 100
+    @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @article.on 'destroy', @redirectToList
 
@@ -40,7 +40,7 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-save:not(.is-disabled)': 'save'
     'keyup :input': 'onKeyup'
     'click #edit-sections *': 'onKeyup'
-    'click .edit-section-container *': 'poplockControls'
+    'click .edit-section-container *': 'popLockControls'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -62,12 +62,12 @@ module.exports = class EditLayout extends Backbone.View
     @article.save @serialize()
     @toggleAstericks()
 
-  poplockControls: =>
+  popLockControls: =>
     $section = @$('.edit-section-container[data-state-editing=true]')
     return unless $section.length
     $controls = $section.find('.edit-section-controls')
     scrolledPast = @$window.scrollTop() + @$('#edit-header').outerHeight() >
-      $section.offset().top - $controls.height()
+      ($section.offset().top or 0) - $controls.height()
     left = ($controls.width() / 2) - ($('#layout-sidebar').width() / 2)
     $controls.css(
       width: if scrolledPast then $controls.width() else ''
