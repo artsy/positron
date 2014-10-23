@@ -38,7 +38,7 @@ module.exports = React.createClass
       className: 'edit-section-artworks-container'
       'data-layout': @props.section.get('layout')
     },
-      div { className: 'esa-controls-container' },
+      div { className: 'esa-controls-container edit-section-controls' },
         nav {},
           a {
             style: {

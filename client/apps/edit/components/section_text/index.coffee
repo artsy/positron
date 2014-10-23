@@ -39,12 +39,13 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-section-text-container' },
-      nav { ref: 'toolbar' },
+      nav { ref: 'toolbar', className: 'edit-section-controls' },
         button { 'data-command-name': 'bold' }, 'B'
         button { 'data-command-name': 'italic' }, 'I'
       div {
         className: 'edit-section-text-editable'
         ref: 'editable'
         dangerouslySetInnerHTML: __html: @props.section.get('body')
-        onClick: @props.onClick
+        onClick: @props.setEditing(true)
+        onFocus: @props.setEditing(true)
       }
