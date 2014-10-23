@@ -6,7 +6,7 @@ module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @onKeyup = _.debounce @onKeyup, 500
+    @onKeyup = _.debounce @onKeyup, 2000
     @toggleAstericks()
     @article.on 'destroy', @redirectToList
 

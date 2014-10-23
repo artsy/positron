@@ -5,7 +5,7 @@
     "antigravity": {
       "version": "0.0.4",
       "from": "antigravity@git://github.com/artsy/antigravity.git",
-      "resolved": "git://github.com/artsy/antigravity.git#255d0331fb7046b4b9caa493ab085edacf009114",
+      "resolved": "git://github.com/artsy/antigravity.git#0dcbd6fafa9dc289593b750a26287139941791e8",
       "dependencies": {
         "express": {
           "version": "4.9.5",
@@ -217,7 +217,7 @@
     "artsy-ezel-components": {
       "version": "0.0.1",
       "from": "artsy-ezel-components@git://github.com/artsy/artsy-ezel-components.git",
-      "resolved": "git://github.com/artsy/artsy-ezel-components.git#2cdd4f98006f1c501ece94059ab527d72209ca6b"
+      "resolved": "git://github.com/artsy/artsy-ezel-components.git#339c554f365b47b6e468d95b8b1c5b940deba58c"
     },
     "async": {
       "version": "0.9.0",

@@ -9,23 +9,22 @@ React = require 'react'
   li, img, p, strong } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
-ARTWORKS_FIXTURE = [
-  { id: '4d8b93ba4eb68a1b2c001c5b', title: 'Skull', artist_name: 'Andy Warhol', partner_name: 'Gagosian Gallery', image_url: 'http://static0.artsy.net/additional_images/4e68f259528702000104c329/1/large.jpg' }
-  { id: '524a87b98b3b81abd0000ecc', title: 'Dolde 1', artist_name: 'Tracey Emin', partner_name: 'White Cube', image_url: 'http://static1.artsy.net/additional_images/524a88458b3b81abd0000ed5/large.jpg' }
-]
-
 module.exports = React.createClass
 
   getInitialState: ->
-    { urlsValue: '', artworks: [] }
+    { urlsValue: '', artworks: [], loadingUrls: false }
 
   addArtworksFromUrls: (e) ->
     e.preventDefault()
-    # slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
-    # TODO: Add local API endpoint that converts urls into artwork json. We'd
-    # do this in the browser, but CORS doesn't allow redirection so when we go
-    # from /artworks/:slug to /artworks/:_id we get a CORS error.
-    @setState artworks: ARTWORKS_FIXTURE
+    slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
+    @setState loadingUrls: true
+    $.ajax
+      url: '/api/artworks'
+      data: ids: slugs
+      success: (artworks) =>
+        @setState
+          artworks: @state.artworks.concat(artworks)
+          loadingUrls: false
     @props.section.set ids: _.pluck @state.artworks, 'id'
 
   removeArtwork: (artwork) -> =>
@@ -77,16 +76,17 @@ module.exports = React.createClass
               }
               button {
                 className: 'avant-garde-button avant-garde-button-dark'
+                'data-state': if @state.loadingUrls then 'loading' else ''
               }, 'Add artworks from urls'
       (if @state.artworks.length
         ul { className: 'esa-artworks-list', ref: 'artworks' },
           (for artwork, i in @state.artworks
             li { key: i },
-              img { src: artwork.image_url }
+              img { src: artwork.image_urls.large }
               p {},
-                strong {}, artwork.artist_name
-              p {}, artwork.title
-              p {}, artwork.partner_name
+                strong {}, artwork.artists[0].name
+              p {}, artwork.artwork.title
+              p {}, artwork.partner.name
               button {
                 className: 'edit-section-remove button-reset'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
