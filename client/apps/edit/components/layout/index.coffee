@@ -6,7 +6,9 @@ module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
+    @$window = $(window)
     @onKeyup = _.debounce @onKeyup, 2000
+    @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @article.on 'destroy', @redirectToList
 
@@ -38,6 +40,7 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-save:not(.is-disabled)': 'save'
     'keyup :input': 'onKeyup'
     'click #edit-sections *': 'onKeyup'
+    'click .edit-section-container *': 'popLockControls'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -58,3 +61,18 @@ module.exports = class EditLayout extends Backbone.View
   onKeyup: =>
     @article.save @serialize()
     @toggleAstericks()
+
+  popLockControls: =>
+    $section = @$('.edit-section-container[data-state-editing=true]')
+    return unless $section.length
+    $controls = $section.find('.edit-section-controls')
+    insideComponent = @$window.scrollTop() + @$('#edit-header').outerHeight() >
+      ($section.offset().top or 0) - $controls.height()
+    if (@$window.scrollTop() + $controls.outerHeight() >
+        $section.offset().top + $section.height())
+      insideComponent = false
+    left = ($controls.width() / 2) - ($('#layout-sidebar').width() / 2)
+    $controls.css(
+      width: if insideComponent then $controls.width() else ''
+      left: if insideComponent then "calc(50% - #{left}px)" else ''
+    ).attr('data-fixed', insideComponent)

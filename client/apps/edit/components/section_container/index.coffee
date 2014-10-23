@@ -44,6 +44,7 @@ module.exports = React.createClass
             editing: @props.editing
             ref: 'section'
             onClick: @setEditing(true)
+            setEditing: @setEditing
           }
         when 'artworks'
           SectionArtworks {
@@ -51,6 +52,7 @@ module.exports = React.createClass
             editing: @props.editing
             ref: 'section'
             onClick: @setEditing(true)
+            setEditing: @setEditing
           }
       )
       div {

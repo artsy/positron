@@ -52,6 +52,16 @@ describe 'SectionArtworks', ->
     @component.setState.args[0][0].artworks.length.should.equal 2
     @component.setState.args[0][0].artworks[1].title.should.equal 'Bar'
 
+  it 'sets artwork ids when clicking off', ->
+    @component.state.artworks = [{ artwork: id: 'foo'}, { artwork: id: 'bar'}]
+    @component.onClickOff()
+    @component.props.section.get('ids').should.containEql 'foo', 'bar'
+
+  it 'fetches artworks on init', ->
+    @component.props.section.set ids: ['foo', 'bar']
+    @component.componentDidMount()
+    $.ajax.args[0][0].data.ids.should.containEql 'foo', 'bar'
+
   xit 'renders the artworks', ->
     @component.state.artworks = [
       { id: '1', title: 'Foo to the bar' }

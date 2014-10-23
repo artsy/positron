@@ -14,18 +14,29 @@ module.exports = React.createClass
   getInitialState: ->
     { urlsValue: '', artworks: [], loadingUrls: false }
 
+  componentDidMount: ->
+    @fetchArtworks @props.section.get('ids')
+
+  onClickOff: ->
+    ids = (artwork.artwork.id for artwork in @state.artworks)
+    return @props.section.destroy() if ids.length is 0
+    @props.section.set ids: ids
+
   addArtworksFromUrls: (e) ->
     e.preventDefault()
     slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
+    @fetchArtworks slugs
+    @props.section.set ids: _.pluck @state.artworks, 'id'
+
+  fetchArtworks: (ids) ->
     @setState loadingUrls: true
     $.ajax
       url: '/api/artworks'
-      data: ids: slugs
+      data: ids: ids
       success: (artworks) =>
         @setState
           artworks: @state.artworks.concat(artworks)
           loadingUrls: false
-    @props.section.set ids: _.pluck @state.artworks, 'id'
 
   removeArtwork: (artwork) -> =>
     @setState artworks: _.without @state.artworks, artwork
@@ -38,7 +49,7 @@ module.exports = React.createClass
       className: 'edit-section-artworks-container'
       'data-layout': @props.section.get('layout')
     },
-      div { className: 'esa-controls-container' },
+      div { className: 'esa-controls-container edit-section-controls' },
         nav {},
           a {
             style: {
