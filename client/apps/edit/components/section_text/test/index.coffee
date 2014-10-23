@@ -19,6 +19,7 @@ describe 'SectionText', ->
       @component = React.renderComponent SectionText(
         section: new Backbone.Model { body: 'Foo to the bar' }
         onSetEditing: @onSetEditing = sinon.stub()
+        setEditing: @setEditing = sinon.stub()
         editing: false
         key: 4
       ), $("<div></div>")[0], -> setTimeout -> done()
