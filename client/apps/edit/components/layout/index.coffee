@@ -66,10 +66,13 @@ module.exports = class EditLayout extends Backbone.View
     $section = @$('.edit-section-container[data-state-editing=true]')
     return unless $section.length
     $controls = $section.find('.edit-section-controls')
-    scrolledPast = @$window.scrollTop() + @$('#edit-header').outerHeight() >
+    insideComponent = @$window.scrollTop() + @$('#edit-header').outerHeight() >
       ($section.offset().top or 0) - $controls.height()
+    if (@$window.scrollTop() + $controls.outerHeight() >
+        $section.offset().top + $section.height())
+      insideComponent = false
     left = ($controls.width() / 2) - ($('#layout-sidebar').width() / 2)
     $controls.css(
-      width: if scrolledPast then $controls.width() else ''
-      left: if scrolledPast then "calc(50% - #{left}px)" else ''
-    ).attr('data-fixed', scrolledPast)
+      width: if insideComponent then $controls.width() else ''
+      left: if insideComponent then "calc(50% - #{left}px)" else ''
+    ).attr('data-fixed', insideComponent)
