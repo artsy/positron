@@ -44,7 +44,8 @@ request = require 'superagent'
               request
                 .get(artwork._links.artists.href)
                 .set('X-Access-Token': accessToken)
-                .end (err, res) -> cb err, res?.body._embedded.artists
+                .end (err, res) ->
+                  cb err, res?.body._embedded.artists
             (cb) ->
               request
                 .get(artwork._links.partner.href)

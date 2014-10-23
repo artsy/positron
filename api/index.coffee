@@ -7,6 +7,7 @@ bodyParser = require 'body-parser'
 morgan = require 'morgan'
 { helpers, notFound, locals, setUser, errorHandler,
   loginRequired } = require './lib/middleware'
+{ NODE_ENV } = process.env
 
 app = module.exports = express()
 
@@ -17,6 +18,7 @@ app.use bodyParser.json()
 app.use morgan 'dev'
 
 # Apps
+app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use require './apps/users'
 app.use require './apps/articles'
 app.use require './apps/artworks'

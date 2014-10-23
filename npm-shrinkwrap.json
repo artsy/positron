@@ -5,7 +5,7 @@
     "antigravity": {
       "version": "0.0.4",
       "from": "antigravity@git://github.com/artsy/antigravity.git",
-      "resolved": "git://github.com/artsy/antigravity.git#255d0331fb7046b4b9caa493ab085edacf009114",
+      "resolved": "git://github.com/artsy/antigravity.git#0dcbd6fafa9dc289593b750a26287139941791e8",
       "dependencies": {
         "express": {
           "version": "4.9.5",

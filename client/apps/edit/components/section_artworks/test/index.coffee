@@ -8,6 +8,7 @@ r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
+fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionArtworks', ->
 
@@ -23,12 +24,23 @@ describe 'SectionArtworks', ->
         editing: false
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
+        sinon.stub $, 'ajax'
         done()
 
   afterEach ->
+    $.ajax.restore()
     benv.teardown()
 
-  it 'adds artworks from urls'
+  it 'adds artworks from urls', ->
+    @component.state.urlsValue = 'artsy.net/foo\nartsy.net/baz'
+    @component.state.artworks = []
+    @component.addArtworksFromUrls (preventDefault: ->)
+    $.ajax.args[0][0].data.ids[0].should.equal 'foo'
+    $.ajax.args[0][0].success artworks = [fixtures().artworks]
+    @component.setState.args[0][0].loadingUrls.should.equal true
+    @component.setState.args[1][0].loadingUrls.should.equal false
+    @component.setState.args[1][0].artworks[0].artwork.title
+      .should.equal artworks[0].artwork.title
 
   it 'removes an artwork on click', ->
     @component.state.artworks = [
