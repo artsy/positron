@@ -53,7 +53,7 @@ module.exports = class EditLayout extends Backbone.View
     # TODO: We should instead drop down a notice saying
     # "Your article has been saved under 'drafts' [ view drafts ]".
     alert "Saved #{@article.stateName()}!"
-    @redirectToList()
+    @article.save complete: => @redirectToList()
 
   onKeyup: =>
     @article.save @serialize()

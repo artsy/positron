@@ -5,6 +5,26 @@
 
 @import '../stylus_lib'
 
+// Circular remove button
+.edit-section-remove
+  position absolute
+  top -(section-tool-size / 2)
+  right -(section-tool-size / 2)
+  color #ccc
+  font-size 19px
+  transition color 0.3s ease-out
+  cursor pointer
+  z-index 3
+  &:hover
+    color red-color
+  svg
+    width section-tool-size
+    fill-color gray-color
+    &:hover
+      fill-color red-color
+    polygon
+      fill white !important
+
 // Fields with red asktericks
 .edit-required
   &::after

@@ -15,8 +15,19 @@ module.exports = React.createClass
   toggle: ->
     @setState open: not @state.open
 
-  newSectionText: ->
-    @props.sections.add { type: 'text', body: '' }, at: @props.index + 1
+  newSection: (type) -> =>
+    switch type
+      when 'text'
+        @props.sections.add {
+          type: 'text'
+          body: ''
+        }, at: @props.index + 1
+      when 'artworks'
+        @props.sections.add {
+          type: 'artworks'
+          ids: []
+          layout: 'column_width'
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -33,7 +44,7 @@ module.exports = React.createClass
       ul { className: 'edit-section-tool-menu' },
         li {
           className: 'edit-section-tool-text'
-          onClick: @newSectionText
+          onClick: @newSection('text')
         }, 'Text',
           div {
             className: 'edit-menu-icon-text'
@@ -41,6 +52,7 @@ module.exports = React.createClass
           }
         li {
           className: 'edit-section-tool-artworks'
+          onClick: @newSection('artworks')
         }, 'Artworks',
           div {
             className: 'edit-menu-icon-artworks'

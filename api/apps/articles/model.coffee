@@ -32,6 +32,7 @@ schema = (->
     @object().keys
       type: @string().valid('artworks')
       ids: @array().includes(@string())
+      layout: @string().allow('overflow_fillwidth', 'column_width', null)
     @object().keys
       type: @string().valid('video')
       url: @string().allow('', null)

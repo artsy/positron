@@ -3,8 +3,8 @@
 # section components that get rendered.
 #
 
-SectionText = require '../section_text/index.coffee'
-SectionTool = require '../section_tool/index.coffee'
+SectionContainer = -> require('../section_container/index.coffee') arguments...
+SectionTool = -> require('../section_tool/index.coffee') arguments...
 React = require 'react'
 { div } = React.DOM
 
@@ -32,15 +32,12 @@ module.exports = React.createClass
         SectionTool { sections: @props.sections }
         @props.sections.map (section, i) =>
           [
-            (switch section.get 'type'
-              when 'text'
-                SectionText {
-                  section: section
-                  key: i
-                  ref: 'text' + i
-                  editing: @state.editingIndex is i
-                  onSetEditing: @onSetEditing
-                }
-            )
+            SectionContainer {
+              section: section
+              key: i
+              editing: @state.editingIndex is i
+              ref: 'section' + 1
+              onSetEditing: @onSetEditing
+            }
             SectionTool { sections: @props.sections, index: i }
           ]

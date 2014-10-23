@@ -18,7 +18,7 @@ test: assets
 	$(BIN)/mocha $(shell find api/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
 	$(BIN)/mocha $(shell find client/test -name '*.coffee' -not -path 'test/helpers/*')
 	$(BIN)/mocha $(shell find client/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find apps/*/**/*/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find client/apps/*/**/*/test -name '*.coffee' -not -path 'test/helpers/*')
 
 # Run app in test mode
 test-s:

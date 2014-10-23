@@ -30,14 +30,6 @@
   min-height 1em
   background white
 
-.edit-section-container[data-state-editing=true]
-  nav
-    display block
-  .edit-section-text-editing-bg
-    display block
-  .edit-section-hover-controls
-    opacity 0
-
 .edit-section-text-editing-bg
   width 100%
   height 100%
@@ -46,3 +38,7 @@
   left 0
   z-index 1
   display none
+
+.edit-section-container[data-state-editing=true]
+  nav
+    display block

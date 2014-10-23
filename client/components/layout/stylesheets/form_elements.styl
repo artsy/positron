@@ -7,7 +7,7 @@
   background transparent
   font-size default-avant-garde-font-size - 1
   outline none
-  transition background-color 0.25s, color 0.25s
+  transition background-color 0.25s, color 0.25s, border-color 0.25s
   text-decoration none
   line-height 1
   display inline-block
@@ -19,6 +19,13 @@
     background gray-lighter-color
     color gray-dark-color
     cursor not-allowed
+  &.avant-garde-button-dark
+    background gray-darkest-color
+    border-color gray-darkest-color
+    color white
+    &:hover, &:active, &:focus
+      background purple-color
+      border-color purple-color
 
 .button-reset
   margin 0

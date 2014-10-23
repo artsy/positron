@@ -11,6 +11,7 @@ Browser = require 'zombie'
 
 # Global Zombie options
 Browser.headers = 'X-Access-Token': 'test-access-token'
+Browser.debug = true
 
 # Spawns a child process with test .env.test variables
 @startServer = (callback) =>

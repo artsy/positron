@@ -1,0 +1,89 @@
+@import '../stylus_lib'
+
+.edit-section-artworks-container
+  nav a
+    display inline-block
+    height 40px
+    width @height + 20px
+    background no-repeat center center
+    border-right 1px solid gray-darkest-color
+    transition opacity 0.3s
+    opacity 0.5
+    &:last-of-type
+      border-right 0
+  &[data-layout=column_width] nav .esa-column-width
+    opacity 1
+  &[data-layout=overflow_fillwidth] nav .esa-overflow-fillwidth
+    opacity 1
+
+.esa-controls-container
+  fill-container()
+  background black
+  z-index 3
+  height 285px
+  top -(@height)
+  text-align center
+  display none
+
+.esa-inputs
+  color white
+  padding controls-padding
+  text-align left
+  border-top 1px solid gray-darkest-color
+  h1
+    font-weight bold
+    margin-bottom controls-padding
+  label
+    display block
+    margin-bottom controls-padding
+    position relative
+    span, input, textarea
+      display inline-block
+      vertical-align top
+    input, textarea
+      background white
+      border-color white
+      position absolute
+      right 0
+    span
+      margin-top 10px
+  .esa-by-urls-container
+    display inline-block
+    position absolute
+    right 0
+    textarea, button
+      position relative
+      display block
+      width 100%
+    button
+      font-size small-avant-garde-font-size + 1
+  .esa-by-urls-container, input
+    width 290px
+
+.esa-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
+  line-height @height
+
+.edit-section-artworks-container[data-layout=column_width] .esa-artworks-list
+  li
+    margin-bottom 10px
+    position relative
+    img
+      width 100%
+      margin-bottom 5px
+    p
+      color gray-dark-color
+      line-height 20px
+
+.esa-artworks-list .edit-section-remove
+  display none
+  &:hover svg
+    fill-color red-color
+  svg
+    fill-color black
+
+.edit-section-container[data-state-editing=true]
+  .esa-controls-container, .esa-artworks-list .edit-section-remove
+    display block
