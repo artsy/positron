@@ -1,3 +1,4 @@
+@import '../../node_modules/artsy-ezel-components/spinners'
 @import '../../stylus_lib'
 
 .avant-garde-button
@@ -26,6 +27,18 @@
     &:hover, &:active, &:focus
       background purple-color
       border-color purple-color
+  &[data-state='loading'], &.is-loading
+    &, &[disabled], &[disabled]:hover
+      background-color purple-color
+      color transparent !important
+      // Note:
+      // Giving the loading state to input[type='submit']
+      // or input[type='button'] will *not* display a spinner.
+      // These elements don't support psuedo-elements.
+      &::before
+        display block
+        content ''
+        spinner(25px, 6px, #fff)
 
 .button-reset
   margin 0

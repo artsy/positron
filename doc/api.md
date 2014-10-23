@@ -18,7 +18,7 @@ You may pass `me` in place of your user id, e.g. `/articles?author_id=me` to get
 
 Positron's API is a boring ol' [pragmatic REST API](https://blog.apigee.com/detail/api_design_a_new_model_for_pragmatic_rest). It speaks only JSON, and uses plural resources with POST/GET/PUT/DELETE verbs for CRUD. Accepted endpoints include:
 
-GET /articles
+GET /articles?author_id=
 GET /articles/:id
 POST /articles
 PUT /articles/:id
@@ -26,3 +26,5 @@ DELETE /articles/:id
 
 GET /users/me
 DELETE /users/me
+
+GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8

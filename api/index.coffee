@@ -19,6 +19,7 @@ app.use morgan 'dev'
 # Apps
 app.use require './apps/users'
 app.use require './apps/articles'
+app.use require './apps/artworks'
 
 # Moar middleware
 app.use errorHandler
