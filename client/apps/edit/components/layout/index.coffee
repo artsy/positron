@@ -41,6 +41,9 @@ module.exports = class EditLayout extends Backbone.View
     'keyup :input': 'onKeyup'
     'click #edit-sections *': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
+    'dragenter .dashed-file-upload-container': 'toggleDragover'
+    'dragleave .dashed-file-upload-container': 'toggleDragover'
+    'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -71,8 +74,12 @@ module.exports = class EditLayout extends Backbone.View
     if (@$window.scrollTop() + $controls.outerHeight() >
         $section.offset().top + $section.height())
       insideComponent = false
-    left = ($controls.width() / 2) - ($('#layout-sidebar').width() / 2)
+    left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
     $controls.css(
-      width: if insideComponent then $controls.width() else ''
+      width: if insideComponent then $controls.outerWidth() else ''
       left: if insideComponent then "calc(50% - #{left}px)" else ''
     ).attr('data-fixed', insideComponent)
+
+  toggleDragover: (e) ->
+    $(e.currentTarget).closest('.dashed-file-upload-container')
+      .toggleClass 'is-dragover'

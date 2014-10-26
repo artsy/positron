@@ -9,7 +9,7 @@ sd = require('sharify').data
 module.exports = (app) ->
 
   # Development only
-  if 'development' is NODE_ENV
+  if NODE_ENV in ['development', 'test']
     # Compile assets on request in development
     app.use require('stylus').middleware
       src: path.resolve(__dirname, '../../')

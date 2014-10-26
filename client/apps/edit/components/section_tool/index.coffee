@@ -28,6 +28,11 @@ module.exports = React.createClass
           ids: []
           layout: 'column_width'
         }, at: @props.index + 1
+      when 'image'
+        @props.sections.add {
+          type: 'image'
+          url: ''
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -60,6 +65,7 @@ module.exports = React.createClass
           }
         li {
           className: 'edit-section-tool-image'
+          onClick: @newSection('image')
         }, 'Image',
           div {
             className: 'edit-menu-icon-image'

@@ -46,6 +46,6 @@ module.exports = React.createClass
         className: 'edit-section-text-editable'
         ref: 'editable'
         dangerouslySetInnerHTML: __html: @props.section.get('body')
-        onClick: @props.setEditing(true)
-        onFocus: @props.setEditing(true)
+        onClick: @props.setEditing(on)
+        onFocus: @props.setEditing(on)
       }

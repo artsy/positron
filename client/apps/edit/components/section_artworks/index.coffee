@@ -1,6 +1,6 @@
 #
-# Text section that display large bodies of copy and can split itself
-# between empty paragraphs to insert a new section.
+# Artworks section that shows artwork image in various layouts. A user can
+# add artworks from urls or search via autocomplete.
 #
 
 _ = require 'underscore'
@@ -106,4 +106,6 @@ module.exports = React.createClass
           )
       else
         div { className: 'esa-empty-placeholder' }, 'Add artworks above'
+        div { className: 'esa-spinner-container' },
+          div { className: 'loading-spinner' }
       )
