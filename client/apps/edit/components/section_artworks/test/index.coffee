@@ -22,6 +22,7 @@ describe 'SectionArtworks', ->
       @component = React.renderComponent SectionArtworks(
         section: new Backbone.Model { body: 'Foo to the bar' }
         editing: false
+        setEditing: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub $, 'ajax'

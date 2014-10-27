@@ -20,18 +20,14 @@ module.exports = React.createClass
       @props.section.destroy()
 
   upload: (e) ->
-    console.log 'uploading'
     @props.setEditing(off)()
     gemup e.target.files[0],
       key: sd.GEMINI_KEY
       progress: (percent) =>
-        console.log 'progress'
         @setState progress: percent
       add: (src) =>
-        console.log 'add'
         @setState src: src, progress: 0.1
       done: (src) =>
-        console.log 'done'
         image = new Image()
         image.src = src
         image.onload = => @setState src: src, progress: null
