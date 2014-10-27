@@ -35,7 +35,6 @@ module.exports = React.createClass
     $.ajax
       url: '/api/artworks'
       data: ids: ids
-      cache: true
       success: (artworks) =>
         return unless @isMounted()
         @setState
