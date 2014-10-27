@@ -15,13 +15,8 @@ module.exports = class EditThumbnail extends Backbone.View
 
   events:
     'change #edit-thumbnail-image': 'uploadThumbnail'
-    'dragenter #edit-thumbnail-upload': 'toggleThumbnailDragover'
-    'dragleave #edit-thumbnail-upload': 'toggleThumbnailDragover'
     'drop #edit-thumbnail-upload': 'toggleThumbnailDragover'
     'click #edit-thumbnail-remove': 'removeThumbnail'
-
-  toggleThumbnailDragover: (e) ->
-    $(e.currentTarget).toggleClass 'is-dragover'
 
   uploadThumbnail: (e) ->
     gemup e.target.files[0],

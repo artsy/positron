@@ -1,6 +1,6 @@
 #
-# Text section that display large bodies of copy and can split itself
-# between empty paragraphs to insert a new section.
+# Artworks section that shows artwork images in various layouts. A user can
+# add artworks from urls or search via autocomplete.
 #
 
 _ = require 'underscore'
@@ -15,7 +15,9 @@ module.exports = React.createClass
     { urlsValue: '', artworks: [], loadingUrls: false }
 
   componentDidMount: ->
-    @fetchArtworks @props.section.get('ids')
+    ids = @props.section.get('ids')
+    return if not ids?.length or @state.artworks.length
+    @fetchArtworks ids 
 
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
@@ -34,6 +36,7 @@ module.exports = React.createClass
       url: '/api/artworks'
       data: ids: ids
       success: (artworks) =>
+        return unless @isMounted()
         @setState
           artworks: @state.artworks.concat(artworks)
           loadingUrls: false
@@ -48,6 +51,7 @@ module.exports = React.createClass
     div {
       className: 'edit-section-artworks-container'
       'data-layout': @props.section.get('layout')
+      onClick: @props.setEditing(on)
     },
       div { className: 'esa-controls-container edit-section-controls' },
         nav {},
@@ -104,6 +108,9 @@ module.exports = React.createClass
                 onClick: @removeArtwork(artwork)
               }
           )
+      else if @state.loadingUrls
+        div { className: 'esa-spinner-container' },
+          div { className: 'loading-spinner' }
       else
         div { className: 'esa-empty-placeholder' }, 'Add artworks above'
       )

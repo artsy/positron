@@ -1,0 +1,71 @@
+@import '../stylus_lib'
+
+.edit-section-image 
+  position relative
+
+.edit-section-image .edit-section-controls
+  fill-container()
+  avant-garde()
+  background black
+  color white
+  height 118px
+  top -@height
+  left -(controls-padding)
+  padding controls-padding
+  text-align center
+  display none
+  z-index 2
+  width 900px
+  h1
+    font-size default-avant-garde-font-size
+  h2
+    font-size small-avant-garde-font-size
+    color gray-darker-color
+    margin-top 10px
+
+.dashed-file-upload-container
+  padding controls-padding
+
+.esi-placeholder
+  text-align center
+  color gray-darker-color
+  height 200px
+  line-height @height
+
+.edit-section-controls .dashed-file-upload-container
+  transition none
+  span
+    transition none
+  &:hover, &.is-dragover
+    border-color white
+    color gray-darker-color
+  &.is-dragover
+    .dashed-file-upload-container-drop
+      color white
+  &:hover
+    border 2px solid
+    .dashed-file-upload-container-click
+      color white
+
+.edit-section-container[data-state-editing=true]
+  .edit-section-controls
+    display block
+
+.esi-image
+  width 100%
+  transition opacity 0.5s
+
+.esi-progress-container
+  width 200px
+  height 4px
+  position absolute
+  top "calc(50% - %s / 2)" % @height
+  left "calc(50% - %s / 2)" % @width
+  background white
+  z-index 3
+
+.esi-progress
+  height 100%
+  background purple-color
+  min-width 10%
+  transition width 0.5s

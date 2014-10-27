@@ -4,6 +4,7 @@
 #
 
 sd = require('sharify').data
+window.$ = $ = require 'jquery'
 
 $ ->
   require('../components/layout/client.coffee').init()

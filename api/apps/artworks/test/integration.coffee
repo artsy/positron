@@ -4,14 +4,14 @@ app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
 
-describe 'users endpoints', ->
+describe 'artwork endpoints', ->
 
   beforeEach (done) ->
     fabricate 'users', {}, (err, @user) =>
-      db.users.insert @user, (err, users) =>
-        @server = app.listen 5000, ->
-          console.log 'listening'
-          done()
+      return done err if err
+      @server = app.listen 5000, ->
+        console.log 'listening'
+        done()
 
   afterEach (done) ->
     @server.close()
