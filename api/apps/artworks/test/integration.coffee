@@ -8,6 +8,7 @@ describe 'artwork endpoints', ->
 
   beforeEach (done) ->
     fabricate 'users', {}, (err, @user) =>
+      return done err if err
       @server = app.listen 5000, ->
         console.log 'listening'
         done()
