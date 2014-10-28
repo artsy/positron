@@ -33,6 +33,11 @@ module.exports = React.createClass
           type: 'image'
           url: ''
         }, at: @props.index + 1
+      when 'video'
+        @props.sections.add {
+          type: 'video'
+          url: ''
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -73,6 +78,7 @@ module.exports = React.createClass
           }
         li {
           className: 'edit-section-tool-video'
+          onClick: @newSection('video')
         }, 'Video',
           div {
             className: 'edit-menu-icon-video'
