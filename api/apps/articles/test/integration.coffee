@@ -9,10 +9,9 @@ describe 'articles endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        db.users.insert @user, (err, users) =>
-          @server = app.listen 5000, ->
-            console.log 'listening'
-            done()
+        @server = app.listen 5000, ->
+          console.log 'listening'
+          done()
 
   afterEach ->
     @server.close()
