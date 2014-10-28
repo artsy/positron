@@ -4,7 +4,7 @@ module.exports = class EditHeader extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @article.on 'request', @saving
+    @article.on 'change', @saving
     @article.on 'sync', @doneSaving
 
   saving: =>
