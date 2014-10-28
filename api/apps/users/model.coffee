@@ -53,11 +53,6 @@ request = require 'superagent'
           user.icon_url = curie.href.replace('{rel}',
             user.profile.image_versions[0] + '.' + ext)
 
-          # Clean out HAL properties
-          delete user.profile._links
-          delete user.details._links
-          delete user._links
-
           # Save the merged user data in the database
           db.users.update { id: user.id }, user, { upsert: true }, (err, res) ->
             return callback err if err
