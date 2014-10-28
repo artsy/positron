@@ -7,10 +7,12 @@ module.exports = class EditLayout extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @$window = $(window)
-    @onKeyup = _.debounce @onKeyup, 2000
+    @article.sync = _.debounce _.bind(@article.sync, @article), 1000
+    @article.sections.on 'change', => @article.save()
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @article.on 'destroy', @redirectToList
+    @$('#edit-sections-spinner').remove()
 
   serialize: ->
     {
@@ -38,7 +40,7 @@ module.exports = class EditLayout extends Backbone.View
   events:
     'click #edit-tabs > a': 'toggleTabs'
     'click #edit-save:not(.is-disabled)': 'save'
-    'keyup :input': 'onKeyup'
+    'keyup :input, [contenteditable]': 'onKeyup'
     'click #edit-sections *': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
     'dragenter .dashed-file-upload-container': 'toggleDragover'
