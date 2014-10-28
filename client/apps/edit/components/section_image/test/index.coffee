@@ -13,6 +13,10 @@ fixtures = require '../../../../../../test/helpers/fixtures'
 describe 'SectionImage', ->
 
   beforeEach (done) ->
+    global.Image = class Image
+      constructor: ->
+        setTimeout => @onload()
+      onload: ->
     benv.setup =>
       benv.expose $: require 'jquery'
       SectionImage = benv.require resolve __dirname, '../index'
@@ -29,6 +33,7 @@ describe 'SectionImage', ->
   afterEach ->
     $.ajax.restore()
     benv.teardown()
+    delete global.Image
 
   it 'removes itself when the section is empty', ->
     @component.props.section.destroy = sinon.stub()
@@ -37,28 +42,19 @@ describe 'SectionImage', ->
     @component.props.section.destroy.called.should.be.ok
 
   it 'uploads to gemini', (done) ->
-    global.Image = class Image
-      constructor: ->
-        setTimeout => @onload()
-      onload: ->
     @component.upload target: files: ['foo']
     @gemup.args[0][0].should.equal 'foo'
     @gemup.args[0][1].done('fooza')
     setTimeout =>
       @component.setState.args[0][0].src.should.equal 'fooza'
-      delete global.Image
       done()
 
-  it 'saves the url after upload', ->
-    global.Image = class Image
-      constructor: ->
-        setTimeout => @onload()
-      onload: ->
+  it 'saves the url after upload', (done) ->
+    sinon.stub @component, 'onClickOff'
     @component.upload target: files: ['foo']
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.props.section.get('url').should.equal 'fooza'
-      delete global.Image
+      @component.onClickOff.called.should.be.ok
       done()
 
   xit 'renders an image', ->

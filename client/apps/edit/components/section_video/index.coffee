@@ -31,6 +31,9 @@ module.exports = React.createClass
       id = _.last @state.src.split '/'
       id = id.split('?v=')[1] if id.match 'watch'
       "//www.youtube.com/embed/#{id}"
+    else if @state.src.match 'vimeo'
+      id = _.last @state.src.split '/'
+      "//player.vimeo.com/video/#{id}?color=ffffff"
 
   render: ->
     section { className: 'edit-section-video' },
