@@ -33,7 +33,6 @@ module.exports = React.createClass
         image.onload = =>
           @setState src: src, progress: null
           @onClickOff()
-          console.log @props.section.get 'url'
 
   render: ->
     section {

@@ -49,6 +49,18 @@ describe 'SectionImage', ->
       delete global.Image
       done()
 
+  it 'saves the url after upload', ->
+    global.Image = class Image
+      constructor: ->
+        setTimeout => @onload()
+      onload: ->
+    @component.upload target: files: ['foo']
+    @gemup.args[0][1].done('fooza')
+    setTimeout =>
+      @component.props.section.get('url').should.equal 'fooza'
+      delete global.Image
+      done()
+
   xit 'renders an image', ->
     @component.state.src = 'foobaz'
     @component.render()
