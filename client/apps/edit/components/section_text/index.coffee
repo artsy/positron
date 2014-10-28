@@ -9,6 +9,7 @@ try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require './sanitizer.coffee'
+  scribePluginLinkPromptCommand = require 'scribe-plugin-link-prompt-command'
 React = require 'react'
 { div, nav, button } = React.DOM
 
@@ -29,6 +30,7 @@ module.exports = React.createClass
         a: { href: true, target: '_blank' }
     }
     scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
+    scribe.use scribePluginLinkPromptCommand({})
     $(@refs.editable.getDOMNode()).focus()
 
   componentDidMount: ->
@@ -37,11 +39,14 @@ module.exports = React.createClass
   componentDidUpdate: ->
     @attachScribe()
 
+  componentWillUnmount: ->
+
   render: ->
     div { className: 'edit-section-text-container' },
       nav { ref: 'toolbar', className: 'edit-section-controls' },
         button { 'data-command-name': 'bold' }, 'B'
         button { 'data-command-name': 'italic' }, 'I'
+        button { 'data-command-name': 'linkPrompt' }, 'L'
       div {
         className: 'edit-section-text-editable'
         ref: 'editable'

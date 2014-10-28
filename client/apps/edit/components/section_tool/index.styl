@@ -3,18 +3,33 @@
 .edit-section-tool
   width section-tool-size - 11px
   position absolute
-  opacity 1
-  z-index 1
   opacity 0
+  z-index 1
+  &:only-child::after
+    opacity 1
+  &:last-child
+    opacity 1
   &:hover
     width 100%
     opacity 1
+    &::after
+      opacity 0
     svg
       fill-color black
     .edit-section-tool-icon::before
       opacity 1
-  &:last-child
-    opacity 1
+  &::after
+    content 'Add a section'
+    width 150px
+    display block
+    float left
+    position absolute
+    top -6px
+    left 35px
+    avant-garde()
+    color gray-dark-color
+    font-size default-avant-garde-font-size - 1
+    opacity 0
 
 .edit-section-tool-icon
   position relative

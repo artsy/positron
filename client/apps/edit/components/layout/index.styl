@@ -68,10 +68,13 @@
 
 #edit-author-section
   text-align center
-  width 100%
+  width body-width
   avant-garde()
   font-size small-avant-garde-font-size + 1
-  marigin-bottom whitespace-block-size
+  margin whitespace-block-size auto whitespace-block-size + 5px auto
+  border-top 1px solid gray-lighter-color
+  border-bottom @border-top
+  padding controls-padding 0
   p
     display inline-block
     &:after
@@ -86,5 +89,9 @@
 
 #edit-lead-paragraph
   margin 20px auto whitespace-block-size auto
-  input
-    font-size 20px
+  width body-width
+  font-size 20px
+  &.is-empty::before
+    content 'Lead paragraph (optional)'
+    color gray-dark-color
+    position absolute

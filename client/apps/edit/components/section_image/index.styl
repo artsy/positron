@@ -1,6 +1,6 @@
 @import '../stylus_lib'
 
-.edit-section-image 
+.edit-section-image
   position relative
 
 .edit-section-image .edit-section-controls
@@ -34,11 +34,13 @@
 
 .edit-section-controls .dashed-file-upload-container
   transition none
+  border-color gray-darker-color
   span
     transition none
   &:hover, &.is-dragover
     border-color white
-    color gray-darker-color
+    span
+      color gray-darker-color
   &.is-dragover
     .dashed-file-upload-container-drop
       color white
