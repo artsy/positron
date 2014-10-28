@@ -17,4 +17,4 @@ path = require 'path'
 @empty = (callback) =>
   collections = fs.readdirSync path.resolve(__dirname, '../../apps')
   cb = _.after collections.length, callback
-  @db[col].drop(cb) for col in collections
+  @db[col]?.drop(cb) for col in collections

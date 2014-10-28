@@ -41,12 +41,19 @@ request = require 'superagent'
               .end (err, res) -> cb err, res?.body
         ], (err, results) ->
 
-          # Flatten the various user datas and clean out HAL properties
+          # Aggregate the various user datas
           user._id = ObjectId user.id
           user.access_token = accessToken
           user.profile = results[0]
           user.details = results[1]
-          user.profile.icon_url = user.profile._links.thumbnail.href
+
+          # Piece together the profile icon url
+          curie = (c for c in user.profile._links.curies when c.name is 'image')[0]
+          ext = _.last user.profile._links['image:self'].href.split('.')
+          user.icon_url = curie.href.replace('{rel}',
+            user.profile.image_versions[0] + '.' + ext)
+
+          # Clean out HAL properties
           delete user.profile._links
           delete user.details._links
           delete user._links
