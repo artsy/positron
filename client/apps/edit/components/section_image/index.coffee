@@ -14,8 +14,8 @@ module.exports = React.createClass
     { src: @props.section.get('url'), progress: null }
 
   onClickOff: ->
-    if @props.section.get('url')
-      @props.section.set url: @state.src      
+    if @state.src
+      @props.section.set url: @state.src
     else
       @props.section.destroy()
 
@@ -30,10 +30,15 @@ module.exports = React.createClass
       done: (src) =>
         image = new Image()
         image.src = src
-        image.onload = => @setState src: src, progress: null
+        image.onload = =>
+          @setState src: src, progress: null
+          @onClickOff()
 
   render: ->
-    section { className: 'edit-section-image' },
+    section {
+      className: 'edit-section-image'
+      onClick: @props.setEditing(true)
+    },
       header { className: 'edit-section-controls' },
         div { className: 'dashed-file-upload-container' },
           h1 {}, 'Drag & ',
@@ -60,5 +65,5 @@ module.exports = React.createClass
             style: opacity: if @state.progress then @state.progress else '1'
           }
         else
-          div { className: 'esi-placeholder' }, 'Add an image above' 
+          div { className: 'esi-placeholder' }, 'Add an image above'
       )

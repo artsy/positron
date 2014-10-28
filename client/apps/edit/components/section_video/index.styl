@@ -1,0 +1,29 @@
+@import '../stylus_lib'
+
+.edit-section-video .edit-section-controls
+  background black
+  color white
+  fill-container()
+  height 114px
+  top -(@height)
+  padding controls-padding
+  z-index 3
+  display none
+  input
+    background white
+    width 402px
+    margin controls-padding 0
+  button
+    border 0
+    position relative
+    top 1px
+
+.esv-placeholder
+  height 150px
+  line-height @height
+  text-align center
+  color gray-dark-color
+
+.edit-section-container[data-state-editing=true]
+  .edit-section-controls
+    display block
