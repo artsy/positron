@@ -27,8 +27,8 @@ describe 'EditHeader', ->
 
   describe '#saving', ->
 
-    it 'indicates saving on request', ->
-      @view.article.trigger 'request'
+    it 'indicates saving on change', ->
+      @view.article.trigger 'change'
       @view.$('#edit-save').hasClass('is-saving').should.be.ok
 
   describe '#delete', ->

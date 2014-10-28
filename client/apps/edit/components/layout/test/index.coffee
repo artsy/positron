@@ -21,6 +21,7 @@ describe 'EditLayout', ->
         sinon.stub _, 'debounce'
         _.debounce.callsArg 0
         @view = new EditLayout el: $('#layout-content'), article: @article
+        @view.article.sync = sinon.stub()
         done()
 
   afterEach ->
@@ -39,6 +40,10 @@ describe 'EditLayout', ->
 
     it 'autosaves on debounce keyup', ->
       $('#edit-title input').trigger 'keyup'
+      Backbone.sync.called.should.be.ok
+
+    it 'autosaves on section changes', ->
+      @view.article.sections.trigger 'change'
       Backbone.sync.called.should.be.ok
 
   describe 'on destroy', ->
