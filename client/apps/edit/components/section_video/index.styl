@@ -8,6 +8,7 @@
   top -(@height)
   padding controls-padding
   z-index 3
+  display none
   input
     background white
     width 402px
@@ -22,3 +23,7 @@
   line-height @height
   text-align center
   color gray-dark-color
+
+.edit-section-container[data-state-editing=true]
+  .edit-section-controls
+    display block

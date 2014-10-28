@@ -14,8 +14,8 @@ module.exports = React.createClass
     { src: @props.section.get('url') }
 
   onClickOff: ->
-    if @props.section.get('url')
-      @props.section.set url: @state.src      
+    if @state.src
+      @props.section.set url: @state.src
     else
       @props.section.destroy()
 
@@ -26,24 +26,30 @@ module.exports = React.createClass
     e.preventDefault()
     @setState src: $(@refs.input.getDOMNode()).val()
 
+  getIframeUrl: ->
+    if @state.src.match 'youtu'
+      id = _.last @state.src.split '/'
+      id = id.split('?v=')[1] if id.match 'watch'
+      "//www.youtube.com/embed/#{id}"
+
   render: ->
     section { className: 'edit-section-video' },
       header { className: 'edit-section-controls' },
-        h1 {}, ("Paste the url of a video on Vimeo or YouTube" + 
+        h1 {}, ("Paste the url of a video on Vimeo or YouTube" +
           (if @state.src then ' to replace this video' else ''))
         form { onSubmit: @onSubmit },
           input {
             className: 'bordered-input'
             placeholder: 'http://youtu.be/share-url'
             ref: 'input'
+            defaultValue: @state.src
           }
           button {
             className: 'avant-garde-button avant-garde-button-dark'
           }, 'Embed'
       (
         if @state.src
-          iframe { src: @state.src }
+          iframe { src: @getIframeUrl(), width: '100%', height: '313px' }
         else
           div { className: 'esv-placeholder' }, 'Add a video above'
       )
-      
