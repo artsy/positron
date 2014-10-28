@@ -52,13 +52,18 @@
 
 #layout-sidebar-profile
   position relative
+  &:hover
+    img
+      opacity 1
+    #layout-sidebar-profile-menu
+      display block
   img
     border-radius 100px
     width 50px
     display inline-block
     margin-bottom 10px
-  &:hover #layout-sidebar-profile-menu
-    display block
+    opacity 0.5
+    transition opacity 0.3s
   #layout-sidebar-profile-menu
     position absolute
     width 200px

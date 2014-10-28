@@ -25,7 +25,7 @@ nav#layout-sidebar
     br
     | Help
   #layout-sidebar-profile
-    img( src=(user.get('profile').icon_url) )
+    img( src=(user.get('icon_url')) )
     br
     = user.get('name').split(' ')[0]
     nav#layout-sidebar-profile-menu

@@ -26,8 +26,12 @@ describe 'User', ->
       User.fromAccessToken 'foobar', (err, user) ->
         user.name.should.equal 'Craig Spaeth'
         user.access_token.should.equal 'foobar'
-        user.profile.icon_url.should.equal '/assets/shared/missing_image.png'
         user.details.type.should.equal 'Admin'
+        done()
+
+    it 'pieces together the icon url', (done) ->
+      User.fromAccessToken 'foobar', (err, user) ->
+        user.icon_url.should.match /// profile_icons/.*/square140.jpg ///
         done()
 
   describe '#destroyFromAccessToken', ->
