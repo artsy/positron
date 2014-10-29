@@ -40,6 +40,7 @@ module.exports = React.createClass
     @attachScribe()
 
   componentWillUnmount: ->
+    # Remove Scribe. Waiting on https://github.com/guardian/scribe/issues/95
 
   render: ->
     div { className: 'edit-section-text-container' },
