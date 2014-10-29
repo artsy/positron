@@ -25,14 +25,14 @@
     transition none
     &.is-active
       color black
+    &[data-complete=true] svg
+      fill-color green-light-color
     svg
       fill-color gray-lighter-color
       position absolute
       right 15px
       top 8px
       height 15px
-  &.edit-tabs-complete svg
-    fill-color green-light-color
 
 #edit-save
   position relative

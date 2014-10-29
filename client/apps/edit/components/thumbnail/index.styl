@@ -45,6 +45,18 @@ inputs-margin = 15px
       padding-bottom inputs-margin - 5
       display inline-block
 
+error-placeholder()
+  color red-color
+
+#edit-thumbnail-inputs.eti-error
+  .edit-required[data-hidden=false]
+    & + input, & + textarea, & + #edit-thumbnail-upload
+      border-color red-color
+      color red-color
+      placeholder(error-placeholder)
+      *
+        transition-delay 0
+
 #edit-thumbnail-inputs-right, #edit-thumbnail-inputs-left
   display inline-block
   vertical-align top
