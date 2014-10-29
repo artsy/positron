@@ -28,3 +28,17 @@ describe "Article", ->
       @article.set sections: [{ body: 'Foobar' }]
       @article.sections.reset []
       @article.toJSON().sections[0].body.should.equal 'Foobar'
+
+  describe '#finishedContent', ->
+
+    it 'returns true if theres a title', ->
+      @article.set title: 'foo'
+      @article.finishedContent().should.be.ok
+
+    it 'returns true if finished all thumbnail stuff', ->
+      @article.set
+        thumbnail_title: 'bar'
+        thumbnail_image: 'foo.jpg'
+        thumbnail_teaser: 'baz'
+        tags: ['foo']
+      @article.finishedThumbnail().should.be.ok

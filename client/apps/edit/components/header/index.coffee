@@ -30,4 +30,4 @@ module.exports = class EditHeader extends Backbone.View
     @article.destroy()
 
   save: ->
-    @article.save @serialize(), complete: => @redirectToList()
+    @article.save {}, complete: => @redirectToList()

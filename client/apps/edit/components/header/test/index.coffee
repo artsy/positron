@@ -39,3 +39,14 @@ describe 'EditHeader', ->
       @view.delete()
       spy.called.should.be.ok
       delete global.confirm
+
+  describe '#toggleCheckmarks', ->
+
+    it 'sets a checkmark when finished with content', ->
+      @article.set title: 'foobar'
+      @view.toggleCheckmarks()
+      @view.$('#edit-tabs a:eq(0)').attr('data-complete').should.equal 'true'
+
+    it 'saves on clicking save', ->
+      @view.save()
+      Backbone.sync.args[0][0].should.equal 'create'
