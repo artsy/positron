@@ -17,10 +17,11 @@ describe 'EditLayout', ->
         benv.expose $: require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
-        EditLayout = require '../index.coffee'
+        @EditLayout = require '../index.coffee'
+        sinon.stub @EditLayout.prototype, 'attachScribe'
         sinon.stub _, 'debounce'
         _.debounce.callsArg 0
-        @view = new EditLayout el: $('#layout-content'), article: @article
+        @view = new @EditLayout el: $('#layout-content'), article: @article
         @view.article.sync = sinon.stub()
         done()
 
@@ -28,6 +29,7 @@ describe 'EditLayout', ->
     benv.teardown()
     Backbone.sync.restore()
     _.debounce.restore()
+    @EditLayout::attachScribe.restore()
 
   describe '#toggleTabs', ->
 
@@ -56,14 +58,28 @@ describe 'EditLayout', ->
   describe '#serialize', ->
 
     it 'turns form elements into data', ->
-      @view.$('#edit-lead-paragraph input').val('foobar')
-      @view.serialize().lead_paragraph.should.equal 'foobar'
+      @view.$('#edit-thumbnail-title :input').val('foobar')
+      @view.serialize().thumbnail_title.should.equal 'foobar'
 
     it 'cleans up tags into an array', ->
       @view.$('#edit-thumbnail-tags input').val('foobar,baz,boo   bar,bam  ')
       @view.serialize().tags.should.eql [
         'foobar', 'baz', 'boo bar', 'bam'
       ]
+
+  describe '#attachScribe', ->
+
+    it 'attaches Scribe to the lead paragraph'
+
+  describe '#toggleLeadParagraphPlaceholder', ->
+
+    it 'toggle the placeholder ::before element if lead paragraph is empty', ->
+      $('#edit-lead-paragraph').html "<p>foobar</p>"
+      @view.toggleLeadParagraphPlaceholder()
+      $('#edit-lead-paragraph').hasClass('is-empty').should.not.be.ok
+      $('#edit-lead-paragraph').html "<p><br></p>"
+      @view.toggleLeadParagraphPlaceholder()
+      $('#edit-lead-paragraph').hasClass('is-empty').should.be.ok
 
   describe '#popLockControls', ->
 

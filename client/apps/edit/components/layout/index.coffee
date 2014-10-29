@@ -1,6 +1,9 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
+try
+  Scribe = require 'scribe-editor'
+  scribePluginSanitizer = require '../section_text/sanitizer.coffee'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -11,13 +14,30 @@ module.exports = class EditLayout extends Backbone.View
     @article.sections.on 'change', => @article.save()
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
+    @attachScribe()
     @article.on 'destroy', @redirectToList
     @$('#edit-sections-spinner').remove()
+
+  attachScribe: ->
+    scribe = new Scribe $('#edit-lead-paragraph')[0]
+    scribe.use scribePluginSanitizer
+      tags:
+        p: true
+        b: true
+        i: true
+        a: { href: true, target: '_blank' }
+    @toggleLeadParagraphPlaceholder()
+
+  toggleLeadParagraphPlaceholder: ->
+    show = @$('#edit-lead-paragraph').text().match(/\w/) is null
+    @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
+      'is-empty'
+    )
 
   serialize: ->
     {
       title: @$('#edit-title input').val()
-      lead_paragraph: @$('#edit-lead-paragraph input').val()
+      lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_image: @$('#edit-thumbnail-image :input').val()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
@@ -46,6 +66,7 @@ module.exports = class EditLayout extends Backbone.View
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
+    'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
 
   toggleTabs: (e) ->
     idx = $(e.target).index()
@@ -58,10 +79,7 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section:eq(#{idx})").show()
 
   save: ->
-    # TODO: We should instead drop down a notice saying
-    # "Your article has been saved under 'drafts' [ view drafts ]".
-    alert "Saved #{@article.stateName()}!"
-    @article.save complete: => @redirectToList()
+    @article.save @serialize(), complete: => @redirectToList()
 
   onKeyup: =>
     @article.save @serialize()

@@ -13,7 +13,10 @@ block content
         li
           a( href="/articles/#{article.get('id')}/edit" )
             .article-list-item-left
-              img( src=article.get('thumbnail_image') )
+              if article.get('thumbnail_image')
+                img( src=article.get('thumbnail_image') )
+              else
+                .article-list-item-placeholder
             .article-list-item-right
               .article-list-item-tags
                 if article.get('tags')

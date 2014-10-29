@@ -2446,6 +2446,18 @@
         }
       }
     },
+    "scribe-plugin-link-prompt-command": {
+      "version": "0.1.2",
+      "from": "scribe-plugin-link-prompt-command@*",
+      "resolved": "https://registry.npmjs.org/scribe-plugin-link-prompt-command/-/scribe-plugin-link-prompt-command-0.1.2.tgz",
+      "dependencies": {
+        "lodash-amd": {
+          "version": "2.4.1",
+          "from": "lodash-amd@~2.4.1",
+          "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-2.4.1.tgz"
+        }
+      }
+    },
     "scribe-plugin-toolbar": {
       "version": "0.1.4",
       "from": "scribe-plugin-toolbar@*",

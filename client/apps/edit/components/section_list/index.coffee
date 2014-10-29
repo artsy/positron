@@ -28,7 +28,10 @@ module.exports = React.createClass
 
   render: ->
     div {},
-      div { className: 'edit-section-list', ref: 'sections' },
+      div {
+        className: 'edit-section-list' + (' esl-children' if @props.sections.length)
+        ref: 'sections'
+      },
         SectionTool { sections: @props.sections }
         @props.sections.map (section, i) =>
           [
