@@ -51,9 +51,9 @@ module.exports = React.createClass
           input { type: 'file', onChange: @upload }
       (
         if @state.progress
-          div { className: 'esi-progress-container' },
+          div { className: 'upload-progress-container' },
             div {
-              className: 'esi-progress'
+              className: 'upload-progress'
               style: width: (@state.progress * 100) + '%'
             }
       )

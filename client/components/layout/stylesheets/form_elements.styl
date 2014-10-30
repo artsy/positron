@@ -99,3 +99,18 @@ input-placeholder()
   &:hover
     .dashed-file-upload-container-click
       color purple-color
+
+.upload-progress-container
+  width 200px
+  height 4px
+  position absolute
+  top "calc(50% - %s / 2)" % @height
+  left "calc(50% - %s / 2)" % @width
+  background white
+  z-index 3
+
+.upload-progress
+  height 100%
+  background purple-color
+  min-width 10%
+  transition width 0.5s

@@ -20,14 +20,3 @@ module.exports = class EditHeader extends Backbone.View
     @$('#edit-tabs a:eq(1)').attr 'data-complete', @article.finishedThumbnail()
     @$('#edit-publish').attr('data-disabled',
       not @article.finishedContent() or not @article.finishedThumbnail())
-
-  events:
-    'click #edit-delete': 'delete'
-    'click #edit-save': 'save'
-
-  delete: ->
-    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
-    @article.destroy()
-
-  save: ->
-    @article.save {}, complete: => @redirectToList()

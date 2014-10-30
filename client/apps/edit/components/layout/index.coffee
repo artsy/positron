@@ -15,8 +15,7 @@ module.exports = class EditLayout extends Backbone.View
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @attachScribe()
-    @article.on 'destroy', @redirectToList
-    @$('#edit-sections-spinner').remove()
+    @$('#edit-sections-spinner').hide()
 
   attachScribe: ->
     scribe = new Scribe $('#edit-lead-paragraph')[0]
@@ -32,7 +31,6 @@ module.exports = class EditLayout extends Backbone.View
     {
       title: @$('#edit-title input').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
-      thumbnail_image: @$('#edit-thumbnail-image :input').val()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
       tags: _.reject(
@@ -63,6 +61,9 @@ module.exports = class EditLayout extends Backbone.View
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
     'click #edit-publish': 'togglePublished'
+    'click #edit-delete': 'delete'
+    'click #edit-save': 'save'
+
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -100,6 +101,8 @@ module.exports = class EditLayout extends Backbone.View
     e.preventDefault()
     e.stopPropagation()
     if @article.finishedContent() and @article.finishedThumbnail()
+      @$('#edit-sections-spinner').show()
+      @$('#edit-publish').text 'Publishing...'
       @article.save(
         _.extend(@serialize(), published: not @article.get('published'))
         success: @redirectToList
@@ -109,3 +112,16 @@ module.exports = class EditLayout extends Backbone.View
       @$window.scrollTop @$window.height()
       @$('#edit-thumbnail-inputs').addClass 'eti-error'
       setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
+
+  delete: (e) ->
+    e.preventDefault()
+    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
+    @$('#edit-sections-spinner').show()
+    @$('#edit-delete').text 'Deleting...'
+    @article.destroy complete: @redirectToList
+
+  save: (e) ->
+    e.preventDefault()
+    @$('#edit-sections-spinner').show()
+    @$('#edit-save').text 'Saving...'
+    @article.save {}, complete: @redirectToList

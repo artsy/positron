@@ -95,3 +95,12 @@
     content 'Lead paragraph (optional)'
     color gray-dark-color
     position absolute
+
+#edit-sections-spinner
+  position fixed
+  top header-size
+  left sidebar-width
+  width "calc(100% - %s)" % sidebar-width
+  height "calc(100% - %s)" % header-size
+  z-index 4
+  background rgba(255,255,255,0.7)
