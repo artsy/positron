@@ -79,3 +79,11 @@ describe 'EditLayout', ->
       @view.popLockControls()
       $($section.find('.edit-section-controls')).attr('data-fixed')
         .should.equal 'true'
+
+  describe '#onFinished', ->
+
+    it 'redirects to the list once the articles syncs', ->
+      @view.redirectToList = sinon.stub()
+      @view.onFinished()
+      @view.article.trigger 'sync'
+      @view.redirectToList.called.should.be.ok

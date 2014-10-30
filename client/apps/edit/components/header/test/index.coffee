@@ -68,3 +68,11 @@ describe 'EditHeader', ->
       @view.article.on 'missing', spy = sinon.spy()
       @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
       spy.called.should.be.ok
+
+  describe '#save', ->
+
+    it 'saves the article triggering finish', ->
+      @view.article.on 'finished', spy = sinon.spy()
+      @view.save preventDefault: ->
+      spy.called.should.be.ok
+      Backbone.sync.args[0][0].should.equal 'create'
