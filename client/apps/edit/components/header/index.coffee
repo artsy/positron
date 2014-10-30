@@ -36,10 +36,7 @@ module.exports = class EditHeader extends Backbone.View
       )
       @article.trigger('finished').save published: not @article.get 'published'
     else
-      @openTab 1
-      @$window.scrollTop @$window.height()
-      @$('#edit-thumbnail-inputs').addClass 'eti-error'
-      setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
+      @article.trigger 'missing'
 
   delete: (e) ->
     e.preventDefault()

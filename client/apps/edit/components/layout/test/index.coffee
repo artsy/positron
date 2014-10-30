@@ -41,13 +41,6 @@ describe 'EditLayout', ->
       @view.article.sections.trigger 'change'
       Backbone.sync.called.should.be.ok
 
-  describe 'on destroy', ->
-
-    it 'redirects to the root', ->
-      location.assign = sinon.stub()
-      @view.article.destroy()
-      location.assign.args[0][0].should.containEql '/articles?published='
-
   describe '#serialize', ->
 
     it 'turns form elements into data', ->
@@ -86,21 +79,3 @@ describe 'EditLayout', ->
       @view.popLockControls()
       $($section.find('.edit-section-controls')).attr('data-fixed')
         .should.equal 'true'
-
-  describe '#togglePublished', ->
-
-    it 'publishes an article thats ready', ->
-      @view.article.set
-        title: 'foo'
-        thumbnail_title: 'bar'
-        thumbnail_image: 'foo.jpg'
-        thumbnail_teaser: 'baz'
-        tags: ['foo']
-      @view.article.save = sinon.stub()
-      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
-      @view.article.save.called.should.be.ok
-
-    it 'highlights missing fields if not done', ->
-      @view.article.clear()
-      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
-      @view.$('#edit-thumbnail-inputs').hasClass('eti-error').should.be.ok

@@ -12,6 +12,7 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 1000
     @article.sections.on 'change', => @article.save()
+    @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
@@ -56,6 +57,12 @@ module.exports = class EditLayout extends Backbone.View
   onFinished: =>
     @$('#edit-sections-spinner').show()
     @article.on 'sync', @redirectToList
+
+  highlightMissingFields: =>
+    @openTab 1
+    @$window.scrollTop @$window.height()
+    @$('#edit-thumbnail-inputs').addClass 'eti-error'
+    setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
