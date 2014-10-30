@@ -43,7 +43,6 @@ module.exports = ->
       }
     ]
   fixtures.users =
-    "_id": ObjectId('4d8cd73191a5c50ce200002a')
     "name": "Craig Spaeth",
     "access_token": "test-access-token",
     "profile": {
