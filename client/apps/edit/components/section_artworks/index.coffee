@@ -4,6 +4,7 @@
 #
 
 _ = require 'underscore'
+Artworks = require '../../../../collections/artworks.coffee'
 React = require 'react'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong } = React.DOM
@@ -12,12 +13,12 @@ icons = -> require('./icons.jade') arguments...
 module.exports = React.createClass
 
   getInitialState: ->
-    { urlsValue: '', artworks: [], loadingUrls: false }
+    { urlsValue: '', artworks: [], loadingUrls: false, byTitleArtworks: [] }
 
   componentDidMount: ->
     ids = @props.section.get('ids')
     return if not ids?.length or @state.artworks.length
-    @fetchArtworks ids 
+    @fetchArtworks ids
 
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
@@ -32,14 +33,19 @@ module.exports = React.createClass
 
   fetchArtworks: (ids) ->
     @setState loadingUrls: true
-    $.ajax
-      url: '/api/artworks'
+    new Artworks().fetch
       data: ids: ids
       success: (artworks) =>
         return unless @isMounted()
         @setState
-          artworks: @state.artworks.concat(artworks)
+          artworks: @state.artworks.concat artworks.toJSON()
           loadingUrls: false
+
+  searchByTitle: (e) ->
+    new Artworks().fetch
+      data: q: e.target.value
+      success: (artworks) =>
+        @setState byTitleArtworks: artworks.toJSON()
 
   removeArtwork: (artwork) -> =>
     @setState artworks: _.without @state.artworks, artwork
@@ -75,7 +81,16 @@ module.exports = React.createClass
             input {
               placeholder: 'Try “Andy Warhol Skull”'
               className: 'bordered-input'
+              onChange: @searchByTitle
             }
+            (
+              if @state.byTitleArtworks.length
+                ul {},
+                  (
+                    for artwork in @state.byTitleArtworks
+                      li {}, artwork.artwork.title
+                  )
+            )
           label {}, 'or paste in artwork page urls',
             form {
               className: 'esa-by-urls-container'

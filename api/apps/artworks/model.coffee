@@ -19,9 +19,10 @@ request = require 'superagent'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 
+#
 # Retrieval
-
-@findByIds = (ids, accessToken, callback) ->
+#
+@findByIds = findByIds = (ids, accessToken, callback) ->
 
   # Parallel fetch each artwork
   async.parallel (for id in ids
@@ -39,19 +40,22 @@ request = require 'superagent'
     async.parallel (for artwork in artworks
       ((artwork) ->
         (cb) ->
-          async.parallel [
+          requests = []
+          requests.push(
             (cb) ->
               request
                 .get(artwork._links.artists.href)
                 .set('X-Access-Token': accessToken)
-                .end (err, res) ->
-                  cb err, res?.body._embedded.artists
+                .end (err, res) -> cb err, res?.body._embedded.artists
+          ) if artwork._links.artists?
+          requests.push(
             (cb) ->
               request
                 .get(artwork._links.partner.href)
                 .set('X-Access-Token': accessToken)
                 .end (err, res) -> cb err, res?.body
-          ], (err, [artists, partner]) ->
+          ) if artwork._links.partner?
+          async.parallel requests, (err, [artists, partner]) ->
 
             # Map curries into an image urls hash
             imageUrls = {}
@@ -74,12 +78,17 @@ request = require 'superagent'
 @search = (query, accessToken, callback) ->
 
   # Query the search API for 3 pages
-  async.parallel _.times 3, (i) ->
+  async.parallel _.times(3, (i) ->
     (cb) ->
       request
-        .get("#{ARTSY_URL}/api/search?q=#{query}&offset=#{10 * i}")
+        .get("#{ARTSY_URL}/api/search?q=#{query}&offset=#{i * 10}")
         .set('X-Access-Token': accessToken)
         .end (err, res) -> cb err, res?.body
-  , (err, results) ->
+  ), (err, results) ->
     return callback err if err
-    console.log results
+
+    # Pluck out all of the slugs from the urls and findByIds
+    embeds = _.flatten (r._embedded.results for r in results)
+    slugs = for result in embeds when result.type is 'Artwork'
+      _.last result._links.self.href.split '/'
+    findByIds slugs, accessToken, callback
