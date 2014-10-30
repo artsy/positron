@@ -12,11 +12,12 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 1000
     @article.sections.on 'change', => @article.save()
+    @article.on 'missing', @highlightMissingFields
+    @article.on 'finished', @onFinished
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @attachScribe()
-    @article.on 'destroy', @redirectToList
-    @$('#edit-sections-spinner').remove()
+    @$('#edit-sections-spinner').hide()
 
   attachScribe: ->
     scribe = new Scribe $('#edit-lead-paragraph')[0]
@@ -32,7 +33,6 @@ module.exports = class EditLayout extends Backbone.View
     {
       title: @$('#edit-title input').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
-      thumbnail_image: @$('#edit-thumbnail-image :input').val()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
       tags: _.reject(
@@ -54,6 +54,16 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
 
+  onFinished: =>
+    @$('#edit-sections-spinner').show()
+    @article.on 'sync', @redirectToList
+
+  highlightMissingFields: =>
+    @openTab 1
+    @$window.scrollTop @$window.height()
+    @$('#edit-thumbnail-inputs').addClass 'eti-error'
+    setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
+
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input, [contenteditable]': 'onKeyup'
@@ -62,7 +72,6 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
-    'click #edit-publish': 'togglePublished'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -95,17 +104,3 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
       'is-empty'
     )
-
-  togglePublished: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
-    if @article.finishedContent() and @article.finishedThumbnail()
-      @article.save(
-        _.extend(@serialize(), published: not @article.get('published'))
-        success: @redirectToList
-      )
-    else
-      @openTab 1
-      @$window.scrollTop @$window.height()
-      @$('#edit-thumbnail-inputs').addClass 'eti-error'
-      setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000

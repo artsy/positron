@@ -36,7 +36,7 @@ describe 'EditHeader', ->
     it 'deletes the article', ->
       global.confirm = -> true
       @view.article.on 'destroy', spy = sinon.spy()
-      @view.delete()
+      @view.delete preventDefault: ->
       spy.called.should.be.ok
       delete global.confirm
 
@@ -44,9 +44,35 @@ describe 'EditHeader', ->
 
     it 'sets a checkmark when finished with content', ->
       @article.set title: 'foobar'
-      @view.toggleCheckmarks()
+      @view.toggleCheckmarks  preventDefault: ->
       @view.$('#edit-tabs a:eq(0)').attr('data-complete').should.equal 'true'
 
     it 'saves on clicking save', ->
-      @view.save()
+      @view.save  preventDefault: ->
+      Backbone.sync.args[0][0].should.equal 'create'
+
+  describe '#togglePublished', ->
+
+    it 'publishes an article thats ready', ->
+      @view.article.set
+        title: 'foo'
+        thumbnail_title: 'bar'
+        thumbnail_image: 'foo.jpg'
+        thumbnail_teaser: 'baz'
+        tags: ['foo']
+      @view.article.save = sinon.stub()
+      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
+      @view.article.save.called.should.be.ok
+
+    it 'triggers missing if not done', ->
+      @view.article.on 'missing', spy = sinon.spy()
+      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
+      spy.called.should.be.ok
+
+  describe '#save', ->
+
+    it 'saves the article triggering finish', ->
+      @view.article.on 'finished', spy = sinon.spy()
+      @view.save preventDefault: ->
+      spy.called.should.be.ok
       Backbone.sync.args[0][0].should.equal 'create'

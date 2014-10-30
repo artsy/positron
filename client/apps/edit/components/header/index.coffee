@@ -1,3 +1,4 @@
+_ = require 'underscore'
 Backbone = require 'backbone'
 
 module.exports = class EditHeader extends Backbone.View
@@ -21,13 +22,29 @@ module.exports = class EditHeader extends Backbone.View
     @$('#edit-publish').attr('data-disabled',
       not @article.finishedContent() or not @article.finishedThumbnail())
 
-  events:
+  events: ->
+    'click #edit-publish': 'togglePublished'
     'click #edit-delete': 'delete'
     'click #edit-save': 'save'
 
-  delete: ->
-    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
-    @article.destroy()
+  togglePublished: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    if @article.finishedContent() and @article.finishedThumbnail()
+      @$('#edit-publish').text(
+        if @article.get('published') then 'Unpublishing...' else 'Publishing...'
+      )
+      @article.trigger('finished').save published: not @article.get 'published'
+    else
+      @article.trigger 'missing'
 
-  save: ->
-    @article.save {}, complete: => @redirectToList()
+  delete: (e) ->
+    e.preventDefault()
+    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
+    @$('#edit-delete').text 'Deleting...'
+    @article.trigger('finished').destroy()
+
+  save: (e) ->
+    e.preventDefault()
+    @$('#edit-save').text 'Saving...'
+    @article.trigger('finished').save()

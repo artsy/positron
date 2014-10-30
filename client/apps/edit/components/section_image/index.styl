@@ -9,7 +9,7 @@
   background black
   color white
   height 118px
-  top -@height
+  top -(@height + controls-padding)
   left -(controls-padding)
   padding controls-padding
   text-align center
@@ -57,17 +57,7 @@
   width 100%
   transition opacity 0.5s
 
-.esi-progress-container
-  width 200px
-  height 4px
-  position absolute
-  top "calc(50% - %s / 2)" % @height
-  left "calc(50% - %s / 2)" % @width
-  background white
-  z-index 3
-
-.esi-progress
-  height 100%
-  background purple-color
-  min-width 10%
-  transition width 0.5s
+#edit-thumbnail-upload
+  position relative
+  .upload-progress-container
+    display none

@@ -11,30 +11,34 @@ block content
     ul
       for article in articles
         li
-          a( href="/articles/#{article.get('id')}/edit" )
-            .article-list-item-left
-              if article.get('thumbnail_image')
-                img( src=article.get('thumbnail_image') )
-              else
-                .article-list-item-placeholder
-            .article-list-item-right
-              .article-list-item-tags
-                if article.get('tags')
-                  ul
-                    for tag in article.get('tags')
-                      li= tag
+          section
+            a( href="/articles/#{article.get('id')}/edit" )
+              .article-list-item-left
+                if article.get('thumbnail_image')
+                  img( src=article.get('thumbnail_image') )
                 else
-                  span.article-list-missing Missing tags
-              h1= article.get('thumbnail_title')
-              if article.get('thumbnail_teaser')
-                h2= article.get('thumbnail_teaser')
-              else
-                h2.article-list-missing Missing teaser
-              .article-list-items-dates
-                if article.get('published_at')
-                  strong Published #{moment(article.get('published_at')).fromNow()}
-                  | Last saved #{moment(article.get('updated_at')).fromNow()}
+                  .article-list-item-placeholder
+              .article-list-item-right
+                .article-list-item-tags
+                  if article.get('tags') && article.get('tags').length
+                    ul
+                      for tag in article.get('tags')
+                        li= tag
+                  else
+                    span.article-list-missing Missing tags
+                if article.get('thumbnail_title')
+                  h1= article.get('thumbnail_title')
                 else
-                  strong Last saved #{moment(article.get('updated_at')).fromNow()}
+                  h1.article-list-missing Missing title
+                if article.get('thumbnail_teaser')
+                  h2= article.get('thumbnail_teaser')
+                else
+                  h2.article-list-missing Missing teaser
+                .article-list-items-dates
+                  if article.get('published_at')
+                    strong Published #{moment(article.get('published_at')).fromNow()}
+                    | Last saved #{moment(article.get('updated_at')).fromNow()}
+                  else
+                    strong Last saved #{moment(article.get('updated_at')).fromNow()}
     #article-list-pagination
       +paginate(page, totalPages)

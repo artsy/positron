@@ -21,14 +21,21 @@ module.exports = class EditThumbnail extends Backbone.View
   uploadThumbnail: (e) ->
     gemup e.target.files[0],
       key: sd.GEMINI_KEY
-      fail: (err) -> # TODO
-      progress: (percent) -> # TODO
+      progress: (percent) =>
+        @$('#edit-thumbnail-upload .upload-progress-container')
+          .show().find('.upload-progress').width "#{percent * 100}%"
+        @$('#edit-thumbnail-preview').css opacity: percent
       add: (src) =>
         @article.set 'thumbnail_image', src
+        @$('#edit-thumbnail-preview').css opacity: 0.1
+        @$('#edit-thumbnail-upload').addClass 'is-uploading'
       done: (src) =>
         img = new Image()
         img.src = src
-        img.onload = => @article.save thumbnail_image: src
+        img.onload = =>
+          @article.save thumbnail_image: src
+          @$('#edit-thumbnail-upload .upload-progress-container').hide()
+          @$('#edit-thumbnail-upload').removeClass 'is-uploading'
 
   removeThumbnail: (e) ->
     e.preventDefault()
