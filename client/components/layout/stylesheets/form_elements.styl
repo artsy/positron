@@ -16,7 +16,7 @@
   margin 0
   &:hover, &:active
     color purple-color
-  &:disabled, &.is-disabled
+  &:disabled, &.is-disabled, &[data-disabled=true]
     background gray-lighter-color
     color gray-dark-color
     cursor not-allowed
@@ -58,6 +58,10 @@
   outline none
   margin 0
 
+input-placeholder()
+  color gray-dark-color
+  transition color 0.3s
+
 .bordered-input
   margin 0
   padding 5px 8px 7px 8px
@@ -71,14 +75,13 @@
   outline none
   &.is-active, &:active, &:focus
     border-color purple-color
+  placeholder(input-placeholder)
 
 .dashed-file-upload-container
   position relative
   border 2px dashed gray-lighter-color
   cursor pointer
-  transition border-color 0.3s
-  span
-    transition color 0.3s
+  transition border-color 0.3s, color 0.3s
   input
     width 100%
     height 100%

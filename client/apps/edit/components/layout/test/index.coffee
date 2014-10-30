@@ -31,13 +31,6 @@ describe 'EditLayout', ->
     _.debounce.restore()
     @EditLayout::attachScribe.restore()
 
-  describe '#toggleTabs', ->
-
-    it 'highlights missing fields if the author isnt done', ->
-      @view.highlightMissingFields = sinon.stub()
-      $('#edit-publish').click()
-      @view.highlightMissingFields.called.should.be.ok
-
   describe '#autosave', ->
 
     it 'autosaves on debounce keyup', ->
@@ -93,3 +86,21 @@ describe 'EditLayout', ->
       @view.popLockControls()
       $($section.find('.edit-section-controls')).attr('data-fixed')
         .should.equal 'true'
+
+  describe '#togglePublished', ->
+
+    it 'publishes an article thats ready', ->
+      @view.article.set
+        title: 'foo'
+        thumbnail_title: 'bar'
+        thumbnail_image: 'foo.jpg'
+        thumbnail_teaser: 'baz'
+        tags: ['foo']
+      @view.article.save = sinon.stub()
+      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
+      @view.article.save.called.should.be.ok
+
+    it 'highlights missing fields if not done', ->
+      @view.article.clear()
+      @view.togglePublished { preventDefault: (->), stopPropagation: (->) }
+      @view.$('#edit-thumbnail-inputs').hasClass('eti-error').should.be.ok

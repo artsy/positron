@@ -28,12 +28,6 @@ module.exports = class EditLayout extends Backbone.View
         a: { href: true, target: '_blank' }
     @toggleLeadParagraphPlaceholder()
 
-  toggleLeadParagraphPlaceholder: ->
-    show = @$('#edit-lead-paragraph').text().match(/\w/) is null
-    @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
-      'is-empty'
-    )
-
   serialize: ->
     {
       title: @$('#edit-title input').val()
@@ -47,9 +41,6 @@ module.exports = class EditLayout extends Backbone.View
       )
     }
 
-  highlightMissingFields: ->
-    alert 'missing fields'
-
   toggleAstericks: =>
     @$('.edit-required + :input').each (i, el) =>
       $(el).prev('.edit-required').attr 'data-hidden', !!$(el).val()
@@ -57,29 +48,24 @@ module.exports = class EditLayout extends Backbone.View
   redirectToList: =>
     location.assign '/articles?published=' + @article.get('published')
 
-  events:
-    'click #edit-tabs > a': 'toggleTabs'
-    'click #edit-save:not(.is-disabled)': 'save'
-    'keyup :input, [contenteditable]': 'onKeyup'
-    'click #edit-sections *': 'onKeyup'
-    'click .edit-section-container *': 'popLockControls'
-    'dragenter .dashed-file-upload-container': 'toggleDragover'
-    'dragleave .dashed-file-upload-container': 'toggleDragover'
-    'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
-    'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
-
-  toggleTabs: (e) ->
-    idx = $(e.target).index()
-    if $(e.currentTarget).is('#edit-publish.is-disabled')
-      idx = 1
-      @highlightMissingFields()
+  openTab: (idx) ->
     @$('#edit-tabs a').removeClass('is-active')
     @$("#edit-tabs a:eq(#{idx})").addClass 'is-active'
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
 
-  save: ->
-    @article.save @serialize(), complete: => @redirectToList()
+  events:
+    'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
+    'keyup :input, [contenteditable]': 'onKeyup'
+    'click .edit-section-container *': 'popLockControls'
+    'dragenter .dashed-file-upload-container': 'toggleDragover'
+    'dragleave .dashed-file-upload-container': 'toggleDragover'
+    'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
+    'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
+    'click #edit-publish': 'togglePublished'
+
+  toggleTabs: (e) ->
+    @openTab $(e.target).index()
 
   onKeyup: =>
     @article.save @serialize()
@@ -103,3 +89,23 @@ module.exports = class EditLayout extends Backbone.View
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')
       .toggleClass 'is-dragover'
+
+  toggleLeadParagraphPlaceholder: ->
+    show = @$('#edit-lead-paragraph').text().match(/\w/) is null
+    @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
+      'is-empty'
+    )
+
+  togglePublished: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    if @article.finishedContent() and @article.finishedThumbnail()
+      @article.save(
+        _.extend(@serialize(), published: not @article.get('published'))
+        success: @redirectToList
+      )
+    else
+      @openTab 1
+      @$window.scrollTop @$window.height()
+      @$('#edit-thumbnail-inputs').addClass 'eti-error'
+      setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000

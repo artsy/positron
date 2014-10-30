@@ -11,7 +11,11 @@ describe 'routes', ->
     @Article = routes.__get__ 'Article'
     for method in @methods = ['where', 'save', 'destroy', 'find']
       sinon.stub @Article, method
-    @req = { query: {}, body: {}, params: {}, user: _.extend fixtures().users }
+    @req =
+      query: {}
+      body: {}
+      params: {}
+      user: _.extend(fixtures().users, _id: ObjectId '5086df098523e60002000012')
     @res = { send: sinon.stub(), err: sinon.stub() }
     @next = sinon.stub()
 
