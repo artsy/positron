@@ -70,3 +70,16 @@ request = require 'superagent'
       )(artwork)
     ), (err, results) ->
       callback null, results
+
+@search = (query, accessToken, callback) ->
+
+  # Query the search API for 3 pages
+  async.parallel _.times 3, (i) ->
+    (cb) ->
+      request
+        .get("#{ARTSY_URL}/api/search?q=#{query}&offset=#{10 * i}")
+        .set('X-Access-Token': accessToken)
+        .end (err, res) -> cb err, res?.body
+  , (err, results) ->
+    return callback err if err
+    console.log results

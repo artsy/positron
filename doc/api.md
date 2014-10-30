@@ -28,3 +28,4 @@ GET /users/me
 DELETE /users/me
 
 GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
+GET /artworks?q=Skull
