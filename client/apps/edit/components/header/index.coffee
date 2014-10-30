@@ -1,3 +1,4 @@
+_ = require 'underscore'
 Backbone = require 'backbone'
 
 module.exports = class EditHeader extends Backbone.View
@@ -20,3 +21,33 @@ module.exports = class EditHeader extends Backbone.View
     @$('#edit-tabs a:eq(1)').attr 'data-complete', @article.finishedThumbnail()
     @$('#edit-publish').attr('data-disabled',
       not @article.finishedContent() or not @article.finishedThumbnail())
+
+  events: ->
+    'click #edit-publish': 'togglePublished'
+    'click #edit-delete': 'delete'
+    'click #edit-save': 'save'
+
+  togglePublished: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    if @article.finishedContent() and @article.finishedThumbnail()
+      @$('#edit-publish').text(
+        if @article.get('published') then 'Unpublishing...' else 'Publishing...'
+      )
+      @article.trigger('finished').save published: not @article.get 'published'
+    else
+      @openTab 1
+      @$window.scrollTop @$window.height()
+      @$('#edit-thumbnail-inputs').addClass 'eti-error'
+      setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
+
+  delete: (e) ->
+    e.preventDefault()
+    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
+    @$('#edit-delete').text 'Deleting...'
+    @article.trigger('finished').destroy()
+
+  save: (e) ->
+    e.preventDefault()
+    @$('#edit-save').text 'Saving...'
+    @article.trigger('finished').save()

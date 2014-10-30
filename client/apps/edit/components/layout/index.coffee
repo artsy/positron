@@ -12,6 +12,7 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 1000
     @article.sections.on 'change', => @article.save()
+    @article.on 'finished', @onFinished
     @$window.on 'scroll', _.throttle @popLockControls, 100
     @toggleAstericks()
     @attachScribe()
@@ -52,6 +53,10 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
 
+  onFinished: =>
+    @$('#edit-sections-spinner').show()
+    @article.on 'sync', @redirectToList
+
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input, [contenteditable]': 'onKeyup'
@@ -60,10 +65,6 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
-    'click #edit-publish': 'togglePublished'
-    'click #edit-delete': 'delete'
-    'click #edit-save': 'save'
-
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -96,32 +97,3 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
       'is-empty'
     )
-
-  togglePublished: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
-    if @article.finishedContent() and @article.finishedThumbnail()
-      @$('#edit-sections-spinner').show()
-      @$('#edit-publish').text 'Publishing...'
-      @article.save(
-        _.extend(@serialize(), published: not @article.get('published'))
-        success: @redirectToList
-      )
-    else
-      @openTab 1
-      @$window.scrollTop @$window.height()
-      @$('#edit-thumbnail-inputs').addClass 'eti-error'
-      setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
-
-  delete: (e) ->
-    e.preventDefault()
-    return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
-    @$('#edit-sections-spinner').show()
-    @$('#edit-delete').text 'Deleting...'
-    @article.destroy complete: @redirectToList
-
-  save: (e) ->
-    e.preventDefault()
-    @$('#edit-sections-spinner').show()
-    @$('#edit-save').text 'Saving...'
-    @article.save {}, complete: @redirectToList
