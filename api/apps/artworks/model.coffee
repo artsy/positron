@@ -76,19 +76,12 @@ request = require 'superagent'
       callback null, results
 
 @search = (query, accessToken, callback) ->
-
-  # Query the search API for 3 pages
-  async.parallel _.times(3, (i) ->
-    (cb) ->
-      request
-        .get("#{ARTSY_URL}/api/search?q=#{query}&offset=#{i * 10}")
-        .set('X-Access-Token': accessToken)
-        .end (err, res) -> cb err, res?.body
-  ), (err, results) ->
-    return callback err if err
-
-    # Pluck out all of the slugs from the urls and findByIds
-    embeds = _.flatten (r._embedded.results for r in results)
-    slugs = for result in embeds when result.type is 'Artwork'
-      _.last result._links.self.href.split '/'
-    findByIds slugs, accessToken, callback
+  request
+    .get("#{ARTSY_URL}/api/search?q=#{query}")
+    .set('X-Access-Token': accessToken)
+    .end (err, res) ->
+      return callback err if err
+      results = res.body._embedded.results
+      slugs = for result in results when result.type is 'Artwork'
+        _.last result._links.self.href.split '/'
+      findByIds slugs, accessToken, callback

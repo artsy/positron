@@ -94,3 +94,40 @@
 .edit-section-container[data-state-editing=true]
   .esa-controls-container, .esa-artworks-list .edit-section-remove
     display block
+
+.esa-autocomplete-menu
+  width 290px
+  position absolute
+  right 0
+  background white
+  z-index 2
+  overflow ellipsis
+  top 37px
+  li
+    padding 10px
+    border 1px solid gray-color
+    border-bottom 0
+    color black
+    &:last-child
+      border-bottom 1px solid gray-color
+    &.is-active
+      background black
+      color white
+  img
+    background gray-lighter-color
+    width 100%
+  span
+    margin-top 18px
+
+.esa-thumbnail-container
+  height 40px
+  width 40px
+  overflow hidden
+  margin-right 10px
+
+.esa-thumbnail-container, .esa-thumbnail-right
+  display inline-block
+  vertical-align top
+
+.esa-thumbnail-right
+  line-height 1.4em
