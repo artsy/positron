@@ -6,9 +6,7 @@
 _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
 React = require 'react'
-{ div, nav, section, label, input, a, h1, textarea, button, form, ul,
-  li, img, p, strong, span } = React.DOM
-icons = -> require('./icons.jade') arguments...
+{ div, label, input, ul, li, img } = React.DOM
 
 module.exports = React.createClass
 
@@ -16,15 +14,11 @@ module.exports = React.createClass
     { loading: false, artworks: [], highlighted: 0 }
 
   search: (e) ->
-    @debouncedSearch e.target.value
-
-  debouncedSearch: _.debounce (q) ->
     @setState loading: true
-    new Artworks().fetch
-      data: q: q
-      success: (artworks) =>
-        @setState artworks: artworks.toJSON(), loading: false
-  , 500
+    @xhr?.abort()
+    @xhr = new Artworks().fetch
+      data: q: e.target.value
+      success: (a, res) => @setState artworks: res, loading: false
 
   onKeyUp: (e) ->
     switch e.which
@@ -46,7 +40,6 @@ module.exports = React.createClass
   addHighlighted: ->
     @props.addArtwork @state.artworks[@state.highlighted]
     @setState artworks: [], loading: false, highlighted: 0
-
 
   onMouseOverLi: (index) -> =>
     @setState highlighted: index

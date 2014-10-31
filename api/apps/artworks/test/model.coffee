@@ -29,3 +29,10 @@ describe 'Artwork', ->
         artworks[0].partner.name.should.equal 'Gagosian Gallery'
         artworks[0].image_urls.large.should.containEql 'large.jpg'
         done()
+
+  describe '#search', ->
+
+    it 'queries the search endpoint and expands it into artwork data', (done) ->
+      Artwork.search 'Skull', 'test-access-token', (err, artworks) ->
+        artworks[0].artwork.title.should.equal 'Skull'
+        done()
