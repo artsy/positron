@@ -4,20 +4,24 @@
 #
 
 _ = require 'underscore'
+Artworks = require '../../../../collections/artworks.coffee'
 React = require 'react'
+ByTitle = require './by_title.coffee'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
-  li, img, p, strong } = React.DOM
+  li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
 module.exports = React.createClass
 
   getInitialState: ->
-    { urlsValue: '', artworks: [], loadingUrls: false }
+    urlsValue: ''
+    artworks: []
+    loadingUrls: false
 
   componentDidMount: ->
     ids = @props.section.get('ids')
     return if not ids?.length or @state.artworks.length
-    @fetchArtworks ids 
+    @fetchArtworks ids
 
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
@@ -32,17 +36,19 @@ module.exports = React.createClass
 
   fetchArtworks: (ids) ->
     @setState loadingUrls: true
-    $.ajax
-      url: '/api/artworks'
+    new Artworks().fetch
       data: ids: ids
       success: (artworks) =>
         return unless @isMounted()
         @setState
-          artworks: @state.artworks.concat(artworks)
+          artworks: @state.artworks.concat artworks.toJSON()
           loadingUrls: false
 
   removeArtwork: (artwork) -> =>
     @setState artworks: _.without @state.artworks, artwork
+
+  addArtwork: (artwork) ->
+    @setState artworks: @state.artworks.concat [artwork]
 
   onChangeUrls: (e) ->
     @setState urlsValue: e.target.value
@@ -71,11 +77,7 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          label {}, 'Search by title',
-            input {
-              placeholder: 'Try “Andy Warhol Skull”'
-              className: 'bordered-input'
-            }
+          ByTitle { addArtwork: @addArtwork }
           label {}, 'or paste in artwork page urls',
             form {
               className: 'esa-by-urls-container'
@@ -99,9 +101,9 @@ module.exports = React.createClass
             li { key: i },
               img { src: artwork.image_urls.large }
               p {},
-                strong {}, artwork.artists[0].name
+                strong {}, artwork.artists?[0]?.name
               p {}, artwork.artwork.title
-              p {}, artwork.partner.name
+              p {}, artwork.partner?.name
               button {
                 className: 'edit-section-remove button-reset'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()

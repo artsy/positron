@@ -19,9 +19,10 @@ request = require 'superagent'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 
+#
 # Retrieval
-
-@findByIds = (ids, accessToken, callback) ->
+#
+@findByIds = findByIds = (ids, accessToken, callback) ->
 
   # Parallel fetch each artwork
   async.parallel (for id in ids
@@ -39,19 +40,22 @@ request = require 'superagent'
     async.parallel (for artwork in artworks
       ((artwork) ->
         (cb) ->
-          async.parallel [
+          requests = []
+          requests.push(
             (cb) ->
               request
                 .get(artwork._links.artists.href)
                 .set('X-Access-Token': accessToken)
-                .end (err, res) ->
-                  cb err, res?.body._embedded.artists
+                .end (err, res) -> cb err, res?.body._embedded.artists
+          ) if artwork._links.artists?
+          requests.push(
             (cb) ->
               request
                 .get(artwork._links.partner.href)
                 .set('X-Access-Token': accessToken)
                 .end (err, res) -> cb err, res?.body
-          ], (err, [artists, partner]) ->
+          ) if artwork._links.partner?
+          async.parallel requests, (err, [artists, partner]) ->
 
             # Map curries into an image urls hash
             imageUrls = {}
@@ -70,3 +74,14 @@ request = require 'superagent'
       )(artwork)
     ), (err, results) ->
       callback null, results
+
+@search = (query, accessToken, callback) ->
+  request
+    .get("#{ARTSY_URL}/api/search?q=#{query}")
+    .set('X-Access-Token': accessToken)
+    .end (err, res) ->
+      return callback err if err
+      results = res.body._embedded.results
+      slugs = for result in results when result.type is 'Artwork'
+        _.last result._links.self.href.split '/'
+      findByIds slugs, accessToken, callback

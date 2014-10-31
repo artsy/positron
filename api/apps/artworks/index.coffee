@@ -3,4 +3,4 @@ routes = require './routes'
 
 app = module.exports = express()
 
-app.get '/artworks', routes.index
+app.get '/artworks', routes.search, routes.index

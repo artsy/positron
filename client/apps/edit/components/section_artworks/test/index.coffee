@@ -25,19 +25,19 @@ describe 'SectionArtworks', ->
         setEditing: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub $, 'ajax'
+        sinon.stub Backbone, 'sync'
         done()
 
   afterEach ->
-    $.ajax.restore()
+    Backbone.sync.restore()
     benv.teardown()
 
   it 'adds artworks from urls', ->
     @component.state.urlsValue = 'artsy.net/foo\nartsy.net/baz'
     @component.state.artworks = []
     @component.addArtworksFromUrls (preventDefault: ->)
-    $.ajax.args[0][0].data.ids[0].should.equal 'foo'
-    $.ajax.args[0][0].success artworks = [fixtures().artworks]
+    Backbone.sync.args[0][2].data.ids[0].should.equal 'foo'
+    Backbone.sync.args[0][2].success results: artworks = [fixtures().artworks]
     @component.setState.args[0][0].loadingUrls.should.equal true
     @component.setState.args[1][0].loadingUrls.should.equal false
     @component.setState.args[1][0].artworks[0].artwork.title
@@ -61,7 +61,7 @@ describe 'SectionArtworks', ->
   it 'fetches artworks on init', ->
     @component.props.section.set ids: ['foo', 'bar']
     @component.componentDidMount()
-    $.ajax.args[0][0].data.ids.should.containEql 'foo', 'bar'
+    Backbone.sync.args[0][2].data.ids.should.containEql 'foo', 'bar'
 
   xit 'renders the artworks', ->
     @component.state.artworks = [
