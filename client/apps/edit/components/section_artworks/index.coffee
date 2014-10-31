@@ -38,10 +38,10 @@ module.exports = React.createClass
     @setState loadingUrls: true
     new Artworks().fetch
       data: ids: ids
-      success: (artworks, res) =>
+      success: (artworks) =>
         return unless @isMounted()
         @setState
-          artworks: @state.artworks.concat res
+          artworks: @state.artworks.concat artworks.toJSON()
           loadingUrls: false
 
   removeArtwork: (artwork) -> =>

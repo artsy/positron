@@ -18,7 +18,8 @@ module.exports = React.createClass
     @xhr?.abort()
     @xhr = new Artworks().fetch
       data: q: e.target.value
-      success: (a, res) => @setState artworks: res, loading: false
+      success: (artworks) =>
+        @setState artworks: artworks.toJSON(), loading: false
 
   onKeyUp: (e) ->
     switch e.which

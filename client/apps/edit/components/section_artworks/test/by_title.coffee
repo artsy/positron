@@ -32,7 +32,7 @@ describe 'SectionArtworks', ->
   it 'searches artworks by title', ->
     @component.search target: value: 'Skull'
     Backbone.sync.args[0][2].data.q.should.equal 'Skull'
-    Backbone.sync.args[0][2].success artworks = [fixtures().artworks]
+    Backbone.sync.args[0][2].success results: artworks = [fixtures().artworks]
     @component.setState.args[1][0].artworks[0].artwork.title.should
       .equal artworks[0].artwork.title
 

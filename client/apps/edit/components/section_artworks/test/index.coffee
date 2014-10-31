@@ -37,7 +37,7 @@ describe 'SectionArtworks', ->
     @component.state.artworks = []
     @component.addArtworksFromUrls (preventDefault: ->)
     Backbone.sync.args[0][2].data.ids[0].should.equal 'foo'
-    Backbone.sync.args[0][2].success artworks = [fixtures().artworks]
+    Backbone.sync.args[0][2].success results: artworks = [fixtures().artworks]
     @component.setState.args[0][0].loadingUrls.should.equal true
     @component.setState.args[1][0].loadingUrls.should.equal false
     @component.setState.args[1][0].artworks[0].artwork.title
