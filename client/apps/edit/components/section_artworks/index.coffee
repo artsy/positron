@@ -17,6 +17,7 @@ module.exports = React.createClass
     urlsValue: ''
     artworks: []
     loadingUrls: false
+    layout: @props.section.get('layout')
 
   componentDidMount: ->
     ids = @props.section.get('ids')
@@ -53,6 +54,9 @@ module.exports = React.createClass
   onChangeUrls: (e) ->
     @setState urlsValue: e.target.value
 
+  changeLayout: (layout) -> =>
+    @setState layout: layout
+
   render: ->
     div {
       className: 'edit-section-artworks-container'
@@ -67,6 +71,7 @@ module.exports = React.createClass
               'background-size': '38px'
             }
             className: 'esa-overflow-fillwidth'
+            onClick: @changeLayout('fillwidth')
           }
           a {
             style: {
@@ -74,6 +79,8 @@ module.exports = React.createClass
               'background-size': '22px'
             }
             className: 'esa-column-width'
+            onClick: @changeLayout('column-width')
+            onClick: @changeLayout('column-width')
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
