@@ -28,7 +28,7 @@ module.exports = React.createClass
 
   componentDidUpdate: ->
     return unless @refs.artworks
-    if @props.layout is 'row_overflow'
+    if @props.layout is 'overflow_fillwidth'
       @fillwidth()
     else
       @removeFillwidth()
@@ -89,11 +89,11 @@ module.exports = React.createClass
         nav {},
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_row_overflow.svg)'
+              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
               'background-size': '38px'
             }
             className: 'esa-overflow-fillwidth'
-            onClick: @props.changeLayout('row_overflow')
+            onClick: @props.changeLayout('overflow_fillwidth')
           }
           a {
             style: {
