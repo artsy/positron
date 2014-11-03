@@ -23,6 +23,7 @@ describe 'SectionArtworks', ->
         section: new Backbone.Model { body: 'Foo to the bar' }
         editing: false
         setEditing: ->
+        changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub Backbone, 'sync'
