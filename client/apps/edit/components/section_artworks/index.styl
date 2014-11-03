@@ -1,5 +1,9 @@
 @import '../stylus_lib'
 
+artwork-img-bottom = 10px
+short-input-width = 290px
+wide-input-width = 640px
+
 .edit-section-artworks-container
   nav a
     display inline-block
@@ -56,7 +60,7 @@
     button
       font-size small-avant-garde-font-size + 1
   .esa-by-urls-container, input
-    width 290px
+    width short-input-width
 
 .esa-empty-placeholder
   text-align center
@@ -92,7 +96,7 @@
     display block
 
 .esa-autocomplete-menu
-  width 290px
+  width short-input-width
   position absolute
   right 0
   background white
@@ -143,6 +147,8 @@
 .edit-section-container[data-layout=row_overflow]
   nav .esa-overflow-fillwidth
     opacity 1
+  .esa-by-urls-container, input, .esa-autocomplete-menu
+    width wide-input-width
   .esa-artworks-list
     li
       display inline-block

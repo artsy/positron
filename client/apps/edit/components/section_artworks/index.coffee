@@ -53,7 +53,7 @@ module.exports = React.createClass
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
     return @props.section.destroy() if ids.length is 0
-    @props.section.set ids: ids
+    @props.section.set ids: ids, layout: @props.layout
 
   addArtworksFromUrls: (e) ->
     e.preventDefault()
