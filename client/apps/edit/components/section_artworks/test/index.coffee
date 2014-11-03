@@ -65,14 +65,14 @@ describe 'SectionArtworks', ->
     Backbone.sync.args[0][2].data.ids.should.containEql 'foo', 'bar'
 
   it 'adds fillwidth styling if the layout is appropriate', ->
-    @component.refs = artworks: {}
+    @component.state.artworks = [fixtures().artworks]
     @component.fillwidth = sinon.stub()
     @component.props.layout = 'overflow_fillwidth'
     @component.componentDidUpdate()
     @component.fillwidth.called.should.be.ok
 
   it 'adds removes styling if the layout is appropriate', ->
-    @component.refs = artworks: {}
+    @component.state.artworks = [fixtures().artworks]
     @component.removeFillwidth = sinon.stub()
     @component.props.layout = 'column_width'
     @component.componentDidUpdate()

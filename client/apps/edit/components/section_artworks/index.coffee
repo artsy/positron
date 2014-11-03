@@ -27,7 +27,7 @@ module.exports = React.createClass
     @fetchArtworks ids
 
   componentDidUpdate: ->
-    return unless @refs.artworks
+    return unless @state.artworks.length
     if @props.layout is 'overflow_fillwidth'
       @fillwidth()
     else
