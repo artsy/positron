@@ -6,15 +6,13 @@
     height 40px
     width @height + 20px
     background no-repeat center center
-    border-right 1px solid gray-darkest-color
     transition opacity 0.3s
     opacity 0.5
+    cursor pointer
+    &:hover
+      opacity 1
     &:last-of-type
       border-right 0
-  &[data-layout=column_width] nav .esa-column-width
-    opacity 1
-  &[data-layout=overflow_fillwidth] nav .esa-overflow-fillwidth
-    opacity 1
 
 .esa-controls-container
   fill-container()
@@ -66,18 +64,16 @@
   height 100px
   line-height @height
 
-.edit-section-artworks-container[data-layout=column_width] .esa-artworks-list
+.esa-artworks-list
   li
     margin-bottom 30px
     position relative
     &:last-child
       margin-bottom 0
-    img
-      width 100%
-      margin-bottom 5px
     p
       color gray-dark-color
       line-height 20px
+      overflow ellipsis
 
 .esa-artworks-list .edit-section-remove
   display none
@@ -132,3 +128,40 @@
 
 .esa-thumbnail-right
   line-height 1.4em
+
+//
+// Varying layouts
+//
+.edit-section-container[data-layout=column_width]
+  nav .esa-column-width
+    opacity 1
+  .esa-artworks-list
+    img
+      width 100%
+      margin-bottom artwork-img-bottom
+
+.edit-section-container[data-layout=row_overflow]
+  nav .esa-overflow-fillwidth
+    opacity 1
+  .esa-artworks-list
+    li
+      display inline-block
+      vertical-align top
+      padding 0 10px artwork-img-bottom 10px
+      &:last-child
+        padding-right 0
+        padding-left 20px
+        .edit-section-remove
+          right -15px
+      &:first-child
+        padding-left 0
+        padding-right 20px
+        .edit-section-remove
+          right 5px
+    img
+      max-height 400px
+      max-width 100%
+    .esa-img-container
+      padding-bottom artwork-img-bottom
+    .edit-section-remove
+      right -5px

@@ -7,9 +7,12 @@ _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
 React = require 'react'
 ByTitle = require './by_title.coffee'
+imagesLoaded = require 'imagesloaded'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...
+
+ROW_OVERFLOW_PADDING = 20
 
 module.exports = React.createClass
 
@@ -17,12 +20,35 @@ module.exports = React.createClass
     urlsValue: ''
     artworks: []
     loadingUrls: false
-    layout: @props.section.get('layout')
 
   componentDidMount: ->
     ids = @props.section.get('ids')
     return if not ids?.length or @state.artworks.length
     @fetchArtworks ids
+
+  componentDidUpdate: ->
+    return unless @refs.artworks
+    if @props.layout is 'row_overflow'
+      @fillwidth()
+    else
+      @removeFillwidth()
+
+  fillwidth: ->
+    $list = $(@refs.artworks.getDOMNode())
+    $imgs = $list.find('img')
+    imagesLoaded $list[0], =>
+      widths = $imgs.map -> $(this).width()
+      sum = _.reduce widths, (m, n) -> m + n
+      return unless sum > listWidth = $list.width()
+      newWidths = _.map widths, (w) -> Math.round w * (listWidth / sum)
+      $list.children('li').each (i) ->
+        $(this).width newWidths[i] - ROW_OVERFLOW_PADDING
+      tallest = _.max $imgs.map -> $(this).height()
+      $list.find('.esa-img-container').each -> $(this).height tallest
+
+  removeFillwidth: ->
+    $(@refs.artworks.getDOMNode()).children('li').each ->
+      $(this).width('auto').find('.esa-img-container').height 'auto'
 
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
@@ -54,24 +80,20 @@ module.exports = React.createClass
   onChangeUrls: (e) ->
     @setState urlsValue: e.target.value
 
-  changeLayout: (layout) -> =>
-    @setState layout: layout
-
   render: ->
     div {
       className: 'edit-section-artworks-container'
-      'data-layout': @props.section.get('layout')
       onClick: @props.setEditing(on)
     },
       div { className: 'esa-controls-container edit-section-controls' },
         nav {},
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'background-image': 'url(/icons/edit_artworks_row_overflow.svg)'
               'background-size': '38px'
             }
             className: 'esa-overflow-fillwidth'
-            onClick: @changeLayout('fillwidth')
+            onClick: @props.changeLayout('row_overflow')
           }
           a {
             style: {
@@ -79,8 +101,7 @@ module.exports = React.createClass
               'background-size': '22px'
             }
             className: 'esa-column-width'
-            onClick: @changeLayout('column-width')
-            onClick: @changeLayout('column-width')
+            onClick: @props.changeLayout('column_width')
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
@@ -106,7 +127,8 @@ module.exports = React.createClass
         ul { className: 'esa-artworks-list', ref: 'artworks' },
           (for artwork, i in @state.artworks
             li { key: i },
-              img { src: artwork.image_urls.large }
+              div { className: 'esa-img-container' },
+                img { src: artwork.image_urls.large }
               p {},
                 strong {}, artwork.artists?[0]?.name
               p {}, artwork.artwork.title

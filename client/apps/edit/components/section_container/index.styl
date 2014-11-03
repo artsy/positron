@@ -27,12 +27,13 @@
     &:last-of-type
       bottom -4px
 
-.edit-section-container[data-type=image]
-  width 900px
-  margin-left -180px
-
 .edit-section-container[data-state-editing=true]
   .edit-section-container-bg
     display block
   .edit-section-hover-controls
     opacity 0
+
+.edit-section-container[data-type=image]
+.edit-section-container[data-type=artworks][data-layout=row_overflow]
+  width overflow-width
+  margin-left -((overflow-width - body-width) / 2 - controls-padding)
