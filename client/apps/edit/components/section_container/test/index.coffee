@@ -17,12 +17,12 @@ describe 'SectionContainer', ->
         resolve(__dirname, '../index'), ['icons']
       )
       SectionContainer.__set__ 'SectionText', ->
-      @component = React.renderComponent SectionContainer(
+      @component = React.render SectionContainer(
         section: new Backbone.Model(
           { body: 'Foo to the bar', type: 'text', layout: 'foo' }
         )
         onSetEditing: @onSetEditing = sinon.stub()
-        key: 4
+        index: 4
       ), $("<div></div>")[0], => setTimeout =>
         @component.setState = sinon.stub()
         done()

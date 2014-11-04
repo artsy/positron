@@ -26,7 +26,7 @@ module.exports = React.createClass
 
   setEditing: (editing) -> =>
     return if editing is @props.editing
-    @props.onSetEditing if editing then @props.key else null
+    @props.onSetEditing if editing then @props.index else null
 
   deleteSection: ->
     @props.section.destroy()

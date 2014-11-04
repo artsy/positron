@@ -17,7 +17,7 @@ describe 'SectionVideo', ->
       benv.expose $: require 'jquery'
       SectionVideo = benv.require resolve __dirname, '../index'
       SectionVideo.__set__ 'gemup', @gemup = sinon.stub()
-      @component = React.renderComponent SectionVideo(
+      @component = React.render SectionVideo(
         section: new Backbone.Model
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
         editing: false

@@ -37,7 +37,7 @@ module.exports = React.createClass
           [
             SectionContainer {
               section: section
-              key: i
+              index: i
               editing: @state.editingIndex is i
               ref: 'section' + 1
               onSetEditing: @onSetEditing

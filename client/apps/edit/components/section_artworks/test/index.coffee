@@ -20,7 +20,7 @@ describe 'SectionArtworks', ->
         resolve(__dirname, '../index')
         ['icons']
       )
-      @component = React.renderComponent SectionArtworks(
+      @component = React.render SectionArtworks(
         section: new Section { body: 'Foo to the bar' }
         editing: false
         setEditing: ->

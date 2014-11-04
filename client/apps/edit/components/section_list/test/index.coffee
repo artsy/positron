@@ -18,7 +18,7 @@ describe 'SectionList', ->
       SectionList.__set__ 'SectionTool', ->
       SectionList.__set__ 'SectionContainer', React.createClass
         render: -> React.DOM.div {}
-      @component = React.renderComponent SectionList(
+      @component = React.render SectionList(
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }

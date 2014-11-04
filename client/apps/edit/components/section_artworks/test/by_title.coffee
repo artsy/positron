@@ -17,7 +17,7 @@ describe 'SectionArtworks', ->
     benv.setup =>
       benv.expose $: require 'jquery'
       SectionArtworks = require  resolve(__dirname, '../by_title')
-      @component = React.renderComponent SectionArtworks(
+      @component = React.render SectionArtworks(
         artworks: [fixtures().artworks]
         addArtwork: sinon.stub()
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
