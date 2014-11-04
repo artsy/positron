@@ -18,5 +18,5 @@ module.exports = class Artworks extends Backbone.Collection
       data: ids: ids
       error: options.error
       success: (artworks) =>
-        @set artworks.models
+        @set artworks.models, remove: false
         options.success this

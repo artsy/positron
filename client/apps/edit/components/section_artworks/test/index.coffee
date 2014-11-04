@@ -4,6 +4,7 @@ Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
 require 'react/addons'
+Section = require '../../../../../models/section.coffee'
 r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
@@ -20,7 +21,7 @@ describe 'SectionArtworks', ->
         ['icons']
       )
       @component = React.renderComponent SectionArtworks(
-        section: new Backbone.Model { body: 'Foo to the bar' }
+        section: new Section { body: 'Foo to the bar' }
         editing: false
         setEditing: ->
         changeLayout: ->
@@ -67,7 +68,7 @@ describe 'SectionArtworks', ->
   it 'adds fillwidth styling if the layout is appropriate', ->
     @component.state.artworks = [fixtures().artworks]
     @component.fillwidth = sinon.stub()
-    @component.props.layout = 'overflow_fillwidth'
+    @component.props.section.set layout: 'overflow_fillwidth'
     @component.componentDidUpdate()
     @component.fillwidth.called.should.be.ok
 
@@ -78,8 +79,11 @@ describe 'SectionArtworks', ->
     @component.componentDidUpdate()
     @component.removeFillwidth.called.should.be.ok
 
-  xit 'renders the artwo
-  rks', ->
+  it 'changes layout when clicking on layout controls', ->
+    r.simulate.click r.find @component, 'esa-overflow-fillwidth'
+    @component.props.section.get('layout').should.equal 'overflow_fillwidth'
+
+  xit 'renders the artworks', ->
     @component.state.artworks = [
       { id: '1', title: 'Foo to the bar' }
     ]
