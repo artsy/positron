@@ -16,7 +16,7 @@ describe 'SectionTool', ->
       SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      @component = React.renderComponent SectionTool(
+      @component = React.render SectionTool(
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }

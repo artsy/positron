@@ -21,7 +21,7 @@ describe 'SectionImage', ->
       benv.expose $: require 'jquery'
       SectionImage = benv.require resolve __dirname, '../index'
       SectionImage.__set__ 'gemup', @gemup = sinon.stub()
-      @component = React.renderComponent SectionImage(
+      @component = React.render SectionImage(
         section: new Backbone.Model { body: 'Foo to the bar' }
         editing: false
         setEditing: -> ->

@@ -16,7 +16,7 @@ describe 'SectionText', ->
       SectionText = benv.require resolve(__dirname, '../index')
       SectionText.__set__ 'Scribe', @Scribe = sinon.stub()
       SectionText.__set__ 'scribePluginToolbar', @scribePluginToolbar = sinon.stub()
-      @component = React.renderComponent SectionText(
+      @component = React.render SectionText(
         section: new Backbone.Model { body: 'Foo to the bar' }
         onSetEditing: @onSetEditing = sinon.stub()
         setEditing: @setEditing = sinon.stub()
