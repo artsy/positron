@@ -43,8 +43,3 @@ describe 'SectionContainer', ->
   it 'exits editing mode when clicking off and callsback a parent', ->
     r.simulate.click r.find @component, 'edit-section-container-bg'
     (@component.props.onSetEditing.args[0][0]?).should.not.be.ok
-
-  it 'callsback to change the layout', ->
-    @component.state.layout.should.equal 'foo'
-    @component.changeLayout('bar')()
-    @component.setState.args[0][0].layout.should.equal 'bar'
