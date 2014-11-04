@@ -14,12 +14,15 @@ icons = -> require('./icons.jade') arguments...
 
 module.exports = React.createClass
 
-  getInitialState: ->
-    layout: @props.section.get('layout')
-
   onClickOff: ->
     @setEditing(false)()
     @refs.section?.onClickOff?()
+
+  componentDidMount: ->
+    @props.section.on 'change:layout', => @forceUpdate()
+
+  componentWillUnmount: ->
+    @props.section.off()
 
   setEditing: (editing) -> =>
     return if editing is @props.editing
@@ -28,15 +31,12 @@ module.exports = React.createClass
   deleteSection: ->
     @props.section.destroy()
 
-  changeLayout: (layout) -> =>
-    @setState layout: layout
-
   render: ->
     div {
       className: 'edit-section-container'
       'data-state-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @state.layout
+      'data-layout': @props.section.get('layout')
     },
       div {
         className: 'edit-section-hover-controls'
@@ -58,8 +58,6 @@ module.exports = React.createClass
         ref: 'section'
         onClick: @setEditing(on)
         setEditing: @setEditing
-        changeLayout: @changeLayout
-        layout: @state.layout
       )
       div {
         className: 'edit-section-container-bg'

@@ -66,6 +66,7 @@ request = require 'superagent'
 
             # Finally callback with our compiled data
             cb err, {
+              id: artwork.id
               artwork: artwork
               artists: artists
               partner: partner
