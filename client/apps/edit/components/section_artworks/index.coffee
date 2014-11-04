@@ -28,7 +28,7 @@ module.exports = React.createClass
 
   componentDidUpdate: ->
     return unless @state.artworks.length
-    if @props.layout is 'overflow_fillwidth'
+    if @props.section.get('layout') is 'overflow_fillwidth'
       @fillwidth()
     else
       @removeFillwidth()
@@ -53,7 +53,7 @@ module.exports = React.createClass
   onClickOff: ->
     ids = (artwork.artwork.id for artwork in @state.artworks)
     return @props.section.destroy() if ids.length is 0
-    @props.section.set ids: ids, layout: @props.layout
+    @props.section.set ids: ids, layout: @props.section.get('layout')
 
   addArtworksFromUrls: (e) ->
     e.preventDefault()
@@ -63,12 +63,11 @@ module.exports = React.createClass
 
   fetchArtworks: (ids) ->
     @setState loadingUrls: true
-    new Artworks().fetch
-      data: ids: ids
+    @props.section.artworks.getOrFetchIds ids,
       success: (artworks) =>
         return unless @isMounted()
         @setState
-          artworks: @state.artworks.concat artworks.toJSON()
+          artworks: artworks.toJSON()
           loadingUrls: false
 
   removeArtwork: (artwork) -> =>
@@ -79,6 +78,9 @@ module.exports = React.createClass
 
   onChangeUrls: (e) ->
     @setState urlsValue: e.target.value
+
+  changeLayout: (layout) -> =>
+    @props.section.set layout: layout
 
   render: ->
     div {
@@ -93,7 +95,7 @@ module.exports = React.createClass
               'background-size': '38px'
             }
             className: 'esa-overflow-fillwidth'
-            onClick: @props.changeLayout('overflow_fillwidth')
+            onClick: @changeLayout('overflow_fillwidth')
           }
           a {
             style: {
@@ -101,7 +103,7 @@ module.exports = React.createClass
               'background-size': '22px'
             }
             className: 'esa-column-width'
-            onClick: @props.changeLayout('column_width')
+            onClick: @changeLayout('column_width')
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
