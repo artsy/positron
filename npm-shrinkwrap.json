@@ -5,7 +5,7 @@
     "antigravity": {
       "version": "0.0.4",
       "from": "antigravity@git://github.com/artsy/antigravity.git",
-      "resolved": "git://github.com/artsy/antigravity.git#490f09f3e0b368f7eed7b790fec74495837c8139",
+      "resolved": "git://github.com/artsy/antigravity.git#b4696204206850462ba70be4676a1cc7db98d8bb",
       "dependencies": {
         "express": {
           "version": "4.9.5",
@@ -2469,7 +2469,7 @@
     "scribe-editor": {
       "version": "0.1.25",
       "from": "scribe-editor@git://github.com/guardian/scribe.git",
-      "resolved": "git://github.com/guardian/scribe.git#46f6fdf87ed39be8a3d81f70157e37e5c4598ece",
+      "resolved": "git://github.com/guardian/scribe.git#9effa16217a6123fb856b1c79efba46be2bdd14b",
       "dependencies": {
         "lodash-amd": {
           "version": "2.4.1",
@@ -2483,17 +2483,9 @@
         }
       }
     },
-    "scribe-plugin-link-prompt-command": {
-      "version": "0.1.2",
-      "from": "scribe-plugin-link-prompt-command@*",
-      "resolved": "https://registry.npmjs.org/scribe-plugin-link-prompt-command/-/scribe-plugin-link-prompt-command-0.1.2.tgz",
-      "dependencies": {
-        "lodash-amd": {
-          "version": "2.4.1",
-          "from": "lodash-amd@~2.4.1",
-          "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-2.4.1.tgz"
-        }
-      }
+    "scribe-plugin-link-tooltip": {
+      "version": "0.0.2",
+      "from": "scribe-plugin-link-tooltip@*"
     },
     "scribe-plugin-toolbar": {
       "version": "0.1.4",

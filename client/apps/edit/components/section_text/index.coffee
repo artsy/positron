@@ -9,7 +9,7 @@ try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require './sanitizer.coffee'
-  scribePluginLinkPromptCommand = require 'scribe-plugin-link-prompt-command'
+  scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -31,7 +31,7 @@ module.exports = React.createClass
         a: { href: true, target: '_blank' }
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
-    @scribe.use scribePluginLinkPromptCommand({})
+    @scribe.use scribePluginLinkTooltip()
     $(@refs.editable.getDOMNode()).focus()
 
   componentDidMount: ->
@@ -63,10 +63,11 @@ module.exports = React.createClass
           dangerouslySetInnerHTML:
             __html: "&nbsp;" + $(icons()).filter('.remove-formatting').html()
         }
-      div {
-        className: 'edit-section-text-editable'
-        ref: 'editable'
-        dangerouslySetInnerHTML: __html: @props.section.get('body')
-        onClick: @props.setEditing(on)
-        onFocus: @props.setEditing(on)
-      }
+      div { className: 'est-editable-container' },
+        div {
+          className: 'edit-section-text-editable'
+          ref: 'editable'
+          dangerouslySetInnerHTML: __html: @props.section.get('body')
+          onClick: @props.setEditing(on)
+          onFocus: @props.setEditing(on)
+        }
