@@ -11,6 +11,7 @@ try
   scribePluginSanitizer = require './sanitizer.coffee'
   scribePluginLinkPromptCommand = require 'scribe-plugin-link-prompt-command'
 React = require 'react'
+icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
 
 module.exports = React.createClass
@@ -21,16 +22,17 @@ module.exports = React.createClass
 
   attachScribe: ->
     return unless @props.editing
-    scribe = new Scribe @refs.editable.getDOMNode()
-    scribe.use scribePluginSanitizer {
+    @scribe?.destroy()
+    @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe.use scribePluginSanitizer {
       tags:
         p: true
         b: true
         i: true
         a: { href: true, target: '_blank' }
     }
-    scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
-    scribe.use scribePluginLinkPromptCommand({})
+    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
+    @scribe.use scribePluginLinkPromptCommand({})
     $(@refs.editable.getDOMNode()).focus()
 
   componentDidMount: ->
@@ -40,14 +42,31 @@ module.exports = React.createClass
     @attachScribe()
 
   componentWillUnmount: ->
-    # Remove Scribe. Waiting on https://github.com/guardian/scribe/issues/95
+    @scribe.destroy()
 
   render: ->
     div { className: 'edit-section-text-container' },
       nav { ref: 'toolbar', className: 'edit-section-controls' },
-        button { 'data-command-name': 'bold' }, 'B'
-        button { 'data-command-name': 'italic' }, 'I'
-        button { 'data-command-name': 'linkPrompt' }, 'L'
+        button {
+          'data-command-name': 'bold'
+          dangerouslySetInnerHTML: __html: '&nbsp;'
+        }
+        button {
+          'data-command-name': 'italic'
+          dangerouslySetInnerHTML: __html: '&nbsp;'
+        }
+        div { className: 'est-link-container' },
+          button {
+            'data-command-name': 'linkPrompt'
+            dangerouslySetInnerHTML:
+              __html: "&nbsp;" + $(icons()).filter('.link').html()
+          }
+          button { 'data-command-name': 'unlink' }
+        button {
+          'data-command-name': 'removeFormat'
+          dangerouslySetInnerHTML:
+            __html: "&nbsp;" + $(icons()).filter('.remove-formatting').html()
+        }
       div {
         className: 'edit-section-text-editable'
         ref: 'editable'

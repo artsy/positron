@@ -2468,8 +2468,8 @@
     },
     "scribe-editor": {
       "version": "0.1.25",
-      "from": "scribe-editor@*",
-      "resolved": "https://registry.npmjs.org/scribe-editor/-/scribe-editor-0.1.25.tgz",
+      "from": "scribe-editor@git://github.com/craigspaeth/scribe#destroy",
+      "resolved": "git://github.com/craigspaeth/scribe#4bf629a930af7da788fd12ba3359b4f2c1a924f3",
       "dependencies": {
         "lodash-amd": {
           "version": "2.4.1",
