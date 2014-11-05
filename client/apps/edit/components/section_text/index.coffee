@@ -46,7 +46,7 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-section-text-container' },
-      nav { ref: 'toolbar', className: 'edit-section-controls' },
+      nav { ref: 'toolbar', className: 'edit-section-controls est-nav' },
         button {
           'data-command-name': 'bold'
           dangerouslySetInnerHTML: __html: '&nbsp;'
