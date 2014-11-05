@@ -95,3 +95,42 @@
 .edit-section-container[data-state-editing=true]
   nav
     display block
+
+.scribe-plugin-link-tooltip
+  background black
+  position absolute
+  padding 12px
+  z-index 2
+  width 400px
+  margin-left -(@width / 2)
+  &::after
+    content '.'
+    width 0
+    height 0
+    border-left 7px solid transparent
+    border-right 7px solid transparent
+    border-bottom 7px solid black
+    position absolute
+    top -7px
+    left 200px
+  input
+    background white
+    color black
+    border 0
+    padding 0 10px
+    width 296px
+  button
+    background gray-darker-color
+    color white
+    font-size small-avant-garde-font-size + 1
+    border 0
+    padding 0
+    width 80px
+    text-align center
+    &:hover
+      color white
+      background gray-dark-color
+  input, button
+    height 30px
+    display inline-block
+    vertical-align top
