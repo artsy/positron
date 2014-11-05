@@ -21,8 +21,7 @@ module.exports = React.createClass
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   attachScribe: ->
-    return unless @props.editing
-    @scribe?.destroy()
+    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
@@ -40,9 +39,6 @@ module.exports = React.createClass
 
   componentDidUpdate: ->
     @attachScribe()
-
-  componentWillUnmount: ->
-    @scribe.destroy()
 
   render: ->
     div { className: 'edit-section-text-container' },
