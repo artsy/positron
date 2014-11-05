@@ -44,7 +44,7 @@
     "ezel-assets": "*",
     "gemup": "git://github.com/artsy/gemup.git",
     "deamdify": "*",
-    "scribe-editor": "*",
+    "scribe-editor": "git://github.com/guardian/scribe.git",
     "scribe-plugin-toolbar": "*",
     "scribe-plugin-link-prompt-command": "*",
     "html-janitor": "git://github.com/gaearon/html-janitor.git#patch-1",

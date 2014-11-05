@@ -2,25 +2,78 @@
 
 .edit-section-text-container
   background white
-  nav
-    fill-container()
-    background black
-    z-index 3
-    height 40px
-    top -(@height - 1px)
-    avant-garde()
-    display none
-    button
+
+.est-nav
+  fill-container()
+  background black
+  z-index 3
+  height 40px
+  top -(@height - 1px)
+  avant-garde()
+  display none
+  text-align center
+  button
+    color gray-dark-color
+    border 0
+    border-right 1px solid gray-darkest-color
+    padding 12px 20px
+    background transparent
+    font-size 12px
+    cursor pointer
+    display inline-block
+    vertical-align top
+    outline none
+    position relative
+    &:last-child
+      border-right 0
+    &.active
       color white
-      border 0
-      border-right 1px solid gray-darker-color
-      padding 12px 20px
-      background transparent
-      font-size 12px
-      cursor pointer
-      display inline-block
-      vertical-align top
-      outline none
+      svg
+        fill-color white
+    svg
+      fill-color gray-dark-color
+      position absolute
+    &[data-command-name=linkPrompt] svg
+      width 13px
+      height 14px
+      top 12px
+      left 16px
+    &[data-command-name=removeFormat] svg
+      height 18px
+      width 17px
+      left 15px
+      top 11px
+    &[data-command-name=italic]::after
+      content 'I'
+      garamond()
+      font-style italic
+      position absolute
+      font-size 18px
+      font-weight bold
+      top 8px
+      left 17px
+    &[data-command-name=bold]::after
+      content 'B'
+      avant-garde()
+      position absolute
+      top 8px
+      left 17px
+      font-size 16px
+
+.est-link-container
+  position relative
+  display inline-block
+  [data-command-name=linkPrompt].active + [data-command-name=unlink]
+    display block
+  [data-command-name=unlink]
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    z-index 2
+    opacity 0
+    display none
 
 .edit-section-text-editable
   font-size 20px

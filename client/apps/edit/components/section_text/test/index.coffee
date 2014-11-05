@@ -13,7 +13,9 @@ describe 'SectionText', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: require 'jquery'
-      SectionText = benv.require resolve(__dirname, '../index')
+      SectionText = benv.requireWithJadeify(
+        resolve(__dirname, '../index'), ['icons']
+      )
       SectionText.__set__ 'Scribe', @Scribe = sinon.stub()
       SectionText.__set__ 'scribePluginToolbar', @scribePluginToolbar = sinon.stub()
       @component = React.render SectionText(
