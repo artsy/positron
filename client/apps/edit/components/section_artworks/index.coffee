@@ -24,7 +24,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     ids = @props.section.get('ids')
-    @fetchArtworks ids if ids.length
+    @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
 
@@ -124,10 +124,10 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls').large }
+                img { src: artwork.get('image_urls')?.large }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
-              p {}, artwork.get('artwork').title
+              p {}, artwork.get('artwork')?.title
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'

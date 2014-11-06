@@ -21,7 +21,7 @@ describe 'SectionArtworks', ->
         ['icons']
       )
       @component = React.render SectionArtworks(
-        section: new Section { body: 'Foo to the bar' }
+        section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
         setEditing: ->
         changeLayout: ->
@@ -34,29 +34,21 @@ describe 'SectionArtworks', ->
     Backbone.sync.restore()
     benv.teardown()
 
-  it 'adds artworks from urls', ->
-    @component.state.urlsValue = 'artsy.net/foo\nartsy.net/baz'
-    @component.state.artworks = []
-    @component.addArtworksFromUrls (preventDefault: ->)
-    Backbone.sync.args[0][2].data.ids[0].should.equal 'foo'
-    Backbone.sync.args[0][2].success results: artworks = [fixtures().artworks]
-    @component.setState.args[0][0].loadingUrls.should.equal true
-    @component.setState.args[1][0].loadingUrls.should.equal false
-    @component.setState.args[1][0].artworks[0].artwork.title
-      .should.equal artworks[0].artwork.title
-
   it 'removes an artwork on click', ->
-    @component.state.artworks = [
+    @component.props.section.artworks.off()
+    @component.props.section.artworks.reset [
       { id: '1', title: 'Baz'}
       a = { id: '2', title: 'Foo' }
       { id: '3', title: 'Bar'}
     ]
-    @component.removeArtwork(a)()
-    @component.setState.args[0][0].artworks.length.should.equal 2
-    @component.setState.args[0][0].artworks[1].title.should.equal 'Bar'
+    @component.removeArtwork(@component.props.section.artworks.at 1)()
+    @component.props.section.artworks.length.should.equal 2
 
   it 'sets artwork ids when clicking off', ->
-    @component.state.artworks = [{ artwork: id: 'foo'}, { artwork: id: 'bar'}]
+    @component.props.section.artworks.reset [
+      { id: 'foo', title: 'Foo' }
+      { id: 'bar', title: 'Bar'}
+    ]
     @component.onClickOff()
     @component.props.section.get('ids').should.containEql 'foo', 'bar'
 
@@ -65,15 +57,16 @@ describe 'SectionArtworks', ->
     @component.componentDidMount()
     Backbone.sync.args[0][2].data.ids.should.containEql 'foo', 'bar'
 
-  it 'adds fillwidth styling if the layout is appropriate', ->
-    @component.state.artworks = [fixtures().artworks]
+  xit 'adds fillwidth styling if the layout is appropriate', ->
+    @component.props.section.artworks.reset [fixtures().artworks]
+    @component.render()
     @component.fillwidth = sinon.stub()
     @component.props.section.set layout: 'overflow_fillwidth'
     @component.componentDidUpdate()
     @component.fillwidth.called.should.be.ok
 
   it 'adds removes styling if the layout is appropriate', ->
-    @component.state.artworks = [fixtures().artworks]
+    @component.props.section.artworks.reset [fixtures().artworks]
     @component.removeFillwidth = sinon.stub()
     @component.props.layout = 'column_width'
     @component.componentDidUpdate()

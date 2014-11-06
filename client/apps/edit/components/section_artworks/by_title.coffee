@@ -14,12 +14,12 @@ module.exports = React.createClass
     { loading: false, artworks: [], highlighted: 0 }
 
   componentDidMount: ->
-    @fetch = _.debounce _.bind(@fetch, this), 500
+    @debouncedSearch = _.debounce _.bind(@search, this), 500
 
-  search: (e) ->
-    @fetch e.target.value
+  onSearch: (e) ->
+    @debouncedSearch e.target.value
 
-  fetch: (q) ->
+  search: (q) ->
     @setState loading: true
     new Artworks().fetch
       data: q: q
@@ -57,7 +57,7 @@ module.exports = React.createClass
       input {
         placeholder: 'Try “Andy Warhol Skull”'
         className: 'bordered-input bordered-input-dark'
-        onChange: @search
+        onChange: @onSearch
         onKeyUp: @onKeyUp
         ref: 'byTitle'
       }

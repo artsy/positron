@@ -107,3 +107,7 @@ describe 'EditLayout', ->
       @view.syncTitleTeaser()
       @view.serialize().thumbnail_title.should.equal 'moo'
       @view.serialize().thumbnail_teaser.should.equal 'baz'
+
+  describe '#onFirstSave', ->
+
+    it 'updates the url', ->

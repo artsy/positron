@@ -25,6 +25,7 @@ describe 'SectionList', ->
         ]
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.setState = sinon.stub()
+        @component.props.sections.off()
         done()
 
   afterEach ->
@@ -34,8 +35,8 @@ describe 'SectionList', ->
     @$el.html().should.containEql 'Foo to the bar'
 
   it 'opens editing mode in the last added section', ->
-    @component.props.sections.add { body: 'Hello World', type: 'text' }
-    @component.setState.args[0][0].editingIndex.should.equal 2
+    @component.onNewSection @component.props.sections.last()
+    @component.setState.args[0][0].editingIndex.should.equal 1
 
   it 'toggles editing state when a child section callsback', ->
     @component.refs.section1.props.onSetEditing 2
