@@ -31,7 +31,7 @@ module.exports = class EditLayout extends Backbone.View
 
   serialize: ->
     {
-      title: @$('#edit-title input').val()
+      title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
@@ -68,7 +68,7 @@ module.exports = class EditLayout extends Backbone.View
   syncTitleTeaser: =>
     unless @article.get 'thumbnail_title'
       @$('#edit-thumbnail-title input')
-        .val(@$('#edit-title input').val()).trigger 'keyup'
+        .val(@$('#edit-title textarea').val()).trigger 'keyup'
     unless @article.get 'thumbnail_teaser'
       @$('#edit-thumbnail-teaser textarea')
         .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'

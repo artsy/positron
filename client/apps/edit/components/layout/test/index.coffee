@@ -34,7 +34,7 @@ describe 'EditLayout', ->
   describe '#autosave', ->
 
     it 'autosaves on debounce keyup', ->
-      $('#edit-title input').trigger 'keyup'
+      $('#edit-title textarea').trigger 'keyup'
       Backbone.sync.called.should.be.ok
 
     it 'autosaves on section changes', ->
@@ -87,3 +87,23 @@ describe 'EditLayout', ->
       @view.onFinished()
       @view.article.trigger 'sync'
       @view.redirectToList.called.should.be.ok
+
+  describe '#syncTitleTeaser', ->
+
+    it 'adds a title and teaser to an empty post', ->
+      @view.article.set thumbnail_title: '', thumbnail_teaser: ''
+      @view.$('#edit-title textarea').val 'foo'
+      @view.$('#edit-lead-paragraph').html '<p>bar</p>'
+      @view.syncTitleTeaser()
+      @view.serialize().thumbnail_title.should.equal 'foo'
+      @view.serialize().thumbnail_teaser.should.equal 'bar'
+
+    it 'doesnt change filled in posts', ->
+      @view.article.set thumbnail_title: 'moo', thumbnail_teaser: 'baz'
+      @view.$('#edit-thumbnail-title input').val 'moo'
+      @view.$('#edit-thumbnail-teaser textarea').val 'baz'
+      @view.$('#edit-title textarea').val 'foo'
+      @view.$('#edit-lead-paragraph').html '<p>bar</p>'
+      @view.syncTitleTeaser()
+      @view.serialize().thumbnail_title.should.equal 'moo'
+      @view.serialize().thumbnail_teaser.should.equal 'baz'
