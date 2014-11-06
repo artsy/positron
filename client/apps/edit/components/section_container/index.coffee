@@ -15,7 +15,7 @@ icons = -> require('./icons.jade') arguments...
 module.exports = React.createClass
 
   onClickOff: ->
-    @setEditing(false)()
+    @setEditing(off)()
     @refs.section?.onClickOff?()
 
   componentDidMount: ->
@@ -25,11 +25,15 @@ module.exports = React.createClass
     @props.section.off()
 
   setEditing: (editing) -> =>
-    return if editing is @props.editing
     @props.onSetEditing if editing then @props.index else null
 
-  deleteSection: ->
-    @props.section.destroy()
+  removeSection: (e) ->
+    e.stopPropagation()
+    if @props.section.collection?.length is 1
+      @props.section.collection?.reset()
+    else
+      @props.section.destroy()
+    return
 
   render: ->
     div {
@@ -44,7 +48,7 @@ module.exports = React.createClass
       },
         button {
           className: 'edit-section-remove button-reset'
-          onClick: @deleteSection
+          onClick: @removeSection
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }
       (switch @props.section.get('type')

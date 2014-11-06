@@ -10,14 +10,24 @@ module.exports = class EditLayout extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @$window = $(window)
-    @article.sync = _.debounce _.bind(@article.sync, @article), 1000
+    @article.sync = _.debounce _.bind(@article.sync, @article), 500
     @article.sections.on 'change', => @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
-    @$window.on 'scroll', _.throttle @popLockControls, 100
+    @article.once 'sync', @onFirstSave if @article.isNew()
+    @article.sections.on 'change:layout', => _.defer => @popLockControls()
+    @$window.on 'scroll', @popLockControls
+    @setupOnBeforeUnload()
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
+
+  onFirstSave: =>
+    Backbone.history.navigate "/articles/#{@article.get 'id'}"
+
+  setupOnBeforeUnload: ->
+    window.onbeforeunload = =>
+      if @$.active > 0 then "Your article is not finished saving." else null
 
   attachScribe: ->
     scribe = new Scribe $('#edit-lead-paragraph')[0]
@@ -94,6 +104,7 @@ module.exports = class EditLayout extends Backbone.View
     $section = @$('.edit-section-container[data-state-editing=true]')
     return unless $section.length
     $controls = $section.find('.edit-section-controls')
+    $controls.css width: $section.outerWidth(), left: ''
     insideComponent = @$window.scrollTop() + @$('#edit-header').outerHeight() >
       ($section.offset().top or 0) - $controls.height()
     if (@$window.scrollTop() + $controls.outerHeight() >

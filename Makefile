@@ -12,6 +12,10 @@ BIN = node_modules/.bin
 s:
 	$(BIN)/coffee index.coffee
 
+# Start the server pointing to production
+sp:
+	ARTSY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
+
 # Run all of the project-level tests, followed by app-level tests
 test: assets
 	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')

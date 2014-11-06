@@ -22,7 +22,7 @@ wide-input-width = 640px
   fill-container()
   background black
   z-index 3
-  height 285px
+  height 282px
   top -(@height)
   text-align center
   display none
@@ -43,8 +43,6 @@ wide-input-width = 640px
       display inline-block
       vertical-align top
     input, textarea
-      background white
-      border-color white
       position absolute
       right 0
     span
@@ -80,7 +78,6 @@ wide-input-width = 640px
       overflow ellipsis
   img
     background gray-lighter-color
-    min-height 200px
 
 .esa-artworks-list .edit-section-remove
   display none
@@ -88,11 +85,6 @@ wide-input-width = 640px
     fill-color red-color
   svg
     fill-color black
-
-.esa-spinner-container
-  position relative
-  width 100%
-  height 100px
 
 .edit-section-container[data-state-editing=true]
   .esa-controls-container, .esa-artworks-list .edit-section-remove
@@ -115,8 +107,7 @@ wide-input-width = 640px
     &:last-child
       border-bottom 1px solid gray-color
     &.is-active
-      background black
-      color white
+      background gray-color
   img
     background gray-lighter-color
     width 100%
@@ -136,6 +127,13 @@ wide-input-width = 640px
 .esa-thumbnail-right
   line-height 1.4em
 
+.esa-urls-error
+  color red-color
+  width 200px
+  position absolute
+  top 28px
+  line-height 21px
+
 //
 // Varying layouts
 //
@@ -153,10 +151,12 @@ wide-input-width = 640px
   .esa-by-urls-container, input, .esa-autocomplete-menu
     width wide-input-width
   .esa-artworks-list
+    text-align center
     li
       display inline-block
       vertical-align top
       padding 0 10px artwork-img-bottom 10px
+      text-align left
       &:last-child
         padding-right 0
         padding-left 20px
@@ -168,7 +168,6 @@ wide-input-width = 640px
         .edit-section-remove
           right 5px
     img
-      max-height 400px
       max-width 100%
     .esa-img-container
       padding-bottom artwork-img-bottom
