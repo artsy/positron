@@ -31,7 +31,7 @@ module.exports = class EditLayout extends Backbone.View
 
   serialize: ->
     {
-      title: @$('#edit-title input').val()
+      title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
@@ -56,6 +56,7 @@ module.exports = class EditLayout extends Backbone.View
 
   onFinished: =>
     @$('#edit-sections-spinner').show()
+    @syncTitleTeaser()
     @article.on 'sync', @redirectToList
 
   highlightMissingFields: =>
@@ -63,6 +64,14 @@ module.exports = class EditLayout extends Backbone.View
     @$window.scrollTop @$window.height()
     @$('#edit-thumbnail-inputs').addClass 'eti-error'
     setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
+
+  syncTitleTeaser: =>
+    unless @article.get 'thumbnail_title'
+      @$('#edit-thumbnail-title input')
+        .val(@$('#edit-title textarea').val()).trigger 'keyup'
+    unless @article.get 'thumbnail_teaser'
+      @$('#edit-thumbnail-teaser textarea')
+        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
@@ -75,6 +84,7 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
+    @syncTitleTeaser()
 
   onKeyup: =>
     @article.save @serialize()
