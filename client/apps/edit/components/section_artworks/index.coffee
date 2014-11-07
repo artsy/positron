@@ -7,6 +7,7 @@ _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
 React = require 'react'
 ByTitle = require './by_title.coffee'
+ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
@@ -18,20 +19,29 @@ module.exports = React.createClass
 
   getInitialState: ->
     urlsValue: ''
-    artworks: []
     loadingUrls: false
+    errorMessage: ''
 
   componentDidMount: ->
     ids = @props.section.get('ids')
-    return if not ids?.length or @state.artworks.length
-    @fetchArtworks ids
+    @fetchArtworks ids if ids?.length
+    @props.section.artworks.on 'add remove', => @forceUpdate()
+    @toggleFillwidth()
+
+  componentWillUnmount: ->
+    @props.section.artworks.off()
 
   componentDidUpdate: ->
-    return unless @state.artworks.length
+    @toggleFillwidth()
+
+  toggleFillwidth: ->
+    return unless @props.section.artworks.length
     if @props.section.get('layout') is 'overflow_fillwidth'
+      @removeFillwidth() if @prevLength isnt @props.section.artworks.length
       @fillwidth()
     else
       @removeFillwidth()
+    @prevLength = @props.section.artworks.length
 
   fillwidth: ->
     $list = $(@refs.artworks.getDOMNode())
@@ -40,44 +50,37 @@ module.exports = React.createClass
       widths = $imgs.map -> $(this).width()
       sum = _.reduce widths, (m, n) -> m + n
       return unless sum > listWidth = $list.width()
-      newWidths = _.map widths, (w) -> Math.round w * (listWidth / sum)
+      newWidths = _.map widths, (w) -> Math.floor w * (listWidth / sum)
       $list.children('li').each (i) ->
         $(this).width newWidths[i] - ROW_OVERFLOW_PADDING
       tallest = _.max $imgs.map -> $(this).height()
       $list.find('.esa-img-container').each -> $(this).height tallest
 
   removeFillwidth: ->
-    $(@refs.artworks.getDOMNode()).children('li').each ->
+    $list = $(@refs.artworks.getDOMNode())
+    $list.css(opacity: 0, height: $list.height()).children('li').each ->
       $(this).width('auto').find('.esa-img-container').height 'auto'
+    imagesLoaded $list[0], -> $list.css opacity: 1, height: ''
 
   onClickOff: ->
-    ids = (artwork.artwork.id for artwork in @state.artworks)
+    ids = @props.section.artworks.pluck 'id'
     return @props.section.destroy() if ids.length is 0
     @props.section.set ids: ids, layout: @props.section.get('layout')
 
-  addArtworksFromUrls: (e) ->
-    e.preventDefault()
-    slugs = (_.last(url.split '/') for url in @state.urlsValue.split '\n')
-    @fetchArtworks slugs
-    @props.section.set ids: _.pluck @state.artworks, 'id'
-
   fetchArtworks: (ids) ->
-    @setState loadingUrls: true
     @props.section.artworks.getOrFetchIds ids,
+      error: (m, res) =>
+        @refs.byUrls.setState(
+          errorMessage: 'Artwork not found. Make sure your urls are correct.'
+          loadings: false
+        ) if res.status is 404
       success: (artworks) =>
         return unless @isMounted()
-        @setState
-          artworks: artworks.toJSON()
-          loadingUrls: false
+        @setState artworks: artworks.toJSON()
+        @refs.byUrls.setState loading: false, errorMessage: ''
 
   removeArtwork: (artwork) -> =>
-    @setState artworks: _.without @state.artworks, artwork
-
-  addArtwork: (artwork) ->
-    @setState artworks: @state.artworks.concat [artwork]
-
-  onChangeUrls: (e) ->
-    @setState urlsValue: e.target.value
+    @props.section.artworks.remove artwork
 
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
@@ -107,41 +110,32 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          ByTitle { addArtwork: @addArtwork }
-          label {}, 'or paste in artwork page urls',
-            form {
-              className: 'esa-by-urls-container'
-              onSubmit: @addArtworksFromUrls
-            },
-              textarea {
-                placeholder: ('http://artsy.net/artwork/andy-warhol-skull\n' +
-                              'http://artsy.net/artwork/tracey-emin-dolde')
-                className: 'bordered-input'
-                value: @state.urlsValue
-                onChange: @onChangeUrls
-                rows: 3
-              }
-              button {
-                className: 'avant-garde-button avant-garde-button-dark'
-                'data-state': if @state.loadingUrls then 'loading' else ''
-              }, 'Add artworks from urls'
-      (if @state.artworks.length
+          ByTitle {
+            artworks: @props.section.artworks
+            ref: 'byTitle'
+          }
+          ByUrls {
+            section: @props.section
+            fetchArtworks: @fetchArtworks
+            ref: 'byUrls'
+          }
+      (if @props.section.artworks.length
         ul { className: 'esa-artworks-list', ref: 'artworks' },
-          (for artwork, i in @state.artworks
+          (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.image_urls.large }
+                img { src: artwork.get('image_urls')?.large }
               p {},
-                strong {}, artwork.artists?[0]?.name
-              p {}, artwork.artwork.title
-              p {}, artwork.partner?.name
+                strong {}, artwork.get('artists')?[0]?.name
+              p {}, artwork.get('artwork')?.title
+              p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                 onClick: @removeArtwork(artwork)
               }
           )
-      else if @state.loadingUrls
+      else if @state.loadingUrls and not @props.editing
         div { className: 'esa-spinner-container' },
           div { className: 'loading-spinner' }
       else

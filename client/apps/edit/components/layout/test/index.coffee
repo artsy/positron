@@ -107,3 +107,18 @@ describe 'EditLayout', ->
       @view.syncTitleTeaser()
       @view.serialize().thumbnail_title.should.equal 'moo'
       @view.serialize().thumbnail_teaser.should.equal 'baz'
+
+  describe '#onFirstSave', ->
+
+    it 'updates the url', ->
+      sinon.stub Backbone.history, 'navigate'
+      @view.article.set id: 'foo'
+      @view.onFirstSave()
+      Backbone.history.navigate.args[0][0].should.equal '/articles/foo'
+
+  describe '#setupOnBeforeUnload', ->
+
+    it 'stops you if theres ajax requests going on', ->
+      $.active = 3
+      @view.setupOnBeforeUnload()
+      window.onbeforeunload().should.containEql 'not finished'

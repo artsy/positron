@@ -13,11 +13,16 @@ module.exports = React.createClass
   getInitialState: ->
     { loading: false, artworks: [], highlighted: 0 }
 
-  search: (e) ->
+  componentDidMount: ->
+    @debouncedSearch = _.debounce _.bind(@search, this), 500
+
+  onSearch: (e) ->
+    @debouncedSearch e.target.value
+
+  search: (q) ->
     @setState loading: true
-    @xhr?.abort()
-    @xhr = new Artworks().fetch
-      data: q: e.target.value
+    new Artworks().fetch
+      data: q: q
       success: (artworks) =>
         @setState artworks: artworks.toJSON(), loading: false
 
@@ -39,7 +44,7 @@ module.exports = React.createClass
         @addHighlighted()
 
   addHighlighted: ->
-    @props.addArtwork @state.artworks[@state.highlighted]
+    @props.artworks.add @state.artworks[@state.highlighted]
     @setState artworks: [], loading: false, highlighted: 0
 
   onMouseOverLi: (index) -> =>
@@ -51,8 +56,8 @@ module.exports = React.createClass
     }, 'Search by title',
       input {
         placeholder: 'Try “Andy Warhol Skull”'
-        className: 'bordered-input '
-        onChange: @search
+        className: 'bordered-input bordered-input-dark'
+        onChange: @onSearch
         onKeyUp: @onKeyUp
         ref: 'byTitle'
       }

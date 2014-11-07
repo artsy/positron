@@ -11,15 +11,14 @@ r =
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
-describe 'SectionArtworks', ->
+describe 'ByTitle', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: require 'jquery'
-      SectionArtworks = require  resolve(__dirname, '../by_title')
-      @component = React.render SectionArtworks(
-        artworks: [fixtures().artworks]
-        addArtwork: sinon.stub()
+      ByTitle = benv.require  resolve(__dirname, '../by_title')
+      @component = React.render ByTitle(
+        artworks: new Backbone.Collection [fixtures().artworks]
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub Backbone, 'sync'
@@ -30,7 +29,7 @@ describe 'SectionArtworks', ->
     benv.teardown()
 
   it 'searches artworks by title', ->
-    @component.search target: value: 'Skull'
+    @component.search 'Skull'
     Backbone.sync.args[0][2].data.q.should.equal 'Skull'
     Backbone.sync.args[0][2].success results: artworks = [fixtures().artworks]
     @component.setState.args[1][0].artworks[0].artwork.title.should
@@ -47,4 +46,4 @@ describe 'SectionArtworks', ->
     ]
     @component.state.highlighted = 1
     @component.addHighlighted()
-    @component.props.addArtwork.args[0][0].foo.should.equal 'bar'
+    @component.props.artworks.last().get('foo').should.equal 'bar'

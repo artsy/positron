@@ -20,3 +20,4 @@ module.exports = class Artworks extends Backbone.Collection
       success: (artworks) =>
         @set artworks.models, remove: false
         options.success this
+      complete: options.complete
