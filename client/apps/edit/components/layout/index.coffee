@@ -27,7 +27,7 @@ module.exports = class EditLayout extends Backbone.View
 
   setupOnBeforeUnload: ->
     window.onbeforeunload = =>
-      if @$.active > 0 then "Your article is not finished saving." else null
+      if $.active > 0 then "Your article is not finished saving." else null
 
   attachScribe: ->
     scribe = new Scribe $('#edit-lead-paragraph')[0]
