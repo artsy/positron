@@ -19,7 +19,9 @@ describe 'SectionImage', ->
       onload: ->
     benv.setup =>
       benv.expose $: require 'jquery'
-      SectionImage = benv.require resolve __dirname, '../index'
+      SectionImage = benv.requireWithJadeify(
+        resolve(__dirname, '../index'), ['icons']
+      )
       SectionImage.__set__ 'gemup', @gemup = sinon.stub()
       @component = React.render SectionImage(
         section: new Backbone.Model { body: 'Foo to the bar' }
@@ -61,3 +63,14 @@ describe 'SectionImage', ->
     @component.state.src = 'foobaz'
     @component.render()
     $(@component.getDOMNode()).html().should.containEql 'foobaz'
+
+  it 'preivews captions on keyup', ->
+    $(@component.refs.editable.getDOMNode()).html('foobar')
+    @component.onEditableKeyup()
+    @component.setState.args[0][0].caption.should.equal 'foobar'
+
+  it 'saves captions on click off', ->
+    @component.state.caption = 'foobar'
+    @component.state.src = 'foo'
+    @component.onClickOff()
+    @component.props.section.get('caption').should.equal 'foobar'

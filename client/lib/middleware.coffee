@@ -7,7 +7,7 @@ viewHelpers = require './view_helpers'
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
-    err = new Error superagentRes.body.message if superagentRes.body.message
+    err = new Error(superagentRes.body.message) if superagentRes.body?.message
     err ?= superagentRes.error
     next err
   next()
