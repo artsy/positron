@@ -114,7 +114,7 @@ describe 'EditLayout', ->
       sinon.stub Backbone.history, 'navigate'
       @view.article.set id: 'foo'
       @view.onFirstSave()
-      Backbone.history.navigate.args[0][0].should.equal '/articles/foo'
+      Backbone.history.navigate.args[0][0].should.equal '/articles/foo/edit'
 
   describe '#setupOnBeforeUnload', ->
 

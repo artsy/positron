@@ -7,7 +7,10 @@ viewHelpers = require './view_helpers'
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
-    next superagentRes.error
+    err = new Error superagentRes.body.message if superagentRes.body.message
+    err ?= superagentRes.error
+    next err
+  next()
 
 @locals = (req, res, next) ->
   res.locals.sd.URL = req.url
@@ -18,7 +21,7 @@ viewHelpers = require './view_helpers'
 
 # TODO: Replace with app that renders a nice page
 @errorHandler = (err, req, res, next) ->
-  console.log err.stack
+  console.log err.stack, err.message
   res.status(err.status or 500).send(
     "<pre>" + err.message or err.toString() + "</pre>"
   )

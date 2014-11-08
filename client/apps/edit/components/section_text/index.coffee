@@ -8,7 +8,7 @@
 try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
-  scribePluginSanitizer = require './sanitizer.coffee'
+  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
   scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
@@ -42,7 +42,10 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-section-text-container' },
-      nav { ref: 'toolbar', className: 'edit-section-controls est-nav' },
+      nav {
+        ref: 'toolbar'
+        className: 'edit-section-controls est-nav edit-scribe-nav'
+      },
         button {
           'data-command-name': 'bold'
           dangerouslySetInnerHTML: __html: '&nbsp;'

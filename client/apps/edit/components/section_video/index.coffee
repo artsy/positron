@@ -25,6 +25,7 @@ module.exports = React.createClass
   onSubmit: (e) ->
     e.preventDefault()
     @setState src: $(@refs.input.getDOMNode()).val()
+    @props.setEditing(off)()
 
   getIframeUrl: ->
     if @state.src.match 'youtu'
@@ -42,7 +43,7 @@ module.exports = React.createClass
           (if @state.src then ' to replace this video' else ''))
         form { onSubmit: @onSubmit },
           input {
-            className: 'bordered-input'
+            className: 'bordered-input bordered-input-dark'
             placeholder: 'http://youtu.be/share-url'
             ref: 'input'
             defaultValue: @state.src
