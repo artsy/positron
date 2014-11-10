@@ -2,9 +2,11 @@
 
 .edit-section-tool
   width section-tool-size - 11px
-  position absolute
   opacity 0
   z-index 1
+  max-height 0
+  transition max-height 0.15s ease-out, opacity 0.15s ease-in
+  position relative
   &:only-child::after
     opacity 1
   &:last-child
@@ -12,12 +14,14 @@
   &:hover
     width 100%
     opacity 1
+    position relative
     &::after
       opacity 0
     svg
       fill-color black
     .edit-section-tool-icon::before
       opacity 1
+      max-width 800px
   &::after
     content 'Add a section'
     width 150px
@@ -38,13 +42,16 @@
   &::before
     content '.'
     border-top 2px solid black
-    width 100%
     position absolute
     top 6px
-    left 0
+    left 16px
+    width "calc(100% - %s)" % @left
+    max-width 0
     color transparent
     opacity 0
-    transition opacity 0.1s
+    transition opacity 0.15s ease-out, max-width 0.15s ease-out
+    height 20px
+    z-index 2
   svg
     z-index 1
     fill-color gray-color
@@ -62,10 +69,11 @@
   position relative
   left 0
   width 100%
-  max-height 0
   overflow hidden
   opacity 0
-  // transition max-height 0.2s ease-out-quart, opacity 0.2s ease-out-quart
+  border-top-color transparent
+  max-height 0
+  transition max-height 0.15s ease-out, opacity 0.15s ease-in
   li
     width 25%
     height 130px
@@ -100,15 +108,19 @@
       left calc(50% - 23px)
 
 .edit-section-tool[data-state-open="true"]
+  max-height 130px
   width 100%
-  position relative
   opacity 1
+  position relative
+  .edit-section-tool-icon::before
+    opacity 1
+    max-width 800px
   &::after
     opacity 0
   .edit-section-tool-icon::after
     display block
   .edit-section-tool-menu
-    max-height 130px
     opacity 1
+    max-height 130px
   .edit-section-tool-icon svg *
     fill black

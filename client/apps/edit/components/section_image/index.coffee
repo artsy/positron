@@ -2,20 +2,31 @@
 # Image section that allows uploading large overflowing images.
 #
 
+# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
+# requiring it for testing in node.
+try
+  Scribe = require 'scribe-editor'
+  scribePluginToolbar = require 'scribe-plugin-toolbar'
+  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
+  scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
-{ div, section, h1, h2, span, img, header, input } = React.DOM
+icons = -> require('./icons.jade') arguments...
+{ div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
 
 module.exports = React.createClass
 
   getInitialState: ->
-    { src: @props.section.get('url'), progress: null }
+    src: @props.section.get('url')
+    progress: null
+    caption: @props.section.get('caption')
 
   onClickOff: ->
     if @state.src
-      @props.section.set url: @state.src
+      @props.section.set url: @state.src, caption: @state.caption
     else
       @props.section.destroy()
 
@@ -34,6 +45,30 @@ module.exports = React.createClass
           @setState src: src, progress: null
           @onClickOff()
 
+  attachScribe: ->
+    return if @scribe? or not @props.editing
+    @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe.use scribePluginSanitizer {
+      tags:
+        p: true
+        b: true
+        i: true
+        a: { href: true, target: '_blank' }
+    }
+    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
+    @scribe.use scribePluginLinkTooltip()
+    toggleScribePlaceholder @refs.editable.getDOMNode()
+
+  componentDidMount: ->
+    @attachScribe()
+
+  componentDidUpdate: ->
+    @attachScribe()
+
+  onEditableKeyup: ->
+    toggleScribePlaceholder @refs.editable.getDOMNode()
+    @setState caption: $(@refs.editable.getDOMNode()).html()
+
   render: ->
     section {
       className: 'edit-section-image'
@@ -43,12 +78,28 @@ module.exports = React.createClass
         div { className: 'dashed-file-upload-container' },
           h1 {}, 'Drag & ',
             span { className: 'dashed-file-upload-container-drop' }, 'drop'
-            span {}, ' or ',
+            ' or '
             span { className: 'dashed-file-upload-container-click' }, 'click'
             span {}, (' to ' +
               if @props.section.get('url') then 'replace' else 'upload')
           h2 {}, 'Up to 30mb'
           input { type: 'file', onChange: @upload }
+        div { className: 'esi-caption-container' },
+          nav { ref: 'toolbar', className: 'edit-scribe-nav esi-nav' },
+            button {
+              'data-command-name': 'bold'
+              dangerouslySetInnerHTML: __html: '&nbsp;'
+            }
+            button {
+              'data-command-name': 'linkPrompt'
+              dangerouslySetInnerHTML:
+                __html: "&nbsp;" + $(icons()).filter('.link').html()
+            }
+          div {
+            className: 'esi-caption bordered-input'
+            ref: 'editable'
+            onKeyUp: @onEditableKeyup
+          }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -59,11 +110,17 @@ module.exports = React.createClass
       )
       (
         if @state.src
-          img {
-            className: 'esi-image'
-            src: @state.src
-            style: opacity: if @state.progress then @state.progress else '1'
-          }
+          [
+            img {
+              className: 'esi-image'
+              src: @state.src
+              style: opacity: if @state.progress then @state.progress else '1'
+            }
+            div {
+              className: 'esi-inline-caption'
+              dangerouslySetInnerHTML: __html: @state.caption
+            }
+          ]
         else
           div { className: 'esi-placeholder' }, 'Add an image above'
       )

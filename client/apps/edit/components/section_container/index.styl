@@ -1,5 +1,17 @@
 @import '../stylus_lib'
 
+@keyframes fadein
+  0% {
+    opacity 0
+  }
+  100% {
+    opacity 1
+  }
+
+.edit-section-container
+  animation fadein 0.15s
+  z-index 1
+
 .edit-section-container-bg
   width 100%
   height 100%
@@ -17,6 +29,7 @@
   top 0
   left 0
   opacity 0
+  transition opacity 0.2s ease-in
 
 .edit-section-hover-controls
   .edit-section-tool

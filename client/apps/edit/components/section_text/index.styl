@@ -3,63 +3,6 @@
 .edit-section-text-container
   background white
 
-.est-nav
-  fill-container()
-  background black
-  z-index 3
-  height 40px
-  top -(@height - 1px)
-  avant-garde()
-  display none
-  text-align center
-  button
-    color gray-dark-color
-    border 0
-    border-right 1px solid gray-darkest-color
-    padding 12px 20px
-    background transparent
-    font-size 12px
-    cursor pointer
-    display inline-block
-    vertical-align top
-    outline none
-    position relative
-    &:last-child
-      border-right 0
-    &.active
-      color white
-      svg
-        fill-color white
-    svg
-      fill-color gray-dark-color
-      position absolute
-    &[data-command-name=linkPrompt] svg
-      width 13px
-      height 14px
-      top 12px
-      left 16px
-    &[data-command-name=removeFormat] svg
-      height 18px
-      width 17px
-      left 15px
-      top 11px
-    &[data-command-name=italic]::after
-      content 'I'
-      garamond()
-      font-style italic
-      position absolute
-      font-size 18px
-      font-weight bold
-      top 8px
-      left 17px
-    &[data-command-name=bold]::after
-      content 'B'
-      avant-garde()
-      position absolute
-      top 8px
-      left 17px
-      font-size 16px
-
 .est-link-container
   position relative
   display inline-block

@@ -1,9 +1,10 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
+toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
-  scribePluginSanitizer = require '../section_text/sanitizer.coffee'
+  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -23,7 +24,7 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
-    Backbone.history.navigate "/articles/#{@article.get 'id'}"
+    Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
 
   setupOnBeforeUnload: ->
     window.onbeforeunload = =>
@@ -121,7 +122,4 @@ module.exports = class EditLayout extends Backbone.View
       .toggleClass 'is-dragover'
 
   toggleLeadParagraphPlaceholder: ->
-    show = @$('#edit-lead-paragraph').text().match(/\w/) is null
-    @$('#edit-lead-paragraph')[(if show then 'add' else 'remove') + 'Class'](
-      'is-empty'
-    )
+    toggleScribePlaceholder @$('#edit-lead-paragraph')

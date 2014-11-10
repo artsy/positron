@@ -26,6 +26,7 @@ schema = (->
     @object().keys
       type: @string().valid('image')
       url: @string().allow('', null)
+      caption: @string().allow('', null)
     @object().keys
       type: @string().valid('text')
       body: @string().allow('', null)
@@ -81,9 +82,9 @@ querySchema = (->
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
     data.updated_at = moment().format()
-    data.author_id = ObjectId(data.author_id)
+    data.author_id = ObjectId data.author_id
     db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
-      callback err, _.extend data, _id: id
+      callback err, _.extend data, _id: res.upserted?[0]?._id or id
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

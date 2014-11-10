@@ -23,7 +23,7 @@ forceSSL = require 'express-force-ssl'
 setupEnv = require './env'
 setupAuth = require './auth'
 morgan = require 'morgan'
-{ locals, errorHandler } = require '../middleware'
+{ locals, errorHandler, helpers } = require '../middleware'
 { parse } = require 'url'
 
 module.exports = (app) ->
@@ -44,6 +44,7 @@ module.exports = (app) ->
     key: 'positron.sess'
   setupAuth app
   app.use locals
+  app.use helpers
 
   # Mount apps
   app.use '/', require '../../apps/article_list'
