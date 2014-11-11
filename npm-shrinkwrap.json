@@ -2018,6 +2018,11 @@
       "from": "jquery@*",
       "resolved": "https://registry.npmjs.org/jquery/-/jquery-2.1.1.tgz"
     },
+    "jquery-autosize": {
+      "version": "1.18.13",
+      "from": "jquery-autosize@*",
+      "resolved": "https://registry.npmjs.org/jquery-autosize/-/jquery-autosize-1.18.13.tgz"
+    },
     "mocha": {
       "version": "2.0.1",
       "from": "mocha@*",
@@ -2467,24 +2472,19 @@
       "resolved": "https://registry.npmjs.org/rewire/-/rewire-2.1.3.tgz"
     },
     "scribe-editor": {
-      "version": "0.1.25",
+      "version": "1.0.0",
       "from": "scribe-editor@git://github.com/guardian/scribe.git",
-      "resolved": "git://github.com/guardian/scribe.git#9effa16217a6123fb856b1c79efba46be2bdd14b",
+      "resolved": "git://github.com/guardian/scribe.git#80181bde3a4be0193be94dd569a450ee7b9e4990",
       "dependencies": {
         "lodash-amd": {
           "version": "2.4.1",
           "from": "lodash-amd@~2.4.1",
           "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-2.4.1.tgz"
-        },
-        "scribe-common": {
-          "version": "0.0.11",
-          "from": "scribe-common@~0.0.11",
-          "resolved": "https://registry.npmjs.org/scribe-common/-/scribe-common-0.0.11.tgz"
         }
       }
     },
     "scribe-plugin-link-tooltip": {
-      "version": "0.0.2",
+      "version": "0.0.3",
       "from": "scribe-plugin-link-tooltip@*"
     },
     "scribe-plugin-toolbar": {
