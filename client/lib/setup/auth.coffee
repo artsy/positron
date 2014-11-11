@@ -34,6 +34,8 @@ module.exports = (app) ->
     successRedirect: '/'
     failureRedirect: '/login'
   app.get '/logout', (req, res) ->
+    req.user.destroy()
+    req.logout()
     res.redirect sd.ARTSY_URL
   app.use (req, res, next) ->
     if req.user? then next() else res.redirect '/login'

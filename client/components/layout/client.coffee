@@ -9,6 +9,9 @@ Backbone = require 'backbone'
 viewHelpers = require '../../lib/view_helpers.coffee'
 sd = require('sharify').data
 
+# Add jquery plugins
+require 'jquery-autosize'
+
 module.exports.init = ->
   Backbone.$ = $
   $.ajaxSettings.headers = 'X-Access-Token': sd.USER.access_token

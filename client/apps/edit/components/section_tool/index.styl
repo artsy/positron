@@ -5,7 +5,6 @@
   opacity 0
   z-index 1
   max-height 0
-  transition max-height 0.15s ease-out, opacity 0.15s ease-in
   position relative
   &:only-child::after
     opacity 1
@@ -73,7 +72,6 @@
   opacity 0
   border-top-color transparent
   max-height 0
-  transition max-height 0.15s ease-out, opacity 0.15s ease-in
   li
     width 25%
     height 130px
@@ -112,6 +110,7 @@
   width 100%
   opacity 1
   position relative
+  transition max-height 0.15s ease-out, opacity 0.15s ease-in
   .edit-section-tool-icon::before
     opacity 1
     max-width 800px
@@ -122,5 +121,6 @@
   .edit-section-tool-menu
     opacity 1
     max-height 130px
+    transition max-height 0.15s ease-out, opacity 0.15s ease-in
   .edit-section-tool-icon svg *
     fill black

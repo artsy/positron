@@ -20,6 +20,7 @@ describe 'EditLayout', ->
         @EditLayout = require '../index.coffee'
         sinon.stub @EditLayout.prototype, 'attachScribe'
         sinon.stub _, 'debounce'
+        $.fn.autosize = sinon.stub()
         _.debounce.callsArg 0
         @view = new @EditLayout el: $('#layout-content'), article: @article
         @view.article.sync = sinon.stub()

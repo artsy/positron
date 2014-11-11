@@ -19,6 +19,7 @@ module.exports = class EditLayout extends Backbone.View
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
     @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
+    @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
@@ -30,8 +31,11 @@ module.exports = class EditLayout extends Backbone.View
     window.onbeforeunload = =>
       if $.active > 0 then "Your article is not finished saving." else null
 
+  setupTitleAutosize: ->
+    @$('#edit-title textarea').autosize()
+
   attachScribe: ->
-    scribe = new Scribe $('#edit-lead-paragraph')[0]
+    scribe = new Scribe @$('#edit-lead-paragraph')[0]
     scribe.use scribePluginSanitizer
       tags:
         p: true
