@@ -4,7 +4,6 @@ Artists = require '../collections/artists.coffee'
 Artworks = require '../collections/artworks.coffee'
 sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
-$ = require 'jquery'
 
 module.exports = class Article extends Backbone.Model
 

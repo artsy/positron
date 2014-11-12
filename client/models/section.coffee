@@ -11,6 +11,7 @@ module.exports = class Section extends Backbone.Model
     @artworks = new Artworks
 
   slugsFromHTML: (attr, resource) ->
+    return throw Error 'Missing jQuery' unless $?
     _.compact $(@get attr).find('a').map(->
       href = $(this).attr('href')
       if href.match(resource) then _.last href.split('/') else null
