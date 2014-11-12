@@ -14,6 +14,7 @@ module.exports = class EditAdmin extends Backbone.View
     @article.on 'open:tab2', @onOpen
 
   onOpen: =>
+    console.log 'fetch'
     @article.fetchFeatured()
     @article.fetchMentioned()
 
