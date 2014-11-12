@@ -11,17 +11,19 @@
   min-width 866px
   z-index 4
   background white
-  .avant-garde-button
-    font-size default-avant-garde-font-size - 2
-    padding 10px 18px
 
 #edit-tabs
-  a:first-child
+  a
+    font-size default-avant-garde-font-size - 2
+    padding 10px 18px
     border-right 0
+  a:nth-last-child(2)
+    border-right 1px solid gray-lighter-color
   a:not(#edit-publish)
     position relative
-    padding-right 45px
     color gray-color
+    &.edit-check
+      padding-right 45px
     &:hover
       color black
     &.is-active
