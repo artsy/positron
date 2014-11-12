@@ -38,6 +38,8 @@ schema = (->
       type: @string().valid('video')
       url: @string().allow('', null)
   ]
+  featured_artist_ids: @array().includes(@string())
+  featured_artwork_ids: @array().includes(@string())
 ).call Joi
 
 querySchema = (->

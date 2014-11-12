@@ -1,5 +1,7 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
+Artists = require '../collections/artists.coffee'
+Artworks = require '../collections/artworks.coffee'
 sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 
@@ -9,6 +11,10 @@ module.exports = class Article extends Backbone.Model
 
   initialize: ->
     @sections = new Sections @get 'sections'
+    @featuredArtists = new Artists
+    @mentionedArtists = new Artists
+    @featuredArtworks = new Artworks
+    @mentionedArtworks = new Artworks
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -22,6 +28,19 @@ module.exports = class Article extends Backbone.Model
     @get('thumbnail_teaser')?.length > 0 and
     @get('tags')?.length > 0
 
+  fetchFeatured: (options = {}) ->
+    @featuredArtists.getOrFetchIds @get('featured_artist_ids'), options
+    @featuredArtworks.getOrFetchIds @get('featured_artwork_ids'), options
+
+  fetchMentioned: (options = {}) ->
+    @mentionedArtists.getOrFetchIds @sections.mentionedArtistSlugs(), options
+    @mentionedArtworks.getOrFetchIds @sections.mentionedArtworkSlugs(), options
+
   toJSON: ->
-    sections = if @sections.length then @sections.toJSON() else @get 'sections'
-    _.extend super, sections: sections
+    extended = {}
+    extended.sections = @sections.toJSON() if @sections.length
+    if @featuredArtworks.length
+      extended.featured_artwork_ids = @featuredArtworks.pluck('id')
+    if @featuredArtists.length
+      extended.featured_artist_ids = @featuredArtists.pluck('id')
+    _.extend super, extended
