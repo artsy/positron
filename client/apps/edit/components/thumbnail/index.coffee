@@ -8,19 +8,10 @@ module.exports = class EditThumbnail extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @article.on 'change:thumbnail_image', @renderThumbnailForm
-    @article.on 'open:tab', (i) => @syncTitleTeaser() if i is 1
 
   renderThumbnailForm: =>
     @$('#edit-thumbnail-inputs-left').html thumbnailFormTemplate
       article: @article
-
-  syncTitleTeaser: =>
-    unless @article.get 'thumbnail_title'
-      @$('#edit-thumbnail-title input')
-        .val(@$('#edit-title textarea').val()).trigger 'keyup'
-    unless @article.get 'thumbnail_teaser'
-      @$('#edit-thumbnail-teaser textarea')
-        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
 
   events:
     'change #edit-thumbnail-image': 'uploadThumbnail'

@@ -15,6 +15,7 @@ module.exports = class EditLayout extends Backbone.View
     @article.sections.on 'change', => @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
+    @article.on 'finished open:tab1', @syncTitleTeaser
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
     @$window.on 'scroll', @popLockControls
@@ -23,6 +24,14 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
+
+  syncTitleTeaser: =>
+    unless @article.get 'thumbnail_title'
+      @$('#edit-thumbnail-title input')
+        .val(@$('#edit-title textarea').val()).trigger 'keyup'
+    unless @article.get 'thumbnail_teaser'
+      @$('#edit-thumbnail-teaser textarea')
+        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
@@ -68,11 +77,10 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tabs a:eq(#{idx})").addClass 'is-active'
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
-    @article.trigger 'open:tab', idx
+    @article.trigger "open:tab#{idx}"
 
   onFinished: =>
     @$('#edit-sections-spinner').show()
-    @syncTitleTeaser()
     @article.on 'sync', @redirectToList
 
   highlightMissingFields: =>

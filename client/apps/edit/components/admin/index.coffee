@@ -7,32 +7,46 @@ module.exports = class EditAdmin extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @render = _.debounce @render, 500
-    @article.featuredArtists.on 'sync', @renderFeatured
+    @article.featuredArtists.on 'add remove', @renderFeatured
     @article.mentionedArtists.on 'sync', @renderFeatured
-    @article.featuredArtworks.on 'sync', @renderFeatured
+    @article.featuredArtworks.on 'add remove', @renderFeatured
     @article.mentionedArtworks.on 'sync', @renderFeatured
-    @article.on 'open:tab', (i) => @onOpen() if i is 2
+    @article.on 'open:tab2', @onOpen
 
-  onOpen: ->
+  onOpen: =>
     @article.fetchFeatured()
     @article.fetchMentioned()
 
   renderFeatured: =>
-    @$('#eaf-artists').html featuredArtistsTemplate
-      mentionedArtists: @article.mentionedArtists.models
+    @$('#eaf-artists li:not(.eaf-input-li)').remove()
+    @$('#eaf-artists .eaf-input-li').before $ featuredArtistsTemplate
+      mentionedArtists: @article.mentionedArtists.notIn @article.featuredArtists
       featuredArtists: @article.featuredArtists.models
-    @$('#eaf-artworks').html featuredArtworksTemplate
-      mentionedArtworks: @article.mentionedArtworks.models
+    @$('#eaf-artworks li:not(.eaf-input-li)').remove()
+    @$('#eaf-artworks .eaf-input-li').before $ featuredArtworksTemplate
+      mentionedArtworks: @article.mentionedArtworks.notIn @article.featuredArtworks
       featuredArtworks: @article.featuredArtworks.models
 
   events:
-    'change .eaf-artist-input': (e) -> @addFeatured('Artists')(e)
-    'change .eaf-artwork-input': (e) -> @addFeatured('Artworks')(e)
+    'change .eaf-artist-input': (e) -> @featureFromInput('Artists') e
+    'change .eaf-artwork-input': (e) -> @featureFromInput('Artworks') e
+    'click #eaf-artists .eaf-featured': (e)-> @unfeature('Artists') e
+    'click #eaf-artworks .eaf-featured': (e)-> @unfeature('Artworks') e
+    'click #eaf-artists .eaf-mentioned': (e) -> @featureMentioned('Artists') e
+    'click #eaf-artworks .eaf-mentioned': (e) -> @featureMentioned('Artworks') e
 
-  addFeatured: (suffix) => (e) =>
+  featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
     id = _.last $t.val().split('/')
     $t.parent().addClass 'bordered-input-loading'
-    @article['featured' + suffix].getOrFetchIds [id],
+    @article['featured' + resource].getOrFetchIds [id],
       complete: -> $t.val('').parent().removeClass 'bordered-input-loading'
+
+  featureMentioned: (resource) => (e) =>
+    @article['featured' + resource].add(
+      @article['mentioned' + resource].get $(e.currentTarget).attr 'data-id'
+    )
+
+  unfeature: (resource) => (e) =>
+    id = $(e.currentTarget).attr 'data-id'
+    @article['featured' + resource].remove id

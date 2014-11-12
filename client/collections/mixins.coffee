@@ -20,3 +20,6 @@ _ = require 'underscore'
       remove: false
       success: options.success
       complete: options.complete
+
+  notIn: (col) ->
+    @reject (model) => model.id in col.pluck 'id'

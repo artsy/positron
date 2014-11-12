@@ -29,17 +29,19 @@ module.exports = class Article extends Backbone.Model
     @get('thumbnail_teaser')?.length > 0 and
     @get('tags')?.length > 0
 
-  featuredIds: (type) ->
-    _.pluck(_.where(@get('featured_to'), type: type), 'id')
-
   fetchFeatured: (options = {}) ->
-    @featuredArtists.getOrFetchIds @featuredIds('artist'), options
-    @featuredArtworks.getOrFetchIds @featuredIds('artwork'), options
+    @featuredArtists.getOrFetchIds @get('featured_artist_ids'), options
+    @featuredArtworks.getOrFetchIds @get('featured_artwork_ids'), options
 
   fetchMentioned: (options = {}) ->
     @mentionedArtists.getOrFetchIds @sections.mentionedArtistSlugs(), options
     @mentionedArtworks.getOrFetchIds @sections.mentionedArtworkSlugs(), options
 
   toJSON: ->
-    sections = if @sections.length then @sections.toJSON() else @get 'sections'
-    _.extend super, sections: sections
+    extended = {}
+    extended.sections = @sections.toJSON() if @sections.length
+    if @featuredArtworks.length
+      extended.featured_artwork_ids = @featuredArtworks.pluck('id')
+    if @featuredArtists.length
+      extended.featured_artist_ids = @featuredArtists.pluck('id')
+    _.extend super, extended

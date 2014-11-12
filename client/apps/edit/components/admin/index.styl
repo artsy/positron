@@ -10,6 +10,7 @@ inputs-margin = 15px
   h1
     avant-garde()
     font-size 22px
+    letter-spacing 2px
     margin-top (whitespace-block-size * 2)
   h2
     margin 20px 0 whitespace-block-size 0
@@ -23,6 +24,8 @@ inputs-margin = 15px
   padding 10px
   &.eaf-mentioned
     color gray-dark-color
+    position relative
+    cursor pointer
     &::after
       content 'Mentioned'
       float right
@@ -30,9 +33,30 @@ inputs-margin = 15px
       font-size default-avant-garde-font-size - 2
       color gray-color
       margin-top 2px
+      position absolute
+      right 10px
+    &::before
+      content '.'
+      color transparent
+      background url(/icons/check.svg) center center no-repeat
+      position absolute
+      right 10px
+      background-size 100%
+      width 15px
+      height 14px
+      display none
+    &:hover
+      color black
+      &:before
+        display block
+      &:after
+        content 'Feature'
+        right 30px
+        color black
   &.eaf-featured
     border-color black
     position relative
+    cursor pointer
     &::after
       content '.'
       color transparent
@@ -42,6 +66,20 @@ inputs-margin = 15px
       background-size 100%
       width 15px
       height 14px
+    &::before
+      content 'Unfeature'
+      avant-garde()
+      position absolute
+      right 30px
+      display none
+      font-size default-avant-garde-font-size - 2
+      margin-top 2px
+    &:hover
+      &::before
+        display block
+      &::after
+        background url(/icons/remove.svg) center center no-repeat
+      
 
 .eaf-input input
   padding 6px 12px 7px 12px

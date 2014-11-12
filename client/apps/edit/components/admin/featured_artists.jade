@@ -1,9 +1,4 @@
-for artist in mentionedArtists || []
-  li.eaf-mentioned= artist.get('artist').name
-for artist in featuredArtists || []
-  li.eaf-featured= artist.get('artist').name
-li.eaf-input-li
-  label.eaf-input
-    input.bordered-input.eaf-artist-input(
-      placeholder='Add an artist by url or slug...'
-    )
+for artist in mentionedArtists
+  li.eaf-mentioned( data-id=artist.get('id') )= artist.get('artist').name
+for artist in featuredArtists
+  li.eaf-featured( data-id=artist.get('id') )= artist.get('artist').name

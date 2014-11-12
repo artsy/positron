@@ -5,7 +5,15 @@ section#edit-admin
       | To curate pages like the homepage go to "Featuring" in the sidebar.
     h3 Artist Pages
     ul#eaf-artists.edit-admin-feature-list
-      include ./featured_artists
+      li.eaf-input-li
+        label.eaf-input
+          input.bordered-input.eaf-artist-input(
+            placeholder='Add an artist by url or slug...'
+          )
     h3 Artwork Pages
     ul#eaf-artworks.edit-admin-feature-list
-      include ./featured_artworks
+      li.eaf-input-li
+        label.eaf-input
+          input.bordered-input.eaf-artwork-input(
+            placeholder='Add an artwork by url or slug...'
+          )

@@ -1,9 +1,4 @@
-for artwork in mentionedArtworks || []
-  li.eaf-mentioned= artwork.get('artwork').title
-for artwork in featuredArtworks || []
-  li.eaf-featured= artwork.get('artwork').title
-li.eaf-input-li
-  label.eaf-input
-    input.bordered-input.eaf-artwork-input(
-      placeholder='Add an artwork by url or slug...'
-    )
+for artwork in mentionedArtworks
+  li.eaf-mentioned( data-id=artwork.get('id') )= artwork.get('artwork').title
+for artwork in featuredArtworks
+  li.eaf-featured( data-id=artwork.get('id') )= artwork.get('artwork').title
