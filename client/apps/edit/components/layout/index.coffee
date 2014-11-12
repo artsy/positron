@@ -68,6 +68,7 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tabs a:eq(#{idx})").addClass 'is-active'
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
+    @article.trigger 'open:tab', idx
 
   onFinished: =>
     @$('#edit-sections-spinner').show()
@@ -80,14 +81,6 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-thumbnail-inputs').addClass 'eti-error'
     setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
 
-  syncTitleTeaser: =>
-    unless @article.get 'thumbnail_title'
-      @$('#edit-thumbnail-title input')
-        .val(@$('#edit-title textarea').val()).trigger 'keyup'
-    unless @article.get 'thumbnail_teaser'
-      @$('#edit-thumbnail-teaser textarea')
-        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
-
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input, [contenteditable]': 'onKeyup'
@@ -99,7 +92,6 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
-    @syncTitleTeaser()
 
   onKeyup: =>
     @article.save @serialize()

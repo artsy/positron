@@ -42,6 +42,16 @@ module.exports = ->
         url: 'http://youtu.be/yYjLrJRuMnY'
       }
     ]
+    featured_to: [
+      {
+        type: 'artist',
+        id: '5086df098523e60002000012'
+      },
+      {
+        type: 'artwork',
+        id: '5321b71c275b24bcaa0001a5'
+      }
+    ]
   fixtures.users =
     "name": "Craig Spaeth",
     "access_token": "test-access-token",

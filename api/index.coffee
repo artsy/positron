@@ -22,6 +22,7 @@ app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use require './apps/users'
 app.use require './apps/articles'
 app.use require './apps/artworks'
+app.use require './apps/artists'
 
 # Moar middleware
 app.use errorHandler

@@ -38,6 +38,11 @@ schema = (->
       type: @string().valid('video')
       url: @string().allow('', null)
   ]
+  featured_to: @array().includes [
+    @object().keys
+      type: @string().valid('artist', 'artwork')
+      id: @objectId()
+  ]
 ).call Joi
 
 querySchema = (->
