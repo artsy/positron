@@ -14,7 +14,7 @@ s:
 
 # Start the server pointing to production
 sp:
-	GRAVITY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
+	ARTSY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
 
 # Runs a migration script to pull in old posts from gravity
 migrate:

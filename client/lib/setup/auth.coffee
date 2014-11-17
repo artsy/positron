@@ -10,8 +10,8 @@ CurrentUser = require '../../models/current_user'
 
 setupPassport = ->
   passport.use 'artsy', new OAuth2Strategy
-    authorizationURL: process.env.GRAVITY_URL + '/oauth2/authorize'
-    tokenURL: process.env.GRAVITY_URL + '/oauth2/access_token'
+    authorizationURL: process.env.ARTSY_URL + '/oauth2/authorize'
+    tokenURL: process.env.ARTSY_URL + '/oauth2/access_token'
     clientID: process.env.ARTSY_ID
     clientSecret: process.env.ARTSY_SECRET
     callbackURL: process.env.APP_URL + '/auth/artsy/callback'
@@ -33,7 +33,7 @@ requireLogin = (req, res, next) ->
 logout = (req, res) ->
   req.user.destroy()
   req.logout()
-  res.redirect sd.GRAVITY_URL
+  res.redirect sd.ARTSY_URL
 
 module.exports = (app) ->
   setupPassport()
