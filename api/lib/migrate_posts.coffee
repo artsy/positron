@@ -27,7 +27,7 @@ start = moment()
 # Remove all of the existing migrated posts & fetch the latest from Gravity
 db.articles.remove { gravity_id: $ne: null }, (err) ->
   return kill(err) if err
-  gravity.posts.find().limit(1000).toArray (err, posts) ->
+  gravity.posts.find().toArray (err, posts) ->
     return kill(err) if err
     console.log "Migrating #{posts.length} posts...."
 
@@ -40,7 +40,7 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
         attachment = post.attachments?[0]
         $ = cheerio.load post.body if post.body
 
-        # Denormalize Gravity features into the Positron schema
+        # Denormalize Gravity features into the a Positron schema
         featuredArtistIds = (feature.artist_id for feature in results[0])
         featuredArtworkIds = (feature.artwork_id for feature in results[1])
 
