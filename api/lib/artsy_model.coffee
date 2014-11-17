@@ -6,7 +6,7 @@
 _ = require 'underscore'
 async = require 'async'
 request = require 'superagent'
-{ ARTSY_URL } = process.env
+{ GRAVITY_URL } = process.env
 
 # Map curries into an image urls hash
 #
@@ -33,7 +33,7 @@ request = require 'superagent'
     ((id) ->
       (cb) ->
         request
-          .get("#{ARTSY_URL}/api/#{resource}/#{id}")
+          .get("#{GRAVITY_URL}/api/#{resource}/#{id}")
           .set('X-Access-Token': accessToken)
           .end (err, res) -> cb err or res.error, res?.body
     )(id)
@@ -49,7 +49,7 @@ request = require 'superagent'
 
 @searchToSlugs = (type, query, accessToken, callback) =>
   request
-    .get("#{ARTSY_URL}/api/search?q=#{query}")
+    .get("#{GRAVITY_URL}/api/search?q=#{query}")
     .set('X-Access-Token': accessToken)
     .end (err, res) =>
       return callback err if err

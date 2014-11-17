@@ -13,7 +13,7 @@ describe 'User', ->
 
   beforeEach (done) ->
     empty =>
-      User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
+      User.__set__ 'GRAVITY_URL', 'http://localhost:5000/__gravity'
       @server = app.listen 5000, =>
         done()
 

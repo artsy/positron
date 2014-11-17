@@ -17,7 +17,7 @@ _ = require 'underscore'
 async = require 'async'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL } = process.env
+{ GRAVITY_URL } = process.env
 { imageUrlsFor, findByIds, searchToSlugs } = require '../../lib/artsy_model'
 
 #

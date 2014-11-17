@@ -10,7 +10,7 @@ app.use '/__gravity', require('antigravity').server
 describe 'Artwork', ->
 
   beforeEach (done) ->
-    Artwork.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
+    Artwork.__set__ 'GRAVITY_URL', 'http://localhost:5000/__gravity'
     @server = app.listen 5000, =>
       done()
 

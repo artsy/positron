@@ -14,7 +14,7 @@ s:
 
 # Start the server pointing to production
 sp:
-	ARTSY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
+	GRAVITY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets

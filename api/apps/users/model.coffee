@@ -8,7 +8,7 @@ async = require 'async'
 db = require '../../lib/db'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL } = process.env
+{ GRAVITY_URL } = process.env
 
 # Retrieval
 
@@ -21,7 +21,7 @@ request = require 'superagent'
 
     # If not, fetch the current user from Artsy's API
     request
-      .get("#{ARTSY_URL}/api/current_user")
+      .get("#{GRAVITY_URL}/api/current_user")
       .set('X-Access-Token': accessToken)
       .end (err, res) ->
         return callback err if err
