@@ -15,7 +15,7 @@ moment = require 'moment'
 # Load the Positron & Gravity databases
 db = require './db'
 gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
-  'post_artwork_features']
+  'post_artwork_features', 'artworks']
 
 # Convenience for killing the script on error
 kill = (err) ->
@@ -28,22 +28,26 @@ start = moment()
 # Remove all of the existing migrated posts & fetch the latest from Gravity
 db.articles.remove { gravity_id: $ne: null }, (err) ->
   return kill(err) if err
-  gravity.posts.find().toArray (err, posts) ->
+  gravity.posts.find(published: true).toArray (err, posts) ->
     return kill(err) if err
     console.log "Migrating #{posts.length} posts...."
 
     # Fetch any artist/artwork features and begin mapping posts -> articles
     async.map posts, ((post, callback) ->
-      async.parallel [
+      $ = cheerio.load post.body if post.body
+      queries = [
         (cb) -> gravity.post_artist_features.find(post_id: post._id).toArray cb
         (cb) -> gravity.post_artwork_features.find(post_id: post._id).toArray cb
-      ], (err, results) ->
-        attachment = post.attachments?[0]
-        $ = cheerio.load post.body if post.body
+      ]
+      if post.attachments?[0]?._type is 'PostArtwork'
+        queries.push (cb) ->
+          gravity.artworks.findOne { _id: post.attachments?[0].artwork_id }, cb
+      async.parallel queries, (err, results) ->
 
         # Denormalize Gravity features into the Positron schema
         featuredArtistIds = (feature.artist_id for feature in results[0])
         featuredArtworkIds = (feature.artwork_id for feature in results[1])
+        artwork = results[2]
 
         # Map Gravity attachments into Positron sections
         sections = _.compact (for attachment in (post.attachments or [])
@@ -51,7 +55,7 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
             when 'PostArtwork'
               {
                 type: 'artworks'
-                ids: [attachment.artwork_id]
+                ids: [attachment?.artwork_id]
                 layout: 'column_width'
               }
             when 'PostImage'
@@ -71,20 +75,27 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
 
         # Map the rest of the Gravity data into a Positron schema
         data =
-          _id: post._id
           slugs: post._slugs
           author_id: ObjectId(post.author_id)
           thumbnail_title: post.title
           thumbnail_teaser: $?('p')?.first()?.text()
-          thumbnail_image: switch attachment?._type
+          thumbnail_image: switch post.attachments?[0]?._type
+            when 'PostArtwork'
+              img = artwork?.additional_images?[0]
+              if img
+                "http://static.artsy.net/additional_images/#{img._id}/" +
+                "#{if v = img.image_version then v + '/' else ''}large.jpg"
+              else
+                artwork?.image_urls?.large or artwork?.image_urls?[0]
             when 'PostImage'
               "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-              "#{attachment?._id}/larger.jpg"
+              "#{post.attachments?[0]?._id}/large.jpg"
             when 'PostLink'
               (
-                attachment?.oembed_json?.thumbnail_url or
-                attachment?.oembed_json?.url
+                post.attachments?[0]?.oembed_json?.thumbnail_url or
+                post.attachments?[0]?.oembed_json?.url
               )
+          tags: [moment(post.published_at).format('YYYY')]
           title: post.title
           published: post.published
           published_at: moment(post.published_at).format()
@@ -93,6 +104,7 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
           featured_artist_ids: featuredArtistIds
           featured_artwork_ids: featuredArtworkIds
           gravity_id: post._id
+        console.log "Mapped #{_.last post._slugs}"
         callback null, data
     ), (err, posts) ->
       return kill(err) if err
