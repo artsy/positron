@@ -16,6 +16,10 @@ s:
 sp:
 	GRAVITY_URL=https://api.artsy.net $(BIN)/coffee index.coffee
 
+# Runs a migration script to pull in old posts from gravity
+migrate:
+	$(BIN)/coffee api/lib/migrate_posts.coffee
+
 # Run all of the project-level tests, followed by app-level tests
 test: assets
 	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')
