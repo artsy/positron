@@ -15,7 +15,9 @@ block content
             a( href="/articles/#{article.get('id')}/edit" )
               .article-list-item-left
                 if article.get('thumbnail_image')
-                  img( src=article.get('thumbnail_image') )
+                  .article-list-img(
+                    style="background-image: url(#{article.get('thumbnail_image')})"
+                  )
                 else
                   .article-list-item-placeholder
               .article-list-item-right
@@ -41,4 +43,4 @@ block content
                   else
                     strong Last saved #{moment(article.get('updated_at')).fromNow()}
     #article-list-pagination
-      +paginate(page, totalPages)
+      +paginate(page, totalPages, '?published=' + published + '&')

@@ -2,6 +2,7 @@
 # Migrates old gravity posts into the new article format.
 #
 
+_ = require 'underscore'
 env = require 'node-env-file'
 { resolve } = require 'path'
 env resolve __dirname, '../../.env'
@@ -40,12 +41,12 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
         attachment = post.attachments?[0]
         $ = cheerio.load post.body if post.body
 
-        # Denormalize Gravity features into the a Positron schema
+        # Denormalize Gravity features into the Positron schema
         featuredArtistIds = (feature.artist_id for feature in results[0])
         featuredArtworkIds = (feature.artwork_id for feature in results[1])
 
         # Map Gravity attachments into Positron sections
-        sections = for attachment in (post.attachments or [])
+        sections = _.compact (for attachment in (post.attachments or [])
           switch attachment?._type
             when 'PostArtwork'
               {
@@ -65,10 +66,13 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
                   type: 'video'
                   url: attachment?.url
                 }
+          )
         sections.push { type: 'text', body: post.body } if $?('*').text()
 
-        # Map the rest of the Gravity data into Positron schema
+        # Map the rest of the Gravity data into a Positron schema
         data =
+          _id: post._id
+          slugs: post._slugs
           author_id: ObjectId(post.author_id)
           thumbnail_title: post.title
           thumbnail_teaser: $?('p')?.first()?.text()

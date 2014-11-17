@@ -4,6 +4,7 @@
 #
 
 _ = require 'underscore'
+_s = require 'underscore.string'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require 'joi'
@@ -71,7 +72,8 @@ querySchema = (->
       }
 
 @find = (id, callback) ->
-  db.articles.findOne { _id: ObjectId(id) }, (err, doc) ->
+  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
+  db.articles.findOne query, (err, doc) ->
     return callback err if err
     callback null, doc
 
@@ -83,10 +85,16 @@ querySchema = (->
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
-    data.updated_at = moment().format()
-    data.author_id = ObjectId data.author_id
-    db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
-      callback err, _.extend data, _id: res.upserted?[0]?._id or id
+    db.articles.findOne { _id: id }, (err, article) ->
+      return callback err if err
+      data.updated_at = moment().format()
+      data.author_id = ObjectId data.author_id
+      slug = _s.slugify data.title
+      slugs = article?.slugs or []
+      data.slugs = if slug in slugs then slugs else slugs.concat([slug])
+      db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
+        return callback err if err
+        callback null, _.extend data, _id: res.upserted?[0]?._id or id
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->
@@ -105,3 +113,5 @@ querySchema = (->
   _.extend data,
     id: data._id?.toString()
     _id: undefined
+    slug: _.last data.slugs
+    slugs: undefined
