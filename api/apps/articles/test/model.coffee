@@ -71,6 +71,15 @@ describe 'Article', ->
           article._id.toString().should.equal '5086df098523e60002000018'
           done()
 
+    it 'can lookup an article by slug', (done) ->
+      fabricate 'articles', {
+        _id: ObjectId('5086df098523e60002000018')
+        slugs: ['foo-bar']
+      }, ->
+        Article.find 'foo-bar', (err, article) ->
+          article._id.toString().should.equal '5086df098523e60002000018'
+          done()
+
   describe '#save', ->
 
     it 'saves valid article input data', (done) ->
@@ -110,6 +119,16 @@ describe 'Article', ->
       }, (err, article) ->
         return done err if err
         (article._id?).should.be.ok
+        done()
+
+    it 'adds a slug based off the title', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+      }, (err, article) ->
+        return done err if err
+        article.slugs[0].should.equal 'top-ten-shows'
         done()
 
   describe "#destroy", ->
