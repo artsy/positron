@@ -87,11 +87,11 @@ querySchema = (->
     return callback err if err
     db.articles.findOne { _id: id }, (err, article) ->
       return callback err if err
+      data = _.extend (article or {}), { slugs: [] }, data
       data.updated_at = moment().format()
       data.author_id = ObjectId data.author_id
       slug = _s.slugify data.title
-      slugs = article?.slugs or []
-      data.slugs = if slug in slugs then slugs else slugs.concat([slug])
+      data.slugs = data.slugs.concat [slug] unless slug in data.slugs
       db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
         return callback err if err
         callback null, _.extend data, _id: res.upserted?[0]?._id or id
