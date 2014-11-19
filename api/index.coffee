@@ -20,7 +20,8 @@ app.use morgan 'dev'
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.post '/articles', authenticated
-app.use '/articles/*', authenticated
+app.put '/articles/:id', authenticated
+app.delete '/articles/:id', authenticated
 app.use require './apps/articles'
 app.use authenticated
 app.use require './apps/users'

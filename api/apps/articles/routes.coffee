@@ -39,7 +39,8 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Article.find req.params.id, (err, article) ->
     return next err if err
-    unless article? and article.author_id.toString() is req.user._id.toString()
+    if not article? or (article.published isnt true and
+       article.author_id.toString() isnt req.user?._id.toString())
       return res.err 404, 'Article not found.'
     req.article = article
     next()
