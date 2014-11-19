@@ -40,7 +40,18 @@ schema = (->
       url: @string().allow('', null)
     @object().keys
       type: @string().valid('slideshow')
-      items: @array()
+      items: @array().includes [
+        @object().keys
+          type: @string().valid('image')
+          url: @string().allow('', null)
+          caption: @string().allow('', null)
+        @object().keys
+          type: @string().valid('video')
+          url: @string().allow('', null)
+        @object().keys
+          type: @string().valid('artwork')
+          id: @string()
+      ]
   ]
   featured_artist_ids: @array().includes(@string())
   featured_artwork_ids: @array().includes(@string())

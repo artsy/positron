@@ -35,14 +35,14 @@ module.exports = React.createClass
               (switch item.type
                 when 'artwork'
                   (
-                    if item.artwork?
+                    if (artwork = @props.section.artworks.get item.id)?
                       [
-                        img { src: item.artwork.get('image_urls').large }
+                        img { src: artwork.get('image_urls').large }
                         div { className: 'ess-artwork-details' },
                           p {},
-                            strong {}, item.artwork.get('artists')?[0]?.name
-                          p {}, item.artwork.get('artwork')?.title
-                          p {}, item.artwork.get('partner')?.name
+                            strong {}, artwork.get('artists')?[0]?.name
+                          p {}, artwork.get('artwork')?.title
+                          p {}, artwork.get('partner')?.name
                       ]
                     else
                       div { className: 'ess-loading-artwork' },

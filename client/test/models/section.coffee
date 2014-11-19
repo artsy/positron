@@ -30,9 +30,10 @@ describe "Article", ->
 
   describe '#fetchSlideshowArtworks', ->
 
-    it 'fetches slideshow artworks and injects them into the item', (done) ->
+    it 'adds slideshow artworks to the section.artworks', (done) ->
       @section.fetchSlideshowArtworks success: =>
-        @section.get('items')[0].artwork.get('title').should.equal 'Foo'
+        id = @section.get('items')[0].id
+        @section.artworks.get(id).get('title').should.equal 'Foo'
         done()
       Backbone.sync.args[0][2].success
         results: [_.extend(

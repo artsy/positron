@@ -23,8 +23,6 @@ module.exports = class Section extends Backbone.Model
     @artworks.getOrFetchIds ids,
       error: options.error
       success: =>
-        for item in @get('items') when item.type is 'artwork'
-          item.artwork = @artworks.get(item.id)
         options.success arguments...
 
   @getIframeUrl: (src) ->
