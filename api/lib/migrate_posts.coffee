@@ -85,13 +85,12 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
           published_at: moment(post.published_at).format()
           updated_at: moment(post.updated_at).format()
           sections: (
-            sections = _.compact(for attachment in (post.attachments or [])
+            slideshowItems = _.compact(for attachment in (post.attachments or [])
               switch attachment?._type
                 when 'PostArtwork'
                   {
-                    type: 'artworks'
-                    ids: [attachment?.artwork_id]
-                    layout: 'column_width'
+                    type: 'artwork'
+                    id: attachment?.artwork_id
                   }
                 when 'PostImage'
                   {
@@ -111,6 +110,7 @@ db.articles.remove { gravity_id: $ne: null }, (err) ->
                       url: attachment.url
                     }
             )
+            sections = [{ type: 'slideshow', items: slideshowItems }]
             sections.push { type: 'text', body: post.body } if bodyText
             sections
           )

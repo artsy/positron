@@ -76,7 +76,6 @@ module.exports = React.createClass
         ) if res.status is 404
       success: (artworks) =>
         return unless @isMounted()
-        @setState artworks: artworks.toJSON()
         @refs.byUrls.setState loading: false, errorMessage: ''
 
   removeArtwork: (artwork) -> =>

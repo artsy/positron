@@ -8,6 +8,7 @@ SectionText = require '../section_text/index.coffee'
 SectionArtworks = require '../section_artworks/index.coffee'
 SectionImage = require '../section_image/index.coffee'
 SectionVideo = require '../section_video/index.coffee'
+SectionSlideshow = require '../section_slideshow/index.coffee'
 React = require 'react'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
@@ -56,6 +57,7 @@ module.exports = React.createClass
         when 'artworks' then SectionArtworks
         when 'image' then SectionImage
         when 'video' then SectionVideo
+        when 'slideshow' then SectionSlideshow
       )(
         section: @props.section
         editing: @props.editing

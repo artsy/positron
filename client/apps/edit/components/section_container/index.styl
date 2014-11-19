@@ -25,7 +25,7 @@
   position absolute
   width 100%
   height 100%
-  border 1px solid gray-color
+  border 1px solid rgba(100,100,100,0.33)
   top 0
   left 0
   opacity 0
@@ -50,3 +50,10 @@
 .edit-section-container[data-type=artworks][data-layout=overflow_fillwidth]
   width overflow-width
   margin-left -((overflow-width - body-width) / 2 - controls-padding)
+
+.edit-section-container[data-type=slideshow] .edit-section-hover-controls
+.edit-section-container[data-type=slideshow][data-state-editing=true]::after
+  top inherit
+  margin-top -(controls-padding)
+  left (sidebar-width + controls-padding)
+  width "calc(100% - %s)" % (sidebar-width + controls-padding * 2)

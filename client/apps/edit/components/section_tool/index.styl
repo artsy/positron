@@ -1,5 +1,7 @@
 @import '../stylus_lib'
 
+section-btn-height = 130px
+
 .edit-section-tool
   width section-tool-size - 11px
   opacity 0
@@ -72,10 +74,13 @@
   opacity 0
   border-top-color transparent
   max-height 0
+  background gray-lightest-color
   li
     width 25%
-    height 130px
-    border-right 1px solid black
+    height section-btn-height
+    background white
+    border-right 1px solid gray-color
+    border-bottom 1px solid gray-color
     vertical-align top
     line-height @height + 50px
     avant-garde()
@@ -84,7 +89,7 @@
     text-align center
     cursor pointer
     position relative
-    &:last-child
+    &:nth-child(4n+4)
       border-right none
     svg
       max-width 40px
@@ -104,13 +109,17 @@
       margin-top 3px
       max-width 46px
       left calc(50% - 23px)
+    .edit-menu-icon-slideshow svg
+      margin-top 11px
+      max-width 82px
+      left calc(50% - 38px)
 
 .edit-section-tool[data-state-open="true"]
-  max-height 130px
+  max-height (section-btn-height * 2)
   width 100%
   opacity 1
   position relative
-  transition max-height 0.15s ease-out, opacity 0.15s ease-in
+  transition max-height 0.15s linear, opacity 0.15s linear
   .edit-section-tool-icon::before
     opacity 1
     max-width 800px
@@ -120,7 +129,10 @@
     display block
   .edit-section-tool-menu
     opacity 1
-    max-height 130px
-    transition max-height 0.15s ease-out, opacity 0.15s ease-in
+    max-height (section-btn-height * 2)
+    transition max-height 0.15s linear, opacity 0.15s linear
   .edit-section-tool-icon svg *
     fill black
+
+.edit-section-tool-menu li.edit-section-tool-slideshow
+  display none

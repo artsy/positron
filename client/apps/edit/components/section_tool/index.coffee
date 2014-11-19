@@ -38,6 +38,11 @@ module.exports = React.createClass
           type: 'video'
           url: ''
         }, at: @props.index + 1
+      when 'slideshow'
+        @props.sections.add {
+          type: 'slideshow'
+          items: []
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -83,4 +88,12 @@ module.exports = React.createClass
           div {
             className: 'edit-menu-icon-video'
             dangerouslySetInnerHTML: __html: $(icons()).filter('.video').html()
+          }
+        li {
+          className: 'edit-section-tool-slideshow'
+          onClick: @newSection('slideshow')
+        }, 'Slideshow',
+          div {
+            className: 'edit-menu-icon-slideshow'
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
           }
