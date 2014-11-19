@@ -38,6 +38,9 @@ schema = (->
     @object().keys
       type: @string().valid('video')
       url: @string().allow('', null)
+    @object().keys
+      type: @string().valid('slideshow')
+      items: @array()
   ]
   featured_artist_ids: @array().includes(@string())
   featured_artwork_ids: @array().includes(@string())

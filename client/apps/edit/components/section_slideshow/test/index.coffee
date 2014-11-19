@@ -16,22 +16,34 @@ describe 'SectionSlideshow', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: require 'jquery'
-      SectionSlideshow = benv.requireWithJadeify(
-        resolve(__dirname, '../index')
-        ['icons']
-      )
-      @component = React.render SectionSlideshow(
-        section: new Section { body: 'Foo to the bar', ids: [] }
+      @SectionSlideshow = benv.require resolve __dirname, '../index'
+      sinon.stub Backbone, 'sync'
+      @component = React.render @SectionSlideshow(
+        section: new Section { type: 'slideshow', items: [
+          { type: 'artwork', id: 'foo' }
+          { type: 'artwork', id: 'bar' }
+        ] }
         editing: false
         setEditing: ->
         changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub Backbone, 'sync'
         done()
 
   afterEach ->
     Backbone.sync.restore()
     benv.teardown()
 
-  it 'removes an artwork on click', ->
+  it 'fetches the artworks on mount', ->
+    @component.componentDidMount()
+    Backbone.sync.args[0][2].data.ids.join('').should.equal 'foobar'
+
+  it 'renders the images', ->
+    React.renderToString(@SectionSlideshow(
+      section: new Section { type: 'slideshow', items: [
+        { type: 'image', url: 'http://foobar.jpg' }
+      ] }
+      editing: false
+      setEditing: ->
+      changeLayout: ->
+    )).should.containEql 'http://foobar.jpg'
