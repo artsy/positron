@@ -12,7 +12,7 @@
     res.send present user
 
 # Require a user middleware
-@set = (req, res, next) ->
+@authenticated = (req, res, next) ->
   unless token = req.get('X-Access-Token')
     return res.err 401, 'You must pass a valid access token'
   User.fromAccessToken token, (err, user) ->

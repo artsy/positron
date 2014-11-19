@@ -31,12 +31,38 @@ describe 'articles endpoints', ->
       {}
     ], (err, articles) =>
       request
-        .get("http://localhost:5000/articles?author_id=#{@user._id}")
+        .get("http://localhost:5000/articles?author_id=#{@user._id}&published=true")
         .set('X-Access-Token': @user.access_token)
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 2
           res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
+          done()
+
+  it 'can get a list of published articles without a logged in user', (done) ->
+    fabricate 'articles', [
+      { title: 'Flowers on Flowers', published: true }
+      { title: 'Flowers on Flowers The Sequel', published: true }
+      { published: false }
+    ], (err, articles) =>
+      request
+        .get("http://localhost:5000/articles?published=true")
+      .end (err, res) ->
+          res.body.total.should.equal 3
+          res.body.count.should.equal 2
+          res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
+          done()
+
+  it 'denies unpublished requests', (done) ->
+    fabricate 'articles', [
+      { title: 'Flowers on Flowers', published: true }
+      { title: 'Flowers on Flowers The Sequel', published: true }
+      { published: false }
+    ], (err, articles) =>
+      request
+        .get("http://localhost:5000/articles?published=false")
+      .end (err, res) ->
+          res.body.message.should.containEql 'published=true'
           done()
 
   it 'gets a single article', (done) ->

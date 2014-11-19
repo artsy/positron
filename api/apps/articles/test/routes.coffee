@@ -95,5 +95,16 @@ describe 'routes', ->
       routes.find @req, @res, @next
       @Article.find.args[0][1] null, _.extend(fixtures().articles,
         author_id: ObjectId('4d8cd73191a5c50ce210002a')
+        published: false
       )
       @res.err.args[0][0].should.equal 404
+
+    it 'shows published articles', ->
+      routes.find @req, @res, @next
+      @Article.find.args[0][1] null, _.extend(fixtures().articles,
+        author_id: ObjectId('4d8cd73191a5c50ce210002a')
+        published: true
+        title: 'Andy Foobar and The Gang'
+      )
+      @res.err.called.should.not.be.ok
+      @req.article.title.should.equal 'Andy Foobar and The Gang'

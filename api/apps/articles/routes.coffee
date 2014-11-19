@@ -3,8 +3,11 @@ _ = require 'underscore'
 
 # GET /api/articles
 @index = (req, res, next) ->
-  unless req.query.author_id is req.user?._id.toString()
-    return res.err 401, 'Must pass your author_id.'
+  if req.query.published isnt 'true' and (not req.query.author_id? or
+     req.query.author_id isnt req.user?._id.toString())
+    return res.err 401,
+      'Must pass author_id=me to view unpublished articles. Or pass ' +
+      'published=true to only view published articles.'
   Article.where req.query, (err, results) ->
     return next err if err
     res.send presentCollection results
@@ -36,7 +39,8 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Article.find req.params.id, (err, article) ->
     return next err if err
-    unless article? and article.author_id.toString() is req.user._id.toString()
+    if not article? or (article.published isnt true and
+       article.author_id.toString() isnt req.user?._id.toString())
       return res.err 404, 'Article not found.'
     req.article = article
     next()
