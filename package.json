@@ -32,6 +32,7 @@
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "react": "*",
     "cheerio": "*",
+    "glossary": "*",
 
     "stylus": "*",
     "nib": "*",

@@ -42,17 +42,6 @@ describe 'SectionVideo', ->
     @component.onSubmit preventDefault: ->
     @component.setState.args[0][0].src.should.equal 'foobar'
 
-  it 'converts youtube urls to an iframe frriendly one', ->
-    @component.state.src = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-    @component.getIframeUrl().should.equal '//www.youtube.com/embed/dQw4w9WgXcQ'
-    @component.state.src = 'http://youtu.be/dQw4w9WgXcQ'
-    @component.getIframeUrl().should.equal '//www.youtube.com/embed/dQw4w9WgXcQ'
-
-  it 'converts vimeo urls to an iframe frriendly one', ->
-    @component.state.src = 'http://vimeo.com/87031388'
-    @component.getIframeUrl().should
-      .equal "//player.vimeo.com/video/87031388?color=ffffff"
-
   it 'renders the video url', ->
     $(@component.getDOMNode()).html().should.containEql 'dQw4w9WgXcQ'
 

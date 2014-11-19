@@ -21,22 +21,30 @@ module.exports = ->
     updated_at: moment().add(timeCount, 'seconds').format(),
     sections: [
       {
+        type: 'slideshow',
+        items: [
+          { type: 'artwork', id: '54276766fd4f50996aeca2b8' }
+          { type: 'image', url: '', caption: '' }
+          { type: 'video', url: '', caption: '' }
+        ]
+      }
+      {
         type: 'image',
         url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-      },
+      }
       {
         type: 'text',
         body: '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...',
-      },
+      }
       {
         type: 'artworks',
         ids: ['5321b73dc9dc2458c4000196', '5321b71c275b24bcaa0001a5'],
         layout: 'overflow_fillwidth'
-      },
+      }
       {
         type: 'text',
         body: 'Check out this video art:',
-      },
+      }
       {
         type: 'video',
         url: 'http://youtu.be/yYjLrJRuMnY'

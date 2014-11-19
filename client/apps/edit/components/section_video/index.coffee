@@ -5,6 +5,7 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+{ getIframeUrl } = require '../../../../models/section.coffee'
 sd = require('sharify').data
 { section, h1, header, input, button, div, iframe, form } = React.DOM
 
@@ -27,15 +28,6 @@ module.exports = React.createClass
     @setState src: $(@refs.input.getDOMNode()).val()
     @props.setEditing(off)()
 
-  getIframeUrl: ->
-    if @state.src.match 'youtu'
-      id = _.last @state.src.split '/'
-      id = id.split('?v=')[1] if id.match 'watch'
-      "//www.youtube.com/embed/#{id}"
-    else if @state.src.match 'vimeo'
-      id = _.last @state.src.split '/'
-      "//player.vimeo.com/video/#{id}?color=ffffff"
-
   render: ->
     section { className: 'edit-section-video' },
       header { className: 'edit-section-controls' },
@@ -53,7 +45,7 @@ module.exports = React.createClass
           }, 'Embed'
       (
         if @state.src
-          iframe { src: @getIframeUrl(), width: '100%', height: '313px' }
+          iframe { src: getIframeUrl(@state.src), width: '100%', height: '313px' }
         else
           div { className: 'esv-placeholder' }, 'Add a video above'
       )

@@ -16,7 +16,7 @@ describe "Article", ->
   describe '#initialize', ->
 
     it 'sets up a related sections collection', ->
-      @article.sections.length.should.equal 5
+      @article.sections.length.should.equal 6
 
   describe '#toJSON', ->
 
