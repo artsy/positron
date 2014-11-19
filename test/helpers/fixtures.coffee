@@ -25,7 +25,7 @@ module.exports = ->
         items: [
           { type: 'artwork', id: '54276766fd4f50996aeca2b8' }
           { type: 'image', url: '', caption: '' }
-          { type: 'video', url: '', caption: '' }
+          { type: 'video', url: ''  }
         ]
       }
       {
