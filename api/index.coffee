@@ -7,8 +7,8 @@ bodyParser = require 'body-parser'
 morgan = require 'morgan'
 { helpers, notFound, locals, setUser, errorHandler,
   loginRequired } = require './lib/middleware'
-{ NODE_ENV } = process.env
-
+{ NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
+{ authenticated } = require './apps/users/routes'
 app = module.exports = express()
 
 # Middleware
@@ -19,8 +19,11 @@ app.use morgan 'dev'
 
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
-app.use require './apps/users'
+app.post '/articles', authenticated
+app.use '/articles/*', authenticated
 app.use require './apps/articles'
+app.use authenticated
+app.use require './apps/users'
 app.use require './apps/artworks'
 app.use require './apps/artists'
 
