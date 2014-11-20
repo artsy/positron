@@ -53,7 +53,7 @@ request = require 'superagent'
     .set('X-Access-Token': accessToken)
     .end (err, res) =>
       return callback err if err
-      results = res.body._embedded.results
+      results = res.body._embedded?.results or []
       slugs = for result in results when result.type is type
         _.last result._links.self.href.split '/'
       callback null, slugs

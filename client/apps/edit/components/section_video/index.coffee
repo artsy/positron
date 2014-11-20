@@ -11,41 +11,45 @@ sd = require('sharify').data
 
 module.exports = React.createClass
 
-  getInitialState: ->
-    { src: @props.section.get('url') }
+  componentDidMount: ->
+    @props.section.on 'change:url', => @forceUpdate()
+
+  componentWillUnmount: ->
+    @props.section.off()
 
   onClickOff: ->
-    if @state.src
-      @props.section.set url: @state.src
-    else
-      @props.section.destroy()
+    @props.section.destroy() unless @props.section.get('url')
 
   componentDidMount: ->
     $(@refs.input.getDOMNode()).focus() unless @props.section.get('url')
 
   onSubmit: (e) ->
     e.preventDefault()
-    @setState src: $(@refs.input.getDOMNode()).val()
+    @props.section.set url: $(@refs.input.getDOMNode()).val()
     @props.setEditing(off)()
 
   render: ->
     section { className: 'edit-section-video' },
       header { className: 'edit-section-controls' },
         h1 {}, ("Paste the url of a video on Vimeo or YouTube" +
-          (if @state.src then ' to replace this video' else ''))
+          (if @props.section.get('url') then ' to replace this video' else ''))
         form { onSubmit: @onSubmit },
           input {
             className: 'bordered-input bordered-input-dark'
             placeholder: 'http://youtu.be/share-url'
             ref: 'input'
-            defaultValue: @state.src
+            defaultValue: @props.section.get('url')
           }
           button {
             className: 'avant-garde-button avant-garde-button-dark'
           }, 'Embed'
       (
-        if @state.src
-          iframe { src: getIframeUrl(@state.src), width: '100%', height: '313px' }
+        if @props.section.get('url')
+          iframe {
+            src: getIframeUrl(@props.section.get 'url')
+            width: '100%'
+            height: '313px'
+          }
         else
           div { className: 'esv-placeholder' }, 'Add a video above'
       )

@@ -15,6 +15,10 @@
 @authenticated = (req, res, next) ->
   unless token = req.get('X-Access-Token')
     return res.err 401, 'You must pass a valid access token'
+  next()
+
+@setUser = (req, res, next) ->
+  return next() unless token = req.get('X-Access-Token')
   User.fromAccessToken token, (err, user) ->
 
     # Stop all further requests if we can't find a user from that access token

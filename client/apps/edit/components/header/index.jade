@@ -11,7 +11,9 @@ header#edit-header
   #edit-header-right
     a#edit-delete.avant-garde-button Delete
     a#edit-save.avant-garde-button Save #{article.stateName()}
-    a#edit-preview.avant-garde-button
+    a#edit-preview.avant-garde-button(
+      href="#{sd.FORCE_URL}/articles/#{article.get('id')}/#{article.get('slug')}"
+    )
       if article.get('published')
         | View
       else

@@ -23,7 +23,7 @@ schema = (->
   title: @string().allow('', null)
   published: @boolean().default(false)
   lead_paragraph: @string().allow('', null)
-  sections: @array().includes [
+  sections: @array().includes([
     @object().keys
       type: @string().valid('image')
       url: @string().allow('', null)
@@ -52,7 +52,7 @@ schema = (->
           type: @string().valid('artwork')
           id: @string()
       ]
-  ]
+  ]).default([])
   featured_artist_ids: @array().includes(@string())
   featured_artwork_ids: @array().includes(@string())
 ).call Joi
