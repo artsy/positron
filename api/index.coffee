@@ -8,7 +8,7 @@ morgan = require 'morgan'
 { helpers, notFound, locals, setUser, errorHandler,
   loginRequired } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
-{ authenticated } = require './apps/users/routes'
+{ authenticated, setUser } = require './apps/users/routes'
 app = module.exports = express()
 
 # Middleware
@@ -19,6 +19,7 @@ app.use morgan 'dev'
 
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
+app.use setUser
 app.post '/articles', authenticated
 app.put '/articles/:id', authenticated
 app.delete '/articles/:id', authenticated

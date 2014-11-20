@@ -33,14 +33,14 @@ describe 'SectionVideo', ->
 
   it 'removes itself when clicking off & the section is empty', ->
     @component.props.section.destroy = sinon.stub()
-    @component.state.src = ''
+    @component.props.section.set url: ''
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
   it 'changes the video when submitting', ->
     $(@component.refs.input.getDOMNode()).val 'foobar'
     @component.onSubmit preventDefault: ->
-    @component.setState.args[0][0].src.should.equal 'foobar'
+    @component.props.section.get('url').should.equal 'foobar'
 
   it 'renders the video url', ->
     $(@component.getDOMNode()).html().should.containEql 'dQw4w9WgXcQ'
