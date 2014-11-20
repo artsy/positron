@@ -36,3 +36,8 @@ describe 'artsy_model', ->
       am.searchToSlugs 'Artwork', 'Warhol', 'test-access-token', (err, slugs) ->
         slugs.should.containEql 'andy-warhol-skull'
         done()
+
+    it 'doesnt choke when theres no results', (done) ->
+      am.searchToSlugs 'Artwork', 'NoResults', 'test-access-token', (err, slugs) ->
+        slugs.length.should.equal 0
+        done()
