@@ -32,8 +32,10 @@ describe "Article", ->
     it 'injects features artworks & artists', ->
       @article.featuredArtworks.set [fixtures().artworks]
       @article.featuredArtists.set [fixtures().artists]
+      @article.featuredPrimaryArtists.set [fixtures().artists]
       @article.toJSON().featured_artwork_ids.length.should.equal 1
       @article.toJSON().featured_artist_ids.length.should.equal 1
+      @article.toJSON().primary_featured_artist_ids.length.should.equal 1
 
   describe '#finishedContent', ->
 
@@ -48,3 +50,20 @@ describe "Article", ->
         thumbnail_teaser: 'baz'
         tags: ['foo']
       @article.finishedThumbnail().should.be.ok
+
+  describe '#featuredList', ->
+
+    it 'returns a mapped list of featured/mentioned artists ordered by name', ->
+      @article.mentionedArtists.reset(
+        [
+          _.extend(fixtures().artists, id: 'andy', artist: name: 'Andy')
+          _.extend(fixtures().artists, id: 'charles', artist: name: 'Charles')
+        ])
+      @article.featuredArtists.reset(
+        [
+          _.extend(fixtures().artists, id: 'bob', artist: name: 'Bob')
+        ])
+      _.map(@article.featuredList('Artists'), (i) -> i.model.id).join('')
+        .should.equal 'andybobcharles'
+      _.map(@article.featuredList('Artists'), (i) -> String i.featured).join('')
+        .should.equal 'falsetruefalse'
