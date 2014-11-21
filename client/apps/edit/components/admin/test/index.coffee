@@ -18,7 +18,7 @@ describe 'EditAdmin', ->
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditAdmin = benv.requireWithJadeify '../index',
-          ['featuredArtistsTemplate', 'featuredArtworksTemplate']
+          ['featuredListTemplate']
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 
@@ -43,6 +43,13 @@ describe 'EditAdmin', ->
       @view.article.featuredArtists.set [artist]
       @view.renderFeatured()
       @view.$el.html().should.containEql 'Andy Foobar'
+
+    it 'renders primary featured', ->
+      artist = fixtures().artists
+      artist.artist.name = 'Andy Moobar'
+      @view.article.featuredPrimaryArtists.set [artist]
+      @view.renderFeatured()
+      @view.$el.html().should.containEql 'Andy Moobar'
 
   describe '#featureFromInput', ->
 

@@ -11,6 +11,7 @@ module.exports = class Article extends Backbone.Model
 
   initialize: ->
     @sections = new Sections @get 'sections'
+    @featuredPrimaryArtists = new Artists
     @featuredArtists = new Artists
     @mentionedArtists = new Artists
     @featuredArtworks = new Artworks
@@ -29,12 +30,31 @@ module.exports = class Article extends Backbone.Model
     @get('tags')?.length > 0
 
   fetchFeatured: (options = {}) ->
-    @featuredArtists.getOrFetchIds @get('featured_artist_ids'), options
-    @featuredArtworks.getOrFetchIds @get('featured_artwork_ids'), options
+    options.success = _.after 3, options.success if options.success?
+    @featuredPrimaryArtists.getOrFetchIds(
+      @get('primary_featured_artist_ids'), options)
+    @featuredArtists.getOrFetchIds(
+      @get('featured_artist_ids'), options)
+    @featuredArtworks.getOrFetchIds(
+      @get('featured_artwork_ids'), options)
 
   fetchMentioned: (options = {}) ->
+    options.success = _.after 2, options.success if options.success?
     @mentionedArtists.getOrFetchIds @sections.mentionedArtistSlugs(), options
     @mentionedArtworks.getOrFetchIds @sections.mentionedArtworkSlugs(), options
+
+  featuredList: (mentioned, featured) ->
+    featured ?= mentioned
+    list = []
+    for model in @['mentioned' + mentioned].notIn(@['featured' + featured])
+      list.push { featured: false, model: model }
+    @['featured' + featured].each (model) ->
+      list.push { featured: true, model: model }
+    list = _.sortBy list, (item) ->
+      if mentioned is 'Artworks'
+        item.model.get('artwork').title
+      else
+        item.model.get('artist').name
 
   toJSON: ->
     extended = {}
@@ -43,4 +63,6 @@ module.exports = class Article extends Backbone.Model
       extended.featured_artwork_ids = @featuredArtworks.pluck('id')
     if @featuredArtists.length
       extended.featured_artist_ids = @featuredArtists.pluck('id')
+    if @featuredPrimaryArtists.length
+      extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('id')
     _.extend super, extended

@@ -73,7 +73,7 @@ describe 'EditLayout', ->
     it 'locks the controls to the top when you scroll', ->
       @view.$window = scrollTop: -> 100
       @view.$el.append( $section = $
-        "<div class='edit-section-container' data-state-editing='true'>
+        "<div class='edit-section-container' data-editing='true'>
           <div class='edit-section-controls'></div>
         </div>"
       )

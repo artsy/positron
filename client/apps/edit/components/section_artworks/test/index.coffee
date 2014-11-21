@@ -66,9 +66,10 @@ describe 'SectionArtworks', ->
     @component.fillwidth.called.should.be.ok
 
   it 'adds removes styling if the layout is appropriate', ->
+    @component.props.section.set layout: 'overflow_fillwidth'
     @component.props.section.artworks.reset [fixtures().artworks]
     @component.removeFillwidth = sinon.stub()
-    @component.props.layout = 'column_width'
+    @component.props.section.set layout: 'column_width'
     @component.componentDidUpdate()
     @component.removeFillwidth.called.should.be.ok
 

@@ -39,7 +39,7 @@ module.exports = React.createClass
     if @props.section.get('layout') is 'overflow_fillwidth'
       @removeFillwidth() if @prevLength isnt @props.section.artworks.length
       @fillwidth()
-    else
+    else if @props.section.previous('layout') isnt @props.section.get('layout')
       @removeFillwidth()
     @prevLength = @props.section.artworks.length
 
