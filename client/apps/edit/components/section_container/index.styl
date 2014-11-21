@@ -29,7 +29,6 @@
   top 0
   left 0
   opacity 0
-  transition opacity 0.2s ease-in
 
 .edit-section-hover-controls
   .edit-section-tool
@@ -40,7 +39,7 @@
     &:last-of-type
       bottom -4px
 
-.edit-section-container[data-state-editing=true]
+.edit-section-container[data-editing=true]
   .edit-section-container-bg
     display block
   .edit-section-hover-controls
@@ -52,7 +51,7 @@
   margin-left -((overflow-width - body-width) / 2 - controls-padding)
 
 .edit-section-container[data-type=slideshow] .edit-section-hover-controls
-.edit-section-container[data-type=slideshow][data-state-editing=true]::after
+.edit-section-container[data-type=slideshow][data-editing=true]::after
   top inherit
   margin-top -(controls-padding)
   left (sidebar-width + controls-padding)

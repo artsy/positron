@@ -1,35 +1,44 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-featuredArtistsTemplate = -> require('./featured_artists.jade') arguments...
-featuredArtworksTemplate = -> require('./featured_artworks.jade') arguments...
+async = require 'async'
+featuredListTemplate = -> require('./featured_list.jade') arguments...
 
 module.exports = class EditAdmin extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @article.featuredArtists.on 'add remove', @renderFeatured
-    @article.mentionedArtists.on 'sync', @renderFeatured
-    @article.featuredArtworks.on 'add remove', @renderFeatured
-    @article.mentionedArtworks.on 'sync', @renderFeatured
     @article.on 'open:tab2', @onOpen
 
   onOpen: =>
-    console.log 'fetch'
-    @article.fetchFeatured()
-    @article.fetchMentioned()
+    async.parallel [
+      (cb) => @article.fetchFeatured success: -> cb()
+      (cb) => @article.fetchMentioned success: -> cb()
+    ], =>
+      @renderFeatured()
+      @article.featuredPrimaryArtists.on 'add remove', @renderFeatured
+      @article.featuredArtists.on 'add remove', @renderFeatured
+      @article.featuredArtworks.on 'add remove', @renderFeatured
+
 
   renderFeatured: =>
+    @$('#eaf-primary-artists li:not(.eaf-input-li)').remove()
+    @$('#eaf-primary-artists .eaf-input-li').before $(
+      featuredListTemplate list: @article.featuredList('Artists', 'PrimaryArtists')
+    )
     @$('#eaf-artists li:not(.eaf-input-li)').remove()
-    @$('#eaf-artists .eaf-input-li').before $ featuredArtistsTemplate
-      mentionedArtists: @article.mentionedArtists.notIn @article.featuredArtists
-      featuredArtists: @article.featuredArtists.models
+    @$('#eaf-artists .eaf-input-li').before $(
+      featuredListTemplate list: @article.featuredList('Artists')
+    )
     @$('#eaf-artworks li:not(.eaf-input-li)').remove()
-    @$('#eaf-artworks .eaf-input-li').before $ featuredArtworksTemplate
-      mentionedArtworks: @article.mentionedArtworks.notIn @article.featuredArtworks
-      featuredArtworks: @article.featuredArtworks.models
+    @$('#eaf-artworks .eaf-input-li').before $(
+      featuredListTemplate list: @article.featuredList('Artworks')
+    )
 
   events:
-    'change .eaf-artist-input': (e) -> @featureFromInput('Artists') e
+    'change #eaf-primary-artists .eaf-artist-input': (e) ->
+      @featureFromInput('PrimaryArtists') e
+    'change #eaf-artists .eaf-artist-input': (e) ->
+      @featureFromInput('Artists') e
     'change .eaf-artwork-input': (e) -> @featureFromInput('Artworks') e
     'click #eaf-artists .eaf-featured': (e)-> @unfeature('Artists') e
     'click #eaf-artworks .eaf-featured': (e)-> @unfeature('Artworks') e

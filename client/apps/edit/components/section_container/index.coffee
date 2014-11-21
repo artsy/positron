@@ -39,7 +39,7 @@ module.exports = React.createClass
   render: ->
     div {
       className: 'edit-section-container'
-      'data-state-editing': @props.editing
+      'data-editing': @props.editing
       'data-type': @props.section.get('type')
       'data-layout': @props.section.get('layout')
     },

@@ -53,6 +53,7 @@ schema = (->
           id: @string()
       ]
   ]).default([])
+  primary_featured_artist_ids: @array().includes(@string())
   featured_artist_ids: @array().includes(@string())
   featured_artwork_ids: @array().includes(@string())
 ).call Joi

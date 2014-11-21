@@ -97,6 +97,9 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
+    'mouseenter .edit-section-container:not([data-editing=true])': 'toggleSectionTools'
+    'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
+    'click .edit-section-container': 'hideSectionTools'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -106,7 +109,7 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
 
   popLockControls: =>
-    $section = @$('.edit-section-container[data-state-editing=true]')
+    $section = @$('.edit-section-container[data-editing=true]')
     return unless $section.length
     $controls = $section.find('.edit-section-controls')
     $controls.css width: $section.outerWidth(), left: ''
@@ -127,3 +130,11 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleLeadParagraphPlaceholder: ->
     toggleScribePlaceholder @$('#edit-lead-paragraph')
+
+  toggleSectionTools: (e) ->
+    @hideSectionTools()
+    $(e.currentTarget).prev('.edit-section-tool').addClass 'is-active'
+    $(e.currentTarget).next('.edit-section-tool').addClass 'is-active'
+
+  hideSectionTools: ->
+    @$('.edit-section-tool').removeClass 'is-active'

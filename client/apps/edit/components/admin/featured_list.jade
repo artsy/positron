@@ -1,0 +1,9 @@
+for item in list
+  li(
+    class=item.featured ? 'eaf-featured' : 'eaf-mentioned'
+    data-id=item.model.get('id')
+  )
+    if item.model.get('artwork')
+      span= item.model.truncatedLabel()
+    else
+      span= item.model.get('artist').name

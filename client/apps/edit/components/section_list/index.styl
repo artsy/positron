@@ -19,12 +19,10 @@
     display none
 
 .edit-section-container:hover .edit-section-hover-controls
-.edit-section-container:hover + .edit-section-tool
 .edit-section-tool.is-active
-.edit-section-tool + .edit-section-container:hover
   opacity 1
 
-.edit-section-container[data-state-editing=true]
+.edit-section-container[data-editing=true]
   &::after
     content '.'
     fill-container()
