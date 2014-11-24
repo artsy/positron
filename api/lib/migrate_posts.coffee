@@ -2,8 +2,7 @@
 # Migrates old gravity posts into the new article format.
 #
 
-try
-  require('node-env-file')("#{process.cwd()}/.env")
+try require('node-env-file')("#{process.cwd()}/.env")
 _ = require 'underscore'
 { resolve } = require 'path'
 async = require 'async'

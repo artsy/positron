@@ -1,5 +1,4 @@
-try
-  require('node-env-file')("#{process.cwd()}/.env")
+try require('node-env-file')("#{process.cwd()}/.env")
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
