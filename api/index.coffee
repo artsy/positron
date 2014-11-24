@@ -1,4 +1,5 @@
-try require('node-env-file')("#{process.cwd()}/.env")
+unless process.env.NODE_ENV in ['production', 'staging']
+  require('node-env-file')("#{process.cwd()}/.env")
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
