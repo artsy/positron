@@ -3,9 +3,7 @@
 #
 
 _ = require 'underscore'
-env = require 'node-env-file'
 { resolve } = require 'path'
-env resolve __dirname, '../../.env'
 async = require 'async'
 cheerio = require 'cheerio'
 moment = require 'moment'
@@ -13,6 +11,13 @@ glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
   'art', 'I', 'sy', 'work', 'love', 'works', 'views', 'study', 'post', 'share'
 ])
 { ObjectId } = mongojs = require 'mongojs'
+
+# Load environment vars
+env = require 'node-env-file'
+env switch process.env.NODE_ENV
+  when 'test' then resolve __dirname, '../../.env.test'
+  when 'production', 'staging' then ''
+  else resolve __dirname, '../../.env'
 { GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
 
 # Load the Positron & Gravity databases
