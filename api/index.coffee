@@ -1,7 +1,5 @@
-fs = require 'fs'
-path = require 'path'
-env = require 'node-env-file'
-env envFile if fs.existsSync envFile = path.resolve __dirname, '../.env'
+try
+  require('node-env-file')("#{process.cwd()}/.env")
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
