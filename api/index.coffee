@@ -1,4 +1,4 @@
-if process.env.NODE_ENV is 'development'
+unless process.env.NODE_ENV in ['staging', 'production']
   require('node-env-file')("#{process.cwd()}/.env")
 express = require "express"
 bodyParser = require 'body-parser'
@@ -8,6 +8,8 @@ morgan = require 'morgan'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 { authenticated, setUser } = require './apps/users/routes'
 { CronJob } = require 'cron'
+migratePosts = require './lib/migrate_posts.coffee'
+
 app = module.exports = express()
 
 # Middleware
@@ -32,8 +34,8 @@ app.use require './apps/artists'
 app.use errorHandler
 app.use notFound
 
-# Run any cron jobs
-new CronJob '0 */4 * * *', , null, true, 'America/New_York'
+# Start cron jobs
+new CronJob '0 */4 * * *', migratePosts, null, true, 'America/New_York'
 
 # Start the test server if run directly
 app.listen(5000, -> console.log "Listening on 5000") if module is require.main

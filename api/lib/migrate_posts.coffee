@@ -1,7 +1,7 @@
 #
 # Migrates old gravity posts into the new article format.
 #
-if process.env.NODE_ENV is 'development'
+unless process.env.NODE_ENV in ['staging', 'production']
   require('node-env-file')("#{process.cwd()}/.env")
 _ = require 'underscore'
 { resolve } = require 'path'
