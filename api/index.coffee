@@ -1,4 +1,4 @@
-unless process.env.NODE_ENV in ['staging', 'production']
+if process.env.NODE_ENV is 'development'
   require('node-env-file')("#{process.cwd()}/.env")
 express = require "express"
 bodyParser = require 'body-parser'
