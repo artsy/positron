@@ -35,7 +35,7 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */4 * * *', migratePosts, null, true, 'America/New_York'
+new CronJob '0 */12 * * *', migratePosts, null, true, 'America/New_York'
 
 # Start the test server if run directly
 app.listen(5000, -> console.log "Listening on 5000") if module is require.main
