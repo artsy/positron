@@ -33,6 +33,8 @@
     "react": "*",
     "cheerio": "*",
     "glossary": "*",
+    "cron": "*",
+    "newrelic": "*",
 
     "stylus": "*",
     "nib": "*",

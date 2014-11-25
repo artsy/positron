@@ -7,6 +7,9 @@ morgan = require 'morgan'
   loginRequired } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 { authenticated, setUser } = require './apps/users/routes'
+{ CronJob } = require 'cron'
+migratePosts = require './lib/migrate_posts.coffee'
+
 app = module.exports = express()
 
 # Middleware
@@ -30,6 +33,9 @@ app.use require './apps/artists'
 # Moar middleware
 app.use errorHandler
 app.use notFound
+
+# Start cron jobs
+new CronJob '0 */12 * * *', migratePosts, null, true, 'America/New_York'
 
 # Start the test server if run directly
 app.listen(5000, -> console.log "Listening on 5000") if module is require.main

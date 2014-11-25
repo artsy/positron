@@ -1632,6 +1632,11 @@
         }
       }
     },
+    "cron": {
+      "version": "1.0.5",
+      "from": "cron@*",
+      "resolved": "https://registry.npmjs.org/cron/-/cron-1.0.5.tgz"
+    },
     "deamdify": {
       "version": "0.1.1",
       "from": "deamdify@*",
@@ -2407,6 +2412,59 @@
         }
       }
     },
+    "newrelic": {
+      "version": "1.13.4",
+      "from": "newrelic@*",
+      "resolved": "https://registry.npmjs.org/newrelic/-/newrelic-1.13.4.tgz",
+      "dependencies": {
+        "continuation-local-storage": {
+          "version": "3.1.1",
+          "from": "continuation-local-storage@>=3.1.0 <4.0.0",
+          "resolved": "https://registry.npmjs.org/continuation-local-storage/-/continuation-local-storage-3.1.1.tgz",
+          "dependencies": {
+            "emitter-listener": {
+              "version": "1.0.1",
+              "from": "emitter-listener@1.0.1",
+              "resolved": "https://registry.npmjs.org/emitter-listener/-/emitter-listener-1.0.1.tgz",
+              "dependencies": {
+                "shimmer": {
+                  "version": "1.0.0",
+                  "from": "shimmer@1.0.0",
+                  "resolved": "https://registry.npmjs.org/shimmer/-/shimmer-1.0.0.tgz"
+                }
+              }
+            },
+            "async-listener": {
+              "version": "0.4.7",
+              "from": "async-listener@0.4.7",
+              "resolved": "https://registry.npmjs.org/async-listener/-/async-listener-0.4.7.tgz",
+              "dependencies": {
+                "shimmer": {
+                  "version": "1.0.0",
+                  "from": "shimmer@1.0.0",
+                  "resolved": "https://registry.npmjs.org/shimmer/-/shimmer-1.0.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "json-stringify-safe": {
+          "version": "5.0.0",
+          "from": "json-stringify-safe@>=5.0.0 <6.0.0",
+          "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.0.tgz"
+        },
+        "proxying-agent": {
+          "version": "0.1.6",
+          "from": "proxying-agent@>=0.1.6 <0.2.0",
+          "resolved": "https://registry.npmjs.org/proxying-agent/-/proxying-agent-0.1.6.tgz"
+        },
+        "yakaa": {
+          "version": "1.0.0",
+          "from": "yakaa@>=1.0.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/yakaa/-/yakaa-1.0.0.tgz"
+        }
+      }
+    },
     "nib": {
       "version": "1.0.4",
       "from": "nib@*",
@@ -2620,7 +2678,7 @@
     "scribe-editor": {
       "version": "1.0.0",
       "from": "scribe-editor@git://github.com/guardian/scribe.git",
-      "resolved": "git://github.com/guardian/scribe.git#f408aaae43581bd28219bdd8aa6e51f0f3ae3d74",
+      "resolved": "git://github.com/guardian/scribe.git#687f92eff5f72c487bcd54665a49e0f42eafa420",
       "dependencies": {
         "lodash-amd": {
           "version": "2.4.1",
