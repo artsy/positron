@@ -15,7 +15,9 @@ request = require 'superagent'
 
 @imageUrlsFor = (data) ->
   imageUrls = {}
-  for version in data.image_versions
+  versions = data?.image_versions?
+  return null unless versions?.length
+  for version in versions
     imageTempl = (curie.href for curie in data._links.curies when \
       curie.name is 'image')[0]
     imageUrls[version] = imageTempl.replace '{rel}', version + '.jpg'

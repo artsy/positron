@@ -9,6 +9,12 @@ mixin featuredList(id, resource)
         )
 
 section#edit-admin
+  section#edit-admin-change-author
+    h1 Change Author
+    h2 Changing the author of this article will move it to their Artsy Writer.
+    form
+      input.bordered-input( placeholder='Author id' )
+      button.avant-garde-button Change Author
   section#edit-admin-feature
     h1 Feature
     h2 Choose pages for this post to appear on at Artsy.

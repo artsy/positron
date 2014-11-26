@@ -1,8 +1,8 @@
 #
 # Migrates old gravity posts into the new article format.
 #
-if process.env.NODE_ENV is 'development'
-  require('node-env-file')("#{process.cwd()}/.env")
+
+require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 _ = require 'underscore'
 { resolve } = require 'path'
 async = require 'async'

@@ -3,7 +3,7 @@
 
 .avant-garde-button
   avant-garde()
-  padding 12px 25px
+  padding 11px 25px
   border 1px solid gray-lighter-color
   background transparent
   font-size default-avant-garde-font-size - 1
@@ -14,6 +14,7 @@
   display inline-block
   cursor pointer
   margin 0
+  vertical-align top
   &:hover, &:active
     color purple-color
   &:disabled, &.is-disabled, &[data-disabled=true]
@@ -73,6 +74,7 @@ input-placeholder()
   background-color transparent
   transition border-color 0.3s
   outline none
+  vertical-align top
   placeholder(input-placeholder)
   &.is-active, &:active, &:focus
     border-color purple-color

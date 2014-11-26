@@ -88,9 +88,7 @@ querySchema = (->
 
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
-  db.articles.findOne query, (err, doc) ->
-    return callback err if err
-    callback null, doc
+  db.articles.findOne query, callback
 
 # Persistence
 

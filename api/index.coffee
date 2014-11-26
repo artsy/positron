@@ -1,5 +1,4 @@
-if process.env.NODE_ENV is 'development'
-  require('node-env-file')("#{process.cwd()}/.env")
+require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
@@ -35,7 +34,7 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */12 * * *', migratePosts, null, true, 'America/New_York'
+new CronJob '0 */12 * * *', migratePosts, null, true
 
 # Start the test server if run directly
 app.listen(5000, -> console.log "Listening on 5000") if module is require.main
