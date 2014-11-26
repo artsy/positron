@@ -3,5 +3,5 @@ routes = require './routes'
 
 app = module.exports = express()
 
-app.delete '/users/me', routes.deleteMe
-app.get '/users/me', routes.me
+app.get '/users/:id', routes.setUser, routes.authUser, routes.show
+app.put '/users/:id', routes.setUser, routes.authUser, routes.update

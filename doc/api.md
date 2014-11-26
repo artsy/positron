@@ -24,8 +24,9 @@ POST /articles
 PUT /articles/:id
 DELETE /articles/:id
 
-GET /users/me
-DELETE /users/me
+GET /users/:id
+PUT /users/:id
+POST /users
 
 GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
 GET /artworks?q=Skull

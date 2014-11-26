@@ -31,7 +31,9 @@ requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
 
 logout = (req, res) ->
-  req.user.destroy()
+  req.user.save { access_token: null },
+    headers: 'X-Access-Token': req.user.get('access_token')
+    error: res.backboneError
   req.logout()
   res.redirect sd.ARTSY_URL
 

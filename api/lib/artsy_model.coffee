@@ -15,7 +15,7 @@ request = require 'superagent'
 
 @imageUrlsFor = (data) ->
   imageUrls = {}
-  versions = data?.image_versions?
+  versions = data?.image_versions
   return null unless versions?.length
   for version in versions
     imageTempl = (curie.href for curie in data._links.curies when \

@@ -48,6 +48,7 @@ module.exports = (callback) ->
 
           # Map Gravity data into a Positron schema
           data =
+            _id: post._id
             slugs: post._slugs
             author_id: ObjectId(post.author_id)
             thumbnail_title: post.title

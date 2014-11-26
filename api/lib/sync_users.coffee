@@ -31,10 +31,11 @@ module.exports = (callback) ->
         return callback err if err
         return callback() unless authorIds.length
 
-        # Start inserting users with Gravity data
+        # Fetch Gravity user data for the missing authors in batches of 100
+        # with pauses in between
         console.log "Syncing a total of #{authorIds.length} users"
-        async.timesSeries Math.ceil(authorIds.length / 10), (n, cb) ->
-          syncUsersByIds _.compact(authorIds[n...n + 10]), xappToken, ->
+        async.timesSeries Math.ceil(authorIds.length / 100), (n, cb) ->
+          syncUsersByIds _.compact(authorIds[n...n + 100]), xappToken, ->
             setTimeout cb, 5000
         , (err) ->
           console.log "Took #{moment().diff(start)}ms"
@@ -47,11 +48,18 @@ syncUsersByIds = (ids, xappToken, callback) ->
       id: id.toString()
       xappToken: xappToken
     }, (err, user) ->
-      if err.message is 'User Not Found'
+      # User doesn't exist, so empty any articles with that author
+      if err?.message is 'User Not Found'
         console.log err, id
-        db.articles.update { author_id: id }, { $set: author_id: null }
-      console.log "Sycned #{name}" if name = user?.user?.name
-      cb null, user
+        db.articles.update(
+          { author_id: id }
+          { $set: author_id: null }
+          { multi: true },
+          -> cb()
+        )
+      else
+        console.log "Sycned #{name}" if name = user?.user?.name
+        cb null, user
   , callback
 
 return unless module is require.main

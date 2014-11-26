@@ -17,22 +17,23 @@ request = require 'superagent'
 @fromAccessToken = (accessToken, callback) ->
   db.users.findOne { access_token: accessToken }, (err, user) ->
     return callback err if err
-    return callback null, user if user
+    return callback null, user if user?.details?
     upsertWithGravityData { accessToken: accessToken }, callback
 
-@find = (id, callback) ->
+@find = find = (id, callback) ->
   db.users.findOne { _id: ObjectId(id) }, callback
 
 #
 # Persistence
 #
-@destroyFromAccessToken = (accessToken, callback) ->
-  db.users.findOne { access_token: accessToken }, (err, user) ->
-    return callback err if err
-    db.users.remove { access_token: accessToken }, (err, res) ->
-      callback err, user
-
-
+@save = (data, callback) ->
+  db.users.update(
+    { _id: id = ObjectId(data.id) }
+    { $set: access_token: data.access_token }
+    (err, res) ->
+      return callback err if err
+      find id, callback
+  )
 
 #
 # JSON views
@@ -47,7 +48,7 @@ request = require 'superagent'
 #
 @upsertWithGravityData = upsertWithGravityData = (options, callback) ->
 
-  # Determine who we're fetching with what access token
+  # Determine who we're fetching with what authorization
   if options.id
     url = "#{ARTSY_URL}/api/users/#{options.id}"
   else
@@ -80,7 +81,7 @@ request = require 'superagent'
 
       # Aggregate the various user datas
       profile = results[0] if results[0].handle
-      details = results[1] if results[1].name
+      details = results[1] if results[1].type
       newUser = {
         _id: ObjectId user.id
         user: user
