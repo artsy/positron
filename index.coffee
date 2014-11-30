@@ -9,6 +9,9 @@ switch process.env.NODE_ENV
   when 'production', 'staging' then ''
   else env __dirname + '/.env'
 
+# Start New Relic
+require 'newrelic' if process.env.NODE_ENV in ['staging', 'production']
+
 # Dependencies
 express = require "express"
 app = module.exports = express()

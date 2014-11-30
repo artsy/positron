@@ -1,15 +1,32 @@
 { present } = User = require './model'
 { API_URL } = process.env
 
-# GET /api/users/me
-@me = (req, res, next) ->
-  res.send present req.user
-
-# DELETE /api/users/me
-@deleteMe = (req, res, next) ->
-  User.destroyFromAccessToken req.get('X-Access-Token'), (err, user) ->
+# GET /api/users/:id
+@show = (req, res, next) ->
+  return res.send present req.user if req.isUser
+  User.find req.params.id, (err, user) ->
     return next err if err
     res.send present user
+
+# PUT /api/users/:id
+@update = (req, res, next) ->
+  User.save { id: req.params.id }, (err, user) ->
+    return next err if err
+    res.send present user
+
+# GET /api/users?q=
+@search = (req, res, next) ->
+  User.search req.query.q, (err, users) ->
+    return next err if err
+    res.send results: (present user for user in users)
+
+# Middleware to deny non-admins access to certain user endpoint operations
+@ownerOrAdminOnly = (req, res, next) ->
+  req.isUser = req.params.id is req.user._id.toString()
+  if not req.isUser and req.user.details?.type isnt 'Admin'
+    res.err 401, 'Must be an admin or the user being accessed.'
+  else
+    next()
 
 # Require a user middleware
 @authenticated = (req, res, next) ->
@@ -17,6 +34,7 @@
     return res.err 401, 'You must pass a valid access token'
   next()
 
+# Set the user from an access token and alias the `me` param
 @setUser = (req, res, next) ->
   return next() unless token = req.get('X-Access-Token')
   User.fromAccessToken token, (err, user) ->

@@ -19,6 +19,7 @@ describe 'EditAdmin', ->
         sinon.stub Backbone, 'sync'
         EditAdmin = benv.requireWithJadeify '../index',
           ['featuredListTemplate']
+        EditAdmin::setupAutocomplete = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 
@@ -69,4 +70,12 @@ describe 'EditAdmin', ->
         currentTarget: $ "<input data-id='bar' />"
       )
       (@view.article.featuredArtists.get('bar')?).should.be.ok
+
+  describe '#onAutocompleteSelect', ->
+
+    it 'changes the author', ->
+      global.confirm = -> true
+      @view.onAutocompleteSelect {}, { id: 'foo' }
+      @view.article.get('author_id').should.equal 'foo'
+      delete global.confirm
 

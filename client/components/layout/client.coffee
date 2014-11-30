@@ -7,7 +7,9 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 viewHelpers = require '../../lib/view_helpers.coffee'
+Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
+Modal = require 'simple-modal'
 
 # Add jquery plugins
 require 'jquery-autosize'
@@ -17,3 +19,20 @@ module.exports.init = ->
   $.ajaxSettings.headers = 'X-Access-Token': sd.USER.access_token
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
+
+$('#layout-sidebar-profile-menu').click ->
+  modal = Modal
+    title: 'Switch User'
+    content: "<input placeholder='Search by user name...'>"
+    removeOnClose: true
+    buttons: [
+      { text: 'Cancel', closeOnClick: true }
+      { className: 'simple-modal-close', closeOnClick: true } 
+    ]
+  new Autocomplete
+    el: $(modal.m).find('input')
+    url: "#{sd.API_URL}/users?q=%QUERY"
+    filter: (res) -> for r in res.results
+      { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
+    selected: (e, item) =>
+      location.assign '/impersonate/' + item.id

@@ -51,7 +51,6 @@ module.exports = React.createClass
                 when 'image'
                   img { src: item.url }
                 when 'video'
-                  console.log item.url
                   iframe {
                     src: getIframeUrl(item.url)
                     height: '500px'

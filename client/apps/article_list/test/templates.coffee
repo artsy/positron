@@ -17,6 +17,6 @@ render = (locals) ->
 describe 'article list template', ->
 
   it 'renders an article thumbnail_title', ->
-    articles = new Articles([fixtures().articles])
+    articles = new Articles [fixtures().articles]
     articles.first().set thumbnail_title: 'Hello Blue World'
     render(articles: articles.models).should.containEql 'Hello Blue World'

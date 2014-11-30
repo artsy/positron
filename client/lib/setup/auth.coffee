@@ -16,22 +16,27 @@ setupPassport = ->
     clientSecret: process.env.ARTSY_SECRET
     callbackURL: process.env.APP_URL + '/auth/artsy/callback'
   , (accessToken, refreshToken, profile, done) ->
-    passport.deserializeUser accessToken, done
+    done null, accessToken
 
-  passport.serializeUser (user, done) ->
-    done null, user.get('access_token')
+  passport.serializeUser (userOrAccessToken, done) ->
+    if userOrAccessToken.id?
+      done null, JSON.stringify userOrAccessToken.toJSON()
+    else
+      new CurrentUser().fetch
+        headers: 'X-Access-Token': userOrAccessToken
+        error: (m, res) -> done res.body
+        success: (user) -> done null, JSON.stringify user.toJSON()
 
-  passport.deserializeUser (accessToken, done) ->
-    new CurrentUser().fetch
-      headers: 'X-Access-Token': accessToken
-      error: (model, res) -> done res.error
-      success: (user) -> done null, user
+  passport.deserializeUser (user, done) ->
+    done null, new CurrentUser JSON.parse user
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
 
 logout = (req, res) ->
-  req.user.destroy()
+  req.user.save { access_token: null },
+    headers: 'X-Access-Token': req.user.get('access_token')
+    error: res.backboneError
   req.logout()
   res.redirect sd.ARTSY_URL
 

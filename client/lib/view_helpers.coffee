@@ -4,3 +4,4 @@
 #
 
 @moment = require 'moment'
+@_ = require 'underscore'

@@ -1,9 +1,9 @@
 @import '../../node_modules/artsy-ezel-components/spinners'
 @import '../../stylus_lib'
 
-.avant-garde-button
+.avant-garde-button, .simple-modal-controls button:not(.simple-modal-close)
   avant-garde()
-  padding 12px 25px
+  padding 11px 25px
   border 1px solid gray-lighter-color
   background transparent
   font-size default-avant-garde-font-size - 1
@@ -14,6 +14,7 @@
   display inline-block
   cursor pointer
   margin 0
+  vertical-align top
   &:hover, &:active
     color purple-color
   &:disabled, &.is-disabled, &[data-disabled=true]
@@ -62,7 +63,7 @@ input-placeholder()
   color gray-dark-color
   transition color 0.3s
 
-.bordered-input
+.bordered-input, .simple-modal-content input
   margin 0
   padding 5px 8px 7px 8px
   border 2px solid gray-lighter-color
@@ -73,6 +74,7 @@ input-placeholder()
   background-color transparent
   transition border-color 0.3s
   outline none
+  vertical-align top
   placeholder(input-placeholder)
   &.is-active, &:active, &:focus
     border-color purple-color

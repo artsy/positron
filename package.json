@@ -33,6 +33,8 @@
     "react": "*",
     "cheerio": "*",
     "glossary": "*",
+    "cron": "*",
+    "newrelic": "*",
 
     "stylus": "*",
     "nib": "*",
@@ -52,6 +54,8 @@
     "html-janitor": "git://github.com/gaearon/html-janitor.git#patch-1",
     "imagesloaded": "*",
     "jquery-autosize": "*",
+    "typeahead.js": "*",
+    "simple-modal": "*",
 
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
