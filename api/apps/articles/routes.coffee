@@ -26,9 +26,13 @@ _ = require 'underscore'
 
 # PATCH/PUT /api/articles/:id
 @update = (req, res, next) ->
-  Article.save _.extend(req.article, req.body), (err, article) ->
+  data = _.extend(req.article, req.body)
+  Article.save data, (err, article) ->
     return next err if err
     res.send present article
+  if req.body.published
+    Article.saveToGravity data, req.get('x-access-token'), (err, post) ->
+      console.log err, post 
 
 # DELETE /api/articles/:id
 @delete = (req, res, next) ->
