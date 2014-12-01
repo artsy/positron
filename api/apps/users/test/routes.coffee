@@ -9,7 +9,7 @@ describe 'routes', ->
 
   beforeEach ->
     @User = routes.__get__ 'User'
-    for method in @methods = ['fromAccessToken', 'destroyFromAccessToken']
+    for method in @methods = ['fromAccessToken']
       sinon.stub @User, method
     @req = { query: {}, body: {}, params: {} }
     @res = { send: sinon.stub(), err: sinon.stub() }
@@ -18,15 +18,6 @@ describe 'routes', ->
   afterEach ->
     @User[method].restore() for method in @methods
 
-  describe '#deleteMe', ->
-
-    it 'deletes a user', ->
-      @req.get = -> 'test-access-token'
-      routes.deleteMe @req, @res
-      @User.destroyFromAccessToken.args[0][0].should.equal 'test-access-token'
-      @User.destroyFromAccessToken.args[0][1] null, u = fixtures().users
-      @res.send.args[0][0].name.should.equal u.name
-
   describe '#setUser', ->
 
     it 'fetches and sets a user', ->
@@ -34,7 +25,7 @@ describe 'routes', ->
       routes.setUser @req, @res, @next
       @User.fromAccessToken.args[0][0].should.equal 'test-access-token'
       @User.fromAccessToken.args[0][1] null, u = fixtures().users
-      @req.user.name.should.equal u.name
+      @req.user.user.name.should.equal u.user.name
 
     it '404s when it cant find a user from the token', ->
       @req.get = -> 'test-access-token'

@@ -23,16 +23,19 @@ describe 'user endpoints', ->
         .get("http://localhost:5000/users/me")
         .set('X-Access-Token': @user.access_token)
         .end (err, res) =>
-          res.body.name.should.equal @user.name
+          res.body.user.name.should.equal @user.user.name
           done()
 
-  describe 'DELETE /api/users/me', ->
+  describe 'GET /api/users/:id', ->
 
-    it 'deletes yourself', (done) ->
-      request
-        .del("http://localhost:5000/users/me")
-        .set('X-Access-Token': @user.access_token)
-        .end (err, res) =>
-          db.users.count (err, count) ->
-            count.should.equal 0
+    it 'returns a user for admins', (done) ->
+      fabricate 'users', {
+        user: name: 'Molly'
+        _id: ObjectId('4d8cd73191a5c50ce210002b')
+      }, =>
+        request
+          .get("http://localhost:5000/users/4d8cd73191a5c50ce210002b")
+          .set('X-Access-Token': @user.access_token)
+          .end (err, res) =>
+            res.body.user.name.should.equal 'Molly'
             done()

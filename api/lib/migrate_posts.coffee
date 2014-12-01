@@ -1,8 +1,8 @@
 #
 # Migrates old gravity posts into the new article format.
 #
-if process.env.NODE_ENV is 'development'
-  require('node-env-file')("#{process.cwd()}/.env")
+
+require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 _ = require 'underscore'
 { resolve } = require 'path'
 async = require 'async'
@@ -48,6 +48,7 @@ module.exports = (callback) ->
 
           # Map Gravity data into a Positron schema
           data =
+            _id: post._id
             slugs: post._slugs
             author_id: ObjectId(post.author_id)
             thumbnail_title: post.title

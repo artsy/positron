@@ -1,7 +1,8 @@
 express = require 'express'
-routes = require './routes'
+{ setUser, ownerOrAdminOnly, show, update, search } = require './routes'
 
 app = module.exports = express()
 
-app.delete '/users/me', routes.deleteMe
-app.get '/users/me', routes.me
+app.get '/users/:id', setUser, ownerOrAdminOnly, show
+app.put '/users/:id', setUser, ownerOrAdminOnly, update
+app.get '/users', ownerOrAdminOnly, search

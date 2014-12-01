@@ -15,6 +15,5 @@ path = require 'path'
   @db[collection].insert data, callback
 
 @empty = (callback) =>
-  collections = fs.readdirSync path.resolve(__dirname, '../../apps')
-  cb = _.after collections.length, callback
-  @db[col].drop(cb) for col in collections
+  cb = _.after @db.collections.length, callback
+  @db[col].drop(cb) for col in @db.collections

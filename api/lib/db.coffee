@@ -8,5 +8,6 @@ fs = require 'fs'
 path = require 'path'
 { MONGO_URL } = process.env
 
-collections = fs.readdirSync path.resolve(__dirname, '../apps/')
-module.exports = mongojs process.env.MONGO_URL, collections
+collections = ['articles', 'artists', 'artworks', 'users']
+module.exports = mongojs MONGO_URL, collections
+module.exports.collections = collections

@@ -2,12 +2,28 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
+sd = require('sharify').data
 
 module.exports = class EditAdmin extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
     @article.on 'open:tab2', @onOpen
+    @setupAutocomplete()
+
+  setupAutocomplete: ->
+    Autocomplete = require '../../../../components/autocomplete/index.coffee'
+    new Autocomplete
+      el: @$('#edit-admin-change-author input')
+      url: "#{sd.API_URL}/users?q=%QUERY"
+      filter: (res) -> for r in res.results
+        { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
+      selected: @onAutocompleteSelect
+
+  onAutocompleteSelect: (e, item) =>
+    return unless confirm "Are you sure you want to change the author?"
+    @article.save { author_id: item.id }, success: =>
+      @article.trigger 'finished'
 
   onOpen: =>
     async.parallel [
@@ -18,7 +34,6 @@ module.exports = class EditAdmin extends Backbone.View
       @article.featuredPrimaryArtists.on 'add remove', @renderFeatured
       @article.featuredArtists.on 'add remove', @renderFeatured
       @article.featuredArtworks.on 'add remove', @renderFeatured
-
 
   renderFeatured: =>
     @$('#eaf-primary-artists li:not(.eaf-input-li)').remove()

@@ -20,6 +20,10 @@ sp:
 migrate:
 	$(BIN)/coffee api/lib/migrate_posts.coffee
 
+# Runs a migration script to pull in old posts from gravity
+sync-users:
+	$(BIN)/coffee api/lib/sync_users.coffee
+
 # Run all of the project-level tests, followed by app-level tests
 test: assets
 	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')
