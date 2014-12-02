@@ -3,6 +3,7 @@ routes = require './routes'
 
 app = module.exports = express()
 
+app.get '/sync_to_post', routes.find, routes.syncToPost
 app.get '/articles', routes.index
 app.get '/articles/:id', routes.find, routes.show
 app.post '/articles', routes.create

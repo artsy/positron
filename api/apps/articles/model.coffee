@@ -112,7 +112,7 @@ querySchema = (->
         return callback err if err
         callback null, _.extend data, _id: res.upserted?[0]?._id or id
 
-@saveToGravity = (article, accessToken, callback) ->
+@syncToPost = (article, accessToken, callback) ->
 
   # Create/update the post with body joined from text sections
   if article.gravity_id
@@ -145,7 +145,7 @@ querySchema = (->
             request
               .del("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{a.id}")
               .set('X-Access-Token', accessToken)
-              .end (err, res) -> cb2()          
+              .end (err, res) -> cb2()
           ), cb
       ], (err) ->
         return callback err if err

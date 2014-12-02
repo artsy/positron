@@ -24,6 +24,9 @@ POST /articles
 PUT /articles/:id
 DELETE /articles/:id
 
+GET /sync_to_post?article_id=
+
+GET /users?q=
 GET /users/:id
 PUT /users/:id
 POST /users

@@ -22,8 +22,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   onAutocompleteSelect: (e, item) =>
     return unless confirm "Are you sure you want to change the author?"
-    @article.save { author_id: item.id }, success: =>
-      @article.trigger 'finished'
+    @article.trigger('finished').save(author_id: item.id)
 
   onOpen: =>
     async.parallel [
