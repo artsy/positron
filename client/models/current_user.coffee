@@ -11,3 +11,6 @@ module.exports = class CurrentUser extends Backbone.Model
 
   isAdmin: ->
     @get('details').type is 'Admin'
+
+  profileHandle: ->
+    @get('profile')?.handle

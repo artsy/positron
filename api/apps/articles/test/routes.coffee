@@ -35,9 +35,15 @@ describe 'routes', ->
       }
       @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
-    it 'sends a list of articles by author', ->
+    it 'denies unpublished articles to non-admins', ->
+      @req.user.details.type = 'User'
       routes.index @req, @res, @next
       @res.err.args[0][0].should.equal 401
+
+    it 'allows unpublished for an admin', ->
+      @req.user.details.type = 'Admin'
+      routes.index @req, @res, @next
+      @Article.where.called.should.be.ok
 
   describe '#show', ->
 
@@ -92,6 +98,7 @@ describe 'routes', ->
       @next.called.should.be.ok
 
     it 'throws a 404 for articles from non-authors', ->
+      @req.user.details.type = 'User'
       routes.find @req, @res, @next
       @Article.find.args[0][1] null, _.extend(fixtures().articles,
         author_id: ObjectId('4d8cd73191a5c50ce210002a')
@@ -108,3 +115,14 @@ describe 'routes', ->
       )
       @res.err.called.should.not.be.ok
       @req.article.title.should.equal 'Andy Foobar and The Gang'
+
+    it 'shows unpublished articles to admins', ->
+      @req.user.details.type = 'Admin'
+      routes.find @req, @res, @next
+      @Article.find.args[0][1] null, _.extend(fixtures().articles,
+        author_id: ObjectId('4d8cd73191a5c50ce210002a')
+        published: false
+        title: 'Andy Foobar and The Gang'
+      )
+      @req.article.title.should.equal 'Andy Foobar and The Gang'
+

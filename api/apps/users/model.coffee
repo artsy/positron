@@ -23,6 +23,9 @@ request = require 'superagent'
 @find = find = (id, callback) ->
   db.users.findOne { _id: ObjectId(id) }, callback
 
+@search = (q, callback) ->
+  db.users.find { 'user.name': { $regex: ///#{q}///i } }, callback
+
 #
 # Persistence
 #

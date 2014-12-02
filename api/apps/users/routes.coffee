@@ -14,11 +14,17 @@
     return next err if err
     res.send present user
 
+# GET /api/users?q=
+@search = (req, res, next) ->
+  User.search req.query.q, (err, users) ->
+    return next err if err
+    res.send results: (present user for user in users)
+
 # Middleware to deny non-admins access to certain user endpoint operations
-@authUser = (req, res, next) ->
+@ownerOrAdminOnly = (req, res, next) ->
   req.isUser = req.params.id is req.user._id.toString()
   if not req.isUser and req.user.details?.type isnt 'Admin'
-    res.err 401, 'Can only view yourself.'
+    res.err 401, 'Must be an admin or the user being accessed.'
   else
     next()
 

@@ -4,7 +4,8 @@ _ = require 'underscore'
 # GET /api/articles
 @index = (req, res, next) ->
   if req.query.published isnt 'true' and (not req.query.author_id? or
-     req.query.author_id isnt req.user?._id.toString())
+     req.query.author_id isnt req.user?._id.toString()) and
+     req.user?.details?.type isnt 'Admin'
     return res.err 401,
       'Must pass author_id=me to view unpublished articles. Or pass ' +
       'published=true to only view published articles.'
@@ -25,9 +26,13 @@ _ = require 'underscore'
 
 # PATCH/PUT /api/articles/:id
 @update = (req, res, next) ->
-  Article.save _.extend(req.article, req.body), (err, article) ->
+  data = _.extend(req.article, req.body)
+  Article.save data, (err, article) ->
     return next err if err
     res.send present article
+  if req.body.published
+    Article.saveToGravity data, req.get('x-access-token'), (err, post) ->
+      console.log err, post 
 
 # DELETE /api/articles/:id
 @delete = (req, res, next) ->
@@ -40,7 +45,8 @@ _ = require 'underscore'
   Article.find req.params.id, (err, article) ->
     return next err if err
     if not article? or (article.published isnt true and
-       article.author_id.toString() isnt req.user?._id.toString())
+       article.author_id.toString() isnt req.user?._id.toString()) and
+       req.user?.details?.type isnt 'Admin'
       return res.err 404, 'Article not found.'
     req.article = article
     next()

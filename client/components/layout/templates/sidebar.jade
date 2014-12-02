@@ -25,8 +25,9 @@ nav#layout-sidebar
     br
     = user.get('user').name.split(' ')[0]
     nav#layout-sidebar-profile-menu
-      a( href=sd.FORCE_URL + '/' + user.get('profile').handle )
+      a( href=sd.FORCE_URL + '/' + user.profileHandle() )
         | View profile on Artsy
       a( href='/logout' ) Sign out
       if user.isAdmin()
-        a( href='/impersonate' ) Switch user
+        a#layout-sidebar-switch-user Switch user
+        

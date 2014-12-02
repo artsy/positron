@@ -1,5 +1,6 @@
 sinon = require 'sinon'
 rewire = require 'rewire'
+Backbone = require 'backbone'
 auth = rewire '../../lib/setup/auth'
 
 describe 'auth middleware', ->
@@ -12,6 +13,10 @@ describe 'auth middleware', ->
     @next = sinon.stub()
     for fn in ['requireLogin', 'logout']
       @[fn] = auth.__get__ fn
+    sinon.stub Backbone, 'sync'
+
+  afterEach ->
+    Backbone.sync.restore()
 
   describe 'requireLogin', ->
 
@@ -22,8 +27,7 @@ describe 'auth middleware', ->
   describe 'logout', ->
 
     it 'destroys the api & client session', ->
-      @req.user = destroy: sinon.stub()
+      @req.user = new Backbone.Model
       @logout @req, @res, @next
-      @req.user.destroy.called.should.be.ok
       @req.logout.called.should.be.ok
       @res.redirect.called.should.be.ok
