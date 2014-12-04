@@ -20,7 +20,7 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
 
-$('#layout-sidebar-profile-menu').click ->
+$('#layout-sidebar-switch-user').click ->
   modal = Modal
     title: 'Switch User'
     content: "<input placeholder='Search by user name...'>"

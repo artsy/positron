@@ -33,6 +33,7 @@ _ = require 'underscore'
 
 # GET /api/publish_to_gravity?article_id=
 @syncToPost = (req, res, next) ->
+  console.log 'syncing', req.article
   Article.syncToPost req.article, req.get('x-access-token'), (err, post) ->
     return next err if err
     res.send post
@@ -45,7 +46,7 @@ _ = require 'underscore'
 
 # Fetch & attach a req.article middleware
 @find = (req, res, next) ->
-  Article.find req.params.id or req.query.article_id, (err, article) ->
+  Article.find (req.params.id or req.query.article_id), (err, article) ->
     return next err if err
     if not article? or (article.published isnt true and
        article.author_id.toString() isnt req.user?._id.toString()) and

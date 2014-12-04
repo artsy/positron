@@ -165,7 +165,7 @@ querySchema = (->
                 .post("#{ARTSY_URL}/api/v1/post/#{post.id}/link")
                 .set('X-Access-Token', accessToken)
                 .send(url: section.url)
-                .end (err, res) -> cb (err or res.body.error), res.body
+                .end cb
         ), (err) ->
           return callback err if err
           request
