@@ -1,10 +1,13 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
+CurrentUser = require '../../../../models/current_user.coffee'
+sd = require('sharify').data
 
 module.exports = class EditHeader extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
+    @user = new CurrentUser sd.USER
     @article.on 'change', @saving
     @article.on 'change', @toggleCheckmarks
     @article.on 'sync', @doneSaving
@@ -53,5 +56,6 @@ module.exports = class EditHeader extends Backbone.View
   syncToPost: (e) ->
     e.preventDefault()
     @$('#edit-sync-to-post').text 'Syncing...'
-    @article.syncToPost success: (post) ->
-      location.assign "#{sd.FORCE_URL}/post/#{post.id}"
+    @article.trigger('finished').syncToPost
+      accessToken: @user.get('access_token')
+      success: (post) -> location.assign "#{sd.FORCE_URL}/post/#{post.id}"

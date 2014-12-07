@@ -33,7 +33,6 @@ _ = require 'underscore'
 
 # GET /api/publish_to_gravity?article_id=
 @syncToPost = (req, res, next) ->
-  console.log 'syncing', req.article
   Article.syncToPost req.article, req.get('x-access-token'), (err, post) ->
     return next err if err
     res.send post

@@ -69,8 +69,9 @@ module.exports = class Article extends Backbone.Model
     _.extend super, extended
 
   syncToPost: (options = {}) ->
-    request.get("#{sd.API_URL}/sync_to_post?article_id=#{@get 'id'}")
+    request
+      .get("#{sd.API_URL}/sync_to_post?article_id=#{@get 'id'}")
+      .set('X-Access-Token': options.accessToken)
       .end (err, res) =>
         return options.error? e if e = err or res.error
-        options.success? res
-        @trigger 'sync'
+        options.success? res.body

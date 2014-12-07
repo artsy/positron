@@ -25,7 +25,7 @@ schema = (->
   title: @string().allow('', null)
   published: @boolean().default(false)
   lead_paragraph: @string().allow('', null)
-  gravity_id: @objectId()
+  gravity_id: @objectId().allow('', null)
   sections: @array().includes([
     @object().keys
       type: @string().valid('image')
@@ -124,6 +124,15 @@ querySchema = (->
     body: (section.body for section in article.sections).join('')
     published: true
   ).set('X-Access-Token', accessToken).end (err, res) =>
+
+    # If the post isn't found, delete the gravity_id tying it to the article
+    # and re-try syncing.
+    if res.body.error is 'Post Not Found'
+      @save _.extend(article, gravity_id: null), (err) =>
+        return callback err if err
+        @syncToPost article, accessToken, callback
+      return
+
     return callback err if err = err or res.body.error
     post = res.body
 
@@ -151,7 +160,7 @@ querySchema = (->
         return callback err if err
 
         # Add artworks, images and video from the article to the post
-        async.map article.sections, ((section, cb) ->
+        async.mapSeries article.sections, ((section, cb) ->
           switch section.type
             when 'artworks'
               async.map section.ids, ((id, cb2) ->
@@ -165,7 +174,9 @@ querySchema = (->
                 .post("#{ARTSY_URL}/api/v1/post/#{post.id}/link")
                 .set('X-Access-Token', accessToken)
                 .send(url: section.url)
-                .end cb
+                .end (err, res) -> cb (err or res.body.error), res.body
+            else
+              cb()
         ), (err) ->
           return callback err if err
           request
