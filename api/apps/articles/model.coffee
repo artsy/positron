@@ -132,7 +132,6 @@ querySchema = (->
         return callback err if err
         @syncToPost article, accessToken, callback
       return
-
     return callback err if err = err or res.body.error
     post = res.body
 
@@ -145,14 +144,14 @@ querySchema = (->
         (cb) ->
           async.map post.attachments, ((a, cb2) ->
             request
-              .del("#{ARTSY_URL}/api/v1/post/#{post.id}/link/#{a.id}")
+              .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
               .set('X-Access-Token', accessToken)
               .end (err, res) -> cb2()
           ), cb
         (cb) ->
           async.map post.artworks, ((a, cb2) ->
             request
-              .del("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{a.id}")
+              .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
               .set('X-Access-Token', accessToken)
               .end (err, res) -> cb2()
           ), cb
@@ -165,13 +164,13 @@ querySchema = (->
             when 'artworks'
               async.map section.ids, ((id, cb2) ->
                 request
-                  .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{id}")
+                  .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
                   .set('X-Access-Token', accessToken)
                   .end (err, res) -> cb2 (err or res.body.error), res.body
               ), cb
             when 'image', 'video'
               request
-                .post("#{ARTSY_URL}/api/v1/post/#{post.id}/link")
+                .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
                 .set('X-Access-Token', accessToken)
                 .send(url: section.url)
                 .end (err, res) -> cb (err or res.body.error), res.body
@@ -180,7 +179,7 @@ querySchema = (->
         ), (err) ->
           return callback err if err
           request
-            .get("#{ARTSY_URL}/api/v1/post/#{post.id}")
+            .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
             .set('X-Access-Token', accessToken)
             .end (err, res) -> callback err, res.body
 
