@@ -1,8 +1,12 @@
 _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
-Article = require '../model'
+rewire = require 'rewire'
+Article = rewire '../model'
 { ObjectId } = require 'mongojs'
+express = require 'express'
+fabricateGravity = require('antigravity').fabricate
+bodyParser = require 'body-parser'
 
 describe 'Article', ->
 
@@ -155,3 +159,53 @@ describe 'Article', ->
         count: 1
         results: [_.extend fixtures().articles, _id: 'baz']
       data.results[0].id.should.equal 'baz'
+
+  describe '#syncToPost', ->
+
+    app = express()
+    app.use bodyParser.urlencoded()
+    app.use bodyParser.json()
+    posts = {}
+    app.post '/api/v1/post', (req, res) ->
+      posts['54276766fd4f50996aeca2b8'] = post = _.extend(
+        fabricateGravity('post')
+        req.body
+        {
+          attachments: [{"artwork":{"artist":{"_id":"4f5f64c23b555230ac000472","id":"carlos-motta","sortable_id":"motta-carlos","name":"Carlos Motta","years":"born 1978","public":true,"birthday":"1978","nationality":"Colombian","published_artworks_count":45,"forsale_artworks_count":36,"artworks_count":68,"image_url":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/:version.jpg","image_versions":["square","tall","large","four_thirds"],"image_urls":{"square":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/square.jpg","tall":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/tall.jpg","large":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/large.jpg","four_thirds":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/four_thirds.jpg"},"original_height":null,"original_width":null},"partner":{"_id":"5314b1f67622dd639900006d","id":"future-generation-art-prize","default_profile_id":"futuregenerationartprize","default_profile_public":true,"sortable_id":"future-generation-art-prize","type":"Non Profit","name":"Future Generation Art Prize","short_name":null,"website":"http://www.futuregenerationartprize.org/en","has_full_profile":true},"images":[{"id":"5457afac7261692d54710100","position":1,"aspect_ratio":1.57,"downloadable":false,"original_height":1912,"original_width":3000,"is_default":true,"image_versions":["small","square","medium","medium_rectangle","large_rectangle","tall","large","larger","normalized"],"image_url":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/:version.jpg","image_urls":{"small":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/small.jpg","square":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/square.jpg","medium":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/medium.jpg","medium_rectangle":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/medium_rectangle.jpg","large_rectangle":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/large_rectangle.jpg","tall":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/tall.jpg","large":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/large.jpg","larger":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/larger.jpg","normalized":"http://static3.artsy.net/additional_images/5457afac7261692d54710100/normalized.jpg"},"tile_size":512,"tile_overlap":0,"tile_format":"jpg","tile_base_url":"http://static0.artsy.net/additional_images/5457afac7261692d54710100/dztiles-512-0","max_tiled_height":1912,"max_tiled_width":3000}],"artists":[{"_id":"4f5f64c23b555230ac000472","id":"carlos-motta","sortable_id":"motta-carlos","name":"Carlos Motta","years":"born 1978","public":true,"birthday":"1978","nationality":"Colombian","published_artworks_count":45,"forsale_artworks_count":36,"artworks_count":68,"image_url":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/:version.jpg","image_versions":["square","tall","large","four_thirds"],"image_urls":{"square":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/square.jpg","tall":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/tall.jpg","large":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/large.jpg","four_thirds":"http://static2.artsy.net/artist_images/52f6be0d4a04f5d504f6d7b0/four_thirds.jpg"},"original_height":null,"original_width":null}],"_id":"5457afa87261697d13930300","id":"carlos-motta-la-vision-de-los-vencidos-the-defeated","title":"La visión de los vencidos (The Defeated)","display":"Carlos Motta, La visión de los vencidos (The Defeated) (2013)","manufacturer":null,"category":"Mixed Media","medium":"Video HD, colour, sound, 6’ 46’’","unique":false,"forsale":false,"sold":false,"date":"2013","dimensions":{"in":null,"cm":null},"price":"","availability":"not for sale","ecommerce":false,"collecting_institution":"","blurb":"","edition_sets_count":0,"published":true,"price_currency":"USD","sale_message":null,"inquireable":false,"acquireable":false,"published_at":"2014-11-12T21:29:08+00:00","can_share":true,"can_share_image":true,"cultural_maker":null},"id":"548367187261691319240400","type":"PostArtwork","position":1}]
+          artworks: []
+          _id: '54276766fd4f50996aeca2b8'
+        }
+      )
+      res.send post
+    app.delete '/api/v1/post/:id/link/:linkId', (req, res) ->
+      posts[req.params.id].content_links = []
+      res.send {}
+    app.delete '/api/v1/post/:id/artwork/:artworkId', (req, res) ->
+      posts[req.params.id].artworks = []
+      res.send {}
+    app.post "/api/v1/post/:id/artwork/:artworkId", (req, res) ->
+      posts[req.params.id].artworks.push { id: req.params.artworkId }
+      res.send {}
+    app.post "/api/v1/post/:id/link", (req, res) ->
+      posts[req.params.id].content_links.push req.body
+      res.send {}
+    app.get '/api/v1/post/:id', (req, res) ->
+      res.send posts[req.params.id]
+
+    beforeEach (done) ->
+      Article.__set__ 'ARTSY_URL', 'http://localhost:5001'
+      @server = app.listen 5001, -> done()
+
+    afterEach ->
+      @server.close()
+
+    it 'saves an article to a gravity post', (done) ->
+      article = _.extend fixtures().articles, gravity_id: null
+      article.sections[3].ids = ['foo', 'bar']
+      Article.syncToPost article, 'foo-token', (err, post) ->
+        post.title.should.equal article.title
+        post.body.should.equal '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
+        post.published.should.be.ok
+        _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
+        _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'
+        done()

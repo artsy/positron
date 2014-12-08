@@ -20,14 +20,14 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
 
-$('#layout-sidebar-profile-menu').click ->
+$('#layout-sidebar-switch-user').click ->
   modal = Modal
     title: 'Switch User'
     content: "<input placeholder='Search by user name...'>"
     removeOnClose: true
     buttons: [
       { text: 'Cancel', closeOnClick: true }
-      { className: 'simple-modal-close', closeOnClick: true } 
+      { className: 'simple-modal-close', closeOnClick: true }
     ]
   new Autocomplete
     el: $(modal.m).find('input')
@@ -36,3 +36,4 @@ $('#layout-sidebar-profile-menu').click ->
       { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
     selected: (e, item) =>
       location.assign '/impersonate/' + item.id
+  _.defer -> $(modal.m).find('input').focus()

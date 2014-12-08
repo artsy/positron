@@ -19,7 +19,9 @@ block content
                     style="background-image: url(#{article.get('thumbnail_image')})"
                   )
                 else
-                  .article-list-item-placeholder
+                  .article-list-item-placeholder Missing
+                    br
+                    | thumbnail
               .article-list-item-right
                 .article-list-item-tags
                   if article.get('tags') && article.get('tags').length
