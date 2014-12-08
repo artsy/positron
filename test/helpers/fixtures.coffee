@@ -53,7 +53,7 @@ module.exports = ->
     primary_featured_artist_ids: ['5086df098523e60002000012']
     featured_artist_ids: ['5086df098523e60002000012']
     featured_artwork_ids: ['5321b71c275b24bcaa0001a5']
-    gravity_id: ObjectId('502a6debe8b6470002000004')
+    gravity_id: '502a6debe8b6470002000004'
   fixtures.users =
     "id": "502a6debe8b6470002000004"
     "access_token": "test-access-token",
