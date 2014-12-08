@@ -162,7 +162,7 @@ querySchema = (->
         async.mapSeries article.sections, ((section, cb) ->
           switch section.type
             when 'artworks'
-              async.map section.ids, ((id, cb2) ->
+              async.mapSeries section.ids, ((id, cb2) ->
                 request
                   .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
                   .set('X-Access-Token', accessToken)
