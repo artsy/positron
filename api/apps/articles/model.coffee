@@ -96,21 +96,22 @@ querySchema = (->
 # Persistence
 
 @save = (data, callback) ->
-  id = ObjectId(data._id) or new ObjectId()
+  id = ObjectId(data._id)
   whitelisted = _.pick data, _.keys schema
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema, (err, data) ->
     return callback err if err
-    db.articles.findOne { _id: id }, (err, article) ->
-      return callback err if err
-      data = _.extend (article or {}), { slugs: [] }, data
-      data.updated_at = moment().format()
-      data.author_id = ObjectId data.author_id
-      slug = _s.slugify data.title
-      data.slugs = data.slugs.concat [slug] unless slug in data.slugs
-      db.articles.update { _id: id }, data, { upsert: true }, (err, res) ->
-        return callback err if err
-        callback null, _.extend data, _id: id
+    data.updated_at = moment().format()
+    data.author_id = ObjectId(data.author_id)
+    slug = _s.slugify data.title
+    data.slugs ?= []
+    data.slugs.push slug unless slug in data.slugs
+    db.articles.findAndModify {
+      query: { _id: id }
+      update: data
+      upsert: true
+      new: true
+    }, callback
 
 @syncToPost = (article, accessToken, callback) ->
 
