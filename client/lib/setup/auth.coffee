@@ -1,5 +1,6 @@
 #
 # Auth setup code using passport and friends.
+# TODO: Extract into an artsy-oauth-passport module
 #
 
 sd = require('sharify').data
@@ -26,7 +27,10 @@ setupPassport = ->
         error: (m, res) -> done res.body
         success: (user) -> done null, JSON.stringify user.toJSON()
   passport.deserializeUser (user, done) ->
-    done null, new CurrentUser JSON.parse user
+    try
+      done null, new CurrentUser JSON.parse user
+    catch e
+      return done e
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
@@ -45,6 +49,6 @@ module.exports = (app) ->
   app.get '/login', passport.authenticate('artsy')
   app.get '/auth/artsy/callback', passport.authenticate 'artsy',
     successRedirect: '/'
-    failureRedirect: '/login'
+    failureRedirect: '/logout'
   app.get '/logout', logout
   app.use requireLogin
