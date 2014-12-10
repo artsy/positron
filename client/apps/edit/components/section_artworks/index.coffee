@@ -19,7 +19,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     urlsValue: ''
-    loadingUrls: false
+    loadingUrls: true
     errorMessage: ''
 
   componentDidMount: ->

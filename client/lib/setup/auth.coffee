@@ -1,5 +1,6 @@
 #
 # Auth setup code using passport and friends.
+# TODO: Extract into an artsy-oauth-passport module
 #
 
 sd = require('sharify').data
@@ -17,7 +18,6 @@ setupPassport = ->
     callbackURL: process.env.APP_URL + '/auth/artsy/callback'
   , (accessToken, refreshToken, profile, done) ->
     done null, accessToken
-
   passport.serializeUser (userOrAccessToken, done) ->
     if userOrAccessToken.id?
       done null, JSON.stringify userOrAccessToken.toJSON()
@@ -26,9 +26,11 @@ setupPassport = ->
         headers: 'X-Access-Token': userOrAccessToken
         error: (m, res) -> done res.body
         success: (user) -> done null, JSON.stringify user.toJSON()
-
   passport.deserializeUser (user, done) ->
-    done null, new CurrentUser JSON.parse user
+    try
+      done null, new CurrentUser JSON.parse user
+    catch e
+      return done e
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
@@ -38,7 +40,7 @@ logout = (req, res) ->
     headers: 'X-Access-Token': req.user.get('access_token')
     error: res.backboneError
   req.logout()
-  res.redirect sd.ARTSY_URL
+  res.redirect sd.APP_URL
 
 module.exports = (app) ->
   setupPassport()
@@ -47,6 +49,6 @@ module.exports = (app) ->
   app.get '/login', passport.authenticate('artsy')
   app.get '/auth/artsy/callback', passport.authenticate 'artsy',
     successRedirect: '/'
-    failureRedirect: '/login'
+    failureRedirect: '/logout'
   app.get '/logout', logout
   app.use requireLogin

@@ -35,7 +35,7 @@ module.exports = (callback) ->
     # keep memory consumption low.
     db.articles.distinct 'gravity_id', {}, (err, ids) ->
       return callback err if err
-      ids = (ObjectId(id.toString()) for id in ids)
+      ids = (ObjectId(id.toString()) for id in _.compact ids)
       gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
         async.timesSeries Math.ceil(count / 1000), ((n, next) ->
           gravity.posts

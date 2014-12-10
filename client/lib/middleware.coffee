@@ -22,6 +22,8 @@ viewHelpers = require './view_helpers'
 # TODO: Replace with app that renders a nice page
 @errorHandler = (err, req, res, next) ->
   console.log err.stack, err.message
+  if err.message.match 'access token is invalid or has expired'
+    return res.redirect '/logout'
   res.status(err.status or 500).send(
     "<pre>" + err.message or err.toString() + "</pre>"
   )
