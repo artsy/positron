@@ -51,6 +51,7 @@
     "scribe-editor": "git://github.com/guardian/scribe.git",
     "scribe-plugin-toolbar": "*",
     "scribe-plugin-link-tooltip": "*",
+    "scribe-plugin-keyboard-shortcuts": "*",
     "html-janitor": "git://github.com/gaearon/html-janitor.git#patch-1",
     "imagesloaded": "*",
     "jquery-autosize": "*",
