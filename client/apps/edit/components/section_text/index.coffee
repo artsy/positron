@@ -10,9 +10,17 @@ try
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
   scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
+  scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
+
+keyboardShortcutsMap =
+  bold: (e) -> e.metaKey and e.keyCode is 66
+  italic: (e) -> e.metaKey and e.keyCode is 73
+  removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
+  linkPrompt: (e) -> e.metaKey and not e.shiftKey and e.keyCode is 75
+  unlink: (e) -> e.metaKey and e.shiftKey and e.keyCode is 75
 
 module.exports = React.createClass
 
@@ -28,10 +36,12 @@ module.exports = React.createClass
         p: true
         b: true
         i: true
+        br: true
         a: { href: true, target: '_blank' }
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
+    @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     $(@refs.editable.getDOMNode()).focus()
 
   componentDidMount: ->

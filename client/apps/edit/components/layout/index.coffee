@@ -50,6 +50,7 @@ module.exports = class EditLayout extends Backbone.View
         p: true
         b: true
         i: true
+        br: true
         a: { href: true, target: '_blank' }
     @toggleLeadParagraphPlaceholder()
 
