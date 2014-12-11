@@ -19,9 +19,6 @@ app.use bodyParser.json()
 app.use morgan 'dev'
 
 # Apps
-app.use (req, res, next) ->
-  console.log req.headers
-  next()
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use setUser
 app.post '/articles', authenticated
