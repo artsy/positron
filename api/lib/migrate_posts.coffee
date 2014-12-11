@@ -49,7 +49,7 @@ module.exports = (callback) ->
         ), (err) ->
           console.log "All done! Started migration #{start.from(moment())}. " +
             "Took #{moment().diff(start)}ms"
-            callback err
+            callback? err
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
@@ -141,7 +141,7 @@ postsToArticles = (posts, callback) ->
 
       # Callback with mapped data
       console.log "Mapped #{_.last post._slugs}"
-      callback null, data
+      callback? null, data
   ), (err, articles) ->
     return callback(err) if err
 

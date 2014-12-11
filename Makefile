@@ -12,10 +12,6 @@ BIN = node_modules/.bin
 s:
 	$(BIN)/coffee index.coffee
 
-# Start the server pointing to production
-sp:
-	ARTSY_URL=https://api.artsy.net FORCE_URL=https://artsy.net $(BIN)/coffee index.coffee
-
 # Runs a migration script to pull in old posts from gravity
 migrate:
 	$(BIN)/coffee api/lib/migrate_posts.coffee
