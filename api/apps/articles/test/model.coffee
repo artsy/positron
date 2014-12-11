@@ -221,8 +221,8 @@ describe 'Article', ->
         done()
 
     it 'saves the gravity slug for lookup', (done) ->
-      article = _.extend fixtures().articles, _id: id = new ObjectId(), gravity_id: null
+      article = _.extend fixtures().articles, gravity_id: null
       Article.syncToPost article, 'foo-token', (err, post) ->
-        db.articles.findOne { _id: id }, (err, article) ->
-          _.last(article.slugs).should.equal 'billpowers-check-out-the-original-flowers-photograph-taken-by-patricia'
+        db.articles.find {}, (err, articles) ->
+          _.last(_.last(articles).slugs).should.equal 'billpowers-check-out-the-original-flowers-photograph-taken-by-patricia'
           done()
