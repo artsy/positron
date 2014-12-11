@@ -58,5 +58,4 @@ module.exports = class EditHeader extends Backbone.View
     @$('#edit-sync-to-post').text 'Syncing...'
     @article.trigger('finished').syncToPost
       accessToken: @user.get('access_token')
-      success: (post) ->
-        location.assign "#{sd.FORCE_URL}/post/#{post.id}"
+      success: (post) -> location.assign "#{sd.FORCE_URL}/post/#{post.id}"

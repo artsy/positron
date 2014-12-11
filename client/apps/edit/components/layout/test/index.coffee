@@ -83,10 +83,10 @@ describe 'EditLayout', ->
 
   describe '#onFinished', ->
 
-    it 'redirects to the list once the articles syncs', ->
+    it 'redirects to the list if the articles is saved', ->
       @view.redirectToList = sinon.stub()
       @view.onFinished()
-      @view.article.trigger 'sync'
+      @view.article.trigger('change').trigger('sync')
       @view.redirectToList.called.should.be.ok
 
   describe '#syncTitleTeaser', ->

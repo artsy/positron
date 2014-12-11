@@ -121,6 +121,7 @@ getSlug = (article, callback) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
   return callback null, titleSlug unless article.author_id
   User.find article.author_id, (err, user) ->
+    return callback null, titleSlug unless user
     callback err, _s.slugify(user.user.name) + '-' + titleSlug
 
 @syncToPost = (article, accessToken, callback) ->
