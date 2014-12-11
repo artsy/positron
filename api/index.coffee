@@ -19,6 +19,9 @@ app.use bodyParser.json()
 app.use morgan 'dev'
 
 # Apps
+app.use (req, res, next) ->
+  console.log req.headers
+  next()
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use setUser
 app.post '/articles', authenticated
@@ -35,7 +38,7 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */12 * * *', migratePosts, null, true
+new CronJob '0 */4 * * *', migratePosts, null, true
 new CronJob '0 24 * * *', syncUsers, null, true
 
 # Start the test server if run directly
