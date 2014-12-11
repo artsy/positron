@@ -31,7 +31,7 @@ describe 'User', ->
 
     it 'pieces together the icon url', (done) ->
       User.fromAccessToken 'foobar', (err, user) ->
-        _.values(user.icon_urls)[0].should.match /// profile_icons/.*/square140.jpg ///
+        _.values(user.icon_urls)[0].should.match '/assets/shared/square140.jpg'
         done()
 
   describe '#present', ->

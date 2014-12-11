@@ -22,6 +22,11 @@ describe 'artsy_model', ->
     it 'it maps curies into image urls', ->
       am.imageUrlsFor(fabricate2('artwork')).large.should.containEql 'large.jpg'
 
+    it 'it prefers the thumbnail base url b/c its more reliable', ->
+      artwork = fabricate2('artwork')
+      artwork._links.thumbnail.href = 'http://foo.com/bar/baz.jpg'
+      am.imageUrlsFor(artwork).large.should.equal 'http://foo.com/bar/large.jpg'
+
   describe '#findByIds', ->
 
     it 'fetches a bunch of id endpoints in parallel', (done) ->

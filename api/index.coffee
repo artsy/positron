@@ -35,7 +35,7 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */12 * * *', migratePosts, null, true
+new CronJob '0 */4 * * *', migratePosts, null, true
 new CronJob '0 24 * * *', syncUsers, null, true
 
 # Start the test server if run directly

@@ -6,6 +6,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../lib/db'
+User = require '../users/model'
 async = require 'async'
 Joi = require 'joi'
 Joi.objectId = require 'joi-objectid'
@@ -18,6 +19,7 @@ request = require 'superagent'
 
 schema = (->
   author_id: @objectId().required()
+  slug: @string()
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
@@ -95,23 +97,32 @@ querySchema = (->
 
 # Persistence
 
-@save = (data, callback) ->
-  id = ObjectId(data._id)
-  whitelisted = _.pick data, _.keys schema
+@save = (article, callback) ->
+  id = ObjectId(article._id)
+  whitelisted = _.pick article, _.keys schema
   whitelisted.author_id = whitelisted.author_id?.toString()
-  Joi.validate whitelisted, schema, (err, data) ->
+  Joi.validate whitelisted, schema, (err, article) ->
     return callback err if err
-    data.updated_at = moment().format()
-    data.author_id = ObjectId(data.author_id)
-    slug = _s.slugify data.title
-    data.slugs ?= []
-    data.slugs.push slug unless slug in data.slugs
-    db.articles.findAndModify {
-      query: { _id: id }
-      update: data
-      upsert: true
-      new: true
-    }, callback
+    article.updated_at = moment().format()
+    article.author_id = ObjectId article.author_id
+    getSlug article, (err, slug) ->
+      return callback err if err
+      article.slugs ?= []
+      article.slugs.push slug unless slug in article.slugs
+      db.articles.findAndModify {
+        query: { _id: id }
+        update: article
+        upsert: true
+        new: true
+      }, callback
+
+getSlug = (article, callback) ->
+  return callback null, article.slug if article.slug
+  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
+  return callback null, titleSlug unless article.author_id
+  User.find article.author_id, (err, user) ->
+    return callback null, titleSlug unless user
+    callback err, _s.slugify(user.user.name) + '-' + titleSlug
 
 @syncToPost = (article, accessToken, callback) ->
 
@@ -137,7 +148,7 @@ querySchema = (->
     post = res.body
 
     # Ensure the article is linked to the Gravity post
-    @save _.extend(article, gravity_id: post._id), (err, article) ->
+    @save _.extend(article, { gravity_id: post._id, slug: post.id }), (err, article) ->
       return callback err if err
 
       # Delete any existing attachments/artworks
@@ -190,16 +201,16 @@ querySchema = (->
 
 # JSON views
 
-@presentCollection = (data) =>
+@presentCollection = (article) =>
   {
-    total: data.total
-    count: data.count
-    results: (@present(obj) for obj in data.results)
+    total: article.total
+    count: article.count
+    results: (@present(obj) for obj in article.results)
   }
 
-@present = (data) =>
-  _.extend data,
-    id: data._id?.toString()
+@present = (article) =>
+  _.extend article,
+    id: article._id?.toString()
     _id: undefined
-    slug: _.last data.slugs
+    slug: _.last article.slugs
     slugs: undefined

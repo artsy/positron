@@ -18,8 +18,14 @@ request = require 'superagent'
   versions = data?.image_versions
   return null unless versions?.length
   for version in versions
-    imageTempl = (curie.href for curie in data._links.curies when \
-      curie.name is 'image')[0]
+    if data._links.thumbnail
+      # Work around an API bug where the CDN is wrong
+      url = data._links.thumbnail.href.split('/')
+      url.pop()
+      imageTempl = url.join('/') + '/{rel}'
+    else
+      imageTempl = (curie.href for curie in data._links.curies when \
+        curie.name is 'image')[0]
     imageUrls[version] = imageTempl.replace '{rel}', version + '.jpg'
   imageUrls
 

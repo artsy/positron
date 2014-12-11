@@ -81,7 +81,7 @@ module.exports = class EditLayout extends Backbone.View
 
   onFinished: =>
     @$('#edit-sections-spinner').show()
-    @article.on 'sync', @redirectToList
+    @article.on 'change', => @article.on 'sync', @redirectToList
 
   highlightMissingFields: =>
     @openTab 1

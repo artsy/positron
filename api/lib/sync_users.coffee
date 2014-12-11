@@ -31,7 +31,7 @@ module.exports = (callback) ->
         return callback err if err
         return callback() unless authorIds.length
 
-        # Fetch Gravity user data for the missing authors in batches with 
+        # Fetch Gravity user data for the missing authors in batches with
         # pauses in between
         console.log "Syncing a total of #{authorIds.length} users"
         async.timesSeries Math.ceil(authorIds.length / 20), (n, cb) ->
@@ -39,7 +39,7 @@ module.exports = (callback) ->
             setTimeout cb, 5000
         , (err) ->
           console.log "Took #{moment().diff(start)}ms"
-          callback()
+          callback?()
 
 syncUsersByIds = (ids, xappToken, callback) ->
   console.log "Syncing #{ids.length} users"

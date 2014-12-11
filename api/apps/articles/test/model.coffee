@@ -135,6 +135,16 @@ describe 'Article', ->
         article.slugs[0].should.equal 'top-ten-shows'
         done()
 
+    it 'adds a slug based off a user and title', (done) ->
+      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+        Article.save {
+          title: 'Foo Baz'
+          author_id: @user._id
+        }, (err, article) ->
+          return done err if err
+          article.slugs[0].should.equal 'molly-foo-baz'
+          done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
@@ -209,3 +219,10 @@ describe 'Article', ->
         _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
         _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'
         done()
+
+    it 'saves the gravity slug for lookup', (done) ->
+      article = _.extend fixtures().articles, gravity_id: null
+      Article.syncToPost article, 'foo-token', (err, post) ->
+        db.articles.find {}, (err, articles) ->
+          _.last(_.last(articles).slugs).should.equal 'billpowers-check-out-the-original-flowers-photograph-taken-by-patricia'
+          done()
