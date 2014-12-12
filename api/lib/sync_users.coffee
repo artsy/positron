@@ -4,7 +4,7 @@
 #
 
 require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
-debug = require('debug')('cron:syncusers')
+debug = require('debug')('cron:sync-users')
 moment = require 'moment'
 db = require './db'
 _ = require 'underscore'

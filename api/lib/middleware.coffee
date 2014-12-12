@@ -15,10 +15,9 @@ UNKNOWN_ERROR = "Unknown failure. " +
 
   # Error handler helper for predictable JSON responses.
   res.err = (status, message) ->
-    err =
-      status: s = status or 500
-      message: message or "Internal Error"
-    res.status(s).send err
+    err = new Error message or "Internal Error"
+    err.status = status or 500
+    next err
   next()
 
 @notFound = (req, res, next) ->
