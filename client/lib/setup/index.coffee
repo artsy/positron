@@ -8,7 +8,8 @@
 _ = require 'underscore'
 sharify = require 'sharify'
 sd = sharify.data = _.pick process.env,
-  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY'
+  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
+  'SENTRY_PUBLIC_DSN'
 
 # Dependencies
 express = require 'express'

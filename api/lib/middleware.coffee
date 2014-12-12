@@ -6,6 +6,7 @@
 _ = require 'underscore'
 { parse } = require 'url'
 { API_URL } = process.env
+debug = require('debug') 'api'
 
 UNKNOWN_ERROR = "Unknown failure. " +
                 "Try again or contact support@artsymail.com for help."
@@ -24,5 +25,5 @@ UNKNOWN_ERROR = "Unknown failure. " +
   res.err 404, "Endpoint does not exist."
 
 @errorHandler = (err, req, res, next) ->
-  console.log err.stack
+  debug err.stack
   res.err err.status, err.message or err.stack or err.toString

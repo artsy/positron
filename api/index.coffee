@@ -8,6 +8,8 @@ morgan = require 'morgan'
 { authenticated, setUser } = require './apps/users/routes'
 migratePosts = require './lib/migrate_posts'
 syncUsers = require './lib/sync_users'
+debug = require('debug') 'api'
+{ CronJob } = require 'cron'
 
 app = module.exports = express()
 
@@ -33,5 +35,9 @@ app.use require './apps/artists'
 app.use errorHandler
 app.use notFound
 
+# Start cron jobs
+new CronJob '0 */4 * * *', migratePosts, null, true
+new CronJob '0 24 * * *', syncUsers, null, true
+
 # Start the test server if run directly
-app.listen(5000, -> console.log "Listening on 5000") if module is require.main
+app.listen(5000, -> debug "Listening on 5000") if module is require.main

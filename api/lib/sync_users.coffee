@@ -4,6 +4,7 @@
 #
 
 require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
+debug = require('debug')('cron:syncusers')
 moment = require 'moment'
 db = require './db'
 _ = require 'underscore'
@@ -33,16 +34,16 @@ module.exports = (callback) ->
 
         # Fetch Gravity user data for the missing authors in batches with
         # pauses in between
-        console.log "Syncing a total of #{authorIds.length} users"
+        debug "Syncing a total of #{authorIds.length} users"
         async.timesSeries Math.ceil(authorIds.length / 20), (n, cb) ->
           syncUsersByIds _.compact(authorIds[n...n + 20]), xappToken, ->
             setTimeout cb, 5000
         , (err) ->
-          console.log "Took #{moment().diff(start)}ms"
+          debug "Took #{moment().diff(start)}ms"
           callback?()
 
 syncUsersByIds = (ids, xappToken, callback) ->
-  console.log "Syncing #{ids.length} users"
+  debug "Syncing #{ids.length} users"
   async.map ids, (id, cb) ->
     User.upsertWithGravityData {
       id: id.toString()
@@ -50,7 +51,7 @@ syncUsersByIds = (ids, xappToken, callback) ->
     }, (err, user) ->
       # User doesn't exist, so empty any articles with that author
       if err?.message is 'User Not Found'
-        console.log err, id
+        debug err, id
         db.articles.update(
           { author_id: id }
           { $set: author_id: null }
@@ -58,14 +59,14 @@ syncUsersByIds = (ids, xappToken, callback) ->
           -> cb()
         )
       else if err
-        console.warn err
+        debug err
         cb err
       else
-        console.log "Sycned #{name}" if name = user?.user?.name
+        debug "Sycned #{name}" if name = user?.user?.name
         cb null, user
   , callback
 
 return unless module is require.main
 module.exports (err) ->
-  console.warn err
+  debug err
   process.exit 1
