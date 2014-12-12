@@ -16,6 +16,10 @@ express = require "express"
 app = module.exports = express()
 
 # Setup Sentry
+app.get '/uncaught', ->
+  setTimeout -> throw new Error "RAWR"
+app.get '/caught', ->
+  throw new Error "RAWR"
 client = new raven.Client process.env.SENTRY_DSN,
   stackFunction: Error.prepareStackTrace
 app.use raven.middleware.express client
