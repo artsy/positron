@@ -9,13 +9,13 @@ switch process.env.NODE_ENV
   when 'production', 'staging' then ''
   else env __dirname + '/.env'
 
-# Start New Relic
-require 'newrelic' if process.env.NODE_ENV in ['staging', 'production']
-
 # Dependencies
+raven = require 'raven'
 express = require "express"
 app = module.exports = express()
 
+# Glue client/sentry and API together
+app.use raven.middleware.express process.env.SENTRY_DSN
 app.use '/api', require './api'
 # TODO: Possibly a terrible hack to not share `req.user` between both.
 app.use (req, rest, next) -> (req.user = null); next()
