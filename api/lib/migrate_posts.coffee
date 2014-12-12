@@ -3,6 +3,7 @@
 #
 
 require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
+debug = require('debug')('cron:migrateposts')
 _ = require 'underscore'
 { resolve } = require 'path'
 async = require 'async'
@@ -20,9 +21,6 @@ gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
   'post_artwork_features', 'artworks']
 
 module.exports = (callback) ->
-
-  # Time it
-  start = moment()
 
   # Remove any posts with slideshows & gravity_ids b/c we know those originated
   # in Gravity and will be replaced.
@@ -47,13 +45,11 @@ module.exports = (callback) ->
                 # Small pause inbetween for the GC to catch up
                 setTimeout (-> next err), 100
         ), (err) ->
-          console.log "All done! Started migration #{start.from(moment())}. " +
-            "Took #{moment().diff(start)}ms"
             callback? err
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
-  console.log "Migrating #{posts.length} posts...."
+  debug "Migrating #{posts.length} posts...."
 
   # Fetch any artist/artwork features + the post's first artwork and begin
   # mapping posts -> articles
@@ -140,7 +136,7 @@ postsToArticles = (posts, callback) ->
         gravity_id: post._id
 
       # Callback with mapped data
-      console.log "Mapped #{_.last post._slugs}"
+      debug "Mapped #{_.last post._slugs}"
       callback? null, data
   ), (err, articles) ->
     return callback(err) if err
@@ -152,5 +148,5 @@ postsToArticles = (posts, callback) ->
 
 return unless module is require.main
 module.exports (err) ->
-  console.warn err
+  debug err
   process.exit 1

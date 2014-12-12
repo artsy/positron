@@ -34,6 +34,8 @@
     "cheerio": "*",
     "glossary": "*",
     "raven": "*",
+    "debug": "*",
+    "cron": "*",
 
     "stylus": "*",
     "nib": "*",
@@ -56,7 +58,6 @@
     "jquery-autosize": "*",
     "typeahead.js": "*",
     "simple-modal": "*",
-
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
     "rewire": "*",

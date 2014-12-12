@@ -14,7 +14,7 @@ header#edit-header
     if user.isAdmin()
       a#edit-sync-to-post.avant-garde-button Sync to post
     a#edit-preview.avant-garde-button(
-      href="#{sd.FORCE_URL}/articles/#{article.get('id')}/#{article.get('slug')}"
+      href="#{sd.FORCE_URL}/article/#{article.get('slug')}"
     )
       if article.get('published')
         | View

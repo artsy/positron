@@ -4,6 +4,7 @@
 #
 
 viewHelpers = require './view_helpers'
+debug = require('debug') 'client'
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
@@ -21,7 +22,7 @@ viewHelpers = require './view_helpers'
 
 # TODO: Replace with app that renders a nice page
 @errorHandler = (err, req, res, next) ->
-  console.log err.stack, err.message
+  debug err.stack, err.message
   if err.message.match 'access token is invalid or has expired'
     return res.redirect '/logout'
   res.status(err.status or 500).send(

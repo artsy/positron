@@ -8,6 +8,7 @@ morgan = require 'morgan'
 { authenticated, setUser } = require './apps/users/routes'
 migratePosts = require './lib/migrate_posts'
 syncUsers = require './lib/sync_users'
+debug = require('debug') 'api'
 
 app = module.exports = express()
 
@@ -34,4 +35,4 @@ app.use errorHandler
 app.use notFound
 
 # Start the test server if run directly
-app.listen(5000, -> console.log "Listening on 5000") if module is require.main
+app.listen(5000, -> debug "Listening on 5000") if module is require.main
