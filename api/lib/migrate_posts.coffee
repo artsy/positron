@@ -3,7 +3,7 @@
 #
 
 require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
-debug = require('debug')('cron:migrateposts')
+debug = require('debug')('cron:migrate-posts')
 _ = require 'underscore'
 { resolve } = require 'path'
 async = require 'async'
