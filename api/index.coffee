@@ -6,7 +6,7 @@ morgan = require 'morgan'
   loginRequired } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 { authenticated, setUser } = require './apps/users/routes'
-migratePosts = require './lib/migrate_posts'
+migrate = require './lib/migrate'
 syncUsers = require './lib/sync_users'
 debug = require('debug') 'api'
 { CronJob } = require 'cron'
@@ -35,7 +35,7 @@ app.use require './apps/artists'
 app.get '/task/:task', (req, res, next) ->
   return res.err 401, 'Admin only.' unless req.user?.details?.type is 'Admin'
   switch req.params.task
-    when 'migrate-posts' then migratePosts()
+    when 'migrate' then migrate()
     when 'sync-users' then syncUsers()
   res.send { success: "Running #{req.params.task}... check the logs." }
 
@@ -44,7 +44,7 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */4 * * *', migratePosts, null, true
+new CronJob '0 */4 * * *', migrate, null, true
 new CronJob '0 24 * * *', syncUsers, null, true
 
 # Start the test server if run directly

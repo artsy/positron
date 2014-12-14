@@ -14,7 +14,7 @@ s:
 
 # Runs a migration script to pull in old posts from gravity
 migrate:
-	$(BIN)/coffee api/lib/migrate_posts.coffee
+	$(BIN)/coffee api/lib/migrate.coffee
 
 # Runs a migration script to pull in old posts from gravity
 sync-users:
