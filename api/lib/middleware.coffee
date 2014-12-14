@@ -25,4 +25,7 @@ UNKNOWN_ERROR = "Unknown failure. " +
 
 @errorHandler = (err, req, res, next) ->
   debug err.stack
-  res.err err.status, err.message or err.stack or err.toString
+  res.status(status = err.status or 500).send {
+    status: status,
+    message: (err.message or err.stack or err.toString())
+  }
