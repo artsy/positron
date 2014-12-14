@@ -18,22 +18,22 @@ describe 'middleware', ->
     it 'sends consistent error messages with sensible defaults', ->
       middleware.helpers @req, @res, @next
       @res.err()
-      @res.status.args[0][0].should.equal 500
-      @res.send.args[0][0].message.should.equal "Internal Error"
+      @next.args[1][0].status.should.equal 500
+      @next.args[1][0].message.should.equal "Internal Error"
 
     it 'sends consistent error messages that is customizable', ->
       middleware.helpers @req, @res, @next
       @res.err 403, "Game Over"
-      @res.status.args[0][0].should.equal 403
-      @res.send.args[0][0].message.should.equal "Game Over"
+      @next.args[1][0].status.should.equal 403
+      @next.args[1][0].message.should.equal "Game Over"
 
   describe 'notFound', ->
 
     it 'throws a nice 404', ->
       middleware.helpers @req, @res,@next
       middleware.notFound @req, @res,@next
-      @res.status.args[0][0].should.equal 404
-      @res.send.args[0][0].message.should.equal "Endpoint does not exist."
+      @next.args[1][0].status.should.equal 404
+      @next.args[1][0].message.should.equal "Endpoint does not exist."
 
   describe 'errorHandler', ->
 
@@ -45,4 +45,5 @@ describe 'middleware', ->
       middleware.helpers @req, @res, @next
       middleware.errorHandler err, @req, @res,@next
       @res.status.args[0][0].should.equal 501
+      @res.send.args[0][0].status.should.equal 501
       @res.send.args[0][0].message.should.equal "Game is so over"

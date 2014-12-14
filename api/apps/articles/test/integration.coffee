@@ -62,6 +62,7 @@ describe 'articles endpoints', ->
       request
         .get("http://localhost:5000/articles?published=false")
       .end (err, res) ->
+          console.log "MOOO", res.body
           res.body.message.should.containEql 'published=true'
           done()
 
