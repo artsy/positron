@@ -44,5 +44,6 @@ describe 'middleware', ->
       err.message = "Game is so over"
       middleware.helpers @req, @res, @next
       middleware.errorHandler err, @req, @res,@next
-      @next.args[1][0].status.should.equal 501
-      @next.args[1][0].message.should.equal "Game is so over"
+      @res.status.args[0][0].should.equal 501
+      @res.send.args[0][0].status.should.equal 501
+      @res.send.args[0][0].message.should.equal "Game is so over"
