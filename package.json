@@ -36,6 +36,7 @@
     "raven": "*",
     "debug": "*",
     "cron": "*",
+    "bucket-assets": "*",
 
     "stylus": "*",
     "nib": "*",

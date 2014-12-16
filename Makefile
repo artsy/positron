@@ -38,7 +38,8 @@ assets:
 	$(BIN)/ezel-assets client/assets/ client/public/assets/
 
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
-deploy:
+deploy: assets
+	$(BIN)/bucketassets -b positron-$(env)
 	git push git@heroku.com:positron-$(env).git master
 
 .PHONY: test assets
