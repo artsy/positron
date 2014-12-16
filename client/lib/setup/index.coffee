@@ -7,6 +7,7 @@
 # Inject some configuration & constant data into sharify
 _ = require 'underscore'
 sharify = require 'sharify'
+bucketAssets = require 'bucket-assets'
 sd = sharify.data = _.pick process.env,
   'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
   'SENTRY_PUBLIC_DSN'
@@ -34,8 +35,8 @@ module.exports = (app) ->
 
   # Mount generic middleware & run setup modules
   app.use forceSSL if 'production' is sd.NODE_ENV
-  setupEnv app
   app.use sharify
+  setupEnv app
   app.use cookieParser()
   app.use bodyParser.json()
   app.use bodyParser.urlencoded()
@@ -43,6 +44,7 @@ module.exports = (app) ->
   app.use session
     secret: process.env.SESSION_SECRET
     key: 'positron.sess'
+  app.use bucketAssets()
   setupAuth app
   app.use locals
   app.use helpers

@@ -1,1 +1,1 @@
-web: make assets && make s
+web: make s

@@ -8,9 +8,8 @@ sd = require('sharify').data
 
 module.exports = (app) ->
 
-  # Development only
+  # Compile assets on request in development
   if 'development' is NODE_ENV
-    # Compile assets on request in development
     app.use require('stylus').middleware
       src: path.resolve(__dirname, '../../')
       dest: path.resolve(__dirname, '../../public')
@@ -19,6 +18,6 @@ module.exports = (app) ->
       transforms: [require('caching-coffeeify'), require('jadeify')]
       globalTransforms: [require('deamdify')]
 
-  # Test only
+  # Mount antigravity in test
   if 'test' is NODE_ENV
     app.use '/__gravity', require('antigravity').server
