@@ -22,3 +22,5 @@ SectionList = require './components/section_list/index.coffee'
     SectionList(sections: article.sections)
     $('#edit-sections')[0]
   )
+
+'This is a new line'
