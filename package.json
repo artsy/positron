@@ -37,6 +37,7 @@
     "debug": "*",
     "cron": "*",
     "bucket-assets": "*",
+    "cors": "*",
 
     "stylus": "*",
     "nib": "*",

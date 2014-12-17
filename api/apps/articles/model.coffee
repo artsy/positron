@@ -19,7 +19,7 @@ request = require 'superagent'
 
 schema = (->
   author_id: @objectId().required()
-  slug: @string()
+  slug: @string().allow(null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
@@ -107,6 +107,7 @@ querySchema = (->
     article.author_id = ObjectId article.author_id
     getSlug article, (err, slug) ->
       return callback err if err
+      article.slug = undefined
       article.slugs ?= []
       article.slugs.push slug unless slug in article.slugs
       db.articles.findAndModify {
