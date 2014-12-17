@@ -105,7 +105,7 @@ querySchema = (->
     return callback err if err
     article.updated_at = moment().format()
     article.author_id = ObjectId article.author_id
-    getSlug article, (err, slug) ->
+    getSlug _.omit(article, 'slug'), (err, slug) ->
       return callback err if err
       article.slugs ?= []
       article.slugs.push slug unless slug in article.slugs

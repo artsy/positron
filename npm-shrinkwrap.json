@@ -1876,6 +1876,18 @@
         }
       }
     },
+    "cors": {
+      "version": "2.5.2",
+      "from": "cors@*",
+      "resolved": "https://registry.npmjs.org/cors/-/cors-2.5.2.tgz",
+      "dependencies": {
+        "vary": {
+          "version": "1.0.0",
+          "from": "vary@^1",
+          "resolved": "https://registry.npmjs.org/vary/-/vary-1.0.0.tgz"
+        }
+      }
+    },
     "cron": {
       "version": "1.0.5",
       "from": "cron@*",
