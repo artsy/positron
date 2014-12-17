@@ -15,7 +15,9 @@ _ = require 'underscore'
 
 # GET /api/articles/:id
 @show = (req, res, next) ->
-  res.send present req.article
+  Article.find req.params.id, (err, article) ->
+    return next err if err
+    res.send present article
 
 # POST /api/articles
 @create = (req, res, next) ->

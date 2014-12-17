@@ -20,7 +20,7 @@ db = require './db'
 gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
   'post_artwork_features', 'artworks']
 
-module.exports = (callback) ->
+module.exports = (callback = ->) ->
 
   # Remove any posts with slideshows & gravity_ids b/c we know those originated
   # in Gravity and will be replaced.
@@ -45,7 +45,7 @@ module.exports = (callback) ->
                 # Small pause inbetween for the GC to catch up
                 setTimeout (-> next err), 100
         ), (err) ->
-            callback? err
+            callback err
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length

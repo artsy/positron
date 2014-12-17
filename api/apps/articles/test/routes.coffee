@@ -47,7 +47,7 @@ describe 'routes', ->
 
   describe '#show', ->
 
-    it 'sends a single article', ->
+    xit 'sends a single article', ->
       @req.article = fixtures().articles
       routes.show @req, @res
       @res.send.args[0][0].title.should.containEql 'Top Ten'

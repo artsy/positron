@@ -35,8 +35,8 @@ app.use require './apps/artists'
 app.get '/task/:task', (req, res, next) ->
   return res.err 401, 'Admin only.' unless req.user?.details?.type is 'Admin'
   switch req.params.task
-    when 'migrate' then migrate()
-    when 'sync-users' then syncUsers()
+    when 'migrate' then migrate debug
+    when 'sync-users' then syncUsers debug
   res.send { success: "Running #{req.params.task}... check the logs." }
 
 # Moar middleware
@@ -44,8 +44,8 @@ app.use errorHandler
 app.use notFound
 
 # Start cron jobs
-new CronJob '0 */4 * * *', migrate, null, true
-new CronJob '0 24 * * *', syncUsers, null, true
+new CronJob '0 */4 * * *', (-> migrate debug), null, true
+new CronJob '0 24 * * *', (-> syncUsers debug), null, true
 
 # Start the test server if run directly
 app.listen(5000, -> debug "Listening on 5000") if module is require.main
