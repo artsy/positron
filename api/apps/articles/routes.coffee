@@ -17,6 +17,7 @@ _ = require 'underscore'
 @show = (req, res, next) ->
   Article.find req.params.id, (err, article) ->
     return next err if err
+    return res.err 404, 'Article not found.' unless article
     res.send present article
 
 # POST /api/articles
