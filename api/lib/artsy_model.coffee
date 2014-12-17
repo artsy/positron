@@ -29,7 +29,7 @@ request = require 'superagent'
     imageUrls[version] = imageTempl.replace '{rel}', version + '.jpg'
   imageUrls
 
-# Parallel fetches a single resource by ids
+# Parallel fetches a resource by ids
 #
 # @param {String} resource Resource name like 'artists'
 # @param {Array} ids Array of ids
@@ -37,6 +37,7 @@ request = require 'superagent'
 # @param {Function} callback Calls back with (err, resoures)
 
 @findByIds = (resource, ids, accessToken, callback) ->
+  return callback null, [] unless ids?.length
   async.parallel (for id in ids
     ((id) ->
       (cb) ->

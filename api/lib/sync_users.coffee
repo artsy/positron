@@ -13,7 +13,7 @@ User = require '../apps/users/model.coffee'
 async = require 'async'
 { ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 
-module.exports = (callback) ->
+module.exports = (callback = ->) ->
   start = moment()
 
   # Get an xapp token
@@ -40,7 +40,7 @@ module.exports = (callback) ->
             setTimeout cb, 5000
         , (err) ->
           debug "Took #{moment().diff(start)}ms"
-          callback?()
+          callback()
 
 syncUsersByIds = (ids, xappToken, callback) ->
   debug "Syncing #{ids.length} users"

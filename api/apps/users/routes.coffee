@@ -40,6 +40,7 @@
   User.fromAccessToken token, (err, user) ->
 
     # Stop all further requests if we can't find a user from that access token
+    return next() if err?.message?.match 'invalid or has expired'
     return next err if err
     res.err 404, 'Could not find a user from that access token'  unless user?
 
