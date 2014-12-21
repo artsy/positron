@@ -1,6 +1,6 @@
-# 
-# A lightweight wrapper around typeahead to add styling/common behavior. 
-# 
+#
+# A lightweight wrapper around typeahead to add styling/common behavior.
+#
 
 _ = require 'underscore'
 Backbone = require 'backbone'

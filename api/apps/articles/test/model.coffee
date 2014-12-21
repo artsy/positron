@@ -145,6 +145,24 @@ describe 'Article', ->
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
 
+    it 'saves slug history to support old slugs', (done) ->
+      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+        Article.save {
+          title: 'Foo Baz'
+          author_id: @user._id
+        }, (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            title: 'Foo Bar Baz'
+            author_id: @user._id
+          }, (err, article) ->
+            return done err if err
+            article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
+            Article.find article.slugs[0], (err, article) ->
+              article.title.should.equal 'Foo Bar Baz'
+              done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->

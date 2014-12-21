@@ -1,6 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
+CurrentUser = require '../../../../models/current_user.coffee'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
@@ -10,11 +11,13 @@ module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
+    @user = new CurrentUser sd.USER
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
     @article.sections.on 'change', => @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
+    @article.on 'loading', @showSpinner
     @article.on 'finished open:tab1', @syncTitleTeaser
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
@@ -56,6 +59,7 @@ module.exports = class EditLayout extends Backbone.View
 
   serialize: ->
     {
+      author_id: @user.get('id')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
@@ -80,8 +84,11 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section:eq(#{idx})").show()
     @article.trigger "open:tab#{idx}"
 
-  onFinished: =>
+  showSpinner: =>
     @$('#edit-sections-spinner').show()
+
+  onFinished: =>
+    @showSpinner()
     @article.on 'change', => @article.on 'sync', @redirectToList
 
   highlightMissingFields: =>

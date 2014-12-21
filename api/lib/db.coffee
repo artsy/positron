@@ -6,8 +6,8 @@
 mongojs = require 'mongojs'
 fs = require 'fs'
 path = require 'path'
-{ MONGO_URL } = process.env
+{ MONGOHQ_URL } = process.env
 
 collections = ['articles', 'artists', 'artworks', 'users']
-module.exports = mongojs MONGO_URL, collections
+module.exports = mongojs MONGOHQ_URL, collections
 module.exports.collections = collections

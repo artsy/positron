@@ -4,16 +4,16 @@ left-padding = 40px
 
 .twitter-typeahead
   position relative
-  
+
 .tt-dropdown-menu
   width 100%
-  border 1px solid gray-lighter-color
+  border 2px solid gray-lighter-color
   z-index 3
   background white
-  margin-top -1px
+  margin-top -2px
 
 .tt-suggestion
-  padding 10px 10px 10px left-padding
+  padding 10px
   border-bottom 1px solid gray-lighter-color
   cursor pointer
   &:last-child
@@ -21,17 +21,16 @@ left-padding = 40px
 
 .tt-cursor
   background-color gray-lighter-color
-  
+
 .twitter-typeahead
   width 100%
 
 .twitter-typeahead input
-  border-width 1px
   padding 7px 8px 7px left-padding
   background url("/autocomplete_search.svg") 9px 6px no-repeat
   background-size 20px
-  
+  &:active, &:focus
+    border-color gray-lighter-color
+
 .tt-input:focus
   border-color gray-lighter-color
-  
-  

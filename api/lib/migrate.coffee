@@ -22,30 +22,39 @@ gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
 
 module.exports = (callback = ->) ->
 
-  # Remove any posts with slideshows & gravity_ids b/c we know those originated
-  # in Gravity and will be replaced.
-  query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
-  db.articles.remove query, (err) ->
+  # Make sure both databases are a go first before dropping previously migrated
+  # posts.
+  async.parallel [
+    (cb) -> db.articles.count {}, cb
+    (cb) -> gravity.posts.count {}, cb
+  ], (err, counts) ->
     return callback err if err
+    debug "Merging #{counts[0]} posts into #{counts[1]} articles."
 
-    # Find published posts from Gravity's db that weren't created in Positron
-    # and map them into Positron articles in batches of 1000 at a time to
-    # keep memory consumption low.
-    db.articles.distinct 'gravity_id', {}, (err, ids) ->
+    # Remove any posts with slideshows & gravity_ids b/c we know those originated
+    # in Gravity and will be replaced.
+    query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
+    db.articles.remove query, (err) ->
       return callback err if err
-      ids = (ObjectId(id.toString()) for id in _.compact ids)
-      gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
-        async.timesSeries Math.ceil(count / 1000), ((n, next) ->
-          gravity.posts
-            .find(published: true, _id: $nin: ids)
-            .skip(n * 1000).limit(1000)
-            .toArray (err, posts) ->
-              return cb(err) if err
-              postsToArticles posts, (err) ->
-                # Small pause inbetween for the GC to catch up
-                setTimeout (-> next err), 100
-        ), (err) ->
-            callback err
+
+      # Find published posts from Gravity's db that weren't created in Positron
+      # and map them into Positron articles in batches of 1000 at a time to
+      # keep memory consumption low.
+      db.articles.distinct 'gravity_id', {}, (err, ids) ->
+        return callback err if err
+        ids = (ObjectId(id.toString()) for id in _.compact ids)
+        gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
+          async.timesSeries Math.ceil(count / 1000), ((n, next) ->
+            gravity.posts
+              .find(published: true, _id: $nin: ids)
+              .skip(n * 1000).limit(1000)
+              .toArray (err, posts) ->
+                return cb(err) if err
+                postsToArticles posts, (err) ->
+                  # Small pause inbetween for the GC to catch up
+                  setTimeout (-> next err), 100
+          ), (err) ->
+              callback err
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
@@ -148,5 +157,9 @@ postsToArticles = (posts, callback) ->
 
 return unless module is require.main
 module.exports (err) ->
-  debug err
-  process.exit 1
+  if err
+    debug err
+    process.exit 1
+  else
+    debug "All done."
+    process.exit()
