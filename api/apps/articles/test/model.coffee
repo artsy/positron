@@ -232,7 +232,7 @@ describe 'Article', ->
       article.sections[3].ids = ['foo', 'bar']
       Article.syncToPost article, 'foo-token', (err, post) ->
         post.title.should.equal article.title
-        post.body.should.equal '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
+        post.body.should.equal 'Just before the lines start forming...<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
         post.published.should.be.ok
         _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
         _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'

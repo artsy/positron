@@ -1,6 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
+sd = require('sharify').data
 CurrentUser = require '../../../../models/current_user.coffee'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
