@@ -54,6 +54,11 @@ describe 'EditLayout', ->
         'foobar', 'baz', 'boo bar', 'bam'
       ]
 
+    it 'adds the current user as the author for cases like impersonating' +
+       ' which need that explicitly sent', ->
+      @view.user.set id: 'foo'
+      @view.serialize().author_id.should.equal 'foo'
+
   describe '#attachScribe', ->
 
     it 'attaches Scribe to the lead paragraph'
