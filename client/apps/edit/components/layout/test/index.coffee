@@ -59,6 +59,12 @@ describe 'EditLayout', ->
       @view.user.set id: 'foo'
       @view.serialize().author_id.should.equal 'foo'
 
+    it 'adds tier', ->
+      @view.$('[type=radio]').first().click()
+      @view.serialize().tier.should.equal 1
+      @view.$('[type=radio]').eq(1).click()
+      @view.serialize().tier.should.equal 2
+
   describe '#attachScribe', ->
 
     it 'attaches Scribe to the lead paragraph'
