@@ -19,4 +19,4 @@ describe "Artwork", ->
       @artwork.set
         artwork: title: 'Foo', date: 'Monday'
         artist: name: 'Andy Warhol'
-      @artwork.truncatedLabel().should.equal 'AW Foo, Monday'
+      @artwork.truncatedLabel().should.equal 'A.W. Foo, Monday'

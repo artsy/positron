@@ -101,7 +101,7 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'change #edit-admin :input': 'onKeyup'
+    'change #edit-admin :input': -> @onKeyup()
     'keyup :input, [contenteditable]': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
     'dragenter .dashed-file-upload-container': 'toggleDragover'

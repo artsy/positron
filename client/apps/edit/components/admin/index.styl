@@ -1,7 +1,6 @@
 @import '../stylus_lib'
 
-inputs-margin = 15px
-column-width = 270px
+gutter-size = 20px
 
 #edit-admin
   padding-top header-size
@@ -23,38 +22,16 @@ column-width = 270px
   h3
     avant-garde()
     font-size default-avant-garde-font-size
-    margin whitespace-block-size 0 15px 0
-    margin-top 0
+    margin-bottom 15px
 
 #edit-admin-tier
   label
-    width column-width
-    avant-garde()
-    font-size default-avant-garde-font-size
-    display inline-block
-    vertical-align top
-    cursor pointer
+    width 50%
+    &:first-child
+      padding-right (gutter-size / 2)
+      padding-left (gutter-size / 2)
   input
     margin 0 10px 0 0
-    appearance none
-    border 2px solid #ccc
-    width 18px
-    height @width
-    border-radius 10px
-    position relative
-    outline none
-    top -2px
-    &:checked::after
-      content '.'
-      width 8px
-      height @width
-      position absolute
-      top 3px
-      left @top
-      display block
-      background purple-color
-      border-radius 10px
-      color transparent
 
 .edit-admin-left, .edit-admin-right
   display inline-block
@@ -62,12 +39,12 @@ column-width = 270px
 
 .edit-admin-left
   width 33.33%
-  padding-right 15px
+  padding-right (gutter-size / 2)
 
 .edit-admin-right
   width 66.66%
   padding-top 85px
-  padding-left 15px
+  padding-left (gutter-size / 2)
 
 .edit-admin-feature-list li:not(.eaf-input-li)
   border 1px solid gray-lighter-color
@@ -143,14 +120,13 @@ column-width = 270px
       &::after
         background url(/icons/remove_r.svg) center center no-repeat
 
-
-.eaf-input input
+.eaf-input-li input
   padding 6px 12px 7px 12px
   width 100%
 
 .eaf-input, .edit-admin-feature-list li
-  width 277px
-  margin 0 30px 10px 0
+  width "calc(50% - %s)" % gutter-size
+  margin 0 gutter-size gutter-size 0
 
 .edit-admin-feature-list li:nth-child(2n+2)
   margin-right 0
@@ -158,6 +134,10 @@ column-width = 270px
 .eaf-input, .edit-admin-feature-list, .edit-admin-feature-list li
   display inline-block
   vertical-align top
+
+.edit-admin-feature-list
+  width 100%
+  margin-bottom 30px
 
 #edit-admin-change-author input
   width 100%

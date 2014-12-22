@@ -3,11 +3,10 @@ mixin featuredList(id, resource)
     li
       .loading-spinner-small
     li.eaf-input-li
-      label.eaf-input
-        input.bordered-input(
-          class=['eaf', resource, 'input'].join('-')
-          placeholder="Add an #{resource} by url or slug..."
-        )
+      input.bordered-input(
+        class=['eaf', resource, 'input'].join('-')
+        placeholder="Add an #{resource} by url or slug..."
+      )
 
 section#edit-admin
   section#edit-admin-change-author
@@ -21,11 +20,11 @@ section#edit-admin
       h1 Tier
       h2 Tier 1 articles get highlighted in the magazine section.
     .edit-admin-right
-      label
+      label.flat-radio-button
         input( type='radio'
           name='tier' checked=article.get('tier') == 1 value=1 )
         | Tier 1
-      label
+      label.flat-radio-button
         input( type='radio'
           name='tier' checked=article.get('tier') != 1 value=2 )
         | Tier 2
