@@ -9,6 +9,7 @@ module.exports = class EditAdmin extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @article.on 'open:tab2', @onOpen
+    window.view = this
     @setupAutocomplete()
 
   setupAutocomplete: ->
@@ -53,7 +54,8 @@ module.exports = class EditAdmin extends Backbone.View
       @featureFromInput('PrimaryArtists') e
     'change #eaf-artists .eaf-artist-input': (e) ->
       @featureFromInput('Artists') e
-    'change .eaf-artwork-input': (e) -> @featureFromInput('Artworks') e
+    'change .eaf-artwork-input': (e) ->
+      @featureFromInput('Artworks') e
     'click #eaf-artists .eaf-featured': (e)-> @unfeature('Artists') e
     'click #eaf-artworks .eaf-featured': (e)-> @unfeature('Artworks') e
     'click #eaf-artists .eaf-mentioned': (e) -> @featureMentioned('Artists') e
@@ -63,6 +65,7 @@ module.exports = class EditAdmin extends Backbone.View
     $t = $ e.currentTarget
     id = _.last $t.val().split('/')
     $t.parent().addClass 'bordered-input-loading'
+    console.log @article['featured' + resource], 'moo'
     @article['featured' + resource].getOrFetchIds [id],
       complete: -> $t.val('').parent().removeClass 'bordered-input-loading'
 

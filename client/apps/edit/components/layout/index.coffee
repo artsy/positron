@@ -61,6 +61,7 @@ module.exports = class EditLayout extends Backbone.View
   serialize: ->
     {
       author_id: @user.get('id')
+      tier: Number @$('[name=tier]:checked').val()
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
@@ -100,6 +101,7 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
+    'change #edit-admin :input': 'onKeyup'
     'keyup :input, [contenteditable]': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
     'dragenter .dashed-file-upload-container': 'toggleDragover'

@@ -20,6 +20,7 @@ request = require 'superagent'
 #
 schema = (->
   author_id: @objectId().required()
+  tier: @number().default(2)
   slug: @string().allow(null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
