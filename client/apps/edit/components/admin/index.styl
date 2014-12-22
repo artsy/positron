@@ -1,23 +1,50 @@
 @import '../stylus_lib'
 
-inputs-margin = 15px
+gutter-size = 20px
 
 #edit-admin
   padding-top header-size
   display none
   width overflow-width
   margin auto
+  section
+    border-top 1px solid gray-lighter-color
+    margin-bottom 40px
+    &:first-child
+      border-top 0
   h1
-    avant-garde()
-    font-size 22px
-    letter-spacing 2px
-    margin-top (whitespace-block-size * 2)
+    font-size 24px
+    margin-top 40px
   h2
     margin 20px 0 whitespace-block-size 0
+    font-size 14px
+    line-height 1.6em
   h3
     avant-garde()
     font-size default-avant-garde-font-size
-    margin whitespace-block-size 0 15px 0
+    margin-bottom 15px
+
+#edit-admin-tier
+  label
+    width 50%
+    &:first-child
+      padding-right (gutter-size / 2)
+      padding-left (gutter-size / 2)
+  input
+    margin 0 10px 0 0
+
+.edit-admin-left, .edit-admin-right
+  display inline-block
+  vertical-align top
+
+.edit-admin-left
+  width 33.33%
+  padding-right (gutter-size / 2)
+
+.edit-admin-right
+  width 66.66%
+  padding-top 85px
+  padding-left (gutter-size / 2)
 
 .edit-admin-feature-list li:not(.eaf-input-li)
   border 1px solid gray-lighter-color
@@ -54,21 +81,22 @@ inputs-margin = 15px
       height 14px
       display none
     &:hover
-      color black
+      color purple-color
       &:before
         display block
       &:after
         content 'Feature'
         right 30px
-        color black
+        color purple-color
   &.eaf-featured
-    border-color black
+    border-color purple-color
+    color purple-color
     position relative
     cursor pointer
     &::after
       content '.'
       color transparent
-      background url(/icons/check.svg) center center no-repeat
+      background url(/icons/check_p.svg) center center no-repeat
       position absolute
       right 10px
       background-size 100%
@@ -83,25 +111,33 @@ inputs-margin = 15px
       font-size default-avant-garde-font-size - 2
       margin-top 2px
     &:hover
+      color red-color
+      border-color red-color
       span
         max-width 175px
       &::before
         display block
       &::after
-        background url(/icons/remove.svg) center center no-repeat
+        background url(/icons/remove_r.svg) center center no-repeat
 
-
-.eaf-input input
+.eaf-input-li input
   padding 6px 12px 7px 12px
   width 100%
 
 .eaf-input, .edit-admin-feature-list li
-  width (overflow-width / 3 - 10px)
-  margin 0 10px 10px 0
+  width "calc(50% - %s)" % gutter-size
+  margin 0 gutter-size gutter-size 0
+
+.edit-admin-feature-list li:nth-child(2n+2)
+  margin-right 0
 
 .eaf-input, .edit-admin-feature-list, .edit-admin-feature-list li
   display inline-block
   vertical-align top
+
+.edit-admin-feature-list
+  width 100%
+  margin-bottom 30px
 
 #edit-admin-change-author input
   width 100%

@@ -11,12 +11,13 @@ script(
 script( src=asset('/assets/main.js') )
 
 //- Add Sentry client-side error tracking
-script( src="//cdn.ravenjs.com/1.1.16/backbone,jquery,native/raven.min.js" )
-script.
-  if (sd.USER) Raven.setUser({ email: sd.USER.id, id: sd.USER.id });
-  Raven.config("#{sd.SENTRY_PUBLIC_DSN}", {
-    whitelistUrls: [
-      /d3df9uo7bhy7ev\.cloudfront\.net/,
-      /d1gmlxxulrit6a\.cloudfront\.net/,
-      /artsy\.net/]
-  }).install();
+if sd.SENTRY_PUBLIC_DSN
+  script( src="//cdn.ravenjs.com/1.1.16/backbone,jquery,native/raven.min.js" )
+  script.
+    if (sd.USER) Raven.setUser({ email: sd.USER.id, id: sd.USER.id });
+    Raven.config("#{sd.SENTRY_PUBLIC_DSN}", {
+      whitelistUrls: [
+        /d3df9uo7bhy7ev\.cloudfront\.net/,
+        /d1gmlxxulrit6a\.cloudfront\.net/,
+        /artsy\.net/]
+    }).install();

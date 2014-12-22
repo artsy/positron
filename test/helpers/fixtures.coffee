@@ -13,6 +13,7 @@ module.exports = ->
     thumbnail_title: 'Top Ten Booths at miart 2014',
     thumbnail_teaser: 'Look here! Before the lines start forming...',
     thumbnail_image: 'http://kitten.com',
+    tier: 1,
     tags: ['Fair Coverage', 'Magazine']
     title: 'Top Ten Booths',
     lead_paragraph: 'Just before the lines start forming...',

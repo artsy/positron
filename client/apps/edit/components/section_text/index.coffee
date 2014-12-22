@@ -25,8 +25,10 @@ keyboardShortcutsMap =
 module.exports = React.createClass
 
   onClickOff: ->
-    @props.section.set body: $(@refs.editable.getDOMNode()).html()
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
+
+  onKeyUp: ->
+    @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
     return if @scribe? or not @props.editing
@@ -83,4 +85,5 @@ module.exports = React.createClass
           dangerouslySetInnerHTML: __html: @props.section.get('body')
           onClick: @props.setEditing(on)
           onFocus: @props.setEditing(on)
+          onKeyUp: @onKeyUp
         }

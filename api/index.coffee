@@ -10,10 +10,12 @@ migrate = require './lib/migrate'
 syncUsers = require './lib/sync_users'
 debug = require('debug') 'api'
 { CronJob } = require 'cron'
+cors = require 'cors'
 
 app = module.exports = express()
 
 # Middleware
+app.use cors()
 app.use helpers
 app.use bodyParser.urlencoded()
 app.use bodyParser.json()

@@ -4,11 +4,11 @@ Positron uses MongoDB + Express to serve a private JSON API which the /client ap
 
 ## Architecture
 
-Positron's API architecture is very thin. Endpoints are split into sub-express apps under /api/apps. These apps represent a resouce and contain routes (like Rails controllers) that do auth/session/routing/etc. for a resource. Apps also contain a model that handles validation/persistence/busines logics/etc. of a resource. Unlike typical ActiveRecord/object-oriented models, these models are just libraries of database transcations that operate on vanilla data objects (using [mongojs](https://github.com/mafintosh/mongojs))—otherwise known as the [Transcation Script pattern](http://martinfowler.com/eaaCatalog/transactionScript.html). As the model logic grows it's encouraged to break apart the library into it's individual parts (e.g. model/domain.coffee, model/validation, model/persistence etc.). A root `index.coffee` app glues together the sub apps & api-wide middleware found under `/lib`.
+Positron's API architecture is very thin. Endpoints are split into sub-express apps under /api/apps. These apps represent a resouce and contain routes (like Rails controllers) that do auth/session/routing/etc. for a resource. Apps also contain a model that handles validation/persistence/busines logic/etc. of a resource. Unlike typical ActiveRecord/object-oriented models, these models are just libraries of database transcations that operate on vanilla data objects (using [mongojs](https://github.com/mafintosh/mongojs))—otherwise known as the [Transcation Script pattern](http://martinfowler.com/eaaCatalog/transactionScript.html). As the model logic grows it's encouraged to break apart the library into it's individual parts (e.g. model/domain.coffee, model/validation.coffee, model/persistence.coffee etc.). A root `index.coffee` app glues together the sub apps & api-wide middleware found under `/lib`.
 
 ## Authentication
 
-Positron uses Gravity to do authentication so all endpoints require a valid Artsy `X-Access-Token` header. Positron will use this to flatten, merge, and cache user data from Arty's API for easy client consumption. Use `DELETE /users/me` to remove this cached data when the user logs out.
+Positron uses Gravity to do authentication so all endpoints require a valid Artsy `X-Access-Token` header. Positron will use this to flatten, merge, and cache user data from Arty's API for easy client consumption.
 
 ## The `me` param
 
@@ -16,7 +16,7 @@ You may pass `me` in place of your user id, e.g. `/articles?author_id=me` to get
 
 ## Endpoints
 
-Positron's API is a boring ol' [pragmatic REST API](https://blog.apigee.com/detail/api_design_a_new_model_for_pragmatic_rest). It speaks only JSON, and uses plural resources with POST/GET/PUT/DELETE verbs for CRUD. Accepted endpoints include:
+Positron's API is a [pragmatic REST API](https://blog.apigee.com/detail/api_design_a_new_model_for_pragmatic_rest). It speaks only JSON, and uses plural resources with POST/GET/PUT/DELETE verbs for CRUD. Endpoints that don't map so easily to CRUD on a resource are designed as root-level GET requests such as /sync_to_post?article_id=. Accepted endpoints include:
 
 GET /articles?author_id=
 GET /articles/:id

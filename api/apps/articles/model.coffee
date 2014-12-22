@@ -15,10 +15,12 @@ request = require 'superagent'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 
+#
 # Validation
-
+#
 schema = (->
   author_id: @objectId().required()
+  tier: @number().default(2)
   slug: @string().allow(null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
@@ -70,8 +72,9 @@ querySchema = (->
   offset: @number()
 ).call Joi
 
+#
 # Retrieval
-
+#
 @where = (query, callback) ->
   Joi.validate query, querySchema, (err, query) ->
     query.author_id = ObjectId(query.author_id) if query.author_id
@@ -95,27 +98,34 @@ querySchema = (->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
   db.articles.findOne query, callback
 
+#
 # Persistence
+#
+@save = (input, cb) ->
+  id = ObjectId (input.id or input._id)?.toString()
+  validate input, (err, input) =>
+    return cb err if err
+    @find id.toString(), (err, article = {}) =>
+      return cb err if err
+      update article, input, (err, article) =>
+        return cb err if err
+        db.articles.save _.extend(article,
+          _id: id
+          author_id: ObjectId(article.author_id)
+        ), cb
 
-@save = (article, callback) ->
-  id = ObjectId(article._id)
-  whitelisted = _.pick article, _.keys schema
+validate = (input, callback) ->
+  whitelisted = _.pick input, _.keys schema
   whitelisted.author_id = whitelisted.author_id?.toString()
-  Joi.validate whitelisted, schema, (err, article) ->
+  Joi.validate whitelisted, schema, callback
+
+update = (article, input, callback) ->
+  article = _.extend article, input, updated_at: moment().format()
+  getSlug article, (err, slug) ->
     return callback err if err
-    article.updated_at = moment().format()
-    article.author_id = ObjectId article.author_id
-    getSlug article, (err, slug) ->
-      return callback err if err
-      article.slug = undefined
-      article.slugs ?= []
-      article.slugs.push slug unless slug in article.slugs
-      db.articles.findAndModify {
-        query: { _id: id }
-        update: article
-        upsert: true
-        new: true
-      }, callback
+    article.slugs ?= []
+    article.slugs.push slug unless slug in article.slugs
+    callback null, article
 
 getSlug = (article, callback) ->
   return callback null, article.slug if article.slug
@@ -134,7 +144,8 @@ getSlug = (article, callback) ->
     req = request.post("#{ARTSY_URL}/api/v1/post")
   req.send(
     title: article.title
-    body: (section.body for section in article.sections).join('')
+    body: article.lead_paragraph +
+      (section.body for section in article.sections).join('')
     published: true
   ).set('X-Access-Token', accessToken).end (err, res) =>
 
@@ -155,14 +166,14 @@ getSlug = (article, callback) ->
       # Delete any existing attachments/artworks
       async.parallel [
         (cb) ->
-          async.map post.attachments, ((a, cb2) ->
+          async.map post.attachments or [], ((a, cb2) ->
             request
               .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
               .set('X-Access-Token', accessToken)
               .end (err, res) -> cb2()
           ), cb
         (cb) ->
-          async.map post.artworks, ((a, cb2) ->
+          async.map post.artworks or [], ((a, cb2) ->
             request
               .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
               .set('X-Access-Token', accessToken)
@@ -200,8 +211,9 @@ getSlug = (article, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->
     callback err, res
 
+#
 # JSON views
-
+#
 @presentCollection = (article) =>
   {
     total: article.total
@@ -211,7 +223,7 @@ getSlug = (article, callback) ->
 
 @present = (article) =>
   _.extend article,
-    id: article._id?.toString()
+    id: article?._id?.toString()
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined

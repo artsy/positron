@@ -3,22 +3,40 @@ mixin featuredList(id, resource)
     li
       .loading-spinner-small
     li.eaf-input-li
-      label.eaf-input
-        input.bordered-input.eaf-artist-input(
+      label
+        input.bordered-input(
+          class=['eaf', resource, 'input'].join('-')
           placeholder="Add an #{resource} by url or slug..."
         )
 
 section#edit-admin
   section#edit-admin-change-author
-    h1 Change Author
-    h2 Changing the author of this article will move it to their Artsy Writer.
-    input.bordered-input( placeholder='Search by user name...' )
+    .edit-admin-left
+      h1 Change Author
+      h2 Changing the author of this article will move it to their Artsy Writer.
+    .edit-admin-right
+      input.bordered-input( placeholder='Search by user name...' )
+  section#edit-admin-tier
+    .edit-admin-left
+      h1 Tier
+      h2 Tier 1 articles get highlighted in the magazine section.
+    .edit-admin-right
+      label.flat-radio-button
+        input( type='radio'
+          name='tier' checked=article.get('tier') == 1 value=1 )
+        | Tier 1
+      label.flat-radio-button
+        input( type='radio'
+          name='tier' checked=article.get('tier') != 1 value=2 )
+        | Tier 2
   section#edit-admin-feature
-    h1 Feature
-    h2 Choose pages for this post to appear on at Artsy.
-    h3 Primary Artists
-    +featuredList('eaf-primary-artists', 'artist')
-    h3 Secondary Artists
-    +featuredList('eaf-artists', 'artist')
-    h3 Artworks
-    +featuredList('eaf-artworks', 'artwork')
+    .edit-admin-left
+      h1 Feature
+      h2 Featuring this article will highlight it on selected artist and artwork pages.
+    .edit-admin-right
+      h3 Primary Artists
+      +featuredList('eaf-primary-artists', 'artist')
+      h3 Secondary Artists
+      +featuredList('eaf-artists', 'artist')
+      h3 Artworks
+      +featuredList('eaf-artworks', 'artwork')

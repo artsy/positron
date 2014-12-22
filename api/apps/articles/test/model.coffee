@@ -145,6 +145,24 @@ describe 'Article', ->
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
 
+    it 'saves slug history to support old slugs', (done) ->
+      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+        Article.save {
+          title: 'Foo Baz'
+          author_id: @user._id
+        }, (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            title: 'Foo Bar Baz'
+            author_id: @user._id
+          }, (err, article) ->
+            return done err if err
+            article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
+            Article.find article.slugs[0], (err, article) ->
+              article.title.should.equal 'Foo Bar Baz'
+              done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
@@ -214,7 +232,7 @@ describe 'Article', ->
       article.sections[3].ids = ['foo', 'bar']
       Article.syncToPost article, 'foo-token', (err, post) ->
         post.title.should.equal article.title
-        post.body.should.equal '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
+        post.body.should.equal 'Just before the lines start forming...<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
         post.published.should.be.ok
         _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
         _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'
