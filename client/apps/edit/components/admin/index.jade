@@ -3,10 +3,11 @@ mixin featuredList(id, resource)
     li
       .loading-spinner-small
     li.eaf-input-li
-      input.bordered-input(
-        class=['eaf', resource, 'input'].join('-')
-        placeholder="Add an #{resource} by url or slug..."
-      )
+      label
+        input.bordered-input(
+          class=['eaf', resource, 'input'].join('-')
+          placeholder="Add an #{resource} by url or slug..."
+        )
 
 section#edit-admin
   section#edit-admin-change-author
