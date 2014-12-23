@@ -67,6 +67,47 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles featured to an artist', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Foo'
+          featured_artist_ids: [ObjectId('4dc98d149a96300001003033')]
+        }
+        {
+          title: 'Bar'
+          primary_featured_artist_ids: [ObjectId('4dc98d149a96300001003033')]
+        }
+        {
+          title: 'Baz'
+          featured_artist_ids: [ObjectId('4dc98d149a96300001003033'), 'abc']
+          primary_featured_artist_ids: [ObjectId('4dc98d149a96300001003033')]
+        }
+      ], ->
+        Article.where(
+          { artist_id: '4dc98d149a96300001003033' }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'BarBazFoo'
+            done()
+        )
+
+    it 'can find articles featured to an artwork', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Foo'
+          featured_artwork_ids: [ObjectId('4dc98d149a96300001003033')]
+        }
+        {
+          title: 'Baz'
+          featured_artwork_ids: [ObjectId('4dc98d149a96300001003033'), 'abc']
+        }
+      ], ->
+        Article.where(
+          { artwork_id: '4dc98d149a96300001003033' }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'BazFoo'
+            done()
+        )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
