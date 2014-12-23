@@ -78,9 +78,8 @@ querySchema = (->
 # Retrieval
 #
 @where = (input, callback) ->
-  toQuery input, (err, query) ->
+  toQuery input, (err, query, limit, offset) ->
     return callback err if err
-    { limit, offset } = input
     cursor = db.articles.find(query).skip(offset or 0)
     async.parallel [
       (cb) -> db.articles.count cb
@@ -97,6 +96,7 @@ querySchema = (->
 toQuery = (input, callback) ->
   Joi.validate input, querySchema, (err, input) ->
     return callback err if err
+    { limit, offset } = input
     query = _.omit input, 'limit', 'offset', 'artist_id', 'artwork_id'
     query.author_id = ObjectId input.author_id if input.author_id
     query.$or = [
@@ -104,7 +104,7 @@ toQuery = (input, callback) ->
       { featured_artist_ids: ObjectId(input.artist_id) }
     ] if input.artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
-    callback null, query
+    callback null, query, limit, offset
 
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
