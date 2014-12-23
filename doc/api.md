@@ -39,7 +39,7 @@ GET /sync_to_post?article_id=
 GET /users
 
 **params**
-q: The search query
+q: Search query to match against name or email
 
 GET /users/:id
 PUT /users/:id
@@ -48,9 +48,15 @@ POST /users
 ### Artworks
 
 GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
-GET /artworks?q=Skull
+
+**params**
+ids[]: Array of artwork ids or slugs
+q: Search query to match against artwork title
 
 ### Artists
 
-GET /artists?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
-GET /artists?q=Skull
+GET /artists?ids[]=andy-warhol&ids[]=54276766fd4f50996aeca2b8
+
+**params**
+ids[]: Array of artist ids or slugs
+q: Search query to match against artist name
