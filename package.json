@@ -38,6 +38,7 @@
     "cron": "*",
     "bucket-assets": "*",
     "cors": "*",
+    "newrelic": "*",
 
     "stylus": "*",
     "nib": "*",
