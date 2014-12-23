@@ -18,21 +18,39 @@ You may pass `me` in place of your user id, e.g. `/articles?author_id=me` to get
 
 Positron's API is a [pragmatic REST API](https://blog.apigee.com/detail/api_design_a_new_model_for_pragmatic_rest). It speaks only JSON, and uses plural resources with POST/GET/PUT/DELETE verbs for CRUD. Endpoints that don't map so easily to CRUD on a resource are designed as root-level GET requests such as /sync_to_post?article_id=. Accepted endpoints include:
 
-GET /articles?author_id=
+### Articles
+
+GET /articles
+
+**params**
+published: Always pass `true` for logged out users
+author_id: Query articles by thier author
+artist_id: Query articles by an artist they're featured to
+artwork_id: Query articles by an artwork they're featured to
+
 GET /articles/:id
 POST /articles
 PUT /articles/:id
 DELETE /articles/:id
-
 GET /sync_to_post?article_id=
 
-GET /users?q=
+### Users
+
+GET /users
+
+**params**
+q: The search query
+
 GET /users/:id
 PUT /users/:id
 POST /users
 
+### Artworks
+
 GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
 GET /artworks?q=Skull
+
+### Artists
 
 GET /artists?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
 GET /artists?q=Skull
