@@ -16,7 +16,7 @@ request = require 'superagent'
 { ARTSY_URL } = process.env
 
 #
-# Validation
+# Schemas
 #
 schema = (->
   author_id: @objectId().required()
@@ -60,9 +60,9 @@ schema = (->
           id: @string()
       ]
   ]).default([])
-  primary_featured_artist_ids: @array().includes(@string())
-  featured_artist_ids: @array().includes(@string())
-  featured_artwork_ids: @array().includes(@string())
+  primary_featured_artist_ids: @array().includes @objectId()
+  featured_artist_ids: @array().includes @objectId()
+  featured_artwork_ids: @array().includes @objectId()
 ).call Joi
 
 querySchema = (->
@@ -70,17 +70,17 @@ querySchema = (->
   published: @boolean()
   limit: @number()
   offset: @number()
+  artist_id: @objectId()
+  artwork_id: @objectId()
 ).call Joi
 
 #
 # Retrieval
 #
-@where = (query, callback) ->
-  Joi.validate query, querySchema, (err, query) ->
-    query.author_id = ObjectId(query.author_id) if query.author_id
+@where = (input, callback) ->
+  toQuery input, (err, query) ->
     return callback err if err
-    { limit, offset } = query
-    query = _.omit query, 'limit', 'offset'
+    { limit, offset } = input
     cursor = db.articles.find(query).skip(offset or 0)
     async.parallel [
       (cb) -> db.articles.count cb
@@ -93,6 +93,18 @@ querySchema = (->
         count: count
         results: results
       }
+
+toQuery = (input, callback) ->
+  Joi.validate input, querySchema, (err, input) ->
+    return callback err if err
+    query = _.omit input, 'limit', 'offset', 'artist_id', 'artwork_id'
+    query.author_id = ObjectId input.author_id if input.author_id
+    query.$or = [
+      { primary_featured_artist_ids: ObjectId(input.artist_id) }
+      { featured_artist_ids: ObjectId(input.artist_id) }
+    ] if input.artist_id
+    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
+    callback null, query
 
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
