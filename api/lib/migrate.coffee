@@ -14,14 +14,18 @@ glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
 ])
 { ObjectId } = mongojs = require 'mongojs'
 { GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
+gravity = null
+db = null
 
 module.exports = (callback = ->) ->
-  return callback() unless GRAVITY_MONGO_URL
+  return callback new Error('No GRAVITY_MONGO_URL') unless GRAVITY_MONGO_URL?
 
   # Load the Positron & Gravity databases
   db = require './db'
   gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
     'post_artwork_features', 'artworks']
+
+  debug "Connecting to databases and beginning migrate..."
 
   # Make sure both databases are a go first before dropping previously migrated
   # posts.
