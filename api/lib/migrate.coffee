@@ -74,11 +74,12 @@ postsToArticles = (posts, callback) ->
       (cb) -> gravity.post_artist_features.find(post_id: post._id).toArray cb
       (cb) -> gravity.post_artwork_features.find(post_id: post._id).toArray cb
     ]
-    if post.attachments?[0]?._type is 'PostArtwork'
-      queries.push (cb) ->
-        gravity.artworks.findOne { _id: post.attachments?[0].artwork_id }, cb
+    artworkIds = (ObjectId(a.artwork_id) for a in (post.attachments or []) \
+      when a._type is 'PostArtwork')
+    if artworkIds.length
+      queries.push (cb) -> gravity.artworks.find { _id: $in: artworkIds }, cb
     async.parallel queries, (err, results) ->
-      [artistFeatures, artworkFeatures, artwork] = results
+      [artistFeatures, artworkFeatures, artworks] = results
 
       # Map Gravity data into a Positron schema
       data =
@@ -87,30 +88,35 @@ postsToArticles = (posts, callback) ->
         author_id: ObjectId(post.author_id)
         thumbnail_title: post.title
         thumbnail_teaser: $?('p')?.first()?.text()
-        thumbnail_image: (
-          switch post.attachments?[0]?._type
-            when 'PostArtwork'
-              img = artwork?.additional_images?[0]
-              if img
-                "http://static.artsy.net/additional_images/#{img._id}/" +
-                "#{if v = img.image_version then v + '/' else ''}large.jpg"
+        thumbnail_image: _.compact(
+          for attachment, i in (post.attachments ? [])
+            switch attachment._type
+              when 'PostArtwork'
+                artwork = _.select(artworks, (artwork) ->
+                  attachment.artwork_id.toString() is artwork._id.toString()
+                )[0]
+                img = artwork?.additional_images?[0]
+                choices = _.compact([
+                  img?.image_urls?.large
+                  _.sample(img?.image_urls ? [])
+                  artwork?.image_urls?.large
+                  _.sample(artwork?.image_urls ? [])
+                  (("http://static.artsy.net/additional_images/#{img._id}/" +
+                   "#{if v = img.image_version then v + '/' else ''}" + 
+                   "large.jpg") if img)
+                ])
+                choices[0]
+              when 'PostImage'
+                "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
+                "#{post.attachments?[i]?._id}/large.jpg"
+              when 'PostLink'
+                (
+                  post.attachments?[i]?.oembed_json?.thumbnail_url or
+                  post.attachments?[i]?.oembed_json?.url
+                )
               else
-                artwork?.image_urls?.large or artwork?.image_urls?[0]
-            when 'PostImage'
-              "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-              "#{post.attachments?[0]?._id}/large.jpg"
-            when 'PostLink'
-              (
-                post.attachments?[0]?.oembed_json?.thumbnail_url or
-                post.attachments?[0]?.oembed_json?.url
-              )
-        )
-        tags: (
-          tags = (term for term in glossary.extract bodyText \
-            when term.length > 3 and not term.match('@')) if bodyText
-          tags ?= []
-          tags.concat 'Migrated Post'
-        )
+                null
+        )[0]
         title: post.title
         published: post.published
         published_at: moment(post.published_at).format()
