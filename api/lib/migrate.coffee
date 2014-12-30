@@ -96,7 +96,7 @@ postsToArticles = (posts, callback) ->
                   attachment.artwork_id.toString() is artwork._id.toString()
                 )[0]
                 img = artwork?.additional_images?[0]
-                choices = _.compact([
+                _.compact([
                   img?.image_urls?.large
                   _.sample(img?.image_urls ? [])
                   artwork?.image_urls?.large
@@ -104,8 +104,7 @@ postsToArticles = (posts, callback) ->
                   (("http://static.artsy.net/additional_images/#{img._id}/" +
                    "#{if v = img.image_version then v + '/' else ''}" + 
                    "large.jpg") if img)
-                ])
-                choices[0]
+                ])[0]
               when 'PostImage'
                 "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
                 "#{post.attachments?[i]?._id}/large.jpg"
