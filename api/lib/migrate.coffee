@@ -37,7 +37,7 @@ setup = (callback) ->
   ], (err, counts) ->
     return callback err if err
     debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-    # Remove any posts with slideshows & gravity_ids b/c we know those 
+    # Remove any posts with slideshows & gravity_ids b/c we know those
     # originated in Gravity and will be replaced.
     query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
     db.articles.remove query, callback
@@ -121,7 +121,7 @@ postsToArticles = (posts, callback) ->
                   artwork?.image_urls?.large
                   _.sample(artwork?.image_urls ? [])
                   (("http://static.artsy.net/additional_images/#{img._id}/" +
-                   "#{if v = img.image_version then v + '/' else ''}" + 
+                   "#{if v = img.image_version then v + '/' else ''}" +
                    "large.jpg") if img)
                 ])[0]
               when 'PostImage'
