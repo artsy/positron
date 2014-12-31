@@ -19,14 +19,16 @@ db = null
 
 module.exports = (callback = ->) ->
   return callback new Error('No GRAVITY_MONGO_URL') unless GRAVITY_MONGO_URL?
+  setup (err) ->
+    return callback err if err
+    async.parallel [updateSyncedArticleSlugs, migrateOldPosts], callback
 
+setup = (callback) ->
   # Load the Positron & Gravity databases
   db = require './db'
   gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
     'post_artwork_features', 'artworks']
-
   debug "Connecting to databases and beginning migrate..."
-
   # Make sure both databases are a go first before dropping previously migrated
   # posts.
   async.parallel [
@@ -35,36 +37,54 @@ module.exports = (callback = ->) ->
   ], (err, counts) ->
     return callback err if err
     debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-
-    # Remove any posts with slideshows & gravity_ids b/c we know those originated
-    # in Gravity and will be replaced.
+    # Remove any posts with slideshows & gravity_ids b/c we know those 
+    # originated in Gravity and will be replaced.
     query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
-    db.articles.remove query, (err) ->
-      return callback err if err
+    db.articles.remove query, callback
 
-      # Find published posts from Gravity's db that weren't created in Positron
-      # and map them into Positron articles in batches of 1000 at a time to
-      # keep memory consumption low.
-      db.articles.distinct 'gravity_id', {}, (err, ids) ->
+updateSyncedArticleSlugs = (callback) ->
+  db.articles.distinct(
+    'gravity_id'
+    { 'sections.0.type': $ne: 'slideshow' }
+    (err, ids) ->
+      return callback err if err
+      debug "Updating slugs for #{ids.length} articles"
+      gravity.posts.find { _id: $in: _.map(ids, ObjectId) }, (err, posts) ->
         return callback err if err
-        ids = (ObjectId(id.toString()) for id in _.compact ids)
-        gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
-          async.timesSeries Math.ceil(count / 1000), ((n, next) ->
-            gravity.posts
-              .find(published: true, _id: $nin: ids)
-              .skip(n * 1000).limit(1000)
-              .toArray (err, posts) ->
-                return cb(err) if err
-                postsToArticles posts, (err) ->
-                  # Small pause inbetween for the GC to catch up
-                  setTimeout (-> next err), 100
-          ), (err) ->
-              callback err
+        async.map posts, (post, cb) ->
+          db.articles.update(
+            { gravity_id: post._id.toString() }
+            { $addToSet: slugs: $each: post._slugs }
+            ->
+              debug "Merged #{post._slugs.join ', '} for #{post._id}"
+              cb arguments...
+          )
+        , callback
+  )
+
+migrateOldPosts = (callback) ->
+  # Find published posts from Gravity's db that weren't created in Positron
+  # and map them into Positron articles in batches of 1000 at a time to
+  # keep memory consumption low.
+  db.articles.distinct 'gravity_id', {}, (err, ids) ->
+    return callback err if err
+    ids = (ObjectId(id.toString()) for id in _.compact ids)
+    gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
+      async.timesSeries Math.ceil(count / 1000), ((n, next) ->
+        gravity.posts
+          .find(published: true, _id: $nin: ids)
+          .skip(n * 1000).limit(1000)
+          .toArray (err, posts) ->
+            return cb(err) if err
+            postsToArticles posts, (err) ->
+              # Small pause inbetween for the GC to catch up
+              setTimeout (-> next err), 100
+      ), (err) ->
+          callback err
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
   debug "Migrating #{posts.length} posts...."
-
   # Fetch any artist/artwork features + the post's first artwork and begin
   # mapping posts -> articles
   async.map posts, ((post, callback) ->
@@ -80,7 +100,6 @@ postsToArticles = (posts, callback) ->
       queries.push (cb) -> gravity.artworks.find { _id: $in: artworkIds }, cb
     async.parallel queries, (err, results) ->
       [artistFeatures, artworkFeatures, artworks] = results
-
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
@@ -153,13 +172,11 @@ postsToArticles = (posts, callback) ->
         featured_artist_ids: (f.artist_id for f in artistFeatures)
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
-
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
   ), (err, articles) ->
     return callback(err) if err
-
     # Bulk update the mapped articles into Positron
     bulk = db.articles.initializeOrderedBulkOp()
     bulk.insert(article) for article in articles
