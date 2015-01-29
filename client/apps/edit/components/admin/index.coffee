@@ -1,28 +1,45 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
+request = require 'superagent'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
+Autocomplete = require '../../../../components/autocomplete/index.coffee'
+AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
 
 module.exports = class EditAdmin extends Backbone.View
 
-  initialize: (options) ->
-    { @article } = options
+  initialize: ({ @article }) ->
     @article.on 'open:tab2', @onOpen
-    @setupAutocomplete()
+    @article.on 'change:fair_id', @renderFairInput
+    @setupAuthorAutocomplete()
+    @setupFairAutocomplete()
 
-  setupAutocomplete: ->
-    Autocomplete = require '../../../../components/autocomplete/index.coffee'
+  setupAuthorAutocomplete: ->
     new Autocomplete
       el: @$('#edit-admin-change-author input')
       url: "#{sd.API_URL}/users?q=%QUERY"
       filter: (res) -> for r in res.results
         { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
-      selected: @onAutocompleteSelect
+      selected: (e, item) =>
+        return unless confirm "Are you sure you want to change the author?"
+        @article.trigger('finished').save(author_id: item.id)
 
-  onAutocompleteSelect: (e, item) =>
-    return unless confirm "Are you sure you want to change the author?"
-    @article.trigger('finished').save(author_id: item.id)
+  setupFairAutocomplete: ->
+    new AutocompleteSelect
+      el: @$('#edit-admin-fair .edit-admin-right')
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      filter: (res) -> for fair in res
+        { id: fair._id, value: fair.name }
+      onSelect: (e, item) ->
+        article.save fair_id: item.id
+      onClear: ->
+        article.save fair_id: null
+      initValue: (callback) =>
+        request
+          .get("#{sd.ARTSY_URL}/fair/#{@article.get 'fair_id'}")
+          .end (err, fair) =>
+            callback fair.name
 
   onOpen: =>
     async.parallel [
