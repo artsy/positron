@@ -26,20 +26,17 @@ module.exports = class EditAdmin extends Backbone.View
         @article.trigger('finished').save(author_id: item.id)
 
   setupFairAutocomplete: ->
-    new AutocompleteSelect
-      el: @$('#edit-admin-fair .edit-admin-right')
+    select = AutocompleteSelect @$('#edit-admin-fair .edit-admin-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
-      filter: (res) -> for fair in res
-        { id: fair._id, value: fair.name }
-      onSelect: (e, item) ->
-        article.save fair_id: item.id
-      onClear: ->
-        article.save fair_id: null
-      initValue: (callback) =>
-        request
-          .get("#{sd.ARTSY_URL}/fair/#{@article.get 'fair_id'}")
-          .end (err, fair) =>
-            callback fair.name
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item) =>
+        @article.save fair_id: item.id
+    if id = @article.get 'fair_id'
+      request.get("#{sd.ARTSY_URL}/api/v1/fair/#{id}").end (err, fair) ->
+        select.setState value: fair.name
+    else
+      select.setState loading: false
 
   onOpen: =>
     async.parallel [

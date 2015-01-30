@@ -20,3 +20,7 @@ module.exports = class Autocomplete extends Backbone.View
         name: options.name or _.uniqueId()
         source: search.ttAdapter()
       $(@el).on 'typeahead:selected', options.selected
+
+    remove: ->
+      super
+      $(@el).typeahead('destroy')
