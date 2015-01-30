@@ -10,6 +10,7 @@ AutocompleteSection = React.createClass
 
   clear: ->
     @setState { value: null }, -> $(@refs.input.getDOMNode()).focus()
+    @props.cleared()
 
   componentDidUpdate: ->
     return unless not @state.loading and not @state.value
@@ -18,6 +19,7 @@ AutocompleteSection = React.createClass
       el: $(@refs.input.getDOMNode())
       selected: (e, item) =>
         @setState value: item.value
+        @props.selected e, item
 
   render: ->
     if @state.loading
