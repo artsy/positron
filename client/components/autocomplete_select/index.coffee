@@ -1,25 +1,31 @@
 _ = require 'underscore'
-Autocomplete = require '../autocomplete/index.coffee'
 React = require 'react'
+Autocomplete = null
 { label, input, div, button } = React.DOM
 
-AutocompleteSection = React.createClass
+module.exports = (el, props) ->
+  React.render AutocompleteSection(props), el
+
+module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
 
   getInitialState: ->
     loading: true, value: null
 
   clear: ->
     @setState { value: null }, -> $(@refs.input.getDOMNode()).focus()
-    @props.cleared()
+    @props.cleared?()
 
   componentDidUpdate: ->
     return unless not @state.loading and not @state.value
     @autocomplete?.remove()
+
+  addAutocomplete: ->
+    Autocomplete ?= require '../autocomplete/index.coffee'
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
-      el: $(@refs.input.getDOMNode())
+      el: $(@refs.input?.getDOMNode())
       selected: (e, item) =>
         @setState value: item.value
-        @props.selected e, item
+        @props.selected? e, item
 
   render: ->
     if @state.loading
@@ -35,6 +41,3 @@ AutocompleteSection = React.createClass
           className: 'bordered-input'
           placeholder: 'Search by fair name...'
         }
-
-module.exports = (el, props) ->
-  React.render AutocompleteSection(props), el
