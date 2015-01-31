@@ -1,28 +1,47 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
+request = require 'superagent'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
 
 module.exports = class EditAdmin extends Backbone.View
 
-  initialize: (options) ->
-    { @article } = options
+  initialize: ({ @article }) ->
     @article.on 'open:tab2', @onOpen
-    @setupAutocomplete()
+    @setupAuthorAutocomplete()
+    @setupFairAutocomplete()
 
-  setupAutocomplete: ->
+  setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
     new Autocomplete
       el: @$('#edit-admin-change-author input')
       url: "#{sd.API_URL}/users?q=%QUERY"
       filter: (res) -> for r in res.results
         { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
-      selected: @onAutocompleteSelect
+      selected: @onAuthorSelect
 
-  onAutocompleteSelect: (e, item) =>
+  onAuthorSelect: (e, item) =>
     return unless confirm "Are you sure you want to change the author?"
     @article.trigger('finished').save(author_id: item.id)
+
+  setupFairAutocomplete: ->
+    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
+    select = AutocompleteSelect @$('#edit-admin-fair .edit-admin-right')[0],
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item) =>
+        @article.save fair_id: item.id
+      cleared: =>
+        @article.save fair_id: null
+    if id = @article.get 'fair_id'
+      request
+        .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
+          select.setState value: res.body.name, loading: false
+    else
+      select.setState loading: false
 
   onOpen: =>
     async.parallel [
