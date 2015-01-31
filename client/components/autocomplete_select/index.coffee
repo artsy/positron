@@ -18,6 +18,7 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
   componentDidUpdate: ->
     return unless not @state.loading and not @state.value
     @autocomplete?.remove()
+    @addAutocomplete()
 
   addAutocomplete: ->
     Autocomplete ?= require '../autocomplete/index.coffee'
