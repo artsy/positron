@@ -146,13 +146,13 @@ describe 'Article', ->
         err.message.should.containEql 'author_id is required'
         done()
 
-    it 'adds an updated as a utf8 string', (done) ->
+    it 'adds an updated_at as a date', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
       }, (err, article) ->
-        article.updated_at.should.be.an.instanceOf(String)
+        article.updated_at.should.be.an.instanceOf(Date)
         moment(article.updated_at).format('YYYY').should.equal moment().format('YYYY')
         done()
 

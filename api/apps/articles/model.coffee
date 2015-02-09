@@ -83,11 +83,11 @@ querySchema = (->
 @where = (input, callback) ->
   toQuery input, (err, query, limit, offset, sort) ->
     return callback err if err
-    cursor = db.articles.find(query).skip(offset or 0).sort(sort)
+    cursor = db.articles.find(query).skip(offset or 0)
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit or 10).toArray cb
+      (cb) -> cursor.limit(limit or 10).sort(sort).toArray cb
     ], (err, [ total, count, results ]) ->
       return callback err if err
       callback null, {
