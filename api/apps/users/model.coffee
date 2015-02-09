@@ -101,3 +101,12 @@ request = require 'superagent'
         { upsert: true }
         (err, res) -> callback err, newUser
       )
+
+      # Denormalize user data into articles their an author of
+      db.articles.update(
+        { author_id: newUser._id }
+        { $set: author:
+            name: newUser.user.name
+            profile_handle: newUser.profile?.handle }
+        {}
+      )
