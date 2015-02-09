@@ -120,6 +120,19 @@ describe 'Article', ->
               done()
           )
 
+    it 'can find articles added to multiple fairs', (done) ->
+      fabricate 'articles', [
+        { title: 'C', fair_id: ObjectId('4dc98d149a96300001003033') }
+        { title: 'A', fair_id: ObjectId('4dc98d149a96300001003033')  }
+        { title: 'B', fair_id: ObjectId('4dc98d149a96300001003032')  }
+      ], ->
+        Article.where(
+          { fair_ids: ['4dc98d149a96300001003033', '4dc98d149a96300001003032'] }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'ABC'
+            done()
+        )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

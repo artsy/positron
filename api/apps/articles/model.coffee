@@ -73,7 +73,7 @@ querySchema = (->
   offset: @number()
   artist_id: @objectId()
   artwork_id: @objectId()
-  fair_id: @objectId()
+  fair_ids: @array()
   sort: @string()
 ).call Joi
 
@@ -101,10 +101,11 @@ toQuery = (input, callback) ->
     return callback err if err
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
-    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id'
+    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
+      'fair_ids'
     # Type cast IDs
     query.author_id = ObjectId input.author_id if input.author_id
-    query.fair_id = ObjectId input.fair_id if input.fair_id
+    query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
