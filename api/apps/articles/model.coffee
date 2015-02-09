@@ -152,7 +152,8 @@ validate = (input, callback) ->
 update = (article, input, callback) ->
   article = _.extend article, input,
     updated_at: new Date
-    published_at: new Date if input.published and not article.published
+    published_at: if input.published and not article.published then \
+      new Date else article.published_at
   getSlug article, (err, slug) ->
     return callback err if err
     article.slugs ?= []
