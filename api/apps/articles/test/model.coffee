@@ -108,6 +108,31 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles sorted by an attr', (done) ->
+      db.articles.drop ->
+        fabricate 'articles', [
+          { title: 'C' }, { title: 'A' }, { title: 'B' }
+        ], ->
+          Article.where(
+            { sort: '-title' }
+            (err, { results }) ->
+              _.pluck(results, 'title').sort().join('').should.containEql 'ABC'
+              done()
+          )
+
+    it 'can find articles added to multiple fairs', (done) ->
+      fabricate 'articles', [
+        { title: 'C', fair_id: ObjectId('4dc98d149a96300001003033') }
+        { title: 'A', fair_id: ObjectId('4dc98d149a96300001003033')  }
+        { title: 'B', fair_id: ObjectId('4dc98d149a96300001003032')  }
+      ], ->
+        Article.where(
+          { fair_ids: ['4dc98d149a96300001003033', '4dc98d149a96300001003032'] }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'ABC'
+            done()
+        )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
@@ -146,13 +171,13 @@ describe 'Article', ->
         err.message.should.containEql 'author_id is required'
         done()
 
-    it 'adds an updated as a utf8 string', (done) ->
+    it 'adds an updated_at as a date', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
       }, (err, article) ->
-        article.updated_at.should.be.an.instanceOf(String)
+        article.updated_at.should.be.an.instanceOf(Date)
         moment(article.updated_at).format('YYYY').should.equal moment().format('YYYY')
         done()
 
@@ -203,6 +228,18 @@ describe 'Article', ->
             Article.find article.slugs[0], (err, article) ->
               article.title.should.equal 'Foo Bar Baz'
               done()
+
+    it 'saves published_at when the articles is published', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, (err, article) ->
+        article.published_at.should.be.an.instanceOf(Date)
+        moment(article.published_at).format('YYYY').should
+          .equal moment().format('YYYY')
+        done()
 
   describe "#destroy", ->
 
