@@ -108,6 +108,18 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles sorted by an attr', (done) ->
+      db.articles.drop ->
+        fabricate 'articles', [
+          { title: 'C' }, { title: 'A' }, { title: 'B' }
+        ], ->
+          Article.where(
+            { sort: '-title' }
+            (err, { results }) ->
+              _.pluck(results, 'title').sort().join('').should.containEql 'ABC'
+              done()
+          )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
@@ -203,6 +215,18 @@ describe 'Article', ->
             Article.find article.slugs[0], (err, article) ->
               article.title.should.equal 'Foo Bar Baz'
               done()
+
+    it 'saves published_at when the articles is published', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, (err, article) ->
+        article.published_at.should.be.an.instanceOf(Date)
+        moment(article.published_at).format('YYYY').should
+          .equal moment().format('YYYY')
+        done()
 
   describe "#destroy", ->
 

@@ -83,11 +83,11 @@ querySchema = (->
 @where = (input, callback) ->
   toQuery input, (err, query, limit, offset, sort) ->
     return callback err if err
-    cursor = db.articles.find(query).skip(offset or 0)
+    cursor = db.articles.find(query).skip(offset or 0).sort(sort)
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit or 10).sort(sort).toArray cb
+      (cb) -> cursor.limit(limit or 10).toArray cb
     ], (err, [ total, count, results ]) ->
       return callback err if err
       callback null, {
@@ -151,8 +151,8 @@ validate = (input, callback) ->
 
 update = (article, input, callback) ->
   article = _.extend article, input,
-    updated_at: new Date moment().format()
-    published_at: new Date article.published_at or moment().format()
+    updated_at: new Date
+    published_at: new Date if input.published and not article.published
   getSlug article, (err, slug) ->
     return callback err if err
     article.slugs ?= []
