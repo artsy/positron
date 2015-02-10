@@ -142,7 +142,7 @@ sortParamToQuery = (input) ->
         db.articles.save _.extend(article,
           _id: id
           author_id: ObjectId(article.author_id)
-          fair_id: ObjectId(article.fair_id)
+          fair_id: ObjectId(article.fair_id) if article.fair_id
         ), cb
 
 validate = (input, callback) ->
@@ -154,7 +154,7 @@ update = (article, input, callback) ->
   article = _.extend article, input,
     updated_at: new Date
     published_at: if input.published and not article.published then \
-      new Date else article.published_at
+      new Date else new Date article.published_at
   getSlug article, (err, slug) ->
     return callback err if err
     article.slugs ?= []

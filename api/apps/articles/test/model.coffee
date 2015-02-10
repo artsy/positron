@@ -241,6 +241,17 @@ describe 'Article', ->
           .equal moment().format('YYYY')
         done()
 
+    it 'doesnt save a fair unless explictly set', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        fair_id: null
+        published: true
+      }, (err, article) ->
+        (article.fair_id?).should.not.be.ok
+        done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
