@@ -27,7 +27,8 @@ setup = (callback) ->
   # Load the Positron & Gravity databases
   db = require './db'
   gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
-    'post_artwork_features', 'artworks']
+    'post_artwork_features', 'artworks', 'profiles', 'fair_organizers', 'fairs',
+    'reposts']
   debug "Connecting to databases and beginning migrate..."
   # Make sure both databases are a go first before dropping previously migrated
   # posts.
@@ -90,16 +91,46 @@ postsToArticles = (posts, callback) ->
   async.map posts, ((post, callback) ->
     $ = cheerio.load post.body if post.body
     bodyText = $?('*').text()
-    queries = [
-      (cb) -> gravity.post_artist_features.find(post_id: post._id).toArray cb
-      (cb) -> gravity.post_artwork_features.find(post_id: post._id).toArray cb
-    ]
-    artworkIds = (ObjectId(a.artwork_id) for a in (post.attachments or []) \
-      when a._type is 'PostArtwork')
-    if artworkIds.length
-      queries.push (cb) -> gravity.artworks.find { _id: $in: artworkIds }, cb
-    async.parallel queries, (err, results) ->
-      [artistFeatures, artworkFeatures, artworks] = results
+    async.parallel [
+      # Featured artists
+      (cb) ->
+        gravity.post_artist_features.find(post_id: post._id).toArray cb
+      # Featured artworks
+      (cb) ->
+        gravity.post_artwork_features.find(post_id: post._id).toArray cb
+      # Embedded artworks
+      (cb) ->
+        artworkIds = (ObjectId(a.artwork_id) for a in (post.attachments or []) \
+          when a._type is 'PostArtwork')
+        return cb() unless artworkIds.length
+        gravity.artworks.find { _id: $in: artworkIds }, cb
+      # Related fair
+      (cb) ->
+        async.parallel [
+          (cb2) ->
+            gravity.profiles.findOne {
+              _id: post.profile_id, owner_type: 'FairOrganizer'
+            }, cb2
+          (cb2) ->
+            gravity.reposts.find { post_id: post._id }, (err, reposts) ->
+              return cb2 err if err
+              gravity.profiles.find({
+                _id: { $in: _.pluck(reposts, 'profile_id') }
+                owner_type: 'FairOrganizer'
+              }, cb2)
+        ], (err, [postProfile, repostProfiles]) ->
+          return cb err if err
+          profiles = _.compact [postProfile].concat repostProfiles
+          return cb() unless profiles.length
+          gravity.fair_organizers.findOne(
+            { _id: $in: _.pluck(profiles, 'owner_id') }
+            (err, organizer) ->
+              return cb err if err
+              return cb() unless organizer?
+              gravity.fairs.findOne { organizer_id: organizer._id }, cb
+          )
+    ], (err, results) ->
+      [artistFeatures, artworkFeatures, artworks, fair] = results
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
@@ -137,8 +168,8 @@ postsToArticles = (posts, callback) ->
         )[0]
         title: post.title
         published: post.published
-        published_at: moment(post.published_at).format()
-        updated_at: moment(post.updated_at).format()
+        published_at: moment(post.published_at).toDate()
+        updated_at: moment(post.updated_at).toDate()
         sections: (
           slideshowItems = _.compact(for attachment in (post.attachments or [])
             switch attachment?._type
@@ -172,6 +203,7 @@ postsToArticles = (posts, callback) ->
         featured_artist_ids: (f.artist_id for f in artistFeatures)
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
+        fair_id: fair?._id
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
