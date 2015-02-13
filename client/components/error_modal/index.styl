@@ -1,0 +1,14 @@
+@import '../stylus_lib'
+
+.error-modal
+  position relative
+  padding-left 40px
+  &::before
+    content '!'
+    color red-color
+    width 25px
+    height @width
+    border-radius @width
+    position absolute
+    top 0
+    left 0

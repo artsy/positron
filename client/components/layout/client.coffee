@@ -10,6 +10,9 @@ viewHelpers = require '../../lib/view_helpers.coffee'
 Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
+{ ErrorModal } = require '../error_modal/index.coffee'
+
+window.open = -> new ErrorModal
 
 # Add jquery plugins
 require 'jquery-autosize'

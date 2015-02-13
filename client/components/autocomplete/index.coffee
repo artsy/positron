@@ -8,19 +8,19 @@ require 'typeahead.js'
 
 module.exports = class Autocomplete extends Backbone.View
 
-    initialize: (options) ->
-      search = new Bloodhound
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
-        queryTokenizer: Bloodhound.tokenizers.whitespace
-        remote:
-          url: options.url
-          filter: options.filter
-      search.initialize()
-      $(@el).typeahead null,
-        name: options.name or _.uniqueId()
-        source: search.ttAdapter()
-      $(@el).on 'typeahead:selected', options.selected
+  initialize: (options) ->
+    search = new Bloodhound
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
+      queryTokenizer: Bloodhound.tokenizers.whitespace
+      remote:
+        url: options.url
+        filter: options.filter
+    search.initialize()
+    $(@el).typeahead null,
+      name: options.name or _.uniqueId()
+      source: search.ttAdapter()
+    $(@el).on 'typeahead:selected', options.selected
 
-    remove: ->
-      super
-      $(@el).typeahead('destroy')
+  remove: ->
+    super
+    $(@el).typeahead('destroy')
