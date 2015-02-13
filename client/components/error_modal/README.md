@@ -20,5 +20,5 @@ article.save error: (err) ->
     error: err
     title: "Aw snap!"
     body: "I guess you could try again later ¯\_(ツ)_/¯"
-    onReport: -> alert "Thanks for your feedback!"
+    flashMessage: "Thanks for your feedback!"
 ````

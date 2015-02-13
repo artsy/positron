@@ -32,6 +32,7 @@ app.use authenticated
 app.use require './apps/users'
 app.use require './apps/artworks'
 app.use require './apps/artists'
+app.use require './apps/report'
 
 # Webhook for tasks for debugging purpose (to be removed)
 app.get '/task/:task', (req, res, next) ->

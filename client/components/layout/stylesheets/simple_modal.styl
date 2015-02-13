@@ -1,0 +1,38 @@
+.simple-modal-body
+  border-radius 0 !important
+  box-shadow none !important
+  border 0 !important
+  padding 40px !important
+
+.simple-modal-title
+  font-size 22px !important
+  padding-bottom 15px !important
+  margin-bottom 20px
+
+.simple-modal-content
+  margin 20px 0 !important
+
+.simple-modal-close
+  top 15px
+  right @top
+  background url("/icons/close.svg") no-repeat center center !important
+  background-size contain !important
+  width 22px
+  height @width
+  display block
+  border 0
+  position absolute
+  opacity 0.15
+  outline 0
+  cursor pointer
+  transition opacity 0.3s
+  &:hover
+    opacity 1
+
+.simple-modal-overlay
+  opacity 0.5 !important
+
+.simple-modal-content
+  overflow visible !important
+  input
+    width 100%

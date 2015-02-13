@@ -1,6 +1,7 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 CurrentUser = require '../../../../models/current_user.coffee'
+{ openErrorModal } = require '../../../../components/error_modal/index.coffee'
 sd = require('sharify').data
 
 module.exports = class EditHeader extends Backbone.View
@@ -54,8 +55,10 @@ module.exports = class EditHeader extends Backbone.View
     @article.trigger('finished').save()
 
   syncToPost: (e) ->
+    return openErrorModal(new Error "bleh")
     e.preventDefault()
     @$('#edit-sync-to-post').text 'Syncing...'
     @article.trigger('loading').syncToPost
       accessToken: @user.get('access_token')
+      error: openErrorModal
       success: (post) -> location.assign "#{sd.FORCE_URL}/post/#{post.id}"
