@@ -1,0 +1,13 @@
+section.error-modal-alert
+  h1!= title
+  h2!= body
+  .error-modal-buttons
+    button.error-modal-report-button.avant-garde-button Report
+    button.error-modal-close.avant-garde-button.avant-garde-button-dark Ok
+section.error-modal-report
+  p Please describe what you were doing when this error occured:
+  form
+    textarea.error-modal-report-textarea.bordered-input
+    .error-modal-buttons
+      button.error-modal-close.avant-garde-button Cancel
+      button.error-modal-report-send.avant-garde-button.avant-garde-button-dark Send

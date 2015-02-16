@@ -60,3 +60,13 @@ GET /artists?ids[]=andy-warhol&ids[]=54276766fd4f50996aeca2b8
 **params**
 ids[]: Array of artist ids or slugs
 q: Search query to match against artist name
+
+### Report
+
+Used to report errors from users.
+
+GET /report?text=
+
+**params**
+text: Body of the email
+

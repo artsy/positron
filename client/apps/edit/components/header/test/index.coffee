@@ -17,7 +17,8 @@ describe 'EditHeader', ->
         benv.expose $: require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
-        EditHeader = require '../index'
+        EditHeader = benv.require resolve __dirname, '../index'
+        EditHeader.__set__ 'openErrorModal', sinon.stub()
         @view = new EditHeader el: $('#edit-header'), article: @article
         done()
 

@@ -39,6 +39,7 @@
     "bucket-assets": "*",
     "cors": "*",
     "newrelic": "*",
+    "node-mandrill": "*",
 
     "stylus": "*",
     "nib": "*",

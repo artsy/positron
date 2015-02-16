@@ -18,12 +18,13 @@ express = require "express"
 app = module.exports = express()
 
 # Setup Sentry
-client = new raven.Client process.env.SENTRY_DSN,
-  stackFunction: Error.prepareStackTrace
-app.use raven.middleware.express client
-client.patchGlobal ->
-  debug 'Uncaught Exception. Process exited by raven.patchGlobal.'
-  process.exit(1)
+if process.env.SENTRY_DSN
+  client = new raven.Client process.env.SENTRY_DSN,
+    stackFunction: Error.prepareStackTrace
+  app.use raven.middleware.express client
+  client.patchGlobal ->
+    debug 'Uncaught Exception. Process exited by raven.patchGlobal.'
+    process.exit(1)
 
 # Put client/api together
 app.use '/api', require './api'
