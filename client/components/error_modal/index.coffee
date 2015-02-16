@@ -1,7 +1,8 @@
 Backbone = require 'backbone'
-Modal = require 'simple-modal'
+Modal = -> require('simple-modal') arguments...
 template = -> require('./template.jade') arguments...
 flash = require '../flash/index.coffee'
+sd = require('sharify').data
 
 module.exports.ErrorModal = class ErrorModal extends Backbone.View
 
@@ -31,6 +32,7 @@ module.exports.ErrorModal = class ErrorModal extends Backbone.View
 
   submitReport: (e) ->
     e.preventDefault()
+    console.log @$('.error-modal-report-textarea').val()
     $.ajax
       url: "#{sd.API_URL}/report"
       data:

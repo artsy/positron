@@ -3,7 +3,7 @@ require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 mandrill = require('node-mandrill')(MANDRILL_APIKEY)
 express = require 'express'
 
-to = for email in TECH_SUPPORT.split ','
+to = for email in TECH_SUPPORT?.split(',') or []
   { email: email, name: 'Writer User' }
 app = module.exports = express()
 
