@@ -204,6 +204,7 @@ postsToArticles = (posts, callback) ->
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
         fair_id: fair?._id
+        tier: 2
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
