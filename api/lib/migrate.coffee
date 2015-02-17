@@ -134,7 +134,7 @@ postsToArticles = (posts, callback) ->
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
-        slugs: post._slugs
+        slugs: (post._slugs or []).concat([post._id.toString()])
         author_id: ObjectId(post.author_id)
         thumbnail_title: post.title
         thumbnail_teaser: $?('p')?.first()?.text()
@@ -204,6 +204,7 @@ postsToArticles = (posts, callback) ->
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
         fair_id: fair?._id
+        tier: 2
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
