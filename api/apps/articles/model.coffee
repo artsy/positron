@@ -151,15 +151,12 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  article = _.extend article, input,
-    updated_at: new Date
-    published_at: if input.published and not article.published then \
-      new Date else new Date article.published_at
+  article = _.extend article, input, updated_at: new Date
   getSlug article, (err, slug) ->
     return callback err if err
     article.slugs ?= []
     article.slugs.push slug unless slug in article.slugs
-    callback null, article
+    onPublish article, callback
 
 getSlug = (article, callback) ->
   return callback null, article.slug if article.slug
@@ -168,6 +165,18 @@ getSlug = (article, callback) ->
   User.find article.author_id, (err, user) ->
     return callback null, titleSlug unless user
     callback err, _s.slugify(user.user.name) + '-' + titleSlug
+
+onPublish = (article, callback) =>
+  User.find article.author_id, (err, author) ->
+    return callback err if err
+    if author
+      article.author =
+        id: author._id.toString()
+        name: author.user?.name
+        profile_id: author.profile?.id
+        profile_handle: author.profile?.handle
+    article.published_at = new Date
+    callback null, article
 
 @syncToPost = (article, accessToken, callback) ->
   # Create/update the post with body joined from text sections
@@ -196,7 +205,7 @@ getSlug = (article, callback) ->
       post = res.body
       # Ensure the article is linked to the Gravity post
       @save _.extend(article, {
-        gravity_id: post._id
+        gravity_id: post._id,
         slug: post.id
       }), (err, article) ->
         return callback err if err
