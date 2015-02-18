@@ -151,12 +151,13 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
+  publishing = input.published and not article.published
   article = _.extend article, input, updated_at: new Date
   getSlug article, (err, slug) ->
     return callback err if err
     article.slugs ?= []
     article.slugs.push slug unless slug in article.slugs
-    onPublish article, callback
+    if publishing then onPublish(article, callback) else callback null, article
 
 getSlug = (article, callback) ->
   return callback null, article.slug if article.slug

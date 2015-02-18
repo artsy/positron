@@ -241,6 +241,22 @@ describe 'Article', ->
           .equal moment().format('YYYY')
         done()
 
+    it 'denormalizes the author into the article on publish', (done) ->
+      fabricate 'users', {
+        _id: ObjectId('5086df098523e60002000018')
+        user: { name: 'Molly' }
+        profile: { handle: 'molly' }
+      }, (err, @user) ->
+        Article.save {
+          title: 'Top Ten Shows'
+          thumbnail_title: 'Ten Shows'
+          author_id: '5086df098523e60002000018'
+          published: true
+        }, (err, article) ->
+          article.author.name.should.equal 'Molly'
+          article.author.profile_handle.should.equal 'molly'
+          done()
+
     it 'doesnt save a fair unless explictly set', (done) ->
       Article.save {
         title: 'Top Ten Shows'
