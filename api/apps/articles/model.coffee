@@ -75,6 +75,7 @@ querySchema = (->
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
+  partner_id: @objectId()
   sort: @string()
 ).call Joi
 
@@ -106,6 +107,7 @@ toQuery = (input, callback) ->
       'fair_ids'
     # Type cast IDs
     query.author_id = ObjectId input.author_id if input.author_id
+    query.partner_id = ObjectId input.partner_id if input.partner_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     # Convert query for articles featured to an artist or artwork
     query.$or = [
