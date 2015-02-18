@@ -111,7 +111,7 @@ debug = require('debug') 'api'
 
       # Denormalize user's data into articles they authored in the background
       db.articles.update(
-        { author_id: userId }
+        { author_id: newUser._id }
         { $set: author: denormalizedForArticle(newUser) }
         (err) -> debug err if err
       )
