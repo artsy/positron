@@ -95,9 +95,10 @@ describe 'EditLayout', ->
   describe '#onFinished', ->
 
     it 'redirects to the list if the articles is saved', ->
+      $.ajaxStop = sinon.stub()
       @view.redirectToList = sinon.stub()
       @view.onFinished()
-      @view.article.trigger('change').trigger('sync')
+      $.ajaxStop.args[0][0]()
       @view.redirectToList.called.should.be.ok
 
   describe '#syncTitleTeaser', ->
