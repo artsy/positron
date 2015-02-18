@@ -49,6 +49,8 @@
     "uglifyify": "*",
     "uglify-js": "*",
     "caching-coffeeify": "*",
+    "coffeeify": "*",
+    "cssify": "*",
     "browserify-dev-middleware": "*",
     "ezel-assets": "*",
     "gemup": "git://github.com/artsy/gemup.git",
