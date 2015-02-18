@@ -34,7 +34,7 @@ $('#layout-sidebar-switch-user').click ->
     el: $(modal.m).find('input')
     url: "#{sd.API_URL}/users?q=%QUERY"
     filter: (res) -> for r in res.results
-      { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
+      { id: r.id, value: _.compact([r.user.name, r.details?.email]).join(', ') }
     selected: (e, item) =>
       location.assign '/impersonate/' + item.id
   _.defer -> $(modal.m).find('input').focus()
