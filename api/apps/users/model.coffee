@@ -7,6 +7,7 @@ _ = require 'underscore'
 async = require 'async'
 db = require '../../lib/db'
 request = require 'superagent'
+debug = require('debug') 'api'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 { imageUrlsFor } = require '../../lib/artsy_model'
@@ -49,6 +50,12 @@ request = require 'superagent'
 #
 # Helpers
 #
+@denormalizedForArticle = denormalizedForArticle = (user) ->
+  id: user._id
+  name: user.user?.name
+  profile_id: user.profile?.id
+  profile_handle: user.profile?.handle
+
 @upsertWithGravityData = upsertWithGravityData = (options, callback) ->
 
   # Determine who we're fetching with what authorization
@@ -86,7 +93,7 @@ request = require 'superagent'
       profile = results[0] if results[0].handle
       details = results[1] if results[1].type
       newUser = {
-        _id: ObjectId user.id
+        _id: ObjectId(user.id)
         user: user
         profile: profile
         details: details
@@ -100,4 +107,11 @@ request = require 'superagent'
         newUser
         { upsert: true }
         (err, res) -> callback err, newUser
+      )
+
+      # Denormalize user's data into articles they authored in the background
+      db.articles.update(
+        { author_id: newUser._id }
+        { $set: author: denormalizedForArticle(newUser) }
+        (err) -> debug err if err
       )

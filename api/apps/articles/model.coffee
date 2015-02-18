@@ -170,16 +170,12 @@ getSlug = (article, callback) ->
 onPublish = (article, callback) =>
   User.find article.author_id, (err, author) ->
     return callback err if err
-    if author
-      article.author =
-        id: author._id.toString()
-        name: author.user?.name
-        profile_id: author.profile?.id
-        profile_handle: author.profile?.handle
+    article.author = User.denormalizedForArticle(author) if author
     article.published_at = new Date
     callback null, article
 
 @syncToPost = (article, accessToken, callback) ->
+
   # Create/update the post with body joined from text sections
   if article.gravity_id
     req = request.put("#{ARTSY_URL}/api/v1/post/#{article.gravity_id}")
@@ -195,6 +191,7 @@ onPublish = (article, callback) =>
       author_id: author?.user?.id?.toString()
       profile_id: author?.profile?.id?.toString()
     ).set('X-Access-Token', accessToken).end (err, res) =>
+
       # If the post isn't found, delete the gravity_id tying it to the article
       # and re-try syncing.
       if res.body.error is 'Post Not Found'
@@ -204,12 +201,14 @@ onPublish = (article, callback) =>
         return
       return callback err if err = err or res.body.error
       post = res.body
+
       # Ensure the article is linked to the Gravity post
       @save _.extend(article, {
         gravity_id: post._id,
         slug: post.id
       }), (err, article) ->
         return callback err if err
+
         # Delete any existing attachments/artworks
         async.parallel [
           (cb) ->
@@ -228,6 +227,7 @@ onPublish = (article, callback) =>
             ), cb
         ], (err) ->
           return callback err if err
+
           # Add artworks, images and video from the article to the post
           async.mapSeries article.sections, ((section, cb) ->
             switch section.type

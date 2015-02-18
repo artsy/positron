@@ -12,6 +12,7 @@ moment = require 'moment'
 glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
   'art', 'I', 'sy', 'work', 'love', 'works', 'views', 'study', 'post', 'share'
 ])
+User = require '../apps/users/model'
 { ObjectId } = mongojs = require 'mongojs'
 { GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
 gravity = null
@@ -129,13 +130,17 @@ postsToArticles = (posts, callback) ->
               return cb() unless organizer?
               gravity.fairs.findOne { organizer_id: organizer._id }, cb
           )
+      # Author
+      (cb) ->
+        User.find post.author_id, cb
     ], (err, results) ->
-      [artistFeatures, artworkFeatures, artworks, fair] = results
+      [artistFeatures, artworkFeatures, artworks, fair, author] = results
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
         slugs: (post._slugs or []).concat([post._id.toString()])
         author_id: ObjectId(post.author_id)
+        author: User.denormalizedForArticle(author) if author
         thumbnail_title: post.title
         thumbnail_teaser: $?('p')?.first()?.text()
         thumbnail_image: _.compact(
