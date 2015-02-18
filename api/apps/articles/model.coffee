@@ -195,7 +195,10 @@ getSlug = (article, callback) ->
       return callback err if err = err or res.body.error
       post = res.body
       # Ensure the article is linked to the Gravity post
-      @save _.extend(article, { gravity_id: post._id, slug: post.id }), (err, article) ->
+      @save _.extend(article, {
+        gravity_id: post._id
+        slug: post.id
+      }), (err, article) ->
         return callback err if err
         # Delete any existing attachments/artworks
         async.parallel [
