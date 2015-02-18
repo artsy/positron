@@ -91,7 +91,7 @@ module.exports = class EditLayout extends Backbone.View
 
   onFinished: =>
     @showSpinner()
-    @article.on 'change', => @article.on 'sync', @redirectToList
+    $(document).ajaxStop @redirectToList
 
   highlightMissingFields: =>
     @openTab 1
@@ -101,8 +101,8 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'change #edit-admin :input': -> @onKeyup()
-    'keyup :input, [contenteditable]': 'onKeyup'
+    'keyup :input:not(.tt-input), [contenteditable]:not(.tt-input)': 'onKeyup'
+    'change #edit-admin :input': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'

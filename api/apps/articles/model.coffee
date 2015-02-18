@@ -175,66 +175,70 @@ getSlug = (article, callback) ->
     req = request.put("#{ARTSY_URL}/api/v1/post/#{article.gravity_id}")
   else
     req = request.post("#{ARTSY_URL}/api/v1/post")
-  req.send(
-    title: article.title
-    body: article.lead_paragraph +
-      (section.body for section in article.sections).join('')
-    published: true
-  ).set('X-Access-Token', accessToken).end (err, res) =>
-    # If the post isn't found, delete the gravity_id tying it to the article
-    # and re-try syncing.
-    if res.body.error is 'Post Not Found'
-      @save _.extend(article, gravity_id: null), (err) =>
-        return callback err if err
-        @syncToPost article, accessToken, callback
-      return
-    return callback err if err = err or res.body.error
-    post = res.body
-    # Ensure the article is linked to the Gravity post
-    @save _.extend(article, { gravity_id: post._id, slug: post.id }), (err, article) ->
-      return callback err if err
-      # Delete any existing attachments/artworks
-      async.parallel [
-        (cb) ->
-          async.map post.attachments or [], ((a, cb2) ->
-            request
-              .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
-              .set('X-Access-Token', accessToken)
-              .end (err, res) -> cb2()
-          ), cb
-        (cb) ->
-          async.map post.artworks or [], ((a, cb2) ->
-            request
-              .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
-              .set('X-Access-Token', accessToken)
-              .end (err, res) -> cb2()
-          ), cb
-      ], (err) ->
-        return callback err if err
-        # Add artworks, images and video from the article to the post
-        async.mapSeries article.sections, ((section, cb) ->
-          switch section.type
-            when 'artworks'
-              async.mapSeries section.ids, ((id, cb2) ->
-                request
-                  .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
-                  .set('X-Access-Token', accessToken)
-                  .end (err, res) -> cb2 (err or res.body.error), res.body
-              ), cb
-            when 'image', 'video'
-              request
-                .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
-                .set('X-Access-Token', accessToken)
-                .send(url: section.url)
-                .end (err, res) -> cb (err or res.body.error), res.body
-            else
-              cb()
-        ), (err) ->
+  User.find article.author_id, (err, author) =>
+    return callback err if err
+    req.send(
+      title: article.title
+      body: article.lead_paragraph +
+        (section.body for section in article.sections).join('')
+      published: true
+      author_id: author?.user?.id?.toString()
+      profile_id: author?.profile?.id?.toString()
+    ).set('X-Access-Token', accessToken).end (err, res) =>
+      # If the post isn't found, delete the gravity_id tying it to the article
+      # and re-try syncing.
+      if res.body.error is 'Post Not Found'
+        @save _.extend(article, gravity_id: null), (err) =>
           return callback err if err
-          request
-            .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
-            .set('X-Access-Token', accessToken)
-            .end (err, res) -> callback err, res.body
+          @syncToPost article, accessToken, callback
+        return
+      return callback err if err = err or res.body.error
+      post = res.body
+      # Ensure the article is linked to the Gravity post
+      @save _.extend(article, { gravity_id: post._id, slug: post.id }), (err, article) ->
+        return callback err if err
+        # Delete any existing attachments/artworks
+        async.parallel [
+          (cb) ->
+            async.map post.attachments or [], ((a, cb2) ->
+              request
+                .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
+                .set('X-Access-Token', accessToken)
+                .end (err, res) -> cb2()
+            ), cb
+          (cb) ->
+            async.map post.artworks or [], ((a, cb2) ->
+              request
+                .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
+                .set('X-Access-Token', accessToken)
+                .end (err, res) -> cb2()
+            ), cb
+        ], (err) ->
+          return callback err if err
+          # Add artworks, images and video from the article to the post
+          async.mapSeries article.sections, ((section, cb) ->
+            switch section.type
+              when 'artworks'
+                async.mapSeries section.ids, ((id, cb2) ->
+                  request
+                    .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
+                    .set('X-Access-Token', accessToken)
+                    .end (err, res) -> cb2 (err or res.body.error), res.body
+                ), cb
+              when 'image', 'video'
+                request
+                  .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
+                  .set('X-Access-Token', accessToken)
+                  .send(url: section.url)
+                  .end (err, res) -> cb (err or res.body.error), res.body
+              else
+                cb()
+          ), (err) ->
+            return callback err if err
+            request
+              .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
+              .set('X-Access-Token', accessToken)
+              .end (err, res) -> callback err, res.body
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

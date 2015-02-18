@@ -18,7 +18,7 @@ module.exports = class EditAdmin extends Backbone.View
       el: @$('#edit-admin-change-author input')
       url: "#{sd.API_URL}/users?q=%QUERY"
       filter: (res) -> for r in res.results
-        { id: r.id, value: r.user.name + ', ' + (r.details?.email or '') }
+        { id: r.id, value: _.compact([r.user.name, r.details?.email]).join(', ') }
       selected: @onAuthorSelect
 
   onAuthorSelect: (e, item) =>
