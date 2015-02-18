@@ -27,8 +27,8 @@ module.exports = (callback = ->) ->
     # Find the authors that aren't users yet
     db.users.distinct '_id', {}, (err, userIds) ->
       return callback err if err
-      q = { author_id: $nin: userIds }
-      db.articles.distinct 'author_id', q, (err, authorIds) ->
+      query = { author_id: $nin: userIds }
+      db.articles.distinct 'author_id', query, (err, authorIds) ->
         return callback err if err
         return callback() unless authorIds.length
 
