@@ -31,6 +31,7 @@ schema = (->
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   fair_id: @objectId().allow('', null)
+  partner_id: @objectId().allow('', null)
   sections: @array().includes([
     @object().keys
       type: @string().valid('image')

@@ -29,7 +29,7 @@ setup = (callback) ->
   db = require './db'
   gravity = mongojs GRAVITY_MONGO_URL, ['posts', 'post_artist_features',
     'post_artwork_features', 'artworks', 'profiles', 'fair_organizers', 'fairs',
-    'reposts']
+    'partners', 'reposts']
   debug "Connecting to databases and beginning migrate..."
   # Make sure both databases are a go first before dropping previously migrated
   # posts.
@@ -84,6 +84,25 @@ migrateOldPosts = (callback) ->
       ), (err) ->
           callback err
 
+findPostProfiles = (post, profileType, callback) ->
+  async.parallel [
+    (cb) ->
+      gravity.profiles.findOne {
+        _id: post.profile_id, owner_type: profileType
+      }, cb
+    (cb) ->
+      gravity.reposts.find { post_id: post._id }, (err, reposts) ->
+        return cb err if err
+        gravity.profiles.find({
+          _id: { $in: _.pluck(reposts, 'profile_id') }
+          owner_type: profileType
+        }, cb)
+  ], (err, [postProfile, repostProfiles]) ->
+    return callback err if err
+    profiles = _.compact [postProfile].concat repostProfiles
+    return callback() unless profiles.length
+    callback null, profiles
+
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
   debug "Migrating #{posts.length} posts...."
@@ -107,22 +126,8 @@ postsToArticles = (posts, callback) ->
         gravity.artworks.find { _id: $in: artworkIds }, cb
       # Related fair
       (cb) ->
-        async.parallel [
-          (cb2) ->
-            gravity.profiles.findOne {
-              _id: post.profile_id, owner_type: 'FairOrganizer'
-            }, cb2
-          (cb2) ->
-            gravity.reposts.find { post_id: post._id }, (err, reposts) ->
-              return cb2 err if err
-              gravity.profiles.find({
-                _id: { $in: _.pluck(reposts, 'profile_id') }
-                owner_type: 'FairOrganizer'
-              }, cb2)
-        ], (err, [postProfile, repostProfiles]) ->
+        findPostProfiles post, 'FairOrganizer', (err, profiles) ->
           return cb err if err
-          profiles = _.compact [postProfile].concat repostProfiles
-          return cb() unless profiles.length
           gravity.fair_organizers.findOne(
             { _id: $in: _.pluck(profiles, 'owner_id') }
             (err, organizer) ->
@@ -130,11 +135,18 @@ postsToArticles = (posts, callback) ->
               return cb() unless organizer?
               gravity.fairs.findOne { organizer_id: organizer._id }, cb
           )
+      # Related partner
+      (cb) ->
+        findPostProfiles post, 'PartnerGallery', (err, profiles) ->
+          return cb err if err
+          gravity.partners.findOne(
+            { _id: $in: _.pluck(profiles, 'owner_id') }, cb
+          )
       # Author
       (cb) ->
         User.find post.author_id, cb
     ], (err, results) ->
-      [artistFeatures, artworkFeatures, artworks, fair, author] = results
+      [artistFeatures, artworkFeatures, artworks, fair, partner, author] = results
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
@@ -209,6 +221,7 @@ postsToArticles = (posts, callback) ->
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
         fair_id: fair?._id
+        partner_id: partner?._id
         tier: 2
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
