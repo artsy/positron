@@ -30,7 +30,6 @@ schema = (->
   published: @boolean().default(false)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  fair_id: @objectId().allow('', null)
   sections: @array().includes([
     @object().keys
       type: @string().valid('image')
@@ -64,6 +63,8 @@ schema = (->
   primary_featured_artist_ids: @array().includes @objectId()
   featured_artist_ids: @array().includes @objectId()
   featured_artwork_ids: @array().includes @objectId()
+  fair_id: @objectId().allow('', null)
+  partner_ids: @array().includes @objectId()
 ).call Joi
 
 querySchema = (->
@@ -74,6 +75,7 @@ querySchema = (->
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
+  partner_id: @objectId()
   sort: @string()
 ).call Joi
 
@@ -102,10 +104,11 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids'
+      'fair_ids', 'partner_id'
     # Type cast IDs
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
+    query.partner_ids = ObjectId input.partner_id if input.partner_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
