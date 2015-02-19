@@ -133,6 +133,19 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles added to a partner', (done) ->
+      fabricate 'articles', [
+        { title: 'Foo', partner_ids: [ObjectId('4dc98d149a96300001003033')] }
+        { title: 'Bar', partner_ids: [ObjectId('4dc98d149a96300001003033')] }
+        { title: 'Baz', partner_ids: [ObjectId('4dc98d149a96300001003031')] }
+      ], ->
+        Article.where(
+          { partner_id: '4dc98d149a96300001003033' }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'BarFoo'
+            done()
+        )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
