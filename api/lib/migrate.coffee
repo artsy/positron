@@ -135,18 +135,18 @@ postsToArticles = (posts, callback) ->
               return cb() unless organizer?
               gravity.fairs.findOne { organizer_id: organizer._id }, cb
           )
-      # Related partner
+      # Related partners
       (cb) ->
         findPostProfiles post, 'PartnerGallery', (err, profiles) ->
           return cb err if err
-          gravity.partners.findOne(
+          gravity.partners.find(
             { _id: $in: _.pluck(profiles, 'owner_id') }, cb
           )
       # Author
       (cb) ->
         User.find post.author_id, cb
     ], (err, results) ->
-      [artistFeatures, artworkFeatures, artworks, fair, partner, author] = results
+      [artistFeatures, artworkFeatures, artworks, fair, partners, author] = results
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
@@ -221,7 +221,7 @@ postsToArticles = (posts, callback) ->
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
         gravity_id: post._id
         fair_id: fair?._id
-        partner_id: partner?._id
+        partner_ids: _.pluck(partners, '_id') if partners?.length
         tier: 2
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
