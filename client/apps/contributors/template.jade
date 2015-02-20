@@ -1,0 +1,31 @@
+extend ../../components/layout/templates/index
+
+block content
+  h1.page-header
+    .max-width-container Contributors
+  #contributors.max-width-container
+    h2 Add a contributor
+    #contributors-add
+      input.bordered-input(
+        placeholder='Search by user name or email...'
+      )
+    table.lite-table
+      thead
+        tr
+          td
+          td Name
+          td Email
+          td Role
+          td Actions
+      tbody
+        for user in users
+          tr
+            td
+              img.contributors-icon( src=user.iconUrl() )
+            td= user.get('user').name
+            td= user.get('details').email
+            td= user.get('details').type
+            td.contributors-actions
+              .contributors-actions-container
+                button.avant-garde-button.contributors-remove Remove
+                a.avant-garde-button( href='' ) Admin
