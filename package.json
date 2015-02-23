@@ -73,5 +73,6 @@
     "sinon": "*",
     "benv": "*",
     "rewire": "*"
-  }
+  },
+  "license": "MIT"
 }
