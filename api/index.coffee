@@ -9,7 +9,6 @@ morgan = require 'morgan'
 migrate = require './lib/migrate'
 syncUsers = require './lib/sync_users'
 debug = require('debug') 'api'
-{ CronJob } = require 'cron'
 cors = require 'cors'
 
 app = module.exports = express()
@@ -45,10 +44,6 @@ app.get '/task/:task', (req, res, next) ->
 # Moar middleware
 app.use errorHandler
 app.use notFound
-
-# Start cron jobs
-new CronJob '0 */4 * * *', (-> migrate debug), null, true
-new CronJob '0 24 * * *', (-> syncUsers debug), null, true
 
 # Start the test server if run directly
 app.listen(5000, -> debug "Listening on 5000") if module is require.main
