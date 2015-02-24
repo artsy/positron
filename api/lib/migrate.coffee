@@ -14,9 +14,10 @@ glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
 ])
 User = require '../apps/users/model'
 { ObjectId } = mongojs = require 'mongojs'
-{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
+{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL, BATCH_SIZE } = process.env
 gravity = null
 db = null
+BATCH_SIZE = Number BATCH_SIZE
 
 module.exports = (callback = ->) ->
   return callback new Error('No GRAVITY_MONGO_URL') unless GRAVITY_MONGO_URL?
@@ -72,10 +73,10 @@ migrateOldPosts = (callback) ->
     return callback err if err
     ids = (ObjectId(id.toString()) for id in _.compact ids)
     gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
-      async.timesSeries Math.ceil(count / 1000), ((n, next) ->
+      async.timesSeries Math.ceil(count / BATCH_SIZE), ((n, next) ->
         gravity.posts
           .find(published: true, _id: $nin: ids)
-          .skip(n * 1000).limit(1000)
+          .skip(n * BATCH_SIZE).limit(BATCH_SIZE)
           .toArray (err, posts) ->
             return cb(err) if err
             postsToArticles posts, (err) ->
@@ -126,15 +127,9 @@ postsToArticles = (posts, callback) ->
         gravity.artworks.find { _id: $in: artworkIds }, cb
       # Related fair
       (cb) ->
-        findPostProfiles post, 'FairOrganizer', (err, profiles) ->
+        findPostProfiles post, 'Fair', (err, profiles) ->
           return cb err if err
-          gravity.fair_organizers.findOne(
-            { _id: $in: _.pluck(profiles, 'owner_id') }
-            (err, organizer) ->
-              return cb err if err
-              return cb() unless organizer?
-              gravity.fairs.findOne { organizer_id: organizer._id }, cb
-          )
+          gravity.fairs.findOne({ _id: $in: _.pluck(profiles, 'owner_id') }, cb)
       # Related partners
       (cb) ->
         findPostProfiles post, 'PartnerGallery', (err, profiles) ->
