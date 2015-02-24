@@ -28,6 +28,24 @@
     &:hover, &:active, &:focus
       background purple-color
       border-color purple-color
+  &.avant-garde-button-external-link
+    position relative
+    padding-right 30px
+    &::after
+      content '.'
+      color transparent
+      position absolute
+      right 0
+      top 0
+      height calc(100% - 2px)
+      width 20px
+      background-image url(/icons/chevron_right.svg)
+      background-position left center
+      background-repeat no-repeat
+      opacity 0.2
+      transition opacity 0.3s
+    &:hover::after
+      opacity 1
   &[data-state='loading'], &.is-loading
     &, &[disabled], &[disabled]:hover
       background-color purple-color
