@@ -35,7 +35,6 @@
     "glossary": "*",
     "raven": "*",
     "debug": "*",
-    "cron": "*",
     "bucket-assets": "*",
     "cors": "*",
     "newrelic": "*",
