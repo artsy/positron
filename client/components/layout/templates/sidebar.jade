@@ -20,12 +20,12 @@ nav#layout-sidebar
     include ../public/icons/layout_published.svg
     br
     | Published
-  if user.isAdmin()
-    a( href='/contributors'
-       class=(sd.URL == '/contributors' ? 'is-active' : '') )
-      include ../public/icons/contributors.svg
-      br
-      | Contributors
+  //- if user.isAdmin()
+  //-   a( href='/contributors'
+  //-      class=(sd.URL == '/contributors' ? 'is-active' : '') )
+  //-     include ../public/icons/contributors.svg
+  //-     br
+  //-     | Contributors
   #layout-sidebar-profile
     img( src=user.iconUrl() )
     br
