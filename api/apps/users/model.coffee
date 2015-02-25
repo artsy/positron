@@ -41,7 +41,10 @@ querySchema = (->
         { 'user.name': $regex: ///#{input.q}///i }
         { 'details.email': $regex: ///#{input.q}///i }
       ]
-    cursor = db.users.find(query).limit(input.limit or 10).skip(input.offset or 0)
+    cursor = db.users
+      .find(query)
+      .limit(input.limit or 10)
+      .skip(input.offset or 0)
     async.parallel [
       (cb) -> cursor.toArray cb
       (cb) -> cursor.count cb

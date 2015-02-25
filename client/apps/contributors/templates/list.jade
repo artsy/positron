@@ -7,6 +7,9 @@ for user in users
     td= user.get('details').type
     td.contributors-actions
       .contributors-actions-container
+        a.avant-garde-button(
+          href="/impersonate/#{user.get('id')}"
+        ) Switch User
         a.avant-garde-button.avant-garde-button-external-link(
           href="http://admin.artsy.net/user/#{user.get('id')}"
           target='_blank'
