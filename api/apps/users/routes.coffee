@@ -8,17 +8,20 @@
     return next err if err
     res.send present user
 
-# PUT /api/users/:id
-@update = (req, res, next) ->
-  User.save { id: req.params.id }, (err, user) ->
+# POST /api/users
+@create = (req, res, next) ->
+  User.upsertWithGravityData {
+    id: req.body.artsy_id
+    accessToken: req.get('X-Access-Token')
+  }, (err, user) ->
     return next err if err
     res.send present user
 
-# GET /api/users?q=
-@search = (req, res, next) ->
-  User.search req.query.q, (err, users) ->
+# GET /api/users
+@index = (req, res, next) ->
+  User.where req.query, (err, json) ->
     return next err if err
-    res.send results: (present user for user in users)
+    res.send json
 
 # Middleware to deny non-admins access to certain user endpoint operations
 @ownerOrAdminOnly = (req, res, next) ->

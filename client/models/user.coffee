@@ -7,4 +7,4 @@ module.exports = class User extends Backbone.Model
 
   _.extend @prototype, UserMixin
 
-  url: "#{sd.API_URL}/users/:id"
+  urlRoot: "#{sd.API_URL}/users"
