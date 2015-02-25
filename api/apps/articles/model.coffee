@@ -150,7 +150,9 @@ sortParamToQuery = (input) ->
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema
+  # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
   whitelisted.author_id = whitelisted.author_id?.toString()
+  whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
