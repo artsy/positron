@@ -7,10 +7,18 @@ _ = require 'underscore'
 async = require 'async'
 db = require '../../lib/db'
 request = require 'superagent'
+Joi = require 'joi'
 debug = require('debug') 'api'
+async = require 'async'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 { imageUrlsFor } = require '../../lib/artsy_model'
+
+querySchema = (->
+  q: @string()
+  limit: @number()
+  offset: @number()
+).call Joi
 
 #
 # Retrieval
@@ -24,20 +32,29 @@ debug = require('debug') 'api'
 @find = find = (id, callback) ->
   db.users.findOne { _id: ObjectId(id) }, callback
 
-@search = (q, callback) ->
-  db.users.find { 'user.name': { $regex: ///#{q}///i } }, callback
-
-#
-# Persistence
-#
-@save = (data, callback) ->
-  db.users.update(
-    { _id: id = ObjectId(data.id) }
-    { $set: access_token: data.access_token }
-    (err, res) ->
-      return callback err if err
-      find id, callback
-  )
+@where = (input, callback) ->
+  Joi.validate input, querySchema, (err, input) =>
+    return callback err if err
+    query = {}
+    if input.q
+      query.$or = [
+        { 'user.name': $regex: ///#{input.q}///i }
+        { 'details.email': $regex: ///#{input.q}///i }
+      ]
+    cursor = db.users
+      .find(query)
+      .limit(input.limit or 10)
+      .skip(input.offset or 0)
+    async.parallel [
+      (cb) -> cursor.toArray cb
+      (cb) -> cursor.count cb
+      (cb) -> db.users.count cb
+    ], (err, [users, count, total]) =>
+      callback err, {
+        total: total
+        count: count
+        results: (@present user for user in users)
+      }
 
 #
 # JSON views

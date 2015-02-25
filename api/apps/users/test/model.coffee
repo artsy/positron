@@ -41,19 +41,25 @@ describe 'User', ->
       (data._id?).should.not.be.ok
       data.id.should.equal 'foo'
 
-  describe '#search', ->
+  describe '#where', ->
 
     it 'regex searches by name', (done) ->
       fabricate 'users', { user: name: 'Molly' }, ->
-        User.search 'molly', (err, users) ->
-          users[0].user.name.should.equal 'Molly'
+        User.where { q: 'molly' }, (err, { results }) ->
+          results[0].user.name.should.equal 'Molly'
           done()
 
-  describe '#save', ->
-
-    it 'updates a users access token', (done) ->
-      fabricate 'users', { _id: ObjectId(fixtures().users.id) }, ->
-        User.save { id: fixtures().users.id, access_token: 'foo' }, (err, user) ->
-          user.access_token.should.equal 'foo'
+    it 'regex searches by email', (done) ->
+      fabricate 'users', {
+        details: { email: 'molly@artsymail.com' }
+        user: { name: 'Molly'}
+      }, ->
+        User.where { q: 'molly@artsymail' }, (err, { results }) ->
+          results[0].user.name.should.equal 'Molly'
           done()
 
+    it 'returns 10 results by default', (done) ->
+      fabricate 'users', _.times(20, -> { user: { name: 'Mark'} }), ->
+        User.where {}, (err, { results }) ->
+          results.length.should.equal 10
+          done()

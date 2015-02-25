@@ -42,8 +42,12 @@ GET /users
 q: Search query to match against name or email
 
 GET /users/:id
-PUT /users/:id
+
 POST /users
+
+**params**
+artsy_id: An admin can add a user to Writer by POSTing their id from Gravity
+
 
 ### Artworks
 
