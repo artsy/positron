@@ -1,30 +1,32 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-Autocomplete = require '../../components/autocomplete/index.coffee'
 { openErrorModal } = require '../../components/error_modal/index.coffee'
 User = require '../../models/user.coffee'
 Users = require '../../collections/users.coffee'
 sd = require('sharify').data
 listTemplate = -> require('./templates/list.jade') arguments...
 
-class ContributorsView extends Backbone.View
+module.exports.ContributorsView = class ContributorsView extends Backbone.View
 
   initialize: ({ @users }) ->
     @users.on 'add', @render
-    @renderAutocomplete()
+    @setupAutocomplete()
     @$('input').focus()
 
-  renderAutocomplete: ->
+  setupAutocomplete: ->
+    Autocomplete = require '../../components/autocomplete/index.coffee'
     new Autocomplete
       el: $('#contributors-add input')
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       filter: (res) -> for r in res
         { id: r.id, value: _.compact([r.name, r.email]).join(', ')  }
-      selected: (e, selected) =>
-        new User().save { artsy_id: selected.id },
-          error: openErrorModal
-          success: (user) => @users.add user, at: 0
-        @renderSpinner()
+      selected: @onSelect
+
+  onSelect: (e, selected) =>
+    new User().save { artsy_id: selected.id },
+      error: openErrorModal
+      success: (user) => @users.add user, at: 0
+    @renderSpinner()
 
   renderSpinner: ->
     @$('tbody').prepend """
