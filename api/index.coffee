@@ -2,8 +2,7 @@ require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
-{ helpers, notFound, locals, setUser, errorHandler,
-  loginRequired } = require './lib/middleware'
+{ helpers, notFound, errorHandler } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 { authenticated, setUser } = require './apps/users/routes'
 migrate = require './lib/migrate'
@@ -22,12 +21,13 @@ app.use morgan 'dev'
 
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
-app.use setUser
-app.post '/articles', authenticated
-app.put '/articles/:id', authenticated
-app.delete '/articles/:id', authenticated
+app.get '/articles', (req, res, next) ->
+	if req.query.published is 'true' then next() else setUser(req, res, next)
+app.post '/articles', setUser, authenticated
+app.put '/articles/:id', setUser, authenticated
+app.delete '/articles/:id', setUser, authenticated
 app.use require './apps/articles'
-app.use authenticated
+app.use setUser, authenticated
 app.use require './apps/users'
 app.use require './apps/artworks'
 app.use require './apps/artists'
