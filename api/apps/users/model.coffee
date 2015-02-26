@@ -45,6 +45,7 @@ querySchema = (->
       .find(query)
       .limit(input.limit or 10)
       .skip(input.offset or 0)
+      .sort($natural: -1)
     async.parallel [
       (cb) -> cursor.toArray cb
       (cb) -> cursor.count cb
