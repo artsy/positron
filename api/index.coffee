@@ -22,7 +22,7 @@ app.use morgan 'dev'
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.get '/articles', (req, res, next) ->
-	if req.query.published is 'true' then next() else setUser(req, res, next)
+  if req.query.published is 'true' then next() else setUser(req, res, next)
 app.post '/articles', setUser, authenticated
 app.put '/articles/:id', setUser, authenticated
 app.delete '/articles/:id', setUser, authenticated
