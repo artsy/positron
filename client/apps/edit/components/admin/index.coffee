@@ -11,6 +11,7 @@ module.exports = class EditAdmin extends Backbone.View
     @article.on 'open:tab2', @onOpen
     @setupAuthorAutocomplete()
     @setupFairAutocomplete()
+    @setupPartnerAutocomplete()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -29,6 +30,7 @@ module.exports = class EditAdmin extends Backbone.View
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
     select = AutocompleteSelect @$('#edit-admin-fair .edit-admin-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
         { id: r._id, value: r.name }
       selected: (e, item) =>
@@ -38,6 +40,25 @@ module.exports = class EditAdmin extends Backbone.View
     if id = @article.get 'fair_id'
       request
         .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
+          select.setState value: res.body.name, loading: false
+    else
+      select.setState loading: false
+
+  setupPartnerAutocomplete: ->
+    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
+    select = AutocompleteSelect @$('#edit-admin-partner .edit-admin-right')[0],
+      url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
+      placeholder: 'Search partner by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item) =>
+        @article.save partner_ids: [item.id]
+      cleared: =>
+        @article.save partner_ids: null
+    if id = @article.get('partner_ids')?[0]
+      request
+        .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
         .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
           select.setState value: res.body.name, loading: false
     else

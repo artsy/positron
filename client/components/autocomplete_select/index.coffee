@@ -40,5 +40,5 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
         input {
           ref: 'input'
           className: 'bordered-input'
-          placeholder: 'Search by fair name...'
+          placeholder: @props.placeholder
         }
