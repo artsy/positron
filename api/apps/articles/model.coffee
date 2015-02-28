@@ -229,6 +229,24 @@ onPublish = (article, callback) =>
         , (err) =>
           return callback err if err
 
+          # Feature to artist pages
+          artistIds = (article.featured_artist_ids or []).concat(
+            article.primary_featured_artist_ids
+          )
+          async.map artistIds, (id, cb) ->
+            request
+              .get("#{ARTSY_URL}/api/v1/partner/#{id.toString()}")
+              .set('X-Access-Token', accessToken)
+              .end (err, res) ->
+                return cb err if err = err or res.body.error
+                request
+                  .post("#{ARTSY_URL}/api/v1/repost")
+                  .send(post_id: post.id, profile_id: res.body.default_profile_id)
+                  .set('X-Access-Token', accessToken)
+                  .end (err, res) -> cb err or res.body.error
+          , (err) =>
+            return callback err if err
+
           # Delete any existing attachments/artworks
           async.parallel [
             (cb) ->
