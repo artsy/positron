@@ -115,7 +115,7 @@ module.exports = class EditAdmin extends Backbone.View
     id = _.last $t.val().split('/')
     $t.parent().addClass 'bordered-input-loading'
     @article['featured' + resource].getOrFetchIds [id],
-      complete: ->
+      complete: =>
         $t.val('').parent().removeClass 'bordered-input-loading'
         @article.save()
 

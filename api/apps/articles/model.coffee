@@ -60,11 +60,11 @@ schema = (->
           id: @string()
       ]
   ]).default([])
-  primary_featured_artist_ids: @array().includes @objectId()
-  featured_artist_ids: @array().includes @objectId()
-  featured_artwork_ids: @array().includes @objectId()
+  primary_featured_artist_ids: @array().includes(@objectId()).allow(null)
+  featured_artist_ids: @array().includes(@objectId()).allow(null)
+  featured_artwork_ids: @array().includes(@objectId()).allow(null)
   fair_id: @objectId().allow('', null)
-  partner_ids: @array().includes @objectId()
+  partner_ids: @array().includes(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->
@@ -229,49 +229,70 @@ onPublish = (article, callback) =>
         , (err) =>
           return callback err if err
 
-          # Delete any existing attachments/artworks
-          async.parallel [
-            (cb) ->
-              async.map post.attachments or [], ((a, cb2) ->
-                request
-                  .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
-                  .set('X-Access-Token', accessToken)
-                  .end (err, res) -> cb2()
-              ), cb
-            (cb) ->
-              async.map post.artworks or [], ((a, cb2) ->
-                request
-                  .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
-                  .set('X-Access-Token', accessToken)
-                  .end (err, res) -> cb2()
-              ), cb
-          ], (err) ->
+          # Feature to artist pages
+          artistIds = (article.featured_artist_ids or []).concat(
+            article.primary_featured_artist_ids
+          )
+          async.map artistIds.map(String), (id, cb) ->
+            request
+              .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artist/#{id}/feature")
+              .set('X-Access-Token', accessToken)
+              .end (err, res) -> cb (err or res.body.error), res.body
+          , (err) =>
             return callback err if err
 
-            # Add artworks, images and video from the article to the post
-            async.mapSeries article.sections, ((section, cb) ->
-              switch section.type
-                when 'artworks'
-                  async.mapSeries section.ids, ((id, cb2) ->
-                    request
-                      .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
-                      .set('X-Access-Token', accessToken)
-                      .end (err, res) -> cb2 (err or res.body.error), res.body
-                  ), cb
-                when 'image', 'video'
-                  request
-                    .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
-                    .set('X-Access-Token', accessToken)
-                    .send(url: section.url)
-                    .end (err, res) -> cb (err or res.body.error), res.body
-                else
-                  cb()
-            ), (err) ->
-              return callback err if err
+            # Feature to artwork pages
+            async.map article.featured_artwork_ids.map(String), (id, cb) ->
               request
-                .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
+                .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{id}/feature")
                 .set('X-Access-Token', accessToken)
-                .end (err, res) -> callback (err or res.body.error), res.body
+                .end (err, res) -> cb (err or res.body.error), res.body
+            , (err) =>
+              return callback err if err
+
+              # Delete any existing attachments/artworks
+              async.parallel [
+                (cb) ->
+                  async.map post.attachments or [], ((a, cb2) ->
+                    request
+                      .del("#{ARTSY_URL}/api/v1/post/#{post._id}/link/#{a.id}")
+                      .set('X-Access-Token', accessToken)
+                      .end (err, res) -> cb2()
+                  ), cb
+                (cb) ->
+                  async.map post.artworks or [], ((a, cb2) ->
+                    request
+                      .del("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{a.id}")
+                      .set('X-Access-Token', accessToken)
+                      .end (err, res) -> cb2()
+                  ), cb
+              ], (err) ->
+                return callback err if err
+
+                # Add artworks, images and video from the article to the post
+                async.mapSeries article.sections, ((section, cb) ->
+                  switch section.type
+                    when 'artworks'
+                      async.mapSeries section.ids, ((id, cb2) ->
+                        request
+                          .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
+                          .set('X-Access-Token', accessToken)
+                          .end (err, res) -> cb2 (err or res.body.error), res.body
+                      ), cb
+                    when 'image', 'video'
+                      request
+                        .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
+                        .set('X-Access-Token', accessToken)
+                        .send(url: section.url)
+                        .end (err, res) -> cb (err or res.body.error), res.body
+                    else
+                      cb()
+                ), (err) ->
+                  return callback err if err
+                  request
+                    .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
+                    .set('X-Access-Token', accessToken)
+                    .end (err, res) -> callback (err or res.body.error), res.body
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->
