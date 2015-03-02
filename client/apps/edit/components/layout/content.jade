@@ -6,7 +6,8 @@ section#edit-content
     contenteditable=true
   )!= article.get('lead_paragraph')
   #edit-author-section
-    p= user.get('user').name
+    if article.get('author')
+      p= article.get('author').name
     p= moment(article.get('created_at') || moment()).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container
