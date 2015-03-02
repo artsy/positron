@@ -212,8 +212,8 @@ postsToArticles = (posts, callback) ->
           sections.push { type: 'text', body: post.body } if bodyText
           sections
         )
-        featured_artist_ids: (f.artist_id for f in artistFeatures)
-        featured_artwork_ids: (f.artwork_id for f in artworkFeatures)
+        featured_artist_ids: (f.artist_id for f in artistFeatures or [])
+        featured_artwork_ids: (f.artwork_id for f in artworkFeatures or [])
         gravity_id: post._id
         fair_id: fair?._id
         partner_ids: _.pluck(partners, '_id') if partners?.length
