@@ -227,28 +227,28 @@ onPublish = (article, callback) =>
               , (err) =>
                 return callback err if err
 
-                do =>
                 # Feature to artist pages
-                # artistIds = (article.featured_artist_ids or []).concat(
-                #   article.primary_featured_artist_ids
-                # )
-                # async.map (artistIds or []).map(String), (id, cb) ->
-                #   request
-                #     .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artist/#{id}/feature")
-                #     .set('X-Access-Token', accessToken)
-                #     .end (err, res) -> cb (err or res.body.error), res.body
-                # , (err) =>
-                #   return callback err if err
+                artistIds = (article.featured_artist_ids or []).concat(
+                  article.primary_featured_artist_ids
+                )
+                async.map (artistIds or []).map(String), (id, cb) ->
+                  request
+                    .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artist/#{id}/feature")
+                    .set('X-Access-Token', accessToken)
+                    .end (err, res) -> cb (err or res.body.error), res.body
+                , (err) =>
+                  # TODO: Figure out what to do with "Artist not Found" errors
+                  # return callback err if err
 
-                  do =>
                   # Feature to artwork pages
-                  # async.map (article.featured_artwork_ids or []).map(String), (id, cb) ->
-                  #   request
-                  #     .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{id}/feature")
-                  #     .set('X-Access-Token', accessToken)
-                  #     .end (err, res) -> cb (err or res.body.error), res.body
-                  # , (err) =>
-                  #   return callback err if err
+                  async.map (article.featured_artwork_ids or []).map(String), (id, cb) ->
+                    request
+                      .post("#{ARTSY_URL}/api/v1/post/#{post.id}/artwork/#{id}/feature")
+                      .set('X-Access-Token', accessToken)
+                      .end (err, res) -> cb (err or res.body.error), res.body
+                  , (err) =>
+                    # TODO: Figure out what to do with "Artwork not Found" errors
+                    # return callback err if err
 
                     # Add artworks, images and video from the article to the post
                     async.mapSeries article.sections, ((section, cb) ->
