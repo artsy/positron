@@ -237,7 +237,8 @@ onPublish = (article, callback) =>
                     .set('X-Access-Token', accessToken)
                     .end (err, res) -> cb (err or res.body.error), res.body
                 , (err) =>
-                  return callback err if err
+                  # TODO: Figure out what to do with "Artist not Found" errors
+                  # return callback err if err
 
                   # Feature to artwork pages
                   async.map (article.featured_artwork_ids or []).map(String), (id, cb) ->
@@ -246,7 +247,8 @@ onPublish = (article, callback) =>
                       .set('X-Access-Token', accessToken)
                       .end (err, res) -> cb (err or res.body.error), res.body
                   , (err) =>
-                    return callback err if err
+                    # TODO: Figure out what to do with "Artwork not Found" errors
+                    # return callback err if err
 
                     # Add artworks, images and video from the article to the post
                     async.mapSeries article.sections, ((section, cb) ->
