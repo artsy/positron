@@ -77,6 +77,7 @@ querySchema = (->
   fair_ids: @array()
   partner_id: @objectId()
   sort: @string()
+  tier: @number()
 ).call Joi
 
 #
