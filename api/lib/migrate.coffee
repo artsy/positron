@@ -104,6 +104,34 @@ findPostProfiles = (post, profileType, callback) ->
     return callback() unless profiles.length
     callback null, profiles
 
+bestThumbnail = (attachments, artworks) ->
+  return null unless attachments?.length
+  artworkUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostArtwork')
+      artwork = _.select(artworks, (artwork) ->
+        attachment.artwork_id.toString() is artwork._id.toString()
+      )[0]
+      img = artwork?.additional_images?[0]
+      _.compact([
+        img?.image_urls?.large
+        _.sample(img?.image_urls ? [])
+        artwork?.image_urls?.large
+        _.sample(artwork?.image_urls ? [])
+        (("http://static.artsy.net/additional_images/#{img._id}/" +
+         "#{if v = img.image_version then v + '/' else ''}" +
+         "large.jpg") if img)
+      ])[0]
+  )
+  imageUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostImage')
+      "#{GRAVITY_CLOUDFRONT_URL}/post_images/#{attachment._id}/large.jpg"
+  )
+  linkUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostLink')
+      attachment.oembed_json?.thumbnail_url or attachment.oembed_json?.url
+  )
+  imageUrls[0] or linkUrls[0] or artworkUrls[0] or null
+
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
   debug "Migrating #{posts.length} posts...."
@@ -145,64 +173,37 @@ postsToArticles = (posts, callback) ->
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
-        slugs: (post._slugs or []).concat([post._id.toString()])
+        slugs: [post._id.toString()].concat(post._slugs)
         author_id: ObjectId(post.author_id)
         author: User.denormalizedForArticle(author) if author
         thumbnail_title: post.title
         thumbnail_teaser: $?('p')?.first()?.text()
-        thumbnail_image: _.compact(
-          for attachment, i in (post.attachments ? [])
-            switch attachment._type
-              when 'PostArtwork'
-                artwork = _.select(artworks, (artwork) ->
-                  attachment.artwork_id.toString() is artwork._id.toString()
-                )[0]
-                img = artwork?.additional_images?[0]
-                _.compact([
-                  img?.image_urls?.large
-                  _.sample(img?.image_urls ? [])
-                  artwork?.image_urls?.large
-                  _.sample(artwork?.image_urls ? [])
-                  (("http://static.artsy.net/additional_images/#{img._id}/" +
-                   "#{if v = img.image_version then v + '/' else ''}" +
-                   "large.jpg") if img)
-                ])[0]
-              when 'PostImage'
-                "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                "#{post.attachments?[i]?._id}/large.jpg"
-              when 'PostLink'
-                (
-                  post.attachments?[i]?.oembed_json?.thumbnail_url or
-                  post.attachments?[i]?.oembed_json?.url
-                )
-              else
-                null
-        )[0]
+        thumbnail_image: bestThumbnail(post.attachments, artworks)
         title: post.title
         published: post.published
         published_at: moment(post.published_at).toDate()
         updated_at: moment(post.updated_at).toDate()
         sections: (
           slideshowItems = _.compact(for attachment in (post.attachments or [])
-            switch attachment?._type
+            switch attachment._type
               when 'PostArtwork'
                 {
                   type: 'artwork'
-                  id: attachment?.artwork_id
+                  id: attachment.artwork_id
                 }
               when 'PostImage'
                 {
                   type: 'image'
                   url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                    "#{attachment?._id}/larger.jpg"
+                    "#{attachment._id}/larger.jpg"
                 }
               when 'PostLink'
-                if attachment?.url?.match /youtube|vimeo/
+                if attachment.url?.match /youtube|vimeo/
                   {
                     type: 'video'
                     url: attachment.url
                   }
-                else if attachment?.url?.match /jpeg|jpg|png|gif/
+                else if attachment.url?.match /jpeg|jpg|png|gif/
                   {
                     type: 'image'
                     url: attachment.url
