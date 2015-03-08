@@ -1,6 +1,6 @@
 @import '../stylus_lib'
 
-gutter-size = 20px
+gutter-size = 30px
 
 #edit-admin
   padding-top header-size
@@ -17,7 +17,7 @@ gutter-size = 20px
     margin-top 40px
   h2
     margin 20px 0 whitespace-block-size 0
-    line-height 1.6em
+    line-height 1.4em
   h3
     avant-garde()
     font-size default-avant-garde-font-size
@@ -27,10 +27,14 @@ gutter-size = 20px
   label
     width 50%
     &:first-child
-      padding-right (gutter-size / 2)
-      padding-left (gutter-size / 2)
+      padding-right gutter-size
   input
     margin 0 10px 0 0
+  .edit-admin-right
+    padding-top 87px
+
+#edit-admin-feature .edit-admin-right
+  padding-top 46px
 
 .edit-admin-left, .edit-admin-right
   display inline-block
@@ -42,18 +46,18 @@ gutter-size = 20px
 
 .edit-admin-right
   width 66.66%
-  padding-top 85px
+  padding-top 75px
   padding-left (gutter-size / 2)
 
 .edit-admin-feature-list li:not(.eaf-input-li)
-  border 1px solid gray-lighter-color
+  border 2px solid gray-lighter-color
   padding 10px
   position relative
   height 38px
   span
     display inline-block
     overflow ellipsis
-    max-width 250px
+    max-width 240px
   &.eaf-mentioned
     color gray-dark-color
     position relative
@@ -83,49 +87,32 @@ gutter-size = 20px
       color purple-color
       &:before
         display block
+        background-image url(/icons/check_p.svg)
       &:after
         content 'Feature'
         right 30px
         color purple-color
   &.eaf-featured
-    border-color purple-color
     color purple-color
     position relative
     cursor pointer
     &::after
       content '.'
       color transparent
-      background url(/icons/check_p.svg) center center no-repeat
+      background url(/icons/remove_g.svg) center center no-repeat
       position absolute
       right 10px
       background-size 100%
       width 15px
       height 14px
-    &::before
-      content 'Unfeature'
-      avant-garde()
-      position absolute
-      right 30px
-      display none
-      font-size default-avant-garde-font-size - 2
-      margin-top 2px
-    &:hover
-      color red-color
-      border-color red-color
-      span
-        max-width 175px
-      &::before
-        display block
-      &::after
-        background url(/icons/remove_r.svg) center center no-repeat
 
 .eaf-input-li input
   padding 6px 12px 7px 12px
   width 100%
 
 .eaf-input, .edit-admin-feature-list li
-  width "calc(50% - %s)" % gutter-size
-  margin 0 gutter-size gutter-size 0
+  width 277px
+  margin 0 gutter-size 10px 0
 
 .edit-admin-feature-list li:nth-child(2n+2)
   margin-right 0
@@ -138,5 +125,7 @@ gutter-size = 20px
   width 100%
   margin-bottom 30px
 
-#edit-admin-change-author input, #edit-admin-fair input
+#edit-admin-change-author input
+#edit-admin-fair input
+#edit-admin-partner input
   width 100%

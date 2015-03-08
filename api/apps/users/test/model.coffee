@@ -59,7 +59,7 @@ describe 'User', ->
           done()
 
     it 'returns 10 results by default', (done) ->
-      fabricate 'users', _.times(20, -> { user: { name: 'Mark'} }), ->
+      fabricate 'users', _.times(20, -> {}), ->
         User.where {}, (err, { results }) ->
           results.length.should.equal 10
           done()
