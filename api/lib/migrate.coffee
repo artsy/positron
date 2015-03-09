@@ -40,9 +40,13 @@ setup = (callback) ->
   ], (err, counts) ->
     return callback err if err
     debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-    # Remove any posts with slideshows & gravity_ids b/c we know those
-    # originated in Gravity and will be replaced.
-    query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
+    # Remove any posts that originated in Gravity b/c they will be replaced.
+    query =
+      $or: [
+        { migrated_from_gravity: true }
+        { 'sections.0.type': 'slideshow' }
+      ]
+      gravity_id: { $ne: null }
     db.articles.remove query, callback
 
 updateSyncedArticleSlugs = (callback) ->
@@ -104,6 +108,74 @@ findPostProfiles = (post, profileType, callback) ->
     return callback() unless profiles.length
     callback null, profiles
 
+bestThumbnail = (attachments, artworks) ->
+  return null unless attachments?.length
+  artworkUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostArtwork')
+      artwork = _.select(artworks, (artwork) ->
+        attachment.artwork_id.toString() is artwork._id.toString()
+      )[0]
+      img = artwork?.additional_images?[0]
+      _.compact([
+        img?.image_urls?.large
+        _.sample(img?.image_urls ? [])
+        artwork?.image_urls?.large
+        _.sample(artwork?.image_urls ? [])
+        (("http://static.artsy.net/additional_images/#{img._id}/" +
+         "#{if v = img.image_version then v + '/' else ''}" +
+         "large.jpg") if img)
+      ])[0]
+  )
+  imageUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostImage')
+      "#{GRAVITY_CLOUDFRONT_URL}/post_images/#{attachment._id}/large.jpg"
+  )
+  linkUrls = _.compact(
+    for attachment in _.where(attachments, _type: 'PostLink')
+      attachment.oembed_json?.thumbnail_url or attachment.oembed_json?.url
+  )
+  imageUrls[0] or linkUrls[0] or artworkUrls[0] or null
+
+slideshowSections = (post, bodyText) ->
+  slideshowItems = _.compact(for attachment in (post.attachments or [])
+    switch attachment._type
+      when 'PostArtwork'
+        {
+          type: 'artwork'
+          id: attachment.artwork_id
+        }
+      when 'PostImage'
+        {
+          type: 'image'
+          url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
+            "#{attachment._id}/larger.jpg"
+        }
+      when 'PostLink'
+        if attachment.url?.match /youtube|vimeo/
+          {
+            type: 'video'
+            url: attachment.url
+          }
+        else if attachment.url?.match /jpeg|jpg|png|gif/
+          {
+            type: 'image'
+            url: attachment.url
+          }
+  )
+  itemTypes = _.uniq(_.pluck slideshowItems, 'type').join('')
+  sections = (
+    if (slideshowItems.length <= 3 and itemTypes is 'artwork')
+      [{ type: 'artworks', ids: _.pluck(slideshowItems, 'id') }]
+    else if slideshowItems.length is 1
+      switch (item = slideshowItems[0]).type
+        when 'image' then [{ type: 'image', url: item.url }]
+        when 'video' then [{ type: 'video', url: item.url }]
+    else
+      [{ type: 'slideshow', items: slideshowItems }]
+  )
+  sections.push { type: 'text', body: post.body } if bodyText
+  sections
+
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
   debug "Migrating #{posts.length} posts...."
@@ -145,79 +217,24 @@ postsToArticles = (posts, callback) ->
       # Map Gravity data into a Positron schema
       data =
         _id: post._id
-        slugs: (post._slugs or []).concat([post._id.toString()])
+        slugs: [post._id.toString()].concat(post._slugs)
         author_id: ObjectId(post.author_id)
         author: User.denormalizedForArticle(author) if author
         thumbnail_title: post.title
         thumbnail_teaser: $?('p')?.first()?.text()
-        thumbnail_image: _.compact(
-          for attachment, i in (post.attachments ? [])
-            switch attachment._type
-              when 'PostArtwork'
-                artwork = _.select(artworks, (artwork) ->
-                  attachment.artwork_id.toString() is artwork._id.toString()
-                )[0]
-                img = artwork?.additional_images?[0]
-                _.compact([
-                  img?.image_urls?.large
-                  _.sample(img?.image_urls ? [])
-                  artwork?.image_urls?.large
-                  _.sample(artwork?.image_urls ? [])
-                  (("http://static.artsy.net/additional_images/#{img._id}/" +
-                   "#{if v = img.image_version then v + '/' else ''}" +
-                   "large.jpg") if img)
-                ])[0]
-              when 'PostImage'
-                "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                "#{post.attachments?[i]?._id}/large.jpg"
-              when 'PostLink'
-                (
-                  post.attachments?[i]?.oembed_json?.thumbnail_url or
-                  post.attachments?[i]?.oembed_json?.url
-                )
-              else
-                null
-        )[0]
+        thumbnail_image: bestThumbnail(post.attachments, artworks)
         title: post.title
         published: post.published
         published_at: moment(post.published_at).toDate()
         updated_at: moment(post.updated_at).toDate()
-        sections: (
-          slideshowItems = _.compact(for attachment in (post.attachments or [])
-            switch attachment?._type
-              when 'PostArtwork'
-                {
-                  type: 'artwork'
-                  id: attachment?.artwork_id
-                }
-              when 'PostImage'
-                {
-                  type: 'image'
-                  url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                    "#{attachment?._id}/larger.jpg"
-                }
-              when 'PostLink'
-                if attachment?.url?.match /youtube|vimeo/
-                  {
-                    type: 'video'
-                    url: attachment.url
-                  }
-                else if attachment?.url?.match /jpeg|jpg|png|gif/
-                  {
-                    type: 'image'
-                    url: attachment.url
-                  }
-          )
-          sections = [{ type: 'slideshow', items: slideshowItems }]
-          sections.push { type: 'text', body: post.body } if bodyText
-          sections
-        )
+        sections: slideshowSections(post, bodyText)
         featured_artist_ids: (f.artist_id for f in artistFeatures or [])
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures or [])
         gravity_id: post._id
         fair_id: fair?._id
         partner_ids: _.pluck(partners, '_id') if partners?.length
         tier: 2
+        migrated_from_gravity: true
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
