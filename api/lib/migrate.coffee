@@ -40,9 +40,13 @@ setup = (callback) ->
   ], (err, counts) ->
     return callback err if err
     debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-    # Remove any posts with slideshows & gravity_ids b/c we know those
-    # originated in Gravity and will be replaced.
-    query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
+    # Remove any posts that originated in Gravity b/c they will be replaced.
+    query =
+      $or: [
+        { migrated_from_gravity: true }
+        { 'sections.0.type': 'slideshow' }
+      ]
+      gravity_id: { $ne: null }
     db.articles.remove query, callback
 
 updateSyncedArticleSlugs = (callback) ->
@@ -132,6 +136,46 @@ bestThumbnail = (attachments, artworks) ->
   )
   imageUrls[0] or linkUrls[0] or artworkUrls[0] or null
 
+slideshowSections = (post, bodyText) ->
+  slideshowItems = _.compact(for attachment in (post.attachments or [])
+    switch attachment._type
+      when 'PostArtwork'
+        {
+          type: 'artwork'
+          id: attachment.artwork_id
+        }
+      when 'PostImage'
+        {
+          type: 'image'
+          url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
+            "#{attachment._id}/larger.jpg"
+        }
+      when 'PostLink'
+        if attachment.url?.match /youtube|vimeo/
+          {
+            type: 'video'
+            url: attachment.url
+          }
+        else if attachment.url?.match /jpeg|jpg|png|gif/
+          {
+            type: 'image'
+            url: attachment.url
+          }
+  )
+  itemTypes = _.uniq(_.pluck slideshowItems, 'type').join('')
+  sections = (
+    if (slideshowItems.length <= 3 and itemTypes is 'artwork')
+      [{ type: 'artworks', ids: _.pluck(slideshowItems, 'id') }]
+    else if slideshowItems.length is 1
+      switch (item = slideshowItems[0]).type
+        when 'image' then [{ type: 'image', url: item.url }]
+        when 'video' then [{ type: 'video', url: item.url }]
+    else
+      [{ type: 'slideshow', items: slideshowItems }]
+  )
+  sections.push { type: 'text', body: post.body } if bodyText
+  sections
+
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
   debug "Migrating #{posts.length} posts...."
@@ -183,42 +227,14 @@ postsToArticles = (posts, callback) ->
         published: post.published
         published_at: moment(post.published_at).toDate()
         updated_at: moment(post.updated_at).toDate()
-        sections: (
-          slideshowItems = _.compact(for attachment in (post.attachments or [])
-            switch attachment._type
-              when 'PostArtwork'
-                {
-                  type: 'artwork'
-                  id: attachment.artwork_id
-                }
-              when 'PostImage'
-                {
-                  type: 'image'
-                  url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                    "#{attachment._id}/larger.jpg"
-                }
-              when 'PostLink'
-                if attachment.url?.match /youtube|vimeo/
-                  {
-                    type: 'video'
-                    url: attachment.url
-                  }
-                else if attachment.url?.match /jpeg|jpg|png|gif/
-                  {
-                    type: 'image'
-                    url: attachment.url
-                  }
-          )
-          sections = [{ type: 'slideshow', items: slideshowItems }]
-          sections.push { type: 'text', body: post.body } if bodyText
-          sections
-        )
+        sections: slideshowSections(post, bodyText)
         featured_artist_ids: (f.artist_id for f in artistFeatures or [])
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures or [])
         gravity_id: post._id
         fair_id: fair?._id
         partner_ids: _.pluck(partners, '_id') if partners?.length
         tier: 2
+        migrated_from_gravity: true
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data
