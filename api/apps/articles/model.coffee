@@ -25,12 +25,12 @@ schema = (->
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
-  tags: @array().includes(@string())
+  tags: @array().items(@string())
   title: @string().allow('', null)
   published: @boolean().default(false)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  sections: @array().includes([
+  sections: @array().items([
     @object().keys
       type: @string().valid('image')
       url: @string().allow('', null)
@@ -40,14 +40,14 @@ schema = (->
       body: @string().allow('', null)
     @object().keys
       type: @string().valid('artworks')
-      ids: @array().includes(@string())
+      ids: @array().items(@string())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
     @object().keys
       type: @string().valid('video')
       url: @string().allow('', null)
     @object().keys
       type: @string().valid('slideshow')
-      items: @array().includes [
+      items: @array().items [
         @object().keys
           type: @string().valid('image')
           url: @string().allow('', null)
@@ -60,11 +60,11 @@ schema = (->
           id: @string()
       ]
   ]).default([])
-  primary_featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artwork_ids: @array().includes(@objectId()).allow(null)
+  primary_featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artwork_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow('', null)
-  partner_ids: @array().includes(@objectId()).allow(null)
+  partner_ids: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->

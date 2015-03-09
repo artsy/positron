@@ -71,7 +71,8 @@
     "mocha": "*",
     "sinon": "*",
     "benv": "*",
-    "rewire": "*"
+    "rewire": "*",
+    "embedly-view-helpers": "*"
   },
   "license": "MIT"
 }
