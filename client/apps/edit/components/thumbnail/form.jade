@@ -9,8 +9,9 @@ label
     span.dashed-file-upload-container-click click<br>
     | to upload your thumbnail
     if article.get('thumbnail_image')
+      - url = resize(article.get('thumbnail_image'), { width: 260 })
       #edit-thumbnail-preview(
-        style="background-image: url(#{article.get('thumbnail_image')})"
+        style="background-image: url(#{url})"
       )
       #edit-thumbnail-remove ×
     input#edit-thumbnail-image( type='file' )

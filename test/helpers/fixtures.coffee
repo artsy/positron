@@ -95,4 +95,7 @@ module.exports = ->
     moment: require 'moment'
     sharify:
       script: -> '<script>var sharify = {}</script>'
+    crop: (url) -> url
+    resize: (url) -> url
+    fill: (url) -> url
   fixtures
