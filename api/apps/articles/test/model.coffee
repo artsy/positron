@@ -242,7 +242,7 @@ describe 'Article', ->
               article.title.should.equal 'Foo Bar Baz'
               done()
 
-    it 'saves published_at when the articles is published', (done) ->
+    it 'saves published_at when the article is published', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'

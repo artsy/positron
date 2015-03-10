@@ -165,7 +165,11 @@ slideshowSections = (post, bodyText) ->
   itemTypes = _.uniq(_.pluck slideshowItems, 'type').join('')
   sections = (
     if (slideshowItems.length <= 3 and itemTypes is 'artwork')
-      [{ type: 'artworks', ids: _.pluck(slideshowItems, 'id') }]
+      [{
+        type: 'artworks'
+        ids: _.pluck(slideshowItems, 'id')
+        layout: 'overflow_fillwidth'
+      }]
     else if slideshowItems.length is 1
       switch (item = slideshowItems[0]).type
         when 'image' then [{ type: 'image', url: item.url }]
