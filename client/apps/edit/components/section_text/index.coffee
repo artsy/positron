@@ -53,7 +53,7 @@ module.exports = React.createClass
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)
-    $(@refs.editable.getDOMNode()).focus()
+    $(@refs.editable.getDOMNode()).focus() if @props.editing
 
   render: ->
     div { className: 'edit-section-text-container' },
