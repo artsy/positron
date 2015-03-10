@@ -39,6 +39,7 @@ module.exports = React.createClass
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
+    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
