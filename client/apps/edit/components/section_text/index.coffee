@@ -26,6 +26,12 @@ keyboardShortcutsMap =
 
 module.exports = React.createClass
 
+  componentDidMount: ->
+    @attachScribe()
+
+  shouldComponentUpdate: ->
+    false
+
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
@@ -33,7 +39,6 @@ module.exports = React.createClass
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
-    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
@@ -49,12 +54,6 @@ module.exports = React.createClass
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)
     $(@refs.editable.getDOMNode()).focus()
-
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
 
   render: ->
     div { className: 'edit-section-text-container' },
