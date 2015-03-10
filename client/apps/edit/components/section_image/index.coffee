@@ -114,7 +114,7 @@ module.exports = React.createClass
           [
             img {
               className: 'esi-image'
-              src: resize(@state.src, width: 900)
+              src: if @state.progress then @state.src else resize(@state.src, width: 900)
               style: opacity: if @state.progress then @state.progress else '1'
             }
             div {
