@@ -5,6 +5,8 @@
 
 _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
+Artwork = require '../../../../models/artwork.coffee'
+{ openErrorModal } = require '../../../../components/error_modal/index.coffee'
 React = require 'react'
 ByTitle = require './by_title.coffee'
 ByUrls = require './by_urls.coffee'
@@ -27,12 +29,28 @@ module.exports = React.createClass
     @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
+    @setupAutocomplete()
 
   componentWillUnmount: ->
     @props.section.artworks.off()
+    @autocomplete.remove()
 
   componentDidUpdate: ->
     @toggleFillwidth()
+
+  setupAutocomplete: ->
+    Autocomplete = require '../../../../components/autocomplete/index.coffee'
+    @autocomplete = new Autocomplete
+      url: "#{sd.ARTSY_URL}/api/v1/match/artworks?term=%QUERY"
+      el: $(@refs.autocomplete.getDOMNode())
+      filter: (res) -> for r in res
+        { id: r.id, value: r.value }
+      selected: @onSelect
+
+  onSelect: (e, selected) =>
+    new Artwork().fetch()
+      url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
+      success: (artwork) => @artworks.add artwork
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length
@@ -109,10 +127,16 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          ByTitle {
-            artworks: @props.section.artworks
-            ref: 'byTitle'
-          }
+          div {
+            ref: 'autocompleteContainer'
+            id: 'autocomplete-input'
+          },
+            label {}, 'Search by title',
+            input {
+              ref: 'autocomplete'
+              # className: 'bordered-input bordered-input-dark'
+              placeholder: 'Try "Andy Warhol Skull"'
+            }
           ByUrls {
             section: @props.section
             fetchArtworks: @fetchArtworks
