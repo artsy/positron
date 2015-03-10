@@ -157,28 +157,29 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  publishing = input.published and not article.published
+  input.published_at = new Date if input.published and not article.published
   article = _.extend article, input, updated_at: new Date
-  getSlug article, (err, slug) ->
-    return callback err if err
-    article.slugs ?= []
-    article.slugs.push slug unless slug in article.slugs
-    if publishing then onPublish(article, callback) else callback null, article
-
-getSlug = (article, callback) ->
-  return callback null, article.slug if article.slug
-  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  return callback null, titleSlug unless article.author_id
-  User.find article.author_id, (err, user) ->
-    return callback null, titleSlug unless user
-    callback err, _s.slugify(user.user.name) + '-' + titleSlug
-
-onPublish = (article, callback) =>
   User.find article.author_id, (err, author) ->
     return callback err if err
-    article.author = User.denormalizedForArticle(author) if author
-    article.published_at = new Date
+    article = addSlug article, author
+    article = denormalizeAuthor article, author
     callback null, article
+
+addSlug = (article, author, callback) ->
+  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
+  if article.slug
+    slug = article.slug
+  else if author
+    slug = _s.slugify(author.user.name) + '-' + titleSlug
+  else
+    slug = titleSlug
+  article.slugs ?= []
+  article.slugs.push slug unless slug in article.slugs
+  article
+
+denormalizeAuthor = (article, author, callback) ->
+  article.author = User.denormalizedForArticle(author) if author
+  article
 
 @syncToPost = (article, accessToken, callback) ->
 
