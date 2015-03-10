@@ -108,9 +108,11 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
+    'mouseenter .edit-section-tool': 'toggleSectionTool'
+    'mouseleave .edit-section-tool': 'toggleSectionTool'
     'mouseenter .edit-section-container:not([data-editing=true])': 'toggleSectionTools'
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
-    'click .edit-section-container': 'hideSectionTools'
+    'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -141,6 +143,11 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleLeadParagraphPlaceholder: ->
     toggleScribePlaceholder @$('#edit-lead-paragraph')
+
+  toggleSectionTool: (e) ->
+    $t = $(e.currentTarget)
+    return if $t.siblings('.edit-section-container').is('[data-editing=true]')
+    $t.toggleClass 'is-active'
 
   toggleSectionTools: (e) ->
     @hideSectionTools()
