@@ -16,8 +16,13 @@ describe 'SectionText', ->
       SectionText = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      SectionText.__set__ 'Scribe', @Scribe = sinon.stub()
-      SectionText.__set__ 'scribePluginToolbar', @scribePluginToolbar = sinon.stub()
+      class @Scribe
+        use: ->
+      SectionText.__set__ 'Scribe', @Scribe
+      for name in ['scribePluginToolbar', 'scribePluginSanitizer',
+        'scribePluginLinkTooltip', 'scribePluginKeyboardShortcuts',
+        'scribePluginHeadingCommand']
+        SectionText.__set__ name, sinon.stub()
       @component = React.render SectionText(
         section: new Backbone.Model { body: 'Foo to the bar' }
         onSetEditing: @onSetEditing = sinon.stub()

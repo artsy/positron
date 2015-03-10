@@ -3,15 +3,12 @@
 # between empty paragraphs to insert a new section.
 #
 
-# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
-# requiring it for testing in node.
-try
-  Scribe = require 'scribe-editor'
-  scribePluginToolbar = require 'scribe-plugin-toolbar'
-  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
-  scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
-  scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
+Scribe = -> require('scribe-editor') arguments...
+scribePluginToolbar = -> require('scribe-plugin-toolbar') arguments...
+scribePluginSanitizer = -> require('../../lib/sanitizer.coffee') arguments...
+scribePluginLinkTooltip = -> require('scribe-plugin-link-tooltip') arguments...
+scribePluginKeyboardShortcuts = -> require('scribe-plugin-keyboard-shortcuts') arguments...
+scribePluginHeadingCommand = -> require('scribe-plugin-heading-command') arguments...
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -39,7 +36,6 @@ module.exports = React.createClass
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
-    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
