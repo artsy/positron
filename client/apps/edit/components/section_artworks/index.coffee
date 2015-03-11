@@ -47,10 +47,11 @@ module.exports = React.createClass
         { id: r.id, value: r.value }
       selected: @onSelect
 
-  onSelect: (e, selected) =>
-    new Artwork().fetch()
+  onSelect: (e, selected) ->
+    new Artwork().fetch
       url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
-      success: (artwork) => @artworks.add artwork
+      success: (artwork) =>
+        @props.section.artworks.add artwork
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length
@@ -129,12 +130,11 @@ module.exports = React.createClass
           h1 {}, 'Add artworks to this section'
           div {
             ref: 'autocompleteContainer'
-            id: 'autocomplete-input'
           },
             label {}, 'Search by title',
             input {
               ref: 'autocomplete'
-              # className: 'bordered-input bordered-input-dark'
+              className: 'bordered-input bordered-input-dark esa-autocomplete-input'
               placeholder: 'Try "Andy Warhol Skull"'
             }
           ByUrls {
@@ -147,10 +147,10 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large }
+                img { src: artwork.get('image_urls')?.large or artwork.attributes.images[0]?.image_urls.large }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
-              p {}, artwork.get('artwork')?.title
+              p {}, artwork.get('artwork')?.title or artwork.attributes?.title
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'
