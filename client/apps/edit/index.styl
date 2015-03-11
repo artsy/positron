@@ -30,14 +30,15 @@
     vertical-align top
     outline none
     position relative
+    transition color 0.15s
     &:last-child
       border-right 0
     &.active
       color white
       svg
-        fill-color white
+        fill-color white 0.15s
     svg
-      fill-color gray-dark-color
+      fill-color gray-dark-color 0.15s
       position absolute
     &[data-command-name=linkPrompt] svg
       width 13px
@@ -45,10 +46,10 @@
       top 12px
       left 16px
     &[data-command-name=removeFormat] svg
-      height 18px
-      width 17px
+      height 20px
+      width 19px
       left 15px
-      top 11px
+      top 12px
     &[data-command-name=italic]::after
       content 'I'
       garamond()
@@ -65,3 +66,17 @@
       top 8px
       left 17px
       font-size 16px
+    &[data-command-name=h2]
+      padding 12px 24px
+      height 100%
+      &::after
+        content 'H2'
+        garamond()
+        font-size 18px
+        font-weight bold
+        position absolute
+        top 8px
+        left 13px
+    &[disabled=disabled]
+      color gray-darkest-color
+      fill-color gray-darkest-color 0.15s

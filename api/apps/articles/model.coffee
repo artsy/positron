@@ -25,12 +25,12 @@ schema = (->
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
-  tags: @array().includes(@string())
+  tags: @array().items(@string())
   title: @string().allow('', null)
   published: @boolean().default(false)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  sections: @array().includes([
+  sections: @array().items([
     @object().keys
       type: @string().valid('image')
       url: @string().allow('', null)
@@ -40,14 +40,14 @@ schema = (->
       body: @string().allow('', null)
     @object().keys
       type: @string().valid('artworks')
-      ids: @array().includes(@string())
+      ids: @array().items(@string())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
     @object().keys
       type: @string().valid('video')
       url: @string().allow('', null)
     @object().keys
       type: @string().valid('slideshow')
-      items: @array().includes [
+      items: @array().items [
         @object().keys
           type: @string().valid('image')
           url: @string().allow('', null)
@@ -60,11 +60,11 @@ schema = (->
           id: @string()
       ]
   ]).default([])
-  primary_featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artwork_ids: @array().includes(@objectId()).allow(null)
+  primary_featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artwork_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow('', null)
-  partner_ids: @array().includes(@objectId()).allow(null)
+  partner_ids: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->
@@ -157,28 +157,29 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  publishing = input.published and not article.published
+  input.published_at = new Date if input.published and not article.published
   article = _.extend article, input, updated_at: new Date
-  getSlug article, (err, slug) ->
-    return callback err if err
-    article.slugs ?= []
-    article.slugs.push slug unless slug in article.slugs
-    if publishing then onPublish(article, callback) else callback null, article
-
-getSlug = (article, callback) ->
-  return callback null, article.slug if article.slug
-  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  return callback null, titleSlug unless article.author_id
-  User.find article.author_id, (err, user) ->
-    return callback null, titleSlug unless user
-    callback err, _s.slugify(user.user.name) + '-' + titleSlug
-
-onPublish = (article, callback) =>
   User.find article.author_id, (err, author) ->
     return callback err if err
-    article.author = User.denormalizedForArticle(author) if author
-    article.published_at = new Date
+    article = addSlug article, author
+    article = denormalizeAuthor article, author
     callback null, article
+
+addSlug = (article, author, callback) ->
+  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
+  if article.slug
+    slug = article.slug
+  else if author
+    slug = _s.slugify(author.user.name) + '-' + titleSlug
+  else
+    slug = titleSlug
+  article.slugs ?= []
+  article.slugs.push slug unless slug in article.slugs
+  article
+
+denormalizeAuthor = (article, author, callback) ->
+  article.author = User.denormalizedForArticle(author) if author
+  article
 
 @syncToPost = (article, accessToken, callback) ->
 

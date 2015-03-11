@@ -14,7 +14,7 @@ describe 'EditThumbnail', ->
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().article
       ), =>
-        benv.expose $: require('jquery')
+        benv.expose $: require('jquery'), resize: ((url) -> url)
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditThumbnail = benv.requireWithJadeify(

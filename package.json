@@ -58,6 +58,7 @@
     "scribe-plugin-toolbar": "*",
     "scribe-plugin-link-tooltip": "*",
     "scribe-plugin-keyboard-shortcuts": "*",
+    "scribe-plugin-heading-command": "*",
     "html-janitor": "git://github.com/gaearon/html-janitor.git#patch-1",
     "imagesloaded": "*",
     "jquery-autosize": "*",
@@ -71,7 +72,8 @@
     "mocha": "*",
     "sinon": "*",
     "benv": "*",
-    "rewire": "*"
+    "rewire": "*",
+    "embedly-view-helpers": "*"
   },
   "license": "MIT"
 }

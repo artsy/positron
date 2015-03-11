@@ -47,7 +47,7 @@ describe 'Article', ->
 
     it 'errors for bad queries', (done) ->
       Article.where { foo: 'bar' }, (err) ->
-        err.message.should.containEql 'foo is not allowed'
+        err.message.should.containEql '"foo" is not allowed'
         done()
 
     it 'can change skip and limit', (done) ->
@@ -181,7 +181,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
       }, (err, article) ->
-        err.message.should.containEql 'author_id is required'
+        err.message.should.containEql '"author_id" is required'
         done()
 
     it 'adds an updated_at as a date', (done) ->
@@ -242,7 +242,7 @@ describe 'Article', ->
               article.title.should.equal 'Foo Bar Baz'
               done()
 
-    it 'saves published_at when the articles is published', (done) ->
+    it 'saves published_at when the article is published', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'

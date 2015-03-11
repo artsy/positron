@@ -16,6 +16,7 @@ toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
+{ crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = React.createClass
 
@@ -113,7 +114,7 @@ module.exports = React.createClass
           [
             img {
               className: 'esi-image'
-              src: @state.src
+              src: if @state.progress then @state.src else resize(@state.src, width: 900)
               style: opacity: if @state.progress then @state.progress else '1'
             }
             div {

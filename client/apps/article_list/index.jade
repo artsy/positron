@@ -15,8 +15,9 @@ block content
             a( href="/articles/#{article.get('id')}/edit" )
               .article-list-item-left
                 if article.get('thumbnail_image')
+                  - url = resize(article.get('thumbnail_image'), { width: 150 })
                   .article-list-img(
-                    style="background-image: url(#{article.get('thumbnail_image')})"
+                    style="background-image: url(#{url})"
                   )
                 else
                   .article-list-item-placeholder Missing

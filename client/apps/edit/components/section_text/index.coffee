@@ -11,6 +11,7 @@ try
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
   scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
   scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
+  scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -18,11 +19,18 @@ icons = -> require('./icons.jade') arguments...
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
   italic: (e) -> e.metaKey and e.keyCode is 73
+  h2: (e) -> e.metaKey && e.keyCode is 50
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
   linkPrompt: (e) -> e.metaKey and not e.shiftKey and e.keyCode is 75
   unlink: (e) -> e.metaKey and e.shiftKey and e.keyCode is 75
 
 module.exports = React.createClass
+
+  componentDidMount: ->
+    @attachScribe()
+
+  shouldComponentUpdate: ->
+    false
 
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
@@ -31,7 +39,6 @@ module.exports = React.createClass
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
-    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
@@ -40,17 +47,13 @@ module.exports = React.createClass
         i: true
         br: true
         a: { href: true, target: '_blank' }
+        h2: true
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
-    $(@refs.editable.getDOMNode()).focus()
-
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
+    @scribe.use scribePluginHeadingCommand(2)
+    $(@refs.editable.getDOMNode()).focus() if @props.editing
 
   render: ->
     div { className: 'edit-section-text-container' },
@@ -65,6 +68,9 @@ module.exports = React.createClass
         button {
           'data-command-name': 'italic'
           dangerouslySetInnerHTML: __html: '&nbsp;'
+        }
+        button {
+          'data-command-name': 'h2'
         }
         div { className: 'est-link-container' },
           button {
