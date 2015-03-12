@@ -9,6 +9,8 @@ Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
 ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
+sd = require('sharify').data
+Autocomplete = -> require('../../../../components/autocomplete/index.coffee') arguments...
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...
@@ -37,7 +39,6 @@ module.exports = React.createClass
     @toggleFillwidth()
 
   setupAutocomplete: ->
-    Autocomplete = require '../../../../components/autocomplete/index.coffee'
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $(@refs.autocomplete.getDOMNode())
@@ -148,7 +149,7 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large or artwork.attributes.images[0]?.image_urls.large }
+                img { src: artwork.get('image_urls')?.large or artwork.attributes.images[0]?.image_urls?.large }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
               p {}, artwork.get('artwork')?.title or artwork.attributes?.title

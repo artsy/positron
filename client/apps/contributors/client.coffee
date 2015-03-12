@@ -24,7 +24,7 @@ module.exports.ContributorsView = class ContributorsView extends Backbone.View
 
   onSelect: (e, selected) =>
     new User().save { artsy_id: selected.id },
-      error: openErrorModal selected.id
+      error: openErrorModal
       success: (user) => @users.add user, at: 0
     @renderSpinner()
 
