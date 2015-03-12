@@ -8,7 +8,6 @@ Artworks = require '../../../../collections/artworks.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 { openErrorModal } = require '../../../../components/error_modal/index.coffee'
 React = require 'react'
-ByTitle = require './by_title.coffee'
 ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
