@@ -252,30 +252,53 @@ denormalizeAuthor = (article, author, callback) ->
                     # TODO: Figure out what to do with "Artwork not Found" errors
                     # return callback err if err
 
-                    # Add artworks, images and video from the article to the post
-                    async.mapSeries article.sections, ((section, cb) ->
-                      switch section.type
-                        when 'artworks'
-                          async.mapSeries section.ids, ((id, cb2) ->
-                            request
-                              .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
-                              .set('X-Access-Token', accessToken)
-                              .end (err, res) -> cb2 (err or res.body.error), res.body
-                          ), cb
+                    # Add artworks, images and video from the slideshow to the post
+                    if article.sections[0]?.type is 'slideshow'
+                      items = article.sections[0].items
+                    else
+                      items = []
+                    async.mapSeries items, ((item, cb) ->
+                      switch item.type
+                        when 'artwork'
+                          request
+                            .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{item.id}")
+                            .set('X-Access-Token', accessToken)
+                            .end (err, res) -> cb (err or res.body.error), res.body
                         when 'image', 'video'
                           request
                             .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
                             .set('X-Access-Token', accessToken)
-                            .send(url: section.url)
+                            .send(url: item.url)
                             .end (err, res) -> cb (err or res.body.error), res.body
                         else
                           cb()
                     ), (err) ->
                       return callback err if err
-                      request
-                        .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
-                        .set('X-Access-Token', accessToken)
-                        .end (err, res) -> callback (err or res.body.error), res.body
+
+                      # Add artworks, images and video from the article to the post
+                      async.mapSeries article.sections, ((section, cb) ->
+                        switch section.type
+                          when 'artworks'
+                            async.mapSeries section.ids, ((id, cb2) ->
+                              request
+                                .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
+                                .set('X-Access-Token', accessToken)
+                                .end (err, res) -> cb2 (err or res.body.error), res.body
+                            ), cb
+                          when 'image', 'video'
+                            request
+                              .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
+                              .set('X-Access-Token', accessToken)
+                              .send(url: section.url)
+                              .end (err, res) -> cb (err or res.body.error), res.body
+                          else
+                            cb()
+                      ), (err) ->
+                        return callback err if err
+                        request
+                          .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
+                          .set('X-Access-Token', accessToken)
+                          .end (err, res) -> callback (err or res.body.error), res.body
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

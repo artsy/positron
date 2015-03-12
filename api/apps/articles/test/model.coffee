@@ -347,6 +347,7 @@ describe 'Article', ->
 
     it 'saves an article to a gravity post', (done) ->
       article = _.extend fixtures().articles, gravity_id: null
+      article.sections[0] = { type: 'text', body: '' }
       article.sections[3].ids = ['foo', 'bar']
       Article.syncToPost article, 'foo-token', (err, post) ->
         post.title.should.equal article.title

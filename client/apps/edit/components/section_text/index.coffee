@@ -12,6 +12,7 @@ try
   scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
   scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
   scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
+  scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -40,6 +41,7 @@ module.exports = React.createClass
 
   attachScribe: ->
     @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe.use scribePluginSanitizeGoogleDoc()
     @scribe.use scribePluginSanitizer {
       tags:
         p: true
