@@ -6,7 +6,6 @@
 _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
 Artwork = require '../../../../models/artwork.coffee'
-{ openErrorModal } = require '../../../../components/error_modal/index.coffee'
 React = require 'react'
 ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
