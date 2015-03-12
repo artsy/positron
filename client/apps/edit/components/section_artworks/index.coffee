@@ -41,10 +41,15 @@ module.exports = React.createClass
   setupAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
     @autocomplete = new Autocomplete
-      url: "#{sd.ARTSY_URL}/api/v1/match/artworks?term=%QUERY"
+      url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $(@refs.autocomplete.getDOMNode())
-      filter: (res) -> for r in res
-        { id: r.id, value: r.value }
+      filter: (res) ->
+        vals = []
+        for r in res._embedded.results
+          if r.type == 'Artwork'
+            id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
+            vals.push { id: id , value: r.title }
+        return vals
       selected: @onSelect
 
   onSelect: (e, selected) ->
@@ -128,13 +133,11 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          div {
-            ref: 'autocompleteContainer'
-          },
-            label {}, 'Search by title',
+          label { className: 'esa-autocomplete-label' }, 'Search by title',
+          div { className: 'esa-autocomplete-input' },
             input {
               ref: 'autocomplete'
-              className: 'bordered-input bordered-input-dark esa-autocomplete-input'
+              className: 'bordered-input bordered-input-dark'
               placeholder: 'Try "Andy Warhol Skull"'
             }
           ByUrls {
