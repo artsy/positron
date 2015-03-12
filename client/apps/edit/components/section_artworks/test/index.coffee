@@ -10,6 +10,7 @@ r =
   simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
+{ fabricate } = require 'antigravity'
 
 describe 'SectionArtworks', ->
 
@@ -20,6 +21,7 @@ describe 'SectionArtworks', ->
         resolve(__dirname, '../index')
         ['icons']
       )
+      SectionArtworks.__set__ 'Autocomplete', sinon.stub()
       @component = React.render SectionArtworks(
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
@@ -27,6 +29,7 @@ describe 'SectionArtworks', ->
         changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
+        sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'
         done()
 
@@ -82,3 +85,8 @@ describe 'SectionArtworks', ->
       { id: '1', title: 'Foo to the bar' }
     ]
     $(@component.getDOMNode()).html().should.containEql 'Foo to the bar'
+
+  it 'adds an artwork onSelect', ->
+    @component.onSelect({},{ id: 'foo-work', value: 'Foo Title' })
+    Backbone.sync.args[0][2].success fabricate 'artwork'
+    @component.props.section.artworks.length.should.be.above 0

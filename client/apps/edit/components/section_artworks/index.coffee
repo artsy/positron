@@ -5,10 +5,12 @@
 
 _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
+Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
-ByTitle = require './by_title.coffee'
 ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
+sd = require('sharify').data
+Autocomplete = -> require('../../../../components/autocomplete/index.coffee') arguments...
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...
@@ -27,12 +29,33 @@ module.exports = React.createClass
     @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
+    @setupAutocomplete()
 
   componentWillUnmount: ->
     @props.section.artworks.off()
+    @autocomplete.remove()
 
   componentDidUpdate: ->
     @toggleFillwidth()
+
+  setupAutocomplete: ->
+    @autocomplete = new Autocomplete
+      url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
+      el: $(@refs.autocomplete.getDOMNode())
+      filter: (res) ->
+        vals = []
+        for r in res._embedded.results
+          if r.type == 'Artwork'
+            id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
+            vals.push { id: id , value: r.title }
+        return vals
+      selected: @onSelect
+
+  onSelect: (e, selected) ->
+    new Artwork().fetch
+      url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
+      success: (artwork) =>
+        @props.section.artworks.add artwork
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length
@@ -109,10 +132,13 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          ByTitle {
-            artworks: @props.section.artworks
-            ref: 'byTitle'
-          }
+          label { className: 'esa-autocomplete-label' }, 'Search by title',
+          div { className: 'esa-autocomplete-input' },
+            input {
+              ref: 'autocomplete'
+              className: 'bordered-input bordered-input-dark'
+              placeholder: 'Try "Andy Warhol Skull"'
+            }
           ByUrls {
             section: @props.section
             fetchArtworks: @fetchArtworks
@@ -123,10 +149,10 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large }
+                img { src: artwork.get('image_urls')?.large or artwork.attributes.images[0]?.image_urls?.large }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
-              p {}, artwork.get('artwork')?.title
+              p {}, artwork.get('artwork')?.title or artwork.attributes?.title
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'
