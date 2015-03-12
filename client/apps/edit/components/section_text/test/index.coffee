@@ -21,8 +21,9 @@ describe 'SectionText', ->
       SectionText.__set__ 'Scribe', @Scribe
       for name in ['scribePluginToolbar', 'scribePluginSanitizer',
         'scribePluginLinkTooltip', 'scribePluginKeyboardShortcuts',
-        'scribePluginHeadingCommand']
+        'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc']
         SectionText.__set__ name, sinon.stub()
+      SectionText::attachScribe = sinon.stub()
       @component = React.render SectionText(
         section: new Backbone.Model { body: 'Foo to the bar' }
         onSetEditing: @onSetEditing = sinon.stub()
