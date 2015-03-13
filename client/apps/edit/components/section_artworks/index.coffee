@@ -10,7 +10,7 @@ React = require 'react'
 ByUrls = require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
 sd = require('sharify').data
-Autocomplete = -> require('../../../../components/autocomplete/index.coffee') arguments...
+Autocomplete = require '../../../../components/autocomplete/index.coffee'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...

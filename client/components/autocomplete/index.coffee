@@ -4,7 +4,6 @@
 
 _ = require 'underscore'
 Backbone = require 'backbone'
-require 'typeahead.js'
 
 module.exports = class Autocomplete extends Backbone.View
 

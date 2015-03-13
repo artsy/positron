@@ -14,6 +14,7 @@ Modal = require 'simple-modal'
 
 # Add jquery plugins
 require 'jquery-autosize'
+require 'typeahead.js'
 
 module.exports.init = ->
   Backbone.$ = $
