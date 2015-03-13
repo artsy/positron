@@ -15,10 +15,7 @@ _ = require 'underscore'
 
 # GET /api/articles/:id
 @show = (req, res, next) ->
-  Article.find req.params.id, (err, article) ->
-    return next err if err
-    return res.err 404, 'Article not found.' unless article
-    res.send present article
+  res.send present req.article
 
 # POST /api/articles
 @create = (req, res, next) ->

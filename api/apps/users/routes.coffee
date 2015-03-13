@@ -10,7 +10,6 @@
 
 # POST /api/users
 @create = (req, res, next) ->
-  console.log 'MOO', req.body.artsy_id
   User.upsertWithGravityData {
     id: req.body.artsy_id
     accessToken: req.get('X-Access-Token')
