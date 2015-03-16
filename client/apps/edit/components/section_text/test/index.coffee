@@ -35,9 +35,9 @@ describe 'SectionText', ->
   afterEach ->
     benv.teardown()
 
-  it "updates the section's body on keyup", ->
+  it "updates the section's body", ->
     $(@component.refs.editable.getDOMNode()).html 'Hello'
-    @component.onKeyUp()
+    @component.setBody()
     @component.props.section.get('body').should.equal 'Hello'
 
   it 'removes the section if they click off and its empty', ->
@@ -45,3 +45,7 @@ describe 'SectionText', ->
     @component.props.section.set body: ''
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
+
+  it 'doesnt update while editing b/c Scribe will jump around all weird', ->
+    @component.props.editing = true
+    @component.shouldComponentUpdate({ editing: true }).should.not.be.ok
