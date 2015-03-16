@@ -149,7 +149,7 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large or artwork.attributes.images[0]?.image_urls?.large }
+                img { src: artwork.get('image_urls')?.large or artwork.attributes.images?[0]?.image_urls?.large }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
               p {}, artwork.get('artwork')?.title or artwork.attributes?.title

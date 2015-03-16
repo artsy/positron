@@ -45,3 +45,7 @@ describe 'SectionText', ->
     @component.props.section.set body: ''
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
+
+  it 'doesnt update while editing b/c Scribe will jump around all weird', ->
+    @component.props.editing = true
+    @component.shouldComponentUpdate({ editing: true }).should.not.be.ok

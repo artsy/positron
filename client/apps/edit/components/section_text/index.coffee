@@ -29,9 +29,13 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @attachScribe()
+    @componentDidUpdate()
 
-  shouldComponentUpdate: ->
-    false
+  componentDidUpdate: ->
+    $(@refs.editable.getDOMNode()).focus() if @props.editing
+
+  shouldComponentUpdate: (nextProps) ->
+    not (nextProps.editing and @props.editing)
 
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
@@ -55,7 +59,6 @@ module.exports = React.createClass
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)
-    $(@refs.editable.getDOMNode()).focus() if @props.editing
 
   render: ->
     div { className: 'edit-section-text-container' },
