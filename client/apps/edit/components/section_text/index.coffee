@@ -40,7 +40,7 @@ module.exports = React.createClass
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
-  onKeyUp: ->
+  setBody: ->
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
@@ -65,6 +65,7 @@ module.exports = React.createClass
       nav {
         ref: 'toolbar'
         className: 'edit-section-controls est-nav edit-scribe-nav'
+        onClick: @setBody
       },
         button {
           'data-command-name': 'bold'
@@ -96,5 +97,5 @@ module.exports = React.createClass
           dangerouslySetInnerHTML: __html: @props.section.get('body')
           onClick: @props.setEditing(on)
           onFocus: @props.setEditing(on)
-          onKeyUp: @onKeyUp
+          onKeyUp: @setBody
         }
