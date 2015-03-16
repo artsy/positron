@@ -35,9 +35,9 @@ describe 'SectionText', ->
   afterEach ->
     benv.teardown()
 
-  it "updates the section's body on keyup", ->
+  it "updates the section's body", ->
     $(@component.refs.editable.getDOMNode()).html 'Hello'
-    @component.onKeyUp()
+    @component.setBody()
     @component.props.section.get('body').should.equal 'Hello'
 
   it 'removes the section if they click off and its empty', ->
