@@ -23,6 +23,7 @@ module.exports = class Autocomplete extends Backbone.View
     @$el.typeahead null,
       name: options.name or _.uniqueId()
       source: search.ttAdapter()
+      templates: options.templates
     @$el.on 'typeahead:selected', options.selected
 
   remove: ->
