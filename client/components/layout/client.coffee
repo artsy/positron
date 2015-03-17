@@ -10,6 +10,7 @@ viewHelpers = require '../../lib/view_helpers.coffee'
 Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
+imagesLoaded = require 'imagesloaded'
 { ErrorModal } = require '../error_modal/index.coffee'
 
 # Add jquery plugins
@@ -22,6 +23,15 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
 
+# Replace broken profile icon
+imgLoad = imagesLoaded('#layout-sidebar-profile img')
+imgLoad.on 'fail', ->
+  $('#layout-sidebar-profile img').attr(
+    'src'
+    "images/layout_missing_user.png"
+  )
+
+# Open switch user modal
 $('#layout-sidebar-switch-user').click ->
   modal = Modal
     title: 'Switch User'
