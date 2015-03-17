@@ -47,8 +47,19 @@ module.exports = React.createClass
         for r in res._embedded.results
           if r.type == 'Artwork'
             id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
-            vals.push { id: id , value: r.title }
+            vals.push
+              id: id
+              value: r.title
+              thumbnail: r._links.thumbnail.href
         return vals
+      templates:
+        suggestion: (data) ->
+          """
+            <div class='esa-suggestion' \
+                 style='background-image: url(#{data.thumbnail})'>
+            </div>
+            #{data.value}
+          """
       selected: @onSelect
 
   onSelect: (e, selected) ->
@@ -56,6 +67,7 @@ module.exports = React.createClass
       url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
       success: (artwork) =>
         @props.section.artworks.add artwork
+    $(@refs.autocomplete.getDOMNode()).val('').focus()
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length

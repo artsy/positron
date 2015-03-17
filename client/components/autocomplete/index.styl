@@ -1,7 +1,5 @@
 @import '../stylus_lib'
 
-left-padding = 40px
-
 .twitter-typeahead
   position relative
 
@@ -26,11 +24,21 @@ left-padding = 40px
   width 100%
 
 .twitter-typeahead input
-  padding 7px 8px 7px left-padding
-  background url("/autocomplete_search.svg") 9px 6px no-repeat
-  background-size 20px
+  padding-left 36px
+  background url("/autocomplete_search.svg") 9px 7px no-repeat
+  background-size 18px
   &:active, &:focus
     border-color purple-color
 
 .tt-input:focus
   border-color gray-lighter-color
+
+.twitter-typeahead.is-loading
+  position relative
+  &::after
+    content '.'
+    spinner(17px, 4px, black)
+    left inherit
+    right 12px
+    color transparent
+    margin-top -1px

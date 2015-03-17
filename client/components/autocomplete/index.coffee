@@ -14,11 +14,17 @@ module.exports = class Autocomplete extends Backbone.View
       remote:
         url: options.url
         filter: options.filter
+        ajax:
+          beforeSend: =>
+            @$el.closest('.twitter-typeahead').addClass 'is-loading'
+          complete: =>
+            @$el.closest('.twitter-typeahead').removeClass 'is-loading'
     search.initialize()
-    $(@el).typeahead null,
+    @$el.typeahead null,
       name: options.name or _.uniqueId()
       source: search.ttAdapter()
-    $(@el).on 'typeahead:selected', options.selected
+      templates: options.templates
+    @$el.on 'typeahead:selected', options.selected
 
   remove: ->
     super
