@@ -58,7 +58,8 @@ describe 'SectionArtworks', ->
   it 'fetches artworks on init', ->
     @component.props.section.set ids: ['foo', 'bar']
     @component.componentDidMount()
-    Backbone.sync.args[0][2].data.ids.should.containEql 'foo', 'bar'
+    Backbone.sync.args[0][1].url().should.containEql 'foo'
+    Backbone.sync.args[1][1].url().should.containEql 'bar'
 
   xit 'adds fillwidth styling if the layout is appropriate', ->
     @component.props.section.artworks.reset [fixtures().artworks]

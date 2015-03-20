@@ -36,7 +36,8 @@ describe 'SectionSlideshow', ->
 
   it 'fetches the artworks on mount', ->
     @component.componentDidMount()
-    Backbone.sync.args[0][2].data.ids.join('').should.equal 'foobar'
+    Backbone.sync.args[0][1].url().should.containEql 'foo'
+    Backbone.sync.args[1][1].url().should.containEql 'bar'
 
   it 'renders the images', ->
     React.renderToString(@SectionSlideshow(

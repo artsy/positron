@@ -214,6 +214,28 @@
         }
       }
     },
+    "artsy-backbone-mixins": {
+      "version": "0.0.18",
+      "from": "artsy-backbone-mixins@git://github.com/artsy/artsy-backbone-mixins.git",
+      "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#909b68e013571d2eb8aabc74c94dcade922d19c5",
+      "dependencies": {
+        "marked": {
+          "version": "0.3.3",
+          "from": "marked@*",
+          "resolved": "https://registry.npmjs.org/marked/-/marked-0.3.3.tgz"
+        },
+        "q": {
+          "version": "1.2.0",
+          "from": "q@^1.1.2",
+          "resolved": "https://registry.npmjs.org/q/-/q-1.2.0.tgz"
+        },
+        "qs": {
+          "version": "2.4.1",
+          "from": "qs@*",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
+        }
+      }
+    },
     "artsy-ezel-components": {
       "version": "0.0.1",
       "from": "artsy-ezel-components@git://github.com/artsy/artsy-ezel-components.git",
@@ -624,7 +646,7 @@
             },
             "through": {
               "version": "2.3.6",
-              "from": "through@>=2.2.7 <3",
+              "from": "through@~2.3.4",
               "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
             }
           }
@@ -1560,7 +1582,7 @@
           "dependencies": {
             "readable-stream": {
               "version": "1.1.13",
-              "from": "readable-stream@>=1.1.13-1 <1.2.0-0",
+              "from": "readable-stream@~1.1.9",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -3262,7 +3284,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@2.x.x",
+          "from": "through@~2.3.4",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         },
         "esprima": {
@@ -3745,7 +3767,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@^2.3.6",
+          "from": "through@2.x.x",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
@@ -5865,7 +5887,7 @@
                 },
                 "readable-stream": {
                   "version": "1.1.13",
-                  "from": "readable-stream@~1.1.9",
+                  "from": "readable-stream@1.1",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
                   "dependencies": {
                     "core-util-is": {
@@ -5948,7 +5970,7 @@
         },
         "ms": {
           "version": "0.6.2",
-          "from": "ms@^0.6.2",
+          "from": "ms@0.6.2",
           "resolved": "http://registry.npmjs.org/ms/-/ms-0.6.2.tgz"
         },
         "request": {
@@ -6122,7 +6144,7 @@
         },
         "tough-cookie": {
           "version": "0.12.1",
-          "from": "tough-cookie@^0.12.1",
+          "from": "tough-cookie@>=0.12.0",
           "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-0.12.1.tgz",
           "dependencies": {
             "punycode": {

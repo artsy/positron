@@ -63,8 +63,7 @@ module.exports = React.createClass
       selected: @onSelect
 
   onSelect: (e, selected) ->
-    new Artwork().fetch
-      url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
+    new Artwork(id: selected.id).fetch
       success: (artwork) =>
         @props.section.artworks.add artwork
     $(@refs.autocomplete.getDOMNode()).val('').focus()
@@ -102,6 +101,12 @@ module.exports = React.createClass
     return @props.section.destroy() if ids.length is 0
     @props.section.set ids: ids, layout: @props.section.get('layout')
 
+  removeArtwork: (artwork) -> =>
+    @props.section.artworks.remove artwork
+
+  changeLayout: (layout) -> =>
+    @props.section.set layout: layout
+
   fetchArtworks: (ids) ->
     @props.section.artworks.getOrFetchIds ids,
       error: (m, res) =>
@@ -112,12 +117,6 @@ module.exports = React.createClass
       success: (artworks) =>
         return unless @isMounted()
         @refs.byUrls.setState loading: false, errorMessage: ''
-
-  removeArtwork: (artwork) -> =>
-    @props.section.artworks.remove artwork
-
-  changeLayout: (layout) -> =>
-    @props.section.set layout: layout
 
   render: ->
     div {
@@ -161,7 +160,7 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large or artwork.attributes.images?[0]?.image_urls?.large }
+                img { src: artwork.imageUrl() }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
               p {}, artwork.get('artwork')?.title or artwork.attributes?.title
