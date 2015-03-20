@@ -1470,7 +1470,7 @@
         },
         "readable-stream": {
           "version": "1.0.33",
-          "from": "readable-stream@~1.0.26",
+          "from": "readable-stream@^1.0.27-1",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
@@ -3745,7 +3745,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@~2.3.4",
+          "from": "through@2.x.x",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
