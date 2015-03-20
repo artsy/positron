@@ -53,3 +53,23 @@ describe 'EditThumbnail', ->
       img.onload()
       Backbone.sync.args[0][0].should.equal 'create'
       delete global.Image
+
+  describe '#useArticleTitle', ->
+
+    it 'uses the article title when clicked', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-use-article-title').click()
+      @view.$('.edit-title-textarea').val().should.equal 'foo'
+
+  describe '#checkTitleTextArea', ->
+
+    it 'shows the use-title link when nothing is in the textarea', ->
+      @view.$('.edit-title-textarea').val('')
+      @view.checkTitleTextarea( { target: '.edit-title-textarea' } )
+      @view.$('.edit-use-article-title').attr('style').should.not.containEql 'display: none'
+
+    it 'hides the use-title link when the title equals the textarea', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-title-textarea').val('foo')
+      @view.checkTitleTextarea( { target: '.edit-title-textarea' } )
+      @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'

@@ -19,7 +19,6 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
-    @article.on 'finished open:tab1', @syncTitleTeaser
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
     @$window.on 'scroll', @popLockControls
@@ -28,14 +27,6 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
-
-  syncTitleTeaser: =>
-    unless @article.get 'thumbnail_title'
-      @$('#edit-thumbnail-title input')
-        .val(@$('#edit-title textarea').val()).trigger 'keyup'
-    unless @article.get 'thumbnail_teaser'
-      @$('#edit-thumbnail-teaser textarea')
-        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
@@ -73,8 +64,8 @@ module.exports = class EditLayout extends Backbone.View
     }
 
   toggleAstericks: =>
-    @$('.edit-required + :input').each (i, el) =>
-      $(el).prev('.edit-required').attr 'data-hidden', !!$(el).val()
+    @$('.edit-required ~ :input').each (i, el) =>
+      $(el).prevAll('.edit-required').attr 'data-hidden', !!$(el).val()
 
   redirectToList: =>
     location.assign '/articles?published=' + @article.get('published')

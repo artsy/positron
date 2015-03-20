@@ -9,17 +9,7 @@ section#edit-thumbnail
     #edit-thumbnail-inputs-right
       label#edit-thumbnail-title
         span.edit-required Title
-        input.bordered-input(
-          placeholder='Type a title'
-          value=article.get('thumbnail_title')
+        a.edit-use-article-title( href='#' ) Use article title
+        textarea.bordered-input.edit-title-textarea(
+          placeholder="Type a title that captures your reader's attention"
         )
-      label#edit-thumbnail-teaser
-        span.edit-required Teaser
-        textarea.bordered-input( placeholder='Type a teaser' )
-          = article.get('thumbnail_teaser')
-    label#edit-thumbnail-tags
-      span.edit-required Tags
-      input.bordered-input(
-        placeholder='Type tags separated by commas'
-        value=article.get('tags') && article.get('tags').join(',')
-      )

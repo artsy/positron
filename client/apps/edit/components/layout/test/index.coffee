@@ -48,12 +48,6 @@ describe 'EditLayout', ->
       @view.$('#edit-thumbnail-title :input').val('foobar')
       @view.serialize().thumbnail_title.should.equal 'foobar'
 
-    it 'cleans up tags into an array', ->
-      @view.$('#edit-thumbnail-tags input').val('foobar,baz,boo   bar,bam  ')
-      @view.serialize().tags.should.eql [
-        'foobar', 'baz', 'boo bar', 'bam'
-      ]
-
     it 'adds the current user as the author for cases like impersonating' +
        ' which need that explicitly sent', ->
       @view.user.set id: 'foo'
@@ -101,26 +95,6 @@ describe 'EditLayout', ->
       $.fn.ajaxStop.args[0][0]()
       @view.redirectToList.called.should.be.ok
       $.fn.ajaxStop.restore()
-
-  describe '#syncTitleTeaser', ->
-
-    it 'adds a title and teaser to an empty post', ->
-      @view.article.set thumbnail_title: '', thumbnail_teaser: ''
-      @view.$('#edit-title textarea').val 'foo'
-      @view.$('#edit-lead-paragraph').html '<p>bar</p>'
-      @view.syncTitleTeaser()
-      @view.serialize().thumbnail_title.should.equal 'foo'
-      @view.serialize().thumbnail_teaser.should.equal 'bar'
-
-    it 'doesnt change filled in posts', ->
-      @view.article.set thumbnail_title: 'moo', thumbnail_teaser: 'baz'
-      @view.$('#edit-thumbnail-title input').val 'moo'
-      @view.$('#edit-thumbnail-teaser textarea').val 'baz'
-      @view.$('#edit-title textarea').val 'foo'
-      @view.$('#edit-lead-paragraph').html '<p>bar</p>'
-      @view.syncTitleTeaser()
-      @view.serialize().thumbnail_title.should.equal 'moo'
-      @view.serialize().thumbnail_teaser.should.equal 'baz'
 
   describe '#onFirstSave', ->
 
