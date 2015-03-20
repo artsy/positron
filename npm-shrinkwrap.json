@@ -3532,7 +3532,7 @@
       "resolved": "https://registry.npmjs.org/express-force-ssl/-/express-force-ssl-0.2.11.tgz"
     },
     "ezel-assets": {
-      "version": "0.0.12",
+      "version": "0.0.13",
       "from": "ezel-assets@*"
     },
     "gemup": {
@@ -3731,7 +3731,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.0",
+              "from": "acorn-globals@^1.0.1",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
@@ -3745,7 +3745,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@2.3.6",
+          "from": "through@^2.3.6",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
@@ -5865,7 +5865,7 @@
                 },
                 "readable-stream": {
                   "version": "1.1.13",
-                  "from": "readable-stream@1.1",
+                  "from": "readable-stream@~1.1.9",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
                   "dependencies": {
                     "core-util-is": {
