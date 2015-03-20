@@ -26,6 +26,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     ids = @props.section.get('ids')
+    @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
     @setupAutocomplete()
@@ -105,6 +106,17 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
 
+  fetchArtworks: (ids) ->
+    @props.section.artworks.getOrFetchIds ids,
+      error: (m, res) =>
+        @refs.byUrls.setState(
+          errorMessage: 'Artwork not found. Make sure your urls are correct.'
+          loadings: false
+        ) if res.status is 404
+      success: (artworks) =>
+        return unless @isMounted()
+        @refs.byUrls.setState loading: false, errorMessage: ''
+
   render: ->
     div {
       className: 'edit-section-artworks-container'
@@ -147,7 +159,7 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large or artwork.attributes.images?[0]?.image_urls?.large }
+                img { src: artwork.imageUrl() }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
               p {}, artwork.get('artwork')?.title or artwork.attributes?.title
