@@ -1470,7 +1470,7 @@
         },
         "readable-stream": {
           "version": "1.0.33",
-          "from": "readable-stream@~1.0.26",
+          "from": "readable-stream@^1.0.27-1",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
@@ -3503,9 +3503,8 @@
       "resolved": "https://registry.npmjs.org/express-force-ssl/-/express-force-ssl-0.2.11.tgz"
     },
     "ezel-assets": {
-      "version": "0.0.11",
-      "from": "ezel-assets@*",
-      "resolved": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-0.0.11.tgz"
+      "version": "0.0.12",
+      "from": "ezel-assets@*"
     },
     "gemup": {
       "version": "0.0.1",
@@ -3717,7 +3716,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@~2.3.4",
+          "from": "through@2.x.x",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
@@ -4919,7 +4918,7 @@
                 },
                 "minimist": {
                   "version": "0.0.10",
-                  "from": "minimist@~0.0.7",
+                  "from": "minimist@~0.0.1",
                   "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
                 }
               }
@@ -5722,7 +5721,7 @@
         },
         "through": {
           "version": "2.3.6",
-          "from": "through@^2.3.6",
+          "from": "through@~2.3.4",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
