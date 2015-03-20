@@ -29,7 +29,6 @@ app.delete '/articles/:id', authenticated
 app.use require './apps/articles'
 app.use authenticated
 app.use require './apps/users'
-app.use require './apps/artworks'
 app.use require './apps/artists'
 app.use require './apps/report'
 

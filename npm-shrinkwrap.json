@@ -214,6 +214,28 @@
         }
       }
     },
+    "artsy-backbone-mixins": {
+      "version": "0.0.18",
+      "from": "artsy-backbone-mixins@git://github.com/artsy/artsy-backbone-mixins.git",
+      "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#02651a5f1425862c724ef804e4a6741eea464ad2",
+      "dependencies": {
+        "marked": {
+          "version": "0.3.3",
+          "from": "marked@*",
+          "resolved": "https://registry.npmjs.org/marked/-/marked-0.3.3.tgz"
+        },
+        "q": {
+          "version": "1.2.0",
+          "from": "q@^1.1.2",
+          "resolved": "https://registry.npmjs.org/q/-/q-1.2.0.tgz"
+        },
+        "qs": {
+          "version": "2.4.1",
+          "from": "qs@*",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
+        }
+      }
+    },
     "artsy-ezel-components": {
       "version": "0.0.1",
       "from": "artsy-ezel-components@git://github.com/artsy/artsy-ezel-components.git",
@@ -420,7 +442,7 @@
                   "dependencies": {
                     "punycode": {
                       "version": "1.3.2",
-                      "from": "punycode@>=0.2.0",
+                      "from": "punycode@1.3.2",
                       "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz"
                     }
                   }
@@ -1470,7 +1492,7 @@
         },
         "readable-stream": {
           "version": "1.0.33",
-          "from": "readable-stream@~1.0.26",
+          "from": "readable-stream@^1.0.27-1",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
@@ -1526,7 +1548,7 @@
         },
         "string_decoder": {
           "version": "0.10.31",
-          "from": "string_decoder@~0.10.0",
+          "from": "string_decoder@~0.10.x",
           "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz"
         },
         "subarg": {
@@ -1560,7 +1582,7 @@
           "dependencies": {
             "readable-stream": {
               "version": "1.1.13",
-              "from": "readable-stream@>=1.1.13-1 <1.2.0-0",
+              "from": "readable-stream@~1.1.9",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -3233,7 +3255,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@~2.3.4",
+          "from": "through@2.3.6",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         },
         "esprima": {
@@ -3703,7 +3725,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.0",
+              "from": "acorn-globals@^1.0.1",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
@@ -3717,7 +3739,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@~2.3.4",
+          "from": "through@^2.3.6",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
@@ -4919,7 +4941,7 @@
                 },
                 "minimist": {
                   "version": "0.0.10",
-                  "from": "minimist@~0.0.7",
+                  "from": "minimist@~0.0.1",
                   "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
                 }
               }
@@ -5722,7 +5744,7 @@
         },
         "through": {
           "version": "2.3.6",
-          "from": "through@^2.3.6",
+          "from": "through@~2.3.4",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
@@ -5803,7 +5825,7 @@
                 },
                 "readable-stream": {
                   "version": "1.1.13",
-                  "from": "readable-stream@1.1",
+                  "from": "readable-stream@1.1.13",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
                   "dependencies": {
                     "core-util-is": {

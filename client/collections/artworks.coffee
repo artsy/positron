@@ -6,8 +6,6 @@ Artwork = require '../models/artwork.coffee'
 
 module.exports = class Artworks extends Backbone.Collection
 
-  _.extend @prototype, ApiCollection
-
-  url: "#{sd.API_URL}/artworks"
+  url: "#{sd.ARTSY_URL}/api/v1/artworks"
 
   model: Artwork

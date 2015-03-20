@@ -39,6 +39,7 @@
     "cors": "*",
     "newrelic": "*",
     "node-mandrill": "*",
+    "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
 
     "stylus": "*",
     "nib": "*",

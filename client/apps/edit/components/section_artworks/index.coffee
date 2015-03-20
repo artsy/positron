@@ -26,7 +26,6 @@ module.exports = React.createClass
 
   componentDidMount: ->
     ids = @props.section.get('ids')
-    @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
     @setupAutocomplete()
@@ -63,10 +62,8 @@ module.exports = React.createClass
       selected: @onSelect
 
   onSelect: (e, selected) ->
-    new Artwork().fetch
-      url: "#{sd.ARTSY_URL}/api/v1/artwork/#{selected.id}"
-      success: (artwork) =>
-        @props.section.artworks.add artwork
+    new Artwork(id: selected.id).fetch
+      success: (artwork) => @props.section.artworks.add artwork
     $(@refs.autocomplete.getDOMNode()).val('').focus()
 
   toggleFillwidth: ->
@@ -101,17 +98,6 @@ module.exports = React.createClass
     ids = @props.section.artworks.pluck 'id'
     return @props.section.destroy() if ids.length is 0
     @props.section.set ids: ids, layout: @props.section.get('layout')
-
-  fetchArtworks: (ids) ->
-    @props.section.artworks.getOrFetchIds ids,
-      error: (m, res) =>
-        @refs.byUrls.setState(
-          errorMessage: 'Artwork not found. Make sure your urls are correct.'
-          loadings: false
-        ) if res.status is 404
-      success: (artworks) =>
-        return unless @isMounted()
-        @refs.byUrls.setState loading: false, errorMessage: ''
 
   removeArtwork: (artwork) -> =>
     @props.section.artworks.remove artwork
