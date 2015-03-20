@@ -3,7 +3,7 @@ for item in list
     class=item.featured ? 'eaf-featured' : 'eaf-mentioned'
     data-id=item.model.get('id')
   )
-    if item.model.get('artwork')
+    if item.model.get('title')
       span= item.model.truncatedLabel()
     else
       span= item.model.get('artist').name

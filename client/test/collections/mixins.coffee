@@ -2,13 +2,14 @@ sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 Backbone = require 'backbone'
 _ = require 'underscore'
-{ ApiCollection } = require '../../collections/mixins.coffee'
+{ ApiCollection, Filter } = require '../../collections/mixins.coffee'
 
 class Artworks extends Backbone.Collection
 
   _.extend @prototype, ApiCollection
+  _.extend @prototype, Filter
 
-describe 'ApiCollection', ->
+describe 'Mixins', ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'

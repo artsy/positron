@@ -10,4 +10,6 @@ module.exports = class Artwork extends Backbone.Model
   urlRoot: "#{sd.ARTSY_URL}/api/v1/artwork"
 
   truncatedLabel: ->
-    'test'
+    split = @get('artist').name.split ' '
+    artistInitials = split[0][0] + '.' + split[1][0] + '.'
+    artistInitials + ' ' + @get('title') + ', ' + @get('date')

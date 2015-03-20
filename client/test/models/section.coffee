@@ -3,6 +3,7 @@ Backbone = require 'backbone'
 Section = require '../../models/section.coffee'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
+{ fabricate } = require 'antigravity'
 
 describe "Article", ->
 
@@ -33,10 +34,9 @@ describe "Article", ->
     it 'adds slideshow artworks to the section.artworks', (done) ->
       @section.fetchSlideshowArtworks success: =>
         id = @section.get('items')[0].id
-        @section.artworks.get(id).get('title').should.equal 'Foo'
+        @section.artworks.findWhere(_id: id).get('title').should.equal 'Foo'
         done()
-      Backbone.sync.args[0][2].success
-        results: [_.extend(
-          fixtures().artworks,
-          { id: @section.get('items')[0].id, title: 'Foo' }
-        )]
+      Backbone.sync.args[0][2].success _.extend(
+        fabricate('artwork'),
+        { _id: @section.get('items')[0].id, title: 'Foo' }
+      )

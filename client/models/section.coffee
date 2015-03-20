@@ -22,8 +22,7 @@ module.exports = class Section extends Backbone.Model
     ids = (item.id for item in @get('items') when item.type is 'artwork')
     @artworks.getOrFetchIds ids,
       error: options.error
-      success: =>
-        options.success arguments...
+      success: => options.success arguments...
 
   @getIframeUrl: (src) ->
     if src.match 'youtu'

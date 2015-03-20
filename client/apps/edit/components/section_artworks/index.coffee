@@ -64,7 +64,8 @@ module.exports = React.createClass
 
   onSelect: (e, selected) ->
     new Artwork(id: selected.id).fetch
-      success: (artwork) => @props.section.artworks.add artwork
+      success: (artwork) =>
+        @props.section.artworks.add artwork
     $(@refs.autocomplete.getDOMNode()).val('').focus()
 
   toggleFillwidth: ->

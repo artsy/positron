@@ -21,5 +21,7 @@ _ = require 'underscore'
       success: options.success
       complete: options.complete
 
+@Filter =
+
   notIn: (col) ->
     @reject (model) => model.id in col.pluck 'id'
