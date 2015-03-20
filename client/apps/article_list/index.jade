@@ -5,9 +5,25 @@ block content
   h1.page-header
     if published
       .max-width-container Published Articles
+      - var emptyMessage = "published any articles"
     else
       .max-width-container Drafts
+      - var emptyMessage = "written any drafts"
   #article-list-items.max-width-container
+    if articles.length == 0
+        .article-list-empty
+          p You haven't #{emptyMessage} yet
+            br
+            | _______
+          p Artsy Writer is a tool for writing stories about art.
+            //- HELP PAGE COMING SOON
+            //- br
+            //- | Get started by writing an article, or see our 
+            //- a( href='' ) help page
+            //- |  for more info.
+          a.avant-garde-button.avant-garde-button-dark.article-new-button( href='/articles/new' )
+            include ../../components/layout/public/icons/layout_new_article.svg
+            .article-new-text Write An Article
     ul
       for article in articles
         li
