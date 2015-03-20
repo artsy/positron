@@ -17,6 +17,8 @@ module.exports = class EditThumbnail extends Backbone.View
     'change #edit-thumbnail-image': 'uploadThumbnail'
     'drop #edit-thumbnail-upload': 'toggleThumbnailDragover'
     'click #edit-thumbnail-remove': 'removeThumbnail'
+    'click .edit-use-article-title': 'useArticleTitle'
+    'change .edit-title-textarea': 'checkTitleTextarea'
 
   uploadThumbnail: (e) ->
     gemup e.target.files[0],
@@ -40,3 +42,14 @@ module.exports = class EditThumbnail extends Backbone.View
   removeThumbnail: (e) ->
     e.preventDefault()
     @article.save thumbnail_image: null
+
+  useArticleTitle: (e) ->
+    e.preventDefault()
+    $(e.target).next().val(@article.get('title'))
+    $(e.target).hide()
+
+  checkTitleTextarea: (e) ->
+    if $(e.target).val() is @article.get('title')
+      $('.edit-use-article-title').hide()
+    else
+      $('.edit-use-article-title').show()
