@@ -1560,7 +1560,7 @@
           "dependencies": {
             "readable-stream": {
               "version": "1.1.13",
-              "from": "readable-stream@~1.1.9",
+              "from": "readable-stream@>=1.1.13-1 <1.2.0-0",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -2875,7 +2875,7 @@
               "dependencies": {
                 "readable-stream": {
                   "version": "1.0.33",
-                  "from": "readable-stream@^1.0.27-1",
+                  "from": "readable-stream@~1.0.17",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
                   "dependencies": {
                     "core-util-is": {
@@ -2912,7 +2912,7 @@
       }
     },
     "bucket-assets": {
-      "version": "0.2.1",
+      "version": "0.2.2",
       "from": "bucket-assets@*",
       "dependencies": {
         "knox": {
@@ -3262,7 +3262,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@~2.3.4",
+          "from": "through@2.x.x",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         },
         "esprima": {
@@ -3623,7 +3623,7 @@
           "dependencies": {
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.1",
+              "from": "acorn-globals@^1.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz",
               "dependencies": {
                 "acorn": {
@@ -3731,7 +3731,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.1",
+              "from": "acorn-globals@^1.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
@@ -3745,7 +3745,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.6",
-          "from": "through@2.x.x",
+          "from": "through@2.3.6",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
         }
       }
