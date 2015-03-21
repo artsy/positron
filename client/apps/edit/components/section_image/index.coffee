@@ -62,6 +62,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @attachScribe()
+    console.log 'mounted', @state,  @props.section.toJSON()
 
   componentDidUpdate: ->
     @attachScribe()
@@ -71,6 +72,7 @@ module.exports = React.createClass
     @setState caption: $(@refs.editable.getDOMNode()).html()
 
   render: ->
+    console.log 'rendered', @state,  @props.section.toJSON() if @props.editing
     section {
       className: 'edit-section-image'
       onClick: @props.setEditing(true)
@@ -116,10 +118,12 @@ module.exports = React.createClass
               className: 'esi-image'
               src: if @state.progress then @state.src else resize(@state.src, width: 900)
               style: opacity: if @state.progress then @state.progress else '1'
+              key: 0
             }
             div {
               className: 'esi-inline-caption'
               dangerouslySetInnerHTML: __html: @state.caption
+              key: 1
             }
           ]
         else
