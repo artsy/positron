@@ -44,7 +44,7 @@ module.exports = React.createClass
               index: i
               editing: @state.editingIndex is i
               ref: 'section' + 1
-              key: i
+              key: section.cid
               onSetEditing: @onSetEditing
             }
             SectionTool { sections: @props.sections, index: i }
