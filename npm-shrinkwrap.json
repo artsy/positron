@@ -19,7 +19,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@2.4.1",
+          "from": "qs@*",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
@@ -125,7 +125,7 @@
       }
     },
     "bucket-assets": {
-      "version": "0.2.3",
+      "version": "0.2.4",
       "from": "bucket-assets@*",
       "dependencies": {
         "knox": {
@@ -836,7 +836,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.0",
+              "from": "acorn-globals@^1.0.1",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
