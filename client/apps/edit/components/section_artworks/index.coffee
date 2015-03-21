@@ -78,8 +78,7 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    $(@refs.artworks.getDOMNode()).fillwidthLite
-      gutterSize: 20
+    $(@refs.artworks.getDOMNode()).fillwidthLite gutterSize: 20
 
   removeFillwidth: ->
     $(@refs.artworks.getDOMNode()).find('img').css(width: '')
