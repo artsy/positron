@@ -4,12 +4,12 @@
 # section type.
 #
 
-SectionText = require '../section_text/index.coffee'
-SectionArtworks = require '../section_artworks/index.coffee'
-SectionImage = require '../section_image/index.coffee'
-SectionVideo = require '../section_video/index.coffee'
-SectionSlideshow = require '../section_slideshow/index.coffee'
 React = require 'react'
+SectionText = React.createFactory require '../section_text/index.coffee'
+SectionArtworks = React.createFactory require '../section_artworks/index.coffee'
+SectionImage = React.createFactory require '../section_image/index.coffee'
+SectionVideo = React.createFactory require '../section_video/index.coffee'
+SectionSlideshow = React.createFactory require '../section_slideshow/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
