@@ -35,12 +35,14 @@
     "glossary": "*",
     "raven": "*",
     "debug": "*",
-    "bucket-assets": "*",
     "cors": "*",
     "newrelic": "*",
     "node-mandrill": "*",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
-
+    "embedly-view-helpers": "*"
+  },
+  "devDependencies": {
+    "bucket-assets": "*",
     "stylus": "*",
     "nib": "*",
     "sqwish": "*",
@@ -66,14 +68,12 @@
     "simple-modal": "*",
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
-    "rewire": "*",
     "zombie": "2.0.3",
     "should": "*",
     "mocha": "*",
     "sinon": "*",
     "benv": "*",
-    "rewire": "*",
-    "embedly-view-helpers": "*"
+    "rewire": "*"
   },
   "license": "MIT"
 }
