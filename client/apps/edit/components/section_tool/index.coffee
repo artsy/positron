@@ -31,7 +31,7 @@ module.exports = React.createClass
       when 'image'
         @props.sections.add {
           type: 'image'
-          url: ''
+          url: 'http://placekitten.com/600/200'
         }, at: @props.index + 1
       when 'video'
         @props.sections.add {
