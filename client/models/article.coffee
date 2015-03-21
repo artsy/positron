@@ -69,10 +69,6 @@ module.exports = class Article extends Backbone.Model
     extended.slug = undefined
     _.extend super, extended
 
-  sync: ->
-    return if window?
-    super
-
   syncToPost: (options = {}) ->
     request
       .get("#{sd.API_URL}/sync_to_post?article_id=#{@get 'id'}")

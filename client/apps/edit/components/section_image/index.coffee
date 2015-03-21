@@ -21,22 +21,17 @@ icons = -> require('./icons.jade') arguments...
 module.exports = React.createClass
 
   getInitialState: ->
-    console.log 'init', @state?.src,  @props.section.toJSON().url, @props.editing
-    {
-      src: @props.section.get('url')
-      progress: null
-      caption: @props.section.get('caption')
-    }
+    src: @props.section.get('url')
+    progress: null
+    caption: @props.section.get('caption')
 
   componentDidMount: ->
     @attachScribe()
-    console.log 'mounted', @state.src,  @props.section.toJSON().url, @props.editing
 
   componentDidUpdate: ->
     @attachScribe()
 
   onClickOff: ->
-    console.log 'clickoff'
     if @state.src
       @props.section.set url: @state.src, caption: @state.caption
     else
@@ -76,7 +71,6 @@ module.exports = React.createClass
     @setState caption: $(@refs.editable.getDOMNode()).html()
 
   render: ->
-    console.log 'rendered', @state.src,  @props.section.toJSON().url, @props.editing if @props.editing
     section {
       className: 'edit-section-image'
       onClick: @props.setEditing(true)
