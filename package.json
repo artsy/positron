@@ -39,10 +39,10 @@
     "newrelic": "*",
     "node-mandrill": "*",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
-    "embedly-view-helpers": "*"
+    "embedly-view-helpers": "*",
+    "bucket-assets": "*"
   },
   "devDependencies": {
-    "bucket-assets": "*",
     "stylus": "*",
     "nib": "*",
     "sqwish": "*",
