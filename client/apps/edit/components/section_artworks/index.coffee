@@ -78,23 +78,11 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    $list = $(@refs.artworks.getDOMNode())
-    $imgs = $list.find('img')
-    imagesLoaded $list[0], =>
-      widths = $imgs.map -> $(this).width()
-      sum = _.reduce widths, (m, n) -> m + n
-      return unless sum > listWidth = $list.width()
-      newWidths = _.map widths, (w) -> Math.floor w * (listWidth / sum)
-      $list.children('li').each (i) ->
-        $(this).width newWidths[i] - ROW_OVERFLOW_PADDING
-      tallest = _.max $imgs.map -> $(this).height()
-      $list.find('.esa-img-container').each -> $(this).height tallest
+    $(@refs.artworks.getDOMNode()).fillwidthLite
+      gutterSize: 20
 
   removeFillwidth: ->
-    $list = $(@refs.artworks.getDOMNode())
-    $list.css(opacity: 0, height: $list.height()).children('li').each ->
-      $(this).width('auto').find('.esa-img-container').height 'auto'
-    imagesLoaded $list[0], -> $list.css opacity: 1, height: ''
+    $(@refs.artworks.getDOMNode()).find('img').css(width: '')
 
   onClickOff: ->
     ids = @props.section.artworks.pluck 'id'

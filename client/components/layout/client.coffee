@@ -16,6 +16,7 @@ imagesLoaded = require 'imagesloaded'
 # Add jquery plugins
 require 'jquery-autosize'
 require 'typeahead.js'
+require('jquery-fillwidth-lite') $, _, imagesLoaded
 
 module.exports.init = ->
   Backbone.$ = $

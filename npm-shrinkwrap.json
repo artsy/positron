@@ -19,7 +19,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@2.4.1",
+          "from": "qs@*",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
