@@ -1,0 +1,25 @@
+db.posts.insert({
+  "_slugs" : [
+    "garren-ceci-nest-pas-une-pipe1"
+  ],
+  "_v1_slugs" : [
+    "ceci-nest-pas-une-pipe1"
+  ],
+  "artwork_ids" : [
+    ObjectId("50c1f80f67dc28afde00109b")
+  ],
+  "author_id" : ObjectId("4fdf5dfeab0d1d0001000a77"),
+  "body" : "<p>After splitting time between <a href=\"http://art.sy/design-miami\">Design Miami</a> and other fairs that flooded the city the past few days, its difficult to say where this piece and others in Jeremy Hutchison's series \"Erratum\" would have best fit in.  Pushing the subject of (dis)functionality to the forefront,  Hutchison's works walk the fine line between art and design, ultimately leading back to the question of whether a line exists at all.</p>\n\n<p>Check out more of the works from Jeremy Hutchison's \"Erratum\" <a href=\"http://art.sy/artist/jeremy-hutchison\">here</a>.</p>",
+  "content_links" : [ ],
+  "created_at" : ISODate("2012-08-14T15:25:31Z"),
+  "featured" : false,
+  "last_promoted_at" : ISODate("2012-12-11T00:50:18Z"),
+  "layout" : "twocolumn",
+  "markdown_body" : "After splitting time between [Design Miami](http://art.sy/design-miami \"Link: http://art.sy/design-miami\")&nbsp;and other fairs that flooded the city the past few days, its difficult to say where this piece and others in Jeremy Hutchison's series \"Erratum\"&nbsp;would have best fit in. &nbsp;Pushing the subject&nbsp;of (dis)functionality&nbsp;to the forefront, &nbsp;Hutchison's works&nbsp;walk the&nbsp;fine&nbsp;line between art and design, ultimately leading back to the question of whether a line exists at all.  \n  \nCheck out more of the works from Jeremy Hutchison's&nbsp;\"Erratum\"&nbsp;[here](http://art.sy/artist/jeremy-hutchison).",
+  "profile_id" : ObjectId("50be53325d3885e229000df4"),
+  "published" : true,
+  "published_at" : ISODate("2012-12-11T00:50:18Z"),
+  "published_changed_at" : ISODate("2012-12-11T00:50:18Z"),
+  "title" : "Ceci n'est pas une pipe!",
+  "updated_at" : ISODate("2012-12-11T15:13:03Z")
+})

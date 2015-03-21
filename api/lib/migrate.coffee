@@ -14,16 +14,15 @@ glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
 ])
 User = require '../apps/users/model'
 { ObjectId } = mongojs = require 'mongojs'
-{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL, BATCH_SIZE } = process.env
+{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
 gravity = null
 db = null
-BATCH_SIZE = Number BATCH_SIZE
 
 module.exports = (callback = ->) ->
   return callback new Error('No GRAVITY_MONGO_URL') unless GRAVITY_MONGO_URL?
   setup (err) ->
     return callback err if err
-    async.parallel [updateSyncedArticleSlugs, migrateOldPosts], callback
+    migrateOldPosts callback
 
 setup = (callback) ->
   # Load the Positron & Gravity databases
@@ -32,62 +31,21 @@ setup = (callback) ->
     'post_artwork_features', 'artworks', 'profiles', 'fair_organizers', 'fairs',
     'partners', 'reposts']
   debug "Connecting to databases and beginning migrate..."
-  # Make sure both databases are a go first before dropping previously migrated
-  # posts.
+  # Make sure both databases are a go first.
   async.parallel [
     (cb) -> db.articles.count {}, cb
     (cb) -> gravity.posts.count {}, cb
-  ], (err, counts) ->
-    return callback err if err
-    debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-    # Remove any posts that originated in Gravity b/c they will be replaced.
-    query =
-      $or: [
-        { migrated_from_gravity: true }
-        { 'sections.0.type': 'slideshow' }
-      ]
-      gravity_id: { $ne: null }
-    db.articles.remove query, callback
-
-updateSyncedArticleSlugs = (callback) ->
-  db.articles.distinct(
-    'gravity_id'
-    { 'sections.0.type': $ne: 'slideshow' }
-    (err, ids) ->
-      return callback err if err
-      debug "Updating slugs for #{ids.length} articles"
-      gravity.posts.find { _id: $in: _.map(ids, ObjectId) }, (err, posts) ->
-        return callback err if err
-        async.map posts, (post, cb) ->
-          db.articles.update(
-            { gravity_id: post._id.toString() }
-            { $addToSet: slugs: $each: post._slugs }
-            ->
-              debug "Merged #{post._slugs.join ', '} for #{post._id}"
-              cb arguments...
-          )
-        , callback
-  )
+  ], callback
 
 migrateOldPosts = (callback) ->
-  # Find published posts from Gravity's db that weren't created in Positron
-  # and map them into Positron articles in batches of 1000 at a time to
-  # keep memory consumption low.
+  # Find published posts from Gravity's db that don't exist in Positron and
+  # convert them to articles.
   db.articles.distinct 'gravity_id', {}, (err, ids) ->
     return callback err if err
     ids = (ObjectId(id.toString()) for id in _.compact ids)
-    gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
-      async.timesSeries Math.ceil(count / BATCH_SIZE), ((n, next) ->
-        gravity.posts
-          .find(published: true, _id: $nin: ids)
-          .skip(n * BATCH_SIZE).limit(BATCH_SIZE)
-          .toArray (err, posts) ->
-            return cb(err) if err
-            postsToArticles posts, (err) ->
-              # Small pause inbetween for the GC to catch up
-              setTimeout (-> next err), 100
-      ), (err) ->
-          callback err
+    gravity.posts.find { published: true, _id: $nin: ids }, (err, posts) ->
+      debug "Converting #{posts.length} new posts into articles..."
+      postsToArticles posts, callback
 
 findPostProfiles = (post, profileType, callback) ->
   async.parallel [
