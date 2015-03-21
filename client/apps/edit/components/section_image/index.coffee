@@ -25,6 +25,12 @@ module.exports = React.createClass
     progress: null
     caption: @props.section.get('caption')
 
+  componentDidMount: ->
+    @attachScribe()
+
+  componentDidUpdate: ->
+    @attachScribe()
+
   onClickOff: ->
     if @state.src
       @props.section.set url: @state.src, caption: @state.caption
@@ -59,12 +65,6 @@ module.exports = React.createClass
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     toggleScribePlaceholder @refs.editable.getDOMNode()
-
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
 
   onEditableKeyup: ->
     toggleScribePlaceholder @refs.editable.getDOMNode()
@@ -116,10 +116,12 @@ module.exports = React.createClass
               className: 'esi-image'
               src: if @state.progress then @state.src else resize(@state.src, width: 900)
               style: opacity: if @state.progress then @state.progress else '1'
+              key: 0
             }
             div {
               className: 'esi-inline-caption'
               dangerouslySetInnerHTML: __html: @state.caption
+              key: 1
             }
           ]
         else

@@ -3,9 +3,9 @@
 # section components that get rendered.
 #
 
-SectionContainer = -> require('../section_container/index.coffee') arguments...
-SectionTool = -> require('../section_tool/index.coffee') arguments...
 React = require 'react'
+SectionContainer = React.createFactory require '../section_container/index.coffee'
+SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -44,6 +44,7 @@ module.exports = React.createClass
               index: i
               editing: @state.editingIndex is i
               ref: 'section' + 1
+              key: section.cid
               onSetEditing: @onSetEditing
             }
             SectionTool { sections: @props.sections, index: i }
