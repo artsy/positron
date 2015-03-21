@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "artsy-backbone-mixins": {
-      "version": "0.0.18",
+      "version": "0.0.20",
       "from": "artsy-backbone-mixins@git://github.com/artsy/artsy-backbone-mixins.git",
-      "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#909b68e013571d2eb8aabc74c94dcade922d19c5",
+      "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "dependencies": {
         "marked": {
           "version": "0.3.3",
@@ -19,7 +19,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@*",
+          "from": "qs@2.4.1",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
@@ -693,7 +693,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.1",
+              "from": "acorn-globals@^1.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
@@ -800,7 +800,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@^1.0.27-1",
+              "from": "readable-stream@latest",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
