@@ -26,9 +26,7 @@ module.exports = class Article extends Backbone.Model
 
   finishedThumbnail: ->
     @get('thumbnail_title')?.length > 0 and
-    @get('thumbnail_image')?.length > 0 and
-    @get('thumbnail_teaser')?.length > 0 and
-    @get('tags')?.length > 0
+    @get('thumbnail_image')?.length > 0
 
   fetchFeatured: (options = {}) ->
     options.success = _.after 3, options.success if options.success?

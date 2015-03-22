@@ -12,4 +12,4 @@ section#edit-thumbnail
         a.edit-use-article-title( href='#' ) Use article title
         textarea.bordered-input.edit-title-textarea(
           placeholder="Type a title that captures your reader's attention"
-        )
+        )= article.get('thumbnail_title')
