@@ -73,7 +73,8 @@
     "mocha": "*",
     "sinon": "*",
     "benv": "*",
-    "rewire": "*"
+    "rewire": "*",
+    "jquery-fillwidth-lite": "*"
   },
   "license": "MIT"
 }
