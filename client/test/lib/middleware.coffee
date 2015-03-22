@@ -38,3 +38,11 @@ describe 'middleware', ->
       middleware.helpers @req, @res, @next
       @res.backboneError new Backbone.Model(), { error: 'moo' }
       @next.args[1][0].should.equal 'moo'
+
+
+  describe 'ua', ->
+
+    it 'adds a IS_MOBILE flag for iOS and Android', ->
+      @req.get = -> "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X; en-us) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53"
+      middleware.ua @req, @res, @next
+      @res.locals.sd.IS_MOBILE.should.be.ok

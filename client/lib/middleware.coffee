@@ -33,5 +33,4 @@ uaParser = require('ua-parser')
 @ua = (req, res, next) ->
   r = uaParser.parse(req.get('user-agent'))
   res.locals.sd.IS_MOBILE = true if r.os.family in ['iOS', 'Android']
-  console.log r.os.family
   next()
