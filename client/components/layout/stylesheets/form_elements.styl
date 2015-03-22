@@ -21,13 +21,16 @@
     background gray-lighter-color
     color gray-dark-color
     cursor not-allowed
-  &.avant-garde-button-dark
+  &.avant-garde-button-dark, &.avant-garde-button-dark
     background gray-darkest-color
     border-color gray-darkest-color
     color white
     &:hover, &:active, &:focus
       background purple-color
       border-color purple-color
+  &.avant-garde-button-black
+    background black
+    color white
   &.avant-garde-button-external-link
     position relative
     padding-right 30px
@@ -210,4 +213,10 @@ label.bordered-input-loading
       opacity 0
       color transparent
       transition opacity 0.2s
+
+@media (max-width: 600px)
+  .avant-garde-button
+    width 100%
+    text-align center
+    padding 15px
 

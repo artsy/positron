@@ -5,6 +5,7 @@
 
 viewHelpers = require './view_helpers'
 debug = require('debug') 'client'
+uaParser = require('ua-parser')
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
@@ -28,3 +29,9 @@ debug = require('debug') 'client'
   res.status(err.status or 500).send(
     "<pre>" + err.message or err.toString() + "</pre>"
   )
+
+@ua = (req, res, next) ->
+  r = uaParser.parse(req.get('user-agent'))
+  res.locals.sd.IS_MOBILE = true if r.os.family in ['iOS', 'Android']
+  console.log r.os.family
+  next()

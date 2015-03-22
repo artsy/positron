@@ -19,7 +19,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@*",
+          "from": "qs@2.4.1",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
@@ -1448,7 +1448,7 @@
           "dependencies": {
             "through": {
               "version": "2.3.6",
-              "from": "through@~2.3.4",
+              "from": "through@>=2.2.7 <3",
               "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
             },
             "jstransform": {
@@ -1579,6 +1579,18 @@
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
+        }
+      }
+    },
+    "ua-parser": {
+      "version": "0.3.5",
+      "from": "ua-parser@*",
+      "resolved": "https://registry.npmjs.org/ua-parser/-/ua-parser-0.3.5.tgz",
+      "dependencies": {
+        "yamlparser": {
+          "version": "0.0.2",
+          "from": "yamlparser@>=0.0.2",
+          "resolved": "https://registry.npmjs.org/yamlparser/-/yamlparser-0.0.2.tgz"
         }
       }
     },

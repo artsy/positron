@@ -1,7 +1,7 @@
 Article = require '../../models/article'
 
 @create = (req, res, next) ->
-  render res, new Article
+  render req, res, new Article
 
 @edit = (req, res, next) ->
   new Article(id: req.params.id).fetch
@@ -11,8 +11,9 @@ Article = require '../../models/article'
       if article.get('author_id') isnt req.user.get('id')
         res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
       else
-        render res, article
+        render req, res, article
 
-render = (res, article) ->
+render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()
-  res.render 'layout/index', article: article
+  view = if res.locals.sd.IS_MOBILE then 'mobile/index' else 'layout/index'
+  res.render view, article: article

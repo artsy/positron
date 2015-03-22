@@ -1,3 +1,5 @@
+@import '../../stylus_lib'
+
 .simple-modal-body
   border-radius 0 !important
   box-shadow none !important
@@ -36,3 +38,10 @@
   overflow visible !important
   input
     width 100%
+
+@media (max-width: 600px)
+  .simple-modal-body
+    min-width "calc(100% - %s) !important" % (mobile-padding * 2)
+    left mobile-padding !important
+    margin-left 0 !important
+    padding 20px !important

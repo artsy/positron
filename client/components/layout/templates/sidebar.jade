@@ -1,38 +1,39 @@
-nav#layout-sidebar
-  a#layout-sidebar-home( href='/' )
-    include ../public/icons/layout_home.svg
-    br
-    | Artsy Writer
-  a#layout-sidebar-new-article(
-    href='/articles/new'
-    class=(sd.URL == '/articles/new' ? 'is-active' : '')
-  )
-    include ../public/icons/layout_new_article.svg
-    br
-    | New Article
-  a( href='/articles?published=false'
-     class=(sd.URL == '/articles?published=false' ? 'is-active' : '') )
-    include ../public/icons/layout_drafts.svg
-    br
-    | Drafts
-  a( href='/articles?published=true'
-     class=(sd.URL == '/articles?published=true' ? 'is-active' : '') )
-    include ../public/icons/layout_published.svg
-    br
-    | Published
-  if user.isAdmin()
-    a( href='/contributors'
-       class=(sd.URL == '/contributors' ? 'is-active' : '') )
-      include ../public/icons/contributors.svg
+#layout-sidebar-container
+  nav#layout-sidebar
+    a#layout-sidebar-home( href='/' )
+      include ../public/icons/layout_home.svg
       br
-      | Contributors
-  #layout-sidebar-profile
-    img( src=user.iconUrl() )
-    br
-    = user.get('user').name.split(' ')[0]
-    nav#layout-sidebar-profile-menu
-      a( href=sd.FORCE_URL + '/' + user.profileHandle() )
-        | View profile on Artsy
-      a( href='/logout' ) Sign out
-      if user.isAdmin()
-        a#layout-sidebar-switch-user Switch user
+      | Artsy Writer
+    a#layout-sidebar-new-article(
+      href='/articles/new'
+      class=(sd.URL == '/articles/new' ? 'is-active' : '')
+    )
+      include ../public/icons/layout_new_article.svg
+      br
+      | New Article
+    a( href='/articles?published=false'
+       class=(sd.URL == '/articles?published=false' ? 'is-active' : '') )
+      include ../public/icons/layout_drafts.svg
+      br
+      | Drafts
+    a( href='/articles?published=true'
+       class=(sd.URL == '/articles?published=true' ? 'is-active' : '') )
+      include ../public/icons/layout_published.svg
+      br
+      | Published
+    if user.isAdmin()
+      a( href='/contributors'
+         class=(sd.URL == '/contributors' ? 'is-active' : '') )
+        include ../public/icons/contributors.svg
+        br
+        | Contributors
+    #layout-sidebar-profile
+      img( src=user.iconUrl() )
+      br
+      = user.get('user').name.split(' ')[0]
+      nav#layout-sidebar-profile-menu
+        a( href=sd.FORCE_URL + '/' + user.profileHandle() )
+          | View profile on Artsy
+        a( href='/logout' ) Sign out
+        if user.isAdmin()
+          a#layout-sidebar-switch-user Switch user
