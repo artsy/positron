@@ -8,6 +8,7 @@ Article = require '../../models/article'
     headers: 'x-access-token': req.user.get('access_token')
     error: res.backboneError
     success: (article) ->
+      console.log article.get('author_id'), req.user.get('id')
       if article.get('author_id') isnt req.user.get('id')
         res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
       else
