@@ -53,6 +53,7 @@ module.exports = class EditLayout extends Backbone.View
     {
       author_id: @user.get('id')
       tier: Number @$('[name=tier]:checked').val()
+      featured: @$('[name=featured]').is(':checked')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()

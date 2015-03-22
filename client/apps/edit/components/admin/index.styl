@@ -5,7 +5,7 @@ gutter-size = 30px
 #edit-admin
   padding-top header-size
   display none
-  width overflow-width
+  width overflow-width - 40px
   margin auto
   section
     border-top 1px solid gray-lighter-color
@@ -26,10 +26,12 @@ gutter-size = 30px
 #edit-admin-tier
   label
     width 50%
-    &:first-child
-      padding-right gutter-size
+    &:last-child
+      padding-left (gutter-size / 2)
   input
     margin 0 10px 0 0
+
+#edit-admin-tier, #edit-admin-magazine
   .edit-admin-right
     padding-top 87px
 
@@ -111,7 +113,7 @@ gutter-size = 30px
   width 100%
 
 .eaf-input, .edit-admin-feature-list li
-  width 277px
+  width 264px
   margin 0 gutter-size 10px 0
 
 .edit-admin-feature-list li:nth-child(2n+2)

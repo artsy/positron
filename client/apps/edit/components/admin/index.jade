@@ -10,34 +10,36 @@ mixin featuredList(id, resource)
         )
 
 section#edit-admin
-  section#edit-admin-change-author
-    .edit-admin-left
-      h1 Change Author
-      h2 Changing the author of this article will move it to their Artsy Writer.
-    .edit-admin-right
-      input.bordered-input( placeholder='Search by user name...' )
   section#edit-admin-tier
     .edit-admin-left
       h1 Tier
       h2 Tier 1 articles get highlighted in the magazine section.
     .edit-admin-right
       label.flat-radio-button
-        input( type='radio'
-          name='tier' checked=article.get('tier') == 1 value=1 )
+        input( type='radio' name='tier' checked=article.get('tier') == 1
+          value=1 )
         | Tier 1
       label.flat-radio-button
-        input( type='radio'
-          name='tier' checked=article.get('tier') != 1 value=2 )
+        input( type='radio' name='tier' checked=article.get('tier') != 1
+          value=2 )
         | Tier 2
+  section#edit-admin-magazine
+    .edit-admin-left
+      h1 Magazine
+      h2 Add this article to the main Magazine section of Artsy.
+    .edit-admin-right
+      label.flat-checkbox
+        input( type='checkbox' name= 'featured'
+          checked=article.get('featured') == 1 value=1 )
   section#edit-admin-fair
     .edit-admin-left
       h1 Fair
-      h2 Add this article to a fair's magazine and year round page.
+      h2 Add this article to a fair&rsquo;s magazine and year round page.
     .edit-admin-right
   section#edit-admin-partner
     .edit-admin-left
       h1 Partner
-      h2 Add this article to a partner's profile page.
+      h2 Add this article to a partner&rsquo;s profile page.
     .edit-admin-right
   section#edit-admin-feature
     .edit-admin-left
@@ -50,3 +52,9 @@ section#edit-admin
       +featuredList('eaf-artists', 'artist')
       h3 Artworks
       +featuredList('eaf-artworks', 'artwork')
+  section#edit-admin-change-author
+    .edit-admin-left
+      h1 Change Author
+      h2 Changing the author of this article will move it to their Artsy Writer.
+    .edit-admin-right
+      input.bordered-input( placeholder='Search by user name...' )

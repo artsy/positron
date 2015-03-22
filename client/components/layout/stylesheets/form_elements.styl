@@ -157,6 +157,35 @@ label.bordered-input-loading
   @extend .bordered-input
 
 .flat-radio-button
+  input
+    border-radius 10px
+    &::after
+      background gray-lighter-color
+      border-radius 10px
+      width 8px
+      height @width
+      top 3px
+      left @top
+  input:checked::after
+    opacity 1
+    background-color purple-color
+
+.flat-checkbox
+  input::after
+    content '.'
+    color transparent
+    background center center no-repeat
+    background-image url('/icons/check_g.svg')
+    background-size container
+    width 11px
+    height @width
+    top 1px
+    left @top
+  input:checked::after
+    opacity 1
+    background-image url('/icons/check_p.svg')
+
+.flat-checkbox, .flat-radio-button
   avant-garde()
   font-size default-avant-garde-font-size
   display inline-block
@@ -169,24 +198,16 @@ label.bordered-input-loading
     border 2px solid gray-lighter-color
     width 18px
     height @width
-    border-radius 10px
     position relative
     outline none
     top -2px
     z-index -1
+    margin 0 15px 0 0
     &::after
       content '.'
-      width 8px
-      height @width
       position absolute
-      top 3px
-      left @top
       display block
       opacity 0
-      background gray-lighter-color
-      border-radius 10px
       color transparent
       transition opacity 0.2s
-    &:checked::after
-      opacity 1
-      background-color purple-color
+
