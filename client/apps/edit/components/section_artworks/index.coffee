@@ -78,7 +78,15 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    $(@refs.artworks.getDOMNode()).fillwidthLite gutterSize: 20
+    len = $(@refs.artworks.getDOMNode()).find('img').length
+    $(@refs.artworks.getDOMNode()).fillwidthLite
+      gutterSize: 20
+      apply: (img, i) ->
+        pad = switch i
+          when 0 then '0 20px 0 0'
+          when len - 1 then '0 0 0 20px'
+          else '0 10px'
+        img.$el.closest('li').css(padding: pad).width(img.width)
 
   removeFillwidth: ->
     $(@refs.artworks.getDOMNode()).find('img').css(width: '')
