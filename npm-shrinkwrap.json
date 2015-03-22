@@ -27,7 +27,7 @@
     "artsy-ezel-components": {
       "version": "0.0.1",
       "from": "artsy-ezel-components@git://github.com/artsy/artsy-ezel-components.git",
-      "resolved": "git://github.com/artsy/artsy-ezel-components.git#339c554f365b47b6e468d95b8b1c5b940deba58c"
+      "resolved": "git://github.com/artsy/artsy-ezel-components.git#cc5d67ff679531f0e4788e305e98cc0d0219cf71"
     },
     "async": {
       "version": "0.9.0",
@@ -207,7 +207,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -728,7 +728,7 @@
           "dependencies": {
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.0",
+              "from": "acorn-globals@^1.0.1",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz",
               "dependencies": {
                 "acorn": {
@@ -836,7 +836,7 @@
             },
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.0",
+              "from": "acorn-globals@^1.0.1",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz"
             }
           }
@@ -1127,7 +1127,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -1448,7 +1448,7 @@
           "dependencies": {
             "through": {
               "version": "2.3.6",
-              "from": "through@>=2.2.7 <3",
+              "from": "through@~2.3.4",
               "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
             },
             "jstransform": {

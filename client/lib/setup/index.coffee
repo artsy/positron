@@ -55,7 +55,6 @@ module.exports = (app) ->
   app.use require '../../apps/edit'
   app.use require '../../apps/contributors'
   app.use require '../../apps/impersonate'
-  app.use errorHandler
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../../apps').forEach (fld) ->
@@ -63,3 +62,6 @@ module.exports = (app) ->
   fs.readdirSync(path.resolve __dirname, '../../components').forEach (fld) ->
     app.use express.static(path.resolve __dirname, "../../components/#{fld}/public")
   app.use express.static(path.resolve __dirname, '../../public')
+
+  # Error handler
+  require('../../apps/error') app
