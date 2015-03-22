@@ -20,6 +20,10 @@ module.exports = class Autocomplete extends Backbone.View
           complete: =>
             @$el.closest('.twitter-typeahead').removeClass 'is-loading'
     search.initialize()
+    options.templates ?= {}
+    options.templates?.empty ?= -> """
+      <div class='autocomplete-empty'>No results</div>
+    """
     @$el.typeahead null,
       name: options.name or _.uniqueId()
       source: search.ttAdapter()
