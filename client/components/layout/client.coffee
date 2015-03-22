@@ -28,7 +28,7 @@ imgLoad = imagesLoaded('#layout-sidebar-profile img')
 imgLoad.on 'fail', ->
   $('#layout-sidebar-profile img').attr(
     'src'
-    "images/layout_missing_user.png"
+    "/images/layout_missing_user.png"
   )
 
 # Open switch user modal

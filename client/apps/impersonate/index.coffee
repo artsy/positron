@@ -21,4 +21,4 @@ app.get '/impersonate/:id', impersonate = (req, res, next) ->
       user.set access_token: req.user.get 'access_token'
       req.login user, (err) ->
         return next err if err
-        res.redirect '/'
+        res.redirect req.query['redirect-to'] or '/'

@@ -7,7 +7,11 @@ Article = require '../../models/article'
   new Article(id: req.params.id).fetch
     headers: 'x-access-token': req.user.get('access_token')
     error: res.backboneError
-    success: (article) -> render res, article
+    success: (article) ->
+      if article.get('author_id') isnt req.user.get('id')
+        res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
+      else
+        render res, article
 
 render = (res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()

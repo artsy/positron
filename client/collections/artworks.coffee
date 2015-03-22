@@ -14,7 +14,7 @@ module.exports = class Artworks extends Backbone.Collection
   model: Artwork
 
   getOrFetchIds: (ids, options) ->
-    async.map ids, (id, cb) ->
+    async.map ids or [], (id, cb) ->
       new Artwork(id: id).fetch
         error: options.error
         success: (artwork) -> cb null, artwork
