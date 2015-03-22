@@ -50,3 +50,7 @@ $('#layout-sidebar-switch-user').click ->
     selected: (e, item) =>
       location.assign '/impersonate/' + item.id
   _.defer -> $(modal.m).find('input').focus()
+
+# Toggle hamburger menu
+$('#layout-hamburger-container').click ->
+  $('#layout-sidebar-container').toggleClass('is-active')

@@ -40,7 +40,8 @@
     "node-mandrill": "*",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "embedly-view-helpers": "*",
-    "bucket-assets": "*"
+    "bucket-assets": "*",
+    "ua-parser": "*"
   },
   "devDependencies": {
     "stylus": "*",
