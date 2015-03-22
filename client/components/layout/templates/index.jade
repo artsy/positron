@@ -1,3 +1,6 @@
+block locals
+  - hideHeader = false
+
 doctype html
 html(lang="en")
   head
@@ -6,11 +9,12 @@ html(lang="en")
     link( type='text/css' rel='stylesheet' href=asset('/assets/main.css') )
   body
     #layout-content
-      h1.page-header
-        #layout-hamburger-container
-          #layout-hamburger
-        .max-width-container
-          block header
+      unless hideHeader
+        h1.page-header
+          #layout-hamburger-container
+            #layout-hamburger
+          .max-width-container
+            block header
       include sidebar
       block content
     include scripts

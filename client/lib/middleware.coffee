@@ -4,7 +4,6 @@
 #
 
 viewHelpers = require './view_helpers'
-debug = require('debug') 'client'
 uaParser = require('ua-parser')
 
 @helpers = (req, res, next) ->
@@ -20,15 +19,6 @@ uaParser = require('ua-parser')
   res.locals.user = req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()
-
-# TODO: Replace with app that renders a nice page
-@errorHandler = (err, req, res, next) ->
-  debug err.stack, err.message
-  if err.message.match 'access token is invalid or has expired'
-    return res.redirect '/logout'
-  res.status(err.status or 500).send(
-    "<pre>" + err.message or err.toString() + "</pre>"
-  )
 
 @ua = (req, res, next) ->
   r = uaParser.parse(req.get('user-agent'))
