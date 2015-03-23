@@ -47,9 +47,8 @@
   text-decoration none
   color white
   svg
-    width 38px
-    margin-left 10px
-    margin-bottom 5px
+    width 40px
+    height 40px
     fill-color white
 
 #layout-sidebar-profile
@@ -57,6 +56,8 @@
   &:hover
     img
       opacity 1
+      filter none
+      -webkit-filter none
     #layout-sidebar-profile-menu
       display block
   img
@@ -64,16 +65,18 @@
     width 50px
     display inline-block
     margin-bottom 10px
-    opacity 0.7
-    transition opacity 0.3s
+    filter grayscale(100%)
+    -webkit-filter grayscale(100%)
+    transition filter 0.3s
+    -webkit-transition -webkit-filter 0.3s ease
   #layout-sidebar-profile-menu
     position absolute
     width 180px
     background black
-    left sidebar-width
-    border-left 1px solid gray-darker-color
+    left sidebar-width + 20
     text-align left
-    top -16px
+    top -25px
+    padding 8px
     display none
     &::before
       content '.'
@@ -83,13 +86,14 @@
       width 19px
       display block
       position absolute
-      top calc(50% - 15px)
       left -17px
+      padding 33px 0
     a
-      padding 20px 20px 0 20px
-      margin 0
-      &:last-child
-        padding-bottom 20px
+      color white
+      padding 10px
+      margin 2px
+      &:hover
+        background-color gray-darkest-color
 
 
 @media (max-width: 600px)
