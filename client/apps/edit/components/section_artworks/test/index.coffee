@@ -47,13 +47,11 @@ describe 'SectionArtworks', ->
     @component.removeArtwork(@component.props.section.artworks.at 1)()
     @component.props.section.artworks.length.should.equal 2
 
-  it 'sets artwork ids when clicking off', ->
-    @component.props.section.artworks.reset [
-      { id: 'foo', title: 'Foo' }
-      { id: 'bar', title: 'Bar'}
-    ]
+  it 'destroys the section when clicking off with no artworks', ->
+    @component.props.section.artworks.reset()
+    @component.props.section.on 'destroy', spy = sinon.spy()
     @component.onClickOff()
-    @component.props.section.get('ids').should.containEql 'foo', 'bar'
+    spy.called.should.be.ok
 
   it 'fetches artworks on init', ->
     @component.props.section.set ids: ['foo', 'bar']
