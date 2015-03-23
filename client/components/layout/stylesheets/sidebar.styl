@@ -56,6 +56,8 @@
   &:hover
     img
       opacity 1
+      filter none
+      -webkit-filter none
     #layout-sidebar-profile-menu
       display block
   img
@@ -63,8 +65,10 @@
     width 50px
     display inline-block
     margin-bottom 10px
-    opacity 0.7
-    transition opacity 0.3s
+    filter grayscale(100%)
+    -webkit-filter grayscale(100%)
+    transition filter 0.3s
+    -webkit-transition -webkit-filter 0.3s ease
   #layout-sidebar-profile-menu
     position absolute
     width 180px
