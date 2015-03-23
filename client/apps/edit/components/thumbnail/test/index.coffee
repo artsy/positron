@@ -65,11 +65,11 @@ describe 'EditThumbnail', ->
 
     it 'shows the use-title link when nothing is in the textarea', ->
       @view.$('.edit-title-textarea').val('')
-      @view.checkTitleTextarea( { target: '.edit-title-textarea' } )
+      @view.checkTitleTextarea()
       @view.$('.edit-use-article-title').attr('style').should.not.containEql 'display: none'
 
     it 'hides the use-title link when the title equals the textarea', ->
       @view.article.set title: 'foo'
       @view.$('.edit-title-textarea').val('foo')
-      @view.checkTitleTextarea( { target: '.edit-title-textarea' } )
+      @view.checkTitleTextarea()
       @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'

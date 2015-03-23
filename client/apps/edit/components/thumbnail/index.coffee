@@ -8,6 +8,7 @@ module.exports = class EditThumbnail extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @article.on 'change:thumbnail_image', @renderThumbnailForm
+    @checkTitleTextarea()
 
   renderThumbnailForm: =>
     @$('#edit-thumbnail-inputs-left').html thumbnailFormTemplate
@@ -47,9 +48,10 @@ module.exports = class EditThumbnail extends Backbone.View
     e.preventDefault()
     $(e.target).next().val(@article.get('title'))
     $(e.target).hide()
+    @article.save thumbnail_title: @article.get('title')
 
-  checkTitleTextarea: (e) ->
-    if $(e.target).val() is @article.get('title')
+  checkTitleTextarea: ->
+    if $('.edit-title-textarea').val() is @article.get('title')
       $('.edit-use-article-title').hide()
     else
       $('.edit-use-article-title').show()
