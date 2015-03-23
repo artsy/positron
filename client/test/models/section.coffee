@@ -40,3 +40,10 @@ describe "Article", ->
         fabricate('artwork'),
         { _id: @section.get('items')[0].id, title: 'Foo' }
       )
+
+  describe 'toJSON', ->
+
+    it 'maps the _ids from artworks for artwork sections', ->
+      @section.set type: 'artworks'
+      @section.artworks.reset(fabricate 'artwork', _id: 'foo')
+      @section.toJSON().ids[0].should.equal 'foo'

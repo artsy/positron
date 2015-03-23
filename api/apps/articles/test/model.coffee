@@ -348,12 +348,12 @@ describe 'Article', ->
     it 'saves an article to a gravity post', (done) ->
       article = _.extend fixtures().articles, gravity_id: null
       article.sections[0] = { type: 'text', body: '' }
-      article.sections[3].ids = ['foo', 'bar']
+      article.sections[3].ids = ['4f5f64c23b555230ac00047b', '4f5f64c23b555230ac000472']
       Article.syncToPost article, 'foo-token', (err, post) ->
         post.title.should.equal article.title
         post.body.should.equal 'Just before the lines start forming...<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
         post.published.should.be.ok
-        _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
+        _.pluck(post.artworks, 'id').join('').should.equal '4f5f64c23b555230ac00047b4f5f64c23b555230ac000472'
         _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'
         done()
 

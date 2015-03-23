@@ -42,7 +42,6 @@
     "backbone-super-sync": {
       "version": "0.0.22",
       "from": "backbone-super-sync@*",
-      "resolved": "https://registry.npmjs.org/backbone-super-sync/-/backbone-super-sync-0.0.22.tgz",
       "dependencies": {
         "q": {
           "version": "1.2.0",
@@ -127,6 +126,7 @@
     "bucket-assets": {
       "version": "0.2.5",
       "from": "bucket-assets@*",
+      "resolved": "https://registry.npmjs.org/bucket-assets/-/bucket-assets-0.2.5.tgz",
       "dependencies": {
         "knox": {
           "version": "0.9.2",
@@ -207,7 +207,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1",
+              "from": "inherits@2",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -728,7 +728,7 @@
           "dependencies": {
             "acorn-globals": {
               "version": "1.0.2",
-              "from": "acorn-globals@^1.0.1",
+              "from": "acorn-globals@^1.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.2.tgz",
               "dependencies": {
                 "acorn": {
@@ -943,7 +943,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@latest",
+              "from": "readable-stream@~1.0.26",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -1127,7 +1127,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1",
+              "from": "inherits@2",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -1556,7 +1556,7 @@
         "readable-stream": {
           "version": "1.0.27-1",
           "from": "readable-stream@1.0.27-1",
-          "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-1.0.27-1.tgz",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.27-1.tgz",
           "dependencies": {
             "core-util-is": {
               "version": "1.0.1",

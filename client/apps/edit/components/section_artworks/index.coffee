@@ -92,9 +92,7 @@ module.exports = React.createClass
     $(@refs.artworks.getDOMNode()).find('img').css(width: '')
 
   onClickOff: ->
-    ids = @props.section.artworks.pluck 'id'
-    return @props.section.destroy() if ids.length is 0
-    @props.section.set ids: ids, layout: @props.section.get('layout')
+    return @props.section.destroy() if @props.section.artworks.length is 0
 
   removeArtwork: (artwork) -> =>
     @props.section.artworks.remove artwork

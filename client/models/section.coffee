@@ -32,3 +32,9 @@ module.exports = class Section extends Backbone.Model
     else if src.match 'vimeo'
       id = _.last src.split '/'
       "//player.vimeo.com/video/#{id}?color=ffffff"
+
+  toJSON: ->
+    if @get('type') is 'artworks'
+      _.extend super, ids: @artworks.pluck '_id'
+    else
+      super
