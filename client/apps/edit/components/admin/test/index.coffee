@@ -22,6 +22,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupAuthorAutocomplete = sinon.stub()
         EditAdmin::setupFairAutocomplete = sinon.stub()
         EditAdmin::setupPartnerAutocomplete = sinon.stub()
+        EditAdmin::setupAuctionAutocomplete = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 

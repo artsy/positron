@@ -65,6 +65,7 @@ schema = (->
   featured_artwork_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow('', null)
   partner_ids: @array().items(@objectId()).allow(null)
+  auction_id: @objectId().allow('', null)
   featured: @boolean().default(false)
 ).call Joi
 
@@ -77,6 +78,7 @@ querySchema = (->
   artwork_id: @objectId()
   fair_ids: @array()
   partner_id: @objectId()
+  auction_ids: @array()
   sort: @string()
   tier: @number()
   featured: @boolean()
