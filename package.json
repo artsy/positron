@@ -69,7 +69,7 @@
     "simple-modal": "*",
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
-    "zombie": "*",
+    "zombie": "2.0.3",
     "should": "*",
     "mocha": "*",
     "sinon": "*",
