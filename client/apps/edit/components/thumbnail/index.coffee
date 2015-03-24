@@ -9,6 +9,7 @@ module.exports = class EditThumbnail extends Backbone.View
     { @article } = options
     @article.on 'change:thumbnail_image', @renderThumbnailForm
     @checkTitleTextarea()
+    console.log @article
 
   renderThumbnailForm: =>
     @$('#edit-thumbnail-inputs-left').html thumbnailFormTemplate

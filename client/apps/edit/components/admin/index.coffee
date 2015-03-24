@@ -4,6 +4,8 @@ request = require 'superagent'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
+_s = require 'underscore.string'
+moment = require 'moment'
 
 module.exports = class EditAdmin extends Backbone.View
 
@@ -13,6 +15,8 @@ module.exports = class EditAdmin extends Backbone.View
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
+    @setupPublishDate()
+    console.log @article
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -129,6 +133,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
+    'click .edit-admin-slug-generate': 'setSlugFromTitle'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -152,3 +157,22 @@ module.exports = class EditAdmin extends Backbone.View
     id = $(e.currentTarget).attr 'data-id'
     @article['featured' + resource].remove id
     @article.save()
+
+  setSlugFromTitle: (e) ->
+    e.preventDefault()
+    cat = [@article.get('author').name, @article.get('title')].join('-')
+    slug = _s.slugify(cat)
+    @article.slugs?= []
+    unless _.contains(@article.slugs, slug)
+      @article.slugs.push slug
+      console.log @article.slugs
+      $(e.target).prev().val(slug)
+      $(e.target).hide()
+      @article.save()
+
+  setupPublishDate: ->
+    console.log @generatePublishDate(@article.get('published_at'))
+    $('.edit-admin-input-date').val(@generatePublishDate(@article.get('published_at')))
+
+  generatePublishDate: (date) ->
+    return moment(date).format('L')

@@ -22,6 +22,7 @@ schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
   slug: @string().allow(null)
+  slugs: @array().items(@string()).allow(null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
