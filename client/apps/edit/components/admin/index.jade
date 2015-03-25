@@ -62,7 +62,7 @@ section#edit-admin
       h1 Slug
       h2 Change the url of this article to optimize SEO impact.
     .edit-admin-right
-      input.bordered-input( placeholder='Enter slug for url...' value=article.get('slug') )
+      input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
       a.edit-admin-slug-generate(href='/') Generate from title & author name
   section#edit-admin-publish-date
     .edit-admin-left

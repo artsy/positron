@@ -16,7 +16,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
     @setupPublishDate()
-    console.log @article
+    @setupSlug()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -134,6 +134,8 @@ module.exports = class EditAdmin extends Backbone.View
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
     'click .edit-admin-slug-generate': 'setSlugFromTitle'
+    'keyup .edit-admin-slug-input': 'setSlugAndSave'
+    'blur .edit-admin-slug-input': 'slugify'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -158,21 +160,38 @@ module.exports = class EditAdmin extends Backbone.View
     @article['featured' + resource].remove id
     @article.save()
 
+  setupSlug: ->
+    if $('.edit-admin-slug-input').val() is @generateSlugFromTitle()
+      $('.edit-admin-slug-generate').hide()
+    else
+      $('.edit-admin-slug-generate').show()
+
+  generateSlugFromTitle: ->
+    cat = [@article.get('author').name, @article.get('title')].join('-')
+    return _s.slugify(cat)
+
   setSlugFromTitle: (e) ->
     e.preventDefault()
-    cat = [@article.get('author').name, @article.get('title')].join('-')
-    slug = _s.slugify(cat)
+    slug = @generateSlugFromTitle()
+    @saveSlug(slug)
+    $(e.target).prev().val(slug)
+    $(e.target).hide()
+
+  slugify: (e) ->
+    t = $(e.target)
+    slug = _s.slugify(t.val())
+    t.val slug
+    @saveSlug slug
+
+  saveSlug: (slug) ->
     @article.slugs?= []
-    unless _.contains(@article.slugs, slug)
-      @article.slugs.push slug
-      console.log @article.slugs
-      $(e.target).prev().val(slug)
-      $(e.target).hide()
-      @article.save()
+    @article.slugs.unshift slug unless slug in @article.slugs
+    @article.save()
 
   setupPublishDate: ->
-    console.log @generatePublishDate(@article.get('published_at'))
-    $('.edit-admin-input-date').val(@generatePublishDate(@article.get('published_at')))
+    $('.edit-admin-input-date').on 'keyup', @formatAndSetPublishDate($('.edit-admin-input-date').val())
+    @formatAndSetPublishDate()
 
-  generatePublishDate: (date) ->
-    return moment(date).format('L')
+  formatAndSetPublishDate: (date) ->
+    formattedDate = moment(date).format('L')
+    $('.edit-admin-input-date').val(formattedDate)
