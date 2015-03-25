@@ -134,8 +134,6 @@ module.exports = class EditAdmin extends Backbone.View
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
     'click .edit-admin-slug-generate': 'setSlugFromTitle'
-    'keyup .edit-admin-slug-input': 'setSlugAndSave'
-    'blur .edit-admin-slug-input': 'slugify'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -165,6 +163,16 @@ module.exports = class EditAdmin extends Backbone.View
       $('.edit-admin-slug-generate').hide()
     else
       $('.edit-admin-slug-generate').show()
+    $('.edit-admin-slug-input').on 'keyup', _.debounce( @saveslug , 1000 )
+
+  slugify: ->
+    t = $('.edit-admin-slug-input')
+    slug = _s.slugify(t.val())
+    t.val slug
+
+  saveslug: =>
+    @slugify()
+    false
 
   generateSlugFromTitle: ->
     cat = [@article.get('author').name, @article.get('title')].join('-')
@@ -173,20 +181,9 @@ module.exports = class EditAdmin extends Backbone.View
   setSlugFromTitle: (e) ->
     e.preventDefault()
     slug = @generateSlugFromTitle()
-    @saveSlug(slug)
+    @article.save slug: slug
     $(e.target).prev().val(slug)
     $(e.target).hide()
-
-  slugify: (e) ->
-    t = $(e.target)
-    slug = _s.slugify(t.val())
-    t.val slug
-    @saveSlug slug
-
-  saveSlug: (slug) ->
-    @article.slugs?= []
-    @article.slugs.unshift slug unless slug in @article.slugs
-    @article.save()
 
   setupPublishDate: ->
     $('.edit-admin-input-date').on 'keyup', @formatAndSetPublishDate($('.edit-admin-input-date').val())

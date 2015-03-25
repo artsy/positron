@@ -22,7 +22,7 @@ schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
   slug: @string().allow(null)
-  slugs: @array().items(@string()).allow(null)
+  slugs: @array().items(@string())
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
@@ -179,6 +179,7 @@ addSlug = (article, author, callback) ->
   else
     slug = titleSlug
   article.slugs ?= []
+  console.log article.slugs
   article.slugs.push slug unless slug in article.slugs
   article
 
