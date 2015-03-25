@@ -13,6 +13,8 @@ module.exports = class EditAdmin extends Backbone.View
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
+    console.log @article.get('auction_ids')
+    console.log @article
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
