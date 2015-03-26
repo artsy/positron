@@ -64,7 +64,6 @@ module.exports = class Article extends Backbone.Model
       extended.featured_artist_ids = @featuredArtists.pluck('id')
     if @featuredPrimaryArtists.length
       extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('id')
-    extended.slug = undefined
     _.extend super, extended
 
   syncToPost: (options = {}) ->

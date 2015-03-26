@@ -21,7 +21,7 @@ request = require 'superagent'
 schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
-  slug: @string().allow(null)
+  slug: @string().allow('', null)
   slugs: @array().items(@string())
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
@@ -29,6 +29,7 @@ schema = (->
   tags: @array().items(@string())
   title: @string().allow('', null)
   published: @boolean().default(false)
+  published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   sections: @array().items([
@@ -162,7 +163,7 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  input.published_at = new Date if input.published and not article.published
+  input.published_at = new Date if(input.published and not article.published and not input.published_at)
   article = _.extend article, input, updated_at: new Date
   User.find article.author_id, (err, author) ->
     return callback err if err
@@ -179,8 +180,9 @@ addSlug = (article, author, callback) ->
   else
     slug = titleSlug
   article.slugs ?= []
-  console.log article.slugs
-  article.slugs.push slug unless slug in article.slugs
+  article.slugs.push slug
+  article.slugs = _.uniq(article.slugs.reverse())
+  article.slugs.reverse()
   article
 
 denormalizeAuthor = (article, author, callback) ->

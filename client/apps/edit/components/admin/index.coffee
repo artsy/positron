@@ -163,16 +163,22 @@ module.exports = class EditAdmin extends Backbone.View
       $('.edit-admin-slug-generate').hide()
     else
       $('.edit-admin-slug-generate').show()
-    $('.edit-admin-slug-input').on 'keyup', _.debounce( @saveslug , 1000 )
+
+    $('.edit-admin-slug-input').on 'keyup', _.debounce( =>
+      @slugify()
+    , 1000 )
+    $('.edit-admin-slug-input').on 'blur', =>
+      @article.save slug: $('.edit-admin-slug-input').val()
+
+  saveSlug: =>
+    @slugify()
+    @article.save slug: $('.edit-admin-slug-input').val()
+    false
 
   slugify: ->
     t = $('.edit-admin-slug-input')
     slug = _s.slugify(t.val())
     t.val slug
-
-  saveslug: =>
-    @slugify()
-    false
 
   generateSlugFromTitle: ->
     cat = [@article.get('author').name, @article.get('title')].join('-')
@@ -181,14 +187,18 @@ module.exports = class EditAdmin extends Backbone.View
   setSlugFromTitle: (e) ->
     e.preventDefault()
     slug = @generateSlugFromTitle()
-    @article.save slug: slug
     $(e.target).prev().val(slug)
     $(e.target).hide()
+    @article.save slug: slug
 
   setupPublishDate: ->
-    $('.edit-admin-input-date').on 'keyup', @formatAndSetPublishDate($('.edit-admin-input-date').val())
-    @formatAndSetPublishDate()
+    $('.edit-admin-input-date').on 'blur', =>
+      @formatAndSetPublishDate($('.edit-admin-input-date').val())
+      false
+    @formatAndSetPublishDate @article.get('published_at')
 
   formatAndSetPublishDate: (date) ->
-    formattedDate = moment(date).format('L')
-    $('.edit-admin-input-date').val(formattedDate)
+    clientFormat = moment(date).format('L')
+    saveFormat = moment(date).toDate()
+    $('.edit-admin-input-date').val(clientFormat)
+    @article.save published_at: saveFormat
