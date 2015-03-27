@@ -182,8 +182,9 @@ addSlug = (article, input, author, callback) ->
   else
     slug = titleSlug
   article.slugs.push slug
-  article.slugs = _.uniq(article.slugs.reverse())
-  article.slugs.reverse()
+  # article.slugs = _.uniq(article.slugs.reverse())
+  # article.slugs.reverse()
+  article.slugs = [slug].concat _.uniq(article.slugs)
   article
 
 denormalizeAuthor = (article, author, callback) ->

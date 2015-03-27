@@ -170,9 +170,9 @@ module.exports = class EditAdmin extends Backbone.View
     , 1000 )
 
   slugify: ->
-    t = $('.edit-admin-slug-input')
-    slug = _s.slugify(t.val())
-    t.val slug
+    $t = $('.edit-admin-slug-input')
+    slug = _s.slugify($t.val())
+    $t.val slug
 
   generateSlugFromTitle: ->
     cat = [@article.get('author').name, @article.get('title')].join('-')
