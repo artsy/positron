@@ -79,7 +79,7 @@ querySchema = (->
   artwork_id: @objectId()
   fair_ids: @array()
   partner_id: @objectId()
-  auction_ids: @array()
+  auction_id: @objectId()
   sort: @string()
   tier: @number()
   featured: @boolean()
@@ -110,11 +110,12 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id'
+      'fair_ids', 'partner_id', 'auction_id'
     # Type cast IDs
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
+    query.auction_id = ObjectId input.auction_id if input.auction_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
@@ -152,6 +153,7 @@ sortParamToQuery = (input) ->
           _id: id
           author_id: ObjectId(article.author_id)
           fair_id: ObjectId(article.fair_id) if article.fair_id
+          auction_id: ObjectId(article.auction_id) if article.auction_id
         ), cb
 
 validate = (input, callback) ->
