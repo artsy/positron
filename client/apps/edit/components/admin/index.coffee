@@ -4,6 +4,8 @@ request = require 'superagent'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
+_s = require 'underscore.string'
+moment = require 'moment'
 
 module.exports = class EditAdmin extends Backbone.View
 
@@ -13,6 +15,8 @@ module.exports = class EditAdmin extends Backbone.View
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
+    @setupPublishDate()
+    @setupSlug()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -129,6 +133,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
+    'click .edit-admin-slug-generate': 'setSlugFromTitle'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -152,3 +157,42 @@ module.exports = class EditAdmin extends Backbone.View
     id = $(e.currentTarget).attr 'data-id'
     @article['featured' + resource].remove id
     @article.save()
+
+  setupSlug: ->
+    if $('.edit-admin-slug-input').val() is @generateSlugFromTitle()
+      $('.edit-admin-slug-generate').hide()
+    else
+      $('.edit-admin-slug-generate').show()
+
+    $('.edit-admin-slug-input').on 'keyup', _.debounce( =>
+      @slugify()
+      @article.save slug: $('.edit-admin-slug-input').val()
+    , 1000 )
+
+  slugify: ->
+    $t = $('.edit-admin-slug-input')
+    slug = _s.slugify($t.val())
+    $t.val slug
+
+  generateSlugFromTitle: ->
+    cat = [@article.get('author').name, @article.get('title')].join('-')
+    return _s.slugify(cat)
+
+  setSlugFromTitle: (e) ->
+    e.preventDefault()
+    slug = @generateSlugFromTitle()
+    $(e.target).prev().val(slug)
+    $(e.target).hide()
+    @article.save slug: slug
+
+  setupPublishDate: ->
+    $('.edit-admin-input-date').on 'blur', =>
+      @formatAndSetPublishDate($('.edit-admin-input-date').val())
+      @article.save published_at: saveFormat
+      false
+    @formatAndSetPublishDate @article.get('published_at')
+
+  formatAndSetPublishDate: (date) ->
+    clientFormat = moment(date).format('L')
+    saveFormat = moment(date).toDate()
+    $('.edit-admin-input-date').val(clientFormat)

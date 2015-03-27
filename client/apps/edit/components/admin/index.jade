@@ -57,6 +57,19 @@ section#edit-admin
       +featuredList('eaf-artists', 'artist')
       h3 Artworks
       +featuredList('eaf-artworks', 'artwork')
+  section#edit-admin-slug
+    .edit-admin-left
+      h1 Slug
+      h2 Change the url of this article to optimize SEO impact.
+    .edit-admin-right
+      input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
+      a.edit-admin-slug-generate(href='/') Generate from title & author name
+  section#edit-admin-publish-date
+    .edit-admin-left
+      h1 Publish Date
+      h2 Change the date this article was published to reorder it in a Magazine view.
+    .edit-admin-right
+      input.bordered-input.edit-admin-input-date
   section#edit-admin-change-author
     .edit-admin-left
       h1 Change Author

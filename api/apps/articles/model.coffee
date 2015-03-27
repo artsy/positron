@@ -21,13 +21,14 @@ request = require 'superagent'
 schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
-  slug: @string().allow(null)
+  slug: @string().allow('', null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string())
   title: @string().allow('', null)
   published: @boolean().default(false)
+  published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   sections: @array().items([
@@ -163,24 +164,24 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  input.published_at = new Date if input.published and not article.published
-  article = _.extend article, input, updated_at: new Date
-  User.find article.author_id, (err, author) ->
+  input.published_at = new Date if(input.published and not article.published and not input.published_at)
+  User.find (input.author_id or article.author_id), (err, author) ->
     return callback err if err
-    article = addSlug article, author
+    article = _.extend article, input, updated_at: new Date
+    article = addSlug article, input, author
     article = denormalizeAuthor article, author
     callback null, article
 
-addSlug = (article, author, callback) ->
+addSlug = (article, input, author, callback) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  if article.slug
-    slug = article.slug
+  article.slugs ?= []
+  if input.slug? and (input.slug != _.last(article.slugs))
+    slug = input.slug
   else if author
     slug = _s.slugify(author.user.name) + '-' + titleSlug
   else
     slug = titleSlug
-  article.slugs ?= []
-  article.slugs.push slug unless slug in article.slugs
+  article.slugs = _.unique(article.slugs).concat [slug]
   article
 
 denormalizeAuthor = (article, author, callback) ->
