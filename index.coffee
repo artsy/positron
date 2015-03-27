@@ -37,3 +37,7 @@ app.use require './client'
 app.listen process.env.PORT, ->
   debug "Listening on port " + process.env.PORT
   process.send? "listening"
+
+
+# Reboot for memory leak (╥﹏╥)
+setTimeout process.exit, process.env.RESTART_INTERVAL or 1000 * 60 * 60 * 2
