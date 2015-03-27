@@ -242,6 +242,25 @@ describe 'Article', ->
               article.title.should.equal 'Foo Bar Baz'
               done()
 
+    it 'changes the slug if admin updates it', (done) ->
+      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+        Article.save {
+          title: 'Foo Baz'
+          author_id: @user._id
+        }, (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            slug: 'foo-changed'
+            title: 'A Different Title'
+            author_id: @user._id
+          }, (err, article) ->
+            return done err if err
+            article.slugs[1].should.equal 'foo-changed'
+            Article.find article.slugs[0], (err, article) ->
+              article.title.should.equal 'A Different Title'
+              done()
+
     it 'saves published_at when the article is published', (done) ->
       Article.save {
         title: 'Top Ten Shows'
@@ -261,10 +280,13 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
         published: true
       }, (err, article) =>
+        return done err if err
         Article.save {
           id: article._id.toString()
+          author_id: '5086df098523e60002000018'
           published_at: moment().add(1, 'year').toDate()
         }, (err, updatedArticle) ->
+          return done err if err
           updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
             .equal moment().add(1, 'year').format('YYYY')
@@ -377,6 +399,5 @@ describe 'Article', ->
       article = _.extend fixtures().articles, gravity_id: null
       Article.syncToPost article, 'foo-token', (err, post) ->
         db.articles.find {}, (err, articles) ->
-          console.log _.last(articles).slugs
           _.last(_.last(articles).slugs).should.equal 'billpowers-check-out-the-original-flowers-photograph-taken-by-patricia'
           done()

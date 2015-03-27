@@ -163,7 +163,6 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  console.log input
   input.published_at = new Date if(input.published and not article.published and not input.published_at)
   User.find (input.author_id or article.author_id), (err, author) ->
     return callback err if err
@@ -174,15 +173,13 @@ update = (article, input, callback) ->
 
 addSlug = (article, input, author, callback) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  console.log "article.slug in addSlug is #{article.slug}"
-  if article.slug and article.slug is not _s.slugify(author?.user.name)
-    slug = article.slug
+  article.slugs ?= []
+  if input.slug? and (input.slug != _.last(article.slugs))
+    slug = input.slug
   else if author
     slug = _s.slugify(author.user.name) + '-' + titleSlug
   else
     slug = titleSlug
-  article.slugs ?= []
-  console.log slug
   article.slugs.push slug
   article.slugs = _.uniq(article.slugs.reverse())
   article.slugs.reverse()
@@ -218,8 +215,6 @@ denormalizeAuthor = (article, author, callback) ->
             return cb err if err = err or res.body.error
 
             # Ensure the article is linked to the Gravity post & published
-            # console.log article
-            # console.log post
             @save _.extend(article, {
               gravity_id: post._id
               slug: post.id

@@ -166,14 +166,8 @@ module.exports = class EditAdmin extends Backbone.View
 
     $('.edit-admin-slug-input').on 'keyup', _.debounce( =>
       @slugify()
-    , 1000 )
-    $('.edit-admin-slug-input').on 'blur', =>
       @article.save slug: $('.edit-admin-slug-input').val()
-
-  saveSlug: =>
-    @slugify()
-    @article.save slug: $('.edit-admin-slug-input').val()
-    false
+    , 1000 )
 
   slugify: ->
     t = $('.edit-admin-slug-input')
@@ -194,6 +188,7 @@ module.exports = class EditAdmin extends Backbone.View
   setupPublishDate: ->
     $('.edit-admin-input-date').on 'blur', =>
       @formatAndSetPublishDate($('.edit-admin-input-date').val())
+      @article.save published_at: saveFormat
       false
     @formatAndSetPublishDate @article.get('published_at')
 
@@ -201,4 +196,3 @@ module.exports = class EditAdmin extends Backbone.View
     clientFormat = moment(date).format('L')
     saveFormat = moment(date).toDate()
     $('.edit-admin-input-date').val(clientFormat)
-    @article.save published_at: saveFormat
