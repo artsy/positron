@@ -22,7 +22,7 @@ schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
   slug: @string().allow('', null)
-  slugs: @array().items(@string())
+  slugs: @array().items(@string()).allow('',null,[])
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
@@ -163,23 +163,26 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
+  console.log input
   input.published_at = new Date if(input.published and not article.published and not input.published_at)
-  article = _.extend article, input, updated_at: new Date
-  User.find article.author_id, (err, author) ->
+  User.find (input.author_id or article.author_id), (err, author) ->
     return callback err if err
-    article = addSlug article, author
+    article = _.extend article, input, updated_at: new Date
+    article = addSlug article, input, author
     article = denormalizeAuthor article, author
     callback null, article
 
-addSlug = (article, author, callback) ->
+addSlug = (article, input, author, callback) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  if article.slug
+  console.log "article.slug in addSlug is #{article.slug}"
+  if article.slug and article.slug is not _s.slugify(author?.user.name)
     slug = article.slug
   else if author
     slug = _s.slugify(author.user.name) + '-' + titleSlug
   else
     slug = titleSlug
   article.slugs ?= []
+  console.log slug
   article.slugs.push slug
   article.slugs = _.uniq(article.slugs.reverse())
   article.slugs.reverse()
@@ -215,6 +218,8 @@ denormalizeAuthor = (article, author, callback) ->
             return cb err if err = err or res.body.error
 
             # Ensure the article is linked to the Gravity post & published
+            # console.log article
+            # console.log post
             @save _.extend(article, {
               gravity_id: post._id
               slug: post.id

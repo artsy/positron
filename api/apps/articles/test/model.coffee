@@ -254,6 +254,22 @@ describe 'Article', ->
           .equal moment().format('YYYY')
         done()
 
+    it 'updates published_at when admin changes it', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, (err, article) =>
+        Article.save {
+          id: article._id.toString()
+          published_at: moment().add(1, 'year').toDate()
+        }, (err, updatedArticle) ->
+          updatedArticle.published_at.should.be.an.instanceOf(Date)
+          moment(updatedArticle.published_at).format('YYYY').should
+            .equal moment().add(1, 'year').format('YYYY')
+          done()
+
     it 'denormalizes the author into the article on publish', (done) ->
       fabricate 'users', {
         _id: ObjectId('5086df098523e60002000018')
@@ -361,5 +377,6 @@ describe 'Article', ->
       article = _.extend fixtures().articles, gravity_id: null
       Article.syncToPost article, 'foo-token', (err, post) ->
         db.articles.find {}, (err, articles) ->
+          console.log _.last(articles).slugs
           _.last(_.last(articles).slugs).should.equal 'billpowers-check-out-the-original-flowers-photograph-taken-by-patricia'
           done()
