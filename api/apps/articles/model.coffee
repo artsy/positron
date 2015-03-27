@@ -181,8 +181,7 @@ addSlug = (article, input, author, callback) ->
     slug = _s.slugify(author.user.name) + '-' + titleSlug
   else
     slug = titleSlug
-  article.slugs.push slug
-  article.slugs = [slug].concat _.uniq(article.slugs)
+  article.slugs = _.unique(article.slugs).concat [slug]
   article
 
 denormalizeAuthor = (article, author, callback) ->
