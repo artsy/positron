@@ -175,6 +175,7 @@ module.exports = class EditAdmin extends Backbone.View
     $t.val slug
 
   generateSlugFromTitle: ->
+    return unless @article.get('author')
     cat = [@article.get('author').name, @article.get('title')].join('-')
     return _s.slugify(cat)
 

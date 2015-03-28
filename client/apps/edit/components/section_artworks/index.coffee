@@ -32,7 +32,6 @@ module.exports = React.createClass
     @setupAutocomplete()
 
   componentWillUnmount: ->
-    @props.section.artworks.off()
     @autocomplete.remove()
 
   componentDidUpdate: ->

@@ -14,11 +14,8 @@ module.exports = React.createClass
     { editingIndex: null }
 
   componentDidMount: ->
-    @props.sections.on 'remove add destroy reset', => @forceUpdate()
+    @props.sections.on 'add remove reset', => @forceUpdate()
     @props.sections.on 'add', @onNewSection
-
-  componentWillUnmount: ->
-    @props.sections.off()
 
   componentDidUpdate: ->
     $(@getDOMNode()).find('.scribe-marker').remove()
@@ -40,6 +37,7 @@ module.exports = React.createClass
         @props.sections.map (section, i) =>
           [
             SectionContainer {
+              sections: @props.sections
               section: section
               index: i
               editing: @state.editingIndex is i
