@@ -22,5 +22,18 @@ uaParser = require('ua-parser')
 
 @ua = (req, res, next) ->
   r = uaParser.parse(req.get('user-agent'))
+  res.locals.sd.USER_AGENT = req.get('user-agent')
   res.locals.sd.IS_MOBILE = true if r.os.family in ['iOS', 'Android']
-  next()
+  allowed = switch r.ua.family
+    when 'Chrome' then r.ua.major >= 38
+    when 'Firefox' then r.ua.major >= 34
+    when 'Safari' then r.ua.major >= 7
+    when 'IE' then r.ua.major >= 10
+    else false
+  if allowed
+    next()
+  else
+    next new Error(
+      "You must use the lastest version of Chrome, Safari, " +
+      "Firefox, or Internet Explorer to use Artsy Writer."
+    )

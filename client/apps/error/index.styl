@@ -1,5 +1,6 @@
-@import '../../components/stylus_lib'
-
+@import '../../../node_modules/nib'
+@import '../../../node_modules/artsy-ezel-components/stylus_lib/typography'
+json('../../../node_modules/artsy-ezel-components/stylus_lib/colors.json')
 global-reset()
 
 body, html, #error
@@ -14,7 +15,6 @@ body, html, #error
   color white
 
 #error-logo
-  background url(/icons/logo_w.svg)
   width 34px
   height @width
   top 20px
