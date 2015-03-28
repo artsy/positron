@@ -4,7 +4,7 @@
   "dependencies": {
     "artsy-backbone-mixins": {
       "version": "0.0.20",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-24759-16d78604/git-cache-bcd36c5ae19c/be65bf983ac00d4eda3e967bfe644e7551cba6e7",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-30119-494464e5/git-cache-45bd8d9b80df/be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "dependencies": {
         "marked": {
@@ -26,7 +26,7 @@
     },
     "artsy-ezel-components": {
       "version": "0.0.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-24759-16d78604/git-cache-6b51f34bf0bf/a9e81d625c3e9b4a84217289d48972961e9016f5",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-30119-494464e5/git-cache-c1476c3552b9/a9e81d625c3e9b4a84217289d48972961e9016f5",
       "resolved": "git://github.com/artsy/artsy-ezel-components.git#a9e81d625c3e9b4a84217289d48972961e9016f5"
     },
     "async": {
@@ -743,7 +743,7 @@
         },
         "mkdirp": {
           "version": "0.5.0",
-          "from": "mkdirp@>=0.5.0 <0.6.0",
+          "from": "mkdirp@0.5.0",
           "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.0.tgz",
           "dependencies": {
             "minimist": {
@@ -1504,7 +1504,7 @@
     },
     "passport-oauth2": {
       "version": "1.1.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-24759-16d78604/git-cache-648c1fc6e1a9/dd742296739f64dc8fce9f21939177a1cd4c09c2",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-30119-494464e5/git-cache-5c1e2e533bd2/dd742296739f64dc8fce9f21939177a1cd4c09c2",
       "resolved": "git://github.com/craigspaeth/passport-oauth2.git#dd742296739f64dc8fce9f21939177a1cd4c09c2",
       "dependencies": {
         "passport-strategy": {
@@ -1514,7 +1514,7 @@
         },
         "oauth": {
           "version": "0.9.11",
-          "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-24759-16d78604/git-cache-b27e86f89401/424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213",
+          "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-30119-494464e5/git-cache-96f777bd3b93/424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213",
           "resolved": "git://github.com/craigspaeth/node-oauth.git#424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213"
         },
         "uid2": {
@@ -1620,6 +1620,69 @@
       "version": "0.1.6",
       "from": "sharify@*",
       "resolved": "https://registry.npmjs.org/sharify/-/sharify-0.1.6.tgz"
+    },
+    "stylus": {
+      "version": "0.50.0",
+      "from": "stylus@*",
+      "resolved": "https://registry.npmjs.org/stylus/-/stylus-0.50.0.tgz",
+      "dependencies": {
+        "css-parse": {
+          "version": "1.7.0",
+          "from": "css-parse@>=1.7.0 <1.8.0",
+          "resolved": "https://registry.npmjs.org/css-parse/-/css-parse-1.7.0.tgz"
+        },
+        "mkdirp": {
+          "version": "0.3.5",
+          "from": "mkdirp@>=0.3.0 <0.4.0",
+          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.3.5.tgz"
+        },
+        "sax": {
+          "version": "0.5.8",
+          "from": "sax@>=0.5.0 <0.6.0",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.8.tgz"
+        },
+        "glob": {
+          "version": "3.2.11",
+          "from": "glob@>=3.2.0 <3.3.0",
+          "resolved": "https://registry.npmjs.org/glob/-/glob-3.2.11.tgz",
+          "dependencies": {
+            "inherits": {
+              "version": "2.0.1",
+              "from": "inherits@>=2.0.0 <3.0.0",
+              "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+            },
+            "minimatch": {
+              "version": "0.3.0",
+              "from": "minimatch@>=0.3.0 <0.4.0",
+              "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-0.3.0.tgz",
+              "dependencies": {
+                "lru-cache": {
+                  "version": "2.5.0",
+                  "from": "lru-cache@>=2.0.0 <3.0.0",
+                  "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-2.5.0.tgz"
+                },
+                "sigmund": {
+                  "version": "1.0.0",
+                  "from": "sigmund@>=1.0.0 <1.1.0",
+                  "resolved": "https://registry.npmjs.org/sigmund/-/sigmund-1.0.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "source-map": {
+          "version": "0.1.43",
+          "from": "source-map@>=0.1.0 <0.2.0",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
+          "dependencies": {
+            "amdefine": {
+              "version": "0.1.0",
+              "from": "amdefine@>=0.0.4",
+              "resolved": "https://registry.npmjs.org/amdefine/-/amdefine-0.1.0.tgz"
+            }
+          }
+        }
+      }
     },
     "superagent": {
       "version": "1.1.0",
