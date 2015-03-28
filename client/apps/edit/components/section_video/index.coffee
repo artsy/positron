@@ -14,9 +14,6 @@ module.exports = React.createClass
   componentDidMount: ->
     @props.section.on 'change:url', => @forceUpdate()
 
-  componentWillUnmount: ->
-    @props.section.off()
-
   onClickOff: ->
     @props.section.destroy() unless @props.section.get('url')
 

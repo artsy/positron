@@ -22,19 +22,12 @@ module.exports = React.createClass
   componentDidMount: ->
     @props.section.on 'change:layout', => @forceUpdate()
 
-  componentWillUnmount: ->
-    @props.section.off()
-
   setEditing: (editing) -> =>
     @props.onSetEditing if editing then @props.index else null
 
   removeSection: (e) ->
     e.stopPropagation()
-    if @props.section.collection?.length is 1
-      @props.section.collection?.reset()
-    else
-      @props.section.destroy()
-    return
+    @props.section.destroy()
 
   render: ->
     div {

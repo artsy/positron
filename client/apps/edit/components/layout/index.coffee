@@ -15,7 +15,7 @@ module.exports = class EditLayout extends Backbone.View
     @user = new CurrentUser sd.USER
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @article.sections.on 'change', => @article.save()
+    @article.sections.on 'add remove reset', => @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
