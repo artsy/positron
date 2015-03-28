@@ -31,8 +31,7 @@ module.exports = React.createClass
         onSubmit: @addArtworksFromUrls
       },
         textarea {
-          placeholder: ('http://artsy.net/artwork/andy-warhol-skull\n' +
-                        'http://artsy.net/artwork/tracey-emin-dolde')
+          placeholder: 'http://artsy.net/artwork/andy-warhol-skull'
           className: 'bordered-input bordered-input-dark'
           onChange: @onChangeUrls
           ref: 'textarea'

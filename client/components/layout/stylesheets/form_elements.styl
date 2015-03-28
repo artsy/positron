@@ -214,6 +214,11 @@ label.bordered-input-loading
       color transparent
       transition opacity 0.2s
 
+[data-useragent*=Firefox] .flat-checkbox input
+  -moz-appearance checkbox
+[data-useragent*=Firefox] .flat-radio-button input
+  -moz-appearance radio
+
 @media (max-width: 600px)
   .avant-garde-button
     width 100%

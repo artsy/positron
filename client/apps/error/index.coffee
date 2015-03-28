@@ -15,6 +15,7 @@ render = (req, res, locals) ->
   res.send jade.compile(
     fs.readFileSync(f = __dirname + '/index.jade'),
     filename: f
+    cache: true
   ) _.extend res.locals, locals, referrer: req.get('referrer')
 
 module.exports = (app) ->
@@ -28,7 +29,4 @@ module.exports = (app) ->
     debug err.stack, err.message
     if err.message.match 'access token is invalid or has expired'
       return res.redirect '/logout'
-    res.status(err.status or 500).send(
-      "<pre>" + err.message or err.toString() + "</pre>"
-    )
     render req, res, err: err

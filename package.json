@@ -45,10 +45,10 @@
     "superagent": "*",
     "ua-parser": "*",
     "underscore": "*",
-    "underscore.string": "*"
+    "underscore.string": "*",
+    "stylus": "*"
   },
   "devDependencies": {
-    "stylus": "*",
     "nib": "*",
     "sqwish": "*",
     "browserify": "5.x",
