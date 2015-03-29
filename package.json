@@ -46,10 +46,10 @@
     "ua-parser": "*",
     "underscore": "*",
     "underscore.string": "*",
-    "stylus": "*"
+    "stylus": "*",
+    "nib": "*"
   },
   "devDependencies": {
-    "nib": "*",
     "sqwish": "*",
     "browserify": "5.x",
     "jadeify": "*",
