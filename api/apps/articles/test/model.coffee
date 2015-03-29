@@ -47,7 +47,7 @@ describe 'Article', ->
 
     it 'errors for bad queries', (done) ->
       Article.where { foo: 'bar' }, (err) ->
-        err.message.should.containEql 'foo is not allowed'
+        err.message.should.containEql '"foo" is not allowed'
         done()
 
     it 'can change skip and limit', (done) ->
@@ -181,7 +181,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
       }, (err, article) ->
-        err.message.should.containEql 'author_id is required'
+        err.message.should.containEql '"author_id" is required'
         done()
 
     it 'adds an updated_at as a date', (done) ->
@@ -242,7 +242,26 @@ describe 'Article', ->
               article.title.should.equal 'Foo Bar Baz'
               done()
 
-    it 'saves published_at when the articles is published', (done) ->
+    it 'changes the slug if admin updates it', (done) ->
+      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+        Article.save {
+          title: 'Foo Baz'
+          author_id: @user._id
+        }, (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            slug: 'foo-changed'
+            title: 'A Different Title'
+            author_id: @user._id
+          }, (err, article) ->
+            return done err if err
+            article.slugs[1].should.equal 'foo-changed'
+            Article.find article.slugs[0], (err, article) ->
+              article.title.should.equal 'A Different Title'
+              done()
+
+    it 'saves published_at when the article is published', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
@@ -253,6 +272,25 @@ describe 'Article', ->
         moment(article.published_at).format('YYYY').should
           .equal moment().format('YYYY')
         done()
+
+    it 'updates published_at when admin changes it', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, (err, article) =>
+        return done err if err
+        Article.save {
+          id: article._id.toString()
+          author_id: '5086df098523e60002000018'
+          published_at: moment().add(1, 'year').toDate()
+        }, (err, updatedArticle) ->
+          return done err if err
+          updatedArticle.published_at.should.be.an.instanceOf(Date)
+          moment(updatedArticle.published_at).format('YYYY').should
+            .equal moment().add(1, 'year').format('YYYY')
+          done()
 
     it 'denormalizes the author into the article on publish', (done) ->
       fabricate 'users', {
@@ -347,12 +385,13 @@ describe 'Article', ->
 
     it 'saves an article to a gravity post', (done) ->
       article = _.extend fixtures().articles, gravity_id: null
-      article.sections[3].ids = ['foo', 'bar']
+      article.sections[0] = { type: 'text', body: '' }
+      article.sections[3].ids = ['4f5f64c23b555230ac00047b', '4f5f64c23b555230ac000472']
       Article.syncToPost article, 'foo-token', (err, post) ->
         post.title.should.equal article.title
         post.body.should.equal 'Just before the lines start forming...<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...Check out this video art:'
         post.published.should.be.ok
-        _.pluck(post.artworks, 'id').join('').should.equal 'foobar'
+        _.pluck(post.artworks, 'id').join('').should.equal '4f5f64c23b555230ac00047b4f5f64c23b555230ac000472'
         _.pluck(post.content_links, 'url').join('').should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpghttp://youtu.be/yYjLrJRuMnY'
         done()
 

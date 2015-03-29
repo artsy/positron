@@ -10,7 +10,7 @@ EditLayout = require './components/layout/index.coffee'
 EditHeader = require './components/header/index.coffee'
 EditAdmin = require './components/admin/index.coffee'
 EditThumbnail = require './components/thumbnail/index.coffee'
-SectionList = require './components/section_list/index.coffee'
+SectionList = React.createFactory require './components/section_list/index.coffee'
 
 @init = ->
   article = new Article sd.ARTICLE

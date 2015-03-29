@@ -11,6 +11,8 @@ try
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
   scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
   scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
+  scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
+  scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -18,21 +20,32 @@ icons = -> require('./icons.jade') arguments...
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
   italic: (e) -> e.metaKey and e.keyCode is 73
+  h2: (e) -> e.metaKey && e.keyCode is 50
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
   linkPrompt: (e) -> e.metaKey and not e.shiftKey and e.keyCode is 75
   unlink: (e) -> e.metaKey and e.shiftKey and e.keyCode is 75
 
 module.exports = React.createClass
 
+  componentDidMount: ->
+    @attachScribe()
+    @componentDidUpdate()
+
+  componentDidUpdate: ->
+    $(@refs.editable.getDOMNode()).focus() if @props.editing
+
+  shouldComponentUpdate: (nextProps) ->
+    not (nextProps.editing and @props.editing)
+
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
-  onKeyUp: ->
+  setBody: ->
     @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
-    return if @scribe? or not @props.editing
     @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe.use scribePluginSanitizeGoogleDoc()
     @scribe.use scribePluginSanitizer {
       tags:
         p: true
@@ -40,23 +53,19 @@ module.exports = React.createClass
         i: true
         br: true
         a: { href: true, target: '_blank' }
+        h2: true
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
-    $(@refs.editable.getDOMNode()).focus()
-
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
+    @scribe.use scribePluginHeadingCommand(2)
 
   render: ->
     div { className: 'edit-section-text-container' },
       nav {
         ref: 'toolbar'
         className: 'edit-section-controls est-nav edit-scribe-nav'
+        onClick: @setBody
       },
         button {
           'data-command-name': 'bold'
@@ -65,6 +74,9 @@ module.exports = React.createClass
         button {
           'data-command-name': 'italic'
           dangerouslySetInnerHTML: __html: '&nbsp;'
+        }
+        button {
+          'data-command-name': 'h2'
         }
         div { className: 'est-link-container' },
           button {
@@ -85,5 +97,5 @@ module.exports = React.createClass
           dangerouslySetInnerHTML: __html: @props.section.get('body')
           onClick: @props.setEditing(on)
           onFocus: @props.setEditing(on)
-          onKeyUp: @onKeyUp
+          onKeyUp: @setBody
         }

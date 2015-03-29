@@ -10,10 +10,13 @@ viewHelpers = require '../../lib/view_helpers.coffee'
 Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
+imagesLoaded = require 'imagesloaded'
 { ErrorModal } = require '../error_modal/index.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
+require 'typeahead.js'
+require('jquery-fillwidth-lite') $, _, imagesLoaded
 
 module.exports.init = ->
   Backbone.$ = $
@@ -21,6 +24,15 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
 
+# Replace broken profile icon
+imgLoad = imagesLoaded('#layout-sidebar-profile img')
+imgLoad.on 'fail', ->
+  $('#layout-sidebar-profile img').attr(
+    'src'
+    "/images/layout_missing_user.png"
+  )
+
+# Open switch user modal
 $('#layout-sidebar-switch-user').click ->
   modal = Modal
     title: 'Switch User'
@@ -38,3 +50,7 @@ $('#layout-sidebar-switch-user').click ->
     selected: (e, item) =>
       location.assign '/impersonate/' + item.id
   _.defer -> $(modal.m).find('input').focus()
+
+# Toggle hamburger menu
+$('#layout-hamburger-container').click ->
+  $('#layout-sidebar-container').toggleClass('is-active')

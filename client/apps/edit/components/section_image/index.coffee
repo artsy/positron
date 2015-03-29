@@ -16,6 +16,7 @@ toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
+{ crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = React.createClass
 
@@ -23,6 +24,12 @@ module.exports = React.createClass
     src: @props.section.get('url')
     progress: null
     caption: @props.section.get('caption')
+
+  componentDidMount: ->
+    @attachScribe()
+
+  componentDidUpdate: ->
+    @attachScribe()
 
   onClickOff: ->
     if @state.src
@@ -58,12 +65,6 @@ module.exports = React.createClass
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     toggleScribePlaceholder @refs.editable.getDOMNode()
-
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
 
   onEditableKeyup: ->
     toggleScribePlaceholder @refs.editable.getDOMNode()
@@ -113,12 +114,14 @@ module.exports = React.createClass
           [
             img {
               className: 'esi-image'
-              src: @state.src
+              src: if @state.progress then @state.src else resize(@state.src, width: 900)
               style: opacity: if @state.progress then @state.progress else '1'
+              key: 0
             }
             div {
               className: 'esi-inline-caption'
               dangerouslySetInnerHTML: __html: @state.caption
+              key: 1
             }
           ]
         else

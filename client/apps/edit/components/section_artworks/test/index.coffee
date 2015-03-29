@@ -10,6 +10,7 @@ r =
   simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
+{ fabricate } = require 'antigravity'
 
 describe 'SectionArtworks', ->
 
@@ -20,6 +21,7 @@ describe 'SectionArtworks', ->
         resolve(__dirname, '../index')
         ['icons']
       )
+      SectionArtworks.__set__ 'Autocomplete', sinon.stub()
       @component = React.render SectionArtworks(
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
@@ -27,6 +29,7 @@ describe 'SectionArtworks', ->
         changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
+        sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'
         done()
 
@@ -44,18 +47,17 @@ describe 'SectionArtworks', ->
     @component.removeArtwork(@component.props.section.artworks.at 1)()
     @component.props.section.artworks.length.should.equal 2
 
-  it 'sets artwork ids when clicking off', ->
-    @component.props.section.artworks.reset [
-      { id: 'foo', title: 'Foo' }
-      { id: 'bar', title: 'Bar'}
-    ]
+  it 'destroys the section when clicking off with no artworks', ->
+    @component.props.section.artworks.reset()
+    @component.props.section.on 'destroy', spy = sinon.spy()
     @component.onClickOff()
-    @component.props.section.get('ids').should.containEql 'foo', 'bar'
+    spy.called.should.be.ok
 
   it 'fetches artworks on init', ->
     @component.props.section.set ids: ['foo', 'bar']
     @component.componentDidMount()
-    Backbone.sync.args[0][2].data.ids.should.containEql 'foo', 'bar'
+    Backbone.sync.args[0][1].url().should.containEql 'foo'
+    Backbone.sync.args[1][1].url().should.containEql 'bar'
 
   xit 'adds fillwidth styling if the layout is appropriate', ->
     @component.props.section.artworks.reset [fixtures().artworks]
@@ -82,3 +84,8 @@ describe 'SectionArtworks', ->
       { id: '1', title: 'Foo to the bar' }
     ]
     $(@component.getDOMNode()).html().should.containEql 'Foo to the bar'
+
+  it 'adds an artwork onSelect', ->
+    @component.onSelect({},{ id: 'foo-work', value: 'Foo Title' })
+    Backbone.sync.args[0][2].success fabricate 'artwork'
+    @component.props.section.artworks.length.should.be.above 0

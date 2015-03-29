@@ -1,9 +1,10 @@
 extend ../../../components/layout/templates/index
 include ../../../../node_modules/artsy-ezel-components/pagination/paginator
 
+block header
+  | Contributors
+
 block content
-  h1.page-header
-    .max-width-container Contributors
   #contributors.max-width-container
     h2 Add an Artsy user to Writer
     #contributors-add
@@ -14,8 +15,7 @@ block content
       thead
         tr
           td
-          td Name
-          td Email
+          td Name & Email
           td Role
           td Actions
       tbody

@@ -5,10 +5,12 @@
 
 _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
+Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
-ByTitle = require './by_title.coffee'
-ByUrls = require './by_urls.coffee'
+ByUrls = React.createFactory require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
+sd = require('sharify').data
+Autocomplete = require '../../../../components/autocomplete/index.coffee'
 { div, nav, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM
 icons = -> require('./icons.jade') arguments...
@@ -27,12 +29,43 @@ module.exports = React.createClass
     @fetchArtworks ids if ids?.length
     @props.section.artworks.on 'add remove', => @forceUpdate()
     @toggleFillwidth()
+    @setupAutocomplete()
 
   componentWillUnmount: ->
-    @props.section.artworks.off()
+    @autocomplete.remove()
 
   componentDidUpdate: ->
     @toggleFillwidth()
+
+  setupAutocomplete: ->
+    @autocomplete = new Autocomplete
+      url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
+      el: $(@refs.autocomplete.getDOMNode())
+      filter: (res) ->
+        vals = []
+        for r in res._embedded.results
+          if r.type == 'Artwork'
+            id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
+            vals.push
+              id: id
+              value: r.title
+              thumbnail: r._links.thumbnail.href
+        return vals
+      templates:
+        suggestion: (data) ->
+          """
+            <div class='esa-suggestion' \
+                 style='background-image: url(#{data.thumbnail})'>
+            </div>
+            #{data.value}
+          """
+      selected: @onSelect
+
+  onSelect: (e, selected) ->
+    new Artwork(id: selected.id).fetch
+      success: (artwork) =>
+        @props.section.artworks.add artwork
+    $(@refs.autocomplete.getDOMNode()).val('').focus()
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length
@@ -44,28 +77,27 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    $list = $(@refs.artworks.getDOMNode())
-    $imgs = $list.find('img')
-    imagesLoaded $list[0], =>
-      widths = $imgs.map -> $(this).width()
-      sum = _.reduce widths, (m, n) -> m + n
-      return unless sum > listWidth = $list.width()
-      newWidths = _.map widths, (w) -> Math.floor w * (listWidth / sum)
-      $list.children('li').each (i) ->
-        $(this).width newWidths[i] - ROW_OVERFLOW_PADDING
-      tallest = _.max $imgs.map -> $(this).height()
-      $list.find('.esa-img-container').each -> $(this).height tallest
+    len = $(@refs.artworks.getDOMNode()).find('img').length
+    $(@refs.artworks.getDOMNode()).fillwidthLite
+      gutterSize: 20
+      apply: (img, i) ->
+        pad = switch i
+          when 0 then '0 20px 0 0'
+          when len - 1 then '0 0 0 20px'
+          else '0 10px'
+        img.$el.closest('li').css(padding: pad).width(img.width)
 
   removeFillwidth: ->
-    $list = $(@refs.artworks.getDOMNode())
-    $list.css(opacity: 0, height: $list.height()).children('li').each ->
-      $(this).width('auto').find('.esa-img-container').height 'auto'
-    imagesLoaded $list[0], -> $list.css opacity: 1, height: ''
+    $(@refs.artworks.getDOMNode()).find('img').css(width: '')
 
   onClickOff: ->
-    ids = @props.section.artworks.pluck 'id'
-    return @props.section.destroy() if ids.length is 0
-    @props.section.set ids: ids, layout: @props.section.get('layout')
+    return @props.section.destroy() if @props.section.artworks.length is 0
+
+  removeArtwork: (artwork) -> =>
+    @props.section.artworks.remove artwork
+
+  changeLayout: (layout) -> =>
+    @props.section.set layout: layout
 
   fetchArtworks: (ids) ->
     @props.section.artworks.getOrFetchIds ids,
@@ -77,12 +109,6 @@ module.exports = React.createClass
       success: (artworks) =>
         return unless @isMounted()
         @refs.byUrls.setState loading: false, errorMessage: ''
-
-  removeArtwork: (artwork) -> =>
-    @props.section.artworks.remove artwork
-
-  changeLayout: (layout) -> =>
-    @props.section.set layout: layout
 
   render: ->
     div {
@@ -109,10 +135,13 @@ module.exports = React.createClass
         }
         section { className: 'esa-inputs' },
           h1 {}, 'Add artworks to this section'
-          ByTitle {
-            artworks: @props.section.artworks
-            ref: 'byTitle'
-          }
+          label { className: 'esa-autocomplete-label' }, 'Search by title',
+          div { className: 'esa-autocomplete-input' },
+            input {
+              ref: 'autocomplete'
+              className: 'bordered-input bordered-input-dark'
+              placeholder: 'Try "Andy Warhol Skull"'
+            }
           ByUrls {
             section: @props.section
             fetchArtworks: @fetchArtworks
@@ -123,10 +152,10 @@ module.exports = React.createClass
           (@props.section.artworks.map (artwork, i) =>
             li { key: i },
               div { className: 'esa-img-container' },
-                img { src: artwork.get('image_urls')?.large }
+                img { src: artwork.imageUrl() }
               p {},
                 strong {}, artwork.get('artists')?[0]?.name
-              p {}, artwork.get('artwork')?.title
+              p {}, artwork.get('artwork')?.title or artwork.attributes?.title
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'

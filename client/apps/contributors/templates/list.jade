@@ -2,8 +2,10 @@ for user in users
   tr
     td
       img.contributors-icon( src=user.iconUrl() )
-    td= user.get('user').name
-    td= user.get('details').email
+    td
+      = user.get('user').name
+      br
+      = user.get('details').email
     td= user.get('details').type
     td.contributors-actions
       .contributors-actions-container

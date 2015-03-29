@@ -1,7 +1,7 @@
 section#edit-thumbnail
   header
-    h1 Prepare your article for Artsy & social media
-    h2 Choose a tag, title, thumbnail and teaser that summarizes the article and grabs the user's attention
+    h1 Prepare your article for Artsy and social media
+    h2 Choose a thumbnail image and title that captures the user&rsquo;s attention
     img( src='/images/edit_prepare_example.png')
   form#edit-thumbnail-inputs
     #edit-thumbnail-inputs-left
@@ -9,17 +9,7 @@ section#edit-thumbnail
     #edit-thumbnail-inputs-right
       label#edit-thumbnail-title
         span.edit-required Title
-        input.bordered-input(
-          placeholder='Type a title'
-          value=article.get('thumbnail_title')
-        )
-      label#edit-thumbnail-teaser
-        span.edit-required Teaser
-        textarea.bordered-input( placeholder='Type a teaser' )
-          = article.get('thumbnail_teaser')
-    label#edit-thumbnail-tags
-      span.edit-required Tags
-      input.bordered-input(
-        placeholder='Type tags separated by commas'
-        value=article.get('tags') && article.get('tags').join(',')
-      )
+        a.edit-use-article-title( href='#' ) Use article title
+        textarea.bordered-input.edit-title-textarea(
+          placeholder="Type a title that captures your reader's attention"
+        )= article.get('thumbnail_title')

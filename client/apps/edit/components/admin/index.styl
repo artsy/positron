@@ -5,7 +5,7 @@ gutter-size = 30px
 #edit-admin
   padding-top header-size
   display none
-  width overflow-width
+  width overflow-width - 40px
   margin auto
   section
     border-top 1px solid gray-lighter-color
@@ -16,7 +16,7 @@ gutter-size = 30px
     font-size 24px
     margin-top 40px
   h2
-    margin 20px 0 whitespace-block-size 0
+    margin 20px 0 35px 0
     line-height 1.4em
   h3
     avant-garde()
@@ -26,10 +26,12 @@ gutter-size = 30px
 #edit-admin-tier
   label
     width 50%
-    &:first-child
-      padding-right gutter-size
+    &:last-child
+      padding-left (gutter-size / 2)
   input
     margin 0 10px 0 0
+
+#edit-admin-tier, #edit-admin-magazine
   .edit-admin-right
     padding-top 87px
 
@@ -111,7 +113,7 @@ gutter-size = 30px
   width 100%
 
 .eaf-input, .edit-admin-feature-list li
-  width 277px
+  width 264px
   margin 0 gutter-size 10px 0
 
 .edit-admin-feature-list li:nth-child(2n+2)
@@ -128,4 +130,15 @@ gutter-size = 30px
 #edit-admin-change-author input
 #edit-admin-fair input
 #edit-admin-partner input
+  width 100%
+#edit-admin-auction input
+  width 100%
+#edit-admin-slug
+  input
+    width 100%
+  a
+    display block
+    color gray-color
+    margin-top 10px
+#edit-admin-publish-date input
   width 100%

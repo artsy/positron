@@ -14,16 +14,15 @@ glossary = require('glossary')(minFreq: 2, collapse: true, blacklist: [
 ])
 User = require '../apps/users/model'
 { ObjectId } = mongojs = require 'mongojs'
-{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL, BATCH_SIZE } = process.env
+{ GRAVITY_MONGO_URL, GRAVITY_CLOUDFRONT_URL } = process.env
 gravity = null
 db = null
-BATCH_SIZE = Number BATCH_SIZE
 
 module.exports = (callback = ->) ->
   return callback new Error('No GRAVITY_MONGO_URL') unless GRAVITY_MONGO_URL?
   setup (err) ->
     return callback err if err
-    async.parallel [updateSyncedArticleSlugs, migrateOldPosts], callback
+    migrateOldPosts callback
 
 setup = (callback) ->
   # Load the Positron & Gravity databases
@@ -32,58 +31,21 @@ setup = (callback) ->
     'post_artwork_features', 'artworks', 'profiles', 'fair_organizers', 'fairs',
     'partners', 'reposts']
   debug "Connecting to databases and beginning migrate..."
-  # Make sure both databases are a go first before dropping previously migrated
-  # posts.
+  # Make sure both databases are a go first.
   async.parallel [
     (cb) -> db.articles.count {}, cb
     (cb) -> gravity.posts.count {}, cb
-  ], (err, counts) ->
-    return callback err if err
-    debug "Merging #{counts[0]} posts into #{counts[1]} articles."
-    # Remove any posts with slideshows & gravity_ids b/c we know those
-    # originated in Gravity and will be replaced.
-    query = {'sections.0.type': 'slideshow', gravity_id: { $ne: null } }
-    db.articles.remove query, callback
-
-updateSyncedArticleSlugs = (callback) ->
-  db.articles.distinct(
-    'gravity_id'
-    { 'sections.0.type': $ne: 'slideshow' }
-    (err, ids) ->
-      return callback err if err
-      debug "Updating slugs for #{ids.length} articles"
-      gravity.posts.find { _id: $in: _.map(ids, ObjectId) }, (err, posts) ->
-        return callback err if err
-        async.map posts, (post, cb) ->
-          db.articles.update(
-            { gravity_id: post._id.toString() }
-            { $addToSet: slugs: $each: post._slugs }
-            ->
-              debug "Merged #{post._slugs.join ', '} for #{post._id}"
-              cb arguments...
-          )
-        , callback
-  )
+  ], callback
 
 migrateOldPosts = (callback) ->
-  # Find published posts from Gravity's db that weren't created in Positron
-  # and map them into Positron articles in batches of 1000 at a time to
-  # keep memory consumption low.
+  # Find published posts from Gravity's db that don't exist in Positron and
+  # convert them to articles.
   db.articles.distinct 'gravity_id', {}, (err, ids) ->
     return callback err if err
     ids = (ObjectId(id.toString()) for id in _.compact ids)
-    gravity.posts.count { published: true, _id: $nin: ids }, (err, count) ->
-      async.timesSeries Math.ceil(count / BATCH_SIZE), ((n, next) ->
-        gravity.posts
-          .find(published: true, _id: $nin: ids)
-          .skip(n * BATCH_SIZE).limit(BATCH_SIZE)
-          .toArray (err, posts) ->
-            return cb(err) if err
-            postsToArticles posts, (err) ->
-              # Small pause inbetween for the GC to catch up
-              setTimeout (-> next err), 100
-      ), (err) ->
-          callback err
+    gravity.posts.find { published: true, _id: $nin: ids }, (err, posts) ->
+      debug "Converting #{posts.length} new posts into articles..."
+      postsToArticles posts, callback
 
 findPostProfiles = (post, profileType, callback) ->
   async.parallel [
@@ -131,6 +93,50 @@ bestThumbnail = (attachments, artworks) ->
       attachment.oembed_json?.thumbnail_url or attachment.oembed_json?.url
   )
   imageUrls[0] or linkUrls[0] or artworkUrls[0] or null
+
+slideshowSections = (post, bodyText) ->
+  slideshowItems = _.compact(for attachment in (post.attachments or [])
+    switch attachment._type
+      when 'PostArtwork'
+        {
+          type: 'artwork'
+          id: attachment.artwork_id
+        }
+      when 'PostImage'
+        {
+          type: 'image'
+          url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
+            "#{attachment._id}/larger.jpg"
+        }
+      when 'PostLink'
+        if attachment.url?.match /youtube|vimeo/
+          {
+            type: 'video'
+            url: attachment.url
+          }
+        else if attachment.url?.match /jpeg|jpg|png|gif/
+          {
+            type: 'image'
+            url: attachment.url
+          }
+  )
+  itemTypes = _.uniq(_.pluck slideshowItems, 'type').join('')
+  sections = (
+    if (slideshowItems.length <= 3 and itemTypes is 'artwork')
+      [{
+        type: 'artworks'
+        ids: _.pluck(slideshowItems, 'id')
+        layout: 'overflow_fillwidth'
+      }]
+    else if slideshowItems.length is 1
+      switch (item = slideshowItems[0]).type
+        when 'image' then [{ type: 'image', url: item.url }]
+        when 'video' then [{ type: 'video', url: item.url }]
+    else
+      [{ type: 'slideshow', items: slideshowItems }]
+  )
+  sections.push { type: 'text', body: post.body } if bodyText
+  sections
 
 postsToArticles = (posts, callback) ->
   return callback() unless posts.length
@@ -183,42 +189,14 @@ postsToArticles = (posts, callback) ->
         published: post.published
         published_at: moment(post.published_at).toDate()
         updated_at: moment(post.updated_at).toDate()
-        sections: (
-          slideshowItems = _.compact(for attachment in (post.attachments or [])
-            switch attachment._type
-              when 'PostArtwork'
-                {
-                  type: 'artwork'
-                  id: attachment.artwork_id
-                }
-              when 'PostImage'
-                {
-                  type: 'image'
-                  url: "#{GRAVITY_CLOUDFRONT_URL}/post_images/" +
-                    "#{attachment._id}/larger.jpg"
-                }
-              when 'PostLink'
-                if attachment.url?.match /youtube|vimeo/
-                  {
-                    type: 'video'
-                    url: attachment.url
-                  }
-                else if attachment.url?.match /jpeg|jpg|png|gif/
-                  {
-                    type: 'image'
-                    url: attachment.url
-                  }
-          )
-          sections = [{ type: 'slideshow', items: slideshowItems }]
-          sections.push { type: 'text', body: post.body } if bodyText
-          sections
-        )
+        sections: slideshowSections(post, bodyText)
         featured_artist_ids: (f.artist_id for f in artistFeatures or [])
         featured_artwork_ids: (f.artwork_id for f in artworkFeatures or [])
         gravity_id: post._id
         fair_id: fair?._id
         partner_ids: _.pluck(partners, '_id') if partners?.length
         tier: 2
+        migrated_from_gravity: true
       # Callback with mapped data
       debug "Mapped #{_.last post._slugs}"
       callback? null, data

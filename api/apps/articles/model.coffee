@@ -21,16 +21,17 @@ request = require 'superagent'
 schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
-  slug: @string().allow(null)
+  slug: @string().allow('', null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
-  tags: @array().includes(@string())
+  tags: @array().items(@string())
   title: @string().allow('', null)
   published: @boolean().default(false)
+  published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  sections: @array().includes([
+  sections: @array().items([
     @object().keys
       type: @string().valid('image')
       url: @string().allow('', null)
@@ -40,14 +41,14 @@ schema = (->
       body: @string().allow('', null)
     @object().keys
       type: @string().valid('artworks')
-      ids: @array().includes(@string())
+      ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
     @object().keys
       type: @string().valid('video')
       url: @string().allow('', null)
     @object().keys
       type: @string().valid('slideshow')
-      items: @array().includes [
+      items: @array().items [
         @object().keys
           type: @string().valid('image')
           url: @string().allow('', null)
@@ -60,11 +61,13 @@ schema = (->
           id: @string()
       ]
   ]).default([])
-  primary_featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artist_ids: @array().includes(@objectId()).allow(null)
-  featured_artwork_ids: @array().includes(@objectId()).allow(null)
+  primary_featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artist_ids: @array().items(@objectId()).allow(null)
+  featured_artwork_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow('', null)
-  partner_ids: @array().includes(@objectId()).allow(null)
+  partner_ids: @array().items(@objectId()).allow(null)
+  auction_id: @objectId().allow('', null)
+  featured: @boolean().default(false)
 ).call Joi
 
 querySchema = (->
@@ -76,8 +79,10 @@ querySchema = (->
   artwork_id: @objectId()
   fair_ids: @array()
   partner_id: @objectId()
+  auction_id: @objectId()
   sort: @string()
   tier: @number()
+  featured: @boolean()
 ).call Joi
 
 #
@@ -105,11 +110,12 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id'
+      'fair_ids', 'partner_id', 'auction_id'
     # Type cast IDs
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
+    query.auction_id = ObjectId input.auction_id if input.auction_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
@@ -147,6 +153,7 @@ sortParamToQuery = (input) ->
           _id: id
           author_id: ObjectId(article.author_id)
           fair_id: ObjectId(article.fair_id) if article.fair_id
+          auction_id: ObjectId(article.auction_id) if article.auction_id
         ), cb
 
 validate = (input, callback) ->
@@ -157,28 +164,29 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  publishing = input.published and not article.published
-  article = _.extend article, input, updated_at: new Date
-  getSlug article, (err, slug) ->
+  input.published_at = new Date if(input.published and not article.published and not input.published_at)
+  User.find (input.author_id or article.author_id), (err, author) ->
     return callback err if err
-    article.slugs ?= []
-    article.slugs.push slug unless slug in article.slugs
-    if publishing then onPublish(article, callback) else callback null, article
-
-getSlug = (article, callback) ->
-  return callback null, article.slug if article.slug
-  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  return callback null, titleSlug unless article.author_id
-  User.find article.author_id, (err, user) ->
-    return callback null, titleSlug unless user
-    callback err, _s.slugify(user.user.name) + '-' + titleSlug
-
-onPublish = (article, callback) =>
-  User.find article.author_id, (err, author) ->
-    return callback err if err
-    article.author = User.denormalizedForArticle(author) if author
-    article.published_at = new Date
+    article = _.extend article, input, updated_at: new Date
+    article = addSlug article, input, author
+    article = denormalizeAuthor article, author
     callback null, article
+
+addSlug = (article, input, author, callback) ->
+  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
+  article.slugs ?= []
+  if input.slug? and (input.slug != _.last(article.slugs))
+    slug = input.slug
+  else if author
+    slug = _s.slugify(author.user.name) + '-' + titleSlug
+  else
+    slug = titleSlug
+  article.slugs = _.unique(article.slugs).concat [slug]
+  article
+
+denormalizeAuthor = (article, author, callback) ->
+  article.author = User.denormalizedForArticle(author) if author
+  article
 
 @syncToPost = (article, accessToken, callback) ->
 
@@ -251,30 +259,53 @@ onPublish = (article, callback) =>
                     # TODO: Figure out what to do with "Artwork not Found" errors
                     # return callback err if err
 
-                    # Add artworks, images and video from the article to the post
-                    async.mapSeries article.sections, ((section, cb) ->
-                      switch section.type
-                        when 'artworks'
-                          async.mapSeries section.ids, ((id, cb2) ->
-                            request
-                              .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
-                              .set('X-Access-Token', accessToken)
-                              .end (err, res) -> cb2 (err or res.body.error), res.body
-                          ), cb
+                    # Add artworks, images and video from the slideshow to the post
+                    if article.sections[0]?.type is 'slideshow'
+                      items = article.sections[0].items
+                    else
+                      items = []
+                    async.mapSeries items, ((item, cb) ->
+                      switch item.type
+                        when 'artwork'
+                          request
+                            .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{item.id}")
+                            .set('X-Access-Token', accessToken)
+                            .end (err, res) -> cb (err or res.body.error), res.body
                         when 'image', 'video'
                           request
                             .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
                             .set('X-Access-Token', accessToken)
-                            .send(url: section.url)
+                            .send(url: item.url)
                             .end (err, res) -> cb (err or res.body.error), res.body
                         else
                           cb()
                     ), (err) ->
                       return callback err if err
-                      request
-                        .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
-                        .set('X-Access-Token', accessToken)
-                        .end (err, res) -> callback (err or res.body.error), res.body
+
+                      # Add artworks, images and video from the article to the post
+                      async.mapSeries article.sections, ((section, cb) ->
+                        switch section.type
+                          when 'artworks'
+                            async.mapSeries section.ids, ((id, cb2) ->
+                              request
+                                .post("#{ARTSY_URL}/api/v1/post/#{post._id}/artwork/#{id}")
+                                .set('X-Access-Token', accessToken)
+                                .end (err, res) -> cb2 (err or res.body.error), res.body
+                            ), cb
+                          when 'image', 'video'
+                            request
+                              .post("#{ARTSY_URL}/api/v1/post/#{post._id}/link")
+                              .set('X-Access-Token', accessToken)
+                              .send(url: section.url)
+                              .end (err, res) -> cb (err or res.body.error), res.body
+                          else
+                            cb()
+                      ), (err) ->
+                        return callback err if err
+                        request
+                          .get("#{ARTSY_URL}/api/v1/post/#{post._id}")
+                          .set('X-Access-Token', accessToken)
+                          .end (err, res) -> callback (err or res.body.error), res.body
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, (err, res) ->

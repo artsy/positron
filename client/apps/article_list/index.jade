@@ -1,13 +1,31 @@
 extend ../../components/layout/templates/index
 include ../../../node_modules/artsy-ezel-components/pagination/paginator
 
+block header
+  if published
+    | Published Articles
+    - var emptyMessage = "published any articles"
+  else
+    | Drafts
+    - var emptyMessage = "written any drafts"
+
+
 block content
-  h1.page-header
-    if published
-      .max-width-container Published Articles
-    else
-      .max-width-container Drafts
   #article-list-items.max-width-container
+    if articles.length == 0
+        .article-list-empty
+          p You haven't #{emptyMessage} yet
+            br
+            | _______
+          p Artsy Writer is a tool for writing stories about art.
+            //- HELP PAGE COMING SOON
+            //- br
+            //- | Get started by writing an article, or see our
+            //- a( href='' ) help page
+            //- |  for more info.
+          a.avant-garde-button.avant-garde-button-dark.article-new-button( href='/articles/new' )
+            include ../../components/layout/public/icons/layout_new_article.svg
+            .article-new-text Write An Article
     ul
       for article in articles
         li
@@ -15,29 +33,19 @@ block content
             a( href="/articles/#{article.get('id')}/edit" )
               .article-list-item-left
                 if article.get('thumbnail_image')
+                  - url = resize(article.get('thumbnail_image'), { width: 150 })
                   .article-list-img(
-                    style="background-image: url(#{article.get('thumbnail_image')})"
+                    style="background-image: url(#{url})"
                   )
                 else
                   .article-list-item-placeholder Missing
                     br
                     | thumbnail
               .article-list-item-right
-                .article-list-item-tags
-                  if article.get('tags') && article.get('tags').length
-                    ul
-                      for tag in article.get('tags')
-                        li= tag
-                  else
-                    span.article-list-missing Missing tags
                 if article.get('thumbnail_title')
                   h1= article.get('thumbnail_title')
                 else
                   h1.article-list-missing Missing title
-                if article.get('thumbnail_teaser')
-                  h2= article.get('thumbnail_teaser')
-                else
-                  h2.article-list-missing Missing teaser
                 .article-list-items-dates
                   if article.get('published_at')
                     strong Published #{moment(article.get('published_at')).fromNow()}

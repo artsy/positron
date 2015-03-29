@@ -22,12 +22,13 @@ wide-input-width = 640px
   fill-container()
   background black
   z-index 3
-  height 282px
+  height 294px
   top -(@height)
   text-align center
   display none
 
 .esa-inputs
+  clearfix()
   color white
   padding controls-padding
   text-align left
@@ -37,15 +38,15 @@ wide-input-width = 640px
     margin-bottom controls-padding
   label
     display block
-    margin-bottom controls-padding
+    margin-bottom controls-padding + 10px
     position relative
-    span, input, textarea
+    > span, > input, > textarea
       display inline-block
       vertical-align top
-    input, textarea
+    > input, > textarea
       position absolute
       right 0
-    span
+    > span
       margin-top 10px
   .esa-by-urls-container
     display inline-block
@@ -68,7 +69,6 @@ wide-input-width = 640px
 
 .esa-artworks-list
   li
-    margin-bottom 30px
     position relative
     &:last-child
       margin-bottom 0
@@ -134,6 +134,32 @@ wide-input-width = 640px
   position absolute
   top 28px
   line-height 21px
+
+.esa-autocomplete-label
+  margin-bottom 30px
+
+.esa-autocomplete-input
+  float right
+  margin-bottom 10px
+  padding-left 8px
+  color black
+  input
+    padding-left 8px
+  .tt-dropdown-menu
+    margin-top 0
+    border 1px solid gray-lighter-color
+    p
+      line-height 1.2em
+    .tt-suggestion
+      clearfix()
+      line-height 1.2em
+      .esa-suggestion
+        width 50px
+        height @width
+        background center center gray-lighter-color
+        background-size cover
+        margin-right 10px
+        float left
 
 //
 // Varying layouts

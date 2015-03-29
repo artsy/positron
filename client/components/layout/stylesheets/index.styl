@@ -7,6 +7,7 @@ global-reset()
 
 body
   garamond()
+  min-width 300px
 
 *
   box-sizing border-box
@@ -23,16 +24,17 @@ em
 #layout-content
   padding-left sidebar-width
   padding-bottom 100px
+  min-width overflow-width - 20px
 
 .page-header
   avant-garde()
   font-size default-avant-garde-font-size
-  padding whitespace-block-size 0
+  padding 35px 0
   border-bottom 1px solid gray-lighter-color
 
 .max-width-container
-  max-width 700px + (whitespace-block-size * 2)
-  padding 0 whitespace-block-size
+  max-width 700px + (35px * 2)
+  padding 0 35px
   margin auto
 
 .lite-table
@@ -50,3 +52,54 @@ em
 .lite-table-spinner-tr td
   position relative
   padding 30px 0
+
+#layout-hamburger
+  vertical-align middle
+  font-style normal
+  color #000
+  text-align left
+  text-indent -9999px
+  direction ltr
+  width 20px
+  height 4px
+  box-shadow inset 0 0 0 7px,0 -7px,0 7px
+  margin 24px 0 0 15px
+
+#layout-hamburger-container
+  width 53px
+  position absolute
+  top 0
+  left 0
+  display none
+  height 100%
+  border-right 1px solid gray-lighter-color
+  cursor pointer
+
+// TODO: Move to artsy-ezel-components
+@media (max-width: 600px)
+  .bordered-pagination
+    position relative
+    ul, li
+      border 0 !important
+    li a
+      display none !important
+      &.paginator-previous, &.paginator-next
+        display block !important
+        border 2px solid gray-lighter-color
+        position absolute
+      &.paginator-previous
+        left 0
+      &.paginator-next
+        right 0
+
+@media (max-width: 600px)
+  #layout-hamburger-container
+    display inline-block
+  .page-header
+    padding 20px 20px 20px 55px
+    position relative
+  #layout-content
+    min-width 0
+  .max-width-container
+    padding 0 20px
+

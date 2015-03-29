@@ -26,9 +26,7 @@ module.exports = class Article extends Backbone.Model
 
   finishedThumbnail: ->
     @get('thumbnail_title')?.length > 0 and
-    @get('thumbnail_image')?.length > 0 and
-    @get('thumbnail_teaser')?.length > 0 and
-    @get('tags')?.length > 0
+    @get('thumbnail_image')?.length > 0
 
   fetchFeatured: (options = {}) ->
     options.success = _.after 3, options.success if options.success?
@@ -53,7 +51,7 @@ module.exports = class Article extends Backbone.Model
       list.push { featured: true, model: model }
     list = _.sortBy list, (item) ->
       if mentioned is 'Artworks'
-        item.model.get('artwork').title
+        item.model.get('title')
       else
         item.model.get('artist').name
 
@@ -61,12 +59,11 @@ module.exports = class Article extends Backbone.Model
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length
     if @featuredArtworks.length
-      extended.featured_artwork_ids = @featuredArtworks.pluck('id')
+      extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
     if @featuredArtists.length
       extended.featured_artist_ids = @featuredArtists.pluck('id')
     if @featuredPrimaryArtists.length
       extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('id')
-    extended.slug = undefined
     _.extend super, extended
 
   syncToPost: (options = {}) ->

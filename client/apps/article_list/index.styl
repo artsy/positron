@@ -1,13 +1,22 @@
 @import '../../components/stylus_lib'
 
 #article-list-items > ul > li
-  margin-top whitespace-block-size
+  margin-top 20px
+  padding-top 20px
+  border-top 1px solid gray-lighter-color
   line-height 26px
   transition opacity 0.3s
+  &:first-child
+    border-top 0
+    padding-top 0
+  &:last-child
+    border-bottom 0
+    padding-bottom 0
   &:hover
     opacity 0.8
   h1
-    font-size 20px
+    font-size 24px
+    padding-bottom 5px
   .article-list-img
     width 130px
     height 84px
@@ -19,29 +28,18 @@
 
 .article-list-item-left, .article-list-item-right
   display inline-block
-  vertical-align top
+  vertical-align middle
 
 .article-list-item-right > *
   overflow ellipsis
   width 550px
 
-.article-list-item-tags, .article-list-items-dates
+.article-list-items-dates
   avant-garde()
   font-size small-avant-garde-font-size
-
-.article-list-item-tags
-  line-height small-avant-garde-font-size
-  margin-bottom 5px
-  ul li
-    display inline-block
-    color gray-dark-color
-    margin-right 8px
-    &:first-child
-      color black
-
-.article-list-items-dates
   display inline-block
   color gray-dark-color
+  line-height 1em
   strong
     margin-right 10px
     color black
@@ -51,7 +49,7 @@
   color gray-dark-color
 
 #article-list-pagination
-  margin (whitespace-block-size * 2) 0
+  margin (35px * 2) 0
 
 .article-list-item-placeholder
   background gray-lighter-color
@@ -63,3 +61,52 @@
   line-height 1.2em
   padding-top (@height / 2) - 13px
   color gray-dark-color
+
+.article-list-empty
+  text-align center
+  p
+    font-size 20px
+    margin 45px 0
+    line-height 32px
+  p:first-child
+    margin-top 50px
+    font-size 24px
+    line-height 20px
+  svg
+    fill white
+    width 22px
+    display inline
+    vertical-align middle
+    margin-left 15px
+
+.article-new-text
+  display inline
+  vertical-align middle
+  margin 0 15px
+
+@media (max-width: 600px)
+  .article-list-item-left
+    width 30%
+    margin 0
+  .article-list-img
+    width 100% !important
+  .article-list-item-right, .article-list-item-left
+    vertical-align top
+  .article-list-item-right
+    width 70%
+    padding-left 20px
+    h1, .article-list-items-dates
+      width 100%
+    h1
+      font-size default-garamond-font-size !important
+      line-height 1.2em
+      overflow visible
+      padding 0
+      white-space inherit
+    .article-list-items-dates strong
+      display block
+      margin 7px 0 5px 0
+  .article-list-item-placeholder
+    width 100%
+  #article-list-pagination
+    margin 20px 0

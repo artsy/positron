@@ -39,7 +39,7 @@ assets:
 
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
 deploy: assets
-	$(BIN)/bucketassets -b positron-$(env)
+	$(BIN)/bucket-assets -b positron-$(env)
 	heroku config:set COMMIT_HASH=$(shell git rev-parse --short HEAD) --app=positron-$(env)
 	git push git@heroku.com:positron-$(env).git master
 

@@ -14,7 +14,7 @@ describe 'EditThumbnail', ->
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().article
       ), =>
-        benv.expose $: require('jquery')
+        benv.expose $: require('jquery'), resize: ((url) -> url)
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditThumbnail = benv.requireWithJadeify(
@@ -53,3 +53,23 @@ describe 'EditThumbnail', ->
       img.onload()
       Backbone.sync.args[0][0].should.equal 'create'
       delete global.Image
+
+  describe '#useArticleTitle', ->
+
+    it 'uses the article title when clicked', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-use-article-title').click()
+      @view.$('.edit-title-textarea').val().should.equal 'foo'
+
+  describe '#checkTitleTextArea', ->
+
+    it 'shows the use-title link when nothing is in the textarea', ->
+      @view.$('.edit-title-textarea').val('')
+      @view.checkTitleTextarea()
+      @view.$('.edit-use-article-title').attr('style').should.not.containEql 'display: none'
+
+    it 'hides the use-title link when the title equals the textarea', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-title-textarea').val('foo')
+      @view.checkTitleTextarea()
+      @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'

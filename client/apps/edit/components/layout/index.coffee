@@ -15,11 +15,10 @@ module.exports = class EditLayout extends Backbone.View
     @user = new CurrentUser sd.USER
     @$window = $(window)
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @article.sections.on 'change', => @article.save()
+    @article.sections.on 'add remove reset', => @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
-    @article.on 'finished open:tab1', @syncTitleTeaser
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
     @$window.on 'scroll', @popLockControls
@@ -28,14 +27,6 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
-
-  syncTitleTeaser: =>
-    unless @article.get 'thumbnail_title'
-      @$('#edit-thumbnail-title input')
-        .val(@$('#edit-title textarea').val()).trigger 'keyup'
-    unless @article.get 'thumbnail_teaser'
-      @$('#edit-thumbnail-teaser textarea')
-        .val(@$('#edit-lead-paragraph').text()).trigger 'keyup'
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
@@ -62,6 +53,7 @@ module.exports = class EditLayout extends Backbone.View
     {
       author_id: @user.get('id')
       tier: Number @$('[name=tier]:checked').val()
+      featured: @$('[name=featured]').is(':checked')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
@@ -73,8 +65,8 @@ module.exports = class EditLayout extends Backbone.View
     }
 
   toggleAstericks: =>
-    @$('.edit-required + :input').each (i, el) =>
-      $(el).prev('.edit-required').attr 'data-hidden', !!$(el).val()
+    @$('.edit-required ~ :input').each (i, el) =>
+      $(el).prevAll('.edit-required').attr 'data-hidden', !!$(el).val()
 
   redirectToList: =>
     location.assign '/articles?published=' + @article.get('published')
@@ -108,9 +100,11 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
+    'mouseenter .edit-section-tool': 'toggleSectionTool'
+    'mouseleave .edit-section-tool': 'toggleSectionTool'
     'mouseenter .edit-section-container:not([data-editing=true])': 'toggleSectionTools'
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
-    'click .edit-section-container': 'hideSectionTools'
+    'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -141,6 +135,11 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleLeadParagraphPlaceholder: ->
     toggleScribePlaceholder @$('#edit-lead-paragraph')
+
+  toggleSectionTool: (e) ->
+    $t = $(e.currentTarget)
+    return if $t.siblings('.edit-section-container').is('[data-editing=true]')
+    $t.toggleClass 'is-active'
 
   toggleSectionTools: (e) ->
     @hideSectionTools()

@@ -4,7 +4,7 @@
 #
 
 viewHelpers = require './view_helpers'
-debug = require('debug') 'client'
+uaParser = require('ua-parser')
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
@@ -20,11 +20,20 @@ debug = require('debug') 'client'
   res.locals[key] = helper for key, helper of viewHelpers
   next()
 
-# TODO: Replace with app that renders a nice page
-@errorHandler = (err, req, res, next) ->
-  debug err.stack, err.message
-  if err.message.match 'access token is invalid or has expired'
-    return res.redirect '/logout'
-  res.status(err.status or 500).send(
-    "<pre>" + err.message or err.toString() + "</pre>"
-  )
+@ua = (req, res, next) ->
+  r = uaParser.parse(req.get('user-agent'))
+  res.locals.sd.USER_AGENT = req.get('user-agent')
+  res.locals.sd.IS_MOBILE = true if r.os.family in ['iOS', 'Android']
+  allowed = switch r.ua.family
+    when 'Chrome' then r.ua.major >= 38
+    when 'Firefox' then r.ua.major >= 34
+    when 'Safari' then r.ua.major >= 7
+    when 'IE' then r.ua.major >= 10
+    else false
+  if allowed
+    next()
+  else
+    next new Error(
+      "You must use the lastest version of Chrome, Safari, " +
+      "Firefox, or Internet Explorer to use Artsy Writer."
+    )

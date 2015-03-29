@@ -16,8 +16,7 @@ describe 'SectionList', ->
       benv.expose $: require 'jquery'
       SectionList = benv.require resolve(__dirname, '../index')
       SectionList.__set__ 'SectionTool', ->
-      SectionList.__set__ 'SectionContainer', React.createClass
-        render: -> React.DOM.div {}
+      SectionList.__set__ 'SectionContainer', @SectionContainer = sinon.stub()
       @component = React.render SectionList(
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
@@ -39,5 +38,11 @@ describe 'SectionList', ->
     @component.setState.args[0][0].editingIndex.should.equal 1
 
   it 'toggles editing state when a child section callsback', ->
-    @component.refs.section1.props.onSetEditing 2
-    @component.setState.args[0][0].editingIndex.should.equal 2
+    @SectionContainer.args[0][0].onSetEditing
+      .should.equal @component.onSetEditing
+
+  it 'uses the section cid as a key b/c they have to be unique AND a \
+      property specific to that piece of data, or model in our case', ->
+    @component.render()
+    @SectionContainer.args[0][0].key.should.equal @sections.at(0).cid
+    @SectionContainer.args[1][0].key.should.equal @sections.at(1).cid

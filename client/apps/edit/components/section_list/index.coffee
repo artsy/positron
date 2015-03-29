@@ -3,9 +3,9 @@
 # section components that get rendered.
 #
 
-SectionContainer = -> require('../section_container/index.coffee') arguments...
-SectionTool = -> require('../section_tool/index.coffee') arguments...
 React = require 'react'
+SectionContainer = React.createFactory require '../section_container/index.coffee'
+SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -14,11 +14,8 @@ module.exports = React.createClass
     { editingIndex: null }
 
   componentDidMount: ->
-    @props.sections.on 'remove add destroy reset', => @forceUpdate()
+    @props.sections.on 'add remove reset', => @forceUpdate()
     @props.sections.on 'add', @onNewSection
-
-  componentWillUnmount: ->
-    @props.sections.off()
 
   componentDidUpdate: ->
     $(@getDOMNode()).find('.scribe-marker').remove()
@@ -40,10 +37,12 @@ module.exports = React.createClass
         @props.sections.map (section, i) =>
           [
             SectionContainer {
+              sections: @props.sections
               section: section
               index: i
               editing: @state.editingIndex is i
               ref: 'section' + 1
+              key: section.cid
               onSetEditing: @onSetEditing
             }
             SectionTool { sections: @props.sections, index: i }
