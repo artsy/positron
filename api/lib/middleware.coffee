@@ -8,9 +8,6 @@ _ = require 'underscore'
 { API_URL } = process.env
 debug = require('debug') 'api'
 
-UNKNOWN_ERROR = "Unknown failure. " +
-                "Try again or contact support@artsymail.com for help."
-
 @helpers = (req, res, next) ->
 
   # Error handler helper for predictable JSON responses.
