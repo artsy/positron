@@ -86,11 +86,7 @@ module.exports = React.createClass
           h2 {}, 'Up to 30mb'
           input { type: 'file', onChange: @upload }
         div { className: 'esi-caption-container' },
-          nav {
-            ref: 'toolbar'
-            className: 'edit-scribe-nav esi-nav'
-            onClick: @focusEmptyCaption
-          },
+          nav { ref: 'toolbar', className: 'edit-scribe-nav esi-nav' },
             button {
               'data-command-name': 'bold'
               dangerouslySetInnerHTML: __html: '&nbsp;'

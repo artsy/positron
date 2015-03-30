@@ -1,3 +1,4 @@
+_ = require 'underscore'
 Backbone = require 'backbone'
 gemup = require 'gemup'
 sd = require('sharify').data
@@ -16,7 +17,6 @@ module.exports = class EditThumbnail extends Backbone.View
       article: @article
 
   prefillThumbnailTitle: =>
-    console.log @article.get('title') and not @article.get('thumbnail_title')
     if @article.get('title') and not @article.get('thumbnail_title')
       @useArticleTitle()
 
