@@ -4,7 +4,7 @@
   "dependencies": {
     "artsy-backbone-mixins": {
       "version": "0.0.20",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-40132-28fce91b/git-cache-68ce1c934e51/be65bf983ac00d4eda3e967bfe644e7551cba6e7",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-ca1728c1cf6e/be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "dependencies": {
         "marked": {
@@ -26,7 +26,7 @@
     },
     "artsy-ezel-components": {
       "version": "0.0.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-40132-28fce91b/git-cache-90c80298c975/a9e81d625c3e9b4a84217289d48972961e9016f5",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-4ee0e25db09e/a9e81d625c3e9b4a84217289d48972961e9016f5",
       "resolved": "git://github.com/artsy/artsy-ezel-components.git#a9e81d625c3e9b4a84217289d48972961e9016f5"
     },
     "async": {
@@ -729,7 +729,7 @@
           "dependencies": {
             "acorn-globals": {
               "version": "1.0.3",
-              "from": "acorn-globals@>=1.0.0 <2.0.0",
+              "from": "acorn-globals@>=1.0.1 <2.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.3.tgz",
               "dependencies": {
                 "acorn": {
@@ -743,7 +743,7 @@
         },
         "mkdirp": {
           "version": "0.5.0",
-          "from": "mkdirp@0.5.0",
+          "from": "mkdirp@>=0.5.0 <0.6.0",
           "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.0.tgz",
           "dependencies": {
             "minimist": {
@@ -794,7 +794,7 @@
               "dependencies": {
                 "source-map": {
                   "version": "0.1.43",
-                  "from": "source-map@>=0.1.7 <0.2.0",
+                  "from": "source-map@>=0.1.40 <0.2.0",
                   "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
                   "dependencies": {
                     "amdefine": {
@@ -837,7 +837,7 @@
             },
             "acorn-globals": {
               "version": "1.0.3",
-              "from": "acorn-globals@>=1.0.0 <2.0.0",
+              "from": "acorn-globals@>=1.0.1 <2.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.3.tgz"
             }
           }
@@ -944,7 +944,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@latest",
+              "from": "readable-stream@>=1.0.26 <1.1.0",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -1469,7 +1469,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@>=1.1.0 <2.0.0",
+                          "from": "ansi-regex@>=1.0.0 <2.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         },
                         "get-stdin": {
@@ -1486,7 +1486,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@>=1.1.0 <2.0.0",
+                          "from": "ansi-regex@>=1.0.0 <2.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         }
                       }
@@ -1574,7 +1574,7 @@
     },
     "passport-oauth2": {
       "version": "1.1.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-40132-28fce91b/git-cache-70b5d6fd4272/dd742296739f64dc8fce9f21939177a1cd4c09c2",
+      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-1ab5fdf65079/dd742296739f64dc8fce9f21939177a1cd4c09c2",
       "resolved": "git://github.com/craigspaeth/passport-oauth2.git#dd742296739f64dc8fce9f21939177a1cd4c09c2",
       "dependencies": {
         "passport-strategy": {
@@ -1584,7 +1584,7 @@
         },
         "oauth": {
           "version": "0.9.11",
-          "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-40132-28fce91b/git-cache-5ecbcb71cb8c/424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213",
+          "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-0b9aeb710209/424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213",
           "resolved": "git://github.com/craigspaeth/node-oauth.git#424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213"
         },
         "uid2": {
@@ -1633,7 +1633,7 @@
           "dependencies": {
             "through": {
               "version": "2.3.6",
-              "from": "through@>=2.3.4 <2.4.0",
+              "from": "through@>=2.2.7 <3.0.0",
               "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
             },
             "jstransform": {
@@ -1666,23 +1666,6 @@
               }
             }
           }
-        }
-      }
-    },
-    "scribe-editor": {
-      "version": "1.3.4",
-      "from": "scribe-editor@>=1.3.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/scribe-editor/-/scribe-editor-1.3.4.tgz",
-      "dependencies": {
-        "lodash-amd": {
-          "version": "2.4.1",
-          "from": "lodash-amd@>=2.4.1 <2.5.0",
-          "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-2.4.1.tgz"
-        },
-        "immutable": {
-          "version": "3.6.4",
-          "from": "immutable@>=3.6.2 <3.7.0",
-          "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.6.4.tgz"
         }
       }
     },
