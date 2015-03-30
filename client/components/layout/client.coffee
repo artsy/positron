@@ -58,8 +58,7 @@ $('#layout-hamburger-container').click ->
 
 initAnalyitcs = ->
   if sd.USER
-    analytics.identify '52d6e374ebad647dd90009e4', {
+    analytics.identify '52d6e374ebad647dd90009e4',
       email: sd.USER.details?.email
       name: sd.USER.user?.name
       createdAt: sd.USER.details?.created_at
-    }, integrations: Intercom: user_hash: sd.USER_HASH
