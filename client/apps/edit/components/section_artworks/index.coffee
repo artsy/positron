@@ -38,9 +38,10 @@ module.exports = React.createClass
     @toggleFillwidth()
 
   setupAutocomplete: ->
+    $el = $(@refs.autocomplete.getDOMNode())
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
-      el: $(@refs.autocomplete.getDOMNode())
+      el: $el
       filter: (res) ->
         vals = []
         for r in res._embedded.results
@@ -60,6 +61,7 @@ module.exports = React.createClass
             #{data.value}
           """
       selected: @onSelect
+    _.defer -> $el.focus()
 
   onSelect: (e, selected) ->
     new Artwork(id: selected.id).fetch
