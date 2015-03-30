@@ -16,7 +16,9 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @article.sections.on 'add remove reset', => @article.save()
+    @changedPublishedArticle = false
+    @article.sections.on 'add remove reset', =>
+      if @article.published is false then @article.save()
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
@@ -34,7 +36,12 @@ module.exports = class EditLayout extends Backbone.View
 
   setupOnBeforeUnload: ->
     window.onbeforeunload = =>
-      if $.active > 0 then "Your article is not finished saving." else null
+      if $.active > 0
+        "Your article is not finished saving."
+      else if @changedPublishedArticle is true
+        "You have unsaved changes, do you wish to continue?"
+      else
+        null
 
   setupTitleAutosize: ->
     @$('#edit-title textarea').autosize()
@@ -112,7 +119,10 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   onKeyup: =>
-    @article.save @serialize()
+    if @article.published
+      @changedPublishedArticle = true
+    else
+      @article.save @serialize()
     @toggleAstericks()
 
   popLockControls: =>
