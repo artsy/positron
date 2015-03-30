@@ -64,20 +64,35 @@
 
 .article-list-empty
   text-align center
+  margin-top 50px
+  &::before
+    content '.'
+    border-bottom 3px solid #000
+    width 50px
+    color transparent
+    top 70px
+    position relative
+    display block
+    margin auto
+  a
+    faux-underline()
   p
     font-size 20px
-    margin 45px 0
-    line-height 32px
+    margin 41px 0 25px 0
+    line-height 28px
   p:first-child
-    margin-top 50px
+    margin-top 28px
     font-size 24px
     line-height 20px
+    font-weight bold
   svg
     fill white
     width 22px
     display inline
     vertical-align middle
     margin-left 15px
+  .avant-garde-button:hover
+    background purple-color
 
 .article-new-text
   display inline

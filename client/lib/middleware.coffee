@@ -5,6 +5,7 @@
 
 viewHelpers = require './view_helpers'
 uaParser = require('ua-parser')
+{ INTERCOM_SECRET } = process.env
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
@@ -16,6 +17,9 @@ uaParser = require('ua-parser')
 @locals = (req, res, next) ->
   res.locals.sd.URL = req.url
   res.locals.sd.USER = req.user?.toJSON()
+  res.locals.sd.USER_HASH = require('crypto')
+    .createHmac('sha256', INTERCOM_SECRET).update(req.user.get('id'))
+    .digest('hex') if req.user
   res.locals.user = req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()

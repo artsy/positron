@@ -23,6 +23,7 @@ module.exports.init = ->
   $.ajaxSettings.headers = 'X-Access-Token': sd.USER.access_token
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
+  initAnalyitcs()
 
 # Replace broken profile icon
 imgLoad = imagesLoaded('#layout-sidebar-profile img')
@@ -54,3 +55,11 @@ $('#layout-sidebar-switch-user').click ->
 # Toggle hamburger menu
 $('#layout-hamburger-container').click ->
   $('#layout-sidebar-container').toggleClass('is-active')
+
+initAnalyitcs = ->
+  if sd.USER
+    analytics.identify '52d6e374ebad647dd90009e4', {
+      email: sd.USER.details?.email
+      name: sd.USER.user?.name
+      createdAt: sd.USER.details?.created_at
+    }, integrations: Intercom: user_hash: sd.USER_HASH
