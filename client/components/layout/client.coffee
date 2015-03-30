@@ -56,9 +56,14 @@ $('#layout-sidebar-switch-user').click ->
 $('#layout-hamburger-container').click ->
   $('#layout-sidebar-container').toggleClass('is-active')
 
+# Open intercom for empty state CTAs
+$('.article-list-empty-chat').click ->
+  $('.intercom-launcher-button').click()
+
 initAnalyitcs = ->
   if sd.USER
-    analytics.identify '52d6e374ebad647dd90009e4',
+    analytics.identify sd.USER.id,
       email: sd.USER.details?.email
       name: sd.USER.user?.name
       createdAt: sd.USER.details?.created_at
+    , integrations: Intercom: user_hash: sd.USER_HASH

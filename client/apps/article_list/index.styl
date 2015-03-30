@@ -64,18 +64,10 @@
 
 .article-list-empty
   text-align center
-  margin-top 50px
-  &::before
-    content '.'
-    border-bottom 3px solid #000
-    width 50px
-    color transparent
-    top 70px
-    position relative
-    display block
-    margin auto
+  margin-top 75px
   a
     faux-underline()
+    cursor pointer
   p
     font-size 20px
     margin 41px 0 25px 0
@@ -83,8 +75,18 @@
   p:first-child
     margin-top 28px
     font-size 24px
-    line-height 20px
     font-weight bold
+    position relative
+    &::after
+      content '.'
+      border-bottom 3px solid #000
+      width 50px
+      color transparent
+      position absolute
+      display block
+      margin auto
+      left "calc(50% - %s)" % (@width / 2)
+      margin-top -10px
   svg
     fill white
     width 22px
@@ -125,3 +127,5 @@
     width 100%
   #article-list-pagination
     margin 20px 0
+  .article-list-empty::before
+    top 110px
