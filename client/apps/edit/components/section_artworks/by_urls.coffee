@@ -18,7 +18,7 @@ module.exports = React.createClass
     val = @refs.textarea.getDOMNode().value
     slugs = (_.last(url.split '/') for url in val.split '\n')
     @setState loading: true
-    @props.fetchArtworks slugs
+    @props.fetchArtworks slugs, => $(@refs.textarea.getDOMNode()).val ''
 
   render: ->
     label {}, 'or paste in artwork page urls',
@@ -33,7 +33,6 @@ module.exports = React.createClass
         textarea {
           placeholder: 'http://artsy.net/artwork/andy-warhol-skull'
           className: 'bordered-input bordered-input-dark'
-          onChange: @onChangeUrls
           ref: 'textarea'
           rows: 3
         }

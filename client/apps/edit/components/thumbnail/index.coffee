@@ -8,11 +8,17 @@ module.exports = class EditThumbnail extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @article.on 'change:thumbnail_image', @renderThumbnailForm
+    @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
 
   renderThumbnailForm: =>
     @$('#edit-thumbnail-inputs-left').html thumbnailFormTemplate
       article: @article
+
+  prefillThumbnailTitle: =>
+    console.log @article.get('title') and not @article.get('thumbnail_title')
+    if @article.get('title') and not @article.get('thumbnail_title')
+      @useArticleTitle()
 
   events:
     'change #edit-thumbnail-image': 'uploadThumbnail'
@@ -45,9 +51,9 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.save thumbnail_image: null
 
   useArticleTitle: (e) ->
-    e.preventDefault()
-    $(e.target).next().val(@article.get('title'))
-    $(e.target).hide()
+    e?.preventDefault()
+    @$('.edit-use-article-title').next().val(@article.get('title'))
+    @$('.edit-use-article-title').hide()
     @article.save thumbnail_title: @article.get('title')
 
   checkTitleTextarea: ->

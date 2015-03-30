@@ -86,15 +86,21 @@ module.exports = React.createClass
           h2 {}, 'Up to 30mb'
           input { type: 'file', onChange: @upload }
         div { className: 'esi-caption-container' },
-          nav { ref: 'toolbar', className: 'edit-scribe-nav esi-nav' },
+          nav {
+            ref: 'toolbar'
+            className: 'edit-scribe-nav esi-nav'
+            onClick: @focusEmptyCaption
+          },
             button {
               'data-command-name': 'bold'
               dangerouslySetInnerHTML: __html: '&nbsp;'
+              disabled: if @state.caption then false else true
             }
             button {
               'data-command-name': 'linkPrompt'
               dangerouslySetInnerHTML:
                 __html: "&nbsp;" + $(icons()).filter('.link').html()
+              disabled: if @state.caption then false else true
             }
           div {
             className: 'esi-caption bordered-input'

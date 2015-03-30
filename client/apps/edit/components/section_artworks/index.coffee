@@ -90,7 +90,7 @@ module.exports = React.createClass
         img.$el.closest('li').css(padding: pad).width(img.width)
 
   removeFillwidth: ->
-    $(@refs.artworks.getDOMNode()).find('img').css(width: '')
+    $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
 
   onClickOff: ->
     return @props.section.destroy() if @props.section.artworks.length is 0
@@ -101,16 +101,17 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
 
-  fetchArtworks: (ids) ->
+  fetchArtworks: (ids, callback) ->
     @props.section.artworks.getOrFetchIds ids,
       error: (m, res) =>
         @refs.byUrls.setState(
           errorMessage: 'Artwork not found. Make sure your urls are correct.'
-          loadings: false
+          loadingUrls: false
         ) if res.status is 404
       success: (artworks) =>
         return unless @isMounted()
         @refs.byUrls.setState loading: false, errorMessage: ''
+        callback?()
 
   render: ->
     div {

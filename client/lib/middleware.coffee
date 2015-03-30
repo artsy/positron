@@ -28,7 +28,6 @@ uaParser = require('ua-parser')
   r = uaParser.parse(req.get('user-agent'))
   res.locals.sd.USER_AGENT = req.get('user-agent')
   res.locals.sd.IS_MOBILE = true if r.os.family in ['iOS', 'Android']
-  console.log r.ua.family, r.ua.major
   allowed = switch r.ua.family
     when 'Chrome' then r.ua.major >= 38
     when 'Firefox' then r.ua.major >= 34
