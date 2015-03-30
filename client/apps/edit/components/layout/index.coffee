@@ -14,6 +14,7 @@ module.exports = class EditLayout extends Backbone.View
     { @article } = options
     @user = new CurrentUser sd.USER
     @$window = $(window)
+    @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
     @article.sections.on 'add remove reset', => @article.save()
     @article.on 'missing', @highlightMissingFields
@@ -105,6 +106,7 @@ module.exports = class EditLayout extends Backbone.View
     'mouseenter .edit-section-container:not([data-editing=true])': 'toggleSectionTools'
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
+    'blur #edit-title': 'prefillThumbnailTitle'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()

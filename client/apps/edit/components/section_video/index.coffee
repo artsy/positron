@@ -33,7 +33,7 @@ module.exports = React.createClass
         form { onSubmit: @onSubmit },
           input {
             className: 'bordered-input bordered-input-dark'
-            placeholder: 'http://youtu.be/share-url'
+            placeholder: 'http://youtube.com/watch?v=id'
             ref: 'input'
             defaultValue: @props.section.get('url')
           }
