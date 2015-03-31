@@ -51,8 +51,13 @@ module.exports = class EditHeader extends Backbone.View
 
   save: (e) ->
     e.preventDefault()
-    @$('#edit-save').text 'Saving...'
-    @article.trigger('finished').save()
+    @$('#edit-save')
+      .text 'Saving...'
+      .removeClass 'attention'
+    if @article.get('published')
+      @article.trigger('savePublished').trigger('finished')
+    else
+      @article.trigger('finished').save()
 
   syncToPost: (e) ->
     e.preventDefault()

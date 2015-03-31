@@ -6,7 +6,7 @@ Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
-describe 'EditLayout', ->
+describe 'EditLayoutDraft', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -41,6 +41,18 @@ describe 'EditLayout', ->
     it 'autosaves on section changes', ->
       @view.article.sections.trigger 'change'
       Backbone.sync.called.should.be.ok
+
+  describe 'no #autosave on published article', ->
+
+    it 'does not autosave on debounce keyup when editing a published article', ->
+      @view.article.set { published: true }
+      $('#edit-title textarea').trigger 'keyup'
+      @view.changedAPublishedArticle.should.equal true
+
+    it 'does not autosave on section changes when editing a published article', ->
+      @view.article.set { published: true }
+      @view.article.sections.trigger 'add'
+      @view.changedAPublishedArticle.should.equal true
 
   describe '#serialize', ->
 
@@ -110,3 +122,10 @@ describe 'EditLayout', ->
       $.active = 3
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'not finished'
+
+    it 'stops you if theres a published article that is not yet saved', ->
+      $.active = 0
+      @view.changedAPublishedArticle = true
+      @view.finished = false
+      @view.setupOnBeforeUnload()
+      window.onbeforeunload().should.containEql 'do you wish to continue'
