@@ -51,9 +51,7 @@ module.exports = class EditHeader extends Backbone.View
 
   save: (e) ->
     e.preventDefault()
-    @$('#edit-save')
-      .text 'Saving...'
-      .removeClass 'attention'
+    @$('#edit-save').text('Saving...').removeClass('attention')
     if @article.get('published')
       @article.trigger('savePublished').trigger('finished')
     else

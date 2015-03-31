@@ -16,7 +16,6 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @changedAPublishedArticle = false
     @article.sections.on 'add remove reset', @addRemoveReset
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished

@@ -6,7 +6,7 @@ Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
-describe 'EditLayoutDraft', ->
+describe 'EditLayout', ->
 
   beforeEach (done) ->
     benv.setup =>
