@@ -189,11 +189,11 @@ module.exports = class EditAdmin extends Backbone.View
   setupPublishDate: ->
     $('.edit-admin-input-date').on 'blur', =>
       @formatAndSetPublishDate($('.edit-admin-input-date').val())
-      @article.save published_at: saveFormat
+      @article.save published_at: @saveFormat
       false
     @formatAndSetPublishDate @article.get('published_at')
 
   formatAndSetPublishDate: (date) ->
     clientFormat = moment(date).format('L')
-    saveFormat = moment(date).toDate()
+    @saveFormat = moment(date).toDate()
     $('.edit-admin-input-date').val(clientFormat)

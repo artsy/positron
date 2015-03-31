@@ -16,12 +16,13 @@ module.exports = class EditLayout extends Backbone.View
     @$window = $(window)
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @article.sections.on 'add remove reset', => @article.save()
+    @article.sections.on 'add remove reset', @addRemoveReset
     @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.sections.on 'change:layout', => _.defer => @popLockControls()
+    @article.on 'savePublished', @savePublished
     @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
     @setupTitleAutosize()
@@ -34,7 +35,12 @@ module.exports = class EditLayout extends Backbone.View
 
   setupOnBeforeUnload: ->
     window.onbeforeunload = =>
-      if $.active > 0 then "Your article is not finished saving." else null
+      if $.active > 0
+        "Your article is not finished saving."
+      else if @changedAPublishedArticle is true and not @finished
+        "You have unsaved changes, do you wish to continue?"
+      else
+        null
 
   setupTitleAutosize: ->
     @$('#edit-title textarea').autosize()
@@ -83,8 +89,19 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-sections-spinner').show()
 
   onFinished: =>
+    @finished = true
     @showSpinner()
     $(document).ajaxStop @redirectToList
+
+  savePublished: =>
+    @article.save @serialize()
+
+  addRemoveReset: =>
+    if @article.get('published')
+      @changedAPublishedArticle = true
+      $('#edit-save').addClass 'attention'
+    else
+      @article.save()
 
   highlightMissingFields: =>
     @openTab 1
@@ -112,7 +129,11 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   onKeyup: =>
-    @article.save @serialize()
+    if @article.get('published')
+      @changedAPublishedArticle = true
+      $('#edit-save').addClass 'attention'
+    else
+      @article.save @serialize()
     @toggleAstericks()
 
   popLockControls: =>
