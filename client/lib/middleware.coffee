@@ -5,6 +5,7 @@
 
 viewHelpers = require './view_helpers'
 uaParser = require('ua-parser')
+{ INTERCOM_SECRET } = process.env
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, superagentRes) ->
@@ -16,6 +17,9 @@ uaParser = require('ua-parser')
 @locals = (req, res, next) ->
   res.locals.sd.URL = req.url
   res.locals.sd.USER = req.user?.toJSON()
+  res.locals.sd.USER_HASH = require('crypto')
+    .createHmac('sha256', INTERCOM_SECRET).update(req.user.get('id'))
+    .digest('hex') if req.user
   res.locals.user = req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()
@@ -28,7 +32,10 @@ uaParser = require('ua-parser')
     when 'Chrome' then r.ua.major >= 38
     when 'Firefox' then r.ua.major >= 34
     when 'Safari' then r.ua.major >= 7
+    when 'Mobile Safari' then r.ua.major >= 7
     when 'IE' then r.ua.major >= 10
+    when 'Android' then true
+    when 'Android 2' then true
     else false
   if allowed
     next()

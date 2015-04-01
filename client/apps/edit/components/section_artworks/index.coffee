@@ -38,9 +38,10 @@ module.exports = React.createClass
     @toggleFillwidth()
 
   setupAutocomplete: ->
+    $el = $(@refs.autocomplete.getDOMNode())
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
-      el: $(@refs.autocomplete.getDOMNode())
+      el: $el
       filter: (res) ->
         vals = []
         for r in res._embedded.results
@@ -60,6 +61,7 @@ module.exports = React.createClass
             #{data.value}
           """
       selected: @onSelect
+    _.defer -> $el.focus()
 
   onSelect: (e, selected) ->
     new Artwork(id: selected.id).fetch
@@ -88,7 +90,7 @@ module.exports = React.createClass
         img.$el.closest('li').css(padding: pad).width(img.width)
 
   removeFillwidth: ->
-    $(@refs.artworks.getDOMNode()).find('img').css(width: '')
+    $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
 
   onClickOff: ->
     return @props.section.destroy() if @props.section.artworks.length is 0
@@ -99,16 +101,17 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
 
-  fetchArtworks: (ids) ->
+  fetchArtworks: (ids, callback) ->
     @props.section.artworks.getOrFetchIds ids,
       error: (m, res) =>
         @refs.byUrls.setState(
           errorMessage: 'Artwork not found. Make sure your urls are correct.'
-          loadings: false
+          loadingUrls: false
         ) if res.status is 404
       success: (artworks) =>
         return unless @isMounted()
         @refs.byUrls.setState loading: false, errorMessage: ''
+        callback?()
 
   render: ->
     div {

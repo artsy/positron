@@ -10,7 +10,7 @@ sharify = require 'sharify'
 bucketAssets = require 'bucket-assets'
 sd = sharify.data = _.pick process.env,
   'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
-  'SENTRY_PUBLIC_DSN', 'EMBEDLY_KEY'
+  'SENTRY_PUBLIC_DSN', 'EMBEDLY_KEY', 'SEGMENT_WRITE_KEY'
 
 # Dependencies
 express = require 'express'

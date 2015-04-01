@@ -90,11 +90,13 @@ module.exports = React.createClass
             button {
               'data-command-name': 'bold'
               dangerouslySetInnerHTML: __html: '&nbsp;'
+              disabled: if @state.caption then false else true
             }
             button {
               'data-command-name': 'linkPrompt'
               dangerouslySetInnerHTML:
                 __html: "&nbsp;" + $(icons()).filter('.link').html()
+              disabled: if @state.caption then false else true
             }
           div {
             className: 'esi-caption bordered-input'

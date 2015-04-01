@@ -13,17 +13,14 @@ block header
 block content
   #article-list-items.max-width-container
     if articles.length == 0
-        .article-list-empty
-          p You haven't #{emptyMessage} yet
+        section.article-list-empty
+          p You haven&rsquo;t #{emptyMessage} yet.
+          p Artsy Writer is a tool for writing stories about art on Artsy.
             br
-            | _______
-          p Artsy Writer is a tool for writing stories about art.
-            //- HELP PAGE COMING SOON
-            //- br
-            //- | Get started by writing an article, or see our
-            //- a( href='' ) help page
-            //- |  for more info.
-          a.avant-garde-button.avant-garde-button-dark.article-new-button( href='/articles/new' )
+            | Get started by writing an article or&nbsp;
+            a.article-list-empty-chat chatting with a liason
+            | &nbsp;for help.
+          a.avant-garde-button.avant-garde-button-black.article-new-button( href='/articles/new' )
             include ../../components/layout/public/icons/layout_new_article.svg
             .article-new-text Write An Article
     ul
