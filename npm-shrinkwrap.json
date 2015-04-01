@@ -4,7 +4,7 @@
   "dependencies": {
     "artsy-backbone-mixins": {
       "version": "0.0.20",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-ca1728c1cf6e/be65bf983ac00d4eda3e967bfe644e7551cba6e7",
+      "from": "git://github.com/artsy/artsy-backbone-mixins.git",
       "resolved": "git://github.com/artsy/artsy-backbone-mixins.git#be65bf983ac00d4eda3e967bfe644e7551cba6e7",
       "dependencies": {
         "marked": {
@@ -19,14 +19,14 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@2.4.1",
+          "from": "qs@*",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
     },
     "artsy-ezel-components": {
       "version": "0.0.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-4ee0e25db09e/a9e81d625c3e9b4a84217289d48972961e9016f5",
+      "from": "git://github.com/artsy/artsy-ezel-components.git",
       "resolved": "git://github.com/artsy/artsy-ezel-components.git#a9e81d625c3e9b4a84217289d48972961e9016f5"
     },
     "async": {
@@ -90,7 +90,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@*",
+          "from": "qs@2.4.1",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         },
         "raw-body": {
@@ -208,7 +208,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.0 <3.0.0",
+              "from": "inherits@>=2.0.1 <2.1.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -571,7 +571,7 @@
         "path-to-regexp": {
           "version": "0.1.3",
           "from": "path-to-regexp@0.1.3",
-          "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.3.tgz"
+          "resolved": "http://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.3.tgz"
         },
         "proxy-addr": {
           "version": "1.0.7",
@@ -743,7 +743,7 @@
         },
         "mkdirp": {
           "version": "0.5.0",
-          "from": "mkdirp@>=0.5.0 <0.6.0",
+          "from": "mkdirp@0.5.0",
           "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.0.tgz",
           "dependencies": {
             "minimist": {
@@ -944,7 +944,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@>=1.0.26 <1.1.0",
+              "from": "readable-stream@latest",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -1112,7 +1112,7 @@
               "dependencies": {
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@>=2.0.0 <3.0.0",
+                  "from": "inherits@>=2.0.1 <2.1.0",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 },
                 "minimatch": {
@@ -1198,7 +1198,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.0 <3.0.0",
+              "from": "inherits@>=2.0.1 <2.1.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             },
             "minimatch": {
@@ -1438,14 +1438,14 @@
               "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
             },
             "har-validator": {
-              "version": "1.4.0",
+              "version": "1.5.1",
               "from": "har-validator@>=1.4.0 <2.0.0",
-              "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.4.0.tgz",
+              "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.5.1.tgz",
               "dependencies": {
                 "bluebird": {
-                  "version": "2.9.20",
+                  "version": "2.9.21",
                   "from": "bluebird@>=2.9.14 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.20.tgz"
+                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.21.tgz"
                 },
                 "chalk": {
                   "version": "1.0.0",
@@ -1543,11 +1543,6 @@
                       "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.0.tgz"
                     }
                   }
-                },
-                "require-directory": {
-                  "version": "2.1.0",
-                  "from": "require-directory@>=2.1.0 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/require-directory/-/require-directory-2.1.0.tgz"
                 }
               }
             }
@@ -1574,7 +1569,7 @@
     },
     "passport-oauth2": {
       "version": "1.1.2",
-      "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-1ab5fdf65079/dd742296739f64dc8fce9f21939177a1cd4c09c2",
+      "from": "git://github.com/craigspaeth/passport-oauth2.git",
       "resolved": "git://github.com/craigspaeth/passport-oauth2.git#dd742296739f64dc8fce9f21939177a1cd4c09c2",
       "dependencies": {
         "passport-strategy": {
@@ -1584,7 +1579,7 @@
         },
         "oauth": {
           "version": "0.9.11",
-          "from": "../../../var/folders/50/tmf8zhsx1x10gxpqs9lxh_fr0000gn/T/npm-43703-818806ee/git-cache-0b9aeb710209/424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213",
+          "from": "git://github.com/craigspaeth/node-oauth.git",
           "resolved": "git://github.com/craigspaeth/node-oauth.git#424ad9d3bfb8b7553b9dfdf3e40c70b4b84dd213"
         },
         "uid2": {
@@ -1633,7 +1628,7 @@
           "dependencies": {
             "through": {
               "version": "2.3.6",
-              "from": "through@>=2.2.7 <3.0.0",
+              "from": "through@>=2.3.4 <2.4.0",
               "resolved": "https://registry.npmjs.org/through/-/through-2.3.6.tgz"
             },
             "jstransform": {

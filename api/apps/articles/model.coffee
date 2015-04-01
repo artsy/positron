@@ -64,9 +64,9 @@ schema = (->
   primary_featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artwork_ids: @array().items(@objectId()).allow(null)
-  fair_id: @objectId().allow('', null)
   partner_ids: @array().items(@objectId()).allow(null)
-  auction_id: @objectId().allow('', null)
+  fair_id: @objectId().allow(null)
+  auction_id: @objectId().allow(null)
   featured: @boolean().default(false)
 ).call Joi
 
@@ -151,9 +151,14 @@ sortParamToQuery = (input) ->
         return cb err if err
         db.articles.save _.extend(article,
           _id: id
-          author_id: ObjectId(article.author_id)
+          # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+          author_id: ObjectId(article.author_id) if article.author_id
           fair_id: ObjectId(article.fair_id) if article.fair_id
           auction_id: ObjectId(article.auction_id) if article.auction_id
+          partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
+          primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
+          featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
+          featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
         ), cb
 
 validate = (input, callback) ->
@@ -164,7 +169,8 @@ validate = (input, callback) ->
   Joi.validate whitelisted, schema, callback
 
 update = (article, input, callback) ->
-  input.published_at = new Date if(input.published and not article.published and not input.published_at)
+  if input.published and not article.published and not input.published_at
+    input.published_at = new Date
   User.find (input.author_id or article.author_id), (err, author) ->
     return callback err if err
     article = _.extend article, input, updated_at: new Date
