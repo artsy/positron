@@ -77,10 +77,3 @@ describe 'EditHeader', ->
       @view.save preventDefault: ->
       spy.called.should.be.ok
       Backbone.sync.args[0][0].should.equal 'create'
-
-  describe '#syncToPost', ->
-
-    it 'syncs to the post', ->
-      @view.article.syncToPost = sinon.stub()
-      @view.syncToPost preventDefault: ->
-      @view.article.syncToPost.called.should.be.ok

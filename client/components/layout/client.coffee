@@ -67,3 +67,4 @@ initAnalyitcs = ->
       name: sd.USER.user?.name
       createdAt: sd.USER.details?.created_at
     , integrations: Intercom: user_hash: sd.USER_HASH
+  analytics.page()

@@ -31,12 +31,6 @@ _ = require 'underscore'
     return next err if err
     res.send present article
 
-# GET /api/publish_to_gravity?article_id=
-@syncToPost = (req, res, next) ->
-  Article.syncToPost req.article, req.get('x-access-token'), (err, post) ->
-    return next err if err
-    res.send post
-
 # DELETE /api/articles/:id
 @delete = (req, res, next) ->
   Article.destroy req.article._id, (err) ->
