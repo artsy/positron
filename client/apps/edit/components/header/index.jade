@@ -11,8 +11,6 @@ header#edit-header
   #edit-header-right
     a#edit-delete.avant-garde-button Delete
     a#edit-save.avant-garde-button Save #{article.stateName()}
-    if user.isAdmin()
-      a#edit-sync-to-post.avant-garde-button Sync to post
     a#edit-preview.avant-garde-button(
       href="#{sd.FORCE_URL}/article/#{article.get('slug')}"
     )

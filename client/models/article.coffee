@@ -65,11 +65,3 @@ module.exports = class Article extends Backbone.Model
     if @featuredPrimaryArtists.length
       extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('id')
     _.extend super, extended
-
-  syncToPost: (options = {}) ->
-    request
-      .get("#{sd.API_URL}/sync_to_post?article_id=#{@get 'id'}")
-      .set('X-Access-Token': options.accessToken)
-      .end (err, res) =>
-        return options.error? e if e = err or res.error
-        options.success? res.body

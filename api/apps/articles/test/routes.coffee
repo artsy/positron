@@ -125,12 +125,3 @@ describe 'routes', ->
         title: 'Andy Foobar and The Gang'
       )
       @req.article.title.should.equal 'Andy Foobar and The Gang'
-
-  describe '#syncToPost', ->
-
-    it 'syncs an article to a gravity post', ->
-      @req.get = ->
-      @req.article = _.extend fixtures().articles, title: 'Foo'
-      sinon.stub @Article, 'syncToPost'
-      routes.syncToPost @req, @res, @next
-      @Article.syncToPost.args[0][0].title.should.equal 'Foo'

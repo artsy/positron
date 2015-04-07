@@ -6,8 +6,6 @@ morgan = require 'morgan'
   loginRequired } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 { authenticated, setUser } = require './apps/users/routes'
-migrate = require './lib/migrate'
-syncUsers = require './lib/sync_users'
 debug = require('debug') 'api'
 cors = require 'cors'
 
@@ -31,14 +29,6 @@ app.use authenticated
 app.use require './apps/users'
 app.use require './apps/artists'
 app.use require './apps/report'
-
-# Webhook for tasks for debugging purpose (to be removed)
-app.get '/task/:task', (req, res, next) ->
-  return res.err 401, 'Admin only.' unless req.user?.details?.type is 'Admin'
-  switch req.params.task
-    when 'migrate' then migrate debug
-    when 'sync-users' then syncUsers debug
-  res.send { success: "Running #{req.params.task}... check the logs." }
 
 # Moar middleware
 app.use errorHandler

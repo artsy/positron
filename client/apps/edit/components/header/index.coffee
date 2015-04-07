@@ -30,7 +30,6 @@ module.exports = class EditHeader extends Backbone.View
     'click #edit-publish': 'togglePublished'
     'click #edit-delete': 'delete'
     'click #edit-save': 'save'
-    'click #edit-sync-to-post': 'syncToPost'
 
   togglePublished: (e) ->
     e.preventDefault()
@@ -56,11 +55,3 @@ module.exports = class EditHeader extends Backbone.View
       @article.trigger('savePublished').trigger('finished')
     else
       @article.trigger('finished').save()
-
-  syncToPost: (e) ->
-    e.preventDefault()
-    @$('#edit-sync-to-post').text 'Syncing...'
-    @article.trigger('loading').syncToPost
-      accessToken: @user.get('access_token')
-      error: openErrorModal
-      success: (post) -> location.assign "#{sd.FORCE_URL}/post/#{post.id}"
