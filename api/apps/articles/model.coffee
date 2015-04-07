@@ -181,12 +181,13 @@ update = (article, input, callback) ->
 addSlug = (article, input, author, callback) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
   article.slugs ?= []
+  #Don't change the article slug unless it's unpublished or a new slug is added
   if input.slug? and (input.slug != _.last(article.slugs))
     slug = input.slug
-  else if author
-    slug = _s.slugify(author.user.name) + '-' + titleSlug
+  else if article.published is false
+    slug = if author then _s.slugify(author.user.name) + '-' + titleSlug else titleSlug
   else
-    slug = titleSlug
+    return article
   article.slugs = _.unique(article.slugs).concat [slug]
   article
 
