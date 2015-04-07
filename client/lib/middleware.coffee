@@ -18,7 +18,6 @@ crypto = require 'crypto'
 @locals = (req, res, next) ->
   res.locals.sd.URL = req.url
   res.locals.sd.USER = req.user?.toJSON()
-  console.log INTERCOM_SECRET
   res.locals.sd.USER_HASH = crypto.createHmac('sha256', INTERCOM_SECRET)
     .update(req.user.id).digest('hex') if req.user
   res.locals.user = req.user
