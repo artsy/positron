@@ -16,6 +16,7 @@ module.exports = class EditHeader extends Backbone.View
 
   saving: =>
     @$('#edit-save').addClass 'is-saving'
+    @$('#edit-save').removeClass 'attention'
 
   doneSaving: =>
     @$('#edit-save').removeClass 'is-saving'
