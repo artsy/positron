@@ -11,7 +11,7 @@ Meta
 * __Staging:__ [https://staging.artsy.net/](https://staging.artsy.net/) | [Heroku](https://dashboard.heroku.com/apps/positron-staging/resources)
 * __Github:__ [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 * __CI:__ [Semaphore](https://semaphoreapp.com/artsy/positron/); merged PRs to artsy/positron#master are automatically deployed to staging; production is manually deployed from semaphore
-* __Point People:__ [@craigspaeth](https://github.com/craigspaeth), [@dzucconi](https://github.com/dzucconi), [@broskoski](https://github.com/broskoski), [@kanaabe](https://github.com/kanaabe)
+* __Point People:__ [@craigspaeth](https://github.com/craigspaeth), [@kanaabe](https://github.com/kanaabe)
 
 [![Build Status](https://semaphoreapp.com/api/v1/projects/f6c57bfa-d60c-476d-b7cf-5f3954b69495/253300/badge.png)](https://semaphoreapp.com/artsy/positron)
 
