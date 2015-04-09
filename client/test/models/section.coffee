@@ -4,12 +4,15 @@ Section = require '../../models/section.coffee'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
+benv = require 'benv'
 
 describe "Article", ->
 
   beforeEach ->
-    sinon.stub Backbone, 'sync'
-    @section = new Section fixtures().articles.sections[0]
+    benv.setup =>
+      benv.expose $: require 'jquery'
+      sinon.stub Backbone, 'sync'
+      @section = new Section fixtures().articles.sections[0]
 
   afterEach ->
     Backbone.sync.restore()
@@ -47,3 +50,13 @@ describe "Article", ->
       @section.set type: 'artworks'
       @section.artworks.reset(fabricate 'artwork', _id: 'foo')
       @section.toJSON().ids[0].should.equal 'foo'
+
+  describe 'slugsFromHTML', ->
+
+    it 'extracts a slug from an Artsy link', ->
+      @section.set body: '<p><a href="http://artsy.net/artist/kana-abe"></p>'
+      @section.slugsFromHTML('body','artist')[0].should.equal 'kana-abe'
+
+    it 'extracts a slug from a Google link', ->
+      @section.set body: '<p><a href="https://www.google.com/url?q=https%3A%2F%2Fwww.artsy.net%2Fartist%2Ftrenton-doyle-hancock&sa=D&sntz=1"></p>'
+      @section.slugsFromHTML('body','artist')[0].should.equal 'trenton-doyle-hancock'
