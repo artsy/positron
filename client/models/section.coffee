@@ -14,6 +14,9 @@ module.exports = class Section extends Backbone.Model
     return throw Error 'Missing jQuery' unless $? # TODO: Isomorphic DOM reader
     _.compact $(@get attr).find('a').map(->
       href = $(this).attr('href')
+      if href.match('google')
+        href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
+        href = _.first(href.split('&'))
       if href.match(resource) then _.last href.split('/') else null
     ).toArray()
 
