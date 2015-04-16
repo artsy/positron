@@ -3,7 +3,7 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 Artwork = require '../models/artwork.coffee'
 async = require 'async'
-{ ApiCollection, Filter } = require './mixins.coffee'
+{ Filter } = require './mixins.coffee'
 
 module.exports = class Artworks extends Backbone.Collection
 

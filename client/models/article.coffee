@@ -53,7 +53,7 @@ module.exports = class Article extends Backbone.Model
       if mentioned is 'Artworks'
         item.model.get('title')
       else
-        item.model.get('artist').name
+        item.model.get('name')
 
   toJSON: ->
     extended = {}
@@ -61,7 +61,7 @@ module.exports = class Article extends Backbone.Model
     if @featuredArtworks.length
       extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
     if @featuredArtists.length
-      extended.featured_artist_ids = @featuredArtists.pluck('id')
+      extended.featured_artist_ids = @featuredArtists.pluck('_id')
     if @featuredPrimaryArtists.length
-      extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('id')
+      extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('_id')
     _.extend super, extended

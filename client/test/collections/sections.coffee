@@ -23,8 +23,8 @@ describe "Sections", ->
     it 'finds artists mentioned in links and such', ->
       @sections.set [
         { type: 'artworks' }
-        { type: 'text', body: "<p><a href='/artist/foo'>Foo</a></p>" }
-        { type: 'image', caption: "<p><a href='/artist/bar'>Bar</a></p>" }
+        { type: 'text', body: "<p><a href='artsy.net/artist/foo'>Foo</a></p>" }
+        { type: 'image', caption: "<p><a href='artsy.net/artist/bar'>Bar</a></p>" }
       ]
       @sections.first().artworks.set { artist: { id: 'baz' } }
       @sections.mentionedArtistSlugs().join('').should.equal 'bazfoobar'
@@ -34,8 +34,8 @@ describe "Sections", ->
     it 'finds artists mentioned in links and such', ->
       @sections.set [
         { type: 'artworks', ids: ['baz'] }
-        { type: 'text', body: "<p><a href='/artworks/foo'>Foo</a></p>" }
-        { type: 'image', caption: "<p><a href='/artworks/bar'>Bar</a></p>" }
+        { type: 'text', body: "<p><a href='artsy.net/artworks/foo'>Foo</a></p>" }
+        { type: 'image', caption: "<p><a href='artsy.net/artworks/bar'>Bar</a></p>" }
       ]
       @sections.mentionedArtworkSlugs().join('').should.equal 'bazfoobar'
 
