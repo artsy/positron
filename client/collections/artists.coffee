@@ -1,11 +1,24 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 sd = require('sharify').data
-{ ApiCollection, Filter } = require './mixins.coffee'
+Artist = require '../models/artist.coffee'
+async = require 'async'
+{ Filter } = require './mixins.coffee'
 
 module.exports = class Artists extends Backbone.Collection
 
-  _.extend @prototype, ApiCollection
   _.extend @prototype, Filter
 
-  url: "#{sd.API_URL}/artists"
+  url: "#{sd.ARTSY_URL}/api/v1/artists"
+
+  model: Artist
+
+  getOrFetchIds: (ids, options) ->
+    async.map ids or [], (id, cb) ->
+      new Artist(id: id).fetch
+        error: options.error
+        success: (artist) -> cb null, artist
+        complete: options.complete
+    , (err, artists) =>
+      @add artists
+      options.success?()

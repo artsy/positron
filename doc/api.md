@@ -48,23 +48,6 @@ POST /users
 **params**
 artsy_id: An admin can add a user to Writer by POSTing their id from Gravity
 
-
-### Artworks
-
-GET /artworks?ids[]=warhol-skull&ids[]=54276766fd4f50996aeca2b8
-
-**params**
-ids[]: Array of artwork ids or slugs
-q: Search query to match against artwork title
-
-### Artists
-
-GET /artists?ids[]=andy-warhol&ids[]=54276766fd4f50996aeca2b8
-
-**params**
-ids[]: Array of artist ids or slugs
-q: Search query to match against artist name
-
 ### Report
 
 Used to report errors from users.

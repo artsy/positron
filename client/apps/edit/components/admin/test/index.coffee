@@ -45,14 +45,14 @@ describe 'EditAdmin', ->
 
     it 'renders the featured artists', ->
       artist = fixtures().artists
-      artist.artist.name = 'Andy Foobar'
+      artist.name = 'Andy Foobar'
       @view.article.featuredArtists.set [artist]
       @view.renderFeatured()
       @view.$el.html().should.containEql 'Andy Foobar'
 
     it 'renders primary featured', ->
       artist = fixtures().artists
-      artist.artist.name = 'Andy Moobar'
+      artist.name = 'Andy Moobar'
       @view.article.featuredPrimaryArtists.set [artist]
       @view.renderFeatured()
       @view.$el.html().should.containEql 'Andy Moobar'
@@ -64,7 +64,7 @@ describe 'EditAdmin', ->
       @view.featureFromInput('Artists')(
         currentTarget: $ "<input value='/andy-warhol' />"
       )
-      Backbone.sync.args[0][2].data.ids[0].should.equal 'andy-warhol'
+      Backbone.sync.args[0][1].id.should.equal 'andy-warhol'
 
   describe '#featureMentioned', ->
 

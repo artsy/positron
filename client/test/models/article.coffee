@@ -56,12 +56,12 @@ describe "Article", ->
     it 'returns a mapped list of featured/mentioned artists ordered by name', ->
       @article.mentionedArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'andy', artist: name: 'Andy')
-          _.extend(fixtures().artists, id: 'charles', artist: name: 'Charles')
+          _.extend(fixtures().artists, id: 'andy', name: 'Andy')
+          _.extend(fixtures().artists, id: 'charles', name: 'Charles')
         ])
       @article.featuredArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'bob', artist: name: 'Bob')
+          _.extend(fixtures().artists, id: 'bob', name: 'Bob')
         ])
       _.map(@article.featuredList('Artists'), (i) -> i.model.id).join('')
         .should.equal 'andybobcharles'

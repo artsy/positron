@@ -17,7 +17,7 @@ module.exports = class Section extends Backbone.Model
       if href.match('google')
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
         href = _.first(href.split('&'))
-      if href.match(resource) then _.last href.split('/') else null
+      if href.match('artsy.net/' + resource) then _.last href.split('/') else null
     ).toArray()
 
   fetchSlideshowArtworks: (options) ->

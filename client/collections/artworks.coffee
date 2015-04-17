@@ -3,7 +3,7 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 Artwork = require '../models/artwork.coffee'
 async = require 'async'
-{ ApiCollection, Filter } = require './mixins.coffee'
+{ Filter } = require './mixins.coffee'
 
 module.exports = class Artworks extends Backbone.Collection
 
@@ -18,6 +18,7 @@ module.exports = class Artworks extends Backbone.Collection
       new Artwork(id: id).fetch
         error: options.error
         success: (artwork) -> cb null, artwork
+        complete: options.complete
     , (err, artworks) =>
       @add artworks
       options.success?()
