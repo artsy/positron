@@ -64,7 +64,7 @@ describe 'EditAdmin', ->
       @view.featureFromInput('Artists')(
         currentTarget: $ "<input value='/andy-warhol' />"
       )
-      Backbone.sync.args[0][2].data.ids[0].should.equal 'andy-warhol'
+      Backbone.sync.args[0][1].id.should.equal 'andy-warhol'
 
   describe '#featureMentioned', ->
 

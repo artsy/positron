@@ -18,6 +18,7 @@ module.exports = class Artists extends Backbone.Collection
       new Artist(id: id).fetch
         error: options.error
         success: (artist) -> cb null, artist
+        complete: options.complete
     , (err, artists) =>
       @add artists
       options.success?()

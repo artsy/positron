@@ -18,6 +18,7 @@ module.exports = class Artworks extends Backbone.Collection
       new Artwork(id: id).fetch
         error: options.error
         success: (artwork) -> cb null, artwork
+        complete: options.complete
     , (err, artworks) =>
       @add artworks
       options.success?()
