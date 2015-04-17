@@ -63,9 +63,6 @@ describe "Article", ->
         [
           _.extend(fixtures().artists, id: 'bob', name: 'Bob')
         ])
-      # console.log @article.mentionedArtists
-      # console.log @article.featuredArtists
-      # console.log @article.featuredList('Artists')
       _.map(@article.featuredList('Artists'), (i) -> i.model.id).join('')
         .should.equal 'andybobcharles'
       _.map(@article.featuredList('Artists'), (i) -> String i.featured).join('')

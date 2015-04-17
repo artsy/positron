@@ -143,7 +143,6 @@ module.exports = class EditAdmin extends Backbone.View
       complete: =>
         $t.val('').parent().removeClass 'bordered-input-loading'
         @article.save()
-        console.log $t.val()
 
   featureMentioned: (resource) => (e) =>
     id = $(e.currentTarget).attr 'data-id'
