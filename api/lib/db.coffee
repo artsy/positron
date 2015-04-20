@@ -8,6 +8,6 @@ fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env
 
-collections = ['articles', 'artists', 'artworks', 'users']
+collections = ['articles', 'users', 'verticals']
 module.exports = mongojs MONGOHQ_URL, collections
 module.exports.collections = collections
