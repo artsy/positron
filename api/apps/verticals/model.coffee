@@ -77,5 +77,5 @@ querySchema = (->
 #
 @present = (vertical) =>
   _.extend
-    id: vertical._id.toString()
+    id: vertical?._id?.toString()
   , _.omit(vertical, '_id')
