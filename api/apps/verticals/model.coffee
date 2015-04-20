@@ -25,6 +25,9 @@ schema = (->
   slug: @string().allow('', null)
   partner_logo: @string().allow('', null)
   featured_article_ids: @array().items(@objectId()).allow(null)
+  start_at: @date().allow(null)
+  end_at: @date().allow(null)
+  thumbnail_url: @string().allow('', null)
 ).call Joi
 
 querySchema = (->
