@@ -24,10 +24,10 @@ schema = (->
   description: @string().allow('', null)
   slug: @string().allow('', null)
   partner_logo_url: @string().allow('', null)
+  thumbnail_url: @string().allow('', null)
   featured_article_ids: @array().items(@objectId()).allow(null)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
-  thumbnail_url: @string().allow('', null)
 ).call Joi
 
 querySchema = (->
@@ -35,6 +35,7 @@ querySchema = (->
   limit: @number()
   offset: @number()
 ).call Joi
+
 #
 # Retrieval
 #
