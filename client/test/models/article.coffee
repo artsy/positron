@@ -2,6 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 Article = require '../../models/article.coffee'
 sinon = require 'sinon'
+{ fabricate } = require 'antigravity'
 fixtures = require '../../../test/helpers/fixtures'
 
 describe "Article", ->
@@ -56,12 +57,12 @@ describe "Article", ->
     it 'returns a mapped list of featured/mentioned artists ordered by name', ->
       @article.mentionedArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'andy', name: 'Andy')
-          _.extend(fixtures().artists, id: 'charles', name: 'Charles')
+          _.extend(fabricate 'artist', id: 'andy', name: 'Andy')
+          _.extend(fabricate 'artist', id: 'charles', name: 'Charles')
         ])
       @article.featuredArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'bob', name: 'Bob')
+          _.extend(fabricate 'artist', id: 'bob', name: 'Bob')
         ])
       _.map(@article.featuredList('Artists'), (i) -> i.model.id).join('')
         .should.equal 'andybobcharles'
