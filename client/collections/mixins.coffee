@@ -22,7 +22,7 @@ async = require 'async'
         error: (m, err) -> cb null, err
         success: (model) -> cb null, model
     , (err, models) =>
+      @add models
       options.complete?()
       return options.error? err if err
-      @add models
       options.success?()

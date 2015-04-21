@@ -20,26 +20,19 @@ describe 'Mixins', ->
 
   describe '#getOrFetchIds', ->
 
-    it 'fetches artworks by ids', (done) ->
+    it 'fetches models by ids', (done) ->
       @artworks.getOrFetchIds ['foo', 'bar'], success: =>
         @artworks.pluck('id').join('').should.equal 'foobar'
         done()
-      Backbone.sync.args[0][2].success results: [{ id: 'foo' }, { id: 'bar' }]
+      Backbone.sync.args[0][2].success { id: 'foo' }
+      Backbone.sync.args[1][2].success { id: 'bar' }
 
-    it 'does not fetch artworks that have already been fetched', (done) ->
-      @artworks.set [{ id: 'foo' }, { id: 'bar' }]
-      @artworks.getOrFetchIds ['foo', 'bar'], success: =>
-        @artworks.pluck('id').join('').should.equal 'foobar'
+    it '`completes` fine', (done) ->
+      @artworks.getOrFetchIds ['foo', 'bar'], complete: =>
+        @artworks.pluck('id').join('').should.equal 'foo'
         done()
-      Backbone.sync.called.should.not.be.ok
-
-    it 'only fetches artworks that have not already been fetched', (done) ->
-      @artworks.set [{ id: 'foo' }]
-      @artworks.getOrFetchIds ['foo', 'bar'], success: =>
-        @artworks.pluck('id').join('').should.equal 'foobar'
-        done()
-      Backbone.sync.args[0][2].data.ids.join('').should.equal 'bar'
-      Backbone.sync.args[0][2].success results: [{ id: 'bar' }]
+      Backbone.sync.args[0][2].success { id: 'foo' }
+      Backbone.sync.args[1][2].error {}, {}
 
   describe '#notIn', ->
 
