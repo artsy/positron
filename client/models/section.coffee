@@ -20,7 +20,6 @@ module.exports = class Section extends Backbone.Model
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
         href = _.first(href.split('&'))
       if href.match('artsy.net/' + resource)
-        console.log
         _.last url.parse(href).pathname?.split('/')
       else
         null

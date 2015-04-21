@@ -3,6 +3,7 @@
 #
 
 _ = require 'underscore'
+async = require 'async'
 
 @ApiCollection =
 
@@ -10,18 +11,18 @@ _ = require 'underscore'
     { @total, @count } = data
     data.results
 
-  getOrFetchIds: (ids, options = {}) ->
-    ids = _.without ids, @pluck('id')...
-    ids = _.reject ids, (id) -> not id
-    return options.success? this unless ids.length
-    @fetch
-      data: ids: ids
-      error: options.error
-      remove: false
-      success: options.success
-      complete: options.complete
-
 @Filter =
 
   notIn: (col) ->
     @reject (model) => model.id in col.pluck 'id'
+
+  getOrFetchIds: (ids, options = {}) ->
+    async.map ids or [], (id, cb) =>
+      new @model(id: id).fetch
+        error: (m, err) -> cb null, err
+        success: (model) -> cb null, model
+    , (err, models) =>
+      options.complete?()
+      return options.error? err if err
+      @add models
+      options.success?()
