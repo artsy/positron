@@ -25,6 +25,7 @@ app.post '/articles', authenticated
 app.put '/articles/:id', authenticated
 app.delete '/articles/:id', authenticated
 app.use require './apps/articles'
+app.use require './apps/verticals'
 app.use authenticated
 app.use require './apps/users'
 app.use require './apps/report'

@@ -4,6 +4,7 @@ sinon = require 'sinon'
 Article = require '../../../../../models/article'
 Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
+{ fabricate } = require 'antigravity'
 { resolve } = require 'path'
 
 describe 'EditAdmin', ->
@@ -23,6 +24,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupFairAutocomplete = sinon.stub()
         EditAdmin::setupPartnerAutocomplete = sinon.stub()
         EditAdmin::setupAuctionAutocomplete = sinon.stub()
+        EditAdmin::setupVerticalAutocomplete = sinon.stub()
         EditAdmin::setupSlug = sinon.stub()
         EditAdmin::setupPublishDate = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
@@ -44,14 +46,14 @@ describe 'EditAdmin', ->
   describe '#renderFeatured', ->
 
     it 'renders the featured artists', ->
-      artist = fixtures().artists
+      artist = fabricate('artist')
       artist.name = 'Andy Foobar'
       @view.article.featuredArtists.set [artist]
       @view.renderFeatured()
       @view.$el.html().should.containEql 'Andy Foobar'
 
     it 'renders primary featured', ->
-      artist = fixtures().artists
+      artist = fabricate('artist')
       artist.name = 'Andy Moobar'
       @view.article.featuredPrimaryArtists.set [artist]
       @view.renderFeatured()

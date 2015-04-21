@@ -2,6 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 Article = require '../../models/article.coffee'
 sinon = require 'sinon'
+{ fabricate } = require 'antigravity'
 fixtures = require '../../../test/helpers/fixtures'
 
 describe "Article", ->
@@ -30,9 +31,9 @@ describe "Article", ->
       @article.toJSON().sections[0].body.should.equal 'Foobar'
 
     it 'injects features artworks & artists', ->
-      @article.featuredArtworks.set [fixtures().artworks]
-      @article.featuredArtists.set [fixtures().artists]
-      @article.featuredPrimaryArtists.set [fixtures().artists]
+      @article.featuredArtworks.set [fabricate('artist')]
+      @article.featuredArtists.set [fabricate('artist')]
+      @article.featuredPrimaryArtists.set [fabricate('artist')]
       @article.toJSON().featured_artwork_ids.length.should.equal 1
       @article.toJSON().featured_artist_ids.length.should.equal 1
       @article.toJSON().primary_featured_artist_ids.length.should.equal 1
@@ -56,12 +57,12 @@ describe "Article", ->
     it 'returns a mapped list of featured/mentioned artists ordered by name', ->
       @article.mentionedArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'andy', name: 'Andy')
-          _.extend(fixtures().artists, id: 'charles', name: 'Charles')
+          _.extend(fabricate 'artist', id: 'andy', name: 'Andy')
+          _.extend(fabricate 'artist', id: 'charles', name: 'Charles')
         ])
       @article.featuredArtists.reset(
         [
-          _.extend(fixtures().artists, id: 'bob', name: 'Bob')
+          _.extend(fabricate 'artist', id: 'bob', name: 'Bob')
         ])
       _.map(@article.featuredList('Artists'), (i) -> i.model.id).join('')
         .should.equal 'andybobcharles'

@@ -67,6 +67,7 @@ schema = (->
   partner_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow(null)
   auction_id: @objectId().allow(null)
+  vertical_id: @objectId().allow(null)
   featured: @boolean().default(false)
 ).call Joi
 
@@ -75,6 +76,7 @@ querySchema = (->
   published: @boolean()
   limit: @number()
   offset: @number()
+  vertical_id: @objectId()
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
@@ -112,10 +114,12 @@ toQuery = (input, callback) ->
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
       'fair_ids', 'partner_id', 'auction_id'
     # Type cast IDs
+    # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
+    query.vertical_id = ObjectId input.vertical_id if input.vertical_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
@@ -154,6 +158,7 @@ sortParamToQuery = (input) ->
           # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
           author_id: ObjectId(article.author_id) if article.author_id
           fair_id: ObjectId(article.fair_id) if article.fair_id
+          vertical_id: ObjectId(article.vertical_id) if article.vertical_id
           auction_id: ObjectId(article.auction_id) if article.auction_id
           partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
           primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
