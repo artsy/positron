@@ -57,6 +57,10 @@ describe "Article", ->
       @section.set body: '<p><a href="http://artsy.net/artist/kana-abe"></p>'
       @section.slugsFromHTML('body','artist')[0].should.equal 'kana-abe'
 
+    it 'extracts a slug from an Artsy link with query junk', ->
+      @section.set body: '<p><a href="http://artsy.net/artist/kana-abe?foo=bar"></p>'
+      @section.slugsFromHTML('body','artist')[0].should.equal 'kana-abe'
+
     it 'extracts a slug from a Google link', ->
       @section.set body: '<p><a href="https://www.google.com/url?q=https%3A%2F%2Fwww.artsy.net%2Fartist%2Ftrenton-doyle-hancock&sa=D&sntz=1"></p>'
       @section.slugsFromHTML('body','artist')[0].should.equal 'trenton-doyle-hancock'
