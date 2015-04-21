@@ -2,6 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 sd = require('sharify').data
 Artworks = require '../collections/artworks.coffee'
+url = require 'url'
 
 module.exports = class Section extends Backbone.Model
 
@@ -11,13 +12,17 @@ module.exports = class Section extends Backbone.Model
     @artworks = new Artworks
 
   slugsFromHTML: (attr, resource) ->
-    return throw Error 'Missing jQuery' unless $? # TODO: Isomorphic DOM reader
+    # TODO: Isomorphic DOM reader... cheerio?
+    return throw Error 'Missing jQuery' unless $?
     _.compact $(@get attr).find('a').map(->
       href = $(this).attr('href')
       if href.match('google')
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
         href = _.first(href.split('&'))
-      if href.match('artsy.net/' + resource) then _.last href.split('/') else null
+      if href.match('artsy.net/' + resource)
+        _.last url.parse(href).pathname?.split('/')
+      else
+        null
     ).toArray()
 
   fetchSlideshowArtworks: (options) ->
