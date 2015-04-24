@@ -4,6 +4,7 @@ Artists = require '../collections/artists.coffee'
 Artworks = require '../collections/artworks.coffee'
 sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
+Section = require '../models/section.coffee'
 request = require 'superagent'
 
 module.exports = class Article extends Backbone.Model
@@ -17,6 +18,7 @@ module.exports = class Article extends Backbone.Model
     @mentionedArtists = new Artists
     @featuredArtworks = new Artworks
     @mentionedArtworks = new Artworks
+    @heroSection = new Section @get 'hero_section'
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'

@@ -11,6 +11,7 @@ EditHeader = require './components/header/index.coffee'
 EditAdmin = require './components/admin/index.coffee'
 EditThumbnail = require './components/thumbnail/index.coffee'
 SectionList = React.createFactory require './components/section_list/index.coffee'
+HeroSection = React.createFactory require './components/hero_section/index.coffee'
 
 @init = ->
   article = new Article sd.ARTICLE
@@ -21,4 +22,8 @@ SectionList = React.createFactory require './components/section_list/index.coffe
   React.render(
     SectionList(sections: article.sections)
     $('#edit-sections')[0]
+  )
+  React.render(
+    HeroSection(section: article.heroSection)
+    $('#edit-hero-section')[0]
   )

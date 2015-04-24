@@ -1,0 +1,15 @@
+@import '../stylus_lib'
+
+#edit-hero-section
+  width body-width + (controls-padding * 2)
+  margin 100px auto 20px auto
+  .edit-section-tool:only-child:not([data-state-open="true"])
+    fill-color gray-color
+    &::after
+      display none
+    &:hover
+      fill-color black
+
+#edit-hero-section
+  .edit-section-tool-menu li
+    width 50%

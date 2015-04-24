@@ -8,8 +8,12 @@ section-btn-height = 130px
   z-index 2
   max-height 0
   position relative
-  &:only-child::after
-    opacity 1
+  &:only-child
+    &::after
+      opacity 1
+      color black
+    svg
+      fill-color black
   &:last-child
     opacity 1
   &:hover

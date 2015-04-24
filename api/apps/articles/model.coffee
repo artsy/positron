@@ -31,6 +31,16 @@ schema = (->
   published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
+  hero_section: @alternatives().try(
+    @object().keys
+      type: @string().valid('image')
+      url: @string().allow('', null)
+      caption: @string().allow('', null)
+    @object().keys
+      type: @string().valid('video')
+      url: @string().allow('', null)
+      cover_image_url: @string().allow('', null)
+  )
   sections: @array().items([
     @object().keys
       type: @string().valid('image')

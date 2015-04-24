@@ -56,44 +56,63 @@ module.exports = React.createClass
           else
             $(icons()).filter('.section-tool').html()
       }
-      ul { className: 'edit-section-tool-menu' },
-        li {
-          className: 'edit-section-tool-text'
-          onClick: @newSection('text')
-        }, 'Text',
-          div {
-            className: 'edit-menu-icon-text'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.text').html()
-          }
-        li {
-          className: 'edit-section-tool-artworks'
-          onClick: @newSection('artworks')
-        }, 'Artworks',
-          div {
-            className: 'edit-menu-icon-artworks'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.artworks').html()
-          }
-        li {
-          className: 'edit-section-tool-image'
-          onClick: @newSection('image')
-        }, 'Image',
-          div {
-            className: 'edit-menu-icon-image'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
-          }
-        li {
-          className: 'edit-section-tool-video'
-          onClick: @newSection('video')
-        }, 'Video',
-          div {
-            className: 'edit-menu-icon-video'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.video').html()
-          }
-        li {
-          className: 'edit-section-tool-slideshow'
-          onClick: @newSection('slideshow')
-        }, 'Slideshow',
-          div {
-            className: 'edit-menu-icon-slideshow'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
-          }
+      if @props.hero
+        ul { className: 'edit-section-tool-menu' },
+          li {
+            className: 'edit-section-tool-hero-image'
+            onClick: @props.setHero('image')
+          }, 'Large Format Image',
+            div {
+              className: 'edit-menu-icon-hero-image'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-image').html()
+            }
+          li {
+            className: 'edit-section-tool-hero-video'
+            onClick: @props.setHero('video')
+          }, 'Large Format Video',
+            div {
+              className: 'edit-menu-icon-hero-video'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-video').html()
+            }
+      else
+        ul { className: 'edit-section-tool-menu' },
+          li {
+            className: 'edit-section-tool-text'
+            onClick: @newSection('text')
+          }, 'Text',
+            div {
+              className: 'edit-menu-icon-text'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.text').html()
+            }
+          li {
+            className: 'edit-section-tool-artworks'
+            onClick: @newSection('artworks')
+          }, 'Artworks',
+            div {
+              className: 'edit-menu-icon-artworks'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.artworks').html()
+            }
+          li {
+            className: 'edit-section-tool-image'
+            onClick: @newSection('image')
+          }, 'Image',
+            div {
+              className: 'edit-menu-icon-image'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
+            }
+          li {
+            className: 'edit-section-tool-video'
+            onClick: @newSection('video')
+          }, 'Video',
+            div {
+              className: 'edit-menu-icon-video'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.video').html()
+            }
+          li {
+            className: 'edit-section-tool-slideshow'
+            onClick: @newSection('slideshow')
+          }, 'Slideshow',
+            div {
+              className: 'edit-menu-icon-slideshow'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
+            }
