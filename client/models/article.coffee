@@ -19,6 +19,7 @@ module.exports = class Article extends Backbone.Model
     @featuredArtworks = new Artworks
     @mentionedArtworks = new Artworks
     @heroSection = new Section @get 'hero_section'
+    @heroSection.isHero = true
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'

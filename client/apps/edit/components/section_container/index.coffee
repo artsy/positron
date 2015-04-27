@@ -27,7 +27,12 @@ module.exports = React.createClass
 
   removeSection: (e) ->
     e.stopPropagation()
-    @props.section.destroy()
+    if @props.section.isHero
+      console.log 'clear'
+      @props.section.clear()
+    else
+      console.log 'destroy'
+      @props.section.destroy()
 
   render: ->
     div {
@@ -51,6 +56,7 @@ module.exports = React.createClass
         when 'image' then SectionImage
         when 'video' then SectionVideo
         when 'slideshow' then SectionSlideshow
+        else ->
       )(
         section: @props.section
         editing: @props.editing
