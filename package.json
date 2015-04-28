@@ -68,7 +68,7 @@
     "html-janitor": "*",
     "imagesloaded": "*",
     "jquery-autosize": "*",
-    "typeahead.js": "*",
+    "typeahead.js": "0.10.x",
     "simple-modal": "*",
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",

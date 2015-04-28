@@ -4,7 +4,6 @@
 
 _ = require 'underscore'
 Backbone = require 'backbone'
-Bloodhound = require 'typeahead.js/dist/bloodhound.js'
 
 module.exports = class Autocomplete extends Backbone.View
 
