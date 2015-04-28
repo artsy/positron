@@ -13,7 +13,7 @@ s:
 	$(BIN)/coffee index.coffee
 
 # Run all of the project-level tests, followed by app-level tests
-test: assets
+test:
 	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')
 	$(BIN)/mocha $(shell find api/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
 	$(BIN)/mocha $(shell find client/test -name '*.coffee' -not -path 'test/helpers/*')

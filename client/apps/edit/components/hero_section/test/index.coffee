@@ -27,12 +27,10 @@ describe 'HeroSection', ->
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub $, 'ajax'
         done()
 
   afterEach ->
-    $.ajax.restore()
-    benv.teardown()
+    benv.teardown(false)
 
   it 'opens a video section and sets the model type', ->
     @component.setHero('video')({})

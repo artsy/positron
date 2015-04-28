@@ -61,7 +61,10 @@ module.exports = class Article extends Backbone.Model
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length
-    extended.hero_section = @heroSection.toJSON()
+    if @heroSection.keys().length
+      extended.hero_section = @heroSection.toJSON()
+    else
+      extended.hero_section = null
     if @featuredArtworks.length
       extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
     if @featuredArtists.length
