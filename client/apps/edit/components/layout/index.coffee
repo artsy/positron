@@ -114,6 +114,7 @@ module.exports = class EditLayout extends Backbone.View
     'keyup :input:not(.tt-input), [contenteditable]:not(.tt-input)': 'onKeyup'
     'change #edit-admin :input': 'onKeyup'
     'click .edit-section-container *': 'popLockControls'
+    'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'

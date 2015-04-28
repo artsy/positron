@@ -38,6 +38,17 @@ describe "Article", ->
       @article.toJSON().featured_artist_ids.length.should.equal 1
       @article.toJSON().primary_featured_artist_ids.length.should.equal 1
 
+    it 'nulls a hero section if there isnt any data', ->
+      @article.set hero_section: {}
+      @article.heroSection.clear()
+      (@article.toJSON().hero_section?).should.not.be.ok
+
+    it 'serializes the hero section if there is data', ->
+      @article.set hero_section: {}
+      @article.heroSection.set type: 'video', url: 'foo'
+      @article.toJSON().hero_section.type.should.equal 'video'
+      @article.toJSON().hero_section.url.should.equal 'foo'
+
   describe '#finishedContent', ->
 
     it 'returns true if theres a title', ->
@@ -68,3 +79,9 @@ describe "Article", ->
         .should.equal 'andybobcharles'
       _.map(@article.featuredList('Artists'), (i) -> String i.featured).join('')
         .should.equal 'falsetruefalse'
+
+  describe 'heroSection', ->
+
+    it 'comes with a hero section that clears on destroy to manage state better', ->
+      @article.heroSection.destroy.toString()
+        .should.equal @article.heroSection.clear.toString()

@@ -23,7 +23,7 @@ module.exports = React.createClass
     @props.section.on 'change:layout', => @forceUpdate()
 
   setEditing: (editing) -> =>
-    @props.onSetEditing if editing then @props.index else null
+    @props.onSetEditing if editing then @props.index ? true else null
 
   removeSection: (e) ->
     e.stopPropagation()

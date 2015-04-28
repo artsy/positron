@@ -4,6 +4,7 @@ Artists = require '../collections/artists.coffee'
 Artworks = require '../collections/artworks.coffee'
 sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
+Section = require '../models/section.coffee'
 request = require 'superagent'
 
 module.exports = class Article extends Backbone.Model
@@ -17,6 +18,8 @@ module.exports = class Article extends Backbone.Model
     @mentionedArtists = new Artists
     @featuredArtworks = new Artworks
     @mentionedArtworks = new Artworks
+    @heroSection = new Section @get 'hero_section'
+    @heroSection.destroy = @heroSection.clear
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -58,6 +61,10 @@ module.exports = class Article extends Backbone.Model
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length
+    if @heroSection.keys().length
+      extended.hero_section = @heroSection.toJSON()
+    else
+      extended.hero_section = null
     if @featuredArtworks.length
       extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
     if @featuredArtists.length

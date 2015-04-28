@@ -1,0 +1,28 @@
+@import '../stylus_lib'
+
+#edit-hero-section
+  width body-width + (controls-padding * 2)
+  margin 100px auto 20px auto
+  .edit-section-tool:only-child:not([data-state-open="true"])
+    fill-color gray-color
+    &::after
+      display none
+    &:hover
+      fill-color black
+  .edit-section-container
+    min-height 400px
+    width 1100px
+    margin-left -280px
+  .esi-placeholder
+    line-height 480px
+
+#edit-hero-section
+  .edit-section-tool-menu li
+    width 50%
+  .edit-section-video
+    .bordered-input
+      width calc(100% - 97px)
+    .esv-placeholder
+      line-height 400px
+    iframe
+      min-height 590px

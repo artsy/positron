@@ -11,13 +11,26 @@ async = require 'async'
 Joi = require 'joi'
 Joi.objectId = require 'joi-objectid'
 moment = require 'moment'
-request = require 'superagent'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL } = process.env
 
 #
 # Schemas
 #
+imageSection = (->
+  @object().keys
+    type: @string().valid('image')
+    url: @string().allow('', null)
+    caption: @string().allow('', null)
+).call Joi
+
+videoSection = (->
+  @object().keys
+    type: @string().valid('video')
+    url: @string().allow('', null)
+    cover_image_url: @string().allow('', null)
+).call Joi
+
 schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
@@ -31,11 +44,10 @@ schema = (->
   published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
+  hero_section: @alternatives().try(videoSection, imageSection)
   sections: @array().items([
-    @object().keys
-      type: @string().valid('image')
-      url: @string().allow('', null)
-      caption: @string().allow('', null)
+    imageSection
+    videoSection
     @object().keys
       type: @string().valid('text')
       body: @string().allow('', null)
@@ -43,9 +55,6 @@ schema = (->
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
-    @object().keys
-      type: @string().valid('video')
-      url: @string().allow('', null)
     @object().keys
       type: @string().valid('slideshow')
       items: @array().items [
