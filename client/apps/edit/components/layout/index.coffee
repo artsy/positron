@@ -113,7 +113,8 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input:not(.tt-input), [contenteditable]:not(.tt-input)': 'onKeyup'
     'change #edit-admin :input': 'onKeyup'
-    'click .edit-section-container *, .edit-section-tool-menu li': 'popLockControls'
+    'click .edit-section-container *': 'popLockControls'
+    'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
@@ -136,7 +137,7 @@ module.exports = class EditLayout extends Backbone.View
       @article.save @serialize()
     @toggleAstericks()
 
-  popLockControls: => _.defer =>
+  popLockControls: =>
     $section = @$('.edit-section-container[data-editing=true]')
     return unless $section.length
     $controls = $section.find('.edit-section-controls')

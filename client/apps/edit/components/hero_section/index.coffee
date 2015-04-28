@@ -16,12 +16,11 @@ module.exports = React.createClass
   componentDidMount: ->
     @props.section.on 'change', => @forceUpdate()
 
-  setHero: (type) -> (e) =>
+  setHero: (type) -> =>
     @props.section.set type: type
     @setState editing: true
 
   onSetEditing: (editing) ->
-    console.log 'set editing', editing
     @setState editing: editing
 
   render: ->

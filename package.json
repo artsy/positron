@@ -72,12 +72,12 @@
     "simple-modal": "*",
     "antigravity": "git://github.com/artsy/antigravity.git",
     "jquery": "*",
-    "zombie": "2.0.3",
+    "zombie": "3.x",
     "should": "*",
     "mocha": "*",
     "sinon": "*",
     "benv": "*",
-    "rewire": "*",
+    "rewire": "2.2.x",
     "jquery-fillwidth-lite": "*"
   },
   "license": "MIT"

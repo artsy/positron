@@ -1,8 +1,7 @@
 _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
-rewire = require 'rewire'
-Article = rewire '../model'
+Article = require '../model'
 { ObjectId } = require 'mongojs'
 express = require 'express'
 fabricateGravity = require('antigravity').fabricate
