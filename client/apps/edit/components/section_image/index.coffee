@@ -102,6 +102,10 @@ module.exports = React.createClass
             className: 'esi-caption bordered-input'
             ref: 'editable'
             onKeyUp: @onEditableKeyup
+            onFocus: (e) ->
+              console.log 'focus'
+              e.stopPropagation()
+              e.preventDefault()
           }
       (
         if @state.progress

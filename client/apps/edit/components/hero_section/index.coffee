@@ -14,23 +14,21 @@ module.exports = React.createClass
     { editing: false }
 
   componentDidMount: ->
-    @props.section.on 'change destroy clear', => @forceUpdate()
+    @props.section.on 'change', => @forceUpdate()
 
   setHero: (type) -> (e) =>
     @props.section.set type: type
     @setState editing: true
 
-  onSetEditing: ->
-    @props.section.clear() unless @props.section.get('url')
-    @setState editing: not @state.editing
+  onSetEditing: (editing) ->
+    console.log 'set editing', editing
+    @setState editing: editing
 
   render: ->
-    console.log @props.section.isEmpty?()
-    if not @props.section? or @props.section.isEmpty?()
+    unless @props.section.keys().length
       SectionTool { sections: @props.sections, hero: true, setHero: @setHero }
     else
       SectionContainer {
-        sections: @props.sections
         section: @props.section
         editing: @state.editing
         onSetEditing: @onSetEditing

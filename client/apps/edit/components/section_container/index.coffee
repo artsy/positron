@@ -23,16 +23,11 @@ module.exports = React.createClass
     @props.section.on 'change:layout', => @forceUpdate()
 
   setEditing: (editing) -> =>
-    @props.onSetEditing if editing then @props.index else null
+    @props.onSetEditing if editing then @props.index or true else null
 
   removeSection: (e) ->
     e.stopPropagation()
-    if @props.section.isHero
-      console.log 'clear'
-      @props.section.clear()
-    else
-      console.log 'destroy'
-      @props.section.destroy()
+    @props.section.destroy()
 
   render: ->
     div {

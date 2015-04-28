@@ -18,7 +18,7 @@ module.exports = (app) ->
       transforms: [require('caching-coffeeify'), require('jadeify')]
       globalTransforms: [require('deamdify')]
       detectGlobals: false
-      noParse: [require.resolve('jquery'), require.resolve('typeahead.js')]
+      noParse: [require.resolve('jquery')]
 
   # Mount antigravity in test
   if 'test' is NODE_ENV
