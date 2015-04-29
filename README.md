@@ -34,6 +34,16 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 npm install
 ```
 - Create a .env file in the root of the project and paste in sensitive configuration. You can copy the .env.example and fill in the sensitive config with the config vars from staging `heroku config --app=positron-staging`.
+
+  ( note: Leave non-sensitive configuration as it appears in the .env.example rather than copying over the config vars from `heroku config --app=positron-staging`. )
+- Positron uses MongoDB as a database. To install MongoDB using homebrew do the following, if you would prefer to install manually check the documentation at [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
+```
+brew install mongodb
+```
+- Start the MongoDB database
+```
+mongod
+```
 - Start the server
 ```
 make s
