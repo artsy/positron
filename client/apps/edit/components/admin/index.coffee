@@ -11,6 +11,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   initialize: ({ @article }) ->
     @article.on 'open:tab2', @onOpen
+    window.testArticle = @article
     @setupAuthorAutocomplete()
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
@@ -114,20 +115,25 @@ module.exports = class EditAdmin extends Backbone.View
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       placeholder: 'Search Show by name...'
       filter: (res) ->
+        console.log res
         vals = []
         for r in res._embedded.results
           if r.type == 'Show'
-              vals.push {id: r.id, value: r.title}
+            id = r._links.self.href.substr (r._links.self.href.lastIndexOf('/') + 1)
+            console.log r
+            vals.push {id: id, value: r.title}
         vals
       selected: (e, item) =>
-        @article.save show_id: item.id
+        request.get( "#{sd.ARTSY_URL}/api/v1/show/#{item.id}" )
+                .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+                  @article.save show_ids: [res.body._id]
       cleared: =>
-        @article.save show_id: null
-    if id = @article.get 'show_id'
+        @article.save show_ids: null
+    if id = @article.get('show_ids')?[0]
       request
-        .get("#{sd.ARTSY_URL}/api/v1/show/#{id}")
+        .get("#{sd.ARTSY_URL}/api/#{id}")
         .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+          select.setState value: res.body.title, loading: false
     else
       select.setState loading: false
 
