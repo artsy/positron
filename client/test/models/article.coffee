@@ -85,3 +85,8 @@ describe "Article", ->
     it 'comes with a hero section that clears on destroy to manage state better', ->
       @article.heroSection.destroy.toString()
         .should.equal @article.heroSection.clear.toString()
+
+    it 'updates on sync bc we may use an empty model and then fetch later', ->
+      @article.set hero_section: { type: 'foo' }
+      @article.trigger 'sync'
+      @article.heroSection.get('type').should.equal 'foo'
