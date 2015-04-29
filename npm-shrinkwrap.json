@@ -24,7 +24,7 @@
         },
         "qs": {
           "version": "2.4.1",
-          "from": "qs@>=2.4.1 <3.0.0",
+          "from": "qs@2.4.1",
           "resolved": "https://registry.npmjs.org/qs/-/qs-2.4.1.tgz"
         }
       }
@@ -197,7 +197,7 @@
                   "dependencies": {
                     "readable-stream": {
                       "version": "1.0.33",
-                      "from": "readable-stream@>=1.0.26 <1.1.0",
+                      "from": "readable-stream@>=1.0.27-1 <2.0.0",
                       "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
                       "dependencies": {
                         "core-util-is": {
@@ -554,7 +554,7 @@
                 },
                 "source-map": {
                   "version": "0.1.43",
-                  "from": "source-map@>=0.1.7 <0.2.0",
+                  "from": "source-map@>=0.1.40 <0.2.0",
                   "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
                   "dependencies": {
                     "amdefine": {
@@ -1379,7 +1379,7 @@
                         },
                         "wordwrap": {
                           "version": "0.0.2",
-                          "from": "wordwrap@>=0.0.2 <0.1.0",
+                          "from": "wordwrap@0.0.2",
                           "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                         },
                         "type-check": {
@@ -3298,7 +3298,7 @@
         },
         "mime": {
           "version": "1.3.4",
-          "from": "mime@1.3.4",
+          "from": "mime@>=1.3.4 <2.0.0",
           "resolved": "https://registry.npmjs.org/mime/-/mime-1.3.4.tgz"
         }
       }
@@ -4232,7 +4232,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@>=1.0.26 <1.1.0",
+              "from": "readable-stream@latest",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -4951,14 +4951,14 @@
       "resolved": "https://registry.npmjs.org/rewire/-/rewire-2.2.0.tgz"
     },
     "scribe-editor": {
-      "version": "1.3.7",
-      "from": "scribe-editor@*",
-      "resolved": "https://registry.npmjs.org/scribe-editor/-/scribe-editor-1.3.7.tgz",
+      "version": "1.3.1",
+      "from": "scribe-editor@1.3.1",
+      "resolved": "https://registry.npmjs.org/scribe-editor/-/scribe-editor-1.3.1.tgz",
       "dependencies": {
         "lodash-amd": {
-          "version": "3.5.0",
-          "from": "lodash-amd@>=3.5.0 <3.6.0",
-          "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-3.5.0.tgz"
+          "version": "2.4.1",
+          "from": "lodash-amd@>=2.4.1 <2.5.0",
+          "resolved": "https://registry.npmjs.org/lodash-amd/-/lodash-amd-2.4.1.tgz"
         },
         "immutable": {
           "version": "3.6.4",
@@ -6535,7 +6535,7 @@
               "dependencies": {
                 "readable-stream": {
                   "version": "1.0.33",
-                  "from": "readable-stream@>=1.0.26 <1.1.0",
+                  "from": "readable-stream@latest",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
                   "dependencies": {
                     "core-util-is": {
