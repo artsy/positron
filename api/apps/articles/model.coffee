@@ -44,7 +44,7 @@ schema = (->
   published_at: @date()
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection)
+  hero_section: @alternatives().try(videoSection, imageSection).allow(null)
   sections: @array().items([
     imageSection
     videoSection
