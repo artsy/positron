@@ -26,8 +26,11 @@ querySchema = (->
 @fromAccessToken = (accessToken, callback) ->
   db.users.findOne { access_token: accessToken }, (err, user) ->
     return callback err if err
-    return callback null, user if user?.details?
-    upsertWithGravityData { accessToken: accessToken }, callback
+    if user?.details?
+      callback null, user
+      upsertWithGravityData { accessToken: accessToken }
+    else
+      upsertWithGravityData { accessToken: accessToken }, callback
 
 @find = find = (id, callback) ->
   db.users.findOne { _id: ObjectId(id) }, callback
@@ -74,7 +77,7 @@ querySchema = (->
   profile_id: user.profile?.id
   profile_handle: user.profile?.handle
 
-@upsertWithGravityData = upsertWithGravityData = (options, callback) ->
+@upsertWithGravityData = upsertWithGravityData = (options, callback = ->) ->
 
   # Determine who we're fetching with what authorization
   if options.id
