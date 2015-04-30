@@ -24,8 +24,13 @@ setupPassport = ->
   passport.serializeUser (user, done) ->
     done null, user.toJSON()
   passport.deserializeUser (user, done) ->
-    console.log 'mOOOO', user
     done null, new User(user)
+
+logoutOldSchema = (req, res, next) ->
+  if req.user and not req.user.get('type')
+    res.redirect '/logout'
+  else
+    next()
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
@@ -43,4 +48,5 @@ module.exports = (app) ->
     successRedirect: '/'
     failureRedirect: '/logout'
   app.get '/logout', logout
+  app.use logoutOldSchema
   app.use requireLogin

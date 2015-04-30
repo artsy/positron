@@ -13,11 +13,13 @@ async = require 'async'
 bcrypt = require 'bcrypt'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, SALT } = process.env
-{ imageUrlsFor } = require '../../lib/artsy_model'
 
 #
 # Retrieval
 #
+@find = (id, callback) ->
+  db.users.findOne { _id: ObjectId(id) }, callback
+
 @fromAccessToken = (accessToken, callback) ->
   # Find via access token from DB if they exist
   bcrypt.hash accessToken, SALT, (err, encryptedAccessToken) ->
@@ -38,7 +40,6 @@ bcrypt = require 'bcrypt'
         user = results[0].body
         partnerIds = _.pluck(results[1].body, '_id')
         save user, partnerIds, accessToken, callback
-
 
 @findOrInsert = (id, accessToken, callback) ->
   db.users.findOne { _id: ObjectId(id) }, (err, user) ->
