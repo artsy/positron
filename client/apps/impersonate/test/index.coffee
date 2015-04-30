@@ -14,7 +14,7 @@ describe 'impersonate', ->
     @request = get: -> set: -> end: (cb) -> cb null,
       body:
         details: {}
-        user: name: 'Molly'
+        name: 'Molly'
     app.__set__ 'request', @request
     @impersonate = app.__get__ 'impersonate'
 
