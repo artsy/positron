@@ -20,4 +20,4 @@ describe 'impersonate', ->
 
   it 'logs in as a fetched user', ->
     @impersonate @req, @res, @next
-    @req.login.args[0][0].get('user').name.should.equal 'Molly'
+    @req.login.args[0][0].get('name').should.equal 'Molly'

@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "dependencies": {
     "antigravity": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "from": "git://github.com/artsy/antigravity.git",
-      "resolved": "git://github.com/artsy/antigravity.git#b561156adfe233aeb490c497507f537ddb3c5617"
+      "resolved": "git://github.com/artsy/antigravity.git#18062b229390ab9c0250dde6cc7dc68c439d0ee2"
     },
     "artsy-backbone-mixins": {
       "version": "0.0.20",
@@ -723,7 +723,7 @@
                 },
                 "source-map": {
                   "version": "0.1.43",
-                  "from": "source-map@>=0.1.40 <0.2.0",
+                  "from": "source-map@>=0.1.31 <0.2.0",
                   "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
                   "dependencies": {
                     "amdefine": {
@@ -1228,7 +1228,7 @@
                 },
                 "source-map": {
                   "version": "0.1.43",
-                  "from": "source-map@>=0.1.40 <0.2.0",
+                  "from": "source-map@>=0.1.31 <0.2.0",
                   "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
                   "dependencies": {
                     "amdefine": {
@@ -3290,7 +3290,7 @@
         },
         "mime": {
           "version": "1.3.4",
-          "from": "mime@>=1.3.4 <2.0.0",
+          "from": "mime@1.3.4",
           "resolved": "https://registry.npmjs.org/mime/-/mime-1.3.4.tgz"
         }
       }
@@ -3513,7 +3513,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         },
         "esprima": {
@@ -3875,7 +3875,7 @@
           "dependencies": {
             "acorn-globals": {
               "version": "1.0.4",
-              "from": "acorn-globals@>=1.0.3 <2.0.0",
+              "from": "acorn-globals@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.4.tgz",
               "dependencies": {
                 "acorn": {
@@ -3983,7 +3983,7 @@
             },
             "acorn-globals": {
               "version": "1.0.4",
-              "from": "acorn-globals@>=1.0.3 <2.0.0",
+              "from": "acorn-globals@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/acorn-globals/-/acorn-globals-1.0.4.tgz"
             }
           }
@@ -3997,7 +3997,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         }
       }
@@ -4224,7 +4224,7 @@
             },
             "readable-stream": {
               "version": "1.0.33",
-              "from": "readable-stream@>=1.0.27-1 <2.0.0",
+              "from": "readable-stream@>=1.0.26 <1.1.0",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -4717,7 +4717,7 @@
               "dependencies": {
                 "bluebird": {
                   "version": "2.9.25",
-                  "from": "bluebird@>=2.0.0 <3.0.0",
+                  "from": "bluebird@>=2.9.25 <3.0.0",
                   "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
                 },
                 "chalk": {
@@ -6156,7 +6156,7 @@
         },
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         },
         "uglify-js": {
@@ -6246,7 +6246,7 @@
         },
         "bluebird": {
           "version": "2.9.25",
-          "from": "bluebird@>=2.0.0 <3.0.0",
+          "from": "bluebird@>=2.9.25 <3.0.0",
           "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
         },
         "eventsource": {
@@ -6517,7 +6517,7 @@
         },
         "request": {
           "version": "2.55.0",
-          "from": "request@>=2.44.0 <3.0.0",
+          "from": "request@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/request/-/request-2.55.0.tgz",
           "dependencies": {
             "bl": {
