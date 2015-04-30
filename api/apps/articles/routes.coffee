@@ -5,7 +5,7 @@ _ = require 'underscore'
 @index = (req, res, next) ->
   if req.query.published isnt 'true' and (not req.query.author_id? or
      req.query.author_id isnt req.user?._id.toString()) and
-     req.user?.details?.type isnt 'Admin'
+     req.user?.type isnt 'Admin'
     return res.err 401,
       'Must pass author_id=me to view unpublished articles. Or pass ' +
       'published=true to only view published articles.'
@@ -43,7 +43,7 @@ _ = require 'underscore'
     return next err if err
     if not article? or (article.published isnt true and
        article.author_id.toString() isnt req.user?._id.toString()) and
-       req.user?.details?.type isnt 'Admin'
+       req.user?.type isnt 'Admin'
       return res.err 404, 'Article not found.'
     req.article = article
     next()

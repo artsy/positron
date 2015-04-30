@@ -36,22 +36,49 @@ bcrypt = require 'bcrypt'
       ], (err, results) ->
         return callback err if err
         user = results[0].body
-        partnerIds = _.pluck results[1].body, '_id'
-        request
-          .get("#{ARTSY_URL}/api/v1/profile/#{user.default_profile_id}")
-          .set('X-Access-Token': accessToken).end (err, res) ->
-            return callback err if err
-            profile = res.body
-            db.users.save {
-              _id: ObjectId(user.id)
-              name: user.name
-              type: user.type
-              access_to_partner_ids: partnerIds
-              profile_handle: profile.id
-              profile_id: profile._id
-              profile_icon_url: _.first(_.values(profile.icon?.image_urls))
-              access_token: encryptedAccessToken
-            }, callback
+        partnerIds = _.pluck(results[1].body, '_id')
+        save user, partnerIds, accessToken, callback
+
+
+@findOrInsert = (id, accessToken, callback) ->
+  db.users.findOne { _id: ObjectId(id) }, (err, user) ->
+    return callback err if err
+    return callback null, user if user
+    async.parallel [
+      (cb) ->
+        request.get("#{ARTSY_URL}/api/v1/user/#{id}")
+          .set('X-Access-Token': accessToken).end cb
+      (cb) ->
+        request.get("#{ARTSY_URL}/api/v1/user/#{id}/access_controls")
+          .set('X-Access-Token': accessToken).end cb
+    ], (err, results) ->
+      return callback err if err
+      user = results[0].body
+      partnerIds = (ac.property._id for ac in results[1].body)
+      save user, partnerIds, accessToken, callback
+
+save = (user, partnerIds, accessToken, callback) ->
+  async.parallel [
+    (cb) ->
+      bcrypt.hash accessToken, SALT, cb
+    (cb) ->
+      request
+        .get("#{ARTSY_URL}/api/v1/profile/#{user.default_profile_id}")
+        .set('X-Access-Token': accessToken).end cb
+  ], (err, results) ->
+    return callback err if err
+    encryptedAccessToken = results[0]
+    profile = results[1].body
+    db.users.save {
+      _id: ObjectId(user.id)
+      name: user.name
+      type: user.type
+      access_to_partner_ids: partnerIds
+      profile_handle: profile.id
+      profile_id: profile._id
+      profile_icon_url: _.first(_.values(profile.icon?.image_urls))
+      access_token: encryptedAccessToken
+    }, callback
 
 #
 # JSON views

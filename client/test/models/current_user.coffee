@@ -1,14 +1,14 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-CurrentUser = require '../../models/current_user'
+User = require '../../models/user'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 
-describe "CurrentUser", ->
+describe "User", ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
-    @user = new CurrentUser fixtures().users
+    @user = new User fixtures().users
 
   afterEach ->
     Backbone.sync.restore()

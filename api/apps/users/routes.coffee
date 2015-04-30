@@ -4,14 +4,14 @@
 # GET /api/users/:id
 @show = (req, res, next) ->
   return res.send present req.user if req.isUser
-  User.find req.params.id, (err, user) ->
+  User.findOrInsert req.params.id, req.get('X-Access-Token'), (err, user) ->
     return next err if err
     res.send present user
 
 # Middleware to deny non-admins access to certain user endpoint operations
 @ownerOrAdminOnly = (req, res, next) ->
   req.isUser = req.params.id is req.user._id.toString()
-  if not req.isUser and req.user.details?.type isnt 'Admin'
+  if not req.isUser and req.user?.type isnt 'Admin'
     res.err 401, 'Must be an admin or the user being accessed.'
   else
     next()

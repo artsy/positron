@@ -7,7 +7,7 @@ describe 'impersonate', ->
 
   beforeEach ->
     user = new Backbone.Model
-    user.isAdmin = -> true
+    user.set type: 'Admin'
     @req = user: user, login: sinon.stub(), params: id: 'foo'
     @res = redirect: sinon.stub()
     @next = sinon.stub()
@@ -21,4 +21,3 @@ describe 'impersonate', ->
   it 'logs in as a fetched user', ->
     @impersonate @req, @res, @next
     @req.login.args[0][0].get('user').name.should.equal 'Molly'
-    

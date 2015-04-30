@@ -20,12 +20,12 @@
       br
       | Published
     #layout-sidebar-profile
-      img( src=user.iconUrl() )
+      img( src=user.get('profile_icon_url') )
       br
-      = user.get('user').name.split(' ')[0]
+      = user.get('name').split(' ')[0]
       nav#layout-sidebar-profile-menu
-        a( href=sd.FORCE_URL + '/' + user.profileHandle() )
+        a( href=sd.FORCE_URL + '/' + user.get('profile_handle') )
           | View profile on Artsy
         a( href='/logout' ) Sign out
-        if user.isAdmin()
+        if user.get('type') == 'Admin'
           a#layout-sidebar-switch-user Switch user

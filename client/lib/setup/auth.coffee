@@ -7,7 +7,7 @@ sd = require('sharify').data
 Backbone = require 'backbone'
 passport = require 'passport'
 OAuth2Strategy = require 'passport-oauth2'
-CurrentUser = require '../../models/current_user'
+User = require '../../models/user'
 
 setupPassport = ->
   passport.use 'artsy', new OAuth2Strategy
@@ -17,20 +17,15 @@ setupPassport = ->
     clientSecret: process.env.ARTSY_SECRET
     callbackURL: process.env.APP_URL + '/auth/artsy/callback'
   , (accessToken, refreshToken, profile, done) ->
-    done null, accessToken
-  passport.serializeUser (userOrAccessToken, done) ->
-    if userOrAccessToken.id?
-      done null, JSON.stringify userOrAccessToken.toJSON()
-    else
-      new CurrentUser().fetch
-        headers: 'X-Access-Token': userOrAccessToken
-        error: (m, res) -> done res.body
-        success: (user) -> done null, JSON.stringify user.toJSON()
+    new User(id: 'me', access_token: accessToken).fetch
+      headers: 'X-Access-Token': accessToken
+      error: (m, err) -> done err
+      success: (user) -> done null, user
+  passport.serializeUser (user, done) ->
+    done null, user.toJSON()
   passport.deserializeUser (user, done) ->
-    try
-      done null, new CurrentUser JSON.parse user
-    catch e
-      return done e
+    console.log 'mOOOO', user
+    done null, new User(user)
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'

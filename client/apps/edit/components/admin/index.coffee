@@ -23,9 +23,9 @@ module.exports = class EditAdmin extends Backbone.View
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
     new Autocomplete
       el: @$('#edit-admin-change-author input')
-      url: "#{sd.API_URL}/users?q=%QUERY"
-      filter: (res) -> for r in res.results
-        { id: r.id, value: _.compact([r.user.name, r.details?.email]).join(', ') }
+      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+      filter: (users) -> for user in users
+        { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
       selected: @onAuthorSelect
 
   onAuthorSelect: (e, item) =>
