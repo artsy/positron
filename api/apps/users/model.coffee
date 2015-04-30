@@ -26,11 +26,8 @@ querySchema = (->
 @fromAccessToken = (accessToken, callback) ->
   db.users.findOne { access_token: accessToken }, (err, user) ->
     return callback err if err
-    if user?.details?
-      callback null, user
-      upsertWithGravityData { accessToken: accessToken }
-    else
-      upsertWithGravityData { accessToken: accessToken }, callback
+    return callback null, user if user?.details?
+    upsertWithGravityData { accessToken: accessToken }, callback
 
 @find = find = (id, callback) ->
   db.users.findOne { _id: ObjectId(id) }, callback
