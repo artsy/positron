@@ -53,7 +53,6 @@ module.exports = (app) ->
   # Mount apps
   app.use require '../../apps/article_list'
   app.use require '../../apps/edit'
-  app.use require '../../apps/contributors'
   app.use require '../../apps/impersonate'
 
   # Mount static middleware for sub apps, components, and project-wide

@@ -8,21 +8,6 @@
     return next err if err
     res.send present user
 
-# POST /api/users
-@create = (req, res, next) ->
-  User.upsertWithGravityData {
-    id: req.body.artsy_id
-    accessToken: req.get('X-Access-Token')
-  }, (err, user) ->
-    return next err if err
-    res.send present user
-
-# GET /api/users
-@index = (req, res, next) ->
-  User.where req.query, (err, json) ->
-    return next err if err
-    res.send json
-
 # Middleware to deny non-admins access to certain user endpoint operations
 @ownerOrAdminOnly = (req, res, next) ->
   req.isUser = req.params.id is req.user._id.toString()

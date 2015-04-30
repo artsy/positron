@@ -4,5 +4,3 @@ express = require 'express'
 app = module.exports = express()
 
 app.get '/users/:id', setUser, ownerOrAdminOnly, show
-app.post '/users', setUser, ownerOrAdminOnly, create
-app.get '/users', ownerOrAdminOnly, index

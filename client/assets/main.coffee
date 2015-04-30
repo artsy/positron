@@ -10,5 +10,3 @@ $ ->
   require('../components/layout/client.coffee').init()
   if sd.URL.match /// /articles/new|.*/edit ///
     require('../apps/edit/client.coffee').init()
-  else if sd.URL.match /// /contributors.* ///
-    require('../apps/contributors/client.coffee').init()
