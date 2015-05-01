@@ -45,7 +45,7 @@ bcrypt = require 'bcrypt'
 # Persistance
 #
 @findOrInsert = (id, accessToken, callback) ->
-  return callback null unless id?
+  return callback() unless id?
   db.users.findOne { _id: ObjectId(id) }, (err, user) ->
     return callback err if err
     return callback null, user if user

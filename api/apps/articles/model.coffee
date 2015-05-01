@@ -160,7 +160,8 @@ sortParamToQuery = (input) ->
     return callback err if err
     @find id.toString(), (err, article) =>
       return callback err if err
-      User.findOrInsert article?.author_id, accessToken, (err, author) ->
+      authorId = article?.author_id or input?.author_id
+      User.findOrInsert authorId, accessToken, (err, author) ->
         return callback err if err
         article = update (article or {}), input, author
         db.articles.save _.extend(article,

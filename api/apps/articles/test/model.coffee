@@ -169,7 +169,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         article.title.should.equal 'Top Ten Shows'
         db.articles.count (err, count) ->
           count.should.equal 11
@@ -179,7 +179,7 @@ describe 'Article', ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         err.message.should.containEql '"author_id" is required'
         done()
 
@@ -188,7 +188,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         article.updated_at.should.be.an.instanceOf(Date)
         moment(article.updated_at).format('YYYY').should.equal moment().format('YYYY')
         done()
@@ -198,7 +198,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         return done err if err
         (article._id?).should.be.ok
         done()
@@ -208,7 +208,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         return done err if err
         article.slugs[0].should.equal 'top-ten-shows'
         done()
@@ -218,7 +218,7 @@ describe 'Article', ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
-        }, (err, article) ->
+        }, 'foo', (err, article) ->
           return done err if err
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
@@ -228,13 +228,13 @@ describe 'Article', ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
-        }, (err, article) =>
+        }, 'foo', (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
             title: 'Foo Bar Baz'
             author_id: @user._id
-          }, (err, article) ->
+          }, 'foo', (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
             Article.find article.slugs[0], (err, article) ->
@@ -246,14 +246,14 @@ describe 'Article', ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
-        }, (err, article) =>
+        }, 'foo', (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
             slug: 'foo-changed'
             title: 'A Different Title'
             author_id: @user._id
-          }, (err, article) ->
+          }, 'foo', (err, article) ->
             return done err if err
             article.slugs[1].should.equal 'foo-changed'
             Article.find article.slugs[0], (err, article) ->
@@ -266,7 +266,7 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should
           .equal moment().format('YYYY')
@@ -278,13 +278,13 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
-      }, (err, article) =>
+      }, 'foo', (err, article) =>
         return done err if err
         Article.save {
           id: article._id.toString()
           author_id: '5086df098523e60002000018'
           published_at: moment().add(1, 'year').toDate()
-        }, (err, updatedArticle) ->
+        }, 'foo', (err, updatedArticle) ->
           return done err if err
           updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
@@ -302,7 +302,7 @@ describe 'Article', ->
           thumbnail_title: 'Ten Shows'
           author_id: '5086df098523e60002000018'
           published: true
-        }, (err, article) ->
+        }, 'foo', (err, article) ->
           article.author.name.should.equal 'Molly'
           article.author.profile_handle.should.equal 'molly'
           done()
@@ -314,7 +314,7 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
         fair_id: null
         published: true
-      }, (err, article) ->
+      }, 'foo', (err, article) ->
         (article.fair_id?).should.not.be.ok
         done()
 
