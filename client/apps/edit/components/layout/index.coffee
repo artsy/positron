@@ -2,7 +2,7 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 sd = require('sharify').data
-CurrentUser = require '../../../../models/current_user.coffee'
+User = require '../../../../models/user.coffee'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
@@ -12,7 +12,7 @@ module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @user = new CurrentUser sd.USER
+    @user = new User sd.USER
     @$window = $(window)
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500

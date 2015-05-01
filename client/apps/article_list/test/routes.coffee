@@ -3,13 +3,13 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 sinon = require 'sinon'
 fixtures = require '../../../../test/helpers/fixtures'
-CurrentUser = require '../../../models/current_user'
+User = require '../../../models/user'
 
 describe 'routes', ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
-    @req = { query: {}, user: new CurrentUser fixtures().users }
+    @req = { query: {}, user: new User fixtures().users }
     @res = { render: sinon.stub(), locals: fixtures().locals }
 
   afterEach ->

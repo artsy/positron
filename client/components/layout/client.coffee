@@ -45,9 +45,9 @@ $('#layout-sidebar-switch-user').click ->
     ]
   new Autocomplete
     el: $(modal.m).find('input')
-    url: "#{sd.API_URL}/users?q=%QUERY"
-    filter: (res) -> for r in res.results
-      { id: r.id, value: _.compact([r.user.name, r.details?.email]).join(', ') }
+    url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+    filter: (users) -> for user in users
+      { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
     selected: (e, item) =>
       location.assign '/impersonate/' + item.id
   _.defer -> $(modal.m).find('input').focus()

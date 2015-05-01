@@ -1,6 +1,6 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-CurrentUser = require '../../../../models/current_user.coffee'
+User = require '../../../../models/user.coffee'
 { openErrorModal } = require '../../../../components/error_modal/index.coffee'
 sd = require('sharify').data
 
@@ -8,7 +8,7 @@ module.exports = class EditHeader extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @user = new CurrentUser sd.USER
+    @user = new User sd.USER
     @article.on 'change', @saving
     @article.on 'change', @toggleCheckmarks
     @article.on 'sync', @doneSaving

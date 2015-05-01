@@ -10,7 +10,7 @@ html(lang="en")
       a#error-logo( href='/' )
         include ../../components/layout/public/icons/logo_w.svg
       #error-message
-        h1= err && err.message || 'Unknown Error'
+        pre= err && err.message || 'Unknown Error'
         h2 Our engineers have been notified. You can&nbsp;
           a( href=(referrer || '/') ) go back and try again&nbsp;
           | or wait until the issue is resolved.&nbsp;

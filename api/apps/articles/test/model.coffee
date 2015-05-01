@@ -214,7 +214,7 @@ describe 'Article', ->
         done()
 
     it 'adds a slug based off a user and title', (done) ->
-      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
@@ -224,7 +224,7 @@ describe 'Article', ->
           done()
 
     it 'saves slug history to support old slugs', (done) ->
-      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
@@ -242,7 +242,7 @@ describe 'Article', ->
               done()
 
     it 'changes the slug if admin updates it', (done) ->
-      fabricate 'users', { user: { name: 'Molly' } }, (err, @user) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
           title: 'Foo Baz'
           author_id: @user._id
@@ -294,8 +294,8 @@ describe 'Article', ->
     it 'denormalizes the author into the article on publish', (done) ->
       fabricate 'users', {
         _id: ObjectId('5086df098523e60002000018')
-        user: { name: 'Molly' }
-        profile: { handle: 'molly' }
+        name: 'Molly'
+        profile_handle: 'molly'
       }, (err, @user) ->
         Article.save {
           title: 'Top Ten Shows'

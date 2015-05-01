@@ -1,4 +1,4 @@
-CurrentUser = require '../../client/models/current_user'
+User = require '../../client/models/user'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
 
@@ -57,36 +57,14 @@ module.exports = ->
     gravity_id: '502a6debe8b6470002000004'
     featured: false
   fixtures.users =
-    "id": "502a6debe8b6470002000004"
-    "access_token": "test-access-token",
-    "user": {
-      "name": "Craig Spaeth",
-    },
-    "profile": {
-      "id": "5086df098523e60002000012",
-      "created_at": "2012-10-23T18:16:41+00:00",
-      "updated_at": "2014-09-24T20:38:41+00:00",
-      "handle": "craig",
-      "location": "New York, New York",
-      "description": "Developer at Artsy. My heart swoons for code, art, & indie games.",
-      "image_versions": [
-        "square140"
-      ],
-    },
-    "details": {
-      "id": "4d8cd73191a5c50ce200002a",
-      "created_at": "2011-07-18T17:53:47+00:00",
-      "updated_at": "2014-10-03T01:59:14+00:00",
-      "type": "Admin",
-      "email": "craig@artsymail.com",
-      "birthday": null,
-      "phone": "",
-      "gender": null
-    }
-    "icon_urls": {
-      "square140": "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.jpg"
-      "large": "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/large.jpg"
-    }
+    "id" : "4d8cd73191a5c50ce200002a"
+    "name" : "Craig Spaeth"
+    "type" : "Admin"
+    "access_to_partner_ids" : [ ]
+    "profile_handle" : "craig"
+    "profile_id" : "5086df098523e60002000012"
+    "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
+    "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
   fixtures.verticals =
     'id': '55356a9deca560a0137aa4b7'
     'title': 'Vennice Biennalez'
@@ -97,7 +75,7 @@ module.exports = ->
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
   fixtures.locals =
     asset: ->
-    user: new CurrentUser fixtures.users
+    user: new User fixtures.users
     sd:
       PATH: '/'
     moment: require 'moment'

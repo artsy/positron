@@ -23,19 +23,19 @@ describe 'user endpoints', ->
         .get("http://localhost:5000/users/me")
         .set('X-Access-Token': @user.access_token)
         .end (err, res) =>
-          res.body.user.name.should.equal @user.user.name
+          res.body.name.should.equal @user.name
           done()
 
   describe 'GET /api/users/:id', ->
 
     it 'returns a user for admins', (done) ->
       fabricate 'users', {
-        user: name: 'Molly'
+        name: 'Molly'
         _id: ObjectId('4d8cd73191a5c50ce210002b')
       }, =>
         request
           .get("http://localhost:5000/users/4d8cd73191a5c50ce210002b")
           .set('X-Access-Token': @user.access_token)
           .end (err, res) =>
-            res.body.user.name.should.equal 'Molly'
+            res.body.name.should.equal 'Molly'
             done()

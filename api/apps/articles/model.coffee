@@ -199,7 +199,7 @@ addSlug = (article, input, author, callback) ->
   if input.slug? and (input.slug != _.last(article.slugs))
     slug = input.slug
   else if article.published is false
-    slug = if author then _s.slugify(author.user.name) + '-' + titleSlug else titleSlug
+    slug = if author then _s.slugify(author.name) + '-' + titleSlug else titleSlug
   else
     return article
   article.slugs = _.unique(article.slugs).concat [slug]

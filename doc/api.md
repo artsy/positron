@@ -36,17 +36,10 @@ GET /sync_to_post?article_id=
 
 ### Users
 
-GET /users
-
 **params**
-q: Search query to match against name or email
+access_token: Gravity access token for auth
 
 GET /users/:id
-
-POST /users
-
-**params**
-artsy_id: An admin can add a user to Writer by POSTing their id from Gravity
 
 ### Report
 
