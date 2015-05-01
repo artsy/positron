@@ -41,7 +41,11 @@ bcrypt = require 'bcrypt'
         partnerIds = _.pluck(results[1].body, '_id')
         save user, partnerIds, accessToken, callback
 
+#
+# Persistance
+#
 @findOrInsert = (id, accessToken, callback) ->
+  return callback null unless id?
   db.users.findOne { _id: ObjectId(id) }, (err, user) ->
     return callback err if err
     return callback null, user if user
@@ -93,5 +97,10 @@ save = (user, partnerIds, accessToken, callback) ->
 #
 # Helpers
 #
-@denormalizedForArticle = denormalizedForArticle = (user) ->
-  _.pick user, 'id', 'name', 'profile_id', 'profile_handle'
+@denormalizedForArticle = (user) ->
+  {
+    id: user._id
+    name: user.name
+    profile_id: user.profile_id
+    profile_handle: user.profile_handle
+  }
