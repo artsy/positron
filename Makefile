@@ -33,6 +33,6 @@ assets:
 deploy: assets
 	$(BIN)/bucket-assets -b positron-$(env)
 	heroku config:set COMMIT_HASH=$(shell git rev-parse --short HEAD) --app=positron-$(env)
-	git push git@heroku.com:positron-$(env).git master
+	git push --force git@heroku.com:positron-$(env).git master
 
 .PHONY: test assets
