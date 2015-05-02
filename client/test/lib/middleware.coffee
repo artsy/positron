@@ -27,7 +27,7 @@ describe 'middleware', ->
     it 'adds a res.backboneError helper', ->
       middleware.helpers @req, @res, @next
       @res.backboneError new Backbone.Model(), { error: 'moo' }
-      @next.args[1][0].should.equal 'moo'
+      @next.args[1][0].error.should.equal 'moo'
 
 
   describe 'ua', ->
