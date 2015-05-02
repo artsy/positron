@@ -10,6 +10,7 @@ crypto = require 'crypto'
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, err) ->
+    console.warn err
     next err
   next()
 

@@ -10,14 +10,20 @@ html(lang="en")
       a#error-logo( href='/' )
         include ../../components/layout/public/icons/logo_w.svg
       #error-message
-        pre= err && err.message || 'Unknown Error'
-        pre= err.toString()
-        pre= err.stack
-        pre= err.response && err.response.text
+        h1 There was an unexpected error
         h2 Our engineers have been notified. You can&nbsp;
           a( href=(referrer || '/') ) go back and try again&nbsp;
           | or wait until the issue is resolved.&nbsp;
           | We&rsquo;re sorry for the inconvenience.
+        if err
+          pre
+            = err.toString()
+            br
+            if err.response
+              = err.status
+              br
+              = err.response.req._header
+              = err.response.text
     script(
       type="text/javascript"
       src="//fast.fonts.net/jsapi/f7f47a40-b25b-44ee-9f9c-cfdfc8bb2741.js"
