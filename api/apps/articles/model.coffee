@@ -158,9 +158,9 @@ sortParamToQuery = (input) ->
   id = ObjectId (input.id or input._id)?.toString()
   validate input, (err, input) =>
     return callback err if err
-    @find id.toString(), (err, article) =>
+    @find id.toString(), (err, article = {}) =>
       return callback err if err
-      authorId = article?.author_id or input?.author_id
+      authorId = input.author_id or article.author_id
       User.findOrInsert authorId, accessToken, (err, author) ->
         return callback err if err
         article = update (article or {}), input, author
