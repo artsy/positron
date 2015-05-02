@@ -154,14 +154,16 @@ sortParamToQuery = (input) ->
 #
 # Persistence
 #
-@save = (input, cb) ->
+@save = (input, accessToken, callback) ->
   id = ObjectId (input.id or input._id)?.toString()
   validate input, (err, input) =>
-    return cb err if err
+    return callback err if err
     @find id.toString(), (err, article = {}) =>
-      return cb err if err
-      update article, input, (err, article) =>
-        return cb err if err
+      return callback err if err
+      authorId = input.author_id or article.author_id
+      User.findOrInsert authorId, accessToken, (err, author) ->
+        return callback err if err
+        article = update article, input, author
         db.articles.save _.extend(article,
           _id: id
           # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -173,7 +175,7 @@ sortParamToQuery = (input) ->
           primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
-        ), cb
+        ), callback
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema
@@ -182,17 +184,15 @@ validate = (input, callback) ->
   whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema, callback
 
-update = (article, input, callback) ->
+update = (article, input, author) ->
   if input.published and not article.published and not input.published_at
     input.published_at = new Date
-  User.find (input.author_id or article.author_id), (err, author) ->
-    return callback err if err
-    article = _.extend article, input, updated_at: new Date
-    article = addSlug article, input, author
-    article = denormalizeAuthor article, author
-    callback null, article
+  article = _.extend article, input, updated_at: new Date
+  article = addSlug article, input, author
+  article.author = User.denormalizedForArticle author if author
+  article
 
-addSlug = (article, input, author, callback) ->
+addSlug = (article, input, author) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
   article.slugs ?= []
   #Don't change the article slug unless it's unpublished or a new slug is added
@@ -203,10 +203,6 @@ addSlug = (article, input, author, callback) ->
   else
     return article
   article.slugs = _.unique(article.slugs).concat [slug]
-  article
-
-denormalizeAuthor = (article, author, callback) ->
-  article.author = User.denormalizedForArticle(author) if author
   article
 
 @destroy = (id, callback) ->

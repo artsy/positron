@@ -15,6 +15,7 @@ describe 'routes', ->
       query: {}
       body: {}
       params: {}
+      get: ->
       user: _.extend(fixtures().users, _id: ObjectId '5086df098523e60002000012')
     @res = { send: sinon.stub(), err: sinon.stub() }
     @next = sinon.stub()
@@ -57,7 +58,7 @@ describe 'routes', ->
     it 'creates an article with data', ->
       @req.body.title = "Foo Bar"
       routes.create @req, @res
-      @Article.save.args[0][1] null, fixtures().articles
+      @Article.save.args[0][2] null, fixtures().articles
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
   describe '#update', ->
@@ -66,7 +67,7 @@ describe 'routes', ->
       @req.article = fixtures().articles
       @req.body.title = "Foo Bar"
       routes.create @req, @res
-      @Article.save.args[0][1] null, fixtures().articles
+      @Article.save.args[0][2] null, fixtures().articles
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
     it 'defaults to the logged in user for author_id', ->
