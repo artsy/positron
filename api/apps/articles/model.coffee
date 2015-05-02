@@ -163,7 +163,7 @@ sortParamToQuery = (input) ->
       authorId = input.author_id or article.author_id
       User.findOrInsert authorId, accessToken, (err, author) ->
         return callback err if err
-        article = update (article or {}), input, author
+        article = update article, input, author
         db.articles.save _.extend(article,
           _id: id
           # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
