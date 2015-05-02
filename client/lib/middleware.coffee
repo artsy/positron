@@ -9,9 +9,7 @@ crypto = require 'crypto'
 { INTERCOM_SECRET } = process.env
 
 @helpers = (req, res, next) ->
-  res.backboneError = (model, superagentRes) ->
-    err = new Error(superagentRes.body.message) if superagentRes.body?.message
-    err ?= superagentRes.error
+  res.backboneError = (model, err) ->
     next err
   next()
 

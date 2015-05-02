@@ -11,6 +11,9 @@ html(lang="en")
         include ../../components/layout/public/icons/logo_w.svg
       #error-message
         pre= err && err.message || 'Unknown Error'
+        pre= err.toString()
+        pre= err.stack
+        pre= err.response && err.response.text
         h2 Our engineers have been notified. You can&nbsp;
           a( href=(referrer || '/') ) go back and try again&nbsp;
           | or wait until the issue is resolved.&nbsp;
