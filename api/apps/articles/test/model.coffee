@@ -5,9 +5,19 @@ Article = require '../model'
 { ObjectId } = require 'mongojs'
 express = require 'express'
 fabricateGravity = require('antigravity').fabricate
+gravity = require('antigravity').server
+app = require('express')()
 bodyParser = require 'body-parser'
 
 describe 'Article', ->
+
+  before (done) ->
+    app.use '/__gravity', gravity
+    @server = app.listen 5000, ->
+      done()
+
+  after ->
+    @server.close()
 
   beforeEach (done) ->
     empty ->
@@ -210,7 +220,7 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
       }, 'foo', (err, article) ->
         return done err if err
-        article.slugs[0].should.equal 'top-ten-shows'
+        article.slugs[0].should.equal 'craig-spaeth-top-ten-shows'
         done()
 
     it 'adds a slug based off a user and title', (done) ->
