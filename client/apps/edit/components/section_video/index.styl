@@ -1,18 +1,23 @@
 @import '../stylus_lib'
 
+play-button-size = 30px
+
 .edit-section-video .edit-section-controls
   background black
   color white
   fill-container()
-  height 114px
+  height 216px
   top -(@height)
   padding controls-padding
   z-index 3
   display none
-  form
-    padding controls-padding 0
+  > h2
+    avant-garde()
+    font-size 11px
+    margin-bottom 10px
   input
-    width 402px
+    width 100%
+    margin 0 0 controls-padding 0
   button
     border 0
     position relative
@@ -33,3 +38,29 @@
   .edit-section-video iframe
     position relative
     z-index 2
+
+.esv-cover-image
+  width 100%
+  min-height 50px
+  background gray-lightest-color
+
+.esv-cover-image-container
+  position relative
+
+.esv-cover-image-play-container
+  background white
+  width play-button-size + 40px
+  height @width
+  position absolute
+  top "calc(50% - %s)" % (@width / 2)
+  left "calc(50% - %s)" % (@width / 2)
+
+.esv-cover-image-play
+  width 0
+  height 0
+  top 14px
+  left 22px
+  position absolute
+  border-top (play-button-size - 10) solid transparent
+  border-bottom (play-button-size - 10) solid transparent
+  border-left play-button-size solid black

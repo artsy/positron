@@ -24,6 +24,7 @@ schema = (->
   description: @string().allow('', null)
   slug: @string().allow('', null)
   partner_logo_url: @string().allow('', null)
+  partner_website_url: @string().allow('', null)
   thumbnail_url: @string().allow('', null)
   featured_article_ids: @array().items(@objectId()).allow(null)
   start_at: @date().allow(null)

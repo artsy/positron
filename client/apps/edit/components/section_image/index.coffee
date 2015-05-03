@@ -76,7 +76,7 @@ module.exports = React.createClass
       onClick: @props.setEditing(true)
     },
       header { className: 'edit-section-controls' },
-        div { className: 'dashed-file-upload-container' },
+        section { className: 'dashed-file-upload-container' },
           h1 {}, 'Drag & ',
             span { className: 'dashed-file-upload-container-drop' }, 'drop'
             ' or '
