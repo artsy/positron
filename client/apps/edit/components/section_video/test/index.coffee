@@ -14,7 +14,7 @@ describe 'SectionVideo', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: require('jquery'), resize: ->
       SectionVideo = benv.require resolve __dirname, '../index'
       SectionVideo.__set__ 'gemup', @gemup = sinon.stub()
       @component = React.render SectionVideo(
@@ -24,6 +24,7 @@ describe 'SectionVideo', ->
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
+        sinon.stub @component, 'forceUpdate'
         sinon.stub $, 'ajax'
         done()
 
@@ -39,7 +40,7 @@ describe 'SectionVideo', ->
 
   it 'changes the video when submitting', ->
     $(@component.refs.input.getDOMNode()).val 'foobar'
-    @component.onSubmit preventDefault: ->
+    @component.onChangeUrl preventDefault: ->
     @component.props.section.get('url').should.equal 'foobar'
 
   it 'renders the video url', ->

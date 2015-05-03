@@ -24,7 +24,8 @@ module.exports = React.createClass
     else
       @props.section.set cover_image_url: @state.coverSrc
 
-  onChangeInput: (e) ->
+  onChangeUrl: (e) ->
+    console.log 'chnage'
     @props.section.set url: $(@refs.input.getDOMNode()).val()
 
   uploadCoverImage: (e) ->
@@ -63,7 +64,7 @@ module.exports = React.createClass
             '(e.g. http://youtube.com/watch?v=id)'
           ref: 'input'
           defaultValue: @props.section.get('url')
-          onChange: @onChangeInput
+          onKeyDown: _.debounce(_.bind(@onChangeUrl, this), 500)
         }
         h2 {}, "Cover image"
         section { className: 'dashed-file-upload-container' },
