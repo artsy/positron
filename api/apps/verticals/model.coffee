@@ -21,14 +21,17 @@ request = require 'superagent'
 schema = (->
   id: @objectId()
   title: @string().allow('', null)
+  meta_title: @string().allow('', null)
   description: @string().allow('', null)
   slug: @string().allow('', null)
   partner_logo_url: @string().allow('', null)
   partner_website_url: @string().allow('', null)
   thumbnail_url: @string().allow('', null)
+  featured_articles_header: @string().allow('', null)
   featured_article_ids: @array().items(@objectId()).allow(null)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
+  title: @string().allow('', null)
 ).call Joi
 
 querySchema = (->
