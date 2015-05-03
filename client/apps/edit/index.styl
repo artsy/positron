@@ -82,3 +82,32 @@
     &[disabled=disabled]
       color gray-darkest-color
       fill-color gray-darkest-color 0.15s
+
+.edit-section-controls .dashed-file-upload-container
+  border-color gray-darker-color
+  transition border-color 0.3s, color 0.3s
+  padding controls-padding
+  avant-garde()
+  background black
+  color white
+  text-align center
+  &:hover, &.is-dragover
+    border-color white
+    span
+      color gray-darker-color
+  &.is-dragover
+    .dashed-file-upload-container-drop
+      color white
+  &:hover
+    border-color gray-darker-color
+    .dashed-file-upload-container-click
+      color white
+  span
+    transition color 0.3s
+  h1
+    font-size default-avant-garde-font-size - 1
+  h2
+    font-size small-avant-garde-font-size
+    color gray-darker-color
+    margin-top 10px
+
