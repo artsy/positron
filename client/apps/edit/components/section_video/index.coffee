@@ -15,7 +15,6 @@ module.exports = React.createClass
     progress: null, coverSrc: @props.section.get('cover_image_url')
 
   componentDidMount: ->
-    @props.section.on 'change:url', => @forceUpdate()
     $(@refs.input.getDOMNode()).focus() unless @props.section.get('url')
 
   onClickOff: ->
@@ -25,8 +24,8 @@ module.exports = React.createClass
       @props.section.set cover_image_url: @state.coverSrc
 
   onChangeUrl: (e) ->
-    console.log 'chnage'
     @props.section.set url: $(@refs.input.getDOMNode()).val()
+    @forceUpdate()
 
   uploadCoverImage: (e) ->
     gemup e.target.files[0],
