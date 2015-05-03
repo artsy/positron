@@ -21,6 +21,7 @@ keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
   italic: (e) -> e.metaKey and e.keyCode is 73
   h2: (e) -> e.metaKey && e.keyCode is 50
+  h3: (e) -> e.metaKey && e.keyCode is 51
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
   linkPrompt: (e) -> e.metaKey and not e.shiftKey and e.keyCode is 75
   unlink: (e) -> e.metaKey and e.shiftKey and e.keyCode is 75
@@ -54,11 +55,13 @@ module.exports = React.createClass
         br: true
         a: { href: true, target: '_blank' }
         h2: true
+        h3: true
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)
+    @scribe.use scribePluginHeadingCommand(3)
 
   render: ->
     div { className: 'edit-section-text-container' },
@@ -77,6 +80,9 @@ module.exports = React.createClass
         }
         button {
           'data-command-name': 'h2'
+        }
+        button {
+          'data-command-name': 'h3'
         }
         div { className: 'est-link-container' },
           button {

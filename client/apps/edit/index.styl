@@ -68,7 +68,7 @@
       top 8px
       left 17px
       font-size 16px
-    &[data-command-name=h2]
+    &[data-command-name=h2], &[data-command-name=h3]
       padding 12px 24px
       height 100%
       &::after
@@ -79,6 +79,8 @@
         position absolute
         top 8px
         left 13px
+    &[data-command-name=h3]::after
+      content 'H3'
     &[disabled=disabled]
       color gray-darkest-color
       fill-color gray-darkest-color 0.15s
