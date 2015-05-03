@@ -31,7 +31,6 @@ schema = (->
   featured_article_ids: @array().items(@objectId()).allow(null)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
-  title: @string().allow('', null)
 ).call Joi
 
 querySchema = (->
