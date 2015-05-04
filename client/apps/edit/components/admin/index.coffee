@@ -11,11 +11,13 @@ module.exports = class EditAdmin extends Backbone.View
 
   initialize: ({ @article }) ->
     @article.on 'open:tab2', @onOpen
+    window.testArticle = @article
     @setupAuthorAutocomplete()
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
     @setupVerticalAutocomplete()
+    @setupShowsAutocomplete()
     @setupPublishDate()
     @setupSlug()
 
@@ -103,6 +105,34 @@ module.exports = class EditAdmin extends Backbone.View
     if id = @article.get 'vertical_id'
       request
         .get("#{sd.API_URL}/verticals/#{id}").end (err, res) ->
+          select.setState value: res.body.title, loading: false
+    else
+      select.setState loading: false
+
+  setupShowsAutocomplete: ->
+    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
+    select = AutocompleteSelect @$('#edit-admin-shows .edit-admin-right')[0],
+      url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
+      placeholder: 'Search Show by name...'
+      filter: (res) ->
+        console.log res
+        vals = []
+        for r in res._embedded.results
+          if r.type == 'Show'
+            id = r._links.self.href.substr (r._links.self.href.lastIndexOf('/') + 1)
+            console.log r
+            vals.push {id: id, value: r.title}
+        vals
+      selected: (e, item) =>
+        request.get( "#{sd.ARTSY_URL}/api/v1/show/#{item.id}" )
+                .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+                  @article.save show_ids: [res.body._id]
+      cleared: =>
+        @article.save show_ids: null
+    if id = @article.get('show_ids')?[0]
+      request
+        .get("#{sd.ARTSY_URL}/api/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
           select.setState value: res.body.title, loading: false
     else
       select.setState loading: false

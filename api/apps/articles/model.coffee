@@ -74,6 +74,7 @@ schema = (->
   featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artwork_ids: @array().items(@objectId()).allow(null)
   partner_ids: @array().items(@objectId()).allow(null)
+  show_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow(null)
   auction_id: @objectId().allow(null)
   vertical_id: @objectId().allow(null)
@@ -89,6 +90,7 @@ querySchema = (->
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
+  show_id: @objectId()
   partner_id: @objectId()
   auction_id: @objectId()
   sort: @string()
@@ -121,18 +123,20 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
+    query.show_ids = ObjectId input.show_id if input.show_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.vertical_id = ObjectId input.vertical_id if input.vertical_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
+
     ] if input.artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     callback null, query, limit, offset, sortParamToQuery(sort)
@@ -172,6 +176,7 @@ sortParamToQuery = (input) ->
           vertical_id: ObjectId(article.vertical_id) if article.vertical_id
           auction_id: ObjectId(article.auction_id) if article.auction_id
           partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
+          show_ids: article.show_ids.map(ObjectId) if article.show_ids
           primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
