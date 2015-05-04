@@ -11,7 +11,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   initialize: ({ @article }) ->
     @article.on 'open:tab2', @onOpen
-    window.testArticle = @article
     @setupAuthorAutocomplete()
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()

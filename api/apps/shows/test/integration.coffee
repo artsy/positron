@@ -7,7 +7,6 @@ describe 'shows endpoints', ->
 
   beforeEach (done) ->
     @server = app.listen 5000, ->
-      console.log 'listening'
       done()
 
   afterEach ->
