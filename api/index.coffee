@@ -21,11 +21,15 @@ app.use morgan 'dev'
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use setUser
+# Authed routes
 app.post '/articles', authenticated
 app.put '/articles/:id', authenticated
 app.delete '/articles/:id', authenticated
+# Unauthed apps
 app.use require './apps/articles'
 app.use require './apps/verticals'
+app.use require './apps/shows'
+# Authed apps
 app.use authenticated
 app.use require './apps/users'
 app.use require './apps/report'
