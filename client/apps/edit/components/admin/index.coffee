@@ -16,6 +16,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
     @setupVerticalAutocomplete()
+    @setupShowsAutocomplete()
     @setupPublishDate()
     @setupSlug()
 
@@ -104,6 +105,23 @@ module.exports = class EditAdmin extends Backbone.View
       request
         .get("#{sd.API_URL}/verticals/#{id}").end (err, res) ->
           select.setState value: res.body.title, loading: false
+    else
+      select.setState loading: false
+
+  setupShowsAutocomplete: ->
+    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
+    select = AutocompleteSelect @$('#edit-admin-shows .edit-admin-right')[0],
+      url: "#{sd.API_URL}/api/shows?q=%QUERY"
+      placeholder: 'Search Show by name...'
+      selected: (e, item) =>
+        @article.save show_ids: [item.id]
+      cleared: =>
+        @article.save show_ids: null
+    if id = @article.get('show_ids')?[0]
+      request
+        .get("#{sd.API_URL}/show/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
+          select.setState value: res.body.name, loading: false
     else
       select.setState loading: false
 
