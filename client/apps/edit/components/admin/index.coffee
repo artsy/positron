@@ -111,7 +111,7 @@ module.exports = class EditAdmin extends Backbone.View
   setupShowsAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
     select = AutocompleteSelect @$('#edit-admin-shows .edit-admin-right')[0],
-      url: "#{sd.API_URL}/api/shows?q=%QUERY"
+      url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search Show by name...'
       selected: (e, item) =>
         @article.save show_ids: [item.id]
