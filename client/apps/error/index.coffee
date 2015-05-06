@@ -18,6 +18,12 @@ render = (req, res, locals) ->
     cache: true
   ) _.extend res.locals, locals, referrer: req.get('referrer')
 
+errorHandler = (err, req, res, next) ->
+  debug err.stack, err.message
+  if err.status in [401, 403]
+    return res.redirect '/logout'
+  render req, res, err: err
+
 module.exports = (app) ->
   app.set 'views', __dirname
   app.set 'view engine', 'jade'
@@ -25,8 +31,4 @@ module.exports = (app) ->
     err = new Error "Page Not Found"
     err.status = 404
     render req, res, err: err
-  app.use (err, req, res, next) ->
-    debug err.stack, err.message
-    if err.message.match 'access token is invalid or has expired'
-      return res.redirect '/logout'
-    render req, res, err: err
+  app.use errorHandler
