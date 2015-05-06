@@ -9,9 +9,7 @@ crypto = require 'crypto'
 { INTERCOM_SECRET } = process.env
 
 @helpers = (req, res, next) ->
-  res.backboneError = (model, err) ->
-    console.warn err
-    next err
+  res.backboneError = (model, err) -> next err
   next()
 
 @locals = (req, res, next) ->
