@@ -84,7 +84,7 @@ schema = (->
 querySchema = (->
   author_id: @objectId()
   published: @boolean()
-  limit: @number()
+  limit: @number().max(100).default(20)
   offset: @number()
   vertical_id: @objectId()
   artist_id: @objectId()
@@ -108,7 +108,7 @@ querySchema = (->
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit or 10).toArray cb
+      (cb) -> cursor.limit(limit).toArray cb
     ], (err, [ total, count, results ]) ->
       return callback err if err
       callback null, {

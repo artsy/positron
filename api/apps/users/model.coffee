@@ -77,6 +77,7 @@ save = (user, partnerIds, accessToken, callback) ->
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
+      email: user.email
       type: user.type
       access_to_partner_ids: partnerIds
       profile_handle: profile.id
