@@ -37,7 +37,7 @@ requireLogin = (req, res, next) ->
 
 logout = (req, res) ->
   req.logout()
-  res.redirect sd.APP_URL
+  res.redirect sd.ARTSY_URL + '/users/sign_out'
 
 module.exports = (app) ->
   setupPassport()

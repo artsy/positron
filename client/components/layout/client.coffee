@@ -63,8 +63,7 @@ $('.article-list-empty-chat').click ->
 initAnalyitcs = ->
   if sd.USER
     analytics.identify sd.USER.id,
-      email: sd.USER.details?.email
-      name: sd.USER.user?.name
-      createdAt: sd.USER.details?.created_at
+      email: sd.USER.email
+      name: sd.USER.name
     , integrations: Intercom: user_hash: sd.USER_HASH
   analytics.page()
