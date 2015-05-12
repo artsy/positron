@@ -23,7 +23,8 @@ debug = require('debug') 'api'
 
 @errorHandler = (err, req, res, next) ->
   debug err.stack
-  res.status(status = err.status or 500).send {
+  status = err.status or if err.name is 'ValidationError' then 403 else 500
+  res.status(status).send {
     status: status,
     message: (err.message or err.stack or err.toString())
   }
