@@ -14,6 +14,8 @@ debug = require('debug') 'api'
     err = new Error message or "Internal Error"
     err.status = status or 500
     next err
+  # Allow access token in header or query param
+  req.accessToken = req.get('X-Access-Token') or req.query.access_token
   next()
 
 @notFound = (req, res, next) ->
