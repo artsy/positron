@@ -5,7 +5,7 @@ middleware = require '../../lib/middleware'
 describe 'middleware', ->
 
   beforeEach ->
-    @req = {}
+    @req = { get: (->), query: {} }
     @res = {}
     @res.locals =  { sd: {} }
     for method in ['send', 'status']

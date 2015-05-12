@@ -82,6 +82,7 @@ schema = (->
 ).call Joi
 
 querySchema = (->
+  access_token: @string()
   author_id: @objectId()
   published: @boolean()
   limit: @number().max(100).default(20)

@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { present, presentCollection } = Article = require './model'
+{ setUser } = require '../users/routes'
 
 # GET /api/articles
 @index = (req, res, next) ->
@@ -15,19 +16,23 @@ _ = require 'underscore'
 
 # GET /api/articles/:id
 @show = (req, res, next) ->
-  res.send present req.article
+  if req.article.published or req.user?.type is 'Admin' or
+     req.article.author_id.equals req.user?._id
+    res.send present req.article
+  else
+    res.err 404, 'Article not found.'
 
 # POST /api/articles
 @create = (req, res, next) ->
   data =_.extend { author_id: req.user._id }, req.body
-  Article.save data, req.get('x-access-token'), (err, article) ->
+  Article.save data, req.accessToken, (err, article) ->
     return next err if err
     res.send present article
 
 # PATCH/PUT /api/articles/:id
 @update = (req, res, next) ->
   data = _.extend(req.article, req.body)
-  Article.save data, req.get('x-access-token'), (err, article) ->
+  Article.save data, req.accessToken, (err, article) ->
     return next err if err
     res.send present article
 
@@ -41,9 +46,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
     return next err if err
-    if not article? or (article.published isnt true and
-       article.author_id.toString() isnt req.user?._id.toString()) and
-       req.user?.type isnt 'Admin'
-      return res.err 404, 'Article not found.'
-    req.article = article
-    next()
+    return res.err 404, 'Article not found.' unless req.article = article
+    if req.article?.published then next() else setUser(req, res, next)
