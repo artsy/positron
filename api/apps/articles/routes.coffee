@@ -16,7 +16,6 @@ _ = require 'underscore'
 
 # GET /api/articles/:id
 @show = (req, res, next) ->
-  return res.err 404, 'Article not found.' unless req.article
   if req.article.published or req.user?.type is 'Admin' or
      req.article.author_id.equals req.user?._id
     res.send present req.article
@@ -47,5 +46,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
     return next err if err
-    req.article = article
+    return res.err 404, 'Article not found.' unless req.article = article
     if req.article?.published then next() else setUser(req, res, next)

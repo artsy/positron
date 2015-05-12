@@ -53,6 +53,16 @@ describe 'routes', ->
       routes.show @req, @res
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
+
+    it 'throws a 404 for articles from non-authors', ->
+      @req.user.type = 'User'
+      @req.article = _.extend(fixtures().articles,
+        author_id: ObjectId('4d8cd73191a5c50ce210002a')
+        published: false
+      )
+      routes.show @req, @res, @next
+      @res.err.args[0][0].should.equal 404
+
   describe '#create', ->
 
     it 'creates an article with data', ->
@@ -97,15 +107,6 @@ describe 'routes', ->
         author_id: @req.user._id
       @req.article.title.should.equal 'foo to the baz'
       @next.called.should.be.ok
-
-    it 'throws a 404 for articles from non-authors', ->
-      @req.user.type = 'User'
-      routes.find @req, @res, @next
-      @Article.find.args[0][1] null, _.extend(fixtures().articles,
-        author_id: ObjectId('4d8cd73191a5c50ce210002a')
-        published: false
-      )
-      @res.err.args[0][0].should.equal 404
 
     it 'shows published articles', ->
       routes.find @req, @res, @next
