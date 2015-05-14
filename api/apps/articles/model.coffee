@@ -212,8 +212,7 @@ addSlug = (article, input, author) ->
   article
 
 @destroy = (id, callback) ->
-  db.articles.remove { _id: ObjectId(id) }, (err, res) ->
-    callback err, res
+  db.articles.remove { _id: ObjectId(id) }, callback
 
 #
 # JSON views

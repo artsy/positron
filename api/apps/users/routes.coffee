@@ -22,6 +22,11 @@
     return res.err 401, 'You must pass a valid access token'
   next()
 
+# Require an admin middleware
+@adminOnly = (req, res, next) ->
+  return res.err 401, 'Must be an admin' unless req.user?.type is 'Admin'
+  next()
+
 # Set the user from an access token and alias the `me` param
 @setUser = (req, res, next) ->
   return next() unless req.accessToken

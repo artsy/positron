@@ -10,7 +10,7 @@ module.exports.ErrorModal = class ErrorModal extends Backbone.View
     { @title, @body, @error, @flashMessage } = options
     @modal = Modal
       content: template
-        title: @title or "Sorry, there was an unexpected error."
+        title: @title or "Sorry, there was an error"
         body: @body or "Please try again later or report the issue to our " +
           " engineers. <br> Thank you for your patience."
       removeOnClose: true
