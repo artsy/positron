@@ -63,4 +63,4 @@ module.exports = (app) ->
   app.use express.static(path.resolve __dirname, '../../public')
 
   # Error handler
-  require('../../apps/error') app
+  require('../../components/error/server') app

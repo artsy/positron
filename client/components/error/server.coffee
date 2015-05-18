@@ -3,10 +3,7 @@
 #
 
 _ = require 'underscore'
-express = require 'express'
-request = require 'superagent'
 sd = require('sharify').data
-User = require '../../models/user.coffee'
 debug = require('debug') 'client'
 fs = require 'fs'
 jade = require 'jade'

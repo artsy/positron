@@ -1,7 +1,7 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 User = require '../../../../models/user.coffee'
-{ openErrorModal } = require '../../../../components/error_modal/index.coffee'
+{ openErrorModal } = require '../../../../components/error/client.coffee'
 sd = require('sharify').data
 
 module.exports = class EditHeader extends Backbone.View
