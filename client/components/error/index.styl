@@ -1,9 +1,38 @@
 @import '../stylus_lib'
+@import '../layout/stylesheets/form_elements'
+
+global-reset()
+
+#error
+  .error-modal-alert
+    margin 100px auto
+    width 550px
+
+#error-logo
+  position absolute
+  top 10px
+  left @top
+
+#error-not-found
+  garamond()
+  font-size 20px
+  line-height 1.4em
+  position absolute
+  top 50%
+  margin-top -(@font-size + 4px)
+  text-align center
+  width 100%
+  a
+    color black
+    faux-underline()
 
 .error-modal
   position relative
   padding-left 60px
   margin 0 !important
+
+.error-modal-alert
+  position relative
   &::before
     content '!'
     color red-color
@@ -14,23 +43,17 @@
     border 2px solid red-color
     position absolute
     top 0
-    left 0
+    left -55px
     text-align center
     font-size 25px
     font-weight bold
-  &[data-state=report]
-    .error-modal-report
-      display block
-    .error-modal-alert
-      display none
-
-.error-modal-alert
   h1
     avant-garde()
     font-size default-avant-garde-font-size
     margin-bottom 5px
   h2
     garamond()
+    font-size default-garamond-font-size
     line-height 1.4em
     margin-bottom 20px
   pre

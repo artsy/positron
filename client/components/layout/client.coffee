@@ -11,7 +11,7 @@ Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
 imagesLoaded = require 'imagesloaded'
-{ ErrorModal, openErrorModal } = require '../error/client.coffee'
+{ openErrorModal } = require '../error/client.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
@@ -24,7 +24,6 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
   initAnalyitcs()
-  openErrorModal(new Error message: "Hello World")
 
 # Replace broken profile icon
 imgLoad = imagesLoaded('#layout-sidebar-profile img')

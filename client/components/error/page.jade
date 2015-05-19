@@ -8,11 +8,29 @@ html(lang="en")
   body
     #error
       a#error-logo( href='/' )
-        include ../../components/layout/public/icons/logo_w.svg
-      include alert
+        include ../layout/public/icons/logo.svg
+      if error.status == 404
+        h1#error-not-found Page not found, please check that you have the correct url.
+          br
+          a( href='/' ) Back to Artsy Writer
+      else
+        include alert
+    //- Fonts, Jquery, Segment, and Intercom launcher code
+    script( type="text/javascript" ).
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.0.1";
+      analytics.load("#{sd.SEGMENT_WRITE_KEY}");
+      }}();
     script(
       type="text/javascript"
       src="//fast.fonts.net/jsapi/f7f47a40-b25b-44ee-9f9c-cfdfc8bb2741.js"
     )
-    script
-      include:coffeescript client.coffee
+    script( src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" )
+    script.
+      analytics.identify("#{sd.USER.id}", {
+        email: "#{sd.USER.email}",
+        name: "#{sd.USER.name}"
+      }, { integrations: { Intercom: { user_hash: "#{sd.USER_HASH}" }}});
+      $('.error-modal-report-button').click(function() {
+        $(this).hide();
+        $('#intercom-launcher').click();
+      });

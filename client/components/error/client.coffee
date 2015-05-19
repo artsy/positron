@@ -1,13 +1,12 @@
 Backbone = require 'backbone'
 Modal = -> require('simple-modal') arguments...
 template = -> require('./alert.jade') arguments...
-flash = require '../flash/index.coffee'
 sd = require('sharify').data
 
 module.exports.ErrorModal = class ErrorModal extends Backbone.View
 
   initialize: (options = {}) ->
-    { @title, @body, @error, @flashMessage } = options
+    { @title, @body, @error } = options
     @modal = Modal
       content: template(error: @error)
       removeOnClose: true
@@ -19,7 +18,8 @@ module.exports.ErrorModal = class ErrorModal extends Backbone.View
     'click .error-modal-close': 'close'
     'click .error-modal-report-button': 'openIntercom'
 
-  close: ->
+  close: (e) ->
+    e.preventDefault()
     @modal.close()
 
   openIntercom: ->

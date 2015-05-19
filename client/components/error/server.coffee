@@ -10,7 +10,7 @@ jade = require 'jade'
 
 render = (req, res, locals) ->
   res.send jade.compile(
-    fs.readFileSync(f = __dirname + '/index.jade'),
+    fs.readFileSync(f = __dirname + '/page.jade'),
     filename: f
     cache: true
   ) _.extend res.locals, locals, referrer: req.get('referrer')
@@ -19,7 +19,7 @@ errorHandler = (err, req, res, next) ->
   debug err.stack, err.message
   if err.status in [401, 403]
     return res.redirect '/logout'
-  render req, res, err: err
+  render req, res, error: err
 
 module.exports = (app) ->
   app.set 'views', __dirname
@@ -27,5 +27,5 @@ module.exports = (app) ->
   app.get '*', (req, res, next) ->
     err = new Error "Page Not Found"
     err.status = 404
-    render req, res, err: err
+    render req, res, error: err
   app.use errorHandler
