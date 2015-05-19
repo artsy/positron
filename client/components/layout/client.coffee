@@ -11,7 +11,6 @@ Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
 imagesLoaded = require 'imagesloaded'
-{ openErrorModal } = require '../error/client.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
