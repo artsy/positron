@@ -1,4 +1,4 @@
-# Error Modal
+# Error
 
 Unexpected error handler UI for the client and server side. On the client shows a modal, on the server renders that modal in a page. The report functionality requires Intercom to be integrated (all it does is click the intercom button on the page).
 

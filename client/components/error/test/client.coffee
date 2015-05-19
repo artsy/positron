@@ -11,7 +11,7 @@ describe 'ErroModal', ->
       Backbone.$ = $
       sinon.stub $, 'ajax'
       { ErrorModal } = mod = benv.requireWithJadeify(
-        resolve(__dirname, '../index'), ['template']
+        resolve(__dirname, '../client'), ['template']
       )
       mod.__set__ 'Modal', @Modal = ->
         m: $("<div></div>")
@@ -23,7 +23,7 @@ describe 'ErroModal', ->
     $.ajax.restore()
     benv.teardown()
 
-  it 'submits an error on form submission', ->
-    @modal.submitReport preventDefault: ->
-    $.ajax.args[0][0].url.should.containEql '/report'
-    $.ajax.args[0][0].data.html.should.containEql 'ERRR'
+  it 'opens intercom on report', ->
+    spy = sinon.stub $.fn, 'click'
+    @modal.openIntercom()
+    spy.thisValues[0].selector.should.equal '#intercom-launcher'
