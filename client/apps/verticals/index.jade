@@ -1,0 +1,19 @@
+extend ../../components/layout/templates/index
+include ../../../node_modules/artsy-ezel-components/pagination/paginator
+
+block header
+  | Verticals
+
+block content
+  .max-width-container
+    button.avant-garde-button.avant-garde-button-black.verticals-add Add Vertical
+    ul
+      for vertical in verticals.models
+        li.verticals-item
+          img( src=vertical.get('thumbnail_url') )
+          .verticals-item-text-container
+            h2= vertical.get('title')
+            h3
+              = moment(vertical.get('start_at')).format('MMM Do')
+              | –
+              = moment(vertical.get('end_at')).format('MMM Do')
