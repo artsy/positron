@@ -1,6 +1,6 @@
 sinon = require 'sinon'
 rewire = require 'rewire'
-app = rewire '../'
+app = rewire '../server'
 
 describe 'errorHandler', ->
 

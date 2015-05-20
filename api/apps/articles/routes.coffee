@@ -29,7 +29,7 @@ _ = require 'underscore'
     return next err if err
     res.send present article
 
-# PATCH/PUT /api/articles/:id
+# PUT /api/articles/:id
 @update = (req, res, next) ->
   data = _.extend(req.article, req.body)
   Article.save data, req.accessToken, (err, article) ->

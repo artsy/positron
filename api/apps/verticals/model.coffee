@@ -73,12 +73,14 @@ querySchema = (->
 @save = (input, callback) ->
   Joi.validate input, schema, (err, input) =>
     return callback err if err
-    db.verticals.save _.extend(_.omit(input, 'id'),
+    data = _.extend _.omit(input, 'id'),
       _id: ObjectId(input.id)
       # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
       featured_article_ids: input.featured_article_ids.map(ObjectId) if input.featured_article_ids
-    ), callback
+    db.verticals.save data, callback
 
+@destroy = (id, callback) ->
+  db.verticals.remove { _id: ObjectId(id) }, callback
 
 #
 # JSON views

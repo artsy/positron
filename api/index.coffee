@@ -2,10 +2,8 @@ require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 morgan = require 'morgan'
-{ helpers, notFound, locals, setUser, errorHandler,
-  loginRequired } = require './lib/middleware'
+{ helpers, notFound, errorHandler } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
-{ authenticated, setUser } = require './apps/users/routes'
 debug = require('debug') 'api'
 cors = require 'cors'
 
@@ -20,23 +18,14 @@ app.use morgan 'dev'
 
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
-# Authed routes
-app.get '/articles', setUser
-app.post '/articles', setUser, authenticated
-app.put '/articles/:id', setUser, authenticated
-app.delete '/articles/:id', setUser, authenticated
-# Apps
 app.use require './apps/articles'
 app.use require './apps/verticals'
 app.use require './apps/shows'
-# Authed apps
-app.use setUser, authenticated
 app.use require './apps/users'
-app.use require './apps/report'
 
 # Moar middleware
-app.use errorHandler
 app.use notFound
+app.use errorHandler
 
 # Start the test server if run directly
 app.listen(5000, -> debug "Listening on 5000") if module is require.main

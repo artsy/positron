@@ -9,6 +9,23 @@ _ = require 'underscore'
 
 # GET /api/verticals/:id
 @show = (req, res, next) ->
-  Vertical.find req.params.id, (err, vertical) ->
+  res.send present req.vertical
+
+# POST /api/verticals & PUT /api/verticals/:id
+@save = (req, res, next) ->
+  Vertical.save _.extend(req.body, id: req.params.id), (err, vertical) ->
     return next err if err
     res.send present vertical
+
+# DELETE /api/verticals/:id
+@delete = (req, res, next) ->
+  Vertical.destroy req.vertical._id, (err) ->
+    return next err if err
+    res.send present req.vertical
+
+# Fetch & attach a req.vertical middleware
+@find = (req, res, next) ->
+  Vertical.find req.params.id, (err, vertical) ->
+    return next err if err
+    return res.err 404, 'Vertical not found.' unless req.vertical = vertical
+    next()
