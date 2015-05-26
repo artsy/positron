@@ -1,0 +1,27 @@
+@import '../stylus_lib'
+
+form-height = 150px
+
+.image-upload-form
+  border 2px dashed gray-lighter-color
+  padding 10px
+  text-align center
+  position relative
+  height form-height
+  padding (form-height / 2 - 18px) 0
+  h1, h2
+    avant-garde(s-headline)
+    color gray-dark-color
+  h2
+    margin-top 3px
+    color gray-color
+
+.image-upload-form-input
+  position absolute
+  z-index 2
+  width 100%
+  height 100%
+  opacity 0
+  cursor pointer
+  top 0
+  left 0

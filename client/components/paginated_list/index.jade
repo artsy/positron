@@ -5,7 +5,7 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams)
     section.paginated-list-item
       a( href=item.href )
         if item.imgSrc
-          img( src=item.imgSrc )
+          .paginated-list-img( style="background-image: url(#{item.imgSrc})" )
         else
           .paginated-list-missing-img Missing Thumbnail
         .paginated-list-text-container

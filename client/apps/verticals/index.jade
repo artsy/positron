@@ -7,5 +7,7 @@ block header
 
 block content
   .max-width-container
-    button.avant-garde-button.avant-garde-button-black.verticals-add Add Vertical
+    a.avant-garde-button.avant-garde-button-black.verticals-add(
+      href="/verticals/new"
+    ) Add Vertical
     +paginated-list(page, totalPages, verticals.toPaginatedListItems())
