@@ -1,0 +1,17 @@
+include ../../../node_modules/artsy-ezel-components/pagination/paginator
+
+mixin paginated-list(currentPage, totalPages, items, paginationParams)
+  for item in items
+    section.paginated-list-item
+      a( href=item.href )
+        if item.imgSrc
+          img( src=item.imgSrc )
+        else
+          .paginated-list-missing-img Missing Thumbnail
+        .paginated-list-text-container
+          if item.title
+            h1= item.title
+          else
+            h1.paginated-list-missing-title Missing Title
+          h2= item.subtitle
+  +paginate(currentPage, totalPages, paginationParams)
