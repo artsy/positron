@@ -27,7 +27,7 @@ schema = (->
   partner_logo_url: @string().allow('', null)
   partner_website_url: @string().allow('', null)
   thumbnail_url: @string().allow('', null)
-  featured_articles_header: @string().allow('', null)
+  featured_links_header: @string().allow('', null)
   featured_links: @array().items([
     @object().keys
       thumbnail_url: @string().allow('', null)
