@@ -1,5 +1,6 @@
+include ../../components/paginated_list/index
+
 extend ../../components/layout/templates/index
-include ../../../node_modules/artsy-ezel-components/pagination/paginator
 
 block header
   if published
@@ -13,41 +14,15 @@ block header
 block content
   #article-list-items.max-width-container
     if articles.length == 0
-        section.article-list-empty
-          p You haven&rsquo;t #{emptyMessage} yet.
-          p Artsy Writer is a tool for writing stories about art on Artsy.
-            br
-            | Get started by writing an article or&nbsp;
-            a.article-list-empty-chat chatting with a liason
-            | &nbsp;for help.
-          a.avant-garde-button.avant-garde-button-black.article-new-button( href='/articles/new' )
-            include ../../components/layout/public/icons/layout_new_article.svg
-            .article-new-text Write An Article
-    ul
-      for article in articles
-        li
-          section
-            a( href="/articles/#{article.get('id')}/edit" )
-              .article-list-item-left
-                if article.get('thumbnail_image')
-                  - url = resize(article.get('thumbnail_image'), { width: 150 })
-                  .article-list-img(
-                    style="background-image: url(#{url})"
-                  )
-                else
-                  .article-list-item-placeholder Missing
-                    br
-                    | thumbnail
-              .article-list-item-right
-                if article.get('thumbnail_title')
-                  h1= article.get('thumbnail_title')
-                else
-                  h1.article-list-missing Missing title
-                .article-list-items-dates
-                  if article.get('published_at')
-                    strong Published #{moment(article.get('published_at')).fromNow()}
-                    | Last saved #{moment(article.get('updated_at')).fromNow()}
-                  else
-                    strong Last saved #{moment(article.get('updated_at')).fromNow()}
-    #article-list-pagination
-      +paginate(page, totalPages, '?published=' + published + '&')
+      section.article-list-empty
+        p You haven&rsquo;t #{emptyMessage} yet.
+        p Artsy Writer is a tool for writing stories about art on Artsy.
+          br
+          | Get started by writing an article or&nbsp;
+          a.article-list-empty-chat chatting with a liason
+          | &nbsp;for help.
+        a.avant-garde-button.avant-garde-button-black.article-new-button( href='/articles/new' )
+          include ../../components/layout/public/icons/layout_new_article.svg
+          .article-new-text Write An Article
+    else
+      +paginated-list(page, totalPages, articles.toPaginatedListItems(), '?published=' + published + '&')

@@ -1,0 +1,49 @@
+@import '../stylus_lib'
+
+thumbnail-height = 90px
+thumbnail-width = 145px
+
+.paginated-list-item
+  clearfix()
+  border-bottom 1px solid gray-lighter-color
+  padding 20px 0
+  cursor pointer
+  transition opacity 0.2s ease-in-out
+  &:hover
+    opacity 0.7
+  &:last-of-type
+    border-bottom 0
+  .paginated-list-img, .paginated-list-missing-img
+    width thumbnail-width
+    margin-right 20px
+    vertical-align middle
+    height thumbnail-height
+    display inline-block
+  .paginated-list-img, .paginated-list-text-container
+    display inline-block
+    vertical-align middle
+  h1
+    garamond(l-body)
+    margin-bottom 5px
+  h2
+    avant-garde(s-headline)
+
+.paginated-list-text-container
+  width "calc(100% - %s)" % (thumbnail-width + 20px)
+  h1, h2
+    overflow ellipsis
+
+.paginated-list-img
+  background center center gray-lighter-color
+  background-size cover
+
+.paginated-list-missing-img
+  avant-garde(s-headline)
+  text-align center
+  color gray-dark-color
+  position relative
+  padding (thumbnail-height / 2) - 15px
+  background gray-lighter-color
+
+.paginated-list-missing-title
+  color gray-dark-color

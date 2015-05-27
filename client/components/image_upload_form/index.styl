@@ -1,0 +1,80 @@
+@import '../stylus_lib'
+
+form-height = 150px
+
+fill-form()
+  fill-container()
+  top -2px
+  left -2px
+  width calc(100% + 4px)
+  height @width
+
+.image-upload-form
+  border 2px dashed gray-lighter-color
+  padding 10px
+  text-align center
+  position relative
+  height form-height
+  &[data-state=uploading]
+    .image-upload-form-preview, .image-upload-form-progress-container
+      display block
+  &[data-state=loaded]
+    .image-upload-form-preview, .image-upload-form-remove
+      display block
+  h1, h2
+    avant-garde(s-headline)
+    color gray-dark-color
+  h1
+    margin-top (form-height / 2 - 30px)
+  h2
+    margin-top 3px
+    color gray-color
+
+.image-upload-form-input
+  fill-form()
+  z-index 2
+  opacity 0
+  cursor pointer
+
+.image-upload-form-preview
+  fill-form()
+  background gray-lighter-color
+  z-index 1
+  display none
+
+.image-upload-form-remove
+  top -2px
+  right -2px
+  width 25px
+  height @width
+  line-height 20px
+  position absolute
+  z-index 3
+  background black
+  color white
+  font-size 27px
+  font-weight bold
+  text-align center
+  padding 1px 0 0 2px
+  display none
+  transition background-color 0.3s ease-in-out
+  cursor pointer
+  &:hover
+    background-color red-color
+
+.image-upload-form-progress-container
+  width 70%
+  margin auto
+  height 5px
+  top 50%
+  left calc(50% - 35%)
+  margin-top -(@height / 2)
+  background white
+  position absolute
+  z-index 1
+  display none
+
+.image-upload-form-progress
+  fill-container()
+  min-width 3px
+  background purple-color

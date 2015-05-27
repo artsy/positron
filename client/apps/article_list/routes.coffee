@@ -14,7 +14,7 @@ Articles = require '../../collections/articles.coffee'
     error: res.backboneError
     success: (articles) ->
       res.render 'index',
-        articles: articles.models
+        articles: articles
         published: published
         page: page or 1
         totalPages: Math.ceil(articles.count / size)
