@@ -78,6 +78,7 @@ schema = (->
   fair_id: @objectId().allow(null)
   auction_id: @objectId().allow(null)
   vertical_id: @objectId().allow(null)
+  biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
 ).call Joi
 
@@ -134,10 +135,12 @@ toQuery = (input, callback) ->
     query.show_ids = ObjectId input.show_id if input.show_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.vertical_id = ObjectId input.vertical_id if input.vertical_id
+    query.biography_for_artist_id = ObjectId biography_for_artist_id if input.biography_for_artist_id
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
+      { biography_for_artist_id: ObjectId(input.biography_for_artist_id) }
     ] if input.artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     # Allow regex searching through the q param

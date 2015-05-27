@@ -12,7 +12,7 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
     loading: true, value: null, id: null
 
   clear: ->
-    @setState { value: null }, => $(@refs.input.getDOMNode()).focus()
+    @setState { value: null }
     @props.cleared?()
 
   componentDidUpdate: ->

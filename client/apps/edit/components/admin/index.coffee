@@ -17,6 +17,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupAuctionAutocomplete()
     @setupVerticalAutocomplete()
     @setupShowsAutocomplete()
+    @setupBiographyAutocomplete()
     @setupPublishDate()
     @setupSlug()
 
@@ -112,7 +113,7 @@ module.exports = class EditAdmin extends Backbone.View
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
     select = AutocompleteSelect @$('#edit-admin-shows .edit-admin-right')[0],
       url: "#{sd.API_URL}/shows?q=%QUERY"
-      placeholder: 'Search Show by name...'
+      placeholder: 'Search show by name...'
       selected: (e, item) =>
         @article.save show_ids: [item.id]
       cleared: =>
@@ -120,6 +121,25 @@ module.exports = class EditAdmin extends Backbone.View
     if id = @article.get('show_ids')?[0]
       request
         .get("#{sd.API_URL}/show/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
+          select.setState value: res.body.name, loading: false
+    else
+      select.setState loading: false
+
+  setupBiographyAutocomplete: ->
+    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
+    select = AutocompleteSelect @$('#edit-admin-biography .edit-admin-right')[0],
+      url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
+      placeholder: 'Search artist by name...'
+      filter: (artists) -> for artist in artists
+        { id: artist._id, value: artist.name }
+      selected: (e, item) =>
+        @article.save biography_for_artist_id: item.id
+      cleared: =>
+        @article.save biography_for_artist_id: null
+    if id = @article.get 'biography_for_artist_id'
+      request
+        .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
         .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
           select.setState value: res.body.name, loading: false
     else
