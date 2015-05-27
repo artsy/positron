@@ -17,6 +17,7 @@ mixin form-elements(items)
         .verticals-image-placeholder( data-name=item.attr )
 
 mixin featured-link(i)
+  - link = vertical.get('featured_links')[i]
   h3.admin-form-subheader Link #{i + 1}
   label
     | Thumbnail
@@ -26,13 +27,13 @@ mixin featured-link(i)
     | Title
     input.bordered-input(
       name="featured_links[#{i}][title]"
-      value=vertical.get('featured_links')[i].title
+      value=link && link.title
     )
   label
     | URL
     input.bordered-input(
       name="featured_links[#{i}][url]"
-      value=vertical.get('featured_links')[i].url
+      value=link && link.url
     )
 
 extend ../../components/layout/templates/index
