@@ -30,9 +30,9 @@
       }
     },
     "artsy-ezel-components": {
-      "version": "0.0.2",
+      "version": "0.0.3",
       "from": "git://github.com/artsy/artsy-ezel-components.git",
-      "resolved": "git://github.com/artsy/artsy-ezel-components.git#aa2ca5d817eeb9b5b9c64dc4545c6dd58fea8d62"
+      "resolved": "git://github.com/artsy/artsy-ezel-components.git#60ac475e0e33bc1a5e6526634b6b4549f0fa8d16"
     },
     "async": {
       "version": "1.0.0",
@@ -100,12 +100,12 @@
               "dependencies": {
                 "bindings": {
                   "version": "1.2.1",
-                  "from": "bindings@>=1.2.0 <1.3.0",
+                  "from": "bindings@*",
                   "resolved": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz"
                 },
                 "nan": {
                   "version": "1.8.4",
-                  "from": "nan@>=1.8.0 <1.9.0",
+                  "from": "nan@>=1.8.4 <1.9.0",
                   "resolved": "https://registry.npmjs.org/nan/-/nan-1.8.4.tgz"
                 }
               }
@@ -373,7 +373,7 @@
                     "delayed-stream": {
                       "version": "0.0.5",
                       "from": "delayed-stream@0.0.5",
-                      "resolved": "http://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
+                      "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
                     }
                   }
                 },
@@ -1533,7 +1533,7 @@
         },
         "readable-stream": {
           "version": "1.0.33",
-          "from": "readable-stream@>=1.0.26 <1.1.0",
+          "from": "readable-stream@>=1.0.27-1 <2.0.0",
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
@@ -3408,7 +3408,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.0.0 <3.0.0",
+          "from": "through@>=2.3.6 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         },
         "esprima": {
@@ -4003,15 +4003,15 @@
       "dependencies": {
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.0.0 <3.0.0",
+          "from": "through@>=2.3.6 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         }
       }
     },
     "joi": {
-      "version": "6.4.2",
+      "version": "6.4.3",
       "from": "joi@*",
-      "resolved": "https://registry.npmjs.org/joi/-/joi-6.4.2.tgz",
+      "resolved": "https://registry.npmjs.org/joi/-/joi-6.4.3.tgz",
       "dependencies": {
         "hoek": {
           "version": "2.14.0",
@@ -4714,7 +4714,7 @@
                 "delayed-stream": {
                   "version": "0.0.5",
                   "from": "delayed-stream@0.0.5",
-                  "resolved": "http://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
+                  "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
                 }
               }
             },
@@ -4755,7 +4755,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@>=1.1.0 <2.0.0",
+                          "from": "ansi-regex@>=1.0.0 <2.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         },
                         "get-stdin": {
@@ -4772,7 +4772,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@>=1.1.0 <2.0.0",
+                          "from": "ansi-regex@>=1.0.0 <2.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         }
                       }
@@ -5663,7 +5663,7 @@
               "dependencies": {
                 "minimist": {
                   "version": "0.0.10",
-                  "from": "minimist@>=0.0.7 <0.1.0",
+                  "from": "minimist@>=0.0.1 <0.1.0",
                   "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
                 }
               }
@@ -6076,7 +6076,7 @@
                 "delayed-stream": {
                   "version": "0.0.5",
                   "from": "delayed-stream@0.0.5",
-                  "resolved": "http://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
+                  "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
                 }
               }
             },
@@ -6174,7 +6174,7 @@
         },
         "through": {
           "version": "2.3.7",
-          "from": "through@>=2.0.0 <3.0.0",
+          "from": "through@>=2.3.6 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.7.tgz"
         },
         "uglify-js": {
@@ -6264,7 +6264,7 @@
         },
         "bluebird": {
           "version": "2.9.26",
-          "from": "bluebird@>=2.0.0 <3.0.0",
+          "from": "bluebird@>=2.9.26 <3.0.0",
           "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.26.tgz"
         },
         "eventsource": {
@@ -6545,7 +6545,7 @@
               "dependencies": {
                 "readable-stream": {
                   "version": "1.0.33",
-                  "from": "readable-stream@latest",
+                  "from": "readable-stream@>=1.0.26 <1.1.0",
                   "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
                   "dependencies": {
                     "core-util-is": {
@@ -6698,7 +6698,7 @@
                 "delayed-stream": {
                   "version": "0.0.5",
                   "from": "delayed-stream@0.0.5",
-                  "resolved": "http://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
+                  "resolved": "https://registry.npmjs.org/delayed-stream/-/delayed-stream-0.0.5.tgz"
                 }
               }
             },
