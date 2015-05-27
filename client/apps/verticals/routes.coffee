@@ -17,7 +17,9 @@ Vertical = require '../../models/vertical'
       res.render 'edit', vertical: vertical
 
 @save = (req, res) ->
-  new Vertical(id: req.params.id).save _.pick(req.body, _.identity),
+  data = _.pick req.body, _.identity
+  data.featured_article_ids = _.compact data.featured_article_ids
+  new Vertical(id: req.params.id).save data,
     headers: 'X-Access-Token': req.user?.get('access_token')
     error: res.backboneError
     success: ->

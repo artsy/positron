@@ -6,6 +6,8 @@ Kinda like a cross between a `<select>` box and the autocomplete component. It h
 
 ## Example
 
+Basic usage
+
 ````coffeescript
 select = AutocompleteSelect @$('#input-container')[0],
   url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
@@ -15,4 +17,17 @@ select = AutocompleteSelect @$('#input-container')[0],
     article.save fair_id: item.id
   cleared: ->
     article.save fair_id: null
+select.setState loading: false, value: article.get('fair_id')
+````
+
+If you're using a label and server-side serialization
+
+````coffeescript
+select = AutocompleteSelect @$('#input-container')[0],
+  label: 'Fair Id'
+  name: 'fair_id'
+  url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+  filter: (res) -> for r in res
+    { id: r._id, value: r.name }
+select.setState loading: false, value: article.get('fair_id')
 ````

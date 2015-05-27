@@ -11,13 +11,16 @@ gutter-size = 30px
   width 100%
   margin-bottom 20px
   display block
-  &:last-of-type
-    margin-bottom 0
-  input, textarea, .image-upload-form
+  input, textarea, .image-upload-form, .autocomplete-select-selected
     garamond(body)
     display block
     width 100%
     margin-top 5px
+
+.admin-form-left > label:last-of-type
+.admin-form-center > label:last-of-type
+.admin-form-right > label:last-of-type
+  margin-bottom 0
 
 .admin-form-left, .admin-form-right, .admin-form-center
   width 280px

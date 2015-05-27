@@ -16,11 +16,6 @@ mixin form-elements(items)
       else if item.type == 'image'
         .verticals-image-placeholder( data-attr=item.attr name=item.attr )
 
-mixin article-input(i)
-  label
-    | Article #{i + 1}
-    input.bordered-input
-
 extend ../../components/layout/templates/index
 
 block header
@@ -57,11 +52,11 @@ block content
       .admin-form-section
         .admin-form-left Featured Articles
         .admin-form-center
-          +article-input(0)
-          +article-input(1)
+          .verticals-article-input: input.bordered-input
+          .verticals-article-input: input.bordered-input
         .admin-form-right
-          +article-input(2)
-          +article-input(3)
+          .verticals-article-input: input.bordered-input
+          .verticals-article-input: input.bordered-input
       button.avant-garde-button.avant-garde-button-black.verticals-save(
         type='submit' href="/verticals/new"
       ) Save Changes
