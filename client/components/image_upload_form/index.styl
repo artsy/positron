@@ -15,6 +15,7 @@ fill-form()
   text-align center
   position relative
   height form-height
+  transition border-color 0.3s ease-in-out
   &:hover
     h1, h1, span
       color gray-color
@@ -27,6 +28,7 @@ fill-form()
     .image-upload-form-preview, .image-upload-form-remove
       display block
   &.is-dragover
+    border-color purple-color
     h1, h1, span
       color gray-color
     .image-upload-form-drop
