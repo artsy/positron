@@ -140,7 +140,7 @@ toQuery = (input, callback) ->
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
-      { biography_for_artist_id: ObjectId(input.biography_for_artist_id) }
+      { biography_for_artist_id: ObjectId(input.artist_id) }
     ] if input.artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     # Allow regex searching through the q param
