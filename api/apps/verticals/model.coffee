@@ -28,7 +28,12 @@ schema = (->
   partner_website_url: @string().allow('', null)
   thumbnail_url: @string().allow('', null)
   featured_articles_header: @string().allow('', null)
-  featured_article_ids: @array().items(@objectId()).allow(null)
+  featured_links: @array().items([
+    @object().keys
+      thumbnail_url: @string().allow('', null)
+      title: @string().allow('', null)
+      url: @string().allow('', null)
+  ]).allow(null)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
   slogan: @string().allow('',null)
