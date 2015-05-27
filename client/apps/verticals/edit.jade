@@ -29,7 +29,8 @@ block header
 block content
   .max-width-container
     form.admin-form-container(
-      action="/verticals/#{vertical.get('id')}" method='post'
+      action=(vertical.isNew() ?  "/verticals" : "/verticals/#{vertical.get('id')}")
+      method='post'
     )
       .admin-form-section
         .admin-form-left Vertical Details
@@ -64,6 +65,5 @@ block content
       button.avant-garde-button.avant-garde-button-black.verticals-save(
         type='submit' href="/verticals/new"
       ) Save Changes
-      a.avant-garde-button.verticals-delete(
-        href="/verticals/#{vertical.get('id')}/delete"
-      ) Delete Vertical
+      unless vertical.isNew()
+        a.avant-garde-button.verticals-delete Delete Vertical

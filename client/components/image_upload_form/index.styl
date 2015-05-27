@@ -15,15 +15,26 @@ fill-form()
   text-align center
   position relative
   height form-height
+  &:hover
+    h1, h1, span
+      color gray-color
+    .image-upload-form-click
+      color purple-color
   &[data-state=uploading]
     .image-upload-form-preview, .image-upload-form-progress-container
       display block
   &[data-state=loaded]
     .image-upload-form-preview, .image-upload-form-remove
       display block
-  h1, h2
+  &.is-dragover
+    h1, h1, span
+      color gray-color
+    .image-upload-form-drop
+      color purple-color
+  h1, h2, span
     avant-garde(s-headline)
     color gray-dark-color
+    transition color 0.3s ease-in-out 0s
   h1
     margin-top (form-height / 2 - 30px)
   h2

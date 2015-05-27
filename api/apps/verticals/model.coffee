@@ -55,6 +55,7 @@ querySchema = (->
     cursor = db.verticals
       .find(query)
       .limit(input.limit or 10)
+      .sort($natural: -1)
       .skip(input.offset or 0)
     async.parallel [
       (cb) -> cursor.toArray cb
