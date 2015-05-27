@@ -14,7 +14,26 @@ mixin form-elements(items)
       else if item.type == 'textarea'
         textarea.bordered-input( name=item.attr )=vertical.get(item.attr)
       else if item.type == 'image'
-        .verticals-image-placeholder( data-attr=item.attr name=item.attr )
+        .verticals-image-placeholder( data-name=item.attr )
+
+mixin featured-link(i)
+  h3.admin-form-subheader Link #{i + 1}
+  label
+    | Thumbnail
+    .verticals-image-placeholder(
+      data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
+  label
+    | Title
+    input.bordered-input(
+      name="featured_links[#{i}][title]"
+      value=vertical.get('featured_links')[i].title
+    )
+  label
+    | URL
+    input.bordered-input(
+      name="featured_links[#{i}][url]"
+      value=vertical.get('featured_links')[i].url
+    )
 
 extend ../../components/layout/templates/index
 
@@ -50,13 +69,13 @@ block content
             { attr: 'partner_website_url', type: 'input' }
           ])
       .admin-form-section
-        .admin-form-left Featured Articles
+        .admin-form-left Featured Links
         .admin-form-center
-          .verticals-article-input: input.bordered-input
-          .verticals-article-input: input.bordered-input
+          +featured-link(0)
+          +featured-link(1)
         .admin-form-right
-          .verticals-article-input: input.bordered-input
-          .verticals-article-input: input.bordered-input
+          +featured-link(2)
+          +featured-link(3)
       button.avant-garde-button.avant-garde-button-black.verticals-save(
         type='submit' href="/verticals/new"
       ) Save Changes
