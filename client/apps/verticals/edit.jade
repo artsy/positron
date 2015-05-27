@@ -1,0 +1,64 @@
+include ../../components/paginated_list/index
+
+mixin form-elements(items)
+  each item in items
+    label
+      = _s.humanize(item.attr)
+      if item.type == 'input'
+        input.bordered-input( value=vertical.get(item.attr) name=item.attr )
+      else if item.type == 'date'
+        input.bordered-input(
+          value=moment(vertical.get(item.attr)).format('MM/DD/YYYY')
+          name=item.attr
+        )
+      else if item.type == 'textarea'
+        textarea.bordered-input( name=item.attr )=vertical.get(item.attr)
+      else if item.type == 'image'
+        .verticals-image-placeholder( data-attr=item.attr name=item.attr )
+
+extend ../../components/layout/templates/index
+
+block header
+  | Verticals
+
+block content
+  .max-width-container
+    form.admin-form-container(
+      action=(vertical.isNew() ?  "/verticals" : "/verticals/#{vertical.get('id')}")
+      method='post'
+    )
+      .admin-form-section
+        .admin-form-left Vertical Details
+        .admin-form-center
+          +form-elements([
+            { attr: 'title', type: 'input' },
+            { attr: 'meta_title', type: 'input' },
+            { attr: 'slug', type: 'input' },
+            { attr: 'description', type: 'textarea' }
+          ])
+        .admin-form-right
+          +form-elements([
+            { attr: 'start_at', type: 'date' },
+            { attr: 'end_at', type: 'date' },
+            { attr: 'thumbnail_url', type: 'image' }
+          ])
+      .admin-form-section
+        .admin-form-left Partner Logo
+        .admin-form-center
+          +form-elements([
+            { attr: 'partner_logo_url', type: 'image' },
+            { attr: 'partner_website_url', type: 'input' }
+          ])
+      .admin-form-section
+        .admin-form-left Featured Articles
+        .admin-form-center
+          .verticals-article-input: input.bordered-input
+          .verticals-article-input: input.bordered-input
+        .admin-form-right
+          .verticals-article-input: input.bordered-input
+          .verticals-article-input: input.bordered-input
+      button.avant-garde-button.avant-garde-button-black.verticals-save(
+        type='submit' href="/verticals/new"
+      ) Save Changes
+      unless vertical.isNew()
+        a.avant-garde-button.verticals-delete Delete Vertical

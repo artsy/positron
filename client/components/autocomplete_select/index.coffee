@@ -9,10 +9,10 @@ module.exports = (el, props) ->
 module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
 
   getInitialState: ->
-    loading: true, value: null
+    loading: true, value: null, id: null
 
   clear: ->
-    @setState { value: null }, -> $(@refs.input.getDOMNode()).focus()
+    @setState { value: null }, => $(@refs.input.getDOMNode()).focus()
     @props.cleared?()
 
   componentDidUpdate: ->
@@ -25,20 +25,25 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
       el: $(@refs.input?.getDOMNode())
       selected: (e, item) =>
-        @setState value: item.value
+        @setState value: item.value, id: item.id
         @props.selected? e, item
 
   render: ->
+    hidden = input { type: 'hidden', value: @state.id, name: @props.name }
     if @state.loading
-      label { className: 'bordered-input-loading' },
+      label { className: 'bordered-input-loading' }, @props.label,
         input { className: 'bordered-input' }
+        hidden
     else if @state.value
-      div { className: 'autocomplete-select-selected' }, @state.value,
-        button { className: 'autocomplete-select-remove', onClick: @clear }
+      label {}, @props.label,
+        div { className: 'autocomplete-select-selected' }, @state.value,
+          button { className: 'autocomplete-select-remove', onClick: @clear }
+        hidden
     else
-      label {},
+      label {}, @props.label,
         input {
           ref: 'input'
           className: 'bordered-input'
           placeholder: @props.placeholder
         }
+        hidden

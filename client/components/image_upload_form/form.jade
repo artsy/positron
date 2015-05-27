@@ -1,0 +1,17 @@
+section.image-upload-form( data-state=(src ? 'loaded': '') )
+  h1
+    | Drag &&nbsp;
+    span.image-upload-form-drop Drop&nbsp;
+    | or&nbsp;
+    span.image-upload-form-click click&nbsp;
+    | to upload
+  h2 Up to 30MB
+  if src
+    .image-upload-form-preview( style="background-image: url(#{resize(src, { width: 800 })})" )
+  else
+    .image-upload-form-preview
+  .image-upload-form-remove ×
+  input.image-upload-form-input( type='file' )
+  input.image-upload-hidden-input( type='hidden' name=name value=src )
+  .image-upload-form-progress-container
+    .image-upload-form-progress

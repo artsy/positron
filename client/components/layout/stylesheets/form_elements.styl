@@ -15,6 +15,7 @@
   cursor pointer
   margin 0
   vertical-align top
+  text-align center
   &:hover, &:active
     color purple-color
   &:disabled, &.is-disabled, &[data-disabled=true]
@@ -30,7 +31,11 @@
       border-color purple-color
   &.avant-garde-button-black
     background black
+    border-color black
     color white
+    &:hover, &:active, &:focus
+      background purple-color
+      border-color purple-color
   &.avant-garde-button-external-link
     position relative
     padding-right 30px

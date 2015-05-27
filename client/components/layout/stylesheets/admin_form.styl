@@ -1,0 +1,41 @@
+//
+// A responsive 3 column grid that has labels on the left and form elements
+// on the right 2 columns. Used in the admin section of articles, in vertical
+// edit UI, and useful for generic form element containers.
+//
+
+gutter-size = 30px
+
+.admin-form-container label
+  avant-garde(s-headline)
+  width 100%
+  margin-bottom 20px
+  display block
+  input, textarea, .image-upload-form, .autocomplete-select-selected
+    garamond(body)
+    display block
+    width 100%
+    margin-top 5px
+
+.admin-form-left > label:last-of-type
+.admin-form-center > label:last-of-type
+.admin-form-right > label:last-of-type
+  margin-bottom 0
+
+.admin-form-left, .admin-form-right, .admin-form-center
+  width 280px
+  margin-right gutter-size
+  display inline-block
+  vertical-align top
+
+.admin-form-left
+  garamond(headline)
+
+.admin-form-right
+  margin-right 0
+
+.admin-form-section
+  border-bottom 1px solid gray-lighter-color
+  padding gutter-size 0
+  &:last-of-type
+    border-bottom 0

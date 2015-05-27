@@ -2,6 +2,7 @@
 @import './sidebar'
 @import './form_elements'
 @import './simple_modal'
+@import './admin_form'
 
 global-reset()
 
@@ -29,12 +30,12 @@ em
 .page-header
   avant-garde()
   font-size default-avant-garde-font-size
-  padding 25px 0
+  padding 20px 0
   border-bottom 1px solid gray-lighter-color
 
 .max-width-container
-  max-width 700px + (35px * 2)
-  padding 0 35px
+  max-width overflow-width + 60px
+  padding 0 30px
   margin auto
 
 #layout-hamburger
@@ -66,7 +67,7 @@ em
     line-height 63px !important
     font-size 15px !important
 
-// TODO: Move to artsy-ezel-components
+// Responsive pagination styling. TODO: Move to artsy-ezel-components
 @media (max-width: 600px)
   .bordered-pagination
     position relative

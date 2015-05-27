@@ -1,0 +1,13 @@
+include ../../components/paginated_list/index
+
+extend ../../components/layout/templates/index
+
+block header
+  | Verticals
+
+block content
+  .max-width-container
+    a.avant-garde-button.avant-garde-button-black.verticals-add(
+      href="/verticals/new"
+    ) Add Vertical
+    +paginated-list(page, totalPages, verticals.toPaginatedListItems())

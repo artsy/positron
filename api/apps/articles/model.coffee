@@ -97,6 +97,7 @@ querySchema = (->
   sort: @string()
   tier: @number()
   featured: @boolean()
+  q: @string()
 ).call Joi
 
 #
@@ -124,7 +125,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -137,9 +138,10 @@ toQuery = (input, callback) ->
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
-
     ] if input.artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
+    # Allow regex searching through the q param
+    query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
     callback null, query, limit, offset, sortParamToQuery(sort)
 
 sortParamToQuery = (input) ->
