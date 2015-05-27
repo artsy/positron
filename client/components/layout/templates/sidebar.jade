@@ -19,11 +19,12 @@
       include ../public/icons/layout_published.svg
       br
       | Published
-    a( href='/verticals'
-       class=(sd.URL == '/verticals' ? 'is-active' : '') )
-      include ../public/icons/layout_vertical.svg
-      br
-      | Verticals
+    if user.get('type') == 'Admin'
+      a( href='/verticals'
+         class=(sd.URL == '/verticals' ? 'is-active' : '') )
+        include ../public/icons/layout_vertical.svg
+        br
+        | Verticals
     #layout-sidebar-profile
       img( src=user.get('profile_icon_url') )
       br
