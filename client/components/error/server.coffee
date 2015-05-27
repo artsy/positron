@@ -17,8 +17,7 @@ render = (req, res, locals) ->
 
 errorHandler = (err, req, res, next) ->
   debug err.stack, err.message
-  if err.status in [401, 403]
-    return res.redirect '/logout'
+  return res.redirect '/logout' if err.status is 401
   render req, res, error: err
 
 module.exports = (app) ->

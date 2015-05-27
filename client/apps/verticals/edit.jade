@@ -6,17 +6,20 @@ mixin form-elements(items)
       = _s.humanize(item.attr)
       if item.type == 'input'
         input.bordered-input( value=vertical.get(item.attr) name=item.attr )
+      else if item.type == 'date'
+        input.bordered-input(
+          value=moment(vertical.get(item.attr)).format('MM/DD/YYYY')
+          name=item.attr
+        )
       else if item.type == 'textarea'
-        textarea.bordered-input( value=vertical.get(item.attr) name=item.attr )
+        textarea.bordered-input( name=item.attr )=vertical.get(item.attr)
       else if item.type == 'image'
         .verticals-image-placeholder( data-attr=item.attr name=item.attr )
 
 mixin article-input(i)
   label
     | Article #{i + 1}
-    input.bordered-input(
-      value=vertical.get('featured_article_ids') ? vertical.get('featured_article_ids')[i] : ''
-    )
+    input.bordered-input
 
 extend ../../components/layout/templates/index
 
@@ -39,8 +42,8 @@ block content
           ])
         .admin-form-right
           +form-elements([
-            { attr: 'start_at', type: 'input' },
-            { attr: 'end_at', type: 'input' },
+            { attr: 'start_at', type: 'date' },
+            { attr: 'end_at', type: 'date' },
             { attr: 'thumbnail_url', type: 'image' }
           ])
       .admin-form-section

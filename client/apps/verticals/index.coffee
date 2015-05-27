@@ -11,3 +11,4 @@ app.set 'view engine', 'jade'
 
 app.get '/verticals', routes.index
 app.get '/verticals/:id/edit', routes.edit
+app.post '/verticals/:id', routes.save
