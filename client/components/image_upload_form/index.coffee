@@ -42,6 +42,7 @@ module.exports = class ImageUploadForm extends Backbone.View
     return unless confirm 'Are you sure you want to remove this image?'
     @$('.image-upload-form').attr 'data-state', ''
     @$('.image-upload-form-preview').css 'background-image': ''
+    @$('.image-upload-hidden-input').val ''
     @options.remove?()
 
   toggleDragover: ->
