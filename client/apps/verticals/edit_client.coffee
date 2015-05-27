@@ -16,7 +16,7 @@ class VerticalEditView extends Backbone.View
         el: $(el)
         src: (
           if $(el).attr('data-name').match 'featured_links'
-            @vertical.get('featured_links')?[$(el).attr('data-index')].thumbnail_url
+            @vertical.get('featured_links')?[$(el).attr('data-index')]?.thumbnail_url
           else
             @vertical.get $(el).attr 'data-name'
         )
