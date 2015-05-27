@@ -24,19 +24,6 @@ inputs-margin = 15px
 #edit-thumbnail-inputs
   width 860px
   margin 30px auto
-  .dashed-file-upload-container
-    width 270px
-    height 180px
-    garamond()
-    color gray-lighter-color
-    text-transform none
-    letter-spacing 0
-    padding-top 66px
-    color gray-dark-color
-    text-align center
-    font-size default-garamond-font-size
-    line-height 1.2em
-    transition color 0.3s, border-color 0.3s
   label
     avant-garde()
     font-size default-avant-garde-font-size - 2
@@ -59,6 +46,12 @@ error-placeholder()
   display inline-block
   vertical-align top
 
+#edit-thumbnail-inputs-left .image-upload-form
+  height 180px
+  width 270px
+  h1
+    margin-top 60px
+
 #edit-thumbnail-inputs-right
   width 590px
   padding-left inputs-margin
@@ -79,40 +72,6 @@ error-placeholder()
     font-size 15px
     faux-underline(gray-dark-color, 2px, 2px)
     margin-top -1px
-
-#edit-thumbnail-preview
-  width calc(100% + 4px)
-  height calc(100% + 4px)
-  top -2px
-  left -2px
-  position absolute
-  background center center
-  background-size cover
-
-#edit-thumbnail-remove
-  background #000
-  top -2px
-  left -2px
-  height 30px
-  width @height
-  line-height @height
-  color #fff
-  position absolute
-  font-size 18px
-  font-weight bold
-  font-family Helvetica, sans-serif
-  cursor pointer
-  transition color 0.3s, background-color 0.3s
-  z-index 3
-  &:hover
-    background-color red-color
-    color white
-
-#edit-thumbnail-upload.is-uploading
-  color transparent
-  span
-    color transparent
-  border-color transparent
 
 .edit-title-textarea
   padding 12px 15px

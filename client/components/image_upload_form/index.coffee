@@ -35,7 +35,7 @@ module.exports = class ImageUploadForm extends Backbone.View
           @$('.image-upload-form').attr 'data-state', 'loaded'
           @$('.image-upload-form-preview').css 'background-image': "url(#{src})"
         @$('.image-upload-hidden-input').val src
-        @options.done?()
+        @options.done? src
 
   onRemove: (e) ->
     e.preventDefault()

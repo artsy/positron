@@ -22,37 +22,13 @@ describe 'EditThumbnail', ->
           ['thumbnailFormTemplate']
         )
         EditThumbnail.__set__ 'gemup', @gemup = sinon.stub()
+        EditThumbnail.__set__ 'ImageUploadForm', @ImageUploadForm = sinon.stub()
         @view = new EditThumbnail el: $('#edit-thumbnail'), article: @article
         done()
 
   afterEach ->
     benv.teardown()
     Backbone.sync.restore()
-
-  describe '#renderThumbnailForm', ->
-
-    it 'renders the thumbnail image on change', ->
-      @view.article.set thumbnail_image: 'http://kittens.com/foo.jpg'
-      @view.$el.html().should.containEql 'http://kittens.com/foo.jpg'
-
-  describe '#removeThumbnail', ->
-
-    it 'empties the thumbnail image', ->
-      @view.removeThumbnail({ preventDefault: -> })
-      (@view.article.get('thumbnail_image')?).should.not.be.ok
-
-  describe '#uploadThumbnail', ->
-
-    it 'uses gemup to upload an image and shows it in the DOM', ->
-      @view.uploadThumbnail target: files: ['foo.jpg']
-      @gemup.args[0][0].should.equal 'foo.jpg'
-      img = null
-      class global.Image
-        constructor: -> img = this
-      @gemup.args[0][1].done 'moo.jpg'
-      img.onload()
-      Backbone.sync.args[0][0].should.equal 'create'
-      delete global.Image
 
   describe '#useArticleTitle', ->
 
