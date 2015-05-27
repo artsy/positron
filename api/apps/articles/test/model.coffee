@@ -155,6 +155,19 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles by query', (done) ->
+      fabricate 'articles', [
+        { thumbnail_title: 'Foo' }
+        { thumbnail_title: 'Bar' }
+        { thumbnail_title: 'Baz' }
+      ], ->
+        Article.where(
+          { q: 'fo' }
+          (err, { results }) ->
+            results[0].thumbnail_title.should.equal 'Foo'
+            done()
+        )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

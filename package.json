@@ -13,7 +13,7 @@
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "async": "*",
-    "backbone": "*",
+    "backbone": "1.1.x",
     "backbone-super-sync": "*",
     "body-parser": "*",
     "bucket-assets": "*",

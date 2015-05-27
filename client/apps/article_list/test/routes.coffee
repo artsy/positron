@@ -22,7 +22,7 @@ describe 'routes', ->
       Backbone.sync.args[0][2].success {
         results: [_.extend(fixtures().articles, title: "mooo")]
       }
-      @res.render.args[0][1].articles[0].get('title').should.equal 'mooo'
+      @res.render.args[0][1].articles.first().get('title').should.equal 'mooo'
 
     it 'can filter based on query params', ->
       @req.query.published = 'true'
