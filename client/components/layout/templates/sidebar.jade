@@ -26,7 +26,8 @@
         br
         | Verticals
     #layout-sidebar-profile
-      img( src=user.get('profile_icon_url') )
+      .layout-sidebar-profile-img(
+        style="background-image: url(#{user.get('profile_icon_url')})" )
       br
       = user.get('name').split(' ')[0]
       nav#layout-sidebar-profile-menu
