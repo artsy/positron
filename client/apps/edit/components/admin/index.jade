@@ -9,85 +9,87 @@ mixin featuredList(id, resource)
           placeholder="Add an #{resource} by url or slug..."
         )
 
-section#edit-admin
-  section#edit-admin-tier
-    .edit-admin-left
+section#edit-admin.admin-form-container.max-width-container
+  section#edit-admin-tier.admin-form-section
+    .admin-form-left
       h1 Tier
       h2 Tier 1 articles get highlighted in the magazine section.
-    .edit-admin-right
-      label.flat-radio-button
-        input( type='radio' name='tier' checked=article.get('tier') == 1
-          value=1 )
-        | Tier 1
-      label.flat-radio-button
-        input( type='radio' name='tier' checked=article.get('tier') != 1
-          value=2 )
-        | Tier 2
-  section#edit-admin-magazine
-    .edit-admin-left
+    .admin-form-right
+      .admin-form-right-col
+        label.flat-radio-button
+          input( type='radio' name='tier' checked=article.get('tier') == 1
+            value=1 )
+          | Tier 1
+      .admin-form-right-col
+        label.flat-radio-button
+          input( type='radio' name='tier' checked=article.get('tier') != 1
+            value=2 )
+          | Tier 2
+  section#edit-admin-magazine.admin-form-section
+    .admin-form-left
       h1 Magazine
       h2 Add this article to the main Magazine section of Artsy.
-    .edit-admin-right
+    .admin-form-right
       label.flat-checkbox
         input( type='checkbox' name= 'featured'
           checked=article.get('featured') == 1 value=1 )
-  section#edit-admin-fair
-    .edit-admin-left
+  section#edit-admin-fair.admin-form-section
+    .admin-form-left
       h1 Fair
       h2 Add this article to a fair&rsquo;s magazine and year round page.
-    .edit-admin-right
-  section#edit-admin-partner
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-partner.admin-form-section
+    .admin-form-left
       h1 Partner
       h2 Add this article to a partner&rsquo;s profile page.
-    .edit-admin-right
-  section#edit-admin-auction
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-auction.admin-form-section
+    .admin-form-left
       h1 Auction
       h2 Add this article to an auction&rsquo;s page.
-    .edit-admin-right
-  section#edit-admin-vertical
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-vertical.admin-form-section
+    .admin-form-left
       h1 Vertical
       h2 Add this article to a special editorial "vertical" (e.g. The Vennice Biennale 2015 coverage).
-    .edit-admin-right
-  section#edit-admin-biography
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-biography.admin-form-section
+    .admin-form-left
       h1 Artist Biography
       h2 Indicate that this article is a biography for a specified artist.
-    .edit-admin-right
-  section#edit-admin-shows
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-shows.admin-form-section
+    .admin-form-left
       h1 Shows
       h2 Select Partner Shows or Fair Booths for this article to appear on as a 'Related Article.''
-    .edit-admin-right
-  section#edit-admin-feature
-    .edit-admin-left
+    .admin-form-right
+  section#edit-admin-feature.admin-form-section
+    .admin-form-left
       h1 Artists & Artworks
       h2 Select artist and artwork pages for this article to appear highlighted on.
-    .edit-admin-right
+    .admin-form-right
       h3 Primary Artists
       +featuredList('eaf-primary-artists', 'artist')
       h3 Secondary Artists
       +featuredList('eaf-artists', 'artist')
       h3 Artworks
       +featuredList('eaf-artworks', 'artwork')
-  section#edit-admin-slug
-    .edit-admin-left
+  section#edit-admin-slug.admin-form-section
+    .admin-form-left
       h1 Slug
       h2 Change the url of this article to optimize SEO impact.
-    .edit-admin-right
+    .admin-form-right
       input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
       a.edit-admin-slug-generate(href='/') Generate from title & author name
-  section#edit-admin-publish-date
-    .edit-admin-left
+  section#edit-admin-publish-date.admin-form-section
+    .admin-form-left
       h1 Publish Date
       h2 Change the date this article was published to reorder it in a Magazine view.
-    .edit-admin-right
+    .admin-form-right
       input.bordered-input.edit-admin-input-date
-  section#edit-admin-change-author
-    .edit-admin-left
+  section#edit-admin-change-author.admin-form-section
+    .admin-form-left
       h1 Change Author
       h2 Changing the author of this article will move it to their Artsy Writer.
-    .edit-admin-right
+    .admin-form-right
       input.bordered-input( placeholder='Search by user name...' )

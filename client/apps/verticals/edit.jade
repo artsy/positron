@@ -12,7 +12,7 @@ mixin form-elements(items)
           name=item.attr
         )
       else if item.type == 'textarea'
-        textarea.bordered-input( name=item.attr )=vertical.get(item.attr)
+        textarea.bordered-input( name=item.attr rows=4 )=vertical.get(item.attr)
       else if item.type == 'image'
         .verticals-image-placeholder( data-name=item.attr )
 
@@ -49,36 +49,39 @@ block content
     )
       .admin-form-section
         .admin-form-left Vertical Details
-        .admin-form-center
-          +form-elements([
-            { attr: 'title', type: 'input' },
-            { attr: 'meta_title', type: 'input' },
-            { attr: 'slug', type: 'input' },
-            { attr: 'description', type: 'textarea' }
-          ])
         .admin-form-right
-          +form-elements([
-            { attr: 'start_at', type: 'date' },
-            { attr: 'end_at', type: 'date' },
-            { attr: 'thumbnail_url', type: 'image' }
-          ])
+          .admin-form-right-col
+            +form-elements([
+              { attr: 'title', type: 'input' },
+              { attr: 'meta_title', type: 'input' },
+              { attr: 'slug', type: 'input' },
+              { attr: 'description', type: 'textarea' }
+            ])
+          .admin-form-right-col
+            +form-elements([
+              { attr: 'start_at', type: 'date' },
+              { attr: 'end_at', type: 'date' },
+              { attr: 'thumbnail_url', type: 'image' }
+            ])
       .admin-form-section
         .admin-form-left Partner
-        .admin-form-center
-          +form-elements([
-            { attr: 'partner_logo_url', type: 'image' },
-            { attr: 'partner_website_url', type: 'input' },
-            { attr: 'slogan', type: 'input' }
-          ])
+        .admin-form-right
+          .admin-form-right-col
+            +form-elements([
+              { attr: 'partner_logo_url', type: 'image' },
+              { attr: 'partner_website_url', type: 'input' },
+              { attr: 'slogan', type: 'input' }
+            ])
       .admin-form-section
         .admin-form-left Featured Links
-        .admin-form-center
-          +featured-link(0)
-          +featured-link(1)
         .admin-form-right
-          +featured-link(2)
-          +featured-link(3)
           +form-elements([{ attr: 'featured_links_header', type: 'input' }])
+          .admin-form-right-col
+            +featured-link(0)
+            +featured-link(1)
+          .admin-form-right-col
+            +featured-link(2)
+            +featured-link(3)
       button.avant-garde-button.avant-garde-button-black.verticals-save(
         type='submit' href="/verticals/new"
       ) Save Changes

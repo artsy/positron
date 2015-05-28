@@ -5,51 +5,33 @@ gutter-size = 30px
 #edit-admin
   padding-top header-size
   display none
-  width overflow-width - 40px
-  margin auto
-  section
-    border-top 1px solid gray-lighter-color
-    margin-bottom 40px
-    &:first-child
-      border-top 0
-  h1
-    font-size 24px
-    margin-top 40px
-  h2
-    margin 20px 0 35px 0
-    line-height 1.4em
-  h3
-    avant-garde()
-    font-size default-avant-garde-font-size
-    margin-bottom 15px
-
-#edit-admin-tier
-  label
-    width 50%
-    &:last-child
-      padding-left (gutter-size / 2)
-  input
-    margin 0 10px 0 0
+  input:not([type=radio]):not([type=checkbox])
+    margin-top 35px
 
 #edit-admin-tier, #edit-admin-magazine
-  .edit-admin-right
-    padding-top 87px
+  .admin-form-right
+    padding-top 47px
 
-#edit-admin-feature .edit-admin-right
-  padding-top 46px
+#edit-admin-tier label
+  avant-garde body
 
-.edit-admin-left, .edit-admin-right
-  display inline-block
-  vertical-align top
+#edit-admin-feature
+  h3
+    avant-garde body
+    margin-bottom 5px
+  input, label
+    margin 0 !important
+  .admin-form-right
+    margin-top 12px
 
-.edit-admin-left
-  width 33.33%
-  padding-right (gutter-size / 2)
-
-.edit-admin-right
-  width 66.66%
-  padding-top 75px
-  padding-left (gutter-size / 2)
+#edit-admin-slug
+  input
+    width 100%
+  a
+    display inline-block
+    color gray-dark-color
+    margin-top 10px
+    faux-underline()
 
 .edit-admin-feature-list li:not(.eaf-input-li)
   border 2px solid gray-lighter-color
@@ -126,21 +108,3 @@ gutter-size = 30px
 .edit-admin-feature-list
   width 100%
   margin-bottom 30px
-
-#edit-admin-change-author input
-#edit-admin-fair input
-#edit-admin-partner input
-#edit-admin-auction input
-#edit-admin-vertical input
-#edit-admin-shows input
-#edit-admin-biography input
-  width 100%
-#edit-admin-slug
-  input
-    width 100%
-  a
-    display block
-    color gray-color
-    margin-top 10px
-#edit-admin-publish-date input
-  width 100%

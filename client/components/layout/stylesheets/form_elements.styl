@@ -91,7 +91,7 @@ input-placeholder()
 
 .bordered-input, .simple-modal-content input, .autocomplete-select-selected
   margin 0
-  padding 5px 8px 7px 8px
+  padding 5px 12px
   border 2px solid gray-lighter-color
   border-radius 0
   box-shadow none
@@ -117,8 +117,8 @@ label.bordered-input-loading
     content ''
     spinner(15px, 4px, purple-color)
     left inherit
-    right 10px
-    top 20px
+    right 12px
+    top 15px
 
 .dashed-file-upload-container
   position relative
@@ -164,35 +164,6 @@ label.bordered-input-loading
 .scribe-plugin-link-tooltip input
   @extend .bordered-input
 
-.flat-radio-button
-  input
-    border-radius 10px
-    &::after
-      background gray-lighter-color
-      border-radius 10px
-      width 8px
-      height @width
-      top 3px
-      left @top
-  input:checked::after
-    opacity 1
-    background-color purple-color
-
-.flat-checkbox
-  input::after
-    content '.'
-    color transparent
-    background center center no-repeat
-    background-image url('/icons/check_g.svg')
-    background-size container
-    width 11px
-    height @width
-    top 1px
-    left @top
-  input:checked::after
-    opacity 1
-    background-image url('/icons/check_p.svg')
-
 .flat-checkbox, .flat-radio-button
   avant-garde()
   font-size default-avant-garde-font-size
@@ -219,12 +190,44 @@ label.bordered-input-loading
       color transparent
       transition opacity 0.2s
 
+.flat-radio-button
+  input
+    border-radius 10px
+    &::after
+      background gray-lighter-color
+      border-radius 10px
+      width 8px
+      height @width
+      top 3px
+      left @top
+  input:checked::after
+    opacity 1
+    background-color purple-color
+
+.flat-checkbox
+  input
+    width 20px
+    height @width
+  input::after
+    content '.'
+    color transparent
+    background center center no-repeat
+    background-image url('/icons/check_g.svg')
+    background-size container
+    width 13px
+    height @width
+    top 1px
+    left @top
+  input:checked::after
+    opacity 1
+    background-image url('/icons/check_p.svg')
+
 [data-useragent*=Firefox] .flat-checkbox input
   -moz-appearance checkbox
 [data-useragent*=Firefox] .flat-radio-button input
   -moz-appearance radio
 
-@media (max-width: 600px)
+@media (max-width: 414px)
   .avant-garde-button
     width 100%
     text-align center
