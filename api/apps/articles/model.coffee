@@ -186,6 +186,7 @@ sortParamToQuery = (input) ->
           primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
+          biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
         ), callback
 
 validate = (input, callback) ->

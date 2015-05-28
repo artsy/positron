@@ -29,7 +29,7 @@ crypto = require 'crypto'
     when 'Chrome' then r.ua.major >= 38
     when 'Firefox' then r.ua.major >= 34
     when 'Safari' then r.ua.major >= 7
-    when 'Mobile Safari' then r.ua.major >= 7
+    when 'Mobile Safari' then r.ua.major >= 5
     when 'IE' then r.ua.major >= 10
     when 'Android' then true
     when 'Android 2' then true

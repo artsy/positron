@@ -36,7 +36,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-fair .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-fair .admin-form-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -55,7 +55,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupPartnerAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-partner .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-partner .admin-form-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
       placeholder: 'Search partner by name...'
       filter: (res) -> for r in res
@@ -74,7 +74,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupAuctionAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-auction .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-auction .admin-form-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
       placeholder: 'Search auction by name...'
       filter: (res) -> for r in res
@@ -93,7 +93,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupVerticalAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-vertical .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-vertical .admin-form-right')[0],
       url: "#{sd.API_URL}/verticals?q=%QUERY"
       placeholder: 'Search vertical by name...'
       filter: (res) -> for r in res.results
@@ -111,7 +111,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupShowsAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-shows .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-shows .admin-form-right')[0],
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
       selected: (e, item) =>
@@ -128,7 +128,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupBiographyAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-biography .edit-admin-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-biography .admin-form-right')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
       placeholder: 'Search artist by name...'
       filter: (artists) -> for artist in artists

@@ -7,39 +7,71 @@
 gutter-size = 30px
 
 .admin-form-container label
-  avant-garde(s-headline)
+  avant-garde s-headline
   width 100%
   margin-bottom 20px
   display block
-  input, textarea, .image-upload-form, .autocomplete-select-selected
-    garamond(body)
+  &:last-of-type
+    margin-bottom 0
+.admin-form-container
+  .bordered-input, .image-upload-form, .autocomplete-select-selected
+    garamond s-body
     display block
     width 100%
     margin-top 5px
 
+.admin-form-right-fill > label:last-of-type
 .admin-form-left > label:last-of-type
-.admin-form-center > label:last-of-type
 .admin-form-right > label:last-of-type
   margin-bottom 0
 
-.admin-form-left, .admin-form-right, .admin-form-center
-  width 280px
-  margin-right gutter-size
+.admin-form-left
+  width 33%
+
+.admin-form-left, .admin-form-right-col, .admin-form-right
   display inline-block
   vertical-align top
 
+.admin-form-right-col
+  width 50%
+
+.admin-form-right-col + .admin-form-right-col
+  padding-left gutter-size
+
+.admin-form-right
+  padding-left gutter-size
+  width 66%
+
 .admin-form-left
-  garamond(headline)
+  garamond headline
+  h2
+    garamond s-body
+    margin-top 5px
 
 .admin-form-right
   margin-right 0
 
 .admin-form-section
   border-bottom 1px solid gray-lighter-color
-  padding gutter-size 0
+  padding (gutter-size * 2) 0
   &:last-of-type
     border-bottom 0
 
 .admin-form-subheader
-  avant-garde(m-headline)
-  margin 11px 0 20px 0
+  avant-garde m-headline
+  margin 20px 0
+
+@media (max-width: 768px)
+  .admin-form-right-col
+    width 100%
+  .admin-form-right-col + .admin-form-right-col
+    padding-left 0
+
+@media (max-width: 414px)
+  .admin-form-right, .admin-form-left
+    width 100%
+    padding-left 0
+  .admin-form-left
+    margin-bottom gutter-size
+  .admin-form-section
+    border-bottom 0
