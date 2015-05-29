@@ -12,7 +12,9 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
     loading: true, value: null, id: null
 
   clear: ->
-    @setState { value: null }, => _.defer => $(@refs.input.getDOMNode()).focus()
+    @setState { value: null }, =>
+      # Deferring to focus after render happens
+      _.defer => $(@refs.input.getDOMNode()).focus()
     @props.cleared?()
 
   componentDidUpdate: ->
