@@ -25,6 +25,7 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
       el: $(@refs.input?.getDOMNode())
       selected: (e, item) =>
+        # Deferring because of click race condition
         _.defer => @setState value: item.value, id: item.id
         @props.selected? e, item
 
