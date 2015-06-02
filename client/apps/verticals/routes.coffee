@@ -18,9 +18,16 @@ Vertical = require '../../models/vertical'
 
 @save = (req, res) ->
   data = _.pick req.body, _.identity
-  data.featured_links = _.compact data.featured_links
+  data.featured_links = cleanFeaturedLinks(data.featured_links)
   new Vertical(id: req.params.id).save data,
     headers: 'X-Access-Token': req.user?.get('access_token')
     error: res.backboneError
     success: ->
       res.redirect '/verticals'
+
+cleanFeaturedLinks = (links) ->
+  featured = []
+  for link in links
+    if _.values(link).join('').length
+      featured.push link
+  featured
