@@ -27,6 +27,15 @@ describe 'routes', ->
         .should.equal 2
       Backbone.sync.args[0][1].toJSON().featured_links[0].title.should.equal 'foo'
 
+    it 'does not save featured links which are empty', ->
+      @req.body =
+        title: 'Foobar'
+        featured_links: [{ title: '' }, { title: 'bar' }, null, '']
+      routes.save @req, @res
+      Backbone.sync.args[0][1].toJSON().featured_links.length
+        .should.equal 1
+      Backbone.sync.args[0][1].toJSON().featured_links[0].title.should.equal 'bar'
+
   describe '#edit', ->
 
     it 'renders the edit page', ->
