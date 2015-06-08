@@ -57,7 +57,7 @@ querySchema = (->
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = {}
+    query = _.omit input, 'q', 'limit', 'offset'
     query.title = { $regex: ///#{input.q}///i } if input.q
     cursor = db.verticals
       .find(query)
