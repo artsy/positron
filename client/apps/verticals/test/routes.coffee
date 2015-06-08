@@ -20,12 +20,14 @@ describe 'routes', ->
     it 'saves the serialized form data to the vertical', ->
       @req.body =
         title: 'Foobar'
+        featured: 'on'
         featured_links: [{ title: 'foo' }, { title: 'bar' }, null, '']
       routes.save @req, @res
       Backbone.sync.args[0][1].toJSON().title.should.equal 'Foobar'
       Backbone.sync.args[0][1].toJSON().featured_links.length
         .should.equal 2
       Backbone.sync.args[0][1].toJSON().featured_links[0].title.should.equal 'foo'
+      Backbone.sync.args[0][1].toJSON().featured.should.equal true
 
     it 'does not save featured links which are empty', ->
       @req.body =

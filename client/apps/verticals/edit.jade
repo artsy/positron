@@ -4,17 +4,25 @@ mixin form-elements(items)
   each item in items
     label
       = _s.humanize(item.attr)
-      if item.type == 'input'
-        input.bordered-input( value=vertical.get(item.attr) name=item.attr )
-      else if item.type == 'date'
-        input.bordered-input(
-          value=moment(vertical.get(item.attr)).format('MM/DD/YYYY')
-          name=item.attr
-        )
-      else if item.type == 'textarea'
-        textarea.bordered-input( name=item.attr rows=4 )=vertical.get(item.attr)
-      else if item.type == 'image'
-        .verticals-image-placeholder( data-name=item.attr )
+      case item.type
+        when 'input'
+          input.bordered-input( value=vertical.get(item.attr) name=item.attr )
+        when 'checkbox'
+          .flat-checkbox
+            input(
+              checked=vertical.get(item.attr) name=item.attr type='checkbox'
+            )
+        when 'date'
+          input.bordered-input(
+            value=moment(vertical.get(item.attr)).format('MM/DD/YYYY')
+            name=item.attr
+          )
+        when 'textarea'
+          textarea.bordered-input(
+            name=item.attr rows=4
+          )=vertical.get(item.attr)
+        when 'image'
+          .verticals-image-placeholder( data-name=item.attr )
 
 mixin featured-link(i)
   - link = vertical.get('featured_links')[i]
@@ -47,8 +55,10 @@ block content
       action=(vertical.isNew() ?  "/verticals" : "/verticals/#{vertical.get('id')}")
       method='post'
     )
-      .admin-form-section
-        .admin-form-left Vertical Details
+      section.admin-form-section
+        .admin-form-left
+          h1 Vertical Details
+          h2 General details that apply to all verticals.
         .admin-form-right
           .admin-form-right-col
             +form-elements([
@@ -59,21 +69,12 @@ block content
             ])
           .admin-form-right-col
             +form-elements([
-              { attr: 'start_at', type: 'date' },
-              { attr: 'end_at', type: 'date' },
               { attr: 'thumbnail_url', type: 'image' }
             ])
-      .admin-form-section
-        .admin-form-left Partner
-        .admin-form-right
-          .admin-form-right-col
-            +form-elements([
-              { attr: 'partner_logo_url', type: 'image' },
-              { attr: 'partner_website_url', type: 'input' },
-              { attr: 'slogan', type: 'input' }
-            ])
-      .admin-form-section
-        .admin-form-left Featured Links
+      section.admin-form-section
+        .admin-form-left
+          h1 Featured Links
+          h2 Sticky links that are called out in the vertical's magazine feed and at the top of individual articles.
         .admin-form-right
           +form-elements([{ attr: 'featured_links_header', type: 'input' }])
           .admin-form-right-col
@@ -82,6 +83,28 @@ block content
           .admin-form-right-col
             +featured-link(2)
             +featured-link(3)
+      section.admin-form-section
+        .admin-form-left
+          h1 Featured on Magazine
+          h2 Verticals can be called out on the main magazine page with a banner that runs for a specified time.
+        .admin-form-right
+          .admin-form-right-col
+            +form-elements([
+              { attr: 'featured', type: 'checkbox' },
+              { attr: 'start_at', type: 'date' },
+              { attr: 'end_at', type: 'date' }
+            ])
+      section.admin-form-section
+        .admin-form-left
+          h1 Partner
+          h2 If this vertical is in partnership with someone external (like the Venice Biennale + UBS partnership).
+        .admin-form-right
+          .admin-form-right-col
+            +form-elements([
+              { attr: 'partner_logo_url', type: 'image' },
+              { attr: 'partner_website_url', type: 'input' },
+              { attr: 'slogan', type: 'input' }
+            ])
       button.avant-garde-button.avant-garde-button-black.verticals-save(
         type='submit' href="/verticals/new"
       ) Save Changes

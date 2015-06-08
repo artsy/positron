@@ -34,6 +34,7 @@ schema = (->
       title: @string().allow('', null)
       url: @string().allow('', null)
   ]).allow(null)
+  featured: @boolean().default(false)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
   slogan: @string().allow('',null)
@@ -43,6 +44,7 @@ querySchema = (->
   q: @string()
   limit: @number()
   offset: @number()
+  featured: @boolean()
 ).call Joi
 
 #
