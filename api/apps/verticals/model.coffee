@@ -34,6 +34,7 @@ schema = (->
       title: @string().allow('', null)
       url: @string().allow('', null)
   ]).allow(null)
+  featured: @boolean().default(false)
   start_at: @date().allow(null)
   end_at: @date().allow(null)
   slogan: @string().allow('',null)
@@ -43,6 +44,7 @@ querySchema = (->
   q: @string()
   limit: @number()
   offset: @number()
+  featured: @boolean()
 ).call Joi
 
 #
@@ -55,7 +57,7 @@ querySchema = (->
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = {}
+    query = _.omit input, 'q', 'limit', 'offset'
     query.title = { $regex: ///#{input.q}///i } if input.q
     cursor = db.verticals
       .find(query)
