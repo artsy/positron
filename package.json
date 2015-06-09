@@ -65,7 +65,7 @@
     "scribe-plugin-link-tooltip": "*",
     "scribe-plugin-keyboard-shortcuts": "*",
     "scribe-plugin-heading-command": "*",
-    "scribe-plugin-sanitize-google-doc": "*",
+    "scribe-plugin-sanitize-google-doc": "git://github.com/artsy/scribe-plugin-sanitize-google-doc.git",
     "html-janitor": "*",
     "imagesloaded": "*",
     "jquery-autosize": "*",
