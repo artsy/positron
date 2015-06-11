@@ -24,9 +24,16 @@ GET /articles
 
 **params**
 published: Always pass `true` for logged out users
-author_id: Query articles by thier author
+author_id: Query articles by their author
 artist_id: Query articles by an artist they're featured to
 artwork_id: Query articles by an artwork they're featured to
+vertical_id: Query articles by verticals
+fair_ids: Query articles by a fair they're featured to
+show_id: Query articles by a show they're featured to
+partner_id: Query articles by the partner profile they're featured on
+auction_id: Query articles by an auction they're featured to
+tier: Query articles by their tier
+featured: Query articles by if they're featured to Magazine
 
 GET /articles/:id
 POST /articles
@@ -41,12 +48,14 @@ access_token: Gravity access token for auth
 
 GET /users/:id
 
-### Report
+### Verticals
 
-Used to report errors from users.
-
-GET /report?text=
+GET /verticals
 
 **params**
-text: Body of the email
+featured: Query verticals by featured
 
+POST /verticals
+GET /verticals/:id
+PUT /verticals/:id
+DELETE /verticals/:id
