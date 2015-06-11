@@ -102,6 +102,7 @@ module.exports = React.createClass
             className: 'esi-caption bordered-input'
             ref: 'editable'
             onKeyUp: @onEditableKeyup
+            dangerouslySetInnerHTML: __html: @props.section.get('caption')
           }
       (
         if @state.progress
