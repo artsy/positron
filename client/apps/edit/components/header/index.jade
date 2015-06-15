@@ -12,7 +12,7 @@ header#edit-header
     a#edit-delete.avant-garde-button Delete
     a#edit-save.avant-garde-button Save #{article.stateName()}
     a#edit-preview.avant-garde-button(
-      href="#{sd.FORCE_URL}/article/#{article.get('slug')}"
+      href="#{sd.FORCE_URL}/article/#{article.get('slug')}?access_token=#{sd.ACCESS_TOKEN}"
     )
       if article.get('published')
         | View
