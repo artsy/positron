@@ -21,6 +21,8 @@ fill-form()
       color gray-color
     .image-upload-form-click
       color purple-color
+    .type-error, .size-error
+      color red-light-color
   &[data-state=uploading]
     .image-upload-form-preview, .image-upload-form-progress-container
       display block
@@ -33,6 +35,8 @@ fill-form()
       color gray-color
     .image-upload-form-drop
       color purple-color
+    .type-error, .size-error
+      color red-light-color
   h1, h2, span
     avant-garde(s-headline)
     color gray-dark-color
@@ -42,6 +46,16 @@ fill-form()
   h2
     margin-top 3px
     color gray-color
+  .type-error, .size-error
+    display none
+    color red-color
+    transition color 0.3s ease-in-out 0s
+  &[data-error=type]
+    .type-error
+      display block
+  &[data-error=size]
+    .size-error
+      display block
 
 .image-upload-form-input
   fill-form()
