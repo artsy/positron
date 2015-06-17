@@ -20,6 +20,16 @@ module.exports = class ImageUploadForm extends Backbone.View
 
   upload: (e) ->
     @$('.image-upload-form').removeClass 'is-dragover'
+    type = e.target.files[0]?.type
+    acceptedTypes = ['image/jpg','image/jpeg','image/gif','image/png']
+    if type not in acceptedTypes
+      @$('.image-upload-form').attr 'data-error', 'type'
+      return
+    if e.target.files[0]?.size > 30000000
+      @$('.image-upload-form').attr 'data-error', 'size'
+      return
+    @$('.image-upload-form').attr 'data-error', null
+
     gemup e.target.files[0],
       key: sd.GEMINI_KEY
       progress: (percent) =>

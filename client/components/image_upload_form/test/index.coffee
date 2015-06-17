@@ -27,9 +27,17 @@ describe 'ImageUploadForm', ->
 
   describe '#upload', ->
 
+    it 'displays error when image is too large', ->
+      @view.upload target: files: [{size: 40000000, type: 'image/jpg'}]
+      $('.image-upload-form').attr('data-error').should.equal 'size'
+
+    it 'displays error when image type is incorrect', ->
+      @view.upload target: files: [{size: 300000, type: 'image/tiff'}]
+      $('.image-upload-form').attr('data-error').should.equal 'type'
+
     it 'uploads to gemini', ->
-      @view.upload target: files: ['foo']
-      @gemup.args[0][0].should.equal 'foo'
+      @view.upload target: files: [{size: 300000, type: 'image/jpg', src: 'foo'}]
+      @gemup.args[0][0].src.should.equal 'foo'
 
   describe '#onRemove', ->
 
