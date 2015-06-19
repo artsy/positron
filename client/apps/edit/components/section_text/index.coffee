@@ -25,6 +25,8 @@ keyboardShortcutsMap =
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
   linkPrompt: (e) -> e.metaKey and not e.shiftKey and e.keyCode is 75
   unlink: (e) -> e.metaKey and e.shiftKey and e.keyCode is 75
+  insertOrderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 56
+  insertUnorderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 55
 
 module.exports = React.createClass
 
@@ -56,6 +58,8 @@ module.exports = React.createClass
         a: { href: true, target: '_blank' }
         h2: true
         h3: true
+        ol: true
+        ul: true
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
@@ -83,6 +87,12 @@ module.exports = React.createClass
         }
         button {
           'data-command-name': 'h3'
+        }
+        button {
+          'data-command-name': 'insertOrderedList'
+        }
+        button {
+          'data-command-name': 'insertUnorderedList'
         }
         div { className: 'est-link-container' },
           button {

@@ -65,7 +65,7 @@
       content 'B'
       avant-garde()
       position absolute
-      top 8px
+      top 11px
       left 17px
       font-size 16px
     &[data-command-name=h2], &[data-command-name=h3]
@@ -79,6 +79,13 @@
         position absolute
         top 8px
         left 13px
+    &[data-command-name=insertOrderedList], &[data-command-name=insertUnorderedList]
+      padding 12px 24px
+      height 100%
+      &::after
+        content 'OL'
+    &[data-command-name=insertUnorderedList]::after
+      content 'UL'
     &[data-command-name=h3]::after
       content 'H3'
     &[disabled=disabled]
