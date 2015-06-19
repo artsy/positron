@@ -91,9 +91,13 @@ module.exports = React.createClass
         }
         button {
           'data-command-name': 'insertOrderedList'
+          dangerouslySetInnerHTML:
+            __html: "&nbsp;" + $(icons()).filter('.ordered-list').html()
         }
         button {
           'data-command-name': 'insertUnorderedList'
+          dangerouslySetInnerHTML:
+            __html: "&nbsp;" + $(icons()).filter('.unordered-list').html()
         }
         div { className: 'est-link-container' },
           button {

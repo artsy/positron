@@ -79,15 +79,18 @@
         position absolute
         top 8px
         left 13px
-    &[data-command-name=insertOrderedList], &[data-command-name=insertUnorderedList]
-      padding 12px 24px
-      height 100%
-      &::after
-        content 'OL'
-    &[data-command-name=insertUnorderedList]::after
-      content 'UL'
     &[data-command-name=h3]::after
       content 'H3'
+    &[data-command-name=insertOrderedList] svg
+      width 13px
+      height 14px
+      top 12px
+      left 16px
+    &[data-command-name=insertUnorderedList] svg
+      width 13px
+      height 14px
+      top 12px
+      left 16px
     &[disabled=disabled]
       color gray-darkest-color
       fill-color gray-darkest-color 0.15s
