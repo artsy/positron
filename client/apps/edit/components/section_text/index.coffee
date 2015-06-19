@@ -60,6 +60,7 @@ module.exports = React.createClass
         h3: true
         ol: true
         ul: true
+        li: true
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
