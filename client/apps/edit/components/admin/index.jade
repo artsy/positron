@@ -81,6 +81,12 @@ section#edit-admin.admin-form-container.max-width-container
     .admin-form-right
       input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
       a.edit-admin-slug-generate(href='/') Generate from title & author name
+  section#edit-admin-tags.admin-form-section
+    .admin-form-left
+      h1 Keywords
+      h2 Add SEO keywords for this article with each word separated by a comma (e.g. "Andy Warhol, Pop Art, Brillo Boxes")
+    .admin-form-right
+      input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
   section#edit-admin-publish-date.admin-form-section
     .admin-form-left
       h1 Publish Date
