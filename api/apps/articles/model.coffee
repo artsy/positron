@@ -40,6 +40,7 @@ schema = (->
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string())
   title: @string().allow('', null)
+  keywords: @string().allow('', null)
   published: @boolean().default(false)
   published_at: @date()
   lead_paragraph: @string().allow('', null)
