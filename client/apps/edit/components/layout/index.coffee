@@ -65,9 +65,8 @@ module.exports = class EditLayout extends Backbone.View
       lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('#edit-thumbnail-title :input').val()
       thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
-      keywords: @$('#edit-admin-keywords input').val()
       tags: _.reject(
-        _s.clean(@$('#edit-thumbnail-tags input').val()).split(',')
+        _.map @$('#edit-admin-tags input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
     }
