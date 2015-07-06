@@ -41,6 +41,7 @@ module.exports = React.createClass
     not (nextProps.editing and @props.editing)
 
   onClickOff: ->
+    @setBody()
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   setBody: ->

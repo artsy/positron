@@ -46,6 +46,13 @@ describe 'SectionText', ->
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
+  it 'updates the body on click off', ->
+    @component.props.section.destroy = sinon.stub()
+    @component.props.section.set body: ''
+    $(@component.refs.editable.getDOMNode()).html 'Hello'
+    @component.onClickOff()
+    @component.props.section.get('body').should.equal 'Hello'
+
   it 'doesnt update while editing b/c Scribe will jump around all weird', ->
     @component.props.editing = true
     @component.shouldComponentUpdate({ editing: true }).should.not.be.ok
