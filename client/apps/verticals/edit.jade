@@ -1,35 +1,12 @@
-include ../../components/paginated_list/index
-
-mixin form-elements(items)
-  each item in items
-    label
-      = _s.humanize(item.attr)
-      case item.type
-        when 'input'
-          input.bordered-input( value=vertical.get(item.attr) name=item.attr )
-        when 'checkbox'
-          .flat-checkbox
-            input(
-              checked=vertical.get(item.attr) name=item.attr type='checkbox'
-            )
-        when 'date'
-          input.bordered-input(
-            value=moment(vertical.get(item.attr)).format('MM/DD/YYYY')
-            name=item.attr
-          )
-        when 'textarea'
-          textarea.bordered-input(
-            name=item.attr rows=4
-          )=vertical.get(item.attr)
-        when 'image'
-          .verticals-image-placeholder( data-name=item.attr )
+include ../../components/admin_form/index
+extend ../../components/layout/templates/index
 
 mixin featured-link(i)
   - link = vertical.get('featured_links')[i]
   h3.admin-form-subheader Link #{i + 1}
   label
     | Thumbnail
-    .verticals-image-placeholder(
+    .admin-image-placeholder(
       data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
   label
     | Title
@@ -44,12 +21,11 @@ mixin featured-link(i)
       value=link && link.url
     )
 
-extend ../../components/layout/templates/index
-
 block header
   | Verticals
 
 block content
+  - model = vertical
   .max-width-container
     form.admin-form-container(
       action=(vertical.isNew() ?  "/verticals" : "/verticals/#{vertical.get('id')}")
@@ -105,8 +81,8 @@ block content
               { attr: 'partner_website_url', type: 'input' },
               { attr: 'slogan', type: 'input' }
             ])
-      button.avant-garde-button.avant-garde-button-black.verticals-save(
+      button.avant-garde-button.avant-garde-button-black.admin-form-save(
         type='submit' href="/verticals/new"
       ) Save Changes
       unless vertical.isNew()
-        a.avant-garde-button.verticals-delete Delete Vertical
+        a.avant-garde-button.admin-form-delete Delete Vertical

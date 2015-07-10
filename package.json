@@ -47,7 +47,8 @@
     "underscore.string": "*",
     "stylus": "*",
     "nib": "*",
-    "bcrypt": "*"
+    "bcrypt": "*",
+    "prop-by-string": "*"
   },
   "devDependencies": {
     "sqwish": "*",

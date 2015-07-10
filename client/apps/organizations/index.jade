@@ -1,5 +1,4 @@
 include ../../components/paginated_list/index
-
 extend ../../components/layout/templates/index
 
 block header
@@ -7,7 +6,7 @@ block header
 
 block content
   .max-width-container
-    a.avant-garde-button.avant-garde-button-black.organizations-add(
+    a.avant-garde-button.avant-garde-button-black.paginated-list-add(
       href="/organizations/new"
     ) Add Organization
     +paginated-list(page, totalPages, organizations.toPaginatedListItems())

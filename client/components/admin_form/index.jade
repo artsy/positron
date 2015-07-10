@@ -1,0 +1,23 @@
+mixin form-elements(items)
+  each item in items
+    label
+      = _s.humanize(item.attr)
+      case item.type
+        when 'input'
+          input.bordered-input( value=model.get(item.attr) name=item.attr )
+        when 'checkbox'
+          .flat-checkbox
+            input(
+              checked=model.get(item.attr) name=item.attr type='checkbox'
+            )
+        when 'date'
+          input.bordered-input(
+            value=moment(model.get(item.attr)).format('MM/DD/YYYY')
+            name=item.attr
+          )
+        when 'textarea'
+          textarea.bordered-input(
+            name=item.attr rows=4
+          )=model.get(item.attr)
+        when 'image'
+          .admin-image-placeholder( data-name=item.attr )
