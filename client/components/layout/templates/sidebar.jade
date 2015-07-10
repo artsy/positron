@@ -21,12 +21,12 @@
       | Published
     if user.get('type') == 'Admin'
       a( href='/verticals'
-         class=(sd.URL == '/verticals' ? 'is-active' : '') )
+         class=(sd.URL.match('/verticals') ? 'is-active' : '') )
         include ../public/icons/layout_verticals.svg
         br
         | Verticals
       a( href='/organizations'
-         class=(sd.URL == '/organizations' ? 'is-active' : '') )
+         class=(sd.URL.match('/organizations') ? 'is-active' : '') )
         include ../public/icons/layout_organizations.svg
         br
         | Orgs

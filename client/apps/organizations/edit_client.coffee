@@ -6,3 +6,4 @@ sd = require('sharify').data
   new AdminEditView
     model: new Organization(sd.ORGANIZATION)
     el: $('body')
+    onDeleteUrl: '/organizations'

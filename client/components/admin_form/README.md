@@ -33,4 +33,5 @@ AdminEditView = require '../components/admin_form/index.coffee'
 new AdminEditView
   el: $('body')
   model: @vertical
+  onDeleteUrl: '/verticals'
 ````

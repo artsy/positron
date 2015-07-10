@@ -15,7 +15,7 @@ module.exports = class AdminEditView extends Backbone.View
         name: $(el).attr('data-name')
 
   events:
-    'click .admin-delete': 'destroy'
+    'click .admin-form-delete': 'destroy'
     'change :input': 'unsaved'
     'submit form': 'ignoreUnsaved'
 

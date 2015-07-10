@@ -6,3 +6,4 @@ sd = require('sharify').data
   new AdminEditView
     model: new Vertical(sd.VERTICAL)
     el: $('body')
+    onDeleteUrl: '/verticals'
