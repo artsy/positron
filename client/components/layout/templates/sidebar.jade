@@ -22,9 +22,14 @@
     if user.get('type') == 'Admin'
       a( href='/verticals'
          class=(sd.URL == '/verticals' ? 'is-active' : '') )
-        include ../public/icons/layout_vertical.svg
+        include ../public/icons/layout_verticals.svg
         br
         | Verticals
+      a( href='/organizations'
+         class=(sd.URL == '/organizations' ? 'is-active' : '') )
+        include ../public/icons/layout_organizations.svg
+        br
+        | Organizations
     #layout-sidebar-profile
       .layout-sidebar-profile-img(
         style="background-image: url(#{user.get('profile_icon_url')})" )
