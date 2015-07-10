@@ -83,6 +83,7 @@ module.exports = ->
     user: new User fixtures.users
     sd:
       PATH: '/'
+      URL: '/'
     moment: require 'moment'
     sharify:
       script: -> '<script>var sharify = {}</script>'
