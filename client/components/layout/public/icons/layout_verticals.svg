@@ -4,11 +4,11 @@
 	 viewBox="0 0 30 32" enable-background="new 0 0 30 32" xml:space="preserve">
 <g>
 	<g>
-		<path fill="#FFFFFF" d="M0.3,0v23.5h21.5V0H0.3z M2.2,21.5V2h17.6v19.6H2.2z"/>
-		<rect x="5.2" y="5.9" fill="#FFFFFF" width="10.8" height="1"/>
-		<rect x="5.2" y="9.8" fill="#FFFFFF" width="7.8" height="1"/>
+		<path d="M0.3,0v23.5h21.5V0H0.3z M2.2,21.5V2h17.6v19.6H2.2z"/>
+		<rect x="5.2" y="5.9" width="10.8" height="1"/>
+		<rect x="5.2" y="9.8" width="7.8" height="1"/>
 	</g>
-	<polygon fill="#FFFFFF" points="4,26 4,28 26,28 26,4 24,4 24,26 	"/>
-	<polygon fill="#FFFFFF" points="8,30 8,32 30,32 30,8 28,8 28,30 	"/>
+	<polygon points="4,26 4,28 26,28 26,4 24,4 24,26 	"/>
+	<polygon points="8,30 8,32 30,32 30,8 28,8 28,30 	"/>
 </g>
 </svg>

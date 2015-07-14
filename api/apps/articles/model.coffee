@@ -12,7 +12,7 @@ Joi = require 'joi'
 Joi.objectId = require 'joi-objectid'
 moment = require 'moment'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL } = process.env
+{ ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
 #
 # Schemas
@@ -86,7 +86,7 @@ querySchema = (->
   access_token: @string()
   author_id: @objectId()
   published: @boolean()
-  limit: @number().max(100).default(20)
+  limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   vertical_id: @objectId()
   artist_id: @objectId()

@@ -21,10 +21,15 @@
       | Published
     if user.get('type') == 'Admin'
       a( href='/verticals'
-         class=(sd.URL == '/verticals' ? 'is-active' : '') )
-        include ../public/icons/layout_vertical.svg
+         class=(sd.URL.match('/verticals') ? 'is-active' : '') )
+        include ../public/icons/layout_verticals.svg
         br
         | Verticals
+      a( href='/organizations'
+         class=(sd.URL.match('/organizations') ? 'is-active' : '') )
+        include ../public/icons/layout_organizations.svg
+        br
+        | Orgs
     #layout-sidebar-profile
       .layout-sidebar-profile-img(
         style="background-image: url(#{user.get('profile_icon_url')})" )

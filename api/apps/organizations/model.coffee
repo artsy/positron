@@ -1,6 +1,6 @@
 #
 # Library of retrieval, persistance, validation, json view, and domain logic
-# for the "verticals" resource.
+# for the "organizations" resource.
 #
 
 _ = require 'underscore'
@@ -20,31 +20,15 @@ request = require 'superagent'
 #
 schema = (->
   id: @objectId()
-  title: @string().allow('', null)
-  meta_title: @string().allow('', null)
-  description: @string().allow('', null)
+  name: @string().allow('', null)
   slug: @string().allow('', null)
-  partner_logo_url: @string().allow('', null)
-  partner_website_url: @string().allow('', null)
-  thumbnail_url: @string().allow('', null)
-  featured_links_header: @string().allow('', null)
-  featured_links: @array().items([
-    @object().keys
-      thumbnail_url: @string().allow('', null)
-      title: @string().allow('', null)
-      url: @string().allow('', null)
-  ]).allow(null)
-  featured: @boolean().default(false)
-  start_at: @date().allow(null)
-  end_at: @date().allow(null)
-  slogan: @string().allow('',null)
+  icon_url: @string().allow('', null)
+  author_ids: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->
-  q: @string()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
-  featured: @boolean()
 ).call Joi
 
 #
@@ -52,14 +36,13 @@ querySchema = (->
 #
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slug: id }
-  db.verticals.findOne query, callback
+  db.organizations.findOne query, callback
 
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'q', 'limit', 'offset'
-    query.title = { $regex: ///#{input.q}///i } if input.q
-    cursor = db.verticals
+    query = _.omit input, 'limit', 'offset'
+    cursor = db.organizations
       .find(query)
       .limit(input.limit)
       .sort($natural: -1)
@@ -67,12 +50,12 @@ querySchema = (->
     async.parallel [
       (cb) -> cursor.toArray cb
       (cb) -> cursor.count cb
-      (cb) -> db.verticals.count cb
-    ], (err, [verticals, count, total]) =>
+      (cb) -> db.organizations.count cb
+    ], (err, [organizations, count, total]) =>
       callback err, {
         total: total
         count: count
-        results: verticals.map(@present)
+        results: organizations.map(@present)
       }
 
 #
@@ -84,16 +67,16 @@ querySchema = (->
     data = _.extend _.omit(input, 'id'),
       _id: ObjectId(input.id)
       # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-      featured_article_ids: input.featured_article_ids.map(ObjectId) if input.featured_article_ids
-    db.verticals.save data, callback
+      author_ids: input.author_ids.map(ObjectId) if input.author_ids
+    db.organizations.save data, callback
 
 @destroy = (id, callback) ->
-  db.verticals.remove { _id: ObjectId(id) }, callback
+  db.organizations.remove { _id: ObjectId(id) }, callback
 
 #
 # JSON views
 #
-@present = (vertical) =>
+@present = (organization) =>
   _.extend
-    id: vertical?._id?.toString()
-  , _.omit(vertical, '_id')
+    id: organization?._id?.toString()
+  , _.omit(organization, '_id')

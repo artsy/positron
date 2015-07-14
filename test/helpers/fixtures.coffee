@@ -73,11 +73,17 @@ module.exports = ->
     'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
+  fixtures.organizations =
+    'id': '559ff9706b69f6a086a6563f'
+    'name': 'Artsy Editorial'
+    'slug': 'editorial'
+    'author_ids': null
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
     sd:
       PATH: '/'
+      URL: '/'
     moment: require 'moment'
     sharify:
       script: -> '<script>var sharify = {}</script>'

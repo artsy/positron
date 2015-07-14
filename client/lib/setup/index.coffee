@@ -52,6 +52,7 @@ module.exports = (app) ->
 
   # Mount apps
   app.use require '../../apps/verticals'
+  app.use require '../../apps/organizations'
   app.use require '../../apps/article_list'
   app.use require '../../apps/edit'
   app.use require '../../apps/impersonate'
