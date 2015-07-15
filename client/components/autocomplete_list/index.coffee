@@ -1,0 +1,45 @@
+_ = require 'underscore'
+React = require 'react'
+Autocomplete = null
+{ label, input, div, button } = React.DOM
+
+module.exports = (el, props) ->
+  React.render React.createElement(AutocompleteList, props), el
+
+module.exports.AutocompleteList = AutocompleteList = React.createClass
+
+  getInitialState: ->
+    loading: true, items: @props.items or []
+
+  componentDidMount: ->
+    @addAutocomplete()
+
+  addAutocomplete: ->
+    Autocomplete ?= require '../autocomplete/index.coffee'
+    @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
+      el: $(@refs.input.getDOMNode())
+      selected: (e, item) =>
+        # Deferring because of click race condition
+        _.defer => @onSelect e, item
+
+  onSelect: (e, item) ->
+    @setState items: @state.items.concat [item]
+    $(@refs.input.getDOMNode()).val('').focus()
+
+  removeItem: (item) -> (e) =>
+    e.preventDefault()
+    @setState items: _.reject(@state.items, (i) -> i.id is item.id)
+
+  render: ->
+    div { ref: 'container' },
+      (
+        for item in @state.items
+          div { className: 'autocomplete-select-selected' }, item.value,
+            input { type: 'hidden', value: item.id, name: @props.name }
+            button { className: 'autocomplete-select-remove', onClick: @removeItem(item) }
+      )
+      input {
+        ref: 'input'
+        className: 'bordered-input'
+        placeholder: @props.placeholder
+      }
