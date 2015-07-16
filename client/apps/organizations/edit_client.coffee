@@ -10,16 +10,15 @@ AutocompleteList = require '../../components/autocomplete_list/index.coffee'
     el: $('body')
     onDeleteUrl: '/organizations'
   list = new AutocompleteList $('.organization-authors')[0],
-    name: 'author_ids'
+    name: 'author_ids[]'
     url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
     filter: (users) -> for user in users
       { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
-    selected: (e, item, items) ->
-      organization.save author_ids: _.pluck items, 'id'
-    removed: (e, item, items) ->
-      organization.save author_ids: _.pluck items, 'id'
     placeholder: 'Add a user by name or email....'
   organization.fetchAuthors success: (authors) ->
     items = authors.map (author) ->
-      { id: author.get('id'), value: author.get('name') }
+      {
+        id: author.get('id'),
+        value: _.compact([author.get('name'), author.get('email')]).join(', ')
+      }
     list.setState loading: false, items: items
