@@ -25,10 +25,13 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
   onSelect: (e, item) ->
     @setState items: @state.items.concat [item]
     $(@refs.input.getDOMNode()).val('').focus()
+    @props.selected e, item, @state.items
 
   removeItem: (item) -> (e) =>
     e.preventDefault()
-    @setState items: _.reject(@state.items, (i) -> i.id is item.id)
+    newItems = _.reject(@state.items, (i) -> i.id is item.id)
+    @setState items: newItems
+    @props.removed e, item, newItems
 
   render: ->
     div { ref: 'container' },

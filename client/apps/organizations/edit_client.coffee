@@ -4,12 +4,22 @@ sd = require('sharify').data
 AutocompleteList = require '../../components/autocomplete_list/index.coffee'
 
 @init = ->
+  organization = new Organization(sd.ORGANIZATION)
   new AdminEditView
-    model: new Organization(sd.ORGANIZATION)
+    model: organization
     el: $('body')
     onDeleteUrl: '/organizations'
-  new AutocompleteList $('.organization-authors')[0],
+  list = new AutocompleteList $('.organization-authors')[0],
+    name: 'author_ids'
     url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
     filter: (users) -> for user in users
       { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
+    selected: (e, item, items) ->
+      organization.save author_ids: _.pluck items, 'id'
+    removed: (e, item, items) ->
+      organization.save author_ids: _.pluck items, 'id'
     placeholder: 'Add a user by name or email....'
+  organization.fetchAuthors success: (authors) ->
+    items = authors.map (author) ->
+      { id: author.get('id'), value: author.get('name') }
+    list.setState loading: false, items: items
