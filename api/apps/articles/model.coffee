@@ -80,6 +80,7 @@ schema = (->
   vertical_id: @objectId().allow(null)
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
+  exclude_google_news: @boolean().default(false)
 ).call Joi
 
 querySchema = (->
@@ -98,6 +99,7 @@ querySchema = (->
   sort: @string()
   tier: @number()
   featured: @boolean()
+  exclude_google_news: @boolean()
   q: @string()
 ).call Joi
 

@@ -99,3 +99,11 @@ section#edit-admin.admin-form-container.max-width-container
       h2 Changing the author of this article will move it to their Artsy Writer.
     .admin-form-right
       input.bordered-input( placeholder='Search by user name...' )
+  section#edit-admin-google-news.admin-form-section
+    .admin-form-left
+      h1 Exclude Google News
+      h2 Prevent this article from appearing on Google News.
+    .admin-form-right
+      label.flat-checkbox
+        input( type='checkbox' name='exclude_google_news'
+          checked=article.get('exclude_google_news') == 1 value=1 )
