@@ -9,7 +9,7 @@ try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
+  scribePluginLinkTooltip = require 'scribe-plugin-enhanced-link-tooltip'
   scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
   scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
   scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
