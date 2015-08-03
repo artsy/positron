@@ -8,7 +8,7 @@ try
   Scribe = require 'scribe-editor'
   scribePluginToolbar = require 'scribe-plugin-toolbar'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginLinkTooltip = require 'scribe-plugin-link-tooltip'
+  scribePluginLinkTooltip = require 'scribe-plugin-enhanced-link-tooltip'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
