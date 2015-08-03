@@ -25,12 +25,13 @@ html(lang="en")
       src="//fast.fonts.net/jsapi/f7f47a40-b25b-44ee-9f9c-cfdfc8bb2741.js"
     )
     script( src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" )
-    script.
-      analytics.identify("#{sd.USER.id}", {
-        email: "#{sd.USER.email}",
-        name: "#{sd.USER.name}"
-      }, { integrations: { Intercom: { user_hash: "#{sd.USER_HASH}" }}});
-      $('.error-modal-report-button').click(function() {
-        $(this).hide();
-        $('#intercom-launcher').click();
-      });
+    if sd.USER
+      script.
+        analytics.identify("#{sd.USER.id}", {
+          email: "#{sd.USER.email}",
+          name: "#{sd.USER.name}"
+        }, { integrations: { Intercom: { user_hash: "#{sd.USER_HASH}" }}});
+        $('.error-modal-report-button').click(function() {
+          $(this).hide();
+          $('#intercom-launcher').click();
+        });

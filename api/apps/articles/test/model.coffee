@@ -168,6 +168,24 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles by organization', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) =>
+        fabricate 'organizations', [{
+          _id: id = ObjectId('4dc98d149a96300001003031')
+          author_ids: [@user._id]
+        }], =>
+          fabricate 'articles', [
+            { title: 'Foo', author_id: @user._id }
+            { title: 'Bar', author_id: @user._id }
+            { title: 'Baz' }
+          ], =>
+            Article.where(
+              { organization_id: id.toString() }
+              (err, { results }) ->
+                _.pluck(results, 'title').join('').should.equal 'BarFoo'
+                done()
+            )
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
