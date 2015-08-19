@@ -22,30 +22,32 @@ Positron's API is a [pragmatic REST API](https://blog.apigee.com/detail/api_desi
 
 GET /articles
 
-**params**
-published: Always pass `true` for logged out users
-author_id: Query articles by their author
-artist_id: Query articles by an artist they're featured to
-artwork_id: Query articles by an artwork they're featured to
-vertical_id: Query articles by verticals
-organization_id: Query articles written by authors in an organization
-fair_ids: Query articles by a fair they're featured to
-show_id: Query articles by a show they're featured to
-partner_id: Query articles by the partner profile they're featured on
-auction_id: Query articles by an auction they're featured to
-tier: Query articles by their tier
-featured: Query articles by if they're featured to Magazine
+**params:**
 
-GET /articles/:id
-POST /articles
-PUT /articles/:id
-DELETE /articles/:id
-GET /sync_to_post?article_id=
+- published: Always pass `true` for logged out users
+- author_id: Query articles by their author
+- artist_id: Query articles by an artist they're featured to
+- artwork_id: Query articles by an artwork they're featured to
+- vertical_id: Query articles by verticals
+- organization_id: Query articles written by authors in an organization
+- fair_ids: Query articles by a fair they're featured to
+- show_id: Query articles by a show they're featured to
+- partner_id: Query articles by the partner profile they're featured on
+- auction_id: Query articles by an auction they're featured to
+- tier: Query articles by their tier
+- featured: Query articles by if they're featured to Magazine
+
+GET /articles/:id  
+POST /articles  
+PUT /articles/:id  
+DELETE /articles/:id  
+GET /sync\_to\_post?article_id=
 
 ### Users
 
-**params**
-access_token: Gravity access token for auth
+**params:**
+
+- access_token: Gravity access token for auth
 
 GET /users/:id
 
@@ -53,10 +55,11 @@ GET /users/:id
 
 GET /verticals
 
-**params**
-featured: Query verticals by featured
+**params:**
 
-POST /verticals
-GET /verticals/:id
-PUT /verticals/:id
+- featured: Query verticals by featured
+
+POST /verticals  
+GET /verticals/:id  
+PUT /verticals/:id  
 DELETE /verticals/:id
