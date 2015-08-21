@@ -186,6 +186,26 @@ describe 'Article', ->
                 done()
             )
 
+    it 'can find articles by all_by_author', (done) ->
+      fabricate 'articles', [
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          contributing_authors: [ObjectId '4d8cd73191a5c50ce220002b']
+          title: 'Hello Wurld'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Hello Waaarld'
+        }
+      ], =>
+        Article.where { all_by_author: '4d8cd73191a5c50ce220002b' }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 12
+          count.should.equal 2
+          results[0].title.should.equal 'Hello Waaarld'
+          results[1].title.should.equal 'Hello Wurld'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

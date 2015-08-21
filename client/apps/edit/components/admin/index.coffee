@@ -20,12 +20,14 @@ module.exports = class EditAdmin extends Backbone.View
     @setupBiographyAutocomplete()
     @setupPublishDate()
     @setupSlug()
+    @setupContributingAuthors()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
     new Autocomplete
       el: @$('#edit-admin-change-author input')
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+      placeholder: 'Search by user name or email...'
       filter: (users) -> for user in users
         { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
       selected: @onAuthorSelect
@@ -144,6 +146,36 @@ module.exports = class EditAdmin extends Backbone.View
           select.setState value: res.body.name, loading: false
     else
       select.setState loading: false
+
+  setupContributingAuthors: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    @contributing_authors = @article.get 'contributing_authors' or []
+    list = new AutocompleteList @$('#edit-admin-contributing-authors .admin-form-right')[0],
+      name: 'contributing_authors[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+      placeholder: 'Search by user name or email...'
+      filter: (users) -> for user in users
+        { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
+      selected: (e, item, items) =>
+        @article.save contributing_authors: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get 'contributing_authors'
+      @authors = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/user/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @authors.push(
+              {
+                id: res.body.id,
+                value: _.compact([res.body.name, res.body.email]).join(', ')
+              })
+            cb()
+      , =>
+        list.setState loading: false, items: @authors
+    else
+      list.setState loading: false
 
   onOpen: =>
     async.parallel [
