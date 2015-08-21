@@ -82,6 +82,7 @@ schema = (->
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
+  contributing_authors: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->
@@ -103,6 +104,7 @@ querySchema = (->
   exclude_google_news: @boolean()
   q: @string()
   organization_id: @objectId()
+  all_by_author: @objectId()
 ).call Joi
 
 #
@@ -130,7 +132,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'organization_id'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'organization_id', 'all_by_author'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -140,6 +142,12 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.vertical_id = ObjectId input.vertical_id if input.vertical_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
+
+    query.$or = [
+      { author_id: ObjectId(input.all_by_author) }
+      { contributing_authors: ObjectId(input.all_by_author) }
+    ] if input.all_by_author
+
     # Convert query for articles featured to an artist or artwork
     query.$or = [
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
@@ -198,6 +206,7 @@ sortParamToQuery = (input) ->
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
           biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
+          contributing_authors: article.contributing_authors.map(ObjectId) if article.contributing_authors
         ), callback
 
 validate = (input, callback) ->

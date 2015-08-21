@@ -29,6 +29,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupBiographyAutocomplete = sinon.stub()
         EditAdmin::setupSlug = sinon.stub()
         EditAdmin::setupPublishDate = sinon.stub()
+        EditAdmin::setupContributingAuthors = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 
