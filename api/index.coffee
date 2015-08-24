@@ -23,6 +23,7 @@ app.use require './apps/verticals'
 app.use require './apps/organizations'
 app.use require './apps/shows'
 app.use require './apps/users'
+app.use require './apps/brand_partners'
 
 # Moar middleware
 app.use notFound
