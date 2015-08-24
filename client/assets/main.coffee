@@ -15,6 +15,8 @@ class Router extends Backbone.Router
     'verticals/:id/edit': 'verticalEdit'
     'organizations/new': 'organizationEdit'
     'organizations/:id/edit': 'organizationEdit'
+    'brand-partners/new' : 'brandPartnerEdit'
+    'brand-partners/:id/edit': 'brandPartnerEdit'
 
   articleEdit: ->
     require('../apps/edit/client.coffee').init()
@@ -24,6 +26,9 @@ class Router extends Backbone.Router
 
   organizationEdit: ->
     require('../apps/organizations/edit_client.coffee').init()
+
+  brandPartnerEdit: ->
+    require('../apps/brand_partners/edit_client.coffee').init()
 
 new Router()
 $ ->

@@ -15,7 +15,7 @@ Joi.objectId = require 'joi-objectid'
 # Schemas
 #
 schema = (->
-  partner_id: @objectId()
+  id: @objectId()
   slug: @string().allow('', null)
   featured_links: @array().items([
     @object().keys
