@@ -21,6 +21,7 @@ schema = (->
   featured_links: @array().items([
     @object().keys
       thumbnail_url: @string().allow('', null)
+      url: @string().allow('', null)
       headline: @string().allow('', null)
       subheadline: @string().allow('', null)
       description: @string().allow('',null)

@@ -37,6 +37,7 @@ describe 'BrandPartner', ->
         featured_links: [
           {
             thumbnail_url: 'http://goo.com/img.jpg'
+            url: 'http://google'
             headline: 'Fascinating Article'
             subheadline: 'Featured Artist'
             description: 'Hello World'
@@ -48,6 +49,7 @@ describe 'BrandPartner', ->
         brandPartner.featured_links[0].headline.should.equal 'Fascinating Article'
         brandPartner.featured_links[0].subheadline.should.equal 'Featured Artist'
         brandPartner.featured_links[0].thumbnail_url.should.equal 'http://goo.com/img.jpg'
+        brandPartner.featured_links[0].url.should.equal 'http://google'
         db.brandPartners.count (err, count) ->
           count.should.equal 11
           done()

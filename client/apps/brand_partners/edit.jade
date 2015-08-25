@@ -10,6 +10,12 @@ mixin featured-link(i)
       .admin-image-placeholder(
         data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
     label
+      | URL
+      input.bordered-input(
+        name="featured_links[#{i}][url]"
+        value=link && link.url
+      )
+    label
       | Headline
       input.bordered-input(
         name="featured_links[#{i}][headline]"
