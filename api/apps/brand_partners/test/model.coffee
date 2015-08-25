@@ -29,11 +29,18 @@ describe 'BrandPartner', ->
           brandPartner._id.toString().should.equal '5086df098523e60002000018'
           done()
 
+    it 'finds a brand partner by their slug', (done) ->
+      fabricate 'brandPartners', { slug: 'rolls-royce' }, ->
+        BrandPartner.find 'rolls-royce', (err, brandPartner) ->
+          brandPartner.slug.should.equal 'rolls-royce'
+          done()
+
   describe '#save', ->
 
     it 'saves valid brand partner input data', (done) ->
       BrandPartner.save {
         slug: 'Royce'
+        partner_id: '5086df098523e60002000018'
         featured_links: [
           {
             thumbnail_url: 'http://goo.com/img.jpg'
@@ -45,6 +52,7 @@ describe 'BrandPartner', ->
         ]
       }, (err, brandPartner) ->
         brandPartner.slug.should.equal 'Royce'
+        brandPartner.partner_id.should.equal '5086df098523e60002000018'
         brandPartner.featured_links[0].description.should.equal 'Hello World'
         brandPartner.featured_links[0].headline.should.equal 'Fascinating Article'
         brandPartner.featured_links[0].subheadline.should.equal 'Featured Artist'
