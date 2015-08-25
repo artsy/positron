@@ -20,11 +20,11 @@ describe 'brandPartners endpoints', ->
     fabricate 'brandPartners', [
       {
         _id: ObjectId('55356a9deca560a0137aa4b7')
-        slug: 'VersaceVersace'
+        partner_id: ObjectId('55356a9deca560a0137aa4b8')
       }
     ], (err, brandPartners) =>
       request
-        .get("http://localhost:5000/brand-partners/55356a9deca560a0137aa4b7")
+        .get("http://localhost:5000/brand_partners/55356a9deca560a0137aa4b7")
         .end (err, res) ->
-          res.body.slug.should.equal 'VersaceVersace'
+          res.body.partner_id.should.equal '55356a9deca560a0137aa4b8'
           done()

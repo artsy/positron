@@ -80,7 +80,7 @@ module.exports = ->
     'author_ids': null
   fixtures.brandPartners =
     id: '559ff9706b69f6a086a65633'
-    slug: 'VersaceVersace'
+    partner_id: '559ff9706b69f6a086a65632'
     featured_links: [
       {
         thumbnail_url: 'http://goo.com/img.jpg'

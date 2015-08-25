@@ -19,11 +19,9 @@ describe 'routes', ->
 
     it 'saves the serialized form data to the brand partner', ->
       @req.body =
-        slug: 'Foobar'
         partner_id: '5086df098523e60002000018'
         featured_links: [{ headline: 'foo' }, { headline: 'bar' }, null, '']
       routes.save @req, @res
-      Backbone.sync.args[0][1].toJSON().slug.should.equal 'Foobar'
       Backbone.sync.args[0][1].toJSON().partner_id.should.equal '5086df098523e60002000018'
       Backbone.sync.args[0][1].toJSON().featured_links.length
         .should.equal 2
@@ -31,7 +29,6 @@ describe 'routes', ->
 
     it 'does not save featured links which are empty', ->
       @req.body =
-        slug: 'Foobar'
         featured_links: [{ headline: '' }, { headline: 'bar' }, null, '']
       routes.save @req, @res
       Backbone.sync.args[0][1].toJSON().featured_links.length

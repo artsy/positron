@@ -1,23 +1,23 @@
 _ = require 'underscore'
 { present } = BrandPartner = require './model'
 
-# GET /api/brand-partners
+# GET /api/brand_partners
 @index = (req, res, next) ->
   BrandPartner.where req.query, (err, results) ->
     return next err if err
     res.send results
 
-# GET /api/brand-partners/:id
+# GET /api/brand_partners/:id
 @show = (req, res, next) ->
   res.send present req.brandPartner
 
-# POST /api/brand-partners & PUT /api/brand-partners/:id
+# POST /api/brand_partners & PUT /api/brand_partners/:id
 @save = (req, res, next) ->
   BrandPartner.save _.extend(req.body, id: req.params.id), (err, brandPartner) ->
     return next err if err
     res.send present brandPartner
 
-# DELETE /api/brand-partners/:id
+# DELETE /api/brand_partners/:id
 @delete = (req, res, next) ->
   BrandPartner.destroy req.brandPartner._id, (err) ->
     return next err if err

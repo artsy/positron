@@ -9,7 +9,7 @@ module.exports = class BrandPartners extends Backbone.Collection
 
   _.extend @prototype, ApiCollection
 
-  url: "#{sd.API_URL}/brand-partners"
+  url: "#{sd.API_URL}/brand_partners"
 
   model: BrandPartner
 

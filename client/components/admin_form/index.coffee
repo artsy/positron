@@ -22,7 +22,7 @@ module.exports = class AdminEditView extends Backbone.View
   destroy: (e) ->
     e.preventDefault()
     return unless confirm "Are you sure you want to delete this?"
-    @model.destroy success: -> location.assign @onDeleteUrl
+    @model.destroy success: => location.assign @onDeleteUrl
 
   unsaved: ->
     window.onbeforeunload = ->

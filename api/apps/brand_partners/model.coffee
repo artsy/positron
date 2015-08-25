@@ -16,8 +16,7 @@ Joi.objectId = require 'joi-objectid'
 #
 schema = (->
   id: @objectId()
-  partner_id: @objectId()
-  slug: @string().allow('', null)
+  partner_id: @objectId().allow(null)
   featured_links: @array().items([
     @object().keys
       thumbnail_url: @string().allow('', null)
@@ -31,20 +30,21 @@ schema = (->
 querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
-  partner_id: @string()
+  partner_id: @objectId()
 ).call Joi
 
 #
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slug: id }
+  query = if ObjectId.isValid(id) then { _id: ObjectId(id) }
   db.brandPartners.findOne query, callback
 
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset'
+    query = _.omit input, 'limit', 'offset', 'partner_id'
+    query.partner_id = ObjectId input.partner_id if input.partner_id
     cursor = db.brandPartners
       .find(query)
       .limit(input.limit)
@@ -69,6 +69,7 @@ querySchema = (->
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: ObjectId(input.id)
+      partner_id: ObjectId(input.partner_id) if input.partner_id
     db.brandPartners.save data, callback
 
 @destroy = (id, callback) ->

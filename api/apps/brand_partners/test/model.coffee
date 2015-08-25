@@ -18,8 +18,14 @@ describe 'BrandPartner', ->
         { total, count, results } = res
         total.should.equal 10
         count.should.equal 10
-        results[0].slug.should.equal 'VersaceVersace'
+        results[0].partner_id.should.equal '559ff9706b69f6a086a65632'
         done()
+
+    it 'finds a brand partner by partner_id', (done) ->
+      fabricate 'brandPartners', { partner_id: ObjectId('5086df098523e60002000018') }, ->
+        BrandPartner.where { partner_id: '5086df098523e60002000018' } , (err, res) ->
+          res.results[0].partner_id.toString().should.equal '5086df098523e60002000018'
+          done()
 
   describe '#find', ->
 
@@ -29,17 +35,11 @@ describe 'BrandPartner', ->
           brandPartner._id.toString().should.equal '5086df098523e60002000018'
           done()
 
-    it 'finds a brand partner by their slug', (done) ->
-      fabricate 'brandPartners', { slug: 'rolls-royce' }, ->
-        BrandPartner.find 'rolls-royce', (err, brandPartner) ->
-          brandPartner.slug.should.equal 'rolls-royce'
-          done()
 
   describe '#save', ->
 
     it 'saves valid brand partner input data', (done) ->
       BrandPartner.save {
-        slug: 'Royce'
         partner_id: '5086df098523e60002000018'
         featured_links: [
           {
@@ -51,8 +51,7 @@ describe 'BrandPartner', ->
           }
         ]
       }, (err, brandPartner) ->
-        brandPartner.slug.should.equal 'Royce'
-        brandPartner.partner_id.should.equal '5086df098523e60002000018'
+        brandPartner.partner_id.toString().should.equal '5086df098523e60002000018'
         brandPartner.featured_links[0].description.should.equal 'Hello World'
         brandPartner.featured_links[0].headline.should.equal 'Fascinating Article'
         brandPartner.featured_links[0].subheadline.should.equal 'Featured Artist'
