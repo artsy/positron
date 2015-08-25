@@ -1,6 +1,6 @@
 #
 # Library of retrieval, persistance, validation, json view, and domain logic
-# for the "verticals" resource.
+# for the "brand-partners" resource.
 #
 
 _ = require 'underscore'
@@ -16,6 +16,7 @@ Joi.objectId = require 'joi-objectid'
 #
 schema = (->
   id: @objectId()
+  partner_id: @objectId()
   slug: @string().allow('', null)
   featured_links: @array().items([
     @object().keys
@@ -29,6 +30,7 @@ schema = (->
 querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
+  partner_id: @string()
 ).call Joi
 
 #

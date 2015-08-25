@@ -15,5 +15,6 @@ module.exports = class BrandPartners extends Backbone.Collection
 
   toPaginatedListItems: ->
     @map (brandPartner) ->
-      slug: brandPartner.get('slug')
+      title: brandPartner.get('slug')
       href: "/brand-partners/#{brandPartner.get('id')}/edit"
+      imgSrc: brandPartner.get('featured_links')[0]?.thumbnail_url if brandPartner.get('featured_links')[0]?.thumbnail_url?

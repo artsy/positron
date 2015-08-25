@@ -25,11 +25,11 @@
         include ../public/icons/layout_verticals.svg
         br
         | Verticals
-      a( href='/organizations'
-         class=(sd.URL.match('/organizations') ? 'is-active' : '') )
+      a( href='/brand-partners'
+         class=(sd.URL.match('/brand-partners') ? 'is-active' : '') )
         include ../public/icons/layout_organizations.svg
         br
-        | Orgs
+        | Brands
     #layout-sidebar-profile
       .layout-sidebar-profile-img(
         style="background-image: url(#{user.get('profile_icon_url')})" )

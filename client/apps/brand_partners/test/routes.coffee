@@ -17,32 +17,30 @@ describe 'routes', ->
 
   describe '#save', ->
 
-    it 'saves the serialized form data to the vertical', ->
+    it 'saves the serialized form data to the brand partner', ->
       @req.body =
-        title: 'Foobar'
-        featured: 'on'
-        featured_links: [{ title: 'foo' }, { title: 'bar' }, null, '']
+        slug: 'Foobar'
+        featured_links: [{ headline: 'foo' }, { headline: 'bar' }, null, '']
       routes.save @req, @res
-      Backbone.sync.args[0][1].toJSON().title.should.equal 'Foobar'
+      Backbone.sync.args[0][1].toJSON().slug.should.equal 'Foobar'
       Backbone.sync.args[0][1].toJSON().featured_links.length
         .should.equal 2
-      Backbone.sync.args[0][1].toJSON().featured_links[0].title.should.equal 'foo'
-      Backbone.sync.args[0][1].toJSON().featured.should.equal true
+      Backbone.sync.args[0][1].toJSON().featured_links[0].headline.should.equal 'foo'
 
     it 'does not save featured links which are empty', ->
       @req.body =
-        title: 'Foobar'
-        featured_links: [{ title: '' }, { title: 'bar' }, null, '']
+        slug: 'Foobar'
+        featured_links: [{ headline: '' }, { headline: 'bar' }, null, '']
       routes.save @req, @res
       Backbone.sync.args[0][1].toJSON().featured_links.length
         .should.equal 1
-      Backbone.sync.args[0][1].toJSON().featured_links[0].title.should.equal 'bar'
+      Backbone.sync.args[0][1].toJSON().featured_links[0].headline.should.equal 'bar'
 
   describe '#edit', ->
 
     it 'renders the edit page', ->
       routes.edit @req, @res
-      Backbone.sync.args[0][2].success fixtures().verticals
+      Backbone.sync.args[0][2].success fixtures().brandPartners
       @res.render.args[0][0].should.equal 'edit'
-      @res.render.args[0][1].vertical.get('id')
-        .should.equal '55356a9deca560a0137aa4b7'
+      @res.render.args[0][1].brandPartner.get('id')
+        .should.equal '559ff9706b69f6a086a65633'

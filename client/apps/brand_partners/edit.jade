@@ -2,30 +2,31 @@ include ../../components/admin_form/index
 extend ../../components/layout/templates/index
 
 mixin featured-link(i)
-  - link = brandPartner.get('featured_links')[i]
-  h3.admin-form-subheader Link #{i + 1}
-  label
-    | Thumbnail
-    .admin-image-placeholder(
-      data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
-  label
-    | Headline
-    input.bordered-input(
-      name="featured_links[#{i}][headline]"
-      value=link && link.headline
-    )
-  label
-    | Subheadline
-    input.bordered-input(
-      name="featured_links[#{i}][subheadline]"
-      value=link && link.subheadline
-    )
-  label
-    | Description
-    input.bordered-input(
-      name="featured_links[#{i}][description]"
-      value=link && link.description
-    )
+  .admin-form-input-section
+    - link = brandPartner.get('featured_links')[i]
+    h3.admin-form-subheader Link #{i + 1}
+    label
+      | Thumbnail
+      .admin-image-placeholder(
+        data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
+    label
+      | Headline
+      input.bordered-input(
+        name="featured_links[#{i}][headline]"
+        value=link && link.headline
+      )
+    label
+      | Subheadline
+      input.bordered-input(
+        name="featured_links[#{i}][subheadline]"
+        value=link && link.subheadline
+      )
+    label
+      | Description
+      input.bordered-input(
+        name="featured_links[#{i}][description]"
+        value=link && link.description
+      )
 
 block header
   | Brand Partners
@@ -42,28 +43,28 @@ block content
           h1 Brand Partner Details
           h2 General details that apply to all brand partners.
         .admin-form-right
-          .admin-form-right-col
-            +form-elements([
-              { attr: 'slug', type: 'input' },
-            ])
+          +form-elements([
+            { attr: 'slug', type: 'input' },
+          ])
+          .admin-form-autocomplete-partner
       section.admin-form-section
         .admin-form-left
           h1 Featured Links
           h2 Links that are featured on a brand partner's overview section on their profile
         .admin-form-right
-          .admin-form-right-col
+          .admin-form-right-row
             +featured-link(0)
             +featured-link(1)
-          .admin-form-right-col
+          .admin-form-right-row
             +featured-link(2)
             +featured-link(3)
-          .admin-form-right-col
+          .admin-form-right-row
             +featured-link(4)
             +featured-link(5)
-          .admin-form-right-col
+          .admin-form-right-row
             +featured-link(6)
             +featured-link(7)
-          .admin-form-right-col
+          .admin-form-right-row
             +featured-link(8)
             +featured-link(9)
       button.avant-garde-button.avant-garde-button-black.admin-form-save(
