@@ -1,0 +1,77 @@
+include ../../components/admin_form/index
+extend ../../components/layout/templates/index
+
+mixin featured-link(i)
+  .admin-form-input-section
+    - link = brandPartner.get('featured_links')[i]
+    h3.admin-form-subheader Link #{i + 1}
+    label
+      | Thumbnail
+      .admin-image-placeholder(
+        data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
+    label
+      | URL
+      input.bordered-input(
+        name="featured_links[#{i}][url]"
+        value=link && link.url
+      )
+    label
+      | Headline
+      input.bordered-input(
+        name="featured_links[#{i}][headline]"
+        value=link && link.headline
+      )
+    label
+      | Subheadline
+      input.bordered-input(
+        name="featured_links[#{i}][subheadline]"
+        value=link && link.subheadline
+      )
+    label
+      | Description
+      input.bordered-input(
+        name="featured_links[#{i}][description]"
+        value=link && link.description
+      )
+
+block header
+  | Brand Partners
+
+block content
+  - model = brandPartner
+  .max-width-container
+    form.admin-form-container(
+      action=(brandPartner.isNew() ?  "/brand-partners" : "/brand-partners/#{brandPartner.get('id')}")
+      method='post'
+    )
+      section.admin-form-section
+        .admin-form-left
+          h1 Brand Partner Details
+          h2 General details that apply to all brand partners.
+        .admin-form-right
+          .admin-form-autocomplete-partner
+      section.admin-form-section
+        .admin-form-left
+          h1 Featured Links
+          h2 Links that are featured on a brand partner's overview section on their profile
+        .admin-form-right
+          .admin-form-right-row
+            +featured-link(0)
+            +featured-link(1)
+          .admin-form-right-row
+            +featured-link(2)
+            +featured-link(3)
+          .admin-form-right-row
+            +featured-link(4)
+            +featured-link(5)
+          .admin-form-right-row
+            +featured-link(6)
+            +featured-link(7)
+          .admin-form-right-row
+            +featured-link(8)
+            +featured-link(9)
+      button.avant-garde-button.avant-garde-button-black.admin-form-save(
+        type='submit' href="/brand-partners/new"
+      ) Save Changes
+      unless brandPartner.isNew()
+        a.avant-garde-button.admin-form-delete Delete Brand Partner
