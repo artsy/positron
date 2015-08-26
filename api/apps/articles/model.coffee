@@ -82,7 +82,12 @@ schema = (->
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
-  contributing_authors: @array().items(@objectId()).allow(null)
+  contributing_authors: @array().items([
+    @object().keys
+      id: @objectId().allow(null)
+      name: @string().allow('', null)
+      profile_id: @string().allow('', null)
+    ]).allow(null)
 ).call Joi
 
 querySchema = (->
@@ -145,7 +150,7 @@ toQuery = (input, callback) ->
 
     query.$or = [
       { author_id: ObjectId(input.all_by_author) }
-      { contributing_authors: ObjectId(input.all_by_author) }
+      { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
     ] if input.all_by_author
 
     # Convert query for articles featured to an artist or artwork
@@ -206,7 +211,10 @@ sortParamToQuery = (input) ->
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
           biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-          contributing_authors: article.contributing_authors.map(ObjectId) if article.contributing_authors
+          contributing_authors: article.contributing_authors.map( (author)->
+            author.id = ObjectId(author.id)
+            author
+          ) if article.contributing_authors
         ), callback
 
 validate = (input, callback) ->
