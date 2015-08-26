@@ -168,7 +168,7 @@ module.exports = class EditAdmin extends Backbone.View
           .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
             @authors.push(
               {
-                id: res.body.id,
+                id: { id: res.body.id , name: res.body.name, profile_id: res.body.default_profile_id },
                 value: _.compact([res.body.name, res.body.email]).join(', ')
               })
             cb()
