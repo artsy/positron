@@ -190,7 +190,7 @@ describe 'Article', ->
       fabricate 'articles', [
         {
           author_id: ObjectId '4d8cd73191a5c50ce220002a'
-          contributing_authors: [ObjectId '4d8cd73191a5c50ce220002b']
+          contributing_authors: [ {id: ObjectId '4d8cd73191a5c50ce220002b'}]
           title: 'Hello Wurld'
         }
         {

@@ -155,7 +155,7 @@ module.exports = class EditAdmin extends Backbone.View
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
       filter: (users) -> for user in users
-        { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
+        { id: { id: user.id, name: user.name, profile_id: user.default_profile_id }, value: _.compact([user.name, user.email]).join(', ') }
       selected: (e, item, items) =>
         @article.save contributing_authors: _.pluck items, 'id'
       removed: (e, item, items) =>
@@ -164,7 +164,7 @@ module.exports = class EditAdmin extends Backbone.View
       @authors = []
       async.each ids, (id, cb) =>
         request
-          .get("#{sd.ARTSY_URL}/api/v1/user/#{id}")
+          .get("#{sd.ARTSY_URL}/api/v1/user/#{id.id}")
           .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
             @authors.push(
               {
