@@ -7,7 +7,6 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../lib/db'
 User = require '../users/model'
-Organization = require '../organizations/model'
 async = require 'async'
 Joi = require 'joi'
 Joi.objectId = require 'joi-objectid'
@@ -108,7 +107,6 @@ querySchema = (->
   featured: @boolean()
   exclude_google_news: @boolean()
   q: @string()
-  organization_id: @objectId()
   all_by_author: @objectId()
 ).call Joi
 
@@ -137,7 +135,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'organization_id', 'all_by_author'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -162,14 +160,7 @@ toQuery = (input, callback) ->
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
-    # Find by organization or finish
-    if input.organization_id
-      Organization.find input.organization_id, (err, organization) ->
-        return callback err if err
-        query.author_id = { $in: organization.author_ids }
-        callback null, query, limit, offset, sortParamToQuery(sort)
-    else
-      callback null, query, limit, offset, sortParamToQuery(sort)
+    callback null, query, limit, offset, sortParamToQuery(sort)
 
 sortParamToQuery = (input) ->
   return { updated_at: -1 } unless input
