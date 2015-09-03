@@ -209,6 +209,7 @@ sortParamToQuery = (input) ->
         ), callback
 
 validate = (input, callback) ->
+  console.log input
   whitelisted = _.pick input, _.keys schema
   # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
   whitelisted.author_id = whitelisted.author_id?.toString()
