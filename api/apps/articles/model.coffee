@@ -86,7 +86,7 @@ schema = (->
       id: @objectId().allow(null)
       name: @string().allow('', null)
       profile_id: @string().allow('', null)
-    ]).allow(null)
+    ]).default([])
 ).call Joi
 
 querySchema = (->
@@ -255,3 +255,4 @@ addSlug = (article, input, author) ->
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
+    contributing_authors: article.contributing_authors or []
