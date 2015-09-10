@@ -32,14 +32,10 @@ bcrypt = require 'bcrypt'
         (cb) ->
           request.get("#{ARTSY_URL}/api/v1/me")
             .set('X-Access-Token': accessToken).end cb
-        (cb) ->
-          request.get("#{ARTSY_URL}/api/v1/me/partners")
-            .set('X-Access-Token': accessToken).end cb
       ], (err, results) ->
         return callback err if err
         user = results[0].body
-        partnerIds = _.pluck(results[1].body, '_id')
-        save user, partnerIds, accessToken, callback
+        save user, accessToken, callback
 
 #
 # Persistance
@@ -59,10 +55,9 @@ bcrypt = require 'bcrypt'
     ], (err, results) ->
       return callback err if err
       user = results[0].body
-      partnerIds = (ac.property._id for ac in results[1].body)
-      save user, partnerIds, accessToken, callback
+      save user, accessToken, callback
 
-save = (user, partnerIds, accessToken, callback) ->
+save = (user, accessToken, callback) ->
   async.parallel [
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
@@ -79,7 +74,6 @@ save = (user, partnerIds, accessToken, callback) ->
       name: user.name
       email: user.email
       type: user.type
-      access_to_partner_ids: partnerIds
       profile_handle: profile.id
       profile_id: profile._id
       profile_icon_url: _.first(_.values(profile.icon?.image_urls))
