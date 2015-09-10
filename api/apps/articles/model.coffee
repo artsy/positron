@@ -255,4 +255,3 @@ addSlug = (article, input, author) ->
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
-    contributing_authors: article.contributing_authors or []
