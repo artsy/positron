@@ -86,7 +86,7 @@ schema = (->
       id: @objectId().allow(null)
       name: @string().allow('', null)
       profile_id: @string().allow('', null)
-    ]).allow(null)
+    ]).default([])
 ).call Joi
 
 querySchema = (->
