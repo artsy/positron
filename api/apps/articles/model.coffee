@@ -78,6 +78,7 @@ schema = (->
   fair_id: @objectId().allow(null)
   auction_id: @objectId().allow(null)
   vertical_id: @objectId().allow(null)
+  section_ids: @array().items(@objectId()).default([])
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
@@ -96,6 +97,7 @@ querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   vertical_id: @objectId()
+  section_id: @objectId()
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
@@ -144,6 +146,7 @@ toQuery = (input, callback) ->
     query.show_ids = ObjectId input.show_id if input.show_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.vertical_id = ObjectId input.vertical_id if input.vertical_id
+    query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
 
     query.$or = [
@@ -195,6 +198,7 @@ sortParamToQuery = (input) ->
           author_id: ObjectId(article.author_id) if article.author_id
           fair_id: ObjectId(article.fair_id) if article.fair_id
           vertical_id: ObjectId(article.vertical_id) if article.vertical_id
+          section_ids: article.section_ids.map(ObjectId) if article.section_ids
           auction_id: ObjectId(article.auction_id) if article.auction_id
           partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
           show_ids: article.show_ids.map(ObjectId) if article.show_ids
