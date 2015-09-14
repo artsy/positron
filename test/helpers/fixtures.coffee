@@ -73,6 +73,14 @@ module.exports = ->
     'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
+  fixtures.sections =
+    'id': '55356a9deca560a0137aa4b7'
+    'title': 'Vennice Biennalez'
+    'description': 'The coolest biennale'
+    'slug': 'vennice-biennale'
+    'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+    'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+    'featured_article_ids': [ '5522d03ae8e369060053d953' ]
   fixtures.brandPartners =
     id: '559ff9706b69f6a086a65633'
     partner_id: '559ff9706b69f6a086a65632'
