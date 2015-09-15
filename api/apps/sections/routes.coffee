@@ -19,7 +19,7 @@ _ = require 'underscore'
 
 # DELETE /api/sections/:id
 @delete = (req, res, next) ->
-  Sections.destroy req.section._id, (err) ->
+  Section.destroy req.section._id, (err) ->
     return next err if err
     res.send present req.section
 
