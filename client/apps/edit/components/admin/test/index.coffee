@@ -24,7 +24,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupFairAutocomplete = sinon.stub()
         EditAdmin::setupPartnerAutocomplete = sinon.stub()
         EditAdmin::setupAuctionAutocomplete = sinon.stub()
-        EditAdmin::setupVerticalAutocomplete = sinon.stub()
+        EditAdmin::setupSectionAutocomplete = sinon.stub()
         EditAdmin::setupShowsAutocomplete = sinon.stub()
         EditAdmin::setupBiographyAutocomplete = sinon.stub()
         EditAdmin::setupSlug = sinon.stub()
