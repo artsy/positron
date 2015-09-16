@@ -137,7 +137,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -147,6 +147,7 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.vertical_id = ObjectId input.vertical_id if input.vertical_id
     query.section_ids = ObjectId input.section_id if input.section_id
+    console.log query
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
 
     query.$or = [
