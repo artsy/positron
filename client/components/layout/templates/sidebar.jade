@@ -20,11 +20,11 @@
       br
       | Published
     if user.get('type') == 'Admin'
-      a( href='/verticals'
-         class=(sd.URL.match('/verticals') ? 'is-active' : '') )
-        include ../public/icons/layout_verticals.svg
+      a( href='/sections'
+         class=(sd.URL.match('/sections') ? 'is-active' : '') )
+        include ../public/icons/layout_sections.svg
         br
-        | Verticals
+        | Sections
       a( href='/brand-partners'
          class=(sd.URL.match('/brand-partners') ? 'is-active' : '') )
         include ../public/icons/layout_brands.svg

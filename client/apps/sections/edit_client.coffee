@@ -1,9 +1,9 @@
 AdminEditView = require '../../components/admin_form/index.coffee'
-Vertical = require '../../models/vertical.coffee'
+FeatureSection = require '../../models/feature_section.coffee'
 sd = require('sharify').data
 
 @init = ->
   new AdminEditView
-    model: new Vertical(sd.VERTICAL)
+    model: new FeatureSection(sd.SECTION)
     el: $('body')
-    onDeleteUrl: '/verticals'
+    onDeleteUrl: '/sections'

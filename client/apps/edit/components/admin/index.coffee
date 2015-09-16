@@ -15,7 +15,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
-    @setupVerticalAutocomplete()
+    @setupSectionAutocomplete()
     @setupShowsAutocomplete()
     @setupBiographyAutocomplete()
     @setupPublishDate()
@@ -93,23 +93,30 @@ module.exports = class EditAdmin extends Backbone.View
     else
       select.setState loading: false
 
-  setupVerticalAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-vertical .admin-form-right')[0],
-      url: "#{sd.API_URL}/verticals?q=%QUERY"
-      placeholder: 'Search vertical by name...'
-      filter: (res) -> for r in res.results
-        { id: r.id, value: r.title }
-      selected: (e, item) =>
-        @article.save vertical_id: item.id
-      cleared: =>
-        @article.save vertical_id: null
-    if id = @article.get 'vertical_id'
-      request
-        .get("#{sd.API_URL}/verticals/#{id}").end (err, res) ->
-          select.setState value: res.body.title, loading: false
+  setupSectionAutocomplete: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    @section_ids = @article.get 'section_ids' or []
+    list = new AutocompleteList @$('#edit-admin-section .admin-form-right')[0],
+      name: 'section_ids[]'
+      url: "#{sd.API_URL}/sections?q=%QUERY"
+      placeholder: 'Search section by name...'
+      filter: (sections) -> for section in sections.results
+        { id: section.id, value: section.title }
+      selected: (e, item, items) =>
+        @article.save section_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save section_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @section_ids
+      @sections = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/sections/#{id}").end (err, res) =>
+            @sections.push id: res.body.id, value: res.body.title
+            cb()
+      , =>
+        list.setState loading: false, items: @sections
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupShowsAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
@@ -160,7 +167,7 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save contributing_authors: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get 'contributing_authors'
+    if ids = @article.get('contributing_authors').length
       @authors = []
       async.each ids, (id, cb) =>
         request

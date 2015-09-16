@@ -11,16 +11,16 @@ class Router extends Backbone.Router
   routes:
     'articles/new': 'articleEdit'
     'articles/:id/edit': 'articleEdit'
-    'verticals/new': 'verticalEdit'
-    'verticals/:id/edit': 'verticalEdit'
+    'sections/new': 'sectionEdit'
+    'sections/:id/edit': 'sectionEdit'
     'brand-partners/new' : 'brandPartnerEdit'
     'brand-partners/:id/edit': 'brandPartnerEdit'
 
   articleEdit: ->
     require('../apps/edit/client.coffee').init()
 
-  verticalEdit: ->
-    require('../apps/verticals/edit_client.coffee').init()
+  sectionEdit: ->
+    require('../apps/sections/edit_client.coffee').init()
 
   brandPartnerEdit: ->
     require('../apps/brand_partners/edit_client.coffee').init()

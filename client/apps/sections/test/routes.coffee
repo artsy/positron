@@ -17,7 +17,7 @@ describe 'routes', ->
 
   describe '#save', ->
 
-    it 'saves the serialized form data to the vertical', ->
+    it 'saves the serialized form data to the section', ->
       @req.body =
         title: 'Foobar'
         featured: 'on'
@@ -42,7 +42,7 @@ describe 'routes', ->
 
     it 'renders the edit page', ->
       routes.edit @req, @res
-      Backbone.sync.args[0][2].success fixtures().verticals
+      Backbone.sync.args[0][2].success fixtures().sections
       @res.render.args[0][0].should.equal 'edit'
-      @res.render.args[0][1].vertical.get('id')
+      @res.render.args[0][1].section.get('id')
         .should.equal '55356a9deca560a0137aa4b7'

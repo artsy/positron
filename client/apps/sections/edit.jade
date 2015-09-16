@@ -2,7 +2,7 @@ include ../../components/admin_form/index
 extend ../../components/layout/templates/index
 
 mixin featured-link(i)
-  - link = vertical.get('featured_links')[i]
+  - link = section.get('featured_links')[i]
   h3.admin-form-subheader Link #{i + 1}
   label
     | Thumbnail
@@ -22,19 +22,19 @@ mixin featured-link(i)
     )
 
 block header
-  | Verticals
+  | Sections
 
 block content
-  - model = vertical
+  - model = section
   .max-width-container
     form.admin-form-container(
-      action=(vertical.isNew() ?  "/verticals" : "/verticals/#{vertical.get('id')}")
+      action=(section.isNew() ?  "/sections" : "/sections/#{section.get('id')}")
       method='post'
     )
       section.admin-form-section
         .admin-form-left
-          h1 Vertical Details
-          h2 General details that apply to all verticals.
+          h1 Section Details
+          h2 General details that apply to all sections.
         .admin-form-right
           .admin-form-right-col
             +form-elements([
@@ -50,7 +50,7 @@ block content
       section.admin-form-section
         .admin-form-left
           h1 Featured Links
-          h2 Sticky links that are called out in the vertical's magazine feed and at the top of individual articles.
+          h2 Sticky links that are called out in the sections's magazine feed and at the top of individual articles.
         .admin-form-right
           +form-elements([{ attr: 'featured_links_header', type: 'input' }])
           .admin-form-right-col
@@ -62,7 +62,7 @@ block content
       section.admin-form-section
         .admin-form-left
           h1 Featured on Magazine
-          h2 Verticals can be called out on the main magazine page with a banner that runs for a specified time.
+          h2 Sections can be called out on the main magazine page with a banner that runs for a specified time.
         .admin-form-right
           .admin-form-right-col
             +form-elements([
@@ -73,7 +73,7 @@ block content
       section.admin-form-section
         .admin-form-left
           h1 Partner
-          h2 If this vertical is in partnership with someone external (like the Venice Biennale + UBS partnership).
+          h2 If this section is in partnership with someone external (like the Venice Biennale + UBS partnership).
         .admin-form-right
           .admin-form-right-col
             +form-elements([
@@ -82,7 +82,7 @@ block content
               { attr: 'slogan', type: 'input' }
             ])
       button.avant-garde-button.avant-garde-button-black.admin-form-save(
-        type='submit' href="/verticals/new"
+        type='submit' href="/sections/new"
       ) Save Changes
-      unless vertical.isNew()
-        a.avant-garde-button.admin-form-delete Delete Vertical
+      unless section.isNew()
+        a.avant-garde-button.admin-form-delete Delete Section
