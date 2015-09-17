@@ -167,7 +167,7 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save contributing_authors: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('contributing_authors').length
+    if ids = @article.get('contributing_authors')?.length
       @authors = []
       async.each ids, (id, cb) =>
         request
