@@ -28,7 +28,7 @@ GET /articles
 - author_id: Query articles by their author
 - artist_id: Query articles by an artist they're featured to
 - artwork_id: Query articles by an artwork they're featured to
-- vertical_id: Query articles by verticals
+- section_id: Query articles by their section
 - fair_ids: Query articles by a fair they're featured to
 - show_id: Query articles by a show they're featured to
 - partner_id: Query articles by the partner profile they're featured on

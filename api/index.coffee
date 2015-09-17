@@ -19,7 +19,6 @@ app.use morgan 'dev'
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
 app.use require './apps/articles'
-app.use require './apps/verticals'
 app.use require './apps/sections'
 app.use require './apps/shows'
 app.use require './apps/users'
