@@ -65,14 +65,6 @@ module.exports = ->
     "profile_id" : "5086df098523e60002000012"
     "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
     "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
-  fixtures.verticals =
-    'id': '55356a9deca560a0137aa4b7'
-    'title': 'Vennice Biennalez'
-    'description': 'The coolest biennale'
-    'slug': 'vennice-biennale'
-    'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-    'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-    'featured_article_ids': [ '5522d03ae8e369060053d953' ]
   fixtures.sections =
     'id': '55356a9deca560a0137aa4b7'
     'title': 'Vennice Biennalez'

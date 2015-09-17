@@ -12,7 +12,7 @@ ImageUploadForm = require '../components/image_upload_form/index.coffee'
 new ImageUploadForm
   el: $('.image-form')
   remove: =>
-    @vertical.save thumbnail_image: null
+    @section.save thumbnail_image: null
   done: (src) =>
-    @vertical.save thumbnail_image: src
+    @section.save thumbnail_image: src
 ````
