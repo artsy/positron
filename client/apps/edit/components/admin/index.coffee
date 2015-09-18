@@ -56,23 +56,29 @@ module.exports = class EditAdmin extends Backbone.View
       select.setState loading: false
 
   setupPartnerAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-partner .admin-form-right')[0],
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-partner .admin-form-right')[0],
+      name: 'partner_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
       placeholder: 'Search partner by name...'
       filter: (res) -> for r in res
         { id: r._id, value: r.name }
-      selected: (e, item) =>
-        @article.save partner_ids: [item.id]
-      cleared: =>
-        @article.save partner_ids: null
-    if id = @article.get('partner_ids')?[0]
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+      selected: (e, item, items) =>
+        @article.save partner_ids: _.pluck items, 'id'
+      cleared: (e, item, items) =>
+        @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('partner_ids')
+      @partners = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @partners.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @partners
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupAuctionAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
