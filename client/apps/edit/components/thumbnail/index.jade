@@ -16,23 +16,25 @@ section#edit-thumbnail
   if user.get('type') == 'Admin'
     section#edit-email
       h1 Email
-      label.flat-checkbox.edit-email-toggle
-        input.edit-email-checkbox( type='checkbox' name='email' )
-        span Prepare this article for an email campaign
-        label.edit-email-image
-          span.edit-required(
-            data-hidden=article.get('email_data') ? 'true' : 'false'
-          ) Image
-          #edit-email-upload
-        label
-          span Headline
-          input.bordered-input.edit-email-text( name='headline' )
-        label
-          span Author
-          input.bordered-input.edit-email-text( name='author' )
-        label
-          span Credit Line
-          input.bordered-input.edit-email-text( name='creditline' )
-        label
-          span Credit Link
-          input.bordered-input.edit-email-text( name='creditlink' )
+      .edit-email-toggle
+        label.flat-checkbox
+          input.edit-email-checkbox( type='checkbox' name='email' )
+          span Prepare this article for an email campaign
+        .edit-email-form
+          label.edit-email-image
+            span.edit-required(
+              data-hidden=article.get('email_data') ? 'true' : 'false'
+            ) Image
+            #edit-email-upload
+          label
+            span Headline
+            input.bordered-input.edit-email-text( name='headline' )
+          label
+            span Author
+          label
+            input.bordered-input.edit-email-text( name='author' )
+            span Credit Line
+            input.bordered-input.edit-email-text( name='creditline' )
+          label
+            span Credit Link
+            input.bordered-input.edit-email-text( name='creditlink' )

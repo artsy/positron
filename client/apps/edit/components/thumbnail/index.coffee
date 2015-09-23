@@ -12,6 +12,7 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
     @renderThumbnailForm()
+    @setupEmailForm()
 
   renderThumbnailForm: =>
     new ImageUploadForm
@@ -43,3 +44,7 @@ module.exports = class EditThumbnail extends Backbone.View
       $('.edit-use-article-title').hide()
     else
       $('.edit-use-article-title').show()
+
+  setupEmailForm: ->
+    $('.edit-email-checkbox').change ->
+      $('.edit-email-form').show()
