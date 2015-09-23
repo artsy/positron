@@ -65,7 +65,7 @@ module.exports = class EditAdmin extends Backbone.View
         { id: r._id, value: r.name }
       selected: (e, item, items) =>
         @article.save partner_ids: _.pluck items, 'id'
-      cleared: (e, item, items) =>
+      removed: (e, item, items) =>
         @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
     if ids = @article.get('partner_ids')
       @partners = []
