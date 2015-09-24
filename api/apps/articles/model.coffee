@@ -38,7 +38,7 @@ schema = (->
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
-  tags: @array().items(@string())
+  tags: @array().items(@string()).default([])
   title: @string().allow('', null)
   published: @boolean().default(false)
   published_at: @date()
