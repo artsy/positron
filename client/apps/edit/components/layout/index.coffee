@@ -70,6 +70,13 @@ module.exports = class EditLayout extends Backbone.View
         _.map @$('#edit-admin-tags input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
+      email_metadata:
+        headline: @$(".edit-email-form input[name='headline']").val()
+        author: @$(".edit-email-form input[name='author']").val()
+        credit_line: @$(".edit-email-form input[name='credit_line']").val()
+        credit_link: @$(".edit-email-form input[name='credit_link']").val()
+        small_image_url: if @article.get('email_metadata')?.small_image_url then @article.get('email_metadata').small_image_url else ''
+        large_image_url: if @article.get('email_metadata')?.large_image_url then @article.get('email_metadata').large_image_url else ''
     }
 
   toggleAstericks: =>

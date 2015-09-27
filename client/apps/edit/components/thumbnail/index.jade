@@ -15,26 +15,29 @@ section#edit-thumbnail
         )= article.get('thumbnail_title')
   if user.get('type') == 'Admin'
     section#edit-email
-      h1 Email
-      .edit-email-toggle
-        label.flat-checkbox
-          input.edit-email-checkbox( type='checkbox' name='email' )
-          span Prepare this article for an email campaign
-        .edit-email-form
-          label.edit-email-image
-            span.edit-required(
-              data-hidden=article.get('email_data') ? 'true' : 'false'
-            ) Image
-            #edit-email-upload
-          label
-            span Headline
-            input.bordered-input.edit-email-text( name='headline' )
-          label
-            span Author
-          label
-            input.bordered-input.edit-email-text( name='author' )
-            span Credit Line
-            input.bordered-input.edit-email-text( name='creditline' )
-          label
-            span Credit Link
-            input.bordered-input.edit-email-text( name='creditlink' )
+      h1.edit-email-header Email
+      h2.edit-email-sub-header Prepare this article for an email campaign
+      .edit-email-form
+        label.edit-email-image
+          span(
+            data-hidden=article.get('email_metadata') && article.get('email_metadata').small_image_url ? 'true' : 'false'
+          ) Image
+          #edit-email-upload
+        label
+          span Headline
+          input.bordered-input.edit-email-text( name='headline' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').headline : ''}" )
+        label
+          span Author
+        label
+          input.bordered-input.edit-email-text( name='author' value="#{article.get('email_metadata') && article.get('email_metadata').author ? article.get('email_metadata').author : ''}")
+          span Credit Line
+          input.bordered-input.edit-email-text( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
+        label
+          span Credit Link
+          input.bordered-input.edit-email-text( name='credit_link' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_link : ''}")
+        .edit-email-url URL
+          span  http://artsy.net/articles/#{article.get('slug')}
+        .edit-email-url.edit-email-small-image-url Small
+          span  #{article.get('email_metadata') && article.get('email_metadata').small_image_url ? article.get('email_metadata').small_image_url : ''}
+        .edit-email-url.edit-email-large-image-url Large
+          span  #{article.get('email_metadata') && article.get('email_metadata').large_image_url ? article.get('email_metadata').large_image_url : ''}

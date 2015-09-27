@@ -3,6 +3,7 @@ Backbone = require 'backbone'
 gemup = require 'gemup'
 sd = require('sharify').data
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
+{ crop, resize } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 thumbnailFormTemplate = -> require('./form.jade') arguments...
 
 module.exports = class EditThumbnail extends Backbone.View
@@ -12,17 +13,15 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
     @renderThumbnailForm()
-    @setupEmailForm()
+    @setupEmailMetadata()
 
   renderThumbnailForm: =>
     new ImageUploadForm
       el: $('#edit-thumbnail-upload')
       src: @article.get('thumbnail_image')
       remove: =>
-        console.log 'remove'
         @article.save thumbnail_image: null
       done: (src) =>
-        console.log 'done', src
         @article.save thumbnail_image: src
 
   prefillThumbnailTitle: =>
@@ -45,6 +44,21 @@ module.exports = class EditThumbnail extends Backbone.View
     else
       $('.edit-use-article-title').show()
 
-  setupEmailForm: ->
-    $('.edit-email-checkbox').change ->
-      $('.edit-email-form').show()
+  setupEmailMetadata: ->
+    new ImageUploadForm
+      el: $('#edit-email-upload')
+      src: @article.get('email_metadata')?.small_image_url
+      remove: =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.large_image_url = ''
+        emailMetadata.small_image_url = ''
+        $('.edit-email-large-image-url span').text ''
+        $('.edit-email-small-image-url span').text ''
+        @article.save email_metadata: emailMetadata
+      done: (src) =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.large_image_url = crop(src, { width: 1280, height: 960 } )
+        emailMetadata.small_image_url = crop(src, { width: 552, height: 392 } )
+        $('.edit-email-large-image-url span').text emailMetadata.large_image_url
+        $('.edit-email-small-image-url span').text emailMetadata.small_image_url
+        @article.save email_metadata: emailMetadata
