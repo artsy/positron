@@ -53,7 +53,7 @@ describe 'EditThumbnail', ->
 
   describe '#setupEmailMetadata', ->
 
-    xit 'fills email data if present', ->
+    it 'fills email data if present', ->
       @view.$('input[name=headline]').val().should.equal 'Foo'
       @view.$('input[name=author]').val().should.equal 'Craig Spaeth'
       @view.$('input[name=credit_line]').val().should.equal 'Credit Where Credit Needed'
