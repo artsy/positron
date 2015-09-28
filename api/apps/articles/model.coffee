@@ -93,7 +93,7 @@ schema = (->
     headline: @string().allow('',null)
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
-    credit_link: @string().allow('',null)
+    credit_url: @string().allow('',null)
 ).call Joi
 
 querySchema = (->

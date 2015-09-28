@@ -12,7 +12,7 @@ describe 'EditThumbnail', ->
     benv.setup =>
       tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
-        article: @article = new Article fixtures().article
+        article: @article = new Article fixtures().articles
       ), =>
         benv.expose $: require('jquery'), resize: ((url) -> url)
         Backbone.$ = $
@@ -49,3 +49,13 @@ describe 'EditThumbnail', ->
       @view.$('.edit-title-textarea').val('foo')
       @view.checkTitleTextarea()
       @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'
+
+  describe '#setupEmailMetadata', ->
+
+    it 'fills email data if present', ->
+      @view.$('input[name=headline]').val().should.equal 'Foo'
+      @view.$('input[name=author]').val().should.equal 'Craig Spaeth'
+      @view.$('input[name=credit_line]').val().should.equal 'Credit Where Credit Needed'
+      @view.$('input[name=credit_url]').val().should.equal 'http://credit'
+      @view.$('.edit-email-small-image-url').html().should.containEql 'http://small'
+      @view.$('.edit-email-large-image-url').html().should.containEql 'http://large'

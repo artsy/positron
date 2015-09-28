@@ -33,11 +33,11 @@ section#edit-thumbnail
           span Credit Line
           input.bordered-input.edit-email-text( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
         label
-          span Credit Link
-          input.bordered-input.edit-email-text( name='credit_link' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_link : ''}")
+          span Credit URL
+          input.bordered-input.edit-email-text( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
         .edit-email-url URL
           span  http://artsy.net/articles/#{article.get('slug')}
-        .edit-email-url.edit-email-small-image-url Small
+        .edit-email-url.edit-email-small-image-url Small 
           span  #{article.get('email_metadata') && article.get('email_metadata').small_image_url ? article.get('email_metadata').small_image_url : ''}
-        .edit-email-url.edit-email-large-image-url Large
+        .edit-email-url.edit-email-large-image-url Large 
           span  #{article.get('email_metadata') && article.get('email_metadata').large_image_url ? article.get('email_metadata').large_image_url : ''}
