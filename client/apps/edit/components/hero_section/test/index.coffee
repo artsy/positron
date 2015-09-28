@@ -30,7 +30,7 @@ describe 'HeroSection', ->
         done()
 
   afterEach ->
-    benv.teardown(false)
+    benv.teardown()
 
   it 'opens a video section and sets the model type', ->
     @component.setHero('video')({})

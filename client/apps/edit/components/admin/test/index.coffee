@@ -34,7 +34,7 @@ describe 'EditAdmin', ->
         done()
 
   afterEach ->
-    benv.teardown(false)
+    benv.teardown()
     Backbone.sync.restore()
 
   describe '#onOpen', ->

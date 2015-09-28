@@ -7,7 +7,7 @@ _ = require 'underscore'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require 'joi'
-Joi.objectId = require 'joi-objectid'
+Joi.objectId = require('joi-objectid') Joi
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
