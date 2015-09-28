@@ -57,8 +57,7 @@ module.exports = ->
     gravity_id: '502a6debe8b6470002000004'
     featured: false
     email_metadata:
-      large_image_url: 'http://large'
-      small_image_url: 'http://small'
+      image_url: 'http://img.png'
       headline: 'Foo'
       credit_line: 'Credit Where Credit Needed'
       credit_url: 'http://credit'

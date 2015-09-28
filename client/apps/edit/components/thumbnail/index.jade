@@ -20,7 +20,7 @@ section#edit-thumbnail
       .edit-email-form
         label.edit-email-image
           span(
-            data-hidden=article.get('email_metadata') && article.get('email_metadata').small_image_url ? 'true' : 'false'
+            data-hidden=article.get('email_metadata') && article.get('email_metadata').image_url ? 'true' : 'false'
           ) Image
           #edit-email-upload
         label
@@ -37,7 +37,5 @@ section#edit-thumbnail
           input.bordered-input.edit-email-text( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
         .edit-email-url URL
           span  http://artsy.net/articles/#{article.get('slug')}
-        .edit-email-url.edit-email-small-image-url Small 
-          span  #{article.get('email_metadata') && article.get('email_metadata').small_image_url ? article.get('email_metadata').small_image_url : ''}
-        .edit-email-url.edit-email-large-image-url Large 
-          span  #{article.get('email_metadata') && article.get('email_metadata').large_image_url ? article.get('email_metadata').large_image_url : ''}
+        .edit-email-url.edit-email-small-image-url
+        .edit-email-url.edit-email-large-image-url

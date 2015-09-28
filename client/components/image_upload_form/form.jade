@@ -9,7 +9,7 @@ section.image-upload-form( data-state=(src ? 'loaded': '') )
   .type-error Please choose .png, .jpg, or .gif
   .size-error File is too large
   if src
-    .image-upload-form-preview( style="background-image: url(#{src})" )
+    .image-upload-form-preview( style="background-image: url(#{resize(src,{width: 800})})" )
   else
     .image-upload-form-preview
   .image-upload-form-remove ×

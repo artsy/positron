@@ -88,8 +88,7 @@ schema = (->
       profile_id: @string().allow('', null)
     ]).default([])
   email_metadata: @object().keys
-    small_image_url: @string().allow('',null)
-    large_image_url: @string().allow('',null)
+    image_url: @string().allow('',null)
     headline: @string().allow('',null)
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
