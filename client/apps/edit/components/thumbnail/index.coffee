@@ -3,6 +3,7 @@ Backbone = require 'backbone'
 gemup = require 'gemup'
 sd = require('sharify').data
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
+{ crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 thumbnailFormTemplate = -> require('./form.jade') arguments...
 
 module.exports = class EditThumbnail extends Backbone.View
@@ -12,16 +13,15 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
     @renderThumbnailForm()
+    @setupEmailMetadata()
 
   renderThumbnailForm: =>
     new ImageUploadForm
       el: $('#edit-thumbnail-upload')
       src: @article.get('thumbnail_image')
       remove: =>
-        console.log 'remove'
         @article.save thumbnail_image: null
       done: (src) =>
-        console.log 'done', src
         @article.save thumbnail_image: src
 
   prefillThumbnailTitle: =>
@@ -43,3 +43,29 @@ module.exports = class EditThumbnail extends Backbone.View
       $('.edit-use-article-title').hide()
     else
       $('.edit-use-article-title').show()
+
+  setupEmailMetadata: ->
+    if @article.get('email_metadata')?.image_url
+      src = @article.get('email_metadata').image_url
+      large_image_url = crop(src, { width: 1280, height: 960 } )
+      small_image_url = crop(src, { width: 552, height: 392 } )
+      $('.edit-email-large-image-url').html "Large <span>#{large_image_url}</span>"
+      $('.edit-email-small-image-url').html "Small <span>#{small_image_url}</span>"
+
+    new ImageUploadForm
+      el: $('#edit-email-upload')
+      src: @article.get('email_metadata')?.image_url
+      remove: =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.image_url = ''
+        $('.edit-email-large-image-url').text ''
+        $('.edit-email-small-image-url').text ''
+        @article.save email_metadata: emailMetadata
+      done: (src) =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.image_url = src
+        large_image_url = crop(src, { width: 1280, height: 960 } )
+        small_image_url = crop(src, { width: 552, height: 392 } )
+        $('.edit-email-large-image-url').html "Large <span>#{large_image_url}</span>"
+        $('.edit-email-small-image-url').html "Small <span>#{small_image_url}</span>"
+        @article.save email_metadata: emailMetadata

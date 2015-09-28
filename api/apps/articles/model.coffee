@@ -87,6 +87,12 @@ schema = (->
       name: @string().allow('', null)
       profile_id: @string().allow('', null)
     ]).default([])
+  email_metadata: @object().keys
+    image_url: @string().allow('',null)
+    headline: @string().allow('',null)
+    author: @string().allow('',null)
+    credit_line: @string().allow('',null)
+    credit_url: @string().allow('',null)
 ).call Joi
 
 querySchema = (->

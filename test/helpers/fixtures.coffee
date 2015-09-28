@@ -56,6 +56,12 @@ module.exports = ->
     featured_artwork_ids: ['5321b71c275b24bcaa0001a5']
     gravity_id: '502a6debe8b6470002000004'
     featured: false
+    email_metadata:
+      image_url: 'http://img.png'
+      headline: 'Foo'
+      credit_line: 'Credit Where Credit Needed'
+      credit_url: 'http://credit'
+      author: 'Craig Spaeth'
   fixtures.users =
     "id" : "4d8cd73191a5c50ce200002a"
     "name" : "Craig Spaeth"
