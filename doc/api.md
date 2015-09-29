@@ -50,15 +50,15 @@ GET /sync\_to\_post?article_id=
 
 GET /users/:id
 
-### Verticals
+### Sections
 
-GET /verticals
+GET /sections
 
 **params:**
 
-- featured: Query verticals by featured
+- featured: Query sections by featured
 
-POST /verticals  
-GET /verticals/:id  
-PUT /verticals/:id  
-DELETE /verticals/:id
+POST /sections
+GET /sections/:id
+PUT /sections/:id
+DELETE /sections/:id
