@@ -25,7 +25,7 @@
     "debug": "*",
     "embedly-view-helpers": "*",
     "express": "*",
-    "express-force-ssl": "*",
+    "express-force-ssl": "0.2.13",
     "glossary": "*",
     "jade": "*",
     "joi": "*",
