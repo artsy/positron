@@ -36,6 +36,6 @@ section#edit-thumbnail
           span Credit URL
           input.bordered-input.edit-email-text( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
         .edit-email-url URL
-          span  http://artsy.net/articles/#{article.get('slug')}
+          span  http://artsy.net/article/#{article.get('slug')}
         .edit-email-url.edit-email-small-image-url
         .edit-email-url.edit-email-large-image-url
