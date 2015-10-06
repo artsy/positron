@@ -188,6 +188,38 @@ describe 'Article', ->
           results[1].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles by tags', (done) ->
+      fabricate 'articles', [
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          tags: [ 'pickle', 'samosa' ]
+          title: 'Hello Wuuuurld - Food'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          tags: [ 'pickle', 'muffin' ]
+          title: 'Hello Waaarld - Food'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002c'
+          tags: [ 'muffin', 'lentils' ]
+          title: 'Hello Weeeerld - Food'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002e'
+          tags: [ 'radio', 'pixels' ]
+          title: 'Hello I am Weiiird - Electronics'
+        }
+      ], =>
+        Article.where { tags: ['pickle', 'muffin'] }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 14
+          count.should.equal 3
+          results[0].title.should.equal 'Hello Weeeerld - Food'
+          results[1].title.should.equal 'Hello Waaarld - Food'
+          results[2].title.should.equal 'Hello Wuuuurld - Food'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

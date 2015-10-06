@@ -114,6 +114,7 @@ querySchema = (->
   exclude_google_news: @boolean()
   q: @string()
   all_by_author: @objectId()
+  tags: @array()
 ).call Joi
 
 #
@@ -141,7 +142,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -151,7 +152,7 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
-
+    query.tags = { $in: input.tags } if input.tags
     query.$or = [
       { author_id: ObjectId(input.all_by_author) }
       { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
@@ -232,7 +233,7 @@ update = (article, input, author) ->
 addSlug = (article, input, author) ->
   titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
   article.slugs ?= []
-  #Don't change the article slug unless it's unpublished or a new slug is added
+  # Don't change the article slug unless it's unpublished or a new slug is added
   if input.slug? and (input.slug != _.last(article.slugs))
     slug = input.slug
   else if article.published is false
