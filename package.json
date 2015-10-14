@@ -38,7 +38,7 @@
     "moment": "*",
     "mongojs": "*",
     "morgan": "*",
-    "newrelic": "*",
+    "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
     "nib": "*",
     "node-env-file": "*",
     "node-mandrill": "*",

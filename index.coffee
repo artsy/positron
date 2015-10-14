@@ -2,8 +2,6 @@
 # Main server that combines API & client
 #
 
-require 'newrelic'
-
 # Load environment vars
 env = require 'node-env-file'
 switch process.env.NODE_ENV
@@ -15,9 +13,11 @@ switch process.env.NODE_ENV
 debug = require('debug') 'app'
 raven = require 'raven'
 express = require "express"
+newrelic = require 'artsy-newrelic'
 app = module.exports = express()
 
 # Put client/api together
+app.use newrelic
 app.use '/api', require './api'
 # TODO: Possibly a terrible hack to not share `req.user` between both.
 app.use (req, rest, next) -> (req.user = null); next()
