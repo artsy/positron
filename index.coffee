@@ -10,10 +10,10 @@ switch process.env.NODE_ENV
   else env __dirname + '/.env'
 
 # Dependencies
+newrelic = require 'artsy-newrelic'
 debug = require('debug') 'app'
 raven = require 'raven'
 express = require "express"
-newrelic = require 'artsy-newrelic'
 app = module.exports = express()
 
 # Put client/api together
