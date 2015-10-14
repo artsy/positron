@@ -38,7 +38,7 @@
     "moment": "*",
     "mongojs": "*",
     "morgan": "*",
-    "newrelic": "*",
+    "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
     "nib": "*",
     "node-env-file": "*",
     "node-mandrill": "*",
@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
-    "benv": "*",
+    "benv": "2.x",
     "browserify": "5.x",
     "browserify-dev-middleware": "*",
     "caching-coffeeify": "*",

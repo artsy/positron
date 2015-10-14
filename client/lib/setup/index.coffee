@@ -4,15 +4,10 @@
 # populating sharify data
 #
 
-# Inject some configuration & constant data into sharify
-_ = require 'underscore'
+# Dependencies
+require './sharify'
 sharify = require 'sharify'
 bucketAssets = require 'bucket-assets'
-sd = sharify.data = _.pick process.env,
-  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
-  'SENTRY_PUBLIC_DSN', 'EMBEDLY_KEY', 'SEGMENT_WRITE_KEY'
-
-# Dependencies
 express = require 'express'
 session = require 'cookie-session'
 bodyParser = require 'body-parser'
@@ -27,6 +22,7 @@ setupAuth = require './auth'
 morgan = require 'morgan'
 { locals, errorHandler, helpers, ua } = require '../middleware'
 { parse } = require 'url'
+{ NODE_ENV } = process.env
 
 module.exports = (app) ->
 
@@ -34,7 +30,7 @@ module.exports = (app) ->
   Backbone.sync = require 'backbone-super-sync'
 
   # Mount generic middleware & run setup modules
-  app.use forceSSL if 'production' is sd.NODE_ENV
+  app.use forceSSL if 'production' is NODE_ENV
   app.use sharify
   setupEnv app
   app.use cookieParser()
