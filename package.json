@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
-    "benv": "*",
+    "benv": "2.x",
     "browserify": "5.x",
     "browserify-dev-middleware": "*",
     "caching-coffeeify": "*",
