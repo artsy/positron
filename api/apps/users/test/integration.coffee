@@ -9,7 +9,6 @@ describe 'user endpoints', ->
   beforeEach (done) ->
     fabricate 'users', {}, (err, @user) =>
       @server = app.listen 5000, ->
-        console.log 'listening'
         done()
 
   afterEach (done) ->
