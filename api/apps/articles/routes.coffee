@@ -42,6 +42,13 @@ _ = require 'underscore'
     return next err if err
     res.send present req.article
 
+# Don't let non-admins feature
+@restrictFeature = (req, res, next) ->
+  if req.user?.type isnt 'Admin' and req.body.featured
+    res.err 401, 'You must be an admin to feature an article.'
+  else
+    next()
+
 # Fetch & attach a req.article middleware
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
