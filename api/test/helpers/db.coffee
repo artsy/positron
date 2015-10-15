@@ -11,7 +11,7 @@ bcrypt = require 'bcrypt'
 
 @fabricate = (collection, data, callback) =>
   if _.isArray(data)
-    data = fixturize(collection, data) for obj in data
+    data = (fixturize collection, obj for obj in data)
   else
     data = fixturize collection, data
   @db[collection].insert data, callback
