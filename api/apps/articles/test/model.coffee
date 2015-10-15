@@ -410,7 +410,7 @@ describe 'Article', ->
           }
         ]
       }, 'foo', (err, article) ->
-        article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg/onload=alert(1)&gt;'
+        article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[0].body.should.equal body
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
         done()
