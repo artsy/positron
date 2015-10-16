@@ -433,6 +433,24 @@ describe 'Article', ->
         article.sections[1].body.should.equal '<a href="http://www.bar.com">Foo</a>'
         done()
 
+    it 'retains non-text sections', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'text'
+            body: '<a href="foo.com">Foo</a>'
+          }
+          {
+            type: 'image'
+            url: 'http://foo.com'
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
+        article.sections[1].url.should.equal 'http://foo.com'
+        done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
