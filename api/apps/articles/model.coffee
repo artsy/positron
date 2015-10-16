@@ -222,8 +222,8 @@ sortParamToQuery = (input) ->
 sanitize = (article) ->
   _.extend article,
     lead_paragraph: xss fixHrefs article.lead_paragraph
-    sections: for section in article.sections when section.type is 'text'
-      section.body = xss fixHrefs section.body
+    sections: for section in article.sections
+      section.body = xss fixHrefs section.body if section.type is 'text'
       section
 
 fixHrefs = (html) ->
