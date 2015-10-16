@@ -11,6 +11,9 @@ async = require 'async'
 Joi = require 'joi'
 Joi.objectId = require('joi-objectid') Joi
 moment = require 'moment'
+xss = require 'xss'
+cheerio = require 'cheerio'
+url = require 'url'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
@@ -196,8 +199,12 @@ sortParamToQuery = (input) ->
       User.findOrInsert authorId, accessToken, (err, author) ->
         return callback err if err
         article = update article, input, author
-        db.articles.save _.extend(article,
+        db.articles.save sanitize(_.extend(article,
           _id: id
+          contributing_authors: article.contributing_authors.map( (author)->
+            author.id = ObjectId(author.id)
+            author
+          ) if article.contributing_authors
           # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
           author_id: ObjectId(article.author_id) if article.author_id
           fair_id: ObjectId(article.fair_id) if article.fair_id
@@ -209,11 +216,22 @@ sortParamToQuery = (input) ->
           featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
           featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
           biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-          contributing_authors: article.contributing_authors.map( (author)->
-            author.id = ObjectId(author.id)
-            author
-          ) if article.contributing_authors
-        ), callback
+        )), callback
+
+# TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
+sanitize = (article) ->
+  _.extend article,
+    lead_paragraph: xss fixHrefs article.lead_paragraph
+    sections: for section in article.sections when section.type is 'text'
+      section.body = xss fixHrefs section.body
+      section
+
+fixHrefs = (html) ->
+  return html unless try $ = cheerio.load html
+  $('a').each ->
+    u = url.parse $(this).attr 'href'
+    $(this).attr 'href', 'http://' + u.href unless u.protocol
+  $.html()
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema
