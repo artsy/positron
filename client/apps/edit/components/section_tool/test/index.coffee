@@ -12,7 +12,7 @@ describe 'SectionTool', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )

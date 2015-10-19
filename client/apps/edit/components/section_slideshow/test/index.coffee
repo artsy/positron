@@ -15,7 +15,7 @@ describe 'SectionSlideshow', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       @SectionSlideshow = benv.require resolve __dirname, '../index'
       sinon.stub Backbone, 'sync'
       @component = React.render @SectionSlideshow(

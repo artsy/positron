@@ -14,7 +14,7 @@ describe 'EditHeader', ->
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().article
       ), =>
-        benv.expose $: require('jquery')
+        benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditHeader = benv.require resolve __dirname, '../index'

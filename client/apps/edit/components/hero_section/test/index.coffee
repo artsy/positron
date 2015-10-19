@@ -14,7 +14,7 @@ describe 'HeroSection', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       HeroSection = benv.require resolve __dirname, '../index'
       @SectionContainer = React.createClass
         render: ->

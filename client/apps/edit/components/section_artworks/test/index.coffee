@@ -16,7 +16,7 @@ describe 'SectionArtworks', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionArtworks = benv.requireWithJadeify(
         resolve(__dirname, '../index')
         ['icons']

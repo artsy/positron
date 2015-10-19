@@ -2,7 +2,7 @@ _ = require 'underscore'
 { fixtures } = require '../../../test/helpers/db'
 sinon = require 'sinon'
 rewire = require 'rewire'
-routes = rewire '../routes'
+routes = rewire '../routes.coffee'
 { ObjectId } = require 'mongojs'
 
 describe 'routes', ->

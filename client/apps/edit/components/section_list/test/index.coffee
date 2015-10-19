@@ -13,7 +13,7 @@ describe 'SectionList', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionList = benv.require resolve(__dirname, '../index')
       SectionList.__set__ 'SectionTool', ->
       SectionList.__set__ 'SectionContainer', @SectionContainer = sinon.stub()

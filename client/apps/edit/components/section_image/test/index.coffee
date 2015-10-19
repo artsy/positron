@@ -18,7 +18,7 @@ describe 'SectionImage', ->
         setTimeout => @onload()
       onload: ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionImage = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
