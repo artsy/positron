@@ -16,4 +16,3 @@ dump.rdb
 .env
 .env.ignore
 node_modules
-scripts/tmp

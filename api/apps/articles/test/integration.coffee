@@ -10,11 +10,30 @@ describe 'articles endpoints', ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
         @server = app.listen 5000, ->
-          console.log 'listening'
           done()
 
   afterEach ->
     @server.close()
+
+  describe 'as a non-admin', ->
+
+    beforeEach (done) ->
+      fabricate 'users', {
+        type: 'User'
+        name: 'Normie'
+        access_token: 'foobar'
+        _id: undefined
+      }, (err, @normie) =>
+        done()
+
+    it 'does not allow featuring', (done) ->
+      request
+        .post("http://localhost:5000/articles")
+        .set('X-Access-Token': 'foobar')
+        .send(featured: true).end (err, res) ->
+          err.status.should.equal 401
+          res.body.message.should.containEql 'must be an admin'
+          done()
 
   it 'creates articles', (done) ->
     request
@@ -113,4 +132,3 @@ describe 'articles endpoints', ->
           db.articles.count (err, count) ->
             count.should.equal 1
             done()
-

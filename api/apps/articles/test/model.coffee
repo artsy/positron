@@ -393,6 +393,64 @@ describe 'Article', ->
         (article.fair_id?).should.not.be.ok
         done()
 
+    it 'escapes xss', (done) ->
+      body = '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+      badBody = '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        lead_paragraph: '<p>abcd abcd</p><svg/onload=alert(1)>'
+        sections: [
+          {
+            type: 'text'
+            body: body
+          }
+          {
+            type: 'text'
+            body: badBody
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[0].body.should.equal body
+        article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
+        done()
+
+    it 'fixes anchors urls', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'text'
+            body: '<a href="foo.com">Foo</a>'
+          }
+          {
+            type: 'text'
+            body: '<a href="www.bar.com">Foo</a>'
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
+        article.sections[1].body.should.equal '<a href="http://www.bar.com">Foo</a>'
+        done()
+
+    it 'retains non-text sections', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'text'
+            body: '<a href="foo.com">Foo</a>'
+          }
+          {
+            type: 'image'
+            url: 'http://foo.com'
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
+        article.sections[1].url.should.equal 'http://foo.com'
+        done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
