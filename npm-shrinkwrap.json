@@ -3400,7 +3400,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.8",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
         },
         "esprima": {
@@ -4147,7 +4147,7 @@
       "dependencies": {
         "through": {
           "version": "2.3.8",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
         }
       }
@@ -4320,7 +4320,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.1 <2.1.0",
+              "from": "inherits@>=2.0.0 <3.0.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -6329,7 +6329,7 @@
         },
         "through": {
           "version": "2.3.8",
-          "from": "through@>=2.3.6 <3.0.0",
+          "from": "through@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
         },
         "uglify-js": {
@@ -6392,6 +6392,30 @@
       "version": "3.2.2",
       "from": "underscore.string@>=3.2.2 <4.0.0",
       "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-3.2.2.tgz"
+    },
+    "xss": {
+      "version": "0.2.7",
+      "from": "xss@>=0.2.7 <0.3.0",
+      "resolved": "https://registry.npmjs.org/xss/-/xss-0.2.7.tgz",
+      "dependencies": {
+        "commander": {
+          "version": "2.8.1",
+          "from": "commander@>=2.8.0 <2.9.0",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
+          "dependencies": {
+            "graceful-readlink": {
+              "version": "1.0.1",
+              "from": "graceful-readlink@>=1.0.0",
+              "resolved": "https://registry.npmjs.org/graceful-readlink/-/graceful-readlink-1.0.1.tgz"
+            }
+          }
+        },
+        "cssfilter": {
+          "version": "0.0.5",
+          "from": "cssfilter@0.0.5",
+          "resolved": "https://registry.npmjs.org/cssfilter/-/cssfilter-0.0.5.tgz"
+        }
+      }
     },
     "zombie": {
       "version": "4.1.0",

@@ -52,7 +52,8 @@
     "superagent": "^1.4.0",
     "ua-parser": "^0.3.5",
     "underscore": "^1.8.3",
-    "underscore.string": "^3.2.2"
+    "underscore.string": "^3.2.2",
+    "xss": "^0.2.7"
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
