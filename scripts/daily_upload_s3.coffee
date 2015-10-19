@@ -19,7 +19,12 @@ db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 # Setup CSV
 filename = "export_" + moment().format('YYYYMMDDhhmmss') + ".csv"
 csvStream = csv.createWriteStream { headers: true }
-writableStream = fs.createWriteStream('scripts/tmp/' + filename)
+dir = 'scripts/tmp/'
+if !fs.existsSync dir
+  fs.mkdir dir
+
+writableStream = fs.createWriteStream( dir + filename)
+
 
 csvStream.pipe(writableStream)
 csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_id", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title"])
@@ -40,10 +45,10 @@ db.articles.find({ published: true })
       secret: process.env.S3_SECRET
       bucket: process.env.FULCRUM_BUCKET
 
-    client.putFile 'scripts/tmp/' + filename, "reports/positron_articles/#{filename}", {
+    client.putFile dir + filename, "reports/positron_articles/#{filename}", {
       'Content-Type': 'text/csv'
     }, (err, result) ->
 
       # Delete filename and close db
-      fs.unlink('scripts/tmp/' + filename)
+      fs.unlink(dir + filename)
       db.close()
