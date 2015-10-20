@@ -398,6 +398,9 @@ describe 'Article', ->
       badBody = '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       Article.save {
         author_id: '5086df098523e60002000018'
+        hero_section:
+          type: 'image'
+          caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
         lead_paragraph: '<p>abcd abcd</p><svg/onload=alert(1)>'
         sections: [
           {
@@ -408,11 +411,27 @@ describe 'Article', ->
             type: 'text'
             body: badBody
           }
+          {
+            type: 'image'
+            caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+          }
+          {
+            type: 'slideshow'
+            items: [
+              {
+                type: 'image'
+                caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+              }
+            ]
+          }
         ]
       }, 'foo', (err, article) ->
         article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.hero_section.caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[0].body.should.equal body
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
+        article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         done()
 
     it 'fixes anchors urls', (done) ->

@@ -61,13 +61,8 @@ schema = (->
     @object().keys
       type: @string().valid('slideshow')
       items: @array().items [
-        @object().keys
-          type: @string().valid('image')
-          url: @string().allow('', null)
-          caption: @string().allow('', null)
-        @object().keys
-          type: @string().valid('video')
-          url: @string().allow('', null)
+        imageSection
+        videoSection
         @object().keys
           type: @string().valid('artwork')
           id: @string()
@@ -220,18 +215,25 @@ sortParamToQuery = (input) ->
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
-  _.extend article,
-    lead_paragraph: xss fixHrefs article.lead_paragraph
+  sanitized = _.extend article,
+    lead_paragraph: sanitizeHtml article.lead_paragraph
     sections: for section in article.sections
-      section.body = xss fixHrefs section.body if section.type is 'text'
+      section.body = sanitizeHtml section.body if section.type is 'text'
+      section.caption = sanitizeHtml section.caption if section.type is 'image'
+      if section.type is 'slideshow'
+        for item in section.items when item.type is 'image'
+          item.caption = sanitizeHtml item.caption
       section
+  if article.hero_section?.caption
+    sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
+  sanitized
 
-fixHrefs = (html) ->
-  return html unless try $ = cheerio.load html
+sanitizeHtml = (html) ->
+  return xss html unless try $ = cheerio.load html
   $('a').each ->
     u = url.parse $(this).attr 'href'
     $(this).attr 'href', 'http://' + u.href unless u.protocol
-  $.html()
+  xss $.html()
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema
