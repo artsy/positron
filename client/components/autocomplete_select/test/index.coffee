@@ -7,7 +7,7 @@ describe 'AutocompleteSelect', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
       mod.__set__ 'Autocomplete', @Autocomplete = sinon.stub()
       @component = React.render AutocompleteSelect(

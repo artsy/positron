@@ -7,7 +7,7 @@ describe 'ErroModal', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       Backbone.$ = $
       sinon.stub $, 'ajax'
       { ErrorModal } = mod = benv.requireWithJadeify(

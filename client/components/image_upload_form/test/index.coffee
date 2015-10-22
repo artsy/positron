@@ -9,7 +9,7 @@ describe 'ImageUploadForm', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require('jquery')
+      benv.expose $: benv.require('jquery')
       Backbone.$ = $
       ImageUploadForm = benv.requireWithJadeify(
         resolve(__dirname, '../index')

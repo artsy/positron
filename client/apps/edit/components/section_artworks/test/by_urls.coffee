@@ -15,7 +15,7 @@ describe 'ByUrls', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       ByUrls = benv.require  resolve(__dirname, '../by_urls')
       @component = React.render ByUrls(
         artworks: new Backbone.Collection [fixtures().artworks]

@@ -12,7 +12,7 @@ describe 'SectionText', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionText = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )

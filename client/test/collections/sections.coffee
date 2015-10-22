@@ -9,7 +9,7 @@ describe "Sections", ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       sinon.stub Backbone, 'sync'
       @sections = new Sections fixtures().articles.sections
       done()

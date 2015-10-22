@@ -14,7 +14,7 @@ describe 'SectionVideo', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require('jquery'), resize: ->
+      benv.expose $: benv.require('jquery'), resize: ->
       SectionVideo = benv.require resolve __dirname, '../index'
       SectionVideo.__set__ 'gemup', @gemup = sinon.stub()
       @component = React.render SectionVideo(
@@ -29,7 +29,6 @@ describe 'SectionVideo', ->
         done()
 
   afterEach ->
-    $.ajax.restore()
     benv.teardown()
 
   it 'removes itself when clicking off & the section is empty', ->

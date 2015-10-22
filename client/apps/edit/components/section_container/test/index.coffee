@@ -12,7 +12,7 @@ describe 'SectionContainer', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: require 'jquery'
+      benv.expose $: benv.require 'jquery'
       SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
