@@ -6,6 +6,8 @@ featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
 _s = require 'underscore.string'
 moment = require 'moment'
+ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
+{ crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = class EditAdmin extends Backbone.View
 
@@ -21,6 +23,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupPublishDate()
     @setupSlug()
     @setupContributingAuthors()
+    @setupEmailMetadata()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -38,7 +41,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-fair .admin-form-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-fair')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -57,7 +60,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupPartnerAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
-    list = new AutocompleteList @$('#edit-admin-partner .admin-form-right')[0],
+    list = new AutocompleteList @$('#edit-admin-partner')[0],
       name: 'partner_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
       placeholder: 'Search partner by name...'
@@ -82,7 +85,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupAuctionAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-auction .admin-form-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-auction')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
       placeholder: 'Search auction by name...'
       filter: (res) -> for r in res
@@ -102,7 +105,7 @@ module.exports = class EditAdmin extends Backbone.View
   setupSectionAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @section_ids = @article.get 'section_ids' or []
-    list = new AutocompleteList @$('#edit-admin-section .admin-form-right')[0],
+    list = new AutocompleteList @$('#edit-admin-section')[0],
       name: 'section_ids[]'
       url: "#{sd.API_URL}/sections?q=%QUERY"
       placeholder: 'Search section by name...'
@@ -126,7 +129,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupShowsAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-shows .admin-form-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-shows')[0],
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
       selected: (e, item) =>
@@ -143,7 +146,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupBiographyAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-biography .admin-form-right')[0],
+    select = AutocompleteSelect @$('#edit-admin-biography')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
       placeholder: 'Search artist by name...'
       filter: (artists) -> for artist in artists
@@ -163,7 +166,7 @@ module.exports = class EditAdmin extends Backbone.View
   setupContributingAuthors: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @contributing_authors = @article.get 'contributing_authors' or []
-    list = new AutocompleteList @$('#edit-admin-contributing-authors .admin-form-right')[0],
+    list = new AutocompleteList @$('#edit-admin-contributing-authors')[0],
       name: 'contributing_authors[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
@@ -215,6 +218,28 @@ module.exports = class EditAdmin extends Backbone.View
       featuredListTemplate list: @article.featuredList('Artworks')
     )
 
+  setupEmailMetadata: ->
+    renderInputs = (src) ->
+      $('.edit-email-large-image-url input').val(
+        crop(src, { width: 1280, height: 960 } ))
+      $('.edit-email-small-image-url input').val(
+        crop(src, { width: 552, height: 392 } ))
+    if @article.get('email_metadata')?.image_url
+      renderInputs @article.get('email_metadata').image_url
+    new ImageUploadForm
+      el: $('#edit-email-upload')
+      src: @article.get('email_metadata')?.image_url
+      remove: =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.image_url = ''
+        $('.edit-email-large-image-url').val ''
+        $('.edit-email-small-image-url').val ''
+        @article.save email_metadata: emailMetadata
+      done: (src) =>
+        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata.image_url = src
+        renderInputs src
+
   events:
     'change #eaf-primary-artists .eaf-artist-input': (e) ->
       @featureFromInput('PrimaryArtists') e
@@ -222,14 +247,12 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('PrimaryArtists') e
     'click #eaf-primary-artists .eaf-featured': (e)->
       @unfeature('PrimaryArtists') e
-
     'change #eaf-artists .eaf-artist-input': (e) ->
       @featureFromInput('Artists') e
     'click #eaf-artists .eaf-mentioned': (e) ->
       @featureMentioned('Artists') e
     'click #eaf-artists .eaf-featured': (e)->
       @unfeature('Artists') e
-
     'change .eaf-artwork-input': (e) ->
       @featureFromInput('Artworks') e
     'click #eaf-artworks .eaf-mentioned': (e) ->

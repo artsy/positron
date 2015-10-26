@@ -10,105 +10,131 @@ mixin featuredList(id, resource)
         )
 
 section#edit-admin.admin-form-container.max-width-container
-  section#edit-admin-tier.admin-form-section
-    .admin-form-left
-      h1 Tier
-      h2 Tier 1 articles get highlighted in the magazine section.
-    .admin-form-right
-      .admin-form-right-col
-        label.flat-radio-button
-          input( type='radio' name='tier' checked=article.get('tier') == 1
-            value=1 )
-          | Tier 1
-      .admin-form-right-col
-        label.flat-radio-button
-          input( type='radio' name='tier' checked=article.get('tier') != 1
-            value=2 )
-          | Tier 2
-  section#edit-admin-magazine.admin-form-section
+
+  //- Magazine
+  section.admin-form-section
     .admin-form-left
       h1 Magazine
-      h2 Add this article to the main Magazine section of Artsy.
+      h2 Feature this to the main magazine feed and choose to make it stand out.
     .admin-form-right
-      label.flat-checkbox
-        input( type='checkbox' name= 'featured'
-          checked=article.get('featured') == 1 value=1 )
-  section#edit-admin-fair.admin-form-section
+      .admin-form-right-col
+        label Featured
+          .flat-checkbox
+            input( type='checkbox' name= 'featured'
+              checked=article.get('featured') == 1 value=1 )
+      #edit-admin-tier.admin-form-right-col
+        label Tier 1
+          .flat-radio-button
+            input(
+              type='radio'
+              name='tier'
+              checked=article.get('tier') == 1
+              value=1
+            )
+        label Tier 2
+          .flat-radio-button
+            input(
+              type='radio'
+              name='tier'
+              checked=article.get('tier') != 1
+              value=2
+            )
+
+  //- Email
+  section.admin-form-section#edit-email
     .admin-form-left
-      h1 Fair
-      h2 Add this article to a fair&rsquo;s magazine and year round page.
-    .admin-form-right
-  section#edit-admin-partner.admin-form-section
+      h1 Email
+      h2 Prepare this article for an email campaign.
+    .admin-form-right.edit-email-form
+      .admin-form-right-col
+        label.edit-email-image
+          span(
+            data-hidden=article.get('email_metadata') && article.get('email_metadata').image_url ? 'true' : 'false'
+          ) Image
+          #edit-email-upload
+        label Headline
+          input.bordered-input( name='headline' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').headline : ''}" )
+        label Author
+          input.bordered-input( name='author' value="#{article.get('email_metadata') && article.get('email_metadata').author ? article.get('email_metadata').author : ''}")
+        label Credit Line
+          input.bordered-input( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
+        label Credit URL
+          input.bordered-input( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
+      .admin-form-right-col
+        label.edit-email-url URL
+          input.bordered-input(
+            value="http://artsy.net/article/#{article.get('slug')}"
+            onClick="this.select();"
+            readonly
+          )
+        label.edit-email-small-image-url Large
+          input.bordered-input( onClick="this.select();" readonly )
+        label.edit-email-large-image-url Small
+          input.bordered-input( onClick="this.select();" readonly )
+
+  //- Featuring
+  section.admin-form-section
     .admin-form-left
-      h1 Partner
-      h2 Add this article to a partner&rsquo;s profile page.
+      h1 Featuring
+      h2 Feature this article to selected pages or microsites to highlight it in various feeds and modules.
     .admin-form-right
-  section#edit-admin-auction.admin-form-section
+      .admin-form-right-col
+        label Fair
+          #edit-admin-fair
+        label Partner
+          #edit-admin-partner
+        label Artist Biography
+          #edit-admin-biography
+      .admin-form-right-col
+        label Editorial Section
+          #edit-admin-section
+        label Show
+          #edit-admin-shows
+        label Auction
+          #edit-admin-auction
+      #edit-admin-feature
+        label Primary Artists
+        +featuredList('eaf-primary-artists', 'artist')
+        label Secondary Artists
+        +featuredList('eaf-artists', 'artist')
+        label Artworks
+        +featuredList('eaf-artworks', 'artwork')
+
+  //- Metadata
+  section.admin-form-section
     .admin-form-left
-      h1 Auction
-      h2 Add this article to an auction&rsquo;s page.
+      h1 Metadata
+      h2 Fine tuning slugs (urls), tags (keywords), etc. can increase SEO impact or help with tools like Parsely.
     .admin-form-right
-  section#edit-admin-section.admin-form-section
+      #edit-admin-slug
+        label Slug
+          a.edit-admin-slug-generate(href='/') Use title + author
+        input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
+      br
+      #edit-admin-tags
+        label Tags
+        input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
+      br
+      .admin-form-right-col
+        #edit-admin-publish-date
+          label Publish Date
+          input.bordered-input.edit-admin-input-date
+      .admin-form-right-col
+        #edit-admin-google-news
+          label Exclude from Google News
+          .flat-checkbox
+            input( type='checkbox' name='exclude_google_news'
+              checked=article.get('exclude_google_news') == 1 value=1 )
+
+  //- Authors
+  section.admin-form-section
     .admin-form-left
-      h1 Section
-      h2 Add this article to a special editorial "section" (e.g. The Vennice Biennale 2015 coverage).
+      h1 Authors
+      h2 Change the primary author to move this article in Writer or add contributing authors to expand bylines.
     .admin-form-right
-  section#edit-admin-biography.admin-form-section
-    .admin-form-left
-      h1 Artist Biography
-      h2 Indicate that this article is a biography for a specified artist.
-    .admin-form-right
-  section#edit-admin-shows.admin-form-section
-    .admin-form-left
-      h1 Shows
-      h2 Select Partner Shows or Fair Booths for this article to appear on as a 'Related Article.''
-    .admin-form-right
-  section#edit-admin-feature.admin-form-section
-    .admin-form-left
-      h1 Artists & Artworks
-      h2 Select artist and artwork pages for this article to appear highlighted on.
-    .admin-form-right
-      h3 Primary Artists
-      +featuredList('eaf-primary-artists', 'artist')
-      h3 Secondary Artists
-      +featuredList('eaf-artists', 'artist')
-      h3 Artworks
-      +featuredList('eaf-artworks', 'artwork')
-  section#edit-admin-slug.admin-form-section
-    .admin-form-left
-      h1 Slug
-      h2 Change the url of this article to optimize SEO impact.
-    .admin-form-right
-      input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
-      a.edit-admin-slug-generate(href='/') Generate from title & author name
-  section#edit-admin-tags.admin-form-section
-    .admin-form-left
-      h1 Keywords
-      h2 Add SEO keywords for this article with each word separated by a comma (e.g. "Andy Warhol, Pop Art, Brillo Boxes")
-    .admin-form-right
-      input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
-  section#edit-admin-publish-date.admin-form-section
-    .admin-form-left
-      h1 Publish Date
-      h2 Change the date this article was published to reorder it in a Magazine view.
-    .admin-form-right
-      input.bordered-input.edit-admin-input-date
-  section#edit-admin-change-author.admin-form-section
-    .admin-form-left
-      h1 Change Author
-      h2 Changing the author of this article will move it to their Artsy Writer.
-    .admin-form-right
-      input.bordered-input( placeholder='Search by user name...' )
-  section#edit-admin-contributing-authors.admin-form-section
-    .admin-form-left
-      h1 Contributing Authors
-      h2 Names will appear in article bylines and the article will be added to their profile.
-    .admin-form-right
-  section#edit-admin-google-news.admin-form-section
-    .admin-form-left
-      h1 Exclude Google News
-      h2 Prevent this article from appearing on Google News.
-    .admin-form-right
-      label.flat-checkbox
-        input( type='checkbox' name='exclude_google_news'
-          checked=article.get('exclude_google_news') == 1 value=1 )
+      #edit-admin-change-author
+        label Primary Author
+        input.bordered-input( placeholder='Search by user name...' )
+      br
+      label Contributing Author
+        #edit-admin-contributing-authors

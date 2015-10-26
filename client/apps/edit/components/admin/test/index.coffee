@@ -13,13 +13,14 @@ describe 'EditAdmin', ->
     benv.setup =>
       tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
-        article: @article = new Article fixtures().article
+        article: @article = new Article fixtures().articles
       ), =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
         EditAdmin = benv.requireWithJadeify '../index',
           ['featuredListTemplate']
+        EditAdmin.__set__ 'ImageUploadForm', @ImageUploadForm = sinon.stub()
         EditAdmin::setupAuthorAutocomplete = sinon.stub()
         EditAdmin::setupFairAutocomplete = sinon.stub()
         EditAdmin::setupPartnerAutocomplete = sinon.stub()
@@ -88,4 +89,15 @@ describe 'EditAdmin', ->
       @view.onAuthorSelect {}, { id: 'foo' }
       @view.article.get('author_id').should.equal 'foo'
       delete global.confirm
+
+  describe '#setupEmailMetadata', ->
+
+    it 'fills email data if present', ->
+      @view.setupEmailMetadata()
+      @view.$('input[name=headline]').val().should.equal 'Foo'
+      @view.$('input[name=author]').val().should.equal 'Craig Spaeth'
+      @view.$('input[name=credit_line]').val().should.equal 'Credit Where Credit Needed'
+      @view.$('input[name=credit_url]').val().should.equal 'http://credit'
+      @view.$('.edit-email-small-image-url input').val().should.containEql 'img.png'
+      @view.$('.edit-email-large-image-url input').val().should.containEql 'img.png'
 
