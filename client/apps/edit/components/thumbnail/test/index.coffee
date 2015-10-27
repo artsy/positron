@@ -23,6 +23,7 @@ describe 'EditThumbnail', ->
         )
         EditThumbnail.__set__ 'gemup', @gemup = sinon.stub()
         EditThumbnail.__set__ 'crop', sinon.stub().returns('http://foo')
+        EditThumbnail.__set__ 'ImageUploadForm', @ImageUploadForm = sinon.stub()
         @view = new EditThumbnail el: $('#edit-thumbnail'), article: @article
         done()
 

@@ -109,6 +109,12 @@ input-placeholder()
     background white
     &.is-active, &:active, &:focus
       border-color white
+  &[readonly]
+    border 0
+    border-right 2px solid gray-lighter-color
+    padding-right 0
+    padding-left 0
+    cursor text
 
 label.bordered-input-loading
   position relative
