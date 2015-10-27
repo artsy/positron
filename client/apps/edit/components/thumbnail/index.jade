@@ -13,29 +13,3 @@ section#edit-thumbnail
         textarea.bordered-input.edit-title-textarea(
           placeholder="Type a title that captures your reader's attention"
         )= article.get('thumbnail_title')
-  if user.get('type') == 'Admin'
-    section#edit-email
-      h1.edit-email-header Email
-      h2.edit-email-sub-header Prepare this article for an email campaign
-      .edit-email-form
-        label.edit-email-image
-          span(
-            data-hidden=article.get('email_metadata') && article.get('email_metadata').image_url ? 'true' : 'false'
-          ) Image
-          #edit-email-upload
-        label
-          span Headline
-          input.bordered-input.edit-email-text( name='headline' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').headline : ''}" )
-        label
-          span Author
-        label
-          input.bordered-input.edit-email-text( name='author' value="#{article.get('email_metadata') && article.get('email_metadata').author ? article.get('email_metadata').author : ''}")
-          span Credit Line
-          input.bordered-input.edit-email-text( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
-        label
-          span Credit URL
-          input.bordered-input.edit-email-text( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
-        .edit-email-url URL
-          span  http://artsy.net/article/#{article.get('slug')}
-        .edit-email-url.edit-email-small-image-url
-        .edit-email-url.edit-email-large-image-url

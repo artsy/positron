@@ -5,33 +5,23 @@ gutter-size = 30px
 #edit-admin
   padding-top header-size
   display none
-  input:not([type=radio]):not([type=checkbox])
-    margin-top 35px
 
-#edit-admin-tier, #edit-admin-magazine
-  .admin-form-right
-    padding-top 47px
-
-#edit-admin-tier label
-  avant-garde body
+.edit-admin-slug-generate
+  avant-garde s-headline
+  display inline-block
+  text-decoration none
+  float right
+  &:hover
+    border-bottom 2px solid
 
 #edit-admin-feature
-  h3
-    avant-garde body
-    margin-bottom 5px
-  input, label
-    margin 0 !important
-  .admin-form-right
-    margin-top 13px
+  margin-top 20px
+  label
+    margin 10px 0 5px 0
 
-#edit-admin-slug
-  input
-    width 100%
-  a
-    display inline-block
-    color gray-dark-color
-    margin-top 10px
-    faux-underline()
+.eaf-input-li
+  label, input
+    margin 0 !important
 
 .edit-admin-feature-list li:not(.eaf-input-li)
   border 2px solid gray-lighter-color
@@ -48,7 +38,7 @@ gutter-size = 30px
     position relative
     cursor pointer
     span
-      max-width 190px
+      max-width 170px
     &::after
       content 'Mentioned'
       float right
@@ -94,11 +84,13 @@ gutter-size = 30px
       height 14px
 
 .eaf-input, .edit-admin-feature-list li
-  width 264px
-  margin 0 gutter-size 10px 0
+  width "calc(50% - %s)" % (gutter-size / 2)
+  margin-right (gutter-size / 2)
+  margin-bottom 10px
 
 .edit-admin-feature-list li:nth-child(2n+2)
   margin-right 0
+  margin-left (gutter-size / 2)
 
 .eaf-input, .edit-admin-feature-list, .edit-admin-feature-list li
   display inline-block
@@ -106,7 +98,6 @@ gutter-size = 30px
 
 .edit-admin-feature-list
   width 100%
-  margin-bottom 30px
 
 .edit-admin-autocomplete-list-item
   margin-top 5px

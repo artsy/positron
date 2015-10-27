@@ -15,7 +15,8 @@ gutter-size = 30px
     margin-bottom 0
 
 .admin-form-container
-  .bordered-input, .image-upload-form, .autocomplete-select-selected, .flat-checkbox
+  .bordered-input, .image-upload-form, .autocomplete-select-selected,
+  .flat-checkbox, .flat-radio-button
     garamond s-body
     display block
     width 100%
@@ -35,9 +36,11 @@ gutter-size = 30px
 
 .admin-form-right-col
   width 50%
+  padding-right (gutter-size / 2)
 
 .admin-form-right-col + .admin-form-right-col
-  padding-left gutter-size
+  padding-left (gutter-size / 2)
+  padding-right 0
 
 .admin-form-input-section
   display inline-block
