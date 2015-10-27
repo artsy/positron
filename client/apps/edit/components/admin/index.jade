@@ -40,6 +40,68 @@ section#edit-admin.admin-form-container.max-width-container
               value=2
             )
 
+  //- Featuring
+  section.admin-form-section
+    .admin-form-left
+      h1 Featuring
+      h2 Feature this article to selected pages or microsites to highlight it in various feeds and modules.
+    .admin-form-right
+      .admin-form-right-col
+        label Fair
+          #edit-admin-fair
+        label Partner
+          #edit-admin-partner
+        label Artist Biography
+          #edit-admin-biography
+      .admin-form-right-col
+        label Editorial Section
+          #edit-admin-section
+        label Show
+          #edit-admin-shows
+        label Auction
+          #edit-admin-auction
+      #edit-admin-feature
+        label Primary Artists
+        +featuredList('eaf-primary-artists', 'artist')
+        label Secondary Artists
+        +featuredList('eaf-artists', 'artist')
+        label Artworks
+        +featuredList('eaf-artworks', 'artwork')
+
+  //- Authors
+  section.admin-form-section
+    .admin-form-left
+      h1 Authors
+      h2 Change the primary author to move this article in Writer or add contributing authors to expand bylines.
+    .admin-form-right
+      #edit-admin-change-author
+        label Primary Author
+        input.bordered-input( placeholder='Search by user name...' )
+      br
+      label Contributing Author
+        #edit-admin-contributing-authors
+
+  //- Metadata
+  section.admin-form-section
+    .admin-form-left
+      h1 Metadata
+      h2 Fine-tuning tags and other metadata can increase SEO impact or help with tools like Parsely.
+    .admin-form-right
+      #edit-admin-tags
+        label Tags
+        input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
+      br
+      .admin-form-right-col
+        #edit-admin-publish-date
+          label Publish Date
+          input.bordered-input.edit-admin-input-date
+      .admin-form-right-col
+        #edit-admin-google-news
+          label Exclude from Google News
+          .flat-checkbox
+            input( type='checkbox' name='exclude_google_news'
+              checked=article.get('exclude_google_news') == 1 value=1 )
+
   //- Email
   section.admin-form-section#edit-email
     .admin-form-left
@@ -71,70 +133,3 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( onClick="this.select();" readonly )
         label.edit-email-large-image-url Small
           input.bordered-input( onClick="this.select();" readonly )
-
-  //- Authors
-  section.admin-form-section
-    .admin-form-left
-      h1 Authors
-      h2 Change the primary author to move this article in Writer or add contributing authors to expand bylines.
-    .admin-form-right
-      #edit-admin-change-author
-        label Primary Author
-        input.bordered-input( placeholder='Search by user name...' )
-      br
-      label Contributing Author
-        #edit-admin-contributing-authors
-
-  //- Metadata
-  section.admin-form-section
-    .admin-form-left
-      h1 Metadata
-      h2 Fine tuning slugs, tags, etc. can increase SEO impact or help with tools like Parsely.
-    .admin-form-right
-      #edit-admin-slug
-        label Slug
-          a.edit-admin-slug-generate(href='/') Use title + author
-        input.bordered-input.edit-admin-slug-input( placeholder='Enter slug for url...' value=article.get('slug') )
-      br
-      #edit-admin-tags
-        label Tags
-        input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
-      br
-      .admin-form-right-col
-        #edit-admin-publish-date
-          label Publish Date
-          input.bordered-input.edit-admin-input-date
-      .admin-form-right-col
-        #edit-admin-google-news
-          label Exclude from Google News
-          .flat-checkbox
-            input( type='checkbox' name='exclude_google_news'
-              checked=article.get('exclude_google_news') == 1 value=1 )
-
-  //- Featuring
-  section.admin-form-section
-    .admin-form-left
-      h1 Featuring
-      h2 Feature this article to selected pages or microsites to highlight it in various feeds and modules.
-    .admin-form-right
-      .admin-form-right-col
-        label Fair
-          #edit-admin-fair
-        label Partner
-          #edit-admin-partner
-        label Artist Biography
-          #edit-admin-biography
-      .admin-form-right-col
-        label Editorial Section
-          #edit-admin-section
-        label Show
-          #edit-admin-shows
-        label Auction
-          #edit-admin-auction
-      #edit-admin-feature
-        label Primary Artists
-        +featuredList('eaf-primary-artists', 'artist')
-        label Secondary Artists
-        +featuredList('eaf-artists', 'artist')
-        label Artworks
-        +featuredList('eaf-artworks', 'artwork')

@@ -37,7 +37,6 @@ videoSection = (->
 schema = (->
   author_id: @objectId().required()
   tier: @number().default(2)
-  slug: @string().allow('', null)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
@@ -193,25 +192,26 @@ sortParamToQuery = (input) ->
       authorId = input.author_id or article.author_id
       User.findOrInsert authorId, accessToken, (err, author) ->
         return callback err if err
-        article = update article, input, author
-        db.articles.save sanitize(_.extend(article,
-          _id: id
-          contributing_authors: article.contributing_authors.map( (author)->
-            author.id = ObjectId(author.id)
-            author
-          ) if article.contributing_authors
-          # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-          author_id: ObjectId(article.author_id) if article.author_id
-          fair_id: ObjectId(article.fair_id) if article.fair_id
-          section_ids: article.section_ids.map(ObjectId) if article.section_ids
-          auction_id: ObjectId(article.auction_id) if article.auction_id
-          partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
-          show_ids: article.show_ids.map(ObjectId) if article.show_ids
-          primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
-          featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
-          featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
-          biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-        )), callback
+        update article, input, author, (err, article) ->
+          return callback(err) if err
+          db.articles.save sanitize(_.extend(article,
+            _id: id
+            contributing_authors: article.contributing_authors.map( (author)->
+              author.id = ObjectId(author.id)
+              author
+            ) if article.contributing_authors
+            # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+            author_id: ObjectId(article.author_id) if article.author_id
+            fair_id: ObjectId(article.fair_id) if article.fair_id
+            section_ids: article.section_ids.map(ObjectId) if article.section_ids
+            auction_id: ObjectId(article.auction_id) if article.auction_id
+            partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
+            show_ids: article.show_ids.map(ObjectId) if article.show_ids
+            primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
+            featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
+            featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
+            biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
+          )), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
@@ -242,26 +242,21 @@ validate = (input, callback) ->
   whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema, callback
 
-update = (article, input, author) ->
+update = (article, input, author, cb) ->
   if input.published and not article.published and not input.published_at
     input.published_at = new Date
   article = _.extend article, input, updated_at: new Date
-  article = addSlug article, input, author
   article.author = User.denormalizedForArticle author if author
-  article
+  addSlug article, author, cb
 
-addSlug = (article, input, author) ->
-  titleSlug = _s.slugify(article.title).split('-')[0..7].join('-')
-  article.slugs ?= []
-  # Don't change the article slug unless it's unpublished or a new slug is added
-  if input.slug? and (input.slug != _.last(article.slugs))
-    slug = input.slug
-  else if article.published is false
-    slug = if author then _s.slugify(author.name) + '-' + titleSlug else titleSlug
-  else
-    return article
-  article.slugs = _.unique(article.slugs).concat [slug]
-  article
+addSlug = (article, author, cb) ->
+  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
+  return cb null, article if slug is _.last(article.slugs)
+  db.articles.count { slugs: slug }, (err, count) ->
+    return cb(err) if err
+    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count 
+    article.slugs = (article.slugs or []).concat slug
+    cb(null, article)
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, callback
