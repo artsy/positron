@@ -316,23 +316,19 @@ describe 'Article', ->
               article.title.should.equal 'Foo Bar Baz'
               done()
 
-    it 'changes the slug if admin updates it', (done) ->
-      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+    it 'appends the date to an article URL when its slug already exists', (done) ->
+      fabricate 'articles', {
+        slugs: ['craig-spaeth-heyo']
+        }, ->
         Article.save {
-          title: 'Foo Baz'
-          author_id: @user._id
-        }, 'foo', (err, article) =>
-          return done err if err
-          Article.save {
-            id: article._id.toString()
-            slug: 'foo-changed'
-            title: 'A Different Title'
-            author_id: @user._id
+          title: 'heyo'
+          author_id: '5086df098523e60002000018'
+          published_at: '01-01-99'
           }, 'foo', (err, article) ->
             return done err if err
-            article.slugs[1].should.equal 'foo-changed'
-            Article.find article.slugs[0], (err, article) ->
-              article.title.should.equal 'A Different Title'
+            article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
+            db.articles.count (err, count) ->
+              count.should.equal 12
               done()
 
     it 'saves published_at when the article is published', (done) ->
