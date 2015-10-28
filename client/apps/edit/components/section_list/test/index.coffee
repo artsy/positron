@@ -15,7 +15,7 @@ describe 'SectionList', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       SectionList = benv.require resolve(__dirname, '../index')
-      SectionList.__set__ 'SectionTool', ->
+      SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       SectionList.__set__ 'SectionContainer', @SectionContainer = sinon.stub()
       @component = React.render SectionList(
         sections: @sections = new Backbone.Collection [
@@ -32,6 +32,11 @@ describe 'SectionList', ->
 
   xit 'renders the sections', ->
     @$el.html().should.containEql 'Foo to the bar'
+
+  it 'sets an index for the section tools', ->
+    @SectionTool.args[0][0].index.should.equal -1
+    @SectionTool.args[1][0].index.should.equal 0
+    @SectionTool.args[2][0].index.should.equal 1
 
   it 'opens editing mode in the last added section', ->
     @component.onNewSection @component.props.sections.last()

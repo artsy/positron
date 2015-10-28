@@ -33,7 +33,7 @@ module.exports = React.createClass
           (if @props.sections.length then ' esl-children' else '')
         ref: 'sections'
       },
-        SectionTool { sections: @props.sections }
+        SectionTool { sections: @props.sections, index: -1 }
         @props.sections.map (section, i) =>
           [
             SectionContainer {
