@@ -110,11 +110,10 @@ input-placeholder()
     &.is-active, &:active, &:focus
       border-color white
   &[readonly]
-    border 0
-    border-right 2px solid gray-lighter-color
-    padding-right 0
-    padding-left 0
+    background-color gray-lightest-color
     cursor text
+    &.is-active, &:active, &:focus
+      border-color gray-lighter-color
 
 label.bordered-input-loading
   position relative
