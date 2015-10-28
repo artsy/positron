@@ -30,7 +30,8 @@ module.exports = (app) ->
   Backbone.sync = require 'backbone-super-sync'
 
   # Mount generic middleware & run setup modules
-  app.use forceSSL if 'production' is NODE_ENV
+  if 'production' is NODE_ENV
+    app.set('forceSSLOptions', { trustXFPHeader: true }).use forceSSL
   app.use sharify
   setupEnv app
   app.use cookieParser()
