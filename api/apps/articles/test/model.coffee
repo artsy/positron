@@ -325,6 +325,7 @@ describe 'Article', ->
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
           }, 'foo', (err, article) ->
+            return done err if err
             article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
             db.articles.count (err, count) ->
               count.should.equal 12
