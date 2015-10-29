@@ -13,7 +13,7 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 debug = require('debug') 'scripts'
 
-db.articles.find({ published: true }).sort(updated_at: -1).toArray (err, articles) ->
+db.articles.find (err, articles) ->
   return exit err if err
   debug "Found #{articles?.length} articles, extracting html..."
   articlesHtmls = articles.map getHtmlFrom
@@ -51,4 +51,4 @@ getHtmlFrom = (article) ->
 
 exit = (err) ->
   console.error "ERROR", err
-  proces.exit 1
+  process.exit 1
