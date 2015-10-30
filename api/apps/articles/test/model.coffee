@@ -278,20 +278,20 @@ describe 'Article', ->
         (article._id?).should.be.ok
         done()
 
-    it 'adds a slug based off the title', (done) ->
+    it 'adds a slug based off the thumbnail title', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
       }, 'foo', (err, article) ->
         return done err if err
-        article.slugs[0].should.equal 'craig-spaeth-top-ten-shows'
+        article.slugs[0].should.equal 'craig-spaeth-ten-shows'
         done()
 
-    it 'adds a slug based off a user and title', (done) ->
+    it 'adds a slug based off a user and thumbnail title', (done) ->
       fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
-          title: 'Foo Baz'
+          thumbnail_title: 'Foo Baz'
           author_id: @user._id
         }, 'foo', (err, article) ->
           return done err if err
@@ -301,19 +301,19 @@ describe 'Article', ->
     it 'saves slug history to support old slugs', (done) ->
       fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
-          title: 'Foo Baz'
+          thumbnail_title: 'Foo Baz'
           author_id: @user._id
         }, 'foo', (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
-            title: 'Foo Bar Baz'
+            thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
             Article.find article.slugs[0], (err, article) ->
-              article.title.should.equal 'Foo Bar Baz'
+              article.thumbnail_title.should.equal 'Foo Bar Baz'
               done()
 
     it 'appends the date to an article URL when its slug already exists', (done) ->
@@ -321,7 +321,7 @@ describe 'Article', ->
         slugs: ['craig-spaeth-heyo']
         }, ->
         Article.save {
-          title: 'heyo'
+          thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
           }, 'foo', (err, article) ->
