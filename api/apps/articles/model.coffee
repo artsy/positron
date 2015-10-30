@@ -250,7 +250,7 @@ update = (article, input, author, cb) ->
   addSlug article, author, cb
 
 addSlug = (article, author, cb) ->
-  slug = _s.slugify author.name + ' ' + article.title 
+  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
