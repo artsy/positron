@@ -60,50 +60,6 @@ module.exports = class Article extends Backbone.Model
       else
         item.model.get('name')
 
-  fetchAndCollectKeywords: (options) ->
-    keywords = []
-    callbacks = []
-    if @get('primary_featured_artist_ids')
-      for artistId in @get('primary_featured_artist_ids')
-        do (artistId) ->
-          callbacks.push (callback) ->
-            request
-              .get("#{sd.ARTSY_URL}/api/v1/artist/#{artistId}")
-              .set('X-Xapp-Token': sd.ACCESS_TOKEN)
-              .end callback
-    if @get('featured_artist_ids')
-      for artistId in @get('featured_artist_ids')
-        do (artistId) ->
-          callbacks.push (callback) ->
-            request
-              .get("#{sd.ARTSY_URL}/api/v1/artist/#{artistId}")
-              .set('X-Xapp-Token': sd.ACCESS_TOKEN)
-              .end callback
-    if @get('fair_id')
-      fairId = @get('fair_id')
-      callbacks.push (callback) ->
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/fair/#{fairId}")
-          .set('X-Xapp-Token': sd.ACCESS_TOKEN)
-          .end callback
-    if @get('partner_ids')
-      for partnerId in @get('partner_ids')
-        do (partnerId) ->
-          callbacks.push (callback) ->
-            request
-              .get("#{sd.ARTSY_URL}/api/v1/partner/#{partnerId}")
-              .set('X-Xapp-Token': sd.ACCESS_TOKEN)
-              .end callback
-    async.parallel callbacks, (err, results) =>
-      return options.error err if err
-      keywords = (res.body.name for res in results)
-      for tag in @get('tags')
-        do (tag) ->
-          keywords.push(tag)
-      console.log keywords
-      # options.success keywords
-     
-
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length

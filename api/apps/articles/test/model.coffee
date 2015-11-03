@@ -298,17 +298,19 @@ describe 'Article', ->
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
 
-    it 'saves slug history to support old slugs', (done) ->
+    it 'saves slug history when publishing', (done) ->
       fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
           thumbnail_title: 'Foo Baz'
           author_id: @user._id
+          published: false
         }, 'foo', (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
             thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id
+            published: true
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
@@ -465,6 +467,40 @@ describe 'Article', ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].url.should.equal 'http://foo.com'
         done()
+
+    it 'maintains the original slug when publishing with a new title', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+        Article.save {
+          thumbnail_title: 'Foo Baz'
+          author_id: @user._id
+          published: true
+        }, 'foo', (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            thumbnail_title: 'Foo Bar Baz'
+            author_id: @user._id
+            published: true
+          }, 'foo', (err, article) ->
+            return done err if err
+            article.slugs.join('').should.equal 'molly-foo-baz'
+            article.thumbnail_title.should.equal 'Foo Bar Baz'
+            done()
+
+    it 'generates keywords on publish', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        primary_featured_artist_ids: ['4d8b92b34eb68a1b2c0003f4']
+        featured_artist_ids: ['52868347b202a37bb000072a']
+        fair_id: '5530e72f7261696238050000'
+        partner_ids: ['4f5228a1de92d1000100076e']
+        tags: ['cool', 'art']
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
+        done()
+
 
   describe "#destroy", ->
 
