@@ -28,6 +28,7 @@ module.exports = class EditLayout extends Backbone.View
     @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
+    @article.fetchAndCollectKeywords()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
