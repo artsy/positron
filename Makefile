@@ -29,6 +29,10 @@ assets:
 	mkdir -p client/public/assets
 	$(BIN)/ezel-assets client/assets/ client/public/assets/
 
+# Find unlinked artists
+unlinked:
+	$(BIN)/coffee scripts/unlinked_artists.coffee
+
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
 deploy: assets
 	$(BIN)/bucket-assets -b positron-$(env)

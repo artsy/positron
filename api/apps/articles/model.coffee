@@ -14,6 +14,7 @@ moment = require 'moment'
 xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
+request = require 'superagent'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
@@ -34,7 +35,8 @@ videoSection = (->
     cover_image_url: @string().allow('', null)
 ).call Joi
 
-schema = (->
+inputSchema = (->
+  id: @objectId()
   author_id: @objectId().required()
   tier: @number().default(2)
   thumbnail_title: @string().allow('', null)
@@ -184,34 +186,92 @@ sortParamToQuery = (input) ->
 # Persistence
 #
 @save = (input, accessToken, callback) ->
-  id = ObjectId (input.id or input._id)?.toString()
   validate input, (err, input) =>
     return callback err if err
-    @find id.toString(), (err, article = {}) =>
+    mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
+      return callback(err) if err
+      if publishing
+        onPublish article, author, accessToken, sanitizeAndSave(callback)
+      else if not publishing and not article.slugs?.length > 0
+        generateSlugs article, author, sanitizeAndSave(callback)
+      else
+        sanitizeAndSave(callback)(null, article)
+        
+validate = (input, callback) ->
+  whitelisted = _.pick input, _.keys inputSchema
+  # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+  whitelisted.author_id = whitelisted.author_id?.toString()
+  whitelisted.fair_id = whitelisted.fair_id?.toString()
+  Joi.validate whitelisted, inputSchema, callback
+
+mergeArticleAndAuthor = (input, accessToken, cb) =>
+  id = ObjectId (input.id or input._id)?.toString()
+  @find id.toString(), (err, article = {}) =>
+    return callback err if err
+    authorId = input.author_id or article.author_id
+    User.findOrInsert authorId, accessToken, (err, author) ->
       return callback err if err
-      authorId = input.author_id or article.author_id
-      User.findOrInsert authorId, accessToken, (err, author) ->
-        return callback err if err
-        update article, input, author, (err, article) ->
-          return callback(err) if err
-          db.articles.save sanitize(_.extend(article,
-            _id: id
-            contributing_authors: article.contributing_authors.map( (author)->
-              author.id = ObjectId(author.id)
-              author
-            ) if article.contributing_authors
-            # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-            author_id: ObjectId(article.author_id) if article.author_id
-            fair_id: ObjectId(article.fair_id) if article.fair_id
-            section_ids: article.section_ids.map(ObjectId) if article.section_ids
-            auction_id: ObjectId(article.auction_id) if article.auction_id
-            partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
-            show_ids: article.show_ids.map(ObjectId) if article.show_ids
-            primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
-            featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
-            featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
-            biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-          )), callback
+      publishing = input.published and not article.published
+      article = _.extend article, input, updated_at: new Date
+      article.author = User.denormalizedForArticle author if author
+      cb null, article, author, publishing
+  
+# After merging article & input
+
+onPublish = (article, author, accessToken, cb) ->
+  article.published_at = new Date
+  generateKeywords article, accessToken, (err, article) ->
+    return cb err if err
+    generateSlugs article, author, cb
+
+generateSlugs = (article, author, cb) ->
+  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
+  return cb null, article if slug is _.last(article.slugs)
+  db.articles.count { slugs: slug }, (err, count) ->
+    return cb(err) if err
+    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count 
+    article.slugs = (article.slugs or []).concat slug
+    cb(null, article)
+
+generateKeywords = (article, accessToken, cb) ->
+  keywords = []
+  callbacks = []
+  if article.primary_featured_artist_ids
+    for artistId in article.primary_featured_artist_ids
+      do (artistId) ->
+        callbacks.push (callback) ->
+          request
+            .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
+            .set('X-Xapp-Token': accessToken)
+            .end callback
+  if article.featured_artist_ids
+    for artistId in article.featured_artist_ids
+      do (artistId) ->
+        callbacks.push (callback) ->
+          request
+            .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
+            .set('X-Xapp-Token': accessToken)
+            .end callback
+  if article.fair_id
+    callbacks.push (callback) ->
+      request
+        .get("#{ARTSY_URL}/api/v1/fair/#{article.fair_id}")
+        .set('X-Xapp-Token': accessToken)
+        .end callback
+  if article.partner_ids
+    for partnerId in article.partner_ids
+      do (partnerId) ->
+        callbacks.push (callback) ->
+          request
+            .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
+            .set('X-Xapp-Token': accessToken)
+            .end callback
+  async.parallel callbacks, (err, results) =>
+    return cb(err) if err
+    keywords = (res.body.name for res in results)
+    keywords.push(tag) for tag in article.tags when article.tags
+    article.keywords = keywords[0..9]
+    cb(null, article)
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
@@ -235,28 +295,28 @@ sanitizeHtml = (html) ->
     $(this).attr 'href', 'http://' + u.href unless u.protocol
   xss $.html()
 
-validate = (input, callback) ->
-  whitelisted = _.pick input, _.keys schema
-  # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-  whitelisted.author_id = whitelisted.author_id?.toString()
-  whitelisted.fair_id = whitelisted.fair_id?.toString()
-  Joi.validate whitelisted, schema, callback
+typecastIds = (article) ->
+  _.extend article,
+    # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+    _id: ObjectId(article._id)
+    contributing_authors: article.contributing_authors.map( (author)->
+      author.id = ObjectId(author.id)
+      author
+    ) if article.contributing_authors
+    author_id: ObjectId(article.author_id) if article.author_id
+    fair_id: ObjectId(article.fair_id) if article.fair_id
+    section_ids: article.section_ids.map(ObjectId) if article.section_ids
+    auction_id: ObjectId(article.auction_id) if article.auction_id
+    partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
+    show_ids: article.show_ids.map(ObjectId) if article.show_ids
+    primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
+    featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
+    featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
+    biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
 
-update = (article, input, author, cb) ->
-  if input.published and not article.published and not input.published_at
-    input.published_at = new Date
-  article = _.extend article, input, updated_at: new Date
-  article.author = User.denormalizedForArticle author if author
-  addSlug article, author, cb
-
-addSlug = (article, author, cb) ->
-  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
-  return cb null, article if slug is _.last(article.slugs)
-  db.articles.count { slugs: slug }, (err, count) ->
-    return cb(err) if err
-    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count 
-    article.slugs = (article.slugs or []).concat slug
-    cb(null, article)
+sanitizeAndSave = (callback) -> (err, article) ->
+  return callback err if err
+  db.articles.save sanitize(typecastIds article), callback
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, callback
