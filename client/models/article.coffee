@@ -6,7 +6,6 @@ sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 Section = require '../models/section.coffee'
 request = require 'superagent'
-async = require 'async'
 
 module.exports = class Article extends Backbone.Model
 
