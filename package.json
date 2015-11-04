@@ -67,6 +67,7 @@
     "gemup": "git://github.com/artsy/gemup.git",
     "html-janitor": "^2.0.2",
     "imagesloaded": "^3.1.8",
+    "jadeify": "^4.4.0",
     "jquery": "^2.1.4",
     "jquery-autosize": "^1.18.18",
     "jquery-fillwidth-lite": "^1.0.3",
@@ -84,8 +85,7 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "uglifyify": "^3.0.1",
-    "zombie": "^4.1.0",
-    "jadeify": "^4.4.0"
+    "zombie": "^4.1.0"
   },
   "license": "MIT"
 }

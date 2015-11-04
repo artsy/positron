@@ -278,42 +278,44 @@ describe 'Article', ->
         (article._id?).should.be.ok
         done()
 
-    it 'adds a slug based off the title', (done) ->
+    it 'adds a slug based off the thumbnail title', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
       }, 'foo', (err, article) ->
         return done err if err
-        article.slugs[0].should.equal 'craig-spaeth-top-ten-shows'
+        article.slugs[0].should.equal 'craig-spaeth-ten-shows'
         done()
 
-    it 'adds a slug based off a user and title', (done) ->
+    it 'adds a slug based off a user and thumbnail title', (done) ->
       fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
-          title: 'Foo Baz'
+          thumbnail_title: 'Foo Baz'
           author_id: @user._id
         }, 'foo', (err, article) ->
           return done err if err
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
 
-    it 'saves slug history to support old slugs', (done) ->
+    it 'saves slug history when publishing', (done) ->
       fabricate 'users', { name: 'Molly'}, (err, @user) ->
         Article.save {
-          title: 'Foo Baz'
+          thumbnail_title: 'Foo Baz'
           author_id: @user._id
+          published: false
         }, 'foo', (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
-            title: 'Foo Bar Baz'
+            thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id
+            published: true
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
             Article.find article.slugs[0], (err, article) ->
-              article.title.should.equal 'Foo Bar Baz'
+              article.thumbnail_title.should.equal 'Foo Bar Baz'
               done()
 
     it 'appends the date to an article URL when its slug already exists', (done) ->
@@ -321,7 +323,7 @@ describe 'Article', ->
         slugs: ['craig-spaeth-heyo']
         }, ->
         Article.save {
-          title: 'heyo'
+          thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
           }, 'foo', (err, article) ->
@@ -465,6 +467,40 @@ describe 'Article', ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].url.should.equal 'http://foo.com'
         done()
+
+    it 'maintains the original slug when publishing with a new title', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+        Article.save {
+          thumbnail_title: 'Foo Baz'
+          author_id: @user._id
+          published: true
+        }, 'foo', (err, article) =>
+          return done err if err
+          Article.save {
+            id: article._id.toString()
+            thumbnail_title: 'Foo Bar Baz'
+            author_id: @user._id
+            published: true
+          }, 'foo', (err, article) ->
+            return done err if err
+            article.slugs.join('').should.equal 'molly-foo-baz'
+            article.thumbnail_title.should.equal 'Foo Bar Baz'
+            done()
+
+    it 'generates keywords on publish', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        primary_featured_artist_ids: ['4d8b92b34eb68a1b2c0003f4']
+        featured_artist_ids: ['52868347b202a37bb000072a']
+        fair_id: '5530e72f7261696238050000'
+        partner_ids: ['4f5228a1de92d1000100076e']
+        tags: ['cool', 'art']
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
+        done()
+
 
   describe "#destroy", ->
 
