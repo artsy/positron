@@ -42,6 +42,13 @@ describe 'User', ->
           user.name.should.equal 'Craig Spaeth'
           done()
 
+    it 'gets an admin Facebook UID', (done) ->
+      user = fixtures().users
+      db.users.insert user, ->
+      User.findOrInsert user.id, 'foobar', (err, user) ->
+        user.facebook_uid.should.equal '123'
+        done()
+
   describe '#present', ->
 
     it 'converts _id to id', ->
