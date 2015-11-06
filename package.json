@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "4.x.x"
+    "node": "4.x.x",
+    "npm": "3.3.10"
   },
   "scripts": {
     "start": "make s",
