@@ -54,6 +54,18 @@ describe 'Article', ->
           results[0].title.should.equal 'Moo baz'
           done()
 
+    it 'can return articles scheduled for publication', (done) ->
+      fabricate 'articles', _.times(3, -> { 
+        published: false 
+        scheduled_publish_at: moment().add(1, 'days').toDate()
+        title: 'A Tale of Two Node Modules' 
+      }), ->
+        Article.where { scheduled_publish_at: { $gt: Date() } }, (err, { total, count, results }) ->
+          total.should.equal 13
+          count.should.equal 3
+          results[0].title.should.equal 'A Tale of Two Node Modules'
+          done()
+
     it 'errors for bad queries', (done) ->
       Article.where { foo: 'bar' }, (err) ->
         err.message.should.containEql '"foo" is not allowed'

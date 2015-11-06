@@ -87,6 +87,9 @@ section#edit-admin.admin-form-container.max-width-container
       h1 Schedule Publication
       h2 Enter a future date and time for publication if you don't want this article to go up right away.
     .admin-form-right
+      label Schedule publication?
+      .flat-checkbox.publication-checkbox
+        input( type='checkbox' name='publication-checkbox' )
       #edit-admin-schedule-publish-date
         label Publication date
         input.bordered-input( type='date', placeholder='Publication date' )

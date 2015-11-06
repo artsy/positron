@@ -46,6 +46,7 @@ inputSchema = (->
   title: @string().allow('', null)
   published: @boolean().default(false)
   published_at: @date()
+  scheduled_publish_at: @date.default(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   hero_section: @alternatives().try(videoSection, imageSection).allow(null)
@@ -98,6 +99,7 @@ querySchema = (->
   access_token: @string()
   author_id: @objectId()
   published: @boolean()
+  scheduled_publish_at: @date()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   section_id: @objectId()
@@ -211,7 +213,7 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
     authorId = input.author_id or article.author_id
     User.findOrInsert authorId, accessToken, (err, author) ->
       return callback err if err
-      publishing = input.published and not article.published
+      publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
       article = _.extend article, input, updated_at: new Date
       article.author = User.denormalizedForArticle author if author
       cb null, article, author, publishing
