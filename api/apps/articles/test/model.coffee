@@ -321,7 +321,7 @@ describe 'Article', ->
     it 'appends the date to an article URL when its slug already exists', (done) ->
       fabricate 'articles', {
         slugs: ['craig-spaeth-heyo']
-        }, ->
+      }, ->
         Article.save {
           thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'

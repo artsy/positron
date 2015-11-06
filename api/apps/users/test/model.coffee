@@ -42,6 +42,12 @@ describe 'User', ->
           user.name.should.equal 'Craig Spaeth'
           done()
 
+    it 'gets admin social media UIDs', (done) ->
+      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
+        user.facebook_uid.should.equal '456'
+        user.twitter_uid.should.equal '321'
+        done()
+
   describe '#present', ->
 
     it 'converts _id to id', ->
