@@ -922,7 +922,7 @@
     "destroy": {
       "version": "1.0.3",
       "from": "destroy@1.0.3",
-      "resolved": "http://registry.npmjs.org/destroy/-/destroy-1.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/destroy/-/destroy-1.0.3.tgz"
     },
     "detective": {
       "version": "4.3.1",
@@ -2065,9 +2065,9 @@
       "resolved": "https://registry.npmjs.org/is-glob/-/is-glob-1.1.3.tgz"
     },
     "is-my-json-valid": {
-      "version": "2.12.2",
+      "version": "2.12.3",
       "from": "is-my-json-valid@>=2.12.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.12.2.tgz"
+      "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.12.3.tgz"
     },
     "is-number": {
       "version": "1.1.2",
@@ -2351,7 +2351,7 @@
     "media-typer": {
       "version": "0.3.0",
       "from": "media-typer@0.3.0",
-      "resolved": "http://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
+      "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
     },
     "merge-descriptors": {
       "version": "1.0.0",
