@@ -48,6 +48,14 @@ describe 'User', ->
         user.twitter_uid.should.equal '321'
         done()
 
+    it 'does not get user social media UIDs', (done) ->
+      user = _.extend fixtures().users, type: 'Admin'
+      db.users.insert user, ->
+        User.findOrInsert user._id, 'foobar', (err, user) ->
+          (user.facebook_uid?).should.be.false()
+          (user.twitter_uid?).should.be.false()
+          done()
+
   describe '#present', ->
 
     it 'converts _id to id', ->
