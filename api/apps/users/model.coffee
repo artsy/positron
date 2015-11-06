@@ -58,7 +58,7 @@ bcrypt = require 'bcrypt'
       save user, accessToken, callback
 
 save = (user, accessToken, callback) ->
-  async.parallel [
+  async.parallel _.compact([
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
     (cb) ->
@@ -70,12 +70,10 @@ save = (user, accessToken, callback) ->
         request
         .get("#{ARTSY_URL}/api/v1/me/authentications")
         .set('X-Access-Token': accessToken).end cb
-  ], (err, results) ->
+  ]), (err, results) ->
     return callback err if err
     encryptedAccessToken = results[0]
     profile = results[1].body
-    facebook_uid = results[2].body[0].uid if results[2].body[0].uid?
-    twitter_uid = results[2].body[1].uid if results[2].body[1].uid?
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
@@ -85,8 +83,8 @@ save = (user, accessToken, callback) ->
       profile_id: profile._id
       profile_icon_url: _.first(_.values(profile.icon?.image_urls))
       access_token: encryptedAccessToken
-      facebook_uid: facebook_uid
-      twitter_uid: twitter_uid
+      facebook_uid: results[2]?.body[0]?.uid
+      twitter_uid: results[2]?.body[1]?.uid
     }, callback
 
 #
