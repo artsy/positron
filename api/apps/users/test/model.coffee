@@ -42,11 +42,10 @@ describe 'User', ->
           user.name.should.equal 'Craig Spaeth'
           done()
 
-    it 'gets an admin Facebook UID', (done) ->
-      user = fixtures().users
-      db.users.insert user, ->
-      User.findOrInsert user.id, 'foobar', (err, user) ->
-        user.facebook_uid.should.equal '123'
+    it 'gets admin social media UIDs', (done) ->
+      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
+        user.facebook_uid.should.equal '456'
+        user.twitter_uid.should.equal '321'
         done()
 
   describe '#present', ->

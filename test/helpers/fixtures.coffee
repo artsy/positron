@@ -71,7 +71,6 @@ module.exports = ->
     "profile_id" : "5086df098523e60002000012"
     "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
     "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
-    "facebook_uid" : "123"
   fixtures.sections =
     'id': '55356a9deca560a0137aa4b7'
     'title': 'Vennice Biennalez'

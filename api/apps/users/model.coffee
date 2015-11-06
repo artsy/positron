@@ -74,7 +74,8 @@ save = (user, accessToken, callback) ->
     return callback err if err
     encryptedAccessToken = results[0]
     profile = results[1].body
-    facebook_uid = results[2].body[0].uid
+    facebook_uid = results[2].body[0].uid if results[2].body[0].uid?
+    twitter_uid = results[2].body[1].uid if results[2].body[1].uid?
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
@@ -84,7 +85,8 @@ save = (user, accessToken, callback) ->
       profile_id: profile._id
       profile_icon_url: _.first(_.values(profile.icon?.image_urls))
       access_token: encryptedAccessToken
-      facebook_uid: facebook_uid if facebook_uid else null
+      facebook_uid: facebook_uid
+      twitter_uid: twitter_uid
     }, callback
 
 #
@@ -106,4 +108,5 @@ save = (user, accessToken, callback) ->
     profile_id: user.profile_id
     profile_handle: user.profile_handle
     facebook_uid: user.facebook_uid
+    twitter_uid: user.twitter_uid
   }
