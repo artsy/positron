@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "4.x.x",
+    "node": "5.x.x",
     "npm": "3.x.x"
   },
   "scripts": {
@@ -81,7 +81,7 @@
     "scribe-plugin-sanitize-google-doc": "git://github.com/artsy/scribe-plugin-sanitize-google-doc.git",
     "scribe-plugin-toolbar": "^0.2.2",
     "should": "^7.1.0",
-    "simple-modal": "git://github.com/craigspaeth/simple-modal.git",
+    "simple-modal": "^1.0.1",
     "sinon": "^1.17.1",
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
