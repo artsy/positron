@@ -12,6 +12,7 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
     @renderThumbnailForm()
+    @updateCharCount()
 
   renderThumbnailForm: =>
     new ImageUploadForm
@@ -29,11 +30,13 @@ module.exports = class EditThumbnail extends Backbone.View
   events:
     'click .edit-use-article-title': 'useArticleTitle'
     'change .edit-title-textarea': 'checkTitleTextarea'
+    'keyup .edit-title-textarea': 'updateCharCount'
 
   useArticleTitle: (e) ->
     e?.preventDefault()
     @$('.edit-use-article-title').next().val(@article.get('title'))
     @$('.edit-use-article-title').hide()
+    @updateCharCount()
     @article.save thumbnail_title: @article.get('title')
 
   checkTitleTextarea: ->
@@ -41,3 +44,11 @@ module.exports = class EditThumbnail extends Backbone.View
       $('.edit-use-article-title').hide()
     else
       $('.edit-use-article-title').show()
+
+  updateCharCount: ->
+    textLength = 97 - $('.edit-title-textarea').val().length
+    if textLength < 0
+      $('.edit-char-count').addClass('edit-char-count-limit')
+    else
+      $('.edit-char-count').removeClass('edit-char-count-limit')
+    $('.edit-char-count').text(textLength)
