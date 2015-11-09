@@ -50,3 +50,10 @@ describe 'EditThumbnail', ->
       @view.$('.edit-title-textarea').val('foo')
       @view.checkTitleTextarea()
       @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'
+
+  describe '#updateCharCount', ->
+
+    it 'updates the count when adding text', ->
+      @view.$('.edit-title-textarea').val('Title')
+      @view.updateCharCount()
+      @view.$('.edit-char-count').text().should.containEql '92'
