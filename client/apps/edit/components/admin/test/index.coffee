@@ -29,6 +29,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupShowsAutocomplete = sinon.stub()
         EditAdmin::setupBiographyAutocomplete = sinon.stub()
         EditAdmin::setupPublishDate = sinon.stub()
+        EditAdmin::setupScheduledDate = sinon.stub()
         EditAdmin::setupContributingAuthors = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
@@ -100,3 +101,10 @@ describe 'EditAdmin', ->
       @view.$('.edit-email-small-image-url input').val().should.containEql 'img.png'
       @view.$('.edit-email-large-image-url input').val().should.containEql 'img.png'
 
+  describe '#schedulePublish', ->
+
+    it 'saves the publish date and time', ->
+
+  describe '#toggleScheduled', ->
+
+    it 'can unset the scheduled publish time', ->

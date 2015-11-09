@@ -21,6 +21,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupShowsAutocomplete()
     @setupBiographyAutocomplete()
     @setupPublishDate()
+    @setupScheduledDate()
     @setupContributingAuthors()
     @setupEmailMetadata()
 
@@ -258,7 +259,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
-    'click #edit-schedule': 'schedulePublish'
+    'click #edit-schedule': 'toggleScheduled'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -290,21 +291,51 @@ module.exports = class EditAdmin extends Backbone.View
       false
     @formatAndSetPublishDate @article.get('published_at')
 
-  schedulePublish: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
-    return unless confirm "Are you sure you want to schedule publication?" # TODO: Implement Artsy branded dialog
-    @$('#edit-scheduling').text('Scheduling...').removeClass('attention')
-    if $('.edit-admin-input-date').val() is undefined
-      alert 'Please enter a time.'
-
-    @article.save scheduled_publish_at: 
-    if @article.get('published')
-      @article.trigger('savePublished').trigger('finished')
-    else
-      @article.trigger('finished').save()
-
   formatAndSetPublishDate: (date) ->
     clientFormat = moment(date).format('L')
     @saveFormat = moment(date).toDate()
     $('.edit-admin-input-date').val(clientFormat)
+
+  setupScheduledDate: ->
+    if @article.get('scheduled_publish_at')
+      # grab time (date taken care of by setupPublishDate() above)
+      publishTime = moment(@article.get('scheduled_publish_at')).format('HH:mm')
+      $('.edit-admin-input-time').val(publishTime)
+      @$('.edit-schedule-button').addClass('button-when-scheduled')
+      @$('.edit-schedule-button').text('Unschedule')
+      $('.edit-admin-input-date').readOnly=true
+      $('.edit-admin-input-time').readOnly=true
+    else
+      @article.save scheduled_publish_at: null
+
+  toggleScheduled: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    if @article.get('scheduled_publish_at')
+      @$('.edit-schedule-button').text('Saving...')
+      @article.save scheduled_publish_at: null
+      @$('.edit-schedule-button').removeClass('button-when-scheduled')
+      @$('.edit-schedule-button').text('Schedule')
+      $('.edit-admin-input-date').readOnly=false
+      $('.edit-admin-input-time').readOnly=false
+    else
+      @schedulePublish()
+      @$('.edit-schedule-button').text('Saving...')
+      @$('.edit-schedule-button').addClass('button-when-scheduled')
+      @$('.edit-schedule-button').text('Unschedule')
+      $('.edit-admin-input-date').readOnly=true
+      $('.edit-admin-input-time').readOnly=true
+
+  schedulePublish: ->
+    return unless confirm "Are you sure you want to schedule publication?" # TODO: Implement Artsy branded dialog
+    if $('.edit-admin-input-time').val() is undefined
+      alert 'Please enter a time.'
+    if @article.finishedContent() and @article.finishedThumbnail()
+      dateAndTime = $('.edit-admin-input-date').val() + ' ' + $('.edit-admin-input-time').val()
+      @article.save scheduled_publish_at: moment(dateAndTime).toDate()
+    else
+      @article.trigger 'missing'
+    if @article.get('published')
+      @article.trigger('savePublished').trigger('finished')
+    else
+      @article.trigger('finished').save()
