@@ -81,23 +81,6 @@ section#edit-admin.admin-form-container.max-width-container
       label Contributing Authors
         #edit-admin-contributing-authors
 
-  //- Scheduling
-  section.admin-form-section
-    .admin-form-left
-      h1 Schedule Publication
-      h2 Enter a future date and time for publication if you don't want this article to go up right away.
-    .admin-form-right
-      label Schedule publication?
-      .flat-checkbox.publication-checkbox
-        input( type='checkbox' name='publication-checkbox' )
-      #edit-admin-schedule-publish-date
-        label Publication date
-        input.bordered-input( type='date', placeholder='Publication date' )
-      br
-      #edit-admin-schedule-publish-time
-        label Publication time
-        input.bordered-input( type='time', placeholder='Publication time' )
-
   //- Metadata
   section.admin-form-section
     .admin-form-left
@@ -112,7 +95,15 @@ section#edit-admin.admin-form-container.max-width-container
         #edit-admin-publish-date
           label Publish Date
           input.bordered-input.edit-admin-input-date
+        br
+        a#edit-schedule.avant-garde-button Schedule
+        //-( data-disabled='true' )
+        //- = article.get('scheduled_publish_at') ? 'Scheduled' : 'Schedule' 
       .admin-form-right-col
+        #edit-admin-schedule-publish-time
+          label Publish time
+          input.bordered-input.edit-admin-input-time( type='time', step=6000, placeholder='Publication time' )
+        br
         #edit-admin-google-news
           label Exclude from Google News
           .flat-checkbox

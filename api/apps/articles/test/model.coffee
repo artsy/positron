@@ -54,16 +54,20 @@ describe 'Article', ->
           results[0].title.should.equal 'Moo baz'
           done()
 
+    # can't figure out how to query by scheduled_publish_at
+
     it 'can return articles scheduled for publication', (done) ->
       fabricate 'articles', _.times(3, -> { 
         published: false 
-        scheduled_publish_at: moment().add(1, 'days').toDate()
+        scheduled_publish_at: moment().format('YYYY')
         title: 'A Tale of Two Node Modules' 
       }), ->
-        Article.where { scheduled_publish_at: { $gt: Date() } }, (err, { total, count, results }) ->
+        Article.where { scheduled_publish_at: moment().format('YYYY') }, (err, { total, count, results }) ->
+          console.log total, count, results
           total.should.equal 13
           count.should.equal 3
           results[0].title.should.equal 'A Tale of Two Node Modules'
+          results[0].scheduled_publish_at.should.be.an.instanceOf(Date)
           done()
 
     it 'errors for bad queries', (done) ->
@@ -333,7 +337,7 @@ describe 'Article', ->
     it 'appends the date to an article URL when its slug already exists', (done) ->
       fabricate 'articles', {
         slugs: ['craig-spaeth-heyo']
-        }, ->
+      }, ->
         Article.save {
           thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'

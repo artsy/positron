@@ -4,10 +4,15 @@ rewire = require 'rewire'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 User = rewire '../model'
 { ObjectId } = require 'mongojs'
+gravity = require('antigravity').server
+gravityFabricate = require('antigravity').fabricate
 express = require 'express'
 
 app = express()
-app.use '/__gravity', require('antigravity').server
+app.get '/__gravity/api/v1/user/563d08e6275b247014000026', (req, res, next) ->
+  user = gravityFabricate 'user', type: 'User', id: '563d08e6275b247014000026'
+  res.send user
+app.use '/__gravity', gravity
 
 describe 'User', ->
 
@@ -41,6 +46,18 @@ describe 'User', ->
         User.findOrInsert user.id, 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
+
+    it 'gets admin social media UIDs', (done) ->
+      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
+        user.facebook_uid.should.equal '456'
+        user.twitter_uid.should.equal '321'
+        done()
+
+    it 'does not get user social media UIDs', (done) ->
+      User.findOrInsert '563d08e6275b247014000026', 'foobar', (err, user) ->
+        (user.facebook_uid?).should.be.false()
+        (user.twitter_uid?).should.be.false()
+        done()
 
   describe '#present', ->
 

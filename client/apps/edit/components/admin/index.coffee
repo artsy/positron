@@ -258,6 +258,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
+    'click #edit-schedule': 'schedulePublish'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -288,6 +289,20 @@ module.exports = class EditAdmin extends Backbone.View
       @article.save published_at: @saveFormat
       false
     @formatAndSetPublishDate @article.get('published_at')
+
+  schedulePublish: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    return unless confirm "Are you sure you want to schedule publication?" # TODO: Implement Artsy branded dialog
+    @$('#edit-scheduling').text('Scheduling...').removeClass('attention')
+    if $('.edit-admin-input-date').val() is undefined
+      alert 'Please enter a time.'
+
+    @article.save scheduled_publish_at: 
+    if @article.get('published')
+      @article.trigger('savePublished').trigger('finished')
+    else
+      @article.trigger('finished').save()
 
   formatAndSetPublishDate: (date) ->
     clientFormat = moment(date).format('L')

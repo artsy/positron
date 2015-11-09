@@ -46,7 +46,7 @@ inputSchema = (->
   title: @string().allow('', null)
   published: @boolean().default(false)
   published_at: @date()
-  scheduled_publish_at: @date.default(null)
+  scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   hero_section: @alternatives().try(videoSection, imageSection).allow(null)
@@ -143,16 +143,19 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'scheduled_publish_at'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
+    # Unrelated, but aren't we passing in just a single fair id?
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
     query.show_ids = ObjectId input.show_id if input.show_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
+    # can't figure out how to query by scheduled_publish_at
+    query.scheduled_publish_at = Date input.scheduled_publish_at if input.scheduled_publish_at
     query.tags = { $in: input.tags } if input.tags
     query.$or = [
       { author_id: ObjectId(input.all_by_author) }
