@@ -54,22 +54,6 @@ describe 'Article', ->
           results[0].title.should.equal 'Moo baz'
           done()
 
-    # can't figure out how to query by scheduled_publish_at
-
-    it 'can return articles scheduled for publication', (done) ->
-      fabricate 'articles', _.times(3, -> { 
-        published: false 
-        scheduled_publish_at: moment().format('YYYY')
-        title: 'A Tale of Two Node Modules' 
-      }), ->
-        Article.where { scheduled_publish_at: moment().format('YYYY') }, (err, { total, count, results }) ->
-          console.log total, count, results
-          total.should.equal 13
-          count.should.equal 3
-          results[0].title.should.equal 'A Tale of Two Node Modules'
-          results[0].scheduled_publish_at.should.be.an.instanceOf(Date)
-          done()
-
     it 'errors for bad queries', (done) ->
       Article.where { foo: 'bar' }, (err) ->
         err.message.should.containEql '"foo" is not allowed'

@@ -99,7 +99,6 @@ querySchema = (->
   access_token: @string()
   author_id: @objectId()
   published: @boolean()
-  scheduled_publish_at: @date()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   section_id: @objectId()
@@ -143,7 +142,7 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'scheduled_publish_at'
+      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -154,8 +153,6 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
-    # can't figure out how to query by scheduled_publish_at
-    query.scheduled_publish_at = Date input.scheduled_publish_at if input.scheduled_publish_at
     query.tags = { $in: input.tags } if input.tags
     query.$or = [
       { author_id: ObjectId(input.all_by_author) }
