@@ -127,21 +127,28 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupShowsAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-shows')[0],
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    @show_ids = @article.get 'show_ids' or []
+    list = new AutocompleteList @$('#edit-admin-shows')[0],
+      name: 'show_ids[]'
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
-      selected: (e, item) =>
-        @article.save show_ids: [item.id]
-      cleared: =>
-        @article.save show_ids: null
-    if id = @article.get('show_ids')?[0]
-      request
-        .get("#{sd.API_URL}/show/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+      selected: (e, item, items) =>
+        @article.save show_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
+    if ids = @show_ids
+      @shows = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/show/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @shows.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @shows
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupBiographyAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
