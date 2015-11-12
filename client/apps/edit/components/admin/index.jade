@@ -96,13 +96,11 @@ section#edit-admin.admin-form-container.max-width-container
           label Publish Date
           input.bordered-input.edit-admin-input-date
         br
-        a#edit-schedule-button.avant-garde-button Schedule
-        //-( data-disabled='true' )
-        //- = article.get('scheduled_publish_at') ? 'Scheduled' : 'Schedule' 
+        a#edit-schedule-button.avant-garde-button Schedule 
       .admin-form-right-col
         #edit-admin-schedule-publish-time
           label Publish time
-          //- Firefox + Safari don't support time input?
+          //- Firefox + Safari don't currently support time input
           input.bordered-input.edit-admin-input-time( type='time', step=6000, placeholder='Publication time' )
         br
         #edit-admin-google-news
