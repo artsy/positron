@@ -99,4 +99,3 @@ describe 'EditAdmin', ->
       @view.$('input[name=credit_url]').val().should.equal 'http://credit'
       @view.$('.edit-email-small-image-url input').val().should.containEql 'img.png'
       @view.$('.edit-email-large-image-url input').val().should.containEql 'img.png'
-
