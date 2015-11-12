@@ -18,11 +18,10 @@ module.exports = class Articles extends Backbone.Collection
       imgSrc: article.get('thumbnail_image')
       title: article.get('thumbnail_title')
       subtitle: (
-        if article.get('published_at')
+        if article.get('published_at') && article.get('published')
           "Published #{moment(article.get('published_at')).fromNow()}"
         else if article.get('scheduled_publish_at')
-          "Scheduled for publication at #{moment(article.get('scheduled_publish_at')).fromNow()}"
-          style: 'color: red'
+          "*****Scheduled to be published #{moment(article.get('scheduled_publish_at')).fromNow()}*****"
         else
           "Last saved #{moment(article.get('updated_at')).fromNow()}"
       )

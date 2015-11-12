@@ -12,39 +12,33 @@ cheerio = require 'cheerio'
 _ = require 'underscore'
 _s = require 'underscore.string'
 debug = require('debug') 'scripts'
-artists = require './artist_list.coffee'
 
-db.articles.find { published: true }, (err, articles) ->
+db.articles.find (err, articles) ->
   return exit err if err
-  unlinkedTotal = 0
   debug "Found #{articles?.length} articles, extracting html..."
   articlesHtmls = articles.map getHtmlFrom
-  articlesWithUnlinkedNames = _.compact _.flatten(
-    for article, i in articles
-      unlinkedArtistSlugs = findUnlinked artists, articlesHtmls[i]
-      debug "Searched #{i + 1 * 1000} articles..." if i % 1000 is 0
-      if unlinkedArtistSlugs.length
-        { id: article._id, artsyUrl: article.slugs.slice(-1)[0], slugs: unlinkedArtistSlugs }
-        unlinkedTotal = unlinkedTotal + (unlinkedArtistSlugs.length)
-      else
-        null
-  )
-  debug "Total artist mentions without link: #{unlinkedTotal}"
-  debug "DONE"
-  for data in articlesWithUnlinkedNames
-    debug "Article #{data.id} is missing links to #{data.slugs.join ', '}"
-  for artist in artists
-    count = 0
-    for i in [0...articlesWithUnlinkedNames.length]
-      if articlesWithUnlinkedNames[i] == artist
-        count++
-    { id: artist, unlinkedCount: count }
-  process.exit()
+  db.artists.find (err, artists) ->
+    return exit err if err
+    debug "Found #{artists?.length} artists..."
+    articlesWithUnlinkedNames = _.compact _.flatten(
+      for article, i in articles
+        unlinkedArtistSlugs = findUnlinked artists, articlesHtmls[i]
+        debug "Searched #{i + 1 * 1000} articles..." if i % 1000 is 0
+        if unlinkedArtistSlugs.length
+          { id: article._id, slugs: unlinkedArtistSlugs }
+        else
+          null
+    )
+    debug "DONE"
+    for data in articlesWithUnlinkedNames
+      debug "Article #{data.id} is missing links to #{data.slugs.join ', '}"
+    process.exit()
 
 findUnlinked = (artists, articlesHtml) ->
   slugs = []
   for artist, i in artists
-    if articlesHtml.indexOf(name) >= 0
+    name = (artist.first?.trim() or '') + ' ' + (artist.last?.trim() or '')
+    if name.trim() and articlesHtml.indexOf(name) >= 0
       slugs.push artist._slugs[0]
   slugs
 

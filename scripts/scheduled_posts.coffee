@@ -3,7 +3,7 @@ mongojs = require 'mongojs'
 fs = require 'fs'
 path = require 'path'
 moment = require 'moment'
-deubg = require('debug') 'scripts'
+debug = require('debug') 'scripts'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -15,10 +15,23 @@ switch process.env.NODE_ENV
 # Connect to database
 db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
-db.articles.update({ scheduled_publish_at: { $lt: Date() }, { $set: { published: true, published_at: Date() } } }), (err, msg) ->
-  return exit err if err
-  debug 'Scheduled publication finished', msg
+db.articles.update(
+  { scheduled_publish_at: { $lt: new Date() } }
+  { 
+    $set: {
+      published: true
+      published_at: Date()
+      scheduled_publish_at: null 
+    } 
+  }
+  { multi: true }
+  (err, msg) ->
+    console.log 'CB', err, msg
+    return exit err if err
+    debug 'Scheduled publication finished', msg
+    process.exit()
+)
 
 exit = (err) ->
   console.error "ERROR", err
-  process.exit 1
+  process.exit true
