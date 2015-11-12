@@ -21,8 +21,14 @@ module.exports = class Articles extends Backbone.Collection
         if article.get('published_at') && article.get('published')
           "Published #{moment(article.get('published_at')).fromNow()}"
         else if article.get('scheduled_publish_at')
-          "*****Scheduled to be published #{moment(article.get('scheduled_publish_at')).fromNow()}*****"
+          "Scheduled to be published #{moment(article.get('scheduled_publish_at')).fromNow()}"
         else
           "Last saved #{moment(article.get('updated_at')).fromNow()}"
       )
       href: "/articles/#{article.get('id')}/edit"
+      fontColor: (
+        if article.get('scheduled_publish_at')
+          'red'
+        else
+          'black'
+      )

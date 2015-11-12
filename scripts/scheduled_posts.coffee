@@ -26,7 +26,6 @@ db.articles.update(
   }
   { multi: true }
   (err, msg) ->
-    console.log 'CB', err, msg
     return exit err if err
     debug 'Scheduled publication finished', msg
     process.exit()
