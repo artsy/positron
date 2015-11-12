@@ -197,7 +197,7 @@ sortParamToQuery = (input) ->
         generateSlugs article, author, sanitizeAndSave(callback)
       else
         sanitizeAndSave(callback)(null, article)
-        
+
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys inputSchema
   # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -216,7 +216,7 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
       article = _.extend article, input, updated_at: new Date
       article.author = User.denormalizedForArticle author if author
       cb null, article, author, publishing
-  
+
 # After merging article & input
 
 onPublish = (article, author, accessToken, cb) ->

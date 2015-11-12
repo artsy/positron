@@ -104,7 +104,6 @@ describe 'EditAdmin', ->
       @view.$('.edit-email-small-image-url input').val().should.containEql 'img.png'
       @view.$('.edit-email-large-image-url input').val().should.containEql 'img.png'
 
-
   describe '#toggleScheduled', ->
 
     it 'can save the scheduled publish date and time', ->

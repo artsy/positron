@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "4.x.x"
+    "node": "4.x.x",
+    "npm": "2.x.x"
   },
   "scripts": {
     "start": "make s",
@@ -59,7 +60,7 @@
     "antigravity": "git://github.com/artsy/antigravity.git",
     "benv": "^3.0.0",
     "browserify": "^11.2.0",
-    "browserify-dev-middleware": "^1.0.0",
+    "browserify-dev-middleware": "^0.1.2",
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
     "deamdify": "^0.1.1",

@@ -1,3 +1,8 @@
+#
+# A script that collects article data from our mongo database, creates a CSV document,
+# and sends that data to S3 for consumption by Fulcrum.
+#
+
 knox = require 'knox'
 Q = require 'bluebird-q'
 mongojs = require 'mongojs'
