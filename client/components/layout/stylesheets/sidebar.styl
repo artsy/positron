@@ -13,6 +13,12 @@ triangle-size = 12px
   text-align center
   padding-top 20px
   z-index 5
+  overflow-y scroll
+  &::-webkit-scrollbar
+    background-color black
+    width 8px
+  &::-webkit-scrollbar-corner
+    display none
   a:not(#layout-sidebar-home), #layout-sidebar-profile
     display block
     margin-top 40px
