@@ -146,7 +146,6 @@ toQuery = (input, callback) ->
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
-    # Unrelated, but aren't we passing in just a single fair id?
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
     query.partner_ids = ObjectId input.partner_id if input.partner_id
     query.show_ids = ObjectId input.show_id if input.show_id
