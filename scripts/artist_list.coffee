@@ -1,4 +1,4 @@
-artists = ['banksy',
+module.exports = ['banksy',
 'andy warhol',
 'jean michel basquiat',
 'marina abramovic',
