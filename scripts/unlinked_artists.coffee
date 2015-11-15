@@ -11,21 +11,22 @@ moment = require 'moment'
 _ = require 'underscore'
 _s = require 'underscore.string'
 debug = require('debug') 'scripts'
+# upload an array of artist names to search for in this directory
 ARTISTS = require './artist_list.coffee'
 
-# Pull all of the articles into memory and extract out their html
+#Pull all of the articles into memory and extract out their html
 db.articles.find({ published: true }).toArray (err, articles) ->
   return exit err if err
-  unlinkedTotal = 0
   debug "Found #{articles?.length} articles, extracting html..."
   articlesElements = articles.map getHtmlFrom
 
-  # Parse the HTML and find any instances of artist names no inside <a>s
-  csv = [['Artist Name', 'Unlinked Articles', 'Total Articles Unlinked', 'Times Unmentioned']]
+  # Parse the HTML and find any instances of artist names not inside <a>s
+  csv = [['Artist Name', 'Unlinked Articles', 'Unlinked Artsy URLs', 'Total Articles Unlinked', 'Times Unmentioned']]
   csvHash = {}
   # {
   #   "Andy Warhol": {
-  #     unlinkedArticles: ['http']
+  #     unlinkedArticles: ['writer.artsy.net/...']
+  #     unlinkedArtsyUrls: ['artsy.net/article/...']
   #     totalUnlinked: 5
   #     timesUnmentioned: 10
   #   }
@@ -33,9 +34,12 @@ db.articles.find({ published: true }).toArray (err, articles) ->
   for article, i in articles
     unlinkedArtistNamesAndCounts = findUnlinked articlesElements[i]
     for artistName, unmentionedCount of unlinkedArtistNamesAndCounts
-      csvHash[artistName] ?= { unlinkedArticles: [], totalUnlinked: 0, timesUnmentioned: 0 }
+      csvHash[artistName] ?= { unlinkedArticles: [], unlinkedArtsyUrls: [], totalUnlinked: 0, timesUnmentioned: 0 }
       csvHash[artistName].unlinkedArticles.push(
         "http://writer.artsy.net/articles/#{article._id}/edit"
+      )
+      csvHash[artistName].unlinkedArtsyUrls.push(
+        "http://artsy.net/article/#{article.slugs.slice(-1)[0]}"
       )
       csvHash[artistName].timesUnmentioned += unmentionedCount
     debug "Searched #{i + 1 * 1000} articles..." if i % 1000 is 0
@@ -43,6 +47,7 @@ db.articles.find({ published: true }).toArray (err, articles) ->
     csv.push [
       artistName
       data.unlinkedArticles.join(' | ')
+      data.unlinkedArtsyUrls.join(' | ')
       data.unlinkedArticles.length
       data.timesUnmentioned
     ]
@@ -56,17 +61,18 @@ db.articles.find({ published: true }).toArray (err, articles) ->
 
 findUnlinked = ($) ->
   namesAndCounts = {}
+  html = $.html().toLowerCase()
   for name in ARTISTS
-    count = _s.count $.html().toLowerCase(), name
-    namesAndCounts[name] = count if count > 0
+    nameLink = 'artsy.net/artist/' + name.split(' ').join('-')
+    # if name appears in article without a link
+    if (_s.count html, nameLink) is 0 && (_s.count html, name) > 0
+      namesAndCounts[name] = _s.count html, name
   namesAndCounts
 
 getHtmlFrom = (article) ->
   texts = (section.body for section in article.sections \
-    when section.type is 'text').join('')
+    when section.type is 'text').join('') + article.lead_paragraph
   $ = cheerio.load texts
-  $('a').remove()
-  $
 
 exit = (err) ->
   console.error "ERROR", err
