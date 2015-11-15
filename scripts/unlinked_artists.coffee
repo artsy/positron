@@ -5,9 +5,7 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 db = require '../api/lib/db'
 cheerio = require 'cheerio'
-csv = require 'fast-csv'
 fs = require 'fs'
-moment = require 'moment'
 _ = require 'underscore'
 _s = require 'underscore.string'
 debug = require('debug') 'scripts'
