@@ -30,7 +30,6 @@
     "embedly-view-helpers": "^1.0.0",
     "express": "^4.13.3",
     "express-force-ssl": "^0.3.0",
-    "ezel-assets": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-0.0.13.tgz",
     "fast-csv": "^0.6.0",
     "fs": "0.0.2",
     "glossary": "^0.1.1",
@@ -87,6 +86,7 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "uglifyify": "^3.0.1",
+    "ezel-assets": "^1.0.0",
     "zombie": "^4.1.0"
   },
   "license": "MIT"
