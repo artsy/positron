@@ -308,7 +308,6 @@ module.exports = class EditAdmin extends Backbone.View
     if @article.get('scheduled_publish_at')
       @article.save scheduled_publish_at: null
     else
-      return unless confirm "Are you sure you want to schedule publication?" # TODO: Implement Artsy branded dialog
       @schedulePublish()
     @renderScheduleState()
 
@@ -327,12 +326,7 @@ module.exports = class EditAdmin extends Backbone.View
       publishTime = moment(@article.get('scheduled_publish_at')).format('HH:mm')
       @$('.edit-admin-input-time').val(publishTime)
       @$('#edit-schedule-button').addClass('edit-button-when-scheduled')
-      @$('#edit-schedule-button').text('Unschedule')
       @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', true)
     else
       @$('#edit-schedule-button').removeClass('edit-button-when-scheduled')
-      @$('#edit-schedule-button').text('Schedule')
       @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', false)
-
-
-
