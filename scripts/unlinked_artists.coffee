@@ -61,7 +61,7 @@ findUnlinked = ($) ->
   namesAndCounts = {}
   html = $.html().toLowerCase()
   for name in ARTISTS
-    nameLink = 'artsy.net/artist/' + name.split(' ').join('-')
+    nameLink = 'artsy.net/artist/' + name.toLowerCase().split(' ').join('-')
     # if name appears in article without a link
     if (_s.count html, nameLink) is 0 && (_s.count html, name) > 0
       namesAndCounts[name] = _s.count html, name
