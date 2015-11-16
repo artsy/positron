@@ -13,5 +13,5 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams)
             h1= item.title
           else
             h1.paginated-list-missing-title Missing Title
-          h2= item.subtitle
+          h2( style="color: #{item.fontColor}" )= item.subtitle
   +paginate(currentPage, totalPages, paginationParams)

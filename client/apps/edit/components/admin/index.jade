@@ -95,7 +95,14 @@ section#edit-admin.admin-form-container.max-width-container
         #edit-admin-publish-date
           label Publish Date
           input.bordered-input.edit-admin-input-date
+        br
+        a#edit-schedule-button.avant-garde-button Schedule 
       .admin-form-right-col
+        #edit-admin-schedule-publish-time
+          label Publish time
+          //- Firefox + Safari don't currently support time input
+          input.bordered-input.edit-admin-input-time( type='time', step=6000, placeholder='Publication time' )
+        br
         #edit-admin-google-news
           label Exclude from Google News
           .flat-checkbox

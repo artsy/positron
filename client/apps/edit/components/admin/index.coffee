@@ -21,6 +21,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupShowsAutocomplete()
     @setupBiographyAutocomplete()
     @setupPublishDate()
+    @renderScheduleState()
     @setupContributingAuthors()
     @setupEmailMetadata()
 
@@ -265,6 +266,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
+    'click #edit-schedule-button': 'toggleScheduled'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -300,3 +302,37 @@ module.exports = class EditAdmin extends Backbone.View
     clientFormat = moment(date).format('L')
     @saveFormat = moment(date).toDate()
     $('.edit-admin-input-date').val(clientFormat)
+
+  toggleScheduled: (e) ->
+    e.preventDefault()
+    if @article.get('scheduled_publish_at')
+      @article.save scheduled_publish_at: null
+    else
+      return unless confirm "Are you sure you want to schedule publication?" # TODO: Implement Artsy branded dialog
+      @schedulePublish()
+    @renderScheduleState()
+
+  schedulePublish: ->
+    if @$('.edit-admin-input-time').val() is undefined
+      alert 'Please enter a time.'
+      return
+    if @article.finishedContent() and @article.finishedThumbnail()
+      dateAndTime = @$('.edit-admin-input-date').val() + ' ' + @$('.edit-admin-input-time').val()
+      @article.save scheduled_publish_at: moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+    else
+      @article.trigger 'missing'
+
+  renderScheduleState: ->
+    if @article.get('scheduled_publish_at')
+      publishTime = moment(@article.get('scheduled_publish_at')).format('HH:mm')
+      @$('.edit-admin-input-time').val(publishTime)
+      @$('#edit-schedule-button').addClass('edit-button-when-scheduled')
+      @$('#edit-schedule-button').text('Unschedule')
+      @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', true)
+    else
+      @$('#edit-schedule-button').removeClass('edit-button-when-scheduled')
+      @$('#edit-schedule-button').text('Schedule')
+      @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', false)
+
+
+
