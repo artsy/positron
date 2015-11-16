@@ -86,6 +86,7 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "uglifyify": "^3.0.1",
+    "ezel-assets": "^1.0.0",
     "zombie": "^4.1.0"
   },
   "license": "MIT"
