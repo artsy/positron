@@ -15,21 +15,18 @@ switch process.env.NODE_ENV
 # Connect to database
 db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
-db.articles.update(
-  { scheduled_publish_at: { $lt: new Date() } }
-  { 
-    $set: {
-      published: true
-      published_at: Date()
-      scheduled_publish_at: null 
-    } 
-  }
-  { multi: true }
-  (err, msg) ->
-    return exit err if err
-    debug 'Scheduled publication finished', msg
+db.articles.find(
+  scheduled_publish_at: { $lt: new Date() }
+).forEach (err, doc) ->
+  if !doc
+    debug 'Scheduled publication finished'
     process.exit()
-)
+  if err
+    exit err
+  doc.published = true
+  doc.published_at = moment(doc.scheduled_publish_at).toDate()
+  doc.scheduled_publish_at = null
+  db.articles.save doc
 
 exit = (err) ->
   console.error "ERROR", err

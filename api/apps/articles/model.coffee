@@ -221,6 +221,7 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
 
 onPublish = (article, author, accessToken, cb) ->
   article.published_at = new Date
+  console.log article.published_at
   generateKeywords article, accessToken, (err, article) ->
     return cb err if err
     generateSlugs article, author, cb
