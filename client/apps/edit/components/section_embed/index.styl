@@ -1,0 +1,61 @@
+@import '../stylus_lib'
+
+artwork-img-bottom = 10px
+short-input-width = 290px
+wide-input-width = 640px
+
+.ese-controls-container
+  fill-container()
+  background black
+  z-index 3
+  height 170px
+  top -(@height)
+  text-align center
+  display none
+  a
+    background-repeat no-repeat !important
+    background-position center !important
+
+.ese-inputs
+  clearfix()
+  color white
+  padding controls-padding
+  text-align left
+  border-top 1px solid gray-darkest-color
+  h1
+    font-weight bold
+    margin-bottom controls-padding
+  .ese-by-url-container
+    display inline-block
+    width 100%
+    input
+      width 100%
+    button
+      position relative
+      display block
+      width 100%
+      font-size small-avant-garde-font-size + 1
+
+.ese-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
+  line-height @height
+
+.edit-section-remove
+  display none
+  &:hover svg
+    fill-color red-color
+  svg
+    fill-color black
+
+.edit-section-container[data-editing=true]
+  .esa-controls-container, .edit-section-remove
+    display block
+
+.ese-url-error
+  color red-color
+  width 200px
+  position absolute
+  top 28px
+  line-height 21px

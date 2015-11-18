@@ -43,6 +43,11 @@ module.exports = React.createClass
           type: 'slideshow'
           items: []
         }, at: @props.index + 1
+      when 'embed'
+        @props.sections.add {
+          type: 'embed'
+          url: ''
+        }
     @setState open: false
 
   render: ->
@@ -115,4 +120,12 @@ module.exports = React.createClass
             div {
               className: 'edit-menu-icon-slideshow'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
+            }
+          li {
+            className: 'edit-section-tool-embed'
+            onClick: @newSection('embed')
+          }, 'Embed',
+            div {
+              className: 'edit-menu-icon-embed'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
             }

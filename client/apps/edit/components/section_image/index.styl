@@ -1,80 +1,208 @@
 @import '../stylus_lib'
 
-.edit-section-image
-  position relative
+artwork-img-bottom = 10px
+short-input-width = 290px
+wide-input-width = 640px
 
-.est-nav
-  fill-container()
-  height 40px
-  top -(@height - 1px)
+.edit-section-artworks-container
+  nav a
+    display inline-block
+    height 40px
+    width @height + 20px
+    background no-repeat center center
+    transition opacity 0.3s
+    opacity 0.5
+    cursor pointer
+    &:hover
+      opacity 1
+    &:last-of-type
+      border-right 0
 
-[data-useragent*=Firefox] .est-nav
-  height 41px
-
-.edit-section-image .edit-section-controls
+.esa-controls-container
   fill-container()
   background black
-  height 218px
-  top -(@height + controls-padding)
-  left -(controls-padding)
-  padding controls-padding
-  display none
-  z-index 2
-  width overflow-width
-
-.esi-placeholder
+  z-index 3
+  height 334px
+  top -(@height)
   text-align center
-  color gray-darker-color
-  height 200px
+  display none
+  a
+    background-repeat no-repeat !important
+    background-position center !important
+
+.esa-inputs
+  clearfix()
+  color white
+  padding controls-padding
+  text-align left
+  border-top 1px solid gray-darkest-color
+  h1
+    font-weight bold
+    margin-bottom controls-padding
+  label
+    display block
+    margin-bottom controls-padding + 10px
+    position relative
+    > span, > input, > textarea
+      display inline-block
+      vertical-align top
+    > input, > textarea
+      position absolute
+      right 0
+    > span
+      margin-top 10px
+  .esa-by-urls-container
+    display inline-block
+    position absolute
+    right 0
+    textarea, button
+      position relative
+      display block
+      width 100%
+    button
+      font-size small-avant-garde-font-size + 1
+  .esa-by-urls-container, input
+    width short-input-width
+
+.esa-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
   line-height @height
 
+.esa-artworks-list
+  li
+    position relative
+    margin-bottom 30px
+    &:last-child
+      margin-bottom 0
+    p
+      color gray-dark-color
+      line-height 20px
+      overflow ellipsis
+  img
+    background gray-lighter-color
+
+.esa-artworks-list .edit-section-remove
+  display none
+  &:hover svg
+    fill-color red-color
+  svg
+    fill-color black
+
 .edit-section-container[data-editing=true]
-  .edit-section-controls
+  .esa-controls-container, .esa-artworks-list .edit-section-remove
     display block
 
-.esi-image
-  width 100%
-  transition opacity 0.5s
-
-#edit-thumbnail-upload
-  position relative
-  .upload-progress-container
-    display none
-
-.esi-caption
-  border 1px solid gray-darker-color !important
-  width 100%
-  background transparent
-  text-transform none
-  letter-spacing 0
-  cursor text
-  color white
-  a
-    color white
-  &.is-empty::before
-    content 'Add a caption'
-    color gray-dark-color
-    position absolute
-    text-align center
-    left 0
-    width 100%
-
-[data-useragent*=Firefox] .esi-caption
+.esa-autocomplete-menu
+  width short-input-width
   position absolute
-  width calc(100% - 40px)
+  right 0
+  background white
+  z-index 2
+  overflow ellipsis
+  top 37px
+  li
+    padding 10px
+    border 1px solid gray-color
+    border-bottom 0
+    color black
+    cursor pointer
+    transition background-color 0.3s
+    &:last-child
+      border-bottom 1px solid gray-color
+    &.is-active
+      background gray-color
+  img
+    background gray-lighter-color
+    width 100%
+  span
+    margin-top 18px
 
-.esi-nav.edit-scribe-nav
-  margin 10px 0
-  button
-    padding 6px 20px
-    &::after
-      top 3px !important
-    svg
-      top 7px !important
+.esa-thumbnail-container
+  height 40px
+  width 40px
+  overflow hidden
+  margin-right 10px
 
-.esi-inline-caption
-  color gray-darker-color
-  margin-top 10px
-  font-style italic
-  a
-    color gray-darker-color
+.esa-thumbnail-container, .esa-thumbnail-right
+  display inline-block
+  vertical-align top
+
+.esa-thumbnail-right
+  line-height 1.4em
+
+.esa-urls-error
+  color red-color
+  width 200px
+  position absolute
+  top 28px
+  line-height 21px
+
+.esa-autocomplete-label
+  margin-bottom 30px
+
+.esa-autocomplete-input
+  float right
+  margin-bottom 10px
+  padding-left 8px
+  color black
+  input
+    padding-left 8px
+  .tt-input
+    background white !important
+  .tt-dropdown-menu
+    margin-top 0
+    border 1px solid gray-lighter-color
+    p
+      line-height 1.2em
+    .tt-suggestion
+      clearfix()
+      line-height 1.2em
+      .esa-suggestion
+        width 50px
+        height @width
+        background center center gray-lighter-color
+        background-size cover
+        margin-right 10px
+        float left
+
+//
+// Varying layouts
+//
+.edit-section-container[data-layout=column_width]
+  nav .esa-column-width
+    opacity 1
+  .esa-artworks-list
+    img
+      width 100%
+      margin-bottom artwork-img-bottom
+
+.edit-section-container[data-layout=overflow_fillwidth]
+  nav .esa-overflow-fillwidth
+    opacity 1
+  .esa-by-urls-container, input, .esa-autocomplete-menu
+    width wide-input-width
+  .esa-artworks-list
+    text-align center
+    li
+      display inline-block
+      vertical-align top
+      padding 0 10px artwork-img-bottom 10px
+      text-align left
+      &:last-child
+        padding-right 0
+        padding-left 20px
+        .edit-section-remove
+          right -15px
+      &:first-child
+        padding-left 0
+        padding-right 20px
+        .edit-section-remove
+          right 5px
+    img
+      max-width 100%
+    .esa-img-container
+      padding-bottom artwork-img-bottom
+    .edit-section-remove
+      right -5px
