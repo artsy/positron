@@ -46,7 +46,7 @@ module.exports = React.createClass
       when 'embed'
         @props.sections.add {
           type: 'embed'
-          url: ''
+          src: ''
         }
     @setState open: false
 
