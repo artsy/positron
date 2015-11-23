@@ -4,6 +4,7 @@
 #
 
 React = require 'react'
+sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM
 
@@ -121,11 +122,12 @@ module.exports = React.createClass
               className: 'edit-menu-icon-slideshow'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
             }
-          li {
-            className: 'edit-section-tool-embed'
-            onClick: @newSection('embed')
-          }, 'Embed',
-            div {
-              className: 'edit-menu-icon-embed'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
-            }
+          if sd.USER.type is 'Admin'
+            li {
+              className: 'edit-section-tool-embed'
+              onClick: @newSection('embed')
+            }, 'Embed',
+              div {
+                className: 'edit-menu-icon-embed'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
+              }

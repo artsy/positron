@@ -8,6 +8,7 @@ Artworks = require '../../../../collections/artworks.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
 sd = require('sharify').data
+{ oembed } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -17,29 +18,45 @@ module.exports = React.createClass
     errorMessage: ''
     src: ''
     height: ''
+    embeddable: ''
+    iframe: ''
 
   componentDidMount: ->
     src = @props.section.get('src')
-    @renderEmbeddedContent src if src
+    # @renderEmbeddedContent src if src
 
   onClickOff: ->
     return @props.section.destroy() if @state.src is ''
 
-  renderIframe: (src, height) ->
-    @setState src: src, height: height
-    @forceUpdate()
-    @setState loading: false
-
-  submitIframe: (e) ->
+  submitSrc: (e) ->
     e.preventDefault()
     src = @refs.url.getDOMNode().value
     height = @refs.height.getDOMNode().value
     @setState loading: true
-    @renderIframe src, height
+    @setSrc src, height
+
+  setSrc: (src, height) ->
+    @setState src: src, height: height, embeddable: @isEmbeddable(src)
+    @forceUpdate()
+    @setState loading: false
+
+  isEmbeddable: (src) ->
+    @getIframe src, =>
+      @state.iframe?.length > 0
+
+  getIframe: (src, cb) ->
+    $.get oembed(src), (response) =>
+      @setState iframe: response.html if response.html
+      cb()
 
   removeIframe: ->
     @setState src: ''
     @forceUpdate()
+
+  changeLayout: (layout) -> =>
+    console.log 'changing layout to' + layout
+    @props.section.set layout: layout
+    # toggleFillwidth()
 
   # toggleFillwidth: ->
   #   return unless @props.section.artworks.length
@@ -64,9 +81,6 @@ module.exports = React.createClass
   # removeFillwidth: ->
   #   $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
 
-  changeLayout: (layout) -> =>
-    console.log 'changing layout to' + layout
-    @props.section.set layout: layout
 
   render: ->
     div {
@@ -81,15 +95,7 @@ module.exports = React.createClass
               'background-size': '38px'
             }
             className: 'esa-overflow-fillwidth'
-            onClick: @changeLayout('overflow_tall')
-          }
-          a {
-            style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
-            }
-            className: 'esa-overflow-fillwidth'
-            onClick: @changeLayout('overflow_short')
+            onClick: @changeLayout('overflow')
           }
           a {
             style: {
@@ -107,7 +113,7 @@ module.exports = React.createClass
           }
           form {
             className: 'ese-input-form-container'
-            onSubmit: @submitIframe
+            onSubmit: @submitSrc
           },
             div { className: 'ese-input' }, "URL",
               input {
@@ -127,8 +133,23 @@ module.exports = React.createClass
             }, 'Add URL'
       (if @state.src is ''
         div { className: 'ese-empty-placeholder' }, 'Add URL above'
+      else if @state.embeddable and @state.iframe
+          console.log @state.iframe
+
+          div {
+            className: 'ese-embed-content'
+            dangerouslySetInnerHTML: __html: @state.iframe
+            style: { height: @state.height }
+          }
+          button {
+            className: 'edit-section-remove button-reset'
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+            onClick: @removeIframe
+          }
       else
-        div { className: 'ese-embed-content' },
+        div {
+          className: 'ese-embed-content'
+        },
           iframe {
             src: @state.src
             style: { 'height': @state.height }
@@ -137,9 +158,9 @@ module.exports = React.createClass
             frameborder: '0'
             ref: 'iframe'
           }
-          button {
-            className: 'edit-section-remove button-reset'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-            onClick: @removeIframe
-          }
+        button {
+          className: 'edit-section-remove button-reset'
+          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+          onClick: @removeIframe
+        }
       )
