@@ -333,18 +333,6 @@ describe 'Article', ->
               count.should.equal 12
               done()
 
-    it 'saves published_at when the article is published', (done) ->
-      Article.save {
-        title: 'Top Ten Shows'
-        thumbnail_title: 'Ten Shows'
-        author_id: '5086df098523e60002000018'
-        published: true
-      }, 'foo', (err, article) ->
-        article.published_at.should.be.an.instanceOf(Date)
-        moment(article.published_at).format('YYYY').should
-          .equal moment().format('YYYY')
-        done()
-
     it 'updates published_at when admin changes it', (done) ->
       Article.save {
         title: 'Top Ten Shows'
