@@ -48,6 +48,7 @@ module.exports = React.createClass
         @props.sections.add {
           type: 'embed'
           src: ''
+          layout: 'column_width'
         }
     @setState open: false
 

@@ -17,13 +17,12 @@ module.exports = React.createClass
   getInitialState: ->
     errorMessage: ''
     src: ''
-    height: ''
     embeddable: ''
     iframe: ''
 
   componentDidMount: ->
     src = @props.section.get('src')
-    # @renderEmbeddedContent src if src
+    @updateIframe src if src
 
   onClickOff: ->
     return @props.section.destroy() if @state.src is ''
@@ -31,23 +30,15 @@ module.exports = React.createClass
   submitSrc: (e) ->
     e.preventDefault()
     src = @refs.url.getDOMNode().value
-    height = @refs.height.getDOMNode().value
     @setState loading: true
-    @setSrc src, height
+    @updateIframe src
 
-  setSrc: (src, height) ->
-    @setState src: src, height: height, embeddable: @isEmbeddable(src)
-    @forceUpdate()
-    @setState loading: false
-
-  isEmbeddable: (src) ->
-    @getIframe src, =>
-      @state.iframe?.length > 0
-
-  getIframe: (src, cb) ->
-    $.get oembed(src), (response) =>
+  updateIframe: (src) ->
+    $.get oembed(src, { maxwidth: @getWidth() }), (response) =>
       @setState iframe: response.html if response.html
-      cb()
+      @setState src: src, embeddable: @state.iframe?.length > 0
+      @forceUpdate()
+      @setState loading: false
 
   removeIframe: ->
     @setState src: ''
@@ -56,31 +47,19 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     console.log 'changing layout to' + layout
     @props.section.set layout: layout
-    # toggleFillwidth()
+    @toggleFillwidth()
 
-  # toggleFillwidth: ->
-  #   return unless @props.section.artworks.length
-  #   if @props.section.get('layout') is 'overflow_fillwidth'
-  #     @removeFillwidth() if @prevLength isnt @props.section.artworks.length
-  #     @fillwidth()
-  #   else if @props.section.previous('layout') isnt @props.section.get('layout')
-  #     @removeFillwidth()
-  #   @prevLength = @props.section.artworks.length
+  toggleFillwidth: ->
+    # if @props.section.get('layout') is 'overflow'
+    #   # Fill Width
+    #   $(@refs.embed.getDOMNode()).css( width: 1100 )
+    # else
+    #   # Column width
+    #   $(@refs.embed.getDOMNode()).css( width: 500)
+    @updateIframe(@state.src)
 
-  # fillwidth: ->
-  #   len = $(@refs.artworks.getDOMNode()).find('img').length
-  #   $(@refs.artworks.getDOMNode()).fillwidthLite
-  #     gutterSize: 20
-  #     apply: (img, i) ->
-  #       pad = switch i
-  #         when 0 then '0 20px 0 0'
-  #         when len - 1 then '0 0 0 20px'
-  #         else '0 10px'
-  #       img.$el.closest('li').css(padding: pad).width(img.width)
-
-  # removeFillwidth: ->
-  #   $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
-
+  getWidth: ->
+    if @props.section.get('layout') is 'overflow' then 860 else 500
 
   render: ->
     div {
@@ -106,7 +85,7 @@ module.exports = React.createClass
             onClick: @changeLayout('column_width')
         }
         section { className: 'ese-inputs' },
-          h1 {}, 'Add a embedded content to this section'
+          h1 {}, 'Add embedded content to this section'
           div {
             className: 'ese-iframe-error'
             dangerouslySetInnerHTML: __html: @state.errorMessage
@@ -121,46 +100,40 @@ module.exports = React.createClass
                 className: 'bordered-input bordered-input-dark'
                 ref: 'url'
               }
-            div { className: 'ese-input' }, "Height",
-              input {
-                className: 'bordered-input bordered-input-dark'
-                placeholder: '400'
-                ref: 'height'
-              }
             button {
               className: 'avant-garde-button avant-garde-button-dark'
               'data-state': if @state.loading then 'loading' else ''
             }, 'Add URL'
-      (if @state.src is ''
-        div { className: 'ese-empty-placeholder' }, 'Add URL above'
-      else if @state.embeddable and @state.iframe
-          console.log @state.iframe
-
-          div {
-            className: 'ese-embed-content'
-            dangerouslySetInnerHTML: __html: @state.iframe
-            style: { height: @state.height }
-          }
-          button {
-            className: 'edit-section-remove button-reset'
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-            onClick: @removeIframe
-          }
-      else
-        div {
-          className: 'ese-embed-content'
-        },
-          iframe {
-            src: @state.src
-            style: { 'height': @state.height }
-            className: 'embed-iframe'
-            scrolling: 'no'
-            frameborder: '0'
-            ref: 'iframe'
-          }
-        button {
-          className: 'edit-section-remove button-reset'
-          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          onClick: @removeIframe
-        }
-      )
+      div { className: 'embed-container', ref: 'embed' },
+        (if @state.src is ''
+          div { className: 'ese-empty-placeholder' }, 'Add URL above'
+        else if @state.embeddable and @state.iframe
+          [
+            div {
+              className: 'ese-embed-content'
+              dangerouslySetInnerHTML: __html: @state.iframe
+            }
+            button {
+              className: 'edit-section-remove button-reset'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+              onClick: @removeIframe
+            }
+          ]
+        else
+          [
+            div {
+              className: 'ese-embed-content'
+            },
+              iframe {
+                src: @state.src
+                className: 'embed-iframe'
+                scrolling: 'no'
+                frameborder: '0'
+              }
+            button {
+              className: 'edit-section-remove button-reset'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+              onClick: @removeIframe
+            }
+          ]
+        )

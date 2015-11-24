@@ -1,6 +1,5 @@
 @import '../stylus_lib'
 
-
 .ese-controls-container
   fill-container()
   background black
@@ -36,10 +35,8 @@
     margin-bottom controls-padding
   .ese-input-form-container
     .ese-input
+      width 100%
       display inline-block
-      width 50%
-      &:first-child
-        padding-right 10px
     input
       width 100%
     button
@@ -72,47 +69,25 @@
   top 28px
   line-height 21px
 
-// .ese-embed-content
-//   iframe
-//     height 100vh
-//     width 100%
+.ese-embed-content
+  iframe
+    height 100vh
+    width 100%
 
 //
 // Varying layouts
 //
 .edit-section-container[data-layout=column_width]
+  width 540px
   nav .esa-column-width
     opacity 1
-  .esa-artworks-list
-    img
-      width 100%
-      margin-bottom artwork-img-bottom
+  .embed-container
+    width 500px
 
-.edit-section-container[data-layout=overflow_fillwidth]
+.edit-section-container[data-layout=overflow]
+  width 900px
+  left -180px
   nav .esa-overflow-fillwidth
     opacity 1
-  .esa-by-urls-container, input, .esa-autocomplete-menu
-    width wide-input-width
-  .esa-artworks-list
-    text-align center
-    li
-      display inline-block
-      vertical-align top
-      padding 0 10px artwork-img-bottom 10px
-      text-align left
-      &:last-child
-        padding-right 0
-        padding-left 20px
-        .edit-section-remove
-          right -15px
-      &:first-child
-        padding-left 0
-        padding-right 20px
-        .edit-section-remove
-          right 5px
-    img
-      max-width 100%
-    .esa-img-container
-      padding-bottom artwork-img-bottom
-    .edit-section-remove
-      right -5px
+  .embed-container
+    width 860px
