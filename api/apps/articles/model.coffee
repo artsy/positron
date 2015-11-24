@@ -197,7 +197,6 @@ sortParamToQuery = (input) ->
         generateSlugs article, author, sanitizeAndSave(callback)
       else
         sanitizeAndSave(callback)(null, article)
-        console.log article.published_at
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys inputSchema
