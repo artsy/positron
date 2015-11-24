@@ -220,6 +220,8 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
 # After merging article & input
 
 onPublish = (article, author, accessToken, cb) ->
+  if not article.published_at
+    article.published_at = new Date
   generateKeywords article, accessToken, (err, article) ->
     return cb err if err
     generateSlugs article, author, cb
