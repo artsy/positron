@@ -35,6 +35,14 @@ videoSection = (->
     cover_image_url: @string().allow('', null)
 ).call Joi
 
+embedSection = (->
+  @object().keys
+    type: @string().valid('embed')
+    url: @string().allow('',null)
+    height: @string().allow('',null)
+    layout: @string().allow('',null)
+).call Joi
+
 inputSchema = (->
   id: @objectId()
   author_id: @objectId().required()
@@ -53,6 +61,7 @@ inputSchema = (->
   sections: @array().items([
     imageSection
     videoSection
+    embedSection
     @object().keys
       type: @string().valid('text')
       body: @string().allow('', null)
@@ -188,6 +197,7 @@ sortParamToQuery = (input) ->
 #
 @save = (input, accessToken, callback) ->
   validate input, (err, input) =>
+    console.log input
     return callback err if err
     mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
       return callback(err) if err
