@@ -19,10 +19,12 @@ module.exports = React.createClass
     src: ''
     embeddable: ''
     iframe: ''
+    height: ''
 
   componentDidMount: ->
     src = @props.section.get('src')
-    @updateIframe src if src
+    height = @props.section.get('height') or ''
+    @updateIframe src, height if src
 
   onClickOff: ->
     return @props.section.destroy() if @state.src is ''
@@ -30,13 +32,14 @@ module.exports = React.createClass
   submitSrc: (e) ->
     e.preventDefault()
     src = @refs.url.getDOMNode().value
+    height = @refs.height.getDOMNode().value
     @setState loading: true
-    @updateIframe src
+    @updateIframe src, height
 
-  updateIframe: (src) ->
+  updateIframe: (src, height = '') ->
     $.get oembed(src, { maxwidth: @getWidth() }), (response) =>
       @setState iframe: response.html if response.html
-      @setState src: src, embeddable: @state.iframe?.length > 0
+      @setState src: src, height: height, embeddable: @state.iframe?.length > 0
       @forceUpdate()
       @setState loading: false
 
@@ -56,7 +59,7 @@ module.exports = React.createClass
     # else
     #   # Column width
     #   $(@refs.embed.getDOMNode()).css( width: 500)
-    @updateIframe(@state.src)
+    @updateIframe(@state.src, @state.height)
 
   getWidth: ->
     if @props.section.get('layout') is 'overflow' then 860 else 500
@@ -100,11 +103,20 @@ module.exports = React.createClass
                 className: 'bordered-input bordered-input-dark'
                 ref: 'url'
               }
+            div { className: 'ese-input' }, "Height (optional)",
+              input {
+                placeholder: '400'
+                className: 'bordered-input bordered-input-dark'
+                ref: 'height'
+              }
             button {
               className: 'avant-garde-button avant-garde-button-dark'
               'data-state': if @state.loading then 'loading' else ''
             }, 'Add URL'
-      div { className: 'embed-container', ref: 'embed' },
+      div {
+        className: 'embed-container'
+        ref: 'embed'
+      }
         (if @state.src is ''
           div { className: 'ese-empty-placeholder' }, 'Add URL above'
         else if @state.embeddable and @state.iframe
@@ -112,6 +124,7 @@ module.exports = React.createClass
             div {
               className: 'ese-embed-content'
               dangerouslySetInnerHTML: __html: @state.iframe
+              style: { 'height': @state.height if @state.height.length }
             }
             button {
               className: 'edit-section-remove button-reset'
@@ -129,6 +142,7 @@ module.exports = React.createClass
                 className: 'embed-iframe'
                 scrolling: 'no'
                 frameborder: '0'
+                style: { 'height': @state.height if @state.height.length }
               }
             button {
               className: 'edit-section-remove button-reset'
