@@ -4,8 +4,6 @@
 #
 
 _ = require 'underscore'
-Artworks = require '../../../../collections/artworks.coffee'
-Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
 sd = require('sharify').data
 { oembed } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
