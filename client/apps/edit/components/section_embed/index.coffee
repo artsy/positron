@@ -16,50 +16,41 @@ module.exports = React.createClass
 
   getInitialState: ->
     errorMessage: ''
-    src: ''
+    url: ''
     embeddable: ''
     iframe: ''
     height: ''
 
   componentDidMount: ->
-    src = @props.section.get('src')
+    url = @props.section.get('url')
     height = @props.section.get('height') or ''
-    @updateIframe src, height if src
+    @updateIframe url, height if url
 
   onClickOff: ->
-    return @props.section.destroy() if @state.src is ''
+    return @props.section.destroy() if @state.url is ''
 
-  submitSrc: (e) ->
+  submitUrl: (e) ->
     e.preventDefault()
-    src = @refs.url.getDOMNode().value
+    url = @refs.url.getDOMNode().value
     height = @refs.height.getDOMNode().value
+    @props.section.set url: url, height: height
     @setState loading: true
-    @updateIframe src, height
+    @updateIframe url, height
 
-  updateIframe: (src, height = '') ->
-    $.get oembed(src, { maxwidth: @getWidth() }), (response) =>
+  updateIframe: (url, height = '') ->
+    $.get oembed(url, { maxwidth: @getWidth() }), (response) =>
       @setState iframe: response.html if response.html
-      @setState src: src, height: height, embeddable: @state.iframe?.length > 0
+      @setState url: url, height: height, embeddable: @state.iframe?.length > 0
       @forceUpdate()
       @setState loading: false
 
   removeIframe: ->
-    @setState src: ''
+    @setState url: ''
     @forceUpdate()
 
   changeLayout: (layout) -> =>
-    console.log 'changing layout to' + layout
     @props.section.set layout: layout
-    @toggleFillwidth()
-
-  toggleFillwidth: ->
-    # if @props.section.get('layout') is 'overflow'
-    #   # Fill Width
-    #   $(@refs.embed.getDOMNode()).css( width: 1100 )
-    # else
-    #   # Column width
-    #   $(@refs.embed.getDOMNode()).css( width: 500)
-    @updateIframe(@state.src, @state.height)
+    @updateIframe(@state.url, @state.height)
 
   getWidth: ->
     if @props.section.get('layout') is 'overflow' then 860 else 500
@@ -95,7 +86,7 @@ module.exports = React.createClass
           }
           form {
             className: 'ese-input-form-container'
-            onSubmit: @submitSrc
+            onSubmit: @submitUrl
           },
             div { className: 'ese-input' }, "URL",
               input {
@@ -117,7 +108,7 @@ module.exports = React.createClass
         className: 'embed-container'
         ref: 'embed'
       }
-        (if @state.src is ''
+        (if @state.url is ''
           div { className: 'ese-empty-placeholder' }, 'Add URL above'
         else if @state.embeddable and @state.iframe
           [
@@ -133,12 +124,14 @@ module.exports = React.createClass
             }
           ]
         else
+          console.log @state.height.length
+          console.log @state
           [
             div {
               className: 'ese-embed-content'
             },
               iframe {
-                src: @state.src
+                src: @state.url
                 className: 'embed-iframe'
                 scrolling: 'no'
                 frameborder: '0'
