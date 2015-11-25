@@ -50,7 +50,7 @@ module.exports = React.createClass
           url: ''
           layout: 'column_width'
           height: ''
-        }
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -124,7 +124,7 @@ module.exports = React.createClass
               className: 'edit-menu-icon-slideshow'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
             }
-          if sd.USER.type is 'Admin'
+          if sd.USER?.type is 'Admin'
             li {
               className: 'edit-section-tool-embed'
               onClick: @newSection('embed')

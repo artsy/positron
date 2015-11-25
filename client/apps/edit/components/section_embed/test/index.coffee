@@ -15,10 +15,7 @@ describe 'SectionEmbed', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      SectionEmbed = benv.requireWithJadeify(
-        resolve(__dirname, '../index')
-        ['icons']
-      )
+      SectionEmbed = benv.require resolve __dirname, '../index'
       @component = React.render SectionEmbed(
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
