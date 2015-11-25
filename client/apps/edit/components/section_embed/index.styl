@@ -53,15 +53,8 @@
   height 100px
   line-height @height
 
-.edit-section-remove
-  display none
-  &:hover svg
-    fill-color red-color
-  svg
-    fill-color black
-
 .edit-section-container[data-editing=true]
-  .esa-controls-container, .edit-section-remove
+  .ese-controls-container
     display block
 
 .ese-iframe-error
@@ -80,7 +73,7 @@
 //
 .edit-section-container[data-layout=column_width]
   width 540px
-  nav .esa-column-width
+  nav .ese-column-width
     opacity 1
   .embed-container
     width 500px
@@ -88,7 +81,7 @@
 .edit-section-container[data-layout=overflow]
   width 1100px
   left calc(50% - 550px)
-  nav .esa-overflow-fillwidth
+  nav .ese-overflow
     opacity 1
   .embed-container
     width 1060px

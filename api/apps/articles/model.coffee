@@ -192,7 +192,6 @@ sortParamToQuery = (input) ->
 # Persistence
 #
 @save = (input, accessToken, callback) ->
-  console.log input
   validate input, (err, input) =>
     return callback err if err
     mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->

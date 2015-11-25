@@ -10,7 +10,6 @@ React = require 'react'
 sd = require('sharify').data
 { oembed } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
-icons = -> require('./icons.jade') arguments...
 
 module.exports = React.createClass
 
@@ -40,20 +39,16 @@ module.exports = React.createClass
   updateIframe: (url, height = '') ->
     $.get oembed(url, { maxwidth: @getWidth() }), (response) =>
       @setState iframe: response.html if response.html
-      @setState url: url, height: height, embeddable: @state.iframe?.length > 0
+      @setState url: url, height: height, embeddable: response.html?
       @forceUpdate()
       @setState loading: false
-
-  removeIframe: ->
-    @setState url: ''
-    @forceUpdate()
 
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
     @updateIframe(@state.url, @state.height)
 
   getWidth: ->
-    if @props.section.get('layout') is 'overflow' then 860 else 500
+    if @props.section.get('layout') is 'overflow' then 1060 else 500
 
   render: ->
     div {
@@ -67,7 +62,7 @@ module.exports = React.createClass
               'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
               'background-size': '38px'
             }
-            className: 'esa-overflow-fillwidth'
+            className: 'ese-overflow'
             onClick: @changeLayout('overflow')
           }
           a {
@@ -75,7 +70,7 @@ module.exports = React.createClass
               'background-image': 'url(/icons/edit_artworks_column_width.svg)'
               'background-size': '22px'
             }
-            className: 'esa-column-width'
+            className: 'ese-column-width'
             onClick: @changeLayout('column_width')
         }
         section { className: 'ese-inputs' },
@@ -111,36 +106,20 @@ module.exports = React.createClass
         (if @state.url is ''
           div { className: 'ese-empty-placeholder' }, 'Add URL above'
         else if @state.embeddable and @state.iframe
-          [
-            div {
-              className: 'ese-embed-content'
-              dangerouslySetInnerHTML: __html: @state.iframe
+          div {
+            className: 'ese-embed-content'
+            dangerouslySetInnerHTML: __html: @state.iframe
+            style: { 'height': @state.height if @state.height.length }
+          }
+        else
+          div {
+            className: 'ese-embed-content'
+          },
+            iframe {
+              src: @state.url
+              className: 'embed-iframe'
+              scrolling: 'no'
+              frameborder: '0'
               style: { 'height': @state.height if @state.height.length }
             }
-            button {
-              className: 'edit-section-remove button-reset'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-              onClick: @removeIframe
-            }
-          ]
-        else
-          console.log @state.height.length
-          console.log @state
-          [
-            div {
-              className: 'ese-embed-content'
-            },
-              iframe {
-                src: @state.url
-                className: 'embed-iframe'
-                scrolling: 'no'
-                frameborder: '0'
-                style: { 'height': @state.height if @state.height.length }
-              }
-            button {
-              className: 'edit-section-remove button-reset'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-              onClick: @removeIframe
-            }
-          ]
         )
