@@ -422,6 +422,10 @@ describe 'Article', ->
               }
             ]
           }
+          {
+            type: 'embed'
+            url: 'http://maps.google.com'
+          }
         ]
       }, 'foo', (err, article) ->
         article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
@@ -430,6 +434,7 @@ describe 'Article', ->
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
         article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[4].url.should.equal 'http://maps.google.com'
         done()
 
     it 'fixes anchors urls', (done) ->

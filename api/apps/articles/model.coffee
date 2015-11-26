@@ -54,6 +54,11 @@ inputSchema = (->
     imageSection
     videoSection
     @object().keys
+      type: @string().valid('embed')
+      url: @string().allow('',null)
+      height: @string().allow('',null)
+      layout: @string().allow('',null)
+    @object().keys
       type: @string().valid('text')
       body: @string().allow('', null)
     @object().keys
