@@ -98,6 +98,12 @@ inputSchema = (->
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
     credit_url: @string().allow('',null)
+  is_super_article: @boolean().default(false)
+  super_article: @object().keys
+    partner_link: @string().allow('',null)
+    partner_logo: @string().allow('',null)
+    secondary_partner_logo: @string().allow('',null)
+    related_articles: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->

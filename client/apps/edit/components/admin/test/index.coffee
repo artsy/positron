@@ -34,6 +34,8 @@ describe 'EditAdmin', ->
         EditAdmin::setupPublishDate = sinon.stub()
         EditAdmin::renderScheduleState = sinon.stub()
         EditAdmin::setupContributingAuthors = sinon.stub()
+        EditAdmin::setupSuperArticleAutocomplete = sinon.stub()
+        EditAdmin::setupSuperArticleImages = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 

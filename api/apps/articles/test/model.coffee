@@ -506,7 +506,6 @@ describe 'Article', ->
         article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
         done()
 
-
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
