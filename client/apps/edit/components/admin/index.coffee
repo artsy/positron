@@ -275,7 +275,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupSuperArticleAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
-    @related_articles = if @article.get('super_articles') then @article.get('super_articles').related_articles else []
+    @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     list = new AutocompleteList @$('#edit-admin-related-articles')[0],
       name: 'related_articles[]'
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
@@ -297,7 +297,7 @@ module.exports = class EditAdmin extends Backbone.View
         request
           .get("#{sd.API_URL}/articles/#{id}")
           .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @articles.push id: res.body._id, value: "#{res.body.title}, #{res.body.author?.name}"
+            @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
             cb()
       , =>
         list.setState loading: false, items: @articles

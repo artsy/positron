@@ -343,7 +343,7 @@ describe 'Article', ->
         article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should
           .equal moment().format('YYYY')
-        done() 
+        done()
 
     it 'updates published_at when admin changes it', (done) ->
       Article.save {
@@ -504,6 +504,26 @@ describe 'Article', ->
       }, 'foo', (err, article) ->
         return done err if err
         article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
+        done()
+
+    it 'saves Super Articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        is_super_article: true
+        super_article: {
+          partner_link: 'http://partnerlink.com'
+          partner_logo: 'http://partnerlink.com/logo.jpg'
+          secondary_partner_logo: 'http://secondarypartner.com/logo.png'
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.super_article.partner_link.should.equal 'http://partnerlink.com'
+        article.super_article.partner_logo.should.equal 'http://partnerlink.com/logo.jpg'
+        article.super_article.related_articles.length.should.equal 1
+        article.is_super_article.should.equal true
+        article.super_article.secondary_partner_logo.should.equal 'http://secondarypartner.com/logo.png'
         done()
 
   describe "#destroy", ->
