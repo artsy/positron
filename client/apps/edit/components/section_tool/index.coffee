@@ -82,6 +82,15 @@ module.exports = React.createClass
               className: 'edit-menu-icon-hero-video'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-video').html()
             }
+          if sd.USER?.type is 'Admin'
+            li {
+              className: 'edit-section-tool-hero-fullscreen'
+              onClick: @props.setHero('fullscreen')
+            }, 'Fullscreen Background',
+              div {
+                className: 'edit-menu-icon-hero-fullscreen'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-fullscreen').html()
+              }
       else
         ul { className: 'edit-section-tool-menu' },
           li {
