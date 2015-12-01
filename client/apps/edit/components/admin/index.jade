@@ -138,3 +138,30 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( onClick="this.select();" readonly )
         label.edit-email-large-image-url Small
           input.bordered-input( onClick="this.select();" readonly )
+
+  //- Super Article
+  section.admin-form-section#edit-super-article
+    .admin-form-left
+      h1 Super Article
+      h2 Enable the Super Article functionality for special partnerships and features.
+    .admin-form-right
+      .admin-form-right-col
+        label Enable
+          .flat-checkbox
+            input( type='checkbox' name='is_super_article'
+              checked=article.get('is_super_article') == true value=true )
+        label Partner Link
+          input.bordered-input( name='partner_link' value="#{article.get('super_article') && article.get('super_article').partner_link ? article.get('super_article').partner_link : ''}")
+        label.edit-partner-logo
+          span(
+            data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
+          ) Partner Logo
+          #edit-partner-logo-upload
+        label.edit-partner-logo
+          span(
+            data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
+          ) Secondary Partner Logo
+          #edit-secondary-partner-logo-upload
+      .admin-form-right-col
+        label Related Articles
+        #edit-admin-related-articles

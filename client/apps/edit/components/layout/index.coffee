@@ -76,6 +76,12 @@ module.exports = class EditLayout extends Backbone.View
         credit_line: @$(".edit-email-form input[name='credit_line']").val()
         credit_url: @$(".edit-email-form input[name='credit_url']").val()
         image_url: if @article.get('email_metadata')?.image_url then @article.get('email_metadata').image_url else ''
+      is_super_article: @$('[name=is_super_article]').is(':checked')
+      super_article:
+        partner_link: @$("#edit-super-article input[name='partner_link']").val()
+        partner_logo: if @article.get('super_article')?.partner_logo then @article.get('super_article').partner_logo else ''
+        secondary_partner_logo: if @article.get('super_article')?.secondary_partner_logo then @article.get('super_article').secondary_partner_logo else ''
+        related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     }
 
   toggleAstericks: =>
