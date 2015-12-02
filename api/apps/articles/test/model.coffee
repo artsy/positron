@@ -188,6 +188,30 @@ describe 'Article', ->
           results[1].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles by super article', (done) ->
+      fabricate 'articles', [
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          title: 'Hello Wurld'
+          is_super_article: false
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Hello Waaarldie'
+          is_super_article: true
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Hello Waaarld'
+        }
+      ], =>
+        Article.where { is_super_article: true }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 13
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Waaarldie'
+          done()
+
     it 'can find articles by tags', (done) ->
       fabricate 'articles', [
         {
