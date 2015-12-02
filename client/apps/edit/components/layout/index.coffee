@@ -165,10 +165,11 @@ module.exports = class EditLayout extends Backbone.View
         $section.offset().top + $section.height())
       insideComponent = false
     left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
-    $controls.css(
-      width: if insideComponent then $controls.outerWidth() else ''
-      left: if insideComponent then "calc(50% - #{left}px)" else ''
-    ).attr('data-fixed', insideComponent)
+    unless $section.data('type') is 'fullscreen'
+      $controls.css(
+        width: if insideComponent then $controls.outerWidth() else ''
+        left: if insideComponent then "calc(50% - #{left}px)" else ''
+      ).attr('data-fixed', insideComponent)
 
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')

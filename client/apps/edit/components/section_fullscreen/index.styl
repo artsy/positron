@@ -1,0 +1,115 @@
+@import '../stylus_lib'
+
+.edit-section-fullscreen .edit-section-controls
+  fill-container()
+  position absolute
+  top 0
+  left 0
+  z-index 2
+  display none
+
+.esf-placeholder
+  width 100%
+  height 800px
+  background-color gray-lighter-color
+  position relative
+
+.edit-section-container-block
+  position relative
+  height 800px
+
+.edit-section-container[data-editing=true][data-type=fullscreen]
+  height 800px
+  width calc(100vw - 110px)
+  margin-top -45px
+  padding 0px
+  left 110px
+  position absolute
+  &::after
+    border 0
+  .edit-section-controls
+    display block
+
+.esf-right-controls-container
+  float right
+  margin-top 20px
+  .edit-section-remove
+    right 20px
+    top 20px
+    display inline-block
+  .esf-change-background
+    cursor pointer
+    avant-garde()
+    display inline-block
+    margin-right 75px
+
+.esf-image
+  width 100%
+  transition opacity 0.5s
+
+.esf-text-container
+  width 100%
+  margin auto
+  input
+    width 100%
+    text-align center
+    background-color transparent
+    border 0px
+    &:focus
+      outline none
+
+.esf-text-container.is-super-article
+  margin auto 0 auto 150px
+
+.esf-title
+  garamond 'xxl-headline'
+  font-style italic
+  display block
+
+.esf-intro
+  garamond()
+  font-size 25px
+  font-style italic
+  display block
+
+#edit-thumbnail-upload
+  position relative
+  .upload-progress-container
+    display none
+
+.esf-caption
+  width 100%
+  background transparent
+  text-transform none
+  letter-spacing 0
+  cursor text
+  color white
+  a
+    color white
+  &.is-empty::before
+    content 'Add a caption'
+    color gray-dark-color
+    position absolute
+    text-align center
+    left 0
+    width 100%
+
+[data-useragent*=Firefox] .esf-caption
+  position absolute
+  width calc(100% - 40px)
+
+.esf-nav.edit-scribe-nav
+  margin 10px 0
+  button
+    padding 6px 20px
+    &::after
+      top 3px !important
+    svg
+      top 7px !important
+
+.esf-inline-caption
+  color gray-darker-color
+  margin-top 10px
+  font-style italic
+  a
+    color gray-darker-color

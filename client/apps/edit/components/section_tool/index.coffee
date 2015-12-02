@@ -51,6 +51,13 @@ module.exports = React.createClass
           layout: 'column_width'
           height: ''
         }, at: @props.index + 1
+      when 'fullscreen'
+        @props.sections.add {
+          type: 'fullscreen'
+          background_url: ''
+          title: ''
+          intro: ''
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
