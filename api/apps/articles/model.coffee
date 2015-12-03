@@ -123,6 +123,7 @@ querySchema = (->
   tier: @number()
   featured: @boolean()
   exclude_google_news: @boolean()
+  super_article_for: @objectId()
   q: @string()
   all_by_author: @objectId()
   tags: @array()
@@ -153,7 +154,7 @@ toQuery = (input, callback) ->
     return callback err if err
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
-    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
+    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
       'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -164,19 +165,28 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
+    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
-    query.$or = [
+
+    # Convert query for super article for article
+    query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for
+
+    # Only add the $or array for queries that require it (blank $or array causes problems)
+    query.$or ?= [] if input.artist_id or input.all_by_author
+
+    # Convert query for articles by author
+    query.$or.push(
       { author_id: ObjectId(input.all_by_author) }
       { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
-    ] if input.all_by_author
+    ) if input.all_by_author
 
     # Convert query for articles featured to an artist or artwork
-    query.$or = [
+    query.$or.push(
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
       { biography_for_artist_id: ObjectId(input.artist_id) }
-    ] if input.artist_id
-    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
+    ) if input.artist_id
+
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
     callback null, query, limit, offset, sortParamToQuery(sort)
@@ -239,11 +249,11 @@ onPublish = (article, author, accessToken, cb) ->
     generateSlugs article, author, cb
 
 generateSlugs = (article, author, cb) ->
-  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
+  slug = _s.slugify author.name + ' ' + article.thumbnail_title
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
-    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count 
+    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 

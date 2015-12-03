@@ -212,6 +212,32 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Waaarldie'
           done()
 
+    it 'can find super article by article (opposite of the above test!)', (done) ->
+      superArticleId = ObjectId '4d7ab73191a5c50ce220001c'
+      childArticleId = ObjectId '4d8cd73191a5c50ce111111a'
+      fabricate 'articles', [
+        {
+          _id: childArticleId
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          title: 'Child Article'
+          is_super_article: false
+        }
+        {
+          _id: superArticleId
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Super Article'
+          is_super_article: true
+          super_article:
+            related_articles: [childArticleId]
+        }
+      ], =>
+        Article.where { super_article_for: childArticleId.toString() }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 12
+          count.should.equal 1
+          results[0].title.should.equal 'Super Article'
+          done()
+
     it 'can find articles by tags', (done) ->
       fabricate 'articles', [
         {
