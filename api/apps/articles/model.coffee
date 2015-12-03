@@ -165,10 +165,14 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
+    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
 
+    # Convert query for super article for article
+    query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for
+
     # Only add the $or array for queries that require it (blank $or array causes problems)
-    query.$or ?= [] if input.super_article_for or input.artist_id or input.all_by_author
+    query.$or ?= [] if input.artist_id or input.all_by_author
 
     # Convert query for articles by author
     query.$or.push(
@@ -183,12 +187,6 @@ toQuery = (input, callback) ->
       { biography_for_artist_id: ObjectId(input.artist_id) }
     ) if input.artist_id
 
-    # Convert query for super article for article
-    query.$or.push(
-      { 'super_article.related_articles': ObjectId(input.super_article_for) }
-    ) if input.super_article_for
-
-    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
     callback null, query, limit, offset, sortParamToQuery(sort)
