@@ -83,10 +83,10 @@ module.exports = React.createClass
     },
       div { className: 'edit-section-controls' },
         div { className: 'esf-right-controls-container' },
-          input { type: 'file', onChange: @upload, hidden: true },
-            div {
-              className: 'esf-change-background'
-            }, (if @props.section.get('url') then '+ Change Background' else '+ Add Background')
+          section { className: 'esf-change-background'},
+            span {},
+              (if @props.section.get('url') then '+ Change Background' else '+ Add Background'),
+            input { type: 'file', onChange: @upload }
           button {
             className: 'edit-section-remove button-reset'
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
