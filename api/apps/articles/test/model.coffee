@@ -569,7 +569,6 @@ describe 'Article', ->
           secondary_logo_text: 'In Partnership With'
           secondary_logo_link: 'http://secondary'
           related_articles: [ '5530e72f7261696238050000' ]
-
         }
         published: true
       }, 'foo', (err, article) ->
