@@ -565,6 +565,8 @@ describe 'Article', ->
           partner_logo: 'http://partnerlink.com/logo.jpg'
           secondary_partner_logo: 'http://secondarypartner.com/logo.png'
           related_articles: [ '5530e72f7261696238050000' ]
+          secondary_partner_text: 'In Partnership With'
+          partner_link_title: 'Download The App'
         }
         published: true
       }, 'foo', (err, article) ->
@@ -574,6 +576,8 @@ describe 'Article', ->
         article.super_article.related_articles.length.should.equal 1
         article.is_super_article.should.equal true
         article.super_article.secondary_partner_logo.should.equal 'http://secondarypartner.com/logo.png'
+        article.super_article.secondary_partner_text.should.equal 'In Partnership With'
+        article.super_article.partner_link_title.should.equal 'Download The App'
         done()
 
   describe "#destroy", ->

@@ -104,6 +104,8 @@ inputSchema = (->
     partner_logo: @string().allow('',null)
     secondary_partner_logo: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
+    secondary_logo_text: @string().allow('',null)
+    partner_link_title: @string().allow('',null)
 ).call Joi
 
 querySchema = (->
