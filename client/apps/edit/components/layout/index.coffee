@@ -80,10 +80,12 @@ module.exports = class EditLayout extends Backbone.View
       super_article:
         partner_link: @$("#edit-super-article input[name='partner_link']").val()
         partner_logo: @article.getObjectAttribute 'super_article', 'partner_logo'
-        secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
-        related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
         partner_link_title: @$("#edit-super-article input[name='partner_link_title']").val()
+        partner_logo_link: @$("#edit-super-article input[name='partner_logo_link']").val()
+        secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
         secondary_logo_text: @$("#edit-super-article input[name='secondary_logo_text']").val()
+        secondary_logo_link: @$("#edit-super-article input[name='secondary_logo_link']").val()
+        related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     }
 
   toggleAstericks: =>

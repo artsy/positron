@@ -159,13 +159,17 @@ section#edit-admin.admin-form-container.max-width-container
             data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
           ) Partner Logo
           #edit-partner-logo-upload
-        label Secondary Logo Text
-          input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
+        label Partner Logo Link
+          input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
         label.edit-partner-logo
           span(
             data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
           ) Secondary Partner Logo
           #edit-secondary-partner-logo-upload
+        label Secondary Logo Text
+          input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
+        label Secondary Logo Link
+          input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
       .admin-form-right-col
         label Related Articles
         #edit-admin-related-articles
