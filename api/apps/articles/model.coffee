@@ -101,8 +101,12 @@ inputSchema = (->
   is_super_article: @boolean().default(false)
   super_article: @object().keys
     partner_link: @string().allow('',null)
+    partner_link_title: @string().allow('',null)
     partner_logo: @string().allow('',null)
+    partner_logo_link: @string().allow('',null)
     secondary_partner_logo: @string().allow('',null)
+    secondary_logo_text: @string().allow('',null)
+    secondary_logo_link: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
 ).call Joi
 

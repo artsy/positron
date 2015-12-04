@@ -62,6 +62,15 @@ module.exports = ->
       credit_line: 'Credit Where Credit Needed'
       credit_url: 'http://credit'
       author: 'Craig Spaeth'
+    super_article:
+      partner_link: 'http://partnerlink.com'
+      partner_logo: 'http://partnerlink.com/logo.jpg'
+      partner_link_title: 'Download The App'
+      partner_logo_link: 'http://itunes'
+      secondary_partner_logo: 'http://secondarypartner.com/logo.png'
+      secondary_logo_text: 'In Partnership With'
+      secondary_logo_link: 'http://secondary'
+      related_articles: [ '5530e72f7261696238050000' ]
   fixtures.users =
     "id" : "4d8cd73191a5c50ce200002a"
     "name" : "Craig Spaeth"

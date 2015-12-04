@@ -75,12 +75,16 @@ module.exports = class EditLayout extends Backbone.View
         author: @$(".edit-email-form input[name='author']").val()
         credit_line: @$(".edit-email-form input[name='credit_line']").val()
         credit_url: @$(".edit-email-form input[name='credit_url']").val()
-        image_url: if @article.get('email_metadata')?.image_url then @article.get('email_metadata').image_url else ''
+        image_url: @article.getObjectAttribute('email_metadata','image_url')
       is_super_article: @$('[name=is_super_article]').is(':checked')
       super_article:
         partner_link: @$("#edit-super-article input[name='partner_link']").val()
-        partner_logo: if @article.get('super_article')?.partner_logo then @article.get('super_article').partner_logo else ''
-        secondary_partner_logo: if @article.get('super_article')?.secondary_partner_logo then @article.get('super_article').secondary_partner_logo else ''
+        partner_logo: @article.getObjectAttribute 'super_article', 'partner_logo'
+        partner_link_title: @$("#edit-super-article input[name='partner_link_title']").val()
+        partner_logo_link: @$("#edit-super-article input[name='partner_logo_link']").val()
+        secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
+        secondary_logo_text: @$("#edit-super-article input[name='secondary_logo_text']").val()
+        secondary_logo_link: @$("#edit-super-article input[name='secondary_logo_link']").val()
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     }
 

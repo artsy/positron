@@ -59,6 +59,12 @@ module.exports = class Article extends Backbone.Model
       else
         item.model.get('name')
 
+  getObjectAttribute: (object, attribute) ->
+    if @get(object) and _.has @get(object), attribute
+      @get(object)["#{attribute}"]
+    else
+      ''
+
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length

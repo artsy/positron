@@ -120,13 +120,13 @@ section#edit-admin.admin-form-container.max-width-container
           ) Image
           #edit-email-upload
         label Headline
-          input.bordered-input( name='headline' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').headline : ''}" )
+          input.bordered-input( name='headline' value="#{article.getObjectAttribute('email_metadata', 'headline')}" )
         label Author
-          input.bordered-input( name='author' value="#{article.get('email_metadata') && article.get('email_metadata').author ? article.get('email_metadata').author : ''}")
+          input.bordered-input( name='author' value="#{article.getObjectAttribute('email_metadata','author')}")
         label Credit Line
-          input.bordered-input( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
+          input.bordered-input( name='credit_line' value="#{article.getObjectAttribute('email_metadata','credit_line')}")
         label Credit URL
-          input.bordered-input( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
+          input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
       .admin-form-right-col
         label.edit-email-url URL
           input.bordered-input(
@@ -150,18 +150,26 @@ section#edit-admin.admin-form-container.max-width-container
           .flat-checkbox
             input( type='checkbox' name='is_super_article'
               checked=article.get('is_super_article') == true value=true )
+        label Partner Link Title
+          input.bordered-input( name='partner_link_title' value="#{article.getObjectAttribute('super_article','partner_link_title')}" placeholder="Download the App")
         label Partner Link
-          input.bordered-input( name='partner_link' value="#{article.get('super_article') && article.get('super_article').partner_link ? article.get('super_article').partner_link : ''}")
+          input.bordered-input( name='partner_link' value="#{article.getObjectAttribute('super_article', 'partner_link')}")
         label.edit-partner-logo
           span(
             data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
           ) Partner Logo
           #edit-partner-logo-upload
+        label Partner Logo Link
+          input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
         label.edit-partner-logo
           span(
             data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
           ) Secondary Partner Logo
           #edit-secondary-partner-logo-upload
+        label Secondary Logo Text
+          input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
+        label Secondary Logo Link
+          input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
       .admin-form-right-col
         label Related Articles
         #edit-admin-related-articles

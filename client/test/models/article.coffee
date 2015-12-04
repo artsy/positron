@@ -90,3 +90,9 @@ describe "Article", ->
       @article.set hero_section: { type: 'foo' }
       @article.trigger 'sync'
       @article.heroSection.get('type').should.equal 'foo'
+
+  describe 'getObjectAttribute', ->
+
+    it 'returns the object attribute value if it exists', ->
+      @article.getObjectAttribute('super_article', 'partner_link').should.equal 'http://partnerlink.com'
+      @article.getObjectAttribute('email_metadata', 'headline').should.equal 'Foo'
