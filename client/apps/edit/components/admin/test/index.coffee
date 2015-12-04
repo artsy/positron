@@ -31,7 +31,6 @@ describe 'EditAdmin', ->
         EditAdmin::setupSectionAutocomplete = sinon.stub()
         EditAdmin::setupShowsAutocomplete = sinon.stub()
         EditAdmin::setupBiographyAutocomplete = sinon.stub()
-        EditAdmin::setupPublishDate = sinon.stub()
         EditAdmin::renderScheduleState = sinon.stub()
         EditAdmin::setupContributingAuthors = sinon.stub()
         EditAdmin::setupSuperArticleAutocomplete = sinon.stub()
@@ -124,3 +123,14 @@ describe 'EditAdmin', ->
       @view.article.set {scheduled_publish_at: '2015-11-11T22:59:00.000Z'}
       @view.toggleScheduled(@e)
       should.equal(@view.article.get('scheduled_publish_at'), null)
+
+  describe '#setupPublishDate', ->
+
+    it 'can set the publish date and time', ->
+      date = '11/11/11'
+      time = '12:30'
+      dateAndTime = date + ' ' + time
+      @view.$('.edit-admin-input-date').val(date)
+      @view.$('.edit-admin-input-time').val(time)
+      @view.$('.edit-admin-input-time').trigger('blur')
+      @view.article.get('published_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
