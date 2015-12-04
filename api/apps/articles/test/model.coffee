@@ -228,7 +228,7 @@ describe 'Article', ->
           title: 'Super Article'
           is_super_article: true
           super_article:
-            related_articles: [childArticleId]
+            related_articles: [childArticleId.toString()]
         }
       ], =>
         Article.where { super_article_for: childArticleId.toString() }, (err, res) ->

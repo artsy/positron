@@ -168,8 +168,8 @@ toQuery = (input, callback) ->
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
 
-    # Convert query for super article for article
-    query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for
+    # Convert query for super article for article (note: related articles is an array of strings, not object ids)
+    query['super_article.related_articles'] = input.super_article_for if input.super_article_for
 
     # Only add the $or array for queries that require it (blank $or array causes problems)
     query.$or ?= [] if input.artist_id or input.all_by_author
