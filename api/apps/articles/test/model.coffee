@@ -593,8 +593,8 @@ describe 'Article', ->
         published: true
       }, 'foo', (err, article) ->
         return done err if err
-        article.author_id instanceof ObjectId
-        article.super_article.related_articles[0] instanceof ObjectId
+        (article.author_id instanceof ObjectId).should.be.true
+        (article.super_article.related_articles[0] instanceof ObjectId).should.be.true
         done()
 
   describe "#destroy", ->
