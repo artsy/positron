@@ -25,7 +25,7 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'savePublished', @savePublished
     @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
-    @setupTitleAutosize()
+    @setupTitle()
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
@@ -42,7 +42,7 @@ module.exports = class EditLayout extends Backbone.View
       else
         null
 
-  setupTitleAutosize: ->
+  setupTitle: ->
     @$('#edit-title textarea').autosize()
 
   attachScribe: ->

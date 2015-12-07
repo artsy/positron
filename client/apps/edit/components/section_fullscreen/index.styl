@@ -5,7 +5,7 @@
   position absolute
   top 0
   left 0
-  z-index 2
+  z-index 4
   display none
 
 .esf-placeholder
@@ -18,7 +18,7 @@
   position relative
   height 800px
 
-.edit-section-container[data-editing=true][data-type=fullscreen]
+.edit-section-container[data-type=fullscreen]
   height 800px
   width calc(100vw - 110px)
   margin-top -45px
@@ -29,6 +29,16 @@
     border 0
   .edit-section-controls
     display block
+  .edit-author-section
+    color white
+
+.edit-section-container[data-type=fullscreen][data-editing=false]
+  .esf-change-background
+    display none
+
+.edit-section-container[data-type=fullscreen][data-editing=true]
+  .esf-change-background
+    display inline-block
 
 .esf-right-controls-container
   float right
@@ -39,11 +49,12 @@
     display inline-block
 
 .esf-change-background
-  cursor pointer
   avant-garde()
   display inline-block
   margin-right 75px
   position relative
+  cursor pointer
+  color white
   input
     width 100%
     height 100%
@@ -54,60 +65,68 @@
     left 0
     cursor pointer
 
-.esf-image
+.esf-video
+  height 800px
   width 100%
   transition opacity 0.5s
+  opacity 0.5
+  position absolute
+
+.esf-video-container
+  z-index 3
+  background-color black
+  width 100%
+  height 800px
 
 .esf-text-container
-  width 100%
-  margin auto
-  input
-    width 100%
-    text-align center
-    background-color transparent
-    border 0px
-    &:focus
-      outline none
+  z-index 4
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+
+.esf-intro[contentEditable=true]:empty:not(:focus):before
+  content attr('Introduction *')
 
 .esf-text-container.is-super-article
-  margin auto 0 auto 150px
+  margin-left 15%
+  left 0%
+  transform translate(0,-50%)
+  .esf-intro
+    margin-top 0px
+  .esf-title
+    text-align left
 
-.esf-title
-  garamond 'xxl-headline'
-  font-style italic
+.esf-title, .esf-intro
+  cursor text
+  width 100%
   display block
+  font-style italic
+  position relative
+  color white
+
+textarea.esf-title
+  garamond 'xxl-headline'
+  overflow hidden
+  word-wrap break-word
+  resize horizontal
+  max-height 152px
+  text-align center
+  &::-webkit-input-placeholder
+    color white
 
 .esf-intro
   garamond()
   font-size 25px
-  font-style italic
-  display block
+  margin-top 40px
+  &.is-empty::before
+    content 'Introduction *'
+    position absolute
 
 #edit-thumbnail-upload
   position relative
   .upload-progress-container
     display none
-
-.esf-caption
-  width 100%
-  background transparent
-  text-transform none
-  letter-spacing 0
-  cursor text
-  color white
-  a
-    color white
-  &.is-empty::before
-    content 'Add a caption'
-    color gray-dark-color
-    position absolute
-    text-align center
-    left 0
-    width 100%
-
-[data-useragent*=Firefox] .esf-caption
-  position absolute
-  width calc(100% - 40px)
 
 .esf-nav.edit-scribe-nav
   margin 10px 0

@@ -7,14 +7,22 @@
 try
   Scribe = require 'scribe-editor'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
+  scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
+  scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
-{ div, section, h1, h2, span, img, header, input, nav, a, button, p, textarea } = React.DOM
+{ div, section, h1, h2, span, img, header, input, nav, a, button, p, textarea, video } = React.DOM
 { crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 icons = -> require('./icons.jade') arguments...
+moment = require 'moment'
+
+keyboardShortcutsMap =
+  bold: (e) -> e.metaKey and e.keyCode is 66
+  italic: (e) -> e.metaKey and e.keyCode is 73
+  removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
 
 module.exports = React.createClass
 
@@ -26,86 +34,89 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @attachScribe()
+    $('.edit-header-container').hide()
 
   componentDidUpdate: ->
     @attachScribe()
 
   onClickOff: ->
-    if @state.title
+    if @state.background_url or @state.title or @state.intro
       @props.section.set
         title: @state.title
         intro: @state.intro
         background_url: @state.background_url
+      console.log @props
     else
-      @props.section.destroy()
+      @removeSection()
 
   removeSection: ->
+    $('.edit-header-container').show()
     @props.section.destroy()
 
-  changeBackground: ->
-    console.log 'here'
-
   upload: (e) ->
-    @props.setEditing(off)()
     gemup e.target.files[0],
       key: sd.GEMINI_KEY
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
-        @setState src: src, progress: 0.1
+        @setState progress: 0.1
       done: (src) =>
-        image = new Image()
-        image.src = src
-        image.onload = =>
-          @setState src: src, progress: null
-          @onClickOff()
+        @setState background_url: src, progress: null
+        @onClickOff()
 
   attachScribe: ->
-    return if @scribe? or not @props.editing
-    @scribe = new Scribe @refs.editable.getDOMNode()
-    @scribe.use scribePluginSanitizer {
+    return if @scribeIntro? or not @props.editing
+    @scribeIntro = new Scribe @refs.editableIntro.getDOMNode()
+    @scribeIntro.use scribePluginSanitizeGoogleDoc()
+    @scribeIntro.use scribePluginSanitizer {
       tags:
         p: true
         b: true
         i: true
-        a: { href: true, target: '_blank' }
     }
-    toggleScribePlaceholder @refs.editable.getDOMNode()
+    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
+    @scribeIntro.use scribePluginKeyboardShortcuts keyboardShortcutsMap
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editable.getDOMNode()
-    @setState title: $(@refs.editable.getDOMNode()).html()
+    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
+    @setState
+      title: $(@refs.editableTitle.getDOMNode()).val()
+      intro: $(@refs.editableIntro.getDOMNode()).html()
 
   render: ->
     section {
       className: 'edit-section-fullscreen'
-      onClick: @props.setEditing(true)
+      onClick: @props.setEditing(on)
     },
       div { className: 'edit-section-controls' },
         div { className: 'esf-right-controls-container' },
           section { className: 'esf-change-background'},
             span {},
-              (if @props.section.get('url') then '+ Change Background' else '+ Add Background'),
+              (if @state.background_url then '+ Change Background' else '+ Add Background'),
             input { type: 'file', onChange: @upload }
           button {
             className: 'edit-section-remove button-reset'
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
             onClick: @removeSection
           }
-        div { className: 'esf-text-container' },
-          input {
-            className: 'esf-title'
-            ref: 'editable'
-            onKeyUp: @onEditableKeyup
-            dangerouslySetInnerHTML: __html: @props.section.get('title')
+        div { className: "esf-text-container #{if sd.ARTICLE.is_super_article then 'is-super-article' else ''}" },
+          textarea {
+            className: 'esf-title invisible-input'
+            ref: 'editableTitle'
             placeholder: 'Title *'
-          }
-          input {
-            className: 'esf-intro'
-            ref: 'editable'
             onKeyUp: @onEditableKeyup
+          }, @props.section.get('title')
+          (
+            unless sd.ARTICLE.is_super_article
+              div { className: 'edit-author-section'},
+                p {}, sd.ARTICLE.author.name if sd.ARTICLE.author
+                p {}, moment(sd.ARTICLE.published_at || moment()).format('MMM D, YYYY h:mm a')
+          )
+          div {
+            className: 'esf-intro'
+            ref: 'editableIntro'
             dangerouslySetInnerHTML: __html: @props.section.get('intro')
-            placeholder: 'Introduction *'
+            onKeyUp: @onEditableKeyup
           }
       (
         if @state.progress
@@ -117,12 +128,14 @@ module.exports = React.createClass
       )
       (
         if @state.background_url
-          img {
-            className: 'esf-image'
-            src: if @state.progress then @state.src else resize(@state.src, width: 900)
-            style: opacity: if @state.progress then @state.progress else '1'
-            key: 0
-          }
+          div { className: 'esf-video-container' },
+            video {
+              className: 'esf-video'
+              src: @state.background_url
+              key: 0
+              autoPlay: true
+              loop: true
+            }
         else
           div { className: 'esf-placeholder' }
       )
