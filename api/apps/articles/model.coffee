@@ -341,6 +341,7 @@ typecastIds = (article) ->
     featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
     featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
+    super_article: _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) if article.super_article?.related_articles
 
 sanitizeAndSave = (callback) -> (err, article) ->
   return callback err if err

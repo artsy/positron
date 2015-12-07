@@ -584,6 +584,19 @@ describe 'Article', ->
         article.super_article.related_articles.length.should.equal 1
         done()
 
+    it 'type casts ObjectId over articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        super_article: {
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        (article.author_id instanceof ObjectId).should.be.true
+        (article.super_article.related_articles[0] instanceof ObjectId).should.be.true
+        done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
