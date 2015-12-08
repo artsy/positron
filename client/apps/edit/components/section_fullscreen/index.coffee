@@ -40,14 +40,20 @@ module.exports = React.createClass
     @attachScribe()
 
   onClickOff: ->
-    if @state.background_url or @state.title or @state.intro
-      @props.section.set
-        title: @state.title
-        intro: @state.intro
-        background_url: @state.background_url
-      console.log @props
-    else
-      @removeSection()
+    @removeSection() unless @setSection()
+
+  setSection: ->
+    return false unless @state.background_url or @state.title or @state.intro
+    @props.section.set
+      title: @state.title
+      intro: @state.intro
+      background_url: @state.background_url
+
+  onEditableKeyup: ->
+    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
+    @setState
+      title: $(@refs.editableTitle.getDOMNode()).val()
+      intro: $(@refs.editableIntro.getDOMNode()).html()
 
   removeSection: ->
     $('.edit-header-container').show()
@@ -77,12 +83,6 @@ module.exports = React.createClass
     toggleScribePlaceholder @refs.editableIntro.getDOMNode()
     @scribeIntro.use scribePluginKeyboardShortcuts keyboardShortcutsMap
 
-  onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
-    @setState
-      title: $(@refs.editableTitle.getDOMNode()).val()
-      intro: $(@refs.editableIntro.getDOMNode()).html()
-
   render: ->
     section {
       className: 'edit-section-fullscreen'
@@ -105,7 +105,8 @@ module.exports = React.createClass
             ref: 'editableTitle'
             placeholder: 'Title *'
             onKeyUp: @onEditableKeyup
-          }, @props.section.get('title')
+            defaultValue: @state.title
+          }
           (
             unless sd.ARTICLE.is_super_article
               div { className: 'edit-author-section'},

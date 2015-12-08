@@ -91,11 +91,11 @@ module.exports = React.createClass
             }
           if sd.USER?.type is 'Admin'
             li {
-              className: 'edit-section-tool-hero-fullscreen'
-              onClick: @props.setHero('fullscreen')
+              className: "edit-section-tool-hero-fullscreen #{'is-disabled' if @props.hasSection}"
+              onClick: @props.setHero('fullscreen') unless @props.hasSection
             }, 'Fullscreen Background',
               div {
-                className: 'edit-menu-icon-hero-fullscreen'
+                className: "edit-menu-icon-hero-fullscreen"
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-fullscreen').html()
               }
       else
