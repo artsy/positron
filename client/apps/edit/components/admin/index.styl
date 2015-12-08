@@ -93,3 +93,18 @@ gutter-size = 30px
 
 .edit-admin-autocomplete-list-item
   margin-top 5px
+
+#edit-admin-publish-date, #edit-admin-schedule-publish-time
+  margin-bottom 10px
+
+#edit-schedule-button
+  width 100%
+  &::after
+    content 'Schedule'
+  &.edit-button-when-scheduled
+    &::after
+      content 'Scheduled'
+      color purple-color
+    &:hover::after
+      content 'Unschedule'
+      color red-color

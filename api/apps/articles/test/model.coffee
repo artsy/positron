@@ -188,6 +188,56 @@ describe 'Article', ->
           results[1].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles by super article', (done) ->
+      fabricate 'articles', [
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          title: 'Hello Wurld'
+          is_super_article: false
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Hello Waaarldie'
+          is_super_article: true
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Hello Waaarld'
+        }
+      ], =>
+        Article.where { is_super_article: true }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 13
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Waaarldie'
+          done()
+
+    it 'can find super article by article (opposite of the above test!)', (done) ->
+      superArticleId = ObjectId '4d7ab73191a5c50ce220001c'
+      childArticleId = ObjectId '4d8cd73191a5c50ce111111a'
+      fabricate 'articles', [
+        {
+          _id: childArticleId
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          title: 'Child Article'
+          is_super_article: false
+        }
+        {
+          _id: superArticleId
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          title: 'Super Article'
+          is_super_article: true
+          super_article:
+            related_articles: [childArticleId]
+        }
+      ], =>
+        Article.where { super_article_for: childArticleId.toString() }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 12
+          count.should.equal 1
+          results[0].title.should.equal 'Super Article'
+          done()
+
     it 'can find articles by tags', (done) ->
       fabricate 'articles', [
         {
@@ -422,6 +472,10 @@ describe 'Article', ->
               }
             ]
           }
+          {
+            type: 'embed'
+            url: 'http://maps.google.com'
+          }
         ]
       }, 'foo', (err, article) ->
         article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
@@ -430,6 +484,7 @@ describe 'Article', ->
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
         article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[4].url.should.equal 'http://maps.google.com'
         done()
 
     it 'fixes anchors urls', (done) ->
@@ -501,6 +556,46 @@ describe 'Article', ->
         article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
         done()
 
+    it 'saves Super Articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        is_super_article: true
+        super_article: {
+          partner_link: 'http://partnerlink.com'
+          partner_logo: 'http://partnerlink.com/logo.jpg'
+          partner_link_title: 'Download The App'
+          partner_logo_link: 'http://itunes'
+          secondary_partner_logo: 'http://secondarypartner.com/logo.png'
+          secondary_logo_text: 'In Partnership With'
+          secondary_logo_link: 'http://secondary'
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.super_article.partner_link.should.equal 'http://partnerlink.com'
+        article.super_article.partner_logo.should.equal 'http://partnerlink.com/logo.jpg'
+        article.super_article.partner_link_title.should.equal 'Download The App'
+        article.super_article.partner_logo_link.should.equal 'http://itunes'
+        article.super_article.secondary_partner_logo.should.equal 'http://secondarypartner.com/logo.png'
+        article.super_article.secondary_logo_text.should.equal 'In Partnership With'
+        article.super_article.secondary_logo_link.should.equal 'http://secondary'
+        article.is_super_article.should.equal true
+        article.super_article.related_articles.length.should.equal 1
+        done()
+
+    it 'type casts ObjectId over articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        super_article: {
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        (article.author_id instanceof ObjectId).should.be.true
+        (article.super_article.related_articles[0] instanceof ObjectId).should.be.true
+        done()
 
   describe "#destroy", ->
 

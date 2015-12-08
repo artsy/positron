@@ -21,8 +21,11 @@ module.exports = class EditAdmin extends Backbone.View
     @setupShowsAutocomplete()
     @setupBiographyAutocomplete()
     @setupPublishDate()
+    @renderScheduleState()
     @setupContributingAuthors()
     @setupEmailMetadata()
+    @setupSuperArticleImages()
+    @setupSuperArticleAutocomplete()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -127,21 +130,28 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupShowsAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-shows')[0],
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    @show_ids = @article.get 'show_ids' or []
+    list = new AutocompleteList @$('#edit-admin-shows')[0],
+      name: 'show_ids[]'
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
-      selected: (e, item) =>
-        @article.save show_ids: [item.id]
-      cleared: =>
-        @article.save show_ids: null
-    if id = @article.get('show_ids')?[0]
-      request
-        .get("#{sd.API_URL}/show/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+      selected: (e, item, items) =>
+        @article.save show_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
+    if ids = @show_ids
+      @shows = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/show/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @shows.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @shows
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupBiographyAutocomplete: ->
     AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
@@ -229,15 +239,70 @@ module.exports = class EditAdmin extends Backbone.View
       el: $('#edit-email-upload')
       src: @article.get('email_metadata')?.image_url
       remove: =>
-        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata = @article.get('email_metadata') or {}
         emailMetadata.image_url = ''
         $('.edit-email-large-image-url').val ''
         $('.edit-email-small-image-url').val ''
         @article.save email_metadata: emailMetadata
       done: (src) =>
-        emailMetadata = @article.get('email_metadata') || {}
+        emailMetadata = @article.get('email_metadata') or {}
         emailMetadata.image_url = src
         renderInputs src
+
+  setupSuperArticleImages: ->
+    new ImageUploadForm
+      el: $('#edit-partner-logo-upload')
+      src: @article.get('super_article')?.partner_logo
+      remove: =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.partner_logo = ''
+        @article.save super_article: superArticle
+      done: (src) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.partner_logo = src
+        @article.save super_article: superArticle
+    new ImageUploadForm
+      el: $('#edit-secondary-partner-logo-upload')
+      src: @article.get('super_article')?.secondary_partner_logo
+      remove: =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.secondary_partner_logo = ''
+        @article.save super_article: superArticle
+      done: (src) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.secondary_partner_logo = src
+        @article.save super_article: superArticle
+
+  setupSuperArticleAutocomplete: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
+    list = new AutocompleteList @$('#edit-admin-related-articles')[0],
+      name: 'related_articles[]'
+      url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+      placeholder: 'Search article by title...'
+      filter: (articles) ->
+        for article in articles.results
+          { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
+      selected: (e, item, items) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.related_articles = _.pluck items, 'id'
+        @article.save super_article: superArticle
+      removed: (e, item, items) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
+        @article.save super_article: superArticle
+    if ids = @related_articles
+      @articles = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/articles/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
+            cb()
+      , =>
+        list.setState loading: false, items: @articles
+    else
+      list.setState loading: false
 
   events:
     'change #eaf-primary-artists .eaf-artist-input': (e) ->
@@ -258,6 +323,7 @@ module.exports = class EditAdmin extends Backbone.View
       @featureMentioned('Artworks') e
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
+    'click #edit-schedule-button': 'toggleScheduled'
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -283,13 +349,45 @@ module.exports = class EditAdmin extends Backbone.View
     @article.save()
 
   setupPublishDate: ->
-    $('.edit-admin-input-date').on 'blur', =>
-      @formatAndSetPublishDate($('.edit-admin-input-date').val())
+    $('.edit-admin-input-date, .edit-admin-input-time').on 'blur', =>
+      dateAndTime = @$('.edit-admin-input-date').val() + ' ' + @$('.edit-admin-input-time').val()
+      @formatAndSetPublishDate dateAndTime
       @article.save published_at: @saveFormat
       false
     @formatAndSetPublishDate @article.get('published_at')
 
   formatAndSetPublishDate: (date) ->
+    date = new Date(date)
     clientFormat = moment(date).format('L')
+    publishTime = moment(date).format('HH:mm')
     @saveFormat = moment(date).toDate()
     $('.edit-admin-input-date').val(clientFormat)
+    $('.edit-admin-input-time').val(publishTime)
+
+  toggleScheduled: (e) ->
+    e.preventDefault()
+    if @article.get('scheduled_publish_at')
+      @article.save scheduled_publish_at: null
+    else
+      @schedulePublish()
+    @renderScheduleState()
+
+  schedulePublish: ->
+    if @$('.edit-admin-input-time').val() is undefined
+      alert 'Please enter a time.'
+      return
+    if @article.finishedContent() and @article.finishedThumbnail()
+      dateAndTime = @$('.edit-admin-input-date').val() + ' ' + @$('.edit-admin-input-time').val()
+      @article.save scheduled_publish_at: moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+    else
+      @article.trigger 'missing'
+
+  renderScheduleState: ->
+    if @article.get('scheduled_publish_at')
+      publishTime = moment(@article.get('scheduled_publish_at')).format('HH:mm')
+      @$('.edit-admin-input-time').val(publishTime)
+      @$('#edit-schedule-button').addClass('edit-button-when-scheduled')
+      @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', true)
+    else
+      @$('#edit-schedule-button').removeClass('edit-button-when-scheduled')
+      @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', false)

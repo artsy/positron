@@ -46,12 +46,18 @@ inputSchema = (->
   title: @string().allow('', null)
   published: @boolean().default(false)
   published_at: @date()
+  scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
   hero_section: @alternatives().try(videoSection, imageSection).allow(null)
   sections: @array().items([
     imageSection
     videoSection
+    @object().keys
+      type: @string().valid('embed')
+      url: @string().allow('',null)
+      height: @string().allow('',null)
+      layout: @string().allow('',null)
     @object().keys
       type: @string().valid('text')
       body: @string().allow('', null)
@@ -92,6 +98,16 @@ inputSchema = (->
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
     credit_url: @string().allow('',null)
+  is_super_article: @boolean().default(false)
+  super_article: @object().keys
+    partner_link: @string().allow('',null)
+    partner_link_title: @string().allow('',null)
+    partner_logo: @string().allow('',null)
+    partner_logo_link: @string().allow('',null)
+    secondary_partner_logo: @string().allow('',null)
+    secondary_logo_text: @string().allow('',null)
+    secondary_logo_link: @string().allow('',null)
+    related_articles: @array().items(@objectId()).allow(null)
 ).call Joi
 
 querySchema = (->
@@ -111,9 +127,11 @@ querySchema = (->
   tier: @number()
   featured: @boolean()
   exclude_google_news: @boolean()
+  super_article_for: @objectId()
   q: @string()
   all_by_author: @objectId()
   tags: @array()
+  is_super_article: @boolean()
 ).call Joi
 
 #
@@ -140,7 +158,7 @@ toQuery = (input, callback) ->
     return callback err if err
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
-    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
+    query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
       'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -151,19 +169,28 @@ toQuery = (input, callback) ->
     query.auction_id = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
+    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
-    query.$or = [
+
+    # Convert query for super article for article
+    query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for
+
+    # Only add the $or array for queries that require it (blank $or array causes problems)
+    query.$or ?= [] if input.artist_id or input.all_by_author
+
+    # Convert query for articles by author
+    query.$or.push(
       { author_id: ObjectId(input.all_by_author) }
       { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
-    ] if input.all_by_author
+    ) if input.all_by_author
 
     # Convert query for articles featured to an artist or artwork
-    query.$or = [
+    query.$or.push(
       { primary_featured_artist_ids: ObjectId(input.artist_id) }
       { featured_artist_ids: ObjectId(input.artist_id) }
       { biography_for_artist_id: ObjectId(input.artist_id) }
-    ] if input.artist_id
-    query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
+    ) if input.artist_id
+
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
     callback null, query, limit, offset, sortParamToQuery(sort)
@@ -196,7 +223,7 @@ sortParamToQuery = (input) ->
         generateSlugs article, author, sanitizeAndSave(callback)
       else
         sanitizeAndSave(callback)(null, article)
-        
+
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys inputSchema
   # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -211,25 +238,26 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
     authorId = input.author_id or article.author_id
     User.findOrInsert authorId, accessToken, (err, author) ->
       return callback err if err
-      publishing = input.published and not article.published
+      publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
       article = _.extend article, input, updated_at: new Date
       article.author = User.denormalizedForArticle author if author
       cb null, article, author, publishing
-  
+
 # After merging article & input
 
 onPublish = (article, author, accessToken, cb) ->
-  article.published_at = new Date
+  if not article.published_at
+    article.published_at = new Date
   generateKeywords article, accessToken, (err, article) ->
     return cb err if err
     generateSlugs article, author, cb
 
 generateSlugs = (article, author, cb) ->
-  slug = _s.slugify author.name + ' ' + article.thumbnail_title 
+  slug = _s.slugify author.name + ' ' + article.thumbnail_title
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
-    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count 
+    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
@@ -313,6 +341,7 @@ typecastIds = (article) ->
     featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
     featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
+    super_article: _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) if article.super_article?.related_articles
 
 sanitizeAndSave = (callback) -> (err, article) ->
   return callback err if err

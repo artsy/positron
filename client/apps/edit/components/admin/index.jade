@@ -48,18 +48,18 @@ section#edit-admin.admin-form-container.max-width-container
     .admin-form-right
       .admin-form-right-col
         label Fair
-          #edit-admin-fair
+        #edit-admin-fair
         label Artist Biography
-          #edit-admin-biography
+        #edit-admin-biography
         label Partners
-          #edit-admin-partner
+        #edit-admin-partner
       .admin-form-right-col
         label Editorial Section
-          #edit-admin-section
+        #edit-admin-section
         label Show
-          #edit-admin-shows
+        #edit-admin-shows
         label Auction
-          #edit-admin-auction
+        #edit-admin-auction
       #edit-admin-feature
         label Primary Artists
         +featuredList('eaf-primary-artists', 'artist')
@@ -95,6 +95,11 @@ section#edit-admin.admin-form-container.max-width-container
         #edit-admin-publish-date
           label Publish Date
           input.bordered-input.edit-admin-input-date
+        #edit-admin-schedule-publish-time
+          label Publish time
+          //- Firefox + Safari don't currently support time input
+          input.bordered-input.edit-admin-input-time( type='time', step=6000, placeholder='Publication time' )
+        a#edit-schedule-button.avant-garde-button
       .admin-form-right-col
         #edit-admin-google-news
           label Exclude from Google News
@@ -115,13 +120,13 @@ section#edit-admin.admin-form-container.max-width-container
           ) Image
           #edit-email-upload
         label Headline
-          input.bordered-input( name='headline' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').headline : ''}" )
+          input.bordered-input( name='headline' value="#{article.getObjectAttribute('email_metadata', 'headline')}" )
         label Author
-          input.bordered-input( name='author' value="#{article.get('email_metadata') && article.get('email_metadata').author ? article.get('email_metadata').author : ''}")
+          input.bordered-input( name='author' value="#{article.getObjectAttribute('email_metadata','author')}")
         label Credit Line
-          input.bordered-input( name='credit_line' value="#{article.get('email_metadata') && article.get('email_metadata').credit_line ? article.get('email_metadata').credit_line : ''}")
+          input.bordered-input( name='credit_line' value="#{article.getObjectAttribute('email_metadata','credit_line')}")
         label Credit URL
-          input.bordered-input( name='credit_url' value="#{article.get('email_metadata') && article.get('email_metadata').headline ? article.get('email_metadata').credit_url : ''}")
+          input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
       .admin-form-right-col
         label.edit-email-url URL
           input.bordered-input(
@@ -133,3 +138,38 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( onClick="this.select();" readonly )
         label.edit-email-large-image-url Small
           input.bordered-input( onClick="this.select();" readonly )
+
+  //- Super Article
+  section.admin-form-section#edit-super-article
+    .admin-form-left
+      h1 Super Article
+      h2 Enable the Super Article functionality for special partnerships and features.
+    .admin-form-right
+      .admin-form-right-col
+        label Enable
+          .flat-checkbox
+            input( type='checkbox' name='is_super_article'
+              checked=article.get('is_super_article') == true value=true )
+        label Partner Link Title
+          input.bordered-input( name='partner_link_title' value="#{article.getObjectAttribute('super_article','partner_link_title')}" placeholder="Download the App")
+        label Partner Link
+          input.bordered-input( name='partner_link' value="#{article.getObjectAttribute('super_article', 'partner_link')}")
+        label.edit-partner-logo
+          span(
+            data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
+          ) Partner Logo
+          #edit-partner-logo-upload
+        label Partner Logo Link
+          input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
+        label.edit-partner-logo
+          span(
+            data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
+          ) Secondary Partner Logo
+          #edit-secondary-partner-logo-upload
+        label Secondary Logo Text
+          input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
+        label Secondary Logo Link
+          input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
+      .admin-form-right-col
+        label Related Articles
+        #edit-admin-related-articles

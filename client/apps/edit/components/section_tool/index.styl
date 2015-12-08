@@ -79,8 +79,8 @@ section-btn-height = 130px
   max-height 0
   background gray-lightest-color
   li
+    width 20%
     avant-garde()
-    width 25%
     height section-btn-height
     background white
     border-right 1px solid gray-color
@@ -92,7 +92,7 @@ section-btn-height = 130px
     text-align center
     cursor pointer
     position relative
-    &:nth-child(4n+4)
+    &:last-child
       border-right none
     svg
       max-width 40px
@@ -119,6 +119,9 @@ section-btn-height = 130px
     .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg
       max-width 80px
       left calc(50% - 42px)
+  li:first-child:nth-last-child(5),
+  li:first-child:nth-last-child(5) ~ li
+    width 20%
 
 .edit-section-tool[data-state-open="true"]
   max-height (section-btn-height * 2)

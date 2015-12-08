@@ -1,3 +1,8 @@
+#
+# A script that collects article data from our mongo database, creates a CSV document,
+# and sends that data to S3 for consumption by Fulcrum.
+#
+
 knox = require 'knox'
 Q = require 'bluebird-q'
 mongojs = require 'mongojs'
@@ -24,13 +29,13 @@ dir = 'scripts/tmp/'
 writableStream = fs.createWriteStream( dir + filename)
 
 csvStream.pipe(writableStream)
-csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_id", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title"])
+csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_id", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title", "keywords"])
 
 db.articles.find({ published: true })
   .on('data', (doc) ->
     if doc
       published_at = if doc.published_at then moment(doc.published_at).format('YYYYMMDDhhmmss') + " EST" else ''
-      csvStream.write([doc._id, doc.author_id, doc.auction_id, doc.contributing_authors, doc.fair_id, doc.featured, doc.featured_artist_ids, doc.featured_artwork_ids, doc.partner_ids, doc.primary_featured_artist_ids, doc.slugs, doc.tags, doc.title, doc.tier, published_at, doc.show_ids, doc.section_ids, doc.thumbnail_image, doc.thumbnail_title])
+      csvStream.write([doc._id, doc.author_id, doc.auction_id, doc.contributing_authors, doc.fair_id, doc.featured, doc.featured_artist_ids, doc.featured_artwork_ids, doc.partner_ids, doc.primary_featured_artist_ids, doc.slugs, doc.tags, doc.title, doc.tier, published_at, doc.show_ids, doc.section_ids, doc.thumbnail_image, doc.thumbnail_title, doc.keywords])
   ).on 'end', ->
 
     # End Streaming

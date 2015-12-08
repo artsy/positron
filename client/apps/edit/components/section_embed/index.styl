@@ -1,0 +1,87 @@
+@import '../stylus_lib'
+
+.ese-controls-container
+  fill-container()
+  background black
+  z-index 3
+  height 260px
+  top -(@height)
+  text-align center
+  display none
+  a
+    background-repeat no-repeat !important
+    background-position center !important
+  nav a
+    display inline-block
+    height 40px
+    width @height + 20px
+    background no-repeat center center
+    transition opacity 0.3s
+    opacity 0.5
+    cursor pointer
+    &:hover
+      opacity 1
+    &:last-of-type
+      border-right 0
+
+.ese-inputs
+  clearfix()
+  color white
+  padding controls-padding
+  text-align left
+  border-top 1px solid gray-darkest-color
+  h1
+    font-weight bold
+    margin-bottom controls-padding
+  .ese-input-form-container
+    .ese-input
+      width 50%
+      display inline-block
+      &:last-of-type
+        padding-left 10px
+    input
+      width 100%
+    button
+      margin-top 10px
+      display block
+      width 100%
+      font-size small-avant-garde-font-size + 1
+
+.ese-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
+  line-height @height
+
+.edit-section-container[data-editing=true]
+  .ese-controls-container
+    display block
+
+.ese-iframe-error
+  color red-color
+  width 200px
+  position absolute
+  top 28px
+  line-height 21px
+
+.ese-embed-content
+  iframe
+    width 100%
+
+//
+// Varying layouts
+//
+.edit-section-container[data-layout=column_width]
+  width 540px
+  nav .ese-column-width
+    opacity 1
+  .embed-container
+    width 500px
+
+.edit-section-container[data-layout=overflow]
+  width 1100px
+  left calc(50% - 550px)
+  nav .ese-overflow
+    opacity 1
+  .embed-container
+    width 1060px

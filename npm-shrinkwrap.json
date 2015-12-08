@@ -375,116 +375,9 @@
       "resolved": "https://registry.npmjs.org/browserify-des/-/browserify-des-1.0.0.tgz"
     },
     "browserify-dev-middleware": {
-      "version": "1.0.0",
-      "from": "browserify-dev-middleware@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/browserify-dev-middleware/-/browserify-dev-middleware-1.0.0.tgz",
-      "dependencies": {
-        "browser-pack": {
-          "version": "6.0.1",
-          "from": "browser-pack@>=6.0.1 <7.0.0",
-          "resolved": "https://registry.npmjs.org/browser-pack/-/browser-pack-6.0.1.tgz"
-        },
-        "browserify": {
-          "version": "12.0.1",
-          "from": "browserify@>=12.0.1 <13.0.0",
-          "resolved": "https://registry.npmjs.org/browserify/-/browserify-12.0.1.tgz"
-        },
-        "combine-source-map": {
-          "version": "0.7.1",
-          "from": "combine-source-map@>=0.7.1 <0.8.0",
-          "resolved": "https://registry.npmjs.org/combine-source-map/-/combine-source-map-0.7.1.tgz"
-        },
-        "concat-stream": {
-          "version": "1.5.1",
-          "from": "concat-stream@>=1.5.1 <1.6.0",
-          "resolved": "https://registry.npmjs.org/concat-stream/-/concat-stream-1.5.1.tgz"
-        },
-        "constants-browserify": {
-          "version": "1.0.0",
-          "from": "constants-browserify@>=1.0.0 <1.1.0",
-          "resolved": "https://registry.npmjs.org/constants-browserify/-/constants-browserify-1.0.0.tgz"
-        },
-        "deps-sort": {
-          "version": "2.0.0",
-          "from": "deps-sort@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/deps-sort/-/deps-sort-2.0.0.tgz"
-        },
-        "duplexer2": {
-          "version": "0.1.4",
-          "from": "duplexer2@>=0.1.2 <0.2.0",
-          "resolved": "https://registry.npmjs.org/duplexer2/-/duplexer2-0.1.4.tgz"
-        },
-        "events": {
-          "version": "1.1.0",
-          "from": "events@>=1.1.0 <1.2.0",
-          "resolved": "https://registry.npmjs.org/events/-/events-1.1.0.tgz"
-        },
-        "inline-source-map": {
-          "version": "0.6.1",
-          "from": "inline-source-map@>=0.6.0 <0.7.0",
-          "resolved": "https://registry.npmjs.org/inline-source-map/-/inline-source-map-0.6.1.tgz"
-        },
-        "insert-module-globals": {
-          "version": "7.0.1",
-          "from": "insert-module-globals@>=7.0.0 <8.0.0",
-          "resolved": "https://registry.npmjs.org/insert-module-globals/-/insert-module-globals-7.0.1.tgz"
-        },
-        "labeled-stream-splicer": {
-          "version": "2.0.0",
-          "from": "labeled-stream-splicer@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/labeled-stream-splicer/-/labeled-stream-splicer-2.0.0.tgz"
-        },
-        "module-deps": {
-          "version": "4.0.2",
-          "from": "module-deps@>=4.0.2 <5.0.0",
-          "resolved": "https://registry.npmjs.org/module-deps/-/module-deps-4.0.2.tgz"
-        },
-        "read-only-stream": {
-          "version": "2.0.0",
-          "from": "read-only-stream@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/read-only-stream/-/read-only-stream-2.0.0.tgz"
-        },
-        "readable-stream": {
-          "version": "2.0.4",
-          "from": "readable-stream@>=2.0.2 <3.0.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.4.tgz"
-        },
-        "shell-quote": {
-          "version": "1.4.3",
-          "from": "shell-quote@>=1.4.3 <2.0.0",
-          "resolved": "https://registry.npmjs.org/shell-quote/-/shell-quote-1.4.3.tgz"
-        },
-        "source-map": {
-          "version": "0.4.2",
-          "from": "source-map@0.4.2",
-          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.4.2.tgz"
-        },
-        "stream-combiner2": {
-          "version": "1.1.1",
-          "from": "stream-combiner2@>=1.1.1 <2.0.0",
-          "resolved": "https://registry.npmjs.org/stream-combiner2/-/stream-combiner2-1.1.1.tgz"
-        },
-        "stream-http": {
-          "version": "2.0.2",
-          "from": "stream-http@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/stream-http/-/stream-http-2.0.2.tgz"
-        },
-        "stream-splicer": {
-          "version": "2.0.0",
-          "from": "stream-splicer@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/stream-splicer/-/stream-splicer-2.0.0.tgz"
-        },
-        "through2": {
-          "version": "2.0.0",
-          "from": "through2@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/through2/-/through2-2.0.0.tgz"
-        },
-        "url": {
-          "version": "0.11.0",
-          "from": "url@>=0.11.0 <0.12.0",
-          "resolved": "https://registry.npmjs.org/url/-/url-0.11.0.tgz"
-        }
-      }
+      "version": "0.1.2",
+      "from": "browserify-dev-middleware@>=0.1.2 <0.2.0",
+      "resolved": "https://registry.npmjs.org/browserify-dev-middleware/-/browserify-dev-middleware-0.1.2.tgz"
     },
     "browserify-rsa": {
       "version": "4.0.0",
@@ -999,9 +892,9 @@
       "resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.0.2.tgz"
     },
     "embedly-view-helpers": {
-      "version": "1.0.0",
-      "from": "embedly-view-helpers@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/embedly-view-helpers/-/embedly-view-helpers-1.0.0.tgz"
+      "version": "1.0.1",
+      "from": "git://github.com/artsy/embedly-view-helpers.git",
+      "resolved": "git://github.com/artsy/embedly-view-helpers.git#bca6962068247ba4b147d5f693ffad6ec474b70d"
     },
     "end-of-stream": {
       "version": "1.1.0",
@@ -1158,9 +1051,9 @@
       "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.0.2.tgz"
     },
     "ezel-assets": {
-      "version": "0.0.13",
-      "from": "ezel-assets@0.0.13",
-      "resolved": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-0.0.13.tgz"
+      "version": "1.0.0",
+      "from": "ezel-assets@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-1.0.0.tgz"
     },
     "fast-csv": {
       "version": "0.6.0",
@@ -3741,7 +3634,7 @@
     },
     "watchify": {
       "version": "3.6.1",
-      "from": "watchify@>=3.6.0 <4.0.0",
+      "from": "watchify@*",
       "resolved": "https://registry.npmjs.org/watchify/-/watchify-3.6.1.tgz",
       "dependencies": {
         "browser-pack": {

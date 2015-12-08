@@ -10,6 +10,7 @@ SectionArtworks = React.createFactory require '../section_artworks/index.coffee'
 SectionImage = React.createFactory require '../section_image/index.coffee'
 SectionVideo = React.createFactory require '../section_video/index.coffee'
 SectionSlideshow = React.createFactory require '../section_slideshow/index.coffee'
+SectionEmbed = React.createFactory require '../section_embed/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -51,6 +52,7 @@ module.exports = React.createClass
         when 'image' then SectionImage
         when 'video' then SectionVideo
         when 'slideshow' then SectionSlideshow
+        when 'embed' then SectionEmbed
       )(
         section: @props.section
         editing: @props.editing

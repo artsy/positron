@@ -10,8 +10,8 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams)
           .paginated-list-missing-img Missing Thumbnail
         .paginated-list-text-container
           if item.title
-            h1= item.title
+            h1!= item.title
           else
             h1.paginated-list-missing-title Missing Title
-          h2= item.subtitle
+          h2!= item.subtitle
   +paginate(currentPage, totalPages, paginationParams)

@@ -3,6 +3,8 @@ benv = require 'benv'
 sinon = require 'sinon'
 Article = require '../../../../../models/article'
 Backbone = require 'backbone'
+moment = require 'moment'
+should = require 'should'
 fixtures = require '../../../../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
 { resolve } = require 'path'
@@ -17,6 +19,7 @@ describe 'EditAdmin', ->
       ), =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
+        @e = new $.Event('click')
         sinon.stub Backbone, 'sync'
         EditAdmin = benv.requireWithJadeify '../index',
           ['featuredListTemplate']
@@ -28,8 +31,10 @@ describe 'EditAdmin', ->
         EditAdmin::setupSectionAutocomplete = sinon.stub()
         EditAdmin::setupShowsAutocomplete = sinon.stub()
         EditAdmin::setupBiographyAutocomplete = sinon.stub()
-        EditAdmin::setupPublishDate = sinon.stub()
+        EditAdmin::renderScheduleState = sinon.stub()
         EditAdmin::setupContributingAuthors = sinon.stub()
+        EditAdmin::setupSuperArticleAutocomplete = sinon.stub()
+        EditAdmin::setupSuperArticleImages = sinon.stub()
         @view = new EditAdmin el: $('#edit-admin'), article: @article
         done()
 
@@ -100,3 +105,32 @@ describe 'EditAdmin', ->
       @view.$('.edit-email-small-image-url input').val().should.containEql 'img.png'
       @view.$('.edit-email-large-image-url input').val().should.containEql 'img.png'
 
+  describe '#toggleScheduled', ->
+
+    it 'can save the scheduled publish date and time', ->
+      @view.article.set {scheduled_publish_at: null}
+      date = '11/11/11'
+      time = '12:30'
+      dateAndTime = date + ' ' + time
+      global.confirm = -> true
+      @view.$('.edit-admin-input-date').val(date)
+      @view.$('.edit-admin-input-time').val(time)
+      @view.toggleScheduled(@e)
+      @view.article.get('scheduled_publish_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+      delete global.confirm
+
+    it 'can unset the scheduled publish time', ->
+      @view.article.set {scheduled_publish_at: '2015-11-11T22:59:00.000Z'}
+      @view.toggleScheduled(@e)
+      should.equal(@view.article.get('scheduled_publish_at'), null)
+
+  describe '#setupPublishDate', ->
+
+    it 'can set the publish date and time', ->
+      date = '11/11/11'
+      time = '12:30'
+      dateAndTime = date + ' ' + time
+      @view.$('.edit-admin-input-date').val(date)
+      @view.$('.edit-admin-input-time').val(time)
+      @view.$('.edit-admin-input-time').trigger('blur')
+      @view.article.get('published_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
