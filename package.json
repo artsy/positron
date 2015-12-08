@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "4.x.x",
-    "npm": "2.x.x"
+    "node": ">=5.1.1",
+    "npm": "3.x.x"
   },
   "scripts": {
     "start": "make s",
@@ -36,6 +36,7 @@
     "jade": "^1.11.0",
     "joi": "^6.9.0",
     "joi-objectid": "^2.0.0",
+    "kerberos": "0.0.17",
     "knox": "^0.9.2",
     "moment": "^2.10.6",
     "mongojs": "^1.4.1",
@@ -81,7 +82,7 @@
     "scribe-plugin-sanitize-google-doc": "git://github.com/artsy/scribe-plugin-sanitize-google-doc.git",
     "scribe-plugin-toolbar": "^0.2.2",
     "should": "^7.1.0",
-    "simple-modal": "^1.0.1",
+    "simple-modal": "git://github.com/craigspaeth/simple-modal.git",
     "sinon": "^1.17.1",
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
