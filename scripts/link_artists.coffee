@@ -25,16 +25,14 @@ db.articles.find({ published: true }).toArray (err, articles) ->
   process.exit()
 
 addLinks = ($) ->
-  namesAndCounts = {}
   html = $.html()
   for name in ARTISTS
     nameLink = name + '</a>'
-    artsyLink = 'artsy.net/artist/' + name.toLowerCase().split(' ').join('-')
+    artsyLink = 'https://artsy.net/artist/' + name.toLowerCase().split(' ').join('-')
     # if name appears in article without a link or with a link to Google
     if (_s.count html, nameLink) is 0 && (_s.count html, name) > 0
       # replace first mention of name in text w/ name + artsy link
-      html.replace name, "<a href=\"https://artsy.net/artist\">Sam Gaskin</a>"
-  namesAndCounts
+      linkedParagraph = html.replace name, "<a href=\"#{artsyLink}\">" + name + "</a>"
 
 # need to iterate over lead paragraph, see if name appears. if so, replace and save. if not, iterate over text sections and do the same
 
