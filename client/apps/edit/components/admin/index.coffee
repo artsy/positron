@@ -15,6 +15,9 @@ module.exports = class EditAdmin extends Backbone.View
     @article.on 'open:tab2', @onOpen
     @setupAuthorAutocomplete()
     @setupFairAutocomplete()
+    @setupFairProgrammingAutocomplete()
+    @setupArtsyAtTheFairAutocomplete()
+    @setupAboutTheFairAutocomplete()
     @setupPartnerAutocomplete()
     @setupAuctionAutocomplete()
     @setupSectionAutocomplete()
@@ -59,6 +62,81 @@ module.exports = class EditAdmin extends Backbone.View
           select.setState value: res.body.name, loading: false
     else
       select.setState loading: false
+
+  setupFairProgrammingAutocomplete: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
+      name: 'fair_programming_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_programming_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_programming_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_programming_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
+
+  setupArtsyAtTheFairAutocomplete: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
+      name: 'fair_artsy_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_artsy_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save ffair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_artsy_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
+
+  setupAboutTheFairAutocomplete: ->
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
+      name: 'fair_about_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_about_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save ffair_about_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_about_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
 
   setupPartnerAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
@@ -357,7 +435,7 @@ module.exports = class EditAdmin extends Backbone.View
     @formatAndSetPublishDate @article.get('published_at')
 
   formatAndSetPublishDate: (date) ->
-    date = new Date(date).toISOString()
+    date = new Date(date)
     clientFormat = moment(date).format('L')
     publishTime = moment(date).format('HH:mm')
     @saveFormat = moment(date).toDate()
