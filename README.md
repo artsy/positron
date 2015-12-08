@@ -19,10 +19,10 @@ Set-Up
 ---
 
 - Install [NVM](https://github.com/creationix/nvm)
-- Install Node 0.12
+- Install Node 5
 ```
-nvm install 0.12
-nvm alias default 0.12
+nvm install 5
+nvm alias default 5
 ```
 - Fork Positron to your Github account in the Github UI.
 - Clone your repo locally (substitute your Github username).
