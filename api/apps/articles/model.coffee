@@ -81,6 +81,9 @@ inputSchema = (->
   partner_ids: @array().items(@objectId()).allow(null)
   show_ids: @array().items(@objectId()).allow(null)
   fair_id: @objectId().allow(null)
+  fair_programming_ids: @array().items(@objectId()).default([])
+  fair_artsy_ids: @array().items(@objectId()).default([])
+  fair_about_ids: @array().items(@objectId()).default([])
   auction_id: @objectId().allow(null)
   section_ids: @array().items(@objectId()).default([])
   biography_for_artist_id: @objectId().allow(null)
@@ -120,6 +123,9 @@ querySchema = (->
   artist_id: @objectId()
   artwork_id: @objectId()
   fair_ids: @array()
+  fair_programming_id: @objectId()
+  fair_artsy_id: @objectId()
+  fair_about_id: @objectId()
   show_id: @objectId()
   partner_id: @objectId()
   auction_id: @objectId()
@@ -159,11 +165,14 @@ toQuery = (input, callback) ->
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
-      'fair_ids', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
+      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
     query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
+    query.fair_programming_ids = ObjectId input.fair_programming_id if input.fair_programming_id
+    query.fair_artsy_ids = ObjectId input.fair_artsy_id if input.fair_artsy_id
+    query.fair_about_ids = ObjectId input.fair_about_id if input.fair_about_id
     query.partner_ids = ObjectId input.partner_id if input.partner_id
     query.show_ids = ObjectId input.show_id if input.show_id
     query.auction_id = ObjectId input.auction_id if input.auction_id
@@ -333,6 +342,9 @@ typecastIds = (article) ->
     ) if article.contributing_authors
     author_id: ObjectId(article.author_id) if article.author_id
     fair_id: ObjectId(article.fair_id) if article.fair_id
+    fair_programming_ids: article.fair_programming_ids.map(ObjectId) if article.fair_programming_ids
+    fair_artsy_ids: article.fair_artsy_ids.map(ObjectId) if article.fair_artsy_ids
+    fair_about_ids: article.fair_about_ids.map(ObjectId) if article.fair_about_ids
     section_ids: article.section_ids.map(ObjectId) if article.section_ids
     auction_id: ObjectId(article.auction_id) if article.auction_id
     partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids

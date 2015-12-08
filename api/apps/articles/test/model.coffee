@@ -142,6 +142,45 @@ describe 'Article', ->
             done()
         )
 
+    it 'can return articles by a fair programming id', (done) ->
+      fabricate 'articles', {
+        author_id: aid = ObjectId '4d8cd73191a5c50ce220002a'
+        title: 'Hello Wurld'
+        fair_programming_ids: [ ObjectId('52617c6c8b3b81f094000013') ]
+      }, ->
+        Article.where { fair_programming_id: '52617c6c8b3b81f094000013' }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
+    it 'can return articles by a fair artsy id', (done) ->
+      fabricate 'articles', {
+        author_id: aid = ObjectId '4d8cd73191a5c50ce220002a'
+        title: 'Hello Wurld'
+        fair_artsy_ids: [ ObjectId('53da550a726169083c0a0700') ]
+      }, ->
+        Article.where { fair_artsy_id: '53da550a726169083c0a0700' }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
+    it 'can return articles by a fair about id', (done) ->
+      fabricate 'articles', {
+        author_id: aid = ObjectId '4d8cd73191a5c50ce220002a'
+        title: 'Hello Wurld'
+        fair_about_ids: [ ObjectId('53da550a726169083c0a0700') ]
+      }, ->
+        Article.where { fair_about_id: '53da550a726169083c0a0700' }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
     it 'can find articles added to a partner', (done) ->
       fabricate 'articles', [
         { title: 'Foo', partner_ids: [ObjectId('4dc98d149a96300001003033')] }
@@ -591,6 +630,9 @@ describe 'Article', ->
           related_articles: [ '5530e72f7261696238050000' ]
         }
         published: true
+        fair_programming_ids: [ '52617c6c8b3b81f094000013' ]
+        fair_artsy_ids: [ '53da550a726169083c0a0700' ]
+        fair_about_ids: [ '53da550a726169083c0a0700' ]
       }, 'foo', (err, article) ->
         return done err if err
         (article.author_id instanceof ObjectId).should.be.true
