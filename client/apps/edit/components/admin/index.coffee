@@ -357,7 +357,7 @@ module.exports = class EditAdmin extends Backbone.View
     @formatAndSetPublishDate @article.get('published_at')
 
   formatAndSetPublishDate: (date) ->
-    date = new Date(date).toISOString()
+    date = new Date(date)
     clientFormat = moment(date).format('L')
     publishTime = moment(date).format('HH:mm')
     @saveFormat = moment(date).toDate()
