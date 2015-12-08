@@ -1051,9 +1051,8 @@
       "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.0.2.tgz"
     },
     "ezel-assets": {
-      "version": "1.0.0",
-      "from": "ezel-assets@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-1.0.0.tgz"
+      "version": "1.0.1",
+      "from": "ezel-assets@>=1.0.0 <2.0.0"
     },
     "fast-csv": {
       "version": "0.6.0",
