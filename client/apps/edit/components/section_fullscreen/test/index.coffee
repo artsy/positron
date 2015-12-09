@@ -4,9 +4,6 @@ Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
 require 'react/addons'
-r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -14,25 +11,30 @@ describe 'SectionFullscreen', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
-      SectionFullscreen = benv.require resolve __dirname, '../index'
-      SectionImage.__set__ 'gemup', @gemup = sinon.stub()
+      benv.expose
+        $: benv.require 'jquery'
+      SectionFullscreen = benv.requireWithJadeify(
+        resolve(__dirname, '../index'), ['icons']
+      )
+      SectionFullscreen.__set__ 'gemup', @gemup = sinon.stub()
       @component = React.render SectionFullscreen(
-        section: new Backbone.Model { body: 'Foo to the bar' }
+        section: new Backbone.Model
+          type: 'fullscreen'
+          intro: ''
+          title: ''
+          background_url: ''
         editing: false
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub $, 'ajax'
         done()
 
   afterEach ->
-    $.ajax.restore()
     benv.teardown()
 
   it 'removes itself when the section is empty', ->
     @component.props.section.destroy = sinon.stub()
-    @component.state.src = ''
+    @component.state = {}
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
@@ -41,7 +43,7 @@ describe 'SectionFullscreen', ->
     @gemup.args[0][0].should.equal 'foo'
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.setState.args[0][0].src.should.equal 'fooza'
+      @component.setState.args[0][0].background_url.should.equal 'fooza'
       done()
 
   it 'saves the url after upload', (done) ->
@@ -52,18 +54,22 @@ describe 'SectionFullscreen', ->
       @component.onClickOff.called.should.be.ok
       done()
 
-  xit 'renders an image', ->
-    @component.state.src = 'foobaz'
-    @component.render()
-    $(@component.getDOMNode()).html().should.containEql 'foobaz'
-
-  it 'previews captions on keyup', ->
-    $(@component.refs.editable.getDOMNode()).html('foobar')
+  it 'sets title state on keyup', ->
+    $(@component.refs.editableTitle.getDOMNode()).html('foobar')
     @component.onEditableKeyup()
-    @component.setState.args[0][0].caption.should.equal 'foobar'
+    @component.setState.args[0][0].title.should.equal 'foobar'
 
-  it 'saves captions on click off', ->
-    @component.state.caption = 'foobar'
-    @component.state.src = 'foo'
+  it 'sets intro state on keyup', ->
+    $(@component.refs.editableIntro.getDOMNode()).html('foobar')
+    @component.onEditableKeyup()
+    @component.setState.args[0][0].intro.should.equal 'foobar'
+
+  it 'saves titles on click off', ->
+    @component.state.title = 'foobar'
     @component.onClickOff()
-    @component.props.section.get('caption').should.equal 'foobar'
+    @component.props.section.get('title').should.equal 'foobar'
+
+  it 'saves intros on click off', ->
+    @component.state.intro = 'foobar'
+    @component.onClickOff()
+    @component.props.section.get('intro').should.equal 'foobar'

@@ -99,7 +99,7 @@ module.exports = React.createClass
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
             onClick: @removeSection
           }
-        div { className: "esf-text-container #{if sd.ARTICLE.is_super_article then 'is-super-article' else ''}" },
+        div { className: "esf-text-container #{if sd.ARTICLE?.is_super_article then 'is-super-article' else ''}" },
           textarea {
             className: 'esf-title invisible-input'
             ref: 'editableTitle'
@@ -108,10 +108,10 @@ module.exports = React.createClass
             defaultValue: @state.title
           }
           (
-            unless sd.ARTICLE.is_super_article
+            unless sd.ARTICLE?.is_super_article
               div { className: 'edit-author-section'},
-                p {}, sd.ARTICLE.author.name if sd.ARTICLE.author
-                p {}, moment(sd.ARTICLE.published_at || moment()).format('MMM D, YYYY h:mm a')
+                p {}, sd.ARTICLE.author.name if sd.ARTICLE?.author
+                p {}, moment(sd.ARTICLE?.published_at || moment()).format('MMM D, YYYY h:mm a')
           )
           div {
             className: 'esf-intro'

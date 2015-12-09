@@ -37,6 +37,16 @@ describe 'HeroSection', ->
     @component.setState.args[0][0].editing.should.equal true
     @section.get('type').should.equal 'video'
 
+  it 'opens an image section and sets the model type', ->
+    @component.setHero('image')({})
+    @component.setState.args[0][0].editing.should.equal true
+    @section.get('type').should.equal 'image'
+
+  it 'opens a fullscreen section and sets the model type', ->
+    @component.setHero('fullscreen')({})
+    @component.setState.args[0][0].editing.should.equal true
+    @section.get('type').should.equal 'fullscreen'
+
   it 'renders on change', ->
     @component.forceUpdate = sinon.stub()
     @section.trigger 'change'
