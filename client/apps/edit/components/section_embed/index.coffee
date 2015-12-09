@@ -86,14 +86,14 @@ module.exports = React.createClass
                 placeholder: 'http://files.artsy.net'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'url'
-                value: @props.section.get('url')
+                defaultValue: @props.section.get('url')
               },
             div { className: 'ese-input' }, "Height (optional)",
               input {
                 placeholder: '400'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'height'
-                value: @props.section.get('height')
+                defaultValue: @props.section.get('height')
               }
             button {
               className: 'avant-garde-button avant-garde-button-dark'
