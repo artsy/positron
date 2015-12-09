@@ -43,14 +43,11 @@ module.exports = React.createClass
           className: 'edit-section-hover-controls'
           onClick: @setEditing(on)
         },
-          (
-            unless @props.section.get('type') is 'fullscreen'
-              button {
-                className: 'edit-section-remove button-reset'
-                onClick: @removeSection
-                dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-              }
-          )
+          button {
+            className: "edit-section-remove button-reset #{'is-hidden' if @props.section.get('type') is 'fullscreen'}"
+            onClick: @removeSection
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+          }
         (switch @props.section.get('type')
           when 'text' then SectionText
           when 'artworks' then SectionArtworks

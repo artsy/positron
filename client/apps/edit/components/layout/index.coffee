@@ -25,7 +25,7 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'savePublished', @savePublished
     @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
-    @setupTitle()
+    @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
@@ -42,7 +42,7 @@ module.exports = class EditLayout extends Backbone.View
       else
         null
 
-  setupTitle: ->
+  setupTitleAutosize: ->
     @$('#edit-title textarea').autosize()
 
   attachScribe: ->
@@ -165,11 +165,10 @@ module.exports = class EditLayout extends Backbone.View
         $section.offset().top + $section.height())
       insideComponent = false
     left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
-    unless $section.data('type') is 'fullscreen'
-      $controls.css(
-        width: if insideComponent then $controls.outerWidth() else ''
-        left: if insideComponent then "calc(50% - #{left}px)" else ''
-      ).attr('data-fixed', insideComponent)
+    $controls.css(
+      width: if insideComponent then $controls.outerWidth() else ''
+      left: if insideComponent then "calc(50% - #{left}px)" else ''
+    ).attr('data-fixed', insideComponent)
 
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')

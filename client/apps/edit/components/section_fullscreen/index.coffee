@@ -14,8 +14,7 @@ gemup = require 'gemup'
 React = require 'react'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
-{ div, section, h1, h2, span, img, header, input, nav, a, button, p, textarea, video } = React.DOM
-{ crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ div, section, span, input, button, p, textarea, video } = React.DOM
 icons = -> require('./icons.jade') arguments...
 moment = require 'moment'
 
