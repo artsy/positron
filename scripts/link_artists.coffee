@@ -1,6 +1,6 @@
 #
 # A script that finds unlinked instances of artist names and adds links.
-# Currently just run locally to report to the Growth team once and a while.
+# Currently just run locally to support the Growth team once and a while.
 #
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 db = require '../api/lib/db'
@@ -8,42 +8,53 @@ cheerio = require 'cheerio'
 _ = require 'underscore'
 _s = require 'underscore.string'
 debug = require('debug') 'scripts'
+request = require 'superagent'
+artsyXapp = require 'artsy-xapp'
 # upload an array of artist names to search for in this directory
-ARTISTS = require './artist_list.coffee'
+ARTISTLIST = require './artist_list.coffee'
 
-#Pull all of the articles into memory and extract their html
-db.articles.find({ published: true }).toArray (err, articles) ->
+# Build array of objects from artist list w/ artist ids + display names
+artists = []
+for artist in ARTISTLIST
+  id = artist.toLowerCase().split(' ').join('-')
+  request.get("#{ARTSY_URL}/api/v1/artist/#{id}")
+    .set({'x-xapp-token': artsyXapp.token)
+    .end((err, sres) => 
+      return next err if err
+      name = sres.body.name
+  artists.push({id: id, name: name})
+
+db.articles.find({ published: true }).forEach (err, article) ->
   return exit err if err
-  debug "Found #{articles?.length} articles, extracting html..."
-  articlesElements = articles.map getHtmlFrom
-
-  for article, i in articles
-    addLinks articlesElements[i]
-    debug "Searched #{i + 1 * 1000} articles..." if i % 1000 is 0
+  checkLinks article
   
-  debug 'CSV written'
   process.exit()
 
-addLinks = ($) ->
-  html = $.html()
-  for name in ARTISTS
-    nameLink = name + '</a>'
-    artsyLink = 'https://artsy.net/artist/' + name.toLowerCase().split(' ').join('-')
-    # if name appears in article without a link or with a link to Google
-    if (_s.count html, nameLink) is 0 && (_s.count html, name) > 0
-      # replace first mention of name in text w/ name + artsy link
-      linkedParagraph = html.replace name, "<a href=\"#{artsyLink}\">" + name + "</a>"
-
-# need to iterate over lead paragraph, see if name appears. if so, replace and save. if not, iterate over text sections and do the same
-
-getHtmlFrom = (article) ->
+checkLinks = (article) ->
   texts = (section.body for section in article.sections \
     when section.type is 'text').join('') + article.lead_paragraph
   $ = cheerio.load texts
+  html = $.html()
+  #check article for unlinked mentions of each artist in artist list
+  for artist in artists
+    # check whether name appears in article without a link or with a link to Google
+    if findUnlinked html, artist
+      # replace first mention of name in text w/ name + artsy link
+      if findUnlinked article.lead_paragraph, artist
+        addLink article.lead_paragraph, artist, article
+      else
+        for section in article.sections when section.type is 'text'
+          if findUnlinked section.body, artist
+            addLink section.body, artist, article
 
-# this will fuck formatting for names like de Kooning
-# makeTitleCase = (name) ->
-#   name.replace(/(?:^|\s|-)\S/g, (c) -> c.toUpperCase())
+findUnlinked = (text, artist) ->
+  nameLink = artist.name + '</a>'
+  return true if (_s.count text, nameLink) is 0 && (_s.count html, artist.name) > 0
+
+addLink = (text, artist, article) ->
+  text.replace artist.name, "<a href=\"https://artsy.net/artist/#{artist.id}\">" + artist.name + "</a>"
+  db.articles.save article
+  break #just want to break out of the if block from line 56, not the whole function
 
 exit = (err) ->
   console.error "ERROR", err
