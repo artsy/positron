@@ -25,7 +25,12 @@ module.exports = React.createClass
 
   render: ->
     unless @props.section.keys().length
-      SectionTool { sections: @props.sections, hero: true, setHero: @setHero }
+      SectionTool {
+        sections: @props.sections
+        hero: true
+        setHero: @setHero
+        hasSection: @props.hasSection
+      }
     else
       SectionContainer {
         section: @props.section

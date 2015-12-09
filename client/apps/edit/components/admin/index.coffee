@@ -183,6 +183,9 @@ module.exports = class EditAdmin extends Backbone.View
       select.setState loading: false
 
   setupSectionAutocomplete: ->
+    if @article.get('hero_section')?.type is 'fullscreen'
+      @$('#edit-admin-section').addClass 'is-error'
+      return
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @section_ids = @article.get 'section_ids' or []
     list = new AutocompleteList @$('#edit-admin-section')[0],

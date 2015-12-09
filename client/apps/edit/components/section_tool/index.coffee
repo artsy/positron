@@ -51,6 +51,13 @@ module.exports = React.createClass
           layout: 'column_width'
           height: ''
         }, at: @props.index + 1
+      when 'fullscreen'
+        @props.sections.add {
+          type: 'fullscreen'
+          background_url: ''
+          title: ''
+          intro: ''
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -82,6 +89,15 @@ module.exports = React.createClass
               className: 'edit-menu-icon-hero-video'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-video').html()
             }
+          if sd.USER?.type is 'Admin'
+            li {
+              className: "edit-section-tool-hero-fullscreen #{'is-disabled' if @props.hasSection}"
+              onClick: @props.setHero('fullscreen') unless @props.hasSection
+            }, 'Fullscreen Background',
+              div {
+                className: "edit-menu-icon-hero-fullscreen"
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-fullscreen').html()
+              }
       else
         ul { className: 'edit-section-tool-menu' },
           li {

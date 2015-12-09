@@ -35,6 +35,14 @@ videoSection = (->
     cover_image_url: @string().allow('', null)
 ).call Joi
 
+fullscreenSection = (->
+  @object().keys
+    type: @string().valid('fullscreen')
+    title: @string().allow('',null)
+    intro: @string().allow('',null)
+    background_url: @string().allow('',null)
+).call Joi
+
 inputSchema = (->
   id: @objectId()
   author_id: @objectId().required()
@@ -49,7 +57,7 @@ inputSchema = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection).allow(null)
+  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
   sections: @array().items([
     imageSection
     videoSection
@@ -226,6 +234,8 @@ sortParamToQuery = (input) ->
     return callback err if err
     mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
       return callback(err) if err
+      # Merge fullscreen title with main article title
+      article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
       if publishing
         onPublish article, author, accessToken, sanitizeAndSave(callback)
       else if not publishing and not article.slugs?.length > 0
@@ -353,7 +363,7 @@ typecastIds = (article) ->
     featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
     featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-    super_article: _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) if article.super_article?.related_articles
+    super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 sanitizeAndSave = (callback) -> (err, article) ->
   return callback err if err

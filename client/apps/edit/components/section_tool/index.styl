@@ -79,7 +79,7 @@ section-btn-height = 130px
   max-height 0
   background gray-lightest-color
   li
-    width 20%
+    width 25%
     avant-garde()
     height section-btn-height
     background white
@@ -116,11 +116,11 @@ section-btn-height = 130px
       margin-top 11px
       max-width 82px
       left calc(50% - 38px)
-    .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg
+    .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg, .edit-menu-icon-hero-fullscreen svg
       max-width 80px
       left calc(50% - 42px)
-  li:first-child:nth-last-child(5),
-  li:first-child:nth-last-child(5) ~ li
+  li:first-child:nth-last-child(6),
+  li:first-child:nth-last-child(6) ~ li
     width 20%
 
 .edit-section-tool[data-state-open="true"]
@@ -140,8 +140,10 @@ section-btn-height = 130px
     opacity 1
     max-height (section-btn-height * 2)
     transition max-height 0.15s linear, opacity 0.15s linear
-  .edit-section-tool-icon svg *
-    fill black
 
 .edit-section-tool-menu li.edit-section-tool-slideshow
   display none
+
+.edit-section-tool-hero-fullscreen.is-disabled
+  cursor not-allowed
+  opacity 0.4
