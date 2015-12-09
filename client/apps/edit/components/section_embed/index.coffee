@@ -13,10 +13,10 @@ module.exports = React.createClass
 
   getInitialState: ->
     errorMessage: ''
-    url: ''
-    embeddable: ''
+    url: @props.section.get('url')
+    embeddable: null
     iframe: ''
-    height: ''
+    height: @props.section.get('height')
 
   componentDidMount: ->
     url = @props.section.get('url')
@@ -86,12 +86,14 @@ module.exports = React.createClass
                 placeholder: 'http://files.artsy.net'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'url'
-              }
+                defaultValue: @props.section.get('url')
+              },
             div { className: 'ese-input' }, "Height (optional)",
               input {
                 placeholder: '400'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'height'
+                defaultValue: @props.section.get('height')
               }
             button {
               className: 'avant-garde-button avant-garde-button-dark'
@@ -107,7 +109,7 @@ module.exports = React.createClass
           div {
             className: 'ese-embed-content'
             dangerouslySetInnerHTML: __html: @state.iframe
-            style: { 'height': @state.height if @state.height.length }
+            style: { 'height': @state.height if @state.height?.length }
           }
         else
           div {
@@ -118,6 +120,6 @@ module.exports = React.createClass
               className: 'embed-iframe'
               scrolling: 'no'
               frameborder: '0'
-              style: { 'height': @state.height if @state.height.length }
+              style: { 'height': @state.height if @state.height?.length }
             }
         )

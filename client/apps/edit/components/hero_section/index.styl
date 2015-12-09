@@ -9,7 +9,7 @@
       display none
     &:hover
       fill-color black
-  .edit-section-container
+  .edit-section-container[data-type=video], .edit-section-container[data-type=image]
     min-height 400px
     width 1100px
     margin-left -280px
@@ -17,8 +17,12 @@
     line-height 480px
 
 #edit-hero-section
-  .edit-section-tool-menu li
-    width 50%
+  .edit-section-tool-menu
+    li
+      width 50%
+    li:first-child:nth-last-child(3),
+    li:first-child:nth-last-child(3) ~ li
+      width 33.3%
   .edit-section-video
     .esv-placeholder
       line-height 500px

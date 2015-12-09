@@ -24,6 +24,6 @@ HeroSection = React.createFactory require './components/hero_section/index.coffe
     $('#edit-sections')[0]
   )
   React.render(
-    HeroSection(section: article.heroSection)
+    HeroSection(section: article.heroSection, hasSection: article.get('section_ids')?.length > 0)
     $('#edit-hero-section')[0]
   )
