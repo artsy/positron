@@ -109,7 +109,7 @@ module.exports = React.createClass
           div {
             className: 'ese-embed-content'
             dangerouslySetInnerHTML: __html: @state.iframe
-            style: { 'height': @state.height if @state.height.length }
+            style: { 'height': @state.height if @state.height?.length }
           }
         else
           div {
@@ -120,6 +120,6 @@ module.exports = React.createClass
               className: 'embed-iframe'
               scrolling: 'no'
               frameborder: '0'
-              style: { 'height': @state.height if @state.height.length }
+              style: { 'height': @state.height if @state.height?.length }
             }
         )

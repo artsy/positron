@@ -52,7 +52,7 @@ module.exports = class EditHeader extends Backbone.View
   save: (e) ->
     e.preventDefault()
     # Handles race condition to set props in a section that hasn't been clicked out of
-    $('.edit-section-container-bg')[0].click()
+    $('.edit-section-container-bg')[0]?.click()
     @$('#edit-save').text('Saving...').removeClass('attention')
     if @article.get('published')
       @article.trigger('savePublished').trigger('finished')
