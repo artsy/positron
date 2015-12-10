@@ -58,6 +58,13 @@ module.exports = React.createClass
           title: ''
           intro: ''
         }, at: @props.index + 1
+      when 'callout'
+        @props.sections.add {
+          type: 'callout'
+          thumbnail_image: ''
+          text: ''
+          article: null
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -149,3 +156,11 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-embed'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
               }
+          li {
+            className: 'edit-section-tool-embed'
+            onClick: @newSection('callout')
+          }, 'Callout',
+            div {
+              className: 'edit-menu-icon-embed'
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
+            }
