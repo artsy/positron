@@ -161,10 +161,10 @@ module.exports = React.createClass
               }
           if sd.USER?.type is 'Admin' and @isAboveTextSection()
             li {
-              className: 'edit-section-tool-embed'
+              className: 'edit-section-tool-callout'
               onClick: @newSection('callout')
             }, 'Callout',
               div {
-                className: 'edit-menu-icon-embed'
+                className: 'edit-menu-icon-callout'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
               }

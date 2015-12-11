@@ -639,6 +639,42 @@ describe 'Article', ->
         (article.super_article.related_articles[0] instanceof ObjectId).should.be.true
         done()
 
+    it 'saves a callout section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'callout'
+            text: 'The Title Goes Here'
+            article: ''
+            thumbnail_url: 'http://image.jpg'
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          },
+          {
+            type: 'callout'
+            text: ''
+            article: '53da550a726169083c0a0700'
+            thumbnail_url: ''
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          }
+        ]
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.sections[0].type.should.equal 'callout'
+        article.sections[0].text.should.equal 'The Title Goes Here'
+        article.sections[0].thumbnail_url.should.equal 'http://image.jpg'
+        article.sections[1].type.should.equal 'text'
+        article.sections[3].type.should.equal 'text'
+        article.sections[2].article.should.equal '53da550a726169083c0a0700'
+        done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->
