@@ -3,6 +3,7 @@
 # to add other articles, or to use as a pull quote
 #
 
+Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
 sd = require('sharify').data
@@ -10,29 +11,41 @@ gemup = require 'gemup'
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 { div, section, input, a, h1, h2, button, img, p, strong, span } = React.DOM
 { crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+Article = require '../../../../models/article.coffee'
 
 module.exports = React.createClass
 
   getInitialState: ->
-    article: @props.section.get('article')
-    text: ''
-    thumbnail_url: ''
-    errorMessage: ''
+    article: @props.section.get('article') or null
+    text: @props.section.get('text') or null
+    thumbnail_url: @props.section.get('thumbnail_url') or null
+    errorMessage: null
     progress: null
+    articleModel: null
+    hide_image: @props.section.get('hide_image') or false
 
   componentDidMount: ->
+    @fetchArticle(@props.section.get('article')) if @props.section.get('article')
     @setupAutocomplete()
 
-  fetchArticle: (id)->
+  fetchArticle: (id) ->
     new Article(id: id).fetch
       success: (article) =>
-        @state.articleModel = article
+        @setState articleModel: article
 
   removeCallout: ->
     @props.section.destroy()
 
   getCalloutType: ->
-    if @state.thumbnail_url.length then 'is-article' else 'is-pull-quote'
+    if @state.thumbnail_url or @state.articleModel then 'is-article' else 'is-pull-quote'
+
+  getThumbnail: ->
+    if @state.thumbnail_url?
+      @state.thumbnail_url
+    else if @state.articleModel?
+      @state.articleModel.get('thumbnail_image')
+    else
+      ''
 
   upload: (e) ->
     @props.setEditing(off)()
@@ -50,16 +63,25 @@ module.exports = React.createClass
           @onClickOff()
 
   onClickOff: ->
-    if @state.article or @state.text or @state.thumbnail_url
-      @props.section.set
-        article: @state.article
-        text: @state.text
-        thumbnail_url: @state.thumbnail_url
-    else
-      @props.section.destroy()
+    _.defer =>
+      if @state.article or @state.text or @state.thumbnail_url
+        @props.section.set
+          article: @state.article
+          text: @state.text
+          thumbnail_url: @state.thumbnail_url
+          hide_image: @state.hide_image
+      else
+        @props.section.destroy()
 
   setText: ->
-    @setState text: $(@refs.textInput.getDOMNode()).val()
+    @setState
+      text: $(@refs.textInput.getDOMNode()).val()
+    @onClickOff()
+
+  setHideImage: ->
+    @setState
+      hide_image: $(@refs.checkInput.getDOMNode()).is(':checked')
+    @onClickOff()
 
   componentWillUnmount: ->
     @autocomplete.remove()
@@ -90,10 +112,14 @@ module.exports = React.createClass
     _.defer -> $el.focus()
 
   onSelect: (e, selected) ->
-    @setState
-      article: selected.id
-      text: selected.value
-      thumbnail_url: selected.thumbnail
+    articleModel = new Article(id: selected.id).fetch
+      success: (article) =>
+        @setState
+          article: selected.id
+          articleModel: article
+        @onClickOff()
+      error: =>
+        @setState error: 'Article Not Found'
 
   render: ->
     div {
@@ -127,6 +153,14 @@ module.exports = React.createClass
                 if @props.section.get('thumbnail_url') then 'replace' else 'upload')
             h2 {}, 'Up to 30mb'
             input { type: 'file', onChange: @upload }
+          div { className: 'esc-hide-thumbnail' },
+            h1 {}, 'Hide Thumbnail?'
+            input {
+              type: 'checkbox'
+              ref: 'checkInput'
+              value: @state.hide_image?
+              onChange: @setHideImage
+            }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -135,14 +169,19 @@ module.exports = React.createClass
               style: width: (@state.progress * 100) + '%'
             }
       )
-      (if @state.text or @state.article or @state.thumbnail_url
-        div { className: "esc-callout-container #{@getCalloutType()}" },
+      (if @state.text or @state.article or @state.articleModel
+        div { className: "esc-callout-container #{@getCalloutType()} hidden-image-#{@state.hide_image}" },
           div { className: 'esc-callout-left'},
             img {
-              src: (if @state.thumbnail_url then crop(@state.thumbnail_url, { width: 300, height: 200, quality: 95 }) else '')
+              src: (
+                if @state.thumbnail_url or @state.articleModel
+                  crop(@getThumbnail(), { width: 300, height: 200, quality: 95 })
+                else
+                  ''
+              )
             }
           div { className: 'esc-callout-right' },
-            p { className: 'esc-title' }, @state.text or @state.article.thumbnail_title or ''
+            p { className: 'esc-title' }, @state.text or @state.articleModel?.get('thumbnail_title') or ''
             p { className: 'esc-read-article' }, 'Read Full Article'
       else
         div { className: 'esc-empty-placeholder' }, 'Add a Callout Above'

@@ -4,32 +4,28 @@ Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
 require 'react/addons'
+_ = require 'underscore'
+Article = require '../../../../../models/article.coffee'
 Section = require '../../../../../models/section.coffee'
 r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
-fixtures = require '../../../../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
 
-describe 'SectionArtworks', ->
+describe 'SectionCallout', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      SectionArtworks = benv.requireWithJadeify(
-        resolve(__dirname, '../index')
-        ['icons']
-      )
-      SectionArtworks.__set__ 'Autocomplete', sinon.stub()
-      @component = React.render SectionArtworks(
-        section: new Section { body: 'Foo to the bar', ids: [] }
-        editing: false
+      @SectionCallout = benv.require resolve __dirname, '../index'
+      @SectionCallout.__set__ 'Autocomplete', sinon.stub()
+      @component = React.render @SectionCallout(
+        section: new Section { article: '', text: '', type: 'callout' }
+        editing: true
         setEditing: ->
-        changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'
         done()
 
@@ -37,55 +33,34 @@ describe 'SectionArtworks', ->
     Backbone.sync.restore()
     benv.teardown()
 
-  it 'removes an artwork on click', ->
-    @component.props.section.artworks.off()
-    @component.props.section.artworks.reset [
-      { id: '1', title: 'Baz'}
-      a = { id: '2', title: 'Foo' }
-      { id: '3', title: 'Bar'}
-    ]
-    @component.removeArtwork(@component.props.section.artworks.at 1)()
-    @component.props.section.artworks.length.should.equal 2
-
-  it 'destroys the section when clicking off with no artworks', ->
-    @component.props.section.artworks.reset()
+  it 'destroys the section when clicking off with no article or pull quote', ->
     @component.props.section.on 'destroy', spy = sinon.spy()
     @component.onClickOff()
     spy.called.should.be.ok
 
-  it 'fetches artworks on init', ->
-    @component.props.section.set ids: ['foo', 'bar']
-    @component.componentDidMount()
-    Backbone.sync.args[0][1].url().should.containEql 'foo'
-    Backbone.sync.args[1][1].url().should.containEql 'bar'
+  xit 'renders an article', ->
+    render = React.renderToString(@SectionCallout
+      section: @sections = new Section
+        type: 'callout'
+        text: 'Test Title'
+        article: '123'
+      setEditing: ->
+      editing: true
+    )
+    render.should.containEql 'Test Title'
+    render.should.containEql 'is-article'
 
-  xit 'adds fillwidth styling if the layout is appropriate', ->
-    @component.props.section.artworks.reset [fixtures().artworks]
-    @component.render()
-    @component.fillwidth = sinon.stub()
-    @component.props.section.set layout: 'overflow_fillwidth'
-    @component.componentDidUpdate()
-    @component.fillwidth.called.should.be.ok
+  it 'renders a pull quote', ->
+    render = React.renderToString(@SectionCallout
+      section: @sections = new Section
+        type: 'callout'
+        text: 'Test Title'
+      setEditing: ->
+      editing: true
+    )
+    render.should.containEql 'Test Title'
+    render.should.containEql 'is-pull-quote'
 
-  it 'adds removes styling if the layout is appropriate', ->
-    @component.props.section.set layout: 'overflow_fillwidth'
-    @component.props.section.artworks.reset [fixtures().artworks]
-    @component.removeFillwidth = sinon.stub()
-    @component.props.section.set layout: 'column_width'
-    @component.componentDidUpdate()
-    @component.removeFillwidth.called.should.be.ok
-
-  it 'changes layout when clicking on layout controls', ->
-    r.simulate.click r.find @component, 'esa-overflow-fillwidth'
-    @component.props.section.get('layout').should.equal 'overflow_fillwidth'
-
-  xit 'renders the artworks', ->
-    @component.state.artworks = [
-      { id: '1', title: 'Foo to the bar' }
-    ]
-    $(@component.getDOMNode()).html().should.containEql 'Foo to the bar'
-
-  it 'adds an artwork onSelect', ->
-    @component.onSelect({},{ id: 'foo-work', value: 'Foo Title' })
-    Backbone.sync.args[0][2].success fabricate 'artwork'
-    @component.props.section.artworks.length.should.be.above 0
+  it 'adds an article onSelect', ->
+    @component.onSelect({},{ id: '123', value: 'Foo Title', thumbnail: '' })
+    _.defer => @component.props.section.get('article').should.equal '123'

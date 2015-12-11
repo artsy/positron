@@ -64,9 +64,10 @@ module.exports = React.createClass
       when 'callout'
         @props.sections.add {
           type: 'callout'
-          thumbnail_image: ''
+          thumbnail_url: ''
           text: ''
-          article: null
+          article: ''
+          hide_image: false
         }, at: @props.index + 1
     @setState open: false
 

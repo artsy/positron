@@ -65,7 +65,8 @@ inputSchema = (->
       type: @string().valid('callout')
       thumbnail_url: @string().allow('',null)
       text: @string().allow('',null)
-      article: @objectId().allow('',null)
+      article: @string().allow('',null)
+      hide_image: @boolean().default(false)
     @object().keys
       type: @string().valid('embed')
       url: @string().allow('',null)
@@ -235,6 +236,7 @@ sortParamToQuery = (input) ->
 # Persistence
 #
 @save = (input, accessToken, callback) ->
+  console.log input.sections
   validate input, (err, input) =>
     return callback err if err
     mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
