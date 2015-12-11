@@ -167,5 +167,5 @@ module.exports = React.createClass
             }, 'Callout',
               div {
                 className: 'edit-menu-icon-callout'
-                dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-fullscreen').html()
               }
