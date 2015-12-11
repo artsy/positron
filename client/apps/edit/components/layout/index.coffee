@@ -165,7 +165,8 @@ module.exports = class EditLayout extends Backbone.View
         $section.offset().top + $section.height())
       insideComponent = false
     left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
-    unless $section.data('type') is 'fullscreen'
+    type = $section.data('type')
+    unless type is 'fullscreen' or type is 'callout'
       $controls.css(
         width: if insideComponent then $controls.outerWidth() else ''
         left: if insideComponent then "calc(50% - #{left}px)" else ''
