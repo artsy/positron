@@ -1,34 +1,20 @@
 @import '../stylus_lib'
 
-artwork-img-bottom = 10px
-short-input-width = 290px
-wide-input-width = 640px
+header-bottom = 10px
 
-.edit-section-artworks-container
-  nav a
-    display inline-block
-    height 40px
-    width @height + 20px
-    background no-repeat center center
-    transition opacity 0.3s
-    opacity 0.5
-    cursor pointer
-    &:hover
-      opacity 1
-    &:last-of-type
-      border-right 0
+.edit-section-callout-container
+  border-top 1px solid gray-lighter-color
+  border-bottom 1px solid gray-lighter-color
+  width 100%
 
 .esc-controls-container
   fill-container()
   background black
   z-index 3
-  height 334px
+  height 300px
   top -(@height)
   text-align center
   display none
-  a
-    background-repeat no-repeat !important
-    background-position center !important
 
 .esc-inputs
   clearfix()
@@ -37,32 +23,12 @@ wide-input-width = 640px
   text-align left
   border-top 1px solid gray-darkest-color
   h1
+    margin-bottom header-bottom
     font-weight bold
-    margin-bottom controls-padding
-  label
-    display block
-    margin-bottom controls-padding + 10px
-    position relative
-    > span, > input, > textarea
-      display inline-block
-      vertical-align top
-    > input, > textarea
-      position absolute
-      right 0
-    > span
-      margin-top 10px
-  .esc-by-urls-container
-    display inline-block
-    position absolute
-    right 0
-    textarea, button
-      position relative
-      display block
-      width 100%
-    button
-      font-size small-avant-garde-font-size + 1
-  .esc-by-urls-container, input
-    width short-input-width
+    avant-garde 's-headline'
+  input
+    width 100%
+    margin-bottom 10px
 
 .esc-empty-placeholder
   text-align center
@@ -70,85 +36,69 @@ wide-input-width = 640px
   height 100px
   line-height @height
 
-.esc-artworks-list
-  li
-    position relative
-    margin-bottom 30px
-    &:last-child
-      margin-bottom 0
-    p
-      color gray-dark-color
-      line-height 20px
-      overflow ellipsis
-  img
-    background gray-lighter-color
-
-.esc-artworks-list .edit-section-remove
-  display none
-  &:hover svg
-    fill-color red-color
-  svg
-    fill-color black
-
 .edit-section-container[data-editing=true]
-  .esc-controls-container, .esc-artworks-list .edit-section-remove
+  .esc-controls-container, .edit-section-remove
     display block
 
 .esc-autocomplete-menu
-  width short-input-width
   position absolute
   right 0
   background white
   z-index 2
   overflow ellipsis
   top 37px
-  li
-    padding 10px
-    border 1px solid gray-color
-    border-bottom 0
-    color black
-    cursor pointer
-    transition background-color 0.3s
-    &:last-child
-      border-bottom 1px solid gray-color
-    &.is-active
-      background gray-color
   img
     background gray-lighter-color
     width 100%
   span
     margin-top 18px
 
-.esc-thumbnail-container
-  height 40px
-  width 40px
-  overflow hidden
-  margin-right 10px
+.esc-callout-container
+  display inline-flex
+  p
+    vertical-align middle
 
-.esc-thumbnail-container, .esc-thumbnail-right
+.esc-callout-container.is-pull-quote
+  width 100%
+  .esc-callout-left, .esc-read-article
+    display none
+  p
+    text-align center
+
+.esc-callout-container.is-article
+  .esc-callout-left
+    display inline-block
+  p
+    text-align left
+
+.esc-read-article
+  avant-garde 'body'
+
+.esc-title
+  garamond()
+  font-size 25px
+
+.esc-callout-left, .esc-callout-right
   display inline-block
-  vertical-align top
+  vertical-align middle
 
-.esc-thumbnail-right
-  line-height 1.4em
+.esc-callout-left
+  overflow hidden
+  margin auto
+  margin-right 20px
+  max-width 180px
+  img
+    width 100%
+    vertical-align middle
+    padding 10px 0 10px 0
 
-.esc-urls-error
-  color red-color
-  width 200px
-  position absolute
-  top 28px
-  line-height 21px
-
-.esc-autocomplete-label
-  margin-bottom 30px
+.esc-callout-right
+  max-width 300px
+  padding 20px 0 20px 0
+  text-align center
 
 .esc-autocomplete-input
-  float right
-  margin-bottom 10px
-  padding-left 8px
   color black
-  input
-    padding-left 8px
   .tt-input
     background white !important
   .tt-dropdown-menu
@@ -166,43 +116,3 @@ wide-input-width = 640px
         background-size cover
         margin-right 10px
         float left
-
-//
-// Varying layouts
-//
-.edit-section-container[data-layout=column_width]
-  nav .esc-column-width
-    opacity 1
-  .esc-artworks-list
-    img
-      width 100%
-      margin-bottom artwork-img-bottom
-
-.edit-section-container[data-layout=overflow_fillwidth]
-  nav .esc-overflow-fillwidth
-    opacity 1
-  .esc-by-urls-container, input, .esc-autocomplete-menu
-    width wide-input-width
-  .esc-artworks-list
-    text-align center
-    li
-      display inline-block
-      vertical-align top
-      padding 0 10px artwork-img-bottom 10px
-      text-align left
-      &:last-child
-        padding-right 0
-        padding-left 20px
-        .edit-section-remove
-          right -15px
-      &:first-child
-        padding-left 0
-        padding-right 20px
-        .edit-section-remove
-          right 5px
-    img
-      max-width 100%
-    .esc-img-container
-      padding-bottom artwork-img-bottom
-    .edit-section-remove
-      right -5px

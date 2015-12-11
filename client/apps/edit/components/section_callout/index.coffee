@@ -6,42 +6,77 @@
 _ = require 'underscore'
 React = require 'react'
 sd = require('sharify').data
-AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-{ div, nav, section, label, input, a, h1, textarea, button, form, ul,
-  li, img, p, strong, span } = React.DOM
+gemup = require 'gemup'
+Autocomplete = require '../../../../components/autocomplete/index.coffee'
+{ div, section, input, a, h1, h2, button, img, p, strong, span } = React.DOM
+{ crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = React.createClass
 
   getInitialState: ->
-    article: ''
+    article: @props.section.get('article')
     text: ''
-    thumbnail_image: ''
-    urlsValue: ''
-    loadingArticle: true
+    thumbnail_url: ''
     errorMessage: ''
+    progress: null
+    # articleModel: fetchArticle(@props.section.get('article')) if @props.section.get('article')
 
   componentDidMount: ->
-    id = @props.section.get('id')
-    @fetchArticle id if id
-    @props.section.article.on 'add remove', => @forceUpdate()
     @setupAutocomplete()
+
+  fetchArticle: (id)->
+    new Article(id: id).fetch
+      success: (article) =>
+        @state.articleModel = article
+
+  removeCallout: ->
+    @props.section.destroy()
+
+  getCalloutType: ->
+    if @state.thumbnail_url.length then 'is-article' else 'is-pull-quote'
+
+  upload: (e) ->
+    @props.setEditing(off)()
+    gemup e.target.files[0],
+      key: sd.GEMINI_KEY
+      progress: (percent) =>
+        @setState progress: percent
+      add: (src) =>
+        @setState progress: 0.1
+      done: (src) =>
+        image = new Image()
+        image.src = src
+        image.onload = =>
+          @setState thumbnail_url: src, progress: null
+          @onClickOff()
+
+  onClickOff: ->
+    if @state.article or @state.text or @state.thumbnail_url
+      @props.section.set
+        article: @state.article
+        text: @state.text
+        thumbnail_url: @state.thumbnail_url
+    else
+      @props.section.destroy()
+
+  setText: ->
+    @setState text: $(@refs.textInput.getDOMNode()).val()
 
   componentWillUnmount: ->
     @autocomplete.remove()
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
-    @autocomplete = new AutocompleteSelect
+    @autocomplete = new Autocomplete
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
       el: $el
       filter: (res) ->
         vals = []
-        # for r in res._embedded.results
-          # id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
-          # vals.push
-          #   id: id
-          #   value: r.title
-          #   thumbnail: r._links.thumbnail.href
+        for r in res.results
+          vals.push
+            id: r.id
+            value: r.title
+            thumbnail: r.thumbnail_image
         return vals
       templates:
         suggestion: (data) ->
@@ -52,70 +87,64 @@ module.exports = React.createClass
             #{data.value}
           """
       selected: @onSelect
-      cleared: @setState article, ''
+      cleared: @setState article: ''
     _.defer -> $el.focus()
 
   onSelect: (e, selected) ->
-    new Article(id: selected.id).fetch
-      success: (article) =>
-        @props.section.article = article
-    $(@refs.autocomplete.getDOMNode()).val('').focus()
-
-  onClickOff: ->
-    return @props.section.destroy() if @props.section.artworks.length is 0
-
-  # fetchArticle: (id, callback) ->
-  #   @props.section.article.fetch id,
-  #     error: (m, res) =>
-  #       @refs.byUrls.setState(
-  #         errorMessage: 'Article not found. Make sure your url is correct.'
-  #         loadingArticle: false
-  #       ) if res.status is 404
-  #     success: (artworks) =>
-  #       return unless @isMounted()
-  #       @refs.byUrls.setState loading: false, errorMessage: ''
-  #       callback?()
-
-  getCalloutType: ->
-    if @props.section.article?.get('thumbnail_image')? then 'is-pull-quote' else 'is-article-callout'
+    @setState
+      article: selected.id
+      text: selected.value
+      thumbnail_url: selected.thumbnail
 
   render: ->
     div {
-      className: 'edit-section-article-container'
+      className: 'edit-section-callout-container'
       onClick: @props.setEditing(on)
     },
       div { className: 'esc-controls-container edit-section-controls' },
-        section { className: 'esc-input' },
+        section { className: 'esc-inputs' },
           h1 {}, 'Article (optional)'
-          label { className: 'esc-autocomplete-label' }
-          div { className: 'esa-autocomplete-input' },
+          div { className: 'esc-autocomplete-input' },
             input {
               ref: 'autocomplete'
               className: 'bordered-input bordered-input-dark'
               placeholder: 'Search for an Article by name'
             }
           h1 {}, 'Text'
-          label { className: 'esc-text-label' }
           div { className: 'esc-text-input' },
             input {
+              ref: 'textInput'
               className: 'bordered-input bordered-input-dark'
               placeholder: 'Enter Text Here...'
+              onBlur: @setText
             }
-      (if @props.section.title or @props.section.article
-        div { className: 'esc-article-container' },
-          img {
-            src: @props.section.article?.get('thumbnail_image') or ''
-            className: "#{@getCalloutType()}"
-          }
-        p {}, @props.section.title or @props.section.article.get('thumbnail_title')
-        button {
-          className: 'edit-section-remove button-reset'
-          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          onClick: @removeArticle
-        }
-      else if @state.loadingArticle and not @props.editing
-        div { className: 'esc-spinner-container' },
-          div { className: 'loading-spinner' }
+          h1 {}, 'Thumbnail Image (optional)'
+          section { className: 'dashed-file-upload-container' },
+            h1 {}, 'Drag & ',
+              span { className: 'dashed-file-upload-container-drop' }, 'drop'
+              ' or '
+              span { className: 'dashed-file-upload-container-click' }, 'click'
+              span {}, (' to ' +
+                if @props.section.get('thumbnail_url') then 'replace' else 'upload')
+            h2 {}, 'Up to 30mb'
+            input { type: 'file', onChange: @upload }
+      (
+        if @state.progress
+          div { className: 'upload-progress-container' },
+            div {
+              className: 'upload-progress'
+              style: width: (@state.progress * 100) + '%'
+            }
+      )
+      (if @state.text or @state.article or @state.thumbnail_url
+        div { className: "esc-callout-container #{@getCalloutType()}" },
+          div { className: 'esc-callout-left'},
+            img {
+              src: (if @state.thumbnail_url then crop(@state.thumbnail_url, { width: 300, height: 200, quality: 95 }) else '')
+            }
+          div { className: 'esc-callout-right' },
+            p { className: 'esc-title' }, @state.text or @state.article.thumbnail_title or ''
+            p { className: 'esc-read-article' }, 'Read Full Article'
       else
         div { className: 'esc-empty-placeholder' }, 'Add a Callout Above'
       )
