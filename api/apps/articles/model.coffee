@@ -62,6 +62,11 @@ inputSchema = (->
     imageSection
     videoSection
     @object().keys
+      type: @string().valid('callout')
+      thumbnail_url: @string().allow('',null)
+      text: @string().allow('',null)
+      article: @objectId().allow('',null)
+    @object().keys
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)

@@ -19,7 +19,6 @@ module.exports = React.createClass
     thumbnail_url: ''
     errorMessage: ''
     progress: null
-    # articleModel: fetchArticle(@props.section.get('article')) if @props.section.get('article')
 
   componentDidMount: ->
     @setupAutocomplete()
