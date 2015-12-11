@@ -648,7 +648,7 @@ describe 'Article', ->
             text: 'The Title Goes Here'
             article: ''
             thumbnail_url: 'http://image.jpg'
-            hide_thumbnail: false
+            hide_image: false
           },
           {
             type: 'text'
