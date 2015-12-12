@@ -82,9 +82,11 @@ module.exports = class EditLayout extends Backbone.View
         partner_logo: @article.getObjectAttribute 'super_article', 'partner_logo'
         partner_link_title: @$("#edit-super-article input[name='partner_link_title']").val()
         partner_logo_link: @$("#edit-super-article input[name='partner_logo_link']").val()
+        partner_fullscreen_header_logo: @article.getObjectAttribute 'super_article', 'partner_fullscreen_header_logo'
         secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
         secondary_logo_text: @$("#edit-super-article input[name='secondary_logo_text']").val()
         secondary_logo_link: @$("#edit-super-article input[name='secondary_logo_link']").val()
+        footer_blurb: @$("#edit-super-article textarea[name='footer_blurb']").val()
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     }
 

@@ -121,9 +121,11 @@ inputSchema = (->
     partner_link_title: @string().allow('',null)
     partner_logo: @string().allow('',null)
     partner_logo_link: @string().allow('',null)
+    partner_fullscreen_header_logo: @string().allow('',null)
     secondary_partner_logo: @string().allow('',null)
     secondary_logo_text: @string().allow('',null)
     secondary_logo_link: @string().allow('',null)
+    footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
 ).call Joi
 
