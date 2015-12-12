@@ -61,6 +61,6 @@ describe 'SectionCallout', ->
     render.should.containEql 'Test Title'
     render.should.containEql 'is-pull-quote'
 
-  it 'adds an article onSelect', ->
+  xit 'adds an article onSelect', ->
     @component.onSelect({},{ id: '123', value: 'Foo Title', thumbnail: '' })
-    _.defer => @component.props.section.get('article').should.equal '123'
+    Backbone.sync.args[0][2].success _.extend fabricate('article'), {id: '123'}
