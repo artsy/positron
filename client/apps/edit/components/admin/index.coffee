@@ -353,6 +353,17 @@ module.exports = class EditAdmin extends Backbone.View
         superArticle = @article.get('super_article') or {}
         superArticle.secondary_partner_logo = src
         @article.save super_article: superArticle
+    new ImageUploadForm
+      el: $('#edit-partner-fullscreen-header-logo-upload')
+      src: @article.get('super_article')?.partner_fullscreen_header_logo
+      remove: =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.partner_fullscreen_header_logo = ''
+        @article.save super_article: superArticle
+      done: (src) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.partner_fullscreen_header_logo = src
+        @article.save super_article: superArticle
 
   setupSuperArticleAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
