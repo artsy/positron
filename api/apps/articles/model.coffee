@@ -33,6 +33,8 @@ videoSection = (->
     type: @string().valid('video')
     url: @string().allow('', null)
     cover_image_url: @string().allow('', null)
+    layout: @string().allow('',null)
+    background_color: @string().allow('',null)
 ).call Joi
 
 fullscreenSection = (->

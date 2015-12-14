@@ -1,16 +1,25 @@
 @import '../stylus_lib'
 
 play-button-size = 30px
+short-input-width = 290px
+wide-input-width = 640px
 
-.edit-section-video .edit-section-controls
-  background black
-  color white
+.edit-section-video .esv-controls-container
   fill-container()
-  height 246px
-  top -(@height)
-  padding controls-padding
-  z-index 3
   display none
+  z-index 3
+  height 334px
+  top -(@height)
+  background black
+
+.esv-nav
+  text-align center
+
+.esv-inputs
+  padding controls-padding
+  color white
+  background black
+  border-top 1px solid gray-darkest-color
   > h2
     avant-garde()
     font-size 11px
@@ -23,6 +32,38 @@ play-button-size = 30px
     position relative
     top 1px
 
+.esv-nav a
+  display inline-block
+  height 40px
+  width @height + 20px
+  background no-repeat center center
+  transition opacity 0.3s
+  opacity 0.5
+  cursor pointer
+  &:hover
+    opacity 1
+  &:last-of-type
+    border-right 0
+  background-repeat no-repeat !important
+  background-position center !important
+
+.esv-background-color.flat-radio-button
+  margin-top 10px
+  h2
+    avant-garde()
+    font-size 11px
+  label
+    avant-garde()
+    font-size 11px
+    margin-right 10px
+  input
+    width 17px
+    height 17px
+    margin 4px 5px 0 0
+    border-radius 10px
+    z-index 3
+    background-color white
+
 [data-useragent*=Firefox] .edit-section-video .edit-section-controls input
   width 397px
 
@@ -33,7 +74,7 @@ play-button-size = 30px
   color gray-dark-color
 
 .edit-section-container[data-editing=true]
-  .edit-section-controls
+  .esv-controls-container
     display block
   .edit-section-video iframe
     position relative
@@ -64,3 +105,27 @@ play-button-size = 30px
   border-top (play-button-size - 10) solid transparent
   border-bottom (play-button-size - 10) solid transparent
   border-left play-button-size solid black
+
+//
+// Varying layouts
+//
+.edit-section-container[data-layout=column_width]
+  nav .esv-column-width
+    opacity 1
+  iframe
+    width 100%
+
+.edit-section-container[data-layout=overflow_fillwidth]
+  min-height 400px
+  margin-left -280px
+  width 1100px
+  .edit-section-video
+    width 200vw
+    margin-left -1000px
+  iframe
+    margin-left 1000px
+  nav .esv-overflow-fillwidth
+    opacity 1
+  .esv-inputs
+    .bordered-input
+      width 100%
