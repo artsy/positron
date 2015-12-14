@@ -41,6 +41,8 @@ module.exports = React.createClass
         @props.sections.add {
           type: 'video'
           url: ''
+          background_color: ''
+          layout: 'column_width'
         }, at: @props.index + 1
       when 'slideshow'
         @props.sections.add {
