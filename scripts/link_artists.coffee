@@ -1,6 +1,6 @@
 #
 # A script that finds unlinked instances of artist names and adds links.
-# Currently just run locally to support the Growth team once and a while.
+# Currently just run locally to support the Growth team once in a while.
 #
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 db = require '../api/lib/db'
@@ -13,7 +13,7 @@ artsyXapp = require 'artsy-xapp'
 # upload an array of artist names to search for in this directory
 ARTISTLIST = require './artist_list.coffee'
 
-# Build array of objects from artist list w/ artist ids + display names
+# Build array of objects from artist list w/ artist ids + display names (i.e. w/ proper capitalization)
 artists = []
 for artist in ARTISTLIST
   id = artist.toLowerCase().split(' ').join('-')
@@ -48,13 +48,13 @@ checkLinks = (article) ->
             addLink section.body, artist, article
 
 findUnlinked = (text, artist) ->
-  nameLink = artist.name + '</a>'
+  nameLink = artist.name + '</a>' #any way to exclude google hrefs from check?
   return true if (_s.count text, nameLink) is 0 && (_s.count html, artist.name) > 0
 
 addLink = (text, artist, article) ->
-  text.replace artist.name, "<a href=\"https://artsy.net/artist/#{artist.id}\">" + artist.name + "</a>"
+  # an absurd means of attempting to ignore possessive mentions
+  text.replace (artist.name if text.charAt(text.indexOf(artist.name) + (artist.name).length) is not '\''), "<a href=\"https://artsy.net/artist/#{artist.id}\">" + artist.name + "</a>"
   db.articles.save article
-  break #just want to break out of the if block from line 56, not the whole function
 
 exit = (err) ->
   console.error "ERROR", err
