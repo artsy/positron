@@ -109,9 +109,8 @@ section#edit-admin.admin-form-container.max-width-container
       .admin-form-right-col
         #edit-admin-google-news
           label Exclude from Google News
-          .flat-checkbox
-            input( type='checkbox' name='exclude_google_news'
-              checked=article.get('exclude_google_news') == 1 value=1 )
+            .flat-checkbox
+              input( type='checkbox' name='exclude_google_news' checked=article.get('exclude_google_news') == 1 value=1 )
 
   //- Email
   section.admin-form-section#edit-email
