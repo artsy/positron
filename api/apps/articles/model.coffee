@@ -105,6 +105,7 @@ inputSchema = (->
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
+  exclude_infinite_feed: @boolean().default(false)
   contributing_authors: @array().items([
     @object().keys
       id: @objectId().allow(null)
@@ -156,6 +157,7 @@ querySchema = (->
   all_by_author: @objectId()
   tags: @array()
   is_super_article: @boolean()
+  include_in_infinite_feed: @boolean()
 ).call Joi
 
 #
