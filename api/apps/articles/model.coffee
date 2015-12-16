@@ -156,7 +156,6 @@ querySchema = (->
   all_by_author: @objectId()
   tags: @array()
   is_super_article: @boolean()
-  include_in_infinite_feed: @boolean()
 ).call Joi
 
 #
