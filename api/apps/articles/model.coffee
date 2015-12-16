@@ -105,7 +105,6 @@ inputSchema = (->
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
-  exclude_infinite_feed: @boolean().default(false)
   contributing_authors: @array().items([
     @object().keys
       id: @objectId().allow(null)
