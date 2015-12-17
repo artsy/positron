@@ -96,6 +96,9 @@ section#edit-admin.admin-form-container.max-width-container
       #edit-admin-tags
         label Tags
         input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
+      #edit-admin-share-description
+        label Social Sharing
+        input.bordered-input.edit-admin-share-input( placeholder='Enter custom description to use in share buttons' value=article.get('share_description') )
       br
       .admin-form-right-col
         #edit-admin-publish-date

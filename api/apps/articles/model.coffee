@@ -129,6 +129,7 @@ inputSchema = (->
     secondary_logo_link: @string().allow('',null)
     footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
+  share_description: @string().allow('',null)
 ).call Joi
 
 querySchema = (->
