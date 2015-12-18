@@ -34,7 +34,8 @@
       .layout-sidebar-profile-img(
         style="background-image: url(#{user.get('profile_icon_url')})" )
       br
-      = user.get('name').split(' ')[0]
+      if user.get('name')
+        = user.get('name').split(' ')[0]
       nav#layout-sidebar-profile-menu
         a( href=sd.FORCE_URL + '/' + user.get('profile_handle') )
           | View profile on Artsy
