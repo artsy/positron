@@ -526,6 +526,16 @@ describe 'Article', ->
         article.sections[4].url.should.equal 'http://maps.google.com'
         done()
 
+    it 'doesnt escape smart quotes', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        title: 'Dr. Evil demands “one million dollars”.'
+        thumbnail_title: 'Dr. Evil demands “one billion dollars”.'
+      }, 'foo', (err, article) ->
+        article.title.should.containEql '“'
+        article.thumbnail_title.should.containEql '“'
+        done()
+
     it 'fixes anchors urls', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'

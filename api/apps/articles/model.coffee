@@ -349,7 +349,7 @@ sanitize = (article) ->
   sanitized
 
 sanitizeHtml = (html) ->
-  return xss html unless try $ = cheerio.load html
+  return xss html unless try $ = cheerio.load html, decodeEntities: false
   $('a').each ->
     u = url.parse $(this).attr 'href'
     $(this).attr 'href', 'http://' + u.href unless u.protocol
