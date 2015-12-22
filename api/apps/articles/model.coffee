@@ -334,6 +334,8 @@ generateKeywords = (article, accessToken, cb) ->
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
   sanitized = _.extend article,
+    title: sanitizeHtml article.title
+    thumbnail_title: sanitizeHtml article.thumbnail_title
     lead_paragraph: sanitizeHtml article.lead_paragraph
     sections: for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
