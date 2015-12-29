@@ -566,10 +566,25 @@ describe 'Article', ->
             type: 'image'
             url: 'http://foo.com'
           }
+          {
+            type: 'video'
+            url: 'foo.com/watch'
+          }
+          {
+            type: 'slideshow'
+            items: [
+              {
+                type: 'video'
+                url: 'foo.com/watch'
+              }
+            ]
+          }
         ]
       }, 'foo', (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].url.should.equal 'http://foo.com'
+        article.sections[2].url.should.equal 'http://foo.com/watch'
+        article.sections[3].items[0].url.should.equal 'http://foo.com/watch'
         done()
 
     it 'maintains the original slug when publishing with a new title', (done) ->
