@@ -41,7 +41,9 @@ module.exports = React.createClass
       @props.section.set cover_image_url: @state.coverSrc
 
   onChangeUrl: (e) ->
-    @props.section.set url: $(@refs.input.getDOMNode()).val()
+    url = $(@refs.input.getDOMNode()).val()
+    url = "https://".concat(url) if url.indexOf('http') < 0
+    @props.section.set url: url
     @forceUpdate()
 
   uploadCoverImage: (e) ->
