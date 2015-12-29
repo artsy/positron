@@ -40,7 +40,7 @@ describe 'SectionVideo', ->
   it 'changes the video when submitting', ->
     $(@component.refs.input.getDOMNode()).val 'foobar'
     @component.onChangeUrl preventDefault: ->
-    @component.props.section.get('url').should.equal 'http://foobar'
+    @component.props.section.get('url').should.equal 'https://foobar'
 
   it 'renders the video url', ->
     $(@component.getDOMNode()).html().should.containEql 'dQw4w9WgXcQ'
