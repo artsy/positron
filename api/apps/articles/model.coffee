@@ -340,19 +340,25 @@ sanitize = (article) ->
     sections: for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
       section.caption = sanitizeHtml section.caption if section.type is 'image'
+      section.url = sanitizeLink section.url if section.type is 'video'
       if section.type is 'slideshow'
-        for item in section.items when item.type is 'image'
-          item.caption = sanitizeHtml item.caption
+        for item in section.items when item.type is 'image' or item.type is 'video'
+          item.caption = sanitizeHtml item.caption if item.type is 'image'
+          item.url = sanitizeLink item.url if item.type is 'video'
       section
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
   sanitized
 
+sanitizeLink = (urlString) ->
+  u = url.parse urlString
+  if u.protocol then urlString else 'http://' + u.href
+
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
   $('a').each ->
-    u = url.parse $(this).attr 'href'
-    $(this).attr 'href', 'http://' + u.href unless u.protocol
+    u = sanitizeLink $(this).attr 'href'
+    $(this).attr 'href', u
   xss $.html()
 
 typecastIds = (article) ->
