@@ -76,13 +76,13 @@ section-btn-height = 130px
   overflow hidden
   opacity 0
   border-top-color transparent
-  max-height 0
+  height 89px
   background gray-lightest-color
   li
     width 25%
     avant-garde()
-    height section-btn-height
     background white
+    height 89px
     border-right 1px solid gray-color
     border-bottom 1px solid gray-color
     vertical-align top
@@ -94,6 +94,8 @@ section-btn-height = 130px
     position relative
     &:last-child
       border-right none
+    span
+      padding-bottom 20px
     svg
       max-width 40px
       max-height 40px
@@ -102,16 +104,21 @@ section-btn-height = 130px
       left calc(50% - 20px)
     .edit-menu-icon-text svg
       margin-top 4px
-      max-width 56px
-      left calc(50% - 28px)
+      width 35px
+      height 17px
+      left calc(50% - 17px)
     .edit-menu-icon-artworks svg
       margin-top -3px
+      width 28px
+      height 30px
     .edit-menu-icon-image svg
       margin-top 0
+      width 30px
+      height 24px
     .edit-menu-icon-video svg
       margin-top 3px
-      max-width 46px
-      left calc(50% - 23px)
+      height 34px
+      left calc(50% - 30px)
     .edit-menu-icon-slideshow svg
       margin-top 11px
       max-width 82px
@@ -119,6 +126,14 @@ section-btn-height = 130px
     .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg, .edit-menu-icon-hero-fullscreen svg
       max-width 80px
       left calc(50% - 42px)
+    .edit-menu-icon-embed svg
+      width 31px
+      height 22px
+      left calc(50% - 31px)
+    .edit-menu-icon-callout svg
+      width 40px
+      height 23px
+      left calc(50% - 40px)
   li:first-child:nth-last-child(6),
   li:first-child:nth-last-child(6) ~ li
     width 20%
