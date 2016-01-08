@@ -17,6 +17,7 @@ module.exports = React.createClass
     embeddable: null
     iframe: ''
     height: @props.section.get('height')
+    layout: @props.section.get('layout') or 'column_width'
 
   componentDidMount: ->
     url = @props.section.get('url')
@@ -70,7 +71,15 @@ module.exports = React.createClass
             }
             className: 'ese-column-width'
             onClick: @changeLayout('column_width')
-        }
+          }
+          a {
+            style: {
+              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'background-size': '22px'
+            }
+            className: 'ese-overflow-fillwidth'
+            onClick: @changeLayout('overflow_fillwidth')
+          }
         section { className: 'ese-inputs' },
           h1 {}, 'Add embedded content to this section'
           div {
@@ -83,7 +92,7 @@ module.exports = React.createClass
           },
             div { className: 'ese-input' }, "URL",
               input {
-                placeholder: 'http://files.artsy.net'
+                placeholder: 'https://files.artsy.net'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'url'
                 defaultValue: @props.section.get('url')

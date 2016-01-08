@@ -70,6 +70,7 @@ module.exports = class EditLayout extends Backbone.View
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
+      share_description: @$('#edit-admin-share-description :input').val()
       email_metadata:
         headline: @$(".edit-email-form input[name='headline']").val()
         author: @$(".edit-email-form input[name='author']").val()
@@ -82,9 +83,11 @@ module.exports = class EditLayout extends Backbone.View
         partner_logo: @article.getObjectAttribute 'super_article', 'partner_logo'
         partner_link_title: @$("#edit-super-article input[name='partner_link_title']").val()
         partner_logo_link: @$("#edit-super-article input[name='partner_logo_link']").val()
+        partner_fullscreen_header_logo: @article.getObjectAttribute 'super_article', 'partner_fullscreen_header_logo'
         secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
         secondary_logo_text: @$("#edit-super-article input[name='secondary_logo_text']").val()
         secondary_logo_link: @$("#edit-super-article input[name='secondary_logo_link']").val()
+        footer_blurb: @$("#edit-super-article textarea[name='footer_blurb']").val()
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     }
 
@@ -165,7 +168,8 @@ module.exports = class EditLayout extends Backbone.View
         $section.offset().top + $section.height())
       insideComponent = false
     left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
-    unless $section.data('type') is 'fullscreen'
+    type = $section.data('type')
+    unless type is 'fullscreen' or type is 'callout'
       $controls.css(
         width: if insideComponent then $controls.outerWidth() else ''
         left: if insideComponent then "calc(50% - #{left}px)" else ''

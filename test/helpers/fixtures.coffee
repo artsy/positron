@@ -67,9 +67,11 @@ module.exports = ->
       partner_logo: 'http://partnerlink.com/logo.jpg'
       partner_link_title: 'Download The App'
       partner_logo_link: 'http://itunes'
+      partner_fullscreen_header_logo: 'http://partnerlink.com/blacklogo.jpg'
       secondary_partner_logo: 'http://secondarypartner.com/logo.png'
       secondary_logo_text: 'In Partnership With'
       secondary_logo_link: 'http://secondary'
+      footer_blurb: 'This is a Footer Blurb'
       related_articles: [ '5530e72f7261696238050000' ]
   fixtures.users =
     "id" : "4d8cd73191a5c50ce200002a"

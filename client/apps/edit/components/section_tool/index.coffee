@@ -16,6 +16,9 @@ module.exports = React.createClass
   toggle: ->
     @setState open: not @state.open
 
+  isAboveTextSection: ->
+    @props.sections.models[@props.index + 1]?.get('type') is 'text'
+
   newSection: (type) -> =>
     switch type
       when 'text'
@@ -38,6 +41,8 @@ module.exports = React.createClass
         @props.sections.add {
           type: 'video'
           url: ''
+          background_color: ''
+          layout: 'column_width'
         }, at: @props.index + 1
       when 'slideshow'
         @props.sections.add {
@@ -57,6 +62,14 @@ module.exports = React.createClass
           background_url: ''
           title: ''
           intro: ''
+        }, at: @props.index + 1
+      when 'callout'
+        @props.sections.add {
+          type: 'callout'
+          thumbnail_url: ''
+          text: ''
+          article: ''
+          hide_image: false
         }, at: @props.index + 1
     @setState open: false
 
@@ -148,4 +161,13 @@ module.exports = React.createClass
               div {
                 className: 'edit-menu-icon-embed'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
+              }
+          if sd.USER?.type is 'Admin' and @isAboveTextSection()
+            li {
+              className: 'edit-section-tool-callout'
+              onClick: @newSection('callout')
+            }, 'Callout',
+              div {
+                className: 'edit-menu-icon-callout'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.callout').html()
               }

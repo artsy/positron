@@ -59,9 +59,11 @@ describe 'EditLayout', ->
     it 'turns form elements into data', ->
       @view.$('#edit-thumbnail-title :input').val('foobar')
       @view.$('#edit-admin-tags :input').val('house, couch')
+      @view.$('#edit-admin-share-description :input').val('share me')
       @view.serialize().thumbnail_title.should.equal 'foobar'
       @view.serialize().tags[0].should.equal 'house'
       @view.serialize().tags[1].should.equal 'couch'
+      @view.serialize().share_description.should.equal 'share me'
 
     it 'adds the current user as the author for cases like impersonating' +
        ' which need that explicitly sent', ->

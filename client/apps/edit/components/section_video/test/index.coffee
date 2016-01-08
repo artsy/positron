@@ -45,3 +45,10 @@ describe 'SectionVideo', ->
   it 'renders the video url', ->
     $(@component.getDOMNode()).html().should.containEql 'dQw4w9WgXcQ'
 
+  it 'changes the background when radio button is clicked', ->
+    r.simulate.click r.find @component, "esv-background-black"
+    @component.props.section.get('background_color').should.equal 'black'
+
+  it 'changes the layout when clicked', ->
+    r.simulate.click r.find @component, 'esv-overflow-fillwidth'
+    @component.props.section.get('layout').should.equal 'overflow_fillwidth'

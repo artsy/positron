@@ -85,7 +85,7 @@ section#edit-admin.admin-form-container.max-width-container
         input.bordered-input( placeholder='Search by user name...' )
       br
       label Contributing Authors
-        #edit-admin-contributing-authors
+      #edit-admin-contributing-authors
 
   //- Metadata
   section.admin-form-section
@@ -96,6 +96,9 @@ section#edit-admin.admin-form-container.max-width-container
       #edit-admin-tags
         label Tags
         input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
+      #edit-admin-share-description
+        label Social Sharing
+        input.bordered-input.edit-admin-share-input( placeholder='Enter custom description to use in share buttons' value=article.get('share_description') )
       br
       .admin-form-right-col
         #edit-admin-publish-date
@@ -109,9 +112,8 @@ section#edit-admin.admin-form-container.max-width-container
       .admin-form-right-col
         #edit-admin-google-news
           label Exclude from Google News
-          .flat-checkbox
-            input( type='checkbox' name='exclude_google_news'
-              checked=article.get('exclude_google_news') == 1 value=1 )
+            .flat-checkbox
+              input( type='checkbox' name='exclude_google_news' checked=article.get('exclude_google_news') == 1 value=1 )
 
   //- Email
   section.admin-form-section#edit-email
@@ -140,9 +142,9 @@ section#edit-admin.admin-form-container.max-width-container
             onClick="this.select();"
             readonly
           )
-        label.edit-email-small-image-url Large
+        label.edit-email-small-image-url Small
           input.bordered-input( onClick="this.select();" readonly )
-        label.edit-email-large-image-url Small
+        label.edit-email-large-image-url Large
           input.bordered-input( onClick="this.select();" readonly )
 
   //- Super Article
@@ -165,6 +167,11 @@ section#edit-admin.admin-form-container.max-width-container
             data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
           ) Partner Logo
           #edit-partner-logo-upload
+        label.edit-partner-logo
+          span(
+            data-hidden=article.get('super_article') && article.get('super_article').partner_fullscreen_header_logo ? 'true' : 'false'
+          ) Partner Fullscreen Header Logo
+          #edit-partner-fullscreen-header-logo-upload
         label Partner Logo Link
           input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
         label.edit-partner-logo
@@ -176,6 +183,8 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
         label Secondary Logo Link
           input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
+        label Footer Blurb
+          textarea.bordered-input( name='footer_blurb') #{article.getObjectAttribute('super_article','footer_blurb')}
       .admin-form-right-col
         label Related Articles
         #edit-admin-related-articles

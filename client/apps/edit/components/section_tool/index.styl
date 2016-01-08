@@ -76,17 +76,17 @@ section-btn-height = 130px
   overflow hidden
   opacity 0
   border-top-color transparent
-  max-height 0
+  height 89px
   background gray-lightest-color
   li
     width 25%
     avant-garde()
-    height section-btn-height
     background white
+    height 89px
     border-right 1px solid gray-color
     border-bottom 1px solid gray-color
     vertical-align top
-    line-height @height + 50px
+    line-height 124px
     font-size small-avant-garde-font-size
     display inline-block
     text-align center
@@ -99,29 +99,50 @@ section-btn-height = 130px
       max-height 40px
       position absolute
       top 30px
-      left calc(50% - 20px)
+      left calc(50% - 17px)
     .edit-menu-icon-text svg
-      margin-top 4px
-      max-width 56px
-      left calc(50% - 28px)
-    .edit-menu-icon-artworks svg
       margin-top -3px
+      width 35px
+      height 17px
+      left calc(50% - 17px)
+    .edit-menu-icon-artworks svg
+      margin-top -13px
+      width 28px
+      height 30px
     .edit-menu-icon-image svg
-      margin-top 0
+      margin-top -7px
+      width 30px
+      height 24px
     .edit-menu-icon-video svg
-      margin-top 3px
-      max-width 46px
-      left calc(50% - 23px)
+      margin-top -11px
+      height 34px
+      left calc(50% - 18px)
     .edit-menu-icon-slideshow svg
       margin-top 11px
       max-width 82px
-      left calc(50% - 38px)
+      left calc(50% - 18px)
     .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg, .edit-menu-icon-hero-fullscreen svg
-      max-width 80px
-      left calc(50% - 42px)
+      width 50px
+      left calc(50% - 21px)
+      top 20px
+    .edit-menu-icon-hero-fullscreen svg
+      top 11px
+    .edit-menu-icon-embed svg
+      top 23px
+      width 31px
+      height 22px
+      left calc(50% - 17px)
+    .edit-menu-icon-callout svg
+      top 23px
+      width 40px
+      height 23px
+      left calc(50% - 20px)
   li:first-child:nth-last-child(6),
   li:first-child:nth-last-child(6) ~ li
     width 20%
+  li:first-child:nth-last-child(7),
+  li:first-child:nth-last-child(7) ~ li
+    width 16.66%
 
 .edit-section-tool[data-state-open="true"]
   max-height (section-btn-height * 2)

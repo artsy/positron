@@ -526,6 +526,16 @@ describe 'Article', ->
         article.sections[4].url.should.equal 'http://maps.google.com'
         done()
 
+    it 'doesnt escape smart quotes', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        title: 'Dr. Evil demands “one million dollars”.'
+        thumbnail_title: 'Dr. Evil demands “one billion dollars”.'
+      }, 'foo', (err, article) ->
+        article.title.should.containEql '“'
+        article.thumbnail_title.should.containEql '“'
+        done()
+
     it 'fixes anchors urls', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
@@ -556,10 +566,25 @@ describe 'Article', ->
             type: 'image'
             url: 'http://foo.com'
           }
+          {
+            type: 'video'
+            url: 'foo.com/watch'
+          }
+          {
+            type: 'slideshow'
+            items: [
+              {
+                type: 'video'
+                url: 'foo.com/watch'
+              }
+            ]
+          }
         ]
       }, 'foo', (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].url.should.equal 'http://foo.com'
+        article.sections[2].url.should.equal 'http://foo.com/watch'
+        article.sections[3].items[0].url.should.equal 'http://foo.com/watch'
         done()
 
     it 'maintains the original slug when publishing with a new title', (done) ->
@@ -602,11 +627,13 @@ describe 'Article', ->
         super_article: {
           partner_link: 'http://partnerlink.com'
           partner_logo: 'http://partnerlink.com/logo.jpg'
+          partner_fullscreen_header_logo: 'http://partnerlink.com/blacklogo.jpg'
           partner_link_title: 'Download The App'
           partner_logo_link: 'http://itunes'
           secondary_partner_logo: 'http://secondarypartner.com/logo.png'
           secondary_logo_text: 'In Partnership With'
           secondary_logo_link: 'http://secondary'
+          footer_blurb: 'This is a Footer Blurb'
           related_articles: [ '5530e72f7261696238050000' ]
         }
         published: true
@@ -616,9 +643,11 @@ describe 'Article', ->
         article.super_article.partner_logo.should.equal 'http://partnerlink.com/logo.jpg'
         article.super_article.partner_link_title.should.equal 'Download The App'
         article.super_article.partner_logo_link.should.equal 'http://itunes'
+        article.super_article.partner_fullscreen_header_logo.should.equal 'http://partnerlink.com/blacklogo.jpg'
         article.super_article.secondary_partner_logo.should.equal 'http://secondarypartner.com/logo.png'
         article.super_article.secondary_logo_text.should.equal 'In Partnership With'
         article.super_article.secondary_logo_link.should.equal 'http://secondary'
+        article.super_article.footer_blurb.should.equal 'This is a Footer Blurb'
         article.is_super_article.should.equal true
         article.super_article.related_articles.length.should.equal 1
         done()
@@ -637,6 +666,43 @@ describe 'Article', ->
         return done err if err
         (article.author_id instanceof ObjectId).should.be.true
         (article.super_article.related_articles[0] instanceof ObjectId).should.be.true
+        done()
+
+    it 'saves a callout section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'callout'
+            text: 'The Title Goes Here'
+            article: ''
+            thumbnail_url: 'http://image.jpg'
+            hide_image: false
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          },
+          {
+            type: 'callout'
+            text: ''
+            article: '53da550a726169083c0a0700'
+            thumbnail_url: ''
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          }
+        ]
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.sections[0].type.should.equal 'callout'
+        article.sections[0].text.should.equal 'The Title Goes Here'
+        article.sections[0].thumbnail_url.should.equal 'http://image.jpg'
+        article.sections[1].type.should.equal 'text'
+        article.sections[3].type.should.equal 'text'
+        article.sections[2].article.should.equal '53da550a726169083c0a0700'
         done()
 
   describe "#destroy", ->

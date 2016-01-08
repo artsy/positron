@@ -33,6 +33,8 @@ videoSection = (->
     type: @string().valid('video')
     url: @string().allow('', null)
     cover_image_url: @string().allow('', null)
+    layout: @string().allow('',null)
+    background_color: @string().allow('',null)
 ).call Joi
 
 fullscreenSection = (->
@@ -61,6 +63,12 @@ inputSchema = (->
   sections: @array().items([
     imageSection
     videoSection
+    @object().keys
+      type: @string().valid('callout')
+      thumbnail_url: @string().allow('',null)
+      text: @string().allow('',null)
+      article: @string().allow('',null)
+      hide_image: @boolean().default(false)
     @object().keys
       type: @string().valid('embed')
       url: @string().allow('',null)
@@ -115,10 +123,13 @@ inputSchema = (->
     partner_link_title: @string().allow('',null)
     partner_logo: @string().allow('',null)
     partner_logo_link: @string().allow('',null)
+    partner_fullscreen_header_logo: @string().allow('',null)
     secondary_partner_logo: @string().allow('',null)
     secondary_logo_text: @string().allow('',null)
     secondary_logo_link: @string().allow('',null)
+    footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
+  share_description: @string().allow('',null)
 ).call Joi
 
 querySchema = (->
@@ -323,23 +334,31 @@ generateKeywords = (article, accessToken, cb) ->
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
   sanitized = _.extend article,
+    title: sanitizeHtml article.title
+    thumbnail_title: sanitizeHtml article.thumbnail_title
     lead_paragraph: sanitizeHtml article.lead_paragraph
     sections: for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
       section.caption = sanitizeHtml section.caption if section.type is 'image'
+      section.url = sanitizeLink section.url if section.type is 'video'
       if section.type is 'slideshow'
-        for item in section.items when item.type is 'image'
-          item.caption = sanitizeHtml item.caption
+        for item in section.items when item.type is 'image' or item.type is 'video'
+          item.caption = sanitizeHtml item.caption if item.type is 'image'
+          item.url = sanitizeLink item.url if item.type is 'video'
       section
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
   sanitized
 
+sanitizeLink = (urlString) ->
+  u = url.parse urlString
+  if u.protocol then urlString else 'http://' + u.href
+
 sanitizeHtml = (html) ->
-  return xss html unless try $ = cheerio.load html
+  return xss html unless try $ = cheerio.load html, decodeEntities: false
   $('a').each ->
-    u = url.parse $(this).attr 'href'
-    $(this).attr 'href', 'http://' + u.href unless u.protocol
+    u = sanitizeLink $(this).attr 'href'
+    $(this).attr 'href', u
   xss $.html()
 
 typecastIds = (article) ->

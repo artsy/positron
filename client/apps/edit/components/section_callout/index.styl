@@ -1,0 +1,138 @@
+@import '../stylus_lib'
+
+header-bottom = 10px
+
+.edit-section-callout-container
+  border-top 1px solid gray-lighter-color
+  border-bottom 1px solid gray-lighter-color
+  width 100%
+
+.edit-section-container[data-type=callout]
+  float right
+  width 418px
+  left 170px
+  margin-left -170px
+  z-index 4
+
+.esc-controls-container
+  fill-container()
+  background black
+  z-index 3
+  height 331px
+  top -(@height)
+  text-align center
+  display none
+
+.esc-inputs
+  clearfix()
+  color white
+  padding controls-padding
+  text-align left
+  border-top 1px solid gray-darkest-color
+  h1
+    margin-bottom header-bottom
+    font-weight bold
+    avant-garde 's-headline'
+  input
+    width 100%
+    margin-bottom 10px
+
+.esc-hide-thumbnail
+  h1
+    display inline
+  input
+    width 30px
+    display inline
+
+.esc-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
+  line-height @height
+
+.edit-section-container[data-editing=true]
+  .esc-controls-container, .edit-section-remove
+    display block
+
+.esc-autocomplete-menu
+  position absolute
+  right 0
+  background white
+  z-index 2
+  overflow ellipsis
+  top 37px
+  img
+    background gray-lighter-color
+    width 100%
+  span
+    margin-top 18px
+
+.esc-callout-container
+  display inline-flex
+  p
+    vertical-align middle
+
+.esc-callout-container.is-pull-quote
+  width 100%
+  .esc-callout-left, .esc-read-article
+    display none
+  p
+    text-align center
+
+.esc-callout-container.is-article
+  .esc-callout-left
+    display inline-block
+  p
+    text-align left
+
+.esc-callout-container.is-article.hidden-image-true
+  .esc-callout-left
+    display none
+
+.esc-read-article
+  avant-garde 'body'
+  margin-top 15px
+
+.esc-title
+  garamond()
+  font-size 25px
+
+.esc-callout-left, .esc-callout-right
+  display inline-block
+  vertical-align middle
+
+.esc-callout-left
+  overflow hidden
+  margin auto
+  margin-right 20px
+  max-width 180px
+  img
+    width 100%
+    vertical-align middle
+    padding 10px 0 10px 0
+
+.esc-callout-right
+  max-width 300px
+  padding 20px 0 20px 0
+  text-align center
+
+.esc-autocomplete-input
+  color black
+  .tt-input
+    background white !important
+    padding-left 12px
+  .tt-dropdown-menu
+    margin-top 0
+    border 1px solid gray-lighter-color
+    p
+      line-height 1.2em
+    .tt-suggestion
+      clearfix()
+      line-height 1.2em
+      .esc-suggestion
+        width 50px
+        height @width
+        background center center gray-lighter-color
+        background-size cover
+        margin-right 10px
+        float left
