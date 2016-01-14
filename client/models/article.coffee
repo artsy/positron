@@ -65,6 +65,24 @@ module.exports = class Article extends Backbone.Model
     else
       ''
 
+  getMetaAuthorName: ->
+    metaAuthor = @getObjectAttribute('email_metadata', 'author')
+    return metaAuthor if metaAuthor
+    if @get('contributing_authors')?.length
+      _.pluck(@get('contributing_authors'), 'name').join('')
+    else if @get('author')?.name
+      @get('author').name
+    else
+      ''
+
+  getMetaTitle: ->
+    metaTitle = @getObjectAttribute('email_metadata', 'headline')
+    return metaTitle if metaTitle.length > 0
+    if @get('thumbnail_title')?.length
+      @get('thumbnail_title')
+    else
+      ''
+
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length

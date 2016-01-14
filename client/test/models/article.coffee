@@ -91,8 +91,55 @@ describe "Article", ->
       @article.trigger 'sync'
       @article.heroSection.get('type').should.equal 'foo'
 
-  describe 'getObjectAttribute', ->
+  describe '#getObjectAttribute', ->
 
     it 'returns the object attribute value if it exists', ->
       @article.getObjectAttribute('super_article', 'partner_link').should.equal 'http://partnerlink.com'
       @article.getObjectAttribute('email_metadata', 'headline').should.equal 'Foo'
+
+  describe '#getMetaTitle', ->
+
+    it 'returns an empty string if no thumbnail_title exists', ->
+      @article.set
+        thumbnail_title: ''
+        email_metadata: headline: ''
+      @article.getMetaTitle().should.equal ''
+
+    it 'returns the thumbnail_title if it exists', ->
+      @article.set
+        thumbnail_title: 'Thumbnail Title'
+        email_metadata: headline: ''
+      @article.getMetaTitle().should.equal 'Thumbnail Title'
+
+    it 'uses the email_metadata headline if it exists', ->
+      @article.set
+        thumbnail_title: ''
+        email_metadata: headline: 'Headline Title'
+      @article.getMetaTitle().should.equal 'Headline Title'
+
+  describe '#getMetaAuthorName', ->
+
+    it 'returns an empty string if no author exists', ->
+      @article.set
+        author: {}
+        contributing_authors: []
+        email_metadata: author: ''
+      @article.getMetaAuthorName().should.equal ''
+
+    it 'returns the contributing author if there is one', ->
+      @article.set
+        contributing_authors: [ {name: 'Kana'} ]
+        email_metadata: author: ''
+      @article.getMetaAuthorName().should.equal 'Kana'
+
+    it 'returns the author if there is one', ->
+      @article.set
+        author: name: 'Kana'
+        contributing_authors: []
+        email_metadata: author: ''
+      @article.getMetaAuthorName().should.equal 'Kana'
+
+    it 'uses the email_metadata author if it exists', ->
+      @article.set
+        email_metadata: author: 'Kana'
+      @article.getMetaAuthorName().should.equal 'Kana'
