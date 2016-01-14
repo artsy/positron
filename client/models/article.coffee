@@ -68,7 +68,7 @@ module.exports = class Article extends Backbone.Model
   getMetaAuthorName: ->
     metaAuthor = @getObjectAttribute('email_metadata', 'author')
     return metaAuthor if metaAuthor
-    if @get('contributing_authors').length
+    if @get('contributing_authors')?.length
       _.pluck(@get('contributing_authors'), 'name').join('')
     else if @get('author')?.name
       @get('author').name
@@ -76,10 +76,9 @@ module.exports = class Article extends Backbone.Model
       ''
 
   getMetaTitle: ->
-    console.log @get('thumbnail_title')
     metaTitle = @getObjectAttribute('email_metadata', 'headline')
     return metaTitle if metaTitle.length > 0
-    if @get('thumbnail_title').length
+    if @get('thumbnail_title')?.length
       @get('thumbnail_title')
     else
       ''

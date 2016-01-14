@@ -77,8 +77,6 @@ module.exports = class EditLayout extends Backbone.View
         credit_line: @$(".edit-email-form input[name='credit_line']").val()
         credit_url: @$(".edit-email-form input[name='credit_url']").val()
         image_url: @article.getObjectAttribute('email_metadata','image_url')
-        large_image_url: @$('.edit-email-large-image-url input').val()
-        small_image_url: @$('.edit-email-small-image-url input').val()
       is_super_article: @$('[name=is_super_article]').is(':checked')
       super_article:
         partner_link: @$("#edit-super-article input[name='partner_link']").val()
