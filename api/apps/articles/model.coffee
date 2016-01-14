@@ -114,6 +114,8 @@ inputSchema = (->
     ]).default([])
   email_metadata: @object().keys
     image_url: @string().allow('',null)
+    small_image_url: @string().allow('',null)
+    large_image_url: @string().allow('',null)
     headline: @string().allow('',null)
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
