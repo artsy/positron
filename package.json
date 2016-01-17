@@ -65,7 +65,7 @@
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
     "deamdify": "^0.1.1",
-    "ezel-assets": "0.0.13",
+    "ezel-assets": "^1.0.0",
     "gemup": "git://github.com/artsy/gemup.git",
     "html-janitor": "^2.0.2",
     "imagesloaded": "^3.1.8",
@@ -75,6 +75,7 @@
     "jquery-fillwidth-lite": "^1.0.3",
     "mocha": "^2.3.3",
     "rewire": "2.2.0",
+    "sailthru-client": "^2.0.3",
     "scribe-editor": "^2.0.2",
     "scribe-plugin-enhanced-link-tooltip": "git://github.com/jorystiefel/scribe-plugin-enhanced-link-tooltip.git",
     "scribe-plugin-heading-command": "^0.1.0",
@@ -87,7 +88,6 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "uglifyify": "^3.0.1",
-    "ezel-assets": "^1.0.0",
     "zombie": "^4.1.0"
   },
   "license": "MIT"

@@ -16,7 +16,9 @@ cheerio = require 'cheerio'
 url = require 'url'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
+{ ARTSY_URL, API_MAX, API_PAGE_SIZE, SAILTHRU_KEY, SAILTHRU_SECRET, API_URL, EMBEDLY_KEY } = process.env
+sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
+{ crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
 #
 # Schemas
@@ -274,6 +276,28 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
       article.author = User.denormalizedForArticle author if author
       cb null, article, author, publishing
 
+updateSailthruContent = (article) =>
+  images = {}
+  tags = article.keywords
+  tags = tags.concat ["artsy-editorial"] if article.author_id is "503f86e462d56000020002cc"
+  if article.email_metadata?.image_url
+    images =
+      full: url: crop(article.email_metadata.image_url, { width: 1280, height: 960 } )
+      thumb: url: crop(article.email_metadata.image_url, { width: 552, height: 392 } )
+  response = sailthru.apiPost 'content',
+    url: "https://artsy.net/article/#{article.slug}"
+    date: article.published_at
+    title: article.email_metadata?.headline or article.thumbnail_title
+    author: article.email_metadata?.author or article.author.name
+    tags: tags
+    images: images
+    spider: 0
+    vars:
+      credit_line: article.email_metadata?.credit_line
+      credit_url: article.email_metadata?.credit_url
+  , (err, response) =>
+    console.log response
+
 # After merging article & input
 
 onPublish = (article, author, accessToken, cb) ->
@@ -387,6 +411,9 @@ typecastIds = (article) ->
 
 sanitizeAndSave = (callback) -> (err, article) ->
   return callback err if err
+  # Send new content call to Sailthru on any published article save
+  if article.published
+    updateSailthruContent article
   db.articles.save sanitize(typecastIds article), callback
 
 @destroy = (id, callback) ->
