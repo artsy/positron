@@ -308,17 +308,21 @@ module.exports = class EditAdmin extends Backbone.View
       featuredListTemplate list: @article.featuredList('Artworks')
     )
 
+  renderInputs: (src) ->
+    $('.edit-email-large-image-url input').val(
+      crop(src, { width: 1280, height: 960 } ))
+    $('.edit-email-small-image-url input').val(
+      crop(src, { width: 552, height: 392 } ))
+
   setupEmailMetadata: ->
-    renderInputs = (src) ->
-      $('.edit-email-large-image-url input').val(
-        crop(src, { width: 1280, height: 960 } ))
-      $('.edit-email-small-image-url input').val(
-        crop(src, { width: 552, height: 392 } ))
     if @article.get('email_metadata')?.image_url
-      renderInputs @article.get('email_metadata').image_url
+      @renderInputs @article.get('email_metadata').image_url
+    else if @article.get('thumbnail_image').length
+      @renderInputs @article.get('thumbnail_image')
+
     new ImageUploadForm
       el: $('#edit-email-upload')
-      src: @article.get('email_metadata')?.image_url
+      src: @article.get('email_metadata')?.image_url or @article.get('thumbnail_image')
       remove: =>
         emailMetadata = @article.get('email_metadata') or {}
         emailMetadata.image_url = ''
@@ -328,7 +332,7 @@ module.exports = class EditAdmin extends Backbone.View
       done: (src) =>
         emailMetadata = @article.get('email_metadata') or {}
         emailMetadata.image_url = src
-        renderInputs src
+        @renderInputs src
 
   setupSuperArticleImages: ->
     new ImageUploadForm

@@ -14,7 +14,7 @@ gemup = require 'gemup'
 React = require 'react'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
-{ div, section, span, input, button, p, textarea, video } = React.DOM
+{ div, section, span, input, button, p, textarea, video, img } = React.DOM
 icons = -> require('./icons.jade') arguments...
 moment = require 'moment'
 
@@ -29,6 +29,7 @@ module.exports = React.createClass
     title: @props.section.get('title')
     intro: @props.section.get('intro')
     background_url: @props.section.get('background_url')
+    background_image_url: @props.section.get('background_image_url')
     progress: ''
 
   componentDidMount: ->
@@ -42,11 +43,12 @@ module.exports = React.createClass
     @removeSection() unless @setSection()
 
   setSection: ->
-    return false unless @state.background_url or @state.title or @state.intro
+    return false unless @state.background_url or @state.title or @state.intro or @state.background_image_url
     @props.section.set
       title: @state.title
       intro: @state.intro
       background_url: @state.background_url
+      background_image_url: @state.background_image_url
 
   onEditableKeyup: ->
     toggleScribePlaceholder @refs.editableIntro.getDOMNode()
@@ -66,7 +68,10 @@ module.exports = React.createClass
       add: (src) =>
         @setState progress: 0.1
       done: (src) =>
-        @setState background_url: src, progress: null
+        if src.indexOf('.mp4') > 0
+          @setState background_url: src, progress: null, background_image_url: null
+        else
+          @setState background_image_url: src, progress: null, background_url: null
         @onClickOff()
 
   attachScribe: ->
@@ -91,8 +96,8 @@ module.exports = React.createClass
         div { className: 'esf-right-controls-container' },
           section { className: 'esf-change-background'},
             span {},
-              (if @state.background_url then '+ Change Background' else '+ Add Background'),
-            input { type: 'file', onChange: @upload }
+              (if @state.background_url or @state.background_image_url then '+ Change Background' else '+ Add Background'),
+            input { type: 'file', onChange: @upload, accept: 'video/mp4,image/jpg,image/png,image/gif,image/jpeg' }
           button {
             className: 'edit-section-remove button-reset'
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
@@ -128,13 +133,19 @@ module.exports = React.createClass
       )
       (
         if @state.background_url
-          div { className: 'esf-video-container' },
+          div { className: 'esf-fullscreen-container' },
             video {
-              className: 'esf-video'
+              className: 'esf-fullscreen'
               src: @state.background_url
               key: 0
               autoPlay: true
               loop: true
+            }
+        else if @state.background_image_url
+          div { className: 'esf-fullscreen-container' },
+            img {
+              className: 'esf-fullscreen'
+              src: @state.background_image_url
             }
         else
           div { className: 'esf-placeholder' }

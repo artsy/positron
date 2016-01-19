@@ -23,6 +23,7 @@ describe 'SectionFullscreen', ->
           intro: ''
           title: ''
           background_url: ''
+          background_image_url: ''
         editing: false
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -38,12 +39,20 @@ describe 'SectionFullscreen', ->
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
-  it 'uploads to gemini', (done) ->
-    @component.upload target: files: ['foo']
-    @gemup.args[0][0].should.equal 'foo'
-    @gemup.args[0][1].done('fooza')
+  it 'uploads and saves video to gemini', (done) ->
+    @component.upload target: files: ['foo.mp4']
+    @gemup.args[0][0].should.equal 'foo.mp4'
+    @gemup.args[0][1].done('fooza.mp4')
     setTimeout =>
-      @component.setState.args[0][0].background_url.should.equal 'fooza'
+      @component.setState.args[0][0].background_url.should.equal 'fooza.mp4'
+      done()
+
+  it 'uploads and saves image to gemini', (done) ->
+    @component.upload target: files: ['foo.jpg']
+    @gemup.args[0][0].should.equal 'foo.jpg'
+    @gemup.args[0][1].done('fooza.jpg')
+    setTimeout =>
+      @component.setState.args[0][0].background_image_url.should.equal 'fooza.jpg'
       done()
 
   it 'saves the url after upload', (done) ->

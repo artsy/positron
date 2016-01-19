@@ -43,6 +43,7 @@ fullscreenSection = (->
     title: @string().allow('',null)
     intro: @string().allow('',null)
     background_url: @string().allow('',null)
+    background_image_url: @string().allow('',null)
 ).call Joi
 
 inputSchema = (->
