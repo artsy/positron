@@ -296,7 +296,7 @@ updateSailthruContent = (article) =>
       credit_line: article.email_metadata?.credit_line
       credit_url: article.email_metadata?.credit_url
   , (err, response) =>
-    console.log response
+    return err if err
 
 # After merging article & input
 
