@@ -15,8 +15,9 @@ xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
 request = require 'superagent'
+debug = require('debug') 'api'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, API_MAX, API_PAGE_SIZE, SAILTHRU_KEY, SAILTHRU_SECRET, API_URL, EMBEDLY_KEY, FORCE_URL } = process.env
+{ ARTSY_URL, API_MAX, API_PAGE_SIZE, SAILTHRU_KEY, SAILTHRU_SECRET, API_URL, EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, NODE_ENV } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
@@ -389,36 +390,35 @@ typecastIds = (article) ->
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 sendArticleToSailthru = (article, cb) =>
+  cb null unless NODE_ENV is 'production'
   images = {}
   tags = article.keywords.concat ['article']
-  tags = tags.concat ['artsy-editorial'] if article.author_id is "503f86e462d56000020002cc"
+  tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
-  if article.email_metadata?.image_url
-    images =
-      full: url: crop(article.email_metadata.image_url, { width: 1200, height: 706 } )
-      thumb: url: crop(article.email_metadata.image_url, { width: 900, height: 530 } )
-  if NODE_ENV is 'production'
-    response = sailthru.apiPost 'content',
-      url: "#{FORCE_URL}/article/#{article.slug}"
-      date: article.published_at
-      title: article.email_metadata?.headline or article.thumbnail_title
-      author: article.email_metadata?.author or article.author?.name
-      tags: tags
-      images: images
-      spider: 0
-      vars:
-        credit_line: article.email_metadata?.credit_line
-        credit_url: article.email_metadata?.credit_url
-    , (err, response) =>
-      return cb(err) if err
-      cb(null)
+  imageSrc = article.email_metadata?.image_url or article.thumbnail_image
+  images =
+    full: url: crop(imageSrc, { width: 1200, height: 706 } )
+    thumb: url: crop(imageSrc, { width: 900, height: 530 } )
+  response = sailthru.apiPost 'content',
+    url: "#{FORCE_URL}/article/#{article.slug}"
+    date: article.published_at
+    title: article.email_metadata?.headline or article.thumbnail_title
+    author: article.email_metadata?.author or article.author?.name
+    tags: tags
+    images: images
+    spider: 0
+    vars:
+      credit_line: article.email_metadata?.credit_line
+      credit_url: article.email_metadata?.credit_url
+  , (err, response) =>
+    debug err if err
+    cb null
 
 sanitizeAndSave = (callback) -> (err, article) ->
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published
-    sendArticleToSailthru article, (err) =>
-      console.log 'Log an error' if err
+    sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
     db.articles.save sanitize(typecastIds article), callback
