@@ -17,6 +17,7 @@ module.exports = React.createClass
     embeddable: null
     iframe: ''
     height: @props.section.get('height')
+    mobile_height: @props.section.get('mobile_height')
     layout: @props.section.get('layout') or 'column_width'
 
   componentDidMount: ->
@@ -31,7 +32,8 @@ module.exports = React.createClass
     e.preventDefault()
     url = @refs.url.getDOMNode().value
     height = @refs.height.getDOMNode().value
-    @props.section.set url: url, height: height
+    mobileHeight = @refs.mobileHeight.getDOMNode().value
+    @props.section.set url: url, height: height, mobile_height: mobileHeight
     @setState loading: true
     @updateIframe url, height
 
@@ -97,13 +99,20 @@ module.exports = React.createClass
                 ref: 'url'
                 defaultValue: @props.section.get('url')
               },
-            div { className: 'ese-input' }, "Height (optional)",
+            div { className: 'ese-input ese-input-height' }, "Height (optional)",
               input {
                 placeholder: '400'
                 className: 'bordered-input bordered-input-dark'
                 ref: 'height'
                 defaultValue: @props.section.get('height')
               }
+            div { className: 'ese-input ese-input-height' }, "Mobile Height (optional)",
+              input {
+                placeholder: '300'
+                className: 'bordered-input bordered-input-dark'
+                ref: 'mobileHeight'
+                defaultValue: @props.section.get('mobile_height')
+            }
             button {
               className: 'avant-garde-button avant-garde-button-dark'
               'data-state': if @state.loading then 'loading' else ''
