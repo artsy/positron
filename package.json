@@ -59,13 +59,14 @@
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
+    "artsy-xapp": "^1.0.4",
     "benv": "^3.0.0",
     "browserify": "^11.2.0",
     "browserify-dev-middleware": "^0.1.2",
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
     "deamdify": "^0.1.1",
-    "ezel-assets": "0.0.13",
+    "ezel-assets": "^1.0.0",
     "gemup": "git://github.com/artsy/gemup.git",
     "html-janitor": "^2.0.2",
     "imagesloaded": "^3.1.8",
@@ -87,7 +88,6 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "uglifyify": "^3.0.1",
-    "ezel-assets": "^1.0.0",
     "zombie": "^4.1.0"
   },
   "license": "MIT"
