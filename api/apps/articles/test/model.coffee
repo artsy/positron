@@ -514,6 +514,8 @@ describe 'Article', ->
           {
             type: 'embed'
             url: 'http://maps.google.com'
+            height: '400'
+            mobile_height: '300'
           }
         ]
       }, 'foo', (err, article) ->
@@ -524,6 +526,8 @@ describe 'Article', ->
         article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[4].url.should.equal 'http://maps.google.com'
+        article.sections[4].height.should.equal '400'
+        article.sections[4].mobile_height.should.equal '300'
         done()
 
     it 'doesnt escape smart quotes', (done) ->
