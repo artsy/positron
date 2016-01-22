@@ -751,7 +751,8 @@
         },
         "esprima": {
           "version": "1.2.5",
-          "from": "esprima@>=1.0.0 <2.0.0"
+          "from": "esprima@1.2.5",
+          "resolved": "https://registry.npmjs.org/esprima/-/esprima-1.2.5.tgz"
         }
       }
     },
@@ -1052,7 +1053,8 @@
     },
     "ezel-assets": {
       "version": "1.0.1",
-      "from": "ezel-assets@>=1.0.0 <2.0.0"
+      "from": "ezel-assets@1.0.1",
+      "resolved": "https://registry.npmjs.org/ezel-assets/-/ezel-assets-1.0.1.tgz"
     },
     "fast-csv": {
       "version": "0.6.0",
@@ -3051,6 +3053,33 @@
       "from": "resolve@>=1.1.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.1.6.tgz"
     },
+    "restler": {
+      "version": "3.4.0",
+      "from": "restler@>=0.2.3",
+      "resolved": "https://registry.npmjs.org/restler/-/restler-3.4.0.tgz",
+      "dependencies": {
+        "iconv-lite": {
+          "version": "0.2.11",
+          "from": "iconv-lite@0.2.11",
+          "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.2.11.tgz"
+        },
+        "qs": {
+          "version": "1.2.0",
+          "from": "qs@1.2.0",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-1.2.0.tgz"
+        },
+        "sax": {
+          "version": "0.5.8",
+          "from": "sax@>=0.5.0 <0.6.0",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.8.tgz"
+        },
+        "xml2js": {
+          "version": "0.4.0",
+          "from": "xml2js@0.4.0",
+          "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.0.tgz"
+        }
+      }
+    },
     "rewire": {
       "version": "2.2.0",
       "from": "rewire@2.2.0",
@@ -3065,6 +3094,11 @@
       "version": "1.0.1",
       "from": "ripemd160@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/ripemd160/-/ripemd160-1.0.1.tgz"
+    },
+    "sailthru-client": {
+      "version": "2.0.3",
+      "from": "sailthru-client@*",
+      "resolved": "https://registry.npmjs.org/sailthru-client/-/sailthru-client-2.0.3.tgz"
     },
     "samsam": {
       "version": "1.1.2",
@@ -3826,6 +3860,11 @@
       "version": "4.0.1",
       "from": "xtend@>=4.0.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
+    },
+    "yaml": {
+      "version": "0.2.3",
+      "from": "yaml@0.2.3",
+      "resolved": "https://registry.npmjs.org/yaml/-/yaml-0.2.3.tgz"
     },
     "yamlparser": {
       "version": "0.0.2",
