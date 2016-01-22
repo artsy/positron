@@ -457,8 +457,8 @@ module.exports = class EditAdmin extends Backbone.View
     clientFormat = moment(date).format('L')
     publishTime = moment(date).format('HH:mm')
     @saveFormat = moment(date).toDate()
-    $('.edit-admin-input-date').val(clientFormat)
-    $('.edit-admin-input-time').val(publishTime)
+    $('#edit-admin-publish-date input').val(clientFormat)
+    $('#edit-admin-schedule-publish-time input').val(publishTime)
 
   toggleScheduled: (e) ->
     e.preventDefault()
