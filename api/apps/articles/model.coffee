@@ -389,7 +389,7 @@ typecastIds = (article) ->
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
-sendArticleToSailthru = (article, cb) =>
+@sendArticleToSailthru = (article, cb) =>
   cb null unless NODE_ENV is 'production'
   images = {}
   tags = article.keywords.concat ['article']
@@ -414,11 +414,11 @@ sendArticleToSailthru = (article, cb) =>
     debug err if err
     cb null
 
-sanitizeAndSave = (callback) -> (err, article) ->
+sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published
-    sendArticleToSailthru article, =>
+    @sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
     db.articles.save sanitize(typecastIds article), callback
