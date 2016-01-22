@@ -400,7 +400,7 @@ typecastIds = (article) ->
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   sailthru.apiPost 'content',
-    url: "#{FORCE_URL}/article/#{article.slug}"
+    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
     title: article.email_metadata?.headline or article.thumbnail_title
     author: article.email_metadata?.author or article.author?.name
