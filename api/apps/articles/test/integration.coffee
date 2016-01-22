@@ -1,22 +1,18 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
-sinon = require 'sinon'
+app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
 
 describe 'articles endpoints', ->
 
   beforeEach (done) ->
-    @Article = require '../model'
-    sinon.stub(@Article, 'sendArticleToSailthru').yields()
-    app = require '../../../'
     empty =>
       fabricate 'users', {}, (err, @user) =>
         @server = app.listen 5000, ->
           done()
 
   afterEach ->
-    @Article.sendArticleToSailthru.restore()
     @server.close()
 
   describe 'as a non-admin', ->

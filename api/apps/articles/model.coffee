@@ -390,7 +390,7 @@ typecastIds = (article) ->
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 @sendArticleToSailthru = (article, cb) =>
-  cb null unless NODE_ENV is 'production'
+  return cb() unless NODE_ENV is 'production'
   images = {}
   tags = article.keywords.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
@@ -399,7 +399,7 @@ typecastIds = (article) ->
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
-  response = sailthru.apiPost 'content',
+  sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{article.slug}"
     date: article.published_at
     title: article.email_metadata?.headline or article.thumbnail_title
@@ -412,7 +412,7 @@ typecastIds = (article) ->
       credit_url: article.email_metadata?.credit_url
   , (err, response) =>
     debug err if err
-    cb null
+    cb()
 
 sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err

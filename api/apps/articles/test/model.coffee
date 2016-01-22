@@ -22,9 +22,6 @@ describe 'Article', ->
     @server.close()
 
   beforeEach (done) ->
-    @sailthru = Article.__get__ 'sailthru'
-    @sailthru.apiPost = sinon.stub().returns({})
-    Article.__set__ 'sailthru', @sailthru
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -740,6 +737,12 @@ describe 'Article', ->
       data.results[0].id.should.equal 'baz'
 
   describe '#sendArticleToSailthru', ->
+
+    beforeEach ->
+      Article.__set__ 'NODE_ENV', 'production'
+      @sailthru = Article.__get__ 'sailthru'
+      @sailthru.apiPost = sinon.stub().yields()
+      Article.__set__ 'sailthru', @sailthru
 
     it 'concats the article tag for a normal article', (done) ->
       Article.save {
