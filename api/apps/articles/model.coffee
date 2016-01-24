@@ -392,7 +392,8 @@ typecastIds = (article) ->
 @sendArticleToSailthru = (article, cb) =>
   return cb() unless NODE_ENV is 'production'
   images = {}
-  tags = article.keywords.concat ['article']
+  tags = article.keywords or []
+  tags = tags.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
   imageSrc = article.email_metadata?.image_url or article.thumbnail_image
@@ -400,7 +401,7 @@ typecastIds = (article) ->
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   sailthru.apiPost 'content',
-    url: "#{FORCE_URL}/article/#{article.slug}"
+    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
     title: article.email_metadata?.headline or article.thumbnail_title
     author: article.email_metadata?.author or article.author?.name
