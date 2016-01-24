@@ -392,7 +392,8 @@ typecastIds = (article) ->
 @sendArticleToSailthru = (article, cb) =>
   return cb() unless NODE_ENV is 'production'
   images = {}
-  tags = article.keywords.concat ['article']
+  tags = article.keywords or []
+  tags = tags.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
   imageSrc = article.email_metadata?.image_url or article.thumbnail_image
