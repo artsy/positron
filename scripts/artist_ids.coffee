@@ -1,6 +1,6 @@
 module.exports = 
 
-ARTISTLIST = [
+ARTISTIDS = [
   'andy warhol',
   'robert rauschenberg',
   'ai weiwei',
@@ -46,7 +46,7 @@ ARTISTLIST = [
   'olafur eliasson',
   'katsu',
   'alex katz',
-  'marina abramović',
+  'marina abramovic 1',
   'robert mapplethorpe',
   'mike kelley',
   'helen frankenthaler',
@@ -113,7 +113,7 @@ ARTISTLIST = [
   'peter doig',
   'otto piene',
   'barry mcgee',
-  'peter hujar',
+  'peter hujar 2',
   'jorinde voigt',
   'fernando botero',
   'dennis oppenheim',
@@ -246,7 +246,7 @@ ARTISTLIST = [
   'tauba auerbach',
   'douglas gordon',
   'yoshitomo nara',
-  'jonathan meese',
+  'jonathan meese 2',
   'eddie martinez',
   'nick van woert',
   'despina stokou',
@@ -593,7 +593,7 @@ ARTISTLIST = [
   'matthew pillsbury',
   'richard hambleton',
   'sebastiao salgado',
-  'francois morellet',
+  'francois morellet 2',
   'ibrahim el salahi',
   'kiluanji kia henda',
   'margaret kilgallen',

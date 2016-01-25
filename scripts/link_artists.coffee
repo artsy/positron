@@ -10,32 +10,26 @@ _s = require 'underscore.string'
 debug = require('debug') 'scripts'
 request = require 'superagent'
 artsyXapp = require 'artsy-xapp'
+fs = require 'fs'
 ARTSY_URL = process.env.ARTSY_URL
 API_URL = process.env.API_URL
 ARTSY_ID = process.env.ARTSY_ID
 ARTSY_SECRET = process.env.ARTSY_SECRET
 # upload an array of artist names to search for in this directory
 ARTISTLIST = require './artist_list.coffee'
+ARTISTIDS = require './artist_ids.coffee'
 
-# Build array of objects from artist list w/ artist ids + display names (i.e. w/ proper capitalization)
-artists = []
-artsyXapp.init { url: ARTSY_URL, id: ARTSY_ID, secret: ARTSY_SECRET }, ->
-  for artist in ARTISTLIST
-    id = artist.toLowerCase().split(' ').join('-')
-    console.log artsyXapp.token
-    request
-      .head("#{ARTSY_URL}/api/v1/artist/#{id}")
-      .set('X-XAPP-TOKEN': artsyXapp.token)
-      .end (err, sres) => 
-        return next err if err
-        name = sres.body.name
-        artists.push({id: id, name: name})
+artistNames = fs.readFileSync(__dirname + '/tmp/artist_names.txt').toString().split('\n')
 
-  db.articles.find({ published: true }).forEach (err, article) ->
-    return exit err if err
-    checkLinks article
-    
-    process.exit()
+#create of array of artist names/display names/ids
+
+artists = _.zip(ARTISTIDS, artistNames)
+
+db.articles.find({ published: true }).forEach (err, article) ->
+  return exit err if err
+  checkLinks article
+  
+  process.exit()
 
 checkLinks = (article) ->
   texts = (section.body for section in article.sections \
@@ -55,16 +49,16 @@ checkLinks = (article) ->
             addLink section.body, artist, article
 
 findUnlinked = (text, artist) ->
-  nameLinks = _s.count text, artist.name + '</a>' #google hrefs? -- make array of hrefs, stringify, regex for Google?
-  nameMentions = _s.count text, artist.name
-  possessiveMentions = _s.count text, artist.name + "'"
+  nameLinks = _s.count text, artist[1] + '</a>' #google hrefs? -- make array of hrefs, stringify, regex for Google?
+  nameMentions = _s.count text, artist[1]
+  possessiveMentions = _s.count text, artist[1] + "'"
   # make sure there's a non-possessive instance of the name to which a link can be added
   return true if nameLinks is 0 && nameMentions > 0 && nameMentions > possessiveMentions
 
 addLink = (text, artist, article) ->
-  link = "<a href=\"https://artsy.net/artist/#{artist.id}\">" + artist.name + "</a>"
+  link = "<a href=\"https://artsy.net/artist/#{artist[0]}\">" + artist[1] + "</a>"
   if nextCharacter text, artist.name is not "'" # any way to look for subsequent non-possessive mentions?
-    text.replace artist.name, link
+    text.replace artist[1], link
   db.articles.save article
 
 nextCharacter = (text, name) ->
