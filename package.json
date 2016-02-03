@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
+    "artsy-xapp": "^1.0.4",
     "benv": "^3.0.0",
     "browserify": "^11.2.0",
     "browserify-dev-middleware": "^0.1.2",

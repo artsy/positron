@@ -34,7 +34,13 @@ unlinked:
 	$(BIN)/coffee scripts/unlinked_artists.coffee
 
 publish-scheduled:
-	$(BIN)/coffee scripts/scheduled_posts.coffee	
+	$(BIN)/coffee scripts/scheduled_posts.coffee
+
+link-artists:
+	rm scripts/tmp/artist_names.txt
+	$(BIN)/coffee scripts/get_artist_names.coffee
+	$(BIN)/coffee scripts/link_artists.coffee
+
 
 # Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
 deploy: assets
