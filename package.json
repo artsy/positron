@@ -14,7 +14,6 @@
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
-    "artsy-xapp": "^1.0.4",
     "async": "^1.4.2",
     "backbone": "^1.2.3",
     "backbone-super-sync": "^1.1.1",
