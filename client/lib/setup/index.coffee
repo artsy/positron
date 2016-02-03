@@ -29,6 +29,10 @@ module.exports = (app) ->
   # Override Backbone to use server-side sync
   Backbone.sync = require 'backbone-super-sync'
 
+  # Route to ping for system up
+  app.get '/system/up', (req, res) ->
+    res.send 200, { nodejs: true }
+
   # Mount generic middleware & run setup modules
   if 'production' is NODE_ENV
     app.set('forceSSLOptions', { trustXFPHeader: true }).use forceSSL

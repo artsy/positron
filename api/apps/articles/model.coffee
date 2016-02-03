@@ -15,8 +15,11 @@ xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
 request = require 'superagent'
+debug = require('debug') 'api'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
+{ ARTSY_URL, API_MAX, API_PAGE_SIZE, SAILTHRU_KEY, SAILTHRU_SECRET, API_URL, EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, NODE_ENV } = process.env
+sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
+{ crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
 #
 # Schemas
@@ -43,6 +46,7 @@ fullscreenSection = (->
     title: @string().allow('',null)
     intro: @string().allow('',null)
     background_url: @string().allow('',null)
+    background_image_url: @string().allow('',null)
 ).call Joi
 
 inputSchema = (->
@@ -73,6 +77,7 @@ inputSchema = (->
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)
+      mobile_height: @string().allow('',null)
       layout: @string().allow('',null)
     @object().keys
       type: @string().valid('text')
@@ -384,9 +389,40 @@ typecastIds = (article) ->
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
-sanitizeAndSave = (callback) -> (err, article) ->
+@sendArticleToSailthru = (article, cb) =>
+  return cb() unless NODE_ENV is 'production'
+  images = {}
+  tags = article.keywords or []
+  tags = tags.concat ['article']
+  tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
+  tags = tags.concat ['magazine'] if article.featured is true
+  imageSrc = article.email_metadata?.image_url or article.thumbnail_image
+  images =
+    full: url: crop(imageSrc, { width: 1200, height: 706 } )
+    thumb: url: crop(imageSrc, { width: 900, height: 530 } )
+  sailthru.apiPost 'content',
+    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
+    date: article.published_at
+    title: article.email_metadata?.headline or article.thumbnail_title
+    author: article.email_metadata?.author or article.author?.name
+    tags: tags
+    images: images
+    spider: 0
+    vars:
+      credit_line: article.email_metadata?.credit_line
+      credit_url: article.email_metadata?.credit_url
+  , (err, response) =>
+    debug err if err
+    cb()
+
+sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
-  db.articles.save sanitize(typecastIds article), callback
+  # Send new content call to Sailthru on any published article save
+  if article.published
+    @sendArticleToSailthru article, =>
+      db.articles.save sanitize(typecastIds article), callback
+  else
+    db.articles.save sanitize(typecastIds article), callback
 
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, callback
