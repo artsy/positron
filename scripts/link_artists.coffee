@@ -2,6 +2,11 @@
 # A script that finds unlinked instances of artist names and adds links.
 # Currently just run locally to support the Growth team once in a while.
 #
+# IMPORTANT: This script is a WIP, we still need to look at edge cases like
+# noticing when an unlinked artist name is inside of another link. DO NOT
+# run this in production yet.
+#
+
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 db = require '../api/lib/db'
 async = require 'async'
@@ -17,24 +22,20 @@ ARTSY_URL = process.env.ARTSY_URL
 API_URL = process.env.API_URL
 ARTSY_ID = process.env.ARTSY_ID
 ARTSY_SECRET = process.env.ARTSY_SECRET
-# upload an array of artist names to search for in this directory
+
+# Upload an array of artist names to search for in this directory
+# + create of array of artist names/display names/ids
 ARTISTLIST = require './artist_list.coffee'
-# array of artist ids
-ARTISTIDS = require './artist_ids.coffee'
-
 artistNames = fs.readFileSync(__dirname + '/tmp/artist_names.txt').toString().split('\n')
+artists = _.zip(ARTISTLIST.map(_s.slugify), artistNames)
 
-#create of array of artist names/display names/ids
-
-artists = _.zip(ARTISTIDS.map(_s.slugify), artistNames)
-
-db.articles.find({ published: true }).skip(130).limit(10).toArray (err, articles) ->
+# Run all published articles
+db.articles.find({ published: true }).toArray (err, articles) ->
   return exit err if err
   async.map(articles, checkLinks, (err, results) ->
     console.log 'all finished'
     process.exit()
   )
-    
 
 checkLinks = (article, cb) ->
   return cb() unless article
@@ -56,7 +57,7 @@ checkLinks = (article, cb) ->
   db.articles.save article, cb
 
 findUnlinked = (text, artist) ->
-  nameLinks = _s.count text, artist[1] + '</a>' 
+  nameLinks = _s.count text, artist[1] + '</a>'
   nameMentions = _s.count text, artist[1]
   return true if nameLinks is 0 && nameMentions > 0
 
@@ -66,7 +67,7 @@ addLink = (text, artist) ->
     text
   else
     text.replace artist[1], link
-  
+
 nextCharacter = (text, name) ->
   text[text.indexOf(name) + name.length]
 
