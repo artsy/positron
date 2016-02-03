@@ -91,17 +91,6 @@ module.exports = ->
     'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
-  fixtures.brandPartners =
-    id: '559ff9706b69f6a086a65633'
-    partner_id: '559ff9706b69f6a086a65632'
-    featured_links: [
-      {
-        thumbnail_url: 'http://goo.com/img.jpg'
-        headline: 'Fascinating Article'
-        subheadline: 'Featured Artist'
-        description: 'Hello World'
-      }
-    ]
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

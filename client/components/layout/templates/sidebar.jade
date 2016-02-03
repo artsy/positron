@@ -25,11 +25,6 @@
         include ../public/icons/layout_sections.svg
         br
         | Sections
-      a( href='/brand-partners'
-         class=(sd.URL.match('/brand-partners') ? 'is-active' : '') )
-        include ../public/icons/layout_brands.svg
-        br
-        | Brands
     #layout-sidebar-profile
       .layout-sidebar-profile-img(
         style="background-image: url(#{user.get('profile_icon_url')})" )
