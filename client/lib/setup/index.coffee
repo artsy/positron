@@ -34,7 +34,7 @@ module.exports = (app) ->
     res.send 200, { nodejs: true }
 
   # Mount generic middleware & run setup modules
-  if 'production' is NODE_ENV
+  if 'production' is NODE_ENV or 'staging' is NODE_ENV
     app.set('forceSSLOptions', { trustXFPHeader: true }).use forceSSL
   app.use sharify
   setupEnv app
