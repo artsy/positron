@@ -61,10 +61,6 @@ save = (user, accessToken, callback) ->
   async.parallel _.compact([
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
-    (cb) ->
-      request
-        .get("#{ARTSY_URL}/api/v1/profile/#{user.default_profile_id}")
-        .set('X-Access-Token': accessToken).end cb
     if user.type is "Admin"
       (cb) ->
         request
@@ -73,18 +69,14 @@ save = (user, accessToken, callback) ->
   ]), (err, results) ->
     return callback err if err
     encryptedAccessToken = results[0]
-    profile = results[1].body
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
       email: user.email
       type: user.type
-      profile_handle: profile.id
-      profile_id: profile._id
-      profile_icon_url: _.first(_.values(profile.icon?.image_urls))
       access_token: encryptedAccessToken
-      facebook_uid: results[2]?.body[0]?.uid
-      twitter_uid: results[2]?.body[1]?.uid
+      facebook_uid: results[1]?.body[0]?.uid
+      twitter_uid: results[1]?.body[1]?.uid
     }, callback
 
 #
@@ -103,8 +95,6 @@ save = (user, accessToken, callback) ->
   {
     id: user._id
     name: user.name
-    profile_id: user.profile_id
-    profile_handle: user.profile_handle
     facebook_uid: user.facebook_uid
     twitter_uid: user.twitter_uid
   }

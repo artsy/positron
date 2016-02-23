@@ -459,7 +459,6 @@ describe 'Article', ->
       fabricate 'users', {
         _id: ObjectId('5086df098523e60002000018')
         name: 'Molly'
-        profile_handle: 'molly'
       }, (err, @user) ->
         Article.save {
           title: 'Top Ten Shows'
@@ -468,7 +467,6 @@ describe 'Article', ->
           published: true
         }, 'foo', (err, article) ->
           article.author.name.should.equal 'Molly'
-          article.author.profile_handle.should.equal 'molly'
           done()
 
     it 'doesnt save a fair unless explictly set', (done) ->

@@ -79,8 +79,6 @@ module.exports = ->
     "name" : "Craig Spaeth"
     "type" : "Admin"
     "access_to_partner_ids" : [ ]
-    "profile_handle" : "craig"
-    "profile_id" : "5086df098523e60002000012"
     "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
     "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
   fixtures.sections =
