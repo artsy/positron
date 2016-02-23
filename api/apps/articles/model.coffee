@@ -114,7 +114,6 @@ inputSchema = (->
     @object().keys
       id: @objectId().allow(null)
       name: @string().allow('', null)
-      profile_id: @string().allow('', null)
     ]).default([])
   email_metadata: @object().keys
     image_url: @string().allow('',null)
