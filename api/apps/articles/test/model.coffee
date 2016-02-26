@@ -22,10 +22,10 @@ describe 'Article', ->
     @server.close()
 
   beforeEach (done) ->
+    @sailthru = Article.__get__ 'sailthru'
+    @sailthru.apiPost = sinon.stub().yields()
+    Article.__set__ 'sailthru', @sailthru
     empty ->
-      @sailthru = Article.__get__ 'sailthru'
-      @sailthru.apiPost = sinon.stub().yields()
-      Article.__set__ 'sailthru', @sailthru
       fabricate 'articles', _.times(10, -> {}), ->
         done()
 
@@ -810,3 +810,4 @@ describe 'Article', ->
       }, 'foo', (err, article) =>
         @sailthru.apiPost.args[0][1].vars.html.should.containEql '<html>BODY OF TEXT</html>'
         @sailthru.apiPost.args[0][1].vars.html.should.not.containEql 'This Caption'
+        done()

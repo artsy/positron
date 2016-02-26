@@ -1,8 +1,8 @@
 _ = require 'underscore'
-env = require 'node-env-file'
-env __dirname + '../../../../.env.test'
-fs = require 'fs'
 path = require 'path'
+env = require 'node-env-file'
+env path.resolve(__dirname, '../../../.env.test')
+fs = require 'fs'
 bcrypt = require 'bcrypt'
 { SALT } = process.env
 
