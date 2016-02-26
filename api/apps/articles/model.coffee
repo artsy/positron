@@ -134,6 +134,7 @@ inputSchema = (->
     footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
   share_description: @string().allow('',null)
+  send_body: @boolean().default(false)
 ).call Joi
 
 querySchema = (->
@@ -389,7 +390,7 @@ typecastIds = (article) ->
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 @sendArticleToSailthru = (article, cb) =>
-  return cb() unless NODE_ENV is 'production'
+  # return cb() unless NODE_ENV is 'production'
   images = {}
   tags = article.keywords or []
   tags = tags.concat ['article']
@@ -399,6 +400,8 @@ typecastIds = (article) ->
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
+  html = if article.send_body then getTextSections(article) else ''
+  console.log html
   sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
@@ -410,9 +413,17 @@ typecastIds = (article) ->
     vars:
       credit_line: article.email_metadata?.credit_line
       credit_url: article.email_metadata?.credit_url
+      html: html
   , (err, response) =>
+    console.log response
     debug err if err
     cb()
+
+getTextSections = (article) ->
+  condensedHTML = ""
+  for section in article.sections when section.type is 'text'
+    condensedHTML = condensedHTML.concat section.body
+  condensedHTML
 
 sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
