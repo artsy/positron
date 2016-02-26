@@ -252,12 +252,13 @@ sortParamToQuery = (input) ->
       return callback(err) if err
       # Merge fullscreen title with main article title
       article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-      if publishing
-        onPublish article, author, accessToken, sanitizeAndSave(callback)
-      else if not publishing and not article.slugs?.length > 0
-        generateSlugs article, author, sanitizeAndSave(callback)
-      else
-        sanitizeAndSave(callback)(null, article)
+      generateKeywords article, accessToken, input, (err, article) ->
+        if publishing
+          onPublish article, author, accessToken, sanitizeAndSave(callback)
+        else if not publishing and not article.slugs?.length > 0
+          generateSlugs article, author, sanitizeAndSave(callback)
+        else
+          sanitizeAndSave(callback)(null, article)
 
 validate = (input, callback) ->
   whitelisted = _.pick input, _.keys inputSchema
@@ -283,9 +284,7 @@ mergeArticleAndAuthor = (input, accessToken, cb) =>
 onPublish = (article, author, accessToken, cb) ->
   if not article.published_at
     article.published_at = new Date
-  generateKeywords article, accessToken, (err, article) ->
-    return cb err if err
-    generateSlugs article, author, cb
+  generateSlugs article, author, cb
 
 generateSlugs = (article, author, cb) ->
   slug = _s.slugify author.name + ' ' + article.thumbnail_title
@@ -296,9 +295,15 @@ generateSlugs = (article, author, cb) ->
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
-generateKeywords = (article, accessToken, cb) ->
+generateKeywords = (article, accessToken, input, cb) ->
   keywords = []
   callbacks = []
+  if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
+      input.featured_artist_ids is not article.featured_artist_ids or
+      input.fair_id is not article.fair_id or
+      input.partner_ids is not article.partner_ids or
+      input.tags is not article.tags)
+    return cb(null, article)
   if article.primary_featured_artist_ids
     for artistId in article.primary_featured_artist_ids
       do (artistId) ->
@@ -401,7 +406,6 @@ typecastIds = (article) ->
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   html = if article.send_body then getTextSections(article) else ''
-  console.log html
   sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
@@ -415,7 +419,6 @@ typecastIds = (article) ->
       credit_url: article.email_metadata?.credit_url
       html: html
   , (err, response) =>
-    console.log response
     debug err if err
     cb()
 
