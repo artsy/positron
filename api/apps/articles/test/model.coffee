@@ -23,6 +23,9 @@ describe 'Article', ->
 
   beforeEach (done) ->
     empty ->
+      @sailthru = Article.__get__ 'sailthru'
+      @sailthru.apiPost = sinon.stub().yields()
+      Article.__set__ 'sailthru', @sailthru
       fabricate 'articles', _.times(10, -> {}), ->
         done()
 
@@ -736,12 +739,6 @@ describe 'Article', ->
 
   describe '#sendArticleToSailthru', ->
 
-    beforeEach ->
-      Article.__set__ 'NODE_ENV', 'production'
-      @sailthru = Article.__get__ 'sailthru'
-      @sailthru.apiPost = sinon.stub().yields()
-      Article.__set__ 'sailthru', @sailthru
-
     it 'concats the article tag for a normal article', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
@@ -793,3 +790,23 @@ describe 'Article', ->
         @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
         @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
         done()
+
+    it 'sends the article text body', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        published: true
+        send_body: true
+        sections: [
+          {
+            type: 'text'
+            body: '<html>BODY OF TEXT</html>'
+          }
+          {
+            type: 'image'
+            caption: 'This Caption'
+            url: 'URL'
+          }
+        ]
+      }, 'foo', (err, article) =>
+        @sailthru.apiPost.args[0][1].vars.html.should.containEql '<html>BODY OF TEXT</html>'
+        @sailthru.apiPost.args[0][1].vars.html.should.not.containEql 'This Caption'

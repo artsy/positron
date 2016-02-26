@@ -253,6 +253,7 @@ sortParamToQuery = (input) ->
       # Merge fullscreen title with main article title
       article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
       generateKeywords article, accessToken, input, (err, article) ->
+        debug err if err
         if publishing
           onPublish article, author, accessToken, sanitizeAndSave(callback)
         else if not publishing and not article.slugs?.length > 0
@@ -395,7 +396,6 @@ typecastIds = (article) ->
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 @sendArticleToSailthru = (article, cb) =>
-  # return cb() unless NODE_ENV is 'production'
   images = {}
   tags = article.keywords or []
   tags = tags.concat ['article']
