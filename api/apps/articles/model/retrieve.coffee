@@ -1,7 +1,7 @@
 _ = require 'underscore'
 Joi = require 'joi'
 Joi.objectId = require('joi-objectid') Joi
-schema = require './schema.coffee'
+schema = require './schema'
 { ObjectId } = require 'mongojs'
 
 @toQuery = (input, callback) ->

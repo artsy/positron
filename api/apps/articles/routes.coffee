@@ -1,5 +1,5 @@
 _ = require 'underscore'
-{ present, presentCollection } = Article = require './model/index.coffee'
+{ present, presentCollection } = Article = require './model'
 { setUser } = require '../users/routes'
 
 # GET /api/articles

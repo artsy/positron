@@ -6,7 +6,7 @@ _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
 { validate, onPublish, generateSlugs, generateKeywords, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
-retrieve = require './retrieve.coffee'
+retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 
 #
