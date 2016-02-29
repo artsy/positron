@@ -1,8 +1,8 @@
 _ = require 'underscore'
 rewire = require 'rewire'
 moment = require 'moment'
-{ db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
-Article = rewire '../model'
+{ db, fabricate, empty, fixtures } = require '../../../../test/helpers/db'
+Article = rewire '../../model/index'
 { ObjectId } = require 'mongojs'
 express = require 'express'
 fabricateGravity = require('antigravity').fabricate
@@ -22,9 +22,6 @@ describe 'Article', ->
     @server.close()
 
   beforeEach (done) ->
-    @sailthru = Article.__get__ 'sailthru'
-    @sailthru.apiPost = sinon.stub().yields()
-    Article.__set__ 'sailthru', @sailthru
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -736,78 +733,3 @@ describe 'Article', ->
         count: 1
         results: [_.extend fixtures().articles, _id: 'baz']
       data.results[0].id.should.equal 'baz'
-
-  describe '#sendArticleToSailthru', ->
-
-    it 'concats the article tag for a normal article', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        published: true
-      }, 'foo', (err, article) =>
-        @sailthru.apiPost.calledOnce.should.be.true()
-        @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
-        @sailthru.apiPost.args[0][1].tags.should.not.containEql 'artsy-editorial'
-        done()
-
-    it 'concats the artsy-editorial and magazine tags for specialized articles', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        published: true
-        featured: true
-      }, 'foo', (err, article) =>
-        @sailthru.apiPost.calledOnce.should.be.true()
-        @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
-        @sailthru.apiPost.args[0][1].tags.should.containEql 'magazine'
-        done()
-
-    it 'uses email_metadata vars if provided', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        published: true
-        email_metadata:
-          credit_url: 'artsy.net'
-          credit_line: 'Artsy Credit'
-          headline: 'Article Email Title'
-          author: 'Kana Abe'
-          image_url: 'imageurl.com/image.jpg'
-      }, 'foo', (err, article) =>
-        @sailthru.apiPost.args[0][1].title.should.containEql 'Article Email Title'
-        @sailthru.apiPost.args[0][1].vars.credit_line.should.containEql 'Artsy Credit'
-        @sailthru.apiPost.args[0][1].vars.credit_url.should.containEql 'artsy.net'
-        @sailthru.apiPost.args[0][1].author.should.containEql 'Kana Abe'
-        @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        done()
-
-    it 'uses alternate data if email_metadata is not provided', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        published: true
-        thumbnail_image: 'imageurl.com/image.jpg'
-        thumbnail_title: 'This Is The Thumbnail Title'
-      }, 'foo', (err, article) =>
-        @sailthru.apiPost.args[0][1].title.should.containEql 'This Is The Thumbnail Title'
-        @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        done()
-
-    it 'sends the article text body', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        published: true
-        send_body: true
-        sections: [
-          {
-            type: 'text'
-            body: '<html>BODY OF TEXT</html>'
-          }
-          {
-            type: 'image'
-            caption: 'This Caption'
-            url: 'URL'
-          }
-        ]
-      }, 'foo', (err, article) =>
-        @sailthru.apiPost.args[0][1].vars.html.should.containEql '<html>BODY OF TEXT</html>'
-        @sailthru.apiPost.args[0][1].vars.html.should.not.containEql 'This Caption'
-        done()

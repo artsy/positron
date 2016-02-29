@@ -5,7 +5,7 @@
 _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
-save = require './save.coffee'
+{ validate, onPublish, generateSlugs, generateKeywords, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
 retrieve = require './retrieve.coffee'
 { ObjectId } = require 'mongojs'
 
@@ -36,20 +36,21 @@ retrieve = require './retrieve.coffee'
 # Persistence
 #
 @save = (input, accessToken, callback) ->
-  save.validate input, (err, input) =>
+  validate input, (err, input) =>
     return callback err if err
-    save.mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
+    mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
       return callback(err) if err
-      save.generateKeywords article, accessToken, input, (err, article) ->
+      generateKeywords article, accessToken, input, (err, article) ->
         debug err if err
         # Merge fullscreen title with main article title
         article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
         if publishing
-          save.onPublish article, author, accessToken, save.sanitizeAndSave(callback)
+          onPublish article, author, accessToken, sanitizeAndSave(callback)
         else if not publishing and not article.slugs?.length > 0
-          save.generateSlugs article, author, save.sanitizeAndSave(callback)
+          generateSlugs article, author, sanitizeAndSave(callback)
         else
-          save.sanitizeAndSave(callback)(null, article)
+          sanitizeAndSave(callback)(null, article)
+
 #
 # Destroy
 #

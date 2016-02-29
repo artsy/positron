@@ -12,6 +12,7 @@ url = require 'url'
 request = require 'superagent'
 debug = require('debug') 'api'
 schema = require './schema.coffee'
+Article = require './index.coffee'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET, EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
@@ -24,7 +25,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
-@onPublish = (article, author, accessToken, cb) ->
+@onPublish = (article, author, accessToken, cb) =>
   if not article.published_at
     article.published_at = new Date
   @generateSlugs article, author, cb
@@ -95,7 +96,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
 
 @mergeArticleAndAuthor = (input, accessToken, cb) =>
   id = ObjectId (input.id or input._id)?.toString()
-  @find id.toString(), (err, article = {}) =>
+  Article.find id.toString(), (err, article = {}) =>
     return callback err if err
     authorId = input.author_id or article.author_id
     User.findOrInsert authorId, accessToken, (err, author) ->
