@@ -135,6 +135,10 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( name='credit_line' value="#{article.getObjectAttribute('email_metadata','credit_line')}")
         label Credit URL
           input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
+        .admin-send-body-to-sailthru
+          label Send Article Body To Sailthru
+            .flat-checkbox
+              input( type='checkbox' name='send_body' value=1 checked=article.get('send_body') === true)
       .admin-form-right-col
         label.edit-email-url URL
           input.bordered-input(
