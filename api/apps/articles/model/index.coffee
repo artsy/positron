@@ -38,18 +38,20 @@ retrieve = require './retrieve'
 @save = (input, accessToken, callback) ->
   validate input, (err, input) =>
     return callback err if err
-    mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
-      return callback(err) if err
-      generateKeywords article, accessToken, input, (err, article) ->
+    generateKeywords article, accessToken, input, (err, article) ->
+      debug err if err
+      generateArtworks article, accessToken, input (err, article) ->
         debug err if err
-        # Merge fullscreen title with main article title
-        article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-        if publishing
-          onPublish article, author, accessToken, sanitizeAndSave(callback)
-        else if not publishing and not article.slugs?.length > 0
-          generateSlugs article, author, sanitizeAndSave(callback)
-        else
-          sanitizeAndSave(callback)(null, article)
+        mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
+          return callback(err) if err
+          # Merge fullscreen title with main article title
+          article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
+          if publishing
+            onPublish article, author, accessToken, sanitizeAndSave(callback)
+          else if not publishing and not article.slugs?.length > 0
+            generateSlugs article, author, sanitizeAndSave(callback)
+          else
+            sanitizeAndSave(callback)(null, article)
 
 #
 # Destroy

@@ -85,6 +85,10 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.keywords = keywords[0..9]
     cb(null, article)
 
+@generateArtworks = (article, accessToken, input, cb) ->
+  console.log 'here'
+  console.log input.sections
+
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
