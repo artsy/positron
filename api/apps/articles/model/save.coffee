@@ -86,8 +86,25 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 @generateArtworks = (article, accessToken, input, cb) ->
-  console.log 'here'
-  console.log input.sections
+  # First check if any changes were made
+  before = _.pluck _.where(article.sections, type: 'artworks'), 'ids'
+  after = _.pluck _.where(input.sections, type: 'artworks'), 'ids'
+  return cb(null, article) if before is after
+  # Then try to fetch and denormalize the artworks from Gravity asynchonously
+  callbacks = []
+  for section in input.sections when section.type is 'artworks'
+    for artworkId in section.ids
+      do (artworkId) ->
+        callbacks.push (callback) ->
+          request
+            .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
+            .set('X-Xapp-Token': accessToken)
+            .end callback
+  async.parallel callbacks, (err, results) =>
+    return cb(err) if err
+    console.log results
+    # Finally return callback with updated article
+    cb(null, article)
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
@@ -98,17 +115,14 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   else
     db.articles.save sanitize(typecastIds article), callback
 
-@mergeArticleAndAuthor = (input, accessToken, cb) =>
-  id = ObjectId (input.id or input._id)?.toString()
-  Article.find id.toString(), (err, article = {}) =>
+@mergeArticleAndAuthor = (article, input, accessToken, cb) =>
+  authorId = input.author_id or article.author_id
+  User.findOrInsert authorId, accessToken, (err, author) ->
     return callback err if err
-    authorId = input.author_id or article.author_id
-    User.findOrInsert authorId, accessToken, (err, author) ->
-      return callback err if err
-      publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
-      article = _.extend article, input, updated_at: new Date
-      article.author = User.denormalizedForArticle author if author
-      cb null, article, author, publishing
+    publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
+    article = _.extend article, input, updated_at: new Date
+    article.author = User.denormalizedForArticle author if author
+    cb null, article, author, publishing
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
