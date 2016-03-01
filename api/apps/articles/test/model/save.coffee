@@ -2,6 +2,7 @@ _ = require 'underscore'
 rewire = require 'rewire'
 { fabricate, empty } = require '../../../../test/helpers/db'
 Save = rewire '../../model/save'
+Article = require '../../model/index'
 express = require 'express'
 gravity = require('antigravity').server
 app = require('express')()
@@ -99,3 +100,22 @@ describe 'Save', ->
         @sailthru.apiPost.args[0][1].vars.html.should.containEql '<html>BODY OF TEXT</html>'
         @sailthru.apiPost.args[0][1].vars.html.should.not.containEql 'This Caption'
         done()
+
+  describe '#sanitizeAndSave', ->
+
+    it 'skips sanitizing links that do not have an href', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.sections[0].body.should.containEql '<a></a>'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: false
+        _id: '5086df098523e60002000011'
+        sections: [
+          {
+            type: 'text'
+            body: '<a>'
+          }
+        ]
+      })

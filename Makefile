@@ -12,6 +12,10 @@ BIN = node_modules/.bin
 s:
 	$(BIN)/coffee index.coffee
 
+# Start the server using forever
+sf:
+	$(BIN)/forever $(BIN)/coffee --nodejs index.coffee
+
 # Run all of the project-level tests, followed by app-level tests
 test: assets
 	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')

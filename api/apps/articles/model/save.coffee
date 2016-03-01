@@ -132,8 +132,9 @@ sanitizeLink = (urlString) ->
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
   $('a').each ->
-    u = sanitizeLink $(this).attr 'href'
-    $(this).attr 'href', u
+    if $(this).attr 'href'
+      u = sanitizeLink $(this).attr 'href'
+      $(this).attr 'href', u
   xss $.html()
 
 typecastIds = (article) ->
