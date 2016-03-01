@@ -31,6 +31,7 @@
     "express": "^4.13.3",
     "express-force-ssl": "^0.3.0",
     "fast-csv": "^0.6.0",
+    "forever": "^0.15.1",
     "fs": "0.0.2",
     "glossary": "^0.1.1",
     "jade": "^1.11.0",
