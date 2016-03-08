@@ -137,3 +137,13 @@ describe 'EditAdmin', ->
       @view.$('.edit-admin-input-time').val(time)
       @view.$('.edit-admin-input-time').trigger('blur')
       @view.article.get('published_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+
+    it 'validates the date before trying to set it', ->
+      currentDate = moment().format('L')
+      date = '13/40/1991'
+      time = '1:0:00'
+      dateAndTime = date + ' ' + time
+      @view.$('.edit-admin-input-date').val(date)
+      @view.$('.edit-admin-input-time').val(time)
+      @view.$('.edit-admin-input-time').trigger('blur')
+      moment(@view.article.get('published_at')).format('L').should.equal currentDate

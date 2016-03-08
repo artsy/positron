@@ -447,18 +447,20 @@ module.exports = class EditAdmin extends Backbone.View
   setupPublishDate: ->
     $('.edit-admin-input-date, .edit-admin-input-time').on 'blur', =>
       dateAndTime = @$('.edit-admin-input-date').val() + ' ' + @$('.edit-admin-input-time').val()
-      @formatAndSetPublishDate dateAndTime
-      @article.save published_at: @saveFormat
+      @formatAndSetPublishDate dateAndTime, (saveFormat) =>
+        @article.save published_at: saveFormat if saveFormat
       false
-    @formatAndSetPublishDate @article.get('published_at')
+    @formatAndSetPublishDate @article.get('published_at'), ->
 
-  formatAndSetPublishDate: (date) ->
-    date = new Date(date)
-    clientFormat = moment(date).format('L')
-    publishTime = moment(date).format('HH:mm')
-    @saveFormat = moment(date).toDate()
-    $('#edit-admin-publish-date input').val(clientFormat)
-    $('#edit-admin-schedule-publish-time input').val(publishTime)
+  formatAndSetPublishDate: (date, cb) ->
+    return cb null unless moment(date).isValid()
+    date = moment(date)
+    publishDate = date.format('L')
+    publishTime = date.format('HH:mm')
+    saveFormat = date.toDate()
+    $('#edit-admin-publish-date > input').val(publishDate)
+    $('#edit-admin-schedule-publish-time > input').val(publishTime)
+    cb saveFormat
 
   toggleScheduled: (e) ->
     e.preventDefault()
