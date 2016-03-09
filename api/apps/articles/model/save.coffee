@@ -86,10 +86,8 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 @generateArtworks = (article, accessToken, input, cb) ->
-  # First check if any changes were made
-  before = _.pluck _.where(article.sections, type: 'artworks'), 'ids'
-  after = _.pluck _.where(input.sections, type: 'artworks'), 'ids'
-  return cb(null, article) if before is after
+  # First check if any sections have artworks
+  return cb(null, article) unless _.some input.sections, type: 'artworks'
   # Then try to fetch and denormalize the artworks from Gravity asynchonously
   callbacks = []
   for section in input.sections when section.type is 'artworks'
@@ -102,7 +100,12 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
-    console.log results
+    fetchedArtworks = results.map (result) -> result.body
+    for section in input.sections when section.type is 'artworks'
+      section.artworks = []
+      for artworkId in section.ids
+        section.artworks.push _.findWhere fetchedArtworks, _id: artworkId
+    article.sections = input.sections
     # Finally return callback with updated article
     cb(null, article)
 

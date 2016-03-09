@@ -67,6 +67,7 @@ fullscreenSection = (->
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
+      artworks: @array()
     @object().keys
       type: @string().valid('slideshow')
       items: @array().items [

@@ -56,7 +56,6 @@ retrieve = require './retrieve'
             else
               sanitizeAndSave(callback)(null, article)
 
-#
 # Destroy
 #
 @destroy = (id, callback) ->
