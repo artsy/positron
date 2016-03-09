@@ -104,7 +104,12 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     for section in input.sections when section.type is 'artworks'
       section.artworks = []
       for artworkId in section.ids
-        section.artworks.push _.findWhere fetchedArtworks, _id: artworkId
+        artwork = _.findWhere fetchedArtworks, _id: artworkId
+        if artwork
+          section.artworks.push artwork
+        else
+          section.ids = _.without section.ids, artworkId
+      input.sections = _.without input.sections, section if section.ids.length is 0
     article.sections = input.sections
     # Finally return callback with updated article
     cb(null, article)

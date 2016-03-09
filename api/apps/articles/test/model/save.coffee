@@ -119,3 +119,56 @@ describe 'Save', ->
           }
         ]
       })
+
+  describe '#generateArtworks', ->
+
+    it 'denormalizes artworks and adds them as an array to the section', (done) ->
+      Save.generateArtworks {}, 'foo', {
+        sections: [
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['564be09ab202a319e90000e2']
+          }
+        ]
+      }, (err, article) =>
+        article.sections[0].artworks.length.should.equal 1
+        article.sections[0].artworks[0].title.should.equal 'Main artwork!'
+        article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
+        done()
+
+    it 'does not save artworks that are not available', (done) ->
+      Save.generateArtworks {}, 'foo', {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['123', '564be09ab202a319e90000e2']
+          }
+        ]
+      }, (err, article) =>
+        article.sections.length.should.equal 2
+        article.sections[1].artworks[0].title.should.equal 'Main artwork!'
+        article.sections[1].artworks.length.should.equal 1
+        done()
+
+    it 'removes an entire section if there are no available artworks', (done) ->
+      Save.generateArtworks {}, 'foo', {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['123']
+          }
+        ]
+      }, (err, article) =>
+        article.sections.length.should.equal 1
+        done()
