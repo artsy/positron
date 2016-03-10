@@ -88,8 +88,8 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
 @generateArtworks = (article, accessToken, input, cb) ->
   # First check if any sections have artworks
   return cb(null, article) unless _.some input.sections, type: 'artworks'
-  # Then try to fetch and denormalize the artworks from Gravity asynchonously
   callbacks = []
+  # Try to fetch and denormalize the artworks from Gravity asynchonously
   for section in input.sections when section.type is 'artworks'
     for artworkId in section.ids
       do (artworkId) ->
@@ -101,18 +101,23 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
     fetchedArtworks = results.map (result) -> result.body
+    # Push fetched artworks to the section if they are available
     for section in input.sections when section.type is 'artworks'
       section.artworks = []
       for artworkId in section.ids
         artwork = _.findWhere fetchedArtworks, _id: artworkId
         if artwork
-          section.artworks.push artwork
+          section.artworks.push denormalizedArtworkData artwork
         else
           section.ids = _.without section.ids, artworkId
       input.sections = _.without input.sections, section if section.ids.length is 0
     article.sections = input.sections
     # Finally return callback with updated article
     cb(null, article)
+
+denormalizedArtworkData = (artwork) ->
+  fields = ['id', '_id', 'date', 'title', 'images', 'partner', 'artist']
+  _.pick artwork, fields
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
