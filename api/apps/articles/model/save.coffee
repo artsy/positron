@@ -14,7 +14,8 @@ debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET, EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID } = process.env
+{ ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
+EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
@@ -39,7 +40,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
-@generateKeywords = (article, accessToken, input, cb) ->
+@generateKeywords = (input, article, accessToken, cb) ->
   keywords = []
   callbacks = []
   if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
@@ -48,30 +49,30 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
       input.partner_ids is not article.partner_ids or
       input.tags is not article.tags)
     return cb(null, article)
-  if article.primary_featured_artist_ids
-    for artistId in article.primary_featured_artist_ids
+  if input.primary_featured_artist_ids
+    for artistId in input.primary_featured_artist_ids
       do (artistId) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
             .set('X-Xapp-Token': accessToken)
             .end callback
-  if article.featured_artist_ids
-    for artistId in article.featured_artist_ids
+  if input.featured_artist_ids
+    for artistId in input.featured_artist_ids
       do (artistId) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
             .set('X-Xapp-Token': accessToken)
             .end callback
-  if article.fair_id
+  if input.fair_id
     callbacks.push (callback) ->
       request
-        .get("#{ARTSY_URL}/api/v1/fair/#{article.fair_id}")
+        .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
         .set('X-Xapp-Token': accessToken)
         .end callback
-  if article.partner_ids
-    for partnerId in article.partner_ids
+  if input.partner_ids
+    for partnerId in input.partner_ids
       do (partnerId) ->
         callbacks.push (callback) ->
           request
@@ -81,11 +82,11 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
     keywords = (res.body.name for res in results)
-    keywords.push(tag) for tag in article.tags when article.tags
+    keywords.push(tag) for tag in input.tags if input.tags
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@generateArtworks = (article, accessToken, input, cb) ->
+@generateArtworks = (input, article, accessToken, cb) ->
   # First check if any sections have artworks
   return cb(null, article) unless _.some input.sections, type: 'artworks'
   callbacks = []
@@ -102,16 +103,18 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     return cb(err) if err
     fetchedArtworks = results.map (result) -> result.body
     # Push fetched artworks to the section if they are available
+    newSections = input.sections
     for section in input.sections when section.type is 'artworks'
-      section.artworks = []
-      for artworkId in section.ids
-        artwork = _.findWhere fetchedArtworks, _id: artworkId
-        if artwork
-          section.artworks.push denormalizedArtworkData artwork
-        else
-          section.ids = _.without section.ids, artworkId
-      input.sections = _.without input.sections, section if section.ids.length is 0
-    article.sections = input.sections
+      if section.type is 'artworks'
+        section.artworks = []
+        for artworkId in section.ids
+          artwork = _.findWhere fetchedArtworks, _id: artworkId
+          if artwork
+            section.artworks.push denormalizedArtworkData artwork
+          else
+            section.ids = _.without section.ids, artworkId
+        newSections = _.without newSections, section if section.ids.length is 0
+    article.sections = newSections
     # Finally return callback with updated article
     cb(null, article)
 
@@ -128,7 +131,7 @@ denormalizedArtworkData = (artwork) ->
   else
     db.articles.save sanitize(typecastIds article), callback
 
-@mergeArticleAndAuthor = (article, input, accessToken, cb) =>
+@mergeArticleAndAuthor = (input, article, accessToken, cb) =>
   authorId = input.author_id or article.author_id
   User.findOrInsert authorId, accessToken, (err, author) ->
     return callback err if err

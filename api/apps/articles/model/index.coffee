@@ -5,7 +5,8 @@
 _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
-{ validate, onPublish, generateSlugs, generateKeywords, generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
+{ validate, onPublish, generateSlugs, generateKeywords,
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 
@@ -41,11 +42,11 @@ retrieve = require './retrieve'
     id = ObjectId (input.id or input._id)?.toString()
     @find id.toString(), (err, article = {}) =>
       return callback err if err
-      generateKeywords article, accessToken, input, (err, article) ->
+      generateKeywords input, article, accessToken, (err, article) ->
         debug err if err
-        generateArtworks article, accessToken, input, (err, article) ->
+        generateArtworks input, article, accessToken, (err, article) ->
           debug err if err
-          mergeArticleAndAuthor article, input, accessToken, (err, article, author, publishing) ->
+          mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
             return callback(err) if err
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
