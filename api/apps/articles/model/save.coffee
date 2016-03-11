@@ -119,8 +119,19 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 denormalizedArtworkData = (artwork) ->
-  fields = ['id', '_id', 'date', 'title', 'images', 'partner', 'artist']
-  _.pick artwork, fields
+  defaultImage = (_.findWhere artwork.images, is_default: true) or artwork.images[0]
+  denormalizedArtwork =
+    id: artwork._id
+    slug: artwork.id
+    date: artwork.date
+    title: artwork.title
+    image: defaultImage
+    partner:
+      name: artwork.partner.display_name
+      slug: artwork.partner.default_profile_id
+    artist:
+      name: artwork.artist.name
+      slug: artwork.artist.id
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
