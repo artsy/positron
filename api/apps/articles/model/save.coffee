@@ -14,8 +14,10 @@ debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
 { ObjectId } = require 'mongojs'
+Backbone = require 'backbone'
+Artwork = require '../../../../client/models/artwork.coffee'
 { ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
-EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID } = process.env
+EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
@@ -119,19 +121,33 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 denormalizedArtworkData = (artwork) ->
-  defaultImage = (_.findWhere artwork.images, is_default: true) or artwork.images[0]
+  artwork = new Artwork artwork
   denormalizedArtwork =
-    id: artwork._id
-    slug: artwork.id
-    date: artwork.date
-    title: artwork.title
-    image: defaultImage
+    id: artwork.get('_id')
+    slug: artwork.get('id')
+    date: artwork.get('date')
+    title: artwork.get('title')
+    image: artwork.imageUrl()
     partner:
-      name: artwork.partner.display_name
-      slug: artwork.partner.default_profile_id
+      name: getPartnerName artwork
+      slug: getPartnerLink artwork
     artist:
-      name: artwork.artist.name
-      slug: artwork.artist.id
+      name: artwork.get('artist').name or _.compact(artwork.get('artists').pluck('name'))[0] or ''
+      slug: artwork.get('artist').id
+
+getPartnerName = (artwork) ->
+  if artwork.get('collection_institution')?.length > 0
+    artwork.get('collecting_institution')
+  else if artwork.get('partner')
+    artwork.get('partner').name
+  else
+    ''
+
+getPartnerLink = (artwork) ->
+  partner = artwork.get('partner')
+  return unless partner and partner.type isnt 'Auction'
+  if partner.default_profile_public and partner.default_profile_id
+    return partner.default_profile_id
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err

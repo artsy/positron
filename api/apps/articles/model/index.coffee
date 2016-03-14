@@ -44,10 +44,13 @@ retrieve = require './retrieve'
       return callback err if err
       generateKeywords input, article, accessToken, (err, article) ->
         debug err if err
+        console.log 'Generated Keywords'
         generateArtworks input, article, accessToken, (err, article) ->
           debug err if err
+          console.log 'Generated Artworks'
           mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
             return callback(err) if err
+            console.log 'Merged Article and Author'
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
             if publishing
