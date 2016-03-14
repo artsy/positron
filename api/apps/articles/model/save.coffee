@@ -102,11 +102,10 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
             .set('X-Xapp-Token': accessToken)
             .end callback
   async.parallel callbacks, (err, results) =>
-    return cb(err) if err
     fetchedArtworks = results.map (result) -> result.body
     # Push fetched artworks to the section if they are available
-    newSections = input.sections
-    for section in input.sections when section.type is 'artworks'
+    newSections = _.clone input.sections
+    for section in newSections when section.type is 'artworks'
       if section.type is 'artworks'
         section.artworks = []
         for artworkId in section.ids
@@ -115,9 +114,11 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
             section.artworks.push denormalizedArtworkData artwork
           else
             section.ids = _.without section.ids, artworkId
-        newSections = _.without newSections, section if section.ids.length is 0
-    article.sections = newSections
+    # Do not include sections that have no valid artworks
+    newSections = _.filter newSections, (section) ->
+      section.type isnt 'artworks' or section.ids?.length > 0
     # Finally return callback with updated article
+    article.sections = newSections
     cb(null, article)
 
 denormalizedArtworkData = (artwork) ->
