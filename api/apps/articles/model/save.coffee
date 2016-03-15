@@ -9,15 +9,15 @@ moment = require 'moment'
 xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
+Q = require 'bluebird-q'
 request = require 'superagent'
 requestBluebird = require 'superagent-bluebird-promise'
+Backbone = require 'backbone'
+{ ArtworkHelpers } = require 'artsy-backbone-mixins'
 debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
 { ObjectId } = require 'mongojs'
-Backbone = require 'backbone'
-Artwork = require '../../../../client/models/artwork.coffee'
-Q = require 'bluebird-q'
 cloneDeep = require 'lodash.clonedeep'
 { ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
 EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
@@ -92,68 +92,35 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 @generateArtworks = (input, article, accessToken, cb) ->
+  article.sections = input.sections
   return cb(null, article) unless _.some input.sections, type: 'artworks'
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
-  dfds = []
-  Q.allfor artworkId in _.flatten artworkIds
-    dfds.push(requestBluebird.get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}").set('X-Xapp-Token': accessToken).promise()
-    )
-  Q.all(dfds).then (responses) =>
-    # console.log responses
-    # console.log _.pluck responses 'value'
-    # # FOR ARTWORKS THAT DON'T EXIST, THE ENTIRE CALLBACK COMES BACK WITH AN ERROR
-    # fetchedArtworks = _.map results, (result) -> result.body
-    # # Push fetched artworks to the section if they are available
-    # newSections = []
-    # for section in input.sections
-    #   if section.type is 'artworks'
-    #     newSection = _.extend _.clone(section), artworks: []
-    #     console.log "newSection cloned and with extended artworks"
-    #     console.log newSection
-    #     for artworkId in section.ids
-    #       artwork = _.findWhere fetchedArtworks, _id: artworkId
-    #       if artwork
-    #         console.log "Found an artwork"
-    #         newSection.artworks.push denormalizedArtworkData artwork
-    #       else
-    #         newSection.ids = _.without section.ids, artworkId
-    #         console.log "newSection.ids"
-    #         console.log newSection.ids
-    #     # Section shouldn't be added if there are no artworks
-    #     newSection = {} if newSection.artworks.length is 0
-    #   else
-    #     newSection = section
-    #   newSections.push newSection unless _.isEmpty newSection
-
-    # console.log newSections
-    # Finally return callback with updated article
-    # article.sections = newSections
-    article.sections = input.sections
+  Q.allSettled( for artworkId in _.flatten artworkIds
+    requestBluebird
+      .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
+      .set('X-Xapp-Token': accessToken)
+  ).done (responses) =>
+    fetchedArtworks = _.map responses, (res) ->
+      res.value?.body
+    newSections = []
+    for section in cloneDeep input.sections
+      if section.type is 'artworks'
+        section.artworks = []
+        for artworkId in section.ids
+          artwork = _.findWhere fetchedArtworks, _id: artworkId
+          if artwork
+            section.artworks.push denormalizedArtworkData artwork
+          else
+            section.ids = _.without section.ids, artworkId
+        # Section shouldn't be added if there are no artworks
+        section = {} if section.artworks.length is 0
+      newSections.push section unless _.isEmpty section
+    article.sections = newSections
     cb(null, article)
 
-  # async.parallel callbacks, (err, results) =>
-  #   fetchedArtworks = results.map (result) -> result.body
-  #   # Push fetched artworks to the section if they are available
-  #   newSections = _.clone input.sections
-  #   for section in newSections when section.type is 'artworks'
-  #     if section.type is 'artworks'
-  #       section.artworks = []
-  #       for artworkId in section.ids
-  #         artwork = _.findWhere fetchedArtworks, _id: artworkId
-  #         if artwork
-  #           section.artworks.push denormalizedArtworkData artwork
-  #         else
-  #           section.ids = _.without section.ids, artworkId
-  #   # Do not include sections that have no valid artworks
-  #   newSections = _.filter newSections, (section) ->
-  #     section.type isnt 'artworks' or section.ids?.length > 0
-  #   # Finally return callback with updated article
-  #   article.sections = newSections
-  #   cb(null, article)
-
-
 denormalizedArtworkData = (artwork) ->
+  Artwork = Backbone.Model.extend ArtworkHelpers
   artwork = new Artwork artwork
   denormalizedArtwork =
     id: artwork.get('_id')
@@ -169,7 +136,7 @@ denormalizedArtworkData = (artwork) ->
       slug: artwork.get('artist').id
 
 getPartnerName = (artwork) ->
-  if artwork.get('collection_institution')?.length > 0
+  if artwork.get('collecting_institution')?.length > 0
     artwork.get('collecting_institution')
   else if artwork.get('partner')
     artwork.get('partner').name
@@ -196,7 +163,8 @@ getPartnerLink = (artwork) ->
   User.findOrInsert authorId, accessToken, (err, author) ->
     return callback err if err
     publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
-    article = _.extend article, input, updated_at: new Date
+    article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+    article.sections = [] unless input.sections?.length
     article.author = User.denormalizedForArticle author if author
     cb null, article, author, publishing
 
