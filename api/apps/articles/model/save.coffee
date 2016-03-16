@@ -92,8 +92,11 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     cb(null, article)
 
 @generateArtworks = (input, article, accessToken, cb) ->
+  before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
+  after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
+  intersection = _.intersection(before, after)
   article.sections = input.sections
-  return cb(null, article) unless _.some input.sections, type: 'artworks'
+  return cb(null, article) if intersection.length is before.length and intersection.length is after.length
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
   Q.allSettled( for artworkId in _.flatten artworkIds
