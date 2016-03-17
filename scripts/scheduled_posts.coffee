@@ -1,4 +1,7 @@
+_ = require 'underscore'
 Q = require 'bluebird-q'
+requestBluebird = require 'superagent-bluebird-promise'
+request = require 'superagent'
 mongojs = require 'mongojs'
 fs = require 'fs'
 path = require 'path'
@@ -15,18 +18,27 @@ switch process.env.NODE_ENV
 # Connect to database
 db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
+articlesToPublish = []
 db.articles.find(
   scheduled_publish_at: { $lt: new Date() }
-).forEach (err, doc) ->
+).on('data', (doc) ->
   if !doc
     debug 'Scheduled publication finished'
     process.exit()
-  if err
-    exit err
-  doc.published = true
-  doc.published_at = moment(doc.scheduled_publish_at).toDate()
-  doc.scheduled_publish_at = null
-  db.articles.save doc
+  articlesToPublish.push doc
+).on 'end', ->
+  db.close()
+  Q.all(for article in articlesToPublish
+    requestBluebird
+      .post("#{process.env.API_URL}/articles/#{article._id}")
+      .set('X-Xapp-Token': process.env.ACCESS_TOKEN)
+      .send
+        published: true
+        published_at: moment(article.scheduled_publish_at).toDate()
+        scheduled_published_at: null
+      .promise()
+  ).done (responses) =>
+    console.log responses
 
 exit = (err) ->
   console.error "ERROR", err
