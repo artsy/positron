@@ -9,12 +9,18 @@ moment = require 'moment'
 xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
+Q = require 'bluebird-q'
 request = require 'superagent'
+requestBluebird = require 'superagent-bluebird-promise'
+Backbone = require 'backbone'
+{ ArtworkHelpers } = require 'artsy-backbone-mixins'
 debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET, EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID } = process.env
+cloneDeep = require 'lodash.clonedeep'
+{ ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
+EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 
@@ -39,7 +45,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
-@generateKeywords = (article, accessToken, input, cb) ->
+@generateKeywords = (input, article, accessToken, cb) ->
   keywords = []
   callbacks = []
   if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
@@ -48,30 +54,30 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
       input.partner_ids is not article.partner_ids or
       input.tags is not article.tags)
     return cb(null, article)
-  if article.primary_featured_artist_ids
-    for artistId in article.primary_featured_artist_ids
+  if input.primary_featured_artist_ids
+    for artistId in input.primary_featured_artist_ids
       do (artistId) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
             .set('X-Xapp-Token': accessToken)
             .end callback
-  if article.featured_artist_ids
-    for artistId in article.featured_artist_ids
+  if input.featured_artist_ids
+    for artistId in input.featured_artist_ids
       do (artistId) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
             .set('X-Xapp-Token': accessToken)
             .end callback
-  if article.fair_id
+  if input.fair_id
     callbacks.push (callback) ->
       request
-        .get("#{ARTSY_URL}/api/v1/fair/#{article.fair_id}")
+        .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
         .set('X-Xapp-Token': accessToken)
         .end callback
-  if article.partner_ids
-    for partnerId in article.partner_ids
+  if input.partner_ids
+    for partnerId in input.partner_ids
       do (partnerId) ->
         callbacks.push (callback) ->
           request
@@ -81,9 +87,70 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
     keywords = (res.body.name for res in results)
-    keywords.push(tag) for tag in article.tags when article.tags
+    keywords.push(tag) for tag in input.tags if input.tags
     article.keywords = keywords[0..9]
     cb(null, article)
+
+@generateArtworks = (input, article, accessToken, cb) ->
+  before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
+  after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
+  intersection = _.intersection(before, after)
+  article.sections = input.sections
+  return cb(null, article) if intersection.length is before.length and intersection.length is after.length
+  # Try to fetch and denormalize the artworks from Gravity asynchonously
+  artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
+  Q.allSettled( for artworkId in _.flatten artworkIds
+    requestBluebird
+      .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
+      .set('X-Xapp-Token': accessToken)
+  ).done (responses) =>
+    fetchedArtworks = _.map responses, (res) ->
+      res.value?.body
+    newSections = []
+    for section in cloneDeep input.sections
+      if section.type is 'artworks'
+        section.artworks = []
+        for artworkId in section.ids
+          artwork = _.findWhere fetchedArtworks, _id: artworkId
+          if artwork
+            section.artworks.push denormalizedArtworkData artwork
+          else
+            section.ids = _.without section.ids, artworkId
+        # Section shouldn't be added if there are no artworks
+        section = {} if section.artworks.length is 0
+      newSections.push section unless _.isEmpty section
+    article.sections = newSections
+    cb(null, article)
+
+denormalizedArtworkData = (artwork) ->
+  Artwork = Backbone.Model.extend ArtworkHelpers
+  artwork = new Artwork artwork
+  denormalizedArtwork =
+    id: artwork.get('_id')
+    slug: artwork.get('id')
+    date: artwork.get('date')
+    title: artwork.get('title')
+    image: artwork.imageUrl()
+    partner:
+      name: getPartnerName artwork
+      slug: getPartnerLink artwork
+    artist:
+      name: artwork.get('artist').name or _.compact(artwork.get('artists').pluck('name'))[0] or ''
+      slug: artwork.get('artist').id
+
+getPartnerName = (artwork) ->
+  if artwork.get('collecting_institution')?.length > 0
+    artwork.get('collecting_institution')
+  else if artwork.get('partner')
+    artwork.get('partner').name
+  else
+    ''
+
+getPartnerLink = (artwork) ->
+  partner = artwork.get('partner')
+  return unless partner and partner.type isnt 'Auction'
+  if partner.default_profile_public and partner.default_profile_id
+    return partner.default_profile_id
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
@@ -94,17 +161,15 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   else
     db.articles.save sanitize(typecastIds article), callback
 
-@mergeArticleAndAuthor = (input, accessToken, cb) =>
-  id = ObjectId (input.id or input._id)?.toString()
-  Article.find id.toString(), (err, article = {}) =>
+@mergeArticleAndAuthor = (input, article, accessToken, cb) =>
+  authorId = input.author_id or article.author_id
+  User.findOrInsert authorId, accessToken, (err, author) ->
     return callback err if err
-    authorId = input.author_id or article.author_id
-    User.findOrInsert authorId, accessToken, (err, author) ->
-      return callback err if err
-      publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
-      article = _.extend article, input, updated_at: new Date
-      article.author = User.denormalizedForArticle author if author
-      cb null, article, author, publishing
+    publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
+    article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+    article.sections = [] unless input.sections?.length
+    article.author = User.denormalizedForArticle author if author
+    cb null, article, author, publishing
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->

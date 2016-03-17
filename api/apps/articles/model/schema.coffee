@@ -67,6 +67,20 @@ fullscreenSection = (->
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
+      artworks: @array().items(
+        @object().keys
+          id: @string().allow('', null)
+          slug: @string().allow('', null)
+          date: @string().allow('', null)
+          title: @string().allow('', null)
+          image: @string().allow('', null)
+          partner: @object().keys
+            name: @string().allow('', null)
+            slug: @string().allow('', null)
+          artist: @object().keys
+            name: @string().allow('', null)
+            slug: @string().allow('', null)
+      ).allow(null).default([])
     @object().keys
       type: @string().valid('slideshow')
       items: @array().items [

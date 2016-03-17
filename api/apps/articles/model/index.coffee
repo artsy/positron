@@ -5,7 +5,9 @@
 _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
-{ validate, onPublish, generateSlugs, generateKeywords, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
+debug = require('debug') 'api'
+{ validate, onPublish, generateSlugs, generateKeywords,
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 
@@ -38,20 +40,24 @@ retrieve = require './retrieve'
 @save = (input, accessToken, callback) ->
   validate input, (err, input) =>
     return callback err if err
-    mergeArticleAndAuthor input, accessToken, (err, article, author, publishing) ->
-      return callback(err) if err
-      generateKeywords article, accessToken, input, (err, article) ->
+    id = ObjectId (input.id or input._id)?.toString()
+    @find id.toString(), (err, article = {}) =>
+      return callback err if err
+      generateKeywords input, article, accessToken, (err, article) ->
         debug err if err
-        # Merge fullscreen title with main article title
-        article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-        if publishing
-          onPublish article, author, accessToken, sanitizeAndSave(callback)
-        else if not publishing and not article.slugs?.length > 0
-          generateSlugs article, author, sanitizeAndSave(callback)
-        else
-          sanitizeAndSave(callback)(null, article)
+        generateArtworks input, article, accessToken, (err, article) ->
+          debug err if err
+          mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
+            return callback(err) if err
+            # Merge fullscreen title with main article title
+            article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
+            if publishing
+              onPublish article, author, accessToken, sanitizeAndSave(callback)
+            else if not publishing and not article.slugs?.length > 0
+              generateSlugs article, author, sanitizeAndSave(callback)
+            else
+              sanitizeAndSave(callback)(null, article)
 
-#
 # Destroy
 #
 @destroy = (id, callback) ->
