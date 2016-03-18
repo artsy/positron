@@ -7,6 +7,7 @@ fs = require 'fs'
 path = require 'path'
 moment = require 'moment'
 debug = require('debug') 'scripts'
+artsyXapp = require 'artsy-xapp'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -27,19 +28,22 @@ db.articles.find(
     process.exit()
   articlesToPublish.push doc
 ).on 'end', ->
-  db.close()
-  for article in articlesToPublish
-    do (article) ->
-      request
-        .post("#{process.env.API_URL}/articles/#{article._id}")
-        .set('X-Xapp-Token': process.env.ACCESS_TOKEN)
-        .send
-          published: true
-          published_at: moment(article.scheduled_publish_at).toDate()
-          scheduled_published_at: null
-        .then (err, response) ->
-          console.log err
-          console.log response
+  artsyXapp.init { url: process.env.ARTSY_URL, id: process.env.ARTSY_ID, secret: process.env.ARTSY_SECRET }, ->
+    # Q.all( for article in articlesToPublish
+    request
+      .post("https://stagingwriter.artsy.net/articles/#{articlesToPublish[0]._id}")
+      .set('X-Xapp-Token': artsyXapp.token)
+      .send
+        published: true
+        published_at: moment(articlesToPublish[0].scheduled_publish_at).toDate()
+        scheduled_publish_at: null
+      .end (err, response) ->
+        console.log err, response
+        exit()
+    # ).then (err, responses) ->
+    #   console.log err
+    #   console.log responses
+    #   db.close()
 
 exit = (err) ->
   console.error "ERROR", err
