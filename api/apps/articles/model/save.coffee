@@ -23,6 +23,7 @@ cloneDeep = require 'lodash.clonedeep'
 EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
+artsyXapp = require 'artsy-xapp'
 
 @validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema.inputSchema
@@ -31,7 +32,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
-@onPublish = (article, author, accessToken, cb) =>
+@onPublish = (article, author, cb) =>
   if not article.published_at
     article.published_at = new Date
   @generateSlugs article, author, cb
@@ -45,7 +46,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
-@generateKeywords = (input, article, accessToken, cb) ->
+@generateKeywords = (input, article, cb) ->
   keywords = []
   callbacks = []
   if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
@@ -60,7 +61,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   if input.featured_artist_ids
     for artistId in input.featured_artist_ids
@@ -68,13 +69,13 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   if input.fair_id
     callbacks.push (callback) ->
       request
         .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
-        .set('X-Xapp-Token': accessToken)
+        .set('X-Xapp-Token': artsyXapp.token)
         .end callback
   if input.partner_ids
     for partnerId in input.partner_ids
@@ -82,7 +83,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
@@ -91,7 +92,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@generateArtworks = (input, article, accessToken, cb) ->
+@generateArtworks = (input, article, cb) ->
   before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
   after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
   intersection = _.intersection(before, after)
@@ -102,7 +103,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   Q.allSettled( for artworkId in _.flatten artworkIds
     requestBluebird
       .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
-      .set('X-Xapp-Token': accessToken)
+      .set('X-Xapp-Token': artsyXapp.token)
   ).done (responses) =>
     fetchedArtworks = _.map responses, (res) ->
       res.value?.body

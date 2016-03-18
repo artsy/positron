@@ -43,16 +43,16 @@ retrieve = require './retrieve'
     id = ObjectId (input.id or input._id)?.toString()
     @find id.toString(), (err, article = {}) =>
       return callback err if err
-      generateKeywords input, article, accessToken, (err, article) ->
+      generateKeywords input, article, (err, article) ->
         debug err if err
-        generateArtworks input, article, accessToken, (err, article) ->
+        generateArtworks input, article, (err, article) ->
           debug err if err
           mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
             return callback(err) if err
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
             if publishing
-              onPublish article, author, accessToken, sanitizeAndSave(callback)
+              onPublish article, author, sanitizeAndSave(callback)
             else if not publishing and not article.slugs?.length > 0
               generateSlugs article, author, sanitizeAndSave(callback)
             else

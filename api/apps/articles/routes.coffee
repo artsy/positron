@@ -25,14 +25,14 @@ _ = require 'underscore'
 # POST /api/articles
 @create = (req, res, next) ->
   data =_.extend { author_id: req.user._id }, req.body
-  Article.save data, req.accessToken, (err, article) ->
+  Article.save data, req.user?.access_token (err, article) ->
     return next err if err
     res.send present article
 
 # PUT /api/articles/:id
 @update = (req, res, next) ->
   data = _.extend(req.article, req.body)
-  Article.save data, req.accessToken, (err, article) ->
+  Article.save data, req.user?.access_token, (err, article) ->
     return next err if err
     res.send present article
 
