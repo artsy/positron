@@ -248,6 +248,7 @@ typecastIds = (article) ->
       credit_line: article.email_metadata?.credit_line
       credit_url: article.email_metadata?.credit_url
       html: html
+      custom_text: article.email_metadata?.custom_text
   , (err, response) =>
     debug err if err
     cb()

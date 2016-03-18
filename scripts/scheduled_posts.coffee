@@ -28,17 +28,18 @@ db.articles.find(
   articlesToPublish.push doc
 ).on 'end', ->
   db.close()
-  Q.all(for article in articlesToPublish
-    requestBluebird
-      .post("#{process.env.API_URL}/articles/#{article._id}")
-      .set('X-Xapp-Token': process.env.ACCESS_TOKEN)
-      .send
-        published: true
-        published_at: moment(article.scheduled_publish_at).toDate()
-        scheduled_published_at: null
-      .promise()
-  ).done (responses) =>
-    console.log responses
+  for article in articlesToPublish
+    do (article) ->
+      request
+        .post("#{process.env.API_URL}/articles/#{article._id}")
+        .set('X-Xapp-Token': process.env.ACCESS_TOKEN)
+        .send
+          published: true
+          published_at: moment(article.scheduled_publish_at).toDate()
+          scheduled_published_at: null
+        .then (err, response) ->
+          console.log err
+          console.log response
 
 exit = (err) ->
   console.error "ERROR", err
