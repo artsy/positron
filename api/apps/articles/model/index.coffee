@@ -58,6 +58,9 @@ retrieve = require './retrieve'
             else
               sanitizeAndSave(callback)(null, article)
 
+@publishScheduledArticles = ->
+  db.articles.find({scheduled_publish_at: { $lt: new Date() }})
+
 # Destroy
 #
 @destroy = (id, callback) ->
