@@ -11,9 +11,13 @@ debug = require('debug') 'api'
 
 collections = ['articles', 'users', 'sections', 'artists']
 db = mongojs MONGOHQ_URL, collections
-db.on 'close', ->
-  debug 'Mongo Connection Closed'
+exit = (msg) -> (err) ->
+  debug msg
+  debug msg, err if msg is 'Mongo Error'
   process.exit(1)
+
+db.on 'close', exit('Mongo Connection Closed')
+db.on 'error', exit('Mongo Error')
 
 module.exports = db
 module.exports.collections = collections

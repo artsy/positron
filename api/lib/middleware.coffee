@@ -24,7 +24,11 @@ debug = require('debug') 'api'
 @errorHandler = (err, req, res, next) ->
   debug err.stack
   status = err.status or if err.name is 'ValidationError' then 403 else 500
-  res.status(status).send {
-    status: status,
-    message: (err.message or err.stack or err.toString())
-  }
+  msg = (err.message or err.stack or err.toString())
+  res.status(status).send { status: status, message: msg }
+  # TODO: Sporadically our Compose Mongo "pool dies". We have filed a ticket.
+  # Until then, we know restarting the app fixes this issue. See Slack thread
+  # https://artsy.slack.com/archives/web/p1458490282000103
+  if err.name is 'MongoError' and
+  msg.match(/connection to host (.*) was destroyed/)
+    process.exit(1)
