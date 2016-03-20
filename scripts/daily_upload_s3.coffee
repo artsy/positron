@@ -51,6 +51,6 @@ db.articles.find({ published: true })
       'Content-Type': 'text/csv'
     }, (err, result) ->
 
-      # Delete filename and close db
+      # Delete filename and exit
       fs.unlink(dir + filename)
-      db.close()
+      process.exit(1)
