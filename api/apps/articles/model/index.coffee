@@ -7,9 +7,11 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
+moment = require 'moment'
+Q = require 'bluebird-q'
 
 #
 # Retrieval
@@ -37,27 +39,43 @@ retrieve = require './retrieve'
 #
 # Persistence
 #
-@save = (input, accessToken, callback) ->
+@save = (input, accessToken, callback) =>
   validate input, (err, input) =>
     return callback err if err
-    id = ObjectId (input.id or input._id)?.toString()
-    @find id.toString(), (err, article = {}) =>
+    @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
-      generateKeywords input, article, accessToken, (err, article) ->
+      generateKeywords input, article, (err, article) ->
         debug err if err
-        generateArtworks input, article, accessToken, (err, article) ->
+        generateArtworks input, article, (err, article) ->
           debug err if err
           mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
             return callback(err) if err
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
             if publishing
-              onPublish article, author, accessToken, sanitizeAndSave(callback)
+              onPublish article, author, sanitizeAndSave(callback)
             else if not publishing and not article.slugs?.length > 0
               generateSlugs article, author, sanitizeAndSave(callback)
             else
               sanitizeAndSave(callback)(null, article)
 
+@publishScheduledArticles = (callback) ->
+  db.articles.find { scheduled_publish_at: { $lt: new Date() } } , (err, articles) =>
+    return callback err, [] if err
+    return callback null, [] if articles.length is 0
+    async.map articles, (article, cb) =>
+      @save {
+        id: article.id.toString()
+        author_id: article.author_id.toString()
+        published: true
+        published_at: moment(article.scheduled_publish_at).toDate()
+        scheduled_publish_at: null
+      }, 'foo', cb
+    , (err, results) ->
+      return callback err, [] if err
+      return callback null, results
+
+#
 # Destroy
 #
 @destroy = (id, callback) ->

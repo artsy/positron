@@ -23,6 +23,7 @@ cloneDeep = require 'lodash.clonedeep'
 EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
+artsyXapp = require('artsy-xapp')
 
 @validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema.inputSchema
@@ -31,10 +32,19 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
-@onPublish = (article, author, accessToken, cb) =>
-  if not article.published_at
-    article.published_at = new Date
+@onPublish = (article, author, cb) =>
+  unless article.published_at
+    article.published_at = new Date()
+  setEmailFields article, author
   @generateSlugs article, author, cb
+
+setEmailFields = (article, author) =>
+  article.email_metadata = article.email_metadata or {}
+  article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
+  if article.contributing_authors?.length > 0
+    ca = _.pluck(article.contributing_authors, 'name').join(', ')
+  article.email_metadata.author = ca or author?.name unless article.email_metadata?.author
+  article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
 
 @generateSlugs = (article, author, cb) ->
   slug = _s.slugify author.name + ' ' + article.thumbnail_title
@@ -45,7 +55,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
-@generateKeywords = (input, article, accessToken, cb) ->
+@generateKeywords = (input, article, cb) ->
   keywords = []
   callbacks = []
   if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
@@ -60,7 +70,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   if input.featured_artist_ids
     for artistId in input.featured_artist_ids
@@ -68,13 +78,13 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   if input.fair_id
     callbacks.push (callback) ->
       request
         .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
-        .set('X-Xapp-Token': accessToken)
+        .set('X-Xapp-Token': artsyXapp.token)
         .end callback
   if input.partner_ids
     for partnerId in input.partner_ids
@@ -82,7 +92,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
-            .set('X-Xapp-Token': accessToken)
+            .set('X-Xapp-Token': artsyXapp.token)
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
@@ -91,7 +101,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@generateArtworks = (input, article, accessToken, cb) ->
+@generateArtworks = (input, article, cb) ->
   before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
   after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
   intersection = _.intersection(before, after)
@@ -102,7 +112,7 @@ sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU
   Q.allSettled( for artworkId in _.flatten artworkIds
     requestBluebird
       .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
-      .set('X-Xapp-Token': accessToken)
+      .set('X-Xapp-Token': artsyXapp.token)
   ).done (responses) =>
     fetchedArtworks = _.map responses, (res) ->
       res.value?.body
@@ -164,8 +174,8 @@ getPartnerLink = (artwork) ->
 @mergeArticleAndAuthor = (input, article, accessToken, cb) =>
   authorId = input.author_id or article.author_id
   User.findOrInsert authorId, accessToken, (err, author) ->
-    return callback err if err
-    publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
+    return cb err if err
+    publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
     article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
     article.sections = [] unless input.sections?.length
     article.author = User.denormalizedForArticle author if author
@@ -231,7 +241,7 @@ typecastIds = (article) ->
   tags = tags.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
-  imageSrc = article.email_metadata?.image_url or article.thumbnail_image
+  imageSrc = article.email_metadata?.image_url
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
@@ -239,8 +249,8 @@ typecastIds = (article) ->
   sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
-    title: article.email_metadata?.headline or article.thumbnail_title
-    author: article.email_metadata?.author or article.author?.name
+    title: article.email_metadata?.headline
+    author: article.email_metadata?.author
     tags: tags
     images: images
     spider: 0
@@ -248,6 +258,7 @@ typecastIds = (article) ->
       credit_line: article.email_metadata?.credit_line
       credit_url: article.email_metadata?.credit_url
       html: html
+      custom_text: article.email_metadata?.custom_text
   , (err, response) =>
     debug err if err
     cb()

@@ -335,6 +335,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
+        id: '5086df098523e60002002222'
       }, 'foo', (err, article) ->
         article.title.should.equal 'Top Ten Shows'
         db.articles.count (err, count) ->
@@ -411,12 +412,14 @@ describe 'Article', ->
 
     it 'appends the date to an article URL when its slug already exists', (done) ->
       fabricate 'articles', {
+        id: '5086df098523e60002002222'
         slugs: ['craig-spaeth-heyo']
       }, ->
         Article.save {
           thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
+          id: '5086df098523e60002002222'
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
@@ -430,6 +433,7 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
+        id: '5086df098523e60002002222'
       }, 'foo', (err, article) ->
         article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should
@@ -708,6 +712,20 @@ describe 'Article', ->
         article.sections[3].type.should.equal 'text'
         article.sections[2].article.should.equal '53da550a726169083c0a0700'
         done()
+
+  describe '#publishScheduledArticles', ->
+
+    it 'calls #save on each article that needs to be published', (done) ->
+      fabricate 'articles',
+        _id: ObjectId('54276766fd4f50996aeca2b8')
+        author_id: ObjectId('5086df098523e60002000018')
+        published: false
+        scheduled_publish_at: moment('2016-01-01').toDate()
+      , ->
+        Article.publishScheduledArticles (err, results) ->
+          results[0].published.should.be.true()
+          results[0].published_at.toString().should.equal moment('2016-01-01').toDate().toString()
+          done()
 
   describe "#destroy", ->
 

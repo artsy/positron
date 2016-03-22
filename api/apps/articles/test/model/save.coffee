@@ -22,6 +22,7 @@ describe 'Save', ->
     @sailthru = Save.__get__ 'sailthru'
     @sailthru.apiPost = sinon.stub().yields()
     Save.__set__ 'sailthru', @sailthru
+    Save.__set__ 'artsyXapp', { token: 'foo' }
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -64,18 +65,6 @@ describe 'Save', ->
         @sailthru.apiPost.args[0][1].vars.credit_line.should.containEql 'Artsy Credit'
         @sailthru.apiPost.args[0][1].vars.credit_url.should.containEql 'artsy.net'
         @sailthru.apiPost.args[0][1].author.should.containEql 'Kana Abe'
-        @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        done()
-
-    it 'uses alternate data if email_metadata is not provided', (done) ->
-      Save.sendArticleToSailthru {
-        author_id: '5086df098523e60002000018'
-        published: true
-        thumbnail_image: 'imageurl.com/image.jpg'
-        thumbnail_title: 'This Is The Thumbnail Title'
-      }, (err, article) =>
-        @sailthru.apiPost.args[0][1].title.should.containEql 'This Is The Thumbnail Title'
         @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
         @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
         done()
@@ -131,7 +120,7 @@ describe 'Save', ->
             ids: ['564be09ab202a319e90000e2']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections[0].artworks.length.should.equal 1
         article.sections[0].artworks[0].title.should.equal 'Main artwork!'
         article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
@@ -150,7 +139,7 @@ describe 'Save', ->
             ids: ['123', '564be09ab202a319e90000e2']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections.length.should.equal 2
         article.sections[1].artworks[0].title.should.equal 'Main artwork!'
         article.sections[1].artworks.length.should.equal 1
@@ -169,6 +158,37 @@ describe 'Save', ->
             ids: ['123']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections.length.should.equal 1
         done()
+
+  describe '#onPublish', ->
+
+    it 'saves email metadata', (done) ->
+      Save.onPublish {
+        thumbnail_title: 'Thumbnail Title'
+        thumbnail_image: 'foo.png'
+      }, { name : 'Kana' }, (err, article) ->
+        article.email_metadata.image_url.should.containEql 'foo.png'
+        article.email_metadata.author.should.containEql 'Kana'
+        article.email_metadata.headline.should.containEql 'Thumbnail Title'
+        done()
+
+    it 'does not override email metadata', (done) ->
+      Save.onPublish {
+        thumbnail_title: 'Thumbnail Title'
+        thumbnail_image: 'foo.png'
+        email_metadata:
+          image_url: 'bar.png'
+          author: 'Artsy Editorial'
+          headline: 'Custom Headline'
+          credit_line: 'Guggenheim'
+          credit_url: 'https://guggenheim.org'
+      }, { name : 'Kana' }, (err, article) ->
+        article.email_metadata.image_url.should.containEql 'bar.png'
+        article.email_metadata.author.should.containEql 'Artsy Editorial'
+        article.email_metadata.headline.should.containEql 'Custom Headline'
+        article.email_metadata.credit_url.should.containEql 'https://guggenheim.org'
+        article.email_metadata.credit_line.should.containEql 'Guggenheim'
+        done()
+

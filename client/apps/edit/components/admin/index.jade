@@ -124,17 +124,19 @@ section#edit-admin.admin-form-container.max-width-container
       .admin-form-right-col
         label.edit-email-image
           span(
-            data-hidden=(article.get('email_metadata') && article.get('email_metadata').image_url) || article.get('thumbnail_image') ? 'true' : 'false'
+            data-hidden=(article.get('email_metadata') && article.get('email_metadata').image_url) ? 'true' : 'false'
           ) Image
           #edit-email-upload
         label Headline
-          input.bordered-input( name='headline' value="#{article.getMetaTitle()}" )
+          input.bordered-input( name='headline' value="#{article.getObjectAttribute('email_metadata','headline')}" )
         label Author
-          input.bordered-input( name='author' value="#{article.getMetaAuthorName()}")
+          input.bordered-input( name='author' value="#{article.getObjectAttribute('email_metadata','author')}")
         label Credit Line
           input.bordered-input( name='credit_line' value="#{article.getObjectAttribute('email_metadata','credit_line')}")
         label Credit URL
           input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
+        label Custom Text
+          input.bordered-input( name='custom_text' value="#{article.getObjectAttribute('email_metadata','custom_text')}")
         .admin-send-body-to-sailthru
           label Send Article Body To Sailthru
             .flat-checkbox

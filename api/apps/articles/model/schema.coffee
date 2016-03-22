@@ -116,6 +116,7 @@ fullscreenSection = (->
     author: @string().allow('',null)
     credit_line: @string().allow('',null)
     credit_url: @string().allow('',null)
+    custom_text: @string().allow('',null)
   is_super_article: @boolean().default(false)
   super_article: @object().keys
     partner_link: @string().allow('',null)
