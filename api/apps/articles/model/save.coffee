@@ -43,7 +43,7 @@ setEmailFields = (article, author) =>
   article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
   if article.contributing_authors?.length > 0
     ca = _.pluck(article.contributing_authors, 'name').join(', ')
-  article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
+  article.email_metadata.author = ca or author?.name unless article.email_metadata?.author
   article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
 
 @generateSlugs = (article, author, cb) ->
