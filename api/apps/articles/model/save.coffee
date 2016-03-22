@@ -33,9 +33,18 @@ artsyXapp = require('artsy-xapp')
   Joi.validate whitelisted, schema.inputSchema, callback
 
 @onPublish = (article, author, cb) =>
-  if not article.published_at
+  unless article.published_at
     article.published_at = new Date()
+  setEmailFields article, author
   @generateSlugs article, author, cb
+
+setEmailFields = (article, author) =>
+  article.email_metadata = article.email_metadata or {}
+  article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
+  if article.contributing_authors?.length > 0
+    ca = _.pluck(article.contributing_authors, 'name').join(', ')
+  article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
+  article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
 
 @generateSlugs = (article, author, cb) ->
   slug = _s.slugify author.name + ' ' + article.thumbnail_title
@@ -232,7 +241,7 @@ typecastIds = (article) ->
   tags = tags.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
-  imageSrc = article.email_metadata?.image_url or article.thumbnail_image
+  imageSrc = article.email_metadata?.image_url
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
@@ -240,8 +249,8 @@ typecastIds = (article) ->
   sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
-    title: article.email_metadata?.headline or article.thumbnail_title
-    author: article.email_metadata?.author or article.author?.name
+    title: article.email_metadata?.headline
+    author: article.email_metadata?.author
     tags: tags
     images: images
     spider: 0

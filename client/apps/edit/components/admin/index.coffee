@@ -317,12 +317,10 @@ module.exports = class EditAdmin extends Backbone.View
   setupEmailMetadata: ->
     if @article.get('email_metadata')?.image_url
       @renderInputs @article.get('email_metadata').image_url
-    else if @article.get('thumbnail_image')?.length
-      @renderInputs @article.get('thumbnail_image')
 
     new ImageUploadForm
       el: $('#edit-email-upload')
-      src: @article.get('email_metadata')?.image_url or @article.get('thumbnail_image')
+      src: @article.get('email_metadata')?.image_url
       remove: =>
         emailMetadata = @article.get('email_metadata') or {}
         emailMetadata.image_url = ''

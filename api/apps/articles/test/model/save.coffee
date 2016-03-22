@@ -69,18 +69,6 @@ describe 'Save', ->
         @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
         done()
 
-    it 'uses alternate data if email_metadata is not provided', (done) ->
-      Save.sendArticleToSailthru {
-        author_id: '5086df098523e60002000018'
-        published: true
-        thumbnail_image: 'imageurl.com/image.jpg'
-        thumbnail_title: 'This Is The Thumbnail Title'
-      }, (err, article) =>
-        @sailthru.apiPost.args[0][1].title.should.containEql 'This Is The Thumbnail Title'
-        @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        done()
-
     it 'sends the article text body', (done) ->
       Save.sendArticleToSailthru {
         author_id: '5086df098523e60002000018'

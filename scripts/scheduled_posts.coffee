@@ -1,7 +1,7 @@
 path = require 'path'
 debug = require('debug') 'api'
 
-# # Setup environment variables
+# Setup environment variables
 env = require 'node-env-file'
 switch process.env.NODE_ENV
   when 'test' then env path.resolve __dirname, '../.env.test'
