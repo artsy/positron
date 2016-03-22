@@ -34,7 +34,7 @@ artsyXapp = require 'artsy-xapp'
 
 @onPublish = (article, author, cb) =>
   if not article.published_at
-    article.published_at = new Date
+    article.published_at = new Date()
   @generateSlugs article, author, cb
 
 @generateSlugs = (article, author, cb) ->
@@ -165,8 +165,8 @@ getPartnerLink = (artwork) ->
 @mergeArticleAndAuthor = (input, article, accessToken, cb) =>
   authorId = input.author_id or article.author_id
   User.findOrInsert authorId, accessToken, (err, author) ->
-    return callback err if err
-    publishing = (input.published and not article.published) || (input.scheduled_publish_at and not article.published)
+    return cb err if err
+    publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
     article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
     article.sections = [] unless input.sections?.length
     article.author = User.denormalizedForArticle author if author

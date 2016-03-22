@@ -22,6 +22,7 @@ describe 'Save', ->
     @sailthru = Save.__get__ 'sailthru'
     @sailthru.apiPost = sinon.stub().yields()
     Save.__set__ 'sailthru', @sailthru
+    Save.__set__ 'artsyXapp', { token: 'foo' }
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -131,7 +132,7 @@ describe 'Save', ->
             ids: ['564be09ab202a319e90000e2']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections[0].artworks.length.should.equal 1
         article.sections[0].artworks[0].title.should.equal 'Main artwork!'
         article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
@@ -150,7 +151,7 @@ describe 'Save', ->
             ids: ['123', '564be09ab202a319e90000e2']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections.length.should.equal 2
         article.sections[1].artworks[0].title.should.equal 'Main artwork!'
         article.sections[1].artworks.length.should.equal 1
@@ -169,6 +170,6 @@ describe 'Save', ->
             ids: ['123']
           }
         ]
-      }, {}, 'foo', (err, article) =>
+      }, {}, (err, article) =>
         article.sections.length.should.equal 1
         done()

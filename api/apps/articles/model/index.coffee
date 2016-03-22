@@ -7,9 +7,11 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = require './save'
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
+moment = require 'moment'
+Q = require 'bluebird-q'
 
 #
 # Retrieval
@@ -37,11 +39,10 @@ retrieve = require './retrieve'
 #
 # Persistence
 #
-@save = (input, accessToken, callback) ->
+@save = (input, accessToken, callback) =>
   validate input, (err, input) =>
     return callback err if err
-    id = ObjectId (input.id or input._id)?.toString()
-    @find id.toString(), (err, article = {}) =>
+    @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
       generateKeywords input, article, (err, article) ->
         debug err if err
@@ -58,9 +59,26 @@ retrieve = require './retrieve'
             else
               sanitizeAndSave(callback)(null, article)
 
-@publishScheduledArticles = ->
-  db.articles.find({scheduled_publish_at: { $lt: new Date() }})
+@publishScheduledArticles = (callback) ->
+  @where { scheduled_publish_at: moment().toISOString() } , (err, results) =>
+    return callback err, [] if err
+    return callback null, [] if results.count is 0
+    callbacks = []
+    for article in results.results
+      do (article) =>
+        callbacks.push (callback) =>
+          @save {
+            id: article.id.toString()
+            author_id: article.author_id.toString()
+            published: true
+            published_at: moment(article.scheduled_publish_at).toDate()
+            scheduled_publish_at: null
+          }, 'foo', callback
+    async.parallel callbacks, (err, results) ->
+      return callback err, [] if err
+      return callback null, results
 
+#
 # Destroy
 #
 @destroy = (id, callback) ->

@@ -3,6 +3,7 @@ Joi = require 'joi'
 Joi.objectId = require('joi-objectid') Joi
 schema = require './schema'
 { ObjectId } = require 'mongojs'
+moment = require 'moment'
 
 @toQuery = (input, callback) ->
   Joi.validate input, schema.querySchema, (err, input) ->
@@ -47,6 +48,10 @@ schema = require './schema'
 
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
+
+    # Look for articles with scheduled dates before the given date
+    query.scheduled_publish_at = { $lt: moment(input.scheduled_publish_at).toDate() } if input.scheduled_publish_at
+
     callback null, query, limit, offset, sortParamToQuery(sort)
 
 sortParamToQuery = (input) ->
