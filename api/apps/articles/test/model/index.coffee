@@ -22,10 +22,6 @@ describe 'Article', ->
     @server.close()
 
   beforeEach (done) ->
-    # Save = Article.__get__ 'Save'
-    # console.log Save
-    # sinon.stub('Save', 'artsyXapp').returns { token: 'foo' }
-    # # Save.__set__ 'artsyXapp', {token: 'foo'}
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -437,6 +433,7 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
+        id: '5086df098523e60002002222'
       }, 'foo', (err, article) ->
         article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should

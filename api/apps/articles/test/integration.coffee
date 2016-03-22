@@ -3,10 +3,12 @@ _ = require 'underscore'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
+artsyXapp = require 'artsy-xapp'
 
 describe 'articles endpoints', ->
 
   beforeEach (done) ->
+    artsyXapp.token = ''
     empty =>
       fabricate 'users', {}, (err, @user) =>
         @server = app.listen 5000, ->

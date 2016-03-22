@@ -23,7 +23,7 @@ cloneDeep = require 'lodash.clonedeep'
 EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
-artsyXapp = require 'artsy-xapp'
+artsyXapp = require('artsy-xapp')
 
 @validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema.inputSchema
