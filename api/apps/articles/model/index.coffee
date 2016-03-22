@@ -60,21 +60,18 @@ Q = require 'bluebird-q'
               sanitizeAndSave(callback)(null, article)
 
 @publishScheduledArticles = (callback) ->
-  @where { scheduled_publish_at: moment().toISOString() } , (err, results) =>
+  db.articles.find { scheduled_publish_at: { $lt: new Date() } } , (err, articles) =>
     return callback err, [] if err
-    return callback null, [] if results.count is 0
-    callbacks = []
-    for article in results.results
-      do (article) =>
-        callbacks.push (callback) =>
-          @save {
-            id: article.id.toString()
-            author_id: article.author_id.toString()
-            published: true
-            published_at: moment(article.scheduled_publish_at).toDate()
-            scheduled_publish_at: null
-          }, 'foo', callback
-    async.parallel callbacks, (err, results) ->
+    return callback null, [] if articles.length is 0
+    async.map articles, (article, cb) =>
+      @save {
+        id: article.id.toString()
+        author_id: article.author_id.toString()
+        published: true
+        published_at: moment(article.scheduled_publish_at).toDate()
+        scheduled_publish_at: null
+      }, 'foo', cb
+    , (err, results) ->
       return callback err, [] if err
       return callback null, results
 
