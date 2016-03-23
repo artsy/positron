@@ -105,7 +105,7 @@ setEmailFields = (article, author) =>
   before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
   after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
   intersection = _.intersection(before, after)
-  article.sections = input.sections
+  article.sections = input.sections if input.sections.length > 0
   return cb(null, article) if intersection.length is before.length and intersection.length is after.length
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
@@ -177,7 +177,7 @@ getPartnerLink = (artwork) ->
     return cb err if err
     publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
     article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
-    article.sections = [] unless input.sections?.length
+    article.sections = [] unless input.sections.length > 0
     article.author = User.denormalizedForArticle author if author
     cb null, article, author, publishing
 
