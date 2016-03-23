@@ -70,6 +70,7 @@ Q = require 'bluebird-q'
         published: true
         published_at: moment(article.scheduled_publish_at).toDate()
         scheduled_publish_at: null
+        sections: article.sections
       }, 'foo', cb
     , (err, results) ->
       return callback err, [] if err

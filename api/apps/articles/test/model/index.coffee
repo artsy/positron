@@ -721,10 +721,23 @@ describe 'Article', ->
         author_id: ObjectId('5086df098523e60002000018')
         published: false
         scheduled_publish_at: moment('2016-01-01').toDate()
+        sections: [
+          {
+            type: 'text'
+            body: 'The start of a new article'
+          }
+          {
+            type: 'image'
+            url: 'https://image.png'
+            caption: 'Trademarked'
+          }
+        ]
       , ->
         Article.publishScheduledArticles (err, results) ->
           results[0].published.should.be.true()
           results[0].published_at.toString().should.equal moment('2016-01-01').toDate().toString()
+          results[0].sections[0].body.should.containEql 'The start of a new article'
+          results[0].sections[1].url.should.containEql 'https://image.png'
           done()
 
   describe "#destroy", ->
