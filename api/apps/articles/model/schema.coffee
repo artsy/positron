@@ -90,7 +90,7 @@ fullscreenSection = (->
           type: @string().valid('artwork')
           id: @string()
       ]
-  ]).default([])
+  ]).allow(null)
   primary_featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artwork_ids: @array().items(@objectId()).allow(null)

@@ -713,6 +713,38 @@ describe 'Article', ->
         article.sections[2].article.should.equal '53da550a726169083c0a0700'
         done()
 
+    it 'saves an article that does not have sections in input', (done) ->
+      fabricate 'articles',
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: ObjectId('5086df098523e60002000018')
+        published: false
+        author: {
+          name: 'Kana Abe'
+        }
+        sections: [
+          {
+            type: 'text'
+            body: 'The start of a new article'
+          }
+          {
+            type: 'image'
+            url: 'https://image.png'
+            caption: 'Trademarked'
+          }
+        ]
+      , ->
+        Article.save {
+          _id: ObjectId('5086df098523e60002000018')
+          id: '5086df098523e60002000018'
+          author_id: '5086df098523e60002000018'
+          published: true
+        }, 'foo', (err, article) ->
+          article.published.should.be.true()
+          article.sections.length.should.equal 2
+          article.sections[0].body.should.containEql 'The start of a new article'
+          done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->
@@ -721,6 +753,9 @@ describe 'Article', ->
         author_id: ObjectId('5086df098523e60002000018')
         published: false
         scheduled_publish_at: moment('2016-01-01').toDate()
+        author: {
+          name: 'Kana Abe'
+        }
         sections: [
           {
             type: 'text'
