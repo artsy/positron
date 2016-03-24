@@ -64,13 +64,11 @@ Q = require 'bluebird-q'
     return callback err, [] if err
     return callback null, [] if articles.length is 0
     async.map articles, (article, cb) =>
-      @save {
-        id: article.id.toString()
-        author_id: article.author_id.toString()
+      article = _.extend article,
         published: true
         published_at: moment(article.scheduled_publish_at).toDate()
         scheduled_publish_at: null
-      }, 'foo', cb
+      onPublish article, article.author, sanitizeAndSave cb
     , (err, results) ->
       return callback err, [] if err
       return callback null, results
