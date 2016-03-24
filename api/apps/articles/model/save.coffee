@@ -107,6 +107,7 @@ setEmailFields = (article, author) =>
   intersection = _.intersection(before, after)
   if input.sections and input.sections.length > 0
     article.sections = input.sections
+  return cb null, article unless input.sections
   return cb(null, article) if intersection.length is before.length and intersection.length is after.length
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
@@ -185,11 +186,8 @@ getPartnerLink = (artwork) ->
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
-  sanitized = _.extend article,
-    title: sanitizeHtml article.title
-    thumbnail_title: sanitizeHtml article.thumbnail_title
-    lead_paragraph: sanitizeHtml article.lead_paragraph
-    sections: for section in article.sections
+  if article.sections
+    sections = for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
       section.caption = sanitizeHtml section.caption if section.type is 'image'
       section.url = sanitizeLink section.url if section.type is 'video'
@@ -198,6 +196,13 @@ sanitize = (article) ->
           item.caption = sanitizeHtml item.caption if item.type is 'image'
           item.url = sanitizeLink item.url if item.type is 'video'
       section
+  else
+    sections = []
+  sanitized = _.extend article,
+    title: sanitizeHtml article.title
+    thumbnail_title: sanitizeHtml article.thumbnail_title
+    lead_paragraph: sanitizeHtml article.lead_paragraph
+    sections: sections
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
   sanitized
