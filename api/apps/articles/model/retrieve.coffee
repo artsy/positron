@@ -6,7 +6,7 @@ schema = require './schema'
 moment = require 'moment'
 
 @toQuery = (input, callback) ->
-  Joi.validate input, schema.querySchema, (err, input) ->
+  Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) ->
     return callback err if err
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
