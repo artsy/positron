@@ -64,3 +64,12 @@ describe 'Retrieve', ->
       }, (err, query) =>
         query.thumbnail_title['$regex'].should.be.ok()
         done()
+
+    it 'strips out unknown keys in the query', (done) ->
+      Retrieve.toQuery {
+        published: true
+        session_id: '12345'
+      }, (err, query) =>
+        query.published.should.be.true()
+        query.session_id?.should.be.false()
+        done()

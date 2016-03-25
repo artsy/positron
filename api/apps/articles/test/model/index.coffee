@@ -56,11 +56,6 @@ describe 'Article', ->
           results[0].title.should.equal 'Moo baz'
           done()
 
-    it 'errors for bad queries', (done) ->
-      Article.where { foo: 'bar' }, (err) ->
-        err.message.should.containEql '"foo" is not allowed'
-        done()
-
     it 'can change skip and limit', (done) ->
       fabricate 'articles', [
         { title: 'Hello Wurld' }
