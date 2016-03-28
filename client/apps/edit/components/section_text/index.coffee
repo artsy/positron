@@ -16,6 +16,8 @@ try
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
+sd = require('sharify').data
+{ isEditorialTeam } = require '../../../../models/user.coffee'
 
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
@@ -33,6 +35,7 @@ module.exports = React.createClass
   componentDidMount: ->
     @attachScribe()
     @componentDidUpdate()
+
 
   componentDidUpdate: ->
     $(@refs.editable.getDOMNode()).focus() if @props.editing
@@ -112,6 +115,12 @@ module.exports = React.createClass
           dangerouslySetInnerHTML:
             __html: "&nbsp;" + $(icons()).filter('.remove-formatting').html()
         }
+        if isEditorialTeam(sd.USER)
+          button {
+            'data-command-name': 'jumpLink'
+            dangerouslySetInnerHTML:
+              __html: "&nbsp;" + $(icons()).filter('.jump-link').html()
+          }
       div { className: 'est-editable-container' },
         div {
           className: 'edit-section-text-editable'
