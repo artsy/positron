@@ -36,7 +36,6 @@ module.exports = React.createClass
     @attachScribe()
     @componentDidUpdate()
 
-
   componentDidUpdate: ->
     $(@refs.editable.getDOMNode()).focus() if @props.editing
 
@@ -110,17 +109,17 @@ module.exports = React.createClass
               __html: "&nbsp;" + $(icons()).filter('.link').html()
           }
           button { 'data-command-name': 'unlink' }
-        button {
-          'data-command-name': 'removeFormat'
-          dangerouslySetInnerHTML:
-            __html: "&nbsp;" + $(icons()).filter('.remove-formatting').html()
-        }
         if isEditorialTeam(sd.USER)
           button {
             'data-command-name': 'jumpLink'
             dangerouslySetInnerHTML:
               __html: "&nbsp;" + $(icons()).filter('.jump-link').html()
           }
+        button {
+          'data-command-name': 'removeFormat'
+          dangerouslySetInnerHTML:
+            __html: "&nbsp;" + $(icons()).filter('.remove-formatting').html()
+        }
       div { className: 'est-editable-container' },
         div {
           className: 'edit-section-text-editable'
