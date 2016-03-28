@@ -7,6 +7,7 @@ React = require 'react'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM
+{ isEditorialTeam } = require '../../../../models/user.coffee'
 
 module.exports = React.createClass
 
@@ -18,6 +19,15 @@ module.exports = React.createClass
 
   isAboveTextSection: ->
     @props.sections.models[@props.index + 1]?.get('type') is 'text'
+
+  getJumpLinks: ->
+    links = []
+    @props.sections.each (section) ->
+      if section.get('type') is 'text'
+        html = $.parseHTML(section.get('body'))
+        $(html).find('a.is-jump-link').each ->
+          links.push { name: $(this).text(), value: $(this).attr('name') }
+    links
 
   newSection: (type) -> =>
     switch type
@@ -70,6 +80,11 @@ module.exports = React.createClass
           text: ''
           article: ''
           hide_image: false
+        }, at: @props.index + 1
+      when 'toc'
+        @props.sections.add {
+          type: 'toc'
+          links: @getJumpLinks()
         }, at: @props.index + 1
     @setState open: false
 
@@ -170,4 +185,13 @@ module.exports = React.createClass
               div {
                 className: 'edit-menu-icon-callout'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.callout').html()
+              }
+          if isEditorialTeam(sd.USER)
+            li {
+              className: 'edit-section-tool-toc'
+              onClick: @newSection('toc')
+            }, 'TOC',
+              div {
+                className: 'edit-menu-icon-toc'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
               }
