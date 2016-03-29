@@ -64,6 +64,13 @@ fullscreenSection = (->
       type: @string().valid('text')
       body: @string().allow('', null)
     @object().keys
+      type: @string().valid('toc')
+      links: @array().items(
+        @object().keys
+          name: @string().allow('', null)
+          value: @string().allow('', null)
+      ).allow(null).default([])
+    @object().keys
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
