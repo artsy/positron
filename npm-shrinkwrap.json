@@ -3473,9 +3473,9 @@
       "resolved": "https://registry.npmjs.org/scribe-editor/-/scribe-editor-2.2.2.tgz"
     },
     "scribe-plugin-enhanced-link-tooltip": {
-      "version": "0.0.6",
-      "from": "git://github.com/jorystiefel/scribe-plugin-enhanced-link-tooltip.git",
-      "resolved": "git://github.com/jorystiefel/scribe-plugin-enhanced-link-tooltip.git#fd47c5d86e24b1443d61a0a1b160ae41eaccc259"
+      "version": "0.0.7",
+      "from": "git://github.com/artsy/scribe-plugin-enhanced-link-tooltip.git",
+      "resolved": "git://github.com/artsy/scribe-plugin-enhanced-link-tooltip.git#eecfc602ef8aa33c23b518c66666c145510531e6"
     },
     "scribe-plugin-heading-command": {
       "version": "0.1.0",
@@ -3484,7 +3484,7 @@
     },
     "scribe-plugin-jump-link": {
       "version": "1.0.0",
-      "from": "scribe-plugin-jump-link@>=1.0.0 <2.0.0"
+      "from": "scribe-plugin-jump-link@1.0.0"
     },
     "scribe-plugin-keyboard-shortcuts": {
       "version": "0.1.1",
