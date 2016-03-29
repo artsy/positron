@@ -17,11 +17,12 @@ describe 'SectionTool', ->
       @SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      @SectionTool.__set__ 'sd', { USER: type: 'Admin' }
+      @SectionTool.__set__ 'sd', { USER: { type: 'Admin', email: 'kana@artsymail.com'} }
+      @SectionTool.__set__ 'isEditorialTeam', sinon.stub().returns(true)
       @component = React.render @SectionTool(
         sections: @sections = new Backbone.Collection [
-          { body: 'Foo to the bar', type: 'text' }
-          { body: 'Foo to the bar', type: 'text' }
+          { body: '<p>Foo to the bar</p>', type: 'text' }
+          { body: '<p>Foo to the bar <a class="is-jump-link" name="andy">Andy</a></p>', type: 'text' }
         ]
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()
@@ -56,6 +57,12 @@ describe 'SectionTool', ->
         ]
         index: -1
     )).should.containEql 'edit-section-tool-callout'
+
+  describe '#getJumpLinks', ->
+
+    it 'generates an array of jump links', ->
+      @component.getJumpLinks()[0].name.should.equal 'Andy'
+      @component.getJumpLinks()[0].value.should.equal 'andy'
 
 describe 'SectionTool - Hero', ->
 
