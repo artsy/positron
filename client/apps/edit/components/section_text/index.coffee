@@ -59,7 +59,7 @@ module.exports = React.createClass
         b: true
         i: true
         br: true
-        a: { href: true, target: '_blank' }
+        a: { href: true, target: '_blank', name: true, class: true }
         h2: true
         h3: true
         ol: true
