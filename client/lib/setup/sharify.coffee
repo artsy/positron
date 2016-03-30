@@ -13,4 +13,4 @@ sharify = require 'sharify'
 
 sharify.data = _.pick process.env,
   'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
-  'EMBEDLY_KEY', 'SEGMENT_WRITE_KEY'
+  'EMBEDLY_KEY', 'SEGMENT_WRITE_KEY', 'EDITORIAL_TEAM'

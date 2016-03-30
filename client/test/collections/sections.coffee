@@ -39,3 +39,13 @@ describe "Sections", ->
       ]
       @sections.mentionedArtworkSlugs().join('').should.equal 'bazfoobar'
 
+
+  describe '#getJumpLinks', ->
+
+    it 'generates an array of jump links', ->
+      @sections.set [
+        { body: '<p>Foo to the bar</p>', type: 'text' }
+        { body: '<p>Foo to the bar <a class="is-jump-link" name="andy">Andy</a></p>', type: 'text' }
+      ]
+      @sections.getJumpLinks()[0].name.should.equal 'Andy'
+      @sections.getJumpLinks()[0].value.should.equal 'andy'

@@ -217,7 +217,9 @@ sanitizeHtml = (html) ->
     if $(this).attr 'href'
       u = sanitizeLink $(this).attr 'href'
       $(this).attr 'href', u
-  xss $.html()
+  xss $.html(),
+    whiteList: _.extend xss.getDefaultWhiteList(),
+      a: ['target', 'href', 'title', 'name', 'class']
 
 typecastIds = (article) ->
   _.extend article,

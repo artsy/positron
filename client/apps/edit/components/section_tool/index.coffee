@@ -7,11 +7,15 @@ React = require 'react'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM
+User = require '../../../../models/user.coffee'
 
 module.exports = React.createClass
 
   getInitialState: ->
     { open: false }
+
+  componentWillMount: ->
+    @user = new User sd.USER
 
   toggle: ->
     @setState open: not @state.open
@@ -71,6 +75,11 @@ module.exports = React.createClass
           article: ''
           hide_image: false
         }, at: @props.index + 1
+      when 'toc'
+        @props.sections.add {
+          type: 'toc'
+          links: @props.sections.getJumpLinks()
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -102,7 +111,7 @@ module.exports = React.createClass
               className: 'edit-menu-icon-hero-video'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-video').html()
             }
-          if sd.USER?.type is 'Admin'
+          if @user.isAdmin()
             li {
               className: "edit-section-tool-hero-fullscreen #{'is-disabled' if @props.hasSection}"
               onClick: @props.setHero('fullscreen') unless @props.hasSection
@@ -153,7 +162,7 @@ module.exports = React.createClass
               className: 'edit-menu-icon-slideshow'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
             }
-          if sd.USER?.type is 'Admin'
+          if @user.isAdmin()
             li {
               className: 'edit-section-tool-embed'
               onClick: @newSection('embed')
@@ -162,7 +171,7 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-embed'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
               }
-          if sd.USER?.type is 'Admin' and @isAboveTextSection()
+          if @user.isAdmin() and @isAboveTextSection()
             li {
               className: 'edit-section-tool-callout'
               onClick: @newSection('callout')
@@ -170,4 +179,13 @@ module.exports = React.createClass
               div {
                 className: 'edit-menu-icon-callout'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.callout').html()
+              }
+          if @user.isEditorialTeam()
+            li {
+              className: 'edit-section-tool-toc'
+              onClick: @newSection('toc')
+            }, 'TOC',
+              div {
+                className: 'edit-menu-icon-toc'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
               }

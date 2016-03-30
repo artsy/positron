@@ -8,6 +8,8 @@ r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
   findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
+rewire = require 'rewire'
+User = rewire '../../../../../models/user.coffee'
 
 describe 'SectionTool', ->
 
@@ -17,11 +19,13 @@ describe 'SectionTool', ->
       @SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      @SectionTool.__set__ 'sd', { USER: type: 'Admin' }
+      User.__set__ 'sd', { EDITORIAL_TEAM: 'kana' }
+      @SectionTool.__set__ 'User', User
+      @SectionTool.__set__ 'sd', { USER: { type: 'Admin', email: 'kana@artsymail.com'} }
       @component = React.render @SectionTool(
         sections: @sections = new Backbone.Collection [
-          { body: 'Foo to the bar', type: 'text' }
-          { body: 'Foo to the bar', type: 'text' }
+          { body: '<p>Foo to the bar</p>', type: 'text' }
+          { body: '<p>Foo to the bar <a class="is-jump-link" name="andy">Andy</a></p>', type: 'text' }
         ]
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()

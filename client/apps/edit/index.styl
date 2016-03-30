@@ -13,6 +13,7 @@
 @import './components/section_slideshow'
 @import './components/section_fullscreen'
 @import './components/section_callout'
+@import './components/section_toc'
 @import './components/hero_section'
 @import './components/admin'
 @import './components/mobile'
@@ -94,6 +95,9 @@
       height 14px
       top 12px
       left 16px
+    &[data-command-name=jumpLink] svg
+      transform translate(-14px, -16px)
+      fill-color black
     &[disabled=disabled]
       color gray-darkest-color
       fill-color gray-darkest-color 0.15s

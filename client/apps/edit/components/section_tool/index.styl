@@ -21,7 +21,7 @@ section-btn-height = 130px
     position relative
     &::after
       opacity 0
-    svg
+    .edit-section-tool-icon svg
       fill-color black
     .edit-section-tool-icon::before
       opacity 1
@@ -137,12 +137,18 @@ section-btn-height = 130px
       width 40px
       height 23px
       left calc(50% - 20px)
+    .edit-menu-icon-toc svg
+      left calc(50% - 21px)
+      top 21px
   li:first-child:nth-last-child(6),
   li:first-child:nth-last-child(6) ~ li
     width 20%
   li:first-child:nth-last-child(7),
   li:first-child:nth-last-child(7) ~ li
     width 16.66%
+  li:first-child:nth-last-child(8),
+  li:first-child:nth-last-child(8) ~ li
+    width 14.28%
 
 .edit-section-tool[data-state-open="true"]
   max-height (section-btn-height * 2)

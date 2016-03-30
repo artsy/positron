@@ -13,9 +13,12 @@ try
   scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
   scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
   scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
+  scribePluginJumpLink = require 'scribe-plugin-jump-link'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
+sd = require('sharify').data
+User = require '../../../../models/user.coffee'
 
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
@@ -29,6 +32,9 @@ keyboardShortcutsMap =
   insertUnorderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 55
 
 module.exports = React.createClass
+
+  componentWillMount: ->
+    @user = new User sd.USER
 
   componentDidMount: ->
     @attachScribe()
@@ -56,7 +62,7 @@ module.exports = React.createClass
         b: true
         i: true
         br: true
-        a: { href: true, target: '_blank' }
+        a: { href: true, target: '_blank', name: true, class: true }
         h2: true
         h3: true
         ol: true
@@ -68,6 +74,7 @@ module.exports = React.createClass
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)
     @scribe.use scribePluginHeadingCommand(3)
+    @scribe.use scribePluginJumpLink()
 
   render: ->
     div { className: 'edit-section-text-container' },
@@ -107,6 +114,12 @@ module.exports = React.createClass
               __html: "&nbsp;" + $(icons()).filter('.link').html()
           }
           button { 'data-command-name': 'unlink' }
+        if @user.isEditorialTeam()
+          button {
+            'data-command-name': 'jumpLink'
+            dangerouslySetInnerHTML:
+              __html: "&nbsp;" + $(icons()).filter('.jump-link').html()
+          }
         button {
           'data-command-name': 'removeFormat'
           dangerouslySetInnerHTML:
