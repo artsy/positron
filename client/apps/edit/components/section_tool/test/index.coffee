@@ -8,6 +8,8 @@ r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
   findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
+rewire = require 'rewire'
+User = rewire '../../../../../models/user.coffee'
 
 describe 'SectionTool', ->
 
@@ -17,8 +19,9 @@ describe 'SectionTool', ->
       @SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
+      User.__set__ 'sd', { EDITORIAL_TEAM: 'kana' }
+      @SectionTool.__set__ 'User', User
       @SectionTool.__set__ 'sd', { USER: { type: 'Admin', email: 'kana@artsymail.com'} }
-      @SectionTool.__set__ 'isEditorialTeam', sinon.stub().returns(true)
       @component = React.render @SectionTool(
         sections: @sections = new Backbone.Collection [
           { body: '<p>Foo to the bar</p>', type: 'text' }
@@ -57,12 +60,6 @@ describe 'SectionTool', ->
         ]
         index: -1
     )).should.containEql 'edit-section-tool-callout'
-
-  describe '#getJumpLinks', ->
-
-    it 'generates an array of jump links', ->
-      @component.getJumpLinks()[0].name.should.equal 'Andy'
-      @component.getJumpLinks()[0].value.should.equal 'andy'
 
 describe 'SectionTool - Hero', ->
 

@@ -6,5 +6,8 @@ module.exports = class User extends Backbone.Model
 
   urlRoot: "#{sd.API_URL}/users"
 
-  @isEditorialTeam: (user) ->
-    user.type is 'Admin' and user.email?.split('@')[0] in sd.EDITORIAL_TEAM?.split(',')
+  isEditorialTeam: ->
+    @get('type') is 'Admin' and @get('email')?.split('@')[0] in sd.EDITORIAL_TEAM?.split(',')
+
+  isAdmin: ->
+    @get('type') is 'Admin'

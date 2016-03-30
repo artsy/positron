@@ -18,7 +18,7 @@ React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
 sd = require('sharify').data
-{ isEditorialTeam } = require '../../../../models/user.coffee'
+User = require '../../../../models/user.coffee'
 
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
@@ -32,6 +32,9 @@ keyboardShortcutsMap =
   insertUnorderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 55
 
 module.exports = React.createClass
+
+  componentWillMount: ->
+    @user = new User sd.USER
 
   componentDidMount: ->
     @attachScribe()
@@ -111,7 +114,7 @@ module.exports = React.createClass
               __html: "&nbsp;" + $(icons()).filter('.link').html()
           }
           button { 'data-command-name': 'unlink' }
-        if isEditorialTeam(sd.USER)
+        if @user.isEditorialTeam()
           button {
             'data-command-name': 'jumpLink'
             dangerouslySetInnerHTML:

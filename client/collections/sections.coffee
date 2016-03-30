@@ -34,3 +34,12 @@ module.exports = class Sections extends Backbone.Collection
         when 'artworks' then not section.get('ids')?.length
         else false
     @remove section for section in blanks
+
+  getJumpLinks: ->
+    links = []
+    @each (section) ->
+      if section.get('type') is 'text'
+        html = $.parseHTML(section.get('body'))
+        $(html).find('a.is-jump-link').each ->
+          links.push { name: $(this).text(), value: $(this).attr('name') }
+    links
