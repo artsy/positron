@@ -116,6 +116,12 @@ module.exports = React.createClass
           button { 'data-command-name': 'unlink' }
         if @user.isEditorialTeam()
           button {
+            'data-command-name': 'followLink'
+            dangerouslySetInnerHTML:
+              __html: "&nbsp;" + $(icons()).filter('.follow-link').html()
+          }
+        if @user.isEditorialTeam()
+          button {
             'data-command-name': 'jumpLink'
             dangerouslySetInnerHTML:
               __html: "&nbsp;" + $(icons()).filter('.jump-link').html()
