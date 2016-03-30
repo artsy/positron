@@ -2,6 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 sd = require('sharify').data
 { ArtworkHelpers } = require 'artsy-backbone-mixins'
+AdditionalImages = require '../collections/additional_images.coffee'
 
 module.exports = class Artwork extends Backbone.Model
 
@@ -13,3 +14,6 @@ module.exports = class Artwork extends Backbone.Model
     split = @get('artist').name.split ' '
     artistInitials = split[0][0] + '.' + split[1]?[0] + '.'
     artistInitials + ' ' + @get('title') + ', ' + @get('date')
+
+  defaultImage: ->
+    new AdditionalImages(@get('images')).default()

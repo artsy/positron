@@ -13,7 +13,7 @@ Q = require 'bluebird-q'
 request = require 'superagent'
 requestBluebird = require 'superagent-bluebird-promise'
 Backbone = require 'backbone'
-{ ArtworkHelpers } = require 'artsy-backbone-mixins'
+{ Image } = require 'artsy-backbone-mixins'
 debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
@@ -135,20 +135,30 @@ setEmailFields = (article, author) =>
     cb(null, article)
 
 denormalizedArtworkData = (artwork) ->
-  Artwork = Backbone.Model.extend ArtworkHelpers
-  artwork = new Artwork artwork
+  artwork = new Backbone.Model artwork
+  AdditionalImage = Backbone.Model.extend Image(SECURE_IMAGES_URL)
+  images = artwork.get('images')
+  defaultImage = new AdditionalImage(_.findWhere(images, is_default: true) or _.first images)
   denormalizedArtwork =
     id: artwork.get('_id')
     slug: artwork.get('id')
     date: artwork.get('date')
     title: artwork.get('title')
-    image: artwork.imageUrl()
+    image: defaultImage.bestImageUrl(['larger','large', 'medium', 'small'])
     partner:
       name: getPartnerName artwork
       slug: getPartnerLink artwork
     artist:
-      name: artwork.get('artist').name or _.compact(artwork.get('artists').pluck('name'))[0] or ''
-      slug: artwork.get('artist').id
+      name: getArtistName artwork
+      slug: artwork.get('artist')?.id
+
+getArtistName = (artwork) ->
+  if artwork.get('artist')?.name
+    artwork.get('artist').name
+  else if artwork.get('artists')?.length > 0
+    _.compact(artwork.get('artists').pluck('name'))[0]
+  else
+    ''
 
 getPartnerName = (artwork) ->
   if artwork.get('collecting_institution')?.length > 0
