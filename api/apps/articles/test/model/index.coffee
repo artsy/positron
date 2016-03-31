@@ -306,6 +306,23 @@ describe 'Article', ->
           results[2].title.should.equal 'Hello Wuuuurld - Food'
           done()
 
+    it 'can find articles by artist biography', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Hello Wurld'
+          published: true
+          biography_for_artist_id: ObjectId '5086df098523e60002000016'
+        }
+      ], ->
+        Article.where {
+          published: true
+          biography_for_artist_id: '5086df098523e60002000016'
+        }, (err, res) ->
+          { total, count, results } = res
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

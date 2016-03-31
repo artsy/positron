@@ -168,5 +168,6 @@ fullscreenSection = (->
   all_by_author: @objectId()
   tags: @array()
   is_super_article: @boolean()
+  biography_for_artist_id: @objectId()
 ).call Joi
 
