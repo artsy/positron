@@ -41,6 +41,20 @@
     list-style disc inside
   ol li
     list-style decimal inside
+  .artist-follow
+    background-image none !important
+    &:before
+      content url(/icons/circle_plus.svg)
+      padding-left 10px
+      vertical-align -8.5px
+    &:after
+      content 'Follow'
+      garamond('s-body')
+      text-transform none
+      letter-spacing 0px
+  .is-jump-link
+    background-color #CFF8E6
+    background-image none !important
 
 .edit-section-text-editing-bg
   width 100%
@@ -113,7 +127,3 @@
 .scribe-plugin-link-tooltip-state-edit .scribe-plugin-link-tooltip-show-on-view,
 .scribe-plugin-link-tooltip-state-view .scribe-plugin-link-tooltip-show-on-edit
   display none
-
-a.is-jump-link
-  background-color #CFF8E6
-  background-image none !important
