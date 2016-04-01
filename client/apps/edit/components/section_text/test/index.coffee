@@ -22,7 +22,7 @@ describe 'SectionText', ->
       SectionText.__set__ 'isEditorialTeam', sinon.stub().returns(true)
       for name in ['scribePluginToolbar', 'scribePluginSanitizer',
         'scribePluginLinkTooltip', 'scribePluginKeyboardShortcuts',
-        'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc', 'scribePluginJumpLink']
+        'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc', 'scribePluginJumpLink', 'scribePluginFollowLinkTooltip']
         SectionText.__set__ name, sinon.stub()
       SectionText::attachScribe = sinon.stub()
       @component = React.render SectionText(

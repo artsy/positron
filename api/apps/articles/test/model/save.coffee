@@ -126,6 +126,23 @@ describe 'Save', ->
         ]
       })
 
+    it 'can save follow artist links (whitelist data-id)', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.sections[0].body.should.containEql '<a data-id="andy-warhol"></a>'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: false
+        _id: '5086df098523e60002000011'
+        sections: [
+          {
+            type: 'text'
+            body: '<a data-id="andy-warhol"></a>'
+          }
+        ]
+      })
+
   describe '#generateArtworks', ->
 
     it 'denormalizes artworks and adds them as an array to the section', (done) ->
