@@ -229,7 +229,7 @@ sanitizeHtml = (html) ->
       $(this).attr 'href', u
   xss $.html(),
     whiteList: _.extend xss.getDefaultWhiteList(),
-      a: ['target', 'href', 'title', 'name', 'class']
+      a: ['target', 'href', 'title', 'name', 'class', 'data-id']
 
 typecastIds = (article) ->
   _.extend article,

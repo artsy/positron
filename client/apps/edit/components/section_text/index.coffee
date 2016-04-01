@@ -14,6 +14,7 @@ try
   scribePluginHeadingCommand = require 'scribe-plugin-heading-command'
   scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
   scribePluginJumpLink = require 'scribe-plugin-jump-link'
+  scribePluginFollowLinkTooltip = require 'scribe-plugin-follow-link-tooltip'
 React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
@@ -62,7 +63,7 @@ module.exports = React.createClass
         b: true
         i: true
         br: true
-        a: { href: true, target: '_blank', name: true, class: true }
+        a: { href: true, target: '_blank', name: true, class: true, 'data-id': true}
         h2: true
         h3: true
         ol: true
@@ -75,6 +76,7 @@ module.exports = React.createClass
     @scribe.use scribePluginHeadingCommand(2)
     @scribe.use scribePluginHeadingCommand(3)
     @scribe.use scribePluginJumpLink()
+    @scribe.use scribePluginFollowLinkTooltip()
 
   render: ->
     div { className: 'edit-section-text-container' },
@@ -114,6 +116,12 @@ module.exports = React.createClass
               __html: "&nbsp;" + $(icons()).filter('.link').html()
           }
           button { 'data-command-name': 'unlink' }
+        if @user.isEditorialTeam()
+          button {
+            'data-command-name': 'followLink'
+            dangerouslySetInnerHTML:
+              __html: "&nbsp;" + $(icons()).filter('.follow-link').html()
+          }
         if @user.isEditorialTeam()
           button {
             'data-command-name': 'jumpLink'
