@@ -1,0 +1,230 @@
+@import '../stylus_lib'
+
+artwork-img-bottom = 10px
+short-input-width = 290px
+wide-input-width = 640px
+
+.edit-section-image-set
+  position relative
+  margin-top 20px
+
+.edit-section-image-set .edit-section-controls
+  fill-container()
+  background black
+  height 193px
+  top -(@height + controls-padding)
+  left -(controls-padding)
+  padding controls-padding
+  display none
+  z-index 2
+  width overflow-width
+
+.esis-placeholder
+  text-align center
+  color gray-darker-color
+  height 200px
+  line-height @height
+
+.edit-section-container[data-editing=true]
+  .edit-section-controls, .esis-controls-container, .esis-images-list .edit-section-remove, .esis-caption-container
+    display block
+  .esis-nav, .esis-caption
+    display inline-block
+
+.esis-image
+  transition opacity 0.5s
+
+.esis-img-remove
+  padding-top 15px
+
+#edit-thumbnail-upload
+  position relative
+  .upload-progress-container
+    display none
+
+.esis-img-container
+  padding-top 15px
+
+.esis-caption
+  display none
+  width calc(100% - 87px)
+  background transparent
+  text-transform none
+  letter-spacing 0
+  cursor text
+  color white
+  &.is-empty::before
+    content 'Image caption'
+    color gray-dark-color
+    position absolute
+    width 100%
+  p
+    line-height 29px
+
+.esis-nav.edit-scribe-nav
+  width 87px
+  line-height 27px
+  button
+    padding 6px 20px
+    margin-top 5px
+    &::after
+      top 3px !important
+    svg
+      top 7px !important
+
+.esis-nav, .esis-caption
+  height 40px
+  display inline-block
+
+[data-useragent*=Firefox] .esis-nav
+  height 41px
+
+[data-useragent*=Firefox] .esis-caption
+  position absolute
+  width calc(100% - 40px)
+
+.esis-inline-caption
+  color gray-darker-color
+  margin-top 10px
+  font-style italic
+  a
+    color gray-darker-color
+
+.esis-controls-container
+  fill-container()
+  background black
+  height 334px
+  top -(@height)
+  text-align center
+  display none
+  a
+    background-repeat no-repeat !important
+    background-position center !important
+
+.esis-artwork-inputs
+  clearfix()
+  color white
+  padding controls-padding 0px
+  text-align left
+  border-top 1px solid gray-darkest-color
+  input
+    display inline-block
+    vertical-align top
+    width 100%
+  .esis-byurl-input > button
+    position relative
+    display inline-block
+    width 75px
+    font-size small-avant-garde-font-size + 1
+    height 40px
+    background-color gray-lighter-color
+  .esis-byurl-input > input
+    width calc(100% - 75px)
+  .esis-byurl-input
+    padding-left 10px
+  .esis-autocomplete-input
+    padding-right 10px
+  .esis-autocomplete-input, .esis-byurl-input
+    position relative
+    display inline-block
+    width 50%
+
+.esis-empty-placeholder
+  text-align center
+  color gray-dark-color
+  height 100px
+  line-height @height
+
+.esis-images-list
+  position relative
+  white-space nowrap
+  z-index 2 !important
+  li
+    margin-bottom 30px
+    margin-right 30px
+    display inline-block
+    position relative
+    p
+      color gray-dark-color
+      line-height 20px
+      overflow ellipsis
+  img
+    max-height 400px
+    background gray-lighter-color
+
+.esis-images-list .edit-section-remove
+  display none
+  &:hover svg
+    fill-color red-color
+  svg
+    fill-color black
+
+.esis-autocomplete-menu
+  width short-input-width
+  position absolute
+  right 0
+  background white
+  overflow ellipsis
+  top 37px
+  li
+    padding 10px
+    border 1px solid gray-color
+    border-bottom 0
+    color black
+    cursor pointer
+    transition background-color 0.3s
+    &:last-child
+      border-bottom 1px solid gray-color
+    &.is-active
+      background gray-color
+  img
+    background gray-lighter-color
+    width 100%
+  span
+    margin-top 18px
+
+.esis-thumbnail-container
+  height 40px
+  width 40px
+  overflow hidden
+  margin-right 10px
+
+.esis-thumbnail-container, .esis-thumbnail-right
+  display inline-block
+  vertical-align top
+
+.esis-thumbnail-right
+  line-height 1.4em
+
+.esis-urls-error
+  color red-color
+  width 200px
+  position absolute
+  top 28px
+  line-height 21px
+
+.esis-autocomplete-label
+  margin-bottom 30px
+
+.esis-autocomplete-input
+  margin-bottom 10px
+  color black
+  input
+    padding-left 8px
+  .tt-input
+    background white !important
+  .tt-dropdown-menu
+    margin-top 0
+    border 1px solid gray-lighter-color
+    p
+      line-height 1.2em
+    .tt-suggestion
+      clearfix()
+      line-height 1.2em
+      .esis-suggestion
+        width 50px
+        height @width
+        background center center gray-lighter-color
+        background-size cover
+        margin-right 10px
+        float left
