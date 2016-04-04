@@ -14,6 +14,7 @@ SectionEmbed = React.createFactory require '../section_embed/index.coffee'
 SectionFullscreen = React.createFactory require '../section_fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../section_callout/index.coffee'
 SectionToc = React.createFactory require '../section_toc/index.coffee'
+SectionImageSet = React.createFactory require '../section_image_set/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -60,6 +61,7 @@ module.exports = React.createClass
           when 'fullscreen' then SectionFullscreen
           when 'callout' then SectionCallout
           when 'toc' then SectionToc
+          when 'image_set' then SectionImageSet
         )(
           section: @props.section
           editing: @props.editing

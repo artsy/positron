@@ -80,6 +80,11 @@ module.exports = React.createClass
           type: 'toc'
           links: @props.sections.getJumpLinks()
         }, at: @props.index + 1
+      when 'image_set'
+        @props.sections.add {
+          type: 'image_set'
+          images: []
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -171,10 +176,10 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-embed'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
               }
-          if @user.isAdmin() and @isAboveTextSection()
+          if @user.isAdmin()
             li {
-              className: 'edit-section-tool-callout'
-              onClick: @newSection('callout')
+              className: "edit-section-tool-callout #{'is-disabled' unless @isAboveTextSection()}"
+              onClick: @newSection('callout') if @isAboveTextSection()
             }, 'Callout',
               div {
                 className: 'edit-menu-icon-callout'
@@ -188,4 +193,13 @@ module.exports = React.createClass
               div {
                 className: 'edit-menu-icon-toc'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
+              }
+          if @user.isEditorialTeam()
+            li {
+              className: 'edit-section-tool-image-set'
+              onClick: @newSection('image_set')
+            }, 'Image Set',
+              div {
+                className: 'edit-menu-icon-image-set'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
               }
