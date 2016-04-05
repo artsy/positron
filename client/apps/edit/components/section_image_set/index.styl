@@ -25,11 +25,6 @@ wide-input-width = 640px
   height 200px
   line-height @height
 
-.edit-section-container[data-editing=true]
-  .edit-section-controls, .esis-controls-container, .esis-images-list .edit-section-remove, .esis-caption-container
-    display block
-  .esis-nav, .esis-caption
-    display inline-block
 
 .esis-image
   transition opacity 0.5s
@@ -138,6 +133,7 @@ wide-input-width = 640px
 .esis-images-list
   position relative
   white-space nowrap
+  overflow-x scroll
   z-index 2 !important
   li
     margin-bottom 30px
@@ -228,3 +224,44 @@ wide-input-width = 640px
         background-size cover
         margin-right 10px
         float left
+
+.esis-preview-container
+  display block
+  max-width 500px
+  margin auto
+  overflow hidden
+  max-height 150px
+
+.esis-preview-image
+  display none
+  height 150px
+  margin-right 10px
+
+.esis-preview-remaining
+  avant-garde('s-headline')
+  height 150px
+  border 2px solid black
+  display inline-block
+  vertical-align top
+  padding 10px
+  min-width 40px
+  svg
+    width 32px
+
+.esis-preview-icon
+  text-align center
+  margin 25px 0px 20px 0px
+
+.edit-section-container[data-editing=false][data-type=image_set]
+  .esis-preview-container
+    display block
+  .edit-section-controls, .esis-controls-container, .esis-images-list, .edit-section-remove, .esis-caption-container, .esis-nav, .esis-caption
+    display none
+
+.edit-section-container[data-editing=true][data-type=image_set]
+  .edit-section-controls, .esis-controls-container, .esis-images-list, .edit-section-remove, .esis-caption-container
+    display block
+  .esis-nav, .esis-caption
+    display inline-block
+  .esis-preview-container
+    display none

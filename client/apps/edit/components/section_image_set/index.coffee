@@ -23,18 +23,24 @@ Artwork = require '../../../../models/artwork.coffee'
 module.exports = React.createClass
 
   getInitialState: ->
-    images: @props.section.images or []
+    images: @props.section.get('images') or []
     progress: null
 
   componentDidMount: ->
     @attachScribe()
     @setupAutocomplete()
+    @showPreviewImages()
 
   componentDidUpdate: ->
     @attachScribe()
 
   componentWillUnmount: ->
     @autocomplete.remove()
+
+  onStateChange: ->
+    @props.section.set images: @state.images if @state.images.length > 0
+    @showPreviewImages()
+    @forceUpdate()
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
@@ -54,7 +60,7 @@ module.exports = React.createClass
       templates:
         suggestion: (data) ->
           """
-            <div class='esa-suggestion' \
+            <div class='esis-suggestion' \
                  style='background-image: url(#{data.thumbnail})'>
             </div>
             #{data.value}
@@ -67,10 +73,9 @@ module.exports = React.createClass
       success: (artwork) =>
         @state.images.push artwork.denormalized()
         $(@refs.autocomplete.getDOMNode()).val('').focus()
-        @forceUpdate()
+        @onStateChange()
 
   upload: (e) ->
-    @props.setEditing(off)()
     gemup e.target.files[0],
       key: sd.GEMINI_KEY
       progress: (percent) =>
@@ -83,10 +88,11 @@ module.exports = React.createClass
         image.onload = =>
           @state.images.push url: src, type: 'image'
           @setState progress: null
-          @forceUpdate()
+          @onStateChange()
 
   removeItem: (item) -> =>
     @state.images = _.without @state.images, item
+    @onStateChange()
 
   attachScribe: ->
     return if @scribe? or not @props.editing
@@ -121,7 +127,18 @@ module.exports = React.createClass
         @refs.byUrl.setState loading: false, errorMessage: ''
         $(@refs.byUrl.getDOMNode()).val ''
         @state.images.push artwork.denormalized()
-        @forceUpdate()
+        @onStateChange()
+
+  showPreviewImages: ->
+    allowedPixels = 500 - 40.0
+    totalPixels = 0.0
+    $('.esis-preview-container .esis-preview-image').each (i, value) ->
+      _.defer ->
+        totalPixels = totalPixels + ((150.0 * value.width) / value.height)
+        if totalPixels > allowedPixels
+          return
+        else
+          $(value).css('display', 'inline-block')
 
   render: ->
     section {
@@ -163,7 +180,7 @@ module.exports = React.createClass
             }
       )
       (
-        if @state.images?.length > 0
+        if @state.images.length > 0
           ul { className: 'esis-images-list', ref: 'images' },
             (@state.images.map (item, i) =>
               li { key: i },
@@ -228,4 +245,19 @@ module.exports = React.createClass
             )
         else
           div { className: 'esis-placeholder' }, 'Add images and artworks above'
+      )
+      (
+        if @state.images.length > 0
+          div { className: 'esis-preview-container' },
+            @state.images.map (item, i) =>
+              img {
+                src: item.image or item.url or ''
+                className: 'esis-preview-image'
+              }
+            div { className: 'esis-preview-remaining' },
+              div {
+                className: 'esis-preview-icon'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
+              }
+              "#{@state.images.length} Enter Slideshow"
       )
