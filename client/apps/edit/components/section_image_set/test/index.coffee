@@ -20,7 +20,7 @@ describe 'SectionImageSet', ->
       onload: ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      SectionImage = benv.requireWithJadeify(
+      SectionImageSet = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
       SectionImageSet.__set__ 'gemup', @gemup = sinon.stub()
@@ -55,14 +55,9 @@ describe 'SectionImageSet', ->
 
   afterEach ->
     $.ajax.restore()
+    Backbone.sync.restore()
     benv.teardown()
     delete global.Image
-
-  it 'removes itself when the section is empty', ->
-    @component.props.section.destroy = sinon.stub()
-    @component.state.src = ''
-    @component.onClickOff()
-    @component.props.section.destroy.called.should.be.ok
 
   it 'uploads to gemini', (done) ->
     @component.upload target: files: ['foo']
@@ -74,11 +69,10 @@ describe 'SectionImageSet', ->
       done()
 
   it 'saves the url after upload', (done) ->
-    sinon.stub @component, 'onClickOff'
     @component.upload target: files: ['foo']
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.onClickOff.called.should.be.ok
+      @component.onStateChange.called.should.be.ok
       done()
 
   it 'renders an image', ->
