@@ -779,6 +779,39 @@ describe 'Article', ->
         article.sections[0].links[1].value.should.equal 'Andy Warhol'
         done()
 
+    it 'saves an image set section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'image_set'
+            images: [
+              {
+                type: 'image'
+                url: 'https://image.png'
+                caption: 'Trademarked'
+              }
+              {
+                type: 'artwork'
+                id: '123'
+                slug: 'andy-warhol'
+                title: 'The Piece'
+                date: '2015-04-01'
+                image: 'http://image.png'
+              }
+            ]
+          }
+        ]
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.sections[0].type.should.equal 'image_set'
+        article.sections[0].images[0].type.should.equal 'image'
+        article.sections[0].images[0].url.should.equal 'https://image.png'
+        article.sections[0].images[1].type.should.equal 'artwork'
+        article.sections[0].images[1].id.should.equal '123'
+        article.sections[0].images[1].slug.should.equal 'andy-warhol'
+        done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->

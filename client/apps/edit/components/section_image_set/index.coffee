@@ -18,7 +18,7 @@ icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 { div, section, h1, h2, span, img, header, input, nav, a, button, p, ul, li, strong } = React.DOM
-{ crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ crop, resize, fill } = embedly = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = React.createClass
 
