@@ -109,8 +109,11 @@ module.exports = React.createClass
     toggleScribePlaceholder @refs.editable.getDOMNode()
 
   onEditableKeyup: ->
+    return unless @refs.editable
     toggleScribePlaceholder @refs.editable.getDOMNode()
-    @setState caption: $(@refs.editable.getDOMNode()).html()
+    url = $(@refs.editable.getDOMNode()).data('id')
+    stateItem = _.find @state.images, url: url
+    stateItem.caption = $(@refs.editable.getDOMNode()).html()
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
@@ -132,10 +135,13 @@ module.exports = React.createClass
   showPreviewImages: ->
     allowedPixels = 500 - 40.0
     totalPixels = 0.0
+    usedPixels = 0.0
     $('.esis-preview-container .esis-preview-image').each (i, value) ->
       _.defer ->
+        usedPixels = totalPixels
         totalPixels = totalPixels + ((150.0 * value.width) / value.height)
         if totalPixels > allowedPixels
+          $(_this.refs.remaining.getDOMNode()).css('width',allowedPixels - usedPixels)
           return
         else
           $(value).css('display', 'inline-block')
@@ -209,18 +215,12 @@ module.exports = React.createClass
                         src: if @state.progress then item.url else resize(item.url, width: 900)
                         style: opacity: if @state.progress then @state.progress else '1'
                       }
-                    if item.caption
-                      div {
-                        className: 'esis-inline-caption'
-                        dangerouslySetInnerHTML: __html: item.caption
-                        key: 1
-                      }
-                    else
                       div { className: 'esis-caption-container', key: 1 },
                         div {
                           className: 'esis-caption bordered-input'
                           ref: 'editable'
                           onKeyUp: @onEditableKeyup
+                          'data-id': item.url
                           dangerouslySetInnerHTML: __html: item.caption
                         }
                         nav { ref: 'toolbar', className: 'edit-scribe-nav esis-nav' },
@@ -254,7 +254,7 @@ module.exports = React.createClass
                 src: item.image or item.url or ''
                 className: 'esis-preview-image'
               }
-            div { className: 'esis-preview-remaining' },
+            div { className: 'esis-preview-remaining', ref: 'remaining' },
               div {
                 className: 'esis-preview-icon'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()

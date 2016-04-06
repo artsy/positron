@@ -16,7 +16,7 @@ wide-input-width = 640px
   left -(controls-padding)
   padding controls-padding
   display none
-  z-index 2
+  z-index 3
   width overflow-width
 
 .esis-placeholder
@@ -78,13 +78,6 @@ wide-input-width = 640px
   position absolute
   width calc(100% - 40px)
 
-.esis-inline-caption
-  color gray-darker-color
-  margin-top 10px
-  font-style italic
-  a
-    color gray-darker-color
-
 .esis-controls-container
   fill-container()
   background black
@@ -140,6 +133,7 @@ wide-input-width = 640px
     margin-right 30px
     display inline-block
     position relative
+    vertical-align top
     p
       color gray-dark-color
       line-height 20px
@@ -227,10 +221,10 @@ wide-input-width = 640px
 
 .esis-preview-container
   display block
-  max-width 500px
+  width 500px
+  height 150px
   margin auto
   overflow hidden
-  max-height 150px
 
 .esis-preview-image
   display none
@@ -247,6 +241,8 @@ wide-input-width = 640px
   min-width 40px
   svg
     width 32px
+  span
+    display table-caption
 
 .esis-preview-icon
   text-align center
