@@ -45,13 +45,13 @@ describe 'SectionTool', ->
 
   it 'does not show a callout section if there is not a text section below it', ->
     r.simulate.click r.find @component, 'edit-section-tool-icon'
-    (r.findAll @component, 'edit-section-tool-callout').length.should.equal 0
+    (r.findAll @component, 'edit-section-tool-callout')[0].props.className.should.containEql 'is-disabled'
     React.renderToString(@SectionTool(
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
         ]
         index: 0
-    )).should.not.containEql 'edit-section-tool-callout'
+    )).should.containEql 'edit-section-tool-callout is-disabled'
 
   it 'shows a callout section if there is a text section below it', ->
     React.renderToString(@SectionTool(

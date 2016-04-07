@@ -30,6 +30,22 @@ fullscreenSection = (->
     background_image_url: @string().allow('',null)
 ).call Joi
 
+denormalizedArtwork = (->
+  @object().keys
+    type: @string().valid('artwork').default('artwork')
+    id: @string().allow('', null)
+    slug: @string().allow('', null)
+    date: @string().allow('', null)
+    title: @string().allow('', null)
+    image: @string().allow('', null)
+    partner: @object().keys
+      name: @string().allow('', null)
+      slug: @string().allow('', null)
+    artist: @object().keys
+      name: @string().allow('', null)
+      slug: @string().allow('', null)
+).call Joi
+
 @inputSchema = (->
   id: @objectId()
   author_id: @objectId().required()
@@ -74,20 +90,7 @@ fullscreenSection = (->
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
-      artworks: @array().items(
-        @object().keys
-          id: @string().allow('', null)
-          slug: @string().allow('', null)
-          date: @string().allow('', null)
-          title: @string().allow('', null)
-          image: @string().allow('', null)
-          partner: @object().keys
-            name: @string().allow('', null)
-            slug: @string().allow('', null)
-          artist: @object().keys
-            name: @string().allow('', null)
-            slug: @string().allow('', null)
-      ).allow(null).default([])
+      artworks: @array().items(denormalizedArtwork).allow(null).default([])
     @object().keys
       type: @string().valid('slideshow')
       items: @array().items [
@@ -97,6 +100,9 @@ fullscreenSection = (->
           type: @string().valid('artwork')
           id: @string()
       ]
+    @object().keys
+      type: 'image_set'
+      images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   primary_featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artist_ids: @array().items(@objectId()).allow(null)

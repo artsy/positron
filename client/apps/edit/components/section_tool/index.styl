@@ -69,6 +69,7 @@ section-btn-height = 130px
       fill white !important
 
 .edit-section-tool-menu
+  display none
   border 2px solid black
   position relative
   left 0
@@ -76,7 +77,6 @@ section-btn-height = 130px
   overflow hidden
   opacity 0
   border-top-color transparent
-  height 89px
   background gray-lightest-color
   li
     width 25%
@@ -140,18 +140,18 @@ section-btn-height = 130px
     .edit-menu-icon-toc svg
       left calc(50% - 21px)
       top 21px
-  li:first-child:nth-last-child(6),
-  li:first-child:nth-last-child(6) ~ li
-    width 20%
+    .edit-menu-icon-image-set svg
+      top 15px
+      left calc(50% - 18px)
   li:first-child:nth-last-child(7),
   li:first-child:nth-last-child(7) ~ li
-    width 16.66%
+    width 33.33%
   li:first-child:nth-last-child(8),
   li:first-child:nth-last-child(8) ~ li
-    width 14.28%
+    width 25%
 
 .edit-section-tool[data-state-open="true"]
-  max-height (section-btn-height * 2)
+  max-height (section-btn-height * 4)
   width 100%
   opacity 1
   position relative
@@ -167,10 +167,12 @@ section-btn-height = 130px
     opacity 1
     max-height (section-btn-height * 2)
     transition max-height 0.15s linear, opacity 0.15s linear
+    display block
 
 .edit-section-tool-menu li.edit-section-tool-slideshow
   display none
 
-.edit-section-tool-hero-fullscreen.is-disabled
-  cursor not-allowed
-  opacity 0.4
+.edit-section-tool-hero-fullscreen, .edit-section-tool-callout
+  &.is-disabled
+    cursor not-allowed
+    opacity 0.4
