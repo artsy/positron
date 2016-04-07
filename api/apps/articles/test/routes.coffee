@@ -17,7 +17,7 @@ describe 'routes', ->
       params: {}
       get: ->
       user: _.extend(fixtures().users, _id: ObjectId '5086df098523e60002000012')
-    @res = { send: sinon.stub(), err: sinon.stub() }
+    @res = { send: sinon.stub(), err: sinon.stub(), user: sinon.stub() }
     @next = sinon.stub()
 
   afterEach ->
