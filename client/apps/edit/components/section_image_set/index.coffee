@@ -37,10 +37,9 @@ module.exports = React.createClass
   componentWillUnmount: ->
     @autocomplete.remove()
 
-  onStateChange: ->
+  componentWillUpdate: ->
     @props.section.set images: @state.images if @state.images.length > 0
     @showPreviewImages()
-    @forceUpdate()
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
@@ -71,9 +70,9 @@ module.exports = React.createClass
   onSelect: (e, selected) ->
     new Artwork(id: selected.id).fetch
       success: (artwork) =>
-        @state.images.push artwork.denormalized()
+        newImages = @state.images.concat [artwork.denormalized()]
+        @setState images: newImages
         $(@refs.autocomplete.getDOMNode()).val('').focus()
-        @onStateChange()
 
   upload: (e) ->
     gemup e.target.files[0],
@@ -86,13 +85,12 @@ module.exports = React.createClass
         image = new Image()
         image.src = src
         image.onload = =>
-          @state.images.push url: src, type: 'image'
-          @setState progress: null
-          @onStateChange()
+          newImages = @state.images.concat [ { url: src, type: 'image' } ]
+          @setState progress: null, images: newImages
 
   removeItem: (item) -> =>
-    @state.images = _.without @state.images, item
-    @onStateChange()
+    newImages = _.without @state.images, item
+    @setState images: newImages
 
   attachScribe: ->
     return if @scribe? or not @props.editing
@@ -112,8 +110,8 @@ module.exports = React.createClass
     return unless @refs.editable
     toggleScribePlaceholder @refs.editable.getDOMNode()
     url = $(@refs.editable.getDOMNode()).data('id')
-    stateItem = _.find @state.images, url: url
-    stateItem.caption = $(@refs.editable.getDOMNode()).html()
+    image = _.find(@state.images, url: url)
+    image.caption = $(@refs.editable.getDOMNode()).html()
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
@@ -129,22 +127,18 @@ module.exports = React.createClass
       success: (artwork) =>
         @refs.byUrl.setState loading: false, errorMessage: ''
         $(@refs.byUrl.getDOMNode()).val ''
-        @state.images.push artwork.denormalized()
-        @onStateChange()
+        newImages = @state.images.concat [artwork.denormalized()]
+        @setState images: newImages
 
   showPreviewImages: ->
-    allowedPixels = 500 - 40.0
+    allowedPixels = 500 - 40.0 # 40 for margin
     totalPixels = 0.0
-    usedPixels = 0.0
-    $('.esis-preview-container .esis-preview-image').each (i, value) ->
+    $('.esis-preview-image-container .esis-preview-image').each (i, value) ->
       _.defer ->
-        usedPixels = totalPixels
-        totalPixels = totalPixels + ((150.0 * value.width) / value.height)
-        if totalPixels > allowedPixels
-          $(_this.refs.remaining.getDOMNode()).css('width',allowedPixels - usedPixels)
-          return
-        else
-          $(value).css('display', 'inline-block')
+        adjustedWidth = ((150.0 * value.width) / value.height)
+        totalPixels = totalPixels + adjustedWidth
+        return if totalPixels > allowedPixels
+        $(value).css('display', 'inline-block')
 
   render: ->
     section {
@@ -249,15 +243,16 @@ module.exports = React.createClass
       (
         if @state.images.length > 0
           div { className: 'esis-preview-container' },
-            @state.images.map (item, i) =>
-              img {
-                src: item.image or item.url or ''
-                className: 'esis-preview-image'
-              }
+            div { className: 'esis-preview-image-container' },
+              @state.images.map (item, i) =>
+                img {
+                  src: item.image or item.url or ''
+                  className: 'esis-preview-image'
+                }
             div { className: 'esis-preview-remaining', ref: 'remaining' },
               div {
                 className: 'esis-preview-icon'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
               }
-              "#{@state.images.length} Enter Slideshow"
+              div { className: 'esis-preview-text' }, "#{@state.images.length} Enter Slideshow"
       )

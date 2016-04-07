@@ -47,7 +47,7 @@ describe 'SectionImageSet', ->
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub @component, 'onStateChange'
+        sinon.stub @component, 'componentWillUpdate'
         sinon.stub Backbone, 'sync'
         sinon.stub @component, 'removeItem'
         sinon.stub $, 'ajax'
@@ -64,15 +64,15 @@ describe 'SectionImageSet', ->
     @gemup.args[0][0].should.equal 'foo'
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.state.images[2].url.should.equal 'fooza'
-      @component.state.images[2].type.should.equal 'image'
+      @component.setState.args[0][0].images[2].url.should.equal 'fooza'
+      @component.setState.args[0][0].images[2].type.should.equal 'image'
       done()
 
   it 'saves the url after upload', (done) ->
     @component.upload target: files: ['foo']
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.onStateChange.called.should.be.ok
+      @component.componentWillUpdate.called.should.be.ok
       done()
 
   it 'renders an image', ->

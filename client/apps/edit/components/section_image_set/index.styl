@@ -25,7 +25,6 @@ wide-input-width = 640px
   height 200px
   line-height @height
 
-
 .esis-image
   transition opacity 0.5s
 
@@ -54,7 +53,7 @@ wide-input-width = 640px
     position absolute
     width 100%
   p
-    line-height 29px
+    line-height 29px !important
 
 .esis-nav.edit-scribe-nav
   width 87px
@@ -220,11 +219,15 @@ wide-input-width = 640px
         float left
 
 .esis-preview-container
-  display block
   width 500px
-  height 150px
   margin auto
-  overflow hidden
+
+.esis-preview-image-container
+  float left
+  height 150px
+
+.esis-preview-text
+  text-align center
 
 .esis-preview-image
   display none
@@ -235,10 +238,11 @@ wide-input-width = 640px
   avant-garde('s-headline')
   height 150px
   border 2px solid black
-  display inline-block
   vertical-align top
   padding 10px
   min-width 40px
+  width auto
+  overflow hidden
   svg
     width 32px
   span

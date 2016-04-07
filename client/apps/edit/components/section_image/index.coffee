@@ -58,7 +58,6 @@ module.exports = React.createClass
     @scribe.use scribePluginSanitizer {
       tags:
         p: true
-        b: true
         i: true
         a: { href: true, target: '_blank' }
     }
@@ -88,7 +87,7 @@ module.exports = React.createClass
         div { className: 'esi-caption-container' },
           nav { ref: 'toolbar', className: 'edit-scribe-nav esi-nav' },
             button {
-              'data-command-name': 'bold'
+              'data-command-name': 'italic'
               dangerouslySetInnerHTML: __html: '&nbsp;'
               disabled: if @state.caption then false else true
             }
