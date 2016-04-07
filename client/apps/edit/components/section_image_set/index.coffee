@@ -110,7 +110,8 @@ module.exports = React.createClass
     return unless @refs.editable
     toggleScribePlaceholder @refs.editable.getDOMNode()
     url = $(@refs.editable.getDOMNode()).data('id')
-    image = _.find(@state.images, url: url)
+    newImages = _.clone @state.images
+    image = _.find(newImages, url: url)
     image.caption = $(@refs.editable.getDOMNode()).html()
 
   addArtworkFromUrl: (e) ->
