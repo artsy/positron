@@ -1,6 +1,8 @@
 Article = require '../../models/article'
+User = require '../../models/user'
 
 @create = (req, res, next) ->
+  res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
   render req, res, new Article
 
 @edit = (req, res, next) ->
@@ -9,6 +11,7 @@ Article = require '../../models/article'
     error: res.backboneError
     success: (article) ->
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
+      res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
       if article.get('author_id') isnt req.user.get('id')
         res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
       else

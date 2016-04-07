@@ -55,6 +55,7 @@ denormalizedArtwork = (->
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string()).default([])
   title: @string().allow('', null)
+  layout: @string().allow('left', 'center', null).default('center')
   published: @boolean().default(false)
   published_at: @date()
   scheduled_publish_at: @date().allow(null)
@@ -175,5 +176,5 @@ denormalizedArtwork = (->
   tags: @array()
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
+  layout: @string()
 ).call Joi
-

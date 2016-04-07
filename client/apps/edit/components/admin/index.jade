@@ -194,3 +194,27 @@ section#edit-admin.admin-form-container.max-width-container
       .admin-form-right-col
         label Related Articles
         #edit-admin-related-articles
+
+  if sd.IS_EDITORIAL_TEAM
+    section.admin-form-section
+      .admin-form-left
+        h1 Layout
+        h2 Change the article's layout
+      .admin-form-right
+        #edit-admin-layout.admin-form-right-col
+          label Center
+            .flat-radio-button
+              input(
+                type='radio'
+                name='layout'
+                checked=article.get('layout') == 'center'
+                value='center'
+              )
+          label Left
+            .flat-radio-button
+              input(
+                type='radio'
+                name='layout'
+                checked=article.get('layout') == 'left'
+                value='left'
+              )

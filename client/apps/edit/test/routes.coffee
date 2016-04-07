@@ -3,12 +3,14 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 sinon = require 'sinon'
 fixtures = require '../../../../test/helpers/fixtures'
-User = require '../../../models/user'
+rewire = require 'rewire'
+User = rewire '../../../models/user'
 
 describe 'routes', ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
+    User.__set__ 'sd', EDITORIAL_TEAM: 'kana'
     @req = { query: {}, params: {}, user: new User fixtures().users }
     @res = { render: sinon.stub(), locals: { sd: {} }, redirect: sinon.stub() }
 

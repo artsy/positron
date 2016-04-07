@@ -812,6 +812,23 @@ describe 'Article', ->
         article.sections[0].images[1].slug.should.equal 'andy-warhol'
         done()
 
+    it 'saves layouts', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        layout: 'left'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.layout.should.equal 'left'
+        done()
+
+    it 'it defaults to center if layout is not specified', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.layout.should.equal 'center'
+        done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->
