@@ -25,6 +25,8 @@ describe 'SectionImageSet', ->
       )
       SectionImageSet.__set__ 'gemup', @gemup = sinon.stub()
       SectionImageSet.__set__ 'Autocomplete', sinon.stub()
+      SectionImageSet.__set__ 'Input', sinon.stub()
+      SectionImageSet.__set__ 'resize', (url)-> url
       @component = React.render SectionImageSet(
         section: new Backbone.Model
           type: 'image_set'
@@ -78,10 +80,6 @@ describe 'SectionImageSet', ->
   it 'renders an image', ->
     $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/image.png'
 
-  it 'saves captions on click off', ->
-    @component.state.images[0].caption = 'Courtesy of The Guggenheim'
-    @component.props.section.get('images')[0].caption.should.equal 'Courtesy of The Guggenheim'
-
   it 'renders an artwork', ->
     $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/artwork.jpg'
 
@@ -93,6 +91,3 @@ describe 'SectionImageSet', ->
   it 'renders a preview', ->
     $(@component.getDOMNode()).html().should.containEql 'src="https://artsy.net/image.png" class="esis-preview-image"'
     $(@component.getDOMNode()).html().should.containEql '"https://artsy.net/artwork.jpg" class="esis-preview-image"'
-
-  it 'displays the number of images in the preview', ->
-    $(@component.getDOMNode()).html().should.containEql '2 Enter Slideshow'
