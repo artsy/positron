@@ -2,22 +2,15 @@
 # Image Set section that allows uploading a mix of images and artworks
 #
 
-# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
-# requiring it for testing in node.
-try
-  Scribe = require 'scribe-editor'
-  scribePluginToolbar = require 'scribe-plugin-toolbar'
-  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginLinkTooltip = require 'scribe-plugin-enhanced-link-tooltip'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
-{ div, section, h1, h2, span, img, header, input, nav, a, button, p, ul, li, strong } = React.DOM
+Input = React.createFactory require './input.coffee'
+{ div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
 { crop, resize, fill } = embedly = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 
 module.exports = React.createClass
@@ -27,19 +20,17 @@ module.exports = React.createClass
     progress: null
 
   componentDidMount: ->
-    @attachScribe()
     @setupAutocomplete()
     @showPreviewImages()
 
   componentDidUpdate: ->
-    @attachScribe()
+    @showPreviewImages()
 
   componentWillUnmount: ->
     @autocomplete.remove()
 
   componentWillUpdate: ->
     @props.section.set images: @state.images if @state.images.length > 0
-    @showPreviewImages()
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
@@ -92,28 +83,6 @@ module.exports = React.createClass
     newImages = _.without @state.images, item
     @setState images: newImages
 
-  attachScribe: ->
-    return if @scribe? or not @props.editing
-    return unless @refs.editable
-    @scribe = new Scribe @refs.editable.getDOMNode()
-    @scribe.use scribePluginSanitizer {
-      tags:
-        p: true
-        i: true
-        a: { href: true, target: '_blank' }
-    }
-    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
-    @scribe.use scribePluginLinkTooltip()
-    toggleScribePlaceholder @refs.editable.getDOMNode()
-
-  onEditableKeyup: ->
-    return unless @refs.editable
-    toggleScribePlaceholder @refs.editable.getDOMNode()
-    url = $(@refs.editable.getDOMNode()).data('id')
-    newImages = _.clone @state.images
-    image = _.find(newImages, url: url)
-    image.caption = $(@refs.editable.getDOMNode()).html()
-
   addArtworkFromUrl: (e) ->
     e.preventDefault()
     val = @refs.byUrl.getDOMNode().value
@@ -132,14 +101,15 @@ module.exports = React.createClass
         @setState images: newImages
 
   showPreviewImages: ->
-    allowedPixels = 500 - 40.0 # 40 for margin
-    totalPixels = 0.0
-    $('.esis-preview-image-container .esis-preview-image').each (i, value) ->
-      _.defer ->
-        adjustedWidth = ((150.0 * value.width) / value.height)
-        totalPixels = totalPixels + adjustedWidth
-        return if totalPixels > allowedPixels
-        $(value).css('display', 'inline-block')
+    # Slideshow Preview
+    $('.esis-preview-image-container').each (i, value) ->
+      allowedPixels = 560.0 - 100 # min-width + margins
+      totalPixels = 0.0
+      $(value).find('img').each (i, value) ->
+        _.defer ->
+          totalPixels = totalPixels + value.width
+          return if totalPixels > allowedPixels
+          $(value).css('display', 'inline-block')
 
   render: ->
     section {
@@ -204,32 +174,20 @@ module.exports = React.createClass
                   ]
                 else
                   [
-                    div { className: 'esis-img-container', key: 0 },
-                      img {
-                        className: 'esis-image'
-                        src: if @state.progress then item.url else resize(item.url, width: 900)
-                        style: opacity: if @state.progress then @state.progress else '1'
-                      }
-                      div { className: 'esis-caption-container', key: 1 },
-                        div {
-                          className: 'esis-caption bordered-input'
-                          ref: 'editable'
-                          onKeyUp: @onEditableKeyup
-                          'data-id': item.url
-                          dangerouslySetInnerHTML: __html: item.caption
+                    div { className: 'esis-img-container'},
+                      [
+                        img {
+                          className: 'esis-image'
+                          src: if @state.progress then item.url else resize(item.url, width: 900)
+                          style: opacity: if @state.progress then @state.progress else '1'
                         }
-                        nav { ref: 'toolbar', className: 'edit-scribe-nav esis-nav' },
-                          button {
-                            'data-command-name': 'italic'
-                            dangerouslySetInnerHTML: __html: '&nbsp;'
-                            disabled: if item.caption then false else true
-                          }
-                          button {
-                            'data-command-name': 'linkPrompt'
-                            dangerouslySetInnerHTML:
-                              __html: "&nbsp;" + $(icons()).filter('.link').html()
-                            disabled: if item.caption then false else true
-                          }
+                        Input {
+                          caption: item.caption
+                          images: @state.images
+                          url: item.url
+                          editing: @props.editing
+                        }
+                      ]
                     button {
                       className: 'edit-section-remove button-reset esis-img-remove'
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
@@ -245,15 +203,19 @@ module.exports = React.createClass
         if @state.images.length > 0
           div { className: 'esis-preview-container' },
             div { className: 'esis-preview-image-container' },
-              @state.images.map (item, i) =>
+              @state.images.slice(0,4).map (item, i) =>
                 img {
-                  src: item.image or item.url or ''
+                  src: resize((item.image or item.url or ''), height: 150)
                   className: 'esis-preview-image'
                 }
-            div { className: 'esis-preview-remaining', ref: 'remaining' },
+            div {
+              className: 'esis-preview-remaining'
+              ref: 'remaining'
+            },
               div {
-                className: 'esis-preview-icon'
+                className: 'esis-preview-icon' + (if @state.images.length > 9 then ' is-double-digit' else '')
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
+                "data-total": "#{@state.images.length}"
               }
-              div { className: 'esis-preview-text' }, "#{@state.images.length} Enter Slideshow"
+              div { className: 'esis-preview-text' }, "Enter Slideshow"
       )

@@ -219,7 +219,7 @@ wide-input-width = 640px
         float left
 
 .esis-preview-container
-  width 500px
+  width 560px
   margin auto
 
 .esis-preview-image-container
@@ -240,7 +240,7 @@ wide-input-width = 640px
   border 2px solid black
   vertical-align top
   padding 10px
-  min-width 40px
+  min-width 50px
   width auto
   overflow hidden
   svg
@@ -251,6 +251,20 @@ wide-input-width = 640px
 .esis-preview-icon
   text-align center
   margin 25px 0px 20px 0px
+  width  32px
+  position relative
+  text-align center
+  margin 30px auto 20px auto
+  svg
+    width 32px
+  &::after
+    content attr(data-total)
+    left 8px
+    top 13px
+    position absolute
+  &.is-double-digit
+    &::after
+      left 5px
 
 .edit-section-container[data-editing=false][data-type=image_set]
   .esis-preview-container

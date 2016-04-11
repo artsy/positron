@@ -23,6 +23,8 @@ module.exports = React.createClass
   onClickOff: ->
     @setEditing(off)()
     @refs.section?.onClickOff?()
+    if @props.section.get('type') is 'image_set'
+      @props.section.destroy() if @props.section.get('images').length is 0
 
   componentDidMount: ->
     @props.section.on 'change:layout', => @forceUpdate()

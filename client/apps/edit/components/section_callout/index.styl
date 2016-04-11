@@ -18,7 +18,7 @@ header-bottom = 10px
   fill-container()
   background black
   z-index 3
-  height 331px
+  height 342px
   top -(@height)
   text-align center
   display none
@@ -37,7 +37,7 @@ header-bottom = 10px
     width 100%
     margin-bottom 10px
 
-.esc-hide-thumbnail
+.esc-hide-thumbnail, .esc-top-stories
   h1
     display inline
   input
@@ -136,3 +136,22 @@ header-bottom = 10px
         background-size cover
         margin-right 10px
         float left
+
+.esc-top-stories
+  &__headline
+    avant-garde 'body'
+    padding 20px 0px
+  &__container
+    padding-top 10px
+    border-bottom 1px solid gray-lighter-color
+  &__left
+    width 80px
+    height 80px
+    background-color gray-lighter-color
+    margin-right 10px
+  &__right
+    garamond 's-body'
+    line-height 80px
+    vertical-align top
+  &__right, &__left
+    display inline-block
