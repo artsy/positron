@@ -70,6 +70,7 @@ denormalizedArtwork = (->
       text: @string().allow('',null)
       article: @string().allow('',null)
       hide_image: @boolean().default(false)
+      top_stories: @boolean().default(false)
     @object().keys
       type: @string().valid('embed')
       url: @string().allow('',null)

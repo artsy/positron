@@ -74,6 +74,7 @@ module.exports = React.createClass
           text: ''
           article: ''
           hide_image: false
+          top_stories: false
         }, at: @props.index + 1
       when 'toc'
         @props.sections.add {

@@ -23,12 +23,14 @@ module.exports = React.createClass
     @setupAutocomplete()
     @showPreviewImages()
 
+  componentDidUpdate: ->
+    @showPreviewImages()
+
   componentWillUnmount: ->
     @autocomplete.remove()
 
   componentWillUpdate: ->
     @props.section.set images: @state.images if @state.images.length > 0
-    @showPreviewImages()
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
@@ -101,7 +103,7 @@ module.exports = React.createClass
   showPreviewImages: ->
     # Slideshow Preview
     $('.esis-preview-image-container').each (i, value) ->
-      allowedPixels = 580.0 - 120 # min-width + margins
+      allowedPixels = 560.0 - 100 # min-width + margins
       totalPixels = 0.0
       $(value).find('img').each (i, value) ->
         _.defer ->

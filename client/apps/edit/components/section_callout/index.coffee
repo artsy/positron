@@ -23,6 +23,7 @@ module.exports = React.createClass
     progress: null
     articleModel: null
     hide_image: @props.section.get('hide_image') or false
+    top_stories: @props.section.get('top_stories') or false
 
   componentDidMount: ->
     @fetchArticle(@props.section.get('article')) if @props.section.get('article')
@@ -37,7 +38,10 @@ module.exports = React.createClass
     @props.section.destroy()
 
   getCalloutType: ->
-    if @state.thumbnail_url or @state.articleModel then 'is-article' else 'is-pull-quote'
+    if @state.thumbnail_url or @state.articleModel
+      'is-article'
+    else
+      'is-pull-quote'
 
   getThumbnail: ->
     if @state.thumbnail_url?
@@ -64,12 +68,13 @@ module.exports = React.createClass
 
   onClickOff: ->
     _.defer =>
-      if @state.article or @state.text or @state.thumbnail_url
+      if @state.article or @state.text or @state.thumbnail_url or @state.top_stories
         @props.section.set
           article: @state.article
           text: @state.text
           thumbnail_url: @state.thumbnail_url
           hide_image: @state.hide_image
+          top_stories: @state.top_stories
       else
         @props.section.destroy()
 
@@ -81,6 +86,11 @@ module.exports = React.createClass
   setHideImage: ->
     @setState
       hide_image: $(@refs.checkInput.getDOMNode()).is(':checked')
+    @onClickOff()
+
+  setTopStories: ->
+    @setState
+      top_stories: $(@refs.topStories.getDOMNode()).is(':checked')
     @onClickOff()
 
   componentWillUnmount: ->
@@ -161,6 +171,14 @@ module.exports = React.createClass
               value: @state.hide_image?
               onChange: @setHideImage
             }
+          div { className: 'esc-top-stories' },
+            h1 {}, 'Top Stories on Artsy'
+            input {
+              type: 'checkbox'
+              ref: 'topStories'
+              value: @state.top_stories?
+              onChange: @setTopStories
+            }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -183,6 +201,14 @@ module.exports = React.createClass
           div { className: 'esc-callout-right' },
             p { className: 'esc-title' }, @state.text or @state.articleModel?.get('thumbnail_title') or ''
             p { className: 'esc-read-article' }, 'Read Full Article'
+      else if @state.top_stories
+        div { className: 'esc-top-stories' },
+            div { className: 'esc-top-stories__headline'}, "Top Stories on Artsy"
+            _(3).times ->
+              div { className: 'esc-top-stories__container' },
+                div { className: 'esc-top-stories__left'}
+                div { className: 'esc-top-stories__right' },
+                  p { className: 'esc-top-stories__title' }, "Top Stories on Artsy will appear here"
       else
         div { className: 'esc-empty-placeholder' }, 'Add a Callout Above'
       )

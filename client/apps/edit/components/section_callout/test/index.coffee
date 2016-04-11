@@ -64,3 +64,13 @@ describe 'SectionCallout', ->
   xit 'adds an article onSelect', ->
     @component.onSelect({},{ id: '123', value: 'Foo Title', thumbnail: '' })
     Backbone.sync.args[0][2].success _.extend fabricate('article'), {id: '123'}
+
+  it 'renders a top stories callout', ->
+    render = React.renderToString(@SectionCallout
+      section: @sections = new Section
+        type: 'callout'
+        top_stories: true
+      setEditing: ->
+      editing: true
+    )
+    render.should.containEql 'Top Stories'
