@@ -16,15 +16,10 @@ module.exports.ErrorModal = class ErrorModal extends Backbone.View
 
   events:
     'click .error-modal-close': 'close'
-    'click .error-modal-report-button': 'openIntercom'
 
   close: (e) ->
     e.preventDefault()
     @modal.close()
-
-  openIntercom: ->
-    $('#intercom-launcher').click()
-    $('.error-modal-report-button').hide()
 
 module.exports.openErrorModal = (err) ->
   new ErrorModal error: err
