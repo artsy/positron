@@ -1,6 +1,6 @@
 # Error
 
-Unexpected error handler UI for the client and server side. On the client shows a modal, on the server renders that modal in a page. The report functionality requires Intercom to be integrated (all it does is click the intercom button on the page).
+Unexpected error handler UI for the client and server side. On the client shows a modal, on the server renders that modal in a page.
 
 ![](http://cl.ly/image/0r0G432W031A)
 
