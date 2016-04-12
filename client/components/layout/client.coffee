@@ -60,5 +60,4 @@ initAnalyitcs = ->
     analytics.identify sd.USER.id,
       email: sd.USER.email
       name: sd.USER.name
-    , integrations: Intercom: user_hash: sd.USER_HASH
   analytics.page()
