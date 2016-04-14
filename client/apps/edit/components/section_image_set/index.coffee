@@ -105,11 +105,13 @@ module.exports = React.createClass
     $('.esis-preview-image-container').each (i, value) ->
       allowedPixels = 560.0 - 100 # min-width + margins
       totalPixels = 0.0
-      $(value).find('img').each (i, value) ->
-        _.defer ->
-          totalPixels = totalPixels + value.width
-          return if totalPixels > allowedPixels
-          $(value).css('display', 'inline-block')
+      $(value).find('img').each (i, img) ->
+        _.defer -> _.defer ->
+          totalPixels = totalPixels + img.width
+          if totalPixels > allowedPixels
+            $(img).css('display', 'none')
+          else
+            $(img).css('display', 'inline-block')
 
   render: ->
     section {
