@@ -16,10 +16,10 @@ module.exports = class Section extends Backbone.Model
     return throw Error 'Missing jQuery' unless $?
     _.compact $(@get attr).find('a').map(->
       href = $(this).attr('href')
-      if href.match('google')
+      if href?.match('google')
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
         href = _.first(href.split('&'))
-      if href.match('artsy.net/' + resource)
+      if href?.match('artsy.net/' + resource)
         _.last url.parse(href).pathname?.split('/')
       else
         null

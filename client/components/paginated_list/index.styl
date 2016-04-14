@@ -5,14 +5,18 @@ thumbnail-width = 145px
 
 .paginated-list-item
   clearfix()
+  display inline-block
   border-bottom 1px solid gray-lighter-color
   padding 20px 0
   cursor pointer
   transition opacity 0.2s ease-in-out
-  &:hover
-    opacity 0.7
+  width 100%
   &:last-of-type
     border-bottom 0
+  .paginated-list-article
+    &:hover
+      opacity 0.7
+    display inline-block
   .paginated-list-img, .paginated-list-missing-img
     width thumbnail-width
     margin-right 20px
@@ -25,8 +29,13 @@ thumbnail-width = 145px
   h1
     garamond(l-body)
     margin-bottom 5px
+    max-width 630px
   h2
     avant-garde(s-headline)
+
+.paginated-list-preview
+  float right
+  margin-top 25px
 
 .paginated-list-text-container
   width "calc(100% - %s)" % (thumbnail-width + 20px)

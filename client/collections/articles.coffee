@@ -27,3 +27,5 @@ module.exports = class Articles extends Backbone.Collection
           "Last saved #{moment(article.get('updated_at')).fromNow()}"
       )
       href: "/articles/#{article.get('id')}/edit"
+      slug: article.get('slug')
+      published: article.get('published')
