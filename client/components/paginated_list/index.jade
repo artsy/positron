@@ -3,7 +3,7 @@ include ../../../node_modules/artsy-ezel-components/pagination/paginator
 mixin paginated-list(currentPage, totalPages, items, paginationParams)
   for item in items
     section.paginated-list-item
-      a( href=item.href )
+      a.paginated-list-article( href=item.href )
         if item.imgSrc
           .paginated-list-img( style="background-image: url(#{item.imgSrc})" )
         else
@@ -14,4 +14,12 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams)
           else
             h1.paginated-list-missing-title Missing Title
           h2!= item.subtitle
+      a.paginated-list-preview.avant-garde-button(
+        href="#{sd.FORCE_URL}/article/#{item.slug}"
+        target='_blank'
+      )
+        if item.published
+          | View
+        else
+          | Preview
   +paginate(currentPage, totalPages, paginationParams)
