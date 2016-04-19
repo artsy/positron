@@ -37,7 +37,7 @@ module.exports = class EditLayout extends Backbone.View
     window.onbeforeunload = =>
       if $.active > 0
         "Your article is not finished saving."
-      else if @changedAPublishedArticle is true and not @finished
+      else if @changedSection is true and not @finished
         "You have unsaved changes, do you wish to continue?"
       else
         null
@@ -150,7 +150,7 @@ module.exports = class EditLayout extends Backbone.View
 
   onKeyup: =>
     if @article.get('published')
-      @changedAPublishedArticle = true
+      @changedSection = true
       $('#edit-save').addClass 'attention'
     else
       @article.save @serialize()
