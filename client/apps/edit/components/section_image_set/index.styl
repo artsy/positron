@@ -269,13 +269,13 @@ wide-input-width = 640px
 .edit-section-container[data-editing=false][data-type=image_set]
   .esis-preview-container, .edit-section-remove
     display block
-  .edit-section-controls, .esis-controls-container, .esis-images-list, .esis-caption-container, .esis-nav, .esis-caption
+  .edit-section-controls, .esis-controls-container, .esis-images-list, .esis-caption-container, .esis-nav, .esis-caption, .esis-img-remove
     display none
 
 .edit-section-container[data-editing=true][data-type=image_set]
-  .edit-section-controls, .esis-controls-container, .esis-images-list, .esis-caption-container
+  .esis-preview-container, .edit-section-remove
+    display none
+  .edit-section-controls, .esis-controls-container, .esis-images-list, .esis-caption-container, .esis-img-remove
     display block
   .esis-nav, .esis-caption
     display inline-block
-  .esis-preview-container, .edit-section-remove
-    display none

@@ -82,6 +82,7 @@ module.exports = React.createClass
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
     @setState images: newImages
+    @forceUpdate()
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
@@ -194,7 +195,6 @@ module.exports = React.createClass
                       className: 'edit-section-remove button-reset esis-img-remove'
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
-                      key: 2
                     }
                   ]
             )

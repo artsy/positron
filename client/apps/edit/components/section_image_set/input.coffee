@@ -16,6 +16,7 @@ module.exports = React.createClass
   getInitialState: ->
     caption: @props.caption or ''
     images: @props.images
+    url: @props.url
 
   componentDidMount: ->
     @attachScribe()
@@ -41,7 +42,7 @@ module.exports = React.createClass
     return unless @refs.editable
     toggleScribePlaceholder @refs.editable.getDOMNode()
     url = $(@refs.editable.getDOMNode()).data('id')
-    newImages = _.clone @state.images
+    newImages = _.clone @props.images
     image = _.find(newImages, url: url)
     image.caption = $(@refs.editable.getDOMNode()).html()
 
@@ -52,17 +53,17 @@ module.exports = React.createClass
         ref: 'editable'
         onKeyUp: @onEditableKeyup
         'data-id': @props.url
-        dangerouslySetInnerHTML: __html: @state.caption
+        dangerouslySetInnerHTML: __html: @props.caption
       }
       nav { ref: 'toolbar', className: 'edit-scribe-nav esis-nav' },
         button {
           'data-command-name': 'italic'
           dangerouslySetInnerHTML: __html: '&nbsp;'
-          disabled: if @state.caption then false else true
+          disabled: if @props.caption then false else true
         }
         button {
           'data-command-name': 'linkPrompt'
           dangerouslySetInnerHTML:
             __html: "&nbsp;" + $(icons()).filter('.link').html()
-          disabled: if @state.caption then false else true
+          disabled: if @props.caption then false else true
         }
