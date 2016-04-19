@@ -140,6 +140,7 @@ denormalizedArtworkData = (artwork) ->
   images = artwork.get('images')
   defaultImage = new AdditionalImage(_.findWhere(images, is_default: true) or _.first images)
   denormalizedArtwork =
+    type: 'artwork'
     id: artwork.get('_id')
     slug: artwork.get('id')
     date: artwork.get('date')
