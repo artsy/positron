@@ -119,11 +119,8 @@ module.exports = class EditLayout extends Backbone.View
     @article.save @serialize()
 
   addRemoveReset: =>
-    if @article.get('published')
-      @changedAPublishedArticle = true
-      $('#edit-save').addClass 'attention'
-    else
-      @article.save()
+    @changedSection = true
+    $('#edit-save').addClass 'attention'
 
   highlightMissingFields: =>
     @openTab 1

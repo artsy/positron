@@ -47,12 +47,12 @@ describe 'EditLayout', ->
     it 'does not autosave on debounce keyup when editing a published article', ->
       @view.article.set { published: true }
       $('#edit-title textarea').trigger 'keyup'
-      @view.changedAPublishedArticle.should.equal true
+      @view.changedSection.should.equal true
 
     it 'does not autosave on section changes when editing a published article', ->
       @view.article.set { published: true }
       @view.article.sections.trigger 'add'
-      @view.changedAPublishedArticle.should.equal true
+      @view.changedSection.should.equal true
 
   describe '#serialize', ->
 
@@ -128,7 +128,7 @@ describe 'EditLayout', ->
 
     it 'stops you if theres a published article that is not yet saved', ->
       $.active = 0
-      @view.changedAPublishedArticle = true
+      @view.changedSection = true
       @view.finished = false
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'do you wish to continue'
