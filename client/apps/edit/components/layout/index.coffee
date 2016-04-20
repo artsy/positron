@@ -91,6 +91,7 @@ module.exports = class EditLayout extends Backbone.View
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
       send_body: @$('[name=send_body]').is(':checked')
       layout: @$('[name=layout]:checked').val()
+      instant_article: @$('[name=instant_article]').is(':checked')
     }
 
   toggleAstericks: =>
