@@ -145,6 +145,7 @@ denormalizedArtwork = (->
     footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
   send_body: @boolean().default(false)
+  instant_article: @boolean().default(false)
 ).call Joi
 
 #
@@ -177,4 +178,5 @@ denormalizedArtwork = (->
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()
+  instant_article: @boolean()
 ).call Joi

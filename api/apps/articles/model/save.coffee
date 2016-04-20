@@ -23,7 +23,7 @@ cloneDeep = require 'lodash.clonedeep'
 EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 { crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
-artsyXapp = require('artsy-xapp')
+artsyXapp = require('artsy-xapp').token or ''
 
 @validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema.inputSchema
@@ -70,7 +70,7 @@ setEmailFields = (article, author) =>
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': artsyXapp.token)
+            .set('X-Xapp-Token': artsyXapp)
             .end callback
   if input.featured_artist_ids
     for artistId in input.featured_artist_ids
@@ -78,13 +78,13 @@ setEmailFields = (article, author) =>
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': artsyXapp.token)
+            .set('X-Xapp-Token': artsyXapp)
             .end callback
   if input.fair_id
     callbacks.push (callback) ->
       request
         .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
-        .set('X-Xapp-Token': artsyXapp.token)
+        .set('X-Xapp-Token': artsyXapp)
         .end callback
   if input.partner_ids
     for partnerId in input.partner_ids
@@ -92,7 +92,7 @@ setEmailFields = (article, author) =>
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
-            .set('X-Xapp-Token': artsyXapp.token)
+            .set('X-Xapp-Token': artsyXapp)
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
@@ -114,7 +114,7 @@ setEmailFields = (article, author) =>
   Q.allSettled( for artworkId in _.flatten artworkIds
     requestBluebird
       .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
-      .set('X-Xapp-Token': artsyXapp.token)
+      .set('X-Xapp-Token': artsyXapp)
   ).done (responses) =>
     fetchedArtworks = _.map responses, (res) ->
       res.value?.body

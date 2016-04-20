@@ -323,6 +323,23 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles that should be Instant Articles', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Hello Wurld'
+          published: true
+          instant_article: true
+        }
+      ], ->
+        Article.where {
+          published: true
+          instant_article: true
+        }, (err, res) ->
+          { total, count, results } = res
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
@@ -827,6 +844,15 @@ describe 'Article', ->
       }, 'foo', (err, article) ->
         return done err if err
         article.layout.should.equal 'center'
+        done()
+
+    it 'saves articles that should be FB Instant Articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        instant_article: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.instant_article.should.be.true()
         done()
 
   describe '#publishScheduledArticles', ->
