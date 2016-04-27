@@ -65,8 +65,8 @@ describe 'Save', ->
         @sailthru.apiPost.args[0][1].vars.credit_line.should.containEql 'Artsy Credit'
         @sailthru.apiPost.args[0][1].vars.credit_url.should.containEql 'artsy.net'
         @sailthru.apiPost.args[0][1].author.should.containEql 'Kana Abe'
-        @sailthru.apiPost.args[0][1].images.full.url.should.containEql 'https://i.embed.ly/1/display/crop?width=1200&height=706&quality=95&key=&url=imageurl.com%2Fimage.jpg'
-        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql 'https://i.embed.ly/1/display/crop?width=900&height=530&quality=95&key=&url=imageurl.com%2Fimage.jpg'
+        @sailthru.apiPost.args[0][1].images.full.url.should.containEql '&width=1200&height=706&quality=95&src=imageurl.com%2Fimage.jpg'
+        @sailthru.apiPost.args[0][1].images.thumb.url.should.containEql '&width=900&height=530&quality=95&src=imageurl.com%2Fimage.jpg'
         done()
 
     it 'sends the article text body', (done) ->
