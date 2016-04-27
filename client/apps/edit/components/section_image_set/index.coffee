@@ -11,7 +11,7 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 Input = React.createFactory require './input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
-{ crop, resize, fill } = embedly = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ resize } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
 

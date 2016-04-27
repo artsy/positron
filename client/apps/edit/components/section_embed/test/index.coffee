@@ -22,7 +22,6 @@ describe 'SectionEmbed', ->
         setEditing: ->
         changeLayout: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub $, 'get'
         sinon.stub @component, 'setState'
         sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'
@@ -30,18 +29,12 @@ describe 'SectionEmbed', ->
 
   afterEach ->
     Backbone.sync.restore()
-    $.get.restore()
     benv.teardown()
 
   it 'destroys the section when clicking off', ->
     @component.props.section.on 'destroy', spy = sinon.spy()
     @component.onClickOff()
     spy.called.should.be.ok
-
-  it 'fetches embedly iframe on init', ->
-    @component.props.section.set url: 'http://google.com'
-    @component.componentDidMount()
-    $.get.args[0][0].should.containEql 'https://api.embed.ly/1/oembed?maxwidth=500&key=&url=http%3A%2F%2Fgoogle.com'
 
   it 'gets width for overflow styling', ->
     @component.props.section.set layout: 'overflow'

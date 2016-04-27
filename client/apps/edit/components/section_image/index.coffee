@@ -16,7 +16,7 @@ toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
-{ crop, resize, fill } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ crop, resize, fill } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
 

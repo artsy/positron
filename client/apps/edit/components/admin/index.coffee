@@ -7,7 +7,7 @@ sd = require('sharify').data
 _s = require 'underscore.string'
 moment = require 'moment'
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
-{ crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ crop } = require '../../../../components/resizer/index.coffee'
 
 module.exports = class EditAdmin extends Backbone.View
 

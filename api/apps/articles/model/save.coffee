@@ -20,9 +20,8 @@ Article = require './index'
 { ObjectId } = require 'mongojs'
 cloneDeep = require 'lodash.clonedeep'
 { ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
-EMBEDLY_KEY, FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL } = process.env
+FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL, GEMINI_CLOUDFRONT_URL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
-{ crop } = require('embedly-view-helpers')(EMBEDLY_KEY)
 artsyXapp = require('artsy-xapp').token or ''
 
 @validate = (input, callback) ->
@@ -288,3 +287,7 @@ getTextSections = (article) ->
   for section in article.sections when section.type is 'text'
     condensedHTML = condensedHTML.concat section.body
   condensedHTML
+
+crop = (url, options = {}) ->
+  { width, height } = options
+  "#{GEMINI_CLOUDFRONT_URL}/?resize_to=fill&width=#{width}&height=#{height}&quality=95&src=#{encodeURIComponent(url)}"

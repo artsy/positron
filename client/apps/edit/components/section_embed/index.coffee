@@ -1,12 +1,10 @@
 #
-# Artworks section that shows artwork images in various layouts. A user can
-# add artworks from urls or search via autocomplete.
+# Embed section for supporting external content via iframes
 #
 
 _ = require 'underscore'
 React = require 'react'
 sd = require('sharify').data
-{ oembed } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 
 module.exports = React.createClass
@@ -14,8 +12,6 @@ module.exports = React.createClass
   getInitialState: ->
     errorMessage: ''
     url: @props.section.get('url')
-    embeddable: null
-    iframe: ''
     height: @props.section.get('height')
     mobile_height: @props.section.get('mobile_height')
     layout: @props.section.get('layout') or 'column_width'
@@ -38,11 +34,9 @@ module.exports = React.createClass
     @updateIframe url, height
 
   updateIframe: (url, height = '') ->
-    $.get oembed(url, { maxwidth: @getWidth() }), (response) =>
-      @setState iframe: response.html if response.html
-      @setState url: url, height: height, embeddable: response.html?
-      @forceUpdate()
-      @setState loading: false
+    @setState url: url, height: height
+    @forceUpdate()
+    @setState loading: false
 
   changeLayout: (layout) -> =>
     @props.section.set layout: layout
@@ -123,12 +117,6 @@ module.exports = React.createClass
       }
         (if @state.url is ''
           div { className: 'ese-empty-placeholder' }, 'Add URL above'
-        else if @state.embeddable and @state.iframe
-          div {
-            className: 'ese-embed-content'
-            dangerouslySetInnerHTML: __html: @state.iframe
-            style: { 'height': @state.height if @state.height?.length }
-          }
         else
           div {
             className: 'ese-embed-content'
