@@ -57,7 +57,6 @@ module.exports = React.createClass
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
-        p: true
         i: true
         a: { href: true, target: '_blank' }
     }
@@ -90,12 +89,14 @@ module.exports = React.createClass
               'data-command-name': 'italic'
               dangerouslySetInnerHTML: __html: '&nbsp;'
               disabled: if @state.caption then false else true
+              onClick: @onEditableKeyup
             }
             button {
               'data-command-name': 'linkPrompt'
               dangerouslySetInnerHTML:
                 __html: "&nbsp;" + $(icons()).filter('.link').html()
               disabled: if @state.caption then false else true
+              onClick: @onEditableKeyup
             }
           div {
             className: 'esi-caption bordered-input'

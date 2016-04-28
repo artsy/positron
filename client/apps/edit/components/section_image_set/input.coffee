@@ -30,7 +30,6 @@ module.exports = React.createClass
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
-        p: true
         i: true
         a: { href: true, target: '_blank' }
     }
@@ -39,7 +38,6 @@ module.exports = React.createClass
     toggleScribePlaceholder @refs.editable.getDOMNode()
 
   onEditableKeyup: ->
-    return unless @refs.editable
     toggleScribePlaceholder @refs.editable.getDOMNode()
     url = $(@refs.editable.getDOMNode()).data('id')
     newImages = _.clone @props.images
