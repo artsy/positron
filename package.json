@@ -28,7 +28,6 @@
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
-    "embedly-view-helpers": "git://github.com/artsy/embedly-view-helpers.git",
     "express": "^4.13.3",
     "express-force-ssl": "^0.3.0",
     "fast-csv": "^0.6.0",

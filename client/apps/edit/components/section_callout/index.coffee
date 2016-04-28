@@ -10,7 +10,7 @@ sd = require('sharify').data
 gemup = require 'gemup'
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 { div, section, input, a, h1, h2, button, img, p, strong, span } = React.DOM
-{ crop } = require('embedly-view-helpers')(sd.EMBEDLY_KEY)
+{ crop } = require '../../../../components/resizer/index.coffee'
 Article = require '../../../../models/article.coffee'
 
 module.exports = React.createClass
