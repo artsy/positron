@@ -30,10 +30,8 @@ module.exports = React.createClass
     @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
-        p: false
         i: true
         a: { href: true, target: '_blank' }
-        br: false
     }
     @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
