@@ -32,8 +32,7 @@
         br
         | Links
     #layout-sidebar-profile
-      .layout-sidebar-profile-img(
-        style="background-image: url()" )
+      include ../public/icons/layout_person.svg
       br
       if user.get('name')
         = user.get('name').split(' ')[0]
