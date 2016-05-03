@@ -89,6 +89,22 @@ module.exports = ->
     'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
+  fixtures.links =
+    id: '55356a9deca560a0137aa4b7'
+    title: 'Featured Articles'
+    slug: 'homepage:articles'
+    featured_links: [
+      {
+        url: 'https://artsy.net/article/cool-article'
+        thumbnail_url: 'https://artsy.net/article/cool-article/img.png'
+        title: 'The Coolest Article'
+      }
+      {
+        url: 'https://artsy.net/article/okay-article'
+        thumbnail_url: 'https://artsy.net/article/okay-article/img.png'
+        title: 'An Okay Article'
+      }
+    ]
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

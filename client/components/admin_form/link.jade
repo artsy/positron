@@ -1,0 +1,17 @@
+h3.admin-form-subheader Link #{i + 1}
+label
+  | Thumbnail
+  .admin-image-placeholder(
+    data-name="featured_links[#{i}][thumbnail_url]" data-index=i )
+label
+  | Title
+  input.bordered-input(
+    name="featured_links[#{i}][title]"
+    value=link && link.title
+  )
+label
+  | URL
+  input.bordered-input(
+    name="featured_links[#{i}][url]"
+    value=link && link.url
+  )

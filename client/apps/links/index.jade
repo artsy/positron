@@ -2,11 +2,11 @@ include ../../components/paginated_list/index
 extend ../../components/layout/templates/index
 
 block header
-  | Sections
+  | Link Sets
 
 block content
   .max-width-container
     a.avant-garde-button.avant-garde-button-black.paginated-list-add(
-      href="/sections/new"
-    ) Add Section
-    +paginated-list(page, totalPages, sections.toPaginatedListItems(), null , 'section')
+      href="/links/new"
+    ) Add Link Set
+    +paginated-list(page, totalPages, linkSets.toPaginatedListItems(), null,'links')

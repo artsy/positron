@@ -14,6 +14,7 @@ thumbnail-width = 145px
   &:last-of-type
     border-bottom 0
   .paginated-list-article
+    width "calc(100% - %s)" % (thumbnail-width + 20px)
     &:hover
       opacity 0.7
     display inline-block

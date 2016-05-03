@@ -25,6 +25,12 @@
         include ../public/icons/layout_sections.svg
         br
         | Sections
+    if user.get('type') == 'Admin'
+      a( href='/links'
+         class=(sd.URL.match('/links') ? 'is-active' : '') )
+        include ../public/icons/layout_sections.svg
+        br
+        | Links
     #layout-sidebar-profile
       .layout-sidebar-profile-img(
         style="background-image: url()" )
