@@ -1,0 +1,9 @@
+include ../../components/paginated_list/index
+extend ../../components/layout/templates/index
+
+block header
+  | Settings
+
+block content
+  .max-width-container
+    +paginated-list(page, totalPages, curations.toPaginatedListItems(), null,'curations')

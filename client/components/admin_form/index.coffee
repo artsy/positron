@@ -1,13 +1,11 @@
 Backbone = require 'backbone'
 ImageUploadForm = require '../image_upload_form/index.coffee'
 propByString = require 'prop-by-string'
-template = -> require('./link.jade') arguments...
 
 module.exports = class AdminEditView extends Backbone.View
 
   initialize: ({ @onDeleteUrl }) ->
     @attachUploadForms()
-    @featuredLinkLength = @model.get('featured_links')?.length or 0
 
   attachUploadForms: ->
     @$('.admin-image-placeholder').each (i, el) =>
@@ -20,7 +18,6 @@ module.exports = class AdminEditView extends Backbone.View
     'click .admin-form-delete': 'destroy'
     'change :input': 'unsaved'
     'submit form': 'ignoreUnsaved'
-    'click .admin-form-add-new-link': 'newLink'
 
   destroy: (e) ->
     e.preventDefault()
@@ -33,13 +30,3 @@ module.exports = class AdminEditView extends Backbone.View
 
   ignoreUnsaved: ->
     window.onbeforeunload = ->
-
-  newLink: (e) =>
-    e.preventDefault()
-    nextIndex = @featuredLinkLength
-    $('.admin-form-featured-links').append template
-      i: nextIndex
-    new ImageUploadForm
-      el: @$(".admin-image-placeholder[data-index=#{nextIndex}]")
-      name: "featured_links[#{nextIndex}][thumbnail_url]"
-    @featuredLinkLength = @featuredLinkLength + 1

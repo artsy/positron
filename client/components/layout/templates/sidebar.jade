@@ -26,11 +26,11 @@
         br
         | Sections
     if user.get('type') == 'Admin'
-      a( href='/links'
-         class=(sd.URL.match('/links') ? 'is-active' : '') )
-        include ../public/icons/layout_sections.svg
+      a( href='/settings'
+         class=(sd.URL.match('/settings') ? 'is-active' : '') )
+        include ../public/icons/layout_settings.svg
         br
-        | Links
+        | Settings
     #layout-sidebar-profile
       include ../public/icons/layout_person.svg
       br

@@ -1,0 +1,34 @@
+include ../../components/admin_form/index
+extend ../../components/layout/templates/index
+
+mixin image(i)
+  - image = curation.get('images')[i]
+  h3.admin-form-subheader Image #{i + 1}
+  label
+    | Image
+    .admin-image-placeholder(
+      data-name="images[#{i}][src]" data-index=i )
+
+block header
+  = curation.get('name')
+
+block content
+  - model = curation
+  case curation.get('type')
+    when 'three-images'
+      .max-width-container
+        form.admin-form-container(
+          action=("/settings/#{curation.get('id')}")
+          method='post'
+        )
+          section.admin-form-section
+            .admin-form-right-col
+              +image(0)
+              +image(1)
+            .admin-form-right-col
+              +image(2)
+          input( value=curation.get('name') name='name' hidden)
+          input( value=curation.get('type') name='type' hidden)
+          button.avant-garde-button.avant-garde-button-black.admin-form-save(
+            type='submit' href="/curations/#{curation.get('id')}"
+          ) Save Changes
