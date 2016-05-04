@@ -1,25 +1,29 @@
 include ../../../node_modules/artsy-ezel-components/pagination/paginator
 
-mixin paginated-list(currentPage, totalPages, items, paginationParams)
+mixin paginated-list(currentPage, totalPages, items, paginationParams, type )
   for item in items
     section.paginated-list-item
       a.paginated-list-article( href=item.href )
         if item.imgSrc
           .paginated-list-img( style="background-image: url(#{item.imgSrc})" )
-        else
+        else if type !== 'curations'
           .paginated-list-missing-img Missing Thumbnail
         .paginated-list-text-container
           if item.title
             h1= item.title
+          else if item.name
+            h1= item.name
           else
             h1.paginated-list-missing-title Missing Title
           h2!= item.subtitle
-      a.paginated-list-preview.avant-garde-button(
-        href="#{sd.FORCE_URL}/article/#{item.slug}"
-        target='_blank'
-      )
-        if item.published
-          | View
-        else
-          | Preview
+      unless type === 'curations'
+        - resource = type === 'section' ? '' : 'article/'
+        a.paginated-list-preview.avant-garde-button(
+          href="#{sd.FORCE_URL}/#{resource}#{item.slug}"
+          target='_blank'
+        )
+          if item.published
+            | View
+          else
+            | Preview
   +paginate(currentPage, totalPages, paginationParams)

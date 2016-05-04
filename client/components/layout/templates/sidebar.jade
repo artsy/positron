@@ -25,9 +25,14 @@
         include ../public/icons/layout_sections.svg
         br
         | Sections
+    if user.get('type') == 'Admin'
+      a( href='/settings'
+         class=(sd.URL.match('/settings') ? 'is-active' : '') )
+        include ../public/icons/layout_settings.svg
+        br
+        | Settings
     #layout-sidebar-profile
-      .layout-sidebar-profile-img(
-        style="background-image: url()" )
+      include ../public/icons/layout_person.svg
       br
       if user.get('name')
         = user.get('name').split(' ')[0]

@@ -22,3 +22,4 @@ module.exports = class FeatureSections extends Backbone.Collection
         moment(featureSection.get('end_at')).format('MMM Do')
       )
       href: "/sections/#{featureSection.get('id')}/edit"
+      slug: featureSection.get('slug')

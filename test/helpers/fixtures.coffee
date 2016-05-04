@@ -89,6 +89,9 @@ module.exports = ->
     'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     'featured_article_ids': [ '5522d03ae8e369060053d953' ]
+  fixtures.curations =
+    id: '55356a9deca560a0137aa4b7'
+    name: 'Featured Articles'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
