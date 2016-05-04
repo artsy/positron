@@ -38,7 +38,7 @@ querySchema = (->
   db.curations.findOne query, callback
 
 @where = (input, callback) ->
-  Joi.validate input, querySchema, OPTIONS, (err, input) =>
+  Joi.validate input, querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'limit', 'offset'
     cursor = db.curations
