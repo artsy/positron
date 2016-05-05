@@ -25,6 +25,9 @@ module.exports = class Sections extends Backbone.Collection
           section.slugsFromHTML 'body', 'artwork'
         when 'image'
           section.slugsFromHTML 'caption', 'artwork'
+        when 'image_set'
+          _.map section.get('images'), (image) ->
+            image.slug if image.type is 'artwork'
 
   removeBlank: ->
     blanks = @select (section) ->
