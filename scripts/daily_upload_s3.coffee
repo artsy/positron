@@ -34,7 +34,7 @@ csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_
 db.articles.find({ published: true })
   .on('data', (doc) ->
     if doc
-      published_at = if doc.published_at then moment(doc.published_at).format('YYYYMMDDhhmmss') + " EST" else ''
+      published_at = if doc.published_at then moment(doc.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
       csvStream.write([doc._id, doc.author_id, doc.auction_id, doc.contributing_authors, doc.fair_id, doc.featured, doc.featured_artist_ids, doc.featured_artwork_ids, doc.partner_ids, doc.primary_featured_artist_ids, doc.slugs, doc.tags, doc.title, doc.tier, published_at, doc.show_ids, doc.section_ids, doc.thumbnail_image, doc.thumbnail_title, doc.keywords])
   ).on 'end', ->
 
