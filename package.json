@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": ">=5.1.1",
-    "npm": "3.x.x"
+    "npm": "3.8.x"
   },
   "scripts": {
     "start": "make s",
