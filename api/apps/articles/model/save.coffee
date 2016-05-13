@@ -259,9 +259,7 @@ typecastIds = (article) ->
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
 
 @sendArticleToSailthru = (article, cb) =>
-  images = {}
-  tags = []
-  tags = tags.concat ['article']
+  tags = ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
   tags = tags.concat article.keywords
