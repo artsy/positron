@@ -50,6 +50,21 @@ describe 'Save', ->
         @sailthru.apiPost.args[0][1].tags.should.containEql 'magazine'
         done()
 
+    it 'concats the keywords at the end', (done) ->
+      Save.sendArticleToSailthru {
+        author_id: '5086df098523e60002000018'
+        published: true
+        featured: true
+        keywords: ['sofa', 'midcentury', 'knoll']
+      }, (err, article) =>
+        @sailthru.apiPost.calledOnce.should.be.true()
+        @sailthru.apiPost.args[0][1].tags[0].should.equal 'article'
+        @sailthru.apiPost.args[0][1].tags[1].should.equal 'magazine'
+        @sailthru.apiPost.args[0][1].tags[2].should.equal 'sofa'
+        @sailthru.apiPost.args[0][1].tags[3].should.equal 'midcentury'
+        @sailthru.apiPost.args[0][1].tags[4].should.equal 'knoll'
+        done()
+
     it 'uses email_metadata vars if provided', (done) ->
       Save.sendArticleToSailthru {
         author_id: '5086df098523e60002000018'

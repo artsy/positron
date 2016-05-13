@@ -61,6 +61,7 @@ setEmailFields = (article, author) =>
       input.featured_artist_ids is not article.featured_artist_ids or
       input.fair_id is not article.fair_id or
       input.partner_ids is not article.partner_ids or
+      input.contributing_authors is not article.contributing_authors or
       input.tags is not article.tags)
     return cb(null, article)
   if input.primary_featured_artist_ids
@@ -95,8 +96,11 @@ setEmailFields = (article, author) =>
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
-    keywords = (res.body.name for res in results)
-    keywords.push(tag) for tag in input.tags if input.tags
+    keywords = input.tags or []
+    keywords = keywords.concat (res.body.name for res in results)
+    if input.contributing_authors?.length > 0
+      for author in input.contributing_authors
+        keywords.push author.name
     article.keywords = keywords[0..9]
     cb(null, article)
 
@@ -256,10 +260,11 @@ typecastIds = (article) ->
 
 @sendArticleToSailthru = (article, cb) =>
   images = {}
-  tags = article.keywords or []
+  tags = []
   tags = tags.concat ['article']
   tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
+  tags = tags.concat article.keywords
   imageSrc = article.email_metadata?.image_url
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
