@@ -651,10 +651,11 @@ describe 'Article', ->
         fair_id: '5530e72f7261696238050000'
         partner_ids: ['4f5228a1de92d1000100076e']
         tags: ['cool', 'art']
+        contributing_authors: [{name: 'kana'}]
         published: true
       }, 'foo', (err, article) ->
         return done err if err
-        article.keywords.join(',').should.equal 'Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,cool,art'
+        article.keywords.join(',').should.equal 'cool,art,Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,kana'
         done()
 
     it 'saves Super Articles', (done) ->
