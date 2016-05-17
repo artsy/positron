@@ -31,7 +31,7 @@ moment = require 'moment'
     query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for
 
     # Only add the $or array for queries that require it (blank $or array causes problems)
-    query.$or ?= [] if input.artist_id or input.all_by_author
+    query.$or ?= [] if input.artist_id or input.all_by_author or input.has_video
 
     # Convert query for articles by author
     query.$or.push(
@@ -51,6 +51,12 @@ moment = require 'moment'
 
     # Look for articles with scheduled dates before the given date
     query.scheduled_publish_at = { $lt: moment(input.scheduled_publish_at).toDate() } if input.scheduled_publish_at
+
+    # Convert query for articles that have video sections
+    query.$or.push(
+      { sections: { $elemMatch: { type: 'video' } } }
+      { hero_section: { $elemMatch: { type: 'video' } } }
+    ) if input.has_video
 
     callback null, query, limit, offset, sortParamToQuery(sort)
 

@@ -179,4 +179,5 @@ denormalizedArtwork = (->
   biography_for_artist_id: @objectId()
   layout: @string()
   instant_article: @boolean()
+  has_video: @boolean()
 ).call Joi
