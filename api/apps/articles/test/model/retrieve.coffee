@@ -73,3 +73,14 @@ describe 'Retrieve', ->
         query.published.should.be.true()
         query.session_id?.should.be.false()
         done()
+
+    it 'aggregates the query for has_video', (done) ->
+      Retrieve.toQuery {
+        has_video: true
+        published: true
+      }, (err, query) =>
+        query['$or'][1].hero_section['$elemMatch'].should.be.ok()
+        query['$or'][1].hero_section['$elemMatch'].type.should.equal 'video'
+        query['$or'][0].sections['$elemMatch'].should.be.ok()
+        query['$or'][0].sections['$elemMatch'].type.should.equal 'video'
+        done()
