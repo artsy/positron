@@ -55,7 +55,7 @@ moment = require 'moment'
     # Convert query for articles that have video sections
     query.$or.push(
       { sections: { $elemMatch: { type: 'video' } } }
-      { hero_section: { $elemMatch: { type: 'video' } } }
+      { 'hero_section.type': 'video' }
     ) if input.has_video
 
     callback null, query, limit, offset, sortParamToQuery(sort)

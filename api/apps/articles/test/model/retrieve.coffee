@@ -79,8 +79,8 @@ describe 'Retrieve', ->
         has_video: true
         published: true
       }, (err, query) =>
-        query['$or'][1].hero_section['$elemMatch'].should.be.ok()
-        query['$or'][1].hero_section['$elemMatch'].type.should.equal 'video'
+        query['$or'][1]['hero_section.type'].should.be.ok()
+        query['$or'][1]['hero_section.type'].should.equal 'video'
         query['$or'][0].sections['$elemMatch'].should.be.ok()
         query['$or'][0].sections['$elemMatch'].type.should.equal 'video'
         done()
