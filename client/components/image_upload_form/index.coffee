@@ -31,6 +31,7 @@ module.exports = class ImageUploadForm extends Backbone.View
     @$('.image-upload-form').attr 'data-error', null
 
     gemup e.target.files[0],
+      app: sd.GEMINI_APP
       key: sd.GEMINI_KEY
       progress: (percent) =>
         @$('.image-upload-form').attr 'data-state', 'uploading'
