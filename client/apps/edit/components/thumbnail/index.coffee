@@ -1,6 +1,5 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-gemup = require 'gemup'
 sd = require('sharify').data
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
 thumbnailFormTemplate = -> require('./form.jade') arguments...

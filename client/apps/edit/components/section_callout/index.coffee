@@ -54,6 +54,7 @@ module.exports = React.createClass
   upload: (e) ->
     @props.setEditing(off)()
     gemup e.target.files[0],
+      app: sd.GEMINI_APP
       key: sd.GEMINI_KEY
       progress: (percent) =>
         @setState progress: percent

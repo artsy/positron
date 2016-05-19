@@ -12,5 +12,6 @@ _ = require 'underscore'
 sharify = require 'sharify'
 
 sharify.data = _.pick process.env,
-  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_KEY',
-  'SEGMENT_WRITE_KEY', 'EDITORIAL_TEAM', 'EDITORIAL_EMAIL', 'GEMINI_CLOUDFRONT_URL'
+  'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_APP',
+  'GEMINI_KEY', 'SEGMENT_WRITE_KEY', 'EDITORIAL_TEAM', 'EDITORIAL_EMAIL',
+  'GEMINI_CLOUDFRONT_URL'
