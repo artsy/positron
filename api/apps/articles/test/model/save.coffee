@@ -167,6 +167,7 @@ describe 'Save', ->
             type: 'artworks'
             layout: 'overflow'
             ids: ['564be09ab202a319e90000e2']
+            artworks: []
           }
         ]
       }, {}, (err, article) =>
@@ -186,6 +187,7 @@ describe 'Save', ->
             type: 'artworks'
             layout: 'overflow'
             ids: ['123', '564be09ab202a319e90000e2']
+            artworks: []
           }
         ]
       }, {}, (err, article) =>
@@ -205,6 +207,7 @@ describe 'Save', ->
             type: 'artworks'
             layout: 'overflow'
             ids: ['123']
+            artworks: []
           }
         ]
       }, {}, (err, article) =>

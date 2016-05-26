@@ -105,13 +105,13 @@ setEmailFields = (article, author) =>
     cb(null, article)
 
 @generateArtworks = (input, article, cb) ->
-  before = _.flatten _.pluck _.where(article.sections, type: 'artworks'), 'ids'
-  after = _.flatten _.pluck _.where(input.sections, type: 'artworks'), 'ids'
-  intersection = _.intersection(before, after)
-  if input.sections and input.sections.length > 0
+  if input.sections?.length > 0
     article.sections = input.sections
   return cb null, article unless input.sections
-  return cb(null, article) if intersection.length is before.length and intersection.length is after.length
+  emptyArtworks = _.filter input.sections, (section) ->
+    section.type is 'artworks' and section.artworks.length is 0
+  if emptyArtworks.length is 0
+    return cb(null, article)
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
   Q.allSettled( for artworkId in _.flatten artworkIds
