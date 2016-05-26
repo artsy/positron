@@ -50,6 +50,8 @@ Q = require 'bluebird-q'
           debug err if err
           mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
             return callback(err) if err
+            console.log 'Here are the article sections after denormalizing'
+            console.log article.sections
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
             if publishing
