@@ -29,7 +29,7 @@ dir = 'scripts/tmp/'
 writableStream = fs.createWriteStream( dir + filename)
 
 csvStream.pipe(writableStream)
-csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_id", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title", "keywords"])
+csvStream.write(["id", "author_id", "auction_id", "contributing_authors", "fair_id", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title", "keywords", "slug"])
 
 db.articles.find({ published: true })
   .on('data', (doc) ->
