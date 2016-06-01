@@ -107,8 +107,6 @@ setEmailFields = (article, author) =>
 @generateArtworks = (input, article, cb) ->
   articleOrder = _.pluck(_.where(article.sections, type: 'artworks'), 'ids').join()
   inputOrder = _.pluck(_.where(input.sections, type: 'artworks'), 'ids').join()
-  console.log articleOrder
-  console.log inputOrder
   if input.sections?.length > 0
     article.sections = input.sections
   return cb null, article unless input.sections
