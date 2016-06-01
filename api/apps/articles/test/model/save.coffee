@@ -214,6 +214,75 @@ describe 'Save', ->
         article.sections.length.should.equal 1
         done()
 
+    it 'handles artworks that are removed', (done) ->
+      Save.generateArtworks {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['123']
+            artworks: [{title: 'title'}, {title: 'second title'}]
+          }
+        ]
+      },
+      {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['123', '456']
+            artworks: [{title: 'title'}, {title: 'second title'}]
+          }
+        ]
+      }, (err, article) =>
+        article.sections.length.should.equal 2
+        article.sections[1].artworks.length.should.equal 1
+        article.sections[1].artworks[0].title.should.equal 'title'
+        done()
+
+    it 'handles artworks that are reordered', (done) ->
+      Save.generateArtworks {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['456','123']
+            artworks: [{title: 'title'}, {title: 'second title'}]
+          }
+        ]
+      },
+      {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          }
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['123', '456']
+            artworks: [{title: 'second title'}, {title: 'title'}]
+          }
+        ]
+      }, (err, article) =>
+        article.sections.length.should.equal 2
+        article.sections[1].artworks.length.should.equal 2
+        article.sections[1].artworks[0].title.should.equal 'second title'
+        article.sections[1].artworks[1].title.should.equal 'title'
+        done()
+
   describe '#onPublish', ->
 
     it 'saves email metadata', (done) ->
