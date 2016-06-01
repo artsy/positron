@@ -214,6 +214,40 @@ describe 'Save', ->
         article.sections.length.should.equal 1
         done()
 
+    it 'handles artworks that are removed', (done) ->
+      Save.generateArtworks {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          },
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['564be09ab202a319e90000e2']
+            artworks: [{title: 'title'}, {title: 'second title'}]
+          }
+        ]
+      },
+      {
+        sections: [
+          {
+            type: 'text'
+            body: 'fmodfmsdomf'
+          },
+          {
+            type: 'artworks'
+            layout: 'overflow'
+            ids: ['564be09ab202a319e90000e2', '456']
+            artworks: [{title: 'title'}, {title: 'second title'}]
+          }
+        ]
+      }, (err, article) =>
+        article.sections.length.should.equal 2
+        article.sections[1].artworks.length.should.equal 1
+        article.sections[1].artworks[0].title.should.equal 'Main artwork!'
+        done()
+
   describe '#onPublish', ->
 
     it 'saves email metadata', (done) ->

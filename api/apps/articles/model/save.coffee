@@ -105,12 +105,14 @@ setEmailFields = (article, author) =>
     cb(null, article)
 
 @generateArtworks = (input, article, cb) ->
+  articleOrder = _.pluck(_.where(article.sections, type: 'artworks'), 'ids').join()
+  inputOrder = _.pluck(_.where(input.sections, type: 'artworks'), 'ids').join()
   if input.sections?.length > 0
     article.sections = input.sections
   return cb null, article unless input.sections
   emptyArtworks = _.filter input.sections, (section) ->
     section.type is 'artworks' and section.artworks.length is 0
-  if emptyArtworks.length is 0
+  if emptyArtworks.length is 0 and inputOrder is articleOrder
     return cb(null, article)
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
