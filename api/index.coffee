@@ -23,6 +23,7 @@ app.use require './apps/sections'
 app.use require './apps/shows'
 app.use require './apps/users'
 app.use require './apps/curations'
+app.use require './apps/channels'
 
 # Moar middleware
 app.use notFound
