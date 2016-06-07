@@ -45,23 +45,29 @@ module.exports = class EditAdmin extends Backbone.View
     @article.trigger('finished').save(author_id: item.id)
 
   setupFairAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-fair')[0],
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-fair')[0],
+      name: 'fair_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
         { id: r._id, value: r.name }
-      selected: (e, item) =>
-        @article.save fair_id: item.id
-      cleared: =>
-        @article.save fair_id: null
-    if id = @article.get 'fair_id'
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+      selected: (e, item, items) =>
+        @article.save fair_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupFairProgrammingAutocomplete: ->
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
@@ -164,23 +170,29 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupAuctionAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-auction')[0],
+    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+    list = new AutocompleteList @$('#edit-admin-auction')[0],
+      name: 'auction_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
       placeholder: 'Search auction by name...'
       filter: (res) -> for r in res
         { id: r._id, value: r.name }
-      selected: (e, item) =>
-        @article.save auction_id: item.id
-      cleared: =>
-        @article.save auction_id: null
-    if id = @article.get 'auction_id'
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/sale/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
+      selected: (e, item, items) =>
+        @article.save auction_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save auction_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('auction_ids')
+      @auctions = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/sale/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @auctions.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @auctions
     else
-      select.setState loading: false
+      list.setState loading: false
 
   setupSectionAutocomplete: ->
     if @article.get('hero_section')?.type is 'fullscreen'

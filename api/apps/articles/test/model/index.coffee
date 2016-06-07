@@ -139,6 +139,18 @@ describe 'Article', ->
             done()
         )
 
+    it 'can find articles by a fair', (done) ->
+      fabricate 'articles', [
+        { title: 'C', fair_ids: [ObjectId('4dc98d149a96300001003033')] }
+        { title: 'A', fair_ids: [ObjectId('4dc98d149a96300001003033')] }
+      ], ->
+        Article.where(
+          { fair_id: '4dc98d149a96300001003033' }
+          (err, { results }) ->
+            _.pluck(results, 'title').sort().join('').should.equal 'AC'
+            done()
+        )
+
     it 'can return articles by a fair programming id', (done) ->
       fabricate 'articles', {
         author_id: aid = ObjectId '4d8cd73191a5c50ce220002a'
@@ -648,7 +660,7 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
         primary_featured_artist_ids: ['4d8b92b34eb68a1b2c0003f4']
         featured_artist_ids: ['52868347b202a37bb000072a']
-        fair_id: '5530e72f7261696238050000'
+        fair_ids: ['5530e72f7261696238050000']
         partner_ids: ['4f5228a1de92d1000100076e']
         tags: ['cool', 'art']
         contributing_authors: [{name: 'kana'}]
