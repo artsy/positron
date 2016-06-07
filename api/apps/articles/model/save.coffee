@@ -59,7 +59,7 @@ setEmailFields = (article, author) =>
   callbacks = []
   if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
       input.featured_artist_ids is not article.featured_artist_ids or
-      input.fair_id is not article.fair_id or
+      input.fair_ids is not article.fair_ids or
       input.partner_ids is not article.partner_ids or
       input.contributing_authors is not article.contributing_authors or
       input.tags is not article.tags)
@@ -80,12 +80,14 @@ setEmailFields = (article, author) =>
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
             .set('X-Xapp-Token': artsyXapp)
             .end callback
-  if input.fair_id
-    callbacks.push (callback) ->
-      request
-        .get("#{ARTSY_URL}/api/v1/fair/#{input.fair_id}")
-        .set('X-Xapp-Token': artsyXapp)
-        .end callback
+  if input.fair_ids
+    for fairId in input.fair_ids
+      do (fairId) ->
+        callbacks.push (callback) ->
+          request
+            .get("#{ARTSY_URL}/api/v1/fair/#{fairId}")
+            .set('X-Xapp-Token': artsyXapp)
+            .end callback
   if input.partner_ids
     for partnerId in input.partner_ids
       do (partnerId) ->
@@ -247,11 +249,13 @@ typecastIds = (article) ->
     ) if article.contributing_authors
     author_id: ObjectId(article.author_id) if article.author_id
     fair_id: ObjectId(article.fair_id) if article.fair_id
+    fair_ids: article.fair_ids.map(ObjectId) if article.fair_ids
     fair_programming_ids: article.fair_programming_ids.map(ObjectId) if article.fair_programming_ids
     fair_artsy_ids: article.fair_artsy_ids.map(ObjectId) if article.fair_artsy_ids
     fair_about_ids: article.fair_about_ids.map(ObjectId) if article.fair_about_ids
     section_ids: article.section_ids.map(ObjectId) if article.section_ids
     auction_id: ObjectId(article.auction_id) if article.auction_id
+    auction_ids: article.auction_ids.map(ObjectId) if article.auction_ids
     partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
     show_ids: article.show_ids.map(ObjectId) if article.show_ids
     primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
