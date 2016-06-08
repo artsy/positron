@@ -22,9 +22,7 @@ moment = require 'moment'
     query.fair_about_ids = ObjectId input.fair_about_id if input.fair_about_id
     query.partner_ids = ObjectId input.partner_id if input.partner_id
     query.show_ids = ObjectId input.show_id if input.show_id
-    query.auction_id = ObjectId input.auction_id if input.auction_id
-    # Temporary: Uncomment after backfill
-    # query.auction_ids = ObjectId input.auction_id if input.auction_id
+    query.auction_ids = ObjectId input.auction_id if input.auction_id
     query.section_ids = ObjectId input.section_id if input.section_id
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
