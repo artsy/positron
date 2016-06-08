@@ -28,7 +28,6 @@ artsyXapp = require('artsy-xapp').token or ''
   whitelisted = _.pick input, _.keys schema.inputSchema
   # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
   whitelisted.author_id = whitelisted.author_id?.toString()
-  whitelisted.fair_id = whitelisted.fair_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
 @onPublish = (article, author, cb) =>
@@ -248,13 +247,11 @@ typecastIds = (article) ->
       author
     ) if article.contributing_authors
     author_id: ObjectId(article.author_id) if article.author_id
-    fair_id: ObjectId(article.fair_id) if article.fair_id
     fair_ids: article.fair_ids.map(ObjectId) if article.fair_ids
     fair_programming_ids: article.fair_programming_ids.map(ObjectId) if article.fair_programming_ids
     fair_artsy_ids: article.fair_artsy_ids.map(ObjectId) if article.fair_artsy_ids
     fair_about_ids: article.fair_about_ids.map(ObjectId) if article.fair_about_ids
     section_ids: article.section_ids.map(ObjectId) if article.section_ids
-    auction_id: ObjectId(article.auction_id) if article.auction_id
     auction_ids: article.auction_ids.map(ObjectId) if article.auction_ids
     partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
     show_ids: article.show_ids.map(ObjectId) if article.show_ids

@@ -519,10 +519,10 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-        fair_id: null
+        fair_ids: []
         published: true
       }, 'foo', (err, article) ->
-        (article.fair_id?).should.not.be.ok
+        (article.fair_ids?).should.not.be.ok
         done()
 
     it 'escapes xss', (done) ->
