@@ -1,6 +1,8 @@
 AutocompleteList = require '../../../components/autocomplete_list/index.coffee'
 Channel = require '../../../models/channel.coffee'
 sd = require('sharify').data
+async = require 'async'
+request = require 'superagent'
 
 @init = ->
   @channel = new Channel sd.CHANNEL
