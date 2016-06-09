@@ -1,5 +1,5 @@
-include ../../components/admin_form/index
-extend ../../components/layout/templates/index
+include ../../../components/admin_form/index
+extend ../../../components/layout/templates/index
 
 mixin image(i)
   - image = curation.get('images')[i]
@@ -18,7 +18,7 @@ block content
     when 'three-images'
       .max-width-container
         form.admin-form-container(
-          action=("/settings/#{curation.get('id')}")
+          action=("/settings/curations/#{curation.get('id')}")
           method='post'
         )
           section.admin-form-section

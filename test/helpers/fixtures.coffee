@@ -95,6 +95,7 @@ module.exports = ->
   fixtures.channels =
     id: '5086df098523e60002000018'
     name: 'Editorial'
+    user_ids: []
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
