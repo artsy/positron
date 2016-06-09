@@ -16,4 +16,4 @@ module.exports = class Curations extends Backbone.Collection
   toPaginatedListItems: ->
     @map (curation) ->
       name: curation.get('name')
-      href: "/settings/#{curation.get('id')}/edit"
+      href: "/settings/curations/#{curation.get('id')}/edit"

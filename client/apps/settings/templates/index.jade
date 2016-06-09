@@ -1,0 +1,10 @@
+include ../../../components/paginated_list/index
+extend ../../../components/layout/templates/index
+
+block header
+  | Settings
+
+block content
+  .max-width-container
+    a(href='/settings/curations') Curations
+    a(href='/settings/channels') Channels

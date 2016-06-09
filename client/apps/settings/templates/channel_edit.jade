@@ -1,0 +1,9 @@
+include ../../../components/admin_form/index
+extend ../../../components/layout/templates/index
+
+block header
+  = channel.get('name')
+
+block content
+  .max-width-container
+    #channel-edit__users

@@ -6,7 +6,7 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams, type )
       a.paginated-list-article( href=item.href )
         if item.imgSrc
           .paginated-list-img( style="background-image: url(#{item.imgSrc})" )
-        else if type !== 'curations'
+        else if type !== 'curations' && type !== 'channels'
           .paginated-list-missing-img Missing Thumbnail
         .paginated-list-text-container
           if item.title
@@ -16,7 +16,7 @@ mixin paginated-list(currentPage, totalPages, items, paginationParams, type )
           else
             h1.paginated-list-missing-title Missing Title
           h2!= item.subtitle
-      unless type === 'curations'
+      unless type === 'curations' || type === 'channels'
         - resource = type === 'section' ? '' : 'article/'
         a.paginated-list-preview.avant-garde-button(
           href="#{sd.FORCE_URL}/#{resource}#{item.slug}"
