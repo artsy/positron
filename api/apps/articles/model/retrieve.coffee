@@ -11,7 +11,7 @@ moment = require 'moment'
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
-      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id'
+      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id', 'channel_id'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -27,6 +27,7 @@ moment = require 'moment'
     query.biography_for_artist_id = ObjectId input.biography_for_artist_id if input.biography_for_artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
+    query.channel_id = ObjectId input.channel_id if input.channel_id
 
     # Convert query for super article for article
     query['super_article.related_articles']= ObjectId(input.super_article_for) if input.super_article_for

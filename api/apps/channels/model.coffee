@@ -22,6 +22,7 @@ schema = (->
   id: @objectId()
   name: @string().allow('', null)
   user_ids: @array().items(@objectId()).default([])
+  type: @string().allow('', null)
 ).call Joi
 
 querySchema = (->

@@ -35,9 +35,11 @@ describe 'Channel', ->
       Channel.save {
         name: 'Editorial'
         user_ids: ['5086df098523e60002000015', '5086df098523e60002000014']
+        type: 'editorial'
       }, (err, channel) ->
         channel.user_ids[0].toString().should.equal '5086df098523e60002000015'
         channel.user_ids[1].toString().should.equal '5086df098523e60002000014'
+        channel.type.should.equal 'editorial'
         db.channels.count (err, count) ->
           count.should.equal 11
           done()

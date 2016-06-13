@@ -352,6 +352,23 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles by channel_id', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Hello Wurld'
+          published: true
+          channel_id: ObjectId '5086df098523e60002000016'
+        }
+      ], ->
+        Article.where {
+          published: true
+          channel_id: '5086df098523e60002000016'
+        }, (err, res) ->
+          { total, count, results } = res
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->
@@ -866,6 +883,15 @@ describe 'Article', ->
       }, 'foo', (err, article) ->
         return done err if err
         article.instant_article.should.be.true()
+        done()
+
+    it 'saves the channel_id', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.channel_id.toString().should.equal '5086df098523e60002000015'
         done()
 
   describe '#publishScheduledArticles', ->
