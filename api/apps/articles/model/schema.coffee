@@ -147,6 +147,7 @@ denormalizedArtwork = (->
   send_body: @boolean().default(false)
   instant_article: @boolean().default(false)
   channel_id: @objectId().allow(null)
+  partner_channel_id: @objectId().allow(null)
 ).call Joi
 
 #
@@ -183,4 +184,5 @@ denormalizedArtwork = (->
   instant_article: @boolean()
   has_video: @boolean()
   channel_id: @objectId()
+  partner_channel_id: @objectId()
 ).call Joi
