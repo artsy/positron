@@ -261,6 +261,7 @@ typecastIds = (article) ->
     biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
     super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
     channel_id: ObjectId(article.channel_id) if article.channel_id
+    partner_channel_id: ObjectId(article.partner_channel_id) if article.partner_channel_id
 
 @sendArticleToSailthru = (article, cb) =>
   tags = ['article']
