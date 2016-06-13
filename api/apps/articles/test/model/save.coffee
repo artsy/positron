@@ -158,6 +158,47 @@ describe 'Save', ->
         ]
       })
 
+    it 'saves email metadata', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.email_metadata.image_url.should.containEql 'foo.png'
+          article.email_metadata.author.should.containEql 'Kana'
+          article.email_metadata.headline.should.containEql 'Thumbnail Title'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: false
+        _id: '5086df098523e60002000011'
+        thumbnail_title: 'Thumbnail Title'
+        thumbnail_image: 'foo.png'
+        scheduled_publish_at: '123'
+        author: name: 'Kana'
+      })
+
+    it 'does not override email metadata', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.email_metadata.image_url.should.containEql 'bar.png'
+          article.email_metadata.author.should.containEql 'Artsy Editorial'
+          article.email_metadata.headline.should.containEql 'Custom Headline'
+          article.email_metadata.credit_url.should.containEql 'https://guggenheim.org'
+          article.email_metadata.credit_line.should.containEql 'Guggenheim'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: false
+        _id: '5086df098523e60002000011'
+        thumbnail_title: 'Thumbnail Title'
+        thumbnail_image: 'foo.png'
+        email_metadata:
+          image_url: 'bar.png'
+          author: 'Artsy Editorial'
+          headline: 'Custom Headline'
+          credit_line: 'Guggenheim'
+          credit_url: 'https://guggenheim.org'
+        scheduled_publish_at: '123'
+      })
+
   describe '#generateArtworks', ->
 
     it 'denormalizes artworks and adds them as an array to the section', (done) ->
@@ -247,34 +288,3 @@ describe 'Save', ->
         article.sections[1].artworks.length.should.equal 1
         article.sections[1].artworks[0].title.should.equal 'Main artwork!'
         done()
-
-  describe '#onPublish', ->
-
-    it 'saves email metadata', (done) ->
-      Save.onPublish {
-        thumbnail_title: 'Thumbnail Title'
-        thumbnail_image: 'foo.png'
-      }, { name : 'Kana' }, (err, article) ->
-        article.email_metadata.image_url.should.containEql 'foo.png'
-        article.email_metadata.author.should.containEql 'Kana'
-        article.email_metadata.headline.should.containEql 'Thumbnail Title'
-        done()
-
-    it 'does not override email metadata', (done) ->
-      Save.onPublish {
-        thumbnail_title: 'Thumbnail Title'
-        thumbnail_image: 'foo.png'
-        email_metadata:
-          image_url: 'bar.png'
-          author: 'Artsy Editorial'
-          headline: 'Custom Headline'
-          credit_line: 'Guggenheim'
-          credit_url: 'https://guggenheim.org'
-      }, { name : 'Kana' }, (err, article) ->
-        article.email_metadata.image_url.should.containEql 'bar.png'
-        article.email_metadata.author.should.containEql 'Artsy Editorial'
-        article.email_metadata.headline.should.containEql 'Custom Headline'
-        article.email_metadata.credit_url.should.containEql 'https://guggenheim.org'
-        article.email_metadata.credit_line.should.containEql 'Guggenheim'
-        done()
-
