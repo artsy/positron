@@ -25,7 +25,7 @@ module.exports = class ImageUploadForm extends Backbone.View
     if type not in acceptedTypes
       @$('.image-upload-form').attr 'data-error', 'type'
       return
-    if e.target.files[0]?.size > 30000000
+    if e.target.files[0]?.size > 10000000
       @$('.image-upload-form').attr 'data-error', 'size'
       return
     @$('.image-upload-form').attr 'data-error', null
