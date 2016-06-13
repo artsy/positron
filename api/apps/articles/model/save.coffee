@@ -33,15 +33,14 @@ artsyXapp = require('artsy-xapp').token or ''
 @onPublish = (article, author, cb) =>
   unless article.published_at
     article.published_at = new Date()
-  setEmailFields article, author
   @generateSlugs article, author, cb
 
-setEmailFields = (article, author) =>
+setEmailFields = (article) =>
   article.email_metadata = article.email_metadata or {}
   article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
   if article.contributing_authors?.length > 0
     ca = _.pluck(article.contributing_authors, 'name').join(', ')
-  article.email_metadata.author = ca or author?.name unless article.email_metadata?.author
+  article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
   article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
 
 @generateSlugs = (article, author, cb) ->
@@ -184,7 +183,8 @@ getPartnerLink = (artwork) ->
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
-  if article.published
+  if article.published or article.scheduled_publish_at
+    setEmailFields article
     @sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
