@@ -28,6 +28,7 @@ schema = (->
 querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
+  user_id: @objectId()
 ).call Joi
 
 #
@@ -40,7 +41,8 @@ querySchema = (->
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset'
+    query = _.omit input, 'limit', 'offset', 'user_id'
+    query.user_ids = ObjectId input.user_id if input.user_id
     cursor = db.channels
       .find(query)
       .limit(input.limit)

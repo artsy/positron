@@ -19,8 +19,9 @@ describe 'User', ->
   beforeEach (done) ->
     empty =>
       User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
-      @server = app.listen 5000, =>
-        done()
+      fabricate 'channels', {}, (err, @channel) =>
+        @server = app.listen 5000, =>
+          done()
 
   afterEach ->
     @server.close()
@@ -31,6 +32,11 @@ describe 'User', ->
       User.fromAccessToken 'foobar', (err, user) ->
         user.name.should.equal 'Craig Spaeth'
         done()
+
+    it 'gets partner_ids', (done) ->
+        User.fromAccessToken 'foobar', (err, user) ->
+          user.partner_ids[0].should.equal '5086df098523e60002000012'
+          done()
 
   describe '#findOrInsert', ->
 
@@ -46,18 +52,6 @@ describe 'User', ->
         User.findOrInsert user.id, 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
-
-    it 'gets admin social media UIDs', (done) ->
-      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
-        user.facebook_uid.should.equal '456'
-        user.twitter_uid.should.equal '321'
-        done()
-
-    it 'does not get user social media UIDs', (done) ->
-      User.findOrInsert '563d08e6275b247014000026', 'foobar', (err, user) ->
-        (user.facebook_uid?).should.be.false()
-        (user.twitter_uid?).should.be.false()
-        done()
 
   describe '#present', ->
 
