@@ -84,3 +84,13 @@ describe 'Retrieve', ->
         query['$or'][0].sections['$elemMatch'].should.be.ok()
         query['$or'][0].sections['$elemMatch'].type.should.equal 'video'
         done()
+
+    it 'finds articles by multiple fair ids', (done) ->
+      Retrieve.toQuery {
+        fair_ids: ['5086df098523e60002000016','5086df098523e60002000015']
+        published: true
+      }, (err, query) =>
+        query.fair_ids['$elemMatch'].should.be.ok()
+        query.fair_ids['$elemMatch']['$in'][0].toString().should.equal '5086df098523e60002000016'
+        query.fair_ids['$elemMatch']['$in'][1].toString().should.equal '5086df098523e60002000015'
+        done()
