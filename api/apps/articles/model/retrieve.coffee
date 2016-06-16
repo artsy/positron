@@ -15,7 +15,7 @@ moment = require 'moment'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
-    query.fair_id = { $in: _.map(input.fair_ids, ObjectId) } if input.fair_ids
+    query.fair_ids = { $elemMatch: { $in: _.map(input.fair_ids, ObjectId) } } if input.fair_ids
     query.fair_ids = ObjectId input.fair_id if input.fair_id
     query.fair_programming_ids = ObjectId input.fair_programming_id if input.fair_programming_id
     query.fair_artsy_ids = ObjectId input.fair_artsy_id if input.fair_artsy_id
