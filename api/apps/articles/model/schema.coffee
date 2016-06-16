@@ -145,7 +145,6 @@ denormalizedArtwork = (->
     footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
   send_body: @boolean().default(false)
-  instant_article: @boolean().default(false)
   channel_id: @objectId().allow(null)
   partner_channel_id: @objectId().allow(null)
 ).call Joi
@@ -181,7 +180,6 @@ denormalizedArtwork = (->
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()
-  instant_article: @boolean()
   has_video: @boolean()
   channel_id: @objectId()
   partner_channel_id: @objectId()
