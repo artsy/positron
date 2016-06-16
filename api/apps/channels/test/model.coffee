@@ -21,6 +21,21 @@ describe 'Channel', ->
         results[0].name.should.equal 'Editorial'
         done()
 
+    it 'finds channels by a user_id', (done) ->
+      Channel.save {
+        name: 'Channel'
+        user_ids: ['5086df098523e60002000015', '5086df098523e60002000014']
+        type: 'editorial'
+      }, (err, channel) ->
+        Channel.where
+          user_id: '5086df098523e60002000015'
+        , (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 1
+          results[0].name.should.equal 'Channel'
+          done()
+
   describe '#find', ->
 
     it 'finds a channel by an id string', (done) ->

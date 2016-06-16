@@ -78,7 +78,6 @@ module.exports = ->
     "id" : "4d8cd73191a5c50ce200002a"
     "name" : "Craig Spaeth"
     "type" : "Admin"
-    "access_to_partner_ids" : [ ]
     "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
     "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
   fixtures.sections =
@@ -95,7 +94,7 @@ module.exports = ->
   fixtures.channels =
     id: '5086df098523e60002000018'
     name: 'Editorial'
-    user_ids: []
+    user_ids: [ '5522d03ae8e369060053d953', "4d8cd73191a5c50ce200002a" ]
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

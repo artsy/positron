@@ -12,7 +12,7 @@ debug = require('debug') 'api'
 async = require 'async'
 bcrypt = require 'bcrypt'
 { ObjectId } = require 'mongojs'
-{ ARTSY_URL, SALT } = process.env
+{ ARTSY_URL, SALT, API_URL } = process.env
 
 #
 # Retrieval
@@ -45,38 +45,35 @@ bcrypt = require 'bcrypt'
   db.users.findOne { _id: ObjectId(id) }, (err, user) ->
     return callback err if err
     return callback null, user if user
-    async.parallel [
-      (cb) ->
-        request.get("#{ARTSY_URL}/api/v1/user/#{id}")
-          .set('X-Access-Token': accessToken).end cb
-      (cb) ->
-        request.get("#{ARTSY_URL}/api/v1/user/#{id}/access_controls")
-          .set('X-Access-Token': accessToken).end cb
-    ], (err, results) ->
-      return callback err if err
-      user = results[0].body
-      save user, accessToken, callback
+    request.get("#{ARTSY_URL}/api/v1/user/#{id}")
+      .set('X-Access-Token': accessToken)
+      .end (err, user) ->
+        return callback err if err
+        save user.body, accessToken, callback
 
 save = (user, accessToken, callback) ->
-  async.parallel _.compact([
+  async.parallel [
+    (cb) ->
+      request.get("#{ARTSY_URL}/api/v1/user/#{user.id}/access_controls")
+        .set('X-Access-Token': accessToken).end cb
+    (cb) ->
+      db.channels.find {user_ids: ObjectId(user.id)}, cb
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
-    if user.type is "Admin"
-      (cb) ->
-        request
-        .get("#{ARTSY_URL}/api/v1/me/authentications")
-        .set('X-Access-Token': accessToken).end cb
-  ]), (err, results) ->
+  ], (err, results) ->
     return callback err if err
-    encryptedAccessToken = results[0]
+    user.partner_ids = _.map results[0].body, (partner) ->
+      partner.property._id
+    user.channel_ids = _.pluck results[1], '_id'
+    encryptedAccessToken = results[2]
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
       email: user.email
       type: user.type
       access_token: encryptedAccessToken
-      facebook_uid: results[1]?.body[0]?.uid
-      twitter_uid: results[1]?.body[1]?.uid
+      partner_ids: user.partner_ids
+      channel_ids: user.channel_ids
     }, callback
 
 #
@@ -95,6 +92,4 @@ save = (user, accessToken, callback) ->
   {
     id: user._id
     name: user.name
-    facebook_uid: user.facebook_uid
-    twitter_uid: user.twitter_uid
   }
