@@ -111,11 +111,6 @@ section#edit-admin.admin-form-container.max-width-container
           label Exclude from Google News
             .flat-checkbox
               input( type='checkbox' name='exclude_google_news' checked=article.get('exclude_google_news') == 1 value=1 )
-        if sd.IS_EDITORIAL_TEAM
-          #edit-admin-fb-instant-articles
-            label Add To Instant Article Feed
-              .flat-checkbox
-                input( type='checkbox' name='instant_article' checked=article.get('instant_article') == 1 value=1 )
 
   //- Email
   section.admin-form-section#edit-email

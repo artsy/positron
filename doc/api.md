@@ -30,16 +30,28 @@ GET /articles
 - artwork_id: Query articles by an artwork they're featured to
 - section_id: Query articles by their section
 - fair_id: Query articles by a fair they're featured to
+- fair_ids: Query articles by multiple fairs
 - show_id: Query articles by a show they're featured to
 - partner_id: Query articles by the partner profile they're featured on
 - auction_id: Query articles by an auction they're featured to
 - tier: Query articles by their tier
 - featured: Query articles by if they're featured to Magazine
+- exclude_google_news: Query articles that shouldn't appear in Google News
+- super_article_for: Find parent super articles for a given article
+- all_by_author: Query articles that have an author or contributing author by a user id
+- tags: Query articles by multiple tags
+- is_super_article: Query articles that are super articles
+- biography_for_artist_id: Query articles by their artist biography
+- layout: Query articles by their layout type
+- has_video: Query articles that contain a video section
+- channel_id: Query articles by a channel id
+- partner_channel_id: Query articles by a partner channel id
 
-GET /articles/:id  
-POST /articles  
-PUT /articles/:id  
-DELETE /articles/:id  
+
+GET /articles/:id
+POST /articles
+PUT /articles/:id
+DELETE /articles/:id
 GET /sync\_to\_post?article_id=
 
 ### Users
@@ -62,3 +74,24 @@ POST /sections
 GET /sections/:id
 PUT /sections/:id
 DELETE /sections/:id
+
+### Channels
+
+GET /channels
+
+**params:**
+
+- user_id: Query channels that a user belongs to
+
+POST /channels
+GET /channels/:id
+PUT /channels/:id
+DELETE /channels/:id
+
+### Curations
+
+GET /curations
+POST /curations
+GET /curations/:id
+PUT /curations/:id
+DELETE /curations/:id
