@@ -28,6 +28,7 @@ request = require 'superagent'
             return cb null, null if err
             cb null, { id: res.body._id, value: res.body.name }
       , (err, results) ->
+        return callback err if err
         results = _.compact results
         callback null, results
 
