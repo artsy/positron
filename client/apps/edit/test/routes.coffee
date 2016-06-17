@@ -34,10 +34,3 @@ describe 'routes', ->
         author_id: 'bar'
       @res.render.args[0][0].should.equal 'layout/index'
       @res.render.args[0][1].article.get('title').should.equal a.title
-
-    it 'impersonates if not the author', ->
-      @req.params.id = 'foo'
-      routes.edit @req, @res
-      Backbone.sync.args[0][2].success a = _.extend fixtures().articles,
-        author_id: 'bar'
-      @res.redirect.args[0][0].should.containEql 'impersonate/bar'

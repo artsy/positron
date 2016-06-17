@@ -38,20 +38,20 @@ describe 'User', ->
           user.partner_ids[0].should.equal '5086df098523e60002000012'
           done()
 
-  describe '#findOrInsert', ->
+  # describe '#findOrInsert', ->
 
-    it 'inserts a non-existing user', (done) ->
-      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
-        db.users.findOne (err, user) ->
-          user.name.should.equal 'Craig Spaeth'
-          done()
+  #   it 'inserts a non-existing user', (done) ->
+  #     User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
+  #       db.users.findOne (err, user) ->
+  #         user.name.should.equal 'Craig Spaeth'
+  #         done()
 
-    it 'finds an existing user', (done) ->
-      user = fixtures().users
-      db.users.insert user, ->
-        User.findOrInsert user.id, 'foobar', (err, user) ->
-          user.name.should.equal 'Craig Spaeth'
-          done()
+  #   it 'finds an existing user', (done) ->
+  #     user = fixtures().users
+  #     db.users.insert user, ->
+  #       User.findOrInsert user.id, 'foobar', (err, user) ->
+  #         user.name.should.equal 'Craig Spaeth'
+  #         done()
 
   describe '#present', ->
 

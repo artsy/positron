@@ -48,14 +48,18 @@ Q = require 'bluebird-q'
         debug err if err
         generateArtworks input, article, (err, article) ->
           debug err if err
-          mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
+          mergeArticleAndAuthor input, article, accessToken, (err, article) ->
             return callback(err) if err
+            publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
+            article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+            if input.sections and input.sections.length is 0
+              article.sections = []
             # Merge fullscreen title with main article title
             article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
             if publishing
-              onPublish article, author, sanitizeAndSave(callback)
+              onPublish article, sanitizeAndSave(callback)
             else if not publishing and not article.slugs?.length > 0
-              generateSlugs article, author, sanitizeAndSave(callback)
+              generateSlugs article, sanitizeAndSave(callback)
             else
               sanitizeAndSave(callback)(null, article)
 

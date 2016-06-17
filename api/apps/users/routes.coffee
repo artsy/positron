@@ -4,7 +4,7 @@
 # GET /api/users/:id
 @show = (req, res, next) ->
   return res.send present req.user if req.isUser
-  User.findOrInsert req.params.id, req.accessToken, (err, user) ->
+  User.fromAccessToken req.accessToken, (err, user) ->
     return next err if err
     res.send present user
 

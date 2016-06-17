@@ -55,8 +55,8 @@ module.exports = (app) ->
   app.use require '../../apps/sections'
   app.use require '../../apps/article_list'
   app.use require '../../apps/edit'
-  app.use require '../../apps/impersonate'
   app.use require '../../apps/settings'
+  app.use require '../../apps/switch_channel'
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../../apps').forEach (fld) ->

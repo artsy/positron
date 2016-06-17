@@ -30,10 +30,10 @@ artsyXapp = require('artsy-xapp').token or ''
   whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
-@onPublish = (article, author, cb) =>
+@onPublish = (article, cb) =>
   unless article.published_at
     article.published_at = new Date()
-  @generateSlugs article, author, cb
+  @generateSlugs article, cb
 
 setEmailFields = (article) =>
   article.email_metadata = article.email_metadata or {}
@@ -43,8 +43,8 @@ setEmailFields = (article) =>
   article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
   article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
 
-@generateSlugs = (article, author, cb) ->
-  slug = _s.slugify author.name + ' ' + article.thumbnail_title
+@generateSlugs = (article, cb) ->
+  slug = _s.slugify article.author?.name + ' ' + article.thumbnail_title
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
@@ -192,14 +192,19 @@ getPartnerLink = (artwork) ->
 
 @mergeArticleAndAuthor = (input, article, accessToken, cb) =>
   authorId = input.author_id or article.author_id
-  User.findOrInsert authorId, accessToken, (err, author) ->
+  async.parallel [
+    (cb) ->
+      db.channels.find {id: ObjectId(article.channel_id)}, cb
+    (cb) ->
+      request.get("#{ARTSY_URL}/api/v1/user/#{user.id}/access_controls")
+        .set('X-Access-Token': accessToken).end cb
+    (cb) ->
+      User.fromAccessToken accessToken, cb
+  ], (err, results) ->
     return cb err if err
-    publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
-    article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
-    if input.sections and input.sections.length is 0
-      article.sections = []
-    article.author = User.denormalizedForArticle author if author
-    cb null, article, author, publishing
+    results[0].
+    article.author.name = channel or user.name
+    cb null, article
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->

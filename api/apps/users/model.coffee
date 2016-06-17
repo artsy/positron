@@ -40,16 +40,12 @@ bcrypt = require 'bcrypt'
 #
 # Persistance
 #
-@findOrInsert = (id, accessToken, callback) ->
-  return callback() unless id?
-  db.users.findOne { _id: ObjectId(id) }, (err, user) ->
-    return callback err if err
-    return callback null, user if user
-    request.get("#{ARTSY_URL}/api/v1/user/#{id}")
-      .set('X-Access-Token': accessToken)
-      .end (err, user) ->
-        return callback err if err
-        save user.body, accessToken, callback
+# @resave = (id, accessToken, callback) ->
+#   request.get("#{ARTSY_URL}/api/v1/user/#{id}")
+#     .set('X-Access-Token': accessToken)
+#     .end (err, user) ->
+#       return callback err if err
+#       save user.body, accessToken, callback
 
 save = (user, accessToken, callback) ->
   async.parallel [
@@ -85,12 +81,3 @@ save = (user, accessToken, callback) ->
     id: data._id?.toString()
     _id: undefined
     access_token: undefined
-
-#
-# Helpers
-#
-@denormalizedForArticle = (user) ->
-  {
-    id: user._id
-    name: user.name
-  }

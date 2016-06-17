@@ -12,10 +12,7 @@ User = require '../../models/user'
     success: (article) ->
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
       res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
-      if article.get('author_id') isnt req.user.get('id')
-        res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
-      else
-        render req, res, article
+      render req, res, article
 
 render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()

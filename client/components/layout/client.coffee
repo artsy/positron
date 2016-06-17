@@ -11,6 +11,7 @@ Autocomplete = require '../autocomplete/index.coffee'
 sd = require('sharify').data
 Modal = require 'simple-modal'
 imagesLoaded = require 'imagesloaded'
+User = require '../../models/user.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
@@ -23,6 +24,7 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
   initAnalyitcs()
+  ensureFreshUser()
 
 # Replace broken profile icon
 imgLoad = imagesLoaded('#layout-sidebar-profile img')
@@ -33,10 +35,10 @@ imgLoad.on 'fail', ->
   )
 
 # Open switch user modal
-$('#layout-sidebar-switch-user').click ->
+$('#layout-sidebar-switch-channel').click ->
   modal = Modal
-    title: 'Switch User'
-    content: "<input placeholder='Search by user name...'>"
+    title: 'Switch Channel'
+    content: "<input placeholder='Search by channel name...'>"
     removeOnClose: true
     buttons: [
       { text: 'Cancel', closeOnClick: true }
@@ -54,6 +56,13 @@ $('#layout-sidebar-switch-user').click ->
 # Toggle hamburger menu
 $('#layout-hamburger-container').click ->
   $('#layout-sidebar-container').toggleClass('is-active')
+
+ensureFreshUser = ->
+  user = new User sd.USER
+  user.isOutdated (outdated) ->
+    console.log 'check if this user is outdated'
+    console.log outdated
+    user.resave() if outdated
 
 initAnalyitcs = ->
   if sd.USER

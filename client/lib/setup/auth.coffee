@@ -8,6 +8,7 @@ Backbone = require 'backbone'
 passport = require 'passport'
 OAuth2Strategy = require 'passport-oauth2'
 User = require '../../models/user'
+Channel = require '../../models/channel'
 
 setupPassport = ->
   passport.use 'artsy', new OAuth2Strategy
@@ -20,7 +21,14 @@ setupPassport = ->
     new User(id: 'me', access_token: accessToken).fetch
       headers: 'X-Access-Token': accessToken
       error: (m, err) -> done err
-      success: (user) -> done null, user
+      success: (user) ->
+        id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
+        new Channel(id: id).fetch
+          headers: 'X-Access-Token': accessToken
+          error: (m, err) -> done err
+          success: (channel) =>
+            user.set 'current_channel', channel.denormalized()
+            done null, user
   passport.serializeUser (user, done) ->
     done null, user.toJSON()
   passport.deserializeUser (user, done) ->
@@ -34,6 +42,9 @@ logoutOldSchema = (req, res, next) ->
 
 requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
+
+requireChannel = (req, res, next) ->
+  if req.user?.get('current_channel') then next() else req.logout()
 
 logout = (req, res) ->
   req.logout()
@@ -50,3 +61,4 @@ module.exports = (app) ->
   app.get '/logout', logout
   app.use logoutOldSchema
   app.use requireLogin
+  app.use requireChannel

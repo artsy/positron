@@ -1,5 +1,6 @@
 Backbone = require 'backbone'
 sd = require('sharify').data
+async = require 'async'
 
 module.exports = class Channel extends Backbone.Model
 
@@ -27,3 +28,16 @@ module.exports = class Channel extends Backbone.Model
         sections: ['text','artworks', 'images','video']
         associations: []
       }
+
+  fetchChannelOrPartner: ->
+    # async.map [
+
+    # ], (err, results) ->
+    #
+
+  denormalized: ->
+    {
+      id: @get('id')
+      name: @get('name')
+      type: @get('type')
+    }

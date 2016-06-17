@@ -38,5 +38,5 @@
         = user.get('name').split(' ')[0]
       nav#layout-sidebar-profile-menu
         a( href='/logout' ) Sign out
-        if user.get('type') == 'Admin'
-          a#layout-sidebar-switch-user Switch user
+        if user.get('channel_ids').length > 0
+          a#layout-sidebar-switch-channel Switch channel
