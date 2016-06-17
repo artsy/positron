@@ -25,10 +25,10 @@ request = require 'superagent'
           .get("#{ARTSY_URL}/api/v1/show/#{slug}")
           .set('X-Access-Token': accessToken)
           .end (err, res) ->
-            return cb err if err
+            return cb null, null if err
             cb null, { id: res.body._id, value: res.body.name }
       , (err, results) ->
-        return callback err if err
+        results = _.compact results
         callback null, results
 
 @find = (id, accessToken, callback) ->
