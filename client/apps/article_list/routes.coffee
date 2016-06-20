@@ -8,11 +8,12 @@ Articles = require '../../collections/articles.coffee'
     data:
       offset: if page then (page - 1) * size else 0
       limit: size
-      author_id: req.user?.get('id')
+      channel_id: req.user?.get('current_channel').id
       published: published = req.query.published is 'true'
     headers: 'x-access-token': req.user?.get('access_token')
     error: res.backboneError
     success: (articles) ->
+      console.log articles.length
       res.render 'index',
         articles: articles
         published: published

@@ -30,10 +30,17 @@ module.exports = class Channel extends Backbone.Model
       }
 
   fetchChannelOrPartner: ->
-    # async.map [
+    async.parallel [
+      @fetch
+      (cb) ->
+        request.get("#{sd.ARTSY_URL}/partner/#{@get('id')}")
+          .set('X-Access-Token': accessToken).end cb
+    ], (err, results) ->
+      console.log results
+      # if results[0]
 
-    # ], (err, results) ->
-    #
+      # else
+      #   @set 'type', 'partner'
 
   denormalized: ->
     {

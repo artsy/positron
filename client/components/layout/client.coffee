@@ -60,8 +60,7 @@ $('#layout-hamburger-container').click ->
 ensureFreshUser = ->
   user = new User sd.USER
   user.isOutdated (outdated) ->
-    console.log 'check if this user is outdated'
-    console.log outdated
+    console.log 'outdated?', outdated
     user.resave() if outdated
 
 initAnalyitcs = ->
