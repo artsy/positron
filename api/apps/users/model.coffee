@@ -54,7 +54,8 @@ bcrypt = require 'bcrypt'
 save = (user, accessToken, callback) ->
   async.parallel [
     (cb) ->
-      request.get("#{ARTSY_URL}/api/v1/user/#{user.id}/access_controls")
+      return cb() unless user.has_partner_access
+      request.get("#{ARTSY_URL}/api/v1/me/partners")
         .set('X-Access-Token': accessToken).end cb
     (cb) ->
       db.channels.find {user_ids: ObjectId(user.id)}, cb
@@ -62,8 +63,8 @@ save = (user, accessToken, callback) ->
       bcrypt.hash accessToken, SALT, cb
   ], (err, results) ->
     return callback err if err
-    user.partner_ids = _.map results[0].body, (partner) ->
-      partner.property._id
+    user.partner_ids = _.map (results[0]?.body or []), (partner) ->
+      partner._id
     user.channel_ids = _.pluck results[1], '_id'
     encryptedAccessToken = results[2]
     db.users.save {
