@@ -1,50 +1,98 @@
 Backbone = require 'backbone'
 sd = require('sharify').data
 async = require 'async'
+request = require 'superagent'
+artsyXapp = require('artsy-xapp').token or ''
 
 module.exports = class Channel extends Backbone.Model
 
   urlRoot: "#{sd.API_URL}/channels"
 
-  getFeatures: ->
-    switch @get 'type'
-      when 'editorial' then {
-        features: ['header', 'superArticle']
-        sections: ['text', 'artworks', 'images', 'image_set', 'video', 'embed', 'callout', 'toc']
-        associations: ['artworks', 'artists', 'shows', 'fairs', 'partners','auctions']
-      }
-      when 'team' then {
-        features: []
-        sections: ['text', 'artworks', 'images', 'image_set', 'video', 'embed', 'callout']
-        associations: []
-      }
-      when 'support' then {
-        features: []
-        sections: ['text', 'artworks', 'images', 'video', 'callout']
-        associations: ['artworks', 'artists', 'shows', 'fairs', 'partners','auctions']
-      }
-      when 'partner' then {
-        features: []
-        sections: ['text','artworks', 'images','video']
-        associations: []
-      }
+  hasFeature: (feature) ->
+    type = @get('type')
+    if type is 'editorial'
+      _.contains [
+        'header'
+        'superArticle'
+        'text'
+        'artworks'
+        'images'
+        'image_set'
+        'video'
+        'embed'
+        'callout'
+        'toc'
+      ], feature
+    else if type is 'team'
+      _.contains [
+        'text'
+        'artworks'
+        'images'
+        'image_set'
+        'video'
+        'embed'
+        'callout'
+      ], feature
+    else if type is 'support'
+      _.contains [
+        'text'
+        'artworks'
+        'images'
+        'video'
+        'callout'
+      ], feature
+    else if type is 'partner'
+       _.contains [
+        'text'
+        'artworks'
+        'images'
+        'video'
+      ], feature
 
-  fetchChannelOrPartner: ->
+  hasAssociation: (association) ->
+    type = @get('type')
+    if type is 'editorial'
+      _.contains [
+        'artworks'
+        'artists'
+        'shows'
+        'fairs'
+        'partners'
+        'auctions'
+      ], association
+    else if type is 'team'
+      false
+    else if type is 'support'
+      _.contains [
+        'artworks'
+        'artists'
+        'shows'
+        'fairs'
+        'partners'
+        'auctions'
+      ], association
+    else if type is 'partner'
+       false
+
+  fetchChannelOrPartner: (options) ->
     async.parallel [
-      @fetch
-      (cb) ->
-        request.get("#{sd.ARTSY_URL}/partner/#{@get('id')}")
-          .set('X-Access-Token': accessToken).end cb
+      (cb) =>
+        request.get("#{sd.API_URL}/channels/#{@get('id')}")
+          .set('X-Xapp-Token': artsyXapp).end cb
+      (cb) =>
+        request.get("#{sd.ARTSY_URL}/api/v1/partner/#{@get('id')}")
+          .set('X-Xapp-Token': artsyXapp).end cb
     ], (err, results) ->
-      console.log results
-      # if results[0]
-
-      # else
-      #   @set 'type', 'partner'
+      if results[0]
+        options.success(results[0].body)
+      else if results[1]
+        options.success(results[1].body)
+      else
+        options.error(err)
 
   denormalized: ->
     {
       id: @get('id')
       name: @get('name')
-      type: @get('type')
+      type: @get('type') or 'partner'
     }

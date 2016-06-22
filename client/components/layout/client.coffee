@@ -34,7 +34,7 @@ imgLoad.on 'fail', ->
     "/images/layout_missing_user.png"
   )
 
-# Open switch user modal
+# Open switch channel modal
 $('#layout-sidebar-switch-channel').click ->
   modal = Modal
     title: 'Switch Channel'
@@ -46,11 +46,12 @@ $('#layout-sidebar-switch-channel').click ->
     ]
   new Autocomplete
     el: $(modal.m).find('input')
-    url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-    filter: (users) -> for user in users
-      { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
+    url: "#{sd.API_URL}/channels?user_id=#{sd.USER.id}&q=%QUERY"
+    filter: (channels) -> for channel in channels.results
+      console.log channel
+      { id: channel.id, value: channel.name }
     selected: (e, item) =>
-      location.assign '/impersonate/' + item.id
+      location.assign '/switch_channel/' + item.id
   _.defer -> $(modal.m).find('input').focus()
 
 # Toggle hamburger menu
@@ -60,7 +61,7 @@ $('#layout-hamburger-container').click ->
 ensureFreshUser = ->
   user = new User sd.USER
   user.isOutdated (outdated) ->
-    console.log 'outdated?', outdated
+    console.log 'outdated?'
     user.resave() if outdated
 
 initAnalyitcs = ->

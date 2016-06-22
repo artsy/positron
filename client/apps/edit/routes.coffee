@@ -1,5 +1,6 @@
 Article = require '../../models/article'
 User = require '../../models/user'
+Channel = require '../../models/channel'
 
 @create = (req, res, next) ->
   res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
@@ -12,6 +13,7 @@ User = require '../../models/user'
     success: (article) ->
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
       res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
+      res.locals.sd.CURRENT_CHANNEL = new Channel req.user.get('current_channel')
       render req, res, article
 
 render = (req, res, article) ->
