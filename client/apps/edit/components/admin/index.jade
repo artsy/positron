@@ -1,3 +1,5 @@
+- var channel = sd.CURRENT_CHANNEL
+
 mixin featuredList(id, resource)
   ul.edit-admin-feature-list( id=id )
     li
@@ -47,38 +49,44 @@ section#edit-admin.admin-form-container.max-width-container
       h2 Feature this article to selected pages or microsites to highlight it in various feeds and modules.
     .admin-form-right
       .admin-form-right-col
-        label Fair
-        #edit-admin-fair
-        label Fair Programming
-        #edit-admin-fair-programming
-        label Artsy At The Fair
-        #edit-admin-artsy-at-the-fair
-        label About The Fair
-        #edit-admin-about-the-fair
+        if channel.hasAssociation('fairs')
+          label Fair
+          #edit-admin-fair
+          label Fair Programming
+          #edit-admin-fair-programming
+          label Artsy At The Fair
+          #edit-admin-artsy-at-the-fair
+          label About The Fair
+          #edit-admin-about-the-fair
         label Artist Biography
         #edit-admin-biography
-        label Partners
-        #edit-admin-partner
+        if channel.hasAssociation('partners')
+          label Partners
+          #edit-admin-partner
       .admin-form-right-col
         label Editorial Section
         #edit-admin-section
-        label Show
-        #edit-admin-shows
-        label Auction
-        #edit-admin-auction
+        if channel.hasAssociation('shows')
+          label Show
+          #edit-admin-shows
+        if channel.hasAssociation('auctions')
+          label Auction
+          #edit-admin-auction
       #edit-admin-feature
-        label Primary Artists
-        +featuredList('eaf-primary-artists', 'artist')
-        label Secondary Artists
-        +featuredList('eaf-artists', 'artist')
-        label Artworks
-        +featuredList('eaf-artworks', 'artwork')
+        if channel.hasAssociation('artists')
+          label Primary Artists
+          +featuredList('eaf-primary-artists', 'artist')
+          label Secondary Artists
+          +featuredList('eaf-artists', 'artist')
+        if channel.hasAssociation('artworks')
+          label Artworks
+          +featuredList('eaf-artworks', 'artwork')
 
   //- Authors
   section.admin-form-section
     .admin-form-left
       h1 Authors
-      h2 Change the primary author to move this article in Writer or add contributing authors to expand bylines.
+      h2 Change the name of the author
     .admin-form-right
       #edit-admin-change-author
         label Primary Author
@@ -151,48 +159,49 @@ section#edit-admin.admin-form-container.max-width-container
           input.bordered-input( onClick="this.select();" readonly )
 
   //- Super Article
-  section.admin-form-section#edit-super-article
-    .admin-form-left
-      h1 Super Article
-      h2 Enable the Super Article functionality for special partnerships and features.
-    .admin-form-right
-      .admin-form-right-col
-        label Enable
-          .flat-checkbox
-            input( type='checkbox' name='is_super_article'
-              checked=article.get('is_super_article') == true value=true )
-        label Partner Link Title
-          input.bordered-input( name='partner_link_title' value="#{article.getObjectAttribute('super_article','partner_link_title')}" placeholder="Download the App")
-        label Partner Link
-          input.bordered-input( name='partner_link' value="#{article.getObjectAttribute('super_article', 'partner_link')}")
-        label.edit-partner-logo
-          span(
-            data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
-          ) Partner Logo
-          #edit-partner-logo-upload
-        label.edit-partner-logo
-          span(
-            data-hidden=article.get('super_article') && article.get('super_article').partner_fullscreen_header_logo ? 'true' : 'false'
-          ) Partner Fullscreen Header Logo
-          #edit-partner-fullscreen-header-logo-upload
-        label Partner Logo Link
-          input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
-        label.edit-partner-logo
-          span(
-            data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
-          ) Secondary Partner Logo
-          #edit-secondary-partner-logo-upload
-        label Secondary Logo Text
-          input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
-        label Secondary Logo Link
-          input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
-        label Footer Blurb
-          textarea.bordered-input( name='footer_blurb') #{article.getObjectAttribute('super_article','footer_blurb')}
-      .admin-form-right-col
-        label Related Articles
-        #edit-admin-related-articles
+  if channel.hasFeature('superArticle')
+    section.admin-form-section#edit-super-article
+      .admin-form-left
+        h1 Super Article
+        h2 Enable the Super Article functionality for special partnerships and features.
+      .admin-form-right
+        .admin-form-right-col
+          label Enable
+            .flat-checkbox
+              input( type='checkbox' name='is_super_article'
+                checked=article.get('is_super_article') == true value=true )
+          label Partner Link Title
+            input.bordered-input( name='partner_link_title' value="#{article.getObjectAttribute('super_article','partner_link_title')}" placeholder="Download the App")
+          label Partner Link
+            input.bordered-input( name='partner_link' value="#{article.getObjectAttribute('super_article', 'partner_link')}")
+          label.edit-partner-logo
+            span(
+              data-hidden=article.get('super_article') && article.get('super_article').partner_logo ? 'true' : 'false'
+            ) Partner Logo
+            #edit-partner-logo-upload
+          label.edit-partner-logo
+            span(
+              data-hidden=article.get('super_article') && article.get('super_article').partner_fullscreen_header_logo ? 'true' : 'false'
+            ) Partner Fullscreen Header Logo
+            #edit-partner-fullscreen-header-logo-upload
+          label Partner Logo Link
+            input.bordered-input( name='partner_logo_link' value="#{article.getObjectAttribute('super_article', 'partner_logo_link')}")
+          label.edit-partner-logo
+            span(
+              data-hidden=article.get('super_article') && article.get('super_article').secondary_partner_logo ? 'true' : 'false'
+            ) Secondary Partner Logo
+            #edit-secondary-partner-logo-upload
+          label Secondary Logo Text
+            input.bordered-input( name='secondary_logo_text' value="#{article.getObjectAttribute('super_article','secondary_logo_text')}" placeholder="In Partnership With")
+          label Secondary Logo Link
+            input.bordered-input( name='secondary_logo_link' value="#{article.getObjectAttribute('super_article','secondary_logo_link')}")
+          label Footer Blurb
+            textarea.bordered-input( name='footer_blurb') #{article.getObjectAttribute('super_article','footer_blurb')}
+        .admin-form-right-col
+          label Related Articles
+          #edit-admin-related-articles
 
-  if sd.IS_EDITORIAL_TEAM
+  if channel.hasFeature('layout')
     section.admin-form-section
       .admin-form-left
         h1 Layout

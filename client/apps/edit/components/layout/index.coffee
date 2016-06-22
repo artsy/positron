@@ -11,7 +11,7 @@ try
 module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
-    { @article } = options
+    { @article, @channel } = options
     @user = new User sd.USER
     @$window = $(window)
     @article.sections.removeBlank()

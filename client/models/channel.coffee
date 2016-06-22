@@ -1,3 +1,4 @@
+_ = require 'underscore'
 Backbone = require 'backbone'
 sd = require('sharify').data
 async = require 'async'
@@ -22,6 +23,8 @@ module.exports = class Channel extends Backbone.Model
         'embed'
         'callout'
         'toc'
+        'follow'
+        'layout'
       ], feature
     else if type is 'team'
       _.contains [
@@ -32,6 +35,7 @@ module.exports = class Channel extends Backbone.Model
         'video'
         'embed'
         'callout'
+        'follow'
       ], feature
     else if type is 'support'
       _.contains [
@@ -40,6 +44,7 @@ module.exports = class Channel extends Backbone.Model
         'images'
         'video'
         'callout'
+        'follow'
       ], feature
     else if type is 'partner'
        _.contains [
