@@ -19,7 +19,6 @@ describe 'SectionTool', ->
       @SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      User.__set__ 'sd', { EDITORIAL_TEAM: 'kana' }
       @SectionTool.__set__ 'User', User
       @SectionTool.__set__ 'sd', { USER: { type: 'Admin', email: 'kana@artsymail.com'} }
       @component = React.render @SectionTool(

@@ -13,9 +13,9 @@ Articles = require '../../collections/articles.coffee'
     headers: 'x-access-token': req.user?.get('access_token')
     error: res.backboneError
     success: (articles) ->
-      console.log articles.length
       res.render 'index',
         articles: articles
         published: published
         page: page or 1
         totalPages: Math.ceil(articles.count / size)
+        current_channel: req.user?.get('current_channel')

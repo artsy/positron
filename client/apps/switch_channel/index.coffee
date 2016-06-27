@@ -12,8 +12,8 @@ Channel = require '../../models/channel.coffee'
 app = module.exports = express()
 
 app.get '/switch_channel/:id', switchChannel = (req, res, next) ->
-  return next() unless _.contains req.user.get('channel_ids'), req.params.id or
-    _.contains req.user.get('partner_ids'), req.params.id or
+  return next() unless _.contains(req.user.get('channel_ids'), req.params.id) or
+    _.contains(req.user.get('partner_ids'), req.params.id) or
     req.user.get('type') is 'Admin'
   new Channel(id: req.params.id).fetchChannelOrPartner
     success: (channel) ->

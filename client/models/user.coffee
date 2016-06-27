@@ -8,11 +8,6 @@ module.exports = class User extends Backbone.Model
 
   urlRoot: "#{sd.API_URL}/users"
 
-  isEditorialTeam: ->
-    (@get('type') is 'Admin' and
-      @get('email')?.split('@')[0] in sd.EDITORIAL_TEAM?.split(',')) or
-        @get('email') is sd.EDITORIAL_EMAIL
-
   isAdmin: ->
     @get('type') is 'Admin'
 
@@ -35,7 +30,7 @@ module.exports = class User extends Backbone.Model
           .set('X-Access-Token': @get('access_token')).end cb
     ], (err, results) =>
       return callback true if err
-      user = results[0].body
+      user = results[0]?.body
       user.partner_ids = _.map (results[1]?.body or []), (partner) ->
         partner._id
       user.channel_ids = _.pluck results[2]?.body.results, 'id'

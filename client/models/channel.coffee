@@ -88,6 +88,7 @@ module.exports = class Channel extends Backbone.Model
         request.get("#{sd.ARTSY_URL}/api/v1/partner/#{@get('id')}")
           .set('X-Xapp-Token': artsyXapp).end cb
     ], (err, results) ->
+      console.log results
       if results[0]
         options.success(results[0].body)
       else if results[1]
