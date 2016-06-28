@@ -23,7 +23,8 @@ setupPassport = ->
       error: (m, err) -> done err
       success: (user) ->
         id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
-        new Channel(id: id).fetch
+        console.log 'setupPassport'
+        new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
           error: (m, err) -> done err
           success: (channel) =>

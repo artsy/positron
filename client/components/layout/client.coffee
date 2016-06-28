@@ -63,6 +63,7 @@ $('#layout-sidebar-switch-channel').click ->
     remote:
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
       filter: (partners) -> for partner in partners
+        console.log partner
         { id: partner._id, value: partner.name }
       ajax:
         beforeSend: =>
