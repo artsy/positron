@@ -18,12 +18,11 @@ setupPassport = ->
     clientSecret: process.env.ARTSY_SECRET
     callbackURL: process.env.APP_URL + '/auth/artsy/callback'
   , (accessToken, refreshToken, profile, done) ->
-    new User(id: 'me', access_token: accessToken).fetch
+    new User(access_token: accessToken).fetch
       headers: 'X-Access-Token': accessToken
       error: (m, err) -> done err
       success: (user) ->
         id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
-        console.log 'setupPassport'
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
           error: (m, err) -> done err

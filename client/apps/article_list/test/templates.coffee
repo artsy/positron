@@ -19,4 +19,6 @@ describe 'article list template', ->
   it 'renders an article thumbnail_title', ->
     articles = new Articles [fixtures().articles]
     articles.first().set thumbnail_title: 'Hello Blue World'
-    render(articles: articles).should.containEql 'Hello Blue World'
+    html = render(articles: articles, current_channel: {name: 'Artsy Editorial'})
+    html.should.containEql 'Hello Blue World'
+    html.should.containEql 'Artsy Editorial'

@@ -190,22 +190,6 @@ getPartnerLink = (artwork) ->
   else
     db.articles.save sanitize(typecastIds article), callback
 
-@mergeArticleAndAuthor = (input, article, accessToken, cb) =>
-  authorId = input.author_id or article.author_id
-  async.parallel [
-    (cb) ->
-      db.channels.find {id: ObjectId(article.channel_id)}, cb
-    (cb) ->
-      request.get("#{ARTSY_URL}/api/v1/user/#{user.id}/access_controls")
-        .set('X-Access-Token': accessToken).end cb
-    (cb) ->
-      User.fromAccessToken accessToken, cb
-  ], (err, results) ->
-    return cb err if err
-    results[0].
-    article.author.name = channel or user.name
-    cb null, article
-
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
   if article.sections

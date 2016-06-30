@@ -24,6 +24,7 @@ describe 'articles endpoints', ->
         type: 'User'
         name: 'Normie'
         access_token: 'foobar'
+        has_partner_access: false
         _id: undefined
       }, (err, @normie) =>
         done()

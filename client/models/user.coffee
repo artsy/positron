@@ -6,16 +6,17 @@ request = require 'superagent'
 
 module.exports = class User extends Backbone.Model
 
-  urlRoot: "#{sd.API_URL}/users"
+  urlRoot: "#{sd.API_URL}/users/me"
 
   isAdmin: ->
     @get('type') is 'Admin'
 
-  resave: ->
-    @fetch
-      data: resave: true
-      success: (user) ->
-        # console.log user
+  refresh: ->
+    request.get("#{sd.API_URL}/users/me/refresh")
+      .set('X-Access-Token': @get('access_token'))
+      .end (err, res) ->
+        console.log err
+        console.log res
 
   isOutdated: (callback) ->
     async.parallel [

@@ -40,12 +40,13 @@ bcrypt = require 'bcrypt'
 #
 # Persistance
 #
-# @resave = (id, accessToken, callback) ->
-#   request.get("#{ARTSY_URL}/api/v1/user/#{id}")
-#     .set('X-Access-Token': accessToken)
-#     .end (err, user) ->
-#       return callback err if err
-#       save user.body, accessToken, callback
+
+@resave = (accessToken, callback) ->
+  request.get("#{ARTSY_URL}/api/v1/me")
+    .set('X-Access-Token': accessToken)
+    .end (err, user) ->
+      return callback err if err
+      save user.body, accessToken, callback
 
 save = (user, accessToken, callback) ->
   async.parallel [

@@ -9,7 +9,7 @@ Channel = require '../../models/channel'
     channel_id: channel.get('id') if channel.get('type') isnt 'partner'
     partner_channel_id: channel.get('id') if channel.get('type') is 'partner'
     partner_ids: [channel.get('id')] if channel.get('type') is 'partner'
-    author: { name: channel.get('name') }
+    author: { name: channel.get('name'), id: req.user.get('id') }
   }
 
 @edit = (req, res, next) ->

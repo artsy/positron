@@ -83,16 +83,30 @@ module.exports = class Channel extends Backbone.Model
     async.parallel [
       (cb) =>
         request.get("#{sd.API_URL}/channels/#{@get('id')}")
-          .set('X-Xapp-Token': artsyXapp).end cb
+          .set('X-Xapp-Token': artsyXapp)
+          .end (err, res) ->
+            if err
+              cb null, {}
+            else
+              cb null, res
       (cb) =>
         request.get("#{sd.ARTSY_URL}/api/v1/partner/#{@get('id')}")
-          .set('X-Xapp-Token': artsyXapp).end cb
+          .set('X-Xapp-Token': artsyXapp)
+          .end (err, res) ->
+            if err
+              cb null, {}
+            else
+              cb null, res
     ], (err, results) ->
       if results[0]?.ok
-        options.success(results[0].body)
+        options.success new Channel results[0].body
       else if results[1]?.ok
-        results[1].body.id = results[1].body._id
-        options.success(results[1].body)
+        channel = new Channel(
+          name: results[1].body.name
+          id: results[1].body._id
+          type: 'partner'
+        )
+        options.success channel
       else
         options.error(err)
 
