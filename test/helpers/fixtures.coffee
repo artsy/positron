@@ -101,6 +101,7 @@ module.exports = ->
     id: '5086df098523e60002000018'
     name: 'Editorial'
     user_ids: [ '5522d03ae8e369060053d953', "4d8cd73191a5c50ce200002a" ]
+    type: 'editorial'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

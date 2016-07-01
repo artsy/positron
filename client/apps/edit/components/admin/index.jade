@@ -90,7 +90,7 @@ section#edit-admin.admin-form-container.max-width-container
     .admin-form-right
       #edit-admin-change-author
         label Primary Author
-        input.bordered-input( placeholder='Search by user name...' )
+        input.bordered-input.edit-admin-author-name(value=article.get('author') ? article.get('author').name : '')
       br
       label Contributing Authors
       #edit-admin-contributing-authors

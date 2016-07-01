@@ -13,7 +13,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   initialize: ({ @article, @channel }) ->
     @article.on 'open:tab2', @onOpen
-    @setupAuthorAutocomplete()
     @setupFairAutocomplete()
     @setupFairProgrammingAutocomplete()
     @setupArtsyAtTheFairAutocomplete()
@@ -29,16 +28,6 @@ module.exports = class EditAdmin extends Backbone.View
     @setupEmailMetadata()
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
-
-  setupAuthorAutocomplete: ->
-    Autocomplete = require '../../../../components/autocomplete/index.coffee'
-    new Autocomplete
-      el: @$('#edit-admin-change-author input')
-      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-      placeholder: 'Search by user name or email...'
-      filter: (users) -> for user in users
-        { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
-      selected: @onAuthorSelect
 
   onAuthorSelect: (e, item) =>
     return unless confirm "Are you sure you want to change the author?"

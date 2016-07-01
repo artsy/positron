@@ -18,6 +18,12 @@ module.exports = class User extends Backbone.Model
         console.log err
         console.log res
 
+  hasChannel: (id) ->
+    _.contains @get('channel_ids'), id
+
+  hasPartner: (id) ->
+    @isAdmin() or _.contains @get('partner_channel_ids'), id
+
   isOutdated: (callback) ->
     async.parallel [
       (cb) =>

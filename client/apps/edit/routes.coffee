@@ -17,9 +17,14 @@ Channel = require '../../models/channel'
     headers: 'x-access-token': req.user.get('access_token')
     error: res.backboneError
     success: (article) ->
+      return next() unless req.user.hasChannel(article.get('channel_id')) or
+        req.user.hasPartner(article.get('partner_channel_id'))
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
       res.locals.sd.CURRENT_CHANNEL = new Channel req.user.get('current_channel')
-      render req, res, article
+      if (article.get('channel_id') or article.get('partner_channel_id')) isnt req.user.get('current_channel').id
+        res.redirect "/switch_channel/#{article.get 'channel_id' or article.get 'partner_channel_id'}?redirect-to=#{req.url}"
+      else
+        render req, res, article
 
 render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()

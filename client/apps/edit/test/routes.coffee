@@ -42,10 +42,17 @@ describe 'routes', ->
   describe '#edit', ->
 
     it 'renders a fetched article', ->
-      @req.user.set id: 'bar'
+      @req.user.set current_channel: id: '123'
       @req.params.id = 'foo'
       routes.edit @req, @res
       Backbone.sync.args[0][2].success a = _.extend fixtures().articles,
-        author_id: 'bar'
+        channel_id: '123'
       @res.render.args[0][0].should.equal 'layout/index'
       @res.render.args[0][1].article.get('title').should.equal a.title
+
+    it 'switches channel if article and current_channel do not match', ->
+      @req.user.set current_channel: id: '123'
+      @req.params.id = 'foo'
+      routes.edit @req, @res
+      Backbone.sync.args[0][2].success _.extend fixtures().articles
+      @res.redirect.calledOnce.should.be.true()

@@ -59,6 +59,9 @@ module.exports = class EditLayout extends Backbone.View
   serialize: ->
     {
       author_id: @user.get('id')
+      author:
+        name: @$('#edit-admin-change-author :input').val() or @channel.get('name')
+        id: @user.get('id')
       tier: Number @$('[name=tier]:checked').val()
       featured: @$('[name=featured]').is(':checked')
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')

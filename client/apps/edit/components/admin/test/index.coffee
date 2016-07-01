@@ -2,6 +2,7 @@ _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
 Article = require '../../../../../models/article'
+Channel = require '../../../../../models/channel'
 Backbone = require 'backbone'
 moment = require 'moment'
 should = require 'should'
@@ -16,6 +17,7 @@ describe 'EditAdmin', ->
       tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().articles
+        sd: CURRENT_CHANNEL: (@channel = new Channel fixtures().channels)
       ), =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
@@ -24,7 +26,6 @@ describe 'EditAdmin', ->
         EditAdmin = benv.requireWithJadeify '../index',
           ['featuredListTemplate']
         EditAdmin.__set__ 'ImageUploadForm', @ImageUploadForm = sinon.stub()
-        EditAdmin::setupAuthorAutocomplete = sinon.stub()
         EditAdmin::setupFairAutocomplete = sinon.stub()
         EditAdmin::setupFairProgrammingAutocomplete = sinon.stub()
         EditAdmin::setupArtsyAtTheFairAutocomplete = sinon.stub()
@@ -38,7 +39,7 @@ describe 'EditAdmin', ->
         EditAdmin::setupContributingAuthors = sinon.stub()
         EditAdmin::setupSuperArticleAutocomplete = sinon.stub()
         EditAdmin::setupSuperArticleImages = sinon.stub()
-        @view = new EditAdmin el: $('#edit-admin'), article: @article
+        @view = new EditAdmin el: $('#edit-admin'), article: @article, channel: @channel
         done()
 
   afterEach ->
