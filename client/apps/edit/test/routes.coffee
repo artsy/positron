@@ -42,11 +42,10 @@ describe 'routes', ->
   describe '#edit', ->
 
     it 'renders a fetched article', ->
-      @req.user.set current_channel: id: '123'
+      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b'
       @req.params.id = 'foo'
       routes.edit @req, @res
-      Backbone.sync.args[0][2].success a = _.extend fixtures().articles,
-        channel_id: '123'
+      Backbone.sync.args[0][2].success a = _.extend fixtures().articles, channel_id: '4d8cd73191a5c50ce200002b'
       @res.render.args[0][0].should.equal 'layout/index'
       @res.render.args[0][1].article.get('title').should.equal a.title
 
