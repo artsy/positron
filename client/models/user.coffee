@@ -11,18 +11,23 @@ module.exports = class User extends Backbone.Model
   isAdmin: ->
     @get('type') is 'Admin'
 
-  refresh: ->
+  refresh: (cb) ->
     request.get("#{sd.API_URL}/users/me/refresh")
       .set('X-Access-Token': @get('access_token'))
       .end (err, res) ->
-        console.log err
-        console.log res
+        cb()
 
   hasChannel: (id) ->
     _.contains @get('channel_ids'), id
 
   hasPartner: (id) ->
     @isAdmin() or _.contains @get('partner_channel_ids'), id
+
+  hasArticleAccess: (article) ->
+    if article.get('channel_id')
+      @hasChannel article.get('channel_id')
+    else
+      @hasPartner article.get('partner_channel_id')
 
   isOutdated: (callback) ->
     async.parallel [
@@ -43,7 +48,15 @@ module.exports = class User extends Backbone.Model
       user.channel_ids = _.pluck results[2]?.body.results, 'id'
 
       for attr in ['id', 'type', 'name', 'email']
-        return callback true if not _.isEqual user[attr], @get(attr)
+        return callback true unless _.isEqual user[attr], @get(attr)
       for attr in ['channel_ids', 'partner_ids']
-        return callback true if _.difference(user[attr], @get(attr)).length > 0
+        return callback true unless _.isEqual(user[attr].sort(), @get(attr).sort())
       callback false
+
+  fetchPartners: (cb) ->
+    request
+      .get("#{sd.ARTSY_URL}/api/v1/me/partners")
+      .set('X-Access-Token': @get('access_token'))
+      .end (err, results) ->
+        return cb [] if err
+        cb results.body

@@ -394,8 +394,10 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         id: '5086df098523e60002002222'
+        channel_id: '5086df098523e60002002223'
       }, 'foo', (err, article) ->
         article.title.should.equal 'Top Ten Shows'
+        article.channel_id.toString().should.equal '5086df098523e60002002223'
         db.articles.count (err, count) ->
           count.should.equal 11
           done()
@@ -885,6 +887,18 @@ describe 'Article', ->
       }, 'foo', (err, article) ->
         return done err if err
         article.partner_channel_id.toString().should.equal '5086df098523e60002000015'
+        done()
+
+    it 'saves the author', (done) ->
+      Article.save {
+        author:
+          name: 'Jon Snow'
+          id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.author.id.toString().should.equal '5086df098523e60002000018'
+        article.author.name.should.equal 'Jon Snow'
         done()
 
   describe '#publishScheduledArticles', ->

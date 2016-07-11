@@ -50,6 +50,9 @@ logout = (req, res) ->
   req.logout()
   res.redirect sd.ARTSY_URL + '/users/sign_out'
 
+unauthorized = (req, res) ->
+  res.render '../../components/error/page', error: status: 403
+
 module.exports = (app) ->
   setupPassport()
   app.use passport.initialize()
@@ -57,8 +60,9 @@ module.exports = (app) ->
   app.get '/login', passport.authenticate('artsy')
   app.get '/auth/artsy/callback', passport.authenticate 'artsy',
     successRedirect: '/'
-    failureRedirect: '/logout'
+    failureRedirect: '/unauthorized'
   app.get '/logout', logout
+  app.get '/unauthorized', unauthorized
   app.use logoutOldSchema
   app.use requireLogin
   app.use requireChannel

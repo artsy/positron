@@ -36,8 +36,11 @@ querySchema = (->
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) }
-  db.channels.findOne query, callback
+  return callback 'Invalid channel id' unless ObjectId.isValid(id)
+  query = { _id: ObjectId(id) }
+  db.channels.findOne query, (err, channel) ->
+    return callback 'No channel found' unless channel
+    callback null, channel
 
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>

@@ -22,30 +22,23 @@ module.exports.init = ->
   $.ajaxSettings.headers = 'X-Access-Token': sd.USER.access_token
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
-  initAnalyitcs()
+  @user = new User sd.USER
   channelAutocomplete.init()
-  ensureFreshUser()
 
-# Replace broken profile icon
-imgLoad = imagesLoaded('#layout-sidebar-profile img')
-imgLoad.on 'fail', ->
-  $('#layout-sidebar-profile img').attr(
-    'src'
-    "/images/layout_missing_user.png"
-  )
+  # Replace broken profile icon
+  imgLoad = imagesLoaded('#layout-sidebar-profile img')
+  imgLoad.on 'fail', ->
+    $('#layout-sidebar-profile img').attr(
+      'src'
+      "/images/layout_missing_user.png"
+    )
 
-# Toggle hamburger menu
-$('#layout-hamburger-container').click ->
-  $('#layout-sidebar-container').toggleClass('is-active')
+  # Toggle hamburger menu
+  $('#layout-hamburger-container').click ->
+    $('#layout-sidebar-container').toggleClass('is-active')
 
-ensureFreshUser = ->
-  user = new User sd.USER
-  user.isOutdated (outdated) ->
-    user.refresh() if outdated
-
-initAnalyitcs = ->
-  if sd.USER
-    analytics.identify sd.USER.id,
-      email: sd.USER.email
-      name: sd.USER.name
-  analytics.page()
+  # Ensure a fresh user
+  @user.isOutdated (outdated) =>
+    if outdated
+      @user.refresh =>
+        window.location.replace "/logout"
