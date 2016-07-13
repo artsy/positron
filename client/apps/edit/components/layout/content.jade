@@ -13,3 +13,11 @@ section#edit-content
       p= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container
+  #edit-seo
+    label Focus Keyword
+      input#edit-seo__focus-keyword(type='text')
+    label Content
+      input#edit-seo__content-field
+    #edit-seo__snippet
+    label Output
+      #edit-seo__output

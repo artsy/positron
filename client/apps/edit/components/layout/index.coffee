@@ -7,6 +7,8 @@ toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
+yoastSnippetPreview = require( "yoastseo" ).SnippetPreview
+yoastApp = require( "yoastseo" ).App
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -29,6 +31,7 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
+    @setupYoast()
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
@@ -193,3 +196,26 @@ module.exports = class EditLayout extends Backbone.View
 
   hideSectionTools: ->
     @$('.edit-section-tool').removeClass 'is-active'
+
+  setupYoast: ->
+    focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
+    contentField = document.getElementById( "edit-seo__content-field" )
+
+    snippetPreview = new yoastSnippetPreview
+      targetElement: document.getElementById( "edit-seo__snippet" )
+
+
+    app = new yoastApp
+      snippetPreview: snippetPreview,
+      targets:
+        output: "edit-seo__output"
+      callbacks: 
+        getData: ->
+          return {
+            keyword: focusKeywordField.value,
+            text: contentField.value
+          }
+    app.refresh()
+
+    focusKeywordField.addEventListener( 'change', app.refresh.bind( app ) )
+    contentField.addEventListener( 'change', app.refresh.bind( app ) )
