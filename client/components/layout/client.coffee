@@ -10,7 +10,7 @@ viewHelpers = require '../../lib/view_helpers.coffee'
 sd = require('sharify').data
 imagesLoaded = require 'imagesloaded'
 User = require '../../models/user.coffee'
-channelAutocomplete = require './channel_autocomplete.coffee'
+AutocompleteChannels = require '../autocomplete_channels/index.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
@@ -23,7 +23,7 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
   @user = new User sd.USER
-  channelAutocomplete.init()
+  new AutocompleteChannels()
 
   # Replace broken profile icon
   imgLoad = imagesLoaded('#layout-sidebar-profile img')

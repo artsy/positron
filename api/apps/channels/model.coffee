@@ -36,10 +36,10 @@ querySchema = (->
 # Retrieval
 #
 @find = (id, callback) ->
-  return callback 'Invalid channel id' unless ObjectId.isValid(id)
+  return callback new Error 'Invalid channel id' unless ObjectId.isValid(id)
   query = { _id: ObjectId(id) }
   db.channels.findOne query, (err, channel) ->
-    return callback 'No channel found' unless channel
+    return callback new Error 'No channel found' unless channel
     callback null, channel
 
 @where = (input, callback) ->
