@@ -1,12 +1,14 @@
-{ defer } = require 'underscore'
+_ = require 'underscore'
+Backbone = require 'backbone'
 Modal = require 'simple-modal'
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
 User = require '../../models/user.coffee'
 
-module.exports.init = ->
-  $('#layout-sidebar-switch-channel').click =>
+module.exports = class AutocompleteChannels extends Backbone.View
+
+  initialize: (options) ->
     @modal = Modal
       title: 'Switch Channel'
       content: "<input placeholder='Search by channel name...'>"
@@ -18,11 +20,11 @@ module.exports.init = ->
     @$el = $(@modal.m).find('input')
     @user = new User sd.USER
 
-    @user.fetchPartners (partners) ->
-      setupBloodhound partners
-      setupTypeahead()
+    @user.fetchPartners (partners) =>
+      @setupBloodhound partners
+      @setupTypeahead()
 
-  setupBloodhound = (fetchedPartners) =>
+  setupBloodhound: (fetchedPartners) =>
     # Manually set up bloodhound for channels and partners
     @channels = new Bloodhound
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
@@ -60,7 +62,7 @@ module.exports.init = ->
     @adminPartners?.initialize()
     @partners?.initialize()
 
-  setupTypeahead = =>
+  setupTypeahead: =>
     # Initialize typeahead with both channels and partners
 
     @$el.typeahead {
@@ -78,4 +80,4 @@ module.exports.init = ->
 
     @$el.on 'typeahead:selected', (e, item) =>
       location.assign '/switch_channel/' + item.id
-    defer => $(@modal.m).find('input').focus()
+    _.defer => $(@modal.m).find('input').focus()

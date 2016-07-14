@@ -23,15 +23,8 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
   @user = new User sd.USER
-  new AutocompleteChannels()
-
-  # Replace broken profile icon
-  imgLoad = imagesLoaded('#layout-sidebar-profile img')
-  imgLoad.on 'fail', ->
-    $('#layout-sidebar-profile img').attr(
-      'src'
-      "/images/layout_missing_user.png"
-    )
+  $('#layout-sidebar-switch-channel').click =>
+    new AutocompleteChannels()
 
   # Toggle hamburger menu
   $('#layout-hamburger-container').click ->
