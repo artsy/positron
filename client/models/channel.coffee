@@ -108,11 +108,11 @@ module.exports = class Channel extends Backbone.Model
         )
         options.success channel
       else
-        options.error(err)
+        options.error err
 
   denormalized: ->
     {
       id: @get('id')
       name: @get('name')
-      type: @get('type') or 'partner'
+      type: if _.contains ['editorial', 'support', 'team'], @get('type') then @get('type') else 'partner'
     }

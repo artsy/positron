@@ -35,6 +35,7 @@ module.exports = class User extends Backbone.Model
         request.get("#{sd.ARTSY_URL}/api/v1/me")
           .set('X-Access-Token': @get('access_token')).end cb
       (cb) =>
+        return cb() unless @get('has_partner_access')
         request.get("#{sd.ARTSY_URL}/api/v1/me/partners")
           .set('X-Access-Token': @get('access_token')).end cb
       (cb) =>
