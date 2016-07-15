@@ -40,7 +40,7 @@ module.exports = React.createClass
                         img { src: artwork.imageUrl() }
                         div { className: 'ess-artwork-details' },
                           p {},
-                            strong {}, artwork.get('artist').name
+                            strong {}, artwork.get('artist')?.name
                           p {}, artwork.get('title')
                           p {}, artwork.get('partner')?.name
                       ]
