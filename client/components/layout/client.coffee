@@ -8,14 +8,12 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 viewHelpers = require '../../lib/view_helpers.coffee'
 sd = require('sharify').data
-imagesLoaded = require 'imagesloaded'
 User = require '../../models/user.coffee'
 AutocompleteChannels = require '../autocomplete_channels/index.coffee'
 
 # Add jquery plugins
 require 'jquery-autosize'
 require 'typeahead.js'
-require('jquery-fillwidth-lite') $, _, imagesLoaded
 
 module.exports.init = ->
   Backbone.$ = $

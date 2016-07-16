@@ -85,7 +85,7 @@ module.exports = ->
       type: 'editorial'
       id: '4d8cd73191a5c50ce200002b'
     channel_ids: ['4d8cd73191a5c50ce200002b']
-    partner_channel_ids: []
+    partner_ids: []
   fixtures.sections =
     id: '55356a9deca560a0137aa4b7'
     title: 'Vennice Biennalez'

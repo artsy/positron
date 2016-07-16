@@ -4,8 +4,10 @@ sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 rewire = require 'rewire'
 request = require 'superagent'
+async = require 'async'
 User = rewire '../../models/user'
 Article = require '../../models/article'
+{ fabricate } = require 'antigravity'
 
 describe "User", ->
 
@@ -76,21 +78,145 @@ describe "User", ->
       @user = new User _.extend fixtures().users, { partner_channel_ids: ['12345'] }
       @user.hasArticleAccess(@article).should.be.false()
 
-  # describe '#refresh', ->
+  describe '#isOutdated', ->
 
-  #   it 'sends a GET request to the /me/refresh endpoint to manually resave the user', ->
-  #     User.__set__ 'request', {
-  #       end: (cb) -> cb()
-  #     }
-  #     @user = new User fixtures().users
-  #     @user.refresh()
+    it 'returns true if the name has changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'A Girl'
+            }
+          }
+          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
+          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Arya Stark'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.true()
 
-  # describe '#isOutdated', ->
+    it 'returns true if the type has changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'Jon Snow'
+              type: 'King in the North'
+            }
+          }
+          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
+          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Jon Snow'
+        type: 'Lord Commander of the Night\'s Watch'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.true()
 
-  #   it 'returns true if the name, email, type, or id has changed', ->
+    it 'returns true if the email has changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'Cersi Lannister'
+              email: 'madkween@got'
+            }
+          }
+          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
+          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Cersi Lannister'
+        email: 'seekingrevenge@got'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.true()
+
+    it 'returns true if channel permissions have changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'Cersi Lannister'
+            }
+          }
+          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
+          { body: results: [] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Cersi Lannister'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.true()
+
+    it 'returns true if partner permissions have changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'Cersi Lannister'
+            }
+          }
+          { body: [] }
+          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Cersi Lannister'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.true()
 
 
-  # describe '#fetchPartners', ->
-  #   request.end = (cb) -> cb( null , {} )
-  #   User.__set__ 'request', request
+    it 'returns false if nothing has changed', ->
+      User.__set__ 'async',
+        parallel: sinon.stub().yields(null, [
+          {
+            body: _.extend fixtures().users, {
+              name: 'Cersi Lannister'
+              channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+              partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+            }
+          }
+          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
+          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        ])
+      @user = new User _.extend fixtures().users, {
+        name: 'Cersi Lannister'
+        channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+      }
+      @user.isOutdated (outdated) ->
+        outdated.should.be.false()
 
+  describe '#fetchPartners', ->
+
+    it 'returns empty array for no partner access', ->
+      @user = new User fixtures().users
+      @user.fetchPartners (partners) ->
+        partners.length.should.equal 0
+
+    it 'fetches the partners that a user has permission', ->
+      request.get = sinon.stub().returns
+        set: sinon.stub().returns
+          end: (cb) -> cb( null, body: [ fabricate 'partner' ] )
+
+      User.__set__ 'request', request
+      @user = new User _.extend fixtures().users,
+        has_partner_access: true
+      @user.fetchPartners (partners) ->
+        partners.length.should.equal 1
+        partners[0].name.should.equal 'Gagosian Gallery'
+        partners[0].type.should.equal 'Gallery'

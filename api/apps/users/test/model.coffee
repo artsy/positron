@@ -57,3 +57,35 @@ describe 'User', ->
       data = User.present _.extend fixtures().users, _id: 'foo'
       (data._id?).should.not.be.ok
       data.id.should.equal 'foo'
+
+  describe '#refresh', ->
+
+    it 'refreshes the user basic info', (done) ->
+      user = _.extend fixtures().users, {name: 'Nah'}
+      db.users.insert user, ->
+        User.refresh 'foobar', (err, user) ->
+          user.name.should.equal 'Craig Spaeth'
+          User.fromAccessToken 'foobar', (err, user) ->
+            user.name.should.equal 'Craig Spaeth'
+            done()
+
+    it 'refreshes the user partner access', (done) ->
+      user = _.extend fixtures().users, { has_access_token: true, partner_ids: ['123'] }
+      db.users.insert user, (err, user) ->
+        user.partner_ids.length.should.equal 1
+        user.partner_ids[0].should.equal '123'
+        User.refresh 'foobar', (err, user) ->
+          _.isEqual(user.partner_ids,  [ '5086df098523e60002000012' ]).should.be.true()
+          User.fromAccessToken 'foobar', (err, user) ->
+            _.isEqual(user.partner_ids,  [ '5086df098523e60002000012' ]).should.be.true()
+            done()
+
+    it 'refreshes the user channel access', (done) ->
+      user = _.extend fixtures().users, { has_access_token: true, channel_ids: ['123'] }
+      db.users.insert user, (err, user) ->
+        user.channel_ids.length.should.equal 1
+        User.refresh 'foobar', (err, user) ->
+          user.channel_ids.length.should.equal 0
+          User.fromAccessToken 'foobar', (err, user) ->
+            user.channel_ids.length.should.equal 0
+            done()

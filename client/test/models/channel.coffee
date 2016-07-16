@@ -132,7 +132,9 @@ describe "Channel", ->
   describe '#fetchChannelOrPartner' , ->
 
     it 'returns an error if it cannot find either' , ->
-      request.end = (cb) -> cb( null , {} )
+      request.get = sinon.stub().returns
+        set: sinon.stub().returns
+          end: (cb) -> cb( null , {} )
       Channel.__set__ 'request', request
 
       @channel = new Channel fixtures().channels

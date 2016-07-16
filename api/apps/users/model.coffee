@@ -26,6 +26,7 @@ bcrypt = require 'bcrypt'
     return callback err if err
     db.users.findOne { access_token: encryptedAccessToken }, (err, user) ->
       return callback err if err
+      console.log user
       return callback null, user if user
       # Otherwise fetch data from Gravity and flatten it into a Positron user
       async.parallel [
@@ -41,7 +42,7 @@ bcrypt = require 'bcrypt'
 # Persistance
 #
 
-@resave = (accessToken, callback) ->
+@refresh = (accessToken, callback) ->
   request.get("#{ARTSY_URL}/api/v1/me")
     .set('X-Access-Token': accessToken)
     .end (err, user) ->

@@ -40,6 +40,6 @@
 
 @refresh = (req, res, next) ->
   return next() unless req.accessToken
-  User.resave req.accessToken, (err, user) ->
+  User.refresh req.accessToken, (err, user) ->
     res.err 404, 'Could not find a user from that access token' unless user?
     res.send present user
