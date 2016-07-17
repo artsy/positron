@@ -9,6 +9,7 @@ describe 'routes', ->
 
   beforeEach ->
     @Article = routes.__get__ 'Article'
+    @User = routes.__get__ 'User'
     for method in @methods = ['where', 'save', 'destroy', 'find']
       sinon.stub @Article, method
     @req =
@@ -25,8 +26,9 @@ describe 'routes', ->
 
   describe '#index', ->
 
-    it 'sends a list of articles by author', ->
+    it 'sends a list of published articles by author', ->
       @req.query.author_id = @req.user._id = 'fooid'
+      @req.query.published = 'true'
       routes.index @req, @res, @next
       @Article.where.args[0][0].author_id.should.equal @req.user._id
       @Article.where.args[0][1] null, {
@@ -36,15 +38,31 @@ describe 'routes', ->
       }
       @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
-    it 'denies unpublished articles to non-admins', ->
-      @req.user.type = 'User'
+    it 'returns an error if channel_id is not provided for unpublished', ->
+      @req.query.published = 'false'
       routes.index @req, @res, @next
       @res.err.args[0][0].should.equal 401
+      @res.err.args[0][1].should.containEql 'Must pass channel_id to view unpublished articles'
 
-    it 'allows unpublished for an admin', ->
-      @req.user.type = 'Admin'
+    it 'denies unpublished articles to non channel members', ->
+      @User.hasChannelAccess = sinon.stub().yields false
+      @req.query.published = 'false'
+      @req.query.channel_id = '123456'
       routes.index @req, @res, @next
-      @Article.where.called.should.be.ok
+      @res.err.args[0][0].should.equal 401
+      @res.err.args[0][1].should.containEql 'Must be a member of this channel'
+
+    it 'allows unpublished for a channel member', ->
+      @User.hasChannelAccess = sinon.stub().yields true
+      @req.query.published = 'false'
+      @req.query.channel_id = '123456'
+      routes.index @req, @res, @next
+      @Article.where.args[0][1] null, {
+        total: 10
+        count: 1
+        results: [fixtures().articles]
+      }
+      @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
   describe '#show', ->
 
@@ -53,12 +71,12 @@ describe 'routes', ->
       routes.show @req, @res
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
-
-    it 'throws a 404 for articles from non-authors', ->
+    it 'throws a 404 for articles from non channel members', ->
+      @User.hasChannelAccess = sinon.stub().yields false
       @req.user.type = 'User'
       @req.article = _.extend(fixtures().articles,
-        author_id: ObjectId('4d8cd73191a5c50ce210002a')
         published: false
+        channel_id: ObjectId('4d8cd73191a5c50ce210002a')
       )
       routes.show @req, @res, @next
       @res.err.args[0][0].should.equal 404
@@ -66,6 +84,7 @@ describe 'routes', ->
   describe '#create', ->
 
     it 'creates an article with data', ->
+      @User.hasChannelAccess = sinon.stub().yields true
       @req.body.title = "Foo Bar"
       routes.create @req, @res
       @Article.save.args[0][2] null, fixtures().articles

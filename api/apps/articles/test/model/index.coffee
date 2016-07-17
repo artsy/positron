@@ -362,7 +362,7 @@ describe 'Article', ->
       ], ->
         Article.where {
           published: true
-          partner_channel_id: '5086df098523e60002000016'
+          channel_id: '5086df098523e60002000016'
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1

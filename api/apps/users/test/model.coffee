@@ -19,7 +19,7 @@ describe 'User', ->
   beforeEach (done) ->
     empty =>
       User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
-      fabricate 'channels', {}, (err, @channel) =>
+      fabricate 'channels', { id: '5086df098523e60002000018' }, (err, @channel) =>
         @server = app.listen 5000, =>
           done()
 
@@ -89,3 +89,25 @@ describe 'User', ->
           User.fromAccessToken 'foobar', (err, user) ->
             user.channel_ids.length.should.equal 0
             done()
+
+  describe '#hasChannelAccess', ->
+
+    it 'returns true for a channel member', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [ '5086df098523e60002000018' ] }
+      channel = _.extend fixtures().channels, { id: ObjectId('5086df098523e60002000018') }
+      db.channels.insert channel , (err, channel) ->
+        User.hasChannelAccess user, '5086df098523e60002000018', (access) ->
+          access.should.be.true()
+          done()
+
+    it 'returns true for a partner channel member', (done) ->
+      user = _.extend fixtures().users, { partner_ids: [ '5086df098523e60002000012' ] }
+      User.hasChannelAccess user, '5086df098523e60002000012', (access) ->
+        access.should.be.true()
+        done()
+
+    it 'returns false for a non-partner or non-channel member', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [] }
+      User.hasChannelAccess user, '5086df098523e60002000012', (access) ->
+        access.should.be.false()
+        done()

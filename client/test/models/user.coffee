@@ -82,14 +82,11 @@ describe "User", ->
 
     it 'returns true if the name has changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
               name: 'A Girl'
-            }
-          }
-          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
-          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+          [ { _id: '4d8cd73191a5c50ce2000022' } ]
+          [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Arya Stark'
@@ -101,15 +98,12 @@ describe "User", ->
 
     it 'returns true if the type has changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
-              name: 'Jon Snow'
-              type: 'King in the North'
-            }
-          }
-          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
-          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
+            name: 'Jon Snow'
+            type: 'King in the North'
+          [ { _id: '4d8cd73191a5c50ce2000022' } ]
+          [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Jon Snow'
@@ -122,15 +116,12 @@ describe "User", ->
 
     it 'returns true if the email has changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
-              name: 'Cersi Lannister'
-              email: 'madkween@got'
-            }
-          }
-          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
-          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
+            name: 'Cersi Lannister'
+            email: 'madkween@got'
+          [ { _id: '4d8cd73191a5c50ce2000022' } ]
+          [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
@@ -143,14 +134,11 @@ describe "User", ->
 
     it 'returns true if channel permissions have changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
-              name: 'Cersi Lannister'
-            }
-          }
-          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
-          { body: results: [] }
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
+            name: 'Cersi Lannister'
+          [ { _id: '4d8cd73191a5c50ce2000022' } ]
+          []
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
@@ -162,14 +150,11 @@ describe "User", ->
 
     it 'returns true if partner permissions have changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
-              name: 'Cersi Lannister'
-            }
-          }
-          { body: [] }
-          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
+            name: 'Cersi Lannister'
+          []
+          [ { id: '4d8cd73191a5c50ce200002b' }]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
@@ -179,19 +164,15 @@ describe "User", ->
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
 
-
     it 'returns false if nothing has changed', ->
       User.__set__ 'async',
-        parallel: sinon.stub().yields(null, [
-          {
-            body: _.extend fixtures().users, {
-              name: 'Cersi Lannister'
-              channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-              partner_ids: [ '4d8cd73191a5c50ce2000022' ]
-            }
-          }
-          { body: [ { _id: '4d8cd73191a5c50ce2000022' } ] }
-          { body: results: [ { id: '4d8cd73191a5c50ce200002b' } ] }
+        waterfall: sinon.stub().yields(null, [
+          _.extend fixtures().users,
+            name: 'Cersi Lannister'
+            channel_ids: [ '4d8cd73191a5c50ce200002b' ]
+            partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+          [ _id: '4d8cd73191a5c50ce2000022' ]
+          [ id: '4d8cd73191a5c50ce200002b' ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'

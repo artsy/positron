@@ -42,4 +42,5 @@
   return next() unless req.accessToken
   User.refresh req.accessToken, (err, user) ->
     res.err 404, 'Could not find a user from that access token' unless user?
+    req.user = user
     res.send present user

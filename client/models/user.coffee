@@ -30,23 +30,29 @@ module.exports = class User extends Backbone.Model
       @hasPartner article.get('partner_channel_id')
 
   isOutdated: (callback) ->
-    async.parallel [
+    async.waterfall [
       (cb) =>
         request.get("#{sd.ARTSY_URL}/api/v1/me")
-          .set('X-Access-Token': @get('access_token')).end cb
-      (cb) =>
-        return cb() unless @get('has_partner_access')
+          .set('X-Access-Token': @get('access_token'))
+          .end (err, result) ->
+            cb null, result?.body
+      (user, cb) =>
+        return cb(null, user, []) unless user.has_partner_access
         request.get("#{sd.ARTSY_URL}/api/v1/me/partners")
-          .set('X-Access-Token': @get('access_token')).end cb
-      (cb) =>
+          .set('X-Access-Token': @get('access_token'))
+          .end (err, results) ->
+            cb null, user, results?.body
+      (user, partners, cb) =>
         request.get("#{sd.API_URL}/channels?user_id=#{@get('id')}")
-          .set('X-Access-Token': @get('access_token')).end cb
+          .set('X-Access-Token': @get('access_token'))
+          .end (err, results) ->
+            cb null, [ user, partners, results?.body?.results ]
     ], (err, results) =>
       return callback true if err
-      user = results[0]?.body
-      user.partner_ids = _.map (results[1]?.body or []), (partner) ->
+      user = results[0]
+      user.partner_ids = _.map (results[1] or []), (partner) ->
         partner._id
-      user.channel_ids = _.pluck results[2]?.body.results, 'id'
+      user.channel_ids = _.pluck results[2], 'id'
 
       for attr in ['id', 'type', 'name', 'email']
         return callback true unless _.isEqual user[attr], @get(attr)

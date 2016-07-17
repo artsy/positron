@@ -26,7 +26,6 @@ bcrypt = require 'bcrypt'
     return callback err if err
     db.users.findOne { access_token: encryptedAccessToken }, (err, user) ->
       return callback err if err
-      console.log user
       return callback null, user if user
       # Otherwise fetch data from Gravity and flatten it into a Positron user
       async.parallel [
@@ -74,6 +73,22 @@ save = (user, accessToken, callback) ->
       partner_ids: user.partner_ids
       channel_ids: user.channel_ids
     }, callback
+
+#
+# Utility
+#
+@hasChannelAccess = (user, channel_id, callback) ->
+  console.log user
+  console.log channel_id
+  db.channels.findOne { id: ObjectId(channel_id) }, ( err, channel ) ->
+    console.log channel
+    if channel
+      # Check if the user has the channel
+      callback _.contains user.channel_ids, channel_id.toString()
+    else
+      # Check if the user has the partner channel
+      callback _.contains user.partner_ids, channel_id.toString() or
+        user.type is 'Admin'
 
 #
 # JSON views
