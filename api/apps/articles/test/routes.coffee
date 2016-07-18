@@ -45,7 +45,7 @@ describe 'routes', ->
       @res.err.args[0][1].should.containEql 'Must pass channel_id to view unpublished articles'
 
     it 'denies unpublished articles to non channel members', ->
-      @User.hasChannelAccess = sinon.stub().yields false
+      @User.hasChannelAccess = sinon.stub().returns false
       @req.query.published = 'false'
       @req.query.channel_id = '123456'
       routes.index @req, @res, @next
@@ -53,7 +53,7 @@ describe 'routes', ->
       @res.err.args[0][1].should.containEql 'Must be a member of this channel'
 
     it 'allows unpublished for a channel member', ->
-      @User.hasChannelAccess = sinon.stub().yields true
+      @User.hasChannelAccess = sinon.stub().returns true
       @req.query.published = 'false'
       @req.query.channel_id = '123456'
       routes.index @req, @res, @next
@@ -72,7 +72,7 @@ describe 'routes', ->
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
     it 'throws a 404 for articles from non channel members', ->
-      @User.hasChannelAccess = sinon.stub().yields false
+      @User.hasChannelAccess = sinon.stub().returns false
       @req.user.type = 'User'
       @req.article = _.extend(fixtures().articles,
         published: false
@@ -84,7 +84,7 @@ describe 'routes', ->
   describe '#create', ->
 
     it 'creates an article with data', ->
-      @User.hasChannelAccess = sinon.stub().yields true
+      @User.hasChannelAccess = sinon.stub().returns true
       @req.body.title = "Foo Bar"
       routes.create @req, @res
       @Article.save.args[0][2] null, fixtures().articles

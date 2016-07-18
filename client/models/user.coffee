@@ -61,7 +61,7 @@ module.exports = class User extends Backbone.Model
       callback false
 
   fetchPartners: (cb) ->
-    return cb [] unless @get('partner_ids').length > 0
+    return cb [] unless @get('partner_ids')?.length > 0
     request
       .get("#{sd.ARTSY_URL}/api/v1/me/partners")
       .set('X-Access-Token': @get('access_token'))

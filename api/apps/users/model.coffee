@@ -61,7 +61,7 @@ save = (user, accessToken, callback) ->
   ], (err, results) ->
     return callback err if err
     user.partner_ids = _.map (results[0]?.body or []), (partner) ->
-      partner._id
+      ObjectId partner._id
     user.channel_ids = _.pluck results[1], '_id'
     encryptedAccessToken = results[2]
     db.users.save {
@@ -77,19 +77,19 @@ save = (user, accessToken, callback) ->
 #
 # Utility
 #
-@hasChannelAccess = (user, channel_id, callback) ->
-  return callback false unless user and channel_id
+@hasChannelAccess = (user, channel_id) ->
+  return false unless user and channel_id
+
   channel_id = channel_id.toString()
-  query = if ObjectId.isValid(channel_id) then { _id: ObjectId(channel_id) }
-  db.channels.findOne query, ( err, channel ) ->
-    if channel
-      _.each user.channel_ids, (id) ->
-        return callback true if id.toString() is channel_id
-      callback false
-    else
-      # Check if the user has the partner channel
-      callback _.contains user?.partner_ids, channel_id or
-        user.type is 'Admin'
+
+  @channels = _.find user.channel_ids, (id) ->
+    id.toString() is channel_id
+
+  @partners = _.find user.partner_ids, (id) ->
+    id.toString() is channel_id
+
+  return true if @channels
+  return @partners? or user.type is 'Admin'
 
 #
 # JSON views

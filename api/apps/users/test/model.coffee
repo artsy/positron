@@ -35,7 +35,7 @@ describe 'User', ->
 
     it 'gets partner_ids', (done) ->
         User.fromAccessToken 'foobar', (err, user) ->
-          user.partner_ids[0].should.equal '5086df098523e60002000012'
+          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           done()
 
     it 'inserts a non-existing user', (done) ->
@@ -75,9 +75,9 @@ describe 'User', ->
         user.partner_ids.length.should.equal 1
         user.partner_ids[0].should.equal '123'
         User.refresh 'foobar', (err, user) ->
-          _.isEqual(user.partner_ids,  [ '5086df098523e60002000012' ]).should.be.true()
+          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           User.fromAccessToken 'foobar', (err, user) ->
-            _.isEqual(user.partner_ids,  [ '5086df098523e60002000012' ]).should.be.true()
+            user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
             done()
 
     it 'refreshes the user channel access', (done) ->
@@ -96,18 +96,21 @@ describe 'User', ->
       user = _.extend fixtures().users, { channel_ids: [ ObjectId '5086df098523e60002000018' ] }
       channel = _.extend fixtures().channels, { _id: ObjectId('5086df098523e60002000018') }
       db.channels.insert channel , (err, channel) ->
-        User.hasChannelAccess user, '5086df098523e60002000018', (access) ->
-          access.should.be.true()
-          done()
+        User.hasChannelAccess(user, '5086df098523e60002000018').should.be.true()
+        done()
 
     it 'returns true for a partner channel member', (done) ->
       user = _.extend fixtures().users, { partner_ids: [ '5086df098523e60002000012' ] }
-      User.hasChannelAccess user, '5086df098523e60002000012', (access) ->
-        access.should.be.true()
-        done()
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
+      done()
+
+    it 'returns true for a non-partner or non-channel member but admin on a partner channel', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [] }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
+      done()
 
     it 'returns false for a non-partner or non-channel member', (done) ->
-      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [] }
-      User.hasChannelAccess user, '5086df098523e60002000012', (access) ->
-        access.should.be.false()
-        done()
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [], type: 'User' }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.false()
+      done()
+

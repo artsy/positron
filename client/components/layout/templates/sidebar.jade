@@ -36,7 +36,9 @@
       br
       if user.get('name')
         = user.get('name').split(' ')[0]
-      nav#layout-sidebar-profile-menu
+
+      - var hasChannelMenu = (user.get('channel_ids') && user.get('channel_ids').length > 1) || (user.get('partner_ids') && user.get('partner_ids').length > 1) || user.isAdmin()
+      nav#layout-sidebar-profile-menu(class="#{ hasChannelMenu ? '' : 'has-only-child'}")
         a( href='/logout' ) Sign out
-        if user.get('channel_ids').length > 0 || user.get('partner_ids').length > 0 || user.isAdmin()
+        if hasChannelMenu
           a#layout-sidebar-switch-channel Switch channel
