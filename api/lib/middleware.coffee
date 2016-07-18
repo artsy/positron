@@ -30,5 +30,6 @@ debug = require('debug') 'api'
   # Until then, we know restarting the app fixes this issue. See Slack thread
   # https://artsy.slack.com/archives/web/p1458490282000103
   if err.name is 'MongoError' and
-  msg.match(/connection to host (.*) was destroyed/)
+     msg is 'no primary server available' or
+     msg.match(/connection to host (.*) was destroyed/)
     process.exit(1)
