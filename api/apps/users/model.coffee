@@ -78,16 +78,17 @@ save = (user, accessToken, callback) ->
 # Utility
 #
 @hasChannelAccess = (user, channel_id, callback) ->
-  console.log user
-  console.log channel_id
-  db.channels.findOne { id: ObjectId(channel_id) }, ( err, channel ) ->
-    console.log channel
+  return callback false unless user and channel_id
+  channel_id = channel_id.toString()
+  query = if ObjectId.isValid(channel_id) then { _id: ObjectId(channel_id) }
+  db.channels.findOne query, ( err, channel ) ->
     if channel
-      # Check if the user has the channel
-      callback _.contains user.channel_ids, channel_id.toString()
+      _.each user.channel_ids, (id) ->
+        return callback true if id.toString() is channel_id
+      callback false
     else
       # Check if the user has the partner channel
-      callback _.contains user.partner_ids, channel_id.toString() or
+      callback _.contains user?.partner_ids, channel_id or
         user.type is 'Admin'
 
 #

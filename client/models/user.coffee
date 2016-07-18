@@ -21,7 +21,7 @@ module.exports = class User extends Backbone.Model
     _.contains @get('channel_ids'), id
 
   hasPartner: (id) ->
-    @isAdmin() or _.contains @get('partner_channel_ids'), id
+    @isAdmin() or _.contains @get('partner_ids'), id
 
   hasArticleAccess: (article) ->
     if article.get('channel_id')
@@ -61,7 +61,7 @@ module.exports = class User extends Backbone.Model
       callback false
 
   fetchPartners: (cb) ->
-    return cb [] unless @get('has_partner_access')
+    return cb [] unless @get('partner_ids').length > 0
     request
       .get("#{sd.ARTSY_URL}/api/v1/me/partners")
       .set('X-Access-Token': @get('access_token'))

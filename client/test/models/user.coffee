@@ -40,7 +40,7 @@ describe "User", ->
   describe '#hasPartner', ->
 
     it 'returns true for a user with partner permissions', ->
-      @user = new User _.extend fixtures().users, { partner_channel_ids: ['1234'] }
+      @user = new User _.extend fixtures().users, { partner_ids: ['1234'] }
       @user.hasPartner('1234').should.be.true()
 
     it 'returns true for a user that is an Admin', ->
@@ -48,7 +48,7 @@ describe "User", ->
       @user.hasPartner('1234').should.be.true()
 
     it 'returns false for a user that does not have partner permissions', ->
-      @user = new User _.extend fixtures().users, { type: 'User', partner_channel_ids: [] }
+      @user = new User _.extend fixtures().users, { type: 'User', partner_ids: [] }
       @user.hasPartner('1234').should.be.false()
 
   describe '#hasArticleAccess', ->
@@ -60,7 +60,7 @@ describe "User", ->
 
     it 'returns true for a member of a partner on a partner article', ->
       @article = new Article _.extend fixtures().articles, { partner_channel_id: '1234' }
-      @user = new User _.extend fixtures().users, { partner_channel_ids: ['1234'] }
+      @user = new User _.extend fixtures().users, { partner_ids: ['1234'] }
       @user.hasArticleAccess(@article).should.be.true()
 
     it 'returns true for a member of an Admin on a partner article', ->
@@ -75,7 +75,7 @@ describe "User", ->
 
     it 'returns false for a member of a partner on a channel article', ->
       @article = new Article _.extend fixtures().articles, { channel_id: '1234' }
-      @user = new User _.extend fixtures().users, { partner_channel_ids: ['12345'] }
+      @user = new User _.extend fixtures().users, { partner_ids: ['12345'] }
       @user.hasArticleAccess(@article).should.be.false()
 
   describe '#isOutdated', ->
@@ -189,14 +189,14 @@ describe "User", ->
       @user.fetchPartners (partners) ->
         partners.length.should.equal 0
 
-    it 'fetches the partners that a user has permission', ->
+    it 'fetches the partners that a user has permission to', ->
       request.get = sinon.stub().returns
         set: sinon.stub().returns
           end: (cb) -> cb( null, body: [ fabricate 'partner' ] )
 
       User.__set__ 'request', request
       @user = new User _.extend fixtures().users,
-        has_partner_access: true
+        partner_ids: ['123']
       @user.fetchPartners (partners) ->
         partners.length.should.equal 1
         partners[0].name.should.equal 'Gagosian Gallery'

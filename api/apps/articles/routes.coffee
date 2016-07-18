@@ -7,8 +7,12 @@ User = require '../users/model.coffee'
 @index = (req, res, next) ->
   if req.query.published isnt 'true'
     unless req.query.channel_id?
-      return res.err 401, 'Must pass channel_id to view unpublished articles. Or pass' +
+      return res.err 401, 'Must pass channel_id to view unpublished articles. Or pass ' +
         'published=true to only view published articles.'
+
+    unless req.access_token
+      return res.err 401, 'Must provide access_token to view unpublished articles'
+
     User.hasChannelAccess req.user, req.query.channel_id, (access) ->
       if access
         Article.where req.query, (err, results) ->
@@ -16,7 +20,7 @@ User = require '../users/model.coffee'
           res.send presentCollection results
       else
         return res.err 401,
-          'Must be a member of this channel to view unpublished articles.' +
+          'Must be a member of this channel to view unpublished articles. ' +
           'Pass published=true to only view published articles.'
   else
     Article.where req.query, (err, results) ->

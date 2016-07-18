@@ -131,7 +131,7 @@ describe "Channel", ->
 
   describe '#fetchChannelOrPartner' , ->
 
-    it 'returns an error if it cannot find either' , ->
+    it 'returns an error if it cannot find either' , (done) ->
       request.get = sinon.stub().returns
         set: sinon.stub().returns
           end: (cb) -> cb( null , {} )
@@ -142,10 +142,11 @@ describe "Channel", ->
       @channel.fetchChannelOrPartner
         error: =>
           @error = true
-      _.defer ->
+      _.defer =>
         @error.should.be.true()
+        done()
 
-    it 'returns an error if there is an async error' , ->
+    it 'returns an error if there is an async error' , (done) ->
       Channel.__set__ 'async',
         parallel: sinon.stub().yields('Async Error', [])
 
@@ -153,8 +154,9 @@ describe "Channel", ->
       @channel.fetchChannelOrPartner
         error: (err) ->
           err.should.equal 'Async Error'
+          done()
 
-    it 'fetches a channel' , ->
+    it 'fetches a channel' , (done) ->
       Channel.__set__ 'async',
         parallel: sinon.stub().yields(null, [
           {
@@ -170,8 +172,9 @@ describe "Channel", ->
           channel.get('name').should.equal 'Editorial'
           channel.get('type').should.equal 'editorial'
           channel.get('id').should.equal '5086df098523e60002000018'
+          done()
 
-    it 'fetches a partner' , ->
+    it 'fetches a partner' , (done) ->
       Channel.__set__ 'async',
         parallel: sinon.stub().yields(null, [
           {}
@@ -187,6 +190,7 @@ describe "Channel", ->
           channel.get('name').should.equal 'Gagosian Gallery'
           channel.get('type').should.equal 'partner'
           channel.get('id').should.equal '5086df098523e60002000012'
+          done()
 
   describe '#denormalized', ->
 
