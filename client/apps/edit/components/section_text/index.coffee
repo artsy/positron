@@ -19,7 +19,7 @@ React = require 'react'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
 sd = require('sharify').data
-User = require '../../../../models/user.coffee'
+Channel = require '../../../../models/channel.coffee'
 
 keyboardShortcutsMap =
   bold: (e) -> e.metaKey and e.keyCode is 66
@@ -35,7 +35,7 @@ keyboardShortcutsMap =
 module.exports = React.createClass
 
   componentWillMount: ->
-    @user = new User sd.USER
+    @channel = new Channel sd.CURRENT_CHANNEL
 
   componentDidMount: ->
     @attachScribe()
@@ -116,13 +116,13 @@ module.exports = React.createClass
               __html: "&nbsp;" + $(icons()).filter('.link').html()
           }
           button { 'data-command-name': 'unlink' }
-        if @user.isEditorialTeam()
+        if @channel.hasFeature 'follow'
           button {
             'data-command-name': 'followLink'
             dangerouslySetInnerHTML:
               __html: "&nbsp;" + $(icons()).filter('.follow-link').html()
           }
-        if @user.isEditorialTeam()
+        if @channel.hasFeature 'toc'
           button {
             'data-command-name': 'jumpLink'
             dangerouslySetInnerHTML:

@@ -1,19 +1,27 @@
 Article = require '../../models/article'
 User = require '../../models/user'
+Channel = require '../../models/channel'
 
 @create = (req, res, next) ->
-  res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
-  render req, res, new Article
+  channel = new Channel req.user.get('current_channel')
+  res.locals.sd.CURRENT_CHANNEL = channel
+  render req, res, new Article {
+    channel_id: channel.get('id') if channel.get('type') isnt 'partner'
+    partner_channel_id: channel.get('id') if channel.get('type') is 'partner'
+    partner_ids: [channel.get('id')] if channel.get('type') is 'partner'
+    author: { name: channel.get('name'), id: req.user.get('id') }
+  }
 
 @edit = (req, res, next) ->
   new Article(id: req.params.id).fetch
     headers: 'x-access-token': req.user.get('access_token')
     error: res.backboneError
     success: (article) ->
+      return next() unless req.user.hasArticleAccess article
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
-      res.locals.sd.IS_EDITORIAL_TEAM = req.user.isEditorialTeam()
-      if article.get('author_id') isnt req.user.get('id')
-        res.redirect "/impersonate/#{article.get 'author_id'}?redirect-to=#{req.url}"
+      res.locals.sd.CURRENT_CHANNEL = new Channel req.user.get('current_channel')
+      if (article.get('channel_id') or article.get('partner_channel_id')) isnt req.user.get('current_channel').id
+        res.redirect "/switch_channel/#{article.get 'channel_id' or article.get 'partner_channel_id'}?redirect-to=#{req.url}"
       else
         render req, res, article
 

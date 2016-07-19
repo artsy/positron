@@ -11,9 +11,8 @@ ImageUploadForm = require '../../../../components/image_upload_form/index.coffee
 
 module.exports = class EditAdmin extends Backbone.View
 
-  initialize: ({ @article }) ->
+  initialize: ({ @article, @channel }) ->
     @article.on 'open:tab2', @onOpen
-    @setupAuthorAutocomplete()
     @setupFairAutocomplete()
     @setupFairProgrammingAutocomplete()
     @setupArtsyAtTheFairAutocomplete()
@@ -30,21 +29,12 @@ module.exports = class EditAdmin extends Backbone.View
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
 
-  setupAuthorAutocomplete: ->
-    Autocomplete = require '../../../../components/autocomplete/index.coffee'
-    new Autocomplete
-      el: @$('#edit-admin-change-author input')
-      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-      placeholder: 'Search by user name or email...'
-      filter: (users) -> for user in users
-        { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
-      selected: @onAuthorSelect
-
   onAuthorSelect: (e, item) =>
     return unless confirm "Are you sure you want to change the author?"
     @article.trigger('finished').save(author_id: item.id)
 
   setupFairAutocomplete: ->
+    return unless @channel.hasAssociation 'fairs'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-fair')[0],
       name: 'fair_ids[]'
@@ -70,6 +60,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupFairProgrammingAutocomplete: ->
+    return unless @channel.hasAssociation 'fairs'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
       name: 'fair_programming_ids[]'
@@ -95,6 +86,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupArtsyAtTheFairAutocomplete: ->
+    return unless @channel.hasAssociation 'fairs'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
       name: 'fair_artsy_ids[]'
@@ -120,6 +112,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupAboutTheFairAutocomplete: ->
+    return unless @channel.hasAssociation 'fairs'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
       name: 'fair_about_ids[]'
@@ -145,6 +138,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupPartnerAutocomplete: ->
+    return unless @channel.hasAssociation 'partners'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-partner')[0],
       name: 'partner_ids[]'
@@ -170,6 +164,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupAuctionAutocomplete: ->
+    return unless @channel.hasAssociation 'auctions'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-auction')[0],
       name: 'auction_ids[]'
@@ -223,6 +218,7 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupShowsAutocomplete: ->
+    return unless @channel.hasAssociation 'shows'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @show_ids = @article.get 'show_ids' or []
     list = new AutocompleteList @$('#edit-admin-shows')[0],
@@ -380,6 +376,7 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save super_article: superArticle
 
   setupSuperArticleAutocomplete: ->
+    return unless @channel.hasFeature 'superArticle'
     AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     list = new AutocompleteList @$('#edit-admin-related-articles')[0],

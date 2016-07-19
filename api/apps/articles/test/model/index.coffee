@@ -362,7 +362,7 @@ describe 'Article', ->
       ], ->
         Article.where {
           published: true
-          partner_channel_id: '5086df098523e60002000016'
+          channel_id: '5086df098523e60002000016'
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1
@@ -394,8 +394,10 @@ describe 'Article', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         id: '5086df098523e60002002222'
+        channel_id: '5086df098523e60002002223'
       }, 'foo', (err, article) ->
         article.title.should.equal 'Top Ten Shows'
+        article.channel_id.toString().should.equal '5086df098523e60002002223'
         db.articles.count (err, count) ->
           count.should.equal 11
           done()
@@ -433,6 +435,7 @@ describe 'Article', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
+        author: name: 'Craig Spaeth'
       }, 'foo', (err, article) ->
         return done err if err
         article.slugs[0].should.equal 'craig-spaeth-ten-shows'
@@ -443,6 +446,7 @@ describe 'Article', ->
         Article.save {
           thumbnail_title: 'Foo Baz'
           author_id: @user._id
+          author: name: @user.name
         }, 'foo', (err, article) ->
           return done err if err
           article.slugs[0].should.equal 'molly-foo-baz'
@@ -454,6 +458,7 @@ describe 'Article', ->
           thumbnail_title: 'Foo Baz'
           author_id: @user._id
           published: false
+          author: name: @user.name
         }, 'foo', (err, article) =>
           return done err if err
           Article.save {
@@ -461,6 +466,7 @@ describe 'Article', ->
             thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id
             published: true
+            author: name: @user.name
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
@@ -472,12 +478,14 @@ describe 'Article', ->
       fabricate 'articles', {
         id: '5086df098523e60002002222'
         slugs: ['craig-spaeth-heyo']
+        author: name: 'Craig Spaeth'
       }, ->
         Article.save {
           thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
           id: '5086df098523e60002002222'
+          author: name: 'Craig Spaeth'
           }, 'foo', (err, article) ->
             return done err if err
             article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
@@ -515,20 +523,6 @@ describe 'Article', ->
           updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
             .equal moment().add(1, 'year').format('YYYY')
-          done()
-
-    it 'denormalizes the author into the article on publish', (done) ->
-      fabricate 'users', {
-        _id: ObjectId('5086df098523e60002000018')
-        name: 'Molly'
-      }, (err, @user) ->
-        Article.save {
-          title: 'Top Ten Shows'
-          thumbnail_title: 'Ten Shows'
-          author_id: '5086df098523e60002000018'
-          published: true
-        }, 'foo', (err, article) ->
-          article.author.name.should.equal 'Molly'
           done()
 
     it 'doesnt save a fair unless explictly set', (done) ->
@@ -659,6 +653,7 @@ describe 'Article', ->
           thumbnail_title: 'Foo Baz'
           author_id: @user._id
           published: true
+          author: name: @user.name
         }, 'foo', (err, article) =>
           return done err if err
           Article.save {
@@ -894,6 +889,18 @@ describe 'Article', ->
         article.partner_channel_id.toString().should.equal '5086df098523e60002000015'
         done()
 
+    it 'saves the author', (done) ->
+      Article.save {
+        author:
+          name: 'Jon Snow'
+          id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.author.id.toString().should.equal '5086df098523e60002000018'
+        article.author.name.should.equal 'Jon Snow'
+        done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->
@@ -902,9 +909,8 @@ describe 'Article', ->
         author_id: ObjectId('5086df098523e60002000018')
         published: false
         scheduled_publish_at: moment('2016-01-01').toDate()
-        author: {
+        author:
           name: 'Kana Abe'
-        }
         sections: [
           {
             type: 'text'

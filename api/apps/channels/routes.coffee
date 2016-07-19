@@ -26,6 +26,6 @@ _ = require 'underscore'
 # Fetch & attach a req.channel middleware
 @find = (req, res, next) ->
   Channel.find req.params.id, (err, channel) ->
-    return next err if err
-    return res.err 404, 'Channel not found.' unless req.channel = channel
+    return res.err 404, err.message if err
+    req.channel = channel
     next()

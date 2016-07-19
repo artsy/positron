@@ -1,20 +1,9 @@
 { present } = User = require './model'
 { API_URL } = process.env
 
-# GET /api/users/:id
+# GET /api/users/me
 @show = (req, res, next) ->
-  return res.send present req.user if req.isUser
-  User.findOrInsert req.params.id, req.accessToken, (err, user) ->
-    return next err if err
-    res.send present user
-
-# Middleware to deny non-admins access to certain user endpoint operations
-@ownerOrAdminOnly = (req, res, next) ->
-  req.isUser = req.params.id is req.user._id.toString()
-  if not req.isUser and req.user?.type isnt 'Admin'
-    res.err 401, 'Must be an admin or the user being accessed.'
-  else
-    next()
+  res.send present req.user
 
 # Require a user middleware
 @authenticated = (req, res, next) ->
@@ -31,12 +20,10 @@
 @setUser = (req, res, next) ->
   return next() unless req.accessToken
   User.fromAccessToken req.accessToken, (err, user) ->
-
     # Stop all further requests if we can't find a user from that access token
     return next() if err?.message?.match 'invalid or has expired'
     return next err if err
     res.err 404, 'Could not find a user from that access token'  unless user?
-
     # Alias on the request object
     req.user = user
 
@@ -48,3 +35,10 @@
         req[set][key] = user._id.toString() if val is 'me'
 
     next()
+
+@refresh = (req, res, next) ->
+  return next() unless req.accessToken
+  User.refresh req.accessToken, (err, user) ->
+    res.err 404, 'Could not find a user from that access token' unless user?
+    req.user = user
+    res.send present user

@@ -75,19 +75,25 @@ module.exports = ->
       footer_blurb: 'This is a Footer Blurb'
       related_articles: [ '5530e72f7261696238050000' ]
   fixtures.users =
-    "id" : "4d8cd73191a5c50ce200002a"
-    "name" : "Craig Spaeth"
-    "type" : "Admin"
-    "profile_icon_url" : "https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png"
-    "access_token" : "$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke"
+    id: '4d8cd73191a5c50ce200002a'
+    name: 'Craig Spaeth'
+    type: 'Admin'
+    profile_icon_url: 'https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png'
+    access_token: '$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke'
+    current_channel:
+      name: 'Editorial'
+      type: 'editorial'
+      id: '4d8cd73191a5c50ce200002b'
+    channel_ids: ['4d8cd73191a5c50ce200002b']
+    partner_ids: []
   fixtures.sections =
-    'id': '55356a9deca560a0137aa4b7'
-    'title': 'Vennice Biennalez'
-    'description': 'The coolest biennale'
-    'slug': 'vennice-biennale'
-    'partner_logo_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-    'thumbnail_url': 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-    'featured_article_ids': [ '5522d03ae8e369060053d953' ]
+    id: '55356a9deca560a0137aa4b7'
+    title: 'Vennice Biennalez'
+    description: 'The coolest biennale'
+    slug: 'vennice-biennale'
+    partner_logo_url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+    thumbnail_url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+    featured_article_ids: [ '5522d03ae8e369060053d953' ]
   fixtures.curations =
     id: '55356a9deca560a0137aa4b7'
     name: 'Featured Articles'
@@ -95,6 +101,7 @@ module.exports = ->
     id: '5086df098523e60002000018'
     name: 'Editorial'
     user_ids: [ '5522d03ae8e369060053d953', "4d8cd73191a5c50ce200002a" ]
+    type: 'editorial'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

@@ -13,6 +13,10 @@ html(lang="en")
         h1#error-not-found Page not found, please check that you have the correct url.
           br
           a( href='/' ) Back to Artsy Writer
+      else if error.status == 403
+        h1#error-not-found This page is forbidden. Please check with support@artsy.net or your Artsy representative if you believe this is a mistake.
+          br
+          a( href='/' ) Back to Artsy Writer
       else
         include alert
     //- Fonts, Jquery, and Segment

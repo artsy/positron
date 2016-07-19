@@ -49,6 +49,9 @@ denormalizedArtwork = (->
 @inputSchema = (->
   id: @objectId()
   author_id: @objectId().required()
+  author: @object().keys
+    name: @string().allow('').default('')
+    id: @objectId()
   tier: @number().default(2)
   thumbnail_title: @string().allow('', null)
   thumbnail_teaser: @string().allow('', null)
@@ -145,8 +148,8 @@ denormalizedArtwork = (->
     footer_blurb: @string().allow('',null)
     related_articles: @array().items(@objectId()).allow(null)
   send_body: @boolean().default(false)
-  channel_id: @objectId().allow(null)
-  partner_channel_id: @objectId().allow(null)
+  channel_id: @objectId().allow(null).default(null)
+  partner_channel_id: @objectId().allow(null).default(null)
 ).call Joi
 
 #
@@ -182,5 +185,4 @@ denormalizedArtwork = (->
   layout: @string()
   has_video: @boolean()
   channel_id: @objectId()
-  partner_channel_id: @objectId()
 ).call Joi

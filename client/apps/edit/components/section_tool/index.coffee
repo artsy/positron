@@ -8,6 +8,7 @@ sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM
 User = require '../../../../models/user.coffee'
+Channel = require '../../../../models/channel.coffee'
 
 module.exports = React.createClass
 
@@ -16,6 +17,7 @@ module.exports = React.createClass
 
   componentWillMount: ->
     @user = new User sd.USER
+    @channel = new Channel sd.CURRENT_CHANNEL
 
   toggle: ->
     @setState open: not @state.open
@@ -117,7 +119,7 @@ module.exports = React.createClass
               className: 'edit-menu-icon-hero-video'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.hero-video').html()
             }
-          if @user.isAdmin()
+          if @channel.hasFeature 'header'
             li {
               className: "edit-section-tool-hero-fullscreen #{'is-disabled' if @props.hasSection}"
               onClick: @props.setHero('fullscreen') unless @props.hasSection
@@ -168,7 +170,7 @@ module.exports = React.createClass
               className: 'edit-menu-icon-slideshow'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
             }
-          if @user.isAdmin()
+          if @channel.hasFeature 'embed'
             li {
               className: 'edit-section-tool-embed'
               onClick: @newSection('embed')
@@ -177,7 +179,7 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-embed'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.embed').html()
               }
-          if @user.isAdmin()
+          if @channel.hasFeature 'callout'
             li {
               className: "edit-section-tool-callout #{'is-disabled' unless @isAboveTextSection()}"
               onClick: @newSection('callout') if @isAboveTextSection()
@@ -186,7 +188,7 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-callout'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.callout').html()
               }
-          if @user.isEditorialTeam()
+          if @channel.hasFeature 'toc'
             li {
               className: 'edit-section-tool-toc'
               onClick: @newSection('toc')
@@ -195,7 +197,7 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-toc'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
               }
-          if @user.isEditorialTeam()
+          if @channel.hasFeature 'image_set'
             li {
               className: 'edit-section-tool-image-set'
               onClick: @newSection('image_set')

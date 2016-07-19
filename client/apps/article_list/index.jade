@@ -4,10 +4,10 @@ extend ../../components/layout/templates/index
 
 block header
   if published
-    | Published Articles
+    | Published Articles for #{current_channel.name}
     - var emptyMessage = "published any articles"
   else
-    | Drafts
+    | Drafts for #{current_channel.name}
     - var emptyMessage = "written any drafts"
 
 block content

@@ -19,7 +19,7 @@ describe 'User', ->
   beforeEach (done) ->
     empty =>
       User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
-      fabricate 'channels', {}, (err, @channel) =>
+      fabricate 'channels', { id: '5086df098523e60002000018' }, (err, @channel) =>
         @server = app.listen 5000, =>
           done()
 
@@ -35,13 +35,11 @@ describe 'User', ->
 
     it 'gets partner_ids', (done) ->
         User.fromAccessToken 'foobar', (err, user) ->
-          user.partner_ids[0].should.equal '5086df098523e60002000012'
+          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           done()
 
-  describe '#findOrInsert', ->
-
     it 'inserts a non-existing user', (done) ->
-      User.findOrInsert '4d8cd73191a5c50ce200002a', 'foobar', (err, user) ->
+      User.fromAccessToken 'foobar', (err, user) ->
         db.users.findOne (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
@@ -49,7 +47,7 @@ describe 'User', ->
     it 'finds an existing user', (done) ->
       user = fixtures().users
       db.users.insert user, ->
-        User.findOrInsert user.id, 'foobar', (err, user) ->
+        User.fromAccessToken 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
 
@@ -59,3 +57,60 @@ describe 'User', ->
       data = User.present _.extend fixtures().users, _id: 'foo'
       (data._id?).should.not.be.ok
       data.id.should.equal 'foo'
+
+  describe '#refresh', ->
+
+    it 'refreshes the user basic info', (done) ->
+      user = _.extend fixtures().users, {name: 'Nah'}
+      db.users.insert user, ->
+        User.refresh 'foobar', (err, user) ->
+          user.name.should.equal 'Craig Spaeth'
+          User.fromAccessToken 'foobar', (err, user) ->
+            user.name.should.equal 'Craig Spaeth'
+            done()
+
+    it 'refreshes the user partner access', (done) ->
+      user = _.extend fixtures().users, { has_access_token: true, partner_ids: ['123'] }
+      db.users.insert user, (err, user) ->
+        user.partner_ids.length.should.equal 1
+        user.partner_ids[0].should.equal '123'
+        User.refresh 'foobar', (err, user) ->
+          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
+          User.fromAccessToken 'foobar', (err, user) ->
+            user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
+            done()
+
+    it 'refreshes the user channel access', (done) ->
+      user = _.extend fixtures().users, { has_access_token: true, channel_ids: ['123'] }
+      db.users.insert user, (err, user) ->
+        user.channel_ids.length.should.equal 1
+        User.refresh 'foobar', (err, user) ->
+          user.channel_ids.length.should.equal 0
+          User.fromAccessToken 'foobar', (err, user) ->
+            user.channel_ids.length.should.equal 0
+            done()
+
+  describe '#hasChannelAccess', ->
+
+    it 'returns true for a channel member', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [ ObjectId '5086df098523e60002000018' ] }
+      channel = _.extend fixtures().channels, { _id: ObjectId('5086df098523e60002000018') }
+      db.channels.insert channel , (err, channel) ->
+        User.hasChannelAccess(user, '5086df098523e60002000018').should.be.true()
+        done()
+
+    it 'returns true for a partner channel member', (done) ->
+      user = _.extend fixtures().users, { partner_ids: [ '5086df098523e60002000012' ] }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
+      done()
+
+    it 'returns true for a non-partner or non-channel member but admin on a partner channel', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [] }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
+      done()
+
+    it 'returns false for a non-partner or non-channel member', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [], type: 'User' }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.false()
+      done()
+

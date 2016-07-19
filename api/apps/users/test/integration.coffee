@@ -4,7 +4,7 @@ app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
 
-describe 'user endpoints', ->
+describe 'GET /api/users/me', ->
 
   beforeEach (done) ->
     fabricate 'users', {}, (err, @user) =>
@@ -15,26 +15,37 @@ describe 'user endpoints', ->
     @server.close()
     empty -> done()
 
-  describe 'GET /api/users/me', ->
+  it 'returns yourself', (done) ->
+    request
+      .get("http://localhost:5000/users/me")
+      .set('X-Access-Token': @user.access_token)
+      .end (err, res) =>
+        res.body.name.should.equal @user.name
+        done()
 
-    it 'returns yourself', (done) ->
-      request
-        .get("http://localhost:5000/users/me")
-        .set('X-Access-Token': @user.access_token)
-        .end (err, res) =>
-          res.body.name.should.equal @user.name
-          done()
+describe 'GET /api/users/me/refresh', ->
 
-  describe 'GET /api/users/:id', ->
+  beforeEach (done) ->
+    fabricate 'users', { name: 'Outdated Name', partner_ids: ['123'], access_token: 'foo' }, (err, @user) =>
+      @server = app.listen 5000, ->
+        done()
 
-    it 'returns a user for admins', (done) ->
-      fabricate 'users', {
-        name: 'Molly'
-        _id: ObjectId('4d8cd73191a5c50ce210002b')
-      }, =>
-        request
-          .get("http://localhost:5000/users/4d8cd73191a5c50ce210002b")
-          .set('X-Access-Token': @user.access_token)
-          .end (err, res) =>
-            res.body.name.should.equal 'Molly'
-            done()
+  afterEach (done) ->
+    @server.close()
+    empty -> done()
+
+  it 'returns yourself, updated', (done) ->
+    request
+      .get("http://localhost:5000/users/me")
+      .set('X-Access-Token': @user.access_token)
+      .end (err, res) =>
+        res.body.name.should.equal @user.name
+        done()
+
+    request
+      .get("http://localhost:5000/users/me/refresh")
+      .set('X-Access-Token': @user.access_token)
+      .end (err, res) =>
+        res.body.name.should.equal 'Craig Spaeth'
+        res.body.partner_ids[0].should.equal '5086df098523e60002000012'
+        done()
