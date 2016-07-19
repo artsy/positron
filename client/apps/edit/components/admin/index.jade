@@ -150,6 +150,25 @@ section#edit-admin.admin-form-container.max-width-container
         label.edit-email-large-image-url Large
           input.bordered-input( onClick="this.select();" readonly )
 
+  //- SEO optimization
+  section.admin-form-section
+    .admin-form-left
+      h1 SEO Optimization
+      h2 Check the article for several factors to improve where it appears in search engine results.
+    .admin-form-right
+      #edit-seo__primary-focus-keyword
+        label Primary Keyword
+        input.bordered-input( name='primary_keyword' )
+      //- #edit-seo__secondary-focus-keyword
+      //-   label Secondary Keyword (optional)
+      //-   input.bordered-input( name='secondary_keyword' )
+      br
+      a#check-seo-button.avant-garde-button
+    br
+    br
+    label Output
+      #edit-seo__output
+
   //- Super Article
   section.admin-form-section#edit-super-article
     .admin-form-left

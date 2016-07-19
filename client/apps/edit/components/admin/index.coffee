@@ -8,6 +8,7 @@ _s = require 'underscore.string'
 moment = require 'moment'
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
 { crop } = require '../../../../components/resizer/index.coffee'
+yoastApp = require( "yoastseo" ).App
 
 module.exports = class EditAdmin extends Backbone.View
 
@@ -29,6 +30,7 @@ module.exports = class EditAdmin extends Backbone.View
     @setupEmailMetadata()
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
+    @setupYoast()
 
   setupAuthorAutocomplete: ->
     Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -430,6 +432,8 @@ module.exports = class EditAdmin extends Backbone.View
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
     'click #edit-schedule-button': 'toggleScheduled'
+    'click #check-seo-button': 'toggleSeo'
+
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
@@ -499,3 +503,30 @@ module.exports = class EditAdmin extends Backbone.View
     else
       @$('#edit-schedule-button').removeClass('edit-button-when-scheduled')
       @$('.edit-admin-input-date, .edit-admin-input-time').attr('readonly', false)
+
+setupYoast: ->
+    focusKeywordField = document.getElementById( "edit-seo__primary-focus-keyword" )
+    ##focusKeywordField = document.getElementById( "edit-seo__secondary-focus-keyword" )
+
+    ##I need this to be reading from all of the sections in the content tab simultaneously.
+    ##Can I find an example in one of the other admin fields? 
+    contentField = document.getElementById( "edit-seo__content-field" )
+
+    snippetPreview = new yoastSnippetPreview
+    targetElement: document.getElementById( "edit-seo__snippet" )
+
+
+    app = new yoastApp
+      snippetPreview: snippetPreview,
+      targets:
+        output: "edit-seo__output"
+      callbacks: 
+        getData: ->
+          return {
+            keyword: focusKeywordField.value,
+            text: contentField.value
+          }
+    app.refresh()
+
+    focusKeywordField.addEventListener( 'change', app.refresh.bind( app ) )
+    contentField.addEventListener( 'change', app.refresh.bind( app ) )
