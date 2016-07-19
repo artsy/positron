@@ -10,10 +10,12 @@ viewHelpers = require '../../lib/view_helpers.coffee'
 sd = require('sharify').data
 User = require '../../models/user.coffee'
 AutocompleteChannels = require '../autocomplete_channels/index.coffee'
+imagesLoaded = require 'imagesloaded'
 
 # Add jquery plugins
 require 'jquery-autosize'
 require 'typeahead.js'
+require('jquery-fillwidth-lite') $, _, imagesLoaded
 
 module.exports.init = ->
   Backbone.$ = $
