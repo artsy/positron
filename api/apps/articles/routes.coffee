@@ -5,13 +5,15 @@ User = require '../users/model.coffee'
 
 # GET /api/articles
 @index = (req, res, next) ->
-  return res.err(401, 'Must pass channel_id to view unpublished articles. Or pass ' +
-    'published=true to only view published articles.') if req.query.published is 'false' and not req.query.channel_id
+  if req.query.published is 'false' and not req.query.channel_id
+    return res.err(401, 'Must pass channel_id to view unpublished articles. Or pass ' +
+      'published=true to only view published articles.')
 
   access = User.hasChannelAccess req.user, req.query.channel_id
-  return res.err(401,
-    'Must be a member of this channel to view unpublished articles. ' +
-    'Pass published=true to only view published articles.') if req.query.published is 'false' and not access
+  if req.query.published is 'false' and not access
+    return res.err(401,
+      'Must be a member of this channel to view unpublished articles. ' +
+      'Pass published=true to only view published articles.')
 
   Article.where req.query, (err, results) ->
     return next err if err

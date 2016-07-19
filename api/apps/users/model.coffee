@@ -81,10 +81,8 @@ save = (user, accessToken, callback) ->
   return false unless user and channel_id
 
   channel_id = channel_id.toString()
-
   @channels = _.find user.channel_ids, (id) ->
     id.toString() is channel_id
-
   @partners = _.find user.partner_ids, (id) ->
     id.toString() is channel_id
 
