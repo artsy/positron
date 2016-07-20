@@ -22,7 +22,7 @@ setupPassport = ->
       headers: 'X-Access-Token': accessToken
       error: (m, err) -> done err
       success: (user) ->
-        id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
+        id = user.get('channel_ids')?.concat(user.get('partner_ids'))[0]
         id = process.env.DEFAULT_PARTNER_ID if not id and user.get('type') is 'Admin'
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
@@ -45,7 +45,7 @@ requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
 
 requireChannel = (req, res, next) ->
-  if req.user?.get('current_channel') then next() else req.logout()
+  if req.user?.get('current_channel') then next() else res.redirect '/logout'
 
 logout = (req, res) ->
   req.logout()
