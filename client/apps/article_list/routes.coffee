@@ -2,7 +2,6 @@ _ = require 'underscore'
 Articles = require '../../collections/articles.coffee'
 
 @articles = (req, res, next) ->
-  console.log 'in the articles thing'
   page = parseInt req.query.page
   size = 10
   new Articles().fetch
