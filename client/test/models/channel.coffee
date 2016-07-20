@@ -122,12 +122,12 @@ describe "Channel", ->
       @channel.set
         name: 'Gagosian'
         type: 'partner'
-      @channel.hasAssociation('artworks').should.be.false()
-      @channel.hasAssociation('artists').should.be.false()
-      @channel.hasAssociation('shows').should.be.false()
-      @channel.hasAssociation('fairs').should.be.false()
-      @channel.hasAssociation('partners').should.be.false()
-      @channel.hasAssociation('auctions').should.be.false()
+      @channel.hasAssociation('artworks').should.be.true()
+      @channel.hasAssociation('artists').should.be.true()
+      @channel.hasAssociation('shows').should.be.true()
+      @channel.hasAssociation('fairs').should.be.true()
+      @channel.hasAssociation('partners').should.be.true()
+      @channel.hasAssociation('auctions').should.be.true()
 
   describe '#fetchChannelOrPartner' , ->
 
