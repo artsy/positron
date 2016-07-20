@@ -45,7 +45,7 @@ requireLogin = (req, res, next) ->
   if req.user? then next() else res.redirect '/login'
 
 requireChannel = (req, res, next) ->
-  if req.user?.get('current_channel') then next() else req.logout()
+  if req.user?.get('current_channel') then next() else res.redirect '/logout'
 
 logout = (req, res) ->
   req.logout()
