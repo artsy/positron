@@ -77,7 +77,14 @@ module.exports = class Channel extends Backbone.Model
         'auctions'
       ], association
     else if type is 'partner'
-       false
+      _.contains [
+        'artworks'
+        'artists'
+        'shows'
+        'fairs'
+        'partners'
+        'auctions'
+      ], association
 
   fetchChannelOrPartner: (options) ->
     async.parallel [
