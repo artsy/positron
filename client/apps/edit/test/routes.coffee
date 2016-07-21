@@ -55,3 +55,13 @@ describe 'routes', ->
       routes.edit @req, @res
       Backbone.sync.args[0][2].success _.extend fixtures().articles
       @res.redirect.calledOnce.should.be.true()
+
+    it 'switches partner channel if article and current_channel do not match', ->
+      @req.user.set current_channel: id: '123'
+      @req.params.id = 'foo'
+      routes.edit @req, @res
+      Backbone.sync.args[0][2].success _.extend fixtures().articles,
+        partner_channel_id: '1234'
+        channel_id: null
+      @res.redirect.calledOnce.should.be.true()
+      @res.redirect.args[0][0].should.containEql '/switch_channel/1234?'

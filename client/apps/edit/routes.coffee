@@ -21,7 +21,7 @@ Channel = require '../../models/channel'
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
       res.locals.sd.CURRENT_CHANNEL = new Channel req.user.get('current_channel')
       if (article.get('channel_id') or article.get('partner_channel_id')) isnt req.user.get('current_channel').id
-        res.redirect "/switch_channel/#{article.get 'channel_id' or article.get 'partner_channel_id'}?redirect-to=#{req.url}"
+        res.redirect "/switch_channel/#{article.get('channel_id') or article.get('partner_channel_id')}?redirect-to=#{req.url}"
       else
         render req, res, article
 
