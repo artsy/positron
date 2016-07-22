@@ -10,6 +10,7 @@ csv = require 'fast-csv'
 fs = require 'fs'
 path = require 'path'
 moment = require 'moment'
+{ pluck } = require 'underscore'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -21,25 +22,28 @@ switch process.env.NODE_ENV
 # Connect to database
 db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
-# Setup CSV
+# Setup file naming
 filename = "export_" + moment().format('YYYYMMDDhhmmss') + ".csv"
-csvStream = csv.createWriteStream { headers: true }
 dir = 'scripts/tmp/'
 
-writableStream = fs.createWriteStream( dir + filename)
+projections = { 'id': 1, 'author_id': 1, 'auction_ids': 1, 'contributing_authors': 1, 'fair_ids': 1, 'featured': 1, 'featured_artist_ids': 1, 'featured_artwork_ids': 1, 'partner_ids': 1, 'primary_featured_artist_ids': 1, 'slugs': 1, 'tags': 1, 'title': 1, 'tier': 1, 'published_at': 1, 'show_ids': 1, 'section_ids': 1, 'thumbnail_image': 1, 'thumbnail_title': 1, 'keywords': 1, 'slug': 1, 'channel_id': 1, 'partner_channel_id': 1 }
 
-csvStream.pipe(writableStream)
-csvStream.write(["id", "author_id", "auction_ids", "contributing_authors", "fair_ids", "featured", "featured_artist_ids", "featured_artwork_ids", "partner_ids", "primary_featured_artist_ids", "slugs", "tags", "title", "tier", "published_at","show_ids","section_ids","thumbnail_image","thumbnail_title", "keywords", "slug", "channel_id", "partner_channel_id"])
+db.articles.find({ published: true }, projections).toArray (err, articles) ->
 
-db.articles.find({ published: true })
-  .on('data', (doc) ->
-    if doc
-      published_at = if doc.published_at then moment(doc.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
-      csvStream.write([doc._id, doc.author_id, doc.auction_ids, doc.contributing_authors, doc.fair_ids, doc.featured, doc.featured_artist_ids, doc.featured_artwork_ids, doc.partner_ids, doc.primary_featured_artist_ids, doc.slugs, doc.tags, doc.title, doc.tier, published_at, doc.show_ids, doc.section_ids, doc.thumbnail_image, doc.thumbnail_title, doc.keywords, doc.slug, doc.channel_id, doc.partner_channel_id])
-  ).on 'end', ->
+  csv = [ "id,author_id,auction_ids,contributing_authors,fair_ids,featured,featured_artist_ids,featured_artwork_ids,partner_ids,primary_featured_artist_ids,slugs,tags,title,tier,published_at,show_ids,section_ids,thumbnail_image,thumbnail_title,keywords,slug,channel_id,partner_channel_id" ]
 
-    # End Streaming
-    csvStream.end()
+  stringify = (arr) ->
+    return null unless arr
+    '\"' + arr.toString() + '\"'
+
+  articles.map (a) ->
+    published_at = if a.published_at then moment(a.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
+    contributing_authors = pluck a.contributing_authors, 'name'
+    csv.push [ a._id, a.author_id, stringify(a.auction_ids), contributing_authors, stringify(a.fair_ids), a.featured, stringify(a.featured_artist_ids), stringify(a.featured_artwork_ids), stringify(a.partner_ids), stringify(a.primary_featured_artist_ids), stringify(a.slugs), stringify(a.tags), a.title, a.tier, published_at, stringify(a.show_ids), stringify(a.section_ids), a.thumbnail_image, a.thumbnail_title, stringify(a.keywords), a.slug, a.channel_id, a.partner_channel_id ].join(',')
+
+  csv = csv.join('\n')
+
+  fs.writeFile (dir + filename), csv, (err, res) ->
 
     # Setup S3 Client
     client = knox.createClient
@@ -47,10 +51,10 @@ db.articles.find({ published: true })
       secret: process.env.S3_SECRET
       bucket: process.env.FULCRUM_BUCKET
 
-    client.putFile dir + filename, "reports/positron_articles/#{filename}", {
+    client.putFile dir + filename, "reports/positron_articles/test/#{filename}", {
       'Content-Type': 'text/csv'
     }, (err, result) ->
 
-      # Delete filename and close db
-      fs.unlink(dir + filename)
+      # Delete file and close db
+      # fs.unlink(dir + filename)
       db.close()
