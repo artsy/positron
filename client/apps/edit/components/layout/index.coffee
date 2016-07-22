@@ -204,7 +204,6 @@ module.exports = class EditLayout extends Backbone.View
     snippetPreview = new yoastSnippetPreview
       targetElement: document.getElementById( "edit-seo__snippet" )
 
-
     app = new yoastApp
       snippetPreview: snippetPreview,
       targets:
