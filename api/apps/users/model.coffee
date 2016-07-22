@@ -40,16 +40,13 @@ bcrypt = require 'bcrypt'
 #
 # Persistance
 #
-@findOrInsert = (id, accessToken, callback) ->
-  return callback() unless id?
-  db.users.findOne { _id: ObjectId(id) }, (err, user) ->
-    return callback err if err
-    return callback null, user if user
-    request.get("#{ARTSY_URL}/api/v1/user/#{id}")
-      .set('X-Access-Token': accessToken)
-      .end (err, user) ->
-        return callback err if err
-        save user.body, accessToken, callback
+
+@refresh = (accessToken, callback) ->
+  request.get("#{ARTSY_URL}/api/v1/me")
+    .set('X-Access-Token': accessToken)
+    .end (err, user) ->
+      return callback err if err
+      save user.body, accessToken, callback
 
 save = (user, accessToken, callback) ->
   async.parallel [
@@ -64,7 +61,7 @@ save = (user, accessToken, callback) ->
   ], (err, results) ->
     return callback err if err
     user.partner_ids = _.map (results[0]?.body or []), (partner) ->
-      partner._id
+      ObjectId partner._id
     user.channel_ids = _.pluck results[1], '_id'
     encryptedAccessToken = results[2]
     db.users.save {
@@ -78,6 +75,21 @@ save = (user, accessToken, callback) ->
     }, callback
 
 #
+# Utility
+#
+@hasChannelAccess = (user, channel_id) ->
+  return false unless user and channel_id
+
+  channel_id = channel_id.toString()
+  @channels = _.find user.channel_ids, (id) ->
+    id.toString() is channel_id
+  @partners = _.find user.partner_ids, (id) ->
+    id.toString() is channel_id
+
+  return true if @channels
+  return @partners? or user.type is 'Admin'
+
+#
 # JSON views
 #
 @present = (data) =>
@@ -85,12 +97,3 @@ save = (user, accessToken, callback) ->
     id: data._id?.toString()
     _id: undefined
     access_token: undefined
-
-#
-# Helpers
-#
-@denormalizedForArticle = (user) ->
-  {
-    id: user._id
-    name: user.name
-  }

@@ -60,7 +60,7 @@ GET /sync\_to\_post?article_id=
 
 - access_token: Gravity access token for auth
 
-GET /users/:id
+GET /users/me
 
 ### Sections
 

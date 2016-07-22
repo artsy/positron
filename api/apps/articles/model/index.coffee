@@ -48,16 +48,19 @@ Q = require 'bluebird-q'
         debug err if err
         generateArtworks input, article, (err, article) ->
           debug err if err
-          mergeArticleAndAuthor input, article, accessToken, (err, article, author, publishing) ->
-            return callback(err) if err
-            # Merge fullscreen title with main article title
-            article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-            if publishing
-              onPublish article, author, sanitizeAndSave(callback)
-            else if not publishing and not article.slugs?.length > 0
-              generateSlugs article, author, sanitizeAndSave(callback)
-            else
-              sanitizeAndSave(callback)(null, article)
+          publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
+          article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+          if input.sections and input.sections.length is 0
+            article.sections = []
+          # Merge fullscreen title with main article title
+          article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
+          article.author = input.author
+          if publishing
+            onPublish article, sanitizeAndSave(callback)
+          else if not publishing and not article.slugs?.length > 0
+            generateSlugs article, sanitizeAndSave(callback)
+          else
+            sanitizeAndSave(callback)(null, article)
 
 @publishScheduledArticles = (callback) ->
   db.articles.find { scheduled_publish_at: { $lt: new Date() } } , (err, articles) =>
@@ -68,7 +71,7 @@ Q = require 'bluebird-q'
         published: true
         published_at: moment(article.scheduled_publish_at).toDate()
         scheduled_publish_at: null
-      onPublish article, article.author, sanitizeAndSave cb
+      onPublish article, sanitizeAndSave cb
     , (err, results) ->
       return callback err, [] if err
       return callback null, results

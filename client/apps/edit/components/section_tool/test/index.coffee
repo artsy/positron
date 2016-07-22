@@ -10,6 +10,7 @@ r =
   findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
 rewire = require 'rewire'
 User = rewire '../../../../../models/user.coffee'
+fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionTool', ->
 
@@ -19,9 +20,10 @@ describe 'SectionTool', ->
       @SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      User.__set__ 'sd', { EDITORIAL_TEAM: 'kana' }
       @SectionTool.__set__ 'User', User
-      @SectionTool.__set__ 'sd', { USER: { type: 'Admin', email: 'kana@artsymail.com'} }
+      @SectionTool.__set__ 'sd',
+        USER: type: 'Admin', email: 'kana@artsymail.com'
+        CURRENT_CHANNEL: fixtures().channels
       @component = React.render @SectionTool(
         sections: @sections = new Backbone.Collection [
           { body: '<p>Foo to the bar</p>', type: 'text' }
@@ -70,7 +72,9 @@ describe 'SectionTool - Hero', ->
       SectionTool = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      SectionTool.__set__ 'sd', { USER: type: 'Admin' }
+      SectionTool.__set__ 'sd',
+        USER: type: 'Admin', email: 'kana@artsymail.com'
+        CURRENT_CHANNEL: fixtures().channels
       @component = React.render SectionTool(
         sections: new Backbone.Collection [
           { type: 'fullscreen' }

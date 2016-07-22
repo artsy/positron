@@ -29,20 +29,25 @@ querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   user_id: @objectId()
+  q: @string()
 ).call Joi
 
 #
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) }
-  db.channels.findOne query, callback
+  return callback new Error 'Invalid channel id' unless ObjectId.isValid(id)
+  query = { _id: ObjectId(id) }
+  db.channels.findOne query, (err, channel) ->
+    return callback new Error 'No channel found' unless channel
+    callback null, channel
 
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset', 'user_id'
+    query = _.omit input, 'limit', 'offset', 'user_id', 'q'
     query.user_ids = ObjectId input.user_id if input.user_id
+    query.name = { $regex: ///#{input.q}///i } if input.q
     cursor = db.channels
       .find(query)
       .limit(input.limit)

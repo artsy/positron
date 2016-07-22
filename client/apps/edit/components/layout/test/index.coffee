@@ -2,6 +2,7 @@ _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
 Article = require '../../../../../models/article'
+Channel = require '../../../../../models/channel'
 Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
@@ -11,9 +12,12 @@ describe 'EditLayout', ->
   beforeEach (done) ->
     benv.setup =>
       tmpl = resolve __dirname, '../index.jade'
-      benv.render tmpl, _.extend(fixtures().locals,
+      sd = _.extend fixtures().locals.sd,
+        CURRENT_CHANNEL: @channel = new Channel fixtures().channels
+      locals = _.extend fixtures().locals,
         article: @article = new Article fixtures().article
-      ), =>
+        sd: sd
+      benv.render tmpl, locals, =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
@@ -22,7 +26,7 @@ describe 'EditLayout', ->
         sinon.stub _, 'debounce'
         $.fn.autosize = sinon.stub()
         _.debounce.callsArg 0
-        @view = new @EditLayout el: $('#layout-content'), article: @article
+        @view = new @EditLayout el: $('#layout-content'), article: @article, channel: @channel
         @view.article.sync = sinon.stub()
         done()
 
@@ -59,12 +63,13 @@ describe 'EditLayout', ->
     it 'turns form elements into data', ->
       @view.$('#edit-thumbnail-title :input').val('foobar')
       @view.$('#edit-admin-tags :input').val('house, couch')
+      @view.$('#edit-admin-change-author input').val('Jon Snow')
       @view.serialize().thumbnail_title.should.equal 'foobar'
       @view.serialize().tags[0].should.equal 'house'
       @view.serialize().tags[1].should.equal 'couch'
+      @view.serialize().author.name.should.equal 'Jon Snow'
 
-    it 'adds the current user as the author for cases like impersonating' +
-       ' which need that explicitly sent', ->
+    it 'adds the current user as the author_id', ->
       @view.user.set id: 'foo'
       @view.serialize().author_id.should.equal 'foo'
 

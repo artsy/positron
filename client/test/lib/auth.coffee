@@ -11,7 +11,7 @@ describe 'auth middleware', ->
     @res =
       redirect: sinon.stub()
     @next = sinon.stub()
-    for fn in ['requireLogin', 'logout']
+    for fn in ['requireLogin', 'logout', 'requireChannel']
       @[fn] = auth.__get__ fn
     sinon.stub Backbone, 'sync'
 
@@ -23,6 +23,12 @@ describe 'auth middleware', ->
     it 'redirects to login without a user', ->
       @requireLogin @req, @res, @next
       @res.redirect.args[0][0].should.equal '/login'
+
+  describe 'requireChannel', ->
+
+    it 'redirects to login without a user', ->
+      @requireChannel @req, @res, @next
+      @req.logout.called.should.be.ok
 
   describe 'logout', ->
 
