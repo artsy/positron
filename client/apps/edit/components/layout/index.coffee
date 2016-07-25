@@ -155,6 +155,12 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   onKeyup: =>
+    #Issues to deal with:
+    #I want it to check constantly OR every time I press a button, right now it checks the first time I type
+    #I want it to check only text sections
+    #I want it to check all text sections
+    $("#edit-seo__content-field").val($(this.article.get("sections")[0].body).text())
+    $("#snippet-editor-title").val(this.article.get("title"))
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'
