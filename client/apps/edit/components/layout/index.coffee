@@ -157,9 +157,15 @@ module.exports = class EditLayout extends Backbone.View
   onKeyup: =>
     #Issues to deal with:
     #I want it to check constantly OR every time I press a button, right now it checks the first time I type
-    #I want it to check only text sections
-    #I want it to check all text sections
-    $("#edit-seo__content-field").val($(this.article.get("sections")[0].body).text())
+    #I want it to check only text sections--not quite true; I want it to note that there are images present
+    #I want it to check all text sections\
+    # debugger
+    # $("#edit-seo__content-field").val($(this.article.get("sections")[0].body).text())
+    fullText = []
+    # fulltext.push(lead-paragraph) -- pseudo code
+    fullText.push($(section.body).text()) for section in $(this.article.get("sections")) when section.type is "text"
+    fullText = fullText.join(' ')
+    $("#edit-seo__content-field").val(fullText).text()
     $("#snippet-editor-title").val(this.article.get("title"))
     if @article.get('published')
       @changedSection = true
