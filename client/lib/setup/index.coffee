@@ -20,7 +20,7 @@ forceSSL = require 'express-force-ssl'
 setupEnv = require './env'
 setupAuth = require './auth'
 morgan = require 'morgan'
-{ locals, errorHandler, helpers, ua } = require '../middleware'
+{ locals, errorHandler, helpers, ua, sameOrigin } = require '../middleware'
 { parse } = require 'url'
 { NODE_ENV } = process.env
 
@@ -50,6 +50,7 @@ module.exports = (app) ->
   app.use locals
   app.use helpers
   app.use ua
+  app.use sameOrigin
 
   # Mount apps
   app.use require '../../apps/sections'

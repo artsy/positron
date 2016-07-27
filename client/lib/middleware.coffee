@@ -38,3 +38,8 @@ crypto = require 'crypto'
       "You must use the lastest version of Chrome, Safari, " +
       "Firefox, or Internet Explorer to use Artsy Writer."
     )
+
+# Makes sure that writer.artsy.net cannot be embedded elsewhere
+@sameOrigin = (req, res, next) ->
+  res.set('X-Frame-Options', 'SAMEORIGIN')
+  next()
