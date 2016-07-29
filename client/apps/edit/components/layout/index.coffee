@@ -155,14 +155,22 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   onKeyup: =>
-    debugger
+    # debugger
     # $("#edit-seo__content-field").val($(this.article.get("sections")[0].body).text())
+    imageCount = 0
     fullText = []
     fullText.push($(this.article.get("lead_paragraph")).text())
-    fullText.push($((section.body).replace("</p>"," ")).text()) for section in $(this.article.get("sections")) when section.type is "text"
+    for section in $(this.article.get("sections"))
+      if section.type is "text"
+        fullText.push($((section.body).replace(/<\/p>/g," ")).text()) 
+      else if section.type is "artworks"
+        imageCount += 1
+      else if section.type is "image"
+        imageCount += 1
     fullText = fullText.join(' ')
     $("#edit-seo__content-field").val(fullText).text()
     $("#snippet-editor-title").val(this.article.get("title"))
+    $("#snippet-editor-slug").val(((this.article.get("author").name + "-" + this.article.get("title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-"))
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'
