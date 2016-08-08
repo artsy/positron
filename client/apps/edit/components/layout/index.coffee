@@ -155,20 +155,21 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   onKeyup: =>
-    # debugger
-    # $("#edit-seo__content-field").val($(this.article.get("sections")[0].body).text())
+    debugger
+    # $("#edit-seo__content-field").val($(this.article.get("sections")[1].body).text())
     imageCount = 0
     fullText = []
-    fullText.push($(this.article.get("lead_paragraph")).text())
+    fullText.push($(this.article.get("lead_paragraph")).text() + " </p> ")
     for section in $(this.article.get("sections"))
       if section.type is "text"
-        fullText.push($((section.body).replace(/<\/p>/g," ")).text()) 
+        fullText.push($(section.body).text())
+        # fullText.push($((section.body).replace(/<\/p>/g," ")).text())
       else if section.type is "artworks"
         imageCount += 1
       else if section.type is "image"
         imageCount += 1
     fullText = fullText.join(' ')
-    $("#edit-seo__content-field").val(fullText).text()
+    $("#edit-seo__content-field").val(fullText)
     $("#snippet-editor-title").val(this.article.get("title"))
     $("#snippet-editor-slug").val(((this.article.get("author").name + "-" + this.article.get("title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-"))
     if @article.get('published')
