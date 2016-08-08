@@ -427,8 +427,6 @@ module.exports = class EditAdmin extends Backbone.View
     'click #eaf-artworks .eaf-featured': (e)->
       @unfeature('Artworks') e
     'click #edit-schedule-button': 'toggleScheduled'
-    'click #check-seo-button': 'toggleSeo'
-
 
   featureFromInput: (resource) => (e) =>
     $t = $ e.currentTarget
