@@ -102,6 +102,19 @@ module.exports = ->
     name: 'Editorial'
     user_ids: [ '5522d03ae8e369060053d953', "4d8cd73191a5c50ce200002a" ]
     type: 'editorial'
+    tagline: 'A bunch of cool stuff at Artsy'
+    image_url: 'artsy.net/image.jpg'
+    slug: 'editorial'
+    pinned_articles: [
+      {
+        id: '5086df098523e60002000015'
+        index: 0
+      },
+      {
+        id: '5086df098523e60002000011'
+        index: 1
+      }
+    ]
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

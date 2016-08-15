@@ -1,4 +1,5 @@
 Backbone = require 'backbone'
+_ = require 'underscore'
 AutocompleteList = require '../../../components/autocomplete_list/index.coffee'
 AutocompleteSortableList = require '../../../components/autocomplete_sortable_list/index.coffee'
 ImageUploadForm = require '../../../components/image_upload_form/index.coffee'
@@ -7,7 +8,7 @@ sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
 
-module.exports = class EditChannel extends Backbone.View
+module.exports.EditChannel = class EditChannel extends Backbone.View
 
   events:
     'click .js--channel-save-metadata': 'saveMetadata'

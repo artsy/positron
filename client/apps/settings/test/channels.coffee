@@ -6,28 +6,29 @@ Backbone = require 'backbone'
 moment = require 'moment'
 should = require 'should'
 fixtures = require '../../../../test/helpers/fixtures'
-{ fabricate } = require 'antigravity'
 { resolve } = require 'path'
+rewire = require 'rewire'
 
 describe 'EditChannel', ->
 
   beforeEach (done) ->
     benv.setup =>
-      tmpl = resolve __dirname, '../templates/channel_edit.jade'
+      benv.expose $: benv.require 'jquery'
+      Backbone.$ = $
+      sinon.stub Backbone, 'sync'
       @channel = new Channel fixtures().channels
-      benv.render tmpl, _.extend(fixtures().locals,
+      locals = _.extend(fixtures().locals,
         channel: @channel
-        sd: CURRENT_CHANNEL: @channel
-      ), =>
-        benv.expose $: benv.require('jquery')
-        Backbone.$ = $
-        sinon.stub Backbone, 'sync'
-        EditChannel = require '../client/channels.coffee'
-        EditChannel.__set__ 'AutocompleteSortableList', sinon.stub()
-        EditChannel::setupUserAutocomplete = sinon.stub()
-        EditChannel::setupPinnedArticlesAutocomplete = sinon.stub()
-        EditChannel::setupBackgroundImageForm = sinon.stub()
-        @view = new EditChannel el: $('#edit-channel'), channel: @channel
+      )
+      locals.sd = _.extend locals.sd, { CURRENT_CHANNEL: @channel }
+      tmpl = resolve __dirname, '../templates/channel_edit.jade'
+      benv.render tmpl, locals, =>
+        { @EditChannel } = mod = rewire '../client/channels.coffee'
+        mod.__set__ 'AutocompleteSortableList', sinon.stub()
+        @EditChannel::setupUserAutocomplete = sinon.stub()
+        @EditChannel::setupPinnedArticlesAutocomplete = sinon.stub()
+        @EditChannel::setupBackgroundImageForm = sinon.stub()
+        @view = new @EditChannel el: $('body'), channel: @channel
         done()
 
   afterEach ->
@@ -37,4 +38,17 @@ describe 'EditChannel', ->
   describe '#initialize', ->
 
     it 'sets up autocomplete and image uploading', ->
-      EditChannel.setupUserAutocomplete.called.should.be.true()
+      @view.setupUserAutocomplete.called.should.be.true()
+      @view.setupPinnedArticlesAutocomplete.called.should.be.true()
+      @view.setupBackgroundImageForm.called.should.be.true()
+
+    it 'populates saved channel data', ->
+      $('body').html().should.containEql 'A bunch of cool stuff at Artsy'
+      $('body').html().should.containEql 'editorial'
+
+  describe '#saveMetadata', ->
+
+    it 'triggers a save when button is clicked', ->
+      $('.js--channel-save-metadata').click()
+      Backbone.sync.args[0][2].success()
+      $('body').html().should.containEql 'Saved'
