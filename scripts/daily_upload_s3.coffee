@@ -38,7 +38,7 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
 
   articles.map (a) ->
     published_at = if a.published_at then moment(a.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
-    contributing_authors = pluck(a.contributing_authors, 'name')?.toString()
+    contributing_authors = stringify(pluck(a.contributing_authors, 'name'))
     row = [
       a._id
       a.author_id
