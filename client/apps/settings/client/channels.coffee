@@ -56,29 +56,33 @@ module.exports = class EditChannel extends Backbone.View
       filter: (articles) -> for article in articles.results
         { id: article.id, value: article.thumbnail_title }
       selected: (e, item, items) =>
-        pinned = @channel.get('pinned_articles').push { id: item.id, index: items.length }
-        @channel.save pinned_articles: pinned
+        @channel.save pinned_articles: @indexPinnedArticles items
       removed: (e, item, items) =>
-        # pinned = @channel.get('pinned_articles').
-        @channel.save pinned_articles: _.without(_.pluck(items, 'id'),item.id)
+        @channel.save pinned_articles: @indexPinnedArticles items
       moved: (items) =>
-        @channel.save pinned_articles: _.pluck items, 'id'
+        @channel.save pinned_articles: @indexPinnedArticles items
     if @pinnedArticles.length > 0
       @articles = []
-      async.each @pinnedArticles, (id, cb) =>
+      async.each @pinnedArticles, (article, cb) =>
         request
-          .get("#{sd.APP_URL}/api/articles/#{id}")
+          .get("#{sd.APP_URL}/api/articles/#{article.id}")
           .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
             @articles.push(
               {
                 id: res.body.id,
                 value: res.body.thumbnail_title
+                index: article.index
               })
             cb()
       , =>
-        pinned.setState loading: false, items: @articles
+        pinned.setState loading: false, items: _.sortBy @articles, 'index'
     else
       pinned.setState loading: false
+
+  indexPinnedArticles: (items) ->
+    _.map items, (item, i) ->
+      index: i,
+      id: item.id
 
   setupBackgroundImageForm: ->
     new ImageUploadForm
@@ -89,5 +93,32 @@ module.exports = class EditChannel extends Backbone.View
       done: (src) =>
         @channel.save image_url: src
 
-  saveMetadata: (e) ->
-    console.log 'here!'
+  saveMetadata: ->
+    $button = @$('.js--channel-save-metadata')
+    data =
+      slug: $('input[name=slug]').val()
+      tagline: $('input[name=tagline]').val()
+      links: @linkArray()
+    $button.addClass('is-loading')
+    @channel.save data,
+      success: ->
+        $button
+          .removeClass('is-loading')
+          .removeClass('is-error')
+          .text 'Saved'
+      error: ->
+        $button
+          .addClass('is-error')
+          .removeClass('is-loading')
+          .text 'Error Saving'
+
+  linkArray: ->
+    _(3).times (i) ->
+      {
+        text: $("input[name='links[#{i}][text]']").val()
+        url: $("input[name='links[#{i}][url]']").val()
+      }
+
+module.exports.init = ->
+  new EditChannel
+    el: $('body')

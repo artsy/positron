@@ -83,13 +83,14 @@ querySchema = (->
   Joi.validate input, schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
-      _id: ObjectId(input.id)
       # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+      _id: ObjectId(input.id)
       user_ids: input.user_ids.map(ObjectId) if input.user_ids
       pinned_articles: input.pinned_articles.map( (article)->
         article.id = ObjectId(article.id)
         article
       ) if input.pinned_articles
+      slug: _s.slugify(input.slug) if input.slug
     db.channels.save data, callback
 
 @destroy = (id, callback) ->

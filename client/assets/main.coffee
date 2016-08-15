@@ -5,7 +5,6 @@
 
 Backbone = require 'backbone'
 window.jQuery = window.$ = $ = require 'jquery'
-EditChannel = require '../apps/settings/client/channels.coffee'
 
 class Router extends Backbone.Router
 
@@ -27,7 +26,7 @@ class Router extends Backbone.Router
     require('../apps/settings/client/curations.coffee').init()
 
   channelsEdit: ->
-    new EditChannel()
+    require('../apps/settings/client/channels.coffee').init()
 
 new Router()
 $ ->
