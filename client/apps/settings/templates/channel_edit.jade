@@ -5,5 +5,52 @@ block header
   = channel.get('name')
 
 block content
-  .max-width-container
-    #channel-edit__users
+  .max-width-container.admin-form-container
+    section.admin-form-section
+      .admin-form-left
+        h1 Users
+        h2 Manage users who have access to this channel.
+      .admin-form-right
+        #channel-edit__users
+          //- Rendered on the client
+    section.admin-form-section
+      .admin-form-left
+        h1 Pinned Articles
+        h2 Add and reorder up to six articles that appear in the featured section of the landing page.
+      .admin-form-right
+        #channel-edit__pinned-articles
+          //- Rendered on the client
+    section.admin-form-section.channel-edit__metadata
+      .admin-form-left
+        h1 Metadata
+        h2 Upload a background image, add featured links and a tagline to the landing page.
+      .admin-form-right
+        label.channel-edit__image-label
+          span(data-hidden=(channel.get('image_url') ? 'true' : 'false')) Background Image
+          #channel-edit__image
+        label Slug
+          input.bordered-input(type='text' name='slug' value=channel.get('slug'))
+        label Tagline
+          input.bordered-input(type='text' name='tagline' value=channel.get('tagline') maxlength='65')
+        - links = channel.get('links') || []
+        .channel-edit__links
+          .channel-edit__links-item
+            .channel-edit__header Link 1
+            label Text
+              input.bordered-input( value=links[0] ? links[0].text : '' name='links[0][text]' )
+            label URL
+              input.bordered-input( value=links[0] ? links[0].url : '' name='links[0][url]' )
+          .channel-edit__links-item
+            .channel-edit__header Link 2
+            label Text
+              input.bordered-input( value=links[1] ? links[1].text : '' name='links[1][text]' )
+            label URL
+              input.bordered-input( value=links[1] ? links[1].url : '' name='links[1][url]' )
+          .channel-edit__links-item
+            .channel-edit__header Link 3
+            label Text
+              input.bordered-input( value=links[2] ? links[2].text : '' name='links[2][text]' )
+            label URL
+              input.bordered-input( value=links[2] ? links[2].url : '' name='links[2][url]' )
+
+        button.avant-garde-button.avant-garde-button-black.js--channel-save-metadata Save Changes
