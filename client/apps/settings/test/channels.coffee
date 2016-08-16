@@ -52,3 +52,25 @@ describe 'EditChannel', ->
       $('.js--channel-save-metadata').click()
       Backbone.sync.args[0][2].success()
       $('body').html().should.containEql 'Saved'
+
+  describe '#linkArray', ->
+
+    it 'properly formats the array of featured links', ->
+      $("input[name='links[0][text]']").val 'Test Link'
+      $("input[name='links[0][url]']").val 'url.com'
+      arr = @view.linkArray()
+      arr[0].text.should.equal 'Test Link'
+      arr[0].url.should.equal 'url.com'
+
+  describe '#indexPinnedArticles', ->
+
+    it 'properly formats the pinned articles array based on items', ->
+      items = [
+        { id: '12345' }
+        { id: '67890' }
+      ]
+      index = @view.indexPinnedArticles items
+      index[0].id.should.equal '12345'
+      index[0].index.should.equal 0
+      index[1].id.should.equal '67890'
+      index[1].index.should.equal 1
