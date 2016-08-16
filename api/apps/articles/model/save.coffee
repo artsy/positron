@@ -35,13 +35,20 @@ artsyXapp = require('artsy-xapp').token or ''
     article.published_at = new Date()
   @generateSlugs article, cb
 
-setEmailFields = (article) =>
+setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
   article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
   if article.contributing_authors?.length > 0
     ca = _.pluck(article.contributing_authors, 'name').join(', ')
   article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
   article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
+  article.description = article.description or getDescription(article)
+
+getDescription = (article) =>
+  $ = cheerio.load(getTextSections(article))
+  text = $.text().substring(0,150)
+  console.log text
+  text
 
 @generateSlugs = (article, cb) ->
   slug = _s.slugify article.author?.name + ' ' + article.thumbnail_title
@@ -184,7 +191,7 @@ getPartnerLink = (artwork) ->
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
-    setEmailFields article
+    article = setOnPublishFields article
     @sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
@@ -280,7 +287,7 @@ typecastIds = (article) ->
     cb()
 
 getTextSections = (article) ->
-  condensedHTML = ""
+  condensedHTML = article.lead_paragraph or ''
   for section in article.sections when section.type is 'text'
     condensedHTML = condensedHTML.concat section.body
   condensedHTML
