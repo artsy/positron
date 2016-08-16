@@ -16,8 +16,8 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
   initialize: ->
     @channel = new Channel sd.CHANNEL
     @setupUserAutocomplete()
-    @setupPinnedArticlesAutocomplete()
-    @setupBackgroundImageForm()
+    @setupPinnedArticlesAutocomplete() if @channel.isTeam()
+    @setupBackgroundImageForm() if @channel.isTeam()
 
   setupUserAutocomplete: ->
     @user_ids = @channel.get 'user_ids' or []
