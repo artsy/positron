@@ -14,10 +14,10 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
     'click .js--channel-save-metadata': 'saveMetadata'
 
   initialize: ->
-    @channel = new Channel sd.CHANNEL
+    @channel = sd.CHANNEL
     @setupUserAutocomplete()
-    @setupPinnedArticlesAutocomplete()
-    @setupBackgroundImageForm()
+    @setupPinnedArticlesAutocomplete() if @channel.isTeam()
+    @setupBackgroundImageForm() if @channel.isTeam()
 
   setupUserAutocomplete: ->
     @user_ids = @channel.get 'user_ids' or []

@@ -16,15 +16,16 @@ describe 'EditChannel', ->
       benv.expose $: benv.require 'jquery'
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
-      @channel = new Channel fixtures().channels
+      @channel = new Channel _.extend fixtures().channels, type: 'team'
       locals = _.extend(fixtures().locals,
         channel: @channel
       )
-      locals.sd = _.extend locals.sd, { CURRENT_CHANNEL: @channel }
+      locals.sd = _.extend locals.sd, { CHANNEL: @channel }
       tmpl = resolve __dirname, '../templates/channel_edit.jade'
       benv.render tmpl, locals, =>
         { @EditChannel } = mod = rewire '../client/channels.coffee'
         mod.__set__ 'AutocompleteSortableList', sinon.stub()
+        mod.__set__ 'sd', { CHANNEL: @channel }
         @EditChannel::setupUserAutocomplete = sinon.stub()
         @EditChannel::setupPinnedArticlesAutocomplete = sinon.stub()
         @EditChannel::setupBackgroundImageForm = sinon.stub()

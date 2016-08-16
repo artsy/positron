@@ -9,6 +9,9 @@ module.exports = class Channel extends Backbone.Model
 
   urlRoot: "#{sd.API_URL}/channels"
 
+  isTeam: ->
+    @get('type') is 'team'
+
   hasFeature: (feature) ->
     type = @get('type')
     if type is 'editorial'
