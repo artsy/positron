@@ -150,28 +150,31 @@ module.exports = class EditLayout extends Backbone.View
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
     'blur #edit-title': 'prefillThumbnailTitle'
+    'click #seoButton': 'checkSeo'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
 
-  onKeyup: =>
-    debugger
+  checkSeo: =>
     # $("#edit-seo__content-field").val($(this.article.get("sections")[1].body).text())
+    debugger
     imageCount = 0
     fullText = []
     fullText.push($(this.article.get("lead_paragraph")).text() + " </p> ")
     for section in $(this.article.get("sections"))
       if section.type is "text"
-        fullText.push($(section.body).text())
-        # fullText.push($((section.body).replace(/<\/p>/g," ")).text())
+        fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
       else if section.type is "artworks"
         imageCount += 1
       else if section.type is "image"
         imageCount += 1
+    fullText.push("<img></img>") for num in [imageCount..1]
     fullText = fullText.join(' ')
-    $("#edit-seo__content-field").val(fullText)
+    $("#edit-seo__content-field").val(fullText).text()
     $("#snippet-editor-title").val(this.article.get("title"))
-    $("#snippet-editor-slug").val(((this.article.get("author").name + "-" + this.article.get("title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-"))
+    $("#snippet-editor-slug").val(((this.article.get("author").name + "-" + this.article.get("thumbnail_title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-"))
+
+  onKeyup: =>
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'
@@ -220,6 +223,7 @@ module.exports = class EditLayout extends Backbone.View
   setupYoast: ->
     focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
     contentField = document.getElementById( "edit-seo__content-field" )
+    checkSeoButton = document.getElementById( "seoButton" )
 
     snippetPreview = new yoastSnippetPreview
       targetElement: document.getElementById( "edit-seo__snippet" )
@@ -236,5 +240,6 @@ module.exports = class EditLayout extends Backbone.View
           }
     app.refresh()
 
-    focusKeywordField.addEventListener( 'change', app.refresh.bind( app ) )
-    contentField.addEventListener( 'change', app.refresh.bind( app ) )
+    # focusKeywordField.addEventListener( 'change' , app.refresh.bind( app ) )
+    # contentField.addEventListener( 'change', app.refresh.bind( app ) )
+    checkSeoButton.addEventListener( 'click', app.refresh.bind ( app ) )

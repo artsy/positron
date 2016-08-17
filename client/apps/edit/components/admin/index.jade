@@ -103,7 +103,12 @@ section#edit-admin.admin-form-container.max-width-container
     .admin-form-right
       #edit-admin-tags
         label Tags
+        script()
         input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
+      br
+      #edit-meta-description
+        label Description
+        input.bordered-input.edit-meta-description-input( style={height:"200px"} value=article.get('lead_paragraph') )
       br
       .admin-form-right-col
         #edit-admin-publish-date
