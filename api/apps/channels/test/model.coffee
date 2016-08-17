@@ -59,6 +59,39 @@ describe 'Channel', ->
           count.should.equal 11
           done()
 
+    it 'saves valid channel metadata', (done) ->
+      Channel.save {
+        name: 'Editorial'
+        links: [
+          { url: 'artsy.net/galleries', text: 'Galleries' }
+          { url: 'artsy.net/institutions', text: 'Institutions' }
+          { url: 'artsy.net/shows', text: 'Shows' }
+        ]
+        tagline: 'A bunch of cool stuff at Artsy'
+        image_url: 'artsy.net/image.jpg'
+        slug: 'editorial'
+        pinned_articles: [
+          {
+            id: '5086df098523e60002000015'
+            index: 0
+          },
+          {
+            id: '5086df098523e60002000011'
+            index: 1
+          }
+        ]
+      }, (err, channel) ->
+        channel.links.length.should.equal 3
+        channel.links[0].url.should.equal 'artsy.net/galleries'
+        channel.links[1].text.should.equal 'Institutions'
+        channel.links[2].url.should.equal 'artsy.net/shows'
+        channel.tagline.should.equal 'A bunch of cool stuff at Artsy'
+        channel.image_url.should.equal 'artsy.net/image.jpg'
+        channel.slug.should.equal 'editorial'
+        channel.pinned_articles[0].id.toString().should.equal '5086df098523e60002000015'
+        channel.pinned_articles[1].id.toString().should.equal '5086df098523e60002000011'
+        done()
+
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
