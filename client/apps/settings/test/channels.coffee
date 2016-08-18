@@ -16,9 +16,9 @@ describe 'EditChannel', ->
       benv.expose $: benv.require 'jquery'
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
-      @channel = new Channel _.extend fixtures().channels, type: 'team'
+      @channel = _.extend fixtures().channels, type: 'team'
       locals = _.extend(fixtures().locals,
-        channel: @channel
+        channel: new Channel @channel
       )
       locals.sd = _.extend locals.sd, { CHANNEL: @channel }
       tmpl = resolve __dirname, '../templates/channel_edit.jade'
