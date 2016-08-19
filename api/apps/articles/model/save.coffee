@@ -43,11 +43,15 @@ setOnPublishFields = (article) =>
   article.email_metadata.author = ca or article.author?.name unless article.email_metadata?.author
   article.email_metadata.headline = article.thumbnail_title unless article.email_metadata?.headline
   article.description = article.description or getDescription(article)
+  article
 
 getDescription = (article) =>
   $ = cheerio.load(getTextSections(article))
-  text = $.text().substring(0,150)
-  console.log text
+  text = []
+  $('p').map( (i, el) ->
+    text.push $(el).text()
+  )
+  text = text.join(' ').substring(0,150).concat('...')
   text
 
 @generateSlugs = (article, cb) ->
@@ -288,8 +292,8 @@ typecastIds = (article) ->
 
 getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''
-  for section in article.sections when section.type is 'text'
-    condensedHTML = condensedHTML.concat section.body
+  _.map article.sections, (section) ->
+    condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
 
 crop = (url, options = {}) ->
