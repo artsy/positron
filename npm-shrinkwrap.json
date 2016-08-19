@@ -2205,6 +2205,11 @@
       "from": "jadeify@>=4.4.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/jadeify/-/jadeify-4.6.0.tgz"
     },
+    "jed": {
+      "version": "1.1.1",
+      "from": "jed@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/jed/-/jed-1.1.1.tgz"
+    },
     "jodid25519": {
       "version": "1.0.2",
       "from": "jodid25519@>=1.0.0 <2.0.0",
@@ -3568,6 +3573,11 @@
       "from": "sntp@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/sntp/-/sntp-1.0.9.tgz"
     },
+    "sortablejs": {
+      "version": "1.4.2",
+      "from": "sortablejs@>=1.4.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/sortablejs/-/sortablejs-1.4.2.tgz"
+    },
     "source-map": {
       "version": "0.4.4",
       "from": "source-map@>=0.4.0 <0.5.0",
@@ -3825,6 +3835,28 @@
       "version": "2.0.0",
       "from": "to-mongodb-core@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/to-mongodb-core/-/to-mongodb-core-2.0.0.tgz"
+    },
+    "tokenizer2": {
+      "version": "2.0.0",
+      "from": "tokenizer2@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/tokenizer2/-/tokenizer2-2.0.0.tgz",
+      "dependencies": {
+        "isarray": {
+          "version": "1.0.0",
+          "from": "isarray@>=1.0.0 <1.1.0",
+          "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
+        },
+        "readable-stream": {
+          "version": "2.0.6",
+          "from": "readable-stream@>=2.0.0 <2.1.0",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz"
+        },
+        "through2": {
+          "version": "2.0.1",
+          "from": "through2@>=2.0.0 <3.0.0",
+          "resolved": "https://registry.npmjs.org/through2/-/through2-2.0.1.tgz"
+        }
+      }
     },
     "topo": {
       "version": "1.1.0",
@@ -4321,6 +4353,18 @@
       "version": "3.10.0",
       "from": "yargs@>=3.10.0 <3.11.0",
       "resolved": "https://registry.npmjs.org/yargs/-/yargs-3.10.0.tgz"
+    },
+    "yoastseo": {
+      "version": "1.4.0",
+      "from": "git+https://github.com/Yoast/YoastSEO.js.git#develop",
+      "resolved": "git+https://github.com/Yoast/YoastSEO.js.git#dc33d3e7da6afc28cec4d72396e6ead37614f466",
+      "dependencies": {
+        "lodash": {
+          "version": "4.15.0",
+          "from": "lodash@>=4.14.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.15.0.tgz"
+        }
+      }
     },
     "zombie": {
       "version": "4.2.1",
