@@ -31,7 +31,6 @@
     "express": "^4.13.3",
     "express-force-ssl": "^0.3.0",
     "forever": "^0.15.1",
-    "fs": "0.0.2",
     "glossary": "^0.1.1",
     "jade": "^1.11.0",
     "joi": "^6.9.0",
@@ -60,7 +59,7 @@
     "underscore": "^1.8.3",
     "underscore.string": "^3.2.2",
     "xss": "^0.2.7",
-    "yoastseo": "git+https://github.com/Yoast/YoastSEO.js.git#develop"
+    "yoastseo": "git+https://github.com/Yoast/YoastSEO.js.git#901902291eac5f2f775134eefea00225b7054c70"
   },
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
