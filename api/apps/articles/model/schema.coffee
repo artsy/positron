@@ -150,6 +150,7 @@ denormalizedArtwork = (->
   send_body: @boolean().default(false)
   channel_id: @objectId().allow(null).default(null)
   partner_channel_id: @objectId().allow(null).default(null)
+  description: @string().allow('',null)
 ).call Joi
 
 #

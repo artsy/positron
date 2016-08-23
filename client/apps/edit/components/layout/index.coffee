@@ -76,6 +76,7 @@ module.exports = class EditLayout extends Backbone.View
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
+      description: @$('.edit-admin-description-input').val()
       email_metadata:
         headline: @$(".edit-email-form input[name='headline']").val()
         author: @$(".edit-email-form input[name='author']").val()

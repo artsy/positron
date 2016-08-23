@@ -901,6 +901,16 @@ describe 'Article', ->
         article.author.name.should.equal 'Jon Snow'
         done()
 
+    it 'saves a description', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        description: 'Just before the lines start forming, we predict where they will go.'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.description.should.containEql 'lines start forming'
+        done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->

@@ -199,6 +199,37 @@ describe 'Save', ->
         scheduled_publish_at: '123'
       })
 
+    it 'saves generated descriptions', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.description.should.containEql 'Testing 123'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: true
+        _id: '5086df098523e60002000011'
+        sections: [
+          { type: 'text', body: '<p>Testing 123</p>' }
+        ]
+        author: name: 'Kana'
+      })
+
+    it 'does not override description', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.description.should.containEql 'Do not override me'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: true
+        _id: '5086df098523e60002000011'
+        thumbnail_title: 'Thumbnail Title'
+        sections: [
+          { type: 'text', body: '<p>Testing 123</p>' }
+        ]
+        description: 'Do not override me'
+      })
+
   describe '#generateArtworks', ->
 
     it 'denormalizes artworks and adds them as an array to the section', (done) ->

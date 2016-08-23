@@ -105,11 +105,9 @@ section#edit-admin.admin-form-container.max-width-container
         label Tags
         script()
         input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
-      br
-      #edit-meta-description
+      #edit-admin-description
         label Description
-        input.bordered-input.edit-meta-description-input( style={height:"200px"} value=article.get('lead_paragraph') )
-      br
+        textarea.bordered-input.edit-admin-description-input( placeholder='Enter description')= article.get('description')
       .admin-form-right-col
         #edit-admin-publish-date
           label Publish Date

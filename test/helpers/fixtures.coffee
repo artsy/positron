@@ -17,6 +17,7 @@ module.exports = ->
     tags: ['Fair Coverage', 'Magazine']
     title: 'Top Ten Booths',
     lead_paragraph: 'Just before the lines start forming...',
+    description: 'Just before the lines start forming, we predict where they will go.',
     published: true,
     published_at: moment().add(timeCount, 'seconds').format(),
     updated_at: moment().add(timeCount, 'seconds').format(),
