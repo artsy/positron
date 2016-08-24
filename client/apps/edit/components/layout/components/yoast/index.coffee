@@ -1,0 +1,47 @@
+Backbone = require 'backbone'
+yoastSnippetPreview = require( "yoastseo" ).SnippetPreview
+yoastApp = require( "yoastseo" ).App
+Modal = -> require('simple-modal') arguments...
+template = -> require('./yoast.jade') arguments...
+
+module.exports = class YoastView extends Backbone.View
+
+  initialize: (options) ->
+    @modal = Modal
+      title: 'SEO'
+      content: "<div id='yoast-container'>"
+      removeOnClose: true
+      buttons: [
+        { text: 'Cancel', closeOnClick: true }
+        { className: 'simple-modal-close', closeOnClick: true }
+      ]
+
+    $('#yoast-container').html template
+
+    console.log options
+
+    focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
+    contentField = document.getElementById( "edit-seo__content-field" )
+
+    snippetPreview = new yoastSnippetPreview
+      targetElement: document.getElementById( "edit-seo__snippet" )
+
+    app = new yoastApp
+      snippetPreview: snippetPreview,
+      targets:
+        output: "edit-seo__output"
+      callbacks: 
+        getData: ->
+          return {
+            keyword: focusKeywordField.value,
+            text: contentField.value
+          }
+    app.refresh()
+
+    $("#edit-seo__content-field").val(options.contentField)
+    $("#snippet-editor-title").val(options.title)
+    $("#snippet-editor-slug").val(options.slug)
+
+  # focusKeywordField.addEventListener( 'change' , app.refresh.bind( app ) )
+  # contentField.addEventListener( 'change', app.refresh.bind( app ) )
+  # checkSeoButton.addEventListener( 'click', app.refresh.bind ( app ) )

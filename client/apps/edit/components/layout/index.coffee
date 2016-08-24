@@ -3,12 +3,11 @@ _s = require 'underscore.string'
 Backbone = require 'backbone'
 sd = require('sharify').data
 User = require '../../../../models/user.coffee'
+YoastView = require './components/yoast/index.coffee'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
   scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-yoastSnippetPreview = require( "yoastseo" ).SnippetPreview
-yoastApp = require( "yoastseo" ).App
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -31,7 +30,6 @@ module.exports = class EditLayout extends Backbone.View
     @toggleAstericks()
     @attachScribe()
     @$('#edit-sections-spinner').hide()
-    @setupYoast()
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
@@ -158,11 +156,10 @@ module.exports = class EditLayout extends Backbone.View
 
   checkSeo: =>
     # $("#edit-seo__content-field").val($(this.article.get("sections")[1].body).text())
-    debugger
     imageCount = 0
     fullText = []
-    fullText.push($(this.article.get("lead_paragraph")).text() + " </p> ")
-    for section in $(this.article.get("sections"))
+    fullText.push($(@article.get("lead_paragraph")).text() + " </p> ")
+    for section in $(@article.get("sections"))
       if section.type is "text"
         fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
       else if section.type is "artworks"
@@ -171,9 +168,11 @@ module.exports = class EditLayout extends Backbone.View
         imageCount += 1
     fullText.push("<img></img>") for num in [imageCount..1]
     fullText = fullText.join(' ')
-    $("#edit-seo__content-field").val(fullText).text()
-    $("#snippet-editor-title").val(this.article.get("title"))
-    $("#snippet-editor-slug").val(((this.article.get("author").name + "-" + this.article.get("thumbnail_title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-"))
+
+    yoastView = new YoastView
+      contentField: fullText
+      title: @article.get('title')
+      slug: ((@article.get("author").name + "-" + @article.get("thumbnail_title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-")
 
   onKeyup: =>
     if @article.get('published')
@@ -222,25 +221,4 @@ module.exports = class EditLayout extends Backbone.View
     @$('.edit-section-tool').removeClass 'is-active'
 
   setupYoast: ->
-    focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
-    contentField = document.getElementById( "edit-seo__content-field" )
-    checkSeoButton = document.getElementById( "seoButton" )
 
-    snippetPreview = new yoastSnippetPreview
-      targetElement: document.getElementById( "edit-seo__snippet" )
-
-    app = new yoastApp
-      snippetPreview: snippetPreview,
-      targets:
-        output: "edit-seo__output"
-      callbacks: 
-        getData: ->
-          return {
-            keyword: focusKeywordField.value,
-            text: contentField.value
-          }
-    app.refresh()
-
-    # focusKeywordField.addEventListener( 'change' , app.refresh.bind( app ) )
-    # contentField.addEventListener( 'change', app.refresh.bind( app ) )
-    checkSeoButton.addEventListener( 'click', app.refresh.bind ( app ) )
