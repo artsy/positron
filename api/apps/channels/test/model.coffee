@@ -44,6 +44,12 @@ describe 'Channel', ->
           channel._id.toString().should.equal '5086df098523e60002000018'
           done()
 
+    it 'finds a channel by a slug', (done) ->
+      fabricate 'channels', { slug: 'life-at-artsy' }, ->
+        Channel.find 'life-at-artsy', (err, channel) ->
+          channel.slug.should.equal 'life-at-artsy'
+          done()
+
   describe '#save', ->
 
     it 'saves valid channel input data', (done) ->
