@@ -18,8 +18,6 @@ module.exports = class YoastView extends Backbone.View
 
     $('#yoast-container').html template
 
-    console.log options
-
     focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
     contentField = document.getElementById( "edit-seo__content-field" )
 
@@ -42,6 +40,8 @@ module.exports = class YoastView extends Backbone.View
     $("#snippet-editor-title").val(options.title)
     $("#snippet-editor-slug").val(options.slug)
 
-  # focusKeywordField.addEventListener( 'change' , app.refresh.bind( app ) )
-  # contentField.addEventListener( 'change', app.refresh.bind( app ) )
-  # checkSeoButton.addEventListener( 'click', app.refresh.bind ( app ) )
+  events:
+    'change #simple-modal-body :input': 'onKeyup'
+
+  onKeyup: =>
+    console.log("typing...")

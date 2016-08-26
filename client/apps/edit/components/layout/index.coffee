@@ -219,6 +219,3 @@ module.exports = class EditLayout extends Backbone.View
 
   hideSectionTools: ->
     @$('.edit-section-tool').removeClass 'is-active'
-
-  setupYoast: ->
-
