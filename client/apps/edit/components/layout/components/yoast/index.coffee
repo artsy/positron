@@ -8,7 +8,7 @@ module.exports = class YoastView extends Backbone.View
 
   initialize: (options) ->
     @modal = Modal
-      title: 'SEO'
+      title: 'SEO Analyzer'
       content: "<div id='yoast-container'>"
       removeOnClose: true
       buttons: [

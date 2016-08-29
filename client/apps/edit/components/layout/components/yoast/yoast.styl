@@ -1,32 +1,176 @@
-@import "./styl/analyzer"
-
 .simple-modal-body
   overflow scroll
   bottom 5%
 .screen-reader-text
-.simple-modal-controls
 #edit-seo__content-field
 .snippet-editor__heading
+.simple-modal-controls
   display none
 
-// .wpseo-score-icon
-//   &.bad, &.ok, &.good
-//   	display: inline-block;
-// 		width: 12px;
-// 		height: 12px;
-// 		margin: 3px 10px 0 3px;
-// 		border-radius: 50%;
-// 		vertical-align: top;
-// 	&.bad
-// 		background: #dc3232;
-// 	&.ok
-// 		background: #ee7c1b;
-// 	&.good
-// 		background: #7ad03a;
-// .snippet-editor__submit
-//   display none
-// .snippet_preview
-// 	border: 1px solid #f7f7f7;
-// 	border-radius: 20px;
-// 	background-color: #fff;
-// 	position: relative;
+#snippet_title
+  color #1a0dab
+  font-size 18px
+  font-family arial,sans-serif
+  line-height 1.2
+
+#url_container
+  font-size 14px
+  color #006621
+  font-style normal
+  line-height 16px
+  font-family arial,sans-serif
+
+#meta_container
+  line-height 1.4
+  color #545454
+  font-family arial,sans-serif
+  font-size small
+
+.snippet-editor
+  &__container
+    position relative
+    cursor pointer
+  
+  &__form
+    padding 20px   
+
+  &__button
+    //swiped directly from /Users/mattdole/positron2/client/components/layout/stylesheets/form_elements.styl
+    avant-garde()
+    padding 11px 25px
+    border 1px solid gray-lighter-color
+    background transparent
+    font-size default-avant-garde-font-size - 1
+    outline none
+    transition background-color 0.25s, color 0.25s, border-color 0.25s
+    text-decoration none
+    line-height 1
+    display inline-block
+    cursor pointer
+    margin 0
+    vertical-align top
+    text-align center
+    &:hover, &:active
+      color purple-color
+    &:disabled, &.is-disabled, &[data-disabled=true]
+      background gray-lighter-color
+      color gray-dark-color
+      cursor not-allowed
+    &.avant-garde-button-dark, &.avant-garde-button-dark
+      background gray-darkest-color
+      border-color gray-darkest-color
+      color white
+      &:hover, &:active, &:focus
+        background purple-color
+        border-color purple-color
+    &.avant-garde-button-black
+      background black
+      border-color black
+      color white
+      &:hover, &:active, &:focus
+        background purple-color
+          border-color purple-color
+    &.avant-garde-button-external-link
+      position relative
+      padding-right 30px
+      &::after
+        content '.'
+        color transparent
+        position absolute
+        right 0
+        top 0
+        height calc(100% - 2px)
+        width 20px
+        background-image url(/icons/chevron_right.svg)
+        background-position left center
+        background-repeat no-repeat
+        opacity 0.2
+        transition opacity 0.3s
+      &:hover::after
+        opacity 1 
+  &__label 
+    display block
+    width 100%
+    margin-top 1em
+    position relative
+
+    &:first-child 
+      margin-top 0
+         
+  &__input 
+    display block
+    width 100%
+    margin-top 5px
+    border 1px solid color_input_border
+
+    max-width 100%
+    box-sizing border-box
+
+    &:focus 
+      border 1px solid color_input_border_focus
+      outline none
+  
+  &__preview 
+    padding 15px 20px
+
+.snippet-editor__meta-description 
+  height 70px
+
+.snippet-editor__submit 
+  margin-top 1em
+
+#meta_container 
+  clear both
+  min-height 20px
+  margin-bottom 10px
+
+.snippet-editor 
+  &__progress 
+    appearance none
+
+    border none
+
+    box-sizing border-box
+    display block
+
+    margin-top 5px
+    height 8px
+    width 100%
+    
+
+    &--fallback 
+      background-color #f7f7f7
+      height 8px
+      border 1px #bfbfbf
+    
+  
+
+  &__progress-bar 
+    width 0
+    height 100%
+    max-width 100%
+  
+
+  &__date 
+    color #808080
+    font-size 13px
+    line-height 1.4
+  
+
+  &--hidden 
+    display none
+
+.wpseo-score-icon
+  &.bad, &.ok, &.good
+  	display inline-block
+		width 12px
+		height 12px
+		margin 3px 10px 0 3px
+		border-radius 50%
+		vertical-align top
+	&.bad
+		background #dc3232
+	&.ok
+		background #ee7c1b
+	&.good
+		background #7ad03a
