@@ -8,11 +8,11 @@ module.exports = class YoastView extends Backbone.View
 
   initialize: (options) ->
     @modal = Modal
-      title: 'SEO Analyzer'
+      title: 'SEO Analysis'
       content: "<div id='yoast-container'>"
       removeOnClose: true
       buttons: [
-        { text: 'Cancel', closeOnClick: true }
+        # { text: 'Cancel', closeOnClick: true }
         { className: 'simple-modal-close', closeOnClick: true }
       ]
 
@@ -40,8 +40,5 @@ module.exports = class YoastView extends Backbone.View
     $("#snippet-editor-title").val(options.title)
     $("#snippet-editor-slug").val(options.slug)
 
-  events:
-    'change #simple-modal-body :input': 'onKeyup'
-
-  onKeyup: =>
-    console.log("typing...")
+    $('#edit-seo__focus-keyword').on 'keyup', (e) =>
+      snippetPreview.changedInput()
