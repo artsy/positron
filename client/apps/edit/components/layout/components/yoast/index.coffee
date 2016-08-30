@@ -12,7 +12,6 @@ module.exports = class YoastView extends Backbone.View
       content: "<div id='yoast-container'>"
       removeOnClose: true
       buttons: [
-        # { text: 'Cancel', closeOnClick: true }
         { className: 'simple-modal-close', closeOnClick: true }
       ]
 
@@ -35,6 +34,7 @@ module.exports = class YoastView extends Backbone.View
             text: contentField.value
           }
     app.refresh()
+    snippetPreview.changedInput()
 
     $("#edit-seo__content-field").val(options.contentField)
     $("#snippet-editor-title").val(options.title)

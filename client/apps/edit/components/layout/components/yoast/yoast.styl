@@ -1,12 +1,15 @@
 .simple-modal-body
   overflow scroll
   bottom 5%
+  
 .screen-reader-text
 #edit-seo__content-field
 .snippet-editor__heading
-// .simple-modal-controls
   display none
 
+#edit-seo__output
+  margin-bottom 10px
+  
 #snippet_title
   color #1a0dab
   font-size 18px
@@ -70,24 +73,7 @@
       &:hover, &:active, &:focus
         background purple-color
           border-color purple-color
-    &.avant-garde-button-external-link
-      position relative
-      padding-right 30px
-      &::after
-        content '.'
-        color transparent
-        position absolute
-        right 0
-        top 0
-        height calc(100% - 2px)
-        width 20px
-        background-image url(/icons/chevron_right.svg)
-        background-position left center
-        background-repeat no-repeat
-        opacity 0.2
-        transition opacity 0.3s
-      &:hover::after
-        opacity 1 
+        
   &__label 
     display block
     width 100%
@@ -137,40 +123,41 @@
     height 8px
     width 100%
     
-
     &--fallback 
       background-color #f7f7f7
       height 8px
       border 1px #bfbfbf
     
-  
-
   &__progress-bar 
     width 0
     height 100%
     max-width 100%
   
-
   &__date 
     color #808080
     font-size 13px
     line-height 1.4
   
-
   &--hidden 
     display none
 
 .wpseo-score-icon
-  &.bad, &.ok, &.good
+  &.bad, &.ok, &.good, &.na
   	display inline-block
 		width 12px
 		height 12px
 		margin 3px 10px 0 3px
 		border-radius 50%
 		vertical-align top
+  &.na
+    background gray-dark-color
 	&.bad
 		background #dc3232
 	&.ok
 		background #ee7c1b
 	&.good
 		background #7ad03a
+
+#snippet_citeBase
+#snippet_cite
+  float left
