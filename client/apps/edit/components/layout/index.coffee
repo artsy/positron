@@ -157,22 +157,22 @@ module.exports = class EditLayout extends Backbone.View
   checkSeo: =>
     # $("#edit-seo__content-field").val($(this.article.get("sections")[1].body).text())
     imageCount = 0
-    fullText = []
-    fullText.push($(@article.get("lead_paragraph")).text() + " </p> ")
+    @fullText = []
+    @fullText.push($(@article.get("lead_paragraph")).text() + " </p> ")
     for section in $(@article.get("sections"))
       if section.type is "text"
-        fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
+        @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
       else if section.type is "artworks"
         imageCount += 1
       else if section.type is "image"
         imageCount += 1
-    fullText.push("<img></img>") for num in [imageCount..1]
-    fullText = fullText.join(' ')
+    @fullText.push("<img></img>") for num in [imageCount..1]
+    @fullText = @fullText.join(' ')
 
     yoastView = new YoastView
-      contentField: fullText
+      contentField: @fullText
       title: @article.get('title')
-      slug: ((@article.get("author").name + "-" + @article.get("thumbnail_title").replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-")
+      slug: ((@article.get("author")?.name + "-" + @article.get("thumbnail_title")?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-")
 
   onKeyup: =>
     if @article.get('published')

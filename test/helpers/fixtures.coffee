@@ -16,7 +16,7 @@ module.exports = ->
     tier: 1,
     tags: ['Fair Coverage', 'Magazine']
     title: 'Top Ten Booths',
-    lead_paragraph: 'Just before the lines start forming...',
+    lead_paragraph: '<p>Just before the lines start forming...</p>',
     description: 'Just before the lines start forming, we predict where they will go.',
     published: true,
     published_at: moment().add(timeCount, 'seconds').format(),
@@ -45,7 +45,7 @@ module.exports = ->
       }
       {
         type: 'text',
-        body: 'Check out this video art:',
+        body: '<p>Check out this video art:</p>',
       }
       {
         type: 'video',

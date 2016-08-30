@@ -5,6 +5,7 @@ Article = require '../../../../../models/article'
 Channel = require '../../../../../models/channel'
 Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
+rewire = require 'rewire'
 { resolve } = require 'path'
 
 describe 'EditLayout', ->
@@ -15,18 +16,22 @@ describe 'EditLayout', ->
       sd = _.extend fixtures().locals.sd,
         CURRENT_CHANNEL: @channel = new Channel fixtures().channels
       locals = _.extend fixtures().locals,
-        article: @article = new Article fixtures().article
+        article: @article = new Article fixtures().articles
         sd: sd
       benv.render tmpl, locals, =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
-        @EditLayout = require '../index.coffee'
+        @EditLayout = rewire '../index.coffee'
         sinon.stub @EditLayout.prototype, 'attachScribe'
+        @EditLayout.__set__ 'YoastView', sinon.stub()
         sinon.stub _, 'debounce'
         $.fn.autosize = sinon.stub()
         _.debounce.callsArg 0
-        @view = new @EditLayout el: $('#layout-content'), article: @article, channel: @channel
+        @view = new @EditLayout
+          el: $('#layout-content')
+          article: @article
+          channel: @channel
         @view.article.sync = sinon.stub()
         done()
 
@@ -137,3 +142,11 @@ describe 'EditLayout', ->
       @view.finished = false
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'do you wish to continue'
+
+  describe '#checkSeo', ->
+
+    it 'initializes yoast on button click', ->
+      $('#seoButton').click()
+      _.defer =>
+        @view.fullText.should.containEql 'Just before the lines start forming...'
+        @view.fullText.should.containEql 'Check out this video art:'

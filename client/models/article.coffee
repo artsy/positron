@@ -28,6 +28,8 @@ module.exports = class Article extends Backbone.Model
   finishedContent: ->
     @get('title')?.length > 0
 
+  getSlug: ->
+
   finishedThumbnail: ->
     @get('thumbnail_title')?.length > 0 and
     @get('thumbnail_image')?.length > 0
