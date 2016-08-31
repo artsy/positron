@@ -94,3 +94,13 @@ describe 'Retrieve', ->
         query.fair_ids['$elemMatch']['$in'][0].toString().should.equal '5086df098523e60002000016'
         query.fair_ids['$elemMatch']['$in'][1].toString().should.equal '5086df098523e60002000015'
         done()
+
+    it 'finds articles by multiple ids', (done) ->
+      Retrieve.toQuery {
+        ids: ['54276766fd4f50996aeca2b8', '54276766fd4f50996aeca2b7']
+        published: true
+      }, (err, query) =>
+        query._id['$in'].should.be.ok()
+        query._id['$in'][0].toString().should.equal '54276766fd4f50996aeca2b8'
+        query._id['$in'][1].toString().should.equal '54276766fd4f50996aeca2b7'
+        done()

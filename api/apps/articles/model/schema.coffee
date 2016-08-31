@@ -186,4 +186,5 @@ denormalizedArtwork = (->
   layout: @string()
   has_video: @boolean()
   channel_id: @objectId()
+  ids: @array()
 ).call Joi
