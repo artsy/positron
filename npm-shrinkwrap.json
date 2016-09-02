@@ -4152,7 +4152,8 @@
           "dependencies": {
             "isarray": {
               "version": "0.0.1",
-              "from": "isarray@>=0.0.1 <0.1.0"
+              "from": "isarray@0.0.1",
+              "resolved": "http://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
             }
           }
         },
