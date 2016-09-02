@@ -4336,7 +4336,7 @@
     "yoastseo": {
       "version": "1.2.2",
       "from": "git+https://github.com/artsy/YoastSEO.js.git#develop",
-      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#1412b37d2a2195a7ccd9a14b283de1c8ac82a69c"
+      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#f3111cf8fd49fe09bbcbb6135397e8a8879fce29"
     },
     "zombie": {
       "version": "4.2.1",
