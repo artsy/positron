@@ -46,3 +46,4 @@ module.exports = class YoastView extends Backbone.View
 
   onKeyup: =>
     @snippetPreview.changedInput()
+
