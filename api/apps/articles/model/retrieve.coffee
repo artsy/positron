@@ -11,7 +11,7 @@ moment = require 'moment'
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
-      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id', 'channel_id'
+      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id', 'channel_id', 'ids'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -64,6 +64,11 @@ moment = require 'moment'
       { sections: { $elemMatch: { type: 'video' } } }
       { 'hero_section.type': 'video' }
     ) if input.has_video
+
+    # Find multiple articles by id
+    if input.ids
+      ids = _.map input.ids, (id) -> ObjectId(id)
+      query._id = { $in: ids }
 
     callback null, query, limit, offset, sortParamToQuery(sort)
 
