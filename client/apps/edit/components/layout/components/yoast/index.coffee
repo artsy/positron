@@ -34,6 +34,7 @@ module.exports = class YoastView extends Backbone.View
             text: contentField.value
           }
     app.refresh()
+    $('.snippet-editor__button').addClass 'avant-garde-button'
     @snippetPreview.changedInput()
 
     $("#edit-seo__content-field").val(options.contentField)
