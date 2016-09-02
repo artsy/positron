@@ -3,6 +3,7 @@ _s = require 'underscore.string'
 Backbone = require 'backbone'
 sd = require('sharify').data
 User = require '../../../../models/user.coffee'
+YoastView = require './components/yoast/index.coffee'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 try
   Scribe = require 'scribe-editor'
@@ -148,9 +149,29 @@ module.exports = class EditLayout extends Backbone.View
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
     'blur #edit-title': 'prefillThumbnailTitle'
+    'click #seoButton': 'checkSeo'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
+
+  checkSeo: =>
+    imageCount = 0
+    @fullText = []
+    @fullText.push(" <p> " + $(@article.get("lead_paragraph")).text() + " </p> ")
+    for section in $(@article.get("sections"))
+      if section.type is "text"
+        @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
+      else if section.type is "artworks"
+        imageCount += 1
+      else if section.type is "image"
+        imageCount += 1
+    @fullText.push("<img></img>") for num in [imageCount..1]
+    @fullText = @fullText.join(' ')
+      
+    yoastView = new YoastView
+      contentField: @fullText
+      title: @article.get('title')
+      slug: @article.getSlug()
 
   onKeyup: =>
     if @article.get('published')

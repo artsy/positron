@@ -13,3 +13,7 @@ section#edit-content
       p= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container
+  #edit-seo
+    if sd.CURRENT_CHANNEL.get('type') === 'editorial' 
+      button#seoButton
+        include ../../public/icons/edit_seo.svg
