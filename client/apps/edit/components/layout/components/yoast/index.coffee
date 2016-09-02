@@ -14,17 +14,17 @@ module.exports = class YoastView extends Backbone.View
       buttons: [
         { className: 'simple-modal-close', closeOnClick: true }
       ]
-
+    $('.simple-modal-body').addClass 'yoast-modal'
     $('#yoast-container').html template
 
     focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
     contentField = document.getElementById( "edit-seo__content-field" )
 
-    snippetPreview = new yoastSnippetPreview
+    @snippetPreview = new yoastSnippetPreview
       targetElement: document.getElementById( "edit-seo__snippet" )
 
     app = new yoastApp
-      snippetPreview: snippetPreview,
+      snippetPreview: @snippetPreview,
       targets:
         output: "edit-seo__output"
       callbacks: 
@@ -34,11 +34,14 @@ module.exports = class YoastView extends Backbone.View
             text: contentField.value
           }
     app.refresh()
-    snippetPreview.changedInput()
+    @snippetPreview.changedInput()
 
     $("#edit-seo__content-field").val(options.contentField)
     $("#snippet-editor-title").val(options.title)
     $("#snippet-editor-slug").val(options.slug)
 
     $('#edit-seo__focus-keyword').on 'keyup', (e) =>
-      snippetPreview.changedInput()
+      @onKeyup()
+
+  onKeyup: =>
+    @snippetPreview.changedInput()

@@ -155,10 +155,9 @@ module.exports = class EditLayout extends Backbone.View
     @openTab $(e.target).index()
 
   checkSeo: =>
-    # $("#edit-seo__content-field").val($(this.article.get("sections")[1].body).text())
     imageCount = 0
     @fullText = []
-    @fullText.push($(@article.get("lead_paragraph")).text() + " </p> ")
+    @fullText.push(" <p> " + $(@article.get("lead_paragraph")).text() + " </p> ")
     for section in $(@article.get("sections"))
       if section.type is "text"
         @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
@@ -168,11 +167,11 @@ module.exports = class EditLayout extends Backbone.View
         imageCount += 1
     @fullText.push("<img></img>") for num in [imageCount..1]
     @fullText = @fullText.join(' ')
-
+      
     yoastView = new YoastView
       contentField: @fullText
       title: @article.get('title')
-      slug: ((@article.get("author")?.name + "-" + @article.get("thumbnail_title")?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,"")).toLowerCase()).replace(/\ /g,"-")
+      slug: @article.getSlug()
 
   onKeyup: =>
     if @article.get('published')

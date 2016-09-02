@@ -14,13 +14,12 @@ describe 'YoastView', ->
       tmpl = $('<div id="yoast-container"></div>')
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
-      @YoastView = rewire '../index.coffee'
+      @YoastView = benv.requireWithJadeify '../index.coffee', ['template']
       @YoastView.__set__ 'Modal', sinon.stub()
-      @YoastView.__set__ 'yoastSnippetPreview', -> { changedInput: -> }
-      @YoastView.__set__ 'yoastApp', -> { refresh: -> }
+      @keyup = sinon.stub @YoastView.prototype, 'onKeyup'
+      $('body').html '<div id="yoast-container"></div>'
 
       @view = new @YoastView
-        el: tmpl
         contentField: 'Testing This Content Field'
         title: 'Test Title'
         slug: 'test-slug'
@@ -29,7 +28,25 @@ describe 'YoastView', ->
   afterEach ->
     benv.teardown()
     Backbone.sync.restore()
+    @YoastView::onKeyup.restore()
 
   describe '#initialize', ->
 
-    xit 'adds yoast html to #yoast-container', ->
+    it 'adds yoast html to #yoast-container', ->
+      $('#yoast-container').html().should.containEql 'edit-seo__snippet'
+      $('#yoast-container').html().should.containEql 'edit-seo__content-field'
+      $('#yoast-container').html().should.containEql 'edit-seo__focus-keyword'
+
+    it 'adds content, title, and slug to inputs', ->
+      $('#edit-seo__content-field').val().should.equal 'Testing This Content Field'
+      $('#snippet-editor-title').val().should.equal 'Test Title'
+      $('#snippet-editor-slug').val().should.equal 'test-slug'
+
+  describe '#onKeyup', ->
+
+    it 'changes the output when the user adds a keyword', (done) ->
+      $('#edit-seo__focus-keyword').val('Content')
+      $('#edit-seo__focus-keyword').trigger 'keyup'
+      _.defer =>
+        @keyup.called.should.be.true()
+        done()

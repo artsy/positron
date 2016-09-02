@@ -14,5 +14,6 @@ section#edit-content
   .edit-body-container
   #edit-sections.edit-body-container
   #edit-seo
-    button#seoButton
-      include ./edit_seo.svg
+    if sd.CURRENT_CHANNEL.get('type') === 'editorial' 
+      button#seoButton
+        include ./edit_seo.svg

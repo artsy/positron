@@ -29,6 +29,7 @@ module.exports = class Article extends Backbone.Model
     @get('title')?.length > 0
 
   getSlug: ->
+    ((@get('author')?.name + '-' + @get('thumbnail_title')?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,'')).toLowerCase()).replace(/\ /g,'-')
 
   finishedThumbnail: ->
     @get('thumbnail_title')?.length > 0 and
