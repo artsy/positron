@@ -2253,9 +2253,9 @@
       "resolved": "https://registry.npmjs.org/jsbn/-/jsbn-0.1.0.tgz"
     },
     "jsdom": {
-      "version": "9.4.5",
+      "version": "9.5.0",
       "from": "jsdom@>=4.0.0",
-      "resolved": "https://registry.npmjs.org/jsdom/-/jsdom-9.4.5.tgz"
+      "resolved": "https://registry.npmjs.org/jsdom/-/jsdom-9.5.0.tgz"
     },
     "json-schema": {
       "version": "0.2.2",
@@ -4152,8 +4152,7 @@
           "dependencies": {
             "isarray": {
               "version": "0.0.1",
-              "from": "isarray@0.0.1",
-              "resolved": "http://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+              "from": "isarray@>=0.0.1 <0.1.0"
             }
           }
         },
@@ -4337,7 +4336,7 @@
     "yoastseo": {
       "version": "1.2.2",
       "from": "git+https://github.com/artsy/YoastSEO.js.git#develop",
-      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#f3111cf8fd49fe09bbcbb6135397e8a8879fce29"
+      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#a1bbf40ec2dbc807412ca57374a65d95e37c0fcd"
     },
     "zombie": {
       "version": "4.2.1",
