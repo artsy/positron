@@ -158,14 +158,26 @@ module.exports = class EditLayout extends Backbone.View
     imageCount = 0
     textIndex = 0
     @fullText = []
-    if $(@article.get('lead_paragraph')).text() isnt ''
+    if $(@article.get('lead_paragraph')).text()
       @fullText.push(' <p> ' + $(@article.get('lead_paragraph')).text() + ' </p> ')
       textIndex += 1
 
     for section in $(@article.get('sections'))
       if section.type is 'text' && textIndex is 0
-        @fullText.push(' <p> ' + $(section.body).find('p').andSelf().filter('p:first').text() + ' </p> ')
-        @fullText.push($(section.body).find('p').andSelf().filter('p:not(:first)').text())
+        @fullText.push(
+          ' <p> ' + 
+          $(section.body)
+          .find('p')
+          .andSelf()
+          .filter('p:first')
+          .text()
+           + ' </p> ')
+        @fullText.push(
+          $(section.body)
+          .find('p')
+          .andSelf()
+          .filter('p:not(:first)')
+          .text())
         textIndex += 1
       else if section.type is 'text'
         @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
