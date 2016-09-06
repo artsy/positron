@@ -156,18 +156,38 @@ module.exports = class EditLayout extends Backbone.View
 
   checkSeo: =>
     imageCount = 0
+    textIndex = 0
     @fullText = []
-    @fullText.push(" <p> " + $(@article.get("lead_paragraph")).text() + " </p> ")
-    for section in $(@article.get("sections"))
-      if section.type is "text"
+    if $(@article.get('lead_paragraph')).text()
+      @fullText.push(' <p> ' + $(@article.get('lead_paragraph')).text() + ' </p> ')
+      textIndex += 1
+
+    for section in $(@article.get('sections'))
+      if section.type is 'text' && textIndex is 0
+        @fullText.push(
+          ' <p> ' + 
+          $(section.body)
+          .find('p')
+          .andSelf()
+          .filter('p:first')
+          .text()
+           + ' </p> ')
+        @fullText.push(
+          $(section.body)
+          .find('p')
+          .andSelf()
+          .filter('p:not(:first)')
+          .text())
+        textIndex += 1
+      else if section.type is 'text'
         @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
-      else if section.type is "artworks"
+      else if section.type is 'artworks'
         imageCount += 1
-      else if section.type is "image"
+      else if section.type is 'image'
         imageCount += 1
-    @fullText.push("<img></img>") for num in [imageCount..1]
+    @fullText.push('<img></img>') for num in [imageCount..1]
     @fullText = @fullText.join(' ')
-      
+    
     yoastView = new YoastView
       contentField: @fullText
       title: @article.get('title')
