@@ -188,9 +188,15 @@ module.exports = class EditLayout extends Backbone.View
     @fullText.push('<img></img>') for num in [imageCount..1]
     @fullText = @fullText.join(' ')
     
+    @yoastTitle = ''
+    if @article.get('thumbnail_title')
+      @yoastTitle = @article.get('thumbnail_title')
+    else
+      @yoastTitle = @article.get('title')
+
     yoastView = new YoastView
       contentField: @fullText
-      title: @article.get('thumbnail_title')
+      title: @yoastTitle
       slug: @article.getSlug()
 
   onKeyup: =>
