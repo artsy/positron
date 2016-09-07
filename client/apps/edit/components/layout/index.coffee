@@ -190,7 +190,7 @@ module.exports = class EditLayout extends Backbone.View
     
     yoastView = new YoastView
       contentField: @fullText
-      title: @article.get('title')
+      title: @article.get('thumbnail_title')
       slug: @article.getSlug()
 
   onKeyup: =>
