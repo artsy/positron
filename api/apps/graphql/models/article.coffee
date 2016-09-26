@@ -2,4 +2,4 @@
 { inputSchema } = require '../../articles/model/schema'
 _ = require 'underscore'
 
-module.exports = model('article', _.omit inputSchema, 'hero_section', 'sections')
+module.exports = model('article', _.omit inputSchema, 'hero_section')
