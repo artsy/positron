@@ -24,6 +24,7 @@ app.use require './apps/shows'
 app.use require './apps/users'
 app.use require './apps/curations'
 app.use require './apps/channels'
+app.use require './apps/graphql'
 
 # Moar middleware
 app.use notFound
