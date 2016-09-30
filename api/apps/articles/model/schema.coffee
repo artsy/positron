@@ -64,7 +64,7 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
+  # hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
   sections: @array().items([
     imageSection
     videoSection
@@ -157,6 +157,7 @@ denormalizedArtwork = (->
 # Query Schema
 #
 @querySchema = (->
+  id: @objectId()
   access_token: @string()
   author_id: @objectId()
   published: @boolean()
@@ -165,7 +166,7 @@ denormalizedArtwork = (->
   section_id: @objectId()
   artist_id: @objectId()
   artwork_id: @objectId()
-  fair_ids: @array()
+  fair_ids: @array().items(@objectId())
   fair_id: @objectId()
   fair_programming_id: @objectId()
   fair_artsy_id: @objectId()
@@ -180,11 +181,11 @@ denormalizedArtwork = (->
   super_article_for: @objectId()
   q: @string()
   all_by_author: @objectId()
-  tags: @array()
+  tags: @array().items(@string())
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()
   has_video: @boolean()
   channel_id: @objectId()
-  ids: @array()
+  ids: @array().items(@objectId())
 ).call Joi
