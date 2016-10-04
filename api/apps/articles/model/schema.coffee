@@ -6,14 +6,14 @@ Joi.objectId = require('joi-objectid') Joi
 # Input Schema
 #
 imageSection = (->
-  @object().keys
+  @object().meta(name: 'Image').keys
     type: @string().valid('image')
     url: @string().allow('', null)
     caption: @string().allow('', null)
 ).call Joi
 
 videoSection = (->
-  @object().keys
+  @object().meta(name: 'Video').keys
     type: @string().valid('video')
     url: @string().allow('', null)
     cover_image_url: @string().allow('', null)
@@ -22,7 +22,7 @@ videoSection = (->
 ).call Joi
 
 fullscreenSection = (->
-  @object().keys
+  @object().meta(name: 'Fullscreen').keys
     type: @string().valid('fullscreen')
     title: @string().allow('',null)
     intro: @string().allow('',null)
@@ -31,7 +31,7 @@ fullscreenSection = (->
 ).call Joi
 
 denormalizedArtwork = (->
-  @object().keys
+  @object().meta(name: 'Artwork').keys
     type: @string().valid('artwork').default('artwork')
     id: @string().allow('', null)
     slug: @string().allow('', null)
@@ -64,39 +64,39 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  # hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
+  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
   sections: @array().items([
     imageSection
     videoSection
-    @object().keys
+    @object().meta(name: 'Callout').keys
       type: @string().valid('callout')
       thumbnail_url: @string().allow('',null)
       text: @string().allow('',null)
       article: @string().allow('',null)
       hide_image: @boolean().default(false)
       top_stories: @boolean().default(false)
-    @object().keys
+    @object().meta(name: 'Embed').keys
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
       layout: @string().allow('',null)
-    @object().keys
+    @object().meta(name: 'Text').keys
       type: @string().valid('text')
       body: @string().allow('', null)
-    @object().keys
+    @object().meta(name: 'Toc').keys
       type: @string().valid('toc')
       links: @array().items(
         @object().keys
           name: @string().allow('', null)
           value: @string().allow('', null)
       ).allow(null).default([])
-    @object().keys
+    @object().meta(name: 'Artworks').keys
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       artworks: @array().items(denormalizedArtwork).allow(null).default([])
-    @object().keys
+    @object().meta(name: 'Slideshow').keys
       type: @string().valid('slideshow')
       items: @array().items [
         imageSection
@@ -105,7 +105,7 @@ denormalizedArtwork = (->
           type: @string().valid('artwork')
           id: @string()
       ]
-    @object().keys
+    @object().meta(name: 'ImageSet').keys
       type: 'image_set'
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)

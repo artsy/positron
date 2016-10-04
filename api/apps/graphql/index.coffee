@@ -19,8 +19,6 @@ api.use (ctx, next) ->
   return next() unless ctx.req.query.article
   return new Promise (resolve, reject) ->
     find ctx.req.query.article.args.id, (err, article) ->
-      console.log err
-      console.log article
       ctx.res.article = article
       next()
       resolve()
