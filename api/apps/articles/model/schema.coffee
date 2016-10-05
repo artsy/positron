@@ -6,14 +6,20 @@ Joi.objectId = require('joi-objectid') Joi
 # Input Schema
 #
 imageSection = (->
-  @object().meta(name: 'Image').keys
+  @object().meta(
+    name: 'Image'
+    isTypeOf: (data) => data.type is 'image'
+  ).keys
     type: @string().valid('image')
     url: @string().allow('', null)
     caption: @string().allow('', null)
 ).call Joi
 
 videoSection = (->
-  @object().meta(name: 'Video').keys
+  @object().meta(
+    name: 'Video'
+    isTypeOf: (data) => data.type is 'video'
+  ).keys
     type: @string().valid('video')
     url: @string().allow('', null)
     cover_image_url: @string().allow('', null)
@@ -22,7 +28,10 @@ videoSection = (->
 ).call Joi
 
 fullscreenSection = (->
-  @object().meta(name: 'Fullscreen').keys
+  @object().meta(
+    name: 'Fullscreen'
+    isTypeOf: (data) => data.type is 'fullscreen'
+  ).keys
     type: @string().valid('fullscreen')
     title: @string().allow('',null)
     intro: @string().allow('',null)
