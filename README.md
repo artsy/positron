@@ -44,6 +44,11 @@ brew install mongodb
 ```
 mongod
 ```
+- Install and run elasticsearch
+```
+brew install elasticsearch
+elasticsearch -d
+```
 - Start the server
 ```
 make s

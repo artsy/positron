@@ -7,7 +7,7 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = Save = require './save'
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor, removeFromSearch } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -80,7 +80,8 @@ Q = require 'bluebird-q'
 # Destroy
 #
 @destroy = (id, callback) ->
-  db.articles.remove { _id: ObjectId(id) }, callback
+  db.articles.remove { _id: ObjectId(id) }, =>
+    removeFromSearch id, callback
 
 #
 # JSON views

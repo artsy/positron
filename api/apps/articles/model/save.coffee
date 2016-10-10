@@ -1,6 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
+search = require '../../../lib/elasticsearch'
 User = require '../../users/model'
 async = require 'async'
 Joi = require 'joi'
@@ -150,6 +151,41 @@ getDescription = (article) =>
     article.sections = newSections
     cb(null, article)
 
+@indexForSearch = (article, cb) ->
+  if article.sections
+    sections = for section in article.sections
+      section.body
+
+  search.client.index(
+    index: search.index,
+    type: 'article',
+    id: article.id,
+    body:
+      title: article.title
+      slug: article.slug
+      published: article.published
+      date: article.date
+      author: article.author and article.author.name or ''
+      tags: article.tags
+      lead_paragraph: stripHtmlTags(article.lead_paragraph)
+      body: sections and stripHtmlTags(sections.join(' ')) or ''
+    , (error, response) ->
+      console.log(error) if error
+  )
+
+  cb(article)
+
+@removeFromSearch = (id, cb) ->
+  search.client.delete(
+    index: search.index
+    type: 'article'
+    id: id
+  , (error, response) ->
+      console.log(error) if error
+  )
+
+  cb(id)
+
 denormalizedArtworkData = (artwork) ->
   artwork = new Backbone.Model artwork
   AdditionalImage = Backbone.Model.extend Image(SECURE_IMAGES_URL)
@@ -196,10 +232,12 @@ getPartnerLink = (artwork) ->
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
-    @sendArticleToSailthru article, =>
-      db.articles.save sanitize(typecastIds article), callback
+    @indexForSearch article, =>
+      @sendArticleToSailthru article, =>
+        db.articles.save sanitize(typecastIds article), callback
   else
-    db.articles.save sanitize(typecastIds article), callback
+    @indexForSearch article, =>
+      db.articles.save sanitize(typecastIds article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
@@ -289,6 +327,12 @@ typecastIds = (article) ->
   , (err, response) =>
     debug err if err
     cb()
+
+stripHtmlTags = (str) ->
+  if (str == null)
+    return ''
+  else
+    String(str).replace /<\/?[^>]+>/g, ''
 
 getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''

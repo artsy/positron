@@ -10,16 +10,23 @@ gravity = require('antigravity').server
 app = require('express')()
 bodyParser = require 'body-parser'
 sinon = require 'sinon'
+search = require '../../../../lib/elasticsearch'
+sleep = require('sleep')
 
 describe 'Article', ->
 
   before (done) ->
     app.use '/__gravity', gravity
     @server = app.listen 5000, ->
-      done()
+      search.client.indices.create
+        index: 'articles_' + process.env.NODE_ENV
+      , ->
+        done()
 
   after ->
     @server.close()
+    search.client.indices.delete
+      index: 'articles_' + process.env.NODE_ENV
 
   beforeEach (done) ->
     empty ->
@@ -682,6 +689,22 @@ describe 'Article', ->
         article.keywords.join(',').should.equal 'cool,art,Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,kana'
         done()
 
+    it 'indexes the article in elasticsearch on save', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        title: 'foo article'
+        published: true
+      }, 'foo', (err, article) ->
+        return done err if err
+        sleep.sleep 1
+        search.client.search(
+          index: search.index
+          q: 'title:foo'
+          , (error, response) ->
+            response.hits.hits[0]._source.title.should.equal 'foo article'
+            done()
+        )
+
     it 'saves Super Articles', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
@@ -948,6 +971,20 @@ describe 'Article', ->
           db.articles.count (err, count) ->
             count.should.equal 10
             done()
+
+    it 'removes the article from elasticsearch', (done) ->
+      fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
+        sleep.sleep 1
+        Article.destroy '5086df098523e60002000019', (err) ->
+          sleep.sleep 1
+
+          search.client.search(
+            index: search.index
+            q: 'title:quux'
+          , (error, response) ->
+            response.hits.hits.length.should.equal 0
+            done()
+          )
 
   describe '#present', ->
 
