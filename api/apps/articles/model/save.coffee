@@ -161,13 +161,15 @@ getDescription = (article) =>
     type: 'article',
     id: article.id,
     body:
-      title: article.title
       slug: article.slug
+      title: article.title
+      description: article.description
       published: article.published
-      date: article.date
+      published_at: article.published_at
+      scheduled_publish_at: article.scheduled_publish_at
       author: article.author and article.author.name or ''
+      featured: article.featured
       tags: article.tags
-      lead_paragraph: stripHtmlTags(article.lead_paragraph)
       body: sections and stripHtmlTags(sections.join(' ')) or ''
     , (error, response) ->
       console.log(error) if error
