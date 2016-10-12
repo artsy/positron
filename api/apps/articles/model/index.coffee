@@ -81,7 +81,8 @@ Q = require 'bluebird-q'
 #
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, =>
-    removeFromSearch id, callback
+    removeFromSearch id
+    callback(id)
 
 #
 # JSON views

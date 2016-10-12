@@ -11,7 +11,6 @@ app = require('express')()
 bodyParser = require 'body-parser'
 sinon = require 'sinon'
 search = require '../../../../lib/elasticsearch'
-sleep = require('sleep')
 
 describe 'Article', ->
 
@@ -696,14 +695,15 @@ describe 'Article', ->
         published: true
       }, 'foo', (err, article) ->
         return done err if err
-        sleep.sleep 1
-        search.client.search(
-          index: search.index
-          q: 'title:foo'
-          , (error, response) ->
-            response.hits.hits[0]._source.title.should.equal 'foo article'
-            done()
-        )
+        setTimeout( =>
+          search.client.search(
+            index: search.index
+            q: 'name:foo'
+            , (error, response) ->
+              response.hits.hits[0]._source.name.should.equal 'foo article'
+              done()
+          )
+        , 1000)
 
     it 'saves Super Articles', (done) ->
       Article.save {
@@ -974,17 +974,18 @@ describe 'Article', ->
 
     it 'removes the article from elasticsearch', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
-        sleep.sleep 1
-        Article.destroy '5086df098523e60002000019', (err) ->
-          sleep.sleep 1
-
-          search.client.search(
-            index: search.index
-            q: 'title:quux'
-          , (error, response) ->
-            response.hits.hits.length.should.equal 0
-            done()
-          )
+        setTimeout( =>
+          Article.destroy '5086df098523e60002000019', (err) ->
+            setTimeout( =>
+              search.client.search(
+                index: search.index
+                q: 'title:quux'
+              , (error, response) ->
+                response.hits.hits.length.should.equal 0
+                done()
+              )
+            , 1000)
+        , 1000)
 
   describe '#present', ->
 

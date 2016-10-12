@@ -162,11 +162,12 @@ getDescription = (article) =>
     id: article.id,
     body:
       slug: article.slug
-      title: article.title
+      name: article.title
       description: article.description
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
+      visible_to_public: article.published and sections and sections.length > 0
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: article.tags
@@ -175,9 +176,7 @@ getDescription = (article) =>
       console.log(error) if error
   )
 
-  cb(article)
-
-@removeFromSearch = (id, cb) ->
+@removeFromSearch = (id) ->
   search.client.delete(
     index: search.index
     type: 'article'
@@ -185,8 +184,6 @@ getDescription = (article) =>
   , (error, response) ->
       console.log(error) if error
   )
-
-  cb(id)
 
 denormalizedArtworkData = (artwork) ->
   artwork = new Backbone.Model artwork
@@ -234,12 +231,12 @@ getPartnerLink = (artwork) ->
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
-    @indexForSearch article, =>
-      @sendArticleToSailthru article, =>
-        db.articles.save sanitize(typecastIds article), callback
-  else
-    @indexForSearch article, =>
+    @indexForSearch article
+    @sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
+  else
+    @indexForSearch article
+    db.articles.save sanitize(typecastIds article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
