@@ -133,10 +133,10 @@ denormalizedArtwork = (->
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
   contributing_authors: @array().items([
-    @object().keys
+    @object().meta(name: 'ContributingAuthor').keys
       id: @objectId().allow(null)
       name: @string().allow('', null)
-    ]).default([])
+  ]).default([])
   email_metadata: @object().keys
     image_url: @string().allow('',null)
     headline: @string().allow('',null)
@@ -160,6 +160,7 @@ denormalizedArtwork = (->
   channel_id: @objectId().allow(null).default(null)
   partner_channel_id: @objectId().allow(null).default(null)
   description: @string().allow('',null)
+  slug: @string().allow(null)
 ).call Joi
 
 #
