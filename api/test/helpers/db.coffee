@@ -22,6 +22,5 @@ fixturize = (collection, data) ->
   data
 
 @empty = (callback) =>
-  console.log @db.collections
   cb = _.after @db.collections.length, callback
   @db[col].drop(cb) for col in @db.collections
