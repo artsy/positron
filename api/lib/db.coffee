@@ -9,8 +9,11 @@ path = require 'path'
 { MONGOHQ_URL } = process.env
 debug = require('debug') 'api'
 
+console.log 'here'
+console.log MONGOHQ_URL
 collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels']
 db = mongojs MONGOHQ_URL, collections
+
 exit = (msg) -> (err) ->
   debug msg
   debug msg, err if msg is 'Mongo Error'
