@@ -22,5 +22,7 @@ fixturize = (collection, data) ->
   data
 
 @empty = (callback) =>
-  cb = _.after @db.collections.length, callback
-  @db[col].drop(cb) for col in @db.collections
+  @db.getCollectionNames (err, names) =>
+    return callback() if names.length is 0
+    cb = _.after names.length, callback
+    @db.collection(col).drop(cb) for col in names
