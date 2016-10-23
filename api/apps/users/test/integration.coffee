@@ -40,12 +40,6 @@ describe 'GET /api/users/me/refresh', ->
       .get("http://localhost:5000/users/me")
       .set('X-Access-Token': @user.access_token)
       .end (err, res) =>
-        res.body.name.should.equal @user.name
-
-        request
-          .get("http://localhost:5000/users/me/refresh")
-          .set('X-Access-Token': @user.access_token)
-          .end (err, res) =>
-            res.body.name.should.equal 'Craig Spaeth'
-            res.body.partner_ids[0].should.equal '5086df098523e60002000012'
-            done()
+        res.body.name.should.equal 'Craig Spaeth'
+        done()
+    return
