@@ -6,14 +6,20 @@ Joi.objectId = require('joi-objectid') Joi
 # Input Schema
 #
 imageSection = (->
-  @object().keys
+  @object().meta(
+    name: 'Image'
+    isTypeOf: (data) => data.type is 'image'
+  ).keys
     type: @string().valid('image')
     url: @string().allow('', null)
     caption: @string().allow('', null)
 ).call Joi
 
 videoSection = (->
-  @object().keys
+  @object().meta(
+    name: 'Video'
+    isTypeOf: (data) => data.type is 'video'
+  ).keys
     type: @string().valid('video')
     url: @string().allow('', null)
     cover_image_url: @string().allow('', null)
@@ -22,7 +28,10 @@ videoSection = (->
 ).call Joi
 
 fullscreenSection = (->
-  @object().keys
+  @object().meta(
+    name: 'Fullscreen'
+    isTypeOf: (data) => data.type is 'fullscreen'
+  ).keys
     type: @string().valid('fullscreen')
     title: @string().allow('',null)
     intro: @string().allow('',null)
@@ -31,7 +40,7 @@ fullscreenSection = (->
 ).call Joi
 
 denormalizedArtwork = (->
-  @object().keys
+  @object().meta(name: 'Artwork').keys
     type: @string().valid('artwork').default('artwork')
     id: @string().allow('', null)
     slug: @string().allow('', null)
@@ -68,35 +77,35 @@ denormalizedArtwork = (->
   sections: @array().items([
     imageSection
     videoSection
-    @object().keys
+    @object().meta(name: 'Callout').keys
       type: @string().valid('callout')
       thumbnail_url: @string().allow('',null)
       text: @string().allow('',null)
       article: @string().allow('',null)
       hide_image: @boolean().default(false)
       top_stories: @boolean().default(false)
-    @object().keys
+    @object().meta(name: 'Embed').keys
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
       layout: @string().allow('',null)
-    @object().keys
+    @object().meta(name: 'Text').keys
       type: @string().valid('text')
       body: @string().allow('', null)
-    @object().keys
+    @object().meta(name: 'Toc').keys
       type: @string().valid('toc')
       links: @array().items(
         @object().keys
           name: @string().allow('', null)
           value: @string().allow('', null)
       ).allow(null).default([])
-    @object().keys
+    @object().meta(name: 'Artworks').keys
       type: @string().valid('artworks')
       ids: @array().items(@objectId())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       artworks: @array().items(denormalizedArtwork).allow(null).default([])
-    @object().keys
+    @object().meta(name: 'Slideshow').keys
       type: @string().valid('slideshow')
       items: @array().items [
         imageSection
@@ -105,7 +114,7 @@ denormalizedArtwork = (->
           type: @string().valid('artwork')
           id: @string()
       ]
-    @object().keys
+    @object().meta(name: 'ImageSet').keys
       type: 'image_set'
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
@@ -124,10 +133,10 @@ denormalizedArtwork = (->
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
   contributing_authors: @array().items([
-    @object().keys
+    @object().meta(name: 'ContributingAuthor').keys
       id: @objectId().allow(null)
       name: @string().allow('', null)
-    ]).default([])
+  ]).default([])
   email_metadata: @object().keys
     image_url: @string().allow('',null)
     headline: @string().allow('',null)
@@ -151,12 +160,14 @@ denormalizedArtwork = (->
   channel_id: @objectId().allow(null).default(null)
   partner_channel_id: @objectId().allow(null).default(null)
   description: @string().allow('',null)
+  slug: @string().allow(null)
 ).call Joi
 
 #
 # Query Schema
 #
 @querySchema = (->
+  id: @objectId()
   access_token: @string()
   author_id: @objectId()
   published: @boolean()
@@ -165,7 +176,7 @@ denormalizedArtwork = (->
   section_id: @objectId()
   artist_id: @objectId()
   artwork_id: @objectId()
-  fair_ids: @array()
+  fair_ids: @array().items(@objectId())
   fair_id: @objectId()
   fair_programming_id: @objectId()
   fair_artsy_id: @objectId()
@@ -180,11 +191,11 @@ denormalizedArtwork = (->
   super_article_for: @objectId()
   q: @string()
   all_by_author: @objectId()
-  tags: @array()
+  tags: @array().items(@string())
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()
   has_video: @boolean()
   channel_id: @objectId()
-  ids: @array()
+  ids: @array().items(@objectId())
 ).call Joi

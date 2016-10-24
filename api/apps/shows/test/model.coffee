@@ -22,6 +22,7 @@ describe 'Show', ->
       Show.find 'foo', 'foo-token', (err, show) ->
         show.name.should.equal 'Inez & Vinoodh'
         done()
+      return
 
   describe '#search', ->
 
@@ -30,3 +31,4 @@ describe 'Show', ->
         results[0].id.length.should.be.above 1
         results[0].value.should.equal 'Inez & Vinoodh'
         done()
+      return

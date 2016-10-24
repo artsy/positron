@@ -19,11 +19,11 @@ Q = require 'bluebird-q'
 @where = (input, callback) ->
   retrieve.toQuery input, (err, query, limit, offset, sort) ->
     return callback err if err
-    cursor = db.articles.find(query).skip(offset or 0).sort(sort)
+    cursor = db.articles.find(query).skip(offset or 0).sort(sort).limit(limit)
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit).toArray cb
+      (cb) -> cursor.toArray cb
     ], (err, [ total, count, results ]) ->
       return callback err if err
       callback null, {
@@ -49,7 +49,7 @@ Q = require 'bluebird-q'
         generateArtworks input, article, (err, article) ->
           debug err if err
           publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
-          article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+          article = _.extend article, _.omit(input, 'sections', 'slug'), updated_at: new Date
           if input.sections and input.sections.length is 0
             article.sections = []
           # Merge fullscreen title with main article title
