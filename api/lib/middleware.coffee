@@ -7,7 +7,6 @@ _ = require 'underscore'
 { parse } = require 'url'
 { API_URL } = process.env
 debug = require('debug') 'api'
-memwatch = require 'memwatch-next'
 
 @helpers = (req, res, next) ->
   # Error handler helper for predictable JSON responses.
@@ -17,14 +16,6 @@ memwatch = require 'memwatch-next'
     next err
   # Allow access token in header or query param
   req.accessToken = req.get('X-Access-Token') or req.query.access_token
-
-  # # Memory leak
-  memwatch.on 'leak', (info) ->
-    console.log 'Memory leak detected: ', info
-
-  memwatch.on 'stats', (stats) ->
-    console.log "ML Stats found: ", stats
-
   next()
 
 @notFound = (req, res, next) ->
