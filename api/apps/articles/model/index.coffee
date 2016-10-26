@@ -19,7 +19,11 @@ Q = require 'bluebird-q'
 @where = (input, callback) ->
   retrieve.toQuery input, (err, query, limit, offset, sort) ->
     return callback err if err
-    cursor = db.articles.find(query).skip(offset or 0).sort(sort).limit(limit)
+    cursor = db.articles
+      .find(query)
+      .skip(offset or 0)
+      .sort(sort)
+      .limit(limit)
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
@@ -81,7 +85,7 @@ Q = require 'bluebird-q'
 #
 @destroy = (id, callback) ->
   db.articles.remove { _id: ObjectId(id) }, =>
-    removeFromSearch id
+    removeFromSearch id.toString()
     callback(id)
 
 #
