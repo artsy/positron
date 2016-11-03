@@ -3,16 +3,7 @@
 header-bottom = 10px
 
 .edit-section-callout-container
-  border-top 1px solid gray-lighter-color
-  border-bottom 1px solid gray-lighter-color
   width 100%
-
-.edit-section-container[data-type=callout]
-  float right
-  width 418px
-  left 170px
-  margin-left -170px
-  z-index 4
 
 .esc-controls-container
   fill-container()
@@ -67,27 +58,40 @@ header-bottom = 10px
   span
     margin-top 18px
 
-.esc-callout-container
-  display inline-flex
-  p
-    vertical-align middle
-
 .esc-callout-container.is-pull-quote
-  width 100%
-  .esc-callout-left, .esc-read-article
+  width 750px
+  margin-left -85px
+  .esc-read-article
     display none
   p
     text-align center
+    font-size 37px
+    line-height 1.2em
 
 .esc-callout-container.is-article
-  .esc-callout-left
-    display inline-block
+  .esc-callout
+    border 1px solid gray-lighter-color
+    display flex
+    align-items center
+    padding 15px
+    margin-top 10px
+    width 100%
   p
     text-align left
+  img
+    width 120px
+    margin-right 20px
 
 .esc-callout-container.is-article.hidden-image-true
-  .esc-callout-left
+  img
     display none
+  .esc-callout
+    border none
+    padding 0
+    margin-bottom 10px
+    p
+      font-size 25px
+      border-bottom 1px solid
 
 .esc-read-article
   avant-garde 'body'
@@ -95,26 +99,7 @@ header-bottom = 10px
 
 .esc-title
   garamond()
-  font-size 25px
-
-.esc-callout-left, .esc-callout-right
-  display inline-block
-  vertical-align middle
-
-.esc-callout-left
-  overflow hidden
-  margin auto
-  margin-right 20px
-  max-width 180px
-  img
-    width 100%
-    vertical-align middle
-    padding 10px 0 10px 0
-
-.esc-callout-right
-  max-width 300px
-  padding 20px 0 20px 0
-  text-align center
+  font-size 20px
 
 .esc-autocomplete-input
   color black
@@ -141,9 +126,12 @@ header-bottom = 10px
   &__headline
     avant-garde 'body'
     padding 20px 0px
-  &__container
-    padding-top 10px
     border-bottom 1px solid gray-lighter-color
+  &__container
+    padding 10px 0
+    border-bottom 1px solid gray-lighter-color
+    display flex
+    align-items center
   &__left
     width 80px
     height 80px
@@ -151,7 +139,4 @@ header-bottom = 10px
     margin-right 10px
   &__right
     garamond 's-body'
-    line-height 80px
-    vertical-align top
-  &__right, &__left
-    display inline-block
+    line-height 1em
