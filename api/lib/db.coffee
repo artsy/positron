@@ -11,6 +11,7 @@ debug = require('debug') 'api'
 
 collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels']
 db = mongojs MONGOHQ_URL, collections
+
 exit = (msg) -> (err) ->
   debug msg
   debug msg, err if msg is 'Mongo Error'

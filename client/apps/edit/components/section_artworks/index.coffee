@@ -83,11 +83,7 @@ module.exports = React.createClass
     $(@refs.artworks.getDOMNode()).fillwidthLite
       gutterSize: 20
       apply: (img, i) ->
-        pad = switch i
-          when 0 then '0 20px 0 0'
-          when len - 1 then '0 0 0 20px'
-          else '0 10px'
-        img.$el.closest('li').css(padding: pad).width(img.width)
+        img.$el.closest('li').width(img.width)
 
   removeFillwidth: ->
     $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')

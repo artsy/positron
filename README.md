@@ -19,10 +19,10 @@ Set-Up
 ---
 
 - Install [NVM](https://github.com/creationix/nvm)
-- Install Node 5
+- Install Node 6
 ```
-nvm install 5
-nvm alias default 5
+nvm install 6
+nvm alias default 6
 ```
 - Fork Positron to your Github account in the Github UI.
 - Clone your repo locally (substitute your Github username).
@@ -43,6 +43,11 @@ brew install mongodb
 - Start the MongoDB database
 ```
 mongod
+```
+- Install and run elasticsearch
+```
+brew install elasticsearch
+elasticsearch -d
 ```
 - Start the server
 ```

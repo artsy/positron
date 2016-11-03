@@ -1,6 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
+search = require '../../../lib/elasticsearch'
 User = require '../../users/model'
 async = require 'async'
 Joi = require 'joi'
@@ -150,6 +151,40 @@ getDescription = (article) =>
     article.sections = newSections
     cb(null, article)
 
+@indexForSearch = (article, cb) ->
+  if article.sections
+    sections = for section in article.sections
+      section.body
+
+  search.client.index(
+    index: search.index,
+    type: 'article',
+    id: article.id,
+    body:
+      slug: article.slug
+      name: article.title
+      description: article.description
+      published: article.published
+      published_at: article.published_at
+      scheduled_publish_at: article.scheduled_publish_at
+      visible_to_public: article.published and sections and sections.length > 0
+      author: article.author and article.author.name or ''
+      featured: article.featured
+      tags: article.tags
+      body: sections and stripHtmlTags(sections.join(' ')) or ''
+    , (error, response) ->
+      console.log(error) if error
+  )
+
+@removeFromSearch = (id) ->
+  search.client.delete(
+    index: search.index
+    type: 'article'
+    id: id
+  , (error, response) ->
+      console.log(error) if error
+  )
+
 denormalizedArtworkData = (artwork) ->
   artwork = new Backbone.Model artwork
   AdditionalImage = Backbone.Model.extend Image(SECURE_IMAGES_URL)
@@ -196,9 +231,11 @@ getPartnerLink = (artwork) ->
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
+    @indexForSearch article
     @sendArticleToSailthru article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
+    @indexForSearch article
     db.articles.save sanitize(typecastIds article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
@@ -289,6 +326,12 @@ typecastIds = (article) ->
   , (err, response) =>
     debug err if err
     cb()
+
+stripHtmlTags = (str) ->
+  if (str == null)
+    return ''
+  else
+    String(str).replace /<\/?[^>]+>/g, ''
 
 getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''

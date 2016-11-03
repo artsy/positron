@@ -19,4 +19,4 @@ describe 'shows endpoints', ->
       .end (err, res) ->
         res.body.name.should.equal 'Inez & Vinoodh'
         done()
-
+    return

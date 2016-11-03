@@ -7,7 +7,7 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, mergeArticleAndAuthor } = Save = require './save'
+generateArtworks, sanitizeAndSave, mergeArticleAndAuthor, removeFromSearch } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -19,11 +19,15 @@ Q = require 'bluebird-q'
 @where = (input, callback) ->
   retrieve.toQuery input, (err, query, limit, offset, sort) ->
     return callback err if err
-    cursor = db.articles.find(query).skip(offset or 0).sort(sort)
+    cursor = db.articles
+      .find(query)
+      .skip(offset or 0)
+      .sort(sort)
+      .limit(limit)
     async.parallel [
       (cb) -> db.articles.count cb
       (cb) -> cursor.count cb
-      (cb) -> cursor.limit(limit).toArray cb
+      (cb) -> cursor.toArray cb
     ], (err, [ total, count, results ]) ->
       return callback err if err
       callback null, {
@@ -49,7 +53,7 @@ Q = require 'bluebird-q'
         generateArtworks input, article, (err, article) ->
           debug err if err
           publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
-          article = _.extend article, _.omit(input, 'sections'), updated_at: new Date
+          article = _.extend article, _.omit(input, 'sections', 'slug'), updated_at: new Date
           if input.sections and input.sections.length is 0
             article.sections = []
           # Merge fullscreen title with main article title
@@ -80,7 +84,9 @@ Q = require 'bluebird-q'
 # Destroy
 #
 @destroy = (id, callback) ->
-  db.articles.remove { _id: ObjectId(id) }, callback
+  db.articles.remove { _id: ObjectId(id) }, =>
+    removeFromSearch id.toString()
+    callback(id)
 
 #
 # JSON views

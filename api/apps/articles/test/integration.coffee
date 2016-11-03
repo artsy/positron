@@ -53,6 +53,7 @@ describe 'articles endpoints', ->
           err.status.should.equal 401
           res.body.message.should.containEql 'must be an admin'
           done()
+      return
 
   describe 'as a channel member', ->
 
@@ -63,6 +64,7 @@ describe 'articles endpoints', ->
         .send(title: 'Hi', partner_channel_id: ObjectId('5086df098523e60002000012')).end (err, res) ->
           res.body.title.should.equal 'Hi'
           done()
+      return
 
     it 'gets a list of articles by author', (done) ->
       fabricate 'articles', [
