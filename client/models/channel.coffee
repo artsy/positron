@@ -28,6 +28,7 @@ module.exports = class Channel extends Backbone.Model
         'toc'
         'follow'
         'layout'
+        'hero'
       ], feature
     else if type is 'team'
       _.contains [
@@ -39,6 +40,7 @@ module.exports = class Channel extends Backbone.Model
         'embed'
         'callout'
         'follow'
+        'hero'
       ], feature
     else if type is 'support'
       _.contains [
@@ -48,6 +50,7 @@ module.exports = class Channel extends Backbone.Model
         'video'
         'callout'
         'follow'
+        'hero'
       ], feature
     else if type is 'partner'
        _.contains [

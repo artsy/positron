@@ -25,7 +25,8 @@ HeroSection = React.createFactory require './components/hero_section/index.coffe
     SectionList(sections: article.sections)
     $('#edit-sections')[0]
   )
-  React.render(
-    HeroSection(section: article.heroSection, hasSection: article.get('section_ids')?.length > 0)
-    $('#edit-hero-section')[0]
-  )
+  if article.attributes.hero_section != null or channel.hasFeature 'hero'
+    React.render(
+      HeroSection(section: article.heroSection, hasSection: article.get('section_ids')?.length > 0)
+      $('#edit-hero-section')[0]
+    )
