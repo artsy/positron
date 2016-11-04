@@ -190,18 +190,17 @@ module.exports = React.createClass
       )
       (if @state.text or @state.article or @state.articleModel
         div { className: "esc-callout-container #{@getCalloutType()} hidden-image-#{@state.hide_image}" },
-          div { className: 'esc-callout-left'},
+          p {className: 'esc-read-article'}, "Related Article"
+          div { className: 'esc-callout'},
             img {
               src: (
                 if @state.thumbnail_url or @state.articleModel
-                  crop(@getThumbnail(), { width: 300, height: 200, quality: 95 })
+                  crop(@getThumbnail(), { width: 120, height:80, quality: 95 })
                 else
                   ''
               )
             }
-          div { className: 'esc-callout-right' },
             p { className: 'esc-title' }, @state.text or @state.articleModel?.get('thumbnail_title') or ''
-            p { className: 'esc-read-article' }, 'Read Full Article'
       else if @state.top_stories
         div { className: 'esc-top-stories' },
             div { className: 'esc-top-stories__headline'}, "Top Stories on Artsy"
