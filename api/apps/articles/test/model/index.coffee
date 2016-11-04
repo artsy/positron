@@ -693,6 +693,7 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
         title: 'foo article'
         published: true
+        channel_id: '5086df098523e60002000018'
       }, 'foo', (err, article) ->
         return done err if err
         setTimeout( =>
