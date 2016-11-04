@@ -173,7 +173,7 @@ getDescription = (article) =>
       tags: article.tags
       body: sections and stripHtmlTags(sections.join(' ')) or ''
     , (error, response) ->
-      console.log(error) if error
+      console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
   )
 
 @removeFromSearch = (id) ->

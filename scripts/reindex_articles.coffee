@@ -17,6 +17,13 @@ db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
 db.articles.find({ }).toArray (err, articles) ->
   console.log(err) if err
-  articles.map (a) ->
-    indexForSearch Article.present(a), (opts) ->
-      console.log('indexed ' + a.id or a._id)
+  indexWorker(articles, 0)
+
+indexWorker = (articles, i) ->
+  a = articles[i]
+  console.log('indexing ' + a._id)
+  indexForSearch Article.present(a)
+  setTimeout( =>
+    console.log('indexed ' + a.id or a._id)
+    indexWorker(articles, ++i)
+  , 50)
