@@ -21,7 +21,7 @@ Article = require './index'
 { ObjectId } = require 'mongojs'
 cloneDeep = require 'lodash.clonedeep'
 { ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
-FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL, GEMINI_CLOUDFRONT_URL } = process.env
+FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL, GEMINI_CLOUDFRONT_URL, EDITORIAL_CHANNEL } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 artsyXapp = require('artsy-xapp').token or ''
 
@@ -167,7 +167,7 @@ getDescription = (article) =>
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections and sections.length > 0
+      visible_to_public: article.published and sections?.length > 0 and article.channel_id is EDITORIAL_CHANNEL
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: article.tags
