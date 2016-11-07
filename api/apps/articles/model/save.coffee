@@ -167,7 +167,7 @@ getDescription = (article) =>
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections?.length > 0 and article.channel_id is EDITORIAL_CHANNEL
+      visible_to_public: article.published and sections?.length > 0 and article.channel_id and article.channel_id.toString() is EDITORIAL_CHANNEL
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: article.tags
