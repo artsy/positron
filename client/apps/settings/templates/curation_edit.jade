@@ -32,3 +32,44 @@ block content
           button.avant-garde-button.avant-garde-button-black.admin-form-save(
             type='submit' href="/curations/#{curation.get('id')}"
           ) Save Changes
+    when 'editorial-feature'
+      .max-width-container
+        form.admin-form-container(
+          action=("/settings/curations/#{curation.get('id')}")
+          method='post'
+        )
+          for section in curation.get('sections')
+            section.admin-form-section
+              .admin-form-left
+                h1= section.section_id + '. Section Details'
+              .admin-form
+                .admin-form-right-col
+                  label Title
+                  input.bordered-input(
+                    name="headline"
+                    value=section.headline
+                  )
+                  label Callout
+                  input.bordered-input(
+                    name="callout"
+                    value=section.callout
+                  )
+                  label Body
+                  textarea.bordered-input(
+                    name="body"
+                    value=section.body
+                  )=section.body
+                .admin-form-right-col
+                  //- label Primary Image
+                  //- .admin-image-placeholder(
+                  //-   data-name="sections[#{section.section_id - 1}][image]" )
+                  label Image Caption
+                  input.bordered-input(
+                    name="sections[#{section.section_id - 1}][caption]"
+                    value=section.caption
+                  )
+          input( value=curation.get('name') name='name' hidden)
+          input( value=curation.get('type') name='type' hidden)
+          button.avant-garde-button.avant-garde-button-black.admin-form-save(
+            type='submit' href="/curations/#{curation.get('id')}"
+          ) Save Changes
