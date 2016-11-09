@@ -1,23 +1,22 @@
+Backbone = require('backbone')
 AdminEditView = require '../../../components/admin_form/index.coffee'
 Curation = require '../../../models/curation.coffee'
 sd = require('sharify').data
-_s = require 'underscore.string'
-ImageUploadForm = require '../../../components/image_upload_form/index.coffee'
+_ = require('underscore')
 
-@init = ->
-  new AdminEditView
-    model: new Curation(sd.CURATION)
-    el: $('body')
-    onDeleteUrl: '/settings/curations'
+module.exports = class CurationEditView extends Backbone.View
 
-# attachUploadForms: =>
-#   $('.image-form').each (i, el) =>
-#     new ImageUploadForm
-#       el: $(el)
-#       src: propByString.get $(el).attr('data-name') #, @model.attributes
-#       name: $(el).attr('data-name')
+  events:
+    'keyup input': 'saveCuration'
 
-# events:
-#   'click .admin-form-delete': 'destroy'
-#   'change :input': 'unsaved'
-#   'submit form': 'ignoreUnsaved'
+  initialize: ->
+    @curation = new Curation(sd.CURATION)
+    new AdminEditView
+      model: @curation
+      el: $('body')
+      onDeleteUrl: '/settings/curations'
+
+  saveCuration: ->
+    debugger
+    # take all the form elements and serialize them
+    @curation.save()
