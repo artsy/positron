@@ -702,6 +702,7 @@ describe 'Article', ->
             q: 'name:foo'
             , (error, response) ->
               response.hits.hits[0]._source.name.should.equal 'foo article'
+              response.hits.hits[0]._source.visible_to_public.should.equal true
               done()
           )
         , 1000)
