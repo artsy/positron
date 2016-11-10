@@ -5,8 +5,6 @@
 
 Backbone = require 'backbone'
 window.jQuery = window.$ = $ = require 'jquery'
-CurationEditView = require '../apps/settings/client/curations.coffee'
-
 
 class Router extends Backbone.Router
 
@@ -25,8 +23,7 @@ class Router extends Backbone.Router
     require('../apps/sections/edit_client.coffee').init()
 
   curationsEdit: ->
-    new CurationEditView()
-    # require('../apps/settings/client/curations.coffee').init()
+    require('../apps/settings/client/curations.coffee').init()
 
   channelsEdit: ->
     require('../apps/settings/client/channels.coffee').init()

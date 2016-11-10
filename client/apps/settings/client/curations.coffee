@@ -1,22 +1,31 @@
 Backbone = require('backbone')
-AdminEditView = require '../../../components/admin_form/index.coffee'
+{ AdminEditView } = require '../../../components/admin_form/index.coffee'
 Curation = require '../../../models/curation.coffee'
 sd = require('sharify').data
 _ = require('underscore')
 
-module.exports = class CurationEditView extends Backbone.View
+
+module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
   events:
-    'keyup input': 'saveCuration'
+    'click .edit-feature__section-title': 'revealSection'
 
   initialize: ->
-    @curation = new Curation(sd.CURATION)
+    @curation = new Curation sd.CURATION
     new AdminEditView
       model: @curation
       el: $('body')
       onDeleteUrl: '/settings/curations'
+    if this.curation.get('type') == "editorial-feature"
+      @initMenuState()
 
-  saveCuration: ->
-    debugger
-    # take all the form elements and serialize them
-    @curation.save()
+  initMenuState: =>
+    $('.page-header').addClass 'sticky'
+    $('.edit-feature').fadeIn()
+
+  revealSection: (e) ->
+    $(e.target).next().toggleClass('active').slideToggle()
+
+module.exports.init = ->
+  new CurationEditView
+    el: $('body')

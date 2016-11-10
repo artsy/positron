@@ -4,36 +4,37 @@ extend ../../../components/layout/templates/index
 mixin feature-section(i)
   - section = curation.get('sections')[i]
   .edit-feature__fields
-    .admin-form-right-col
-      label
-        | Title
-      input.bordered-input(
-        name="sections[#{i}][headline]"
-        value=section && section.headline
-      )
-      label
-        | Callout
-      input.bordered-input(
-        name="sections[#{i}][callout]"
-        value=section && section.callout
-      )
-      label
-        | Thumbnail
-      .admin-image-placeholder(
-        data-name="sections[#{i}][image]" data-index=i )
-      label
-        | Image Caption
-      input.bordered-input(
-        name="sections[#{i}][caption]"
-        value=section && section.caption
-      )
-    .admin-form-right-col
-      label
-        | Body
-      textarea.bordered-input(
-        name="sections[#{i}][body]"
-        value=section && section.body
-      )=section.body
+    .edit-feature__fields-inner
+      .admin-form-right-col
+        label
+          | Title
+        input.bordered-input(
+          name="sections[#{i}][headline]"
+          value=section && section.headline
+        )
+        label
+          | Callout
+        input.bordered-input(
+          name="sections[#{i}][callout]"
+          value=section && section.callout
+        )
+        label
+          | Image
+        .admin-image-placeholder(
+          data-name="sections[#{i}][image]" data-index=i )
+        label Image Caption
+          span Supports markdown
+        input.bordered-input(
+          name="sections[#{i}][caption]"
+          value=section && section.caption
+        )
+      .admin-form-right-col
+        label Body
+          span Supports markdown
+        textarea.bordered-input(
+          name="sections[#{i}][body]"
+          value=section && section.body
+        )=section.body
 
 mixin image(i)
   - image = curation.get('images')[i]

@@ -2,7 +2,7 @@ Backbone = require 'backbone'
 ImageUploadForm = require '../image_upload_form/index.coffee'
 propByString = require 'prop-by-string'
 
-module.exports = class AdminEditView extends Backbone.View
+module.exports.AdminEditView = class AdminEditView extends Backbone.View
 
   initialize: ({ @onDeleteUrl }) ->
     @attachUploadForms()
@@ -30,3 +30,7 @@ module.exports = class AdminEditView extends Backbone.View
 
   ignoreUnsaved: ->
     window.onbeforeunload = ->
+
+module.exports.init = ->
+  new AdminEditView
+    el: $('body')

@@ -13,8 +13,6 @@ _ = require 'underscore'
 
 # POST /api/curations & PUT /api/curations/:id
 @save = (req, res, next) ->
-  console.log req.params
-  console.log req.body
   Curation.save _.extend(req.body, id: req.params.id), (err, curation) ->
     return next err if err
     res.send present curation

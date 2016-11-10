@@ -29,14 +29,23 @@
   &:last-of-type
     border-bottom none
 
+.page-header.sticky
+  position fixed
+  top 0
+  left 110px
+  right 0
+  background-color white
+  z-index 100
+
 .edit-feature
+  margin-top 60px
+  padding-left 24px
+  display none
   .admin-form-save
-    // position fixed
-    // bottom 5px
-    // left 55px
-    // max-width 900px
-    // right -55px
-    // margin auto
+    position fixed
+    top 5px
+    width 435px
+    right calc((100vw \/ 2) \- 500px)
     z-index 100
   &__section
     border-bottom 1px solid gray-lighter-color
@@ -44,10 +53,24 @@
     padding 20px 5px
     margin-top 0
   &__fields
-    display flex
-    padding 0 5px 30px 5px
+    display none
+    &-inner
+      padding 0 5px 40px 5px
+      display flex
     .admin-form-right-col
       display flex
       flex-direction column
+    .admin-image-placeholder
+      height 255px
+      margin-bottom 15px
+      .image-upload-form
+        height 250px
+    label
+      display flex
+      justify-content space-between
+      span
+        color gray-color
     textarea
       height 100%
+    .bordered-input
+      margin-bottom 15px
