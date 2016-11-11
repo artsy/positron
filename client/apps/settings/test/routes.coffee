@@ -10,7 +10,7 @@ describe 'routes', ->
   beforeEach ->
     sinon.stub Backbone, 'sync'
     @req = { query: {}, user: new User(fixtures().users), params: {} }
-    @res = { render: sinon.stub(), locals: fixtures().locals }
+    @res = { render: sinon.stub(), redirect: sinon.stub(), locals: fixtures().locals }
 
   afterEach ->
     Backbone.sync.restore()
@@ -34,6 +34,7 @@ describe 'routes', ->
       @res.render.args[0][0].should.equal 'curation_edit'
       @res.render.args[0][1].curation.get('id')
         .should.equal '55356a9deca560a0137aa4b7'
+
 
   describe 'Channels', ->
 

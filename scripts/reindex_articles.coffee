@@ -26,4 +26,4 @@ indexWorker = (articles, i) ->
   setTimeout( =>
     console.log('indexed ' + a.id or a._id)
     indexWorker(articles, ++i)
-  , 50)
+  , 30)

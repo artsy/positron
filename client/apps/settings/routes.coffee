@@ -26,8 +26,9 @@ Channel = require '../../models/channel'
   new Curation(id: req.params.id).save data,
     headers: 'X-Access-Token': req.user?.get('access_token')
     error: res.backboneError
-    success: ->
-      res.redirect '/settings/curations'
+    success: (curation) ->
+      res.locals.sd.CURATION = curation.toJSON()
+      res.redirect "/settings/curations/#{curation.get('id')}/edit"
 
 @channels = (req, res) ->
   new Channels().fetch
