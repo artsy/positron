@@ -5,19 +5,19 @@ Backbone = require 'backbone'
 fixtures = require '../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
-describe 'ImageUploadForm', ->
+describe 'ImageVideoUploadForm', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require('jquery')
       Backbone.$ = $
-      ImageUploadForm = benv.requireWithJadeify(
+      ImageVideoUploadForm = benv.requireWithJadeify(
         resolve(__dirname, '../index')
         ['formTemplate']
       )
-      ImageUploadForm.__set__ 'gemup', @gemup = sinon.stub()
+      ImageVideoUploadForm.__set__ 'gemup', @gemup = sinon.stub()
       global.confirm ?= -> true
-      @view = new ImageUploadForm
+      @view = new ImageVideoUploadForm
         el: $('body')
         remove: @remove = sinon.stub()
       done()
@@ -38,6 +38,14 @@ describe 'ImageUploadForm', ->
     it 'uploads to gemini', ->
       @view.upload target: files: [{size: 300000, type: 'image/jpg', src: 'foo'}]
       @gemup.args[0][0].src.should.equal 'foo'
+
+    it 'shows a video preview when upload is mp4', (done) ->
+      @view.upload target: files: [{size: 400000, type: 'video/mp4', src: 'foo.mp4'}]
+      @gemup.args[0][0].src.should.equal 'foo.mp4'
+      @gemup.args[0][1].done('foo.mp4')
+      setTimeout =>
+        $('.image-upload-form-preview source').attr('src').should.equal 'foo.mp4'
+        done()
 
   describe '#onRemove', ->
 

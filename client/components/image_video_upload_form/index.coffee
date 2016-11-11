@@ -29,7 +29,6 @@ module.exports = class ImageVideoUploadForm extends Backbone.View
       @$('.image-upload-form').attr 'data-error', 'size'
       return
     @$('.image-upload-form').attr 'data-error', null
-
     gemup e.target.files[0],
       app: sd.GEMINI_APP
       key: sd.GEMINI_KEY
