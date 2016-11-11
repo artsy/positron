@@ -19,7 +19,7 @@ Channel = require '../../models/channel'
     error: res.backboneError
     success: (curation) ->
       res.locals.sd.CURATION = curation.toJSON()
-      res.redirect "/settings/curations/#{curation.get('id')}/edit"
+      res.render 'curation_edit', curation: curation
 
 @saveCuration = (req, res) ->
   data = _.pick req.body, _.identity

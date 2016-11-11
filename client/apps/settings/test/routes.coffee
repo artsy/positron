@@ -31,8 +31,10 @@ describe 'routes', ->
     it 'renders the edit page', ->
       routes.editCuration @req, @res
       Backbone.sync.args[0][2].success fixtures().curations
-      @res.redirect.args[0][0]
-        .should.equal '/settings/curations/55356a9deca560a0137aa4b7/edit'
+      @res.render.args[0][0].should.equal 'curation_edit'
+      @res.render.args[0][1].curation.get('id')
+        .should.equal '55356a9deca560a0137aa4b7'
+
 
   describe 'Channels', ->
 

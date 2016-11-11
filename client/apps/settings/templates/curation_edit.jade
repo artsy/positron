@@ -3,8 +3,8 @@ extend ../../../components/layout/templates/index
 
 mixin feature-section(i)
   - section = curation.get('sections')[i]
-  .edit-feature__fields
-    .edit-feature__fields-inner
+  .settings-edit-feature__fields
+    .settings-edit-feature__fields-inner
       .admin-form-right-col
         label
           | Title
@@ -69,14 +69,14 @@ block content
           ) Save Changes
 
     when 'editorial-feature'
-      .max-width-container.edit-feature
+      .max-width-container.settings-edit-feature
         form.admin-form-container(
           action=("/settings/curations/#{curation.get('id')}")
           method='post'
         )
           for section, i in curation.get('sections')
-            section.edit-feature__section
-              h1.settings__item-link.edit-feature__section-title
+            section.settings-edit-feature__section
+              h1.settings__item-link.settings-edit-feature__section-title
                 | Section #{i + 1}: #{section.headline}
               +feature-section(i)
           input( value=curation.get('name') name='name' hidden)
