@@ -1,6 +1,41 @@
 include ../../../components/admin_form/index
 extend ../../../components/layout/templates/index
 
+mixin feature-section(i)
+  - section = curation.get('sections')[i]
+  .settings-edit-feature__fields
+    .settings-edit-feature__fields-inner
+      .admin-form-right-col
+        label
+          | Title
+        input.bordered-input(
+          name="sections[#{i}][headline]"
+          value=section && section.headline
+        )
+        label
+          | Callout
+        input.bordered-input(
+          name="sections[#{i}][callout]"
+          value=section && section.callout
+        )
+        label
+          | Image
+        .admin-image-placeholder(
+          data-name="sections[#{i}][image]" data-index=i )
+        label Image Caption
+          span Supports markdown
+        input.bordered-input(
+          name="sections[#{i}][caption]"
+          value=section && section.caption
+        )
+      .admin-form-right-col
+        label Body
+          span Supports markdown
+        textarea.bordered-input(
+          name="sections[#{i}][body]"
+          value=section && section.body
+        )=section.body
+
 mixin image(i)
   - image = curation.get('images')[i]
   h3.admin-form-subheader Image #{i + 1}
@@ -27,6 +62,23 @@ block content
               +image(1)
             .admin-form-right-col
               +image(2)
+          input( value=curation.get('name') name='name' hidden)
+          input( value=curation.get('type') name='type' hidden)
+          button.avant-garde-button.avant-garde-button-black.admin-form-save(
+            type='submit' href="/curations/#{curation.get('id')}"
+          ) Save Changes
+
+    when 'editorial-feature'
+      .max-width-container.settings-edit-feature
+        form.admin-form-container(
+          action=("/settings/curations/#{curation.get('id')}")
+          method='post'
+        )
+          for section, i in curation.get('sections')
+            section.settings-edit-feature__section
+              h1.settings__item-link.settings-edit-feature__section-title
+                | Section #{i + 1}: #{section.headline}
+              +feature-section(i)
           input( value=curation.get('name') name='name' hidden)
           input( value=curation.get('type') name='type' hidden)
           button.avant-garde-button.avant-garde-button-black.admin-form-save(
