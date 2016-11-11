@@ -1,5 +1,6 @@
 Backbone = require 'backbone'
 ImageUploadForm = require '../image_upload_form/index.coffee'
+ImageVideoUploadForm = require '../image_video_upload_form/index.coffee'
 propByString = require 'prop-by-string'
 
 module.exports.AdminEditView = class AdminEditView extends Backbone.View
@@ -9,10 +10,16 @@ module.exports.AdminEditView = class AdminEditView extends Backbone.View
 
   attachUploadForms: ->
     @$('.admin-image-placeholder').each (i, el) =>
-      new ImageUploadForm
-        el: $(el)
-        src: propByString.get $(el).attr('data-name'), @model.attributes
-        name: $(el).attr('data-name')
+      if $(el).attr('data-type') == 'video'
+        new ImageVideoUploadForm
+          el: $(el)
+          src: propByString.get $(el).attr('data-name'), @model.attributes
+          name: $(el).attr('data-name')
+      else
+        new ImageUploadForm
+          el: $(el)
+          src: propByString.get $(el).attr('data-name'), @model.attributes
+          name: $(el).attr('data-name')
 
   events:
     'click .admin-form-delete': 'destroy'
