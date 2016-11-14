@@ -18,10 +18,10 @@ mixin feature-section(i)
           name="sections[#{i}][callout]"
           value=section && section.callout
         )
-        label
-          | Image
+        label Image
+          span Accepts Mp4 Video
         .admin-image-placeholder(
-          data-name="sections[#{i}][image]" data-index=i )
+          data-name="sections[#{i}][image]" data-index=i data-type="video")
         label Image Caption
           span Supports markdown
         input.bordered-input(
