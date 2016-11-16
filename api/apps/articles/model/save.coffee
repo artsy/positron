@@ -172,7 +172,7 @@ getDescription = (article) =>
       featured: article.featured
       tags: article.tags
       body: sections and stripHtmlTags(sections.join(' ')) or ''
-      image_url: crop(article.thumbnail_image, 70, 70)
+      image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
     , (error, response) ->
       console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
   )
