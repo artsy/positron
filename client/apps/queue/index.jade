@@ -3,23 +3,10 @@ include ../../components/paginated_list/index
 extend ../../components/layout/templates/index
 
 block header
-  if published
-    | Published Articles for #{current_channel.name}
-    - var emptyMessage = "published any articles"
-  else
-    | Drafts for #{current_channel.name}
-    - var emptyMessage = "written any drafts"
+  nav#queue-tabs
+    a.is-active Daily Email
+    a Weekly Email
 
 block content
   #article-list-items.max-width-container
-    if articles.length == 0
-      section.article-list-empty
-        p You haven&rsquo;t #{emptyMessage} yet.
-        p Artsy Writer is a tool for writing stories about art on Artsy.
-          br
-          | Get started by writing an article or reaching out to your liaison for help.
-        a.avant-garde-button.avant-garde-button-black.article-new-button( href='/articles/new' )
-          include ../../components/layout/public/icons/layout_new_article.svg
-          .article-new-text Write An Article
-    else
-      +paginated-list(page, totalPages, articles.toPaginatedListItems(), '?published=' + published + '&')
+    +paginated-list(page, totalPages, articles.toPaginatedListItems(), '?published=' + published + '&')
