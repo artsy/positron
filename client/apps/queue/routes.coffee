@@ -1,5 +1,4 @@
 _ = require 'underscore'
-Articles = require '../../collections/articles.coffee'
 positronql = require '../../lib/positronql.coffee'
 query = require './query.coffee'
 
@@ -16,7 +15,9 @@ query = require './query.coffee'
     if result.error
       return res.backboneError
 
+    res.locals.sd.PUBLISHED_ARTICLES = result.latest
+    res.locals.sd.QUEUED_ARTICLES = result.queued
+    res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
     res.render 'index',
-      articles: new Articles result.articles
       published: true
       current_channel: req.user?.get('current_channel')

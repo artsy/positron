@@ -21,7 +21,5 @@ positronql = ({ query, req } = {}) ->
 
       resolve result
     .catch (err, res) =>
-      console.log err
-      console.log res
 
 module.exports = positronql

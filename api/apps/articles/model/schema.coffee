@@ -161,6 +161,8 @@ denormalizedArtwork = (->
   partner_channel_id: @objectId().allow(null).default(null)
   description: @string().allow('',null)
   slug: @string().allow(null)
+  daily_email: @boolean().allow(null).default(false)
+  weekly_email: @boolean().allow(null).default(false)
 ).call Joi
 
 #
@@ -198,4 +200,6 @@ denormalizedArtwork = (->
   has_video: @boolean()
   channel_id: @objectId()
   ids: @array().items(@objectId())
+  daily_email: @boolean()
+  weekly_email: @boolean()
 ).call Joi
