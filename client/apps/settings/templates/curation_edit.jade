@@ -43,12 +43,12 @@ mixin feature-section(i)
           label Secondary Image
             span Accepts Mp4 Video
           .admin-image-placeholder(
-            data-name="sections[#{i}][image]" data-index=i data-type="video")
+            data-name="sections[#{i}][image_second]" data-index=i data-type="video")
           label Secondary Image Caption
             span Supports markdown
           input.bordered-input(
-            name="sections[#{i}][caption]"
-            value=section && section.caption
+            name="sections[#{i}][caption_second]"
+            value=section && section.caption_second
           )
 
 mixin image(i)
