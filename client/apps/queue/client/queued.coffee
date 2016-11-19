@@ -9,9 +9,6 @@ module.exports = (el, props) ->
 
 module.exports.QueuedArticles = QueuedArticles = React.createClass
 
-  getInitialState: ->
-    articles: @props.articles or []
-
   render: ->
     div { className: 'filter-search__container' },
       div { className: 'filter-search__header-container' },
@@ -19,13 +16,13 @@ module.exports.QueuedArticles = QueuedArticles = React.createClass
       div {
         className: 'filter-search__results'
       },
-        (@state.articles.map (result) =>
+        (@props.articles.map (result) =>
           div { className: 'filter-search__result paginated-list-item' },
             div {
               className: 'filter-search__checkcircle'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-              onClick: @props.unselected
-              }
+              onClick: => @props.unselected(result.id)
+            }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
               div { className: 'filter-search__title paginated-list-text-container' },

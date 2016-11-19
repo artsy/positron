@@ -6,6 +6,7 @@ module.exports = (argString) ->
       thumbnail_title
       slug
       published_at
+      id
     }
   }
   """

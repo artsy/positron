@@ -10,10 +10,14 @@ module.exports = (el, props) ->
 module.exports.FilterSearch = FilterSearch = React.createClass
 
   getInitialState: ->
-    loading: false, value: null, articles: @props.articles or []
+    articles: @props.articles or []
 
   componentDidMount: ->
     @addAutocomplete()
+
+  componentWillReceiveProps: (nextProps) ->
+    console.log nextProps
+    @setState articles: nextProps
 
   addAutocomplete: ->
     @engine = new Bloodhound
@@ -30,7 +34,7 @@ module.exports.FilterSearch = FilterSearch = React.createClass
 
   search: ->
     @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
-      @setState articles: results
+      @props.searchResults results
 
   render: ->
     div { className: 'filter-search__container' },
@@ -52,7 +56,8 @@ module.exports.FilterSearch = FilterSearch = React.createClass
               div {
                 className: 'filter-search__checkcircle'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-                }
+                onClick: => @props.selected(result.id)
+              }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
               div { className: 'filter-search__title paginated-list-text-container' },
