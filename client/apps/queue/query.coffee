@@ -1,13 +1,7 @@
-module.exports = (published, channel_id) ->
+module.exports = (argString) ->
   """
   {
-    latest: articles(published: #{published}, sort:"-published_at", channel_id: "#{channel_id}"){
-      thumbnail_image
-      thumbnail_title
-      slug
-      published_at
-    }
-    queued: articles(published: #{published}, channel_id: "#{channel_id}", daily_email: true){
+    articles(#{argString}){
       thumbnail_image
       thumbnail_title
       slug
