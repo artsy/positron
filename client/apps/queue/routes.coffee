@@ -9,7 +9,7 @@ Transport = require('lokka-transport-http').Transport
   published = true
   channel_id = req.user?.get('current_channel').id
   queuedQuery = query "daily_email: true"
-  latestQuery = query "channel_id: \"#{channel_id}\", published: true, sort: \"-published_at\""
+  latestQuery = query "channel_id: \"#{channel_id}\", published: true, sort: \"-published_at\", daily_email: false"
 
   client = new Lokka
     transport: new Transport(API_URL + '/graphql')

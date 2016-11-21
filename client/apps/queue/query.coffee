@@ -7,6 +7,8 @@ module.exports = (argString) ->
       slug
       published_at
       id
+      channel_id
+      partner_channel_id
     }
   }
   """

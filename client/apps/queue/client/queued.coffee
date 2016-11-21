@@ -4,10 +4,7 @@ React = require 'react'
 moment = require 'moment'
 icons = -> require('../../../components/filter_search/icons.jade') arguments...
 
-module.exports = (el, props) ->
-  React.render React.createElement(QueuedArticles, props), el
-
-module.exports.QueuedArticles = QueuedArticles = React.createClass
+module.exports = QueuedArticles = React.createClass
 
   render: ->
     div { className: 'filter-search__container' },
@@ -21,7 +18,7 @@ module.exports.QueuedArticles = QueuedArticles = React.createClass
             div {
               className: 'filter-search__checkcircle'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-              onClick: => @props.unselected(result.id)
+              onClick: => @props.unselected(result)
             }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }

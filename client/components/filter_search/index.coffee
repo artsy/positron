@@ -4,20 +4,10 @@ React = require 'react'
 moment = require 'moment'
 icons = -> require('./icons.jade') arguments...
 
-module.exports = (el, props) ->
-  React.render React.createElement(FilterSearch, props), el
-
-module.exports.FilterSearch = FilterSearch = React.createClass
-
-  getInitialState: ->
-    articles: @props.articles or []
+module.exports = FilterSearch = React.createClass
 
   componentDidMount: ->
     @addAutocomplete()
-
-  componentWillReceiveProps: (nextProps) ->
-    console.log nextProps
-    @setState articles: nextProps
 
   addAutocomplete: ->
     @engine = new Bloodhound
@@ -50,13 +40,13 @@ module.exports.FilterSearch = FilterSearch = React.createClass
       div {
         className: 'filter-search__results'
       },
-        (@state.articles.map (result) =>
+        (@props.articles.map (result) =>
           div { className: 'filter-search__result paginated-list-item' },
             if @props.checkable
               div {
                 className: 'filter-search__checkcircle'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-                onClick: => @props.selected(result.id)
+                onClick: => @props.selected(result)
               }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }

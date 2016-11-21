@@ -7,7 +7,7 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, mergeArticleAndAuthor, removeFromSearch } = Save = require './save'
+generateArtworks, sanitizeAndSave, removeFromSearch } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -44,7 +44,8 @@ Q = require 'bluebird-q'
 # Persistence
 #
 @save = (input, accessToken, callback) =>
-  validate input, (err, input) =>
+  console.log typecastIds(input)
+  validate typecastIds(input), (err, input) =>
     return callback err if err
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
@@ -104,3 +105,30 @@ Q = require 'bluebird-q'
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
+
+# Converts an input from the db that use ObjectId to String
+typecastIds = (article) ->
+  _.extend article,
+    # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+    _id: article._id.toString()
+    author: if article.author? then _.extend article.author, id: article.author.id?.toString() else {}
+    contributing_authors: article.contributing_authors.map( (author)->
+      author.id = author.id.toString()
+      author
+    ) if article.contributing_authors
+    author_id: article.author_id.toString() if article.author_id
+    fair_ids: article.fair_ids.map(String) if article.fair_ids
+    fair_programming_ids: article.fair_programming_ids.map(String) if article.fair_programming_ids
+    fair_artsy_ids: article.fair_artsy_ids.map(String) if article.fair_artsy_ids
+    fair_about_ids: article.fair_about_ids.map(String) if article.fair_about_ids
+    section_ids: article.section_ids.map(String) if article.section_ids
+    auction_ids: article.auction_ids.map(String) if article.auction_ids
+    partner_ids: article.partner_ids.map(String) if article.partner_ids
+    show_ids: article.show_ids.map(String) if article.show_ids
+    primary_featured_artist_ids: article.primary_featured_artist_ids.map(String) if article.primary_featured_artist_ids
+    featured_artist_ids: article.featured_artist_ids.map(String) if article.featured_artist_ids
+    featured_artwork_ids: article.featured_artwork_ids.map(String) if article.featured_artwork_ids
+    biography_for_artist_id: article.biography_for_artist_id.toString() if article.biography_for_artist_id
+    super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(String) else {}
+    channel_id: article.channel_id.toString() if article.channel_id
+    partner_channel_id: article.partner_channel_id.toString() if article.partner_channel_id
