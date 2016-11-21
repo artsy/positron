@@ -9,6 +9,10 @@ module.exports = FilterSearch = React.createClass
   componentDidMount: ->
     @addAutocomplete()
 
+  # componentWillReceiveProps: (nextProps) ->
+  #   console.log nextProps
+  #   @setState articles: nextProps
+
   addAutocomplete: ->
     @engine = new Bloodhound
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
@@ -25,6 +29,15 @@ module.exports = FilterSearch = React.createClass
   search: ->
     @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
       @props.searchResults results
+
+  selected: (id) =>
+    console.log id
+    console.log @state.articles
+    publishedArticles = _.reject @state.articles, (a) ->
+      a.id is id
+    console.log publishedArticles.length
+    @setState articles: publishedArticles
+    @props.saveQueue id, true
 
   render: ->
     div { className: 'filter-search__container' },
@@ -46,7 +59,11 @@ module.exports = FilterSearch = React.createClass
               div {
                 className: 'filter-search__checkcircle'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
+<<<<<<< HEAD
                 onClick: => @props.selected(result)
+=======
+                onClick: => @selected(result.id)
+>>>>>>> d4633a9... Work towards updating state
               }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }

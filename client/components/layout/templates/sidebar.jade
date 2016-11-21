@@ -14,7 +14,7 @@
       include ../public/icons/layout_drafts.svg
       br
       | Drafts
-    if user.get('type') == 'Admin'
+    if user.get('current_channel').type === 'editorial'
       a( href='/queue'
          class=(sd.URL.match('/sections') ? 'is-active' : '') )
         include ../public/icons/layout_queue.svg
