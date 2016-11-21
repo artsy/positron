@@ -44,7 +44,6 @@ Q = require 'bluebird-q'
 # Persistence
 #
 @save = (input, accessToken, callback) =>
-  console.log typecastIds(input)
   validate typecastIds(input), (err, input) =>
     return callback err if err
     @find (input.id or input._id)?.toString(), (err, article = {}) =>

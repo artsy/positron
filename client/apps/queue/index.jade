@@ -1,11 +1,8 @@
 include ../../components/paginated_list/index
 
+block locals
+  - hideHeader = true
 extend ../../components/layout/templates/index
 
-//- block header
-//-   nav#queue-tabs
-//-     a.is-active Daily Email
-//-     a Weekly Email
-
 block content
-  #root
+  #queue-root

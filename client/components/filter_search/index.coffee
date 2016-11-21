@@ -30,15 +30,6 @@ module.exports = FilterSearch = React.createClass
     @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
       @props.searchResults results
 
-  selected: (id) =>
-    console.log id
-    console.log @state.articles
-    publishedArticles = _.reject @state.articles, (a) ->
-      a.id is id
-    console.log publishedArticles.length
-    @setState articles: publishedArticles
-    @props.saveQueue id, true
-
   render: ->
     div { className: 'filter-search__container' },
       div { className: 'filter-search__header-container' },
