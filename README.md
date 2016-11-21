@@ -3,6 +3,8 @@ Positron
 
 [Positron](https://github.com/artsy/positron) is Artsy Writer or the editorial tool for Artsy.
 
+![ArtsyWriter](/doc/ArtsyWriter.png)
+
 Meta
 ---
 
