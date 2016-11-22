@@ -30,7 +30,7 @@ module.exports.QueueView = QueueView = React.createClass
     queued = [article].concat(@state.queuedArticles.slice(0))
     @setState
       publishedArticles: published
-      queuedArticles: queued
+      queuedArticles: _.uniq queued, 'id'
     @saveSelected article, true
 
   unselected: (article) ->
@@ -39,7 +39,7 @@ module.exports.QueueView = QueueView = React.createClass
     published = [article].concat(@state.publishedArticles.slice(0))
     @setState
       queuedArticles: queued
-      publishedArticles: published
+      publishedArticles: _.uniq published, 'id'
     @saveSelected article, false
 
   searchResults: (results) ->
@@ -62,11 +62,11 @@ module.exports.QueueView = QueueView = React.createClass
         div { className: 'max-width-container' },
           nav {className: 'queue-tabs'},
             a {
-              className: "#{if @state.feed is 'daily_email' then 'is-active' else ''}"
+              className: "#{if @state.feed is 'daily_email' then 'is-active' else ''} daily-email"
               onClick: => @setFeed 'daily_email'
               }, "Daily Email"
             a {
-              className: "#{if @state.feed is 'weekly_email' then 'is-active' else ''}"
+              className: "#{if @state.feed is 'weekly_email' then 'is-active' else ''} weekly-email"
               onClick: => @setFeed 'weekly_email'
               }, "Weekly Email"
       div {},

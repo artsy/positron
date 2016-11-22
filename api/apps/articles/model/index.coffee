@@ -109,10 +109,10 @@ Q = require 'bluebird-q'
 typecastIds = (article) ->
   _.extend article,
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-    _id: article._id.toString()
+    _id: article._id.toString() if article._id
     author: if article.author? then _.extend article.author, id: article.author.id?.toString() else {}
     contributing_authors: article.contributing_authors.map( (author)->
-      author.id = author.id.toString()
+      author.id = author.id.toString() if author.id
       author
     ) if article.contributing_authors
     author_id: article.author_id.toString() if article.author_id

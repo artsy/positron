@@ -3,15 +3,12 @@ React = require 'react'
 { label, input, div, button, a, h1, h2 } = React.DOM
 moment = require 'moment'
 icons = -> require('./icons.jade') arguments...
+sd = require('sharify').data
 
 module.exports = FilterSearch = React.createClass
 
   componentDidMount: ->
     @addAutocomplete()
-
-  # componentWillReceiveProps: (nextProps) ->
-  #   console.log nextProps
-  #   @setState articles: nextProps
 
   addAutocomplete: ->
     @engine = new Bloodhound
@@ -21,10 +18,6 @@ module.exports = FilterSearch = React.createClass
         url: @props.url
         filter: @props.filter
     @engine.initialize()
-    @props.templates ?= {}
-    @props.templates?.empty ?= -> """
-      <div class='filter-search__empty'>No results</div>
-    """
 
   search: ->
     @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
@@ -35,7 +28,6 @@ module.exports = FilterSearch = React.createClass
       div { className: 'filter-search__header-container' },
         div { className: 'filter-search__header-text' }, @props.headerText
         input {
-          ref: 'input'
           className: 'filter-search__input bordered-input'
           placeholder: @props.placeholder
           onKeyUp: @search
