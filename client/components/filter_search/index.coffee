@@ -42,11 +42,7 @@ module.exports = FilterSearch = React.createClass
               div {
                 className: 'filter-search__checkcircle'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-<<<<<<< HEAD
                 onClick: => @props.selected(result)
-=======
-                onClick: => @selected(result.id)
->>>>>>> d4633a9... Work towards updating state
               }
             div { className: 'filter-search__article' },
               div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
