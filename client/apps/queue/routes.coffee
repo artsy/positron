@@ -1,6 +1,5 @@
 _ = require 'underscore'
 query = require './query.coffee'
-Q = require 'bluebird-q'
 Lokka = require('lokka').Lokka
 Transport = require('lokka-transport-http').Transport
 { API_URL } = process.env
