@@ -14,6 +14,12 @@
       include ../public/icons/layout_drafts.svg
       br
       | Drafts
+    if user.get('current_channel').type === 'editorial'
+      a( href='/queue'
+         class=(sd.URL.match('/sections') ? 'is-active' : '') )
+        include ../public/icons/layout_queue.svg
+        br
+        | Queue
     a( href='/articles?published=true'
        class=(sd.URL == '/articles?published=true' ? 'is-active' : '') )
       include ../public/icons/layout_published.svg

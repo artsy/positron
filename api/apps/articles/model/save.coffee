@@ -324,6 +324,8 @@ typecastIds = (article) ->
       credit_url: article.email_metadata?.credit_url
       html: html
       custom_text: article.email_metadata?.custom_text
+      daily_email: article.daily_email
+      weekly_email: article.weekly_email
   , (err, response) =>
     debug err if err
     cb()

@@ -148,6 +148,12 @@ section#edit-admin.admin-form-container.max-width-container
           label Send Article Body To Sailthru
             .flat-checkbox
               input( type='checkbox' name='send_body' value=1 checked=article.get('send_body') === true)
+          label Daily Email
+            .flat-checkbox
+              input( type='checkbox' name='daily_email' value=1 checked=article.get('daily_email') === true)
+          label Weekly Email
+            .flat-checkbox
+              input( type='checkbox' name='weekly_email' value=1 checked=article.get('weekly_email') === true)
       .admin-form-right-col
         label.edit-email-url URL
           input.bordered-input(
