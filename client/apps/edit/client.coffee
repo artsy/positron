@@ -19,7 +19,7 @@ HeroSection = React.createFactory require './components/hero_section/index.coffe
   channel = new Channel sd.CURRENT_CHANNEL
   new EditLayout el: $('#layout-content'), article: article, channel: channel
   new EditHeader el: $('#edit-header'), article: article
-  new EditDisplay el: $('#edit-thumbnail'), article: article
+  new EditDisplay el: $('#edit-display'), article: article
   new EditAdmin el: $('#edit-admin'), article: article, channel: channel
   React.render(
     SectionList(sections: article.sections)
