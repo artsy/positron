@@ -1,6 +1,3 @@
-include ../../../components/admin_form/index
-extend ../../../components/layout/templates/index
-
 mixin feature-section(i)
   - section = curation.get('sections')[i]
   .settings-edit-feature__fields
@@ -51,41 +48,7 @@ mixin feature-section(i)
             value=section && section.caption_second
           )
 
-mixin image(i)
-  - image = curation.get('images')[i]
-  h3.admin-form-subheader Image #{i + 1}
-  label
-    | Image
-    .admin-image-placeholder(
-      data-name="images[#{i}][src]" data-index=i )
-
-block header
-  = curation.get('name')
-
-block content
-  - model = curation
-  case curation.get('type')
-    when 'three-images'
-      .max-width-container
-        form.admin-form-container(
-          action=("/settings/curations/#{curation.get('id')}")
-          method='post'
-        )
-          section.admin-form-section
-            .admin-form-right-col
-              +image(0)
-              +image(1)
-            .admin-form-right-col
-              +image(2)
-          input( value=curation.get('name') name='name' hidden)
-          input( value=curation.get('type') name='type' hidden)
-          button.avant-garde-button.avant-garde-button-black.admin-form-save(
-            type='submit' href="/curations/#{curation.get('id')}"
-          ) Save Changes
-
-    when 'editorial-feature'
-      .max-width-container.settings-edit-feature
-        form.admin-form-container(
+form.admin-form-container(
           action=("/settings/curations/#{curation.get('id')}")
           method='post'
         )
@@ -94,6 +57,21 @@ block content
               h1.settings__item-link.settings-edit-feature__section-title
                 | Section #{i + 1}: #{section.headline}
               +feature-section(i)
+          .admin-form-container--wide.intro-assets
+            .admin-form-right-col
+              label Introduction
+                span Supports markdown
+              textarea.bordered-input(
+                name="intro"
+                value=curation && curation.get('intro')
+              )=curation.get('intro')
+
+            .admin-form-right-col
+              label Header Video
+                span Accepts Mp4
+              .admin-image-placeholder(
+                data-name="header_video" data-type="video")
+
           input( value=curation.get('name') name='name' hidden)
           input( value=curation.get('type') name='type' hidden)
           button.avant-garde-button.avant-garde-button-black.admin-form-save(
