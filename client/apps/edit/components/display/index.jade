@@ -1,0 +1,121 @@
+section#edit-display.max-width-container
+  form.edit-display.admin-form-container
+
+    section.edit-display--magazine
+      .admin-form-section
+        h1 Magazine
+        include ../../public/icons/edit_caret_down.svg
+      .edit-display__inputs
+        .admin-form-left
+          - context = 'Magaine'
+          include form
+          label.edit-display__headline
+            span.label.edit-required Magazine Headline
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            input.bordered-input(
+            value=article.get('thumbnail_title')
+            )
+          label.edit-display__description
+            span.label Magazine Description
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            textarea.bordered-input(
+            )= article.get('description')
+        .admin-form-right
+          .edit-display__preview
+          //- example image goes here
+
+    //- Search
+    section.edit-display--social
+      .admin-form-section
+        h1 Social
+        include ../../public/icons/edit_caret_down.svg
+      .edit-display__inputs
+        .admin-form-left
+          - image = article.get('social_thumbnail')
+          - context = 'Social'
+          include form
+          label.edit-display__headline
+            span.label.edit-required Social Headline
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            input.bordered-input(
+            value=article.get('social_title')
+            )
+          label.edit-display__description
+            span.label Social Description
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            textarea.bordered-input(
+            )= article.get('social_description')
+        .admin-form-right
+          .edit-display__preview
+          //- example image goes here
+
+    //- Search
+    section.edit-display--search
+      .admin-form-section
+        h1 Search
+        include ../../public/icons/edit_caret_down.svg
+      .edit-display__inputs
+        .admin-form-left
+          label.edit-display__headline
+            span.label Search Headline
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            input.bordered-input(
+            value=article.get('search_title')
+            )
+          label.edit-display__description
+            span.label Search Description
+            .edit-char-count-message
+              .edit-char-count
+              span Characters
+            textarea.bordered-input(
+            )= article.get('search_description')
+        .admin-form-right
+          .edit-display__preview
+          //- example image goes here
+
+    //- Email
+    section.admin-form-section.edit-display--email
+      .admin-form-section
+        h1 Email
+        include ../../public/icons/edit_caret_down.svg
+      .edit-display__inputs
+        .admin-form-left
+          label.edit-email-image
+            span(
+              data-hidden=(article.get('email_metadata') && article.get('email_metadata').image_url) ? 'true' : 'false'
+            ) Email Thumbnail
+            .edit-display__image-upload
+          label.edit-display__headline
+            span.label Email Headline
+            input.bordered-input( name='headline' value="#{article.getObjectAttribute('email_metadata','headline')}" )
+          label Custom Text
+            input.bordered-input( name='custom_text' value="#{article.getObjectAttribute('email_metadata','custom_text')}")
+
+        .admin-form-right
+          .edit-display__preview
+          //- example image goes here
+
+        .admin-form-left
+          label Author
+            input.bordered-input( name='author' value="#{article.getObjectAttribute('email_metadata','author')}")
+        .admin-form-right.edit-display__email-credits
+          .admin-form-left
+            label Credit Line
+              input.bordered-input( name='credit_line' value="#{article.getObjectAttribute('email_metadata','credit_line')}")
+          .admin-form-right
+            label Credit URL
+              input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
+        .admin-send-body-to-sailthru
+          label Send Article Body To Sailthru
+            .flat-checkbox
+              input( type='checkbox' name='send_body' value=1 checked=article.get('send_body') === true)
