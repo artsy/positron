@@ -2,9 +2,9 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 sd = require('sharify').data
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
-thumbnailFormTemplate = -> require('./form.jade') arguments...
+displayFormTemplate = -> require('./form.jade') arguments...
 
-module.exports = class EditThumbnail extends Backbone.View
+module.exports = class EditDisplay extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
@@ -15,12 +15,32 @@ module.exports = class EditThumbnail extends Backbone.View
 
   renderThumbnailForm: =>
     new ImageUploadForm
-      el: $('#edit-thumbnail-upload')
+      el: $('.edit-display--magazine .edit-display__image-upload')
       src: @article.get('thumbnail_image')
       remove: =>
         @article.save thumbnail_image: null
       done: (src) =>
         @article.save thumbnail_image: src
+
+    new ImageUploadForm
+      el: $('.edit-display--social .edit-display__image-upload')
+      src: @article.get('social_image')
+      remove: =>
+        @article.save social_image: null
+      done: (src) =>
+        @article.save social_image: src
+
+    new ImageUploadForm
+      el: $('.edit-display--email .edit-display__image-upload')
+      src: @article.get('email_metadata')?.image_url
+      remove: =>
+        emailMetadata = @article.get('email_metadata') or {}
+        emailMetadata.image_url = ''
+        @article.save email_metadata: emailMetadata
+      done: (src) =>
+        emailMetadata = @article.get('email_metadata') or {}
+        emailMetadata.image_url = src
+        @article.save email_metadata: emailMetadata
 
   prefillThumbnailTitle: =>
     if @article.get('title') and not @article.get('thumbnail_title')
@@ -28,8 +48,8 @@ module.exports = class EditThumbnail extends Backbone.View
 
   events:
     'click .edit-use-article-title': 'useArticleTitle'
-    'change .edit-title-textarea': 'checkTitleTextarea'
-    'keyup .edit-title-textarea': 'updateCharCount'
+    'change .edit-display--magazine .edit-display__headline': 'checkTitleTextarea'
+    'keyup .edit-display--magazine .edit-display__headline': 'updateCharCount'
 
   useArticleTitle: (e) ->
     e?.preventDefault()
@@ -39,13 +59,13 @@ module.exports = class EditThumbnail extends Backbone.View
     @article.save thumbnail_title: @article.get('title')
 
   checkTitleTextarea: ->
-    if $('.edit-title-textarea').val() is @article.get('title')
+    if $('.edit-display--magazine .edit-display__headline input').val() is @article.get('title')
       $('.edit-use-article-title').hide()
     else
       $('.edit-use-article-title').show()
 
   updateCharCount: ->
-    textLength = 97 - $('.edit-title-textarea').val().length
+    textLength = 130 - $('.edit-display--magazine .edit-display__headline input').val().length
     if textLength < 0
       $('.edit-char-count').addClass('edit-char-count-limit')
     else

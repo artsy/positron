@@ -163,6 +163,11 @@ denormalizedArtwork = (->
   slug: @string().allow(null)
   daily_email: @boolean().allow(null).default(false)
   weekly_email: @boolean().allow(null).default(false)
+  social_image: @string().allow('', null)
+  social_title: @string().allow('', null)
+  social_description: @string().allow('', null)
+  search_title: @string().allow('', null)
+  search_description: @string().allow('', null)
 ).call Joi
 
 #
