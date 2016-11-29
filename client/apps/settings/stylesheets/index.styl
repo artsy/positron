@@ -1,4 +1,5 @@
 @import '../../../components/stylus_lib'
+@import '/editorial_features'
 
 #channel-edit__users
   input
@@ -28,53 +29,3 @@
     color gray-darker-color
   &:last-of-type
     border-bottom none
-
-.settings-edit-feature
-  margin-top 60px
-  padding-left 24px
-  display none
-  .admin-form-save
-    position fixed
-    top 5px
-    width 435px
-    right calc((100vw \/ 2) \- 500px)
-    z-index 100
-  &__section
-    border-bottom 1px solid gray-lighter-color
-  &__section-title
-    padding 20px 5px
-    margin-top 0
-  &__fields
-    display none
-    &-inner
-      padding 0 5px 40px 5px
-    .admin-form-container
-      width 100%
-      display flex
-      &--wide
-        flex-direction column
-        .bordered-input
-          height 20em
-    .admin-form-right-col
-      display flex
-      flex-direction column
-    .admin-image-placeholder
-      height 225px
-      margin-bottom 15px
-      .image-upload-form
-        height 220px
-        display flex
-        flex-direction column
-        align-items center
-        justify-content center
-        h1
-          margin-top 0
-    label
-      display flex
-      justify-content space-between
-      span
-        color gray-color
-    textarea
-      height 100%
-    .bordered-input
-      margin-bottom 30px
