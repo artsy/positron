@@ -2,7 +2,7 @@ section#edit-display.max-width-container
   form.edit-display.admin-form-container
 
     section.edit-display--magazine
-      .admin-form-section
+      .admin-form-section.edit-display__section-title
         h1 Magazine
         include ../../public/icons/edit_caret_down.svg
       .edit-display__inputs
@@ -10,27 +10,26 @@ section#edit-display.max-width-container
           - context = 'Magaine'
           include form
           label.edit-display__headline
-            span.label.edit-required Magazine Headline
-            .edit-char-count-message
+            .label
+              span.title Magazine Headline
               .edit-char-count
-              span Characters
             input.bordered-input(
             value=article.get('thumbnail_title')
             )
           label.edit-display__description
-            span.label Magazine Description
-            .edit-char-count-message
+            .label
+              span.title Magazine Description
               .edit-char-count
-              span Characters
-            textarea.bordered-input(
-            )= article.get('description')
+            input.bordered-input(
+            value=article.get('description')
+            )
         .admin-form-right
           .edit-display__preview
           //- example image goes here
 
     //- Search
     section.edit-display--social
-      .admin-form-section
+      .admin-form-section.edit-display__section-title
         h1 Social
         include ../../public/icons/edit_caret_down.svg
       .edit-display__inputs
@@ -39,53 +38,51 @@ section#edit-display.max-width-container
           - context = 'Social'
           include form
           label.edit-display__headline
-            span.label.edit-required Social Headline
-            .edit-char-count-message
+            .label
+              span.title Social Headline
               .edit-char-count
-              span Characters
             input.bordered-input(
             value=article.get('social_title')
             )
           label.edit-display__description
-            span.label Social Description
-            .edit-char-count-message
+            .label
+              span.title Social Description
               .edit-char-count
-              span Characters
-            textarea.bordered-input(
-            )= article.get('social_description')
+            input.bordered-input(
+              value=article.get('social_description')
+            )
         .admin-form-right
           .edit-display__preview
           //- example image goes here
 
     //- Search
     section.edit-display--search
-      .admin-form-section
+      .admin-form-section.edit-display__section-title
         h1 Search
         include ../../public/icons/edit_caret_down.svg
       .edit-display__inputs
         .admin-form-left
           label.edit-display__headline
-            span.label Search Headline
-            .edit-char-count-message
+            .label
+              span.title Search Headline
               .edit-char-count
-              span Characters
             input.bordered-input(
             value=article.get('search_title')
             )
           label.edit-display__description
-            span.label Search Description
-            .edit-char-count-message
+            .label
+              span.title Search Description
               .edit-char-count
-              span Characters
-            textarea.bordered-input(
-            )= article.get('search_description')
+            input.bordered-input(
+              value=article.get('search_description')
+            )
         .admin-form-right
           .edit-display__preview
           //- example image goes here
 
     //- Email
     section.admin-form-section.edit-display--email
-      .admin-form-section
+      .admin-form-section.edit-display__section-title
         h1 Email
         include ../../public/icons/edit_caret_down.svg
       .edit-display__inputs

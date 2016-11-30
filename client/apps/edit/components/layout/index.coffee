@@ -73,11 +73,11 @@ module.exports = class EditLayout extends Backbone.View
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
-      description: @$('.edit-display--magazine .edit-display__description textarea').val()
+      description: @$('.edit-display--magazine .edit-display__description input').val()
       social_title: @$('.edit-display--social .edit-display__headline input').val()
-      social_description: @$('.edit-display--social .edit-display__description textarea').val()
+      social_description: @$('.edit-display--social .edit-display__description input').val()
       search_title: @$('.edit-display--search .edit-display__headline input').val()
-      search_description: @$('.edit-display--search .edit-display__description textarea').val()
+      search_description: @$('.edit-display--search .edit-display__description input').val()
       email_metadata:
         headline: @$(".edit-display--email input[name='headline']").val()
         author: @$(".edit-display--email input[name='author']").val()

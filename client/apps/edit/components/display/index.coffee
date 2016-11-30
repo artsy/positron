@@ -11,7 +11,7 @@ module.exports = class EditDisplay extends Backbone.View
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
     @checkTitleTextarea()
     @renderThumbnailForm()
-    @updateCharCount()
+    @setCharCounts()
 
   renderThumbnailForm: =>
     new ImageUploadForm
@@ -49,7 +49,21 @@ module.exports = class EditDisplay extends Backbone.View
   events:
     'click .edit-use-article-title': 'useArticleTitle'
     'change .edit-display--magazine .edit-display__headline': 'checkTitleTextarea'
-    'keyup .edit-display--magazine .edit-display__headline': 'updateCharCount'
+    'keyup input': 'updateCharCount'
+
+  updateCharCount: (e) ->
+    if e.target
+      e = e.target
+    textLength = 130 - e.value.length
+    if textLength < 0
+      $(e).parent().find('.edit-char-count').addClass('edit-char-count-limit')
+    else
+      $(e).parent().find('.edit-char-count').removeClass('edit-char-count-limit')
+    $(e).parent().find('.edit-char-count').text(textLength + ' Characters')
+
+  setCharCounts: ->
+    for input in $( ":text" )
+      @updateCharCount(input)
 
   useArticleTitle: (e) ->
     e?.preventDefault()
@@ -64,10 +78,3 @@ module.exports = class EditDisplay extends Backbone.View
     else
       $('.edit-use-article-title').show()
 
-  updateCharCount: ->
-    textLength = 130 - $('.edit-display--magazine .edit-display__headline input').val().length
-    if textLength < 0
-      $('.edit-char-count').addClass('edit-char-count-limit')
-    else
-      $('.edit-char-count').removeClass('edit-char-count-limit')
-    $('.edit-char-count').text(textLength)
