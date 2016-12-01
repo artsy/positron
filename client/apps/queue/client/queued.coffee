@@ -1,29 +1,19 @@
 _ = require 'underscore'
 React = require 'react'
-{ input, div, a, h1, h2 } = React.DOM
-moment = require 'moment'
-icons = -> require('../../../components/filter_search/icons.jade') arguments...
+{ div } = React.DOM
+ArticleList = require '../../../components/article_list/index.coffee'
 
 module.exports = QueuedArticles = React.createClass
 
+  selected: (article) ->
+    @props.selected article, 'unselect'
+
   render: ->
-    div { className: 'filter-search__container' },
-      div { className: 'filter-search__header-container' },
-        div { className: 'filter-search__header-text' }, @props.headerText
-      div {
-        className: 'filter-search__results'
-      },
-        (@props.articles.map (result) =>
-          div { className: 'filter-search__result paginated-list-item' },
-            div {
-              className: 'filter-search__checkcircle'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
-              onClick: => @props.unselected(result)
-            }
-            div { className: 'filter-search__article' },
-              div { className: 'filter-search__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
-              div { className: 'filter-search__title paginated-list-text-container' },
-                h1 {}, result.thumbnail_title
-                h2 {}, "Published #{moment(result.published_at).fromNow()}"
-            a { className: 'paginated-list-preview avant-garde-button', href: "#{sd.FORCE_URL}/article/#{result.slug}", target: '_blank' }, "Preview"
-        )
+    div { className: 'queued-articles__container' },
+      div { className: 'queued-articles__header-container' },
+        div { className: 'queued-articles__header-text' }, @props.headerText
+      ArticleList {
+        articles: @props.articles
+        checkable: true
+        selected: @props.selected
+      }

@@ -9,7 +9,16 @@
 
 .queue-queued
   margin 60px auto 120px auto
-  .filter-search
+  .queued-articles
+    &__header-container
+      display flex
+      border-bottom 1px solid gray-lighter-color
+      padding-bottom 20px
+      justify-content space-between
+    &__header-text
+      garamond('headline')
+
+  .article-list
     &__checkcircle
       svg
         fill-color black

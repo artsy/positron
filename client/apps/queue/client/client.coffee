@@ -24,23 +24,23 @@ module.exports.QueueView = QueueView = React.createClass
       "#{@state.feed}": isQueued
     article.save()
 
-  selected: (article) ->
-    published = _.reject @state.publishedArticles, (a) ->
-      a.id is article.id
-    queued = [article].concat(@state.queuedArticles.slice(0))
-    @setState
-      publishedArticles: published
-      queuedArticles: _.uniq queued, 'id'
-    @saveSelected article, true
-
-  unselected: (article) ->
-    queued = _.reject @state.queuedArticles, (a) ->
-      a.id is article.id
-    published = [article].concat(@state.publishedArticles.slice(0))
-    @setState
-      queuedArticles: queued
-      publishedArticles: _.uniq published, 'id'
-    @saveSelected article, false
+  selected: (article, type) ->
+    if type is 'select'
+      published = _.reject @state.publishedArticles, (a) ->
+        a.id is article.id
+      queued = [article].concat(@state.queuedArticles.slice(0))
+      @setState
+        publishedArticles: published
+        queuedArticles: _.uniq queued, 'id'
+      @saveSelected article, true
+    else
+      queued = _.reject @state.queuedArticles, (a) ->
+        a.id is article.id
+      published = [article].concat(@state.publishedArticles.slice(0))
+      @setState
+        queuedArticles: queued
+        publishedArticles: _.uniq published, 'id'
+      @saveSelected article, false
 
   searchResults: (results) ->
     @setState publishedArticles: results
@@ -75,7 +75,7 @@ module.exports.QueueView = QueueView = React.createClass
             articles: @state.queuedArticles
             headerText: "Queued"
             type: @state.feed
-            unselected: @unselected
+            selected: @selected
           }
         div { className: 'queue-filter-search max-width-container' },
           FilterSearch {
