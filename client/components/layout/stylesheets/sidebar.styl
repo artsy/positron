@@ -25,6 +25,7 @@ triangle-size = 12px
       color white
       svg
         fill-color white
+
   svg
     width 22px
     display inline-block
@@ -35,6 +36,10 @@ triangle-size = 12px
     width 33px
   a[href*=queue] svg
     width 33px
+  a#layout-sidebar-queue:hover svg, a#layout-sidebar-queue.is-active svg
+    ellipse
+      fill black
+      stroke white
 
 #layout-sidebar-new-article
   margin-top 15px !important

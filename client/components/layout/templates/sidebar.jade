@@ -15,7 +15,7 @@
       br
       | Drafts
     if user.get('current_channel').type === 'editorial'
-      a( href='/queue'
+      a#layout-sidebar-queue( href='/queue'
          class=(sd.URL.match('/sections') ? 'is-active' : '') )
         include ../public/icons/layout_queue.svg
         br
