@@ -80,6 +80,19 @@ Q = require 'bluebird-q'
       return callback err, [] if err
       return callback null, results
 
+@unqueue = (callback) ->
+  db.articles.find { $or: [ { weekly_email: true }, { daily_email: true } ] } , (err, articles) =>
+    return callback err, [] if err
+    return callback null, [] if articles.length is 0
+    async.map articles, (article, cb) =>
+      article = _.extend article,
+        weekly_email: false
+        daily_email: false
+      onPublish article, sanitizeAndSave cb
+    , (err, results) ->
+      return callback err, [] if err
+      return callback null, results
+
 #
 # Destroy
 #
