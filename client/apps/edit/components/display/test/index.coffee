@@ -31,29 +31,40 @@ describe 'EditDisplay', ->
     benv.teardown()
     Backbone.sync.restore()
 
-  # describe '#useArticleTitle', ->
+  describe '#useArticleTitle', ->
 
-  #   it 'uses the article title when clicked', ->
-  #     @view.article.set title: 'foo'
-  #     @view.$('.edit-use-article-title').click()
-  #     @view.$('.edit-title-textarea').val().should.equal 'foo'
+    it 'uses the article title when clicked', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-display__use-article-title').click()
+      @view.$('.edit-display--magazine .edit-display__headline textarea').val().should.equal 'foo'
 
-  # describe '#checkTitleTextArea', ->
+  describe '#checkTitleInput', ->
 
-  #   it 'shows the use-title link when nothing is in the textarea', ->
-  #     @view.$('.edit-title-textarea').val('')
-  #     @view.checkTitleTextarea()
-  #     @view.$('.edit-use-article-title').attr('style').should.not.containEql 'display: none'
+    it 'shows the use-title link when nothing is in the textarea', ->
+      @view.$('.edit-display--magazine .edit-display__headline textarea').val('')
+      @view.checkTitleInput()
+      @view.$('.edit-display__use-article-title').css('display').should.equal 'block'
 
-  #   it 'hides the use-title link when the title equals the textarea', ->
-  #     @view.article.set title: 'foo'
-  #     @view.$('.edit-title-textarea').val('foo')
-  #     @view.checkTitleTextarea()
-  #     @view.$('.edit-use-article-title').attr('style').should.containEql 'display: none'
+    it 'hides the use-title link when the title equals the textarea', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-display--magazine .edit-display__headline textarea').val('foo')
+      @view.checkTitleInput()
+      @view.$('.edit-display__use-article-title').attr('style').should.containEql 'display: none'
 
-  # describe '#updateCharCount', ->
+  describe '#updateCharCount', ->
 
-  #   it 'updates the count when adding text', ->
-  #     @view.$('.edit-title-textarea').val('Title')
-  #     @view.updateCharCount()
-  #     @view.$('.edit-char-count').text().should.containEql '92'
+    it 'updates the count when adding text', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.val('Title')
+      input.trigger 'keyup'
+      @view.$('.edit-display--magazine .edit-char-count').text().should.containEql '92'
+
+  describe '#renderThumbnailForms', ->
+
+    it 'uses dist channel images when present', ->
+      @article.set 'social_image', 'http://socialimage'
+      @article.set 'email_metadata', { image_url: 'http://emailimage' }
+      @view.renderThumbnailForms()
+      @ImageUploadForm.args[3][0].src.should.equal 'http://kitten.com'
+      @ImageUploadForm.args[4][0].src.should.equal 'http://socialimage'
+      @ImageUploadForm.args[5][0].src.should.equal 'http://emailimage'

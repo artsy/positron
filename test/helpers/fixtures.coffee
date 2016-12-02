@@ -75,6 +75,11 @@ module.exports = ->
       secondary_logo_link: 'http://secondary'
       footer_blurb: 'This is a Footer Blurb'
       related_articles: [ '5530e72f7261696238050000' ]
+    social_description: 'Social Description Here.'
+    social_title: 'Social Title'
+    social_image: 'http://socialimage.jpg'
+    search_title: 'Search Title'
+    search_description: 'Search Description Here.'
   fixtures.users =
     id: '4d8cd73191a5c50ce200002a'
     name: 'Craig Spaeth'
