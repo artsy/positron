@@ -976,7 +976,7 @@ describe 'Article', ->
           name: 'Kana Abe'
         sections: []
       , ->
-        Article.publishScheduledArticles (err, results) ->
+        Article.unqueue (err, results) ->
           results[0].weekly_email.should.be.false()
           results[0].daily_email.should.be.false()
           done()
