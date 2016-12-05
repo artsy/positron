@@ -60,11 +60,11 @@ describe 'QueuedView', ->
     @component.state.queuedArticles.length.should.equal 2
 
   it 'updates state on selected', ->
-    @component.selected(_.extend fixtures().articles, id: '123')
+    @component.selected(_.extend(fixtures().articles, id: '123'), 'select')
     @component.state.publishedArticles.length.should.equal 0
     @component.state.queuedArticles.length.should.equal 2
 
   it 'updates state on unselected', ->
-    @component.unselected(_.extend fixtures().articles, id: '456')
+    @component.selected(_.extend(fixtures().articles, id: '456'), 'unselect')
     @component.state.publishedArticles.length.should.equal 2
     @component.state.queuedArticles.length.should.equal 0

@@ -965,6 +965,22 @@ describe 'Article', ->
           results[0].sections[1].url.should.containEql 'https://image.png'
           done()
 
+  describe '#unqueue', ->
+
+    it 'calls #save on each article that needs to be unqueued', (done) ->
+      fabricate 'articles',
+        _id: ObjectId('54276766fd4f50996aeca2b8')
+        weekly_email: true
+        daily_email: true
+        author:
+          name: 'Kana Abe'
+        sections: []
+      , ->
+        Article.unqueue (err, results) ->
+          results[0].weekly_email.should.be.false()
+          results[0].daily_email.should.be.false()
+          done()
+
   describe "#destroy", ->
 
     it 'removes an article', (done) ->

@@ -1,0 +1,23 @@
+thumbnail-width = 145px
+
+.article-list
+  &__result
+    cursor default
+  &__checkcircle
+    width 18px
+    height 18px
+    display inline-block
+    margin-right 20px
+    vertical-align middle
+    cursor pointer
+    svg
+      fill-color gray-color
+    &:hover
+      svg
+        fill-color black
+  &__article
+    width "calc(100% - %s)" % (thumbnail-width + 20px)
+    display inline-block
+    cursor default
+    &:hover
+      opacity 1
