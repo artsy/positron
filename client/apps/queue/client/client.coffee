@@ -51,19 +51,14 @@ module.exports.QueueView = QueueView = React.createClass
     @setState feed: type
     request
       .post API_URL + '/graphql'
-      .send query: @getQueryByFeed(type)
+      .set 'X-Access-Token': sd.USER.access_token
+      .send query: query "#{type}: true"
       .end (err, res) =>
         return if err or not res.body?.data
         if @state.feed is 'scheduled'
           @setState scheduledArticles: res.body.data.articles
         else
           @setState queuedArticles: res.body.data.articles
-
-  getQueryByFeed: (type) ->
-    if type is 'scheduled'
-      query "scheduled_publish_at: \"#{new Date()}\""
-    else
-      query "#{type}: true"
 
   render: ->
     div {
