@@ -81,5 +81,6 @@ module.exports = class EditDisplay extends Backbone.View
       $('.edit-display__use-article-title').show()
 
   revealSection: (e) ->
-    $(e.target).toggleClass('active')
-    $(e.target).next().slideToggle()
+    $title = $(e.target).closest('.edit-display__section-title')
+    $title.toggleClass('active')
+    $($title).next().slideToggle()
