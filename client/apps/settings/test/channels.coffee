@@ -21,7 +21,7 @@ describe 'EditChannel', ->
         channel: new Channel @channel
       )
       locals.sd = _.extend locals.sd, { CHANNEL: @channel }
-      tmpl = resolve __dirname, '../templates/channel_edit.jade'
+      tmpl = resolve __dirname, '../templates/channels/channel_edit.jade'
       benv.render tmpl, locals, =>
         { @EditChannel } = mod = rewire '../client/channels.coffee'
         mod.__set__ 'AutocompleteSortableList', sinon.stub()

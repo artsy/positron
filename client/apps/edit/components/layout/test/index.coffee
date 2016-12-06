@@ -66,7 +66,7 @@ describe 'EditLayout', ->
   describe '#serialize', ->
 
     it 'turns form elements into data', ->
-      @view.$('#edit-thumbnail-title :input').val('foobar')
+      @view.$('.edit-display--magazine .edit-display__headline textarea').val('foobar')
       @view.$('#edit-admin-tags :input').val('house, couch')
       @view.$('#edit-admin-change-author input').val('Jon Snow')
       @view.serialize().thumbnail_title.should.equal 'foobar'

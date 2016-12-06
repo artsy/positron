@@ -1,0 +1,12 @@
+.edit-display__prev-email
+  .edit-display__prev-email--placeholder
+    - var image = article.getObjectAttribute('email_metadat', 'image_url') || article.get('thumbnail_image')
+    if image
+      img(src= crop(image, { width: 320, height: 188 }))
+    else
+      .edit-display__prev--x
+  - var headline = article.getObjectAttribute('email_metadata', 'headline')
+  .edit-display__prev-email--headline= headline ? headline : article.get('thumbnail_title')
+  - var author = article.getObjectAttribute('email_metadata', 'author')
+  .edit-display__prev-email--author= "By " + (author ? author : article.getByline())
+  .edit-display__prev-email--placeholder

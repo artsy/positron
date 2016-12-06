@@ -7,25 +7,22 @@ section#edit-display.max-width-container
         include ../../public/icons/edit_caret_down.svg
       .edit-display__inputs
         .admin-form-left
-          - context = 'Magaine'
+          - context = 'Magazine'
           include form
           label.edit-display__headline
             .label
               span.title Magazine Headline
               .edit-char-count
-            input.bordered-input(
-            value=article.get('thumbnail_title')
-            )
+            textarea.bordered-input(data-limit=97)=article.get('thumbnail_title')
+            .edit-display__use-article-title Use Article Title
           label.edit-display__description
             .label
               span.title Magazine Description
               .edit-char-count
-            input.bordered-input(
-            value=article.get('description')
-            )
+            textarea.bordered-input(data-limit=130)=article.get('description')
         .admin-form-right
           .edit-display__preview
-          //- example image goes here
+            include ./templates/magazine_preview
 
     //- Search
     section.edit-display--social
@@ -41,19 +38,15 @@ section#edit-display.max-width-container
             .label
               span.title Social Headline
               .edit-char-count
-            input.bordered-input(
-            value=article.get('social_title')
-            )
+            textarea.bordered-input(data-limit=97)=article.get('social_title')
           label.edit-display__description
             .label
               span.title Social Description
               .edit-char-count
-            input.bordered-input(
-              value=article.get('social_description')
-            )
+            textarea.bordered-input(data-limit=130)=article.get('social_description')
         .admin-form-right
           .edit-display__preview
-          //- example image goes here
+            include ./templates/social_preview
 
     //- Search
     section.edit-display--search
@@ -66,19 +59,15 @@ section#edit-display.max-width-container
             .label
               span.title Search Headline
               .edit-char-count
-            input.bordered-input(
-            value=article.get('search_title')
-            )
+            textarea.bordered-input(data-limit=97)=article.get('search_title')
           label.edit-display__description
             .label
               span.title Search Description
               .edit-char-count
-            input.bordered-input(
-              value=article.get('search_description')
-            )
+            textarea.bordered-input(data-limit=130)=article.get('search_description')
         .admin-form-right
           .edit-display__preview
-          //- example image goes here
+            include ./templates/search_preview
 
     //- Email
     section.admin-form-section.edit-display--email
@@ -94,13 +83,13 @@ section#edit-display.max-width-container
             .edit-display__image-upload
           label.edit-display__headline
             span.label Email Headline
-            input.bordered-input( name='headline' value="#{article.getObjectAttribute('email_metadata','headline')}" )
+            textarea.bordered-input( name='headline' )= article.getObjectAttribute('email_metadata','headline')
           label Custom Text
             input.bordered-input( name='custom_text' value="#{article.getObjectAttribute('email_metadata','custom_text')}")
 
         .admin-form-right
           .edit-display__preview
-          //- example image goes here
+            include ./templates/email_preview
 
         .admin-form-left
           label Author

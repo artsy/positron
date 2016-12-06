@@ -9,11 +9,11 @@ module.exports = class EditDisplay extends Backbone.View
   initialize: (options) ->
     { @article } = options
     @article.on 'change:title', _.debounce @prefillThumbnailTitle, 3000
-    @checkTitleTextarea()
-    @renderThumbnailForm()
+    @checkTitleInput()
+    @renderThumbnailForms()
     @setCharCounts()
 
-  renderThumbnailForm: =>
+  renderThumbnailForms: =>
     new ImageUploadForm
       el: $('.edit-display--magazine .edit-display__image-upload')
       src: @article.get('thumbnail_image')
@@ -47,14 +47,14 @@ module.exports = class EditDisplay extends Backbone.View
       @useArticleTitle()
 
   events:
-    'click .edit-use-article-title': 'useArticleTitle'
-    'change .edit-display--magazine .edit-display__headline': 'checkTitleTextarea'
-    'keyup input': 'updateCharCount'
+    'click .edit-display__use-article-title': 'useArticleTitle'
+    'change .edit-display--magazine .edit-display__headline': 'checkTitleInput'
+    'keyup .edit-display textarea': 'updateCharCount'
 
   updateCharCount: (e) ->
     if e.target
       e = e.target
-    textLength = 130 - e.value.length
+    textLength = $(e).data('limit') - e.value.length
     if textLength < 0
       $(e).parent().find('.edit-char-count').addClass('edit-char-count-limit')
     else
@@ -62,19 +62,18 @@ module.exports = class EditDisplay extends Backbone.View
     $(e).parent().find('.edit-char-count').text(textLength + ' Characters')
 
   setCharCounts: ->
-    for input in $( ":text" )
-      @updateCharCount(input)
+    for input in $( ".edit-display textarea" )
+      $(input).trigger 'keyup'
 
-  useArticleTitle: (e) ->
-    e?.preventDefault()
-    @$('.edit-use-article-title').next().val(@article.get('title'))
-    @$('.edit-use-article-title').hide()
-    @updateCharCount()
+  useArticleTitle: ->
+    titleElement = @$('.edit-display__use-article-title').prev()
+    titleElement.val(@article.get('title'))
+    titleElement.trigger 'keyup'
+    @$('.edit-display__use-article-title').hide()
     @article.save thumbnail_title: @article.get('title')
 
-  checkTitleTextarea: ->
-    if $('.edit-display--magazine .edit-display__headline input').val() is @article.get('title')
-      $('.edit-use-article-title').hide()
+  checkTitleInput: ->
+    if $('.edit-display--magazine .edit-display__headline textarea').val() is @article.get('title')
+      $('.edit-display__use-article-title').hide()
     else
-      $('.edit-use-article-title').show()
-
+      $('.edit-display__use-article-title').show()

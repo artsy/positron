@@ -1,0 +1,19 @@
+.edit-display__prev-social
+  .edit-display__prev-social--post
+  .edit-display__prev-social--post
+    .edit-display__prev-social--identity
+      include ../../../../../components/layout/public/icons/logo.svg
+      .edit-display__prev-social--icontainer
+        .edit-display__prev-social--name Artsy
+        .edit-display__prev-social--hours-ago 1hr
+    .edit-display__prev-social--content
+      .edit-display__prev-social--placeholder
+        if article.getThumbnailImage('social_image')
+          img(src= crop(article.getThumbnailImage('social_image'),{width: 300, height: 155}))
+        else
+        .edit-display__prev--x
+      .edit-display__prev-social--meta
+        .edit-display__prev-social--headline= article.get('thumbnail_title')
+        .edit-display__prev-social--description= article.getDescription('social_description')
+        .edit-display__prev-social--author Artsy.net
+  .edit-display__prev-social--post

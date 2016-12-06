@@ -31,7 +31,7 @@ describe 'routes', ->
     it 'renders the edit page', ->
       routes.editCuration @req, @res
       Backbone.sync.args[0][2].success fixtures().curations
-      @res.render.args[0][0].should.equal 'curation_edit'
+      @res.render.args[0][0].should.equal 'curations/curation_edit'
       @res.render.args[0][1].curation.get('id')
         .should.equal '55356a9deca560a0137aa4b7'
 
@@ -51,7 +51,7 @@ describe 'routes', ->
     it 'renders the edit page', ->
       routes.editChannel @req, @res
       Backbone.sync.args[0][2].success fixtures().channels
-      @res.render.args[0][0].should.equal 'channel_edit'
+      @res.render.args[0][0].should.equal 'channels/channel_edit'
       @res.render.args[0][1].channel.get('id')
         .should.equal '5086df098523e60002000018'
 

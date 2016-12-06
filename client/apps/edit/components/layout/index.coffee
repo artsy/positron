@@ -68,18 +68,18 @@ module.exports = class EditLayout extends Backbone.View
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
-      thumbnail_title: @$('.edit-display--magazine .edit-display__headline :input').val()
+      thumbnail_title: @$('.edit-display--magazine .edit-display__headline textarea').val()
       tags: _.reject(
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
-      description: @$('.edit-display--magazine .edit-display__description input').val()
-      social_title: @$('.edit-display--social .edit-display__headline input').val()
-      social_description: @$('.edit-display--social .edit-display__description input').val()
-      search_title: @$('.edit-display--search .edit-display__headline input').val()
-      search_description: @$('.edit-display--search .edit-display__description input').val()
+      description: @$('.edit-display--magazine .edit-display__description textarea').val()
+      social_title: @$('.edit-display--social .edit-display__headline textarea').val()
+      social_description: @$('.edit-display--social .edit-display__description textarea').val()
+      search_title: @$('.edit-display--search .edit-display__headline textarea').val()
+      search_description: @$('.edit-display--search .edit-display__description textarea').val()
       email_metadata:
-        headline: @$(".edit-display--email input[name='headline']").val()
+        headline: @$(".edit-display--email textarea[name='headline']").val()
         author: @$(".edit-display--email input[name='author']").val()
         credit_line: @$(".edit-display--email input[name='credit_line']").val()
         credit_url: @$(".edit-display--email input[name='credit_url']").val()
