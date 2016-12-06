@@ -12,6 +12,7 @@ module.exports = class EditDisplay extends Backbone.View
     @checkTitleInput()
     @renderThumbnailForms()
     @setCharCounts()
+    $('.edit-display__inputs').first().slideDown().prev().addClass('active')
 
   renderThumbnailForms: =>
     new ImageUploadForm
@@ -50,6 +51,7 @@ module.exports = class EditDisplay extends Backbone.View
     'click .edit-display__use-article-title': 'useArticleTitle'
     'change .edit-display--magazine .edit-display__headline': 'checkTitleInput'
     'keyup .edit-display textarea': 'updateCharCount'
+    'click .edit-display__section-title': 'revealSection'
 
   updateCharCount: (e) ->
     if e.target
@@ -77,3 +79,7 @@ module.exports = class EditDisplay extends Backbone.View
       $('.edit-display__use-article-title').hide()
     else
       $('.edit-display__use-article-title').show()
+
+  revealSection: (e) ->
+    $(e.target).toggleClass('active')
+    $(e.target).next().slideToggle()

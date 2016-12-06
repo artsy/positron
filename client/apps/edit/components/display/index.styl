@@ -10,13 +10,17 @@
   &__section-title
     display flex
     align-items center
-    padding 0
+    padding 15px 0
     h1
       garamond headline
     svg
       margin-left 15px
+      transform rotate(270deg)
+    &.active svg
+      transform rotate(0deg)
   &__inputs
     padding 40px 0 120px 0
+    display none
     textarea
       resize none
    &__image-upload
