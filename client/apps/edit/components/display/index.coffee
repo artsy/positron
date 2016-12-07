@@ -58,6 +58,15 @@ module.exports = class EditDisplay extends Backbone.View
         @article.save email_metadata: emailMetadata
         $($emailImage).find('.image-upload-hidden-input').trigger 'change'
 
+    $partnerImage = $('.edit-display--partner .edit-display__image-upload')
+    new ImageUploadForm
+      el: $partnerImage
+      src: @article.get('thumbnail_image')
+      remove: =>
+        @article.save thumbnail_image: null
+      done: (src) =>
+        @article.save thumbnail_image: src
+
   prefillThumbnailTitle: =>
     if @article.get('title') and not @article.get('thumbnail_title')
       @useArticleTitle()

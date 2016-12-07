@@ -68,7 +68,7 @@ module.exports = class EditLayout extends Backbone.View
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
-      thumbnail_title: @$('.edit-display--magazine .edit-display__headline textarea').val()
+      thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
