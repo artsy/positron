@@ -19,7 +19,7 @@ describe 'EditDisplay', ->
         sinon.stub Backbone, 'sync'
         EditDisplay = benv.requireWithJadeify(
           resolve(__dirname, '../index')
-          ['displayFormTemplate']
+          ['displayFormTemplate', 'magazinePreview', 'socialPreview', 'searchPreview', 'emailPreview']
         )
         EditDisplay.__set__ 'gemup', @gemup = sinon.stub()
         EditDisplay.__set__ 'crop', sinon.stub().returns('http://foo')
@@ -51,14 +51,6 @@ describe 'EditDisplay', ->
       @view.checkTitleInput()
       @view.$('.edit-display__use-article-title').attr('style').should.containEql 'display: none'
 
-  describe '#updateCharCount', ->
-
-    it 'updates the count when adding text', ->
-      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
-      input.val('Title')
-      input.trigger 'keyup'
-      @view.$('.edit-display--magazine .edit-char-count').text().should.containEql '92'
-
   describe '#renderThumbnailForms', ->
 
     it 'uses dist channel images when present', ->
@@ -68,3 +60,45 @@ describe 'EditDisplay', ->
       @ImageUploadForm.args[3][0].src.should.equal 'http://kitten.com'
       @ImageUploadForm.args[4][0].src.should.equal 'http://socialimage'
       @ImageUploadForm.args[5][0].src.should.equal 'http://emailimage'
+
+  describe '#onKeyup', ->
+
+    beforeEach ->
+      @view.renderPreviews = sinon.stub()
+      @view.updateCharCount = sinon.stub()
+
+    afterEach ->
+      @view.renderPreviews.reset()
+      @view.updateCharCount.reset()
+
+    it 'calls renderPreviews and updateCharCount', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.trigger 'keyup'
+      @view.renderPreviews.callCount.should.equal 1
+      @view.updateCharCount.callCount.should.equal 1
+
+    it 'does not renderPreviews on the initial load', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.trigger 'keyup', true
+      @view.renderPreviews.callCount.should.equal 0
+
+  describe '#updateCharCount', ->
+
+    it 'updates the count when adding text', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.val('Title')
+      input.trigger 'keyup', true
+      @view.$('.edit-display--magazine .edit-char-count').text().should.containEql '92'
+
+  describe '#renderPreviews', ->
+
+    it 'rerenders the previews when inputs are changed', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.val('Title')
+      input.trigger 'keyup'
+      @view.$('.edit-display__prev-mag--headline').text().should.equal 'Title'
+
+    it 'does not override when certain previews are present', ->
+      input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.val('Do not override')
+      @view.$('.edit-display__prev-social--headline').text().should.equal 'Social Title'

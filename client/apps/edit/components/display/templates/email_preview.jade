@@ -1,6 +1,6 @@
 .edit-display__prev-email
   .edit-display__prev-email--placeholder
-    - var image = article.getObjectAttribute('email_metadat', 'image_url') || article.get('thumbnail_image')
+    - var image = article.getObjectAttribute('email_metadata', 'image_url') || article.get('thumbnail_image')
     if image
       img(src= crop(image, { width: 320, height: 188 }))
     else

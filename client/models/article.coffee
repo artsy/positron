@@ -48,7 +48,7 @@ module.exports = class Article extends Backbone.Model
       moment(new Date()).local()
 
   hasContributingAuthors: ->
-    @get('contributing_authors').length > 0
+    @get('contributing_authors')?.length > 0
 
   getDescription: (attr = '') ->
     @get(attr) or @get('description')

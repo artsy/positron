@@ -13,16 +13,22 @@ section#edit-display.max-width-container
             .label
               span.title Magazine Headline
               .edit-char-count
-            textarea.bordered-input(data-limit=97)=article.get('thumbnail_title')
+            textarea.bordered-input(
+              data-limit=97
+              data-value='thumbnail_title'
+            )=article.get('thumbnail_title')
             .edit-display__use-article-title Use Article Title
           label.edit-display__description
             .label
               span.title Magazine Description
               .edit-char-count
-            textarea.bordered-input(data-limit=130)=article.get('description')
+            textarea.bordered-input(
+              data-limit=160
+              data-value='description'
+            )=article.get('description')
         .admin-form-right
           .edit-display__preview
-            include ./templates/magazine_preview
+            include templates/magazine_preview
 
     //- Search
     section.edit-display--social
@@ -38,15 +44,21 @@ section#edit-display.max-width-container
             .label
               span.title Social Headline
               .edit-char-count
-            textarea.bordered-input(data-limit=97)=article.get('social_title')
+            textarea.bordered-input(
+              data-limit=97
+              data-value='social_title'
+            )=article.get('social_title')
           label.edit-display__description
             .label
               span.title Social Description
               .edit-char-count
-            textarea.bordered-input(data-limit=130)=article.get('social_description')
+            textarea.bordered-input(
+              data-limit=160
+              data-value='social_description'
+            )=article.get('social_description')
         .admin-form-right
           .edit-display__preview
-            include ./templates/social_preview
+            include templates/social_preview
 
     //- Search
     section.edit-display--search
@@ -59,15 +71,21 @@ section#edit-display.max-width-container
             .label
               span.title Search Headline
               .edit-char-count
-            textarea.bordered-input(data-limit=97)=article.get('search_title')
+            textarea.bordered-input(
+              data-limit=97
+              data-value='search_title'
+            )=article.get('search_title')
           label.edit-display__description
             .label
               span.title Search Description
               .edit-char-count
-            textarea.bordered-input(data-limit=130)=article.get('search_description')
+            textarea.bordered-input(
+              data-limit=160
+              data-value='search_description'
+            )=article.get('search_description')
         .admin-form-right
           .edit-display__preview
-            include ./templates/search_preview
+            include templates/search_preview
 
     //- Email
     section.edit-display--email
@@ -83,17 +101,24 @@ section#edit-display.max-width-container
             .edit-display__image-upload
           label.edit-display__headline
             span.label Email Headline
-            textarea.bordered-input( name='headline' )= article.getObjectAttribute('email_metadata','headline')
+            textarea.bordered-input(
+              name='headline'
+              data-value='headline'
+            )= article.getObjectAttribute('email_metadata','headline')
           label Custom Text
             input.bordered-input( name='custom_text' value="#{article.getObjectAttribute('email_metadata','custom_text')}")
 
         .admin-form-right
           .edit-display__preview
-            include ./templates/email_preview
+            include templates/email_preview
 
         .admin-form-left
           label Author
-            input.bordered-input( name='author' value="#{article.getObjectAttribute('email_metadata','author')}")
+            textarea.bordered-input(
+              name='author'
+              value="#{article.getObjectAttribute('email_metadata','author')}"
+              data-value='author'
+            )
         .admin-form-right.edit-display__email-credits
           .admin-form-left
             label Credit Line
