@@ -19,6 +19,7 @@ module.exports = class EditDisplay extends Backbone.View
     @renderThumbnailForms()
     @setCharCounts()
     $('.edit-display__inputs').first().slideDown().prev().addClass('active')
+    # @renderArticle = @article.clone()
 
   renderThumbnailForms: =>
     $magImage = $('.edit-display--magazine .edit-display__image-upload')
@@ -92,15 +93,15 @@ module.exports = class EditDisplay extends Backbone.View
       $(e).parent().find('.edit-char-count').removeClass('edit-char-count-limit')
     $(e).parent().find('.edit-char-count').text(textLength + ' Characters')
 
-  renderPreviews: (e) ->
+  renderPreviews: (e, img) ->
     # Pluck out the value that needs to be set
     dataValue = $(e.target).data('value')
     if dataValue in ['headline','author']
-      emailMetadata = @renderArticle.get('email_metadata') or {}
+      emailMetadata = @article.get('email_metadata') or {}
       emailMetadata[dataValue] = $(e.target).val()
-      @article.set 'email_metadata', emailMetadata
+      @article.set { email_metadata: emailMetadata }, silent: true
     else if dataValue
-      @article.set dataValue, $(e.target).val()
+      @article.set { "#{dataValue}": $(e.target).val() }, silent: true
 
     # Rerenders all the previews
     $('.edit-display--magazine .edit-display__preview').html magazinePreview
