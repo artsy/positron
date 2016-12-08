@@ -936,6 +936,32 @@ describe 'Article', ->
         article.description.should.containEql 'lines start forming'
         done()
 
+    it 'saves social metadata', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        social_title: 'social title'
+        social_description: 'social description'
+        social_image: 'social image'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.social_title.should.containEql 'social title'
+        article.social_description.should.containEql 'social description'
+        article.social_image.should.containEql 'social image'
+        done()
+
+    it 'saves search metadata', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        search_title: 'search title'
+        search_description: 'search description'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.search_title.should.containEql 'search title'
+        article.search_description.should.containEql 'search description'
+        done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->

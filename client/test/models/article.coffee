@@ -4,6 +4,7 @@ Article = require '../../models/article.coffee'
 sinon = require 'sinon'
 { fabricate } = require 'antigravity'
 fixtures = require '../../../test/helpers/fixtures'
+moment = require 'moment'
 
 describe "Article", ->
 
@@ -96,3 +97,72 @@ describe "Article", ->
     it 'returns the object attribute value if it exists', ->
       @article.getObjectAttribute('super_article', 'partner_link').should.equal 'http://partnerlink.com'
       @article.getObjectAttribute('email_metadata', 'headline').should.equal 'Foo'
+
+  describe '#getFullSlug', ->
+
+    it 'returns a slug with the artsy url', ->
+      @article.getFullSlug().should.equal 'https://artsy.net/article/undefined-top-ten-booths-at-miart-2014'
+
+  describe '#getFullSlug', ->
+
+    it 'returns a slug with the artsy url', ->
+      @article.getFullSlug().should.equal 'https://artsy.net/article/undefined-top-ten-booths-at-miart-2014'
+
+  describe '#getByline', ->
+
+    it 'returns the author when there are no contributing authors', ->
+      @article.set 'contributing_authors', []
+      @article.set 'author', { name: 'Molly' }
+      @article.getByline().should.equal 'Molly'
+
+    it 'returns the contributing author name if there is one', ->
+      @article.set 'contributing_authors', [{name: 'Molly'}]
+      @article.getByline().should.equal 'Molly'
+
+    it 'returns "and" with two contributing authors', ->
+      @article.set 'contributing_authors', [{name: 'Molly'}, {name: 'Kana'}]
+      @article.getByline().should.equal 'Molly and Kana'
+
+    it 'returns multiple contributing authors', ->
+      @article.set 'contributing_authors', [{name: 'Molly'}, {name: 'Kana'}, {name: 'Christina'}]
+      @article.getByline().should.equal 'Molly, Kana and Christina'
+
+  describe '#date', ->
+
+    it 'returns current date if no attribute is passed', ->
+      now = moment().format('LL')
+      @article.date().format('LL').should.equal now
+
+    it 'returns published_at date if attribute is passed', ->
+      @article.set 'published_at', 1360013296
+      @article.date('published_at').format('LL').should.equal 'January 16, 1970'
+
+  describe '#hasContributingAuthors', ->
+
+    it 'returns a slug with the artsy url', ->
+      @article.set 'contributing_authors', [ {name: 'Kana'} ]
+      @article.hasContributingAuthors().should.be.true()
+
+  describe '#getDescription', ->
+
+    it 'defaults to description', ->
+      @article.getDescription().should.containEql 'Just before the lines start forming'
+
+    it 'finds custom description', ->
+      @article.getDescription('search_description').should.containEql 'Search Description'
+
+  describe '#getThumbnailImage', ->
+
+    it 'defaults to thumbnail_image', ->
+      @article.getThumbnailImage().should.containEql 'kitten'
+
+    it 'finds custom thumbnail_image', ->
+      @article.getThumbnailImage('social_image').should.containEql 'socialimage.jpg'
+
+  describe '#getThumbnailTitle', ->
+
+    it 'defaults to thumbnail_title', ->
+      @article.getThumbnailTitle().should.containEql 'Top Ten Booths'
+
+    it 'finds custom thumbnail_title', ->
+      @article.getThumbnailTitle('search_title').should.containEql 'Search Title'

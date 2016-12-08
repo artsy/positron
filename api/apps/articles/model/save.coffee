@@ -303,7 +303,6 @@ typecastIds = (article) ->
 
 @sendArticleToSailthru = (article, cb) =>
   tags = ['article']
-  tags = tags.concat ['artsy-editorial'] if article.author_id is ARTSY_EDITORIAL_ID
   tags = tags.concat ['magazine'] if article.featured is true
   tags = tags.concat article.keywords
   imageSrc = article.email_metadata?.image_url

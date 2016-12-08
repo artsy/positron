@@ -68,20 +68,23 @@ module.exports = class EditLayout extends Backbone.View
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
       lead_paragraph: @$('#edit-lead-paragraph').html()
-      thumbnail_title: @$('#edit-thumbnail-title :input').val()
-      thumbnail_teaser: @$('#edit-thumbnail-teaser :input').val()
+      thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
-      description: @$('.edit-admin-description-input').val()
+      description: @$('.edit-display--magazine .edit-display__description textarea').val()
+      social_title: @$('.edit-display--social .edit-display__headline textarea').val()
+      social_description: @$('.edit-display--social .edit-display__description textarea').val()
+      search_title: @$('.edit-display--search .edit-display__headline textarea').val()
+      search_description: @$('.edit-display--search .edit-display__description textarea').val()
       email_metadata:
-        headline: @$(".edit-email-form input[name='headline']").val()
-        author: @$(".edit-email-form input[name='author']").val()
-        credit_line: @$(".edit-email-form input[name='credit_line']").val()
-        credit_url: @$(".edit-email-form input[name='credit_url']").val()
+        headline: @$(".edit-display--email textarea[name='headline']").val()
+        author: @$(".edit-display--email textarea[name='author']").val()
+        credit_line: @$(".edit-display--email input[name='credit_line']").val()
+        credit_url: @$(".edit-display--email input[name='credit_url']").val()
         image_url: @article.getObjectAttribute('email_metadata','image_url')
-        custom_text: @$(".edit-email-form input[name='custom_text']").val()
+        custom_text: @$(".edit-display--email input[name='custom_text']").val()
       is_super_article: @$('[name=is_super_article]').is(':checked')
       super_article:
         partner_link: @$("#edit-super-article input[name='partner_link']").val()

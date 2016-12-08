@@ -1,4 +1,5 @@
 _ = require 'underscore'
+_s = require 'underscore.string'
 Backbone = require 'backbone'
 Artists = require '../collections/artists.coffee'
 Artworks = require '../collections/artworks.coffee'
@@ -6,6 +7,7 @@ sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 Section = require '../models/section.coffee'
 request = require 'superagent'
+moment = require 'moment'
 
 module.exports = class Article extends Backbone.Model
 
@@ -30,6 +32,32 @@ module.exports = class Article extends Backbone.Model
 
   getSlug: ->
     ((@get('author')?.name + '-' + @get('thumbnail_title')?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,'')).toLowerCase()).replace(/\ /g,'-')
+
+  getFullSlug: ->
+    "https://artsy.net/article/" + @getSlug()
+
+  getByline: ->
+    return _s.toSentence(_.pluck(@get('contributing_authors'), 'name')) if @hasContributingAuthors()
+    return @get('author').name if @get('author')
+    ''
+
+  date: (attr) ->
+    if @get(attr)
+      moment(new Date(@get(attr))).local()
+    else
+      moment(new Date()).local()
+
+  hasContributingAuthors: ->
+    @get('contributing_authors')?.length > 0
+
+  getDescription: (attr = '') ->
+    @get(attr) or @get('description')
+
+  getThumbnailImage: (attr = '') ->
+    @get(attr) or @get('thumbnail_image')
+
+  getThumbnailTitle: (attr = '') ->
+    @get(attr) or @get('thumbnail_title')
 
   finishedThumbnail: ->
     @get('thumbnail_title')?.length > 0 and

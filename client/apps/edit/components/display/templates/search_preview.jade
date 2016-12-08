@@ -1,0 +1,11 @@
+.edit-display__prev-search
+  include ../icons/text_placeholder.svg
+  include ../icons/text_placeholder.svg
+  .edit-display__prev-search--result
+    .edit-display__prev-search--headline= article.getThumbnailTitle('search_title')
+    .edit-display__prev-search--slug= article.getFullSlug()
+    .edit-display__prev-search--dd
+      .edit-display__prev-search--date= article.date('published_at').format('ll') + " - "
+      .edit-display__prev-search--description= article.getDescription('search_description')
+  include ../icons/text_placeholder.svg
+  include ../icons/text_placeholder.svg
