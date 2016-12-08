@@ -74,7 +74,7 @@ module.exports = class EditDisplay extends Backbone.View
 
   events:
     'click .edit-display__use-article-title': 'useArticleTitle'
-    'change .edit-display--magazine .edit-display__headline': 'checkTitleInput'
+    'change .edit-title-textarea': 'checkTitleInput'
     'keyup .edit-display textarea': 'onKeyup'
     'change .edit-display .image-upload-hidden-input': 'renderPreviews'
     'click .edit-display__section-title': 'revealSection'
@@ -128,7 +128,7 @@ module.exports = class EditDisplay extends Backbone.View
     @article.save thumbnail_title: @article.get('title')
 
   checkTitleInput: ->
-    if $('.edit-display--magazine .edit-display__headline textarea').val() is @article.get('title')
+    if $('.edit-title-textarea').val() is @article.get('title')
       $('.edit-display__use-article-title').hide()
     else
       $('.edit-display__use-article-title').show()

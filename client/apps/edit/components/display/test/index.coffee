@@ -2,6 +2,7 @@ _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
 Article = require '../../../../../models/article'
+Channel = require '../../../../../models/channel'
 Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
@@ -13,6 +14,7 @@ describe 'EditDisplay', ->
       tmpl = resolve __dirname, '../index.jade'
       benv.render tmpl, _.extend(fixtures().locals,
         article: @article = new Article fixtures().articles
+        sd: CURRENT_CHANNEL: (@channel = new Channel fixtures().channels)
       ), =>
         benv.expose $: benv.require('jquery'), resize: ((url) -> url)
         Backbone.$ = $
@@ -57,9 +59,9 @@ describe 'EditDisplay', ->
       @article.set 'social_image', 'http://socialimage'
       @article.set 'email_metadata', { image_url: 'http://emailimage' }
       @view.renderThumbnailForms()
-      @ImageUploadForm.args[3][0].src.should.equal 'http://kitten.com'
-      @ImageUploadForm.args[4][0].src.should.equal 'http://socialimage'
-      @ImageUploadForm.args[5][0].src.should.equal 'http://emailimage'
+      @ImageUploadForm.args[4][0].src.should.equal 'http://kitten.com'
+      @ImageUploadForm.args[5][0].src.should.equal 'http://socialimage'
+      @ImageUploadForm.args[6][0].src.should.equal 'http://emailimage'
 
   describe '#onKeyup', ->
 
@@ -102,3 +104,73 @@ describe 'EditDisplay', ->
       input = @view.$('.edit-display--magazine .edit-display__headline textarea')
       input.val('Do not override')
       @view.$('.edit-display__prev-social--headline').text().should.equal 'Social Title'
+
+describe 'EditDisplay Partner', ->
+
+  beforeEach (done) ->
+    benv.setup =>
+      tmpl = resolve __dirname, '../index.jade'
+      benv.render tmpl, _.extend(fixtures().locals,
+        article: @article = new Article fixtures().articles
+        sd: CURRENT_CHANNEL: new Channel _.extend fixtures().channels, type: 'partner'
+      ), =>
+        benv.expose $: benv.require('jquery'), resize: ((url) -> url)
+        Backbone.$ = $
+        sinon.stub Backbone, 'sync'
+        EditDisplay = benv.requireWithJadeify(
+          resolve(__dirname, '../index')
+          ['displayFormTemplate', 'magazinePreview', 'socialPreview', 'searchPreview', 'emailPreview']
+        )
+        EditDisplay.__set__ 'gemup', @gemup = sinon.stub()
+        EditDisplay.__set__ 'crop', sinon.stub().returns('http://foo')
+        EditDisplay.__set__ 'ImageUploadForm', @ImageUploadForm = sinon.stub()
+        @view = new EditDisplay el: $('#edit-display'), article: @article
+        done()
+
+  afterEach ->
+    benv.teardown()
+    Backbone.sync.restore()
+
+  describe '#useArticleTitle', ->
+
+    it 'uses the article title when clicked', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-display__use-article-title').click()
+      @view.$('.edit-title-textarea').val().should.equal 'foo'
+
+  describe '#checkTitleInput', ->
+
+    it 'shows the use-title link when nothing is in the textarea', ->
+      @view.$('.edit-title-textarea').val('')
+      @view.checkTitleInput()
+      @view.$('.edit-display__use-article-title').css('display').should.equal 'block'
+
+    it 'hides the use-title link when the title equals the textarea', ->
+      @view.article.set title: 'foo'
+      @view.$('.edit-title-textarea').val('foo')
+      @view.checkTitleInput()
+      @view.$('.edit-display__use-article-title').attr('style').should.containEql 'display: none'
+
+  describe '#onKeyup', ->
+
+    beforeEach ->
+      @view.renderPreviews = sinon.stub()
+      @view.updateCharCount = sinon.stub()
+
+    afterEach ->
+      @view.renderPreviews.reset()
+      @view.updateCharCount.reset()
+
+    it 'calls renderPreviews and updateCharCount', ->
+      input = @view.$('.edit-title-textarea')
+      input.trigger 'keyup'
+      @view.renderPreviews.callCount.should.equal 1
+      @view.updateCharCount.callCount.should.equal 1
+
+  describe '#updateCharCount', ->
+
+    it 'updates the count when adding text', ->
+      input = @view.$('.edit-title-textarea')
+      input.val('Title')
+      input.trigger 'keyup', true
+      @view.$('.edit-display .edit-char-count').text().should.containEql '92'
