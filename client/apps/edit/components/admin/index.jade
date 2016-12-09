@@ -104,9 +104,6 @@ section#edit-admin.admin-form-container.max-width-container
       #edit-admin-tags
         label Tags
         input.bordered-input.edit-admin-tags-input( placeholder='Enter article keywords' value=article.get('tags') )
-      #edit-admin-description
-        label Description
-        textarea.bordered-input.edit-admin-description-input( placeholder='Enter description')= article.get('description')
       .admin-form-right-col
         #edit-admin-publish-date
           label Publish Date
@@ -121,8 +118,6 @@ section#edit-admin.admin-form-container.max-width-container
           label Exclude from Google News
             .flat-checkbox
               input( type='checkbox' name='exclude_google_news' checked=article.get('exclude_google_news') == 1 value=1 )
-
-
 
   //- Super Article
   if channel.hasFeature('superArticle')
