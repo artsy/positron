@@ -98,8 +98,6 @@ module.exports = class EditLayout extends Backbone.View
         footer_blurb: @$("#edit-super-article textarea[name='footer_blurb']").val()
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
       send_body: @$('[name=send_body]').is(':checked')
-      daily_email: @$('[name=daily_email]').is(':checked')
-      weekly_email: @$('[name=weekly_email]').is(':checked')
       layout: @$('[name=layout]:checked').val()
     }
 
