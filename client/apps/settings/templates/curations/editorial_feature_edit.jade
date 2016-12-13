@@ -49,31 +49,41 @@ mixin feature-section(i)
           )
 
 form.admin-form-container(
-          action=("/settings/curations/#{curation.get('id')}")
-          method='post'
-        )
-          for section, i in curation.get('sections')
-            section.settings-edit-feature__section
-              h1.settings__item-link.settings-edit-feature__section-title
-                | Section #{i + 1}: #{section.headline}
-              +feature-section(i)
-          .admin-form-container--wide.intro-assets
-            .admin-form-right-col
-              label Introduction
-                span Supports markdown
-              textarea.bordered-input(
-                name="intro"
-                value=curation && curation.get('intro')
-              )=curation.get('intro')
+  action=("/settings/curations/#{curation.get('id')}")
+  method='post'
+)
+  for section, i in curation.get('sections')
+    section.settings-edit-feature__section
+      h1.settings__item-link.settings-edit-feature__section-title
+        | Section #{i + 1}: #{section.headline}
+      +feature-section(i)
+  .admin-form-container--wide.intro-assets
+    .admin-form-right-col
+      label Introduction
+        span Supports markdown
+      textarea.bordered-input(
+        name="intro"
+        value=curation && curation.get('intro')
+      )=curation.get('intro')
 
-            .admin-form-right-col
-              label Header Video
-                span Accepts Mp4
-              .admin-image-placeholder(
-                data-name="header_video" data-type="video")
+    .admin-form-right-col
+      label Header Video
+        span Accepts Mp4
+      .admin-image-placeholder(
+        data-name="header_video" data-type="video")
+  .admin-form-container
+    .admin-form-right-col
+      label Carousel
+      for item, i in curation.get('carousel')
+        label= "Image " + (i + 1)
+        input.bordered-input( value=item.image name="carousel[#{i}][image]")
+        label= "Caption " + (i + 1)
+        input.bordered-input( value=item.caption name="carousel[#{i}][caption]")
+      label Placeholder Image
+      input.bordered-input( value=curation.get('placeholder') name='placeholder')
 
-          input( value=curation.get('name') name='name' hidden)
-          input( value=curation.get('type') name='type' hidden)
-          button.avant-garde-button.avant-garde-button-black.admin-form-save(
-            type='submit' href="/curations/#{curation.get('id')}"
-          ) Save Changes
+  input( value=curation.get('name') name='name' hidden)
+  input( value=curation.get('type') name='type' hidden)
+  button.avant-garde-button.avant-garde-button-black.admin-form-save(
+    type='submit' href="/curations/#{curation.get('id')}"
+  ) Save Changes
