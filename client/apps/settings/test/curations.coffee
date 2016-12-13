@@ -22,6 +22,8 @@ describe 'EditCuration', ->
         id: '1234'
         type: 'editorial-feature'
         sections: [{body: 'foo'}]
+        carousel: []
+        placeholder: ""
       locals = _.extend(fixtures().locals,
         curation: @curation
       )
