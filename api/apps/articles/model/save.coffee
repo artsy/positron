@@ -36,6 +36,11 @@ artsyXapp = require('artsy-xapp').token or ''
     article.published_at = new Date()
   @generateSlugs article, cb
 
+@onUnpublish = (article, cb) =>
+  @generateSlugs article, (err, article) =>
+    @deleteArticleFromSailthru article, =>
+      cb null, article
+
 setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
   article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
@@ -325,6 +330,13 @@ typecastIds = (article) ->
       custom_text: article.email_metadata?.custom_text
       daily_email: article.daily_email
       weekly_email: article.weekly_email
+  , (err, response) =>
+    debug err if err
+    cb()
+
+@deleteArticleFromSailthru = (article, cb) =>
+  sailthru.apiDelete 'content',
+    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
   , (err, response) =>
     debug err if err
     cb()
