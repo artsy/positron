@@ -22,9 +22,6 @@ module.exports = React.createClass
   toggle: ->
     @setState open: not @state.open
 
-  isAboveTextSection: ->
-    @props.sections.models[@props.index + 1]?.get('type') is 'text'
-
   newSection: (type) -> =>
     switch type
       when 'text'
@@ -181,8 +178,8 @@ module.exports = React.createClass
               }
           if @channel.hasFeature 'callout'
             li {
-              className: "edit-section-tool-callout #{'is-disabled' unless @isAboveTextSection()}"
-              onClick: @newSection('callout') if @isAboveTextSection()
+              className: "edit-section-tool-callout"
+              onClick: @newSection('callout')
             }, 'Callout',
               div {
                 className: 'edit-menu-icon-callout'
