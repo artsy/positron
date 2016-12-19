@@ -45,6 +45,5 @@ module.exports = React.createClass
               key: section.cid
               onSetEditing: @onSetEditing
             }
-            unless section.get('type') is 'callout'
-              SectionTool { sections: @props.sections, index: i }
+            SectionTool { sections: @props.sections, index: i }
           ]
