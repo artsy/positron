@@ -34,7 +34,7 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @onPublish = (article, cb) =>
   unless article.published_at
-    article.published_at = new Date().toISOString()
+    article.published_at = new Date
   @generateSlugs article, cb
 
 @onUnpublish = (article, cb) =>
@@ -66,7 +66,8 @@ removeStopWords = (title) ->
   return newTitle
 
 @generateSlugs = (article, cb) ->
-  stoppedTitle = removeStopWords article.thumbnail_title
+  if article.thumbnail_title
+    stoppedTitle = removeStopWords article.thumbnail_title
   slug = _s.slugify article.author?.name + ' ' + stoppedTitle
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->

@@ -64,8 +64,11 @@ Q = require 'bluebird-q'
           if publishing
             onPublish article, sanitizeAndSave(callback)
           else if unPublishing
+            console.log 'unPublishing'
             onUnpublish article, sanitizeAndSave(callback)
           else if not publishing and not article.slugs?.length > 0
+            console.log 'publishing'
+            console.log article.title
             generateSlugs article, sanitizeAndSave(callback)
           else
             sanitizeAndSave(callback)(null, article)
