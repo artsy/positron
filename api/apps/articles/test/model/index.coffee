@@ -507,7 +507,6 @@ describe 'Article', ->
         published: true
         id: '5086df098523e60002002222'
       }, 'foo', (err, article) ->
-        article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should
           .equal moment().format('YYYY')
         done()
@@ -523,10 +522,9 @@ describe 'Article', ->
         Article.save {
           id: article._id.toString()
           author_id: '5086df098523e60002000018'
-          published_at: moment().add(1, 'year').toDate()
+          published_at: moment().add(1, 'year').toDate().toISOString()
         }, 'foo', (err, updatedArticle) ->
           return done err if err
-          updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
             .equal moment().add(1, 'year').format('YYYY')
           done()
