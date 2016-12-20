@@ -2,6 +2,7 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
 search = require '../../../lib/elasticsearch'
+stopWords = require '../../../lib/stopwords'
 User = require '../../users/model'
 async = require 'async'
 Joi = require 'joi'
@@ -33,7 +34,7 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @onPublish = (article, cb) =>
   unless article.published_at
-    article.published_at = new Date()
+    article.published_at = new Date().toISOString()
   @generateSlugs article, cb
 
 @onUnpublish = (article, cb) =>
@@ -60,8 +61,13 @@ getDescription = (article) =>
   text = text.join(' ').substring(0,150).concat('...')
   text
 
+getStopWords = (title) ->
+  newTitle = _.difference(title.split(' '), stopWords.stopWords).join(' ')
+  return newTitle
+
 @generateSlugs = (article, cb) ->
-  slug = _s.slugify article.author?.name + ' ' + article.thumbnail_title
+  stoppedTitle = getStopWords article.thumbnail_title
+  slug = _s.slugify article.author?.name + ' ' + stoppedTitle
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err

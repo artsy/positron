@@ -62,6 +62,8 @@ Q = require 'bluebird-q'
           article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
           article.author = input.author
           if publishing
+            debugger
+            console.log 'HI'
             onPublish article, sanitizeAndSave(callback)
           else if unPublishing
             onUnpublish article, sanitizeAndSave(callback)
