@@ -97,7 +97,7 @@ module.exports = class EditAdmin extends Backbone.View
       selected: (e, item, items) =>
         @article.save fair_artsy_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
-        @article.save ffair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
+        @article.save fair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
     if ids = @article.get('fair_artsy_ids')
       @fairs = []
       async.each ids, (id, cb) =>
@@ -123,7 +123,7 @@ module.exports = class EditAdmin extends Backbone.View
       selected: (e, item, items) =>
         @article.save fair_about_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
-        @article.save ffair_about_ids: _.without(_.pluck(items, 'id'),item.id)
+        @article.save fair_about_ids: _.without(_.pluck(items, 'id'),item.id)
     if ids = @article.get('fair_about_ids')
       @fairs = []
       async.each ids, (id, cb) =>

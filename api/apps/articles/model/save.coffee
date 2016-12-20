@@ -127,12 +127,10 @@ getDescription = (article) =>
   if input.sections?.length > 0
     article.sections = input.sections
   return cb null, article unless input.sections
-  console.log 'i have sections'
   emptyArtworks = _.filter input.sections, (section) ->
     section.type is 'artworks' and section.artworks.length is 0
   if emptyArtworks.length is 0 and inputOrder is articleOrder
     return cb(null, article)
-  console.log 'here gonna fetch'
   # Try to fetch and denormalize the artworks from Gravity asynchonously
   artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
   Q.allSettled( for artworkId in _.flatten artworkIds
@@ -141,16 +139,12 @@ getDescription = (article) =>
       .set('X-Xapp-Token': artsyXapp)
   ).done (responses) =>
     fetchedArtworks = _.map responses, (res) ->
-      console.log res
       res.value?.body
-    console.log 'fetchedArtworks'
-    console.log fetchedArtworks
     newSections = []
     for section in cloneDeep input.sections
       if section.type is 'artworks'
         section.artworks = []
         for artworkId in section.ids
-          console.log artworkId
           artwork = _.findWhere fetchedArtworks, _id: artworkId
           if artwork
             section.artworks.push denormalizedArtworkData artwork

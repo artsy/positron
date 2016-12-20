@@ -19,7 +19,6 @@ module.exports = class EditDisplay extends Backbone.View
     @renderThumbnailForms()
     @setCharCounts()
     $('.edit-display__inputs').first().slideDown().prev().addClass('active')
-    # @renderArticle = @article.clone()
 
   renderThumbnailForms: =>
     $magImage = $('.edit-display--magazine .edit-display__image-upload')

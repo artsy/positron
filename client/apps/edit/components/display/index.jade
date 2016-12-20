@@ -10,7 +10,7 @@ if sd.CURRENT_CHANNEL.get('type') === 'partner'
       .edit-display--partner-right
         label.edit-display__headline
           span.edit-required Title
-          textarea.bordered-input.edit-title-textarea(
+          textarea.bordered-input.edit-title-textarea.edit-display__textarea(
             placeholder="Type a title that captures your reader's attention"
             data-limit=97
           )= article.get('thumbnail_title')
@@ -33,7 +33,7 @@ else
               .label
                 span.title Magazine Headline
                 .edit-char-count
-              textarea.bordered-input.edit-title-textarea(
+              textarea.bordered-input.edit-title-textarea.edit-display__textarea(
                 data-limit=97
                 data-value='thumbnail_title'
               )=article.get('thumbnail_title')
@@ -42,7 +42,7 @@ else
               .label
                 span.title Magazine Description
                 .edit-char-count
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 data-limit=160
                 data-value='description'
               )=article.get('description')
@@ -64,7 +64,7 @@ else
               .label
                 span.title Social Headline
                 .edit-char-count
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 data-limit=97
                 data-value='social_title'
               )=article.get('social_title')
@@ -72,7 +72,7 @@ else
               .label
                 span.title Social Description
                 .edit-char-count
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 data-limit=160
                 data-value='social_description'
               )=article.get('social_description')
@@ -91,7 +91,7 @@ else
               .label
                 span.title Search Headline
                 .edit-char-count
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 data-limit=97
                 data-value='search_title'
               )=article.get('search_title')
@@ -99,7 +99,7 @@ else
               .label
                 span.title Search Description
                 .edit-char-count
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 data-limit=160
                 data-value='search_description'
               )=article.get('search_description')
@@ -121,7 +121,7 @@ else
               .edit-display__image-upload
             label.edit-display__headline
               span.label Email Headline
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 name='headline'
                 data-value='headline'
               )= article.getObjectAttribute('email_metadata','headline')
@@ -134,7 +134,7 @@ else
 
           .admin-form-left
             label Author
-              textarea.bordered-input(
+              textarea.bordered-input.edit-display__textarea(
                 name='author'
                 value="#{article.getObjectAttribute('email_metadata','author')}"
                 data-value='author'
