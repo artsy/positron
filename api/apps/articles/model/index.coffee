@@ -7,7 +7,8 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, removeFromSearch } = Save = require './save'
+generateArtworks, sanitizeAndSave, removeFromSearch,
+deleteArticleFromSailthru, onUnpublish } = Save = require './save'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -53,6 +54,7 @@ Q = require 'bluebird-q'
         generateArtworks input, article, (err, article) ->
           debug err if err
           publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
+          unPublishing = article.published and not input.published
           article = _.extend article, _.omit(input, 'sections', 'slug'), updated_at: new Date
           if input.sections and input.sections.length is 0
             article.sections = []
@@ -61,6 +63,8 @@ Q = require 'bluebird-q'
           article.author = input.author
           if publishing
             onPublish article, sanitizeAndSave(callback)
+          else if unPublishing
+            onUnpublish article, sanitizeAndSave(callback)
           else if not publishing and not article.slugs?.length > 0
             generateSlugs article, sanitizeAndSave(callback)
           else
@@ -97,9 +101,11 @@ Q = require 'bluebird-q'
 # Destroy
 #
 @destroy = (id, callback) ->
-  db.articles.remove { _id: ObjectId(id) }, =>
-    removeFromSearch id.toString()
-    callback(id)
+  @find id, (err, article = {}) =>
+    deleteArticleFromSailthru article, =>
+      db.articles.remove { _id: ObjectId(id) }, =>
+        removeFromSearch id.toString()
+        callback(id)
 
 #
 # JSON views
