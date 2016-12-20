@@ -20,6 +20,7 @@ describe 'Save', ->
 
   beforeEach (done) ->
     @sailthru = Save.__get__ 'sailthru'
+    @removeStopWords = Save.__get__ 'removeStopWords'
     @sailthru.apiPost = sinon.stub().yields()
     @sailthru.apiDelete = sinon.stub().yields()
     Save.__set__ 'sailthru', @sailthru
@@ -119,10 +120,10 @@ describe 'Save', ->
   describe '#removeStopWords', ->
 
     it 'removes stop words from a string', (done) ->
-      Save.removeStopWords("I'll be there").should.containEql ''
-      Save.removeStopWords('Why the Internet Is Obsessed with These Videos of People Making Things').should.containEql 'Why Internet Is Obsessed These Videos People Making Things'
-      Save.removeStopWords('Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art').should.containEql 'Heirs Major Jewish Art Dealer Sue Bavaria  20 Million Nazi-Looted Art'
-      Save.removeStopWords('Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week').should.containEql 'Helen Marten Wins UK Biggest Art Prize 9 Other Biggest News Stories This Week'
+      @removeStopWords("I'll be there").should.containEql ''
+      @removeStopWords('Why the Internet Is Obsessed with These Videos of People Making Things').should.containEql 'Why Internet Is Obsessed These Videos People Making Things'
+      @removeStopWords('Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art').should.containEql 'Heirs Major Jewish Art Dealer Sue Bavaria  20 Million Nazi-Looted Art'
+      @removeStopWords('Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week').should.containEql 'Helen Marten Wins UK Biggest Art Prize 9 Other Biggest News Stories This Week'
       done()
 
   describe '#onUnpublish', ->
