@@ -61,12 +61,12 @@ getDescription = (article) =>
   text = text.join(' ').substring(0,150).concat('...')
   text
 
-getStopWords = (title) ->
+removeStopWords = (title) ->
   newTitle = _.difference(title.split(' '), stopWords.stopWords).join(' ')
   return newTitle
 
 @generateSlugs = (article, cb) ->
-  stoppedTitle = getStopWords article.thumbnail_title
+  stoppedTitle = removeStopWords article.thumbnail_title
   slug = _s.slugify article.author?.name + ' ' + stoppedTitle
   return cb null, article if slug is _.last(article.slugs)
   db.articles.count { slugs: slug }, (err, count) ->
