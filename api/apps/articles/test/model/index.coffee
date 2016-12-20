@@ -962,6 +962,25 @@ describe 'Article', ->
         article.search_description.should.containEql 'search description'
         done()
 
+    it 'deletes article from sailthru if it is being unpublished', (done) ->
+      article = {
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+        published: false
+      }
+      Article.__set__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
+      fabricate 'articles',
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: ObjectId('5086df098523e60002000018')
+        published: true
+      , =>
+        Article.save article, 'foo', (err, article) =>
+          article.published.should.be.false()
+          @onUnpublish.callCount.should.equal 1
+          done()
+
   describe '#publishScheduledArticles', ->
 
     it 'calls #save on each article that needs to be published', (done) ->

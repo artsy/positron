@@ -21,6 +21,7 @@ describe 'Save', ->
   beforeEach (done) ->
     @sailthru = Save.__get__ 'sailthru'
     @sailthru.apiPost = sinon.stub().yields()
+    @sailthru.apiDelete = sinon.stub().yields()
     Save.__set__ 'sailthru', @sailthru
     Save.__set__ 'artsyXapp', { token: 'foo' }
     empty ->
@@ -103,6 +104,30 @@ describe 'Save', ->
       }, (err, article) =>
         @sailthru.apiPost.args[0][1].vars.html.should.containEql '<html>BODY OF TEXT</html>'
         @sailthru.apiPost.args[0][1].vars.html.should.not.containEql 'This Caption'
+        done()
+
+  describe '#deleteArticleFromSailthru', ->
+
+    it 'deletes the article from sailthru', (done) ->
+      Save.deleteArticleFromSailthru {
+        slugs: ['artsy-editorial-delete-me']
+        author_id: '5086df098523e60002000018'
+      }, (err, article) =>
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
+        done()
+
+  describe '#onUnpublish', ->
+
+    it 'generates slugs and deletes article from sailthru', (done) ->
+      Save.onUnpublish {
+        thumbnail_title: 'delete me'
+        author_id: '5086df098523e60002000018'
+        author: {
+          name: 'artsy editorial'
+        }
+      }, (err, article) =>
+        article.slugs.length.should.equal 1
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
         done()
 
   describe '#sanitizeAndSave', ->
