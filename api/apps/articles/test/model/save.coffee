@@ -118,16 +118,16 @@ describe 'Save', ->
 
   describe '#onUnpublish', ->
 
-    it 'generates slugs and deletes article from sailthru', (done) ->
+    it 'generates slugs without stop words and deletes article from sailthru', (done) ->
       Save.onUnpublish {
-        thumbnail_title: 'delete me'
+        thumbnail_title: 'delete me a title'
         author_id: '5086df098523e60002000018'
         author: {
           name: 'artsy editorial'
         }
       }, (err, article) =>
         article.slugs.length.should.equal 1
-        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-title'
         done()
 
   describe '#sanitizeAndSave', ->
