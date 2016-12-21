@@ -18,7 +18,7 @@ schema = joiql
       resolve: resolvers.articles
     )
 
-app.use '/graphql', graphqlHTTP(
+app.use '/graphql', setUser, graphqlHTTP(
   schema: schema
   graphiql: true
   formatError: (error) => ({
