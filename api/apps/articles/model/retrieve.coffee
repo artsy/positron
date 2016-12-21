@@ -57,7 +57,7 @@ moment = require 'moment'
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
 
     # # Look for articles that are scheduled
-    query.scheduled = { scheduled_publish_at : { $ne: null } } if input.scheduled
+    query.scheduled_publish_at = { $ne: null } if input.scheduled
 
     # Convert query for articles that have video sections
     query.$or.push(

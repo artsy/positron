@@ -49,16 +49,30 @@ module.exports.QueueView = QueueView = React.createClass
 
   setFeed: (type) ->
     @setState feed: type
+    @fetchFeed()
+
+  fetchFeed: ->
     request
       .post API_URL + '/graphql'
       .set 'X-Access-Token': sd.USER.access_token
-      .send query: query "#{type}: true"
+      .send query: query "#{@state.feed}: true, published: true"
       .end (err, res) =>
         return if err or not res.body?.data
         if @state.feed is 'scheduled'
           @setState scheduledArticles: res.body.data.articles
         else
           @setState queuedArticles: res.body.data.articles
+          @fetchLatest()
+
+  fetchLatest: ->
+    latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
+    request
+      .post API_URL + '/graphql'
+      .set 'X-Access-Token': sd.USER.access_token
+      .send query: latestQuery
+      .end (err, res) =>
+        return if err or not res.body?.data
+        @setState publishedArticles: res.body.data.articles
 
   render: ->
     div {
@@ -106,7 +120,6 @@ module.exports.QueueView = QueueView = React.createClass
 
 module.exports.init = ->
   props =
-    publishedArticles: sd.PUBLISHED_ARTICLES
     scheduledArticles: sd.SCHEDULED_ARTICLES
     feed: 'scheduled'
   React.render React.createElement(QueueView, props), document.getElementById('queue-root')

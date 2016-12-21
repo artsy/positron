@@ -13,6 +13,13 @@ icons = -> require('./icons.jade') arguments...
 
 module.exports = ArticleList = React.createClass
 
+  publishText: (result) ->
+    if result.published_at and result.published
+      "Published #{moment(result.published_at).fromNow()}"
+    else if result.scheduled_publish_at
+      "Scheduled to publish " +
+      "#{moment(result.scheduled_publish_at).fromNow()}"
+
   render: ->
     div { className: 'article-list__results' },
       (@props.articles.map (result) =>
@@ -27,6 +34,6 @@ module.exports = ArticleList = React.createClass
             div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
             div { className: 'article-list__title paginated-list-text-container' },
               h1 {}, result.thumbnail_title
-              h2 {}, "Published #{moment(result.published_at).fromNow()}"
+              h2 {}, @publishText(result)
           a { className: 'paginated-list-preview avant-garde-button', href: "#{sd.FORCE_URL}/article/#{result.slug}", target: '_blank' }, "Preview"
       )
