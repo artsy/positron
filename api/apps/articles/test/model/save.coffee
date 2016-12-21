@@ -20,6 +20,7 @@ describe 'Save', ->
 
   beforeEach (done) ->
     @sailthru = Save.__get__ 'sailthru'
+    @removeStopWords = Save.__get__ 'removeStopWords'
     @sailthru.apiPost = sinon.stub().yields()
     @sailthru.apiDelete = sinon.stub().yields()
     Save.__set__ 'sailthru', @sailthru
@@ -116,19 +117,41 @@ describe 'Save', ->
         @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
         done()
 
+  describe '#removeStopWords', ->
+
+    it 'removes stop words from a string', (done) ->
+      @removeStopWords("I'll be there").should.containEql ''
+      @removeStopWords('Why the Internet Is Obsessed with These Videos of People Making Things').should.containEql 'Why Internet Is Obsessed These Videos People Making Things'
+      @removeStopWords('Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art').should.containEql 'Heirs Major Jewish Art Dealer Sue Bavaria  20 Million Nazi-Looted Art'
+      @removeStopWords('Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week').should.containEql 'Helen Marten Wins UK Biggest Art Prize 9 Other Biggest News Stories This Week'
+      done()
+
   describe '#onUnpublish', ->
 
     it 'generates slugs and deletes article from sailthru', (done) ->
       Save.onUnpublish {
-        thumbnail_title: 'delete me'
+        thumbnail_title: 'delete me a title'
         author_id: '5086df098523e60002000018'
         author: {
           name: 'artsy editorial'
         }
       }, (err, article) =>
         article.slugs.length.should.equal 1
-        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-title'
         done()
+
+    it 'Regenerates the slug with stop words removed', (done) ->
+      Save.onUnpublish {
+        thumbnail_title: 'One New York Building Changed the Way Art Is Made, Seen, and Sold'
+        author_id: '5086df098523e60002000018'
+        author: {
+          name: 'artsy editorial'
+        }
+      }, (err, article) =>
+        article.slugs.length.should.equal 1
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-one-new-york-building-changed-way-art-is-made-seen-sold'
+        done()
+
 
   describe '#sanitizeAndSave', ->
 
