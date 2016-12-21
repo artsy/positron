@@ -7,9 +7,8 @@ Transport = require('lokka-transport-http').Transport
 @queue = (req, res, next) ->
   channel_id = req.user?.get('current_channel').id
   scheduledQuery = query "published: false, channel_id: \"#{channel_id}\", scheduled: true"
-  headers = {
+  headers =
     'X-Access-Token': req.user.get('access_token')
-  }
 
   client = new Lokka
     transport: new Transport(API_URL + '/graphql', {headers})
