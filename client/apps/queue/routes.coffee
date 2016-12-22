@@ -20,4 +20,4 @@ Transport = require('lokka-transport-http').Transport
       res.render 'index',
         published: true
         current_channel: req.user?.get('current_channel')
-    .catch(next)
+    .catch -> next()
