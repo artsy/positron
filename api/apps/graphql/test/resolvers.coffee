@@ -25,11 +25,11 @@ describe 'resolvers', ->
 
     it 'returns throws error when trying to view a draft without channel_id', ->
       args = published: false
-      (-> resolvers.articles({}, args, {}, {})).should.throw('Must pass channel_id to view unpublished articles. Or pass published: true to only view published articles.')
+      resolvers.articles.bind({}, args, {}, {}).should.throw()
 
     it 'returns throws an error when trying to view an unauthorized draft', ->
       args = published: false, channel_id: '123'
-      (-> resolvers.articles({}, args, {}, {})).should.throw('Must be a member of this channel to view unpublished articles. Pass published: true to only view published articles.')
+      resolvers.articles.bind({}, args, {}, {}).should.throw()
 
     it 'can view drafts', ->
       args = published: false, channel_id: '456'
