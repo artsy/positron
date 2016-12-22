@@ -2,13 +2,12 @@ Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
 { div, nav, a, h1 } = React.DOM
-sd = require('sharify').data
 Article = require '../../../models/article.coffee'
 FilterSearch = require '../../../components/filter_search/index.coffee'
 QueuedArticles = require './queued.coffee'
 ArticleList = require '../../../components/article_list/index.coffee'
 query = require '../query.coffee'
-{ API_URL } = require('sharify').data
+sd = require('sharify').data
 request = require 'superagent'
 
 module.exports.QueueView = QueueView = React.createClass
@@ -55,7 +54,7 @@ module.exports.QueueView = QueueView = React.createClass
     published = type in ['daily_email', 'weekly_email']
     feedQuery = query "#{type}: true, published: #{published}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
     request
-      .post API_URL + '/graphql'
+      .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
       .send query: feedQuery
       .end (err, res) =>
@@ -69,7 +68,7 @@ module.exports.QueueView = QueueView = React.createClass
   fetchLatest: ->
     latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
     request
-      .post API_URL + '/graphql'
+      .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
       .send query: latestQuery
       .end (err, res) =>
