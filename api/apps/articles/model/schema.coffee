@@ -207,4 +207,5 @@ denormalizedArtwork = (->
   ids: @array().items(@objectId())
   daily_email: @boolean()
   weekly_email: @boolean()
+  scheduled: @boolean()
 ).call Joi

@@ -375,6 +375,22 @@ describe 'Article', ->
           results[0].title.should.equal 'Hello Wurld'
           done()
 
+    it 'can find articles by scheduled', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Hello Wurld'
+          published: false
+          scheduled_publish_at: '555'
+        }
+      ], ->
+        Article.where {
+          scheduled: true
+        }, (err, res) ->
+          { total, count, results } = res
+          count.should.equal 1
+          results[0].title.should.equal 'Hello Wurld'
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

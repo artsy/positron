@@ -2,12 +2,12 @@ Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
 { div, nav, a, h1 } = React.DOM
-sd = require('sharify').data
 Article = require '../../../models/article.coffee'
 FilterSearch = require '../../../components/filter_search/index.coffee'
 QueuedArticles = require './queued.coffee'
+ArticleList = require '../../../components/article_list/index.coffee'
 query = require '../query.coffee'
-{ API_URL } = require('sharify').data
+sd = require('sharify').data
 request = require 'superagent'
 
 module.exports.QueueView = QueueView = React.createClass
@@ -15,7 +15,8 @@ module.exports.QueueView = QueueView = React.createClass
   getInitialState: ->
     publishedArticles: @props.publishedArticles or []
     queuedArticles: @props.queuedArticles or []
-    feed: @props.feed or 'daily_email'
+    scheduledArticles: @props.scheduledArticles or []
+    feed: @props.feed or 'scheduled'
 
   saveSelected: (data, isQueued) ->
     article = new Article
@@ -47,20 +48,45 @@ module.exports.QueueView = QueueView = React.createClass
 
   setFeed: (type) ->
     @setState feed: type
-    # Refetch queued articles
-    queuedQuery = query "#{type}: true"
+    @fetchFeed type
+
+  fetchFeed: (type) ->
+    published = type in ['daily_email', 'weekly_email']
+    feedQuery = query "#{type}: true, published: #{published}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
     request
-      .post API_URL + '/graphql'
-      .send query: queuedQuery
+      .post sd.API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: feedQuery
       .end (err, res) =>
         return if err or not res.body?.data
-        @setState queuedArticles: res.body.data.articles
+        if type is 'scheduled'
+          @setState scheduledArticles: res.body.data.articles
+        else
+          @setState queuedArticles: res.body.data.articles
+          @fetchLatest()
+
+  fetchLatest: ->
+    latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
+    request
+      .post sd.API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: latestQuery
+      .end (err, res) =>
+        return if err or not res.body?.data
+        @setState publishedArticles: res.body.data.articles
 
   render: ->
-    div {},
+    div {
+      'data-state': @state.feed
+      className: 'queue-root-container'
+    },
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
           nav {className: 'queue-tabs'},
+            a {
+              className: "#{if @state.feed is 'scheduled' then 'is-active' else ''} scheduled"
+              onClick: => @setFeed 'scheduled'
+              }, "Scheduled"
             a {
               className: "#{if @state.feed is 'daily_email' then 'is-active' else ''} daily-email"
               onClick: => @setFeed 'daily_email'
@@ -70,11 +96,16 @@ module.exports.QueueView = QueueView = React.createClass
               onClick: => @setFeed 'weekly_email'
               }, "Weekly Email"
       div {},
+        div { className: 'queue-scheduled max-width-container'},
+          ArticleList {
+            articles: @state.scheduledArticles
+            headerText: "Scheduled Articles"
+            checkable: false
+          }
         div { className: 'queue-queued max-width-container' },
           QueuedArticles {
             articles: @state.queuedArticles
             headerText: "Queued"
-            type: @state.feed
             selected: @selected
           }
         div { className: 'queue-filter-search max-width-container' },
@@ -85,13 +116,11 @@ module.exports.QueueView = QueueView = React.createClass
             checkable: true
             headerText: "Latest Articles"
             selected: @selected
-            type: @state.feed
             searchResults: @searchResults
           }
 
 module.exports.init = ->
   props =
-    publishedArticles: sd.PUBLISHED_ARTICLES
-    queuedArticles: sd.QUEUED_ARTICLES
-    feed: 'daily_email'
+    scheduledArticles: sd.SCHEDULED_ARTICLES
+    feed: 'scheduled'
   React.render React.createElement(QueueView, props), document.getElementById('queue-root')

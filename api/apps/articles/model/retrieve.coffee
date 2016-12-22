@@ -11,7 +11,7 @@ moment = require 'moment'
     # Separate "find" query from sort/offest/limit
     { limit, offset, sort } = input
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id', 'super_article_for',
-      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id', 'channel_id', 'ids'
+      'fair_ids', 'fair_programming_id', 'fair_artsy_id', 'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q', 'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id', 'channel_id', 'ids', 'scheduled'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
     query.author_id = ObjectId input.author_id if input.author_id
@@ -56,8 +56,8 @@ moment = require 'moment'
     # Allow regex searching through the q param
     query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
 
-    # Look for articles with scheduled dates before the given date
-    query.scheduled_publish_at = { $lt: moment(input.scheduled_publish_at).toDate() } if input.scheduled_publish_at
+    # # Look for articles that are scheduled
+    query.scheduled_publish_at = { $ne: null } if input.scheduled
 
     # Convert query for articles that have video sections
     query.$or.push(

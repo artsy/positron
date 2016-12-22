@@ -104,3 +104,10 @@ describe 'Retrieve', ->
         query._id['$in'][0].toString().should.equal '54276766fd4f50996aeca2b8'
         query._id['$in'][1].toString().should.equal '54276766fd4f50996aeca2b7'
         done()
+
+    it 'finds scheduled articles', (done) ->
+      Retrieve.toQuery {
+        scheduled: true
+      }, (err, query) =>
+        query.scheduled_publish_at.should.have.keys '$ne'
+        done()
