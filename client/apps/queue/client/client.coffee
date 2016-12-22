@@ -9,8 +9,7 @@ QueuedArticles = require './queued.coffee'
 ArticleList = require '../../../components/article_list/index.coffee'
 query = require '../query.coffee'
 { API_URL } = require('sharify').data
-Lokka = require('lokka')
-Transport = require('lokka-transport-http')
+request = require 'superagent'
 
 module.exports.QueueView = QueueView = React.createClass
 
@@ -19,12 +18,6 @@ module.exports.QueueView = QueueView = React.createClass
     queuedArticles: @props.queuedArticles or []
     scheduledArticles: @props.scheduledArticles or []
     feed: @props.feed or 'scheduled'
-
-  componentDidMount: ->
-    headers =
-      'X-Access-Token': sd.USER.get('access_token')
-    @client = new Lokka
-      transport: new Transport(API_URL + '/graphql', {headers})
 
   saveSelected: (data, isQueued) ->
     article = new Article
@@ -56,24 +49,32 @@ module.exports.QueueView = QueueView = React.createClass
 
   setFeed: (type) ->
     @setState feed: type
-    # @fetchFeed()
+    @fetchFeed type
 
-  # fetchFeed: ->
-  #   @client.query(query "#{@state.feed}: true, published: true")
-  #     .then (result) =>
-  #       return if err or not result.body?.data
-  #       if @state.feed is 'scheduled'
-  #         @setState scheduledArticles: result.body.data.articles
-  #       else
-  #         @setState queuedArticles: result.body.data.articles
-  #         @fetchLatest()
+  fetchFeed: (type) ->
+    published = type in ['daily_email', 'weekly_email']
+    feedQuery = query "#{type}: true, published: #{published}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
+    request
+      .post API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: feedQuery
+      .end (err, res) =>
+        return if err or not res.body?.data
+        if type is 'scheduled'
+          @setState scheduledArticles: res.body.data.articles
+        else
+          @setState queuedArticles: res.body.data.articles
+          @fetchLatest()
 
-  # fetchLatest: ->
-  #   latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
-  #   @client.query(latestQuery)
-  #     .then (result) =>
-  #       return if err or not result.body?.data
-  #       @setState publishedArticles: result.body.data.articles
+  fetchLatest: ->
+    latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
+    request
+      .post API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: latestQuery
+      .end (err, res) =>
+        return if err or not res.body?.data
+        @setState publishedArticles: res.body.data.articles
 
   render: ->
     div {
