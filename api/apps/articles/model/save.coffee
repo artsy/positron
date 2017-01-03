@@ -343,7 +343,7 @@ typecastIds = (article) ->
     debug err if err
     cb()
 
-cleanArticlesInSailthru = (slugs = []) ->
+cleanArticlesInSailthru = (slugs = []) =>
   if slugs.length > 1
     _.map slugs, (slug, i) =>
       unless i is slugs.length - 1
