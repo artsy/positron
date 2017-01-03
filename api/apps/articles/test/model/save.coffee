@@ -293,7 +293,7 @@ describe 'Save', ->
       }, {}, (err, article) =>
         article.sections[0].artworks.length.should.equal 1
         article.sections[0].artworks[0].title.should.equal 'Main artwork!'
-        article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
+        article.sections[0].artworks[0].artists[0].name.should.equal 'Andy Warhol'
         done()
 
     it 'adds an array of artists to the artwork', (done) ->
@@ -309,7 +309,6 @@ describe 'Save', ->
       }, {}, (err, article) =>
         article.sections[0].artworks[0].artists.length.should.equal 1
         article.sections[0].artworks[0].title.should.equal 'Main artwork!'
-        article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
         article.sections[0].artworks[0].artists[0].name.should.equal 'Andy Warhol'
         done()
 
