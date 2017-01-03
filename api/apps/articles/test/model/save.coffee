@@ -296,7 +296,7 @@ describe 'Save', ->
         article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
         done()
 
-    it 'supports more than one artist per artwork and adds an array to the artwork', (done) ->
+    it 'adds an array of artists to the artwork', (done) ->
       Save.generateArtworks {
         sections: [
           {
@@ -307,11 +307,10 @@ describe 'Save', ->
           }
         ]
       }, {}, (err, article) =>
-        article.sections[0].artworks[0].artists.length.should.equal 2
+        article.sections[0].artworks[0].artists.length.should.equal 1
         article.sections[0].artworks[0].title.should.equal 'Main artwork!'
         article.sections[0].artworks[0].artist.name.should.equal 'Andy Warhol'
         article.sections[0].artworks[0].artists[0].name.should.equal 'Andy Warhol'
-        article.sections[0].artworks[0].artists[1].name.should.equal 'Yoko Ono'
         done()
 
     it 'does not save artworks that are not available', (done) ->

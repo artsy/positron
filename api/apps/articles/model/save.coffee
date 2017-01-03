@@ -230,6 +230,8 @@ getArtistsNames = (artwork) ->
   if artwork.get('artists')?.length > 0
     artwork.get('artists').forEach (artist) ->
        artists.push({name: artist.name, slug: artist.id})
+  else
+    artists.push({name: artwork.get('artist')?.name, slug: artwork.get('artist')?.id})
   artists
 
 getPartnerName = (artwork) ->
