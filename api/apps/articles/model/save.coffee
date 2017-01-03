@@ -39,7 +39,7 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    @deleteArticleFromSailthru article, =>
+    @deleteArticleFromSailthru _.last(article.slugs), =>
       cb null, article
 
 setOnPublishFields = (article) =>
@@ -323,6 +323,7 @@ typecastIds = (article) ->
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   html = if article.send_body then getTextSections(article) else ''
+  cleanArticlesInSailthru article.slugs
   sailthru.apiPost 'content',
     url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
     date: article.published_at
@@ -342,9 +343,15 @@ typecastIds = (article) ->
     debug err if err
     cb()
 
-@deleteArticleFromSailthru = (article, cb) =>
+cleanArticlesInSailthru = (slugs = []) =>
+  if slugs.length > 1
+    slugs.forEach (slug, i) =>
+      unless i is slugs.length - 1
+        @deleteArticleFromSailthru slug, ->
+
+@deleteArticleFromSailthru = (slug, cb) =>
   sailthru.apiDelete 'content',
-    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
+    url: "#{FORCE_URL}/article/#{slug}"
   , (err, response) =>
     debug err if err
     cb()
