@@ -214,7 +214,16 @@ denormalizedArtworkData = (artwork) ->
     partner:
       name: getPartnerName artwork
       slug: getPartnerLink artwork
+    artist:
+      name: getArtistName artwork
+      slug: artwork.get('artist')?.id
     artists: getArtistsNames artwork
+
+getArtistName = (artwork) ->
+  if artwork.get('artist')?.name
+    artwork.get('artist').name
+  else
+    ''
 
 getArtistsNames = (artwork) ->
   artists = []
