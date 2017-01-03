@@ -110,10 +110,7 @@ describe 'Save', ->
   describe '#deleteArticleFromSailthru', ->
 
     it 'deletes the article from sailthru', (done) ->
-      Save.deleteArticleFromSailthru {
-        slugs: ['artsy-editorial-delete-me']
-        author_id: '5086df098523e60002000018'
-      }, (err, article) =>
+      Save.deleteArticleFromSailthru 'artsy-editorial-delete-me', (err, article) =>
         @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
         done()
 
