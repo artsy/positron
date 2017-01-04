@@ -57,7 +57,7 @@ denormalizedArtwork = (->
       @object().keys
         name: @string().allow('', null)
         slug: @string().allow('', null)
-    )
+    ).allow(null).default([])
 ).call Joi
 
 @inputSchema = (->
