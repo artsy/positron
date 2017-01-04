@@ -11,7 +11,6 @@
     "test": "make test"
   },
   "dependencies": {
-    "@newrelic/native-metrics": "^1.0.0",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
