@@ -109,6 +109,12 @@ module.exports = React.createClass
         @refs.byUrls.setState loading: false, errorMessage: ''
         callback?()
 
+  formatArtistNames: (artwork) ->
+    if artwork.get('artists')?[0]
+      names = artwork.get('artists').map (artist) ->
+        artist.name
+      names.join ', '
+
   render: ->
     div {
       className: 'edit-section-artworks-container'
@@ -153,7 +159,7 @@ module.exports = React.createClass
               div { className: 'esa-img-container' },
                 img { src: artwork.defaultImage().bestImageUrl(['larger', 'large', 'medium', 'small']) }
               p {},
-                strong {}, artwork.get('artists')?[0]?.name
+                strong {}, @formatArtistNames artwork
               p {}, artwork.get('artwork')?.title or artwork.attributes?.title
               p {}, artwork.get('partner')?.name
               button {
