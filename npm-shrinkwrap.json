@@ -4516,6 +4516,12 @@
       "resolved": "https://registry.npmjs.org/watchify/-/watchify-3.8.0.tgz",
       "dev": true,
       "dependencies": {
+        "assert": {
+          "version": "1.4.1",
+          "from": "assert@>=1.4.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/assert/-/assert-1.4.1.tgz",
+          "dev": true
+        },
         "base64-js": {
           "version": "1.2.0",
           "from": "base64-js@>=1.0.2 <2.0.0",
@@ -4529,9 +4535,9 @@
           "dev": true
         },
         "browserify": {
-          "version": "13.1.1",
+          "version": "13.3.0",
           "from": "browserify@>=13.0.0 <14.0.0",
-          "resolved": "https://registry.npmjs.org/browserify/-/browserify-13.1.1.tgz",
+          "resolved": "https://registry.npmjs.org/browserify/-/browserify-13.3.0.tgz",
           "dev": true
         },
         "buffer": {
@@ -4596,6 +4602,12 @@
           "resolved": "https://registry.npmjs.org/events/-/events-1.1.1.tgz",
           "dev": true
         },
+        "glob": {
+          "version": "7.1.1",
+          "from": "glob@>=7.1.0 <8.0.0",
+          "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.1.tgz",
+          "dev": true
+        },
         "inline-source-map": {
           "version": "0.6.2",
           "from": "inline-source-map@>=0.6.0 <0.7.0",
@@ -4648,7 +4660,7 @@
         },
         "shell-quote": {
           "version": "1.6.1",
-          "from": "shell-quote@>=1.4.3 <2.0.0",
+          "from": "shell-quote@>=1.6.1 <2.0.0",
           "resolved": "https://registry.npmjs.org/shell-quote/-/shell-quote-1.6.1.tgz",
           "dev": true
         },
