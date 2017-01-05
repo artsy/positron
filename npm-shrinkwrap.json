@@ -46,7 +46,8 @@
     "antigravity": {
       "version": "0.1.3",
       "from": "git://github.com/artsy/antigravity.git",
-      "resolved": "git://github.com/artsy/antigravity.git#e6a20591a6be418facca1b4670db24f11208cfdd"
+      "resolved": "git://github.com/artsy/antigravity.git#e6a20591a6be418facca1b4670db24f11208cfdd",
+      "dev": true
     },
     "anymatch": {
       "version": "1.3.0",
