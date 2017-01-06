@@ -16,6 +16,7 @@ User = require '../users/model.coffee'
       'Pass published=true to only view published articles.')
 
   Article.where req.query, (err, results) ->
+    debug err if err
     return next err if err
     res.send presentCollection results
 
@@ -35,6 +36,7 @@ User = require '../users/model.coffee'
 
   data =_.extend { author_id: req.user._id }, req.body
   Article.save data, req.user?.access_token, (err, article) ->
+    debug err if err
     return next err if err
     res.send present article
 
@@ -45,6 +47,7 @@ User = require '../users/model.coffee'
 
   data = _.extend(req.article, req.body)
   Article.save data, req.user?.access_token, (err, article) ->
+    debug err if err
     return next err if err
     res.send present article
 
@@ -54,6 +57,7 @@ User = require '../users/model.coffee'
     return res.err(401, 'Unauthorized')
 
   Article.destroy req.article._id, (err) ->
+    debug err if err
     return next err if err
     res.send present req.article
 
@@ -67,6 +71,7 @@ User = require '../users/model.coffee'
 # Fetch & attach a req.article middleware
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
+    debug err if err
     return next err if err
     return res.err 404, 'Article not found.' unless req.article = article
     if req.article?.published then next() else setUser(req, res, next)
