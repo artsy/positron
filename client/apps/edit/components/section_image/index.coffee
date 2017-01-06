@@ -24,6 +24,7 @@ module.exports = React.createClass
     src: @props.section.get('url')
     progress: null
     caption: @props.section.get('caption')
+    layout: @props.section.get('layout') or 'overflow_fillwidth'
 
   componentDidMount: ->
     @attachScribe()
@@ -33,11 +34,12 @@ module.exports = React.createClass
 
   onClickOff: ->
     if @state.src
-      @props.section.set url: @state.src, caption: @state.caption
+      @props.section.set url: @state.src, caption: @state.caption, layout: @state.layout
     else
       @props.section.destroy()
 
   changeLayout: (layout) -> =>
+    @setState layout: layout
     @props.section.set layout: layout
 
   upload: (e) ->
@@ -81,16 +83,16 @@ module.exports = React.createClass
         nav { className: 'esi-nav' },
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
+              backgroundImage: 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              backgroundSize: '38px'
             }
             className: 'esa-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
-              'background-size': '22px'
+              backgroundImage: 'url(/icons/edit_artworks_column_width.svg)'
+              backgroundSize: '22px'
             }
             className: 'esa-column-width'
             onClick: @changeLayout('column_width')
