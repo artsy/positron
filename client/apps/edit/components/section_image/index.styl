@@ -14,13 +14,33 @@
 .edit-section-image .edit-section-controls
   fill-container()
   background black
-  height 218px
+  height 275px
   top -(@height + controls-padding)
   left -(controls-padding)
   padding controls-padding
   display none
   z-index 2
-  width overflow-width
+  width calc(100% \+ 40px)
+
+  nav
+    display flex
+    justify-content center
+    a
+      display inline-block
+      height 40px
+      width @height + 20px
+      background-repeat no-repeat !important
+      background-position center !important
+      transition opacity 0.3s
+      opacity 0.5
+      cursor pointer
+      &:hover
+        opacity 1
+      &:last-of-type
+        border-right 0
+    &.esi-nav
+      margin-top -10px
+      margin-bottom 5px
 
 .esi-placeholder
   text-align center
@@ -31,6 +51,12 @@
 .edit-section-container[data-editing=true]
   .edit-section-controls
     display block
+
+  .esi-inputs
+    padding 20px 0
+    color #fff
+    background #000
+    border-top 1px solid #333
 
 .esi-image
   width 100%
