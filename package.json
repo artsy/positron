@@ -60,7 +60,7 @@
     "sharify": "^0.1.6",
     "sortablejs": "^1.4.2",
     "stylus": "^0.52.4",
-    "superagent": "^1.4.0",
+    "superagent": "^3.0.0",
     "superagent-bluebird-promise": "^3.0.0",
     "ua-parser": "^0.3.5",
     "underscore": "^1.8.3",
