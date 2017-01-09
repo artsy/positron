@@ -39,6 +39,7 @@ module.exports = React.createClass
         @props.sections.add {
           type: 'image'
           url: ''
+          layout: 'overflow_fillwidth'
         }, at: @props.index + 1
       when 'video'
         @props.sections.add {

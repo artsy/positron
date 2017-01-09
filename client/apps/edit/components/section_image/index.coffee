@@ -24,6 +24,7 @@ module.exports = React.createClass
     src: @props.section.get('url')
     progress: null
     caption: @props.section.get('caption')
+    layout: @props.section.get('layout') or 'overflow_fillwidth'
 
   componentDidMount: ->
     @attachScribe()
@@ -33,9 +34,13 @@ module.exports = React.createClass
 
   onClickOff: ->
     if @state.src
-      @props.section.set url: @state.src, caption: @state.caption
+      @props.section.set url: @state.src, caption: @state.caption, layout: @state.layout
     else
       @props.section.destroy()
+
+  changeLayout: (layout) -> =>
+    @setState layout: layout
+    @props.section.set layout: layout
 
   upload: (e) ->
     @props.setEditing(off)()
@@ -74,37 +79,55 @@ module.exports = React.createClass
       className: 'edit-section-image'
       onClick: @props.setEditing(true)
     },
-      header { className: 'edit-section-controls' },
-        section { className: 'dashed-file-upload-container' },
-          h1 {}, 'Drag & ',
-            span { className: 'dashed-file-upload-container-drop' }, 'drop'
-            ' or '
-            span { className: 'dashed-file-upload-container-click' }, 'click'
-            span {}, (' to ' +
-              if @props.section.get('url') then 'replace' else 'upload')
-          h2 {}, 'Up to 30mb'
-          input { type: 'file', onChange: @upload }
-        div { className: 'esi-caption-container' },
-          nav { ref: 'toolbar', className: 'edit-scribe-nav esi-nav' },
-            button {
-              'data-command-name': 'italic'
-              dangerouslySetInnerHTML: __html: '&nbsp;'
-              disabled: if @state.caption then false else true
-              onClick: @onEditableKeyup
+      div { className: 'esi-controls-container edit-section-controls' },
+        nav { className: 'esi-nav es-layout' },
+          a {
+            style: {
+              backgroundImage: 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              backgroundSize: '38px'
             }
-            button {
-              'data-command-name': 'linkPrompt'
-              dangerouslySetInnerHTML:
-                __html: "&nbsp;" + $(icons()).filter('.link').html()
-              disabled: if @state.caption then false else true
-              onClick: @onEditableKeyup
-            }
-          div {
-            className: 'esi-caption bordered-input'
-            ref: 'editable'
-            onKeyUp: @onEditableKeyup
-            dangerouslySetInnerHTML: __html: @props.section.get('caption')
+            className: 'esi-overflow-fillwidth'
+            onClick: @changeLayout('overflow_fillwidth')
           }
+          a {
+            style: {
+              backgroundImage: 'url(/icons/edit_artworks_column_width.svg)'
+              backgroundSize: '22px'
+            }
+            className: 'esi-column-width'
+            onClick: @changeLayout('column_width')
+        }
+        div { className: 'esi-inputs' },
+          section { className: 'dashed-file-upload-container' },
+            h1 {}, 'Drag & ',
+              span { className: 'dashed-file-upload-container-drop' }, 'drop'
+              ' or '
+              span { className: 'dashed-file-upload-container-click' }, 'click'
+              span {}, (' to ' +
+                if @props.section.get('url') then 'replace' else 'upload')
+            h2 {}, 'Up to 30mb'
+            input { type: 'file', onChange: @upload }
+          div { className: 'esi-caption-container' },
+            nav { ref: 'toolbar', className: 'edit-scribe-nav' },
+              button {
+                'data-command-name': 'italic'
+                dangerouslySetInnerHTML: __html: '&nbsp;'
+                disabled: if @state.caption then false else true
+                onClick: @onEditableKeyup
+              }
+              button {
+                'data-command-name': 'linkPrompt'
+                dangerouslySetInnerHTML:
+                  __html: "&nbsp;" + $(icons()).filter('.link').html()
+                disabled: if @state.caption then false else true
+                onClick: @onEditableKeyup
+              }
+            div {
+              className: 'esi-caption bordered-input'
+              ref: 'editable'
+              onKeyUp: @onEditableKeyup
+              dangerouslySetInnerHTML: __html: @props.section.get('caption')
+            }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
