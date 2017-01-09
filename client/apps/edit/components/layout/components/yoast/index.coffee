@@ -1,22 +1,13 @@
 Backbone = require 'backbone'
 yoastSnippetPreview = require( "yoastseo" ).SnippetPreview
 yoastApp = require( "yoastseo" ).App
-Modal = -> require('simple-modal') arguments...
-template = -> require('./yoast.jade') arguments...
 
 module.exports = class YoastView extends Backbone.View
 
-  initialize: (options) ->
-    @modal = Modal
-      title: 'SEO Analysis'
-      content: "<div id='yoast-container'>"
-      removeOnClose: true
-      buttons: [
-        { className: 'simple-modal-close', closeOnClick: true }
-      ]
-    $('.simple-modal-body').addClass 'yoast-modal'
-    $('#yoast-container').html template
+  events:
+    'click .edit-seo__header-container': 'toggleDrawer'
 
+  initialize: (options) ->
     focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
     contentField = document.getElementById( "edit-seo__content-field" )
 
@@ -34,7 +25,6 @@ module.exports = class YoastView extends Backbone.View
             text: contentField.value
           }
     app.refresh()
-    $('.snippet-editor__button').addClass 'avant-garde-button'
     @snippetPreview.changedInput()
 
     $("#edit-seo__content-field").val(options.contentField)
@@ -44,6 +34,8 @@ module.exports = class YoastView extends Backbone.View
     $('#edit-seo__focus-keyword').on 'keyup', (e) =>
       @onKeyup()
 
+  toggleDrawer: ->
+    $('#yoast-container').slideToggle duration: 100, easing: 'linear'
+
   onKeyup: =>
     @snippetPreview.changedInput()
-

@@ -29,6 +29,7 @@ module.exports = class EditLayout extends Backbone.View
     @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
+    @checkSeo()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
@@ -152,7 +153,6 @@ module.exports = class EditLayout extends Backbone.View
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
     'blur #edit-title': 'prefillThumbnailTitle'
-    'click #edit-seo': 'checkSeo'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -168,7 +168,7 @@ module.exports = class EditLayout extends Backbone.View
     for section in $(@article.get('sections'))
       if section.type is 'text' && textIndex is 0
         @fullText.push(
-          ' <p> ' + 
+          ' <p> ' +
           $(section.body)
           .find('p')
           .andSelf()
@@ -195,6 +195,7 @@ module.exports = class EditLayout extends Backbone.View
       contentField: @fullText
       title: @article.get('thumbnail_title') or @article.get('title') or ''
       slug: @article.getSlug()
+      el: $('#edit-seo')
 
   onKeyup: =>
     if @article.get('published')
