@@ -152,7 +152,7 @@ module.exports = class EditLayout extends Backbone.View
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
     'blur #edit-title': 'prefillThumbnailTitle'
-    'click #seoButton': 'checkSeo'
+    'click #edit-seo': 'checkSeo'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()

@@ -1,4 +1,9 @@
 section#edit-content
+  if sd.CURRENT_CHANNEL.get('type') === 'editorial'
+    #edit-seo
+      .edit-seo__header Seo Analysis —
+      .edit-seo__unresolved-msg
+      .edit-seo__open: include ../../../../components/layout/public/icons/circle_plus.svg
   #edit-hero-section
   .edit-header-container
     #edit-title
@@ -13,7 +18,3 @@ section#edit-content
       p= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container
-  #edit-seo
-    if sd.CURRENT_CHANNEL.get('type') === 'editorial' 
-      button#seoButton
-        include ../../public/icons/edit_seo.svg

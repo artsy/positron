@@ -27,7 +27,7 @@ module.exports = class YoastView extends Backbone.View
       snippetPreview: @snippetPreview,
       targets:
         output: "edit-seo__output"
-      callbacks: 
+      callbacks:
         getData: ->
           return {
             keyword: focusKeywordField.value,
