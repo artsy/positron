@@ -36,6 +36,7 @@ module.exports = class YoastView extends Backbone.View
 
   toggleDrawer: ->
     $('#yoast-container').slideToggle duration: 100, easing: 'linear'
+    $('.edit-seo__close').toggleClass 'active'
 
   onKeyup: =>
     @snippetPreview.changedInput()

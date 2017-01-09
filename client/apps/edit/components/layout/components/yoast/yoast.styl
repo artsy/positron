@@ -12,10 +12,14 @@
       align-items center
       background-color #f8f8f8
       border-bottom 1px solid gray-lighter-color
-    &__open
+    &__close
       margin-left auto
       svg
         vertical-align middle
+        transition all
+    &__close.active
+      svg
+        transform rotate(45deg)
     &__header, &__unresolved-msg
       garamond('l-caption')
 
