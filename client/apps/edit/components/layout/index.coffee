@@ -100,6 +100,7 @@ module.exports = class EditLayout extends Backbone.View
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
       send_body: @$('[name=send_body]').is(':checked')
       layout: @$('[name=layout]:checked').val()
+      seo_keyword: @$('input#edit-seo__focus-keyword').val()
     }
 
   toggleAstericks: =>
@@ -115,6 +116,7 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
     @article.trigger "open:tab#{idx}"
+    if idx is 2 then @$('#edit-seo').hide() else $('#edit-seo').show()
 
   showSpinner: =>
     @$('#edit-sections-spinner').show()
