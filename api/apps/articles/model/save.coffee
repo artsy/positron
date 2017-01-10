@@ -65,7 +65,7 @@ removeStopWords = (title) ->
   title = title.replace(/[0-9.\/#!$%\^\*;{}=_`’~()]/g,"")
   title = title.replace(/[,&:\—_]/g," ")
   newTitle = _.difference(title.toLocaleLowerCase().split(' '), stopWords.stopWords)
-  if newTitle.length > 1 then return newTitle.join(' ') else return title
+  if newTitle.length > 1 then newTitle.join(' ') else title
 
 @generateSlugs = (article, cb) ->
   stoppedTitle = ''
