@@ -176,7 +176,6 @@ module.exports = class EditLayout extends Backbone.View
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
-    @fullText
 
   onKeyup: =>
     if @article.get('published')

@@ -978,6 +978,15 @@ describe 'Article', ->
         article.search_description.should.containEql 'search description'
         done()
 
+    it 'saves the seo_keyword', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        seo_keyword: 'focus'
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.seo_keyword.should.equal 'focus'
+        done()
+
     it 'deletes article from sailthru if it is being unpublished', (done) ->
       article = {
         _id: ObjectId('5086df098523e60002000018')
@@ -996,15 +1005,6 @@ describe 'Article', ->
           article.published.should.be.false()
           @onUnpublish.callCount.should.equal 1
           done()
-
-    it 'saves the seo_keyword', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        seo_keyword: 'focus'
-      }, 'foo', (err, article) ->
-        return done err if err
-        article.seo_keyword.should.equal 'focus'
-        done()
 
   describe '#publishScheduledArticles', ->
 

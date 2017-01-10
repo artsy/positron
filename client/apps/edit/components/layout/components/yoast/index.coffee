@@ -41,6 +41,7 @@ module.exports = class YoastView extends Backbone.View
       @article.get('thumbnail_title') or
       @article.get('title') or
       '')
+    $('#snippet-editor-title').val()
     $("#snippet-editor-meta-description").val(
       @article.get('search_description') or @article.get('description'))
 

@@ -22,9 +22,10 @@ describe 'EditLayout', ->
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
+        sinon.stub Backbone.history, 'navigate'
         @EditLayout = rewire '../index.coffee'
         sinon.stub @EditLayout.prototype, 'attachScribe'
-        @EditLayout.__set__ 'YoastView', sinon.stub()
+        @EditLayout.__set__ 'YoastView', @YoastView = sinon.stub().returns onKeyup: @yoastKeyup = sinon.stub()
         sinon.stub _, 'debounce'
         $.fn.autosize = sinon.stub()
         _.debounce.callsArg 0
@@ -38,6 +39,7 @@ describe 'EditLayout', ->
   afterEach ->
     benv.teardown()
     Backbone.sync.restore()
+    Backbone.history.navigate.restore()
     _.debounce.restore()
     @EditLayout::attachScribe.restore()
 
@@ -84,10 +86,6 @@ describe 'EditLayout', ->
       @view.$('[type=radio]').eq(1).click()
       @view.serialize().tier.should.equal 2
 
-  describe '#attachScribe', ->
-
-    it 'attaches Scribe to the lead paragraph'
-
   describe '#toggleLeadParagraphPlaceholder', ->
 
     it 'toggle the placeholder ::before element if lead paragraph is empty', ->
@@ -124,7 +122,7 @@ describe 'EditLayout', ->
   describe '#onFirstSave', ->
 
     it 'updates the url', ->
-      sinon.stub Backbone.history, 'navigate'
+
       @view.article.set id: 'foo'
       @view.onFirstSave()
       Backbone.history.navigate.args[0][0].should.equal '/articles/foo/edit'
@@ -143,10 +141,21 @@ describe 'EditLayout', ->
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'do you wish to continue'
 
-  describe '#checkSeo', ->
+  describe '#getBodyText', ->
 
-    it 'initializes yoast on button click', ->
-      $('#seoButton').click()
-      _.defer =>
-        @view.fullText.should.containEql 'Just before the lines start forming...'
-        @view.fullText.should.containEql 'Check out this video art:'
+    it 'parses the article and pulls out an html string of its text', ->
+      text = @view.getBodyText()
+      text.should.containEql '<p>Just before the lines'
+      text.should.containEql 'Check out this video art:</p>'
+
+  describe '#onYoastKeyup', ->
+
+    it 'calls onKeyup on the yoast view', ->
+      @view.onYoastKeyup()
+      @yoastKeyup.callCount.should.equal 1
+
+  describe '#setupYoast', ->
+
+    it 'initializes YoastView with args', ->
+      @YoastView.args[0][0].contentField.should.containEql 'Just before the lines start forming...'
+      @YoastView.args[0][0].contentField.should.containEql 'Check out this video art'
