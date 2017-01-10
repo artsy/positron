@@ -116,7 +116,7 @@ module.exports = class EditDisplay extends Backbone.View
       crop: crop
 
   setCharCounts: ->
-    for input in $( ".edit-display textarea" )
+    for input in $(".edit-display textarea")
       $(input).trigger 'keyup', true
 
   useArticleTitle: ->
