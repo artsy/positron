@@ -71,7 +71,7 @@ Q = require 'bluebird-q'
             sanitizeAndSave(callback)(null, article)
 
 @publishScheduledArticles = (callback) ->
-  db.articles.find { scheduled_publish_at: { $lt: new Date() } } , (err, articles) =>
+  db.articles.find { scheduled_publish_at: { $lt: new Date } } , (err, articles) =>
     return callback err, [] if err
     return callback null, [] if articles.length is 0
     async.map articles, (article, cb) =>
@@ -123,6 +123,8 @@ Q = require 'bluebird-q'
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
+    published_at: moment(article?.published_at).toISOString()
+    updated_at: moment(article?.updated_at).toISOString()
 
 # Converts an input from the db that use ObjectId to String
 typecastIds = (article) ->
