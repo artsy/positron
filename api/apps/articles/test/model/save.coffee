@@ -134,8 +134,8 @@ describe 'Save', ->
 
     it 'removes stop words from a string', (done) ->
       @removeStopWords('Why. the Internet Is Obsessed with These Videos of People Making Things').should.containEql 'internet obsessed videos people making things'
-      @removeStopWords('Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art').should.containEql 'heirs major jewish art dealer sue bavaria  nazi-looted art'
-      @removeStopWords('Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week').should.containEql 'helen marten wins uks art prize  news stories week'
+      @removeStopWords('Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art').should.containEql 'heirs major jewish art dealer sue bavaria 20 million nazi-looted art'
+      @removeStopWords('Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week').should.containEql 'helen marten wins uks art prize 9 news stories week'
       done()
 
     it 'if all words are stop words, keep the title', (done) ->
@@ -165,7 +165,7 @@ describe 'Save', ->
         }
       }, (err, article) =>
         article.slugs.length.should.equal 1
-        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-new-york-building-changed-way-art-made-seen-sold'
+        @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold'
         done()
 
 
