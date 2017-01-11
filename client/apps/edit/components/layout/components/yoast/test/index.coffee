@@ -65,13 +65,20 @@ describe 'YoastView', ->
   describe '#generateResolveMessage', ->
 
     it 'creates a message for unresolved issues', ->
+      $('#edit-seo__focus-keyword').val('Content')
       $('#edit-seo__output').html "<div class='bad'></div>"
       @view.generateResolveMessage()
       $('.edit-seo__unresolved-msg').hasClass('bad').should.be.true()
       $('.edit-seo__unresolved-msg').text().should.containEql '1 Unresolved Issue'
 
     it 'creates a message for all resolved', ->
+      $('#edit-seo__focus-keyword').val('Content')
       $('#edit-seo__output').html "<div class='good'></div>"
       @view.generateResolveMessage()
       $('.edit-seo__unresolved-msg').hasClass('bad').should.be.false()
       $('.edit-seo__unresolved-msg').text().should.containEql 'Resolved'
+    it 'creates a message when no target keyword is set', ->
+      $('#edit-seo__focus-keyword').val('')
+      @view.generateResolveMessage()
+      $('.edit-seo__unresolved-msg').hasClass('bad').should.be.true()
+      $('.edit-seo__unresolved-msg').text().should.containEql 'Set Target Keyword'

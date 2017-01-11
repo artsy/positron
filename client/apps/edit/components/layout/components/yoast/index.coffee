@@ -53,16 +53,12 @@ module.exports = class YoastView extends Backbone.View
     @setSnippetFields contentField
     @snippetPreview.changedInput()
 
-  # getBodyText: ->
-  #   @fullText = []
-  #   $lead = $('#edit-lead-paragraph')
-  #   @fullText.push $($lead).html() if $($lead).text().length
-  #   $('.edit-section-text-editable').each (i, text) =>
-  #     @fullText.push $(text).html() if text
-  #   @fullText = @fullText.join()
-
   generateResolveMessage: =>
-    if unresolved = $('#edit-seo__output .bad').length
+    unless $('#edit-seo__focus-keyword').val()
+      @$msg
+        .text " Set Target Keyword"
+        .addClass 'bad'
+    else if unresolved = $('#edit-seo__output .bad').length
       @$msg
         .text " #{unresolved} Unresolved Issue#{if unresolved > 1 then 's' else ''}"
         .addClass 'bad'
