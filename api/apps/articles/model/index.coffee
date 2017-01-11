@@ -118,17 +118,14 @@ Q = require 'bluebird-q'
   }
 
 @present = (article) =>
-  if article?.scheduled_publish_at
-    scheduled = moment(article.scheduled_publish_at).toISOString()
-  else
-    scheduled = null
-
+  scheduled = if (date = article?.scheduled_publish_at) then moment(date).toISOString() else null
+  published = if (date = article?.published_at) then moment(date).toISOString() else null
   _.extend article,
     id: article?._id?.toString()
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
-    published_at: moment(article?.published_at).toISOString()
+    published_at: published
     scheduled_publish_at: scheduled
     updated_at: moment(article?.updated_at).toISOString()
 
