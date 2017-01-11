@@ -1073,6 +1073,12 @@ describe 'Article', ->
       (data._id?).should.not.be.ok
       data.id.should.equal 'foo'
 
+    it 'converts dates to ISO strings', ->
+      data = Article.present _.extend fixtures().articles, published_at: new Date, scheduled_publish_at: new Date
+      moment(data.updated_at).toISOString().should.equal data.updated_at
+      moment(data.published_at).toISOString().should.equal data.published_at
+      moment(data.scheduled_publish_at).toISOString().should.equal data.scheduled_publish_at
+
   describe '#presentCollection', ->
 
     it 'shows a total/count/results hash for arrays of articles', ->

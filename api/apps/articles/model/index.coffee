@@ -118,12 +118,18 @@ Q = require 'bluebird-q'
   }
 
 @present = (article) =>
+  if article?.scheduled_publish_at
+    scheduled = moment(article.scheduled_publish_at).toISOString()
+  else
+    scheduled = null
+
   _.extend article,
     id: article?._id?.toString()
     _id: undefined
     slug: _.last article.slugs
     slugs: undefined
     published_at: moment(article?.published_at).toISOString()
+    scheduled_publish_at: scheduled
     updated_at: moment(article?.updated_at).toISOString()
 
 # Converts an input from the db that use ObjectId to String
