@@ -62,11 +62,13 @@ getDescription = (article) =>
   text
 
 removeStopWords = (title) ->
-  title = title.replace(/[.,\/#!$%\^&\*;:{}=\—_`’~()]/g," ")
-  newTitle = _.difference(title.split(' '), stopWords.stopWords).join(' ')
-  return newTitle
+  title = title.replace(/[.\/#!$%\^\*;{}=_`’~()]/g,"")
+  title = title.replace(/[,&:\—_]/g," ")
+  newTitle = _.difference(title.toLocaleLowerCase().split(' '), stopWords.stopWords)
+  if newTitle.length > 1 then newTitle.join(' ') else title
 
 @generateSlugs = (article, cb) ->
+  stoppedTitle = ''
   if article.thumbnail_title
     stoppedTitle = removeStopWords article.thumbnail_title
   slug = _s.slugify article.author?.name + ' ' + stoppedTitle
