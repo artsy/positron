@@ -20,8 +20,9 @@ module.exports = FilterSearch = React.createClass
     @engine.initialize()
 
   search: ->
-    @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
-      @props.searchResults results
+    if @refs.searchQuery.getDOMNode().value.length
+      @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
+        @props.searchResults results
 
   selected: (article) ->
     @props.selected article, 'select'
@@ -38,6 +39,6 @@ module.exports = FilterSearch = React.createClass
         }
       ArticleList {
         articles: @props.articles
-        checkable: true
+        checkable: @props.checked
         selected: @selected
       }
