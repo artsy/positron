@@ -1,21 +1,15 @@
 Backbone = require 'backbone'
 yoastSnippetPreview = require( "yoastseo" ).SnippetPreview
 yoastApp = require( "yoastseo" ).App
-Modal = -> require('simple-modal') arguments...
-template = -> require('./yoast.jade') arguments...
 
 module.exports = class YoastView extends Backbone.View
 
+  events:
+    'click .edit-seo__header-container': 'toggleDrawer'
+
   initialize: (options) ->
-    @modal = Modal
-      title: 'SEO Analysis'
-      content: "<div id='yoast-container'>"
-      removeOnClose: true
-      buttons: [
-        { className: 'simple-modal-close', closeOnClick: true }
-      ]
-    $('.simple-modal-body').addClass 'yoast-modal'
-    $('#yoast-container').html template
+    @$msg = $('.edit-seo__unresolved-msg')
+    @article = options.article
 
     focusKeywordField = document.getElementById( "edit-seo__focus-keyword" )
     contentField = document.getElementById( "edit-seo__content-field" )
@@ -23,27 +17,52 @@ module.exports = class YoastView extends Backbone.View
     @snippetPreview = new yoastSnippetPreview
       targetElement: document.getElementById( "edit-seo__snippet" )
 
-    app = new yoastApp
+    @app = new yoastApp
       snippetPreview: @snippetPreview,
       targets:
         output: "edit-seo__output"
-      callbacks: 
+      callbacks:
         getData: ->
           return {
             keyword: focusKeywordField.value,
             text: contentField.value
           }
-    app.refresh()
-    $('.snippet-editor__button').addClass 'avant-garde-button'
+        saveScores: =>
+          @generateResolveMessage()
+
+    @setSnippetFields options.contentField
+    @app.refresh()
     @snippetPreview.changedInput()
 
-    $("#edit-seo__content-field").val(options.contentField)
-    $("#snippet-editor-title").val(options.title)
-    $("#snippet-editor-slug").val(options.slug)
+  setSnippetFields: (contentField) ->
+    $("#edit-seo__content-field").val contentField
+    $("#snippet-editor-title").val(
+      @article.get('search_title') or
+      @article.get('thumbnail_title') or
+      @article.get('title') or
+      '')
+    $('#snippet-editor-title').val()
+    $("#snippet-editor-meta-description").val(
+      @article.get('search_description') or @article.get('description'))
 
-    $('#edit-seo__focus-keyword').on 'keyup', (e) =>
-      @onKeyup()
+  toggleDrawer: ->
+    $('#yoast-container').slideToggle duration: 100, easing: 'linear'
+    $('.edit-seo__close').toggleClass 'active'
 
-  onKeyup: =>
+  onKeyup: (contentField)->
+    @setSnippetFields contentField
     @snippetPreview.changedInput()
 
+  generateResolveMessage: =>
+    unless $('#edit-seo__focus-keyword').val()
+      @$msg
+        .text " Set Target Keyword"
+        .addClass 'bad'
+    else if unresolved = $('#edit-seo__output .bad').length
+      @$msg
+        .text " #{unresolved} Unresolved Issue#{if unresolved > 1 then 's' else ''}"
+        .addClass 'bad'
+    else
+      @$msg
+        .text " Resolved"
+        .removeClass 'bad'

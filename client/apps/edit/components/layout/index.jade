@@ -6,6 +6,14 @@ block locals
 block content
   include ../header/index
   #edit-tab-pages
+    if sd.CURRENT_CHANNEL.get('type') === 'editorial'
+      #edit-seo
+        .edit-seo__header-container
+          .edit-seo__header
+            | Seo Analysis —
+            span.edit-seo__unresolved-msg
+          .edit-seo__close: include ../../../../components/layout/public/icons/circle_plus.svg
+        include components/yoast/yoast.jade
     include content
     #edit-sections-spinner
       .loading-spinner

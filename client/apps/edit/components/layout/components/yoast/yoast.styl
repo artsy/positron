@@ -1,115 +1,65 @@
-.yoast-modal
-  overflow scroll
-  bottom 5%
+#edit-seo
+  position fixed
+  width calc(100% \- 110px)
+  top 55px
+  z-index 90
+  .edit-seo
+    &__header-container
+      cursor pointer
+      height 40px
+      padding 0 20px
+      display flex
+      align-items center
+      background-color #f8f8f8
+      border-bottom 1px solid gray-lighter-color
+    &__close
+      margin-left auto
+      svg
+        vertical-align middle
+        transition all 0.25s
+    &__close.active
+      svg
+        transform rotate(45deg)
+    &__unresolved-msg
+      color green-light-color
+      &.bad
+        color red-color
+    &__header, &__unresolved-msg
+      garamond('l-caption')
 
+#yoast-container
+  display none
+  background-color white
+  border-bottom 1px solid gray-lighter-color
+  .yoast-container
+    &__left, &__right
+      display inline-block
+    &__left
+      top 0
+      width 360px
+      vertical-align top
+      padding 30px 0 30px 30px
+      label
+        avant-garde('s-headline')
+      #edit-seo__focus-keyword
+        width 300px
+    &__right
+      margin 30px
+      width calc(100% \- 420px)
+      border-left 1px solid gray-lighter-color
+      padding-left 30px
+
+#edit-seo__snippet
 .screen-reader-text
 #edit-seo__content-field
-.snippet-editor__heading
   display none
-
-#edit-seo__output
-  margin-bottom 10px
-  
-#snippet_title
-  color #1a0dab
-  font-size 18px
-  font-family arial,sans-serif
-  line-height 1.2
-
-#url_container
-  font-size 14px
-  color #006621
-  font-style normal
-  line-height 16px
-  font-family arial,sans-serif
-
-#meta_container
-  line-height 1.4
-  color #545454
-  font-family arial,sans-serif
-  font-size small
-
-.snippet-editor
-  &__container
-    position relative
-    cursor pointer
-  
-  &__form
-    padding 20px   
-        
-  &__label 
-    display block
-    width 100%
-    margin-top 1em
-    position relative
-
-    &:first-child 
-      margin-top 0
-         
-  &__input 
-    display block
-    width 100%
-    margin-top 5px
-    border 2px solid gray-lighter-color
-
-    max-width 100%
-    box-sizing border-box
-
-    &:focus 
-      border 2px solid purple-color
-      outline none
-  
-  &__preview 
-    padding 15px 20px
-
-.snippet-editor__meta-description 
-  height 70px
-
-.snippet-editor__submit 
-  margin-top 1em
-
-#meta_container 
-  clear both
-  min-height 20px
-  margin-bottom 10px
-
-.snippet-editor 
-  &__progress 
-    appearance none
-
-    border none
-
-    box-sizing border-box
-    display block
-
-    margin-top 5px
-    height 8px
-    width 100%
-    
-    &--fallback 
-      background-color #f7f7f7
-      height 8px
-      border 1px #bfbfbf
-    
-  &__progress-bar 
-    width 0
-    height 100%
-    max-width 100%
-  
-  &__date 
-    color #808080
-    font-size 13px
-    line-height 1.4
-  
-  &--hidden 
-    display none
 
 .wpseo-score-icon
   &.bad, &.ok, &.good, &.na
   	display inline-block
-  	width 12px
-  	height 12px
-  	margin 3px 10px 0 3px
+  	width 10px
+  	height 10px
+  	margin 8px 10px 0 0
   	border-radius 50%
   	vertical-align top
   &.na
@@ -121,6 +71,14 @@
   &.good
   	background #7ad03a
 
-#snippet_citeBase
-#snippet_cite
-  float left
+.wpseoanalysis
+  li
+    display inline-block
+    width 49%
+    vertical-align top
+    padding-bottom 10px
+
+.wpseo-score-text
+  garamond('l-caption')
+  display block
+  margin -22px 10px 0 20px

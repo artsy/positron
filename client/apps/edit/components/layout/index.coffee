@@ -29,6 +29,7 @@ module.exports = class EditLayout extends Backbone.View
     @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
+    @setupYoast()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
@@ -99,6 +100,7 @@ module.exports = class EditLayout extends Backbone.View
         related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
       send_body: @$('[name=send_body]').is(':checked')
       layout: @$('[name=layout]:checked').val()
+      seo_keyword: @$('input#edit-seo__focus-keyword').val()
     }
 
   toggleAstericks: =>
@@ -114,6 +116,7 @@ module.exports = class EditLayout extends Backbone.View
     @$("#edit-tab-pages > section").hide()
     @$("#edit-tab-pages > section:eq(#{idx})").show()
     @article.trigger "open:tab#{idx}"
+    if idx is 2 then @$('#edit-seo').hide() else $('#edit-seo').show()
 
   showSpinner: =>
     @$('#edit-sections-spinner').show()
@@ -138,8 +141,9 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'keyup :input:not(.tt-input,.edit-display__textarea), [contenteditable]:not(.tt-input)': 'onKeyup'
+    'keyup :input:not(.tt-input,.edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'change #edit-admin :input': 'onKeyup'
+    'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
@@ -152,49 +156,26 @@ module.exports = class EditLayout extends Backbone.View
     'mouseleave .edit-section-container:not([data-editing=true])': 'hideSectionTools'
     'click .edit-section-container, .edit-section-tool-menu > li': 'hideSectionTools'
     'blur #edit-title': 'prefillThumbnailTitle'
-    'click #seoButton': 'checkSeo'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
 
-  checkSeo: =>
-    imageCount = 0
-    textIndex = 0
+  setupYoast: ->
+    @yoastView = new YoastView
+      el: $('#edit-seo')
+      article: @article
+      contentField: @getBodyText()
+
+  onYoastKeyup: ->
+    @yoastView.onKeyup @getBodyText()
+
+  getBodyText: =>
     @fullText = []
-    if $(@article.get('lead_paragraph')).text()
-      @fullText.push(' <p> ' + $(@article.get('lead_paragraph')).text() + ' </p> ')
-      textIndex += 1
-
-    for section in $(@article.get('sections'))
-      if section.type is 'text' && textIndex is 0
-        @fullText.push(
-          ' <p> ' + 
-          $(section.body)
-          .find('p')
-          .andSelf()
-          .filter('p:first')
-          .text()
-           + ' </p> ')
-        @fullText.push(
-          $(section.body)
-          .find('p')
-          .andSelf()
-          .filter('p:not(:first)')
-          .text())
-        textIndex += 1
-      else if section.type is 'text'
-        @fullText.push($((section.body).replace(/<\/p>/g," </p>")).text())
-      else if section.type is 'artworks'
-        imageCount += 1
-      else if section.type is 'image'
-        imageCount += 1
-    @fullText.push('<img></img>') for num in [imageCount..1]
-    @fullText = @fullText.join(' ')
-
-    yoastView = new YoastView
-      contentField: @fullText
-      title: @article.get('thumbnail_title') or @article.get('title') or ''
-      slug: @article.getSlug()
+    if $(@article.get('lead_paragraph')).text().length
+      @fullText.push @article.get('lead_paragraph')
+    for section in @article.sections.models when section.get('type') is 'text'
+      @fullText.push section.get('body')
+    @fullText = @fullText.join()
 
   onKeyup: =>
     if @article.get('published')

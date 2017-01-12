@@ -3,6 +3,7 @@ benv = require 'benv'
 sinon = require 'sinon'
 rewire = require 'rewire'
 Backbone = require 'backbone'
+Article = require '../../../../../../../models/article.coffee'
 fixtures = require '../../../../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 
@@ -10,43 +11,74 @@ describe 'YoastView', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require('jquery')
-      tmpl = $('<div id="yoast-container"></div>')
-      Backbone.$ = $
-      sinon.stub Backbone, 'sync'
-      @YoastView = benv.requireWithJadeify '../index.coffee', ['template']
-      @YoastView.__set__ 'Modal', sinon.stub()
-      @keyup = sinon.stub @YoastView.prototype, 'onKeyup'
-      $('body').html '<div id="yoast-container"></div>'
-
-      @view = new @YoastView
-        contentField: 'Testing This Content Field'
-        title: 'Test Title'
-        slug: 'test-slug'
-      done()
+      tmpl = resolve __dirname, '../yoast.jade'
+      locals = _.extend fixtures().locals,
+        article: @article = new Article fixtures().articles
+      benv.render tmpl, locals, =>
+        benv.expose $: benv.require('jquery')
+        Backbone.$ = $
+        sinon.stub Backbone, 'sync'
+        @YoastView = benv.require resolve __dirname, '../index'
+        @YoastView.__set__ 'yoastApp', @yoastApp = sinon.stub().returns(
+          refresh: ->
+        )
+        @YoastView.__set__ 'yoastSnippetPreview', @yoastSnippetPreview = sinon.stub().returns(
+          changedInput: @changedInput = sinon.stub()
+        )
+        $('#yoast-container').append """
+          <input id='snippet-editor-title'>
+          <input id='snippet-editor-meta-description'>
+          <div class='edit-seo__unresolved-msg'></div>
+        """
+        @view = new @YoastView
+          el: $('body')
+          contentField: 'Testing This Content Field'
+          article: @article
+        done()
 
   afterEach ->
     benv.teardown()
     Backbone.sync.restore()
-    @YoastView::onKeyup.restore()
 
   describe '#initialize', ->
 
-    it 'adds yoast html to #yoast-container', ->
-      $('#yoast-container').html().should.containEql 'edit-seo__snippet'
-      $('#yoast-container').html().should.containEql 'edit-seo__content-field'
-      $('#yoast-container').html().should.containEql 'edit-seo__focus-keyword'
+    it 'sets up Yoast plugins', ->
+      @yoastApp.callCount.should.equal 1
+      @yoastSnippetPreview.callCount.should.equal 1
 
-    it 'adds content, title, and slug to inputs', ->
-      $('#edit-seo__content-field').val().should.equal 'Testing This Content Field'
-      $('#snippet-editor-title').val().should.equal 'Test Title'
-      $('#snippet-editor-slug').val().should.equal 'test-slug'
+  describe 'setSnippetFields', ->
+
+    it 'sets input vals according to article data', ->
+      @view.setSnippetFields 'Testing this updated content field'
+      $('#edit-seo__content-field').val().should.containEql 'Testing this updated content field'
+      $('#snippet-editor-title').val().should.containEql 'Search Title'
+      $('#snippet-editor-meta-description').val().should.containEql 'Search Description Here.'
 
   describe '#onKeyup', ->
 
-    it 'changes the output when the user adds a keyword', (done) ->
+    it 'resets the snippet fields when a change is made', ->
       $('#edit-seo__focus-keyword').val('Content')
-      $('#edit-seo__focus-keyword').trigger 'keyup'
-      _.defer =>
-        @keyup.called.should.be.true()
-        done()
+      @view.onKeyup('new content')
+      $('#edit-seo__content-field').val().should.containEql 'new content'
+      @changedInput.callCount.should.equal 2
+
+  describe '#generateResolveMessage', ->
+
+    it 'creates a message for unresolved issues', ->
+      $('#edit-seo__focus-keyword').val('Content')
+      $('#edit-seo__output').html "<div class='bad'></div>"
+      @view.generateResolveMessage()
+      $('.edit-seo__unresolved-msg').hasClass('bad').should.be.true()
+      $('.edit-seo__unresolved-msg').text().should.containEql '1 Unresolved Issue'
+
+    it 'creates a message for all resolved', ->
+      $('#edit-seo__focus-keyword').val('Content')
+      $('#edit-seo__output').html "<div class='good'></div>"
+      @view.generateResolveMessage()
+      $('.edit-seo__unresolved-msg').hasClass('bad').should.be.false()
+      $('.edit-seo__unresolved-msg').text().should.containEql 'Resolved'
+    it 'creates a message when no target keyword is set', ->
+      $('#edit-seo__focus-keyword').val('')
+      @view.generateResolveMessage()
+      $('.edit-seo__unresolved-msg').hasClass('bad').should.be.true()
+      $('.edit-seo__unresolved-msg').text().should.containEql 'Set Target Keyword'
