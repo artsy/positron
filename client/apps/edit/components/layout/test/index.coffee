@@ -150,6 +150,11 @@ describe 'EditLayout', ->
 
   describe '#onYoastKeyup', ->
 
+    it 'returns if its not an editorial channel', ->
+      @view.channel.set 'type', 'team'
+      @view.onYoastKeyup()
+      @yoastKeyup.callCount.should.equal 0
+
     it 'calls onKeyup on the yoast view', ->
       @view.onYoastKeyup()
       @yoastKeyup.callCount.should.equal 1
