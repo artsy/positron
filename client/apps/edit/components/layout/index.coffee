@@ -29,7 +29,7 @@ module.exports = class EditLayout extends Backbone.View
     @setupTitleAutosize()
     @toggleAstericks()
     @attachScribe()
-    @setupYoast()
+    @setupYoast() if @channel.isEditorial()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
@@ -167,6 +167,7 @@ module.exports = class EditLayout extends Backbone.View
       contentField: @getBodyText()
 
   onYoastKeyup: ->
+    return unless @channel.isEditorial()
     @yoastView.onKeyup @getBodyText()
 
   getBodyText: =>
