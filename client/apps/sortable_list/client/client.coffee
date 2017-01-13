@@ -21,7 +21,6 @@ module.exports.SortableListView = SortableListView = React.createClass
     @fetchFeed type
 
   fetchFeed: (type) ->
-    # published = type in ['daily_email', 'weekly_email']
     feedQuery = query "published: #{type}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
     request
       .post sd.API_URL + '/graphql'
@@ -34,9 +33,9 @@ module.exports.SortableListView = SortableListView = React.createClass
 
   render: ->
     div {
-      className: 'queue-root-container'
+      className: 'articles-list'
     },
-      h1 { className: 'page-header' },
+      h1 { className: 'articles-list__header page-header' },
         div { className: 'max-width-container' },
           nav {className: 'queue-tabs'},
             a {
@@ -47,16 +46,16 @@ module.exports.SortableListView = SortableListView = React.createClass
               className: "#{if @state.published is false then 'is-active' else ''} drafts"
               onClick: => @setPublished false
               }, "Drafts"
-      div {},
-        div { className: 'queue-filter-search max-width-container' },
-          FilterSearch {
-            url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
-            placeholder: 'Search Articles...'
-            articles: @state.articles
-            searchResults: @searchResults
-          }
+      div { className: 'articles-list__container max-width-container' },
+        FilterSearch {
+          url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
+          placeholder: 'Search Articles...'
+          articles: @state.articles
+          searchResults: @searchResults
+          selected: null
+        }
 
 module.exports.init = ->
   props =
     articles: sd.SCHEDULED_ARTICLES
-  React.render React.createElement(SortableListView, props), document.getElementById('queue-root')
+  React.render React.createElement(SortableListView, props), document.getElementById('articles-list')

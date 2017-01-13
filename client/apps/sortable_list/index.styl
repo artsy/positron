@@ -1,38 +1,16 @@
-.queue-tabs
-  a
-    padding-right 20px
-    color gray-color
-    &.is-active
-      color black
-    &:hover
-      cursor pointer
-
-.queue-root-container
-  &[data-state='scheduled']
-    .queue-scheduled
-      display block
-    .queue-queued, .queue-filter-search
-      display none
-  &[data-state='daily_email'], &[data-state='weekly_email']
-    .queue-scheduled
-      display none
-    .queue-queued, .queue-filter-search
-      display block
-
-.queue-queued
-  margin 60px auto 120px auto
-  .queued-articles
-    &__header-container
-      display flex
-      border-bottom 1px solid gray-lighter-color
-      padding-bottom 20px
-      justify-content space-between
-    &__header-text
-      garamond('headline')
-
-  .article-list
-    &__checkcircle
-      svg
-        fill-color black
-      &:hover
-        fill-color gray-color
+.articles-list
+  &__header
+    position fixed
+    top 0
+    left 110px
+    right 0
+    background-color white
+  &__container
+    margin-top 75px
+  .filter-search__header-container
+    position fixed
+    top 8px
+    right calc((100vw \- 1070px) \/ 2)
+    max-width 960px
+    padding 0 30px
+    border none
