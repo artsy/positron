@@ -1,5 +1,6 @@
 Backbone = require 'backbone'
 _ = require 'underscore'
+Q = require 'bluebird-q'
 React = require 'react'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
@@ -12,26 +13,36 @@ module.exports.SortableListView = SortableListView = React.createClass
   getInitialState: ->
     articles: @props.articles or []
     published: @props.published or true
-    offset: 0
+    offset: 10
+
+  componentDidMount: ->
+    $(window).scroll () =>
+      if @state.articles.length >= 10
+        last = $('.article-list__result')[_this.state.offset - 1]
+        if $(window).scrollTop() >= $(last).position().top - $(window).height()
+          # console.log 'fetching, offset=' + @state.offset
+          _.once( @fetchFeed @state.published, @loadMore )
 
   setResults: (results) ->
     @setState articles: results
 
   setPublished: (type) ->
     @setState published: type
-    @fetchFeed type
+    @fetchFeed type, @setResults
 
-  loadMore: ->
+  loadMore: (results) ->
+    articles = this.state.articles.concat(results)
+    @setState articles: articles, offset: articles.length
 
-  fetchFeed: (type) ->
-    feedQuery = query "published: #{type}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
+  fetchFeed: (type, cb) ->
+    feedQuery = query "published: #{type}, offset: #{@state.offset}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
     request
       .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
       .send query: feedQuery
       .end (err, res) =>
         return if err or not res.body?.data
-        @setResults res.body.data.articles
+        cb res.body.data.articles
 
   render: ->
     div {
