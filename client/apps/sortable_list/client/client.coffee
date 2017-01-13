@@ -12,13 +12,16 @@ module.exports.SortableListView = SortableListView = React.createClass
   getInitialState: ->
     articles: @props.articles or []
     published: @props.published or true
+    offset: 0
 
-  searchResults: (results) ->
+  setResults: (results) ->
     @setState articles: results
 
   setPublished: (type) ->
     @setState published: type
     @fetchFeed type
+
+  loadMore: ->
 
   fetchFeed: (type) ->
     feedQuery = query "published: #{type}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
@@ -28,8 +31,7 @@ module.exports.SortableListView = SortableListView = React.createClass
       .send query: feedQuery
       .end (err, res) =>
         return if err or not res.body?.data
-        @setState articles: res.body.data.articles
-        # @fetchLatest()
+        @setResults res.body.data.articles
 
   render: ->
     div {
@@ -51,7 +53,7 @@ module.exports.SortableListView = SortableListView = React.createClass
           url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
           placeholder: 'Search Articles...'
           articles: @state.articles
-          searchResults: @searchResults
+          searchResults: @setResults
           selected: null
         }
 

@@ -21,6 +21,8 @@ module.exports = FilterSearch = React.createClass
 
   search: ->
     if @refs.searchQuery.getDOMNode().value.length
+      debugger
+      if @engine.remote.url != @props.url then @engine.remote.url = @props.url
       @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
         @props.searchResults results
 

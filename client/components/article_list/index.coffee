@@ -23,14 +23,13 @@ module.exports = ArticleList = React.createClass
       "Last saved " +
       "#{moment(result.updated_at).fromNow()}"
 
-  hasRows: ->
+  noResults: ->
     if !@props.articles.length
       div { className: 'article-list__no-results' }, "No Results Found"
 
-
   render: ->
     div { className: 'article-list__results' },
-      @hasRows()
+      @noResults()
       (@props.articles.map (result) =>
         div { className: 'article-list__result paginated-list-item' },
           if @props.checkable
@@ -44,5 +43,7 @@ module.exports = ArticleList = React.createClass
             div { className: 'article-list__title paginated-list-text-container' },
               h1 {}, result.thumbnail_title
               h2 {}, @publishText(result)
-          a { className: 'paginated-list-preview avant-garde-button', href: "#{sd.FORCE_URL}/article/#{result.slug}", target: '_blank' }, "Preview"
+          a { className: 'paginated-list-preview avant-garde-button'
+            , href: "#{sd.FORCE_URL}/article/#{result.slug}"
+            , target: '_blank' }, "Preview"
       )
