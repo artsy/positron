@@ -20,12 +20,12 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
 #
 # Schemas
 #
-schema = (->
+@schema = (->
   id: @objectId()
   name: @string().allow('', null)
 ).call Joi
 
-querySchema = (->
+@querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
 ).call Joi
@@ -38,7 +38,7 @@ querySchema = (->
   db.curations.findOne query, callback
 
 @where = (input, callback) ->
-  Joi.validate input, querySchema, (err, input) =>
+  Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'limit', 'offset'
     cursor = db.curations
@@ -61,7 +61,7 @@ querySchema = (->
 # Persistence
 #
 @save = (input, callback) ->
-  Joi.validate input, schema, OPTIONS, (err, input) =>
+  Joi.validate input, @schema, OPTIONS, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: ObjectId(input.id)
