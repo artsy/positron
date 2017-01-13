@@ -23,6 +23,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
 @schema = (->
   id: @objectId()
   name: @string().allow('', null)
+  content: @any()
 ).call Joi
 
 @querySchema = (->
