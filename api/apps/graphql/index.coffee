@@ -1,8 +1,10 @@
 express = require 'express'
 graphqlHTTP = require 'express-graphql'
 joiql = require 'joiql'
-{ string, object, array } = require 'joi'
+{ object, array } = require 'joi'
 Article = require '../articles/model/schema'
+Curation = require '../curations/model'
+Channel = require '../channels/model'
 { setUser } = require '../users/routes.coffee'
 User = require '../users/model.coffee'
 resolvers = require './resolvers'
@@ -16,6 +18,18 @@ schema = joiql
     )).meta(
       args: Article.querySchema
       resolve: resolvers.articles
+    )
+    curations: array().items(object(
+      Curation.schema
+    )).meta(
+      args: Curation.querySchema
+      resolve: resolvers.curations
+    )
+    channels: array().items(object(
+      Channel.schema
+    )).meta(
+      args: Channel.querySchema
+      resolve: resolvers.channels
     )
 
 app.use '/graphql', setUser, graphqlHTTP(

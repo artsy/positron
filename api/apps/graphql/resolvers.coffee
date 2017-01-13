@@ -1,6 +1,8 @@
 _ = require 'underscore'
-{ where, presentCollection } = Article = require '../articles/model'
 User = require '../users/model.coffee'
+{ where, presentCollection } = Article = require '../articles/model'
+Curation = require '../curations/model'
+Channel = require '../channels/model'
 
 module.exports.articles = (root, args, req, ast) ->
   if (not args.published or args.scheduled) and not args.channel_id
@@ -15,3 +17,13 @@ module.exports.articles = (root, args, req, ast) ->
   return new Promise (resolve, reject) ->
     where args, (err, results) ->
       resolve presentCollection(results).results
+
+module.exports.curations = (root, args, req, ast) ->
+  return new Promise (resolve, reject) ->
+    Curation.where args, (err, results) ->
+      resolve results.results
+
+module.exports.channels = (root, args, req, ast) ->
+  return new Promise (resolve, reject) ->
+    Channel.where args, (err, results) ->
+      resolve results.results

@@ -18,7 +18,7 @@ request = require 'superagent'
 #
 # Schemas
 #
-schema = (->
+@schema = (->
   id: @objectId()
   name: @string().allow('', null)
   user_ids: @array().items(@objectId()).default([])
@@ -37,7 +37,7 @@ schema = (->
   ).default([])
 ).call Joi
 
-querySchema = (->
+@querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   user_id: @objectId()
@@ -54,7 +54,7 @@ querySchema = (->
     callback null, channel
 
 @where = (input, callback) ->
-  Joi.validate input, querySchema, (err, input) =>
+  Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'limit', 'offset', 'user_id', 'q'
     query.user_ids = ObjectId input.user_id if input.user_id
@@ -79,7 +79,7 @@ querySchema = (->
 # Persistence
 #
 @save = (input, callback) ->
-  Joi.validate input, schema, (err, input) =>
+  Joi.validate input, @schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
