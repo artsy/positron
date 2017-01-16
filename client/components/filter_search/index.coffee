@@ -40,6 +40,6 @@ module.exports = FilterSearch = React.createClass
         }
       ArticleList {
         articles: @props.articles
-        checkable: @props.checked
+        checkable: @props.checkable
         selected: @selected
       }

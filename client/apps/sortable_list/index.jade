@@ -15,7 +15,9 @@ block content
         a.avant-garde-button.avant-garde-button-black.article-new-button( href='/articles/new' )
           include ../../components/layout/public/icons/layout_new_article.svg
           .article-new-text Write An Article
-    //- else
+    else
       //- +paginated-list(page, totalPages, articles.toPaginatedListItems(), '?published=' + published + '&')
 
-  #articles-list
+      #articles-list
+      #articles-list-loading
+        .loading-spinner

@@ -106,6 +106,7 @@ module.exports.QueueView = QueueView = React.createClass
           QueuedArticles {
             articles: @state.queuedArticles
             headerText: "Queued"
+            checkable: true
             selected: @selected
           }
         div { className: 'queue-filter-search max-width-container' },

@@ -24,7 +24,7 @@ module.exports = ArticleList = React.createClass
       "#{moment(result.updated_at).fromNow()}"
 
   noResults: ->
-    if !@props.articles.length
+    if !@props.articles?.length
       div { className: 'article-list__no-results' }, "No Results Found"
 
   render: ->
@@ -38,7 +38,7 @@ module.exports = ArticleList = React.createClass
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
               onClick: => @props.selected(result)
             }
-          div { className: 'article-list__article' },
+          a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
             div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
             div { className: 'article-list__title paginated-list-text-container' },
               h1 {}, result.thumbnail_title
