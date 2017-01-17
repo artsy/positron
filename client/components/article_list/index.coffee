@@ -19,9 +19,14 @@ module.exports = ArticleList = React.createClass
     else if result.scheduled_publish_at
       "Scheduled to publish " +
       "#{moment(result.scheduled_publish_at).fromNow()}"
+    else
+      "Last saved " +
+      "#{moment(result.updated_at).fromNow()}"
 
   render: ->
     div { className: 'article-list__results' },
+      unless @props.articles?.length
+        div { className: 'article-list__no-results' }, "No Results Found"
       (@props.articles.map (result) =>
         div { className: 'article-list__result paginated-list-item' },
           if @props.checkable
@@ -30,10 +35,17 @@ module.exports = ArticleList = React.createClass
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
               onClick: => @props.selected(result)
             }
-          div { className: 'article-list__article' },
-            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
+          a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
+            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" },
+              unless result.thumbnail_image
+                div { className: 'missing-img'}, "Missing Thumbnail"
             div { className: 'article-list__title paginated-list-text-container' },
-              h1 {}, result.thumbnail_title
+              if result.thumbnail_title
+                h1 {}, result.thumbnail_title
+              else
+                h1 { className: 'missing-title'}, 'Missing Title'
               h2 {}, @publishText(result)
-          a { className: 'paginated-list-preview avant-garde-button', href: "#{sd.FORCE_URL}/article/#{result.slug}", target: '_blank' }, "Preview"
+          a { className: 'paginated-list-preview avant-garde-button'
+            , href: "#{sd.FORCE_URL}/article/#{result.slug}"
+            , target: '_blank' }, "Preview"
       )

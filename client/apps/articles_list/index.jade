@@ -1,0 +1,11 @@
+include ../../components/paginated_list/index
+
+block locals
+  - hideHeader = true
+extend ../../components/layout/templates/index
+
+block content
+  #article-list-items.max-width-container
+    #articles-list
+    #articles-list-loading
+      .loading-spinner

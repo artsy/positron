@@ -3,6 +3,9 @@ thumbnail-width = 145px
 .article-list
   &__result
     cursor default
+  &__no-results
+    garamond l-body
+    margin-top 20px
   &__checkcircle
     width 18px
     height 18px
@@ -19,5 +22,20 @@ thumbnail-width = 145px
     width "calc(100% - %s)" % (thumbnail-width + 20px)
     display inline-block
     cursor default
+    text-decoration none
     &:hover
-      opacity 1
+      opacity .7
+      cursor pointer
+  &__title
+    .missing-title
+      color gray-dark-color
+  &__image.paginated-list-img
+    color gray-dark-color
+    display inline-flex
+    align-items center
+    justify-content center
+    .missing-img
+      avant-garde s-headline
+      text-align center
+      max-width 80%
+      margin 0 auto

@@ -9,22 +9,17 @@
       include ../public/icons/layout_new_article.svg
       br
       | New Article
-    a( href='/articles?published=false'
-       class=(sd.URL == '/articles?published=false' ? 'is-active' : '') )
-      include ../public/icons/layout_drafts.svg
+    a( href='/articles'
+       class=(sd.URL == '/articles' ? 'is-active' : '') )
+      include ../public/icons/layout_published.svg
       br
-      | Drafts
+      | Articles
     if user.get('current_channel').type === 'editorial'
       a#layout-sidebar-queue( href='/queue'
          class=(sd.URL.match('/sections') ? 'is-active' : '') )
         include ../public/icons/layout_queue.svg
         br
         | Queue
-    a( href='/articles?published=true'
-       class=(sd.URL == '/articles?published=true' ? 'is-active' : '') )
-      include ../public/icons/layout_published.svg
-      br
-      | Published
     if user.get('type') == 'Admin'
       a( href='/sections'
          class=(sd.URL.match('/sections') ? 'is-active' : '') )

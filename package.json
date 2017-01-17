@@ -85,6 +85,7 @@
     "jquery": "^2.1.4",
     "jquery-autosize": "^1.18.18",
     "jquery-fillwidth-lite": "^1.0.3",
+    "jquery-on-infinite-scroll": "^1.0.1",
     "mocha": "^3.1.2",
     "rewire": "2.2.0",
     "scribe-editor": "^2.0.2",
