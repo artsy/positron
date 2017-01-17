@@ -1,8 +1,6 @@
-Backbone = require 'backbone'
 _ = require 'underscore'
-Q = require 'bluebird-q'
 React = require 'react'
-jqueryOnInfitireScroll = require('jquery-on-infinite-scroll')
+require 'jquery-on-infinite-scroll'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
 FilterSearch = require '../../../components/filter_search/index.coffee'
@@ -22,7 +20,7 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
     $.onInfiniteScroll canLoadMore
 
   canLoadMore: ->
-    return unless !$('.filter-search__input').val()
+    return if $('.filter-search__input').val()
     $('.loading-spinner').fadeIn()
     @fetchFeed @state.published, @state.offset + 10, @appendMore
 
