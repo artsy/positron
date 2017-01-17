@@ -22,9 +22,17 @@ thumbnail-width = 145px
     width "calc(100% - %s)" % (thumbnail-width + 20px)
     display inline-block
     cursor default
+    text-decoration none
     &:hover
       opacity .7
       cursor pointer
   &__title
     .missing-title
       color gray-dark-color
+  &__image
+    &.missing-img
+      avant-garde s-headline
+      color gray-dark-color
+      display inline-flex
+      align-items center
+      justify-content center

@@ -39,7 +39,10 @@ module.exports = ArticleList = React.createClass
               onClick: => @props.selected(result)
             }
           a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
-            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
+            if result.thumbnail_image
+              div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
+            else
+              div { className: 'article-list__image paginated-list-img missing-img'}, "Missing Image"
             div { className: 'article-list__title paginated-list-text-container' },
               if result.thumbnail_title
                 h1 {}, result.thumbnail_title
