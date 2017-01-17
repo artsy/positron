@@ -9,36 +9,27 @@ r =
   find: React.addons.TestUtils.findRenderedDOMComponentWithClass
   simulate: React.addons.TestUtils.Simulate
 
-describe 'QueuedView', ->
+describe 'ArticlesListView', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      { QueueView } = mod =  benv.require resolve(__dirname, '../../client/client')
+      window.jQuery = $
+      $.onInfiniteScroll = sinon.stub()
+      { ArticlesListView } = mod =  benv.require resolve(__dirname, '../../client/client')
       mod.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
-      mod.__set__ 'QueuedArticles', @QueuedArticles = sinon.stub()
-      mod.__set__ 'ArticleList', @ArticleList = sinon.stub()
-      @request =
-        post: sinon.stub().returns
-          set: sinon.stub().returns
-            send: sinon.stub().returns
-              end: sinon.stub().yields(
-                null,
-                body: data: articles: [fixtures().articles, fixtures().articles]
-              )
-      mod.__set__ 'request', @request
-      @component = React.render QueueView(
+      @component = React.render ArticlesListView(
         {
-          scheduledArticles: [_.extend fixtures().articles, id: '456']
-          feed: 'scheduled'
+          articles: [_.extend fixtures().articles, id: '456']
+          published: true
+          offset: 0
         }
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'saveSelected'
         sinon.stub @component, 'setState'
         done()
 
@@ -46,37 +37,14 @@ describe 'QueuedView', ->
     benv.teardown()
 
   it 'renders the nav', ->
-    $(@component.getDOMNode()).html().should.containEql 'Scheduled'
-    $(@component.getDOMNode()).html().should.containEql 'Daily Email'
-    $(@component.getDOMNode()).html().should.containEql 'Weekly Email'
+    $(@component.getDOMNode()).html().should.containEql 'Published'
+    $(@component.getDOMNode()).html().should.containEql 'Drafts'
 
-  it 'scheduledArticles gets passed along to components', ->
-    @component.state.scheduledArticles.length.should.equal 1
-    @ArticleList.args[0][0].articles.length.should.equal 1
+  it 'articles get passed along to list component', ->
+    @component.state.articles.length.should.equal 1
+    @FilterSearch.args[0][0].articles.length.should.equal 1
 
-  it 'updates feed for daily panel', ->
-    @component.fetchFeed 'daily_email'
-    @request.post.callCount.should.equal 2
-    @component.setState.args[0][0].queuedArticles.length.should.equal 2
-    @component.setState.args[1][0].publishedArticles.length.should.equal 2
-
-  it 'updates feed for weekly panel', ->
-    @component.fetchFeed 'weekly_email'
-    @request.post.callCount.should.equal 2
-    @component.setState.args[0][0].queuedArticles.length.should.equal 2
-    @component.setState.args[1][0].publishedArticles.length.should.equal 2
-
-  it 'updates feed for scheduled panel', ->
-    @component.fetchFeed 'scheduled'
-    @request.post.callCount.should.equal 1
-    @component.setState.args[0][0].scheduledArticles.length.should.equal 2
-
-  it 'updates state on selected', ->
-    @component.selected(_.extend(fixtures().articles, id: '123'), 'select')
-    @component.setState.args[0][0].publishedArticles.length.should.equal 0
-    @component.setState.args[0][0].queuedArticles.length.should.equal 1
-
-  it 'updates state on unselected', ->
-    @component.selected(_.extend(fixtures().articles, id: '456'), 'unselect')
-    @component.setState.args[0][0].publishedArticles.length.should.equal 1
-    @component.setState.args[0][0].queuedArticles.length.should.equal 0
+  it 'updates feed when nav is clicked', ->
+    @component.state.published.should.equal true
+    r.simulate.click r.find @component, 'drafts'
+    @component.setState.args[0][0].published.should.equal false

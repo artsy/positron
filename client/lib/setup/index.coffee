@@ -54,7 +54,6 @@ module.exports = (app) ->
 
   # Mount apps
   app.use require '../../apps/sections'
-  app.use require '../../apps/article_list'
   app.use require '../../apps/edit'
   app.use require '../../apps/settings'
   app.use require '../../apps/switch_channel'

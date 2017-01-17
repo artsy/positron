@@ -9,13 +9,13 @@ FilterSearch = require '../../../components/filter_search/index.coffee'
 query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
+icons = -> require('../icons.jade') arguments...
 
-module.exports.SortableListView = SortableListView = React.createClass
+module.exports.ArticlesListView = ArticlesListView = React.createClass
   getInitialState: ->
     articles: @props.articles or []
     published: @props.published or true
     offset: 0
-    searchOffset: 0
 
   componentDidMount: ->
     canLoadMore = _.debounce @canLoadMore, 300
@@ -49,12 +49,27 @@ module.exports.SortableListView = SortableListView = React.createClass
         @setState offset: @state.offset + 10
         cb res.body.data.articles
 
-  emptyMessage: ->
-    return (
-      p {
-        className: 'no-user-articles'
-      }, 'You haven&rsquo;t written any articles yet.'
-    )
+  showEmptyMessage: ->
+    div { className: 'article-list__empty'},
+      div {}, 'You haven’t written any articles yet.'
+      div {}, 'Artsy Writer is a tool for writing stories about art on Artsy.'
+      div {}, 'Get started by writing an article or reaching out to your liaison for help.'
+      a { className: 'avant-garde-button avant-garde-button-black article-new-button'
+          , dangerouslySetInnerHTML: __html: $(icons()).filter('.new-article').html() + 'Write An Article'
+          , href: '/articles/new' }
+
+  showArticlesList: ->
+    if @props.articles?.length
+      div { className: 'articles-list__container' },
+        FilterSearch {
+          url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
+          placeholder: 'Search Articles...'
+          articles: @state.articles
+          searchResults: @setResults
+          selected: null
+        }
+    else
+      @showEmptyMessage()
 
   render: ->
     div {
@@ -62,7 +77,7 @@ module.exports.SortableListView = SortableListView = React.createClass
     },
       h1 { className: 'articles-list__header page-header' },
         div { className: 'max-width-container' },
-          nav {className: 'queue-tabs'},
+          nav {className: 'nav-tabs'},
             a {
               className: "#{if @state.published is true then 'is-active' else ''} published"
               onClick: => @setPublished true
@@ -71,17 +86,9 @@ module.exports.SortableListView = SortableListView = React.createClass
               className: "#{if @state.published is false then 'is-active' else ''} drafts"
               onClick: => @setPublished false
               }, "Drafts"
-      div { className: 'articles-list__container' },
-        FilterSearch {
-          url: sd.API_URL + "/articles?published=#{@state.published}&offset=#{@state.searchOffset}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
-          placeholder: 'Search Articles...'
-          articles: @state.articles
-          searchResults: @setResults
-          selected: null
-        }
-        @emptyMessage
+      @showArticlesList()
 
 module.exports.init = ->
   props =
     articles: sd.ARTICLES
-  React.render React.createElement(SortableListView, props), document.getElementById('articles-list')
+  React.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')

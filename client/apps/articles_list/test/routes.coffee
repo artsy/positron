@@ -17,14 +17,14 @@ describe 'routes', ->
     @res = { render: sinon.stub(), locals: fixtures().locals }
     @next = sinon.stub()
 
-  describe '#queue', ->
+  describe '#articles_list', ->
 
-    it 'fetches scheduled', ->
-      routes.queue @req, @res, @next
-      @res.locals.sd.SCHEDULED_ARTICLES.length.should.equal 1
+    it 'fetches articles', ->
+      routes.articles_list @req, @res, @next
+      @res.locals.sd.ARTICLES.length.should.equal 1
 
     it 'sends arguments to the template', ->
-      routes.queue @req, @res, @next
+      routes.articles_list @req, @res, @next
       @res.render.args[0][0].should.equal 'index'
       @res.render.args[0][1].published.should.be.true()
       @res.render.args[0][1].current_channel.name.should.equal 'Editorial'

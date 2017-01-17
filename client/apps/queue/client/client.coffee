@@ -82,7 +82,7 @@ module.exports.QueueView = QueueView = React.createClass
     },
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
-          nav {className: 'queue-tabs'},
+          nav {className: 'nav-tabs'},
             a {
               className: "#{if @state.feed is 'scheduled' then 'is-active' else ''} scheduled"
               onClick: => @setFeed 'scheduled'
