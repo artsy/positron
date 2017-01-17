@@ -23,13 +23,10 @@ module.exports = ArticleList = React.createClass
       "Last saved " +
       "#{moment(result.updated_at).fromNow()}"
 
-  noResults: ->
-    if !@props.articles?.length
-      div { className: 'article-list__no-results' }, "No Results Found"
-
   render: ->
     div { className: 'article-list__results' },
-      @noResults()
+      unless @props.articles?.length
+        div { className: 'article-list__no-results' }, "No Results Found"
       (@props.articles.map (result) =>
         div { className: 'article-list__result paginated-list-item' },
           if @props.checkable

@@ -2619,6 +2619,11 @@
       "resolved": "https://registry.npmjs.org/jquery-fillwidth-lite/-/jquery-fillwidth-lite-1.0.8.tgz",
       "dev": true
     },
+    "jquery-on-infinite-scroll": {
+      "version": "1.0.1",
+      "from": "jquery-on-infinite-scroll@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/jquery-on-infinite-scroll/-/jquery-on-infinite-scroll-1.0.1.tgz"
+    },
     "jsbn": {
       "version": "0.1.0",
       "from": "jsbn@>=0.1.0 <0.2.0",
@@ -4895,7 +4900,7 @@
     "yoastseo": {
       "version": "1.2.2",
       "from": "git+https://github.com/artsy/YoastSEO.js.git#develop",
-      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#98ed2d2adf15bb9ef5ae95a01269bb7f21c24638"
+      "resolved": "git+https://github.com/artsy/YoastSEO.js.git#a1bbf40ec2dbc807412ca57374a65d95e37c0fcd"
     },
     "zombie": {
       "version": "4.3.0",
