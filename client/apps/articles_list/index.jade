@@ -6,9 +6,9 @@ extend ../../components/layout/templates/index
 
 block content
   #article-list-items.max-width-container
-    if articles.length == 0
+    if !articles
       section.article-list-empty
-        p You haven&rsquo;t #{emptyMessage} yet.
+        p You haven&rsquo;t written any articles yet.
         p Artsy Writer is a tool for writing stories about art on Artsy.
           br
           | Get started by writing an article or reaching out to your liaison for help.
@@ -16,8 +16,6 @@ block content
           include ../../components/layout/public/icons/layout_new_article.svg
           .article-new-text Write An Article
     else
-      //- +paginated-list(page, totalPages, articles.toPaginatedListItems(), '?published=' + published + '&')
-
       #articles-list
       #articles-list-loading
         .loading-spinner

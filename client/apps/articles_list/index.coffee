@@ -9,4 +9,7 @@ app = module.exports = express()
 app.set 'views', __dirname
 app.set 'view engine', 'jade'
 
-app.get '/sortable_list', routes.sortable_list
+app.get '/', (req, res) -> res.redirect '/articles'
+# app.get '/list', routes.articles_list
+
+app.get '/articles', routes.articles_list

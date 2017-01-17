@@ -49,6 +49,13 @@ module.exports.SortableListView = SortableListView = React.createClass
         @setState offset: @state.offset + 10
         cb res.body.data.articles
 
+  emptyMessage: ->
+    return (
+      p {
+        className: 'no-user-articles'
+      }, 'You haven&rsquo;t written any articles yet.'
+    )
+
   render: ->
     div {
       className: 'articles-list'
@@ -72,8 +79,9 @@ module.exports.SortableListView = SortableListView = React.createClass
           searchResults: @setResults
           selected: null
         }
+        @emptyMessage
 
 module.exports.init = ->
   props =
-    articles: sd.SCHEDULED_ARTICLES
+    articles: sd.ARTICLES
   React.render React.createElement(SortableListView, props), document.getElementById('articles-list')

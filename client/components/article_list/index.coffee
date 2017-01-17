@@ -41,7 +41,10 @@ module.exports = ArticleList = React.createClass
           a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
             div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" }
             div { className: 'article-list__title paginated-list-text-container' },
-              h1 {}, result.thumbnail_title
+              if result.thumbnail_title
+                h1 {}, result.thumbnail_title
+              else
+                h1 { className: 'missing-title'}, 'Missing Title'
               h2 {}, @publishText(result)
           a { className: 'paginated-list-preview avant-garde-button'
             , href: "#{sd.FORCE_URL}/article/#{result.slug}"
