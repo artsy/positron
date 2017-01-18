@@ -26,5 +26,4 @@ describe 'routes', ->
     it 'sends arguments to the template', ->
       routes.articles_list @req, @res, @next
       @res.render.args[0][0].should.equal 'index'
-      @res.render.args[0][1].published.should.be.true()
       @res.render.args[0][1].current_channel.name.should.equal 'Editorial'
