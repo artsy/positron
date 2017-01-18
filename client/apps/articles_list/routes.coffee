@@ -6,17 +6,20 @@ Transport = require('lokka-transport-http').Transport
 
 @articles_list = (req, res, next) ->
   channel_id = req.user?.get('current_channel').id
-  publishedQuery = query "published: true, channel_id: \"#{channel_id}\""
+
+  if req._parsedUrl.query?.includes 'published=false' then published = false else published = true
+  theQuery = query "published: #{published}, channel_id: \"#{channel_id}\""
+
   headers =
     'X-Access-Token': req.user.get('access_token')
 
   client = new Lokka
     transport: new Transport(API_URL + '/graphql', {headers})
 
-  client.query(publishedQuery)
+  client.query(theQuery)
     .then (result) =>
       if result.articles.length > 0
-        renderArticles res, req, result, true
+        renderArticles res, req, result, published
       else
         unpublishedQuery = query "published: false, channel_id: \"#{channel_id}\""
         client.query(unpublishedQuery)
