@@ -21,6 +21,7 @@ describe 'ArticlesListView', ->
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
+        ARTICLES: [_.extend fixtures().articles]
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
       @component = React.render ArticlesListView(

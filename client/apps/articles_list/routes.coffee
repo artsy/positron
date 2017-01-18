@@ -18,8 +18,8 @@ Transport = require('lokka-transport-http').Transport
       if result.articles.length > 0
         renderArticles res, req, result, true
       else
-        publishedQuery = query "published: false, channel_id: \"#{channel_id}\""
-        client.query(publishedQuery)
+        unpublishedQuery = query "published: false, channel_id: \"#{channel_id}\""
+        client.query(unpublishedQuery)
           .then (result) =>
             renderArticles res, req, result, false
     .catch -> next()
