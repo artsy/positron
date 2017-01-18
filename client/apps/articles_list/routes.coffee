@@ -15,10 +15,20 @@ Transport = require('lokka-transport-http').Transport
 
   client.query(publishedQuery)
     .then (result) =>
-      res.locals.sd.ARTICLES = result.articles
-      res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
-      res.render 'index',
-        articles: result.articles || []
-        published: true
-        current_channel: req.user?.get('current_channel')
+      if result.articles.length > 0
+        renderArticles res, req, result, true
+      else
+        unpublishedQuery = query "published: false, channel_id: \"#{channel_id}\""
+        client.query(unpublishedQuery)
+          .then (result) =>
+            renderArticles res, req, result, false
     .catch -> next()
+
+
+renderArticles = (res, req, result, published) ->
+  res.locals.sd.ARTICLES = result.articles
+  res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
+  res.locals.sd.HAS_PUBLISHED = published
+  res.render 'index',
+    articles: result.articles || []
+    current_channel: req.user?.get('current_channel')
