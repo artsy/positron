@@ -12,7 +12,7 @@ icons = -> require('../icons.jade') arguments...
 module.exports.ArticlesListView = ArticlesListView = React.createClass
   getInitialState: ->
     articles: @props.articles or []
-    published: @props.published or true
+    published: @props.published
     offset: 0
 
   componentDidMount: ->
@@ -53,8 +53,8 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
       div {}, 'Artsy Writer is a tool for writing stories about art on Artsy.'
       div {}, 'Get started by writing an article or reaching out to your liaison for help.'
       a { className: 'avant-garde-button avant-garde-button-black article-new-button'
-          , dangerouslySetInnerHTML: __html: $(icons()).filter('.new-article').html() + 'Write An Article'
-          , href: '/articles/new' }
+          , href: '/articles/new'
+          , dangerouslySetInnerHTML: __html: $(icons()).filter('.new-article').html() + 'Write An Article' }
 
   showArticlesList: ->
     if @props.articles?.length
@@ -89,4 +89,5 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
 module.exports.init = ->
   props =
     articles: sd.ARTICLES
+    published: sd.HAS_PUBLISHED
   React.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')
