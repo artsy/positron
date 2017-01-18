@@ -7,7 +7,7 @@ Transport = require('lokka-transport-http').Transport
 @articles_list = (req, res, next) ->
   channel_id = req.user?.get('current_channel').id
 
-  if req._parsedUrl.query?.includes 'published=false' then published = false else published = true
+  if req.query?.published == 'false' then published = false else published = true
   theQuery = query "published: #{published}, channel_id: \"#{channel_id}\""
 
   headers =

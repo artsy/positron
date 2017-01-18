@@ -27,3 +27,15 @@ describe 'routes', ->
       routes.articles_list @req, @res, @next
       @res.render.args[0][0].should.equal 'index'
       @res.render.args[0][1].current_channel.name.should.equal 'Editorial'
+
+    it 'is aware of url queries', ->
+      routes.articles_list @req, @res, @next
+      @res.locals.sd.HAS_PUBLISHED.should.equal true
+
+      @req.query = { published: 'false' }
+      routes.articles_list @req, @res, @next
+      @res.locals.sd.HAS_PUBLISHED.should.equal false
+
+      @req.query = { published: 'true' }
+      routes.articles_list @req, @res, @next
+      @res.locals.sd.HAS_PUBLISHED.should.equal true
