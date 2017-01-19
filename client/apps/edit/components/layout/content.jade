@@ -9,7 +9,7 @@ section#edit-content
     )!= article.get('lead_paragraph')
     .edit-author-section
       if article.get('author')
-        p= article.get('author').name
-      p= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
+        p.article-author= article.get('author').name
+      p.article-date= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container

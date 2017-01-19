@@ -74,22 +74,22 @@ module.exports = React.createClass
       }
     section {
       className: 'edit-section-video'
-      style: { 'background-color' : @state.background_color }
+      style: { 'backgroundColor' : @state.background_color }
     },
       div { className: 'esv-controls-container edit-section-controls' },
         nav { className: 'esv-nav' },
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
+              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'backgroundSize': '38px'
             }
             className: 'esv-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
-              'background-size': '22px'
+              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
+              'backgroundSize': '22px'
             }
             className: 'esv-column-width'
             onClick: @changeLayout('column_width')

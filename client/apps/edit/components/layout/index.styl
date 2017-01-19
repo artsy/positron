@@ -77,19 +77,14 @@
 .edit-author-section
   text-align center
   width body-width
-  avant-garde()
-  font-size small-avant-garde-font-size + 1
-  margin 35px auto 35px + 5px auto
-  border-top 1px solid gray-lighter-color
-  border-bottom @border-top
+  margin 35px auto 0 auto
   padding controls-padding 0
-  p
-    display inline-block
-    &:after
-      content '\2022'
-      margin 0 10px
-    &:last-child:after
-      display none
+  .article-author
+    avant-garde m-headline
+  .article-date
+    avant-garde s-headline
+    line-height 25px
+    color gray-dark-color
 
 .edit-body-container
   width body-width

@@ -124,16 +124,16 @@ module.exports = React.createClass
         nav {},
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
+              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'backgroundSize': '38px'
             }
             className: 'esa-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
-              'background-size': '22px'
+              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
+              'backgroundSize': '22px'
             }
             className: 'esa-column-width'
             onClick: @changeLayout('column_width')
@@ -155,14 +155,13 @@ module.exports = React.createClass
       (if @props.section.artworks.length
         ul { className: 'esa-artworks-list', ref: 'artworks' },
           (@props.section.artworks.map (artwork, i) =>
-            # debugger
             li { key: i },
               div { className: 'esa-img-container' },
                 img { src: artwork.defaultImage().bestImageUrl(['larger', 'large', 'medium', 'small']) }
               p {},
                 strong {}, @formatArtistNames artwork
               p { className: 'title' }, artwork.get('artwork')?.title or artwork.attributes?.title,
-                if artwork.get('date') or artwork.attributes?.date
+                if artwork.get('date')
                   span { className: 'date' }, ", " + artwork.get('date')
               p {}, artwork.get('partner')?.name
               button {
