@@ -79,11 +79,11 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    len = $(@refs.artworks.getDOMNode()).find('img').length
-    $(@refs.artworks.getDOMNode()).fillwidthLite
-      gutterSize: 20
-      apply: (img, i) ->
-        img.$el.closest('li').width(img.width)
+    if $(@refs.artworks.getDOMNode()).find('img').length > 1
+      $(@refs.artworks.getDOMNode()).fillwidthLite
+        gutterSize: 20
+        apply: (img, i) ->
+          img.$el.closest('li').width(img.width)
 
   removeFillwidth: ->
     $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
@@ -124,16 +124,16 @@ module.exports = React.createClass
         nav {},
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
+              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'backgroundSize': '38px'
             }
             className: 'esa-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
-              'background-size': '22px'
+              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
+              'backgroundSize': '22px'
             }
             className: 'esa-column-width'
             onClick: @changeLayout('column_width')
@@ -160,7 +160,9 @@ module.exports = React.createClass
                 img { src: artwork.defaultImage().bestImageUrl(['larger', 'large', 'medium', 'small']) }
               p {},
                 strong {}, @formatArtistNames artwork
-              p {}, artwork.get('artwork')?.title or artwork.attributes?.title
+              p { className: 'title' }, artwork.get('artwork')?.title or artwork.attributes?.title,
+                if artwork.get('date')
+                  span { className: 'date' }, ", " + artwork.get('date')
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'
