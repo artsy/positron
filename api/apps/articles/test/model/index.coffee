@@ -439,7 +439,24 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
       }, 'foo', (err, article) ->
         article.updated_at.should.be.an.instanceOf(Date)
-        moment(article.updated_at).format('YYYY').should.equal moment().format('YYYY')
+        moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
+        done()
+
+    it 'input updated_at must be a date', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        updated_at: 'foo'
+      }, 'foo', (err, article) ->
+        err.message.should.containEql '"updated_at" must be a number of milliseconds or valid date string'
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        updated_at: new Date
+      }, 'foo', (err, article) ->
+        moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
         done()
 
     it 'includes the id for a new article', (done) ->

@@ -74,6 +74,7 @@ denormalizedArtwork = (->
   tags: @array().items(@string()).default([])
   title: @string().allow('', null)
   layout: @string().allow('left', 'center', null).default('center')
+  updated_at: @date()
   published: @boolean().default(false)
   published_at: @date()
   scheduled_publish_at: @date().allow(null)
