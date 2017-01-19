@@ -80,10 +80,11 @@ module.exports = React.createClass
 
   fillwidth: ->
     len = $(@refs.artworks.getDOMNode()).find('img').length
-    $(@refs.artworks.getDOMNode()).fillwidthLite
-      gutterSize: 20
-      apply: (img, i) ->
-        img.$el.closest('li').width(img.width)
+    if len > 1
+      $(@refs.artworks.getDOMNode()).fillwidthLite
+        gutterSize: 20
+        apply: (img, i) ->
+          img.$el.closest('li').width(img.width)
 
   removeFillwidth: ->
     $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
