@@ -11,6 +11,7 @@ module.exports = (argString) ->
       id
       channel_id
       partner_channel_id
+      updated_at
     }
   }
   """
