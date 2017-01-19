@@ -79,8 +79,7 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    len = $(@refs.artworks.getDOMNode()).find('img').length
-    if len > 1
+    if $(@refs.artworks.getDOMNode()).find('img').length > 1
       $(@refs.artworks.getDOMNode()).fillwidthLite
         gutterSize: 20
         apply: (img, i) ->
@@ -156,12 +155,15 @@ module.exports = React.createClass
       (if @props.section.artworks.length
         ul { className: 'esa-artworks-list', ref: 'artworks' },
           (@props.section.artworks.map (artwork, i) =>
+            # debugger
             li { key: i },
               div { className: 'esa-img-container' },
                 img { src: artwork.defaultImage().bestImageUrl(['larger', 'large', 'medium', 'small']) }
               p {},
                 strong {}, @formatArtistNames artwork
-              p {}, artwork.get('artwork')?.title or artwork.attributes?.title
+              p { className: 'title' }, artwork.get('artwork')?.title or artwork.attributes?.title,
+                if artwork.get('date') or artwork.attributes?.date
+                  span { className: 'date' }, ", " + artwork.get('date')
               p {}, artwork.get('partner')?.name
               button {
                 className: 'edit-section-remove button-reset'
