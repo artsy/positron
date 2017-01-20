@@ -43,7 +43,7 @@ module.exports = class User extends Backbone.Model
           .end (err, results) ->
             cb null, user, results?.body
       (user, partners, cb) =>
-        request.get("#{sd.API_URL}/channels?user_id=#{@get('id')}")
+        request.get("#{sd.API_URL}/channels?user_id=#{@get('id')}&limit=50")
           .set('X-Access-Token': @get('access_token'))
           .end (err, results) ->
             cb null, [ user, partners, results?.body?.results ]
