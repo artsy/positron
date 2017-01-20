@@ -22,10 +22,10 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupAutocomplete()
-    @showPreviewImages()
+    @toggleFillwidth()
 
   componentDidUpdate: ->
-    @showPreviewImages()
+    @toggleFillwidth()
 
   componentWillUnmount: ->
     @autocomplete.remove()
@@ -86,6 +86,7 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @setState layout: layout
     @props.section.set layout: layout
+    @toggleFillwidth()
 
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
@@ -108,18 +109,25 @@ module.exports = React.createClass
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
 
-  showPreviewImages: ->
-    # Slideshow Preview
-    $('.esic-preview-image-container').each (i, value) ->
-      allowedPixels = 560.0 - 100 # min-width + margins
-      totalPixels = 0.0
-      $(value).find('img').each (i, img) ->
-        _.defer -> _.defer ->
-          totalPixels = totalPixels + img.width
-          if totalPixels > allowedPixels
-            $(img).css('display', 'none')
-          else
-            $(img).css('display', 'inline-block')
+  toggleFillwidth: ->
+    return unless @props.section.get('images').length
+    if @props.section.get('layout') is 'overflow_fillwidth'
+      @removeFillwidth() if @prevLength isnt @props.section.get('images').length
+      @fillwidth()
+    else if @props.section.previous('layout') isnt @props.section.get('layout')
+      @removeFillwidth()
+    @prevLength = @props.section.get('images').length
+
+  fillwidth: ->
+    console.log 'in fillwidth'
+    if $(@refs.images.getDOMNode()).find('img').length > 1
+      $(@refs.images.getDOMNode()).fillwidthLite
+        gutterSize: 20
+        apply: (img, i) ->
+          img.$el.closest('li').width(img.width)
+
+  removeFillwidth: ->
+    $(@refs.images.getDOMNode()).find('li').css(width: '', padding: '')
 
   render: ->
     section {
@@ -252,16 +260,14 @@ module.exports = React.createClass
                 else
                   [
                     div { className: 'esic-img-container'},
-                      [
-                        img {
-                          className: 'esic-image'
-                          src: if @state.progress then item.url else resize(item.url, width: 900)
-                          style: opacity: if @state.progress then @state.progress else '1'
-                        }
-                        div {
-                          dangerouslySetInnerHTML: __html: item.caption
-                          className: 'esic-caption'
-                        }
-                      ]
+                      img {
+                        className: 'esic-image'
+                        src: if @state.progress then item.url else resize(item.url, width: 900)
+                        style: opacity: if @state.progress then @state.progress else '1'
+                      }
+                      div {
+                        dangerouslySetInnerHTML: __html: item.caption
+                        className: 'esic-caption'
+                      }
                   ]
       )
