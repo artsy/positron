@@ -15,6 +15,7 @@ SectionFullscreen = React.createFactory require '../section_fullscreen/index.cof
 SectionCallout = React.createFactory require '../section_callout/index.coffee'
 SectionToc = React.createFactory require '../section_toc/index.coffee'
 SectionImageSet = React.createFactory require '../section_image_set/index.coffee'
+SectionImageCollection = React.createFactory require '../section_image_collection/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -23,7 +24,7 @@ module.exports = React.createClass
   onClickOff: ->
     @setEditing(off)()
     @refs.section?.onClickOff?()
-    if @props.section.get('type') is 'image_set'
+    if @props.section.get('type') is 'image_set' or 'image_collection'
       @props.section.destroy() if @props.section.get('images').length is 0
 
   componentDidMount: ->
@@ -64,6 +65,7 @@ module.exports = React.createClass
           when 'callout' then SectionCallout
           when 'toc' then SectionToc
           when 'image_set' then SectionImageSet
+          when 'image_collection' then SectionImageCollection
         )(
           section: @props.section
           editing: @props.editing

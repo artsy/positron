@@ -11,6 +11,7 @@
 .edit-section-container
   animation fadein 0.15s
   z-index 1
+  clear both
 
 .edit-section-container-bg
   width 100%
@@ -49,6 +50,7 @@
 .edit-section-container[data-type=image]
 .edit-section-container[data-type=artworks][data-layout=overflow_fillwidth]
 .edit-section-container[data-type=image_set]
+.edit-section-container[data-type=image_collection][data-layout=overflow_fillwidth]
   width overflow-width
   margin-left -((overflow-width - body-width) / 2 - controls-padding)
 

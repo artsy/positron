@@ -124,6 +124,10 @@ denormalizedArtwork = (->
     @object().meta(name: 'ImageSet').keys
       type: 'image_set'
       images: @array().items([denormalizedArtwork, imageSection])
+    @object().meta(name: 'ImageCollection').keys
+      type: 'image_collection'
+      layout: @string().allow('overflow_fillwidth', 'column_width', null)
+      images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   primary_featured_artist_ids: @array().items(@objectId()).allow(null)
   featured_artist_ids: @array().items(@objectId()).allow(null)

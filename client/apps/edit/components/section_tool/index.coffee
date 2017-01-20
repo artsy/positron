@@ -86,6 +86,11 @@ module.exports = React.createClass
           type: 'image_set'
           images: []
         }, at: @props.index + 1
+      when 'image_collection'
+        @props.sections.add {
+          type: 'image_collection'
+          images: []
+        }, at: @props.index + 1
     @setState open: false
 
   render: ->
@@ -200,6 +205,15 @@ module.exports = React.createClass
               className: 'edit-section-tool-image-set'
               onClick: @newSection('image_set')
             }, 'Image Set',
+              div {
+                className: 'edit-menu-icon-image-set'
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
+              }
+          if @channel.hasFeature 'image_set'
+            li {
+              className: 'edit-section-tool-image-set'
+              onClick: @newSection('image_collection')
+            }, 'Image Collection',
               div {
                 className: 'edit-menu-icon-image-set'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
