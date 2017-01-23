@@ -26,6 +26,19 @@ module.exports = React.createClass
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
 
+  convertImages: (section) ->
+    newSection = {
+      type: 'image_collection'
+      layout: section.attributes.layout || 'overflow_fillwidth'
+      images: [ {
+        type: section.get('type')
+        url: section.get('url')
+        caption: section.get('caption')
+      } ]
+    }
+    section.attributes = newSection
+    return section
+
   render: ->
     div {},
       div {
@@ -35,6 +48,8 @@ module.exports = React.createClass
       },
         SectionTool { sections: @props.sections, index: -1 }
         @props.sections.map (section, i) =>
+          if section.get('type') is 'image'
+            section = @convertImages section
           [
             SectionContainer {
               sections: @props.sections
