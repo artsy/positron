@@ -23,7 +23,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupAutocomplete()
-    imagesLoaded $(@refs.images.getDOMNode()), =>
+    imagesLoaded $(@refs.images?.getDOMNode()), =>
       @toggleFillwidth() if @state.images.length > 1
 
   componentWillUnmount: ->

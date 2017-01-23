@@ -29,12 +29,21 @@ module.exports = React.createClass
   convertImages: (section) ->
     newSection = {
       type: 'image_collection'
-      layout: section.attributes.layout || 'overflow_fillwidth'
+      layout: section.get('layout') || 'overflow_fillwidth'
       images: [ {
         type: section.get('type')
         url: section.get('url')
         caption: section.get('caption')
       } ]
+    }
+    section.attributes = newSection
+    return section
+
+  convertArtworks: (section) ->
+    newSection = {
+      type: 'image_collection'
+      layout: section.get('layout') || 'overflow_fillwidth'
+      images: section.get('artworks')
     }
     section.attributes = newSection
     return section
@@ -50,6 +59,8 @@ module.exports = React.createClass
         @props.sections.map (section, i) =>
           if section.get('type') is 'image'
             section = @convertImages section
+          if section.get('type') is 'artworks'
+            @convertArtworks section
           [
             SectionContainer {
               sections: @props.sections
