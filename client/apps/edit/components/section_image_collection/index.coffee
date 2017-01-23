@@ -86,7 +86,6 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @setState layout: layout
     @props.section.set layout: layout
-    @toggleFillwidth()
 
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
@@ -119,10 +118,9 @@ module.exports = React.createClass
     @prevLength = @props.section.get('images').length
 
   fillwidth: ->
-    console.log 'in fillwidth'
     if $(@refs.images.getDOMNode()).find('img').length > 1
       $(@refs.images.getDOMNode()).fillwidthLite
-        gutterSize: 20
+        gutterSize: 30
         apply: (img, i) ->
           img.$el.closest('li').width(img.width)
 
@@ -261,13 +259,13 @@ module.exports = React.createClass
                   [
                     div { className: 'esic-img-container'},
                       img {
-                        className: 'esic-image'
+                        className: 'esic-artwork'
                         src: if @state.progress then item.url else resize(item.url, width: 900)
                         style: opacity: if @state.progress then @state.progress else '1'
                       }
-                      div {
-                        dangerouslySetInnerHTML: __html: item.caption
-                        className: 'esic-caption'
-                      }
+                    div {
+                      dangerouslySetInnerHTML: __html: item.caption
+                      className: 'esic-caption'
+                    }
                   ]
       )
