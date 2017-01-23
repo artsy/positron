@@ -76,7 +76,6 @@ wide-input-width = 640px
   height 200px
   line-height 200px
 
-.esic-preview-container,
 .esic-images-list
   position relative
   z-index 2 !important
@@ -89,6 +88,7 @@ wide-input-width = 640px
       overflow ellipsis
   img
     max-width 100%
+    min-width 100%
     height auto
 
 .esic-images-list
@@ -115,7 +115,6 @@ wide-input-width = 640px
 [data-layout=overflow_fillwidth]
   .edit-section-controls
     width 900px
-  .esic-preview-container,
   .esic-images-list
     display flex
     justify-content center
@@ -127,15 +126,15 @@ wide-input-width = 640px
 .edit-section-container[data-editing=false][data-type=image_collection]
   .edit-section-remove
     display block
-  .edit-section-controls, .esic-controls-container, .esic-images-list, .esic-images-list .esic-caption-container, .esic-nav, .esic-img-remove
+  .edit-section-controls, .esic-controls-container, .esic-images-list .esic-caption-container, .esic-nav, .esic-img-remove
     display none
 
 .edit-section-container[data-editing=true][data-type=image_collection]
-  .esic-preview-container, .edit-section-remove
+  .edit-section-remove, .esic-caption--display
     display none
   .edit-section-controls, .esic-controls-container, .esic-img-remove
     display block
-  .esic-nav, .esic-caption
+  .esic-nav
     display inline-block
 
 //

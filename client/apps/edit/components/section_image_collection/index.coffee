@@ -22,10 +22,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupAutocomplete()
-    @toggleFillwidth()
-
-  componentDidUpdate: ->
-    @toggleFillwidth()
+    @toggleFillwidth() if @state.images.length > 1
 
   componentWillUnmount: ->
     @autocomplete.remove()
@@ -67,6 +64,7 @@ module.exports = React.createClass
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         $(@refs.autocomplete.getDOMNode()).val('').focus()
+        @toggleFillwidth() if @state.images.length > 1
 
   upload: (e) ->
     gemup e.target.files[0],
@@ -90,6 +88,7 @@ module.exports = React.createClass
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
     @setState images: newImages
+    @toggleFillwidth() if @state.images.length > 1
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
@@ -107,6 +106,7 @@ module.exports = React.createClass
         $(@refs.byUrl.getDOMNode()).val ''
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
+        @toggleFillwidth() if @state.images.length > 1
 
   toggleFillwidth: ->
     return unless @props.section.get('images').length
@@ -211,61 +211,29 @@ module.exports = React.createClass
                 else
                   [
                     div { className: 'esic-img-container'},
-                      [
-                        img {
-                          className: 'esic-image'
-                          src: if @state.progress then item.url else resize(item.url, width: 900)
-                          style: opacity: if @state.progress then @state.progress else '1'
-                        }
-                        Input {
-                          caption: item.caption
-                          images: @state.images
-                          url: item.url
-                          editing: @props.editing
-                        }
-                      ]
+                      img {
+                        className: 'esic-image'
+                        src: if @state.progress then item.url else resize(item.url, width: 900)
+                        style: opacity: if @state.progress then @state.progress else '1'
+                      }
+                    Input {
+                      caption: item.caption
+                      images: @state.images
+                      url: item.url
+                      editing: @props.editing
+                    }
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
                       key: 2
                     }
+                    div {
+                      dangerouslySetInnerHTML: __html: item.caption
+                      className: 'esic-caption esic-caption--display'
+                    }
                   ]
             )
         else
           div { className: 'esic-placeholder' }, 'Add images and artworks above'
-      )
-      (
-        if @state.images.length > 0
-          ul { className: 'esic-preview-container', ref: 'images' },
-            @state.images.map (item, i) =>
-              li { key: i },
-                if item.type is 'artwork'
-                  [
-                    div { className: 'esic-img-container' },
-                      img {
-                        src: item.image
-                        className: 'esic-artwork'
-                      }
-                    p {},
-                      strong {}, item.artist.name if item.artist.name
-                    p {},
-                      span { className: 'title' }, item.title if item.title
-                      if item.date
-                        span { className: 'date' }, ", " + item.date if item.date
-                    p {}, item.partner.name if item.partner.name
-                  ]
-                else
-                  [
-                    div { className: 'esic-img-container'},
-                      img {
-                        className: 'esic-artwork'
-                        src: if @state.progress then item.url else resize(item.url, width: 900)
-                        style: opacity: if @state.progress then @state.progress else '1'
-                      }
-                    div {
-                      dangerouslySetInnerHTML: __html: item.caption
-                      className: 'esic-caption'
-                    }
-                  ]
       )
