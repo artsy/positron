@@ -1,5 +1,5 @@
 #
-# Image Set section that allows uploading a mix of images and artworks
+# Image Collection section allows uploading a mix of images and artworks
 #
 
 _ = require 'underscore'
@@ -9,6 +9,7 @@ sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
+imagesLoaded = require 'imagesloaded'
 Input = React.createFactory require './input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
@@ -22,7 +23,8 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupAutocomplete()
-    @toggleFillwidth() if @state.images.length > 1
+    imagesLoaded $(@refs.images.getDOMNode()), =>
+      @toggleFillwidth() if @state.images.length > 1
 
   componentWillUnmount: ->
     @autocomplete.remove()
@@ -80,6 +82,8 @@ module.exports = React.createClass
         image.onload = =>
           newImages = @state.images.concat [ { url: src, type: 'image' } ]
           @setState progress: null, images: newImages
+          imagesLoaded $(@refs.images.getDOMNode()), =>
+            @toggleFillwidth() if @state.images.length > 1
 
   changeLayout: (layout) -> =>
     @setState layout: layout
