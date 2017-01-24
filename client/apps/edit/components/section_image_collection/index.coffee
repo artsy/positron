@@ -22,9 +22,13 @@ module.exports = React.createClass
     progress: null
 
   componentDidMount: ->
+    @$list = $(@refs.images.getDOMNode())
     @setupAutocomplete()
-    imagesLoaded $(@refs.images?.getDOMNode()), =>
-      @toggleFillwidth() if @state.images.length > 1
+    imagesLoaded @$list, =>
+      if @state.images.length > 1
+        @toggleFillwidth()
+      else
+        @$list.animate({opacity: 1}, 500)
 
   componentWillUnmount: ->
     @autocomplete.remove()
@@ -69,14 +73,13 @@ module.exports = React.createClass
         @toggleFillwidth() if @state.images.length > 1
 
   upload: (e) ->
-    $list = $(@refs.images.getDOMNode())
     gemup e.target.files[0],
       app: sd.GEMINI_APP
       key: sd.GEMINI_KEY
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
-        $list.animate({opacity: 0}, 500)
+        @$list.animate({opacity: 0}, 500)
         @setState progress: 0.1
       done: (src) =>
         image = new Image()
@@ -84,13 +87,17 @@ module.exports = React.createClass
         image.onload = =>
           newImages = @state.images.concat [ { url: src, type: 'image' } ]
           @setState images: newImages
-          imagesLoaded $list, =>
-            @toggleFillwidth() if @state.images.length > 1
+          imagesLoaded @$list, =>
+            if @state.images.length > 1
+              @toggleFillwidth()
+            else
+              @setState progress: null
+              @$list.animate({opacity: 1}, 500)
 
   changeLayout: (layout) -> =>
     @setState layout: layout
     @props.section.set layout: layout
-    if @state.images.length > 1 && layout == 'overflow_fillwidth'
+    if layout == 'overflow_fillwidth' && @state.images.length > 1
       @toggleFillwidth()
     else
       @removeFillwidth()
@@ -128,18 +135,18 @@ module.exports = React.createClass
     @prevLength = @props.section.get('images').length
 
   fillwidth: ->
-    $list = $(@refs.images.getDOMNode()).css('opacity', 0)
-    if $list.find('img').length > 1
-      $list.fillwidthLite
+    @$list.css('opacity', 0)
+    if @$list.find('img').length > 1
+      @$list.fillwidthLite
         gutterSize: 30
         apply: (img, i) ->
           img.$el.closest('li').width(img.width)
         done: (imgs) =>
           @setState progress: null
-          $list.animate({opacity: 1}, 500)
+          @$list.animate({opacity: 1}, 500)
 
   removeFillwidth: ->
-    $(@refs.images.getDOMNode()).find('li').css(width: '', padding: '')
+    @$list.find('li').css(width: '', padding: '')
 
   render: ->
     section {
@@ -249,5 +256,6 @@ module.exports = React.createClass
                   ]
             )
         else
-          div { className: 'esic-placeholder' }, 'Add images and artworks above'
+          ul { className: 'esic-images-list--placeholder', ref: 'images' },
+            li { className: 'esic-placeholder' }, 'Add images and artworks above'
       )

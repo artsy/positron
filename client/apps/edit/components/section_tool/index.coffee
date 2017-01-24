@@ -29,18 +29,18 @@ module.exports = React.createClass
           type: 'text'
           body: ''
         }, at: @props.index + 1
-      when 'artworks'
-        @props.sections.add {
-          type: 'artworks'
-          ids: []
-          layout: 'column_width'
-        }, at: @props.index + 1
-      when 'image'
-        @props.sections.add {
-          type: 'image'
-          url: ''
-          layout: 'overflow_fillwidth'
-        }, at: @props.index + 1
+      # when 'artworks'
+      #   @props.sections.add {
+      #     type: 'artworks'
+      #     ids: []
+      #     layout: 'column_width'
+      #   }, at: @props.index + 1
+      # when 'image'
+      #   @props.sections.add {
+      #     type: 'image'
+      #     url: ''
+      #     layout: 'overflow_fillwidth'
+      #   }, at: @props.index + 1
       when 'video'
         @props.sections.add {
           type: 'video'
@@ -142,21 +142,29 @@ module.exports = React.createClass
               dangerouslySetInnerHTML: __html: $(icons()).filter('.text').html()
             }
           li {
-            className: 'edit-section-tool-artworks'
-            onClick: @newSection('artworks')
-          }, 'Artworks',
+            className: 'edit-section-tool-image-set'
+            onClick: @newSection('image_collection')
+          }, 'Images',
             div {
-              className: 'edit-menu-icon-artworks'
+              className: 'edit-menu-icon-image-set'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.artworks').html()
             }
-          li {
-            className: 'edit-section-tool-image'
-            onClick: @newSection('image')
-          }, 'Image',
-            div {
-              className: 'edit-menu-icon-image'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
-            }
+          # li {
+          #   className: 'edit-section-tool-artworks'
+          #   onClick: @newSection('artworks')
+          # }, 'Artworks',
+          #   div {
+          #     className: 'edit-menu-icon-artworks'
+          #     dangerouslySetInnerHTML: __html: $(icons()).filter('.artworks').html()
+          #   }
+          # li {
+          #   className: 'edit-section-tool-image'
+          #   onClick: @newSection('image')
+          # }, 'Image',
+          #   div {
+          #     className: 'edit-menu-icon-image'
+          #     dangerouslySetInnerHTML: __html: $(icons()).filter('.image').html()
+          #   }
           li {
             className: 'edit-section-tool-video'
             onClick: @newSection('video')
@@ -205,15 +213,6 @@ module.exports = React.createClass
               className: 'edit-section-tool-image-set'
               onClick: @newSection('image_set')
             }, 'Image Set',
-              div {
-                className: 'edit-menu-icon-image-set'
-                dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
-              }
-          if @channel.hasFeature 'image_set'
-            li {
-              className: 'edit-section-tool-image-set'
-              onClick: @newSection('image_collection')
-            }, 'Image Collection',
               div {
                 className: 'edit-menu-icon-image-set'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set').html()
