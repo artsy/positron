@@ -208,6 +208,7 @@ module.exports = React.createClass
         if @state.images.length > 0
           ul { className: 'esic-images-list', ref: 'images' },
             (@state.images.map (item, i) =>
+              debugger
               li { key: i },
                 if item.type is 'artwork'
                   [

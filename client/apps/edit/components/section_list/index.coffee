@@ -40,10 +40,13 @@ module.exports = React.createClass
     return section
 
   convertArtworks: (section) ->
+    artworks = section.get('artworks').map (artwork, i) ->
+      artwork.type = 'artwork'
+      return artwork
     newSection = {
       type: 'image_collection'
       layout: section.get('layout') || 'overflow_fillwidth'
-      images: section.get('artworks')
+      images: artworks
     }
     section.attributes = newSection
     return section
