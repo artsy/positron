@@ -16,12 +16,12 @@
       | Articles
     if user.get('current_channel').type === 'editorial'
       a#layout-sidebar-queue( href='/queue'
-         class=(sd.URL.match('/sections') ? 'is-active' : '') )
+         class=(sd.URL.match('/queue') ? 'is-active' : '') )
         include ../public/icons/layout_queue.svg
         br
         | Queue
     if user.get('type') == 'Admin'
-      a( href='/settings'
+      a#layout-sidebar-settings( href='/settings'
          class=(sd.URL.match('/settings') ? 'is-active' : '') )
         include ../public/icons/layout_settings.svg
         br
