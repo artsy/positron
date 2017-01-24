@@ -63,7 +63,7 @@ module.exports = React.createClass
           if section.get('type') is 'image'
             section = @convertImages section
           if section.get('type') is 'artworks'
-            @convertArtworks section
+            section = @convertArtworks section
           [
             SectionContainer {
               sections: @props.sections
