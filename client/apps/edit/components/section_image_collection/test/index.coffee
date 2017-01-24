@@ -43,7 +43,9 @@ describe 'SectionImageCollection', ->
               id: '123'
               image: 'https://artsy.net/artwork.jpg'
               partner: name: 'Guggenheim'
-              artist: name: 'Van Gogh'
+              artists: [
+                {name: 'Van Gogh'}
+              ]
             }
           ]
         editing: false

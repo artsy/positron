@@ -10,7 +10,7 @@ icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
-Input = React.createFactory require './input.coffee'
+Input = React.createFactory require '../section_image_set/input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
