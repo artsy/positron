@@ -6,8 +6,6 @@
 
 React = require 'react'
 SectionText = React.createFactory require '../section_text/index.coffee'
-SectionArtworks = React.createFactory require '../section_artworks/index.coffee'
-SectionImage = React.createFactory require '../section_image/index.coffee'
 SectionVideo = React.createFactory require '../section_video/index.coffee'
 SectionSlideshow = React.createFactory require '../section_slideshow/index.coffee'
 SectionEmbed = React.createFactory require '../section_embed/index.coffee'
@@ -56,8 +54,6 @@ module.exports = React.createClass
           }
         (switch @props.section.get('type')
           when 'text' then SectionText
-          when 'artworks' then SectionArtworks
-          when 'image' then SectionImage
           when 'video' then SectionVideo
           when 'slideshow' then SectionSlideshow
           when 'embed' then SectionEmbed
