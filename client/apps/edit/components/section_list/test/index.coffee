@@ -33,6 +33,10 @@ describe 'SectionList', ->
   xit 'renders the sections', ->
     @$el.html().should.containEql 'Foo to the bar'
 
+  xit 'converts image components to image_collection', ->
+
+  xit 'converts artwork components to image_collection', ->
+
   it 'sets an index for the section tools', ->
     @SectionTool.args[0][0].index.should.equal -1
     @SectionTool.args[1][0].index.should.equal 0

@@ -69,25 +69,31 @@ module.exports = React.createClass
         @toggleFillwidth() if @state.images.length > 1
 
   upload: (e) ->
+    $list = $(@refs.images.getDOMNode())
     gemup e.target.files[0],
       app: sd.GEMINI_APP
       key: sd.GEMINI_KEY
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
+        $list.animate({opacity: 0}, 500)
         @setState progress: 0.1
       done: (src) =>
         image = new Image()
         image.src = src
         image.onload = =>
           newImages = @state.images.concat [ { url: src, type: 'image' } ]
-          @setState progress: null, images: newImages
-          imagesLoaded $(@refs.images.getDOMNode()), =>
+          @setState images: newImages
+          imagesLoaded $list, =>
             @toggleFillwidth() if @state.images.length > 1
 
   changeLayout: (layout) -> =>
     @setState layout: layout
     @props.section.set layout: layout
+    if @state.images.length > 1 && layout == 'overflow_fillwidth'
+      @toggleFillwidth()
+    else
+      @removeFillwidth()
 
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
@@ -122,11 +128,15 @@ module.exports = React.createClass
     @prevLength = @props.section.get('images').length
 
   fillwidth: ->
-    if $(@refs.images.getDOMNode()).find('img').length > 1
-      $(@refs.images.getDOMNode()).fillwidthLite
+    $list = $(@refs.images.getDOMNode()).css('opacity', 0)
+    if $list.find('img').length > 1
+      $list.fillwidthLite
         gutterSize: 30
         apply: (img, i) ->
           img.$el.closest('li').width(img.width)
+        done: (imgs) =>
+          @setState progress: null
+          $list.animate({opacity: 1}, 500)
 
   removeFillwidth: ->
     $(@refs.images.getDOMNode()).find('li').css(width: '', padding: '')
