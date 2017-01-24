@@ -130,6 +130,8 @@ module.exports = React.createClass
       names = artwork.artists.map (artist) ->
         artist.name
       names.join ', '
+    else
+      artwork.artist?.name
 
   toggleFillwidth: ->
     return unless @props.section.get('images').length
