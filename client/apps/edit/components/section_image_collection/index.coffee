@@ -125,6 +125,12 @@ module.exports = React.createClass
         @setState images: newImages
         @toggleFillwidth() if @state.images.length > 1
 
+  formatArtistNames: (artwork) ->
+    if artwork.artists?[0]
+      names = artwork.artists.map (artist) ->
+        artist.name
+      names.join ', '
+
   toggleFillwidth: ->
     return unless @props.section.get('images').length
     if @props.section.get('layout') is 'overflow_fillwidth'
@@ -217,7 +223,7 @@ module.exports = React.createClass
                         className: 'esic-artwork'
                       }
                     p {},
-                      strong {}, item.artist.name if item.artist.name
+                      strong {}, @formatArtistNames item
                     p {},
                       span { className: 'title' }, item.title if item.title
                       if item.date
