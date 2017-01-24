@@ -21,12 +21,6 @@
         br
         | Queue
     if user.get('type') == 'Admin'
-      a( href='/sections'
-         class=(sd.URL.match('/sections') ? 'is-active' : '') )
-        include ../public/icons/layout_sections.svg
-        br
-        | Sections
-    if user.get('type') == 'Admin'
       a( href='/settings'
          class=(sd.URL.match('/settings') ? 'is-active' : '') )
         include ../public/icons/layout_settings.svg
