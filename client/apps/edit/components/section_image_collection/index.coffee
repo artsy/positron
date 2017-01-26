@@ -56,7 +56,7 @@ module.exports = React.createClass
       templates:
         suggestion: (data) ->
           """
-            <div class='esic-suggestion' \
+            <div class='esis-suggestion' \
                  style='background-image: url(#{data.thumbnail})'>
             </div>
             #{data.value}

@@ -50,6 +50,7 @@ Q = require 'bluebird-q'
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
       generateKeywords input, article, (err, article) ->
+        console.log article
         debug err if err
         generateArtworks input, article, (err, article) ->
           debug err if err

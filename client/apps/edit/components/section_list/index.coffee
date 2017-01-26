@@ -27,28 +27,26 @@ module.exports = React.createClass
     @setState editingIndex: @props.sections.indexOf section
 
   convertImages: (section) ->
-    newSection = {
-      type: 'image_collection'
-      layout: section.get('layout') || 'overflow_fillwidth'
-      images: [ {
-        type: section.get('type')
-        url: section.get('url')
-        caption: section.get('caption')
-      } ]
-    }
-    section.attributes = newSection
+    images = [ {
+      type: section.get('type')
+      url: section.get('url')
+      caption: section.get('caption')
+    } ]
+    section.set('type', 'image_collection')
+    section.set('images', images)
+    section.set('layout', section.get('layout') || 'overflow_fillwidth')
+    section.unset('url')
+    section.unset('caption')
     return section
 
   convertArtworks: (section) ->
     artworks = section.get('artworks').map (artwork, i) ->
       artwork.type = 'artwork'
       return artwork
-    newSection = {
-      type: 'image_collection'
-      layout: section.get('layout') || 'overflow_fillwidth'
-      images: artworks
-    }
-    section.attributes = newSection
+    section.set('type', 'image_collection')
+    section.set('images', artworks)
+    section.unset('artworks')
+    section.unset('ids')
     return section
 
   render: ->
