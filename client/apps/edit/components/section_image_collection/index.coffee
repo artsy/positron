@@ -25,7 +25,7 @@ module.exports = React.createClass
     @$list = $(@refs.images.getDOMNode())
     @setupAutocomplete()
     imagesLoaded @$list, =>
-      if @state.images.length > 1
+      if @state.images.length > 1 and @state.layout is 'overflow_fillwidth'
         @toggleFillwidth()
       else
         @$list.animate({opacity: 1}, 500)
@@ -97,7 +97,7 @@ module.exports = React.createClass
   changeLayout: (layout) -> =>
     @setState layout: layout
     @props.section.set layout: layout
-    if layout == 'overflow_fillwidth' && @state.images.length > 1
+    if layout is 'overflow_fillwidth' and @state.images.length > 1
       @toggleFillwidth()
     else
       @removeFillwidth()
