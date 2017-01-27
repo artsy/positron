@@ -51,9 +51,6 @@ denormalizedArtwork = (->
     partner: @object().keys
       name: @string().allow('', null)
       slug: @string().allow('', null)
-    artist: @object().keys
-      name: @string().allow('', null)
-      slug: @string().allow('', null)
     artists: @array().items(
       @object().keys
         name: @string().allow('', null)

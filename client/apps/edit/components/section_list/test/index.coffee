@@ -40,10 +40,10 @@ describe 'SectionList', ->
                         name: "envoy enterprises",
                         slug: "envoy-enterprises"
                     },
-                    artist: {
+                    artists: [{
                         name: "Rodrigo Valenzuela",
                         slug: "rodrigo-valenzuela"
-                    }
+                    }]
                 },
                 {
                     id: "568eda927076d0705d000204",
@@ -55,10 +55,10 @@ describe 'SectionList', ->
                         name: "envoy enterprises",
                         slug: "envoy-enterprises"
                     },
-                    artist: {
+                    artists: [{
                         name: "Rodrigo Valenzuela 2",
                         slug: "rodrigo-valenzuela-2"
-                    }
+                    }]
                 }
             ]
           }
@@ -82,8 +82,8 @@ describe 'SectionList', ->
   it 'converts artwork components to image_collection', ->
     @SectionContainer.args[3][0].section.attributes.type.should.equal 'image_collection'
     @SectionContainer.args[3][0].section.attributes.images[0].type.should.equal 'artwork'
-    @SectionContainer.args[3][0].section.attributes.images[0].artist.slug.should.equal 'rodrigo-valenzuela'
-    @SectionContainer.args[3][0].section.attributes.images[1].artist.slug.should.equal 'rodrigo-valenzuela-2'
+    @SectionContainer.args[3][0].section.attributes.images[0].artists[0].slug.should.equal 'rodrigo-valenzuela'
+    @SectionContainer.args[3][0].section.attributes.images[1].artists[0].slug.should.equal 'rodrigo-valenzuela-2'
 
   it 'sets an index for the section tools', ->
     @SectionTool.args[0][0].index.should.equal -1
