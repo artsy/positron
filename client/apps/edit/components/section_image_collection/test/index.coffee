@@ -52,7 +52,6 @@ describe 'SectionImageCollection', ->
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
-        sinon.stub @component, 'componentWillUpdate'
         sinon.stub Backbone, 'sync'
         sinon.stub @component, 'removeItem'
         sinon.stub $, 'ajax'
@@ -77,7 +76,7 @@ describe 'SectionImageCollection', ->
     @component.upload target: files: ['foo']
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.componentWillUpdate.called.should.be.ok
+      @component.props.section.get('images')[2].url.should.equal 'fooza'
       done()
 
   it 'renders an image', ->

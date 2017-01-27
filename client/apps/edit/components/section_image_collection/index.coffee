@@ -32,9 +32,6 @@ module.exports = React.createClass
 
   componentWillUnmount: ->
     @autocomplete.remove()
-    @props.section.set
-      images: @state.images
-      layout: @state.layout
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete.getDOMNode())
