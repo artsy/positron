@@ -32,10 +32,8 @@ module.exports = React.createClass
 
   componentWillUnmount: ->
     @autocomplete.remove()
-
-  componentWillUpdate: ->
     @props.section.set
-      images: @state.images if @state.images.length > 0
+      images: @state.images
       layout: @state.layout
 
   setupAutocomplete: ->
@@ -69,6 +67,7 @@ module.exports = React.createClass
       success: (artwork) =>
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
+        @props.section.set images: newImages
         $(@refs.autocomplete.getDOMNode()).val('').focus()
         @toggleFillwidth() if @state.images.length > 1
 
@@ -87,6 +86,7 @@ module.exports = React.createClass
         image.onload = =>
           newImages = @state.images.concat [ { url: src, type: 'image' } ]
           @setState images: newImages
+          @props.section.set images: newImages
           imagesLoaded @$list, =>
             if @state.images.length > 1
               @toggleFillwidth()
@@ -105,6 +105,7 @@ module.exports = React.createClass
   removeItem: (item) -> =>
     newImages = _.without @state.images, item
     @setState images: newImages
+    @props.section.set images: newImages
     @toggleFillwidth() if @state.images.length > 1
 
   addArtworkFromUrl: (e) ->
