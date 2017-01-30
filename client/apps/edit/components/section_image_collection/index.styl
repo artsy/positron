@@ -1,0 +1,150 @@
+@import '../stylus_lib'
+
+.edit-section-image-collection
+  position relative
+
+.edit-section-image-collection .edit-section-controls
+  fill-container()
+  background black
+  height 225px
+  top -(@height + controls-padding)
+  left -(controls-padding)
+  padding 5px 20px 20px 20px
+  display none
+  z-index 3
+  min-width 620px
+  nav
+    width 100%
+    text-align center
+    a
+      display inline-block
+      height 40px
+      width @height + 20px
+      background-repeat no-repeat !important
+      background-position center !important
+      transition opacity 0.3s
+      opacity 0.5
+      cursor pointer
+      &:hover
+        opacity 1
+      &:last-of-type
+        border-right 0
+    &.esi-nav
+      margin-top -10px
+      margin-bottom 5px
+
+.esic-artwork-inputs
+  clearfix()
+  color white
+  padding controls-padding 0px
+  text-align left
+  border-top 1px solid gray-darkest-color
+  input
+    display inline-block
+    vertical-align top
+    width 100%
+    max-width 100%
+  .esic-byurl-input > button
+    position relative
+    display inline-block
+    width 75px
+    font-size small-avant-garde-font-size + 1
+    height 40px
+    background-color gray-lighter-color
+  .esic-byurl-input > input
+    width calc(100% - 75px)
+  .esic-byurl-input
+    padding-left 10px
+  .esic-autocomplete-input
+    padding-right 10px
+  .esic-autocomplete-input, .esic-byurl-input
+    position relative
+    display inline-block
+    width 50%
+  .esis-autocomplete-input
+    display inline-block
+    width 50%
+    padding-right 10px
+
+.esic-placeholder
+  text-align center
+  color gray-darker-color
+  height 200px
+  line-height 200px
+
+.esic-images-list
+  position relative
+  z-index 2 !important
+  opacity 0
+  &--placeholder
+    opacity 1
+  li
+    margin-bottom 30px
+    position relative
+    p
+      color gray-darker-color
+      garamond l-caption
+      overflow ellipsis
+      .title
+        font-style italic
+  img
+    max-width 100%
+    width 100%
+    height auto
+
+.esic-images-list
+  white-space nowrap
+  .esis-caption-container
+    display flex
+  .esic-caption
+    width calc(100% - 87px)
+    background transparent
+    text-transform none
+    letter-spacing 0
+    cursor text
+    color white
+    &.bordered-input
+      p
+        line-height 25px
+  .edit-section-remove
+    display none
+    &:hover svg
+      fill-color red-color
+    svg
+      fill-color black
+
+[data-layout=overflow_fillwidth]
+  .edit-section-controls
+    width 900px
+  .esic-images-list
+    display flex
+    justify-content center
+    li
+      margin-right 30px
+      &:last-of-type
+        margin-right 0
+
+.edit-section-container[data-editing=false][data-type=image_collection]
+  .edit-section-remove
+    display block
+  .edit-section-controls, .esic-controls-container, .esic-images-list .esis-caption-container, .esic-nav, .esic-img-remove
+    display none
+
+.edit-section-container[data-editing=true][data-type=image_collection]
+  .edit-section-remove, .esic-caption--display
+    display none
+  .edit-section-controls, .esic-controls-container, .esic-img-remove
+    display block
+  .esic-nav
+    display inline-block
+
+//
+// Varying layouts
+//
+.edit-section-container[data-layout=column_width]
+  nav .esic-column-width
+    opacity 1
+
+.edit-section-container[data-layout=overflow_fillwidth]
+  nav .esic-overflow-fillwidth
+    opacity 1

@@ -6,8 +6,6 @@
 
 React = require 'react'
 SectionText = React.createFactory require '../section_text/index.coffee'
-SectionArtworks = React.createFactory require '../section_artworks/index.coffee'
-SectionImage = React.createFactory require '../section_image/index.coffee'
 SectionVideo = React.createFactory require '../section_video/index.coffee'
 SectionSlideshow = React.createFactory require '../section_slideshow/index.coffee'
 SectionEmbed = React.createFactory require '../section_embed/index.coffee'
@@ -15,6 +13,7 @@ SectionFullscreen = React.createFactory require '../section_fullscreen/index.cof
 SectionCallout = React.createFactory require '../section_callout/index.coffee'
 SectionToc = React.createFactory require '../section_toc/index.coffee'
 SectionImageSet = React.createFactory require '../section_image_set/index.coffee'
+SectionImageCollection = React.createFactory require '../section_image_collection/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -23,8 +22,8 @@ module.exports = React.createClass
   onClickOff: ->
     @setEditing(off)()
     @refs.section?.onClickOff?()
-    if @props.section.get('type') is 'image_set'
-      @props.section.destroy() if @props.section.get('images').length is 0
+    if @props.section.get('type') is 'image_set' or 'image_collection'
+      @props.section.destroy() if @props.section.get('images')?.length is 0
 
   componentDidMount: ->
     @props.section.on 'change:layout', => @forceUpdate()
@@ -55,8 +54,6 @@ module.exports = React.createClass
           }
         (switch @props.section.get('type')
           when 'text' then SectionText
-          when 'artworks' then SectionArtworks
-          when 'image' then SectionImage
           when 'video' then SectionVideo
           when 'slideshow' then SectionSlideshow
           when 'embed' then SectionEmbed
@@ -64,6 +61,7 @@ module.exports = React.createClass
           when 'callout' then SectionCallout
           when 'toc' then SectionToc
           when 'image_set' then SectionImageSet
+          when 'image_collection' then SectionImageCollection
         )(
           section: @props.section
           editing: @props.editing

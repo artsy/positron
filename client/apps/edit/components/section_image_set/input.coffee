@@ -58,10 +58,12 @@ module.exports = React.createClass
           'data-command-name': 'italic'
           dangerouslySetInnerHTML: __html: '&nbsp;'
           disabled: if @props.caption then false else true
+          onClick: @onEditableKeyup
         }
         button {
           'data-command-name': 'linkPrompt'
           dangerouslySetInnerHTML:
             __html: "&nbsp;" + $(icons()).filter('.link').html()
           disabled: if @props.caption then false else true
+          onClick: @onEditableKeyup
         }

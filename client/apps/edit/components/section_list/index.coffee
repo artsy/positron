@@ -26,6 +26,29 @@ module.exports = React.createClass
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
 
+  convertImages: (section) ->
+    images = [ {
+      type: section.get('type')
+      url: section.get('url')
+      caption: section.get('caption')
+    } ]
+    section.set('type', 'image_collection')
+    section.set('images', images)
+    section.set('layout', section.get('layout') || 'overflow_fillwidth')
+    section.unset('url')
+    section.unset('caption')
+    return section
+
+  convertArtworks: (section) ->
+    artworks = section.get('artworks').map (artwork, i) ->
+      artwork.type = 'artwork'
+      return artwork
+    section.set('type', 'image_collection')
+    section.set('images', artworks)
+    section.unset('artworks')
+    section.unset('ids')
+    return section
+
   render: ->
     div {},
       div {
@@ -35,6 +58,10 @@ module.exports = React.createClass
       },
         SectionTool { sections: @props.sections, index: -1 }
         @props.sections.map (section, i) =>
+          if section.get('type') is 'image'
+            section = @convertImages section
+          if section.get('type') is 'artworks'
+            section = @convertArtworks section
           [
             SectionContainer {
               sections: @props.sections
