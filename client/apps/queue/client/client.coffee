@@ -95,6 +95,7 @@ module.exports.QueueView = QueueView = React.createClass
               className: "#{if @state.feed is 'weekly_email' then 'is-active' else ''} weekly-email"
               onClick: => @setFeed 'weekly_email'
               }, "Weekly Email"
+          div {className: 'channel-name'}, "#{@props.channel.name}"
       div {},
         div { className: 'queue-scheduled max-width-container'},
           ArticleList {
@@ -124,4 +125,5 @@ module.exports.init = ->
   props =
     scheduledArticles: sd.SCHEDULED_ARTICLES
     feed: 'scheduled'
+    channel: sd.CURRENT_CHANNEL
   React.render React.createElement(QueueView, props), document.getElementById('queue-root')

@@ -6,23 +6,29 @@
     right 0
     background-color white
     z-index 10
+    .max-width-container
+      display flex
+      justify-content space-between
+      align-items center
   &__container
-    margin-top 75px
+    margin-top 105px
+    position relative
+  &__title
+    garamond headline
+    padding 20px 0
   .filter-search__header-container
-    position fixed
-    top 8px
-    right calc((100vw \- 1070px) \/ 2)
-    max-width 960px
-    padding 0 30px
+    position absolute
+    top 20px
+    right 0
     border none
-    z-index 20
 
 #articles-list-loading
   position relative
   margin-top 75px
   .loading-spinner
     display none
-
+.article-list__results
+  border-top 3px solid gray-lighter-color
 .article-list__empty
   text-align center
   margin-top 150px
