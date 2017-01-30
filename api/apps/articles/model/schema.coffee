@@ -14,6 +14,8 @@ imageSection = (->
     url: @string().allow('', null)
     caption: @string().allow('', null)
     layout: @string().allow('overflow_fillwidth', 'column_width', null)
+    width: @number().allow(null)
+    height: @number().allow(null)
 ).call Joi
 
 videoSection = (->
@@ -55,6 +57,8 @@ denormalizedArtwork = (->
       @object().keys
         name: @string().allow('', null)
         slug: @string().allow('', null)
+    width: @number().allow(null)
+    height: @number().allow(null)
     ).allow(null).default([])
 ).call Joi
 
