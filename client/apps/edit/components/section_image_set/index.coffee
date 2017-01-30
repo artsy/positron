@@ -119,6 +119,14 @@ module.exports = React.createClass
           else
             $(img).css('display', 'inline-block')
 
+  formatArtistNames: (artwork) ->
+    if artwork.artists?[0]
+      names = artwork.artists.map (artist) ->
+        artist.name
+      names.join ', '
+    else
+      artwork.artist?.name
+
   render: ->
     section {
       className: 'edit-section-image-set'
@@ -171,7 +179,7 @@ module.exports = React.createClass
                         className: 'esis-artwork'
                       }
                     p {},
-                      strong {}, item.artist.name if item.artist.name
+                      strong {}, @formatArtistNames item
                     p {}, item.title if item.title
                     p {}, item.partner.name if item.partner.name
                     button {
