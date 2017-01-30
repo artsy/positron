@@ -59,6 +59,7 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
   showArticlesList: ->
     if @props.articles?.length
       div { className: 'articles-list__container' },
+        div { className: 'articles-list__title'}, "Latest Articles"
         FilterSearch {
           url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
           placeholder: 'Search Articles...'
@@ -84,10 +85,12 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
               className: "#{if @state.published is false then 'is-active' else ''} drafts"
               onClick: => @setPublished false
               }, "Drafts"
+          div {className: 'channel-name'}, "#{@props.channel.name}"
       @showArticlesList()
 
 module.exports.init = ->
   props =
     articles: sd.ARTICLES
     published: sd.HAS_PUBLISHED
+    channel: sd.CURRENT_CHANNEL
   React.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')

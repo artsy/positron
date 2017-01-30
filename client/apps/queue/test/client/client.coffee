@@ -36,6 +36,7 @@ describe 'QueuedView', ->
         {
           scheduledArticles: [_.extend fixtures().articles, id: '456']
           feed: 'scheduled'
+          channel: {name: 'Artsy Editorial'}
         }
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'saveSelected'
@@ -49,6 +50,7 @@ describe 'QueuedView', ->
     $(@component.getDOMNode()).html().should.containEql 'Scheduled'
     $(@component.getDOMNode()).html().should.containEql 'Daily Email'
     $(@component.getDOMNode()).html().should.containEql 'Weekly Email'
+    $(@component.getDOMNode()).html().should.containEql 'Artsy Editorial'
 
   it 'scheduledArticles gets passed along to components', ->
     @component.state.scheduledArticles.length.should.equal 1

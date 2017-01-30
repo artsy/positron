@@ -29,6 +29,7 @@ describe 'ArticlesListView', ->
           articles: [_.extend fixtures().articles, id: '456']
           published: true
           offset: 0
+          channel: {name: 'Artsy Editorial'}
         }
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
@@ -40,6 +41,7 @@ describe 'ArticlesListView', ->
   it 'renders the nav', ->
     $(@component.getDOMNode()).html().should.containEql 'Published'
     $(@component.getDOMNode()).html().should.containEql 'Drafts'
+    $(@component.getDOMNode()).html().should.containEql 'Artsy Editorial'
 
   it 'articles get passed along to list component', ->
     @component.state.articles.length.should.equal 1
