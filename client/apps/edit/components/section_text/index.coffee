@@ -16,6 +16,7 @@ try
   scribePluginJumpLink = require 'scribe-plugin-jump-link'
   scribePluginFollowLinkTooltip = require 'scribe-plugin-follow-link-tooltip'
 React = require 'react'
+ReactDOM = require 'react-dom'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
 sd = require('sharify').data
@@ -42,7 +43,7 @@ module.exports = React.createClass
     @componentDidUpdate()
 
   componentDidUpdate: ->
-    $(@refs.editable.getDOMNode()).focus() if @props.editing
+    $(@refs.editable).focus() if @props.editing
 
   shouldComponentUpdate: (nextProps) ->
     not (nextProps.editing and @props.editing)
@@ -52,10 +53,10 @@ module.exports = React.createClass
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   setBody: ->
-    @props.section.set body: $(@refs.editable.getDOMNode()).html()
+    @props.section.set body: $(@refs.editable).html()
 
   attachScribe: ->
-    @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe = new Scribe @refs.editable
     @scribe.use scribePluginSanitizeGoogleDoc()
     @scribe.use scribePluginSanitizer {
       tags:
@@ -70,7 +71,7 @@ module.exports = React.createClass
         ul: true
         li: true
     }
-    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
+    @scribe.use scribePluginToolbar @refs.toolbar
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)

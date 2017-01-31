@@ -1,7 +1,8 @@
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 { div } = React.DOM
-ArticleList = require '../../../components/article_list/index.coffee'
+ArticleList = React.createFactory require '../../../components/article_list/index.coffee'
 
 module.exports = QueuedArticles = React.createClass
 

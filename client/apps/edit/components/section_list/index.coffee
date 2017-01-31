@@ -4,6 +4,7 @@
 #
 
 React = require 'react'
+ReactDOM = require 'react-dom'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
@@ -18,7 +19,7 @@ module.exports = React.createClass
     @props.sections.on 'add', @onNewSection
 
   componentDidUpdate: ->
-    $(@getDOMNode()).find('.scribe-marker').remove()
+    $('.edit-section-list').find('.scribe-marker').remove()
 
   onSetEditing: (i) ->
     @setState editingIndex: i

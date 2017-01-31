@@ -4,7 +4,7 @@ ReactDOM = require 'react-dom'
 require 'jquery-on-infinite-scroll'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
-FilterSearch = React.createFactory(require '../../../components/filter_search/index.coffee')
+FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
 query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'

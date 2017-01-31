@@ -5,6 +5,7 @@
 #
 
 React = require 'react'
+ReactDOM = require 'react-dom'
 Article = require '../../models/article.coffee'
 Channel = require '../../models/channel.coffee'
 EditLayout = require './components/layout/index.coffee'
@@ -21,12 +22,12 @@ HeroSection = React.createFactory require './components/hero_section/index.coffe
   new EditHeader el: $('#edit-header'), article: article
   new EditDisplay el: $('#edit-display'), article: article
   new EditAdmin el: $('#edit-admin'), article: article, channel: channel
-  React.render(
+  ReactDOM.render(
     SectionList(sections: article.sections)
     $('#edit-sections')[0]
   )
   if article.get('hero_section') != null or channel.hasFeature 'hero'
-    React.render(
+    ReactDOM.render(
       HeroSection(section: article.heroSection, hasSection: article.get('section_ids')?.length > 0)
       $('#edit-hero-section')[0]
     )
