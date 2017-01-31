@@ -116,6 +116,7 @@ module.exports.QueueView = QueueView = React.createClass
             placeholder: 'Search Articles...'
             articles: @state.publishedArticles
             checkable: true
+            display: 'email'
             headerText: "Latest Articles"
             selected: @selected
             searchResults: @searchResults

@@ -42,4 +42,5 @@ module.exports = FilterSearch = React.createClass
         articles: @props.articles
         checkable: @props.checkable
         selected: @selected
+        display: @props.display
       }

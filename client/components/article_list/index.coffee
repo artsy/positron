@@ -2,6 +2,7 @@
 # ArticleList {
 #   selected: () ->
 #   checkable: true
+#   display: 'email'
 #   articles: []
 # }
 
@@ -12,6 +13,12 @@ moment = require 'moment'
 icons = -> require('./icons.jade') arguments...
 
 module.exports = ArticleList = React.createClass
+
+  getDisplayAttrs: (article) ->
+    if @props.display is 'email' and article.email_metadata
+      return {headline: article.email_metadata.headline, image: article.email_metadata.image_url}
+    else
+      return {headline: article.thumbnail_title, image: article.thumbnail_image}
 
   publishText: (result) ->
     if result.published_at and result.published
@@ -28,20 +35,22 @@ module.exports = ArticleList = React.createClass
       unless @props.articles?.length
         div { className: 'article-list__no-results' }, "No Results Found"
       (@props.articles.map (result) =>
-        div { className: 'article-list__result paginated-list-item' },
+        attrs = @getDisplayAttrs(result)
+        div { className: 'article-list__result paginated-list-item', key: result.id},
           if @props.checkable
             div {
+              ref: result.id
               className: 'article-list__checkcircle'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
               onClick: => @props.selected(result)
             }
           a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
-            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{result.thumbnail_image})" },
-              unless result.thumbnail_image
+            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{attrs.image})" },
+              unless attrs.image
                 div { className: 'missing-img'}, "Missing Thumbnail"
             div { className: 'article-list__title paginated-list-text-container' },
-              if result.thumbnail_title
-                h1 {}, result.thumbnail_title
+              if attrs.headline
+                h1 {}, attrs.headline
               else
                 h1 { className: 'missing-title'}, 'Missing Title'
               h2 {}, @publishText(result)
