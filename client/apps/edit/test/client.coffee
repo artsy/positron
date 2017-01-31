@@ -19,9 +19,9 @@ describe 'init', ->
         _: require('underscore')
         $: benv.require('jquery')
         jQuery: benv.require('jquery')
+        sd: { ARTICLE: fixtures().articles }
       window.jQuery = jQuery
       @client = rewire '../client.coffee'
-      @client.__set__ 'sd', { USER: fixtures().users, ARTICLE: fixtures().articles }
       @client.__set__ 'EditLayout', @EditLayout = sinon.stub()
       @client.__set__ 'EditHeader', @EditHeader = sinon.stub()
       @client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
@@ -58,10 +58,10 @@ describe 'init', ->
       @client.article.sections.models[3].get('images')[1].image.should.equal 'https://artsy.net/artwork2.jpg'
       done()
 
-  it 'converts image sets components to image_collection', ->
+  it 'keeps image sets as is', ->
     @client.init()
     _.defer =>
-      @client.article.sections.models[6].get('type').should.equal 'image_collection'
+      @client.article.sections.models[6].get('type').should.equal 'image_set'
       @client.article.sections.models[6].get('layout').should.equal 'overflow_fillwidth'
       @client.article.sections.models[6].get('images')[0].image.should.equal 'https://artsy.net/artwork.jpg'
       @client.article.sections.models[6].get('images')[0].title.should.equal 'The Four Hedgehogs'
@@ -80,4 +80,10 @@ describe 'init', ->
       @client.article.sections.models[3].get('images')[0].height.should.equal 90
       @client.article.sections.models[3].get('images')[1].width.should.equal 120
       @client.article.sections.models[3].get('images')[1].height.should.equal 90
+      @client.article.sections.models[6].get('images')[0].height.should.equal 90
+      @client.article.sections.models[6].get('images')[0].height.should.equal 90
+      @client.article.sections.models[6].get('images')[1].height.should.equal 90
+      @client.article.sections.models[6].get('images')[1].height.should.equal 90
+      @client.article.sections.models[6].get('images')[2].height.should.equal 90
+      @client.article.sections.models[6].get('images')[2].height.should.equal 90
       done()
