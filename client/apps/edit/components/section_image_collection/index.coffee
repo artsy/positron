@@ -81,7 +81,12 @@ module.exports = React.createClass
         image = new Image()
         image.src = src
         image.onload = =>
-          newImages = @state.images.concat [ { url: src, type: 'image' } ]
+          newImages = @state.images.concat [{
+            url: src
+            type: 'image'
+            width: image.width
+            height: image.height
+          }]
           @setState images: newImages
           @props.section.set images: newImages
           imagesLoaded @$list, =>

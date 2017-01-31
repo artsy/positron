@@ -77,7 +77,12 @@ module.exports = React.createClass
         image = new Image()
         image.src = src
         image.onload = =>
-          newImages = @state.images.concat [ { url: src, type: 'image' } ]
+          newImages = @state.images.concat [{
+            url: src
+            type: 'image'
+            width: image.width
+            height: image.height
+          }]
           @setState progress: null, images: newImages
 
   removeItem: (item) -> =>
@@ -113,6 +118,14 @@ module.exports = React.createClass
             $(img).css('display', 'none')
           else
             $(img).css('display', 'inline-block')
+
+  formatArtistNames: (artwork) ->
+    if artwork.artists?[0]
+      names = artwork.artists.map (artist) ->
+        artist.name
+      names.join ', '
+    else
+      artwork.artist?.name
 
   render: ->
     section {
@@ -166,7 +179,7 @@ module.exports = React.createClass
                         className: 'esis-artwork'
                       }
                     p {},
-                      strong {}, item.artist.name if item.artist.name
+                      strong {}, @formatArtistNames item
                     p {}, item.title if item.title
                     p {}, item.partner.name if item.partner.name
                     button {

@@ -29,17 +29,19 @@ module.exports = class Artwork extends Backbone.Model
     partner:
       name: @getPartnerName()
       slug: @getPartnerLink()
-    artist:
-      name: @getArtistName()
-      slug: @get('artist')?.id
+    artists: @getArtists()
+    artist: @getArtists()[0]
+    width: parseInt(@defaultImage().get('original_width'))
+    height: parseInt(@defaultImage().get('original_height'))
 
-  getArtistName: ->
-    if @get('artist')?.name
-      @get('artist').name
-    else if @get('artists')?.length > 0
-      _.compact(@get('artists').pluck('name'))[0]
+  getArtists: ->
+    artists = []
+    if @get('artists')?[0]
+      @get('artists').forEach (artist) ->
+         artists.push({name: artist.name, slug: artist.id})
     else
-      ''
+      artists.push({name: @get('artist')?.name, slug: @get('artist')?.id})
+    artists
 
   getPartnerName: ->
     if @get('collecting_institution')?.length > 0

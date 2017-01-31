@@ -18,6 +18,8 @@ describe 'SectionImageCollection', ->
       constructor: ->
         setTimeout => @onload()
       onload: ->
+      width: 120
+      height: 90
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       SectionImageCollection = benv.requireWithJadeify(
@@ -63,20 +65,14 @@ describe 'SectionImageCollection', ->
     benv.teardown()
     delete global.Image
 
-  it 'uploads to gemini', (done) ->
+  it 'saves image info after upload', (done) ->
     @component.upload target: files: ['foo']
-    @gemup.args[0][0].should.equal 'foo'
     @gemup.args[0][1].done('fooza')
     setTimeout =>
-      @component.setState.args[0][0].images[2].url.should.equal 'fooza'
       @component.setState.args[0][0].images[2].type.should.equal 'image'
-      done()
-
-  it 'saves the url after upload', (done) ->
-    @component.upload target: files: ['foo']
-    @gemup.args[0][1].done('fooza')
-    setTimeout =>
       @component.props.section.get('images')[2].url.should.equal 'fooza'
+      @component.props.section.get('images')[2].width.should.equal 120
+      @component.props.section.get('images')[2].height.should.equal 90
       done()
 
   it 'renders an image', ->
