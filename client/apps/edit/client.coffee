@@ -16,20 +16,20 @@ HeroSection = React.createFactory require './components/hero_section/index.coffe
 async = require 'async'
 
 @init = ->
-  article = new Article sd.ARTICLE
-  convertSections article, =>
+  @article = new Article sd.ARTICLE
+  convertSections @article, =>
     channel = new Channel sd.CURRENT_CHANNEL
-    new EditLayout el: $('#layout-content'), article: article, channel: channel
-    new EditHeader el: $('#edit-header'), article: article
-    new EditDisplay el: $('#edit-display'), article: article
-    new EditAdmin el: $('#edit-admin'), article: article, channel: channel
+    new EditLayout el: $('#layout-content'), article: @article, channel: channel
+    new EditHeader el: $('#edit-header'), article: @article
+    new EditDisplay el: $('#edit-display'), article: @article
+    new EditAdmin el: $('#edit-admin'), article: @article, channel: channel
     React.render(
-      SectionList(sections: article.sections)
+      SectionList(sections: @article.sections)
       $('#edit-sections')[0]
     )
-    if article.get('hero_section') != null or channel.hasFeature 'hero'
+    if @article.get('hero_section') != null or channel.hasFeature 'hero'
       React.render(
-        HeroSection(section: article.heroSection, hasSection: article.get('section_ids')?.length > 0)
+        HeroSection(section: @article.heroSection, hasSection: @article.get('section_ids')?.length > 0)
         $('#edit-hero-section')[0]
       )
 

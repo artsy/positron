@@ -1,49 +1,83 @@
 benv = require 'benv'
 sinon = require 'sinon'
 Backbone = require 'backbone'
+{ resolve } = require 'path'
 rewire = require 'rewire'
-Client = rewire '../client.coffee'
 fixtures = require '../../../../test/helpers/fixtures'
 
 describe 'init', ->
 
   beforeEach (done) ->
+    global.Image = class Image
+      constructor: ->
+        setTimeout => @onload()
+      onload: ->
+      width: 120
+      height: 90
     benv.setup =>
-      benv.expose $: benv.require('jquery')
-      Backbone.$ = $
-      window.jQuery = $
-      sinon.stub Backbone, 'sync'
-      Client.__set__ 'EditLayout', @EditLayout = sinon.stub()
-      Client.__set__ 'EditHeader', @EditHeader = sinon.stub()
-      Client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
-      Client.__set__ 'EditDisplay', @EditDisplay = sinon.stub()
-      Client.__set__ 'SectionList', @SectionList = sinon.stub()
-      Client.__set__ 'HeroSection', @HeroSection = sinon.stub()
-      Client.__set__ 'React', sinon.stub()
-      Client.__set__ 'sd', { ARTICLE: fixtures().articles }
-      @view = new Client
-        el: $('body')
-        article: fixtures().articles
+      benv.expose
+        _: require('underscore')
+        $: benv.require('jquery')
+        jQuery: benv.require('jquery')
+      window.jQuery = jQuery
+      @client = rewire '../client.coffee'
+      @client.__set__ 'sd', { USER: fixtures().users, ARTICLE: fixtures().articles }
+      @client.__set__ 'EditLayout', @EditLayout = sinon.stub()
+      @client.__set__ 'EditHeader', @EditHeader = sinon.stub()
+      @client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
+      @client.__set__ 'EditDisplay', @EditDisplay = sinon.stub()
+      @client.__set__ 'React', @React = render: sinon.stub()
       done()
 
   afterEach ->
     benv.teardown()
-    Backbone.sync.restore()
 
-  it 'initializes Backbone layouts and React components', ->
-    console.log @EditLayout.callCount()
+  it 'initializes Backbone layouts and React components', (done) ->
+    @client.init()
+    _.defer =>
+      @EditLayout.callCount.should.equal 1
+      @EditHeader.callCount.should.equal 1
+      @EditAdmin.callCount.should.equal 1
+      @React.render.callCount.should.equal 2
+      done()
 
-  it 'converts legacy articles to ImageCollection', ->
+  it 'converts images and artworks to ImageCollection', (done) ->
+    @client.init()
+    _.defer =>
+      @client.article.sections.models[1].get('type').should.equal 'image_collection'
+      @client.article.sections.models[1].get('layout').should.equal 'overflow_fillwidth'
+      @client.article.sections.models[1].get('images')[0].type.should.equal 'image'
+      @client.article.sections.models[1].get('images')[0].caption.should.equal 'This is a terrible caption'
+      @client.article.sections.models[1].get('images')[0].url.should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+      @client.article.sections.models[3].get('type').should.equal 'image_collection'
+      @client.article.sections.models[3].get('layout').should.equal 'overflow_fillwidth'
+      @client.article.sections.models[3].get('images')[0].image.should.equal 'https://artsy.net/artwork.jpg'
+      @client.article.sections.models[3].get('images')[0].title.should.equal 'The Four Hedgehogs'
+      @client.article.sections.models[3].get('images')[1].title.should.equal 'The Four Hedgehogs 2'
+      @client.article.sections.models[3].get('images')[1].id.should.equal '5321b71c275b24bcaa0001a5'
+      @client.article.sections.models[3].get('images')[1].image.should.equal 'https://artsy.net/artwork2.jpg'
+      done()
 
-  it 'makes sure ImageSets images have widths and heights', ->
+  it 'converts image sets components to image_collection', ->
+    @client.init()
+    _.defer =>
+      @client.article.sections.models[6].get('type').should.equal 'image_collection'
+      @client.article.sections.models[6].get('layout').should.equal 'overflow_fillwidth'
+      @client.article.sections.models[6].get('images')[0].image.should.equal 'https://artsy.net/artwork.jpg'
+      @client.article.sections.models[6].get('images')[0].title.should.equal 'The Four Hedgehogs'
+      @client.article.sections.models[6].get('images')[1].title.should.equal 'The Four Hedgehogs 2'
+      @client.article.sections.models[6].get('images')[1].id.should.equal '5321b71c275b24bcaa0001a5'
+      @client.article.sections.models[6].get('images')[1].image.should.equal 'https://artsy.net/artwork2.jpg'
+      @client.article.sections.models[6].get('images')[2].type.should.equal 'image'
+      @client.article.sections.models[6].get('images')[2].caption.should.equal 'This is a terrible caption'
+      @client.article.sections.models[6].get('images')[2].url.should.equal 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+      done()
 
-  it 'converts image components to image_collection', ->
-    @SectionContainer.args[2][0].section.attributes.type.should.equal 'image_collection'
-    @SectionContainer.args[2][0].section.attributes.images[0].type.should.equal 'image'
-    @SectionContainer.args[2][0].section.attributes.images[0].url.should.equal 'http://artsy.net/image.jpg'
-
-  it 'converts artwork components to image_collection', ->
-    @SectionContainer.args[3][0].section.attributes.type.should.equal 'image_collection'
-    @SectionContainer.args[3][0].section.attributes.images[0].type.should.equal 'artwork'
-    @SectionContainer.args[3][0].section.attributes.images[0].artists[0].slug.should.equal 'rodrigo-valenzuela'
-    @SectionContainer.args[3][0].section.attributes.images[1].artists[0].slug.should.equal 'rodrigo-valenzuela-2'
+  it 'makes sure images have widths and heights', ->
+    @client.init()
+    _.defer =>
+      @client.article.sections.models[3].get('images')[0].width.should.equal 120
+      @client.article.sections.models[3].get('images')[0].height.should.equal 90
+      @client.article.sections.models[3].get('images')[1].width.should.equal 120
+      @client.article.sections.models[3].get('images')[1].height.should.equal 90
+      done()
