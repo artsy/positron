@@ -1,9 +1,10 @@
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 { label, input, div, button, a, h1, h2 } = React.DOM
 moment = require 'moment'
 sd = require('sharify').data
-ArticleList = require '../article_list/index.coffee'
+ArticleList = React.createFactory(require '../article_list/index.coffee')
 
 module.exports = FilterSearch = React.createClass
 
@@ -20,9 +21,9 @@ module.exports = FilterSearch = React.createClass
     @engine.initialize()
 
   search: ->
-    if @refs.searchQuery.getDOMNode().value.length
+    if @refs.searchQuery.value.length
       if @engine.remote.url != @props.url then @engine.remote.url = @props.url
-      @engine.get @refs.searchQuery.getDOMNode().value, ([total, count, results]) =>
+      @engine.get @refs.searchQuery.value, ([total, count, results]) =>
         @props.searchResults results
 
   selected: (article) ->
