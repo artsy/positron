@@ -7,7 +7,6 @@ React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
-async = require 'async'
 
 module.exports = React.createClass
 

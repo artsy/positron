@@ -30,6 +30,7 @@ module.exports = class Artwork extends Backbone.Model
       name: @getPartnerName()
       slug: @getPartnerLink()
     artists: @getArtists()
+    artist: @getArtists()[0]
     width: parseInt(@defaultImage().get('original_width'))
     height: parseInt(@defaultImage().get('original_height'))
 
