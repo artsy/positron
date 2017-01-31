@@ -51,14 +51,14 @@ convertSections = (article, callback) ->
 
 convertImageSet = (section, callback) ->
   async.parallel(
-    for image in section.get('images')
-      (cb) ->
-        img = new Image()
-        img.src = image.image or image.url # image or artwork
-        img.onload = ->
-          image.width = img.width
-          image.height = img.height
-          cb()
+    section.get('images').map (image) -> (cb) ->
+      img = new Image()
+      img.src = image.image or image.url # image or artwork
+      img.onload = ->
+        image.width = img.width
+        image.height = img.height
+        image.artists = [image.artist] if image.type is 'artwork'
+        cb()
   , =>
     callback()
   )
@@ -85,16 +85,15 @@ convertImages = (section, callback) ->
 convertArtworks = (section, callback) ->
   images = []
   async.parallel(
-    for artwork in section.get('artworks')
-      (cb) ->
-        img = new Image()
-        img.src = artwork.image
-        img.onload = ->
-          artwork.type = 'artwork'
-          artwork.width = img.width
-          artwork.height = img.height
-          images.push artwork
-          cb()
+    section.get('artworks').map (artwork) -> (cb) ->
+      img = new Image()
+      img.src = artwork.image
+      img.onload = ->
+        artwork.type = 'artwork'
+        artwork.width = img.width
+        artwork.height = img.height
+        images.push artwork
+        cb()
   , =>
     image = {
       type: 'image_collection'

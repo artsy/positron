@@ -58,6 +58,9 @@ denormalizedArtwork = (->
         name: @string().allow('', null)
         slug: @string().allow('', null)
     ).allow(null).default([])
+    artist: @object().keys
+      name: @string().allow('', null)
+      slug: @string().allow('', null)
     width: @number().allow(null)
     height: @number().allow(null)
 ).call Joi
