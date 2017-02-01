@@ -6,6 +6,7 @@
 Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 gemup = require 'gemup'
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -14,6 +15,7 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Article = require '../../../../models/article.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionCallout'
 
   getInitialState: ->
     article: @props.section.get('article') or null

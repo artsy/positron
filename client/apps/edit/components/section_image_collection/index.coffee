@@ -5,6 +5,7 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -15,6 +16,7 @@ Input = React.createFactory require '../section_image_set/input.coffee'
 { resize } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionImageCollection'
 
   getInitialState: ->
     images: @props.section.get('images') or []
@@ -222,27 +224,29 @@ module.exports = React.createClass
               li { key: i },
                 if item.type is 'artwork'
                   [
-                    div { className: 'esic-img-container' },
+                    div { className: 'esic-img-container', key: 'image-' + i },
                       img {
                         src: item.image
                         className: 'esic-artwork'
                       }
-                    p {},
-                      strong {}, @formatArtistNames item
-                    p {},
-                      span { className: 'title' }, item.title if item.title
-                      if item.date
-                        span { className: 'date' }, ", " + item.date if item.date
-                    p {}, item.partner.name if item.partner.name
+                    div {className: 'esic-caption', key: 'caption-' + i },
+                      p {},
+                        strong {}, @formatArtistNames item
+                      p {},
+                        span { className: 'title' }, item.title if item.title
+                        if item.date
+                          span { className: 'date' }, ", " + item.date if item.date
+                      p {}, item.partner.name if item.partner.name
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
+                      key: 'remove-' + i
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
                     }
                   ]
                 else
                   [
-                    div { className: 'esic-img-container'},
+                    div { className: 'esic-img-container', key: 'image-' + i},
                       img {
                         className: 'esic-image'
                         src: if @state.progress then item.url else resize(item.url, width: 900)
@@ -253,16 +257,18 @@ module.exports = React.createClass
                       images: @state.images
                       url: item.url
                       editing: @props.editing
+                      key: 'caption-edit-' + i
                     }
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
+                      key: 'remove-' + i
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
-                      key: 2
                     }
                     div {
                       dangerouslySetInnerHTML: __html: item.caption
                       className: 'esic-caption esic-caption--display'
+                      key: 'caption-' + i
                     }
                   ]
             )

@@ -10,7 +10,9 @@ sd = require('sharify').data
 request = require 'superagent'
 icons = -> require('../icons.jade') arguments...
 
-module.exports.ArticlesListView = ArticlesListView = React.createClass
+module.exports = ArticlesListView = React.createClass
+  displayName: 'ArticlesListView'
+
   getInitialState: ->
     articles: @props.articles or []
     published: @props.published

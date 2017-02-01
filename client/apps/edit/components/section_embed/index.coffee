@@ -4,10 +4,12 @@
 
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'SectionEmbed'
 
   getInitialState: ->
     errorMessage: ''

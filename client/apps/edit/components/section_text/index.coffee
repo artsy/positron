@@ -34,6 +34,7 @@ keyboardShortcutsMap =
   insertUnorderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 55
 
 module.exports = React.createClass
+  displayName: 'SectionText'
 
   componentWillMount: ->
     @channel = new Channel sd.CURRENT_CHANNEL

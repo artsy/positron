@@ -25,6 +25,7 @@ keyboardShortcutsMap =
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
 
 module.exports = React.createClass
+  displayName: 'SectionFullscreen'
 
   getInitialState: ->
     title: @props.section.get('title')

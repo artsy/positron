@@ -19,6 +19,7 @@ icons = -> require('./icons.jade') arguments...
 ROW_OVERFLOW_PADDING = 20
 
 module.exports = React.createClass
+  displayName: 'SectionArtworks'
 
   getInitialState: ->
     urlsValue: ''

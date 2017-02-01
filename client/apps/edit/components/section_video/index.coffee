@@ -11,6 +11,7 @@ sd = require('sharify').data
 { section, h1, header, input, button, div, iframe, form, span, h2, img, label, nav, a } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'SectionVideo'
 
   getInitialState: ->
     progress: null

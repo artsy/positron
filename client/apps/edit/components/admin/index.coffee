@@ -2,6 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 request = require 'superagent'
 React = require 'react'
+ReactDOM = require 'react-dom'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data

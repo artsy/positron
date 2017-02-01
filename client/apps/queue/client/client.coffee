@@ -11,7 +11,8 @@ query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
 
-module.exports.QueueView = QueueView = React.createClass
+module.exports = QueueView = React.createClass
+  displayName: 'QueueView'
 
   getInitialState: ->
     publishedArticles: @props.publishedArticles or []

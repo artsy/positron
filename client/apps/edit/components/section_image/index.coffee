@@ -12,6 +12,7 @@ try
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+ReactDOM = require 'react-dom'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
@@ -19,6 +20,7 @@ icons = -> require('./icons.jade') arguments...
 { crop, resize, fill } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionImage'
 
   getInitialState: ->
     src: @props.section.get('url')

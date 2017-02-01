@@ -5,6 +5,7 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -14,6 +15,7 @@ Input = React.createFactory require './input.coffee'
 { resize } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionImageSet'
 
   getInitialState: ->
     images: @props.section.get('images') or []

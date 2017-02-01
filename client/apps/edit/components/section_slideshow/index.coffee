@@ -5,11 +5,13 @@
 
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 imagesLoaded = require 'imagesloaded'
 { getIframeUrl } = require '../../../../models/section.coffee'
 { div, section, ul, li, img, p, strong, iframe } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'SectionSlideshow'
 
   componentDidMount: ->
     @props.section.fetchSlideshowArtworks success: => @forceUpdate()

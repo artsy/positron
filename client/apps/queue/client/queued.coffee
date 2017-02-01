@@ -4,7 +4,8 @@ ReactDOM = require 'react-dom'
 { div } = React.DOM
 ArticleList = React.createFactory require '../../../components/article_list/index.coffee'
 
-module.exports = QueuedArticles = React.createClass
+module.exports = React.createClass
+  displayName: 'QueuedArticles'
 
   selected: (article) ->
     @props.selected article, 'unselect'

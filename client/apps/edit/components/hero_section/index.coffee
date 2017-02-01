@@ -4,11 +4,13 @@
 #
 
 React = require 'react'
+ReactDOM = require 'react-dom'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'HeroSection'
 
   getInitialState: ->
     { editing: false }

@@ -6,7 +6,8 @@ moment = require 'moment'
 sd = require('sharify').data
 ArticleList = React.createFactory require '../article_list/index.coffee'
 
-module.exports = FilterSearch = React.createClass
+module.exports = React.createClass
+  displayName: 'FilterSearch'
 
   componentDidMount: ->
     @addAutocomplete()

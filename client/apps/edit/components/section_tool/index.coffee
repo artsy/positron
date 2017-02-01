@@ -4,6 +4,7 @@
 #
 
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM
@@ -11,6 +12,7 @@ User = require '../../../../models/user.coffee'
 Channel = require '../../../../models/channel.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionTool'
 
   getInitialState: ->
     { open: false }
