@@ -22,7 +22,7 @@ module.exports = React.createClass
     progress: null
 
   componentDidMount: ->
-    @$list = $(@refs.images.getDOMNode())
+    @$list = $(@refs.images)
     @setupAutocomplete()
     imagesLoaded @$list, =>
       if @state.images.length > 1 and @state.layout is 'overflow_fillwidth'
@@ -34,7 +34,7 @@ module.exports = React.createClass
     @autocomplete.remove()
 
   setupAutocomplete: ->
-    $el = $(@refs.autocomplete.getDOMNode())
+    $el = $(@refs.autocomplete)
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $el
@@ -65,7 +65,7 @@ module.exports = React.createClass
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @props.section.set images: newImages
-        $(@refs.autocomplete.getDOMNode()).val('').focus()
+        $(@refs.autocomplete).val('').focus()
         @toggleFillwidth() if @state.images.length > 1
 
   upload: (e) ->
@@ -81,7 +81,12 @@ module.exports = React.createClass
         image = new Image()
         image.src = src
         image.onload = =>
-          newImages = @state.images.concat [ { url: src, type: 'image' } ]
+          newImages = @state.images.concat [{
+            url: src
+            type: 'image'
+            width: image.width
+            height: image.height
+          }]
           @setState images: newImages
           @props.section.set images: newImages
           imagesLoaded @$list, =>
@@ -107,7 +112,7 @@ module.exports = React.createClass
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
-    val = @refs.byUrl.getDOMNode().value
+    val = @refs.byUrl.value
     slug = _.last(val.split '/')
     @refs.byUrl.setState loading: true
     new Artwork(id: slug).fetch
@@ -118,7 +123,7 @@ module.exports = React.createClass
         ) if res.status is 404
       success: (artwork) =>
         @refs.byUrl.setState loading: false, errorMessage: ''
-        $(@refs.byUrl.getDOMNode()).val ''
+        $(@refs.byUrl).val ''
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @toggleFillwidth() if @state.images.length > 1

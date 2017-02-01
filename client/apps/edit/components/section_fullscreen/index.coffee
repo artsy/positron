@@ -12,6 +12,7 @@ try
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+ReactDOM = require 'react-dom'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 { div, section, span, input, button, p, textarea, video, img } = React.DOM
@@ -53,8 +54,8 @@ module.exports = React.createClass
   onEditableKeyup: ->
     toggleScribePlaceholder @refs.editableIntro.getDOMNode()
     @setState
-      title: $(@refs.editableTitle.getDOMNode()).val()
-      intro: $(@refs.editableIntro.getDOMNode()).html()
+      title: $(@refs.editableTitle).val()
+      intro: $(@refs.editableIntro).html()
 
   removeSection: ->
     $('.edit-header-container').show()
@@ -77,7 +78,7 @@ module.exports = React.createClass
 
   attachScribe: ->
     return if @scribeIntro? or not @props.editing
-    @scribeIntro = new Scribe @refs.editableIntro.getDOMNode()
+    @scribeIntro = new Scribe @refs.editableIntro
     @scribeIntro.use scribePluginSanitizeGoogleDoc()
     @scribeIntro.use scribePluginSanitizer {
       tags:
@@ -85,7 +86,7 @@ module.exports = React.createClass
         b: true
         i: true
     }
-    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
+    toggleScribePlaceholder @refs.editableIntro
     @scribeIntro.use scribePluginKeyboardShortcuts keyboardShortcutsMap
 
   render: ->
