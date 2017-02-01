@@ -229,7 +229,7 @@ module.exports = React.createClass
                       }
                     p {},
                       strong {}, @formatArtistNames item
-                    p {},
+                    p { className: 'esic-artwork' },
                       span { className: 'title' }, item.title if item.title
                       if item.date
                         span { className: 'date' }, ", " + item.date if item.date
