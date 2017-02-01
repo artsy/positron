@@ -4,7 +4,7 @@ ReactDOM = require 'react-dom'
 { div } = React.DOM
 ArticleList = React.createFactory require '../../../components/article_list/index.coffee'
 
-module.exports = React.createClass
+module.exports = QueuedArticles = React.createClass
   displayName: 'QueuedArticles'
 
   selected: (article) ->

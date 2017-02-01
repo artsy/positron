@@ -3,11 +3,14 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+
 Section = require '../../../../../models/section.coffee'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
@@ -22,12 +25,13 @@ describe 'SectionArtworks', ->
         ['icons']
       )
       SectionArtworks.__set__ 'Autocomplete', sinon.stub()
-      @component = React.render SectionArtworks(
+      props = {
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
         setEditing: ->
         changeLayout: ->
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @component = ReactDOM.render React.createElement(SectionArtworks, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'

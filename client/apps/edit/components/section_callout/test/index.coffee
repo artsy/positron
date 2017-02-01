@@ -3,13 +3,15 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 _ = require 'underscore'
 Article = require '../../../../../models/article.coffee'
 Section = require '../../../../../models/section.coffee'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 { fabricate } = require 'antigravity'
 
@@ -20,11 +22,12 @@ describe 'SectionCallout', ->
       benv.expose $: benv.require 'jquery'
       @SectionCallout = benv.require resolve __dirname, '../index'
       @SectionCallout.__set__ 'Autocomplete', sinon.stub()
-      @component = React.render @SectionCallout(
+      props = {
         section: new Section { article: '', text: '', type: 'callout' }
         editing: true
         setEditing: ->
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @component = ReactDOM.render React.createElement(@SectionCallout, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub Backbone, 'sync'
         done()
@@ -39,7 +42,8 @@ describe 'SectionCallout', ->
     spy.called.should.be.ok
 
   xit 'renders an article', ->
-    render = React.renderToString(@SectionCallout
+          # @stringComponent = ReactDOMServer.renderToString React.createElement(ArticleList, props)
+    render = ReactDOMServer.renderToString React.createElement(@SectionCallout
       section: @sections = new Section
         type: 'callout'
         text: 'Test Title'
@@ -51,7 +55,7 @@ describe 'SectionCallout', ->
     render.should.containEql 'is-article'
 
   it 'renders a pull quote', ->
-    render = React.renderToString(@SectionCallout
+    render = ReactDOMServer.renderToString React.createElement(@SectionCallout
       section: @sections = new Section
         type: 'callout'
         text: 'Test Title'
