@@ -3,10 +3,12 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -23,7 +25,7 @@ describe 'SectionImage', ->
         resolve(__dirname, '../index'), ['icons']
       )
       SectionImage.__set__ 'gemup', @gemup = sinon.stub()
-      @component = React.render SectionImage(
+      @component = ReactDOM.render React.createElement(SectionImage,
         section: new Backbone.Model { body: 'Foo to the bar' }
         editing: false
         setEditing: -> ->
@@ -65,7 +67,7 @@ describe 'SectionImage', ->
     $(@component.getDOMNode()).html().should.containEql 'foobaz'
 
   it 'previews captions on keyup', ->
-    $(@component.refs.editable.getDOMNode()).html('foobar')
+    # $(@component.refs.editable.getDOMNode()).html('foobar')
     @component.onEditableKeyup()
     @component.setState.args[0][0].caption.should.equal 'foobar'
 

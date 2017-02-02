@@ -3,10 +3,12 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -17,12 +19,14 @@ describe 'SectionVideo', ->
       benv.expose $: benv.require('jquery'), resize: ->
       SectionVideo = benv.require resolve __dirname, '../index'
       SectionVideo.__set__ 'gemup', @gemup = sinon.stub()
-      @component = React.render SectionVideo(
+      props = {
         section: new Backbone.Model
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
         editing: false
         setEditing: -> ->
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @rendered = ReactDOMServer.renderToString React.createElement(SectionVideo, props)
+      @component = ReactDOM.render React.createElement(SectionVideo, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub @component, 'forceUpdate'
         sinon.stub $, 'ajax'
@@ -38,12 +42,12 @@ describe 'SectionVideo', ->
     @component.props.section.destroy.called.should.be.ok
 
   it 'changes the video when submitting', ->
-    $(@component.refs.input.getDOMNode()).val 'foobar'
+    $(@component.refs.input).val 'foobar'
     @component.onChangeUrl preventDefault: ->
     @component.props.section.get('url').should.equal 'foobar'
 
   it 'renders the video url', ->
-    $(@component.getDOMNode()).html().should.containEql 'dQw4w9WgXcQ'
+    $(@rendered).html().should.containEql 'dQw4w9WgXcQ'
 
   it 'changes the background when radio button is clicked', ->
     r.simulate.click r.find @component, "esv-background-black"

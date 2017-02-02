@@ -41,7 +41,7 @@ describe 'ArticleList', ->
           checkable: true
           display: 'email'
         }
-      @stringComponent = ReactDOMServer.renderToString React.createElement(ArticleList, props)
+      @rendered = ReactDOMServer.renderToString React.createElement(ArticleList, props)
       @component = ReactDOM.render React.createElement(ArticleList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         done()
@@ -50,8 +50,8 @@ describe 'ArticleList', ->
     benv.teardown()
 
   it 'renders an initial set of articles', ->
-    $(@stringComponent).html().should.containEql 'Game of Thrones'
-    $(@stringComponent).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+    $(@rendered).html().should.containEql 'Game of Thrones'
+    $(@rendered).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
 
   it 'selects the article when clicking the check button', ->
     r.simulate.click @component.refs['123']
@@ -60,5 +60,5 @@ describe 'ArticleList', ->
     @component.props.selected.args[0][0].slug.should.containEql 'artsy-editorial-game-of-thrones'
 
   it 'can render email headlines and images', ->
-    $(@stringComponent).html().should.containEql 'Email of Thrones'
-    $(@stringComponent).html().should.containEql 'image_url.jpg'
+    $(@rendered).html().should.containEql 'Email of Thrones'
+    $(@rendered).html().should.containEql 'image_url.jpg'

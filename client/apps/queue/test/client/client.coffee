@@ -5,6 +5,7 @@ _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../test/helpers/fixtures.coffee'
 QueueView = require '../../client/client'
 
@@ -40,6 +41,7 @@ describe 'QueueView', ->
           feed: 'scheduled'
           channel: {name: 'Artsy Editorial'}
         }
+      @rendered = ReactDOMServer.renderToString React.createElement(QueueView, props)
       @component = ReactDOM.render React.createElement(QueueView, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           sinon.stub @component, 'saveSelected'
@@ -49,11 +51,11 @@ describe 'QueueView', ->
   afterEach ->
     benv.teardown()
 
-  xit 'renders the nav', ->
-    $(@component).html().should.containEql 'Scheduled'
-    $(@component).html().should.containEql 'Daily Email'
-    $(@component).html().should.containEql 'Weekly Email'
-    $(@component).html().should.containEql 'Artsy Editorial'
+  it 'renders the nav', ->
+    $(@rendered).html().should.containEql 'Scheduled'
+    $(@rendered).html().should.containEql 'Daily Email'
+    $(@rendered).html().should.containEql 'Weekly Email'
+    $(@rendered).html().should.containEql 'Artsy Editorial'
 
   it 'scheduledArticles gets passed along to components', ->
     @component.state.scheduledArticles.length.should.equal 1

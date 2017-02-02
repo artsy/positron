@@ -41,9 +41,8 @@ describe 'SectionCallout', ->
     @component.onClickOff()
     spy.called.should.be.ok
 
-  xit 'renders an article', ->
-          # @stringComponent = ReactDOMServer.renderToString React.createElement(ArticleList, props)
-    render = ReactDOMServer.renderToString React.createElement(@SectionCallout
+  it 'renders an article and callout header', ->
+    render = ReactDOMServer.renderToString React.createElement(@SectionCallout,
       section: @sections = new Section
         type: 'callout'
         text: 'Test Title'
@@ -52,25 +51,26 @@ describe 'SectionCallout', ->
       editing: true
     )
     render.should.containEql 'Test Title'
-    render.should.containEql 'is-article'
+    render.should.containEql 'Related Article'
 
   it 'renders a pull quote', ->
-    render = ReactDOMServer.renderToString React.createElement(@SectionCallout
+    props = {
       section: @sections = new Section
         type: 'callout'
         text: 'Test Title'
       setEditing: ->
       editing: true
-    )
+    }
+    render = ReactDOMServer.renderToString React.createElement(@SectionCallout, props)
     render.should.containEql 'Test Title'
     render.should.containEql 'is-pull-quote'
 
-  xit 'adds an article onSelect', ->
+  it 'adds an article onSelect', ->
     @component.onSelect({},{ id: '123', value: 'Foo Title', thumbnail: '' })
     Backbone.sync.args[0][2].success _.extend fabricate('article'), {id: '123'}
 
   it 'renders a top stories callout', ->
-    render = React.renderToString(@SectionCallout
+    render = ReactDOMServer.renderToString React.createElement(@SectionCallout,
       section: @sections = new Section
         type: 'callout'
         top_stories: true

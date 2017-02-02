@@ -1,5 +1,6 @@
 _ = require 'underscore'
 React = require 'react'
+ReactDOM = require 'react-dom'
 Autocomplete = null
 { label, input, div, button } = React.DOM
 
@@ -14,7 +15,7 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
   clear: ->
     @setState { value: null }, =>
       # Deferring to focus after render happens
-      _.defer => $(@refs.input.getDOMNode()).focus()
+      _.defer => $(@refs.input).focus()
     @props.cleared?()
 
   componentDidUpdate: ->
@@ -25,7 +26,7 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
   addAutocomplete: ->
     Autocomplete ?= require '../autocomplete/index.coffee'
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
-      el: $(@refs.input?.getDOMNode())
+      el: $(@refs.input?)
       selected: (e, item) =>
         # Deferring because of click race condition
         _.defer => @setState value: item.value, id: item.id

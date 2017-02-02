@@ -3,7 +3,9 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -17,7 +19,7 @@ describe 'SectionFullscreen', ->
         resolve(__dirname, '../index'), ['icons']
       )
       SectionFullscreen.__set__ 'gemup', @gemup = sinon.stub()
-      @component = React.render SectionFullscreen(
+      @component = ReactDOM.render React.createElement(SectionFullscreen,
         section: new Backbone.Model
           type: 'fullscreen'
           intro: ''
@@ -64,12 +66,12 @@ describe 'SectionFullscreen', ->
       done()
 
   it 'sets title state on keyup', ->
-    $(@component.refs.editableTitle.getDOMNode()).html('foobar')
+    $(@component.refs.editableTitle).html('foobar')
     @component.onEditableKeyup()
     @component.setState.args[0][0].title.should.equal 'foobar'
 
   it 'sets intro state on keyup', ->
-    $(@component.refs.editableIntro.getDOMNode()).html('foobar')
+    $(@component.refs.editableIntro).html('foobar')
     @component.onEditableKeyup()
     @component.setState.args[0][0].intro.should.equal 'foobar'
 

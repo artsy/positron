@@ -3,10 +3,12 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 
 describe 'SectionList', ->
@@ -17,7 +19,7 @@ describe 'SectionList', ->
       SectionList = benv.require resolve(__dirname, '../index')
       SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       SectionList.__set__ 'SectionContainer', @SectionContainer = sinon.stub()
-      @component = React.render SectionList(
+      @component = ReactDOM.render React.createElement(SectionList,
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }

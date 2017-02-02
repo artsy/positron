@@ -56,24 +56,24 @@ module.exports = React.createClass
         nav {},
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '38px'
+              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'backgroundSize': '38px'
             }
             className: 'ese-overflow'
             onClick: @changeLayout('overflow')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
-              'background-size': '22px'
+              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
+              'backgroundSize': '22px'
             }
             className: 'ese-column-width'
             onClick: @changeLayout('column_width')
           }
           a {
             style: {
-              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'background-size': '22px'
+              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'backgroundSize': '22px'
             }
             className: 'ese-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
@@ -127,7 +127,7 @@ module.exports = React.createClass
               src: @state.url
               className: 'embed-iframe'
               scrolling: 'no'
-              frameborder: '0'
+              frameBorder: '0'
               style: { 'height': @state.height if @state.height?.length }
             }
         )

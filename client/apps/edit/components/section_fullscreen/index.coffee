@@ -53,7 +53,7 @@ module.exports = React.createClass
       background_image_url: @state.background_image_url
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
+    toggleScribePlaceholder @refs.editableIntro
     @setState
       title: $(@refs.editableTitle).val()
       intro: $(@refs.editableIntro).html()
