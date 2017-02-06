@@ -9,6 +9,8 @@ sd = require('sharify').data
 _s = require 'underscore.string'
 moment = require 'moment'
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
+AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
 { crop } = require '../../../../components/resizer/index.coffee'
 
 module.exports = class EditAdmin extends Backbone.View
@@ -37,262 +39,252 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-fair')[0],
-    #   name: 'fair_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
-    #   placeholder: 'Search fair by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save fair_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('fair_ids')
-    #   @fairs = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @fairs.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @fairs
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-fair')[0],
+      name: 'fair_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
 
   setupFairProgrammingAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    # AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
-    #   name: 'fair_programming_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
-    #   placeholder: 'Search fair by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save fair_programming_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save fair_programming_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('fair_programming_ids')
-    #   @fairs = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @fairs.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @fairs
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
+      name: 'fair_programming_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_programming_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_programming_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_programming_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
 
   setupArtsyAtTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
-    #   name: 'fair_artsy_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
-    #   placeholder: 'Search fair by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save fair_artsy_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save fair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('fair_artsy_ids')
-    #   @fairs = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @fairs.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @fairs
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
+      name: 'fair_artsy_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_artsy_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_artsy_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
 
   setupAboutTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
-    #   name: 'fair_about_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
-    #   placeholder: 'Search fair by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save fair_about_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save fair_about_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('fair_about_ids')
-    #   @fairs = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @fairs.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @fairs
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
+      name: 'fair_about_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+      placeholder: 'Search fair by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save fair_about_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save fair_about_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('fair_about_ids')
+      @fairs = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @fairs.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @fairs
+    else
+      list.setState loading: false
 
   setupPartnerAutocomplete: ->
     return unless @channel.hasAssociation 'partners'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-partner')[0],
-    #   name: 'partner_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
-    #   placeholder: 'Search partner by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save partner_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('partner_ids')
-    #   @partners = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @partners.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @partners
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-partner')[0],
+      name: 'partner_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
+      placeholder: 'Search partner by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save partner_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('partner_ids')
+      @partners = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @partners.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @partners
+    else
+      list.setState loading: false
 
   setupAuctionAutocomplete: ->
     return unless @channel.hasAssociation 'auctions'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # list = new AutocompleteList @$('#edit-admin-auction')[0],
-    #   name: 'auction_ids[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
-    #   placeholder: 'Search auction by name...'
-    #   filter: (res) -> for r in res
-    #     { id: r._id, value: r.name }
-    #   selected: (e, item, items) =>
-    #     @article.save auction_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save auction_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @article.get('auction_ids')
-    #   @auctions = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/sale/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @auctions.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @auctions
-    # else
-    #   list.setState loading: false
+    list = new AutocompleteList @$('#edit-admin-auction')[0],
+      name: 'auction_ids[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
+      placeholder: 'Search auction by name...'
+      filter: (res) -> for r in res
+        { id: r._id, value: r.name }
+      selected: (e, item, items) =>
+        @article.save auction_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save auction_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @article.get('auction_ids')
+      @auctions = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/sale/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @auctions.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @auctions
+    else
+      list.setState loading: false
 
   setupSectionAutocomplete: ->
     if @article.get('hero_section')?.type is 'fullscreen'
       @$('#edit-admin-section').addClass 'is-error'
       return
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # @section_ids = @article.get 'section_ids' or []
-    # list = new AutocompleteList @$('#edit-admin-section')[0],
-    #   name: 'section_ids[]'
-    #   url: "#{sd.API_URL}/sections?q=%QUERY"
-    #   placeholder: 'Search section by name...'
-    #   filter: (sections) -> for section in sections.results
-    #     { id: section.id, value: section.title }
-    #   selected: (e, item, items) =>
-    #     @article.save section_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save section_ids: _.without(_.pluck(items, 'id'),item.id)
-    # if ids = @section_ids
-    #   @sections = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.API_URL}/sections/#{id}").end (err, res) =>
-    #         @sections.push id: res.body.id, value: res.body.title
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @sections
-    # else
-    #   list.setState loading: false
+    @section_ids = @article.get 'section_ids' or []
+    list = new AutocompleteList @$('#edit-admin-section')[0],
+      name: 'section_ids[]'
+      url: "#{sd.API_URL}/sections?q=%QUERY"
+      placeholder: 'Search section by name...'
+      filter: (sections) -> for section in sections.results
+        { id: section.id, value: section.title }
+      selected: (e, item, items) =>
+        @article.save section_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save section_ids: _.without(_.pluck(items, 'id'),item.id)
+    if ids = @section_ids
+      @sections = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/sections/#{id}").end (err, res) =>
+            @sections.push id: res.body.id, value: res.body.title
+            cb()
+      , =>
+        list.setState loading: false, items: @sections
+    else
+      list.setState loading: false
 
   setupShowsAutocomplete: ->
     return unless @channel.hasAssociation 'shows'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # @show_ids = @article.get 'show_ids' or []
-    # list = new AutocompleteList @$('#edit-admin-shows')[0],
-    #   name: 'show_ids[]'
-    #   url: "#{sd.API_URL}/shows?q=%QUERY"
-    #   placeholder: 'Search show by name...'
-    #   selected: (e, item, items) =>
-    #     @article.save show_ids: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
-    # if ids = @show_ids
-    #   @shows = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.API_URL}/show/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @shows.push id: res.body._id, value: res.body.name
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @shows
-    # else
-    #   list.setState loading: false
+    @show_ids = @article.get 'show_ids' or []
+    list = new AutocompleteList @$('#edit-admin-shows')[0],
+      name: 'show_ids[]'
+      url: "#{sd.API_URL}/shows?q=%QUERY"
+      placeholder: 'Search show by name...'
+      selected: (e, item, items) =>
+        @article.save show_ids: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
+    if ids = @show_ids
+      @shows = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/show/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @shows.push id: res.body._id, value: res.body.name
+            cb()
+      , =>
+        list.setState loading: false, items: @shows
+    else
+      list.setState loading: false
 
   setupBiographyAutocomplete: ->
-    # AutocompleteSelect = React.createFactory require '../../../../components/autocomplete_select/index.coffee'
-    # select = AutocompleteSelect @$('#edit-admin-biography')[0],
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
-    #   placeholder: 'Search artist by name...'
-    #   filter: (artists) -> for artist in artists
-    #     { id: artist._id, value: artist.name }
-    #   selected: (e, item) =>
-    #     @article.save biography_for_artist_id: item.id
-    #   cleared: =>
-    #     @article.save biography_for_artist_id: null
-    # if id = @article.get 'biography_for_artist_id'
-    #   request
-    #     .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
-    #     .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-    #       select.setState value: res.body.name, loading: false
-    # else
-    #   select.setState loading: false
+    select = new AutocompleteSelect @$('#edit-admin-biography')[0],
+      url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
+      placeholder: 'Search artist by name...'
+      filter: (artists) -> for artist in artists
+        { id: artist._id, value: artist.name }
+      selected: (e, item) =>
+        @article.save biography_for_artist_id: item.id
+      cleared: =>
+        @article.save biography_for_artist_id: null
+    if id = @article.get 'biography_for_artist_id'
+      request
+        .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
+        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
+          # select.setState value: res.body.name, loading: false
+    else
+      # select.setState loading: false
 
   setupContributingAuthors: ->
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # @contributing_authors = @article.get 'contributing_authors' or []
-    # list = new AutocompleteList @$('#edit-admin-contributing-authors')[0],
-    #   name: 'contributing_authors[]'
-    #   url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-    #   placeholder: 'Search by user name or email...'
-    #   filter: (users) -> for user in users
-    #     { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
-    #   selected: (e, item, items) =>
-    #     @article.save contributing_authors: _.pluck items, 'id'
-    #   removed: (e, item, items) =>
-    #     @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
-    # if @article.get('contributing_authors')?.length
-    #   @authors = []
-    #   ids = @article.get('contributing_authors')
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.ARTSY_URL}/api/v1/user/#{id.id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @authors.push(
-    #           {
-    #             id: { id: res.body.id , name: res.body.name },
-    #             value: _.compact([res.body.name, res.body.email]).join(', ')
-    #           })
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @authors
-    # else
-    #   list.setState loading: false
+    @contributing_authors = @article.get 'contributing_authors' or []
+    list = new AutocompleteList @$('#edit-admin-contributing-authors')[0],
+      name: 'contributing_authors[]'
+      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+      placeholder: 'Search by user name or email...'
+      filter: (users) -> for user in users
+        { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
+      selected: (e, item, items) =>
+        @article.save contributing_authors: _.pluck items, 'id'
+      removed: (e, item, items) =>
+        @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
+    if @article.get('contributing_authors')?.length
+      @authors = []
+      ids = @article.get('contributing_authors')
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.ARTSY_URL}/api/v1/user/#{id.id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @authors.push(
+              {
+                id: { id: res.body.id , name: res.body.name },
+                value: _.compact([res.body.name, res.body.email]).join(', ')
+              })
+            cb()
+      , =>
+        list.setState loading: false, items: @authors
+    else
+      list.setState loading: false
 
   onOpen: =>
     async.parallel [
@@ -379,35 +371,34 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupSuperArticleAutocomplete: ->
     return unless @channel.hasFeature 'superArticle'
-    # AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-    # @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
-    # list = new AutocompleteList @$('#edit-admin-related-articles')[0],
-    #   name: 'related_articles[]'
-    #   url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
-    #   placeholder: 'Search article by title...'
-    #   filter: (articles) ->
-    #     for article in articles.results
-    #       { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
-    #   selected: (e, item, items) =>
-    #     superArticle = @article.get('super_article') or {}
-    #     superArticle.related_articles = _.pluck items, 'id'
-    #     @article.save super_article: superArticle
-    #   removed: (e, item, items) =>
-    #     superArticle = @article.get('super_article') or {}
-    #     superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
-    #     @article.save super_article: superArticle
-    # if ids = @related_articles
-    #   @articles = []
-    #   async.each ids, (id, cb) =>
-    #     request
-    #       .get("#{sd.API_URL}/articles/#{id}")
-    #       .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-    #         @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
-    #         cb()
-    #   , =>
-    #     list.setState loading: false, items: @articles
-    # else
-    #   list.setState loading: false
+    @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
+    list = new AutocompleteList @$('#edit-admin-related-articles')[0],
+      name: 'related_articles[]'
+      url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+      placeholder: 'Search article by title...'
+      filter: (articles) ->
+        for article in articles.results
+          { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
+      selected: (e, item, items) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.related_articles = _.pluck items, 'id'
+        @article.save super_article: superArticle
+      removed: (e, item, items) =>
+        superArticle = @article.get('super_article') or {}
+        superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
+        @article.save super_article: superArticle
+    if ids = @related_articles
+      @articles = []
+      async.each ids, (id, cb) =>
+        request
+          .get("#{sd.API_URL}/articles/#{id}")
+          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+            @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
+            cb()
+      , =>
+        list.setState loading: false, items: @articles
+    else
+      list.setState loading: false
 
   events:
     'change #eaf-primary-artists .eaf-artist-input': (e) ->

@@ -5,15 +5,15 @@ Autocomplete = null
 { label, input, div, button } = React.DOM
 
 module.exports = (el, props) ->
-  React.render AutocompleteSection(props), el
+  ReactDOM.render React.createElement(AutocompleteSection, props), el
 
 module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
 
   getInitialState: ->
-    loading: true, value: null, id: null
+    loading: true, value: '', id: null
 
   clear: ->
-    @setState { value: null }, =>
+    @setState { value: '' }, =>
       # Deferring to focus after render happens
       _.defer => $(@refs.input).focus()
     @props.cleared?()
