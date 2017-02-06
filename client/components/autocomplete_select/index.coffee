@@ -10,30 +10,40 @@ module.exports = (el, props) ->
 module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
 
   getInitialState: ->
-    loading: true, value: '', id: null
+    loading: true, value: null, id: null
 
   clear: ->
-    @setState { value: '' }, =>
+    debugger
+    @setState { value: null }, =>
       # Deferring to focus after render happens
-      _.defer => $(@refs.input).focus()
-    @props.cleared?()
+      _.defer =>
+        debugger
+        $(@refs.input).focus()
+    @props.cleared()
+
+  removeAutocomplete: ->
+    @autocomplete?.remove()
 
   componentDidUpdate: ->
     return unless not @state.loading and not @state.value
-    @autocomplete?.remove()
+    console.log 'remove addAutocomplete'
+    # @autocomplete?.remove()
     @addAutocomplete()
 
   addAutocomplete: ->
+    console.log 'in addAutocomplete'
     Autocomplete ?= require '../autocomplete/index.coffee'
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
-      el: $(@refs.input?)
+      el: $(@refs.input)
       selected: (e, item) =>
         # Deferring because of click race condition
-        _.defer => @setState value: item.value, id: item.id
+        _.defer =>
+          @setState value: item.value, id: item.id
+          @removeAutocomplete()
         @props.selected? e, item
 
   render: ->
-    hidden = input { type: 'hidden', value: @state.id, name: @props.name }
+    hidden = input { type: 'hidden', value: @state.id || '', name: @props.name }
     if @state.loading
       label { className: 'bordered-input-loading' }, @props.label,
         input { className: 'bordered-input' }

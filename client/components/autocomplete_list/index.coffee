@@ -8,6 +8,7 @@ module.exports = (el, props) ->
   ReactDOM.render React.createElement(AutocompleteList, props), el
 
 module.exports.AutocompleteList = AutocompleteList = React.createClass
+  displayName: 'AutocompleteList'
 
   getInitialState: ->
     loading: true, items: @props.items or []

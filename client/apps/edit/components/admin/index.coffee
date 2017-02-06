@@ -245,16 +245,21 @@ module.exports = class EditAdmin extends Backbone.View
       filter: (artists) -> for artist in artists
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
+        console.log 'in selected'
         @article.save biography_for_artist_id: item.id
+        select.setState value: item.name, loading: false
       cleared: =>
         @article.save biography_for_artist_id: null
+        console.log 'is cleared'
     if id = @article.get 'biography_for_artist_id'
       request
         .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
         .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          # select.setState value: res.body.name, loading: false
+          console.log 'setting selected'
+          select.setState value: res.body.name, loading: false
     else
-      # select.setState loading: false
+      console.log 'has no artist'
+      select.setState loading: false
 
   setupContributingAuthors: ->
     @contributing_authors = @article.get 'contributing_authors' or []
@@ -457,7 +462,7 @@ module.exports = class EditAdmin extends Backbone.View
     date = moment(date)
     publishDate = date.format('L')
     publishTime = date.format('HH:mm')
-    saveFormat = date.toDate()
+    saveFormat = moment(date).toISOString()
     $('#edit-admin-publish-date > input').val(publishDate)
     $('#edit-admin-schedule-publish-time > input').val(publishTime)
     cb saveFormat
