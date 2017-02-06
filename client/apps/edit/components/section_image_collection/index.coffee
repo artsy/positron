@@ -119,13 +119,15 @@ module.exports = React.createClass
     @refs.byUrl.setState loading: true
     new Artwork(id: slug).fetch
       error: (m, res) =>
-        @refs.byUrl.setState(
-          errorMessage: 'Artwork not found. Make sure your urls are correct.'
-          loadingUrls: false
-        ) if res.status is 404
+        if res.status is 404
+          $(@refs.byUrl).val('').attr('placeholder', 'Artwork not found')
+          setTimeout( =>
+            $(@refs.byUrl).siblings('button').removeClass('is-loading')
+            $(@refs.byUrl).attr('placeholder', 'Add artwork url')
+          , 3000)
       success: (artwork) =>
-        @refs.byUrl.setState loading: false, errorMessage: ''
-        $(@refs.byUrl).val ''
+        $(@refs.byUrl).removeClass('is-loading').val ''
+        $(@refs.byUrl).siblings('button').removeClass('is-loading')
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @toggleFillwidth() if @state.images.length > 1
