@@ -245,20 +245,16 @@ module.exports = class EditAdmin extends Backbone.View
       filter: (artists) -> for artist in artists
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
-        console.log 'in selected'
         @article.save biography_for_artist_id: item.id
         select.setState value: item.name, loading: false
       cleared: =>
         @article.save biography_for_artist_id: null
-        console.log 'is cleared'
     if id = @article.get 'biography_for_artist_id'
       request
         .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
         .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          console.log 'setting selected'
           select.setState value: res.body.name, loading: false
     else
-      console.log 'has no artist'
       select.setState loading: false
 
   setupContributingAuthors: ->
