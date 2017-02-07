@@ -15,6 +15,7 @@ module.exports = class Article extends Backbone.Model
 
   initialize: ->
     @sections = new Sections @get 'sections'
+    @on 'change:sections', => @sections.set @get 'sections'
     @featuredPrimaryArtists = new Artists
     @featuredArtists = new Artists
     @mentionedArtists = new Artists
@@ -98,7 +99,7 @@ module.exports = class Article extends Backbone.Model
 
   toJSON: ->
     extended = {}
-    extended.sections = @sections.toJSON() if @sections.length
+    extended.sections = @sections.toJSON()
     if @heroSection.keys().length > 1
       extended.hero_section = @heroSection.toJSON()
     else
