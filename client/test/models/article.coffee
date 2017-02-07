@@ -26,11 +26,6 @@ describe "Article", ->
       @article.sections.reset { body: 'Foobar' }
       @article.toJSON().sections[0].body.should.equal 'Foobar'
 
-    it 'sections fall back to attrs', ->
-      @article.set sections: [{ body: 'Foobar' }]
-      @article.sections.reset []
-      @article.toJSON().sections[0].body.should.equal 'Foobar'
-
     it 'injects features artworks & artists', ->
       @article.featuredArtworks.set [fabricate('artist')]
       @article.featuredArtists.set [fabricate('artist')]
