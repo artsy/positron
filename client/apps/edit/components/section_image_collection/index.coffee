@@ -231,7 +231,6 @@ module.exports = React.createClass
                         src: item.image
                         className: 'esic-artwork'
                       }
-<<<<<<< HEAD
                     div {className: 'esic-caption', key: 'caption-' + i },
                       p {},
                         strong {}, @formatArtistNames item
@@ -240,15 +239,6 @@ module.exports = React.createClass
                         if item.date
                           span { className: 'date' }, ", " + item.date if item.date
                       p {}, item.partner.name if item.partner.name
-=======
-                    p {},
-                      strong {}, @formatArtistNames item
-                    p { className: 'esic-artwork' },
-                      span { className: 'title' }, item.title if item.title
-                      if item.date
-                        span { className: 'date' }, ", " + item.date if item.date
-                    p {}, item.partner.name if item.partner.name
->>>>>>> 8a935313dc18c6fe2f4b30e9a4d7254dd70cdf2b
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
