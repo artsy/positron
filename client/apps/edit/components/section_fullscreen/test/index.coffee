@@ -66,8 +66,8 @@ describe 'SectionFullscreen', ->
       done()
 
   it 'sets title state on keyup', ->
-    $(@component.refs.editableTitle).html('foobar')
-    @component.onEditableKeyup()
+    $(ReactDOM.findDOMNode(@component.refs.editableTitle)).val('foobar')
+    ReactTestUtils.Simulate.keyUp(@component.refs.editableTitle)
     @component.setState.args[0][0].title.should.equal 'foobar'
 
   it 'sets intro state on keyup', ->
