@@ -13,7 +13,6 @@ cheerio = require 'cheerio'
 url = require 'url'
 Q = require 'bluebird-q'
 request = require 'superagent'
-requestBluebird = require 'superagent-bluebird-promise'
 Backbone = require 'backbone'
 { Image } = require 'artsy-backbone-mixins'
 debug = require('debug') 'api'
@@ -252,12 +251,17 @@ typecastIds = (article) ->
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   cleanArticlesInSailthru article.slugs
-  postFacebookAPI article
-  # postSailthruAPI article, tags, images, ->
-  #   console.log 'made the api callback'
-  cb()
+  async.parallel [
+    (callback) ->
+      postFacebookAPI article, callback
+    (callback) ->
+      postSailthruAPI article, tags, images, callback
+  ], (err, results) ->
+    console.log results
+    console.log err
+    cb()
 
-postFacebookAPI = (article) ->
+postFacebookAPI = (article, cb) ->
   html = "<html lang=\"en\" prefix=\"op: http://media.facebook.com/op#\">
 <head>
 <meta charset=\"utf-8\">
@@ -312,14 +316,15 @@ postFacebookAPI = (article) ->
               </figure><footer></footer></article>
 </body>
 </html>"
-  requestBluebird
-    .post "https://graph.facebook.com/#{FB_PAGE_ID}/instant_articles"
+  request
+    .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
     .send
       access_token: INSTANT_ARTICLE_ACCESS_TOKEN
       development_mode: true
       html_source: html
     .end (err, response) =>
       console.log response
+      cb()
 
 postSailthruAPI = (article, tags, images, cbAPI) ->
   html = if article.send_body then getTextSections(article) else ''
@@ -341,7 +346,6 @@ postSailthruAPI = (article, tags, images, cbAPI) ->
   , (err, response) =>
     debug err if err
     cbAPI()
-
 
 cleanArticlesInSailthru = (slugs = []) =>
   if slugs.length > 1
