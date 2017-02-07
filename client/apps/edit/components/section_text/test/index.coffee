@@ -42,8 +42,8 @@ describe 'SectionText', ->
   afterEach ->
     benv.teardown()
 
-  xit "updates the section's body", ->
-    @component.refs.editable.value = 'Hello'
+  it "updates the section's body", ->
+    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'Hello'
     @component.setBody()
     @component.props.section.get('body').should.equal 'Hello'
 
@@ -53,10 +53,10 @@ describe 'SectionText', ->
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
-  xit 'updates the body on click off', ->
+  it 'updates the body on click off', ->
     @component.props.section.destroy = sinon.stub()
     @component.props.section.set body: ''
-    $(@component.refs.editable).html 'Hello'
+    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'Hello'
     @component.onClickOff()
     @component.props.section.get('body').should.equal 'Hello'
 

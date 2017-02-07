@@ -39,8 +39,7 @@ describe 'SectionContainer', ->
     @component.props.section.destroy.called.should.be.ok
 
   it 'calls back to set the editing state upstream', ->
-# deprecated: setProps
-    # @component.setProps editing: false
+    @component.props.editing = false
     r.simulate.click r.find @component, 'edit-section-hover-controls'
     @onSetEditing.args[0][0].should.equal 4
 

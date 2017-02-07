@@ -10,7 +10,7 @@ Section = require '../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
-# { div } = React.DOM
+
 fixtures = require '../../../../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
 

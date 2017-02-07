@@ -64,10 +64,10 @@ describe 'SectionImage', ->
   xit 'renders an image', ->
     @component.state.src = 'foobaz'
     @component.render()
-    $(@component.getDOMNode()).html().should.containEql 'foobaz'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'foobaz'
 
-  xit 'previews captions on keyup', ->
-    @component.refs.editable.value = 'foobar'
+  it 'previews captions on keyup', ->
+    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'foobar'
     @component.onEditableKeyup()
     @component.setState.args[0][0].caption.should.equal 'foobar'
 

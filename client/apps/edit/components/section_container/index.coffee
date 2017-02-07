@@ -39,7 +39,6 @@ module.exports = React.createClass
     @props.section.destroy()
 
   render: ->
-    debugger
     div {},
       div {
         className: 'edit-section-container'
