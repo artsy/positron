@@ -24,7 +24,8 @@ module.exports = React.createClass
     src: @props.section.get('url')
     progress: null
     caption: @props.section.get('caption')
-    layout: @props.section.get('layout') or 'overflow_fillwidth'
+    width: @props.section.get('width')
+    height: @props.section.get('height')
 
   componentDidMount: ->
     @attachScribe()
@@ -34,7 +35,11 @@ module.exports = React.createClass
 
   onClickOff: ->
     if @state.src
-      @props.section.set url: @state.src, caption: @state.caption, layout: @state.layout
+      @props.section.set
+        url: @state.src
+        caption: @state.caption
+        width: @state.width
+        height: @state.height
     else
       @props.section.destroy()
 
@@ -55,7 +60,11 @@ module.exports = React.createClass
         image = new Image()
         image.src = src
         image.onload = =>
-          @setState src: src, progress: null
+          @setState
+            src: src
+            progress: null
+            width: image.width
+            height: image.height
           @onClickOff()
 
   attachScribe: ->

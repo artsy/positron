@@ -13,7 +13,6 @@ imageSection = (->
     type: @string().valid('image')
     url: @string().allow('', null)
     caption: @string().allow('', null)
-    layout: @string().allow('overflow_fillwidth', 'column_width', null)
     width: @number().allow(null)
     height: @number().allow(null)
 ).call Joi
