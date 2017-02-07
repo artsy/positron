@@ -189,6 +189,9 @@ sanitize = (article) ->
         for item in section.items when item.type is 'image' or item.type is 'video'
           item.caption = sanitizeHtml item.caption if item.type is 'image'
           item.url = sanitizeLink item.url if item.type is 'video'
+      if section.type in ['image_collection', 'image_set']
+        for item in section.images when item.type is 'image'
+          item.caption = sanitizeHtml item.caption
       section
   else
     sections = []
