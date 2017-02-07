@@ -4,7 +4,6 @@
 #
 
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, ul, li } = React.DOM

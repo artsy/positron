@@ -5,7 +5,6 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -222,7 +221,7 @@ module.exports = React.createClass
       (
         if @state.images.length > 0
           div { className: 'esis-preview-container' },
-            div { className: 'esis-preview-image-container'},
+            div { className: 'esis-preview-image-container' },
               @state.images.slice(0,4).map (item, i) =>
                 img {
                   src: resize((item.image or item.url or ''), height: 150)

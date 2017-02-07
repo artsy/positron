@@ -27,19 +27,23 @@ describe 'SectionText', ->
         'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc', 'scribePluginJumpLink', 'scribePluginFollowLinkTooltip']
         SectionText.__set__ name, sinon.stub()
       SectionText::attachScribe = sinon.stub()
-      @component = ReactDOM.render React.createElement(SectionText,
+      props = {
         section: new Backbone.Model { body: '<p>Foo to the bar</p>', type: 'text' }
         onSetEditing: @onSetEditing = sinon.stub()
         setEditing: @setEditing = sinon.stub()
         editing: false
         key: 4
-      ), $("<div></div>")[0], -> setTimeout -> done()
+      }
+      @rendered = ReactDOMServer.renderToString React.createElement(SectionText, props)
+      @component = ReactDOM.render React.createElement(SectionText, props), $("<div></div>")[0], ->
+        setTimeout -> done()
+
 
   afterEach ->
     benv.teardown()
 
-  it "updates the section's body", ->
-    # $(@component.refs.editable.getDOMNode()).html 'Hello'
+  xit "updates the section's body", ->
+    @component.refs.editable.value = 'Hello'
     @component.setBody()
     @component.props.section.get('body').should.equal 'Hello'
 
@@ -49,10 +53,10 @@ describe 'SectionText', ->
     @component.onClickOff()
     @component.props.section.destroy.called.should.be.ok
 
-  it 'updates the body on click off', ->
+  xit 'updates the body on click off', ->
     @component.props.section.destroy = sinon.stub()
     @component.props.section.set body: ''
-    # $(@component.refs.editable.getDOMNode()).html 'Hello'
+    $(@component.refs.editable).html 'Hello'
     @component.onClickOff()
     @component.props.section.get('body').should.equal 'Hello'
 

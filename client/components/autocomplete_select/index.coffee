@@ -5,9 +5,10 @@ Autocomplete = null
 { label, input, div, button } = React.DOM
 
 module.exports = (el, props) ->
-  ReactDOM.render React.createElement(AutocompleteSection, props), el
+  ReactDOM.render React.createElement(AutocompleteSelect, props), el
 
-module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
+module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
+  displayName: 'AutocompleteSelect'
 
   getInitialState: ->
     loading: true, value: null, id: null
@@ -18,9 +19,6 @@ module.exports.AutocompleteSelect = AutocompleteSection = React.createClass
       _.defer =>
         $(@refs.input).focus()
       @props.cleared()
-
-  removeAutocomplete: ->
-    @autocomplete?.remove()
 
   componentDidUpdate: ->
     return unless not @state.loading and not @state.value

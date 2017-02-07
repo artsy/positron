@@ -16,7 +16,6 @@ try
   scribePluginJumpLink = require 'scribe-plugin-jump-link'
   scribePluginFollowLinkTooltip = require 'scribe-plugin-follow-link-tooltip'
 React = require 'react'
-ReactDOM = require 'react-dom'
 icons = -> require('./icons.jade') arguments...
 { div, nav, button } = React.DOM
 sd = require('sharify').data

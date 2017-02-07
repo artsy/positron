@@ -5,7 +5,6 @@
 
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 { div, section, label, input, a, h1, textarea, button, form, ul,
   li, img, p, strong, span } = React.DOM

@@ -7,7 +7,6 @@ _ = require 'underscore'
 Artworks = require '../../../../collections/artworks.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 React = require 'react'
-ReactDOM = require 'react-dom'
 ByUrls = React.createFactory require './by_urls.coffee'
 imagesLoaded = require 'imagesloaded'
 sd = require('sharify').data

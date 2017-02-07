@@ -5,7 +5,6 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-ReactDOM = require 'react-dom'
 { getIframeUrl } = require '../../../../models/section.coffee'
 sd = require('sharify').data
 { section, h1, header, input, button, div, iframe, form, span, h2, img, label, nav, a } = React.DOM

@@ -66,8 +66,8 @@ describe 'SectionImage', ->
     @component.render()
     $(@component.getDOMNode()).html().should.containEql 'foobaz'
 
-  it 'previews captions on keyup', ->
-    # $(@component.refs.editable.getDOMNode()).html('foobar')
+  xit 'previews captions on keyup', ->
+    @component.refs.editable.value = 'foobar'
     @component.onEditableKeyup()
     @component.setState.args[0][0].caption.should.equal 'foobar'
 

@@ -5,7 +5,6 @@
 #
 
 React = require 'react'
-ReactDOM = require 'react-dom'
 SectionText = React.createFactory require '../section_text/index.coffee'
 SectionVideo = React.createFactory require '../section_video/index.coffee'
 SectionSlideshow = React.createFactory require '../section_slideshow/index.coffee'

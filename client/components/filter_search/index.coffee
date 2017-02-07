@@ -1,6 +1,5 @@
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 { label, input, div, button, a, h1, h2 } = React.DOM
 moment = require 'moment'
 sd = require('sharify').data

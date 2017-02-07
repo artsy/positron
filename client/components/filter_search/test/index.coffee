@@ -21,26 +21,27 @@ describe 'FilterSearch', ->
         ['icons']
       )
       FilterSearch.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
-      @component = ReactDOM.render React.createElement(FilterSearch,
-        {
+      props = {
           articles: [{id: '123', thumbnail_title: 'Game of Thrones', slug: 'artsy-editorial-game-of-thrones'}]
           url: 'url'
           selected: sinon.stub()
           checkable: true
           searchResults: sinon.stub()
         }
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'setState'
-        sinon.stub @component, 'addAutocomplete'
-        sinon.stub(@component.engine, 'get').yields [0,0,[{id: '456', thumbnail_title: 'finding nemo'}]]
-        done()
+      @rendered = ReactDOMServer.renderToString React.createElement(FilterSearch, props)
+      @component = ReactDOM.render React.createElement(FilterSearch, props), (@$el = $ "<div></div>")[0], =>
+        setTimeout =>
+          sinon.stub @component, 'setState'
+          sinon.stub @component, 'addAutocomplete'
+          sinon.stub(@component.engine, 'get').yields [0,0,[{id: '456', thumbnail_title: 'finding nemo'}]]
+          done()
 
   afterEach ->
     benv.teardown()
 
   xit 'renders an initial set of articles', ->
-    $(@component.getDOMNode()).html().should.containEql 'Game of Thrones'
-    $(@component.getDOMNode()).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+    $(@rendered).html().should.containEql 'Game of Thrones'
+    $(@rendered).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
 
   it 'selects the article when clicking the check button', ->
     r.simulate.click r.find @component, 'filter-search__checkcircle'
@@ -49,7 +50,7 @@ describe 'FilterSearch', ->
     @component.props.selected.args[0][0].slug.should.containEql 'artsy-editorial-game-of-thrones'
 
   it 'searches articles given a query', ->
-    @component.refs.searchQuery.getDOMNode().val = 'finding nemo'
+    @component.refs.searchQuery.val = 'finding nemo'
     @component.refs.searchQuery.props.onKeyUp()
     @component.props.searchResults.args[0][0][0].id.should.equal '456'
     @component.props.searchResults.args[0][0][0].thumbnail_title.should.equal 'finding nemo'

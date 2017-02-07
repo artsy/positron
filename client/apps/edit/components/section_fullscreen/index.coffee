@@ -12,7 +12,6 @@ try
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-ReactDOM = require 'react-dom'
 toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 sd = require('sharify').data
 { div, section, span, input, button, p, textarea, video, img } = React.DOM

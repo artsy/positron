@@ -9,7 +9,7 @@ module.exports = (el, props) ->
   ReactDOM.render React.createElement(AutocompleteSortableList, props), el
 
 module.exports.AutocompleteSortableList = AutocompleteSortableList = React.createClass
-
+  displayName: 'AutocompleteSortableList'
   mixins: [SortableMixin]
 
   getInitialState: ->

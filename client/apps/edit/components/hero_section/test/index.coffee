@@ -19,12 +19,14 @@ describe 'HeroSection', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      imagesloaded = sinon.stub()
-      # HeroSection = benv.require resolve __dirname, '../index'
+      window.jQuery = $
+      $.imagesLoaded = sinon.stub()
+      HeroSection = benv.require resolve __dirname, '../index'
       @SectionContainer = React.createClass
         render: ->
           div 'Hello World'
       HeroSection.__set__ 'SectionContainer', @SectionContainer
+      HeroSection.__set__ 'imagesLoaded', sinon.stub()
       props = {
         section: @section = new Backbone.Model
           url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'

@@ -3,11 +3,13 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 Section = require '../../../../../models/section.coffee'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -18,7 +20,7 @@ describe 'SectionSlideshow', ->
       benv.expose $: benv.require 'jquery'
       @SectionSlideshow = benv.require resolve __dirname, '../index'
       sinon.stub Backbone, 'sync'
-      @component = React.render @SectionSlideshow(
+      @component = ReactDOM.render React.createElement(@SectionSlideshow,
         section: new Section { type: 'slideshow', items: [
           { type: 'artwork', id: 'foo' }
           { type: 'artwork', id: 'bar' }
@@ -40,11 +42,12 @@ describe 'SectionSlideshow', ->
     Backbone.sync.args[1][1].url().should.containEql 'bar'
 
   it 'renders the images', ->
-    React.renderToString(@SectionSlideshow(
+    rendered = ReactDOMServer.renderToString React.createElement(@SectionSlideshow,
       section: new Section { type: 'slideshow', items: [
         { type: 'image', url: 'http://foobar.jpg' }
       ] }
       editing: false
       setEditing: ->
       changeLayout: ->
-    )).should.containEql 'http://foobar.jpg'
+    )
+    $(rendered).html().should.containEql 'http://foobar.jpg'

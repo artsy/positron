@@ -5,7 +5,6 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
