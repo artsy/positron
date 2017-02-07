@@ -2622,7 +2622,8 @@
     "jquery-on-infinite-scroll": {
       "version": "1.0.1",
       "from": "jquery-on-infinite-scroll@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/jquery-on-infinite-scroll/-/jquery-on-infinite-scroll-1.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/jquery-on-infinite-scroll/-/jquery-on-infinite-scroll-1.0.1.tgz",
+      "dev": true
     },
     "jsbn": {
       "version": "0.1.0",

@@ -579,6 +579,7 @@ describe 'Article', ->
       body = '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       badBody = '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       Article.save {
+        id: '5086df098523e60002000018'
         author_id: '5086df098523e60002000018'
         hero_section:
           type: 'image'
@@ -1095,12 +1096,12 @@ describe 'Article', ->
   describe '#present', ->
 
     it 'converts _id to id', ->
-      data = Article.present _.extend fixtures().articles, _id: 'foo'
+      data = Article.present _.extend {}, fixtures().articles, _id: 'foo'
       (data._id?).should.not.be.ok
       data.id.should.equal 'foo'
 
     it 'converts dates to ISO strings', ->
-      data = Article.present _.extend fixtures().articles, published_at: new Date, scheduled_publish_at: new Date
+      data = Article.present _.extend {}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date
       moment(data.updated_at).toISOString().should.equal data.updated_at
       moment(data.published_at).toISOString().should.equal data.published_at
       moment(data.scheduled_publish_at).toISOString().should.equal data.scheduled_publish_at
@@ -1111,5 +1112,5 @@ describe 'Article', ->
       data = Article.presentCollection
         total: 10
         count: 1
-        results: [_.extend fixtures().articles, _id: 'baz']
+        results: [_.extend {}, fixtures().articles, _id: 'baz']
       data.results[0].id.should.equal 'baz'

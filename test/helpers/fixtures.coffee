@@ -33,6 +33,7 @@ module.exports = ->
       {
         type: 'image',
         url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+        caption: 'This is a terrible caption'
       }
       {
         type: 'text',
@@ -42,6 +43,24 @@ module.exports = ->
         type: 'artworks',
         ids: ['5321b73dc9dc2458c4000196', '5321b71c275b24bcaa0001a5'],
         layout: 'overflow_fillwidth'
+        artworks: [
+          {
+            type: 'artwork'
+            title: 'The Four Hedgehogs'
+            id: '5321b73dc9dc2458c4000196'
+            image: 'https://artsy.net/artwork.jpg'
+            partner: name: 'Guggenheim'
+            artists: [ { name: 'Van Gogh' }, { name: 'Van Dogh' } ]
+          }
+          {
+            type: 'artwork'
+            title: 'The Four Hedgehogs 2'
+            id: '5321b71c275b24bcaa0001a5'
+            image: 'https://artsy.net/artwork2.jpg'
+            partner: name: 'Guggenheim'
+            artists: [ { name: 'Van Gogh' }]
+          }
+        ]
       }
       {
         type: 'text',
@@ -50,6 +69,24 @@ module.exports = ->
       {
         type: 'video',
         url: 'http://youtu.be/yYjLrJRuMnY'
+      }
+      {
+        type: 'image_set'
+        images: [
+          {
+            type: 'artwork'
+            title: 'The Four Hedgehogs 2'
+            id: '5321b71c275b24bcaa0001a5'
+            image: 'https://artsy.net/artwork2.jpg'
+            partner: name: 'Guggenheim'
+            artists: [ { name: 'Van Gogh' }]
+          }
+          {
+            type: 'image',
+            url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+            caption: 'This is a terrible caption'
+          }
+        ]
       }
     ]
     primary_featured_artist_ids: ['5086df098523e60002000012']

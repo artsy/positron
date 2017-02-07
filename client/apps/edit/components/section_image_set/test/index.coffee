@@ -18,6 +18,8 @@ describe 'SectionImageSet', ->
       constructor: ->
         setTimeout => @onload()
       onload: ->
+      width: 120
+      height: 90
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       SectionImageSet = benv.requireWithJadeify(
@@ -42,7 +44,7 @@ describe 'SectionImageSet', ->
               id: '123'
               image: 'https://artsy.net/artwork.jpg'
               partner: name: 'Guggenheim'
-              artist: name: 'Van Gogh'
+              artists: [ { name: 'Van Gogh' }, { name: 'Van Dogh' } ]
             }
           ]
         editing: false
@@ -68,12 +70,8 @@ describe 'SectionImageSet', ->
     setTimeout =>
       @component.setState.args[0][0].images[2].url.should.equal 'fooza'
       @component.setState.args[0][0].images[2].type.should.equal 'image'
-      done()
-
-  it 'saves the url after upload', (done) ->
-    @component.upload target: files: ['foo']
-    @gemup.args[0][1].done('fooza')
-    setTimeout =>
+      @component.setState.args[0][0].images[2].width.should.equal 120
+      @component.setState.args[0][0].images[2].height.should.equal 90
       @component.componentWillUpdate.called.should.be.ok
       done()
 
@@ -87,6 +85,7 @@ describe 'SectionImageSet', ->
     $(@component.getDOMNode()).html().should.containEql 'The Four Hedgehogs'
     $(@component.getDOMNode()).html().should.containEql 'Guggenheim'
     $(@component.getDOMNode()).html().should.containEql 'Van Gogh'
+    $(@component.getDOMNode()).html().should.containEql 'Van Dogh'
 
   it 'renders a preview', ->
     $(@component.getDOMNode()).html().should.containEql 'src="https://artsy.net/image.png" class="esis-preview-image"'

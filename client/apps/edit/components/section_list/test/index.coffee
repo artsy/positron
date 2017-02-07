@@ -74,17 +74,6 @@ describe 'SectionList', ->
   xit 'renders the sections', ->
     @$el.html().should.containEql 'Foo to the bar'
 
-  it 'converts image components to image_collection', ->
-    @SectionContainer.args[2][0].section.attributes.type.should.equal 'image_collection'
-    @SectionContainer.args[2][0].section.attributes.images[0].type.should.equal 'image'
-    @SectionContainer.args[2][0].section.attributes.images[0].url.should.equal 'http://artsy.net/image.jpg'
-
-  it 'converts artwork components to image_collection', ->
-    @SectionContainer.args[3][0].section.attributes.type.should.equal 'image_collection'
-    @SectionContainer.args[3][0].section.attributes.images[0].type.should.equal 'artwork'
-    @SectionContainer.args[3][0].section.attributes.images[0].artists[0].slug.should.equal 'rodrigo-valenzuela'
-    @SectionContainer.args[3][0].section.attributes.images[1].artists[0].slug.should.equal 'rodrigo-valenzuela-2'
-
   it 'sets an index for the section tools', ->
     @SectionTool.args[0][0].index.should.equal -1
     @SectionTool.args[1][0].index.should.equal 0
