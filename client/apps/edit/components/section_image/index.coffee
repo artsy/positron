@@ -89,23 +89,6 @@ module.exports = React.createClass
       onClick: @props.setEditing(true)
     },
       div { className: 'esi-controls-container edit-section-controls' },
-        nav { className: 'esi-nav es-layout' },
-          a {
-            style: {
-              backgroundImage: 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              backgroundSize: '38px'
-            }
-            className: 'esi-overflow-fillwidth'
-            onClick: @changeLayout('overflow_fillwidth')
-          }
-          a {
-            style: {
-              backgroundImage: 'url(/icons/edit_artworks_column_width.svg)'
-              backgroundSize: '22px'
-            }
-            className: 'esi-column-width'
-            onClick: @changeLayout('column_width')
-        }
         div { className: 'esi-inputs' },
           section { className: 'dashed-file-upload-container' },
             h1 {}, 'Drag & ',
