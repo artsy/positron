@@ -5,13 +5,12 @@ Backbone = require 'backbone'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
 
 Section = require '../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
-{ div } = React.DOM
+# { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 { fabricate } = require 'antigravity'
 
@@ -25,13 +24,12 @@ describe 'SectionArtworks', ->
         ['icons']
       )
       SectionArtworks.__set__ 'Autocomplete', sinon.stub()
-      props = {
+      @component = ReactDOM.render React.createElement(SectionArtworks, {
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
         setEditing: ->
         changeLayout: ->
-      }
-      @component = ReactDOM.render React.createElement(SectionArtworks, props), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub @component, 'forceUpdate'
         sinon.stub Backbone, 'sync'
@@ -63,9 +61,9 @@ describe 'SectionArtworks', ->
     Backbone.sync.args[0][1].url().should.containEql 'foo'
     Backbone.sync.args[1][1].url().should.containEql 'bar'
 
-  xit 'adds fillwidth styling if the layout is appropriate', ->
+  it 'adds fillwidth styling if the layout is appropriate', ->
     @component.props.section.artworks.reset [fixtures().artworks]
-    @component.render()
+    @component.render
     @component.fillwidth = sinon.stub()
     @component.props.section.set layout: 'overflow_fillwidth'
     @component.componentDidUpdate()
@@ -87,7 +85,7 @@ describe 'SectionArtworks', ->
     @component.state.artworks = [
       { id: '1', title: 'Foo to the bar' }
     ]
-    $(@component.getDOMNode()).html().should.containEql 'Foo to the bar'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Foo to the bar'
 
   it 'adds an artwork onSelect', ->
     @component.onSelect({},{ id: 'foo-work', value: 'Foo Title' })

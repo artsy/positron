@@ -92,7 +92,7 @@ module.exports = React.createClass
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
-    val = @refs.byUrl.getDOMNode().value
+    val = @refs.byUrl.value
     slug = _.last(val.split '/')
     @refs.byUrl.setState loading: true
     new Artwork(id: slug).fetch
@@ -103,7 +103,7 @@ module.exports = React.createClass
         ) if res.status is 404
       success: (artwork) =>
         @refs.byUrl.setState loading: false, errorMessage: ''
-        $(@refs.byUrl.getDOMNode()).val ''
+        $(@refs.byUrl).val ''
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
 

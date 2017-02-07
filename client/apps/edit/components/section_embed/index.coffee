@@ -4,7 +4,6 @@
 
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 
@@ -28,9 +27,9 @@ module.exports = React.createClass
 
   submitUrl: (e) ->
     e.preventDefault()
-    url = @refs.url.getDOMNode().value
-    height = @refs.height.getDOMNode().value
-    mobileHeight = @refs.mobileHeight.getDOMNode().value
+    url = @refs.url.value
+    height = @refs.height.value
+    mobileHeight = @refs.mobileHeight.value
     @props.section.set url: url, height: height, mobile_height: mobileHeight
     @setState loading: true
     @updateIframe url, height

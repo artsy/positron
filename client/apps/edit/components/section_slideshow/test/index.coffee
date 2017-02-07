@@ -7,10 +7,6 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 Section = require '../../../../../models/section.coffee'
-r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
-{ div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionSlideshow', ->

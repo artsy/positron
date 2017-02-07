@@ -115,7 +115,7 @@ module.exports = React.createClass
     e.preventDefault()
     val = @refs.byUrl.value
     slug = _.last(val.split '/')
-    $(@refs.byUrl.getDOMNode()).siblings('button').addClass('is-loading')
+    $(@refs.byUrl).siblings('button').addClass('is-loading')
     new Artwork(id: slug).fetch
       error: (m, res) =>
         if res.status is 404
