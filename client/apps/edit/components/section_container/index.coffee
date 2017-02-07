@@ -15,6 +15,7 @@ SectionToc = React.createFactory require '../section_toc/index.coffee'
 SectionImage = React.createFactory require '../section_image/index.coffee'
 SectionImageSet = React.createFactory require '../section_image_set/index.coffee'
 SectionImageCollection = React.createFactory require '../section_image_collection/index.coffee'
+SectionImage = React.createFactory require '../section_image/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('./icons.jade') arguments...
 
@@ -66,6 +67,7 @@ module.exports = React.createClass
           when 'image' then SectionImage
           when 'image_set' then SectionImageSet
           when 'image_collection' then SectionImageCollection
+          when 'image' then SectionImage
         )(
           section: @props.section
           editing: @props.editing
