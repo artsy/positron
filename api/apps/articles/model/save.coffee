@@ -257,8 +257,6 @@ typecastIds = (article) ->
     (callback) ->
       postSailthruAPI article, tags, images, callback
   ], (err, results) ->
-    console.log results
-    console.log err
     debug err if err
     cb()
 
