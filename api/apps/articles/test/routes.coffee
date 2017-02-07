@@ -17,7 +17,7 @@ describe 'routes', ->
       body: {}
       params: {}
       get: ->
-      user: _.extend(fixtures().users, _id: ObjectId '5086df098523e60002000012')
+      user: _.extend({}, fixtures().users, _id: ObjectId '5086df098523e60002000012')
     @res = { send: sinon.stub(), err: sinon.stub() }
     @next = sinon.stub()
 
@@ -74,10 +74,9 @@ describe 'routes', ->
     it 'throws a 404 for articles from non channel members', ->
       @User.hasChannelAccess = sinon.stub().returns false
       @req.user.type = 'User'
-      @req.article = _.extend(fixtures().articles,
+      @req.article = _.extend {}, fixtures().articles,
         published: false
         channel_id: ObjectId('4d8cd73191a5c50ce210002a')
-      )
       routes.show @req, @res, @next
       @res.err.args[0][0].should.equal 404
 
