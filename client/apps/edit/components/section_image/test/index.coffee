@@ -74,10 +74,3 @@ describe 'SectionImage', ->
     @component.state.src = 'foo'
     @component.onClickOff()
     @component.props.section.get('caption').should.equal 'foobar'
-
-  it 'changes the layout when clicked', ->
-    r.simulate.click r.find @component, 'esi-overflow-fillwidth'
-    @component.props.section.get('layout').should.equal 'overflow_fillwidth'
-    r.simulate.click r.find @component, 'esi-column-width'
-    @component.props.section.get('layout').should.equal 'column_width'
-

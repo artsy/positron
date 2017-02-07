@@ -131,41 +131,6 @@ removeStopWords = (title) ->
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@generateArtworks = (input, article, cb) ->
-  articleOrder = _.pluck(_.where(article.sections, type: 'artworks'), 'ids').join()
-  inputOrder = _.pluck(_.where(input.sections, type: 'artworks'), 'ids').join()
-  if input.sections?.length > 0
-    article.sections = input.sections
-  return cb null, article unless input.sections
-  emptyArtworks = _.filter input.sections, (section) ->
-    section.type is 'artworks' and section.artworks.length is 0
-  if emptyArtworks.length is 0 and inputOrder is articleOrder
-    return cb(null, article)
-  # Try to fetch and denormalize the artworks from Gravity asynchonously
-  artworkIds = _.pluck (_.where input.sections, type: 'artworks' ), 'ids'
-  Q.allSettled( for artworkId in _.flatten artworkIds
-    requestBluebird
-      .get("#{ARTSY_URL}/api/v1/artwork/#{artworkId}")
-      .set('X-Xapp-Token': artsyXapp)
-  ).done (responses) =>
-    fetchedArtworks = _.map responses, (res) ->
-      res.value?.body
-    newSections = []
-    for section in cloneDeep input.sections
-      if section.type is 'artworks'
-        section.artworks = []
-        for artworkId in section.ids
-          artwork = _.findWhere fetchedArtworks, _id: artworkId
-          if artwork
-            section.artworks.push denormalizedArtworkData artwork
-          else
-            section.ids = _.without section.ids, artworkId
-        # Section shouldn't be added if there are no artworks
-        section = {} if section.artworks.length is 0
-      newSections.push section unless _.isEmpty section
-    article.sections = newSections
-    cb(null, article)
-
 @indexForSearch = (article, cb) ->
   if article.sections
     sections = for section in article.sections
@@ -201,46 +166,6 @@ removeStopWords = (title) ->
       console.log(error) if error
   )
 
-denormalizedArtworkData = (artwork) ->
-  artwork = new Backbone.Model artwork
-  AdditionalImage = Backbone.Model.extend Image(SECURE_IMAGES_URL)
-  images = artwork.get('images')
-  defaultImage = new AdditionalImage(_.findWhere(images, is_default: true) or _.first images)
-  denormalizedArtwork =
-    type: 'artwork'
-    id: artwork.get('_id')
-    slug: artwork.get('id')
-    date: artwork.get('date')
-    title: artwork.get('title')
-    image: defaultImage.bestImageUrl(['larger','large', 'medium', 'small'])
-    partner:
-      name: getPartnerName artwork
-      slug: getPartnerLink artwork
-    artists: getArtistsNames artwork
-
-getArtistsNames = (artwork) ->
-  artists = []
-  if artwork.get('artists')?[0]
-    artwork.get('artists').forEach (artist) ->
-       artists.push({name: artist.name, slug: artist.id})
-  else
-    artists.push({name: artwork.get('artist')?.name, slug: artwork.get('artist')?.id})
-  artists
-
-getPartnerName = (artwork) ->
-  if artwork.get('collecting_institution')?.length > 0
-    artwork.get('collecting_institution')
-  else if artwork.get('partner')
-    artwork.get('partner').name
-  else
-    ''
-
-getPartnerLink = (artwork) ->
-  partner = artwork.get('partner')
-  return unless partner and partner.type isnt 'Auction'
-  if partner.default_profile_public and partner.default_profile_id
-    return partner.default_profile_id
-
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
@@ -264,6 +189,9 @@ sanitize = (article) ->
         for item in section.items when item.type is 'image' or item.type is 'video'
           item.caption = sanitizeHtml item.caption if item.type is 'image'
           item.url = sanitizeLink item.url if item.type is 'video'
+      if section.type in ['image_collection', 'image_set']
+        for item in section.images when item.type is 'image'
+          item.caption = sanitizeHtml item.caption
       section
   else
     sections = []
