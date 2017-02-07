@@ -33,7 +33,7 @@ describe 'ArticlesListView', ->
           offset: 0
           channel: {name: 'Artsy Editorial'}
         }
-      @stringComponent = ReactDOMServer.renderToString React.createElement(ArticlesListView, props)
+      @rendered = ReactDOMServer.renderToString React.createElement(ArticlesListView, props)
       @component = ReactDOM.render React.createElement(ArticlesListView, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           sinon.stub @component, 'setState'
@@ -43,9 +43,9 @@ describe 'ArticlesListView', ->
     benv.teardown()
 
   it 'renders the nav', ->
-    $(@stringComponent).html().should.containEql 'Published'
-    $(@stringComponent).html().should.containEql 'Drafts'
-    $(@stringComponent).html().should.containEql 'Artsy Editorial'
+    $(@rendered).html().should.containEql 'Published'
+    $(@rendered).html().should.containEql 'Drafts'
+    $(@rendered).html().should.containEql 'Artsy Editorial'
 
   it 'articles get passed along to list component', ->
     @component.state.articles.length.should.equal 1
