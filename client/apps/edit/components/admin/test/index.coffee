@@ -104,7 +104,7 @@ describe 'EditAdmin', ->
       @view.article.set {scheduled_publish_at: null}
       date = '11/11/11'
       time = '12:30'
-      dateAndTime = date + ' ' + time
+      dateAndTime = moment(date + ' ' + time).toISOString
       global.confirm = -> true
       @view.$('.edit-admin-input-date').val(date)
       @view.$('.edit-admin-input-time').val(time)
@@ -126,7 +126,7 @@ describe 'EditAdmin', ->
       @view.$('.edit-admin-input-date').val(date)
       @view.$('.edit-admin-input-time').val(time)
       @view.$('.edit-admin-input-time').trigger('blur')
-      @view.article.get('published_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+      @view.article.get('published_at').should.containEql moment(dateAndTime).toISOString()
 
     it 'validates the date before trying to set it', ->
       currentDate = moment().format('L')

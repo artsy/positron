@@ -2,10 +2,13 @@ benv = require 'benv'
 sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 
 describe 'ArticleList', ->
 
@@ -18,8 +21,7 @@ describe 'ArticleList', ->
         ['icons']
       )
       ArticleList.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
-      @component = React.render ArticleList(
-        {
+      props = {
           articles: [
             {
               id: '123'
@@ -39,7 +41,8 @@ describe 'ArticleList', ->
           checkable: true
           display: 'email'
         }
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      @rendered = ReactDOMServer.renderToString React.createElement(ArticleList, props)
+      @component = ReactDOM.render React.createElement(ArticleList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         done()
 
@@ -47,15 +50,15 @@ describe 'ArticleList', ->
     benv.teardown()
 
   it 'renders an initial set of articles', ->
-    $(@component.getDOMNode()).html().should.containEql 'Game of Thrones'
-    $(@component.getDOMNode()).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+    $(@rendered).html().should.containEql 'Game of Thrones'
+    $(@rendered).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
 
   it 'selects the article when clicking the check button', ->
-    r.simulate.click @component.refs['123'].getDOMNode()
+    r.simulate.click @component.refs['123']
     @component.props.selected.args[0][0].id.should.containEql '123'
     @component.props.selected.args[0][0].thumbnail_title.should.containEql 'Game of Thrones'
     @component.props.selected.args[0][0].slug.should.containEql 'artsy-editorial-game-of-thrones'
 
   it 'can render email headlines and images', ->
-    $(@component.getDOMNode()).html().should.containEql 'Email of Thrones'
-    $(@component.getDOMNode()).html().should.containEql 'image_url.jpg'
+    $(@rendered).html().should.containEql 'Email of Thrones'
+    $(@rendered).html().should.containEql 'image_url.jpg'

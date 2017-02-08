@@ -10,6 +10,7 @@ sd = require('sharify').data
   li, img, p, strong, span } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'SectionTOC'
 
   getInitialState: ->
     links: @props.section.get('links')

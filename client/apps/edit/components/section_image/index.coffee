@@ -19,6 +19,7 @@ icons = -> require('./icons.jade') arguments...
 { crop, resize, fill } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
+  displayName: 'SectionImage'
 
   getInitialState: ->
     src: @props.section.get('url')
@@ -69,19 +70,19 @@ module.exports = React.createClass
 
   attachScribe: ->
     return if @scribe? or not @props.editing
-    @scribe = new Scribe @refs.editable.getDOMNode()
+    @scribe = new Scribe @refs.editable
     @scribe.use scribePluginSanitizer {
       tags:
         i: true
         a: { href: true, target: '_blank' }
     }
-    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
+    @scribe.use scribePluginToolbar @refs.toolbar
     @scribe.use scribePluginLinkTooltip()
-    toggleScribePlaceholder @refs.editable.getDOMNode()
+    toggleScribePlaceholder @refs.editable
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editable.getDOMNode()
-    @setState caption: $(@refs.editable.getDOMNode()).html()
+    toggleScribePlaceholder @refs.editable
+    @setState caption: $(@refs.editable).html()
 
   render: ->
     section {
