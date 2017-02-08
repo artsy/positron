@@ -12,7 +12,6 @@ SectionEmbed = React.createFactory require '../section_embed/index.coffee'
 SectionFullscreen = React.createFactory require '../section_fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../section_callout/index.coffee'
 SectionToc = React.createFactory require '../section_toc/index.coffee'
-SectionImage = React.createFactory require '../section_image/index.coffee'
 SectionImageSet = React.createFactory require '../section_image_set/index.coffee'
 SectionImageCollection = React.createFactory require '../section_image_collection/index.coffee'
 SectionImage = React.createFactory require '../section_image/index.coffee'
@@ -63,7 +62,6 @@ module.exports = React.createClass
           when 'fullscreen' then SectionFullscreen
           when 'callout' then SectionCallout
           when 'toc' then SectionToc
-          when 'image' then SectionImage
           when 'image_set' then SectionImageSet
           when 'image_collection' then SectionImageCollection
           when 'image' then SectionImage

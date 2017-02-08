@@ -27,15 +27,13 @@ describe 'SectionText', ->
         'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc', 'scribePluginJumpLink', 'scribePluginFollowLinkTooltip']
         SectionText.__set__ name, sinon.stub()
       SectionText::attachScribe = sinon.stub()
-      props = {
+      @component = ReactDOM.render React.createElement(SectionText, {
         section: new Backbone.Model { body: '<p>Foo to the bar</p>', type: 'text' }
         onSetEditing: @onSetEditing = sinon.stub()
         setEditing: @setEditing = sinon.stub()
         editing: false
         key: 4
-      }
-      @rendered = ReactDOMServer.renderToString React.createElement(SectionText, props)
-      @component = ReactDOM.render React.createElement(SectionText, props), $("<div></div>")[0], ->
+      }), $("<div></div>")[0], ->
         setTimeout -> done()
 
 
