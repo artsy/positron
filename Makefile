@@ -31,7 +31,7 @@ test-s:
 # Generate minified assets from the /assets folder and output it to /public.
 assets:
 	mkdir -p client/public/assets
-	$(BIN)/ezel-assets client/assets/ client/public/assets/
+	NODE_ENV=production $(BIN)/ezel-assets client/assets/ client/public/assets/
 
 # Find unlinked artists
 unlinked:
