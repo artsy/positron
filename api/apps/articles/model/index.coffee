@@ -50,7 +50,6 @@ Q = require 'bluebird-q'
       return callback err if err
       generateKeywords input, article, (err, article) ->
         debug err if err
-        console.log article
         publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
         unPublishing = article.published and not input.published
         article = _.extend article, _.omit(input, 'slug'), updated_at: new Date

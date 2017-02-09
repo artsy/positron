@@ -9,6 +9,7 @@ async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
 jade = require 'jade'
+Article = require '../../../models/article.coffee'
 
 @distributeArticle = (article, cb) =>
   tags = ['article']
@@ -42,14 +43,19 @@ cleanArticlesInSailthru = (slugs = []) =>
         @deleteArticleFromSailthru slug, ->
 
 postFacebookAPI = (article, cb) ->
+  article = new Article article
+  console.log article.fullHref()
   jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
     {
-      article: new Backbone.Model article
+      article: new Article article
+      forceUrl: FORCE_URL
       sd: {}
       toSentence: _s.toSentence
       _: _
     },
     (err, html) ->
+      console.log err
+      console.log html
       request
         .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
         .send
@@ -57,8 +63,6 @@ postFacebookAPI = (article, cb) ->
           development_mode: true
           html_source: html
         .end (err, response) =>
-          console.log err
-          console.log response
           return cb err if err
           cb response
 
