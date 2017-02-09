@@ -6,9 +6,8 @@ _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
-{ validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, removeFromSearch,
-deleteArticleFromSailthru, onUnpublish } = Save = require './save'
+{ validate, onPublish, generateSlugs, generateKeywords, sanitizeAndSave, onUnpublish } = Save = require './save'
+{ removeFromSearch, deleteArticleFromSailthru } = require './distribute'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -51,6 +50,7 @@ Q = require 'bluebird-q'
       return callback err if err
       generateKeywords input, article, (err, article) ->
         debug err if err
+        console.log article
         publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
         unPublishing = article.published and not input.published
         article = _.extend article, _.omit(input, 'slug'), updated_at: new Date
