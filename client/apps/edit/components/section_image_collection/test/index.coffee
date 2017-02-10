@@ -3,12 +3,10 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
-r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
-  findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
-{ div } = React.DOM
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+
 fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionImageCollection', ->
@@ -30,7 +28,7 @@ describe 'SectionImageCollection', ->
       SectionImageCollection.__set__ 'Autocomplete', sinon.stub()
       SectionImageCollection.__set__ 'Input', sinon.stub()
       SectionImageCollection.__set__ 'resize', (url)-> url
-      @component = React.render SectionImageCollection(
+      props = {
         section: new Backbone.Model
           type: 'image_collection'
           images: [
@@ -52,7 +50,9 @@ describe 'SectionImageCollection', ->
           ]
         editing: false
         setEditing: -> ->
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @rendered = ReactDOMServer.renderToString React.createElement(SectionImageCollection, props)
+      @component = ReactDOM.render React.createElement(SectionImageCollection, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub Backbone, 'sync'
         sinon.stub @component, 'removeItem'
@@ -76,17 +76,17 @@ describe 'SectionImageCollection', ->
       done()
 
   it 'renders an image', ->
-    $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/image.png'
+    $(@rendered).html().should.containEql 'https://artsy.net/image.png'
 
   it 'renders an artwork', ->
-    $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/artwork.jpg'
+    $(@rendered).html().should.containEql 'https://artsy.net/artwork.jpg'
 
   it 'renders artwork data', ->
-    $(@component.getDOMNode()).html().should.containEql 'The Four Hedgehogs'
-    $(@component.getDOMNode()).html().should.containEql 'Guggenheim'
-    $(@component.getDOMNode()).html().should.containEql 'Van Gogh'
+    $(@rendered).html().should.containEql 'The Four Hedgehogs'
+    $(@rendered).html().should.containEql 'Guggenheim'
+    $(@rendered).html().should.containEql 'Van Gogh'
 
   it 'renders a preview', ->
-    $(@component.getDOMNode()).find('img').length.should.equal 2
-    $(@component.getDOMNode()).find('.esic-caption--display').css('display').should.equal 'block'
-    $(@component.getDOMNode()).find('.esic-caption--display').html().should.containEql '<p>Here is a caption</p>'
+    $(@rendered).find('img').length.should.equal 2
+    $(@rendered).find('.esic-caption--display').css('display').should.equal 'block'
+    $(@rendered).find('.esic-caption--display').html().should.containEql '<p>Here is a caption</p>'

@@ -18,6 +18,7 @@ icons = -> require('./icons.jade') arguments...
 ROW_OVERFLOW_PADDING = 20
 
 module.exports = React.createClass
+  displayName: 'SectionArtworks'
 
   getInitialState: ->
     urlsValue: ''
@@ -38,7 +39,7 @@ module.exports = React.createClass
     @toggleFillwidth()
 
   setupAutocomplete: ->
-    $el = $(@refs.autocomplete.getDOMNode())
+    $el = $(@refs.autocomplete)
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $el
@@ -67,7 +68,7 @@ module.exports = React.createClass
     new Artwork(id: selected.id).fetch
       success: (artwork) =>
         @props.section.artworks.add artwork
-    $(@refs.autocomplete.getDOMNode()).val('').focus()
+    $(@refs.autocomplete).val('').focus()
 
   toggleFillwidth: ->
     return unless @props.section.artworks.length
@@ -79,14 +80,14 @@ module.exports = React.createClass
     @prevLength = @props.section.artworks.length
 
   fillwidth: ->
-    if $(@refs.artworks.getDOMNode()).find('img').length > 1
-      $(@refs.artworks.getDOMNode()).fillwidthLite
+    if $(@refs.artworks).find('img').length > 1
+      $(@refs.artworks).fillwidthLite
         gutterSize: 20
         apply: (img, i) ->
           img.$el.closest('li').width(img.width)
 
   removeFillwidth: ->
-    $(@refs.artworks.getDOMNode()).find('li').css(width: '', padding: '')
+    $(@refs.artworks).find('li').css(width: '', padding: '')
 
   onClickOff: ->
     return @props.section.destroy() if @props.section.artworks.length is 0
