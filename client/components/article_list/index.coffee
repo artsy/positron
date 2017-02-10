@@ -12,7 +12,8 @@ React = require 'react'
 moment = require 'moment'
 icons = -> require('./icons.jade') arguments...
 
-module.exports = ArticleList = React.createClass
+module.exports = React.createClass
+  displayName: 'ArticleList'
 
   getDisplayAttrs: (article) ->
     if @props.display is 'email' and article.email_metadata

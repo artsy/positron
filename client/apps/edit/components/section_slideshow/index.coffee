@@ -10,6 +10,7 @@ imagesLoaded = require 'imagesloaded'
 { div, section, ul, li, img, p, strong, iframe } = React.DOM
 
 module.exports = React.createClass
+  displayName: 'SectionSlideshow'
 
   componentDidMount: ->
     @props.section.fetchSlideshowArtworks success: => @forceUpdate()
@@ -19,12 +20,12 @@ module.exports = React.createClass
     @lockWidths()
 
   lockWidths: ->
-    imagesLoaded @refs.list.getDOMNode(), =>
+    imagesLoaded @refs.list, =>
       width = 0
-      $(@refs.list.getDOMNode()).children('li').each ->
+      $(@refs.list).children('li').each ->
         $(this).width $(this).find('img').width()
         width += $(this).outerWidth(true)
-      $(@refs.list.getDOMNode()).width width
+      $(@refs.list).width width
 
   render: ->
     section { className: 'edit-section-slideshow' },

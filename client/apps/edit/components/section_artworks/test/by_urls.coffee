@@ -4,10 +4,13 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
@@ -17,10 +20,11 @@ describe 'ByUrls', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       ByUrls = benv.require  resolve(__dirname, '../by_urls')
-      @component = React.render ByUrls(
+      props = {
         artworks: new Backbone.Collection [fixtures().artworks]
         fetchArtworks: sinon.stub()
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @component = ReactDOM.render React.createElement(ByUrls, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub Backbone, 'sync'
         done()
@@ -30,7 +34,7 @@ describe 'ByUrls', ->
     benv.teardown()
 
   it 'adds artworks from urls', ->
-    $(@component.refs.textarea.getDOMNode()).val 'artsy.net/foo\nartsy.net/baz'
+    $(@component.refs.textarea).val 'artsy.net/foo\nartsy.net/baz'
     @component.props.artworks = []
     @component.addArtworksFromUrls (preventDefault: ->)
     @component.props.fetchArtworks.args[0][0].join('').should.equal 'foobaz'

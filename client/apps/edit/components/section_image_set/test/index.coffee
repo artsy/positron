@@ -3,12 +3,10 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
-r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
-  findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
-{ div } = React.DOM
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+
 fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionImageSet', ->
@@ -29,7 +27,7 @@ describe 'SectionImageSet', ->
       SectionImageSet.__set__ 'Autocomplete', sinon.stub()
       SectionImageSet.__set__ 'Input', sinon.stub()
       SectionImageSet.__set__ 'resize', (url)-> url
-      @component = React.render SectionImageSet(
+      props = {
         section: new Backbone.Model
           type: 'image_set'
           images: [
@@ -49,13 +47,16 @@ describe 'SectionImageSet', ->
           ]
         editing: false
         setEditing: -> ->
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'setState'
-        sinon.stub @component, 'componentWillUpdate'
-        sinon.stub Backbone, 'sync'
-        sinon.stub @component, 'removeItem'
-        sinon.stub $, 'ajax'
-        done()
+      }
+      @rendered = ReactDOMServer.renderToString React.createElement(SectionImageSet, props)
+      @component = ReactDOM.render React.createElement(SectionImageSet, props), (@$el = $ "<div></div>")[0], =>
+        setTimeout =>
+          sinon.stub @component, 'setState'
+          sinon.stub @component, 'componentWillUpdate'
+          sinon.stub Backbone, 'sync'
+          sinon.stub @component, 'removeItem'
+          sinon.stub $, 'ajax'
+          done()
 
   afterEach ->
     $.ajax.restore()
@@ -76,17 +77,17 @@ describe 'SectionImageSet', ->
       done()
 
   it 'renders an image', ->
-    $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/image.png'
+    $(@rendered).html().should.containEql 'https://artsy.net/image.png'
 
   it 'renders an artwork', ->
-    $(@component.getDOMNode()).html().should.containEql 'https://artsy.net/artwork.jpg'
+    $(@rendered).html().should.containEql 'https://artsy.net/artwork.jpg'
 
   it 'renders artwork data', ->
-    $(@component.getDOMNode()).html().should.containEql 'The Four Hedgehogs'
-    $(@component.getDOMNode()).html().should.containEql 'Guggenheim'
-    $(@component.getDOMNode()).html().should.containEql 'Van Gogh'
-    $(@component.getDOMNode()).html().should.containEql 'Van Dogh'
+    $(@rendered).html().should.containEql 'The Four Hedgehogs'
+    $(@rendered).html().should.containEql 'Guggenheim'
+    $(@rendered).html().should.containEql 'Van Gogh'
+    $(@rendered).html().should.containEql 'Van Dogh'
 
   it 'renders a preview', ->
-    $(@component.getDOMNode()).html().should.containEql 'src="https://artsy.net/image.png" class="esis-preview-image"'
-    $(@component.getDOMNode()).html().should.containEql '"https://artsy.net/artwork.jpg" class="esis-preview-image"'
+    $(@rendered).html().should.containEql 'src="https://artsy.net/image.png" class="esis-preview-image"'
+    $(@rendered).html().should.containEql '"https://artsy.net/artwork.jpg" class="esis-preview-image"'

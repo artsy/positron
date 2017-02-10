@@ -3,11 +3,13 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-require 'react/addons'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 r =
-  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
-  simulate: React.addons.TestUtils.Simulate
-  findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
+  findAll: ReactTestUtils.scryRenderedDOMComponentsWithClass
 rewire = require 'rewire'
 User = rewire '../../../../../models/user.coffee'
 fixtures = require '../../../../../../test/helpers/fixtures'
@@ -24,14 +26,15 @@ describe 'SectionTool', ->
       @SectionTool.__set__ 'sd',
         USER: type: 'Admin', email: 'kana@artsymail.com'
         CURRENT_CHANNEL: fixtures().channels
-      @component = React.render @SectionTool(
+      props = {
         sections: @sections = new Backbone.Collection [
           { body: '<p>Foo to the bar</p>', type: 'text' }
           { body: '<p>Foo to the bar <a class="is-jump-link" name="andy">Andy</a></p>', type: 'text' }
         ]
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()
-      ), $("<div></div>")[0], -> setTimeout -> done()
+      }
+      @component = ReactDOM.render React.createElement(@SectionTool, props), $("<div></div>")[0], -> setTimeout -> done()
 
   afterEach ->
     benv.teardown()
@@ -57,7 +60,7 @@ describe 'SectionTool - Hero', ->
       SectionTool.__set__ 'sd',
         USER: type: 'Admin', email: 'kana@artsymail.com'
         CURRENT_CHANNEL: fixtures().channels
-      @component = React.render SectionTool(
+      props = {
         sections: new Backbone.Collection [
           { type: 'fullscreen' }
         ]
@@ -66,7 +69,10 @@ describe 'SectionTool - Hero', ->
         setHero: ->
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()
-      ), $("<div></div>")[0], -> setTimeout -> done()
+      }
+      @component = ReactDOM.render React.createElement(SectionTool, props), $("<div></div>")[0], -> setTimeout -> done()
+      props.hasSection = true
+      @rendered = ReactDOMServer.renderToString React.createElement(SectionTool, props)
 
   afterEach ->
     benv.teardown()
@@ -76,5 +82,4 @@ describe 'SectionTool - Hero', ->
     @component.props.sections.first().get('type').should.equal 'fullscreen'
 
   it 'disables the fullscreen section when a section exists on the article', ->
-    @component.props.hasSection = true
-    (r.find @component, 'edit-section-tool-hero-fullscreen').props.onClick?.should.be.false
+    $(@rendered).html().should.containEql 'edit-section-tool-hero-fullscreen is-disabled'
