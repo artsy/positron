@@ -1,12 +1,16 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 request = require 'superagent'
+React = require 'react'
+ReactDOM = require 'react-dom'
 async = require 'async'
 featuredListTemplate = -> require('./featured_list.jade') arguments...
 sd = require('sharify').data
 _s = require 'underscore.string'
 moment = require 'moment'
 ImageUploadForm = require '../../../../components/image_upload_form/index.coffee'
+AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
+AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
 { crop } = require '../../../../components/resizer/index.coffee'
 
 module.exports = class EditAdmin extends Backbone.View
@@ -35,7 +39,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-fair')[0],
       name: 'fair_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
@@ -61,7 +64,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairProgrammingAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
       name: 'fair_programming_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
@@ -87,7 +89,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupArtsyAtTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
       name: 'fair_artsy_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
@@ -113,7 +114,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupAboutTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
       name: 'fair_about_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
@@ -139,7 +139,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupPartnerAutocomplete: ->
     return unless @channel.hasAssociation 'partners'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-partner')[0],
       name: 'partner_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
@@ -165,7 +164,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupAuctionAutocomplete: ->
     return unless @channel.hasAssociation 'auctions'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     list = new AutocompleteList @$('#edit-admin-auction')[0],
       name: 'auction_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
@@ -193,7 +191,6 @@ module.exports = class EditAdmin extends Backbone.View
     if @article.get('hero_section')?.type is 'fullscreen'
       @$('#edit-admin-section').addClass 'is-error'
       return
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @section_ids = @article.get 'section_ids' or []
     list = new AutocompleteList @$('#edit-admin-section')[0],
       name: 'section_ids[]'
@@ -219,7 +216,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupShowsAutocomplete: ->
     return unless @channel.hasAssociation 'shows'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @show_ids = @article.get 'show_ids' or []
     list = new AutocompleteList @$('#edit-admin-shows')[0],
       name: 'show_ids[]'
@@ -243,14 +239,14 @@ module.exports = class EditAdmin extends Backbone.View
       list.setState loading: false
 
   setupBiographyAutocomplete: ->
-    AutocompleteSelect = require '../../../../components/autocomplete_select/index.coffee'
-    select = AutocompleteSelect @$('#edit-admin-biography')[0],
+    select = new AutocompleteSelect @$('#edit-admin-biography')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
       placeholder: 'Search artist by name...'
       filter: (artists) -> for artist in artists
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
         @article.save biography_for_artist_id: item.id
+        select.setState value: item.name, loading: false
       cleared: =>
         @article.save biography_for_artist_id: null
     if id = @article.get 'biography_for_artist_id'
@@ -262,7 +258,6 @@ module.exports = class EditAdmin extends Backbone.View
       select.setState loading: false
 
   setupContributingAuthors: ->
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @contributing_authors = @article.get 'contributing_authors' or []
     list = new AutocompleteList @$('#edit-admin-contributing-authors')[0],
       name: 'contributing_authors[]'
@@ -377,7 +372,6 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupSuperArticleAutocomplete: ->
     return unless @channel.hasFeature 'superArticle'
-    AutocompleteList = require '../../../../components/autocomplete_list/index.coffee'
     @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
     list = new AutocompleteList @$('#edit-admin-related-articles')[0],
       name: 'related_articles[]'
@@ -464,7 +458,7 @@ module.exports = class EditAdmin extends Backbone.View
     date = moment(date)
     publishDate = date.format('L')
     publishTime = date.format('HH:mm')
-    saveFormat = date.toDate()
+    saveFormat = moment(date).toISOString()
     $('#edit-admin-publish-date > input').val(publishDate)
     $('#edit-admin-schedule-publish-time > input').val(publishTime)
     cb saveFormat
