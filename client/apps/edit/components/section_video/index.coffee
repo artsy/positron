@@ -10,7 +10,6 @@ sd = require('sharify').data
 { section, h1, header, input, button, div, iframe, form, span, h2, img, label, nav, a } = React.DOM
 
 module.exports = React.createClass
-  displayName: 'SectionVideo'
 
   getInitialState: ->
     progress: null
@@ -19,7 +18,7 @@ module.exports = React.createClass
     layout: @props.section.get('layout') or 'column_width'
 
   componentDidMount: ->
-    $(@refs.input).focus() unless @props.section.get('url')
+    $(@refs.input.getDOMNode()).focus() unless @props.section.get('url')
 
   changeLayout: (layout) -> =>
     @setState layout: layout
@@ -42,7 +41,7 @@ module.exports = React.createClass
       @props.section.set cover_image_url: @state.coverSrc
 
   onChangeUrl: (e) ->
-    @props.section.set url: $(@refs.input).val()
+    @props.section.set url: $(@refs.input.getDOMNode()).val()
     @forceUpdate()
 
   uploadCoverImage: (e) ->

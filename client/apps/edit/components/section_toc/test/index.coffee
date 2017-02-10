@@ -3,7 +3,7 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-ReactDOM = require 'react-dom'
+require 'react/addons'
 
 describe 'SectionToc', ->
 
@@ -11,7 +11,7 @@ describe 'SectionToc', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       SectionToc = benv.require resolve(__dirname, '../index')
-      @component = ReactDOM.render React.createElement(SectionToc,
+      @component = React.render SectionToc(
         section: new Backbone.Model { links: [ { name: 'andy', value: 'Andy' } ] , type: 'toc' }
         onSetEditing: @onSetEditing = sinon.stub()
         setEditing: @setEditing = sinon.stub()

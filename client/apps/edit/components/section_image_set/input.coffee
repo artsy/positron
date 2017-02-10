@@ -12,7 +12,6 @@ toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
 { div, a, p, nav, button } = React.DOM
 
 module.exports = React.createClass
-  displayName: 'ImageCaptionInput'
 
   getInitialState: ->
     caption: @props.caption or ''
@@ -28,22 +27,22 @@ module.exports = React.createClass
   attachScribe: ->
     return if @scribe? or not @props.editing
     return unless @refs.editable
-    @scribe = new Scribe @refs.editable
+    @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizer {
       tags:
         i: true
         a: { href: true, target: '_blank' }
     }
-    @scribe.use scribePluginToolbar @refs.toolbar
+    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
-    toggleScribePlaceholder @refs.editable
+    toggleScribePlaceholder @refs.editable.getDOMNode()
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editable
-    url = $(@refs.editable).data('id')
+    toggleScribePlaceholder @refs.editable.getDOMNode()
+    url = $(@refs.editable.getDOMNode()).data('id')
     newImages = _.clone @props.images
     image = _.find(newImages, url: url)
-    image.caption = $(@refs.editable).html()
+    image.caption = $(@refs.editable.getDOMNode()).html()
 
   render: ->
     div { className: 'esis-caption-container' },

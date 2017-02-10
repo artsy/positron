@@ -3,14 +3,11 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../test/helpers/fixtures.coffee'
-
+require 'react/addons'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
+  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
+  simulate: React.addons.TestUtils.Simulate
 
 describe 'ArticlesListView', ->
 
@@ -19,7 +16,7 @@ describe 'ArticlesListView', ->
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
       $.onInfiniteScroll = sinon.stub()
-      ArticlesListView = mod =  benv.require resolve(__dirname, '../../client/client')
+      { ArticlesListView } = mod =  benv.require resolve(__dirname, '../../client/client')
       mod.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
@@ -27,25 +24,24 @@ describe 'ArticlesListView', ->
         ARTICLES: [_.extend fixtures().articles]
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
-      props = {
+      @component = React.render ArticlesListView(
+        {
           articles: [_.extend fixtures().articles, id: '456']
           published: true
           offset: 0
           channel: {name: 'Artsy Editorial'}
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(ArticlesListView, props)
-      @component = ReactDOM.render React.createElement(ArticlesListView, props), (@$el = $ "<div></div>")[0], =>
-        setTimeout =>
-          sinon.stub @component, 'setState'
-          done()
+      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+        sinon.stub @component, 'setState'
+        done()
 
   afterEach ->
     benv.teardown()
 
   it 'renders the nav', ->
-    $(@rendered).html().should.containEql 'Published'
-    $(@rendered).html().should.containEql 'Drafts'
-    $(@rendered).html().should.containEql 'Artsy Editorial'
+    $(@component.getDOMNode()).html().should.containEql 'Published'
+    $(@component.getDOMNode()).html().should.containEql 'Drafts'
+    $(@component.getDOMNode()).html().should.containEql 'Artsy Editorial'
 
   it 'articles get passed along to list component', ->
     @component.state.articles.length.should.equal 1

@@ -5,7 +5,6 @@
 #
 
 React = require 'react'
-ReactDOM = require 'react-dom'
 Article = require '../../models/article.coffee'
 Channel = require '../../models/channel.coffee'
 EditLayout = require './components/layout/index.coffee'
@@ -24,12 +23,12 @@ async = require 'async'
     new EditHeader el: $('#edit-header'), article: @article
     new EditDisplay el: $('#edit-display'), article: @article
     new EditAdmin el: $('#edit-admin'), article: @article, channel: channel
-    ReactDOM.render(
+    React.render(
       SectionList(sections: @article.sections)
       $('#edit-sections')[0]
     )
     if @article.get('hero_section') != null or channel.hasFeature 'hero'
-      ReactDOM.render(
+      React.render(
         HeroSection(section: @article.heroSection, hasSection: @article.get('section_ids')?.length > 0)
         $('#edit-hero-section')[0]
       )

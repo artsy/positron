@@ -19,7 +19,6 @@ SectionImage = React.createFactory require '../section_image/index.coffee'
 icons = -> require('./icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'SectionContainer'
 
   onClickOff: ->
     @setEditing(off)()

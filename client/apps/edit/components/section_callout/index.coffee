@@ -6,7 +6,6 @@
 Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 sd = require('sharify').data
 gemup = require 'gemup'
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
@@ -15,7 +14,6 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Article = require '../../../../models/article.coffee'
 
 module.exports = React.createClass
-  displayName: 'SectionCallout'
 
   getInitialState: ->
     article: @props.section.get('article') or null
@@ -83,24 +81,24 @@ module.exports = React.createClass
 
   setText: ->
     @setState
-      text: $(@refs.textInput).val()
+      text: $(@refs.textInput.getDOMNode()).val()
     @onClickOff()
 
   setHideImage: ->
     @setState
-      hide_image: $(@refs.checkInput).is(':checked')
+      hide_image: $(@refs.checkInput.getDOMNode()).is(':checked')
     @onClickOff()
 
   setTopStories: ->
     @setState
-      top_stories: $(@refs.topStories).is(':checked')
+      top_stories: $(@refs.topStories.getDOMNode()).is(':checked')
     @onClickOff()
 
   componentWillUnmount: ->
     @autocomplete.remove()
 
   setupAutocomplete: ->
-    $el = $(@refs.autocomplete)
+    $el = $(@refs.autocomplete.getDOMNode())
     @autocomplete = new Autocomplete
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
       el: $el

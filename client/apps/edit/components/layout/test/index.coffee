@@ -99,12 +99,12 @@ describe 'EditLayout', ->
   describe '#popLockControls', ->
 
     it 'locks the controls to the top when you scroll', ->
+      @view.$window = scrollTop: -> 100
       @view.$el.append( $section = $
-        "<div class='edit-section-container' data-editing='true' style='height:300px'>
+        "<div class='edit-section-container' data-editing='true'>
           <div class='edit-section-controls'></div>
         </div>"
       )
-      @view.$window = scrollTop: -> 100
       @view.popLockControls()
       $($section.find('.edit-section-controls')).attr('data-fixed')
         .should.equal 'true'

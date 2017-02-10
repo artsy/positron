@@ -9,7 +9,6 @@ SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
-  displayName: 'HeroSection'
 
   getInitialState: ->
     { editing: false }

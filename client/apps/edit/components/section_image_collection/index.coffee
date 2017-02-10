@@ -15,7 +15,6 @@ Input = React.createFactory require '../section_image_set/input.coffee'
 { resize } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
-  displayName: 'SectionImageCollection'
 
   getInitialState: ->
     images: @props.section.get('images') or []
@@ -23,7 +22,7 @@ module.exports = React.createClass
     progress: null
 
   componentDidMount: ->
-    @$list = $(@refs.images)
+    @$list = $(@refs.images.getDOMNode())
     @setupAutocomplete()
     imagesLoaded @$list, =>
       if @state.images.length > 1 and @state.layout is 'overflow_fillwidth'
@@ -35,7 +34,7 @@ module.exports = React.createClass
     @autocomplete.remove()
 
   setupAutocomplete: ->
-    $el = $(@refs.autocomplete)
+    $el = $(@refs.autocomplete.getDOMNode())
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $el
@@ -66,7 +65,7 @@ module.exports = React.createClass
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @props.section.set images: newImages
-        $(@refs.autocomplete).val('').focus()
+        $(@refs.autocomplete.getDOMNode()).val('').focus()
         @toggleFillwidth() if @state.images.length > 1
 
   upload: (e) ->
@@ -113,20 +112,20 @@ module.exports = React.createClass
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
-    val = @refs.byUrl.value
+    val = @refs.byUrl.getDOMNode().value
     slug = _.last(val.split '/')
-    $(@refs.byUrl).siblings('button').addClass('is-loading')
+    $(@refs.byUrl.getDOMNode()).siblings('button').addClass('is-loading')
     new Artwork(id: slug).fetch
       error: (m, res) =>
         if res.status is 404
-          $(@refs.byUrl).val('').attr('placeholder', 'Artwork not found')
+          $(@refs.byUrl.getDOMNode()).val('').attr('placeholder', 'Artwork not found')
           setTimeout( =>
-            $(@refs.byUrl).siblings('button').removeClass('is-loading')
-            $(@refs.byUrl).attr('placeholder', 'Add artwork url')
+            $(@refs.byUrl.getDOMNode()).siblings('button').removeClass('is-loading')
+            $(@refs.byUrl.getDOMNode()).attr('placeholder', 'Add artwork url')
           , 3000)
       success: (artwork) =>
-        $(@refs.byUrl).removeClass('is-loading').val ''
-        $(@refs.byUrl).siblings('button').removeClass('is-loading')
+        $(@refs.byUrl.getDOMNode()).removeClass('is-loading').val ''
+        $(@refs.byUrl.getDOMNode()).siblings('button').removeClass('is-loading')
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @props.section.set images: newImages
@@ -226,29 +225,27 @@ module.exports = React.createClass
               li { key: i },
                 if item.type is 'artwork'
                   [
-                    div { className: 'esic-img-container', key: 'image-' + i },
+                    div { className: 'esic-img-container' },
                       img {
                         src: item.image
                         className: 'esic-artwork'
                       }
-                    div {className: 'esic-caption', key: 'caption-' + i },
-                      p {},
-                        strong {}, @formatArtistNames item
-                      p {},
-                        span { className: 'title' }, item.title if item.title
-                        if item.date
-                          span { className: 'date' }, ", " + item.date if item.date
-                      p {}, item.partner.name if item.partner.name
+                    p {},
+                      strong {}, @formatArtistNames item
+                    p { className: 'esic-artwork' },
+                      span { className: 'title' }, item.title if item.title
+                      if item.date
+                        span { className: 'date' }, ", " + item.date if item.date
+                    p {}, item.partner.name if item.partner.name
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
-                      key: 'remove-' + i
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
                     }
                   ]
                 else
                   [
-                    div { className: 'esic-img-container', key: 'image-' + i},
+                    div { className: 'esic-img-container'},
                       img {
                         className: 'esic-image'
                         src: if @state.progress then item.url else resize(item.url, width: 900)
@@ -259,18 +256,16 @@ module.exports = React.createClass
                       images: @state.images
                       url: item.url
                       editing: @props.editing
-                      key: 'caption-edit-' + i
                     }
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
-                      key: 'remove-' + i
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
+                      key: 2
                     }
                     div {
                       dangerouslySetInnerHTML: __html: item.caption
                       className: 'esic-caption esic-caption--display'
-                      key: 'caption-' + i
                     }
                   ]
             )

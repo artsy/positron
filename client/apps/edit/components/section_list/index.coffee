@@ -9,7 +9,6 @@ SectionTool = React.createFactory require '../section_tool/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
-  displayName: 'SectionList'
 
   getInitialState: ->
     { editingIndex: null }
@@ -19,7 +18,7 @@ module.exports = React.createClass
     @props.sections.on 'add', @onNewSection
 
   componentDidUpdate: ->
-    $('.edit-section-list').find('.scribe-marker').remove()
+    $(@getDOMNode()).find('.scribe-marker').remove()
 
   onSetEditing: (i) ->
     @setState editingIndex: i
@@ -34,7 +33,7 @@ module.exports = React.createClass
           (if @props.sections.length then ' esl-children' else '')
         ref: 'sections'
       },
-        SectionTool { sections: @props.sections, index: -1, key: 1}
+        SectionTool { sections: @props.sections, index: -1 }
         @props.sections.map (section, i) =>
           [
             SectionContainer {
@@ -42,9 +41,9 @@ module.exports = React.createClass
               section: section
               index: i
               editing: @state.editingIndex is i
-              ref: 'section' + i
+              ref: 'section' + 1
               key: section.cid
               onSetEditing: @onSetEditing
             }
-            SectionTool { sections: @props.sections, index: i, key: i}
+            SectionTool { sections: @props.sections, index: i }
           ]

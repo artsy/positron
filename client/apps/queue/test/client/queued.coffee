@@ -2,12 +2,10 @@ benv = require 'benv'
 sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
+require 'react/addons'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
+  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
+  simulate: React.addons.TestUtils.Simulate
 
 describe 'QueuedArticles', ->
 
@@ -21,16 +19,18 @@ describe 'QueuedArticles', ->
       )
       QueuedArticles.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
       QueuedArticles.__set__ 'ArticleList', sinon.stub()
-      props = {
+      @component = React.render QueuedArticles(
+        {
           articles: [{id: '123', thumbnail_title: 'Game of Thrones', slug: 'artsy-editorial-game-of-thrones'}]
           selected: sinon.stub()
           headerText: 'Queued'
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(QueuedArticles, props)
-      done()
+      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+        sinon.stub @component, 'setState'
+        done()
 
   afterEach ->
     benv.teardown()
 
   it 'renders a header', ->
-    $(@rendered).html().should.containEql 'Queued'
+    $(@component.getDOMNode()).html().should.containEql 'Queued'
