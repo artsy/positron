@@ -59,7 +59,6 @@ postFacebookAPI = (article, cb) ->
       particle: particle
     },
     (err, html) ->
-      console.log html
       request
         .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
         .send
