@@ -2,7 +2,7 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
-{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL, FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL } = process.env
+{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL, FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL, NODE_ENV } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 async = require 'async'
 { getTextSections } = require './save'
@@ -10,6 +10,8 @@ debug = require('debug') 'api'
 request = require 'superagent'
 jade = require 'jade'
 Article = require '../../../models/article.coffee'
+moment = require 'moment'
+particle = require 'particle'
 
 @distributeArticle = (article, cb) =>
   tags = ['article']
@@ -44,23 +46,25 @@ cleanArticlesInSailthru = (slugs = []) =>
 
 postFacebookAPI = (article, cb) ->
   article = new Article article
-  console.log article.fullHref()
+  return cb() unless article.isEditorial()
+  article.prepForInstant()
   jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
     {
-      article: new Article article
+      article: article
       forceUrl: FORCE_URL
       sd: {}
       toSentence: _s.toSentence
       _: _
+      moment: moment
+      particle: particle
     },
     (err, html) ->
-      console.log err
       console.log html
       request
         .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
         .send
           access_token: INSTANT_ARTICLE_ACCESS_TOKEN
-          development_mode: true
+          development_mode: NODE_ENV isnt 'production'
           html_source: html
         .end (err, response) =>
           return cb err if err

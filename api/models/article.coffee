@@ -9,12 +9,14 @@ module.exports = class Article extends Backbone.Model
 
   urlRoot: "/api/articles"
 
+  slug: ->
+    _.last(@get('slugs'))
+
   href: ->
-    "/article/#{@get('slug')}"
+    "/article/#{@slug()}"
 
   fullHref: ->
-    console.log @get('slug')
-    "#{FORCE_URL}/article/#{@get('slug')}"
+    "#{FORCE_URL}/article/#{@slug()}"
 
   date: (attr) ->
     moment(@get(attr)).local()
@@ -24,6 +26,9 @@ module.exports = class Article extends Backbone.Model
     creator.push @get('author').name if @get('author')
     creator = _.union(creator, _.pluck(@get('contributing_authors'), 'name')) if @get('contributing_authors')?.length
     creator
+
+  isEditorial: ->
+    @get('featured')
 
   prepForInstant: ->
 
