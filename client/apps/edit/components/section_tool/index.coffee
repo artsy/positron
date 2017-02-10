@@ -11,7 +11,6 @@ User = require '../../../../models/user.coffee'
 Channel = require '../../../../models/channel.coffee'
 
 module.exports = React.createClass
-  displayName: 'SectionTool'
 
   getInitialState: ->
     { open: false }

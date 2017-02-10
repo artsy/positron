@@ -24,7 +24,6 @@ keyboardShortcutsMap =
   removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
 
 module.exports = React.createClass
-  displayName: 'SectionFullscreen'
 
   getInitialState: ->
     title: @props.section.get('title')
@@ -52,10 +51,10 @@ module.exports = React.createClass
       background_image_url: @state.background_image_url
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editableIntro
+    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
     @setState
-      title: $(@refs.editableTitle).val()
-      intro: $(@refs.editableIntro).html()
+      title: $(@refs.editableTitle.getDOMNode()).val()
+      intro: $(@refs.editableIntro.getDOMNode()).html()
 
   removeSection: ->
     $('.edit-header-container').show()
@@ -78,7 +77,7 @@ module.exports = React.createClass
 
   attachScribe: ->
     return if @scribeIntro? or not @props.editing
-    @scribeIntro = new Scribe @refs.editableIntro
+    @scribeIntro = new Scribe @refs.editableIntro.getDOMNode()
     @scribeIntro.use scribePluginSanitizeGoogleDoc()
     @scribeIntro.use scribePluginSanitizer {
       tags:
@@ -86,7 +85,7 @@ module.exports = React.createClass
         b: true
         i: true
     }
-    toggleScribePlaceholder @refs.editableIntro
+    toggleScribePlaceholder @refs.editableIntro.getDOMNode()
     @scribeIntro.use scribePluginKeyboardShortcuts keyboardShortcutsMap
 
   render: ->

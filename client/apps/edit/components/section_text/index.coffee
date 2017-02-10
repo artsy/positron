@@ -33,7 +33,6 @@ keyboardShortcutsMap =
   insertUnorderedList: (e) -> e.metaKey and e.shiftKey and e.keyCode is 55
 
 module.exports = React.createClass
-  displayName: 'SectionText'
 
   componentWillMount: ->
     @channel = new Channel sd.CURRENT_CHANNEL
@@ -43,7 +42,7 @@ module.exports = React.createClass
     @componentDidUpdate()
 
   componentDidUpdate: ->
-    $(@refs.editable).focus() if @props.editing
+    $(@refs.editable.getDOMNode()).focus() if @props.editing
 
   shouldComponentUpdate: (nextProps) ->
     not (nextProps.editing and @props.editing)
@@ -53,10 +52,10 @@ module.exports = React.createClass
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   setBody: ->
-    @props.section.set body: $(@refs.editable).html()
+    @props.section.set body: $(@refs.editable.getDOMNode()).html()
 
   attachScribe: ->
-    @scribe = new Scribe @refs.editable
+    @scribe = new Scribe @refs.editable.getDOMNode()
     @scribe.use scribePluginSanitizeGoogleDoc()
     @scribe.use scribePluginSanitizer {
       tags:
@@ -71,7 +70,7 @@ module.exports = React.createClass
         ul: true
         li: true
     }
-    @scribe.use scribePluginToolbar @refs.toolbar
+    @scribe.use scribePluginToolbar @refs.toolbar.getDOMNode()
     @scribe.use scribePluginLinkTooltip()
     @scribe.use scribePluginKeyboardShortcuts keyboardShortcutsMap
     @scribe.use scribePluginHeadingCommand(2)

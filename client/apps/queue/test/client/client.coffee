@@ -3,22 +3,18 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../test/helpers/fixtures.coffee'
-QueueView = require '../../client/client'
-
+require 'react/addons'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
+  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
+  simulate: React.addons.TestUtils.Simulate
 
-describe 'QueueView', ->
+describe 'QueuedView', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      QueueView = mod =  benv.require resolve(__dirname, '../../client/client')
+      { QueueView } = mod =  benv.require resolve(__dirname, '../../client/client')
       mod.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
@@ -36,26 +32,25 @@ describe 'QueueView', ->
                 body: data: articles: [fixtures().articles, fixtures().articles]
               )
       mod.__set__ 'request', @request
-      props = {
+      @component = React.render QueueView(
+        {
           scheduledArticles: [_.extend fixtures().articles, id: '456']
           feed: 'scheduled'
           channel: {name: 'Artsy Editorial'}
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(QueueView, props)
-      @component = ReactDOM.render React.createElement(QueueView, props), (@$el = $ "<div></div>")[0], =>
-        setTimeout =>
-          sinon.stub @component, 'saveSelected'
-          sinon.stub @component, 'setState'
-          done()
+      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+        sinon.stub @component, 'saveSelected'
+        sinon.stub @component, 'setState'
+        done()
 
   afterEach ->
     benv.teardown()
 
   it 'renders the nav', ->
-    $(@rendered).html().should.containEql 'Scheduled'
-    $(@rendered).html().should.containEql 'Daily Email'
-    $(@rendered).html().should.containEql 'Weekly Email'
-    $(@rendered).html().should.containEql 'Artsy Editorial'
+    $(@component.getDOMNode()).html().should.containEql 'Scheduled'
+    $(@component.getDOMNode()).html().should.containEql 'Daily Email'
+    $(@component.getDOMNode()).html().should.containEql 'Weekly Email'
+    $(@component.getDOMNode()).html().should.containEql 'Artsy Editorial'
 
   it 'scheduledArticles gets passed along to components', ->
     @component.state.scheduledArticles.length.should.equal 1

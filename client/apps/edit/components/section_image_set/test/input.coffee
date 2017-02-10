@@ -3,9 +3,12 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-
+require 'react/addons'
+r =
+  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
+  simulate: React.addons.TestUtils.Simulate
+  findAll: React.addons.TestUtils.scryRenderedDOMComponentsWithClass
+{ div } = React.DOM
 fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'Input', ->
@@ -16,7 +19,7 @@ describe 'Input', ->
       Input = benv.requireWithJadeify(
         resolve(__dirname, '../input'), ['icons']
       )
-      props = {
+      @component = React.render Input(
         caption: 'this is a caption!'
         url: 'https://artsy.net/image.png'
         images: [
@@ -27,18 +30,16 @@ describe 'Input', ->
           }
         ]
         editing: false
-      }
-      @component = ReactDOM.render React.createElement(Input, props), (@$el = $ "<div></div>")[0], =>
-        setTimeout =>
-          done()
+      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+        done()
 
   afterEach ->
     benv.teardown()
 
   it 'renders a caption', ->
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'this is a caption!'
+    $(@component.getDOMNode()).html().should.containEql 'this is a caption!'
 
   it 'saves captions on click off', ->
-    $(ReactDOM.findDOMNode(@component.refs.editable)).html('Courtesy of The Guggenheim')
-    ReactTestUtils.Simulate.keyUp(@component.refs.editable)
+    $(@component.refs.editable.getDOMNode()).html('Courtesy of The Guggenheim')
+    @component.onEditableKeyup()
     @component.state.images[0].caption.should.equal 'Courtesy of The Guggenheim'

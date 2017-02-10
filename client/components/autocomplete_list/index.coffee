@@ -1,14 +1,12 @@
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 Autocomplete = null
 { label, input, div, button } = React.DOM
 
 module.exports = (el, props) ->
-  ReactDOM.render React.createElement(AutocompleteList, props), el
+  React.render React.createElement(AutocompleteList, props), el
 
 module.exports.AutocompleteList = AutocompleteList = React.createClass
-  displayName: 'AutocompleteList'
 
   getInitialState: ->
     loading: true, items: @props.items or []
@@ -19,14 +17,14 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
   addAutocomplete: ->
     Autocomplete ?= require '../autocomplete/index.coffee'
     @autocomplete = new Autocomplete _.extend _.pick(@props, 'url', 'filter'),
-      el: $(@refs.input)
+      el: $(@refs.input.getDOMNode())
       selected: (e, item) =>
         # Deferring because of click race condition
         _.defer => @onSelect e, item
 
   onSelect: (e, item) ->
     @setState items: @state.items.concat [item]
-    $(@refs.input).val('').focus()
+    $(@refs.input.getDOMNode()).val('').focus()
     @props.selected? e, item, @state.items
 
   removeItem: (item) -> (e) =>

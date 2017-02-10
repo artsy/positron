@@ -15,10 +15,10 @@ module.exports = React.createClass
 
   addArtworksFromUrls: (e) ->
     e.preventDefault()
-    val = @refs.textarea.value
+    val = @refs.textarea.getDOMNode().value
     slugs = (_.last(url.split '/') for url in val.split '\n')
     @setState loading: true
-    @props.fetchArtworks slugs, => $(@refs.textarea).val ''
+    @props.fetchArtworks slugs, => $(@refs.textarea.getDOMNode()).val ''
 
   render: ->
     label {}, 'or paste in artwork page urls',

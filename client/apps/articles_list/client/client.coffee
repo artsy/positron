@@ -1,18 +1,15 @@
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
-onInfiniteScroll = require 'jquery-on-infinite-scroll'
+require 'jquery-on-infinite-scroll'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
-FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
+FilterSearch = require '../../../components/filter_search/index.coffee'
 query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
 icons = -> require('../icons.jade') arguments...
 
-module.exports = ArticlesListView = React.createClass
-  displayName: 'ArticlesListView'
-
+module.exports.ArticlesListView = ArticlesListView = React.createClass
   getInitialState: ->
     articles: @props.articles or []
     published: @props.published
@@ -96,4 +93,4 @@ module.exports.init = ->
     articles: sd.ARTICLES
     published: sd.HAS_PUBLISHED
     channel: sd.CURRENT_CHANNEL
-  ReactDOM.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')
+  React.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')

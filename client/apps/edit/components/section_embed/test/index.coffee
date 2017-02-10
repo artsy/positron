@@ -3,13 +3,11 @@ sinon = require 'sinon'
 Backbone = require 'backbone'
 { resolve } = require 'path'
 React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
+require 'react/addons'
 Section = require '../../../../../models/section.coffee'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
+  find: React.addons.TestUtils.findRenderedDOMComponentWithClass
+  simulate: React.addons.TestUtils.Simulate
 { div } = React.DOM
 
 describe 'SectionEmbed', ->
@@ -18,7 +16,7 @@ describe 'SectionEmbed', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       SectionEmbed = benv.require resolve __dirname, '../index'
-      @component = ReactDOM.render React.createElement(SectionEmbed,
+      @component = React.render SectionEmbed(
         section: new Section { body: 'Foo to the bar', ids: [] }
         editing: false
         setEditing: ->

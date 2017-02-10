@@ -8,7 +8,6 @@ sd = require('sharify').data
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 
 module.exports = React.createClass
-  displayName: 'SectionEmbed'
 
   getInitialState: ->
     errorMessage: ''
@@ -27,9 +26,9 @@ module.exports = React.createClass
 
   submitUrl: (e) ->
     e.preventDefault()
-    url = @refs.url.value
-    height = @refs.height.value
-    mobileHeight = @refs.mobileHeight.value
+    url = @refs.url.getDOMNode().value
+    height = @refs.height.getDOMNode().value
+    mobileHeight = @refs.mobileHeight.getDOMNode().value
     @props.section.set url: url, height: height, mobile_height: mobileHeight
     @setState loading: true
     @updateIframe url, height
@@ -55,24 +54,24 @@ module.exports = React.createClass
         nav {},
           a {
             style: {
-              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'backgroundSize': '38px'
+              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'background-size': '38px'
             }
             className: 'ese-overflow'
             onClick: @changeLayout('overflow')
           }
           a {
             style: {
-              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
-              'backgroundSize': '22px'
+              'background-image': 'url(/icons/edit_artworks_column_width.svg)'
+              'background-size': '22px'
             }
             className: 'ese-column-width'
             onClick: @changeLayout('column_width')
           }
           a {
             style: {
-              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'backgroundSize': '22px'
+              'background-image': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
+              'background-size': '22px'
             }
             className: 'ese-overflow-fillwidth'
             onClick: @changeLayout('overflow_fillwidth')
@@ -126,7 +125,7 @@ module.exports = React.createClass
               src: @state.url
               className: 'embed-iframe'
               scrolling: 'no'
-              frameBorder: '0'
+              frameborder: '0'
               style: { 'height': @state.height if @state.height?.length }
             }
         )

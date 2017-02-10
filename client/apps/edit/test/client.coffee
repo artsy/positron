@@ -26,7 +26,7 @@ describe 'init', ->
       @client.__set__ 'EditHeader', @EditHeader = sinon.stub()
       @client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
       @client.__set__ 'EditDisplay', @EditDisplay = sinon.stub()
-      @client.__set__ 'ReactDOM', @ReactDOM = render: sinon.stub()
+      @client.__set__ 'React', @React = render: sinon.stub()
       done()
 
   afterEach ->
@@ -38,7 +38,7 @@ describe 'init', ->
       @EditLayout.callCount.should.equal 1
       @EditHeader.callCount.should.equal 1
       @EditAdmin.callCount.should.equal 1
-      @ReactDOM.render.callCount.should.equal 2
+      @React.render.callCount.should.equal 2
       done()
 
   it 'converts images and artworks to ImageCollection', (done) ->

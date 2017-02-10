@@ -14,7 +14,6 @@ Input = React.createFactory require './input.coffee'
 { resize } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
-  displayName: 'SectionImageSet'
 
   getInitialState: ->
     images: @props.section.get('images') or []
@@ -34,7 +33,7 @@ module.exports = React.createClass
     @props.section.set images: @state.images if @state.images.length > 0
 
   setupAutocomplete: ->
-    $el = $(@refs.autocomplete)
+    $el = $(@refs.autocomplete.getDOMNode())
     @autocomplete = new Autocomplete
       url: "#{sd.ARTSY_URL}/api/search?q=%QUERY"
       el: $el
@@ -64,7 +63,7 @@ module.exports = React.createClass
       success: (artwork) =>
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
-        $(@refs.autocomplete).val('').focus()
+        $(@refs.autocomplete.getDOMNode()).val('').focus()
 
   upload: (e) ->
     gemup e.target.files[0],
@@ -92,7 +91,7 @@ module.exports = React.createClass
 
   addArtworkFromUrl: (e) ->
     e.preventDefault()
-    val = @refs.byUrl.value
+    val = @refs.byUrl.getDOMNode().value
     slug = _.last(val.split '/')
     @refs.byUrl.setState loading: true
     new Artwork(id: slug).fetch
@@ -103,7 +102,7 @@ module.exports = React.createClass
         ) if res.status is 404
       success: (artwork) =>
         @refs.byUrl.setState loading: false, errorMessage: ''
-        $(@refs.byUrl).val ''
+        $(@refs.byUrl.getDOMNode()).val ''
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
 
@@ -174,26 +173,24 @@ module.exports = React.createClass
               li { key: i },
                 if item.type is 'artwork'
                   [
-                    div { className: 'esis-img-container', key: 'artwork-' + i},
+                    div { className: 'esis-img-container' },
                       img {
                         src: item.image
                         className: 'esis-artwork'
                       }
-                    div {className: 'esic-caption', key: 'caption-' + i },
-                      p {},
-                        strong {}, @formatArtistNames item
-                      p {}, item.title if item.title
-                      p {}, item.partner.name if item.partner.name
+                    p {},
+                      strong {}, @formatArtistNames item
+                    p {}, item.title if item.title
+                    p {}, item.partner.name if item.partner.name
                     button {
                       className: 'edit-section-remove button-reset esis-img-remove'
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
-                      key: 'remove-' + i
                     }
                   ]
                 else
                   [
-                    div { className: 'esis-img-container', key: 'image-' + i},
+                    div { className: 'esis-img-container'},
                       [
                         img {
                           className: 'esis-image'
@@ -211,7 +208,7 @@ module.exports = React.createClass
                       className: 'edit-section-remove button-reset esis-img-remove'
                       dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
-                      key: 'remove-' + i
+                      key: 2
                     }
                   ]
             )
