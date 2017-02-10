@@ -88,7 +88,7 @@
     "jquery-fillwidth-lite": "^1.0.3",
     "jquery-on-infinite-scroll": "^1.0.1",
     "mocha": "^3.1.2",
-    "react-addons-test-utils": "https://registry.npmjs.org/react-addons-test-utils/-/react-addons-test-utils-15.4.2.tgz",
+    "react-addons-test-utils": "^15.4.2",
     "rewire": "2.2.0",
     "scribe-editor": "^2.0.2",
     "scribe-plugin-enhanced-link-tooltip": "git://github.com/artsy/scribe-plugin-enhanced-link-tooltip.git",
