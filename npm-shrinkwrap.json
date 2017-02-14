@@ -1135,6 +1135,18 @@
       "from": "domutils@>=1.4.0 <1.5.0",
       "resolved": "https://registry.npmjs.org/domutils/-/domutils-1.4.3.tgz"
     },
+    "draft-js": {
+      "version": "0.10.0",
+      "from": "draft-js@latest",
+      "resolved": "https://registry.npmjs.org/draft-js/-/draft-js-0.10.0.tgz",
+      "dependencies": {
+        "object-assign": {
+          "version": "4.1.1",
+          "from": "object-assign@>=4.1.0 <5.0.0",
+          "resolved": "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
+        }
+      }
+    },
     "duplexer2": {
       "version": "0.0.2",
       "from": "duplexer2@>=0.0.2 <0.1.0",
@@ -1378,7 +1390,7 @@
     },
     "fbjs": {
       "version": "0.8.9",
-      "from": "fbjs@>=0.8.4 <0.9.0",
+      "from": "fbjs@>=0.8.7 <0.9.0",
       "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.9.tgz",
       "dependencies": {
         "asap": {
@@ -2415,9 +2427,8 @@
     },
     "immutable": {
       "version": "3.7.6",
-      "from": "immutable@>=3.7.3 <3.8.0",
-      "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.7.6.tgz",
-      "dev": true
+      "from": "immutable@>=3.7.4 <3.8.0",
+      "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.7.6.tgz"
     },
     "indexof": {
       "version": "0.0.1",
@@ -2885,7 +2896,7 @@
     },
     "loose-envify": {
       "version": "1.3.1",
-      "from": "loose-envify@>=1.1.0 <2.0.0",
+      "from": "loose-envify@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.3.1.tgz"
     },
     "lru-cache": {
@@ -3270,7 +3281,7 @@
     },
     "node-fetch": {
       "version": "1.6.3",
-      "from": "node-fetch@>=1.5.2 <2.0.0",
+      "from": "node-fetch@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.6.3.tgz"
     },
     "node-mandrill": {
