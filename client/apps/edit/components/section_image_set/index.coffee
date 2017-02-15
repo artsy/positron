@@ -19,6 +19,7 @@ module.exports = React.createClass
   getInitialState: ->
     images: @props.section.get('images') or []
     progress: null
+    isLoading: false
 
   componentDidMount: ->
     @setupAutocomplete()
@@ -94,20 +95,20 @@ module.exports = React.createClass
     e.preventDefault()
     val = @refs.byUrl.value
     slug = _.last(val.split '/')
-    @refs.urlAdd.classList.toggle 'is-loading'
+    @setState isLoading: !@state.isLoading
     @refs.byUrl.value = ''
     new Artwork(id: slug).fetch
       error: (m, res) =>
         if res.status is 404
           @refs.byUrl.placeholder = 'Artwork not found'
           setTimeout( =>
-            @refs.urlAdd.classList.toggle 'is-loading'
+            @setState isLoading: !@state.isLoading
             @refs.byUrl.placeholder = 'Add artwork url'
           , 3000)
       success: (artwork) =>
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
-        @refs.urlAdd.classList.toggle 'is-loading'
+        @setState isLoading: !@state.isLoading
 
   showPreviewImages: ->
     # Slideshow Preview
@@ -131,6 +132,10 @@ module.exports = React.createClass
       artwork.artist?.name
 
   render: ->
+    isLoading = ''
+    if @state.isLoading
+      isLoading = ' is-loading'
+
     section {
       className: 'edit-section-image-set'
       onClick: @props.setEditing(true)
@@ -158,8 +163,7 @@ module.exports = React.createClass
               placeholder: 'Add artwork url'
             }
               button {
-                ref: 'urlAdd'
-                className: 'esis-byurl-button avant-garde-button'
+                className: 'esis-byurl-button avant-garde-button' + isLoading
                 onClick: @addArtworkFromUrl
               }, 'Add'
       (
@@ -227,6 +231,7 @@ module.exports = React.createClass
             div { className: 'esis-preview-image-container' },
               @state.images.slice(0,4).map (item, i) =>
                 img {
+                  key: 'image-' + i
                   src: resize((item.image or item.url or ''), height: 150)
                   className: 'esis-preview-image'
                 }
