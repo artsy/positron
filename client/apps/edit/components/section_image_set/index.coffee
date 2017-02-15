@@ -10,6 +10,7 @@ icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 Input = React.createFactory require './input.coffee'
+UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
@@ -19,7 +20,6 @@ module.exports = React.createClass
   getInitialState: ->
     images: @props.section.get('images') or []
     progress: null
-    isLoading: false
 
   componentDidMount: ->
     @setupAutocomplete()
@@ -91,24 +91,8 @@ module.exports = React.createClass
     newImages = _.without @state.images, item
     @setState images: newImages
 
-  addArtworkFromUrl: (e) ->
-    e.preventDefault()
-    val = @refs.byUrl.value
-    slug = _.last(val.split '/')
-    @setState isLoading: !@state.isLoading
-    @refs.byUrl.value = ''
-    new Artwork(id: slug).fetch
-      error: (m, res) =>
-        if res.status is 404
-          @refs.byUrl.placeholder = 'Artwork not found'
-          setTimeout( =>
-            @setState isLoading: !@state.isLoading
-            @refs.byUrl.placeholder = 'Add artwork url'
-          , 3000)
-      success: (artwork) =>
-        newImages = @state.images.concat [artwork.denormalized()]
-        @setState images: newImages
-        @setState isLoading: !@state.isLoading
+  addArtworkFromUrl: (newImages) ->
+    @setState images: newImages
 
   showPreviewImages: ->
     # Slideshow Preview
@@ -132,10 +116,6 @@ module.exports = React.createClass
       artwork.artist?.name
 
   render: ->
-    isLoading = ''
-    if @state.isLoading
-      isLoading = ' is-loading'
-
     section {
       className: 'edit-section-image-set'
       onClick: @props.setEditing(true)
@@ -156,16 +136,10 @@ module.exports = React.createClass
               className: 'bordered-input bordered-input-dark'
               placeholder: 'Search for artwork by title'
             }
-          div { className: 'esis-byurl-input' },
-            input {
-              ref: 'byUrl'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Add artwork url'
-            }
-              button {
-                className: 'esis-byurl-button avant-garde-button' + isLoading
-                onClick: @addArtworkFromUrl
-              }, 'Add'
+          UrlArtworkInput {
+            images: @state.images
+            addArtworkFromUrl: @addArtworkFromUrl
+          }
       (
         if @state.progress
           div { className: 'upload-progress-container' },

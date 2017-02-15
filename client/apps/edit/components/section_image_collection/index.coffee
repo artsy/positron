@@ -11,6 +11,7 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
 Input = React.createFactory require '../section_image_set/input.coffee'
+UrlArtworkInput = React.createFactory require '../section_image_set/url_artwork_input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
@@ -21,7 +22,6 @@ module.exports = React.createClass
     images: @props.section.get('images') or []
     layout: @props.section.get('layout') or 'overflow_fillwidth'
     progress: null
-    isLoading: false
 
   componentDidMount: ->
     @$list = $(@refs.images)
@@ -112,25 +112,10 @@ module.exports = React.createClass
     @props.section.set images: newImages
     @toggleFillwidth() if @state.images.length > 1
 
-  addArtworkFromUrl: (e) ->
-    e.preventDefault()
-    val = @refs.byUrl.value
-    slug = _.last(val.split '/')
-    @setState isLoading: !@state.isLoading
-    @refs.byUrl.value = ''
-    new Artwork(id: slug).fetch
-      error: (m, res) =>
-        if res.status is 404
-          @refs.byUrl.placeholder = 'Artwork not found'
-          setTimeout( =>
-            @setState isLoading: !@state.isLoading
-            @refs.byUrl.placeholder = 'Add artwork url'
-          , 3000)
-      success: (artwork) =>
-        newImages = @state.images.concat [artwork.denormalized()]
-        @setState images: newImages, isLoading: !@state.isLoading
-        @props.section.set images: newImages
-        @toggleFillwidth() if @state.images.length > 1
+  addArtworkFromUrl: (newImages) ->
+    @setState images: newImages
+    @props.section.set images: newImages
+    @toggleFillwidth() if @state.images.length > 1
 
   formatArtistNames: (artwork) ->
     if artwork.artists?[0]
@@ -164,10 +149,6 @@ module.exports = React.createClass
     @$list.find('li').css(width: '', padding: '')
 
   render: ->
-    isLoading = ''
-    if @state.isLoading
-      isLoading = ' is-loading'
-
     section {
       className: 'edit-section-image-collection edit-section-image-container'
       onClick: @props.setEditing(true)
@@ -205,16 +186,10 @@ module.exports = React.createClass
               className: 'bordered-input bordered-input-dark'
               placeholder: 'Search for artwork by title'
             }
-          div { className: 'esic-byurl-input' },
-            input {
-              ref: 'byUrl'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Add artwork url'
-            }
-              button {
-                className: 'esic-byurl-button avant-garde-button' + isLoading
-                onClick: @addArtworkFromUrl
-              }, 'Add'
+          UrlArtworkInput {
+            images: @state.images
+            addArtworkFromUrl: @addArtworkFromUrl
+          }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
