@@ -1,3 +1,9 @@
+# Use this input to find an artwork by its artsy.net url
+# Pass in the parents images and an update function
+
+# Example:
+# UrlArtworkInput { images: @state.images, addArtworkFromUrl: @addArtworkFromUrl}
+
 React = require 'react'
 Artwork = require '../../../../models/artwork.coffee'
 { div, input, button } = React.DOM
