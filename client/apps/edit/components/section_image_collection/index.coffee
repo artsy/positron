@@ -269,7 +269,7 @@ module.exports = React.createClass
                       onClick: @removeItem(item)
                     },
                       EditSectionRemoveIcon {}
-                    DraftInput {}
+                    DraftInput { item: item}
                     div {
                       dangerouslySetInnerHTML: __html: item.caption
                       className: 'esic-caption esic-caption--display'
