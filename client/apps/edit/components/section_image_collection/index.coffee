@@ -115,18 +115,18 @@ module.exports = React.createClass
     e.preventDefault()
     val = @refs.byUrl.value
     slug = _.last(val.split '/')
-    $(@refs.byUrl).siblings('button').addClass('is-loading')
+    @refs.urlAdd.classList.toggle 'is-loading'
+    @refs.byUrl.value = ''
     new Artwork(id: slug).fetch
       error: (m, res) =>
         if res.status is 404
-          $(@refs.byUrl).val('').attr('placeholder', 'Artwork not found')
+          @refs.byUrl.placeholder = 'Artwork not found'
           setTimeout( =>
-            $(@refs.byUrl).siblings('button').removeClass('is-loading')
-            $(@refs.byUrl).attr('placeholder', 'Add artwork url')
+            @refs.urlAdd.classList.toggle 'is-loading'
+            @refs.byUrl.placeholder = 'Add artwork url'
           , 3000)
       success: (artwork) =>
-        $(@refs.byUrl).removeClass('is-loading').val ''
-        $(@refs.byUrl).siblings('button').removeClass('is-loading')
+        @refs.urlAdd.classList.toggle 'is-loading'
         newImages = @state.images.concat [artwork.denormalized()]
         @setState images: newImages
         @props.section.set images: newImages
@@ -208,6 +208,7 @@ module.exports = React.createClass
               placeholder: 'Add artwork url'
             }
               button {
+                ref: 'urlAdd'
                 className: 'esic-byurl-button avant-garde-button'
                 onClick: @addArtworkFromUrl
               }, 'Add'
