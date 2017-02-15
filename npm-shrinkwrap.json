@@ -1147,6 +1147,16 @@
         }
       }
     },
+    "draft-js-export-html": {
+      "version": "0.5.2",
+      "from": "draft-js-export-html@latest",
+      "resolved": "https://registry.npmjs.org/draft-js-export-html/-/draft-js-export-html-0.5.2.tgz"
+    },
+    "draft-js-utils": {
+      "version": "0.1.7",
+      "from": "draft-js-utils@>=0.1.5 <0.2.0",
+      "resolved": "https://registry.npmjs.org/draft-js-utils/-/draft-js-utils-0.1.7.tgz"
+    },
     "duplexer2": {
       "version": "0.0.2",
       "from": "duplexer2@>=0.0.2 <0.1.0",
