@@ -11,7 +11,7 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
 Input = React.createFactory require '../section_image_set/input.coffee'
-DraftInput = React.createFactory require './draft_input.coffee'
+DraftInputCaption = React.createFactory require '../../../../components/draft_input/draft_input_caption.coffee'
 EditSectionRemoveIcon = React.createFactory require '../../public/icons/edit_section_remove.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
@@ -269,7 +269,7 @@ module.exports = React.createClass
                       onClick: @removeItem(item)
                     },
                       EditSectionRemoveIcon {}
-                    DraftInput { item: item}
+                    DraftInputCaption { item: item}
                     div {
                       dangerouslySetInnerHTML: __html: item.caption
                       className: 'esic-caption esic-caption--display'

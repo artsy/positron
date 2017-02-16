@@ -12,10 +12,19 @@ window.process = {env: {NODE_ENV: 'development'}}
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
 
-LinkIcon = React.createFactory require '../../public/icons/edit_text_link.coffee'
+DraftDecorators = require './draft_decorators.coffee'
+
+LinkIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link.coffee'
 
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
+
+decorator = new CompositeDecorator([
+    {
+      strategy: DraftDecorators.findLinkEntities
+      component: DraftDecorators.Link
+    }
+  ])
 
 module.exports = React.createClass
   displayName: 'DraftInput'
@@ -33,7 +42,7 @@ module.exports = React.createClass
         blocksFromHTML.contentBlocks
         blocksFromHTML.entityMap
        )
-      @setState editorState: EditorState.createWithContent(state)
+      @setState editorState: EditorState.createWithContent(state, decorator)
 
   onChange: (editorState) ->
     html = @getHtml editorState
@@ -83,30 +92,9 @@ module.exports = React.createClass
         newEditorState.getSelection()
         entityKey
       )
-      showURLInput: false
+      showUrlInput: false
       urlValue: ''
     })
-
-  #  findLinkEntities: (contentBlock, callback, contentState) ->
-  #   contentBlock.findEntityRanges(
-  #     (character) => {
-  #       const entityKey = character.getEntity();
-  #       return (
-  #         entityKey !== null &&
-  #         contentState.getEntity(entityKey).getType() === 'LINK'
-  #       );
-  #     },
-  #     callback
-  #   );
-
-
-  link: (props) ->
-    { url } = props.contentState.getEntity(props.entityKey).getData()
-    return (
-      a {
-        href: url
-      }, props.children
-    )
 
   printUrlInput: ->
     if @state.showUrlInput
@@ -122,14 +110,15 @@ module.exports = React.createClass
         }, "Apply"
 
   render: ->
-    div {},
+    div { className: 'draft-input draft-input--caption'},
       editor {
         ref: 'editor'
         placeholder: 'caption here'
+        className: 'bordered-input'
         editorState: @state.editorState
         onChange: @onChange
       }
-      div {},
+      div { className: 'draft-input__actions'},
         button {
           onMouseDown: @onStyleChange
           id: 'ITALIC'
