@@ -45,8 +45,10 @@ module.exports = React.createClass
       @setState editorState: EditorState.createWithContent(state, decorator)
 
   onChange: (editorState) ->
+    console.log 'changed'
     html = @getHtml editorState
     @setState editorState: editorState, html: html
+    console.log html
 
   focus: ->
     @refs.editor.focus()
@@ -98,7 +100,7 @@ module.exports = React.createClass
 
   printUrlInput: ->
     if @state.showUrlInput
-      div {},
+      div { className: 'draft-caption__url-input' },
         input {
           ref: 'url'
           type: 'text'
@@ -110,15 +112,15 @@ module.exports = React.createClass
         }, "Apply"
 
   render: ->
-    div { className: 'draft-input draft-input--caption'},
-      editor {
-        ref: 'editor'
-        placeholder: 'caption here'
-        className: 'bordered-input'
-        editorState: @state.editorState
-        onChange: @onChange
-      }
-      div { className: 'draft-input__actions'},
+    div { className: 'draft-caption' },
+      div { className: 'draft-caption__input bordered-input' },
+        editor {
+          ref: 'editor'
+          placeholder: 'Image caption'
+          editorState: @state.editorState
+          onChange: @onChange
+        }
+      div { className: 'draft-caption__actions'},
         button {
           onMouseDown: @onStyleChange
           id: 'ITALIC'

@@ -1,0 +1,47 @@
+@import '../stylus_lib'
+
+.draft-caption
+	display flex
+	justify-content flex-start
+	position relative
+	&__input
+		width calc(100% \- 85px)
+	&__actions
+		width 85px
+		background-color black
+		display flex
+		justify-content space-around
+		button
+			width 50%
+			background none transparent
+			outline none
+			border none
+			padding 10px
+			color gray-dark-color
+		#ITALIC
+			garamond l-body
+			font-style italic
+			font-weight 600
+			line-height 1em
+			border-right 1px solid gray-darker-color
+			width calc(50% \- 1px)
+		svg
+			width 14px
+			height 14px
+			path
+				fill gray-dark-color
+		    transition fill 0.15s
+	&__url-input
+		position absolute
+    top 100%
+    left 0
+    background black
+    padding 10px
+    button
+    	background gray-dark-color
+	    color white
+	    font-size 11px
+	    border 0
+	    padding 0
+	    width 80px
+	    text-align center
