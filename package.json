@@ -18,7 +18,7 @@
     "artsy-xapp": "^1.0.4",
     "backbone": "^1.2.3",
     "backbone-super-sync": "^1.1.1",
-    "bcrypt": "^0.8.5",
+    "bcryptjs": "^2.4.3",
     "bluebird": "^3.3.4",
     "bluebird-q": "^1.0.3",
     "body-parser": "^1.14.1",
