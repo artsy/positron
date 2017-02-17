@@ -33,7 +33,7 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 ```
 - Install node modules
 ```
-npm install
+yarn install
 ```
 - Create a .env file in the root of the project and paste in sensitive configuration. You can copy the .env.example and fill in the sensitive config with the config vars from staging `heroku config --app=positron-staging`.
 
