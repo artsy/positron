@@ -36,7 +36,7 @@ module.exports = React.createClass
     html: null
 
   componentDidMount: ->
-    if @props.item.caption.length
+    if @props.item.caption?.length
       blocksFromHTML = convertFromHTML(@props.item.caption)
       state = ContentState.createFromBlockArray(
         blocksFromHTML.contentBlocks
