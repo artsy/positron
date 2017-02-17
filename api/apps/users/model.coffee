@@ -10,7 +10,7 @@ request = require 'superagent'
 Joi = require 'joi'
 debug = require('debug') 'api'
 async = require 'async'
-bcrypt = require 'bcrypt'
+bcrypt = require 'bcryptjs'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, SALT, API_URL } = process.env
 
