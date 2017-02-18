@@ -18,5 +18,8 @@ exports.Link = (props) ->
   return (
     a {
       href: url
+      style: {
+        'paddingBottom' : '1px'
+      }
     }, props.children
   )

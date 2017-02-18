@@ -11,10 +11,9 @@ window.process = {env: {NODE_ENV: 'development'}}
   RichUtils,
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
-
 DraftDecorators = require './draft_decorators.coffee'
-
 LinkIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link.coffee'
+RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_section_remove.coffee'
 
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
@@ -34,6 +33,7 @@ module.exports = React.createClass
     showUrlInput: false
     urlValue: ''
     html: null
+    focus: false
 
   componentDidMount: ->
     if @props.item.caption?.length
@@ -45,19 +45,23 @@ module.exports = React.createClass
       @setState editorState: EditorState.createWithContent(state, decorator)
 
   onChange: (editorState) ->
-    console.log 'changed'
     html = @getHtml editorState
     @setState editorState: editorState, html: html
-    console.log html
+    @props.item.caption = html
 
   focus: ->
+    @setState focus: true
     @refs.editor.focus()
+
+  onBlur: ->
+    @setState focus: false
 
   getHtml: (editorState) ->
     stateToHTML editorState.getCurrentContent()
 
   onStyleChange: (e) ->
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.id)
+    @focus()
 
   onURLChange: (e) ->
     @setState urlValue: e.target.value
@@ -87,16 +91,28 @@ module.exports = React.createClass
       {url: urlValue}
     )
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-    newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity })
+    newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
     @setState({
-      editorState: RichUtils.toggleLink(
+      showUrlInput: false
+      urlValue: ''
+    })
+    @onChange RichUtils.toggleLink(
         newEditorState
         newEditorState.getSelection()
         entityKey
       )
-      showUrlInput: false
-      urlValue: ''
-    })
+
+  removeLink: (e) ->
+    debugger
+    e.preventDefault()
+    { editorState } = @state
+    selection = editorState.getSelection()
+    if !selection.isCollapsed()
+      @setState({
+        showUrlInput: false
+        urlValue: ''
+        editorState: RichUtils.toggleLink(editorState, selection, null)
+      })
 
   printUrlInput: ->
     if @state.showUrlInput
@@ -106,14 +122,26 @@ module.exports = React.createClass
           type: 'text'
           value: @state.urlValue
           onChange: @onURLChange
+          className: 'bordered-input'
+          placeholder: 'Paste or type a link'
         }
+        if @state.urlValue?.length
+          button {
+            onMouseDown: @removeLink
+          }, 'X'
         button {
           onMouseDown: @confirmLink
-        }, "Apply"
+        }, 'Apply'
 
   render: ->
+    hasFocus = if @state.focus then ' has-focus' else ' no-focus'
+
     div { className: 'draft-caption' },
-      div { className: 'draft-caption__input bordered-input' },
+      div {
+        className: 'draft-caption__input bordered-input' + hasFocus
+        onClick: @focus
+        onBlur: @onBlur
+      },
         editor {
           ref: 'editor'
           placeholder: 'Image caption'

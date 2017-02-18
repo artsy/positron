@@ -236,25 +236,23 @@ module.exports = React.createClass
                         src: if @state.progress then item.url else resize(item.url, width: 900)
                         style: opacity: if @state.progress then @state.progress else '1'
                       }
-                    Input {
-                      caption: item.caption
-                      images: @state.images
-                      url: item.url
-                      editing: @props.editing
-                      key: 'caption-edit-' + i
-                    }
+                      if @props.editing
+                        DraftInputCaption {
+                          item: item
+                          key: 'caption-edit-' + i
+                        }
+                      else
+                        div {
+                          dangerouslySetInnerHTML: __html: item.caption
+                          className: 'esic-caption esic-caption--display'
+                          key: 'caption-' + i
+                        }
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
                       onClick: @removeItem(item)
                     },
                       EditSectionRemoveIcon {}
-                    DraftInputCaption { item: item, key: 'draft-1'} #replace this key
-                    div {
-                      dangerouslySetInnerHTML: __html: item.caption
-                      className: 'esic-caption esic-caption--display'
-                      key: 'caption-' + i
-                    }
                   ]
             )
         else

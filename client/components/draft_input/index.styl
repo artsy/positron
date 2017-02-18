@@ -1,54 +1,84 @@
 @import '../stylus_lib'
 
 .draft-caption
-	display flex
-	justify-content flex-start
-	position relative
-	&__input
-		width calc(100% \- 85px)
-	.public-DraftEditorPlaceholder-root
-		position absolute
-		color gray-dark-color
-	&__actions
-		height 40px
-		width 85px
-		background-color black
-		display flex
-		justify-content space-around
-		button
-			width 50%
-			background none transparent
-			outline none
-			border none
-			padding 10px
-			color gray-darker-color
-			&:hover
-				color gray-dark-color
-				svg path
-					fill gray-dark-color
-			svg
-				width 14px
-				height 14px
-				path
-					fill gray-darker-color
-			    transition all 0.15s
-		#ITALIC
-			garamond l-body
-			font-style italic
-			font-weight 600
-			line-height 1em
-			border-right 1px solid gray-darkest-color
-			width calc(50% \- 1px)
-	&__url-input
-		position absolute
-    left 0
-    background black
-    padding 10px
+  display flex
+  justify-content flex-start
+  position relative
+  &__input
+    width calc(100% \- 85px)
+    garamond l-caption
+    padding-top 8px
+  .public-DraftEditorPlaceholder-root
+    position absolute
+    color gray-dark-color
+  .bordered-input.has-focus
+    border-color purple-color
+  &__actions
+    height 40px
+    width 85px
+    background-color black
+    display flex
+    justify-content space-around
     button
-    	background gray-dark-color
-	    color white
-	    font-size 11px
-	    border 0
-	    padding 0
-	    width 80px
-	    text-align center
+      width 50%
+      background none transparent
+      outline none
+      border none
+      padding 10px
+      color gray-darker-color
+      &:hover
+        color gray-dark-color
+        svg path
+          fill gray-dark-color
+      svg
+        width 14px
+        height 14px
+        path
+          fill gray-darker-color
+          transition all 0.15s
+    #ITALIC
+      garamond l-body
+      font-style italic
+      font-weight 600
+      line-height 1em
+      border-right 1px solid gray-darkest-color
+      width calc(50% \- 1px)
+  &__url-input
+    position absolute
+    left 0
+    top calc(100% \- 10px)
+    background-color black
+    padding 10px
+    input
+      background-color white
+      max-width 300px
+      garamond l-caption
+      height 30px
+    svg
+      width 20px
+      height 20px
+      position absolute
+      right 100px
+      top 15px
+      cursor pointer
+      z-index 100
+    button
+      background gray-darker-color
+      color white
+      font-size 11px
+      border 0
+      padding 0
+      width 80px
+      height 30px
+      text-align center
+      avant-garde body
+    button::after
+      content ''
+      width 0
+      height 0
+      border-left 7px solid transparent
+      border-right 7px solid transparent
+      border-bottom 7px solid #000
+      position absolute
+      top -7px
+      left 50%
