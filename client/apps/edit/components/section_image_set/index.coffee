@@ -42,7 +42,7 @@ module.exports = React.createClass
       filter: (res) ->
         vals = []
         for r in res._embedded.results
-          if r.type == 'Artwork'
+          if r.type?.toLowerCase() == 'artwork'
             id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
             vals.push
               id: id
