@@ -21,6 +21,11 @@ RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_text
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
+styleMap = {
+  'CODE': {}
+  'BOLD': {}
+};
+
 decorator = new CompositeDecorator([
     {
       strategy: DraftDecorators.findLinkEntities
@@ -169,6 +174,7 @@ module.exports = React.createClass
           spellCheck: true
           onChange: @onChange
           handlePastedText: @onPaste
+          customStyleMap: styleMap
         }
       div { className: 'draft-caption__actions'},
         button {
