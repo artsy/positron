@@ -1,6 +1,8 @@
 React = require 'react'
 window.global = window
 window.process = {env: {NODE_ENV: 'development'}}
+_s = require 'underscore.string'
+{Map} = require 'Immutable'
 
 { convertToRaw,
   convertFromHTML,
@@ -9,11 +11,12 @@ window.process = {env: {NODE_ENV: 'development'}}
   Editor,
   EditorState,
   RichUtils,
+  Modifier,
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
 DraftDecorators = require './draft_decorators.coffee'
 LinkIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link.coffee'
-RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_section_remove.coffee'
+RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link_remove.coffee'
 
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
@@ -59,6 +62,21 @@ module.exports = React.createClass
   getHtml: (editorState) ->
     stateToHTML editorState.getCurrentContent()
 
+  onPaste: (text, html) ->
+    { editorState } = this.state;
+    html = convertFromHTML(html)
+    convertedHtml = html.contentBlocks.map (contentBlock) ->
+      if contentBlock.getType() isnt 'unstyled'
+        newBlock = contentBlock.set('type', 'unstyled')
+        return newBlock
+      else
+        return contentBlock
+    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
+    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
+    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
+    return true
+
   onStyleChange: (e) ->
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.id)
     @focus()
@@ -103,7 +121,6 @@ module.exports = React.createClass
       )
 
   removeLink: (e) ->
-    debugger
     e.preventDefault()
     { editorState } = @state
     selection = editorState.getSelection()
@@ -127,9 +144,12 @@ module.exports = React.createClass
         }
         if @state.urlValue?.length
           button {
+            className: 'remove-link'
             onMouseDown: @removeLink
-          }, 'X'
+          },
+            RemoveIcon {}
         button {
+          className: 'add-link'
           onMouseDown: @confirmLink
         }, 'Apply'
 
@@ -146,7 +166,9 @@ module.exports = React.createClass
           ref: 'editor'
           placeholder: 'Image caption'
           editorState: @state.editorState
+          spellCheck: true
           onChange: @onChange
+          handlePastedText: @onPaste
         }
       div { className: 'draft-caption__actions'},
         button {

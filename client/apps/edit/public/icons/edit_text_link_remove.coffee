@@ -2,7 +2,7 @@ React = require 'react'
 { svg, circle, polygon } = React.DOM
 
 module.exports = React.createClass
-	displayName: 'EditSectionRemoveIcon'
+	displayName: 'EditTextLinkRemoveIcon'
 
 	render: ->
   	svg {
