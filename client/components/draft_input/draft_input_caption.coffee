@@ -66,6 +66,7 @@ module.exports = React.createClass
     @setState urlValue: e.target.value
 
   convertToHtml: (editorState) ->
+    console.log 'converteHtml'
     html = stateToHTML editorState.getCurrentContent()
     html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
     return html
@@ -75,7 +76,8 @@ module.exports = React.createClass
     html = convertFromHTML(html)
     convertedHtml = html.contentBlocks.map (contentBlock) =>
       unstyled = @stripPastedStyles contentBlock
-      if unstyled.getType() isnt 'unstyled'
+      console.log unstyled.getType()
+      if unstyled.getType() isnt 'unstyled' or 'LINK'
         unstyled = unstyled.set('type', 'unstyled')
       return unstyled
     Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
@@ -90,6 +92,7 @@ module.exports = React.createClass
     return unstyled
 
   promptForLink: (e) ->
+    console.log 'link prompt clicked'
     e.preventDefault()
     selection = @state.editorState.getSelection()
     selectionTarget = null
@@ -198,6 +201,7 @@ module.exports = React.createClass
         }, 'I'
         button {
           onMouseDown: @promptForLink
+          className: 'link'
         },
           LinkIcon {}
       @printUrlInput()
