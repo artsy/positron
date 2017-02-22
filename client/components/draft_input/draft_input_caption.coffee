@@ -1,8 +1,6 @@
 React = require 'react'
 window.global = window
 window.process = {env: {NODE_ENV: 'development'}}
-_s = require 'underscore.string'
-{Map} = require 'Immutable'
 
 { convertToRaw,
   convertFromHTML,
@@ -21,11 +19,6 @@ RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_text
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
-styleMap = {
-  'CODE': {}
-  'BOLD': { 'fontWeight' : 'normal'}
-};
-
 decorator = new CompositeDecorator([
     {
       strategy: DraftDecorators.findLinkEntities
@@ -33,8 +26,9 @@ decorator = new CompositeDecorator([
     }
   ])
 
+
 module.exports = React.createClass
-  displayName: 'DraftInput'
+  displayName: 'DraftInputCaption'
 
   getInitialState: ->
     editorState: EditorState.createEmpty()
@@ -53,7 +47,7 @@ module.exports = React.createClass
       @setState editorState: EditorState.createWithContent(state, decorator)
 
   onChange: (editorState) ->
-    html = @getHtml editorState
+    html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.item.caption = html
 
@@ -64,30 +58,35 @@ module.exports = React.createClass
   onBlur: ->
     @setState focus: false
 
-  getHtml: (editorState) ->
-    stateToHTML editorState.getCurrentContent()
-
-  onPaste: (text, html) ->
-    { editorState } = this.state;
-    html = convertFromHTML(html)
-    convertedHtml = html.contentBlocks.map (contentBlock) ->
-      if contentBlock.getType() isnt 'unstyled'
-        newBlock = contentBlock.set('type', 'unstyled')
-        return newBlock
-      else
-        return contentBlock
-    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
-    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
-    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
-    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
-    return true
-
   onStyleChange: (e) ->
-    @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.id)
-    @focus()
+    @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
   onURLChange: (e) ->
     @setState urlValue: e.target.value
+
+  convertToHtml: (editorState) ->
+    html = stateToHTML editorState.getCurrentContent()
+    html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
+    return html
+
+  onPaste: (text, html) ->
+    { editorState } = @state
+    html = convertFromHTML(html)
+    convertedHtml = html.contentBlocks.map (contentBlock) =>
+      unstyled = @stripPastedStyles contentBlock
+      if unstyled.getType() isnt 'unstyled'
+        unstyled = unstyled.set('type', 'unstyled')
+      return unstyled
+    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
+    @onChange(EditorState.push(editorState, ContentState.createFromBlockArray(convertedHtml), 'insert-fragment'))
+    return true
+
+  stripPastedStyles: (contentBlock) ->
+    characterList = contentBlock.getCharacterList().map (character) ->
+      if character.get('style') is 'CODE' or 'BOLD'
+        character.set('style', character.get('style').clear())
+    unstyled = contentBlock.set('characterList', characterList)
+    return unstyled
 
   promptForLink: (e) ->
     selection = @state.editorState.getSelection()
@@ -124,6 +123,7 @@ module.exports = React.createClass
         newEditorState.getSelection()
         entityKey
       )
+    @focus()
 
   removeLink: (e) ->
     e.preventDefault()
@@ -174,12 +174,11 @@ module.exports = React.createClass
           spellCheck: true
           onChange: @onChange
           handlePastedText: @onPaste
-          customStyleMap: styleMap
         }
       div { className: 'draft-caption__actions'},
         button {
           onMouseDown: @onStyleChange
-          id: 'ITALIC'
+          className: 'italic'
         }, 'I'
         button {
           onMouseDown: @promptForLink
