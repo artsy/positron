@@ -26,7 +26,6 @@ decorator = new CompositeDecorator([
     }
   ])
 
-
 module.exports = React.createClass
   displayName: 'DraftInputCaption'
 
@@ -36,6 +35,7 @@ module.exports = React.createClass
     urlValue: ''
     html: null
     focus: false
+    selectionTarget: null
 
   componentDidMount: ->
     if @props.item.caption?.length
@@ -59,6 +59,7 @@ module.exports = React.createClass
     @setState focus: false
 
   onStyleChange: (e) ->
+    e.preventDefault()
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
   onURLChange: (e) ->
@@ -89,19 +90,28 @@ module.exports = React.createClass
     return unstyled
 
   promptForLink: (e) ->
+    e.preventDefault()
     selection = @state.editorState.getSelection()
+    selectionTarget = null
     if !selection.isCollapsed()
+      selectionTarget = @stickyLinkBox getVisibleSelectionRect(window)
       contentState = @state.editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
       blockWithLinkAtBeginning = contentState.getBlockForKey(startKey)
       linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset)
-
       url = ''
       if linkKey
         linkInstance = contentState.getEntity(linkKey)
         url = linkInstance.getData().url
-      @setState({showUrlInput: true, urlValue: url})
+      @setState({showUrlInput: true, urlValue: url, selectionTarget: selectionTarget})
+
+  stickyLinkBox: (selectionTarget) ->
+    parentTop = $('.draft-caption__input').offset().top - window.pageYOffset
+    parentLeft = $('.draft-caption__input').offset().left
+    top = selectionTarget.top - parentTop + 25
+    left = selectionTarget.left - parentLeft - (selectionTarget.width / 2) - 135
+    return {top: top, left: left}
 
   confirmLink: (e) ->
     e.preventDefault()
@@ -117,13 +127,13 @@ module.exports = React.createClass
     @setState({
       showUrlInput: false
       urlValue: ''
+      selectionTarget: null
     })
     @onChange RichUtils.toggleLink(
         newEditorState
         newEditorState.getSelection()
         entityKey
       )
-    @focus()
 
   removeLink: (e) ->
     e.preventDefault()
@@ -138,7 +148,13 @@ module.exports = React.createClass
 
   printUrlInput: ->
     if @state.showUrlInput
-      div { className: 'draft-caption__url-input' },
+      div {
+        className: 'draft-caption__url-input'
+        style: {
+          top: @state.selectionTarget.top
+          left: @state.selectionTarget.left
+        }
+      },
         input {
           ref: 'url'
           type: 'text'
