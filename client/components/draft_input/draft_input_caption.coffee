@@ -23,7 +23,7 @@ editor = (props) -> React.createElement Editor, props
 
 styleMap = {
   'CODE': {}
-  'BOLD': {}
+  'BOLD': { 'fontWeight' : 'normal'}
 };
 
 decorator = new CompositeDecorator([
