@@ -17,7 +17,7 @@ request = require 'superagent'
     .set('X-Access-Token': accessToken)
     .end (err, res) ->
       return callback err if err
-      slugs = for result in res.body._embedded.results when result.type is 'Show'
+      slugs = for result in res.body._embedded.results when result.type?.toLowerCase() is 'show'
         href = result._links.self.href
         slug = _.last href.split('/')
       async.map slugs, (slug, cb) ->

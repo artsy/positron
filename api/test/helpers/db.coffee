@@ -3,7 +3,7 @@ path = require 'path'
 env = require 'node-env-file'
 env path.resolve(__dirname, '../../../.env.test')
 fs = require 'fs'
-bcrypt = require 'bcrypt'
+bcrypt = require 'bcryptjs'
 { SALT } = process.env
 
 @fixtures = fixtures = require '../../../test/helpers/fixtures'
