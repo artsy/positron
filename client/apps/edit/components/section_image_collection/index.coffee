@@ -12,7 +12,6 @@ Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
 Input = React.createFactory require '../section_image_set/input.coffee'
 DraftInputCaption = React.createFactory require '../../../../components/draft_input/draft_input_caption.coffee'
-EditSectionRemoveIcon = React.createFactory require '../../public/icons/edit_section_remove.coffee'
 UrlArtworkInput = React.createFactory require '../section_image_set/url_artwork_input.coffee'
 
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
@@ -225,8 +224,8 @@ module.exports = React.createClass
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
                       onClick: @removeItem(item)
-                    },
-                      EditSectionRemoveIcon {}
+                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+                    }
                   ]
                 else
                   [
@@ -251,8 +250,8 @@ module.exports = React.createClass
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
                       onClick: @removeItem(item)
-                    },
-                      EditSectionRemoveIcon {}
+                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+                    }
                   ]
             )
         else

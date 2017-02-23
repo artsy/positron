@@ -13,9 +13,7 @@ window.process = {env: {NODE_ENV: 'development'}}
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
 DraftDecorators = require './draft_decorators.coffee'
-LinkIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link.coffee'
-RemoveIcon = React.createFactory require '../../apps/edit/public/icons/edit_text_link_remove.coffee'
-
+icons = -> require('./icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
@@ -191,8 +189,8 @@ module.exports = React.createClass
           button {
             className: 'remove-link'
             onMouseDown: @removeLink
-          },
-            RemoveIcon {}
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+          }
         button {
           className: 'add-link'
           onMouseDown: @confirmLink
@@ -225,6 +223,6 @@ module.exports = React.createClass
         button {
           onMouseDown: @promptForLink
           className: 'link'
-        },
-          LinkIcon {}
+          dangerouslySetInnerHTML: __html: $(icons()).filter('.link').html()
+        }
       @printUrlInput()
