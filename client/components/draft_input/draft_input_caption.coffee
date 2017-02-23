@@ -72,30 +72,35 @@ module.exports = React.createClass
 
   onPaste: (text, html) ->
     { editorState } = @state
+    unless html
+      html = '<div>' + text + '</div>'
     html = convertFromHTML(html)
     convertedHtml = html.contentBlocks.map (contentBlock) =>
       unstyled = @stripPastedStyles contentBlock
       if unstyled.getType() isnt 'unstyled' or 'LINK'
         unstyled = unstyled.set('type', 'unstyled')
       return unstyled
+    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
     Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
-    @onChange(EditorState.push(editorState, ContentState.createFromBlockArray(convertedHtml), 'insert-fragment'))
+    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
 
   stripPastedStyles: (contentBlock) ->
     characterList = contentBlock.getCharacterList().map (character) ->
-      if character.get('style') is 'CODE' or 'BOLD'
+      if character.get('style') isnt 'ITALIC'
         character.set('style', character.get('style').clear())
     unstyled = contentBlock.set('characterList', characterList)
     return unstyled
 
   promptForLink: (e) ->
+    { editorState } = @state
     e.preventDefault()
-    selection = @state.editorState.getSelection()
+    selection = editorState.getSelection()
     selectionTarget = null
     if !selection.isCollapsed()
       selectionTarget = @stickyLinkBox getVisibleSelectionRect(window)
-      contentState = @state.editorState.getCurrentContent()
+      contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
       blockWithLinkAtBeginning = contentState.getBlockForKey(startKey)
@@ -146,6 +151,24 @@ module.exports = React.createClass
         editorState: RichUtils.toggleLink(editorState, selection, null)
       })
 
+  handleLinkReturn: (e) ->
+    e.preventDefault()
+    if e.key is 'Enter'
+      @confirmLink(e)
+
+  handleReturn: (e) ->
+    e.preventDefault()
+    return true
+
+  handleKeyCommand: (e) ->
+    if e is 'italic'
+      { editorState } = @state
+      newState = RichUtils.handleKeyCommand editorState, e
+      if newState
+        @onChange newState
+        return true
+    return false
+
   printUrlInput: ->
     if @state.showUrlInput
       div {
@@ -162,6 +185,7 @@ module.exports = React.createClass
           onChange: @onURLChange
           className: 'bordered-input'
           placeholder: 'Paste or type a link'
+          onKeyPress: @handleLinkReturn
         }
         if @state.urlValue?.length
           button {
@@ -190,6 +214,8 @@ module.exports = React.createClass
           spellCheck: true
           onChange: @onChange
           handlePastedText: @onPaste
+          handleReturn: @handleReturn
+          handleKeyCommand: @handleKeyCommand
         }
       div { className: 'draft-caption__actions'},
         button {
