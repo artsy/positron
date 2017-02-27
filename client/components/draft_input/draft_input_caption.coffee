@@ -61,6 +61,7 @@ module.exports = React.createClass
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
   onURLChange: (e) ->
+    debugger
     @setState urlValue: e.target.value
 
   convertToHtml: (editorState) ->
@@ -75,7 +76,7 @@ module.exports = React.createClass
     html = convertFromHTML(html)
     convertedHtml = html.contentBlocks.map (contentBlock) =>
       unstyled = @stripPastedStyles contentBlock
-      if unstyled.getType() isnt 'unstyled' or 'LINK'
+      unless unstyled.getType() in ['unstyled','LINK']
         unstyled = unstyled.set('type', 'unstyled')
       return unstyled
     blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
@@ -183,7 +184,7 @@ module.exports = React.createClass
           onChange: @onURLChange
           className: 'bordered-input'
           placeholder: 'Paste or type a link'
-          onKeyPress: @handleLinkReturn
+          onKeyUp: @handleLinkReturn
         }
         if @state.urlValue?.length
           button {
