@@ -10,6 +10,7 @@ icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 Input = React.createFactory require './input.coffee'
+UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
@@ -41,7 +42,7 @@ module.exports = React.createClass
       filter: (res) ->
         vals = []
         for r in res._embedded.results
-          if r.type == 'Artwork'
+          if r.type?.toLowerCase() == 'artwork'
             id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
             vals.push
               id: id
@@ -90,22 +91,8 @@ module.exports = React.createClass
     newImages = _.without @state.images, item
     @setState images: newImages
 
-  addArtworkFromUrl: (e) ->
-    e.preventDefault()
-    val = @refs.byUrl.value
-    slug = _.last(val.split '/')
-    @refs.byUrl.setState loading: true
-    new Artwork(id: slug).fetch
-      error: (m, res) =>
-        @refs.byUrl.setState(
-          errorMessage: 'Artwork not found. Make sure your urls are correct.'
-          loadingUrls: false
-        ) if res.status is 404
-      success: (artwork) =>
-        @refs.byUrl.setState loading: false, errorMessage: ''
-        $(@refs.byUrl).val ''
-        newImages = @state.images.concat [artwork.denormalized()]
-        @setState images: newImages
+  addArtworkFromUrl: (newImages) ->
+    @setState images: newImages
 
   showPreviewImages: ->
     # Slideshow Preview
@@ -149,16 +136,10 @@ module.exports = React.createClass
               className: 'bordered-input bordered-input-dark'
               placeholder: 'Search for artwork by title'
             }
-          div { className: 'esis-byurl-input' },
-            input {
-              ref: 'byUrl'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Add artwork url'
-            }
-              button {
-                className: 'esis-byurl-button avant-garde-button'
-                onClick: @addArtworkFromUrl
-              }, 'Add'
+          UrlArtworkInput {
+            images: @state.images
+            addArtworkFromUrl: @addArtworkFromUrl
+          }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -179,7 +160,7 @@ module.exports = React.createClass
                         src: item.image
                         className: 'esis-artwork'
                       }
-                    div {className: 'esic-caption', key: 'caption-' + i },
+                    div {className: 'esis-caption', key: 'caption-' + i },
                       p {},
                         strong {}, @formatArtistNames item
                       p {}, item.title if item.title
@@ -224,6 +205,7 @@ module.exports = React.createClass
             div { className: 'esis-preview-image-container' },
               @state.images.slice(0,4).map (item, i) =>
                 img {
+                  key: 'image-' + i
                   src: resize((item.image or item.url or ''), height: 150)
                   className: 'esis-preview-image'
                 }
