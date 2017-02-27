@@ -1,5 +1,92 @@
 @import '../stylus_lib'
 
+.draft-text
+  position relative
+  width calc(100% \+ 40px)
+  margin-top -20px
+  margin-left -20px
+  z-index -1
+  &.is-editing
+    z-index 100
+  .public-DraftEditor-content
+    garamond l-body
+    padding 20px
+    p, .public-DraftStyleDefault-ltr
+      margin-bottom 1em
+    h2
+      garamond l-header
+      font-size 28px
+      line-height 1.2em
+    h3
+      avant-garde body
+    ol li
+      list-style decimal
+      margin-left 20px
+    ul li
+      list-style disc
+      margin-left 20px
+  nav
+    position absolute
+    top -40px
+    display flex !important
+    background black
+    width 100%
+    justify-content center
+  button
+    font-weight 600
+    height 40px
+    width 50px
+    color gray-dark-color
+    line-height 1em !important
+    background none
+    border none
+    border-right 1px solid gray-darkest-color
+    transition color .15s
+    &:hover
+      color gray-color
+    &[name='ITALIC'],
+    &[name='header-two'],
+    &[name='header-three']
+      garamond l-body
+    &[name='BOLD']
+      font-weight 600
+      avant-garde l-headline
+    svg
+      width 18px
+      height 18px
+    .st0, circle, g, path
+      fill gray-dark-color
+      transition color .15s
+    &:hover
+      .st0, circle, g, path
+        fill gray-dark-color
+        transition color .15s
+      &:hover
+        .st0, circle, g, path
+          fill gray-color
+      &[name='toc']
+        svg
+          width 22px
+          height 22px
+          #Group-2-Copy
+            fill black
+  &__input
+    position relative
+    .artist-follow
+      background-image none !important
+      &:before
+        content url(/icons/circle_plus.svg)
+        padding-left 10px
+        vertical-align -8.5px
+      &:after
+        content 'Follow'
+        garamond('s-body')
+        text-transform none
+        letter-spacing 0px
+    .is-jump-link
+      background-color #CFF8E6
+      background-image none !important
+
 .draft-caption
   display flex
   justify-content flex-start

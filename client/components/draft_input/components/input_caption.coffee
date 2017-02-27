@@ -13,8 +13,9 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   Modifier,
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
-DraftDecorators = require '../decorators.coffee'
+
 InputUrl = React.createFactory require './input_url.coffee'
+DraftDecorators = require '../decorators.coffee'
 icons = -> require('../icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
@@ -64,6 +65,7 @@ module.exports = React.createClass
 
   convertToHtml: (editorState) ->
     html = stateToHTML editorState.getCurrentContent()
+    debugger
     html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
     return html
 

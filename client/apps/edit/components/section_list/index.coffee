@@ -19,7 +19,7 @@ module.exports = React.createClass
     @props.sections.on 'add', @onNewSection
 
   componentDidUpdate: ->
-    $('.edit-section-list').find('.scribe-marker').remove()
+    # $('.edit-section-list').find('.scribe-marker').remove()
 
   onSetEditing: (i) ->
     @setState editingIndex: i
