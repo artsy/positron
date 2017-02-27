@@ -4,6 +4,7 @@ Backbone = require 'backbone'
 rewire = require 'rewire'
 Article = rewire '../../models/article'
 sinon = require 'sinon'
+moment = require 'moment'
 
 describe "Article", ->
   beforeEach ->
@@ -33,12 +34,50 @@ describe "Article", ->
 
   describe '#isEditorial', ->
 
+    it 'returns true for featured articles', ->
+      @article.set 'featured', true
+      @article.isEditorial().should.be.true()
+
+    it 'returns false for non-featured articles', ->
+      @article.set 'featured', false
+      @article.isEditorial().should.be.false()
+
   describe '#getAuthorArray', ->
+
+    it 'returns a list of authors', ->
+      @article.set 'author', name: 'Artsy Editorial'
+      @article.set 'contributing_authors', [
+        { name: 'Molly' }
+        { name: 'Kana' }
+      ]
+      @article.getAuthorArray()[0].should.equal 'Artsy Editorial'
+      @article.getAuthorArray()[1].should.equal 'Molly'
+      @article.getAuthorArray()[2].should.equal 'Kana'
 
   describe '#date', ->
 
+    it 'return a moment object with the attribute', ->
+      @article.set 'published_at', '2017-05-05'
+      @article.date('published_at').format('YYYYMMDD').should.equal '20170505'
+
   describe '#fullHref', ->
+
+    it 'returns the full href', ->
+      @article.set 'slugs', ['artsy-editorial-test']
+      @article.fullHref().should.equal 'undefined/article/artsy-editorial-test'
 
   describe '#href', ->
 
+    it 'returns the relative url', ->
+      @article.set 'slugs', ['artsy-editorial-relative']
+      @article.href().should.equal '/article/artsy-editorial-relative'
+
   describe '#slug', ->
+
+    it 'gets the slug', ->
+      @article.set 'slugs', [
+        'artsy-editorial-test1'
+        'artsy-editorial-test2'
+        'artsy-editorial-test3'
+      ]
+      @article.slug().should.equal 'artsy-editorial-test3'

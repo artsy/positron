@@ -50,6 +50,7 @@ module.exports = ->
             id: '5321b73dc9dc2458c4000196'
             image: 'https://artsy.net/artwork.jpg'
             partner: name: 'Guggenheim'
+            date: '1956'
             artists: [ { name: 'Van Gogh' }, { name: 'Van Dogh' } ]
           }
           {
@@ -58,6 +59,7 @@ module.exports = ->
             id: '5321b71c275b24bcaa0001a5'
             image: 'https://artsy.net/artwork2.jpg'
             partner: name: 'Guggenheim'
+            date: '1956'
             artists: [ { name: 'Van Gogh' }]
           }
         ]
@@ -79,6 +81,7 @@ module.exports = ->
             id: '5321b71c275b24bcaa0001a5'
             image: 'https://artsy.net/artwork2.jpg'
             partner: name: 'Guggenheim'
+            date: '1956'
             artists: [ { name: 'Van Gogh' }]
           }
           {

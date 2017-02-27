@@ -12,6 +12,7 @@ jade = require 'jade'
 Article = require '../../../models/article.coffee'
 moment = require 'moment'
 particle = require 'particle'
+cloneDeep = require 'lodash.clonedeep'
 
 @distributeArticle = (article, cb) =>
   tags = ['article']
@@ -45,7 +46,7 @@ cleanArticlesInSailthru = (slugs = []) =>
         @deleteArticleFromSailthru slug, ->
 
 postFacebookAPI = (article, cb) ->
-  article = new Article article
+  article = new Article cloneDeep article
   return cb() unless article.isEditorial()
   article.prepForInstant()
   jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',

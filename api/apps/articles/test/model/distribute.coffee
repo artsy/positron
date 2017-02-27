@@ -130,10 +130,37 @@ describe 'Save', ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
           published: true
-          sections: []
+          featured: true
+          slugs: ['artsy-editorial-test']
+          sections: [
+            {
+              type: 'text'
+              body: '<p>This is a paragraph</p>'
+            }
+          ]
         }, (err, article) =>
-          console.log @post.args
-          console.log @send.args
+          @post.args[0][0].should.equal 'https://graph.facebook.com/v2.7/342443413406/instant_articles'
+          @send.args[0][0].html_source.should.containEql '<p>This is a paragraph</p>'
+          @send.args[0][0].html_source.should.containEql 'fb:article_style'
+          @send.args[0][0].html_source.should.containEql '<iframe src="http://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
+          done()
+
+      it 'performs a deep copy so it doesnt affect the original article when prepping', (done) ->
+        originalArticle = {
+          author_id: '5086df098523e60002000018'
+          published: true
+          featured: true
+          slugs: ['artsy-editorial-test']
+          sections: [
+            {
+              type: 'text'
+              body: '<h3>This is a paragraph</h3>'
+            }
+          ]
+        }
+        Distribute.distributeArticle originalArticle, (err, article) =>
+          @send.args[0][0].html_source.should.containEql '<h2>This is a paragraph</h2>'
+          originalArticle.sections[0].body.should.containEql '<h3>This is a paragraph</h3>'
           done()
 
   describe '#deleteArticleFromSailthru', ->
