@@ -21,7 +21,6 @@ describe 'instant article template', ->
     html = render('index')
       article: new Article sections: []
       forceUrl: ''
-      sd: {}
       _: _
       moment: moment
       particle: particle
@@ -34,7 +33,6 @@ describe 'instant article template', ->
     html = render('index')
       article: new Article fixtures().articles
       forceUrl: ''
-      sd: {}
       _: _
       moment: moment
       particle: particle

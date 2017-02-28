@@ -5,9 +5,13 @@ rewire = require 'rewire'
 Article = rewire '../../models/article'
 sinon = require 'sinon'
 moment = require 'moment'
+gravity = require('antigravity').server
+app = require('express')()
 
 describe "Article", ->
+
   beforeEach ->
+    Article.__set__ 'FORCE_URL', 'https://artsy.net'
     @article = new Article
 
   describe '#prepForInstant', ->
@@ -64,7 +68,7 @@ describe "Article", ->
 
     it 'returns the full href', ->
       @article.set 'slugs', ['artsy-editorial-test']
-      @article.fullHref().should.equal 'undefined/article/artsy-editorial-test'
+      @article.fullHref().should.equal 'https://artsy.net/article/artsy-editorial-test'
 
   describe '#href', ->
 

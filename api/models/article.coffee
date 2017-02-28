@@ -1,8 +1,8 @@
 _ = require 'underscore'
-_s = require 'underscore.string'
 Backbone = require 'backbone'
-moment = require 'moment'
+{ stripTags } = require 'underscore.string'
 { POSITRON_URL, FORCE_URL } = process.env
+moment = require 'moment'
 cheerio = require 'cheerio'
 
 module.exports = class Article extends Backbone.Model
@@ -20,6 +20,9 @@ module.exports = class Article extends Backbone.Model
 
   date: (attr) ->
     moment(@get(attr)).local()
+
+  strip: (attr) ->
+    stripTags(@get attr)
 
   getAuthorArray: ->
     creator = []

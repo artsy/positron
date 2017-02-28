@@ -2,7 +2,9 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
-{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL, FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL, NODE_ENV } = process.env
+{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL,
+  FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL,
+  NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 async = require 'async'
 { getTextSections } = require './save'
@@ -15,19 +17,12 @@ particle = require 'particle'
 cloneDeep = require 'lodash.clonedeep'
 
 @distributeArticle = (article, cb) =>
-  tags = ['article']
-  tags = tags.concat ['magazine'] if article.featured is true
-  tags = tags.concat article.keywords
-  imageSrc = article.email_metadata?.image_url
-  images =
-    full: url: crop(imageSrc, { width: 1200, height: 706 } )
-    thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   cleanArticlesInSailthru article.slugs
   async.parallel [
     (callback) ->
       postFacebookAPI article, callback
     (callback) ->
-      postSailthruAPI article, tags, images, callback
+      postSailthruAPI article, callback
   ], (err, results) ->
     debug err if err
     cb(article)
@@ -53,7 +48,7 @@ postFacebookAPI = (article, cb) ->
     {
       article: article
       forceUrl: FORCE_URL
-      sd: {}
+      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
       toSentence: _s.toSentence
       _: _
       moment: moment
@@ -67,10 +62,19 @@ postFacebookAPI = (article, cb) ->
           development_mode: NODE_ENV isnt 'production'
           html_source: html
         .end (err, response) =>
-          return cb err if err
+          if err
+            debug err
+            return cb err
           cb response
 
-postSailthruAPI = (article, tags, images, cb) ->
+postSailthruAPI = (article, cb) ->
+  tags = ['article']
+  tags = tags.concat ['magazine'] if article.featured is true
+  tags = tags.concat article.keywords
+  imageSrc = article.email_metadata?.image_url
+  images =
+    full: url: crop(imageSrc, { width: 1200, height: 706 } )
+    thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   html = if article.send_body then getTextSections(article) else ''
   sailthru.apiPost 'content',
   url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
@@ -88,7 +92,9 @@ postSailthruAPI = (article, tags, images, cb) ->
     daily_email: article.daily_email
     weekly_email: article.weekly_email
   , (err, response) =>
-    return cb err if err
+    if err
+      debug err
+      return cb err
     cb response
 
 #

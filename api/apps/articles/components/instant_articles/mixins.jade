@@ -52,7 +52,7 @@ mixin video(section)
 mixin artworkCaption(artwork)
   figcaption
     h1
-      a(href="#{sd.APP_URL}/artwork/#{artwork.slug}")= artwork.title + ", " + artwork.date + ". "
+      a(href="#{forceUrl}/artwork/#{artwork.slug}")= artwork.title + ", " + artwork.date + ". "
     h2
       if artwork.artists
         = toSentence(_.pluck(artwork.artists, 'name'))
