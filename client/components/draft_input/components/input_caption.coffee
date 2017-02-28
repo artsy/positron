@@ -12,8 +12,9 @@ window.process = {env: {NODE_ENV: 'development'}}
   Modifier,
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
-DraftDecorators = require './draft_decorators.coffee'
-icons = -> require('./icons.jade') arguments...
+DraftDecorators = require '../decorators.coffee'
+InputUrl = React.createFactory require './input_url.coffee'
+icons = -> require('../icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
@@ -60,9 +61,8 @@ module.exports = React.createClass
     e.preventDefault()
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
-  onURLChange: (e) ->
-    debugger
-    @setState urlValue: e.target.value
+  onURLChange: ->
+    @setState urlValue: @refs.url.value
 
   convertToHtml: (editorState) ->
     html = stateToHTML editorState.getCurrentContent()
@@ -96,7 +96,8 @@ module.exports = React.createClass
     { editorState } = @state
     e.preventDefault()
     selection = editorState.getSelection()
-    selectionTarget = null
+    selectionTarget = {top: 0, left: 0}
+    url = ''
     if !selection.isCollapsed()
       selectionTarget = @stickyLinkBox getVisibleSelectionRect(window)
       contentState = editorState.getCurrentContent()
@@ -104,11 +105,10 @@ module.exports = React.createClass
       startOffset = selection.getStartOffset()
       blockWithLinkAtBeginning = contentState.getBlockForKey(startKey)
       linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset)
-      url = ''
       if linkKey
         linkInstance = contentState.getEntity(linkKey)
         url = linkInstance.getData().url
-      @setState({showUrlInput: true, urlValue: url, selectionTarget: selectionTarget})
+    @setState({showUrlInput: true, urlValue: url, selectionTarget: selectionTarget})
 
   stickyLinkBox: (selectionTarget) ->
     parentTop = $('.draft-caption__input').offset().top - window.pageYOffset
@@ -170,32 +170,12 @@ module.exports = React.createClass
 
   printUrlInput: ->
     if @state.showUrlInput
-      div {
-        className: 'draft-caption__url-input'
-        style: {
-          top: @state.selectionTarget.top
-          left: @state.selectionTarget.left
-        }
-      },
-        input {
-          ref: 'url'
-          type: 'text'
-          value: @state.urlValue
-          onChange: @onURLChange
-          className: 'bordered-input'
-          placeholder: 'Paste or type a link'
-          onKeyUp: @handleLinkReturn
-        }
-        if @state.urlValue?.length
-          button {
-            className: 'remove-link'
-            onMouseDown: @removeLink
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          }
-        button {
-          className: 'add-link'
-          onMouseDown: @confirmLink
-        }, 'Apply'
+      InputUrl {
+        selectionTarget: @state.selectionTarget
+        removeLink: @removeLink
+        confirmLink: @confirmLink
+        urlValue: @state.urlValue
+      }
 
   render: ->
     hasFocus = if @state.focus then ' has-focus' else ' no-focus'

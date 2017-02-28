@@ -11,7 +11,7 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 Input = React.createFactory require './input.coffee'
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
-DraftInputCaption = React.createFactory require '../../../../components/draft_input/draft_input_caption.coffee'
+DraftInputCaption = React.createFactory require '../../../../components/draft_input/components/input_caption.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
