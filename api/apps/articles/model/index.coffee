@@ -7,8 +7,8 @@ db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
 { validate, onPublish, generateSlugs, generateKeywords,
-generateArtworks, sanitizeAndSave, removeFromSearch,
-deleteArticleFromSailthru, onUnpublish } = Save = require './save'
+  sanitizeAndSave, onUnpublish } = Save = require './save'
+{ removeFromSearch, deleteArticleFromSailthru } = require './distribute'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'

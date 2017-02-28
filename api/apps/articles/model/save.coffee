@@ -1,7 +1,6 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
-search = require '../../../lib/elasticsearch'
 stopWords = require '../../../lib/stopwords'
 User = require '../../users/model'
 async = require 'async'
@@ -13,17 +12,13 @@ cheerio = require 'cheerio'
 url = require 'url'
 Q = require 'bluebird-q'
 request = require 'superagent'
-requestBluebird = require 'superagent-bluebird-promise'
 Backbone = require 'backbone'
-{ Image } = require 'artsy-backbone-mixins'
 debug = require('debug') 'api'
 schema = require './schema'
 Article = require './index'
+{ distributeArticle, deleteArticleFromSailthru, indexForSearch } = require './distribute'
 { ObjectId } = require 'mongojs'
-cloneDeep = require 'lodash.clonedeep'
-{ ARTSY_URL, SAILTHRU_KEY, SAILTHRU_SECRET,
-FORCE_URL, ARTSY_EDITORIAL_ID, SECURE_IMAGES_URL, GEMINI_CLOUDFRONT_URL, EDITORIAL_CHANNEL } = process.env
-sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
+{ ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp').token or ''
 
 @validate = (input, callback) ->
@@ -39,7 +34,7 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    @deleteArticleFromSailthru _.last(article.slugs), =>
+    deleteArticleFromSailthru _.last(article.slugs), =>
       cb null, article
 
 setOnPublishFields = (article) =>
@@ -53,7 +48,7 @@ setOnPublishFields = (article) =>
   article
 
 getDescription = (article) =>
-  $ = cheerio.load(getTextSections(article))
+  $ = cheerio.load(@getTextSections(article))
   text = []
   $('p').map( (i, el) ->
     text.push $(el).text()
@@ -131,51 +126,16 @@ removeStopWords = (title) ->
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@indexForSearch = (article, cb) ->
-  if article.sections
-    sections = for section in article.sections
-      section.body
-
-  search.client.index(
-    index: search.index,
-    type: 'article',
-    id: article.id,
-    body:
-      slug: article.slug
-      name: article.title
-      description: article.description
-      published: article.published
-      published_at: article.published_at
-      scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections?.length > 0 and article.channel_id and article.channel_id.toString() is EDITORIAL_CHANNEL
-      author: article.author and article.author.name or ''
-      featured: article.featured
-      tags: article.tags
-      body: sections and stripHtmlTags(sections.join(' ')) or ''
-      image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
-    , (error, response) ->
-      console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
-  )
-
-@removeFromSearch = (id) ->
-  search.client.delete(
-    index: search.index
-    type: 'article'
-    id: id
-  , (error, response) ->
-      console.log(error) if error
-  )
-
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
-    @indexForSearch article
-    @sendArticleToSailthru article, =>
+    indexForSearch article
+    distributeArticle article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
-    @indexForSearch article
+    indexForSearch article
     db.articles.save sanitize(typecastIds article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
@@ -243,60 +203,8 @@ typecastIds = (article) ->
     channel_id: ObjectId(article.channel_id) if article.channel_id
     partner_channel_id: ObjectId(article.partner_channel_id) if article.partner_channel_id
 
-@sendArticleToSailthru = (article, cb) =>
-  tags = ['article']
-  tags = tags.concat ['magazine'] if article.featured is true
-  tags = tags.concat article.keywords
-  imageSrc = article.email_metadata?.image_url
-  images =
-    full: url: crop(imageSrc, { width: 1200, height: 706 } )
-    thumb: url: crop(imageSrc, { width: 900, height: 530 } )
-  html = if article.send_body then getTextSections(article) else ''
-  cleanArticlesInSailthru article.slugs
-  sailthru.apiPost 'content',
-    url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
-    date: article.published_at
-    title: article.email_metadata?.headline
-    author: article.email_metadata?.author
-    tags: tags
-    images: images
-    spider: 0
-    vars:
-      credit_line: article.email_metadata?.credit_line
-      credit_url: article.email_metadata?.credit_url
-      html: html
-      custom_text: article.email_metadata?.custom_text
-      daily_email: article.daily_email
-      weekly_email: article.weekly_email
-  , (err, response) =>
-    debug err if err
-    cb()
-
-cleanArticlesInSailthru = (slugs = []) =>
-  if slugs.length > 1
-    slugs.forEach (slug, i) =>
-      unless i is slugs.length - 1
-        @deleteArticleFromSailthru slug, ->
-
-@deleteArticleFromSailthru = (slug, cb) =>
-  sailthru.apiDelete 'content',
-    url: "#{FORCE_URL}/article/#{slug}"
-  , (err, response) =>
-    debug err if err
-    cb()
-
-stripHtmlTags = (str) ->
-  if (str == null)
-    return ''
-  else
-    String(str).replace /<\/?[^>]+>/g, ''
-
-getTextSections = (article) ->
+@getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''
   _.map article.sections, (section) ->
     condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
-
-crop = (url, options = {}) ->
-  { width, height } = options
-  "#{GEMINI_CLOUDFRONT_URL}/?resize_to=fill&width=#{width}&height=#{height}&quality=95&src=#{encodeURIComponent(url)}"
