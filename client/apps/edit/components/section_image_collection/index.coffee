@@ -37,6 +37,9 @@ module.exports = React.createClass
   componentWillUnmount: ->
     @autocomplete.remove()
 
+  componentWillUpdate: ->
+    @props.section.set images: @state.images if @state.images.length > 0
+
   setupAutocomplete: ->
     $el = $(@refs.autocomplete)
     @autocomplete = new Autocomplete

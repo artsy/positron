@@ -1,7 +1,18 @@
+# A pop-up input for adding a link to a text selection
+
+# Example usage:
+# DraftInputUrl {
+#   selectionTarget: selectionTarget <- where the input should be placed {top, left}
+#   removeLink: @removeLink
+#   confirmLink: @confirmLink
+#   urlValue: urlValue <- to editing an existing link, pass url of selection
+# }
+
+
 React = require 'react'
 
 icons = -> require('../icons.jade') arguments...
-{ div, button, p, a, input } = React.DOM
+{ div, button, input } = React.DOM
 
 module.exports = React.createClass
   displayName: 'DraftInputUrl'
@@ -14,11 +25,14 @@ module.exports = React.createClass
 
   confirmLink: (e) ->
     e.preventDefault()
-    @props.confirmLink
+    if @state.urlValue.length
+      @props.confirmLink(@state.urlValue)
+    else
+      @props.removeLink(e)
 
   removeLink: (e) ->
     e.preventDefault()
-    @props.removeLink
+    @props.removeLink(e)
 
   handleLinkReturn: (e) ->
     e.preventDefault()
@@ -50,6 +64,6 @@ module.exports = React.createClass
         }
       button {
         className: 'add-link'
-        onMouseDown: @props.confirmLink
+        onMouseDown: @confirmLink
       }, 'Apply'
 

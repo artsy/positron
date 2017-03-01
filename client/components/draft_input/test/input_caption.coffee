@@ -37,19 +37,13 @@ describe 'DraftInputCaption', ->
   it 'Shows a placeholder if caption is empty', ->
     $(@rendered).html().should.containEql 'Image caption'
 
-  it 'Renders and existing caption', ->
+  it 'Renders an existing caption', ->
     @component.onChange(@component.state.editorState)
     @component.state.html.should.eql '<p>Here is a <em>caption</em>.</p>'
 
-  it 'Can input a link', ->
+  it 'Opens a link input popup', ->
     @r.simulate.mouseDown @r.find @component, 'link'
-    @component.refs.url.value = 'http://link.com'
-    @component.onURLChange()
-    @component.state.urlValue.should.eql 'http://link.com'
     @component.state.showUrlInput.should.eql true
-    @r.simulate.mouseDown @r.find @component, 'add-link'
-    @component.state.urlValue.should.eql ''
-    @component.state.showUrlInput.should.eql false
 
   xit 'Can remove a link', ->
 

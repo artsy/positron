@@ -61,9 +61,6 @@ module.exports = React.createClass
     e.preventDefault()
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
-  onURLChange: ->
-    @setState urlValue: @refs.url.value
-
   convertToHtml: (editorState) ->
     html = stateToHTML editorState.getCurrentContent()
     html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
@@ -99,7 +96,7 @@ module.exports = React.createClass
     selectionTarget = {top: 0, left: 0}
     url = ''
     if !selection.isCollapsed()
-      selectionTarget = @stickyLinkBox getVisibleSelectionRect(window)
+      selectionTarget = @stickyLinkBox()
       contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
@@ -110,16 +107,22 @@ module.exports = React.createClass
         url = linkInstance.getData().url
     @setState({showUrlInput: true, urlValue: url, selectionTarget: selectionTarget})
 
-  stickyLinkBox: (selectionTarget) ->
-    parentTop = $('.draft-caption__input').offset().top - window.pageYOffset
-    parentLeft = $('.draft-caption__input').offset().left
-    top = selectionTarget.top - parentTop + 25
-    left = selectionTarget.left - parentLeft - (selectionTarget.width / 2) - 135
+  getSelectionLocation: ->
+    target = getVisibleSelectionRect(window)
+    parent = {
+      top: $('.draft-caption__input').offset().top - window.pageYOffset
+      left: $('.draft-caption__input').offset().left
+    }
+    return {target: target, parent: parent}
+
+  stickyLinkBox: ->
+    location = @getSelectionLocation()
+    top = location.target.top - location.parent.top + 25
+    left = location.target.left - location.parent.left - (location.target.width / 2) - 135
     return {top: top, left: left}
 
-  confirmLink: (e) ->
-    e.preventDefault()
-    { editorState, urlValue } = @state
+  confirmLink: (urlValue) ->
+    { editorState } = @state
     contentState = editorState.getCurrentContent()
     contentStateWithEntity = contentState.createEntity(
       'LINK'
