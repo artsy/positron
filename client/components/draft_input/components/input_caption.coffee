@@ -1,6 +1,7 @@
 React = require 'react'
 window.global = window
-window.process = {env: {NODE_ENV: 'development'}}
+sd = require('sharify').data
+window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 
 { convertToRaw,
   convertFromHTML,
@@ -153,19 +154,13 @@ module.exports = React.createClass
         editorState: RichUtils.toggleLink(editorState, selection, null)
       })
 
-  handleLinkReturn: (e) ->
-    e.preventDefault()
-    if e.key is 'Enter'
-      @confirmLink(e)
-
   handleReturn: (e) ->
     e.preventDefault()
     return true
 
   handleKeyCommand: (e) ->
     if e is 'italic'
-      { editorState } = @state
-      newState = RichUtils.handleKeyCommand editorState, e
+      newState = RichUtils.handleKeyCommand @state.editorState, e
       if newState
         @onChange newState
         return true

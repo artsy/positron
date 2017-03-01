@@ -7,10 +7,7 @@
 #   confirmLink: @confirmLink
 #   urlValue: urlValue <- to editing an existing link, pass url of selection
 # }
-
-
 React = require 'react'
-
 icons = -> require('../icons.jade') arguments...
 { div, button, input } = React.DOM
 
