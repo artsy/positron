@@ -11,7 +11,9 @@ Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
 Input = React.createFactory require '../section_image_set/input.coffee'
+DraftInputCaption = React.createFactory require '../../../../components/draft_input/components/input_caption.coffee'
 UrlArtworkInput = React.createFactory require '../section_image_set/url_artwork_input.coffee'
+
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
@@ -34,6 +36,9 @@ module.exports = React.createClass
 
   componentWillUnmount: ->
     @autocomplete.remove()
+
+  componentWillUpdate: ->
+    @props.section.set images: @state.images if @state.images.length > 0
 
   setupAutocomplete: ->
     $el = $(@refs.autocomplete)
@@ -221,8 +226,8 @@ module.exports = React.createClass
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
-                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
+                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                     }
                   ]
                 else
@@ -233,23 +238,22 @@ module.exports = React.createClass
                         src: if @state.progress then item.url else resize(item.url, width: 900)
                         style: opacity: if @state.progress then @state.progress else '1'
                       }
-                    Input {
-                      caption: item.caption
-                      images: @state.images
-                      url: item.url
-                      editing: @props.editing
-                      key: 'caption-edit-' + i
-                    }
+                      if @props.editing
+                        DraftInputCaption {
+                          item: item
+                          key: 'caption-edit-' + i
+                        }
+                      else
+                        div {
+                          dangerouslySetInnerHTML: __html: item.caption
+                          className: 'esic-caption esic-caption--display'
+                          key: 'caption-' + i
+                        }
                     button {
                       className: 'edit-section-remove button-reset esic-img-remove'
                       key: 'remove-' + i
-                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                       onClick: @removeItem(item)
-                    }
-                    div {
-                      dangerouslySetInnerHTML: __html: item.caption
-                      className: 'esic-caption esic-caption--display'
-                      key: 'caption-' + i
+                      dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
                     }
                   ]
             )

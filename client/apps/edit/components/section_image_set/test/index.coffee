@@ -23,6 +23,10 @@ describe 'SectionImageSet', ->
       SectionImageSet = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
+      DraftInputCaption = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../components/draft_input/components/input_caption'), ['icons']
+      )
+      SectionImageSet.__set__ 'DraftInputCaption', React.createFactory(DraftInputCaption)
       SectionImageSet.__set__ 'gemup', @gemup = sinon.stub()
       SectionImageSet.__set__ 'Autocomplete', sinon.stub()
       SectionImageSet.__set__ 'Input', sinon.stub()
