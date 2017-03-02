@@ -60,6 +60,7 @@ postFacebookAPI = (article, cb) ->
         .send
           access_token: INSTANT_ARTICLE_ACCESS_TOKEN
           development_mode: NODE_ENV isnt 'production'
+          published: NODE_ENV is 'production'
           html_source: html
         .end (err, response) =>
           if err
