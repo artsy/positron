@@ -48,7 +48,7 @@ module.exports = React.createClass
             vals.push
               id: id
               value: r.title
-              thumbnail: r._links.thumbnail.href
+              thumbnail: r._links.thumbnail?.href
         return vals
       templates:
         suggestion: (data) ->
