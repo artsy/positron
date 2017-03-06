@@ -19,13 +19,23 @@ module.exports = QueueView = React.createClass
     queuedArticles: @props.queuedArticles or []
     scheduledArticles: @props.scheduledArticles or []
     feed: @props.feed or 'scheduled'
+    loading: false
+    errorMessage: ''
 
   saveSelected: (data, isQueued) ->
-    article = new Article
+    article =
       id: data.id
       channel_id: data.channel_id
       "#{@state.feed}": isQueued
-    article.save()
+    @setState loading: true
+    new Article().save article,
+      success: =>
+        @setState loading: false
+      error: =>
+        @setState
+          loading: false
+          errorMessage: 'There has been an error. Please contact support.'
+        setTimeout ( => @setState(errorMessage: '')), 2000
 
   selected: (article, type) ->
     if type is 'select'
@@ -81,7 +91,12 @@ module.exports = QueueView = React.createClass
     div {
       'data-state': @state.feed
       className: 'queue-root-container'
+      'data-loading': @state.loading
     },
+      div { className: 'queue-loading-container'},
+        div { className: 'loading-spinner' }
+        if @state.errorMessage
+          div { className: 'queue-loading__error' }, @state.errorMessage
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},

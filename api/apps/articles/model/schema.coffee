@@ -15,6 +15,7 @@ imageSection = (->
     caption: @string().allow('', null)
     width: @number().allow(null)
     height: @number().allow(null)
+    layout: @string().allow('', null)
 ).call Joi
 
 videoSection = (->
