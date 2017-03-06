@@ -4,7 +4,7 @@ React = require 'react'
   Editor
   EditorState } = require 'draft-js'
 
-{ a, span } = React.DOM
+{ a, p } = React.DOM
 
 exports.findLinkEntities = (contentBlock, callback, contentState) ->
   contentBlock.findEntityRanges ((character) ->
@@ -14,18 +14,23 @@ exports.findLinkEntities = (contentBlock, callback, contentState) ->
   return
 
 exports.Link = (props) ->
-  { url, className } = props.contentState.getEntity(props.entityKey).getData()
+  { url, className, name } = props.contentState.getEntity(props.entityKey).getData()
   text = props.decoratedText
   if className is 'is-jump-link'
     link = a {
-      'data-name': url
+      name: props.decoratedText
+      className: className
     }, props.children
   else if className is 'is-follow-link'
-    link = a {
+    link = p {},
+      a {
         href: url
         'data-name': 'artist'
         className: className
       }, props.children
+      a {
+        className: 'entity-follow artist-follow'
+      }
   else
     link = a {
       href: url

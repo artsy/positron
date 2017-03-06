@@ -15,7 +15,6 @@ _s = require 'underscore.string'
   DefaultDraftBlockRenderMap,
   getVisibleSelectionRect } = require 'draft-js'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
-# Immutable = require 'immutable'
 DraftDecorators = require '../decorators.coffee'
 icons = -> require('../icons.jade') arguments...
 { div, nav, a, button } = React.DOM
@@ -62,6 +61,7 @@ module.exports = React.createClass
     if @props.section.get('body')?.length
       blocksFromHTML = convertFromHTML({ htmlToEntity: (nodeName, node) ->
         if nodeName is 'a'
+          # here make jump-links immutable
           data = {url: node.href, name: node.name, className: node.classList.toString()}
           return Entity.create(
               'LINK',
@@ -96,8 +96,10 @@ module.exports = React.createClass
     html = convertToHTML({ entityToHTML: (entity, originalText) ->
       if entity.type is 'LINK'
         className = if entity.data.className then ' class="' + entity.data.className + '"' else ''
+        name = if entity.data.name then ' name="' + originalText + '"' else ''
         url = if entity.data.url then ' href="' + entity.data.url + '"' else ''
-        return '<a' + url + className + '>' + originalText + '</a>'
+        followButton = if entity.data.className is 'is-follow-link' then '<a class="entity-follow artist-follow"></a>' else ''
+        return '<a' + url + className + name + '>' + originalText + '</a>' + followButton
       return originalText
     })(editorState.getCurrentContent())
     return html
@@ -131,7 +133,10 @@ module.exports = React.createClass
 
   setPluginType: (e) ->
     @setState pluginType: e
-    @promptForLink(e)
+    if e is 'artist'
+      @promptForLink e
+    if e is 'toc'
+      @confirmLink '', e
 
   promptForLink: (pluginType) ->
     { editorState } = @state
@@ -171,7 +176,7 @@ module.exports = React.createClass
     if pluginType is 'artist'
       props = { url: urlValue, className: 'is-follow-link', 'data-name': 'artist' }
     else if pluginType is 'toc'
-      props = { url: urlValue, className: 'is-jump-link', 'data-name': 'toc'  }
+      props = { url: urlValue, className: 'is-jump-link', name: 'toc'  }
     else
       props = { url: urlValue }
     contentStateWithEntity = contentState.createEntity(
