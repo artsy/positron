@@ -26,7 +26,7 @@ describe 'articles endpoints', ->
         { published: false }
       ], (err, articles) =>
         request
-          .get("http://localhost:5000/articles?published=true")
+          .get("http://localhost:5000/articles?published=true&count=true")
           .end (err, res) ->
               res.body.total.should.equal 3
               res.body.count.should.equal 2
@@ -73,7 +73,7 @@ describe 'articles endpoints', ->
         {}
       ], (err, articles) =>
         request
-          .get("http://localhost:5000/articles?author_id=#{@user._id}&published=true")
+          .get("http://localhost:5000/articles?author_id=#{@user._id}&published=true&count=true")
           .set('X-Access-Token': @user.access_token)
           .end (err, res) ->
             res.body.total.should.equal 3
@@ -86,7 +86,7 @@ describe 'articles endpoints', ->
         { title: 'Winter Is Coming', channel_id: ObjectId('5086df098523e60002000012'), published: true }
       ], (err, articles) =>
         request
-        .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true")
+        .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true")
         .set('X-Access-Token': @user.access_token)
         .end (err, res) ->
           res.body.total.should.equal 1

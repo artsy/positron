@@ -224,4 +224,5 @@ denormalizedArtwork = (->
   daily_email: @boolean()
   weekly_email: @boolean()
   scheduled: @boolean()
+  count: @boolean().default(false)
 ).call Joi

@@ -35,10 +35,18 @@ describe 'Article', ->
   describe '#where', ->
 
     it 'can return all articles along with total and counts', (done) ->
-      Article.where {}, (err, res) ->
+      Article.where { count: true }, (err, res) ->
         { total, count, results } = res
         total.should.equal 10
         count.should.equal 10
+        results[0].title.should.equal 'Top Ten Booths'
+        done()
+
+    it 'can return all articles along with total and counts', (done) ->
+      Article.where {}, (err, res) ->
+        { total, count, results } = res
+        total?.should.be.false()
+        count?.should.be.false()
         results[0].title.should.equal 'Top Ten Booths'
         done()
 
@@ -47,7 +55,7 @@ describe 'Article', ->
         author_id: aid = ObjectId '4d8cd73191a5c50ce220002a'
         title: 'Hello Wurld'
       }, ->
-        Article.where { author_id: aid.toString() }, (err, res) ->
+        Article.where { author_id: aid.toString(), count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 11
           count.should.equal 1
@@ -56,7 +64,7 @@ describe 'Article', ->
 
     it 'can return articles by published', (done) ->
       fabricate 'articles', _.times(3, -> { published: false, title: 'Moo baz' }), ->
-        Article.where { published: false }, (err, { total, count, results }) ->
+        Article.where { published: false, count: true }, (err, { total, count, results }) ->
           total.should.equal 13
           count.should.equal 3
           results[0].title.should.equal 'Moo baz'
@@ -163,7 +171,7 @@ describe 'Article', ->
         title: 'Hello Wurld'
         fair_programming_ids: [ ObjectId('52617c6c8b3b81f094000013') ]
       }, ->
-        Article.where { fair_programming_id: '52617c6c8b3b81f094000013' }, (err, res) ->
+        Article.where { fair_programming_id: '52617c6c8b3b81f094000013', count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 11
           count.should.equal 1
@@ -176,7 +184,7 @@ describe 'Article', ->
         title: 'Hello Wurld'
         fair_artsy_ids: [ ObjectId('53da550a726169083c0a0700') ]
       }, ->
-        Article.where { fair_artsy_id: '53da550a726169083c0a0700' }, (err, res) ->
+        Article.where { fair_artsy_id: '53da550a726169083c0a0700', count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 11
           count.should.equal 1
@@ -189,7 +197,7 @@ describe 'Article', ->
         title: 'Hello Wurld'
         fair_about_ids: [ ObjectId('53da550a726169083c0a0700') ]
       }, ->
-        Article.where { fair_about_id: '53da550a726169083c0a0700' }, (err, res) ->
+        Article.where { fair_about_id: '53da550a726169083c0a0700', count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 11
           count.should.equal 1
@@ -234,7 +242,7 @@ describe 'Article', ->
           title: 'Hello Waaarld'
         }
       ], =>
-        Article.where { all_by_author: '4d8cd73191a5c50ce220002b' }, (err, res) ->
+        Article.where { all_by_author: '4d8cd73191a5c50ce220002b', count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 12
           count.should.equal 2
@@ -259,7 +267,7 @@ describe 'Article', ->
           title: 'Hello Waaarld'
         }
       ], =>
-        Article.where { is_super_article: true }, (err, res) ->
+        Article.where { is_super_article: true, count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 13
           count.should.equal 1
@@ -285,7 +293,7 @@ describe 'Article', ->
             related_articles: [childArticleId]
         }
       ], =>
-        Article.where { super_article_for: childArticleId.toString() }, (err, res) ->
+        Article.where { super_article_for: childArticleId.toString(), count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 12
           count.should.equal 1
@@ -315,7 +323,7 @@ describe 'Article', ->
           title: 'Hello I am Weiiird - Electronics'
         }
       ], =>
-        Article.where { tags: ['pickle', 'muffin'] }, (err, res) ->
+        Article.where { tags: ['pickle', 'muffin'], count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 14
           count.should.equal 3
@@ -335,6 +343,7 @@ describe 'Article', ->
         Article.where {
           published: true
           biography_for_artist_id: '5086df098523e60002000016'
+          count: true
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1
@@ -352,6 +361,7 @@ describe 'Article', ->
         Article.where {
           published: true
           channel_id: '5086df098523e60002000016'
+          count: true
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1
@@ -369,6 +379,7 @@ describe 'Article', ->
         Article.where {
           published: true
           channel_id: '5086df098523e60002000016'
+          count: true
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1
@@ -385,6 +396,7 @@ describe 'Article', ->
       ], ->
         Article.where {
           scheduled: true
+          count: true
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1
