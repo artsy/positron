@@ -18,7 +18,7 @@ Q = require 'bluebird-q'
 # Retrieval
 #
 @where = (input, callback) ->
-  retrieve.toQuery input, (err, query, limit, offset, sort) ->
+  retrieve.toQuery input, (err, query, limit, offset, sort, count) ->
     return callback err if err
     cursor = db.articles
       .find(query)
@@ -26,15 +26,19 @@ Q = require 'bluebird-q'
       .sort(sort)
       .limit(limit)
     async.parallel [
-      (cb) -> db.articles.count cb
-      (cb) -> cursor.count cb
+      (cb) ->
+        return cb() unless count
+        db.articles.count cb
+      (cb) ->
+        return cb() unless count
+        cursor.count cb
       (cb) -> cursor.toArray cb
-    ], (err, [ total, count, results ]) ->
+    ], (err, [ total, articleCount, results ]) ->
       return callback err if err
       callback null, {
-        total: total
-        count: count
         results: results
+        total: total if total
+        count: articleCount if articleCount
       }
 
 @find = (id, callback) ->
