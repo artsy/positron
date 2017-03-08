@@ -124,7 +124,7 @@ Q = require 'bluebird-q'
   published = if (date = article?.published_at) then moment(date).toISOString() else undefined
   _.extend article,
     id: article?._id?.toString()
-    _id: undefined
+    _id: article?._id?.toString()
     slug: _.last article.slugs
     slugs: undefined
     published_at: published
