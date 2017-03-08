@@ -71,15 +71,21 @@ module.exports = React.createClass
         })(@props.section.get('body'))
       @setState editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
 
+
   componentWillReceiveProps: (nextProps) ->
     if @props.editing and !nextProps.editing
       @setState focus: false, showUrlInput: false, urlValue: null
+    else
+      @focus() if @props.editing
 
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
     @logState()
+
+  onClickOff: ->
+    @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
   logState: ->
     content = convertToRaw(@state.editorState.getCurrentContent())
@@ -91,6 +97,14 @@ module.exports = React.createClass
 
   onBlur: ->
     @setState focus: false
+
+  handleKeyCommand: (e) ->
+    if e in ['italic', 'bold']
+      newState = RichUtils.handleKeyCommand @state.editorState, e
+      if newState
+        @onChange newState
+        return true
+    return false
 
   convertToHtml: (editorState) ->
     html = convertToHTML({ entityToHTML: (entity, originalText) ->
@@ -119,11 +133,29 @@ module.exports = React.createClass
         editorState: EditorState.push(editorState, newState, null)
       })
 
-  stripCharacterStyles: (contentBlock) ->
+  stripCharacterStyles: (contentBlock, keepAllowed) ->
     characterList = contentBlock.getCharacterList().map (character) ->
+      unless character.hasStyle('UNDERLINE')
+        return character if keepAllowed and character.hasStyle('BOLD') or character.hasStyle('ITALIC')
       character.set('style', character.get('style').clear())
     unstyled = contentBlock.set('characterList', characterList)
     return unstyled
+
+  onPaste: (text, html) ->
+    { editorState } = @state
+    unless html
+      html = '<div>' + text + '</div>'
+    html = convertFromHTML(html)
+    convertedHtml = html.getBlocksAsArray().map (contentBlock) =>
+      unstyled = @stripCharacterStyles contentBlock, true
+      unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
+        unstyled = unstyled.set('type', 'unstyled')
+      return unstyled
+    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
+    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
+    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
+    return true
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
@@ -261,5 +293,7 @@ module.exports = React.createClass
           onChange: @onChange
           readOnly: isReadOnly
           decorators: decorators
+          handleKeyCommand: @handleKeyCommand
+          handlePastedText: @onPaste
         }
         @printUrlInput()

@@ -4,7 +4,7 @@ React = require 'react'
   Editor
   EditorState } = require 'draft-js'
 
-{ a, p } = React.DOM
+{ a, span } = React.DOM
 
 exports.findLinkEntities = (contentBlock, callback, contentState) ->
   contentBlock.findEntityRanges ((character) ->
@@ -22,7 +22,7 @@ exports.Link = (props) ->
       className: className
     }, props.children
   else if className is 'is-follow-link'
-    link = p {},
+    link = span {},
       a {
         href: url
         'data-name': 'artist'
