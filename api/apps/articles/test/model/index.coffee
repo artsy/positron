@@ -1107,9 +1107,9 @@ describe 'Article', ->
 
   describe '#present', ->
 
-    it 'converts _id to id', ->
+    it 'adds both _id and id', ->
       data = Article.present _.extend {}, fixtures().articles, _id: 'foo'
-      (data._id?).should.not.be.ok
+      (data._id?).should.be.ok
       data.id.should.equal 'foo'
 
     it 'converts dates to ISO strings', ->
