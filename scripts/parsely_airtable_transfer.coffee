@@ -1,8 +1,6 @@
 # Script that sends Parsely data to Airtable
 Airtable = require 'airtable'
 path = require 'path'
-# Q = require 'bluebird-q'
-# request = Q.promisify require 'superagent'
 async = require 'async'
 request = require 'superagent'
 
@@ -13,7 +11,7 @@ switch process.env.NODE_ENV
   when 'production', 'staging' then ''
   else env path.resolve __dirname, '../.env'
 
-console.log 'Start time: ' + new Date().toISOString()
+console.log 'Airtable <> Parsely start time: ' + new Date().toISOString()
 batch = 1
 base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(process.env.AIRTABLE_BASE);
 base('Production').select({
@@ -50,4 +48,4 @@ base('Production').select({
       fetchNextPage()
 , (err) ->
   console.log err if err
-  console.log 'Finish time: ' + new Date().toISOString()
+  console.log 'Airtable <> Parsely finish time: ' + new Date().toISOString()
