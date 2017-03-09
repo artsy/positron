@@ -13,32 +13,41 @@ switch process.env.NODE_ENV
   when 'production', 'staging' then ''
   else env path.resolve __dirname, '../.env'
 
+console.log 'Start time: ' + new Date().toISOString()
+batch = 1
 base = new Airtable({apiKey: process.env.AIRTABLE_KEY}).base(process.env.AIRTABLE_BASE);
 base('Production').select({
-  maxRecords: 20
+  maxRecords: 1000
   view: 'Master'
 }).eachPage (records, fetchNextPage) ->
   parselyCalls = []
   records.forEach (record) ->
-    # console.log 'Retrieved ' + record.get('Article Link')
     parselyCalls.push(
       (cb) ->
+        return cb(null, {}) unless record.get('Article Link')
         request.get("https://api.parsely.com/v2/analytics/post/detail?apikey=#{process.env.PARSELY_KEY}&secret=#{process.env.PARSELY_SECRET}&days=90&url=#{record.get('Article Link')}")
           .end (err, res) ->
-            obj = { record: record.id, hits: res.body.data[0]._hits }
-            console.log obj
-            cb null, { record: record.id, hits: res.body.data[0]._hits }
+            data = { record: record.id, hits: res?.body?.data[0]?._hits, visitors: res?.body?.data[0]?.visitors }
+            cb null, data
     )
-  console.log parselyCalls
   async.parallel parselyCalls, (err, res) ->
-    console.log res
-    for record in res
-      base('Production').update record?.record,
-        'Visitors': record?.hits
-      , (err, record) ->
-        console.log err
-        console.log record
-
-    fetchNextPage()
+    updateCalls = []
+    console.log 'Finished Parsely fetches batch: ' + batch
+    res.forEach (record) ->
+      updateCalls.push(
+        (cb) ->
+          return cb(null, {}) unless record?.record
+          base('Production').update record?.record,
+            'Visitors': record?.visitors
+            'Hits': record?.hits
+          , (err, record) ->
+            cb null, record
+      )
+    async.parallel updateCalls, (err, res) ->
+      console.log err if err
+      console.log 'Finished Airtable updates batch: ' + batch
+      batch = batch + 1
+      fetchNextPage()
 , (err) ->
   console.log err if err
+  console.log 'Finish time: ' + new Date().toISOString()
