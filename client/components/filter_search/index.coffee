@@ -23,7 +23,7 @@ module.exports = React.createClass
   search: ->
     if @refs.searchQuery.value.length
       if @engine.remote.url != @props.url then @engine.remote.url = @props.url
-      @engine.get @refs.searchQuery.value, ([total, count, results]) =>
+      @engine.get @refs.searchQuery.value, ([results]) =>
         @props.searchResults results
 
   selected: (article) ->
