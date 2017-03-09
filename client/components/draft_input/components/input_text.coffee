@@ -59,18 +59,8 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = convertFromHTML({ htmlToEntity: (nodeName, node) ->
-        if nodeName is 'a'
-          # here make jump-links immutable
-          data = {url: node.href, name: node.name, className: node.classList.toString()}
-          return Entity.create(
-              'LINK',
-              'MUTABLE',
-              data
-          )
-        })(@props.section.get('body'))
+      blocksFromHTML = @convertFromHTML(@props.section.get('body'))
       @setState editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
-
 
   componentWillReceiveProps: (nextProps) ->
     if @props.editing and !nextProps.editing
@@ -98,13 +88,17 @@ module.exports = React.createClass
   onBlur: ->
     @setState focus: false
 
-  handleKeyCommand: (e) ->
-    if e in ['italic', 'bold']
-      newState = RichUtils.handleKeyCommand @state.editorState, e
-      if newState
-        @onChange newState
-        return true
-    return false
+  convertFromHTML: (html) ->
+    blocksFromHTML = convertFromHTML({ htmlToEntity: (nodeName, node) ->
+      if nodeName is 'a'
+        data = {url: node.href, name: node.name, className: node.classList.toString()}
+        return Entity.create(
+            'LINK',
+            'MUTABLE',
+            data
+        )
+      })(html)
+    return blocksFromHTML
 
   convertToHtml: (editorState) ->
     html = convertToHTML({ entityToHTML: (entity, originalText) ->
@@ -121,71 +115,93 @@ module.exports = React.createClass
   makePlainText: () ->
     { editorState } = @state
     selection = editorState.getSelection()
-    noLinks = RichUtils.toggleLink(editorState, selection, null)
-    noBlocks = RichUtils.toggleBlockType(noLinks, 'unstyled')
+    noLinks = RichUtils.toggleLink editorState, selection, null
+    noBlocks = RichUtils.toggleBlockType noLinks, 'unstyled'
     noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) =>
       @stripCharacterStyles contentBlock
-    newState = ContentState.createFromBlockArray(noStyles)
+    newState = ContentState.createFromBlockArray noStyles
     if !selection.isCollapsed()
       @setState({
-        showUrlInput: false
-        urlValue: ''
         editorState: EditorState.push(editorState, newState, null)
       })
 
   stripCharacterStyles: (contentBlock, keepAllowed) ->
     characterList = contentBlock.getCharacterList().map (character) ->
-      unless character.hasStyle('UNDERLINE')
-        return character if keepAllowed and character.hasStyle('BOLD') or character.hasStyle('ITALIC')
-      character.set('style', character.get('style').clear())
-    unstyled = contentBlock.set('characterList', characterList)
+      unless character.hasStyle 'UNDERLINE'
+        return character if keepAllowed and character.hasStyle 'BOLD' or character.hasStyle 'ITALIC'
+      character.set 'style', character.get('style').clear()
+    unstyled = contentBlock.set 'characterList', characterList
     return unstyled
 
   onPaste: (text, html) ->
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = convertFromHTML(html)
-    convertedHtml = html.getBlocksAsArray().map (contentBlock) =>
+    blocksFromHTML = @convertFromHTML html
+    convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripCharacterStyles contentBlock, true
       unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
-        unstyled = unstyled.set('type', 'unstyled')
+        unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
-    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
+    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
     Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
     this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
 
+  handleKeyCommand: (e) ->
+    if e in ['italic', 'bold']
+      newState = RichUtils.handleKeyCommand @state.editorState, e
+      if newState
+        @onChange newState
+        return true
+    return false
+
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
 
   toggleInlineStyle: (inlineStyle) ->
-    @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
+    unless @getSelectedBlock().content.get('type') is 'header-three'
+      @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
   setPluginType: (e) ->
     @setState pluginType: e
     if e is 'artist'
       @promptForLink e
     if e is 'toc'
-      @confirmLink '', e
+      url = @getExistingLinkData().url
+      className = @getExistingLinkData().className || ''
+      if className is 'is-jump-link'
+        @removeLink()
+      else
+        @confirmLink url, e, className
 
   promptForLink: (pluginType) ->
     { editorState } = @state
-    selection = editorState.getSelection()
     selectionTarget = null
-    if !selection.isCollapsed()
-      # selectionTarget = @stickyLinkBox getVisibleSelectionRect(window)
-      contentState = editorState.getCurrentContent()
-      startKey = selection.getStartKey()
-      startOffset = selection.getStartOffset()
-      blockWithLinkAtBeginning = contentState.getBlockForKey(startKey)
-      linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset)
-      url = ''
-      if linkKey
-        linkInstance = contentState.getEntity(linkKey)
-        url = linkInstance.getData().url
+    if !editorState.getSelection().isCollapsed()
+      selectionTarget = @stickyLinkBox()
+      url = @getExistingLinkData().url
       @setState({showUrlInput: true, focus: false, urlValue: url, selectionTarget: selectionTarget})
+
+  getExistingLinkData: ->
+    url = ''
+    key = @getSelectedBlock().key
+    if key
+      linkInstance = @state.editorState.getCurrentContent().getEntity(key)
+      url = linkInstance.getData().url
+      className = linkInstance.getData().className
+    return {url: url, key: key, className: className}
+
+  getSelectedBlock: ->
+    { editorState } = @state
+    selection = editorState.getSelection()
+    contentState = editorState.getCurrentContent()
+    startKey = selection.getStartKey()
+    startOffset = selection.getStartOffset()
+    closestBlock = contentState.getBlockForKey(startKey)
+    blockKey = closestBlock.getEntityAt(startOffset)
+    return {key: blockKey, content: closestBlock}
 
   getSelectionLocation: ->
     target = getVisibleSelectionRect(window)
@@ -202,13 +218,28 @@ module.exports = React.createClass
     left = location.target.left - location.parent.left + (location.target.width / 2) - 150
     return {top: top, left: left}
 
-  confirmLink: (urlValue, pluginType) ->
+  confirmLink: (urlValue, pluginType, className) ->
     { editorState } = @state
     contentState = editorState.getCurrentContent()
     if pluginType is 'artist'
-      props = { url: urlValue, className: 'is-follow-link', 'data-name': 'artist' }
+      className = @getExistingLinkData().className
+      if className?.includes 'is-jump-link'
+        name = 'toc'
+        className = 'is-follow-link is-jump-link'
+      props = { url: urlValue, className: className, name: name }
     else if pluginType is 'toc'
-      props = { url: urlValue, className: 'is-jump-link', name: 'toc'  }
+      name = 'toc'
+      if className.includes('is-follow-link') and className.includes('is-jump-link')
+        # remove toc but keep existing link
+        name = ''
+        className = 'is-follow-link'
+      else if className.includes 'is-follow-link'
+        # add toc to existing artist link
+        className = 'is-follow-link is-jump-link'
+      else
+        # a plain toc link with no href
+        className = 'is-jump-link'
+      props = { url: urlValue, className: className, name: name  }
     else
       props = { url: urlValue }
     contentStateWithEntity = contentState.createEntity(
@@ -231,7 +262,7 @@ module.exports = React.createClass
       )
 
   removeLink: (e) ->
-    e.preventDefault()
+    e?.preventDefault()
     { editorState } = @state
     selection = editorState.getSelection()
     if !selection.isCollapsed()
