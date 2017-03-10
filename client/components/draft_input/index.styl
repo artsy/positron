@@ -13,6 +13,8 @@
     padding 20px 20px 0px 20px
     p, .public-DraftStyleDefault-ltr
       margin-bottom 1em
+      &:last-child
+        margin-bottom 0
     h2, h3
       .public-DraftStyleDefault-ltr
         margin-bottom 0
@@ -61,7 +63,25 @@
     .st0, circle, g, path
       fill gray-dark-color
       transition color .15s
+<<<<<<< HEAD
     &:hover
+=======
+      &:hover
+        color gray-color
+      &[name='ITALIC'],
+      &[name='STRIKETHROUGH'],
+      &[name='header-two'],
+      &[name='header-three']
+        garamond l-body
+      &[name='BOLD']
+        font-weight 600
+        avant-garde l-headline
+      &[name='STRIKETHROUGH']
+        text-decoration line-through
+      svg
+        width 18px
+        height 18px
+>>>>>>> f7202b5... strip google docs styles
       .st0, circle, g, path
         fill gray-dark-color
         transition color .15s

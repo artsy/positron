@@ -17,7 +17,7 @@ _s = require 'underscore.string'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
 DraftDecorators = require '../decorators.coffee'
 icons = -> require('../icons.jade') arguments...
-{ div, nav, a, button } = React.DOM
+{ div, nav, a, button, span } = React.DOM
 ButtonStyle = React.createFactory require './button_style.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 editor = (props) -> React.createElement Editor, props
@@ -26,6 +26,7 @@ Channel = require '../../../models/channel.coffee'
 INLINE_STYLES = [
   {label: 'B', style: 'BOLD'}
   {label: 'I', style: 'ITALIC'}
+  {label: ' S ', style: 'STRIKETHROUGH'}
 ]
 
 BLOCK_TYPES = [
@@ -46,7 +47,7 @@ module.exports = React.createClass
   displayName: 'DraftInputText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createEmpty(new CompositeDecorator(decorators))
     focus: false
     html: null
     selectionTarget: null
@@ -101,16 +102,38 @@ module.exports = React.createClass
     return blocksFromHTML
 
   convertToHtml: (editorState) ->
-    html = convertToHTML({ entityToHTML: (entity, originalText) ->
-      if entity.type is 'LINK'
-        className = if entity.data.className then ' class="' + entity.data.className + '"' else ''
-        name = if entity.data.name then ' name="' + originalText + '"' else ''
-        url = if entity.data.url then ' href="' + entity.data.url + '"' else ''
-        followButton = if entity.data.className is 'is-follow-link' then '<a class="entity-follow artist-follow"></a>' else ''
-        return '<a' + url + className + name + '>' + originalText + '</a>' + followButton
-      return originalText
+    html = convertToHTML({
+      entityToHTML: (entity, originalText) ->
+        if entity.type is 'LINK'
+          className = if entity.data.className then ' class="' + entity.data.className + '"' else ''
+          name = if entity.data.name then ' name="' + originalText + '"' else ''
+          url = if entity.data.url then ' href="' + entity.data.url + '"' else ''
+          followButton = if entity.data.className is 'is-follow-link' then '<a class="entity-follow artist-follow"></a>' else ''
+          return '<a' + url + className + name + '>' + originalText + '</a>' + followButton
+        return originalText
+      styleToHTML: (style) ->
+        if style is 'STRIKETHROUGH'
+          return span { style: {textDecoration: 'line-through'}}
     })(editorState.getCurrentContent())
     return html
+
+  stripGoogleStyles: (html) ->
+    # remove non-breaking spaces between paragraphs
+    html = html.replace(/<\/p\>\<br\>/g, "</p>")
+    tempDiv = document.createElement('div')
+    tempDiv.innerHTML = html
+    # remove dummy b tags google docs wraps document in
+    boldBlocks = tempDiv.getElementsByTagName("B")
+    for block, i in boldBlocks
+      if block.style.fontWeight is 'normal'
+        $(tempDiv.getElementsByTagName("B")[i]).replaceWith(tempDiv.getElementsByTagName("B")[i].innerHTML)
+    # replace bold spans with actual b tags
+    boldSpans = tempDiv.getElementsByTagName("SPAN")
+    for span, i in boldSpans
+      if span?.style.fontWeight is '700'
+        newSpan = '<strong>' + span.innerHTML + '</strong>'
+        $(tempDiv.getElementsByTagName("SPAN")[i]).replaceWith(newSpan)
+    return tempDiv.innerHTML
 
   makePlainText: () ->
     { editorState } = @state
@@ -128,7 +151,7 @@ module.exports = React.createClass
   stripCharacterStyles: (contentBlock, keepAllowed) ->
     characterList = contentBlock.getCharacterList().map (character) ->
       unless character.hasStyle 'UNDERLINE'
-        return character if keepAllowed and character.hasStyle 'BOLD' or character.hasStyle 'ITALIC'
+        return character if keepAllowed and character.hasStyle 'BOLD' or character.hasStyle 'ITALIC' or character.hasStyle 'STRIKETHROUGH'
       character.set 'style', character.get('style').clear()
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
@@ -137,6 +160,7 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
+    html = @stripGoogleStyles(html)
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripCharacterStyles contentBlock, true
@@ -144,7 +168,6 @@ module.exports = React.createClass
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
     blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
-    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
     this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
@@ -164,18 +187,6 @@ module.exports = React.createClass
     unless @getSelectedBlock().content.get('type') is 'header-three'
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
-  setPluginType: (e) ->
-    @setState pluginType: e
-    if e is 'artist'
-      @promptForLink e
-    if e is 'toc'
-      url = @getExistingLinkData().url
-      className = @getExistingLinkData().className || ''
-      if className is 'is-jump-link'
-        @removeLink()
-      else
-        @confirmLink url, e, className
-
   promptForLink: (pluginType) ->
     { editorState } = @state
     selectionTarget = null
@@ -183,6 +194,40 @@ module.exports = React.createClass
       selectionTarget = @stickyLinkBox()
       url = @getExistingLinkData().url
       @setState({showUrlInput: true, focus: false, urlValue: url, selectionTarget: selectionTarget})
+
+  confirmLink: (urlValue, pluginType='', className) ->
+    { editorState } = @state
+    contentState = editorState.getCurrentContent()
+    props = @setPluginProps urlValue, pluginType, className
+    contentStateWithEntity = contentState.createEntity(
+      'LINK'
+      'MUTABLE'
+      props
+    )
+    entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+    newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
+    @setState({
+      showUrlInput: false
+      urlValue: ''
+      selectionTarget: null
+      pluginType: null
+    })
+    @onChange RichUtils.toggleLink(
+        newEditorState
+        newEditorState.getSelection()
+        entityKey
+      )
+
+  removeLink: (e) ->
+    e?.preventDefault()
+    { editorState } = @state
+    selection = editorState.getSelection()
+    if !selection.isCollapsed()
+      @setState({
+        showUrlInput: false
+        urlValue: ''
+        editorState: RichUtils.toggleLink(editorState, selection, null)
+      })
 
   getExistingLinkData: ->
     url = ''
@@ -218,9 +263,19 @@ module.exports = React.createClass
     left = location.target.left - location.parent.left + (location.target.width / 2) - 150
     return {top: top, left: left}
 
-  confirmLink: (urlValue, pluginType, className) ->
-    { editorState } = @state
-    contentState = editorState.getCurrentContent()
+  setPluginType: (e) ->
+    @setState pluginType: e
+    if e is 'artist'
+      @promptForLink e
+    if e is 'toc'
+      url = @getExistingLinkData().url
+      className = @getExistingLinkData().className || ''
+      if className is 'is-jump-link'
+        @removeLink()
+      else
+        @confirmLink url, e, className
+
+  setPluginProps: (urlValue, pluginType, className) ->
     if pluginType is 'artist'
       className = @getExistingLinkData().className
       if className?.includes 'is-jump-link'
@@ -242,35 +297,7 @@ module.exports = React.createClass
       props = { url: urlValue, className: className, name: name  }
     else
       props = { url: urlValue }
-    contentStateWithEntity = contentState.createEntity(
-      'LINK'
-      'MUTABLE'
-      props
-    )
-    entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-    newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
-    @setState({
-      showUrlInput: false
-      urlValue: ''
-      selectionTarget: null
-      pluginType: null
-    })
-    @onChange RichUtils.toggleLink(
-        newEditorState
-        newEditorState.getSelection()
-        entityKey
-      )
-
-  removeLink: (e) ->
-    e?.preventDefault()
-    { editorState } = @state
-    selection = editorState.getSelection()
-    if !selection.isCollapsed()
-      @setState({
-        showUrlInput: false
-        urlValue: ''
-        editorState: RichUtils.toggleLink(editorState, selection, null)
-      })
+    return props
 
   printButtons: (buttons, handleToggle) ->
     buttons.map (type, i) ->
@@ -301,12 +328,13 @@ module.exports = React.createClass
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
     isReadOnly = if @props.editing and @state.showUrlInput then true else false
+
     div {
       className: 'draft-text' + isEditing
     },
       if @props.editing
         nav {
-          className: 'draft-text__menu'
+          className: 'draft-text__menu edit-section-controls'
         },
           @printButtons(INLINE_STYLES, @toggleInlineStyle)
           @printButtons(BLOCK_TYPES, @toggleBlockType)

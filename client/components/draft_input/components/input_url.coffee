@@ -1,3 +1,12 @@
+# A pop-up input for adding a link to a text selection
+
+# Example usage:
+# DraftInputUrl {
+#   selectionTarget: selectionTarget <- where the input should be placed {top, left}
+#   removeLink: @removeLink
+#   confirmLink: @confirmLink
+#   urlValue: urlValue <- to edit an existing link, pass url of selection
+# }
 React = require 'react'
 { div, button, input } = React.DOM
 icons = -> require('../icons.jade') arguments...
@@ -8,8 +17,11 @@ module.exports = React.createClass
   getInitialState: ->
     urlValue: ''
 
-  onURLChange: (e) ->
-    @setState urlValue: e.target.value
+  componentDidMount: ->
+    @refs.url.focus()
+
+  onChange: ->
+    @setState urlValue: @refs.url.value
 
   removeLink: ->
 
@@ -26,7 +38,8 @@ module.exports = React.createClass
         onChange: @onURLChange
         className: 'bordered-input'
         placeholder: 'Paste or type a link'
-        onKeyPress: @props.handleLinkReturn
+        onKeyUp: @handleLinkReturn
+        onBlur: @props.removeLink
       }
       if @state.urlValue?.length
         button {
