@@ -7,7 +7,6 @@ search = require '../../../lib/elasticsearch'
   NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 async = require 'async'
-{ getTextSections } = require './save'
 debug = require('debug') 'api'
 request = require 'superagent'
 jade = require 'jade'
@@ -145,3 +144,9 @@ stripHtmlTags = (str) ->
 crop = (url, options = {}) ->
   { width, height } = options
   "#{GEMINI_CLOUDFRONT_URL}/?resize_to=fill&width=#{width}&height=#{height}&quality=95&src=#{encodeURIComponent(url)}"
+
+getTextSections = (article) ->
+  condensedHTML = article.lead_paragraph or ''
+  _.map article.sections, (section) ->
+    condensedHTML = condensedHTML.concat section.body if section.type is 'text'
+  condensedHTML
