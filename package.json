@@ -11,6 +11,7 @@
     "test": "make test"
   },
   "dependencies": {
+    "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
