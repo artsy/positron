@@ -14,8 +14,13 @@ newrelic = require 'artsy-newrelic'
 artsyXapp = require 'artsy-xapp'
 debug = require('debug') 'app'
 raven = require 'raven'
+ipfilter = require('express-ipfilter').IpFilter
 express = require "express"
+
 app = module.exports = express()
+
+# Blacklist ips
+app.use ipfilter([process.env.IP_BLACKLIST.split(',')], log: false, mode: 'deny')
 
 # Get an xapp token
 artsyXapp.init { url: process.env.ARTSY_URL, id: process.env.ARTSY_ID, secret: process.env.ARTSY_SECRET }, ->
