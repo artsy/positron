@@ -14,7 +14,7 @@ s:
 
 # Start the server using forever
 sf:
-	$(BIN)/forever $(BIN)/coffee --nodejs --max_old_space_size=512 index.coffee
+	$(BIN)/forever $(BIN)/coffee --nodejs --max-old-space-size=512 index.coffee
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
