@@ -50,6 +50,7 @@
     "lokka-transport-http": "^1.6.1",
     "mocha": "^3.1.2",
     "moment": "^2.10.6",
+    "mongodb": "mongodb@2.1.21",
     "mongojs": "^2.4.0",
     "morgan": "^1.6.1",
     "nib": "^1.1.0",
