@@ -23,7 +23,12 @@ module.exports = React.createClass
   onChange: ->
     @setState urlValue: @refs.url.value
 
-  removeLink: ->
+  confirmLink: (e) ->
+    e.preventDefault()
+    if @state.urlValue.length isnt 0
+      @props.confirmLink(@state.urlValue, @props.pluginType)
+    else
+      @props.removeLink(e)
 
   confirmLink: ->
 
@@ -39,7 +44,7 @@ module.exports = React.createClass
         className: 'bordered-input'
         placeholder: 'Paste or type a link'
         onKeyUp: @handleLinkReturn
-        onBlur: @props.removeLink
+        onBlur: @confirmLink
       }
       if @state.urlValue?.length
         button {

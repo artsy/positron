@@ -1,8 +1,8 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 window.global = window
-window.process = {env: {NODE_ENV: 'development'}}
-_s = require 'underscore.string'
+sd = require('sharify').data
+window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 
 { convertToRaw,
   CompositeDecorator,
@@ -15,9 +15,10 @@ _s = require 'underscore.string'
   DefaultDraftBlockRenderMap,
   getVisibleSelectionRect } = require 'draft-js'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
+Immutable = require 'immutable'
 DraftDecorators = require '../decorators.coffee'
 icons = -> require('../icons.jade') arguments...
-{ div, nav, a, button, span } = React.DOM
+{ div, nav, a, button, span, p, br } = React.DOM
 ButtonStyle = React.createFactory require './button_style.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 editor = (props) -> React.createElement Editor, props
@@ -36,12 +37,32 @@ BLOCK_TYPES = [
   {label: 'OL', style: 'ordered-list-item'}
 ]
 
-decorator = new CompositeDecorator([
-    {
-      strategy: DraftDecorators.findLinkEntities
-      component: DraftDecorators.Link
-    }
-  ])
+blockRenderMap = Immutable.Map({
+  'header-two': {
+    element: 'h2'
+  },
+  'header-three': {
+    element: 'h3'
+  },
+  'unordered-list-item': {
+    element: 'li'
+  },
+  'ordered-list-item': {
+    element: 'li'
+  },
+  'unstyled': {
+    element: 'div'
+    aliasedElements: ['p']
+    className: 'unstyled'
+  }
+})
+
+decorators = [
+  {
+    strategy: DraftDecorators.findLinkEntities
+    component: DraftDecorators.Link
+  }
+]
 
 module.exports = React.createClass
   displayName: 'DraftInputText'
@@ -73,7 +94,6 @@ module.exports = React.createClass
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
-    @logState()
 
   onClickOff: ->
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
@@ -90,14 +110,17 @@ module.exports = React.createClass
     @setState focus: false
 
   convertFromHTML: (html) ->
-    blocksFromHTML = convertFromHTML({ htmlToEntity: (nodeName, node) ->
-      if nodeName is 'a'
-        data = {url: node.href, name: node.name, className: node.classList.toString()}
-        return Entity.create(
-            'LINK',
-            'MUTABLE',
-            data
-        )
+    blocksFromHTML = convertFromHTML({
+      htmlToEntity: (nodeName, node) ->
+        if nodeName is 'a'
+          data = {url: node.href, name: node.name, className: node.classList.toString()}
+          return Entity.create(
+              'LINK',
+              'MUTABLE',
+              data
+          )
+        if nodeName is 'p' and node.innerHTML is '<br>'
+          node.innerHTML = '' # remove <br>, it renders extra breaks in editor
       })(html)
     return blocksFromHTML
 
@@ -115,6 +138,8 @@ module.exports = React.createClass
         if style is 'STRIKETHROUGH'
           return span { style: {textDecoration: 'line-through'}}
     })(editorState.getCurrentContent())
+    # put the line breaks back for correct client rendering
+    html = html.replace("<p></p>", "<p><br></p>").replace("<p> </p>", "<p><br></p>")
     return html
 
   stripGoogleStyles: (html) ->
@@ -260,7 +285,7 @@ module.exports = React.createClass
   stickyLinkBox: ->
     location = @getSelectionLocation()
     top = location.target.top - location.parent.top + 25
-    left = location.target.left - location.parent.left + (location.target.width / 2) - 150
+    left = location.target.left - location.parent.left + (location.target.width / 2) - 200
     return {top: top, left: left}
 
   setPluginType: (e) ->
@@ -354,5 +379,6 @@ module.exports = React.createClass
           decorators: decorators
           handleKeyCommand: @handleKeyCommand
           handlePastedText: @onPaste
+          blockRenderMap: blockRenderMap
         }
         @printUrlInput()

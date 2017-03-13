@@ -9,7 +9,7 @@ React = require 'react'
 exports.findLinkEntities = (contentBlock, callback, contentState) ->
   contentBlock.findEntityRanges ((character) ->
     entityKey = character.getEntity()
-    entityKey != null and contentState.getEntity(entityKey).getType() == 'LINK'
+    entityKey isnt null and contentState.getEntity(entityKey).getType() is 'LINK'
   ), callback
   return
 
