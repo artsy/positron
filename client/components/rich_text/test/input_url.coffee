@@ -2,7 +2,7 @@ benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
 
-describe 'DraftInputUrl', ->
+describe 'RichTextInputUrl', ->
 
   beforeEach (done) ->
     benv.setup =>

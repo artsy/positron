@@ -3,7 +3,7 @@ React = require 'react'
 icons = -> require('../icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'DraftButtonStyle'
+  displayName: 'RichTextButtonStyle'
 
   onToggle: (e) ->
     e.preventDefault()
@@ -16,6 +16,7 @@ module.exports = React.createClass
       button {
         onMouseDown: @onToggle
         name: @props.name
+        className: @props.name
         dangerouslySetInnerHTML: __html: $(icons()).filter(name).html()
       }
     else

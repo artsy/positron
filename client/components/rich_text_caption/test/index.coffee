@@ -2,7 +2,7 @@ benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
 
-describe 'DraftInputCaption', ->
+describe 'RichTextCaption', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -18,7 +18,7 @@ describe 'DraftInputCaption', ->
         simulate: ReactTestUtils.Simulate
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}
-      DraftInputCaption = benv.requireWithJadeify resolve(__dirname, '../components/input_caption'), ['icons']
+      RichTextCaption = benv.requireWithJadeify resolve(__dirname, '../../rich_text_caption/index'), ['icons']
       props = {
         item:
           {
@@ -27,8 +27,8 @@ describe 'DraftInputCaption', ->
             caption: '<p>Here <a href="http://link.com">is</a> a <em>caption</em>.</p>'
           }
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(DraftInputCaption, props)
-      @component = ReactDOM.render React.createElement(DraftInputCaption, props), (@$el = $ "<div></div>")[0], => setTimeout =>
+      @rendered = ReactDOMServer.renderToString React.createElement(RichTextCaption, props)
+      @component = ReactDOM.render React.createElement(RichTextCaption, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         done()
 
   afterEach ->

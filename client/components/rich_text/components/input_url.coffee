@@ -1,7 +1,7 @@
 # A pop-up input for adding a link to a text selection
 
 # Example usage:
-# DraftInputUrl {
+# InputUrl {
 #   selectionTarget: selectionTarget <- where the input should be placed {top, left}
 #   removeLink: @removeLink
 #   confirmLink: @confirmLink
@@ -12,10 +12,10 @@ React = require 'react'
 icons = -> require('../icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'DraftInputUrl'
+  displayName: 'RichTextInputUrl'
 
   getInitialState: ->
-    urlValue: ''
+    urlValue: @props.urlValue || ''
 
   componentDidMount: ->
     @refs.url.focus()
@@ -30,17 +30,24 @@ module.exports = React.createClass
     else
       @props.removeLink(e)
 
-  confirmLink: ->
+  handleLinkReturn: (e) ->
+    e.preventDefault()
+    if e.key is 'Enter'
+      @confirmLink(e)
 
   render: ->
     div {
-      className: 'draft-caption__url-input draft-input--url'
+      className: 'rich-text--url-input'
+      style: {
+        top: @props.selectionTarget?.top || 0
+        left: @props.selectionTarget?.left || 0
+      }
     },
       input {
         ref: 'url'
         type: 'text'
         value: @state.urlValue
-        onChange: @onURLChange
+        onChange: @onChange
         className: 'bordered-input'
         placeholder: 'Paste or type a link'
         onKeyUp: @handleLinkReturn
@@ -49,7 +56,7 @@ module.exports = React.createClass
       if @state.urlValue?.length
         button {
           className: 'remove-link'
-          onMouseDown: @removeLink
+          onMouseDown: @props.removeLink
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }
       button {

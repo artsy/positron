@@ -1,63 +1,151 @@
 benv = require 'benv'
+{ resolve } = require 'path'
 sinon = require 'sinon'
 Backbone = require 'backbone'
-{ resolve } = require 'path'
-React = require 'react'
-ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
-ReactDOMServer = require 'react-dom/server'
-r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
-  simulate: ReactTestUtils.Simulate
+fixtures = require '../../../../../../test/helpers/fixtures'
 
 describe 'SectionText', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
-      SectionText = benv.requireWithJadeify(
+      benv.expose
+        $: benv.require 'jquery'
+        React: require 'react'
+        ReactDOM: require 'react-dom'
+        ReactTestUtils: require 'react-addons-test-utils'
+      window.jQuery = $
+      @r =
+        find: ReactTestUtils.findRenderedDOMComponentWithClass
+        simulate: ReactTestUtils.Simulate
+      global.HTMLElement = () => {}
+      global.HTMLAnchorElement = () => {}
+      @SectionText = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
-      class @Scribe
-        use: ->
-      SectionText.__set__ 'Scribe', @Scribe
-      SectionText.__set__ 'isEditorialTeam', sinon.stub().returns(true)
-      for name in ['scribePluginToolbar', 'scribePluginSanitizer',
-        'scribePluginLinkTooltip', 'scribePluginKeyboardShortcuts',
-        'scribePluginHeadingCommand', 'scribePluginSanitizeGoogleDoc', 'scribePluginJumpLink', 'scribePluginFollowLinkTooltip']
-        SectionText.__set__ name, sinon.stub()
-      SectionText::attachScribe = sinon.stub()
-      @component = ReactDOM.render React.createElement(SectionText, {
-        section: new Backbone.Model { body: '<p>Foo to the bar</p>', type: 'text' }
-        onSetEditing: @onSetEditing = sinon.stub()
-        setEditing: @setEditing = sinon.stub()
-        editing: false
-        key: 4
-      }), $("<div></div>")[0], ->
-        setTimeout -> done()
-
+      InputUrl = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../components/rich_text/components/input_url'), ['icons']
+      )
+      ButtonStyle = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../components/rich_text/components/button_style'), ['icons']
+      )
+      @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
+      @SectionText.__set__ 'ButtonStyle', React.createFactory ButtonStyle
+      @props = {
+        editing: true
+        section: new Backbone.Model {
+            body: '<h2><a name="toc" class="is-jump-link">toc</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
+          }
+        }
+      @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        done()
 
   afterEach ->
     benv.teardown()
 
-  it "updates the section's body", ->
-    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'Hello'
-    @component.setBody()
-    @component.props.section.get('body').should.equal 'Hello'
 
-  it 'removes the section if they click off and its empty', ->
-    @component.props.section.destroy = sinon.stub()
-    @component.props.section.set body: ''
-    @component.onClickOff()
-    @component.props.section.destroy.called.should.be.ok
+  describe 'Mount and Display', ->
 
-  it 'updates the body on click off', ->
-    @component.props.section.destroy = sinon.stub()
-    @component.props.section.set body: ''
-    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'Hello'
-    @component.onClickOff()
-    @component.props.section.get('body').should.equal 'Hello'
+    it 'Converts existing html to an editorState', ->
+      @props.editing = false
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      component.state.editorState.getCurrentContent().getFirstBlock().should.not.eql component.state.editorState.getCurrentContent().getLastBlock()
 
-  it 'doesnt update while editing b/c Scribe will jump around all weird', ->
-    @component.props.editing = true
-    @component.shouldComponentUpdate({ editing: true }).should.not.be.ok
+    it 'Renders the existing body in the editor', ->
+      editorText = $(ReactDOM.findDOMNode(@component)).find('.edit-section-text__input').text()
+      editorText.should.containEql 'K mounted a solo show at prescient Berlin gallery KOW, restaging his installation It’s Spring and the Weather is Great'
+
+    it 'Converts html on change only plugin supported classes', ->
+      @component.onChange(@component.state.editorState)
+      @component.state.html.should.eql '<h2><a class="is-jump-link" name="toc">toc</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
+
+    it 'Hides the menu when not editing', ->
+      @props.editing = false
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).find('.edit-section-text__menu').length.should.eql 0
+
+    it 'Shows the menu when editing', ->
+      $(ReactDOM.findDOMNode(@component)).find('.edit-section-text__menu').length.should.eql 1
+
+
+  describe 'Rich text events', ->
+
+    it 'Only shows plugins when channel allows', ->
+      @component.hasPlugins().length.should.eql 0
+      @SectionText.__set__ 'sd',
+        CURRENT_CHANNEL: fixtures().channels
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      component.hasPlugins().length.should.eql 2
+
+    xit 'Opens a link input popup', ->
+      @r.simulate.mouseDown @r.find @component, 'link'
+      # fake a text selection here
+      @component.state.showUrlInput.should.eql true
+
+    xit 'Can create italic blocks', ->
+
+    xit 'Can create artist blocks', ->
+
+    xit 'Can create toc blocks', ->
+
+    xit '#makePlainText Can strip styles', ->
+
+    xit '#handleKeyCommand Can make things bold and italic'
+
+
+  describe '#setPluginType', ->
+
+    it 'Sets state to the correct plugin', ->
+      @component.setPluginType('artist')
+      @component.state.pluginType.should.eql 'artist'
+      @component.setPluginType('toc')
+      @component.state.pluginType.should.eql 'toc'
+
+    it 'Calls promt for link if artist', ->
+      @component.promptForLink = sinon.stub()
+      @component.setPluginType('artist')
+      @component.promptForLink.called.should.eql true
+
+    it 'Calls confirm link if new TOC', ->
+      @component.confirmLink = sinon.stub()
+      @component.getExistingLinkData = sinon.stub().returns { url: '', className: '' }
+      @component.setPluginType('toc')
+      @component.confirmLink.called.should.eql true
+
+    it 'Removes a TOC if already exists', ->
+      @component.removeLink = sinon.stub()
+      @component.getExistingLinkData = sinon.stub().returns { url: '', className: 'is-jump-link' }
+      @component.setPluginType('toc')
+      @component.removeLink.called.should.eql true
+
+
+  describe '#setPluginProps', ->
+
+    it 'returns props for artist link', ->
+      @component.getExistingLinkData = sinon.stub().returns {className: ''}
+      artist = @component.setPluginProps('http://link.com', 'artist')
+      artist.should.eql { url: 'http://link.com', className: 'is-follow-link', name: undefined }
+
+    it 'can combine props for artist and toc links', ->
+      @component.getExistingLinkData = sinon.stub().returns {className: 'is-jump-link'}
+      artistToc = @component.setPluginProps('http://link.com', 'artist')
+      artistToc.should.eql { url: 'http://link.com', className: 'is-follow-link is-jump-link', name: 'toc' }
+
+
+  it '#onPaste strips or converts unsupported html and linebreaks', ->
+    @component.onPaste('Here is a caption about an image yep.', '<meta><script>stuff</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
+    @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul><p>yep.'
+
+
+  describe '#stripGoogleStyles', ->
+
+    it 'removes non-breaking spaces between paragraphs', ->
+      html = '<p>hello</p><br><p>here again.</p><br class="Apple-interchange-newline">'
+      @component.stripGoogleStyles(html).should.eql '<p>hello</p><p>here again.</p>'
+
+    it 'removes dummy b tags google docs wraps document in', ->
+      html = '<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>'
+
+    it 'replaces bold spans with actual b tags', ->
+      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><strong>B. 1981 in Madrid. Lives and works in Madrid.</strong></p>'
