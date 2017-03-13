@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": ">=6.6.x",
+    "node": "7.7.1",
     "npm": "3.10.7"
   },
   "scripts": {
@@ -50,7 +50,6 @@
     "lokka-transport-http": "^1.6.1",
     "mocha": "^3.1.2",
     "moment": "^2.10.6",
-    "mongodb": "2.1.21",
     "mongojs": "^2.4.0",
     "morgan": "^1.6.1",
     "nib": "^1.1.0",
