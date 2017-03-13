@@ -50,7 +50,6 @@
     "lokka-transport-http": "^1.6.1",
     "mocha": "^3.1.2",
     "moment": "^2.10.6",
-    "mongodb": "mongodb@2.1.21",
     "mongojs": "^2.4.0",
     "morgan": "^1.6.1",
     "nib": "^1.1.0",
@@ -66,7 +65,7 @@
     "sailthru-client": "^2.0.3",
     "sharify": "^0.1.6",
     "sortablejs": "^1.4.2",
-    "stylus": "^0.52.4",
+    "stylus": "^0.54.5",
     "superagent": "^3.3.1",
     "superagent-bluebird-promise": "^3.0.0",
     "ua-parser": "^0.3.5",
@@ -79,7 +78,7 @@
   "devDependencies": {
     "antigravity": "git://github.com/artsy/antigravity.git",
     "benv": "^3.0.0",
-    "browserify": "^11.2.0",
+    "browserify": "^14.1.0",
     "browserify-dev-middleware": "^0.1.2",
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
@@ -109,7 +108,7 @@
     "sinon": "^1.17.1",
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
-    "zombie": "^4.1.0"
+    "zombie": "^5.0.5"
   },
   "license": "MIT"
 }
