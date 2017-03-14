@@ -13,10 +13,13 @@ describe 'SectionText', ->
         React: require 'react'
         ReactDOM: require 'react-dom'
         ReactTestUtils: require 'react-addons-test-utils'
+        Draft: require 'draft-js'
       window.jQuery = $
       @r =
         find: ReactTestUtils.findRenderedDOMComponentWithClass
         simulate: ReactTestUtils.Simulate
+      @d =
+        EditorState: Draft.EditorState
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}
       @SectionText = benv.requireWithJadeify(
@@ -76,9 +79,22 @@ describe 'SectionText', ->
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
       component.hasPlugins().length.should.eql 2
 
-    xit 'Opens a link input popup', ->
+    it 'Opens a link input popup', ->
+      @component.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
+      @component.stickyLinkBox = sinon.stub().returns {top: 20, left: 40}
+      selection = @component.state.editorState.getSelection()
+      start = @component.state.editorState.getCurrentContent().getFirstBlock().key
+      end = @component.state.editorState.getCurrentContent().getLastBlock().key
+      newSelection = selection.merge({
+        anchorKey: start
+        anchorOffset: 0
+        focusKey: end
+        focusOffset: 10
+        hasFocus: true
+      })
+      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, newSelection)
       @r.simulate.mouseDown @r.find @component, 'link'
-      # fake a text selection here
+      $(ReactDOM.findDOMNode(@component)).find('.rich-text--url-input').should.eql true
       @component.state.showUrlInput.should.eql true
 
     xit 'Can create italic blocks', ->
