@@ -177,6 +177,7 @@ sanitizeHtml = (html) ->
   xss $.html(),
     whiteList: _.extend xss.getDefaultWhiteList(),
       a: ['target', 'href', 'title', 'name', 'class', 'data-id']
+      span: ['style']
 
 typecastIds = (article) ->
   _.extend article,

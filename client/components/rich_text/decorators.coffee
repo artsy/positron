@@ -15,12 +15,12 @@ exports.findLinkEntities = (contentBlock, callback, contentState) ->
 
 exports.Link = (props) ->
   { url, className, name } = props.contentState.getEntity(props.entityKey).getData()
-  text = props.decoratedText
+  text = props.decoratedText.split(' ')[0]
   if className?.includes('is-jump-link') and className?.includes('is-follow-link')
     link = span {},
       a {
         href: url
-        name: props.decoratedText
+        name: text
         className: className
       }, props.children
       a {
@@ -28,7 +28,7 @@ exports.Link = (props) ->
       }
   else if className is 'is-jump-link'
     link = a {
-      name: props.decoratedText
+      name: text
       className: className
     }, props.children
   else if className is 'is-follow-link'

@@ -109,6 +109,11 @@ module.exports = React.createClass
 
   convertFromHTML: (html) ->
     blocksFromHTML = convertFromHTML({
+      htmlToStyle: (nodeName, node, currentStyle) ->
+        if nodeName is 'span' and node.style.textDecoration is 'line-through'
+          return currentStyle.add 'STRIKETHROUGH'
+        else
+          return currentStyle
       htmlToEntity: (nodeName, node) ->
         if nodeName is 'a'
           data = {url: node.href, name: node.name, className: node.classList.toString()}
@@ -126,11 +131,14 @@ module.exports = React.createClass
     html = convertToHTML({
       entityToHTML: (entity, originalText) ->
         if entity.type is 'LINK'
-          className = if entity.data.className then ' class="' + entity.data.className + '"' else ''
-          name = if entity.data.name then ' name="' + originalText + '"' else ''
-          url = if entity.data.url then ' href="' + entity.data.url + '"' else ''
-          followButton = if entity.data.className is 'is-follow-link' then '<a class="entity-follow artist-follow"></a>' else ''
-          return '<a' + url + className + name + '>' + originalText + '</a>' + followButton
+          sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\-_`’'~()]/g,"")
+          name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
+          if entity.data.className.includes('is-follow-link')
+            return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText + '</a><a class="entity-follow artist-follow"></a>'
+          else if entity.data.className is 'is-jump-link'
+            return a { name: sanitizeName, className: entity.data.className}
+          else
+            return a { href: entity.data.url}
         return originalText
       styleToHTML: (style) ->
         if style is 'STRIKETHROUGH'
@@ -167,9 +175,7 @@ module.exports = React.createClass
       @stripCharacterStyles contentBlock
     newState = ContentState.createFromBlockArray noStyles
     if !selection.isCollapsed()
-      @setState({
-        editorState: EditorState.push(editorState, newState, null)
-      })
+      @onChange EditorState.push(editorState, newState, null)
 
   stripCharacterStyles: (contentBlock, keepAllowed) ->
     characterList = contentBlock.getCharacterList().map (character) ->

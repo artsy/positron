@@ -23,4 +23,5 @@ module.exports = React.createClass
       button {
         onMouseDown: @onToggle
         name: @props.name
+        className: @props.name
       }, @props.label

@@ -36,10 +36,31 @@ describe 'SectionText', ->
       @props = {
         editing: true
         section: new Backbone.Model {
-            body: '<h2><a name="toc" class="is-jump-link">toc</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
-          }
+          body: '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
         }
+      }
+      @altProps = {
+        editing: true
+        section: new Backbone.Model {
+          body: '<h2>A <em>short</em> piece of <b>text</b></h2>'
+        }
+      }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @component.stickyLinkBox = sinon.stub().returns {top: 20, left: 40}
+        @SectionText.__set__ 'sd',
+          CURRENT_CHANNEL: fixtures().channels
+        @shortComponent = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+        @shortComponent.stickyLinkBox = sinon.stub().returns {top: 20, left: 40}
+        @shortComponent.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
+        shortSelection = @shortComponent.state.editorState.getSelection()
+        newSelection = shortSelection.merge({
+          anchorKey: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().key
+          anchorOffset: 0
+          focusKey: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().key
+          focusOffset: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().text.length
+        })
+        newEditorState = @d.EditorState.acceptSelection(@shortComponent.state.editorState, newSelection)
+        @shortComponent.onChange newEditorState
         done()
 
   afterEach ->
@@ -59,8 +80,7 @@ describe 'SectionText', ->
 
     it 'Converts html on change only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2><a class="is-jump-link" name="toc">toc</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
-
+      @component.state.html.should.eql '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
     it 'Hides the menu when not editing', ->
       @props.editing = false
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
@@ -80,33 +100,51 @@ describe 'SectionText', ->
       component.hasPlugins().length.should.eql 2
 
     it 'Opens a link input popup', ->
-      @component.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
-      @component.stickyLinkBox = sinon.stub().returns {top: 20, left: 40}
-      selection = @component.state.editorState.getSelection()
-      start = @component.state.editorState.getCurrentContent().getFirstBlock().key
-      end = @component.state.editorState.getCurrentContent().getLastBlock().key
-      newSelection = selection.merge({
-        anchorKey: start
-        anchorOffset: 0
-        focusKey: end
-        focusOffset: 10
-        hasFocus: true
-      })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, newSelection)
-      @r.simulate.mouseDown @r.find @component, 'link'
-      $(ReactDOM.findDOMNode(@component)).find('.rich-text--url-input').should.eql true
-      @component.state.showUrlInput.should.eql true
+      @r.simulate.mouseDown @r.find @shortComponent, 'link'
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
+      @shortComponent.state.showUrlInput.should.eql true
 
-    xit 'Can create italic blocks', ->
+    it 'Can create styled blocks', ->
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'ITALIC'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
-    xit 'Can create artist blocks', ->
+    it 'Can create bold blocks', ->
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'BOLD'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
-    xit 'Can create toc blocks', ->
+    it 'Can create strikethrough blocks', ->
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'STRIKETHROUGH'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
-    xit '#makePlainText Can strip styles', ->
+    it 'Can toggle block changes', ->
+      @r.simulate.mouseDown @r.find @shortComponent, 'header-two'
+      @shortComponent.state.html.should.eql '<p>A <em>short</em> piece of <strong>text</strong></p>'
+      @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
+      @shortComponent.state.html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
 
-    xit '#handleKeyCommand Can make things bold and italic'
+    it 'Can setup link prompt for artist blocks', ->
+      @r.simulate.mouseDown @r.find @shortComponent, 'artist'
+      @shortComponent.state.showUrlInput.should.eql true
+      @shortComponent.state.pluginType.should.eql 'artist'
 
+    it 'Can create toc blocks', ->
+      @r.simulate.mouseDown @r.find @shortComponent, 'toc'
+      @shortComponent.state.html.should.eql '<h2><a name="A" class="is-jump-link">A <em>short</em> piece of <strong>text</strong></a></h2>'
+
+    it '#makePlainText Can strip styles', ->
+      @shortComponent.makePlainText()
+      @shortComponent.state.html.should.eql '<p>A short piece of text</p>'
+
+    it '#handleKeyCommand toggles bold and italic', ->
+      @shortComponent.handleKeyCommand('bold')
+      @shortComponent.state.html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
+      @shortComponent.handleKeyCommand('italic')
+      @shortComponent.state.html.should.eql '<h2><strong><em>A short piece of text</em></strong></h2>'
+      @shortComponent.handleKeyCommand('bold')
+      @shortComponent.state.html.should.eql '<h2><em>A short piece of text</em></h2>'
 
   describe '#setPluginType', ->
 
@@ -149,7 +187,7 @@ describe 'SectionText', ->
 
   it '#onPaste strips or converts unsupported html and linebreaks', ->
     @component.onPaste('Here is a caption about an image yep.', '<meta><script>stuff</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
-    @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul><p>yep.'
+    @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
 
 
   describe '#stripGoogleStyles', ->
