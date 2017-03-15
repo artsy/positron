@@ -111,3 +111,19 @@ describe 'Retrieve', ->
       }, (err, query) =>
         query.scheduled_publish_at.should.have.keys '$ne'
         done()
+
+    it 'finds articles by tags', (done) ->
+      Retrieve.toQuery {
+        tags: ['foo', 'bar']
+      }, (err, query) =>
+        query.tags['$in'].should.containEql 'foo'
+        query.tags['$in'].should.containEql 'bar'
+        done()
+
+    it 'finds articles by internal tags', (done) ->
+      Retrieve.toQuery {
+        internal_tags: ['foo', 'bar']
+      }, (err, query) =>
+        query.internal_tags['$in'].should.containEql 'foo'
+        query.internal_tags['$in'].should.containEql 'bar'
+        done()
