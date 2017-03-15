@@ -627,20 +627,20 @@ describe 'Index Save', ->
     it 'saves verticals', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-        vertical: 'art'
+        vertical: ['art']
         title: 'Art History 101'
       }, 'foo', (err, article) ->
-        article.vertical.should.equal 'art'
+        article.vertical[0].should.equal 'art'
         article.title.should.equal 'Art History 101'
         done()
 
     it 'saves sub_verticals', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-        sub_vertical: 'Art History'
+        sub_vertical: ['Art History']
         title: 'Art History 101'
       }, 'foo', (err, article) ->
-        article.sub_vertical.should.equal 'Art History'
+        article.sub_vertical[0].should.equal 'Art History'
         article.title.should.equal 'Art History 101'
         done()
 
