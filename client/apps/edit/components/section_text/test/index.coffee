@@ -82,6 +82,7 @@ describe 'SectionText', ->
     it 'Converts html on change only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
       @component.state.html.should.eql '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
+
     it 'Hides the menu when not editing', ->
       @props.editing = false
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]

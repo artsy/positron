@@ -131,7 +131,7 @@ module.exports = React.createClass
     html = convertToHTML({
       entityToHTML: (entity, originalText) ->
         if entity.type is 'LINK'
-          sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\-_`’'~()]/g,"")
+          sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\_`’'~()]/g,"")
           name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
           if entity.data.className.includes('is-follow-link')
             return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText + '</a><a class="entity-follow artist-follow"></a>'

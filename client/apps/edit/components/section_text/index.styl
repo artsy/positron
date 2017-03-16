@@ -27,12 +27,18 @@
       line-height 27px
       span
         font-style normal !important
-    ol li, li.public-DraftStyleDefault-orderedListItem
+    ol li, ul li, li
+      list-style none
+      .public-DraftStyleDefault-ltr
+        display list-item
+        margin-left 20px
+        padding-left 10px
+    ol li .public-DraftStyleDefault-ltr,
+    li.public-DraftStyleDefault-orderedListItem  .public-DraftStyleDefault-ltr
       list-style decimal
-      margin-left 20px
-    ul li, li.public-DraftStyleDefault-unorderedListItem
+    ul li .public-DraftStyleDefault-ltr,
+    li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
       list-style disc
-      margin-left 20px
   nav
     position absolute
     top -40px
