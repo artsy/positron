@@ -1,129 +1,103 @@
 @import '../stylus_lib'
 
-.edit-section-text-container
-  background white
-
-.est-link-container
+.edit-section-text
   position relative
-  display inline-block
-  [data-command-name=linkPrompt].active + [data-command-name=unlink]
-    display block
-  [data-command-name=unlink]
-    position absolute
-    top 0
-    left 0
-    width 100%
-    height 100%
-    z-index 2
-    opacity 0
-    display none
-
-.edit-section-text-editable
-  font-size 20px
-  line-height 26px
-  z-index 2
-  position relative
-  min-height 1em
-  background white
-  p
-    margin-bottom 1em
-    &:last-child
+  width calc(100% \+ 40px)
+  margin-top -20px
+  margin-left -20px
+  z-index -1
+  &.is-editing
+    z-index 100
+  .public-DraftEditor-content
+    garamond l-body
+    padding 20px 20px 0px 20px
+    div[data-blocK]
+      margin-bottom 1em
+    div[data-blocK]:last-child
       margin-bottom 0
-  h2
-    font-size 28px
-    line-height 1.2em
-  h2 + p, h3 + p
-    margin-top 1em
-  h3
-    avant-garde()
-    font-size 13px
-  ul li
-    list-style disc inside
-  ol li
-    list-style decimal inside
-  .artist-follow
-    background-image none !important
-    &:before
-      content url(/icons/circle_plus.svg)
-      padding-left 10px
-      vertical-align -8.5px
-    &:after
-      content 'Follow'
-      garamond('s-body')
-      text-transform none
-      letter-spacing 0px
-  .is-jump-link
-    background-color #CFF8E6
-    background-image none !important
-
-.edit-section-text-editing-bg
-  width 100%
-  height 100%
-  position fixed
-  top 0
-  left 0
-  z-index 1
-  display none
-
-.edit-section-container[data-editing=true]
+    h2, h3
+      .public-DraftStyleDefault-ltr
+        margin-bottom 0
+    h2
+      garamond l-header
+      font-size 28px
+      line-height 1.2em
+    h3
+      avant-garde body
+      line-height 27px
+      span
+        font-style normal !important
+    ol li, ul li, li
+      list-style none
+      .public-DraftStyleDefault-ltr
+        display list-item
+        margin-left 20px
+        padding-left 10px
+    ol li .public-DraftStyleDefault-ltr,
+    li.public-DraftStyleDefault-orderedListItem  .public-DraftStyleDefault-ltr
+      list-style decimal
+    ul li .public-DraftStyleDefault-ltr,
+    li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
+      list-style disc
   nav
-    display block
-
-.scribe-plugin-link-tooltip
-  background black
-  position absolute
-  padding 12px
-  z-index 10
-  white-space nowrap
-  &::after
-    content '.'
-    width 0
-    height 0
-    border-left 7px solid transparent
-    border-right 7px solid transparent
-    border-bottom 7px solid black
     position absolute
-    top -7px
-    left 50%
-  input
-    background white
-    color black
-    border 0
-    padding 0 10px
-    width 296px
-  a.scribe-plugin-link-tooltip-show-on-view
-    color white
-    padding 0 20px 0 10px
-    text-decoration none
-    vertical-align top
-    max-width 250px
-    text-overflow ellipsis
-    overflow hidden
-    margin-top 2px
-  button
-    background gray-darker-color
-    color white
-    font-size small-avant-garde-font-size + 1
-    border 0
-    padding 0
-    width 80px
-    text-align center
-    &:hover
-      color white
-      background gray-dark-color
-  button[data-scribe-plugin-link-tooltip-role=remove]
-    border-left 1px solid black
-  input, button
-    height 30px
-    display inline-block
-    vertical-align top
-
-.scribe-plugin-link-tooltip-hidden
-  visibility hidden
-
-.scribe-plugin-link-tooltip > *
-  display inline-block
-
-.scribe-plugin-link-tooltip-state-edit .scribe-plugin-link-tooltip-show-on-view,
-.scribe-plugin-link-tooltip-state-view .scribe-plugin-link-tooltip-show-on-edit
-  display none
+    top -40px
+    display flex !important
+    background black
+    width 100%
+    justify-content center
+    button
+      font-weight 600
+      height 40px
+      width 50px
+      color gray-dark-color
+      line-height 1em !important
+      background none
+      border none
+      border-right 1px solid gray-darkest-color
+      transition color .15s
+      &:hover
+        color gray-color
+      &[name='ITALIC'],
+      &[name='STRIKETHROUGH'],
+      &[name='header-two'],
+      &[name='header-three']
+        garamond l-body
+      &[name='BOLD']
+        font-weight 600
+        avant-garde l-headline
+      &[name='STRIKETHROUGH']
+        text-decoration line-through
+      svg
+        width 18px
+        height 18px
+      .st0, circle, g, path
+        fill gray-dark-color
+        transition color .15s
+      &:hover
+        .st0, circle, g, path
+          fill gray-color
+      &[name='toc']
+        svg
+          width 22px
+          height 22px
+          #Group-2-Copy
+            fill black
+        &:hover g
+          stroke gray-color
+  &__input
+    position relative
+    .artist-follow
+      background-image none !important
+      &:before
+        content url(/icons/circle_plus.svg)
+        padding-left 10px
+        vertical-align -8.5px
+      &:after
+        content 'Follow'
+        garamond('s-body')
+        text-transform none
+        letter-spacing 0px
+    .is-jump-link
+      background-color #CFF8E6
+      background-image none !important

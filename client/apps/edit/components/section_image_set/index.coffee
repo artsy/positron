@@ -9,9 +9,8 @@ sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
-Input = React.createFactory require './input.coffee'
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
-DraftInputCaption = React.createFactory require '../../../../components/draft_input/components/input_caption.coffee'
+RichTextCaption = React.createFactory require '../../../../components/rich_text_caption/index.coffee'
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong } = React.DOM
 { resize } = require '../../../../components/resizer/index.coffee'
 
@@ -182,7 +181,7 @@ module.exports = React.createClass
                           src: if @state.progress then item.url else resize(item.url, width: 900)
                           style: opacity: if @state.progress then @state.progress else '1'
                         }
-                        DraftInputCaption {
+                        RichTextCaption {
                           item: item
                           key: 'caption-edit-' + i
                         }

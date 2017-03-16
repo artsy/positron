@@ -10,8 +10,7 @@ icons = -> require('./icons.jade') arguments...
 Autocomplete = require '../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../models/artwork.coffee'
 imagesLoaded = require 'imagesloaded'
-Input = React.createFactory require '../section_image_set/input.coffee'
-DraftInputCaption = React.createFactory require '../../../../components/draft_input/components/input_caption.coffee'
+RichTextCaption = React.createFactory require '../../../../components/rich_text_caption/index.coffee'
 UrlArtworkInput = React.createFactory require '../section_image_set/url_artwork_input.coffee'
 
 { div, section, h1, h2, span, img, header, input, a, button, p, ul, li, strong, nav } = React.DOM
@@ -239,7 +238,7 @@ module.exports = React.createClass
                         style: opacity: if @state.progress then @state.progress else '1'
                       }
                       if @props.editing
-                        DraftInputCaption {
+                        RichTextCaption {
                           item: item
                           key: 'caption-edit-' + i
                         }

@@ -1,35 +1,34 @@
 # A pop-up input for adding a link to a text selection
 
 # Example usage:
-# DraftInputUrl {
+# InputUrl {
 #   selectionTarget: selectionTarget <- where the input should be placed {top, left}
 #   removeLink: @removeLink
 #   confirmLink: @confirmLink
-#   urlValue: urlValue <- to editing an existing link, pass url of selection
+#   urlValue: urlValue <- to edit an existing link, pass url of selection
 # }
 React = require 'react'
-icons = -> require('../icons.jade') arguments...
 { div, button, input } = React.DOM
+icons = -> require('../icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'DraftInputUrl'
+  displayName: 'RichTextInputUrl'
 
   getInitialState: ->
     urlValue: @props.urlValue || ''
+
+  componentDidMount: ->
+    @refs.url.focus()
 
   onChange: ->
     @setState urlValue: @refs.url.value
 
   confirmLink: (e) ->
     e.preventDefault()
-    if @state.urlValue.length
-      @props.confirmLink(@state.urlValue)
+    if @state.urlValue.length isnt 0
+      @props.confirmLink(@state.urlValue, @props.pluginType)
     else
       @props.removeLink(e)
-
-  removeLink: (e) ->
-    e.preventDefault()
-    @props.removeLink(e)
 
   handleLinkReturn: (e) ->
     e.preventDefault()
@@ -38,10 +37,10 @@ module.exports = React.createClass
 
   render: ->
     div {
-      className: 'draft-caption__url-input'
+      className: 'rich-text--url-input'
       style: {
-        top: @props.selectionTarget.top || 0
-        left: @props.selectionTarget.left || 0
+        top: @props.selectionTarget?.top || 0
+        left: @props.selectionTarget?.left || 0
       }
     },
       input {
@@ -52,6 +51,7 @@ module.exports = React.createClass
         className: 'bordered-input'
         placeholder: 'Paste or type a link'
         onKeyUp: @handleLinkReturn
+        onBlur: @confirmLink
       }
       if @state.urlValue?.length
         button {
@@ -63,4 +63,3 @@ module.exports = React.createClass
         className: 'add-link'
         onMouseDown: @confirmLink
       }, 'Apply'
-

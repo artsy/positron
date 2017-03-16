@@ -2,7 +2,6 @@ React = require 'react'
 window.global = window
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
-
 { convertToRaw,
   convertFromHTML,
   CompositeDecorator,
@@ -13,24 +12,24 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   Modifier,
   getVisibleSelectionRect } = require 'draft-js'
 { stateToHTML } = require 'draft-js-export-html'
-DraftDecorators = require '../decorators.coffee'
-InputUrl = React.createFactory require './input_url.coffee'
-icons = -> require('../icons.jade') arguments...
+InputUrl = React.createFactory require '../rich_text/components/input_url.coffee'
+Decorators = require '../rich_text/decorators.coffee'
+icons = -> require('../rich_text/icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
 decorator = new CompositeDecorator([
     {
-      strategy: DraftDecorators.findLinkEntities
-      component: DraftDecorators.Link
+      strategy: Decorators.findLinkEntities
+      component: Decorators.Link
     }
   ])
 
 module.exports = React.createClass
-  displayName: 'DraftInputCaption'
+  displayName: 'RichTextCaption'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty()
+    editorState: EditorState.createEmpty(decorator)
     showUrlInput: false
     urlValue: ''
     html: null
@@ -111,8 +110,8 @@ module.exports = React.createClass
   getSelectionLocation: ->
     target = getVisibleSelectionRect(window)
     parent = {
-      top: $('.draft-caption__input').offset().top - window.pageYOffset
-      left: $('.draft-caption__input').offset().left
+      top: $('.rich-text--caption__input').offset().top - window.pageYOffset
+      left: $('.rich-text--caption__input').offset().left
     }
     return {target: target, parent: parent}
 
@@ -178,9 +177,9 @@ module.exports = React.createClass
   render: ->
     hasFocus = if @state.focus then ' has-focus' else ' no-focus'
 
-    div { className: 'draft-caption' },
+    div { className: 'rich-text--caption' },
       div {
-        className: 'draft-caption__input bordered-input' + hasFocus
+        className: 'rich-text--caption__input bordered-input' + hasFocus
         onClick: @focus
         onBlur: @onBlur
       },
@@ -194,7 +193,7 @@ module.exports = React.createClass
           handleReturn: @handleReturn
           handleKeyCommand: @handleKeyCommand
         }
-      div { className: 'draft-caption__actions'},
+      div { className: 'rich-text--caption__actions'},
         button {
           onMouseDown: @onStyleChange
           className: 'italic'

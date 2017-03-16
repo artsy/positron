@@ -29,6 +29,7 @@
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
+    "draft-convert": "^1.4.2",
     "draft-js": "^0.10.0",
     "draft-js-export-html": "^0.5.2",
     "elasticsearch": "^11.0.0",
