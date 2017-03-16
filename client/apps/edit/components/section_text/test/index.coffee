@@ -36,13 +36,19 @@ describe 'SectionText', ->
       @props = {
         editing: true
         section: new Backbone.Model {
-          body: '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
+          body: '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
         }
       }
       @altProps = {
         editing: true
         section: new Backbone.Model {
           body: '<h2>A <em>short</em> piece of <b>text</b></h2>'
+        }
+      }
+      @artistProps = {
+        editing: true
+        section: new Backbone.Model {
+          body: '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a></h2>'
         }
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -79,10 +85,6 @@ describe 'SectionText', ->
       editorText = $(ReactDOM.findDOMNode(@component)).find('.edit-section-text__input').text()
       editorText.should.containEql 'K mounted a solo show at prescient Berlin gallery KOW, restaging his installation It’s Spring and the Weather is Great'
 
-    it 'Converts html on change only plugin supported classes', ->
-      @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/show/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
-
     it 'Hides the menu when not editing', ->
       @props.editing = false
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
@@ -91,15 +93,12 @@ describe 'SectionText', ->
     it 'Shows the menu when editing', ->
       $(ReactDOM.findDOMNode(@component)).find('.edit-section-text__menu').length.should.eql 1
 
+    it 'Converts html on change only plugin supported classes', ->
+      @component.onChange(@component.state.editorState)
+      @component.state.html.should.eql '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
 
-  describe 'Rich text events', ->
 
-    it 'Only shows plugins when channel allows', ->
-      @component.hasPlugins().length.should.eql 0
-      @SectionText.__set__ 'sd',
-        CURRENT_CHANNEL: fixtures().channels
-      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
-      component.hasPlugins().length.should.eql 2
+  describe 'Rich text menu events', ->
 
     it 'Opens a link input popup', ->
       @r.simulate.mouseDown @r.find @shortComponent, 'link'
@@ -136,15 +135,6 @@ describe 'SectionText', ->
       @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
       @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
 
-    it 'Can setup link prompt for artist blocks', ->
-      @r.simulate.mouseDown @r.find @shortComponent, 'artist'
-      @shortComponent.state.showUrlInput.should.eql true
-      @shortComponent.state.pluginType.should.eql 'artist'
-
-    it 'Can create toc blocks', ->
-      @r.simulate.mouseDown @r.find @shortComponent, 'toc'
-      @shortComponent.state.html.should.eql '<h2><a name="A" class="is-jump-link">A <em>short</em> piece of <strong>text</strong></a></h2>'
-
     it '#makePlainText Can strip styles', ->
       @shortComponent.makePlainText()
       @shortComponent.state.html.should.eql '<p>A short piece of text</p>'
@@ -163,7 +153,28 @@ describe 'SectionText', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
 
-  describe '#setPluginType', ->
+  describe 'Plugins', ->
+
+    it 'Only shows plugins when channel allows', ->
+      @component.hasPlugins().length.should.eql 0
+      @SectionText.__set__ 'sd',
+        CURRENT_CHANNEL: fixtures().channels
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      component.hasPlugins().length.should.eql 2
+
+    it 'Can setup link prompt for artist blocks', ->
+      @r.simulate.mouseDown @r.find @shortComponent, 'artist'
+      @shortComponent.state.showUrlInput.should.eql true
+      @shortComponent.state.pluginType.should.eql 'artist'
+
+    it 'Can create toc blocks', ->
+      @r.simulate.mouseDown @r.find @shortComponent, 'toc'
+      @shortComponent.state.html.should.eql '<h2><a name="A" class="is-jump-link">A <em>short</em> piece of <strong>text</strong></a></h2>'
+
+    it 'Adds data-id to artist links', ->
+      component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
+      component.onChange(component.state.editorState)
+      component.state.html.should.eql '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></h2>'
 
     it 'Sets state to the correct plugin', ->
       @component.setPluginType('artist')
