@@ -47,6 +47,7 @@ describe 'SectionText', ->
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.stickyLinkBox = sinon.stub().returns {top: 20, left: 40}
+        # a second component for text selection
         @SectionText.__set__ 'sd',
           CURRENT_CHANNEL: fixtures().channels
         @shortComponent = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
@@ -104,26 +105,35 @@ describe 'SectionText', ->
       $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
       @shortComponent.state.showUrlInput.should.eql true
 
-    it 'Can create styled blocks', ->
+    it 'Can create italic entities', ->
       @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'ITALIC'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
-    it 'Can create bold blocks', ->
+    it 'Can create bold entities', ->
       @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'BOLD'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
-    it 'Can create strikethrough blocks', ->
+    it 'Can create strikethrough entities', ->
       @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'STRIKETHROUGH'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
-    it 'Can toggle block changes', ->
+    it 'Can toggle h2 block changes', ->
+      @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'header-two'
-      @shortComponent.state.html.should.eql '<p>A <em>short</em> piece of <strong>text</strong></p>'
+      @shortComponent.setState.args[0][0].html.should.eql '<p>A <em>short</em> piece of <strong>text</strong></p>'
+
+    it 'Can toggle h3 block changes and strips the styles', ->
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'header-three'
+      @shortComponent.setState.args[0][0].html.should.eql '<h3>A short piece of text</h3>'
+
+    it 'Can toggle ul block changes', ->
+      @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
-      @shortComponent.state.html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
+      @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
 
     it 'Can setup link prompt for artist blocks', ->
       @r.simulate.mouseDown @r.find @shortComponent, 'artist'
@@ -138,13 +148,19 @@ describe 'SectionText', ->
       @shortComponent.makePlainText()
       @shortComponent.state.html.should.eql '<p>A short piece of text</p>'
 
-    it '#handleKeyCommand toggles bold and italic', ->
+
+  describe '#handleKeyCommand', ->
+
+    it 'Can toggle bold entities', ->
+      @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('bold')
-      @shortComponent.state.html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
+
+    it 'Can toggle italic entities', ->
+      @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('italic')
-      @shortComponent.state.html.should.eql '<h2><strong><em>A short piece of text</em></strong></h2>'
-      @shortComponent.handleKeyCommand('bold')
-      @shortComponent.state.html.should.eql '<h2><em>A short piece of text</em></h2>'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
+
 
   describe '#setPluginType', ->
 
@@ -186,7 +202,7 @@ describe 'SectionText', ->
 
 
   it '#onPaste strips or converts unsupported html and linebreaks', ->
-    @component.onPaste('Here is a caption about an image yep.', '<meta><script>stuff</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
+    @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
     @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
 
 

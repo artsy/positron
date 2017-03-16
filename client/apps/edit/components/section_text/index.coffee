@@ -18,7 +18,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 Immutable = require 'immutable'
 Decorators = require '../../../../components/rich_text/decorators.coffee'
 icons = -> require('../../../../components/rich_text/icons.jade') arguments...
-{ div, nav, a, button, span, p, br } = React.DOM
+{ div, nav, a, button, span, p, br, h3 } = React.DOM
 ButtonStyle = React.createFactory require '../../../../components/rich_text/components/button_style.coffee'
 InputUrl = React.createFactory require '../../../../components/rich_text/components/input_url.coffee'
 editor = (props) -> React.createElement Editor, props
@@ -140,6 +140,9 @@ module.exports = React.createClass
           else
             return a { href: entity.data.url}
         return originalText
+      blockToHTML: (block) ->
+        if block.type is 'header-three'
+          return h3 {}, block.text
       styleToHTML: (style) ->
         if style is 'STRIKETHROUGH'
           return span { style: {textDecoration: 'line-through'}}
@@ -179,8 +182,9 @@ module.exports = React.createClass
 
   stripCharacterStyles: (contentBlock, keepAllowed) ->
     characterList = contentBlock.getCharacterList().map (character) ->
-      unless character.hasStyle 'UNDERLINE'
-        return character if keepAllowed and character.hasStyle 'BOLD' or character.hasStyle 'ITALIC' or character.hasStyle 'STRIKETHROUGH'
+      if keepAllowed
+        unless character.hasStyle 'UNDERLINE'
+          return character if character.hasStyle 'BOLD' or character.hasStyle 'ITALIC' or character.hasStyle 'STRIKETHROUGH'
       character.set 'style', character.get('style').clear()
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
@@ -202,18 +206,21 @@ module.exports = React.createClass
     return true
 
   handleKeyCommand: (e) ->
-    if e in ['italic', 'bold']
-      newState = RichUtils.handleKeyCommand @state.editorState, e
-      if newState
-        @onChange newState
-        return true
-    return false
+    unless @getSelectedBlock().content.get('type') is 'header-three'
+      if e in ['italic', 'bold']
+        newState = RichUtils.handleKeyCommand @state.editorState, e
+        if newState
+          @onChange newState
+          return true
+      return false
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
 
   toggleInlineStyle: (inlineStyle) ->
-    unless @getSelectedBlock().content.get('type') is 'header-three'
+    if @getSelectedBlock().content.get('type') is 'header-three'
+      @stripCharacterStyles @getSelectedBlock().content
+    else
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
   promptForLink: (pluginType) ->
