@@ -3,15 +3,15 @@ window.global = window
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 { convertToRaw,
-  convertFromHTML,
   CompositeDecorator,
   ContentState,
   Editor,
   EditorState,
+  Entity,
   RichUtils,
   Modifier,
   getVisibleSelectionRect } = require 'draft-js'
-{ stateToHTML } = require 'draft-js-export-html'
+{ convertToHTML, convertFromHTML } = require 'draft-convert'
 InputUrl = React.createFactory require '../rich_text/components/input_url.coffee'
 Decorators = require '../rich_text/decorators.coffee'
 icons = -> require('../rich_text/icons.jade') arguments...
@@ -38,12 +38,10 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if @props.item.caption?.length
-      blocksFromHTML = convertFromHTML(@props.item.caption)
-      state = ContentState.createFromBlockArray(
-        blocksFromHTML.contentBlocks
-        blocksFromHTML.entityMap
-       )
-      @setState editorState: EditorState.createWithContent(state, decorator)
+      blocksFromHTML = @convertFromHTML(@props.item.caption)
+      @setState
+        html: @props.item.caption
+        editorState: EditorState.createWithContent(blocksFromHTML, decorator)
 
   onChange: (editorState) ->
     html = @convertToHtml editorState
@@ -61,8 +59,26 @@ module.exports = React.createClass
     e.preventDefault()
     @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
 
+  convertFromHTML: (html) ->
+    blocksFromHTML = convertFromHTML({
+      htmlToEntity: (nodeName, node) ->
+        if nodeName is 'a'
+          data = {url: node.href}
+          return Entity.create(
+            'LINK',
+            'MUTABLE',
+            data
+          )
+      })(html)
+    return blocksFromHTML
+
   convertToHtml: (editorState) ->
-    html = stateToHTML editorState.getCurrentContent()
+    html = convertToHTML({
+      entityToHTML: (entity, originalText) ->
+        if entity.type is 'LINK'
+          return a { href: entity.data.url}
+        return originalText
+    })(editorState.getCurrentContent())
     html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
     return html
 
@@ -70,14 +86,13 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = convertFromHTML(html)
-    convertedHtml = html.contentBlocks.map (contentBlock) =>
+    blocksFromHTML = @convertFromHTML(html)
+    convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripPastedStyles contentBlock
       unless unstyled.getType() in ['unstyled','LINK']
         unstyled = unstyled.set('type', 'unstyled')
       return unstyled
-    blockMap = ContentState.createFromBlockArray(convertedHtml, html.entityMap).blockMap
-    Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), 'font-weight')
+    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
     this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
@@ -118,7 +133,7 @@ module.exports = React.createClass
   stickyLinkBox: ->
     location = @getSelectionLocation()
     top = location.target.top - location.parent.top + 25
-    left = location.target.left - location.parent.left - (location.target.width / 2) - 135
+    left = location.target.left - location.parent.left + (location.target.width / 2) - 200
     return {top: top, left: left}
 
   confirmLink: (urlValue) ->
