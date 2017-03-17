@@ -26,7 +26,6 @@ describe 'SectionImageCollection', ->
       SectionImageCollection.__set__ 'gemup', @gemup = sinon.stub()
       SectionImageCollection.__set__ 'imagesLoaded', sinon.stub()
       SectionImageCollection.__set__ 'Autocomplete', sinon.stub()
-      SectionImageCollection.__set__ 'Input', sinon.stub()
       SectionImageCollection.__set__ 'resize', (url)-> url
       props = {
         section: new Backbone.Model

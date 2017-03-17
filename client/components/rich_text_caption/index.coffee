@@ -46,7 +46,10 @@ module.exports = React.createClass
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
-    @props.item.caption = html
+    if @props.onChange
+      @props.onChange(html)
+    else
+      @props.item.caption = html
 
   focus: ->
     @setState focus: true

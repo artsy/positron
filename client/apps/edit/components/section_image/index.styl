@@ -3,44 +3,12 @@
 .edit-section-image
   position relative
 
-.est-nav
-  fill-container()
-  height 40px
-  top -(@height - 1px)
-
-[data-useragent*=Firefox] .est-nav
-  height 41px
-
 .edit-section-image .edit-section-controls
-  fill-container()
   background black
-  height 275px
-  top -(@height + controls-padding)
   left -(controls-padding)
-  padding controls-padding
   display none
   z-index 2
-  width calc(100% \+ 40px)
-
-  nav
-    display flex
-    justify-content center
-    a
-      display inline-block
-      height 40px
-      width @height + 20px
-      background-repeat no-repeat !important
-      background-position center !important
-      transition opacity 0.3s
-      opacity 0.5
-      cursor pointer
-      &:hover
-        opacity 1
-      &:last-of-type
-        border-right 0
-    &.esi-nav
-      margin-top -10px
-      margin-bottom 5px
+  width 1100px
 
 .esi-placeholder
   text-align center
@@ -48,58 +16,60 @@
   height 200px
   line-height @height
 
-.edit-section-container[data-editing=true]
-  .edit-section-controls
-    display block
+.edit-section-container[data-type=image]
+  padding 0
+  &[data-editing=true]
+    .edit-section-controls
+      display block
 
-  .esi-inputs
-    padding 20px 0
-    color #fff
-    background #000
-    border-top 1px solid #333
+    .esi-inputs
+      padding 20px
+      color #fff
+      background #000
+      border-top 1px solid #333
+
+.esi-preview
+  padding 20px
 
 .esi-image
   width 100%
   transition opacity 0.5s
-
-#edit-thumbnail-upload
-  position relative
-  .upload-progress-container
-    display none
-
-.esi-caption
-  border 1px solid gray-darker-color !important
-  width 100%
-  background transparent
-  text-transform none
-  letter-spacing 0
-  cursor text
-  color white
-  a
-    color white
-  &.is-empty::before
-    content 'Add a caption'
-    color gray-dark-color
-    position absolute
-    text-align center
-    left 0
-    width 100%
-
-[data-useragent*=Firefox] .esi-caption
-  position absolute
-  width calc(100% - 40px)
-
-.esi-nav.edit-scribe-nav
-  margin 10px 0
-  button
-    padding 6px 20px
-    &::after
-      top 3px !important
-    svg
-      top 7px !important
 
 .esi-inline-caption
   color gray-darker-color
   garamond l-caption
   a
     color gray-darker-color
+
+#edit-thumbnail-upload
+  position relative
+  .upload-progress-container
+    display none
+
+.esi-caption-container
+  .rich-text--caption
+    flex-direction column-reverse
+    &__input
+      width 100%
+      border 1px solid gray-darker-color
+      color white
+      garamond s-body
+      a
+        color white
+        border-bottom 1px solid
+      .public-DraftEditorPlaceholder-root
+        width calc(100% \- 30px)
+        text-align center
+    &__actions
+      width 100%
+      .italic
+        text-align right
+        padding-right 20px
+      .link
+        text-align left
+        margin-left 10px
+  .rich-text--url-input
+    margin-top 40px
+    background-color gray-darkest-color
+    button.add-link::after
+      border-bottom-color gray-darkest-color
