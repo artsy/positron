@@ -133,7 +133,7 @@ module.exports = React.createClass
         if entity.type is 'LINK'
           sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\_`’'~()]/g,"")
           name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
-          if entity.data.className.includes('is-follow-link')
+          if entity.data.className?.includes('is-follow-link')
             artist = entity.data.url.split('/artist/')[1]
             return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText + '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
           else if entity.data.className is 'is-jump-link'
@@ -272,7 +272,7 @@ module.exports = React.createClass
     if key
       linkInstance = @state.editorState.getCurrentContent().getEntity(key)
       url = linkInstance.getData().url
-      className = linkInstance.getData().className
+      className = linkInstance.getData().className || ''
     return {url: url, key: key, className: className}
 
   getSelectedBlock: ->
