@@ -162,12 +162,17 @@ module.exports = React.createClass
     for block, i in boldBlocks
       if block.style.fontWeight is 'normal'
         $(doc.getElementsByTagName('B')[i]).replaceWith(doc.getElementsByTagName('B')[i].innerHTML)
-    # replace bold spans with actual b tags
-    boldSpans = doc.getElementsByTagName('SPAN')
-    for span, i in boldSpans
-      if span?.style.fontWeight is '700'
+    # replace bold and italic spans with actual b or em tags
+    spans = doc.getElementsByTagName('SPAN')
+    for span, i in spans
+      newSpan = span
+      if span?.style.fontStyle is 'italic' and span?.style.fontWeight is '700'
+        newSpan = '<strong><em>' + span.innerHTML + '</em></strong>'
+      else if span?.style.fontStyle is 'italic'
+        newSpan = '<em>' + span.innerHTML + '</em>'
+      else if span?.style.fontWeight is '700'
         newSpan = '<strong>' + span.innerHTML + '</strong>'
-        $(doc.getElementsByTagName('SPAN')[i]).replaceWith(newSpan)
+      $(doc.getElementsByTagName('SPAN')[i]).replaceWith(newSpan)
     return doc.innerHTML
 
   makePlainText: () ->
@@ -185,7 +190,7 @@ module.exports = React.createClass
     characterList = contentBlock.getCharacterList().map (character) ->
       if keepAllowed
         unless character.hasStyle 'UNDERLINE'
-          return character if character.hasStyle 'BOLD' or character.hasStyle 'ITALIC' or character.hasStyle 'STRIKETHROUGH'
+          return character if character.hasStyle('BOLD') || character.hasStyle('ITALIC') || character.hasStyle('STRIKETHROUGH')
       character.set 'style', character.get('style').clear()
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
