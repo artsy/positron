@@ -153,6 +153,17 @@ describe 'SectionText', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
 
+  describe 'Links', ->
+
+    it 'Can confirm links without a class', ->
+      @shortComponent.confirmLink 'link.com'
+      @shortComponent.state.html.should.containEql '<a href="link.com">'
+
+    it 'Can confirm links with a class', ->
+      @shortComponent.confirmLink 'link.com', '', 'class'
+      @shortComponent.state.html.should.containEql '<a href="link.com">'
+
+
   describe 'Plugins', ->
 
     it 'Only shows plugins when channel allows', ->

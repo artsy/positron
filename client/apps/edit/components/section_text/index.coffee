@@ -232,7 +232,7 @@ module.exports = React.createClass
       url = @getExistingLinkData().url
       @setState({showUrlInput: true, focus: false, urlValue: url, selectionTarget: selectionTarget, pluginType: pluginType})
 
-  confirmLink: (urlValue, pluginType='', className) ->
+  confirmLink: (urlValue, pluginType='', className='') ->
     { editorState } = @state
     contentState = editorState.getCurrentContent()
     props = @setPluginProps urlValue, pluginType, className
