@@ -231,3 +231,11 @@ describe 'SectionText', ->
     it 'replaces bold spans with actual b tags', ->
       html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
       @component.stripGoogleStyles(html).should.eql '<p><strong>B. 1981 in Madrid. Lives and works in Madrid.</strong></p>'
+
+    it 'replaces italic spans with actual em tags', ->
+      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><em>B. 1981 in Madrid. Lives and works in Madrid.</em></p>'
+
+    it 'Can replaces spans that are bold and italic', ->
+      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><strong><em>B. 1981 in Madrid. Lives and works in Madrid.</em></strong></p>'
