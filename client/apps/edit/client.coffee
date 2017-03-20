@@ -14,6 +14,8 @@ EditAdmin = require './components/admin/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 SectionList = React.createFactory require './components/section_list/index.coffee'
 HeroSection = React.createFactory require './components/hero_section/index.coffee'
+RichLeadParagraph = React.createFactory require '../../components/rich_text/components/input_paragraph.coffee'
+
 async = require 'async'
 
 @init = ->
@@ -27,6 +29,10 @@ async = require 'async'
     ReactDOM.render(
       SectionList(sections: @article.sections)
       $('#edit-sections')[0]
+    )
+    ReactDOM.render(
+      RichLeadParagraph(text: @article.get('lead_paragraph'), onChange: @article.setLeadParagraph)
+      $('#edit-lead-paragraph')[0]
     )
     if @article.get('hero_section') != null or channel.hasFeature 'hero'
       ReactDOM.render(
