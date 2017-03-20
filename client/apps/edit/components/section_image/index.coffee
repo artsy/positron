@@ -2,17 +2,10 @@
 # Image section that allows uploading large overflowing images.
 #
 
-# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
-# requiring it for testing in node.
-try
-  Scribe = require 'scribe-editor'
-  scribePluginToolbar = require 'scribe-plugin-toolbar'
-  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginLinkTooltip = require 'scribe-plugin-enhanced-link-tooltip'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
+RichTextCaption = React.createFactory require '../../../../components/rich_text_caption/index.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
@@ -28,12 +21,6 @@ module.exports = React.createClass
     width: @props.section.get('width')
     height: @props.section.get('height')
 
-  componentDidMount: ->
-    @attachScribe()
-
-  componentDidUpdate: ->
-    @attachScribe()
-
   onClickOff: ->
     if @state.src
       @props.section.set
@@ -44,9 +31,9 @@ module.exports = React.createClass
     else
       @props.section.destroy()
 
-  changeLayout: (layout) -> =>
-    @setState layout: layout
-    @props.section.set layout: layout
+  onCaptionChange: (html) ->
+    @setState
+      caption: html
 
   upload: (e) ->
     @props.setEditing(off)()
@@ -68,22 +55,6 @@ module.exports = React.createClass
             height: image.height
           @onClickOff()
 
-  attachScribe: ->
-    return if @scribe? or not @props.editing
-    @scribe = new Scribe @refs.editable
-    @scribe.use scribePluginSanitizer {
-      tags:
-        i: true
-        a: { href: true, target: '_blank' }
-    }
-    @scribe.use scribePluginToolbar @refs.toolbar
-    @scribe.use scribePluginLinkTooltip()
-    toggleScribePlaceholder @refs.editable
-
-  onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editable
-    @setState caption: $(@refs.editable).html()
-
   render: ->
     section {
       className: 'edit-section-image'
@@ -101,26 +72,12 @@ module.exports = React.createClass
             h2 {}, 'Up to 30mb'
             input { type: 'file', onChange: @upload }
           div { className: 'esi-caption-container' },
-            nav { ref: 'toolbar', className: 'edit-scribe-nav' },
-              button {
-                'data-command-name': 'italic'
-                dangerouslySetInnerHTML: __html: '&nbsp;'
-                disabled: if @state.caption then false else true
-                onClick: @onEditableKeyup
-              }
-              button {
-                'data-command-name': 'linkPrompt'
-                dangerouslySetInnerHTML:
-                  __html: "&nbsp;" + $(icons()).filter('.link').html()
-                disabled: if @state.caption then false else true
-                onClick: @onEditableKeyup
-              }
-            div {
-              className: 'esi-caption bordered-input'
-              ref: 'editable'
-              onKeyUp: @onEditableKeyup
-              dangerouslySetInnerHTML: __html: @props.section.get('caption')
+            RichTextCaption {
+              item: @state
+              key: 'caption-edit' + @props.section.cid
+              onChange: @onCaptionChange
             }
+
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -131,7 +88,7 @@ module.exports = React.createClass
       )
       (
         if @state.src
-          [
+          div { className: 'esi-preview' },
             img {
               className: 'esi-image'
               src: if @state.progress then @state.src else resize(@state.src, width: 900)
@@ -143,7 +100,6 @@ module.exports = React.createClass
               dangerouslySetInnerHTML: __html: @state.caption
               key: 1
             }
-          ]
         else
           div { className: 'esi-placeholder' }, 'Add an image above'
       )

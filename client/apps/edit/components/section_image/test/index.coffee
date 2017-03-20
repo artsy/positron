@@ -21,16 +21,21 @@ describe 'SectionImage', ->
       onload: ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
+      global.HTMLElement = () => {}
+      global.HTMLAnchorElement = () => {}
       SectionImage = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
+      RichTextCaption = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../components/rich_text_caption/index'), ['icons']
+      )
+      SectionImage.__set__ 'RichTextCaption', React.createFactory(RichTextCaption)
       SectionImage.__set__ 'gemup', @gemup = sinon.stub()
       @component = ReactDOM.render React.createElement(SectionImage,
-        section: new Backbone.Model { body: 'Foo to the bar' }
+        section: new Backbone.Model { body: 'Foo to the bar', caption: '<p>hello!</p>' }
         editing: false
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'setState'
         sinon.stub $, 'ajax'
         done()
 
@@ -46,6 +51,7 @@ describe 'SectionImage', ->
     @component.props.section.destroy.called.should.be.ok
 
   it 'uploads to gemini', (done) ->
+    sinon.stub @component, 'setState'
     @component.upload target: files: ['foo']
     @gemup.args[0][0].should.equal 'foo'
     @gemup.args[0][1].done('fooza')
@@ -61,15 +67,20 @@ describe 'SectionImage', ->
       @component.onClickOff.called.should.be.ok
       done()
 
-  xit 'renders an image', ->
-    @component.state.src = 'foobaz'
-    @component.render()
+  it 'renders a placeholder if no image', ->
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add an image above'
+
+  it 'renders an image', ->
+    @component.setState({ src: 'foobaz.jpg' })
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'foobaz'
 
+  it 'renders a caption', ->
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'hello!'
+
   it 'previews captions on keyup', ->
-    $(ReactDOM.findDOMNode(@component.refs.editable)).html 'foobar'
-    @component.onEditableKeyup()
-    @component.setState.args[0][0].caption.should.equal 'foobar'
+    @component.setState({ src: 'foobaz.jpg' })
+    @component.onCaptionChange('<p>foobar</p>')
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'foobar'
 
   it 'saves captions on click off', ->
     @component.state.caption = 'foobar'
