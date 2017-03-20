@@ -22,7 +22,7 @@ setupAuth = require './auth'
 morgan = require 'morgan'
 { locals, errorHandler, helpers, ua, sameOrigin } = require '../middleware'
 { parse } = require 'url'
-{ NODE_ENV } = process.env
+{ NODE_ENV, SESSION_SECRET } = process.env
 
 module.exports = (app) ->
 
@@ -41,9 +41,9 @@ module.exports = (app) ->
   app.use cookieParser()
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
-  app.use morgan 'dev'
+  app.use morgan(if NODE_ENV is 'development' then 'dev' else 'combined')
   app.use session
-    secret: process.env.SESSION_SECRET
+    secret: SESSION_SECRET
     key: 'positron.sess'
   app.use bucketAssets()
   setupAuth app
