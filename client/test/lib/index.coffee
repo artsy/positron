@@ -31,7 +31,7 @@ describe 'index', ->
     @json.args[0][0].extended.should.be.true()
     @urlencoded.args[0][0].limit.should.equal '5mb'
     @urlencoded.args[0][0].extended.should.be.true()
-    @morgan.args[0][0].should.equal 'tiny'
+    @morgan.args[0][0].should.equal 'combined'
     @bucketAssets.called.should.be.true()
     @setupAuth.called.should.be.true()
 
@@ -69,7 +69,7 @@ describe 'production environment', ->
     setup @app
 
   it 'sets morgan logs to tiny mode', ->
-    @morgan.args[0][0].should.equal 'tiny'
+    @morgan.args[0][0].should.equal 'combined'
 
   it 'sets SSL options', ->
     @app.set.args[3][0].should.equal 'forceSSLOptions'
