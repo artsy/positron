@@ -1,3 +1,5 @@
+# A basic paragraph component including bold and italic styles
+
 React = require 'react'
 window.global = window
 sd = require('sharify').data
@@ -8,7 +10,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   RichUtils,
   Modifier } = require 'draft-js'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
-{ div, button, p, a, input } = React.DOM
+{ div } = React.DOM
 editor = (props) -> React.createElement Editor, props
 
 module.exports = React.createClass
@@ -37,17 +39,12 @@ module.exports = React.createClass
   onBlur: ->
     @setState focus: false
 
-  onStyleChange: (e) ->
-    e.preventDefault()
-    @onChange RichUtils.toggleInlineStyle(@state.editorState, e.target.className.toUpperCase())
-
   convertFromHTML: (html) ->
     blocksFromHTML = convertFromHTML({})(html)
     return blocksFromHTML
 
   convertToHtml: (editorState) ->
     html = convertToHTML({})(editorState.getCurrentContent())
-    html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
     return html
 
   onPaste: (text, html) ->
