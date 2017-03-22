@@ -52,7 +52,6 @@ module.exports = class EditLayout extends Backbone.View
       featured: @$('[name=featured]').is(':checked')
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
-      lead_paragraph: @article.leadParagraph.get('text')
       thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
