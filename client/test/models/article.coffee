@@ -50,6 +50,14 @@ describe "Article", ->
       @article.toJSON().hero_section.type.should.equal 'video'
       @article.toJSON().hero_section.url.should.equal 'foo'
 
+    it 'serializes the lead paragraph if there is data', ->
+      @article.setLeadParagraph('<p>hello</p>')
+      @article.toJSON().lead_paragraph.should.eql '<p>hello</p>'
+
+    it 'serializes the lead paragraph if there isnt any data', ->
+      @article.setLeadParagraph('<p></p>')
+      (@article.toJSON().lead_paragraph?).should.not.be.ok
+
   describe '#finishedContent', ->
 
     it 'returns true if theres a title', ->
@@ -92,16 +100,18 @@ describe "Article", ->
       @article.trigger 'sync'
       @article.heroSection.get('type').should.equal 'foo'
 
+
+  describe '#setLeadParagraph', ->
+
+    it 'sets @leadParagraph to html contents', ->
+      @article.setLeadParagraph('<p>hello</p>')
+      @article.leadParagraph.get('text').should.equal '<p>hello</p>'
+
   describe '#getObjectAttribute', ->
 
     it 'returns the object attribute value if it exists', ->
       @article.getObjectAttribute('super_article', 'partner_link').should.equal 'http://partnerlink.com'
       @article.getObjectAttribute('email_metadata', 'headline').should.equal 'Foo'
-
-  describe '#getFullSlug', ->
-
-    it 'returns a slug with the artsy url', ->
-      @article.getFullSlug().should.equal 'https://artsy.net/article/undefined-top-ten-booths-at-miart-2014'
 
   describe '#getFullSlug', ->
 

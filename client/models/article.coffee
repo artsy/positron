@@ -20,6 +20,7 @@ module.exports = class Article extends Backbone.Model
     @mentionedArtists = new Artists
     @featuredArtworks = new Artworks
     @mentionedArtworks = new Artworks
+    @leadParagraph = new Backbone.Model text: @get('lead_paragraph')
     @heroSection = new Section @get 'hero_section'
     @on 'change:hero_section', => @heroSection.set @get 'hero_section'
     @heroSection.destroy = @heroSection.clear
@@ -49,6 +50,9 @@ module.exports = class Article extends Backbone.Model
 
   hasContributingAuthors: ->
     @get('contributing_authors')?.length > 0
+
+  setLeadParagraph: (html) =>
+    @leadParagraph.set('text', html)
 
   getDescription: (attr = '') ->
     @get(attr) or @get('description')
@@ -103,6 +107,8 @@ module.exports = class Article extends Backbone.Model
       extended.hero_section = @heroSection.toJSON()
     else
       extended.hero_section = null
+    if @leadParagraph.get('text')?.length
+      extended.lead_paragraph = @leadParagraph.get('text')
     if @featuredArtworks.length
       extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
     if @featuredArtists.length

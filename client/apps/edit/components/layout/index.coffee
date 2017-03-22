@@ -4,10 +4,6 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
-toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
-try
-  Scribe = require 'scribe-editor'
-  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -28,7 +24,6 @@ module.exports = class EditLayout extends Backbone.View
     @setupOnBeforeUnload()
     @setupTitleAutosize()
     @toggleAstericks()
-    @attachScribe()
     @setupYoast() if @channel.isEditorial()
     @$('#edit-sections-spinner').hide()
 
@@ -47,17 +42,6 @@ module.exports = class EditLayout extends Backbone.View
   setupTitleAutosize: ->
     @$('#edit-title textarea').autosize()
 
-  attachScribe: ->
-    scribe = new Scribe @$('#edit-lead-paragraph')[0]
-    scribe.use scribePluginSanitizer
-      tags:
-        p: true
-        b: true
-        i: true
-        br: true
-        a: { href: true, target: '_blank' }
-    @toggleLeadParagraphPlaceholder()
-
   serialize: ->
     {
       author_id: @user.get('id')
@@ -68,7 +52,6 @@ module.exports = class EditLayout extends Backbone.View
       featured: @$('[name=featured]').is(':checked')
       exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
-      lead_paragraph: @$('#edit-lead-paragraph').html()
       thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(
         _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
@@ -149,7 +132,6 @@ module.exports = class EditLayout extends Backbone.View
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
-    'keyup #edit-lead-paragraph': 'toggleLeadParagraphPlaceholder'
     'mouseenter .edit-section-tool': 'toggleSectionTool'
     'mouseleave .edit-section-tool': 'toggleSectionTool'
     'mouseenter .edit-section-container:not([data-editing=true])': 'toggleSectionTools'
@@ -172,8 +154,8 @@ module.exports = class EditLayout extends Backbone.View
 
   getBodyText: =>
     @fullText = []
-    if $(@article.get('lead_paragraph')).text().length
-      @fullText.push @article.get('lead_paragraph')
+    if $(@article.leadParagraph.get('text')).text().length
+      @fullText.push @article.leadParagraph.get('text')
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
@@ -207,9 +189,6 @@ module.exports = class EditLayout extends Backbone.View
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')
       .toggleClass 'is-dragover'
-
-  toggleLeadParagraphPlaceholder: ->
-    toggleScribePlaceholder @$('#edit-lead-paragraph')
 
   toggleSectionTool: (e) ->
     $t = $(e.currentTarget)

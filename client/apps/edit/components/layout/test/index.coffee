@@ -24,7 +24,6 @@ describe 'EditLayout', ->
         sinon.stub Backbone, 'sync'
         sinon.stub Backbone.history, 'navigate'
         @EditLayout = rewire '../index.coffee'
-        sinon.stub @EditLayout.prototype, 'attachScribe'
         @EditLayout.__set__ 'YoastView', @YoastView = sinon.stub().returns onKeyup: @yoastKeyup = sinon.stub()
         sinon.stub _, 'debounce'
         $.fn.autosize = sinon.stub()
@@ -41,7 +40,6 @@ describe 'EditLayout', ->
     Backbone.sync.restore()
     Backbone.history.navigate.restore()
     _.debounce.restore()
-    @EditLayout::attachScribe.restore()
 
   describe '#autosave', ->
 
@@ -86,15 +84,6 @@ describe 'EditLayout', ->
       @view.$('[type=radio]').eq(1).click()
       @view.serialize().tier.should.equal 2
 
-  describe '#toggleLeadParagraphPlaceholder', ->
-
-    it 'toggle the placeholder ::before element if lead paragraph is empty', ->
-      $('#edit-lead-paragraph').html "<p>foobar</p>"
-      @view.toggleLeadParagraphPlaceholder()
-      $('#edit-lead-paragraph').hasClass('is-empty').should.not.be.ok
-      $('#edit-lead-paragraph').html "<p><br></p>"
-      @view.toggleLeadParagraphPlaceholder()
-      $('#edit-lead-paragraph').hasClass('is-empty').should.be.ok
 
   describe '#popLockControls', ->
 
