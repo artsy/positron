@@ -42,7 +42,7 @@ module.exports = (app) ->
   app.use cookieParser()
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
-  app.use morgan if NODE_ENV is 'production' then 'dev' else (tokens, req, res) ->
+  app.use morgan if NODE_ENV is 'development' then 'dev' else (tokens, req, res) ->
     status = tokens.status(req, res)
     chalk.yellow('CLIENT:') +
       ' ' + chalk.blue(tokens.method(req, res)) +
