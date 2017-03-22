@@ -1,4 +1,11 @@
-# A basic paragraph component including bold and italic styles
+# A basic paragraph component including bold and italic by default
+
+# RichLeadParagraph {
+#   text        *required
+#   onChange    *required
+#   placeholder
+#   styleMap: ['italic', 'underline'] #overrides default styles
+# }
 
 React = require 'react'
 window.global = window
@@ -19,6 +26,7 @@ module.exports = React.createClass
   getInitialState: ->
     editorState: EditorState.createEmpty()
     focus: false
+    styleMap: @props.styleMap || ['bold', 'italic']
 
   componentDidMount: ->
     if $(@props.text).text().length
@@ -63,14 +71,16 @@ module.exports = React.createClass
     return true
 
   stripPastedStyles: (contentBlock) ->
+    styleMap = @state.styleMap.map (style) ->
+      return style.toUpperCase()
     characterList = contentBlock.getCharacterList().map (character) ->
-      if character.get('style') not in ['ITALIC', 'BOLD']
+      if character.get('style') not in styleMap
         character.set('style', character.get('style').clear())
     unstyled = contentBlock.set('characterList', characterList)
     return unstyled
 
   handleKeyCommand: (e) ->
-    if e in ['bold','italic']
+    if e in @state.styleMap
       newState = RichUtils.handleKeyCommand @state.editorState, e
       if newState
         @onChange newState
@@ -86,7 +96,7 @@ module.exports = React.createClass
       },
         editor {
           ref: 'editor'
-          placeholder: 'Lead paragraph (optional)'
+          placeholder: @props.placeholder
           editorState: @state.editorState
           spellCheck: true
           onChange: @onChange

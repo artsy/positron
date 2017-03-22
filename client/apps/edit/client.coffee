@@ -31,7 +31,11 @@ async = require 'async'
       $('#edit-sections')[0]
     )
     ReactDOM.render(
-      RichLeadParagraph(text: @article.get('lead_paragraph'), onChange: @article.setLeadParagraph)
+      RichLeadParagraph(
+        text: @article.get('lead_paragraph')
+        onChange: @article.setLeadParagraph
+        placeholder: 'Lead paragraph (optional)'
+      )
       $('#edit-lead-paragraph')[0]
     )
     if @article.get('hero_section') != null or channel.hasFeature 'hero'
