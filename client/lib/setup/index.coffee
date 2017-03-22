@@ -44,15 +44,16 @@ module.exports = (app) ->
   app.use bodyParser.urlencoded limit:'5mb', extended: true
   app.use morgan if NODE_ENV is 'development' then 'dev' else (tokens, req, res) ->
     status = tokens.status(req, res)
+    url = tokens.url(req, res)
     chalk.yellow('CLIENT:') +
       ' ' + chalk.blue(tokens.method(req, res)) +
       ' ' + (
               if status >= 500
-                chalk.red(tokens.url(req, res)) + ' ' + chalk.red(status)
+                chalk.red(url + ' ' + status)
               else if status >= 400
-                chalk.yellow(tokens.url(req, res)) + ' ' + chalk.yellow(status)
+                chalk.yellow(url + ' ' + status)
               else
-                chalk.green(tokens.url(req, res)) + ' ' + chalk.green(status)
+                chalk.green(url + ' ' + status)
             ) +
       ' ' + chalk.cyan(tokens['response-time'](req, res) + 'ms') +
       ' ' + chalk.white(tokens['remote-addr'](req, res)) +
