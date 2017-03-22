@@ -16,7 +16,6 @@ module.exports = (app) ->
     app.use require('browserify-dev-middleware')
       src: path.resolve(__dirname, '../../')
       transforms: [require('caching-coffeeify'), require('jadeify')]
-      globalTransforms: [require('deamdify')]
       detectGlobals: false
       noParse: [require.resolve('jquery')]
 
