@@ -1,6 +1,6 @@
 # A basic paragraph component including bold and italic by default
 
-# RichLeadParagraph {
+# RichTextParagraph {
 #   text        *required
 #   onChange    *required
 #   placeholder
@@ -21,7 +21,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 editor = (props) -> React.createElement Editor, props
 
 module.exports = React.createClass
-  displayName: 'RichLeadParagraph'
+  displayName: 'RichTextParagraph'
 
   getInitialState: ->
     editorState: EditorState.createEmpty()
@@ -88,9 +88,9 @@ module.exports = React.createClass
     return false
 
   render: ->
-    div { className: 'rich-text--lead-paragraph' },
+    div { className: 'rich-text--paragraph' },
       div {
-        className: 'rich-text--lead-paragraph__input'
+        className: 'rich-text--paragraph__input'
         onClick: @focus
         onBlur: @onBlur
       },

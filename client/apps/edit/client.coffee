@@ -14,7 +14,7 @@ EditAdmin = require './components/admin/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 SectionList = React.createFactory require './components/section_list/index.coffee'
 HeroSection = React.createFactory require './components/hero_section/index.coffee'
-RichLeadParagraph = React.createFactory require '../../components/rich_text/components/input_paragraph.coffee'
+RichTextParagraph = React.createFactory require '../../components/rich_text/components/input_paragraph.coffee'
 
 async = require 'async'
 
@@ -31,7 +31,7 @@ async = require 'async'
       $('#edit-sections')[0]
     )
     ReactDOM.render(
-      RichLeadParagraph(
+      RichTextParagraph(
         text: @article.get('lead_paragraph')
         onChange: @article.setLeadParagraph
         placeholder: 'Lead paragraph (optional)'
