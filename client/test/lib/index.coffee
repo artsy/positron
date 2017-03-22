@@ -31,9 +31,18 @@ describe 'index', ->
     @json.args[0][0].extended.should.be.true()
     @urlencoded.args[0][0].limit.should.equal '5mb'
     @urlencoded.args[0][0].extended.should.be.true()
-    @morgan.args[0][0].should.equal 'combined'
     @bucketAssets.called.should.be.true()
     @setupAuth.called.should.be.true()
+
+  it 'sets morgan logs to custom mode', ->
+    tokens =
+      status: -> 200
+      method: -> 'GET'
+      url: -> 'https://writer.artsy.net'
+      'response-time': -> 1000
+      'remote-addr': -> '0.0.0.0'
+      'user-agent': -> 'Mozilla'
+    @morgan.args[0][0](tokens, {}, {}).should.equal '\u001b[33mCLIENT:\u001b[39m \u001b[34mGET\u001b[39m \u001b[32mhttps://writer.artsy.net 200\u001b[39m \u001b[36m1000ms\u001b[39m \u001b[37m0.0.0.0\u001b[39m "\u001b[37mMozilla\u001b[39m"'
 
 describe 'development environment', ->
 
@@ -68,8 +77,15 @@ describe 'production environment', ->
     sinon.spy @app, 'set'
     setup @app
 
-  it 'sets morgan logs to tiny mode', ->
-    @morgan.args[0][0].should.equal 'combined'
+  it 'sets morgan logs to custom mode', ->
+    tokens =
+      status: -> 200
+      method: -> 'GET'
+      url: -> 'https://writer.artsy.net'
+      'response-time': -> 1000
+      'remote-addr': -> '0.0.0.0'
+      'user-agent': -> 'Mozilla'
+    @morgan.args[0][0](tokens, {}, {}).should.equal '\u001b[33mCLIENT:\u001b[39m \u001b[34mGET\u001b[39m \u001b[32mhttps://writer.artsy.net 200\u001b[39m \u001b[36m1000ms\u001b[39m \u001b[37m0.0.0.0\u001b[39m "\u001b[37mMozilla\u001b[39m"'
 
   it 'sets SSL options', ->
     @app.set.args[3][0].should.equal 'forceSSLOptions'

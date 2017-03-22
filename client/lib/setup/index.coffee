@@ -20,6 +20,7 @@ forceSSL = require 'express-force-ssl'
 setupEnv = require './env'
 setupAuth = require './auth'
 morgan = require 'morgan'
+chalk = require 'chalk'
 { locals, errorHandler, helpers, ua, sameOrigin } = require '../middleware'
 { parse } = require 'url'
 { NODE_ENV, SESSION_SECRET } = process.env
@@ -41,7 +42,23 @@ module.exports = (app) ->
   app.use cookieParser()
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
-  app.use morgan(if NODE_ENV is 'development' then 'dev' else 'combined')
+  app.use morgan if NODE_ENV is 'development' then 'dev' else (tokens, req, res) ->
+    status = tokens.status(req, res)
+    url = tokens.url(req, res)
+    chalk.yellow('CLIENT:') +
+      ' ' + chalk.blue(tokens.method(req, res)) +
+      ' ' + (
+              if status >= 500
+                chalk.red(url + ' ' + status)
+              else if status >= 400
+                chalk.yellow(url + ' ' + status)
+              else
+                chalk.green(url + ' ' + status)
+            ) +
+      ' ' + chalk.cyan(tokens['response-time'](req, res) + 'ms') +
+      ' ' + chalk.white(tokens['remote-addr'](req, res)) +
+      ' "' + chalk.white(tokens['user-agent'](req, res)) + '"'
+
   app.use session
     secret: SESSION_SECRET
     key: 'positron.sess'
