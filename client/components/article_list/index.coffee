@@ -6,6 +6,7 @@
 #   articles: []
 # }
 
+window.global = window
 _ = require 'underscore'
 React = require 'react'
 { input, div, a, h1, h2 } = React.DOM
