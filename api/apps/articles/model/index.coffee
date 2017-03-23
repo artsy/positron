@@ -57,6 +57,7 @@ Q = require 'bluebird-q'
         debug err if err
         publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
         unPublishing = article.published and not input.published
+        hero_section = article.hero_section
         article = _.extend article, _.omit(input, 'slug'), updated_at: new Date
         if input.sections and input.sections.length is 0
           article.sections = []

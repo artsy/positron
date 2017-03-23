@@ -105,8 +105,6 @@ module.exports = class Article extends Backbone.Model
     extended.sections = @sections.toJSON() if @sections.length
     if @heroSection.keys().length > 1
       extended.hero_section = @heroSection.toJSON()
-    else
-      extended.hero_section = null
     if @leadParagraph.get('text')?.length
       extended.lead_paragraph = @leadParagraph.get('text')
     if @featuredArtworks.length
