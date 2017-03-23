@@ -2,26 +2,14 @@
 # Fullscreen section that allows uploading large overflowing images and an intro text.
 #
 
-# Using `try` here b/c Scribe is an AMD module that doesn't play nice when
-# requiring it for testing in node.
-try
-  Scribe = require 'scribe-editor'
-  scribePluginSanitizer = require '../../lib/sanitizer.coffee'
-  scribePluginKeyboardShortcuts = require 'scribe-plugin-keyboard-shortcuts'
-  scribePluginSanitizeGoogleDoc = require 'scribe-plugin-sanitize-google-doc'
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-toggleScribePlaceholder = require '../../lib/toggle_scribe_placeholder.coffee'
+RichTextParagraph = React.createFactory require '../../../../components/rich_text/components/input_paragraph.coffee'
 sd = require('sharify').data
 { div, section, span, input, button, p, textarea, video, img } = React.DOM
 icons = -> require('./icons.jade') arguments...
 moment = require 'moment'
-
-keyboardShortcutsMap =
-  bold: (e) -> e.metaKey and e.keyCode is 66
-  italic: (e) -> e.metaKey and e.keyCode is 73
-  removeFormat: (e) -> e.altKey and e.shiftKey and e.keyCode is 65
 
 module.exports = React.createClass
   displayName: 'SectionFullscreen'
@@ -34,11 +22,7 @@ module.exports = React.createClass
     progress: ''
 
   componentDidMount: ->
-    @attachScribe()
     $('.edit-header-container').hide()
-
-  componentDidUpdate: ->
-    @attachScribe()
 
   onClickOff: ->
     @removeSection() unless @setSection()
@@ -52,10 +36,10 @@ module.exports = React.createClass
       background_image_url: @state.background_image_url
 
   onEditableKeyup: ->
-    toggleScribePlaceholder @refs.editableIntro
-    @setState
-      title: $(@refs.editableTitle).val()
-      intro: $(@refs.editableIntro).html()
+    @setState title: $(@refs.editableTitle).val()
+
+  onChangeIntro: (html) ->
+    @setState intro: html
 
   removeSection: ->
     $('.edit-header-container').show()
@@ -75,19 +59,6 @@ module.exports = React.createClass
         else
           @setState background_image_url: src, progress: null, background_url: null
         @onClickOff()
-
-  attachScribe: ->
-    return if @scribeIntro? or not @props.editing
-    @scribeIntro = new Scribe @refs.editableIntro
-    @scribeIntro.use scribePluginSanitizeGoogleDoc()
-    @scribeIntro.use scribePluginSanitizer {
-      tags:
-        p: true
-        b: true
-        i: true
-    }
-    toggleScribePlaceholder @refs.editableIntro
-    @scribeIntro.use scribePluginKeyboardShortcuts keyboardShortcutsMap
 
   render: ->
     section {
@@ -119,12 +90,13 @@ module.exports = React.createClass
                 p {}, sd.ARTICLE.author.name if sd.ARTICLE?.author
                 p {}, moment(sd.ARTICLE?.published_at || moment()).format('MMM D, YYYY h:mm a')
           )
-          div {
-            className: 'esf-intro'
-            ref: 'editableIntro'
-            dangerouslySetInnerHTML: __html: @props.section.get('intro')
-            onKeyUp: @onEditableKeyup
-          }
+            div {className: 'esf-intro'},
+              RichTextParagraph {
+                text: @props.section.get('intro')
+                onChange: @onChangeIntro
+                styleMap: ['bold']
+                placeholder: 'Introduction *'
+              }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
