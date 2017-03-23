@@ -6,8 +6,8 @@
 #   articles: []
 # }
 
-_ = require 'underscore'
 React = require 'react'
+_ = require 'underscore'
 { input, div, a, h1, h2 } = React.DOM
 moment = require 'moment'
 icons = -> require('./icons.jade') arguments...

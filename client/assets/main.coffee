@@ -5,6 +5,7 @@
 
 Backbone = require 'backbone'
 window.jQuery = window.$ = $ = require 'jquery'
+window.global = window
 
 class Router extends Backbone.Router
 
