@@ -10,7 +10,8 @@ Article = require '../../models/article.coffee'
 Channel = require '../../models/channel.coffee'
 EditLayout = require './components/layout/index.coffee'
 EditHeader = require './components/header/index.coffee'
-EditAdmin = require './components/admin/index.coffee'
+# EditAdmin = require './components/admin/index.coffee'
+EditAdmin2 = React.createFactory require './components/admin2/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 SectionList = React.createFactory require './components/section_list/index.coffee'
 HeroSection = React.createFactory require './components/hero_section/index.coffee'
@@ -25,7 +26,11 @@ async = require 'async'
     new EditLayout el: $('#layout-content'), article: @article, channel: channel
     new EditHeader el: $('#edit-header'), article: @article
     new EditDisplay el: $('#edit-display'), article: @article
-    new EditAdmin el: $('#edit-admin'), article: @article, channel: channel
+    # new EditAdmin el: $('#edit-admin'), article: @article, channel: channel
+    ReactDOM.render(
+      EditAdmin2(article: @article, channel: channel)
+      $('#edit-admin')[0]
+    )
     ReactDOM.render(
       SectionList(sections: @article.sections)
       $('#edit-sections')[0]

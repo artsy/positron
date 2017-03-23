@@ -1,0 +1,90 @@
+@import '../stylus_lib'
+@import './article'
+@import './section_tags'
+
+.dropdown-header
+  display flex
+  align-items center
+  padding 15px 0
+  border-bottom 1px solid gray-lighter-color
+  h1
+    garamond headline
+  div
+    height 1.25em
+  svg
+    margin-left 15px
+    transform rotate(270deg)
+
+section.active
+  .dropdown-header svg
+    transform rotate(0deg)
+
+.edit-admin__fields
+  margin-top 30px
+  margin-bottom 120px
+  display flex
+  justify-content space-between
+  .fields-left,
+  .fields-right
+    width calc(50% \- 15px)
+  .field-group
+    margin-bottom 40px
+    &--inline
+      display flex
+      align-items center
+  .fields-full
+    min-width 100%
+    display flex
+    justify-content space-between
+  .fields-col-3
+    width calc(33% \- 20px)
+
+.edit-admin--super-article
+  flex-direction column
+  .field-group--inline.flat-checkbox
+    margin-bottom 30px
+  .fields-col-3:nth-child(2)
+    display flex
+    flex-direction column
+    justify-content space-between
+  .image-upload-form, textarea
+    height 175px
+  .image-upload-form h1
+    margin-top 60px
+
+.edit-admin--featuring
+  flex-direction column
+  .fields-col-3 form input
+    margin-bottom 10px
+  .feature-mention
+    border 2px solid gray-lighter-color
+    color gray-darker-color
+    display flex
+    justify-content space-between
+    align-items center
+    padding 5px 10px
+    margin-top 5px
+    margin-bottom 10px
+    position relative
+    cursor pointer
+    &.feature
+      color purple-color
+    .mention
+      avant-garde s-headline
+      color gray-color
+      &:after
+        content 'Mentioned'
+    .remove:after
+      content '.'
+      color transparent
+      background url(/icons/remove_g.svg) center center no-repeat
+      position absolute
+      right 10px
+      top 11px
+      background-size 100%
+      width 15px
+      height 14px
+    &:hover
+      .mention:after
+        color purple-color
+        content 'Feature'

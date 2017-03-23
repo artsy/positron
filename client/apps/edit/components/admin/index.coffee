@@ -33,9 +33,9 @@ module.exports = class EditAdmin extends Backbone.View
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
 
-  onAuthorSelect: (e, item) =>
-    return unless confirm "Are you sure you want to change the author?"
-    @article.trigger('finished').save(author_id: item.id)
+  # onAuthorSelect: (e, item) =>
+  #   return unless confirm "Are you sure you want to change the author?"
+  #   @article.trigger('finished').save(author_id: item.id)
 
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
@@ -420,11 +420,13 @@ module.exports = class EditAdmin extends Backbone.View
     'click #edit-schedule-button': 'toggleScheduled'
 
   featureFromInput: (resource) => (e) =>
+    debugger
     $t = $ e.currentTarget
     id = _.last $t.val().split('/')
     $t.parent().addClass 'bordered-input-loading'
     @article['featured' + resource].getOrFetchIds [id],
       complete: =>
+        debugger
         $t.val('').parent().removeClass 'bordered-input-loading'
         @article.save()
 
