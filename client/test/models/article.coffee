@@ -39,16 +39,15 @@ describe "Article", ->
       @article.toJSON().featured_artist_ids.length.should.equal 1
       @article.toJSON().primary_featured_artist_ids.length.should.equal 1
 
-    it 'does not set a hero section if there isnt any data', ->
-      @article.set hero_section: null
-      @article.heroSection.clear()
-      console.log @article.toJSON()
-
     it 'serializes the hero section if there is data', ->
       @article.set hero_section: {}
       @article.heroSection.set type: 'video', url: 'foo'
       @article.toJSON().hero_section.type.should.equal 'video'
       @article.toJSON().hero_section.url.should.equal 'foo'
+
+    it 'sets the hero section to null if there is no data', ->
+      @article.set hero_section: {}
+      JSON.stringify(@article.toJSON()).should.containEql '"hero_section":null'
 
     it 'serializes the lead paragraph if there is data', ->
       @article.setLeadParagraph('<p>hello</p>')
@@ -99,7 +98,6 @@ describe "Article", ->
       @article.set hero_section: { type: 'foo' }
       @article.trigger 'sync'
       @article.heroSection.get('type').should.equal 'foo'
-
 
   describe '#setLeadParagraph', ->
 
@@ -176,3 +174,25 @@ describe "Article", ->
 
     it 'finds custom thumbnail_title', ->
       @article.getThumbnailTitle('search_title').should.containEql 'Search Title'
+
+describe "Article simple mode", ->
+
+  beforeEach ->
+    sinon.stub Backbone, 'sync'
+    data =
+      daily_email: true
+    @article = new Article data, simple: true
+
+  afterEach ->
+    Backbone.sync.restore()
+
+  it 'does not create additional associations', ->
+    @article.keys().length.should.equal 1
+
+  describe '#toJSON', ->
+
+    it 'serializes article data', ->
+      JSON.stringify(@article.toJSON()).should.equal '{"daily_email":true}'
+
+    it 'does not serialize associations', ->
+      JSON.stringify(@article.toJSON()).should.not.containEql '"hero_section"'
