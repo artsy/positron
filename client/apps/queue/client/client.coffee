@@ -28,7 +28,8 @@ module.exports = QueueView = React.createClass
       channel_id: data.channel_id
       "#{@state.feed}": isQueued
     @setState loading: true
-    new Article().save article,
+    # Initialize new article with `simple` mode on to prevent default associations
+    new Article({}, simple: true).save article,
       success: =>
         @setState loading: false
       error: =>

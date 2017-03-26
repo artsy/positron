@@ -1,3 +1,10 @@
+#
+# Article Model
+#
+# Use `simple` mode when dealing with article data that doesn't need associations
+# For an example of `simple` usage, see the Queue panel
+#
+
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
@@ -7,22 +14,24 @@ sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 Section = require '../models/section.coffee'
 request = require 'superagent'
-HeroSection = require '../models/hero_section.coffee'
+moment = require 'moment'
 
 module.exports = class Article extends Backbone.Model
 
   urlRoot: "#{sd.API_URL}/articles"
 
-  initialize: ->
-    @sections = new Sections @get 'sections'
-    @featuredPrimaryArtists = new Artists
-    @featuredArtists = new Artists
-    @mentionedArtists = new Artists
-    @featuredArtworks = new Artworks
-    @mentionedArtworks = new Artworks
-    @leadParagraph = new Backbone.Model text: @get('lead_paragraph')
-    @heroSection = new HeroSection @get 'hero_section'
-    @on 'change:hero_section', => @heroSection.set @get 'hero_section'
+  initialize: (attributes, options = {}) ->
+    unless options.simple
+      @sections = new Sections @get 'sections'
+      @featuredPrimaryArtists = new Artists
+      @featuredArtists = new Artists
+      @mentionedArtists = new Artists
+      @featuredArtworks = new Artworks
+      @mentionedArtworks = new Artworks
+      @leadParagraph = new Backbone.Model text: @get('lead_paragraph')
+      @heroSection = new Backbone.Model @get 'hero_section'
+      @on 'change:hero_section', => @heroSection.set @get 'hero_section'
+      @heroSection.destroy = @heroSection.clear
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -101,15 +110,17 @@ module.exports = class Article extends Backbone.Model
 
   toJSON: ->
     extended = {}
-    extended.sections = @sections.toJSON() if @sections.length
-    unless @heroSection.isEmpty()
+    extended.sections = @sections.toJSON() if @sections?.length
+    if @heroSection?.keys().length > 1
       extended.hero_section = @heroSection.toJSON()
-    if @leadParagraph.get('text')?.length
+    else if @heroSection
+      extended.hero_section = null
+    if @leadParagraph?.get('text')?.length
       extended.lead_paragraph = @leadParagraph.get('text')
-    if @featuredArtworks.length
+    if @featuredArtworks?.length
       extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
-    if @featuredArtists.length
+    if @featuredArtists?.length
       extended.featured_artist_ids = @featuredArtists.pluck('_id')
-    if @featuredPrimaryArtists.length
+    if @featuredPrimaryArtists?.length
       extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('_id')
     _.extend super, extended
