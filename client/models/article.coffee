@@ -7,7 +7,7 @@ sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 Section = require '../models/section.coffee'
 request = require 'superagent'
-moment = require 'moment'
+HeroSection = require '../models/hero_section.coffee'
 
 module.exports = class Article extends Backbone.Model
 
@@ -21,9 +21,8 @@ module.exports = class Article extends Backbone.Model
     @featuredArtworks = new Artworks
     @mentionedArtworks = new Artworks
     @leadParagraph = new Backbone.Model text: @get('lead_paragraph')
-    @heroSection = new Section @get 'hero_section'
+    @heroSection = new HeroSection @get 'hero_section'
     @on 'change:hero_section', => @heroSection.set @get 'hero_section'
-    @heroSection.destroy = @heroSection.clear
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -103,7 +102,7 @@ module.exports = class Article extends Backbone.Model
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections.length
-    if @heroSection.keys().length > 1
+    unless @heroSection.isEmpty()
       extended.hero_section = @heroSection.toJSON()
     if @leadParagraph.get('text')?.length
       extended.lead_paragraph = @leadParagraph.get('text')

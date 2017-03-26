@@ -39,10 +39,10 @@ describe "Article", ->
       @article.toJSON().featured_artist_ids.length.should.equal 1
       @article.toJSON().primary_featured_artist_ids.length.should.equal 1
 
-    it 'nulls a hero section if there isnt any data', ->
-      @article.set hero_section: {}
+    it 'does not set a hero section if there isnt any data', ->
+      @article.set hero_section: null
       @article.heroSection.clear()
-      (@article.toJSON().hero_section?).should.not.be.ok
+      console.log @article.toJSON()
 
     it 'serializes the hero section if there is data', ->
       @article.set hero_section: {}
