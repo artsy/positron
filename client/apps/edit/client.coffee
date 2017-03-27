@@ -40,7 +40,7 @@ async = require 'async'
     )
     if @article.get('hero_section') != null or channel.hasFeature 'hero'
       ReactDOM.render(
-        HeroSection(section: @article.heroSection, hasSection: @article.get('section_ids')?.length > 0)
+        HeroSection section: @article.heroSection
         $('#edit-hero-section')[0]
       )
 

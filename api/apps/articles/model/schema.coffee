@@ -84,7 +84,7 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null)
+  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null).default(null)
   sections: @array().items([
     imageSection
     videoSection

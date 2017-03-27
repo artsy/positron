@@ -65,13 +65,11 @@ describe 'SectionTool - Hero', ->
           { type: 'fullscreen' }
         ]
         hero: true
-        hasSection: false
         setHero: ->
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()
       }
       @component = ReactDOM.render React.createElement(SectionTool, props), $("<div></div>")[0], -> setTimeout -> done()
-      props.hasSection = true
       @rendered = ReactDOMServer.renderToString React.createElement(SectionTool, props)
 
   afterEach ->
@@ -80,6 +78,3 @@ describe 'SectionTool - Hero', ->
   it 'adds a new fullscreen section when clicking on it', ->
     r.simulate.click r.find @component, 'edit-section-tool-hero-fullscreen'
     @component.props.sections.first().get('type').should.equal 'fullscreen'
-
-  it 'disables the fullscreen section when a section exists on the article', ->
-    $(@rendered).html().should.containEql 'edit-section-tool-hero-fullscreen is-disabled'

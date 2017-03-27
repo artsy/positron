@@ -114,8 +114,8 @@ module.exports = React.createClass
             }
           if @channel.hasFeature 'header'
             li {
-              className: "edit-section-tool-hero-fullscreen #{'is-disabled' if @props.hasSection}"
-              onClick: @props.setHero('fullscreen') unless @props.hasSection
+              className: "edit-section-tool-hero-fullscreen"
+              onClick: @props.setHero('fullscreen')
             }, 'Fullscreen Background',
               div {
                 className: "edit-menu-icon-hero-fullscreen"

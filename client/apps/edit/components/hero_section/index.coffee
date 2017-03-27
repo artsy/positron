@@ -30,7 +30,6 @@ module.exports = React.createClass
         sections: @props.sections
         hero: true
         setHero: @setHero
-        hasSection: @props.hasSection
       }
     else
       SectionContainer {
