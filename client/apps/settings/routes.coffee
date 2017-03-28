@@ -55,7 +55,9 @@ Tags = require '../../collections/tags'
 
 @tags = (req, res) ->
   new Tags().fetch
-    data: limit: 100
+    data:
+      limit: 50
+      public: true
     error: res.backboneError
     success: (channels) ->
       res.render 'tags/tag_index', tags: tags

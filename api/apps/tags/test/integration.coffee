@@ -20,7 +20,7 @@ describe 'tags endpoints', ->
       { name: 'Asia' }
       { name: 'Berlin' }
       {}
-    ], (err, tags) =>
+    ], (err, tags) ->
       request
         .get("http://localhost:5000/tags?q=Asia&count=true")
         .end (err, res) ->
@@ -31,12 +31,12 @@ describe 'tags endpoints', ->
 
   it 'gets a list of tags by type', (done) ->
     fabricate 'tags', [
-      { name: 'Asia', type: 'topic' }
-      { name: 'Berlin', type: 'internal'}
+      { name: 'Asia', public: true }
+      { name: 'Berlin', public: true }
       {}
-    ], (err, tags) =>
+    ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?type=topic&count=true")
+        .get("http://localhost:5000/tags?public=true&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 2
@@ -50,7 +50,7 @@ describe 'tags endpoints', ->
         _id: ObjectId('55356a9deca560a0137aa4b7')
         name: 'Asia'
       }
-    ], (err, sections) =>
+    ], (err, sections) ->
       request
         .get("http://localhost:5000/tags/55356a9deca560a0137aa4b7")
         .end (err, res) ->

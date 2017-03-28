@@ -19,7 +19,7 @@ describe 'Tag', ->
         total.should.equal 10
         count.should.equal 10
         results[0].name.should.equal 'Show Reviews'
-        results[0].type.should.equal 'topic'
+        results[0].public.should.be.true()
         done()
 
   describe '#find', ->
@@ -35,10 +35,10 @@ describe 'Tag', ->
     it 'saves valid tag input data', (done) ->
       Tag.save {
         name: 'Berlin'
-        type: 'topic'
+        public: true
       }, (err, tag) ->
         tag.name.should.equal 'Berlin'
-        tag.type.should.equal 'topic'
+        tag.public.should.be.true()
         db.tags.count (err, count) ->
           count.should.equal 11
           done()

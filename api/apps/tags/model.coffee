@@ -17,7 +17,6 @@ Joi.objectId = require('joi-objectid') Joi
 schema = (->
   id: @objectId()
   name: @string().allow('', null)
-  type: @string().allow('internal', 'topic')
   public: @boolean().default(false)
 ).call Joi
 
@@ -25,7 +24,6 @@ querySchema = (->
   q: @string()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
-  type: @string()
   count: @boolean().default(false)
   public: @boolean()
 ).call Joi
