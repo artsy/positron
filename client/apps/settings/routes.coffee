@@ -3,6 +3,7 @@ Curations = require '../../collections/curations'
 Curation = require '../../models/curation'
 Channels = require '../../collections/channels'
 Channel = require '../../models/channel'
+Tags = require '../../collections/tags'
 
 @index = (req, res) ->
   res.render 'index'
@@ -51,3 +52,10 @@ Channel = require '../../models/channel'
     error: res.backboneError
     success: ->
       res.redirect '/settings/channels'
+
+@tags = (req, res) ->
+  new Tags().fetch
+    data: limit: 100
+    error: res.backboneError
+    success: (channels) ->
+      res.render 'tags/tag_index', tags: tags

@@ -17,3 +17,4 @@ app.post '/settings/curations/:id', adminOnly, routes.saveCuration
 app.get '/settings/channels', adminOnly, routes.channels
 app.get '/settings/channels/:id/edit', adminOnly, routes.editChannel
 app.post '/settings/channels/:id', adminOnly, routes.saveChannel
+app.get '/settings/tags', adminOnly, routes.tags
