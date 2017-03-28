@@ -3,7 +3,6 @@ Curations = require '../../collections/curations'
 Curation = require '../../models/curation'
 Channels = require '../../collections/channels'
 Channel = require '../../models/channel'
-Tags = require '../../collections/tags'
 
 @index = (req, res) ->
   res.render 'index'

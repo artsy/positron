@@ -13,4 +13,4 @@ sharify = require 'sharify'
 
 sharify.data = _.pick process.env,
   'APP_URL', 'API_URL', 'NODE_ENV', 'FORCE_URL', 'ARTSY_URL', 'GEMINI_APP',
-  'GEMINI_KEY', 'SEGMENT_WRITE_KEY', 'GEMINI_CLOUDFRONT_URL'
+  'GEMINI_KEY', 'SEGMENT_WRITE_KEY', 'GEMINI_CLOUDFRONT_URL', 'TAG_CURATION'
