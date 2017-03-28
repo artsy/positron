@@ -18,6 +18,7 @@ schema = (->
   id: @objectId()
   name: @string().allow('', null)
   type: @string().allow('internal', 'topic')
+  public: @boolean().default(false)
 ).call Joi
 
 querySchema = (->
@@ -26,6 +27,7 @@ querySchema = (->
   offset: @number()
   type: @string()
   count: @boolean().default(false)
+  public: @boolean()
 ).call Joi
 
 #
@@ -38,7 +40,7 @@ querySchema = (->
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'q', 'limit', 'offset'
+    query = _.omit input, 'q', 'limit', 'offset', 'count'
     query.name = { $regex: ///#{input.q}///i } if input.q
     cursor = db.tags
       .find(query)
@@ -46,13 +48,13 @@ querySchema = (->
       .sort($natural: -1)
       .skip(input.offset or 0)
     async.parallel [
-      (cb) ->
-        return cb() unless input.count
-        cursor.toArray cb
+      (cb) -> cursor.toArray cb
       (cb) ->
         return cb() unless input.count
         cursor.count cb
-      (cb) -> db.tags.count cb
+      (cb) ->
+        return cb() unless input.count
+        db.tags.count cb
     ], (err, [tags, tagCount, total]) =>
       callback err, {
         total: total if input.count
