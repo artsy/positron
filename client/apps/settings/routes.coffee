@@ -59,5 +59,5 @@ Tags = require '../../collections/tags'
       limit: 50
       public: true
     error: res.backboneError
-    success: (channels) ->
-      res.render 'tags/tag_index', tags: tags
+    success: (tags) ->
+      res.render 'tags/tags_index', tags: tags
