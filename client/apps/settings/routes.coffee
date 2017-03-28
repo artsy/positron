@@ -3,6 +3,8 @@ Curations = require '../../collections/curations'
 Curation = require '../../models/curation'
 Channels = require '../../collections/channels'
 Channel = require '../../models/channel'
+Tags = require '../../collections/tags'
+Tag = require '../../models/tag'
 
 @index = (req, res) ->
   res.render 'index'
@@ -51,3 +53,25 @@ Channel = require '../../models/channel'
     error: res.backboneError
     success: ->
       res.redirect '/settings/channels'
+
+@tags = (req, res) ->
+  new Tags().fetch
+    data: limit: 100
+    error: res.backboneError
+    success: (channels) ->
+      res.render 'tags/tag_index', tags: tags
+
+@editTag = (req, res) ->
+  new Tag(id: req.params.id).fetch
+    error: res.backboneError
+    success: (tag) ->
+      res.locals.sd.TAG = tag.toJSON()
+      res.render 'tags/tag_edit', tag: tag
+
+@saveTag = (req, res) ->
+  data = _.pick req.body, _.identity
+  new Tag(id: req.params.id).save data,
+    headers: 'X-Access-Token': req.user?.get('access_token')
+    error: res.backboneError
+    success: ->
+      res.redirect '/settings/tags'

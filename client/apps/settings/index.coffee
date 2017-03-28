@@ -16,3 +16,6 @@ app.post '/settings/curations/:id', routes.saveCuration
 app.get '/settings/channels', routes.channels
 app.get '/settings/channels/:id/edit', routes.editChannel
 app.post '/settings/channels/:id', routes.saveChannel
+app.get '/settings/tags', routes.tags
+app.get '/settings/tags/:id/edit', routes.editTag
+app.post '/settings/tags/:id', routes.saveTag
