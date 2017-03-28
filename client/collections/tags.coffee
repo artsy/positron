@@ -11,7 +11,7 @@ module.exports = class Tags extends Backbone.Collection
 
   url: "#{sd.API_URL}/tags"
 
-  model: Channel
+  model: Tag
 
   toPaginatedListItems: ->
     @map (channel) ->
