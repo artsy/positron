@@ -36,7 +36,7 @@ describe 'SectionText', ->
       @props = {
         editing: true
         section: new Backbone.Model {
-          body: '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
+          body: '<h2>01  <a name="here" class="is-jump-link">here is a toc.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
         }
       }
       @altProps = {
@@ -95,7 +95,7 @@ describe 'SectionText', ->
 
     it 'Converts html on change only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2><a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
+      @component.state.html.should.eql '<h2>01 &nbsp;<a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p></p>'
 
 
   describe 'Rich text menu events', ->
@@ -187,11 +187,15 @@ describe 'SectionText', ->
       component.onChange(component.state.editorState)
       component.state.html.should.eql '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></h2>'
 
-    it 'Sets state to the correct plugin', ->
+    it 'Can toggle the artist plugin', ->
+      @component.setState = sinon.stub()
       @component.setPluginType('artist')
-      @component.state.pluginType.should.eql 'artist'
+      @component.setState.args[0][0].pluginType.should.eql 'artist'
+
+    it 'Can toggle the toc plugin', ->
+      @component.setState = sinon.stub()
       @component.setPluginType('toc')
-      @component.state.pluginType.should.eql 'toc'
+      @component.setState.args[0][0].pluginType.should.eql 'toc'
 
     it 'Calls promt for link if artist', ->
       @component.promptForLink = sinon.stub()

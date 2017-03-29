@@ -81,7 +81,7 @@ module.exports = React.createClass
           return a { href: entity.data.url}
         return originalText
     })(editorState.getCurrentContent())
-    html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ')
+    html = html.replace(/(\r\n|\n|\r)/gm,'').replace(/<\/p><p>/g, ' ').replace('  ', ' &nbsp;')
     return html
 
   onPaste: (text, html) ->

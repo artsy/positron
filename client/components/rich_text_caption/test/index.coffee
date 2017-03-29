@@ -30,7 +30,7 @@ describe 'RichTextCaption', ->
           {
             type: 'image'
             url: 'https://artsy.net/image.png'
-            caption: '<p><a href="http://link.com">A link</a> is inside a <em>caption</em>.</p>'
+            caption: '<p><a href="http://link.com">A link</a> is  inside a <em>caption</em>.</p>'
           }
         }
       @component = ReactDOM.render React.createElement(@RichTextCaption, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -60,7 +60,7 @@ describe 'RichTextCaption', ->
 
   it 'Renders an existing caption', ->
     @component.onChange(@component.state.editorState)
-    @component.state.html.should.eql '<p><a href="http://link.com/">A link</a> is inside a <em>caption</em>.</p>'
+    @component.state.html.should.eql '<p><a href="http://link.com/">A link</a> is &nbsp;inside a <em>caption</em>.</p>'
 
   it 'Opens a link input popup', ->
     @r.simulate.mouseDown @r.find @component, 'link'
@@ -75,8 +75,8 @@ describe 'RichTextCaption', ->
 
   it 'Can create italic blocks', ->
     @r.simulate.mouseDown @r.find @selectComponent, 'italic'
-    @selectComponent.state.html.should.eql '<p><em><a href="http://link.com/">A link</a></em> is inside a <em>caption</em>.</p>'
+    @selectComponent.state.html.should.eql '<p><em><a href="http://link.com/">A link</a></em> is &nbsp;inside a <em>caption</em>.</p>'
 
   it 'Strips unsupported html and linebreaks on paste', ->
     @component.onPaste('Here is a caption about an image yep.', '<p>Here is a</p><ul><li><b>caption</b></li><li>about an image</li></ul><p>yep.</p>')
-    @component.state.html.should.eql '<p>Here is a caption about an image yep.<a href="http://link.com/">A link</a> is inside a <em>caption</em>.</p>'
+    @component.state.html.should.eql '<p>Here is a caption about an image yep.<a href="http://link.com/">A link</a> is &nbsp;inside a <em>caption</em>.</p>'
