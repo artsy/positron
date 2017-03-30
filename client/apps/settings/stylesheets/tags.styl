@@ -1,0 +1,28 @@
+.tags-root-container
+  &[data-loading='true']
+    .loading-spinner
+      display block
+    .tags-loading-container
+      position fixed
+      top 0
+      left sidebar-width
+      width "calc(100% - %s)" % sidebar-width
+      height 100%
+      z-index 4
+      background rgba(255,255,255,0.8)
+  &[data-loading='false']
+    .loading-spinner
+      display none
+  .tags-loading__error
+    position fixed
+    display flex
+    justify-content center
+    align-items center
+    garamond 'headline'
+    top 0
+    bottom 0
+    right 0
+    left 0
+    z-index 4
+    background rgba(0,0,0,0.5)
+    color white

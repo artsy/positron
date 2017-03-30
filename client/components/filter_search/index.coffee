@@ -1,3 +1,16 @@
+# Generic Filter Component that uses Bloodhound to search
+#
+# Prop List
+# url:
+# filter:
+# searchResults:
+# selected:
+# headerText:
+# placeholder:
+# checkable:
+# display:
+# contentType:
+
 _ = require 'underscore'
 React = require 'react'
 { label, input, div, button, a, h1, h2 } = React.DOM
@@ -38,9 +51,17 @@ module.exports = React.createClass
           onKeyUp: @search
           ref: 'searchQuery'
         }
-      ArticleList {
-        articles: @props.articles
-        checkable: @props.checkable
-        selected: @selected
-        display: @props.display
-      }
+      (
+        if @props.contentType is 'article'
+          ArticleList {
+            articles: @props.collection
+            checkable: @props.checkable
+            selected: @selected
+            display: @props.display
+          }
+        else if @props.contentType is 'tag'
+          [
+            for item in @props.collection
+              div {}, item
+          ]
+      )

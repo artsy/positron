@@ -66,9 +66,10 @@ module.exports = ArticlesListView = React.createClass
         FilterSearch {
           url: sd.API_URL + "/articles?published=#{@state.published}&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
           placeholder: 'Search Articles...'
-          articles: @state.articles
+          collection: @state.articles
           searchResults: @setResults
           selected: null
+          contentType: 'article'
         }
     else
       @showEmptyMessage()

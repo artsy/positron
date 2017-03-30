@@ -132,12 +132,13 @@ module.exports = QueueView = React.createClass
           FilterSearch {
             url: sd.API_URL + "/articles?published=true&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
             placeholder: 'Search Articles...'
-            articles: @state.publishedArticles
+            collection: @state.publishedArticles
             checkable: true
             display: 'email'
             headerText: "Latest Articles"
             selected: @selected
             searchResults: @searchResults
+            contentType: 'article'
           }
 
 module.exports.init = ->

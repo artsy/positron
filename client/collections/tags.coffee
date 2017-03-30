@@ -1,6 +1,5 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-moment = require 'moment'
 Tag = require '../models/tag.coffee'
 sd = require('sharify').data
 { ApiCollection } = require './mixins.coffee'
@@ -12,8 +11,3 @@ module.exports = class Tags extends Backbone.Collection
   url: "#{sd.API_URL}/tags"
 
   model: Tag
-
-  toPaginatedListItems: ->
-    @map (channel) ->
-      name: tag.get('name')
-      href: "/settings/tags/#{tag.get('id')}/edit"
