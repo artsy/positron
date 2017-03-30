@@ -420,13 +420,11 @@ module.exports = class EditAdmin extends Backbone.View
     'click #edit-schedule-button': 'toggleScheduled'
 
   featureFromInput: (resource) => (e) =>
-    debugger
     $t = $ e.currentTarget
     id = _.last $t.val().split('/')
     $t.parent().addClass 'bordered-input-loading'
     @article['featured' + resource].getOrFetchIds [id],
       complete: =>
-        debugger
         $t.val('').parent().removeClass 'bordered-input-loading'
         @article.save()
 

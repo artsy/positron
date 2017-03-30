@@ -1,8 +1,9 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, label, input } = React.DOM
-Autocomplete = require '../../../../../components/autocomplete/index.coffee'
+
 AutocompleteSelect = require '../../../../../components/autocomplete_select/index.coffee'
+AutocompleteList = React.createFactory require '../featuring/autocomplete.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminAppearances'
@@ -39,19 +40,37 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-admin--appearances edit-admin__fields'},
-      div {className: 'fields-left'},
+      div {className: 'fields-full'},
+        div {className: 'fields-left'},
+          div {className: 'field-group'},
+            label {}, 'Fair Programming'
+              AutocompleteList {
+                field: 'fair_programming_ids'
+                onChange: @props.onChange
+                article: @props.article
+                channel: @props.channel
+              }
+        div {className: 'fields-right'},
+          div {className: 'field-group'},
+            label {}, 'Artsy at the Fair'
+            AutocompleteList {
+              field: 'fair_artsy_ids'
+              onChange: @props.onChange
+              article: @props.article
+              channel: @props.channel
+            }
 
-        div {className: 'field-group'},
-          label {}, 'Fair Programming'
-
-        div {className: 'field-group'},
-          label {}, 'About the Fair'
-
-      div {className: 'fields-right'},
-
-        div {className: 'field-group'},
-          label {}, 'Artsy at the Fair'
-
-        div {className: 'field-group'},
-          label {}, 'Extended Artist Biography'
-          div { ref: 'biography_for_artist_id', value: @state.biography_for_artist_id }
+      div {className: 'fields-full'},
+        div {className: 'fields-left'},
+          div {className: 'field-group'},
+            label {}, 'About the Fair'
+              AutocompleteList {
+                field: 'fair_about_ids'
+                onChange: @props.onChange
+                article: @props.article
+                channel: @props.channel
+              }
+        div {className: 'fields-right'},
+          div {className: 'field-group'},
+            label {}, 'Extended Artist Biography'
+            div { ref: 'biography_for_artist_id', value: @state.biography_for_artist_id }

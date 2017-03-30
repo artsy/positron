@@ -56,7 +56,9 @@ module.exports = React.createClass
         }, 'x'
 
   render: ->
-    section { className: 'image-upload-form', onClick: @onClick },
+    disabled = if @props.disabled then ' disabled' else ''
+
+    section { className: 'image-upload-form' + disabled, onClick: @onClick },
       h1 {}, 'Drag & ',
         span { className: 'image-upload-form-drop' }, 'drop'
         ' or '
@@ -67,6 +69,7 @@ module.exports = React.createClass
         accept: ['image/jpg','image/jpeg','image/gif','image/png']
         onChange: @upload
         className: 'image-upload-form-input'
+        disabled: @props.disabled
       }
       @previewImage()
       @progressBar()

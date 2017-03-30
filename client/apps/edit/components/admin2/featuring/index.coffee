@@ -7,6 +7,8 @@ _ = require 'underscore'
 { div, label, input, form, span } = React.DOM
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
+Autocomplete = React.createFactory require './autocomplete.coffee'
+
 module.exports = React.createClass
   displayName: 'AdminFeaturing'
 
@@ -16,49 +18,12 @@ module.exports = React.createClass
     fair_ids: @props.article.get('fair_ids') || []
     auction_ids: @props.article.get('auction_ids') || []
     PrimaryArtists: @props.article.featuredPrimaryArtists.models
-    Artists: @props.article.featuredArtists.models
     Artworks: @props.article.featuredArtworks.models
+    mentionedArtworks: @props.article.mentionedArtworks.models
+    mentionedArtists: @props.article.mentionedArtists.models
 
   componentDidMount: ->
     @setupShowsAutocomplete()
-    @setupAutocomplete('partner_ids')
-    @setupAutocomplete('fair_ids')
-    @setupAutocomplete('auction_ids')
-
-  setupAutocomplete: (field) ->
-    fieldSingle = field.replace('_ids', '')
-    fieldPlural = fieldSingle + 's'
-    return unless @props.channel.hasAssociation fieldPlural
-    fieldPlural = if field isnt 'auction_ids' then fieldPlural else 'sales'
-    list = new AutocompleteList $(@refs[field])[0],
-      name: field + '[]'
-      url: "#{sd.ARTSY_URL}/api/v1/match/#{fieldPlural}?term=%QUERY"
-      placeholder: "Search #{fieldSingle} by name..."
-      filter: (res) -> for r in res
-        { id: r._id, value: r.name }
-      selected: (e, item, items) =>
-        newState = @state
-        newState[field] = _.pluck items, 'id'
-        @setState newState
-        @props.onChange field, _.pluck items, 'id'
-      removed: (e, item, items) =>
-        newState = @state
-        newState[field] = _.without(_.pluck(items, 'id'),item.id)
-        @setState newState
-        @props.onChange field, _.without(_.pluck(items, 'id'),item.id)
-    if ids = @props.article.get field
-      fieldSingle = if field isnt 'auction_ids' then fieldSingle else 'sale'
-      @ids = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/#{fieldSingle}/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @ids.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @ids
-    else
-      list.setState loading: false
 
   setupShowsAutocomplete: ->
     return unless @props.channel.hasAssociation 'shows'
@@ -154,12 +119,22 @@ module.exports = React.createClass
         div {className: 'fields-left'},
           div {className: 'field-group'},
             label {}, 'Partner'
-            div { ref: 'partner_ids' }
+            Autocomplete {
+              field: 'partner_ids'
+              onChange: @props.onChange
+              article: @props.article
+              channel: @props.channel
+            }
 
         div {className: 'fields-right'},
           div {className: 'field-group'},
             label {}, 'Fair'
-            div { ref: 'fair_ids' }
+            Autocomplete {
+              field: 'fair_ids'
+              onChange: @props.onChange
+              article: @props.article
+              channel: @props.channel
+            }
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},
@@ -170,11 +145,16 @@ module.exports = React.createClass
         div {className: 'fields-right'},
           div {className: 'field-group'},
             label {}, 'Auction'
-            div { ref: 'auction_ids' }
+            Autocomplete {
+              field: 'auction_ids'
+              onChange: @props.onChange
+              article: @props.article
+              channel: @props.channel
+            }
 
       div {className: 'fields-full'},
 
-        div {className: 'fields-col-3'},
+        div {className: 'fields-left'},
           form {
             className: 'field-group'
             onSubmit: @onInputChange
@@ -188,21 +168,7 @@ module.exports = React.createClass
             @getFeatured('PrimaryArtists')
             @getMentioned('Artists', 'PrimaryArtists')
 
-        div {className: 'fields-col-3'},
-          form {
-            className: 'field-group'
-            onSubmit: @onInputChange
-            name: 'Artists'
-          },
-            label {}, 'Secondary Artists'
-            input {
-              placeholder: 'Add an artist by slug or url...'
-              className: 'bordered-input'
-            }
-            @getFeatured('Artists')
-            @getMentioned('Artists', 'Artists')
-
-        div {className: 'fields-col-3'},
+        div {className: 'fields-right'},
           form {
             className: 'field-group'
             onSubmit: @onInputChange

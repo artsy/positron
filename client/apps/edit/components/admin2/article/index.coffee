@@ -55,8 +55,10 @@ module.exports = React.createClass
     @onChange('exclude_google_news', !@state.exclude_google_news)
 
   onPublishDateChange: (e) ->
-    @onChange 'publish_date', @refs.publish_date.value
-    @onChange 'publish_time', @refs.publish_time.value
+    @setState publish_date: @refs.publish_date.value
+    @setState publish_time: @refs.publish_time.value
+    published_at = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
+    @onChange 'published_at', published_at
 
   onPublishSchedule: (e) ->
     publish_date = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
@@ -116,18 +118,6 @@ module.exports = React.createClass
     else
       list.setState loading: false
 
-  printScheduleButton: ->
-    if @state.is_scheduled
-      button {
-        className: 'avant-garde-button scheduled'
-        onClick: @onPublishUnschedule
-      }
-    else
-      button {
-        className: 'avant-garde-button'
-        onClick: @onPublishSchedule
-      }, 'Schedule'
-
   showActive: (key, value) ->
     active = if @state[key] is value then ' active' else ''
 
@@ -140,7 +130,7 @@ module.exports = React.createClass
             label {}, 'Primary Author'
             input {
               className: 'bordered-input'
-              placeholder: 'Move this article to another author’s account'
+              placeholder: 'Change Primary Author name'
               defaultValue: @state.author.name
               onChange: @onPrimaryAuthorChange
             }
@@ -152,43 +142,8 @@ module.exports = React.createClass
             }
 
       div {className: 'fields-full'},
-        div {className: 'fields-left'},
-          div {className: 'field-group publish-time'},
-            label {}, 'Publish Time'
-            div {className: 'field-group--inline'},
-              input {
-                type: 'date'
-                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
-                ref: 'publish_date'
-                onChange: @onPublishDateChange
-                defaultValue: @state.publish_date
-                onClick: @focusDate
-                onBlur: @blurDate
-                disabled: @state.is_scheduled
-              }
-              input {
-                type: 'time'
-                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
-                ref: 'publish_time'
-                onChange: @onPublishDateChange
-                value: @state.publish_time
-                onClick: @focusDate
-                onBlur: @blurDate
-                disabled: @state.is_scheduled
-              }
-              @printScheduleButton()
-            div {
-              className: 'field-group--inline flat-checkbox'
-              onClick: @onCheckboxChange
-            },
-              input {
-                type: 'checkbox'
-                checked: @state.exclude_google_news
-                ref: 'exclude_google_news'
-              }
-              label {}, 'Exclude from Google News'
 
-        div {className: 'fields-right'},
+        div {className: 'fields-left'},
           div {className: 'field-group--inline tier-feed'},
             div {className: 'field-group'},
               label {}, 'Article Tier'
@@ -216,3 +171,37 @@ module.exports = React.createClass
                   className: 'avant-garde-button' + @showActive('featured', false)
                   onClick: @onMagazineChange
                 }, 'No'
+
+        div {className: 'fields-right'},
+          div {className: 'field-group publish-time'},
+            label {}, 'Publish Time'
+            div {className: 'field-group--inline'},
+              input {
+                type: 'date'
+                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
+                ref: 'publish_date'
+                onChange: @onPublishDateChange
+                defaultValue: @state.publish_date
+                onClick: @focusDate
+                onBlur: @blurDate
+              }
+              input {
+                type: 'time'
+                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
+                ref: 'publish_time'
+                onChange: @onPublishDateChange
+                value: @state.publish_time
+                onClick: @focusDate
+                onBlur: @blurDate
+              }
+            div {
+              className: 'field-group--inline flat-checkbox'
+              onClick: @onCheckboxChange
+            },
+              input {
+                type: 'checkbox'
+                checked: @state.exclude_google_news
+                ref: 'exclude_google_news'
+              }
+              label {}, 'Exclude from Google News'
+

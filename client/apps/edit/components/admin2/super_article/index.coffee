@@ -34,6 +34,17 @@ module.exports = React.createClass
     newSuperArticle[field] = src
     @setState super_article: newSuperArticle
 
+  printFieldGroup: (field, title) ->
+    div {className: 'field-group'},
+      label {}, title
+      input {
+        value: @state.super_article[field]
+        onChange: @onInputChange
+        name: field
+        className: 'bordered-input'
+        disabled: !@state.is_super_article
+      }
+
   render: ->
     div { className: 'edit-admin--super-article edit-admin__fields'},
       div {className: 'fields-full'},
@@ -51,50 +62,11 @@ module.exports = React.createClass
       div {className: 'fields-full'},
 
         div {className: 'fields-col-3'},
-          div {className: 'field-group'},
-            label {}, 'Partner Link Title'
-            input {
-              value: @state.super_article.partner_link_title
-              onChange: @onInputChange
-              name: 'partner_link_title'
-              className: 'bordered-input'
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Partner Link'
-            input {
-              value: @state.super_article.partner_link
-              onChange: @onInputChange
-              name: 'partner_link'
-              className: 'bordered-input'
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Partner Logo Link'
-            input {
-              value: @state.super_article.partner_logo_link
-              onChange: @onInputChange
-              name: 'partner_logo_link'
-              className: 'bordered-input'
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Secondary Logo Text'
-            input {
-              value: @state.super_article.secondary_logo_text
-              onChange: @onInputChange
-              name: 'secondary_logo_text'
-              className: 'bordered-input'
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Secondary Logo Link'
-            input {
-              value: @state.super_article.secondary_logo_link
-              onChange: @onInputChange
-              name: 'secondary_logo_link'
-              className: 'bordered-input'
-            }
+          @printFieldGroup 'partner_link_title', 'Partner Link Title'
+          @printFieldGroup 'partner_link', 'Partner Link'
+          @printFieldGroup 'partner_logo_link', 'Partner Logo Link'
+          @printFieldGroup 'secondary_logo_text', 'Secondary Logo Text'
+          @printFieldGroup 'secondary_logo_link', 'Secondary Logo Link'
 
           div {className: 'field-group'},
             label {}, 'Footer Blurb'
@@ -103,20 +75,21 @@ module.exports = React.createClass
               onChange: @onInputChange
               name: 'footer_blurb'
               className: 'bordered-input'
+              disabled: !@state.is_super_article
             }
 
         div {className: 'fields-col-3'},
           div {className: 'field-group'},
             label {}, 'Partner Logo'
-            ImageUpload { upload: @upload, name: 'partner_logo' }
+            ImageUpload { upload: @upload, name: 'partner_logo', disabled: !@state.is_super_article }
 
           div {className: 'field-group'},
             label {}, 'Partner Fullscreen'
-            ImageUpload { upload: @upload, name: 'partner_fullscreen_header_logo' }
+            ImageUpload { upload: @upload, name: 'partner_fullscreen_header_logo', disabled: !@state.is_super_article }
 
           div {className: 'field-group'},
             label {}, 'Secondary Logo'
-            ImageUpload { upload: @upload, name: 'secondary_partner_logo' }
+            ImageUpload { upload: @upload, name: 'secondary_partner_logo', disabled: !@state.is_super_article }
 
         div {className: 'fields-col-3'},
           div {className: 'field-group'},

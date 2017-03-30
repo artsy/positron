@@ -38,6 +38,17 @@ section.active
     justify-content space-between
   .fields-col-3
     width calc(33% \- 20px)
+  input[disabled], textarea[disabled]
+    background gray-lightest-color
+    border-color gray-lighter-color
+    cursor no-drop
+
+
+section.image-upload-form.disabled
+  background gray-lightest-color
+  cursor no-drop
+  span, h1
+    color gray-dark-color !important
 
 .edit-admin--super-article
   flex-direction column
@@ -52,10 +63,11 @@ section.active
   .image-upload-form h1
     margin-top 60px
 
+.edit-admin--appearances
+  flex-direction column
+
 .edit-admin--featuring
   flex-direction column
-  .fields-col-3 form input
-    margin-bottom 10px
   .feature-mention
     border 2px solid gray-lighter-color
     color gray-darker-color
@@ -63,8 +75,8 @@ section.active
     justify-content space-between
     align-items center
     padding 5px 10px
-    margin-top 5px
-    margin-bottom 10px
+    // margin-top 5px
+    margin-top 10px
     position relative
     cursor pointer
     &.feature
@@ -85,6 +97,14 @@ section.active
       width 15px
       height 14px
     &:hover
-      .mention:after
-        color purple-color
-        content 'Feature'
+      .mention
+        &:after
+          color purple-color
+          content 'Feature'
+          background url(/icons/check_p.svg) 99% top no-repeat
+          background-size 13px 13px
+          padding-right 18px
+      .mention:before
+        display block
+      .remove:after
+        background url(/icons/remove_r.svg) center center no-repeat

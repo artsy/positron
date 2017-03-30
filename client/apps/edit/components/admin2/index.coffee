@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 { section, div } = React.DOM
+_ = require 'underscore'
 
 Article = React.createFactory require './article/index.coffee'
 SectionTags = React.createFactory require './section_tags/index.coffee'
@@ -14,18 +15,23 @@ module.exports = React.createClass
   displayName: 'AdminSections'
 
   getInitialState: ->
-    activeSection: 'super-article'
+    activeSections: ['article', 'section-tags']
 
   setActiveSection: (section) ->
-    section = if section isnt @state.activeSection then section else null
-    @setState activeSection: section
+    sections = @state.activeSections || []
+    if section in @state.activeSections
+      sections = _.without(sections, section)
+      @setState activeSections: sections
+    else
+      sections.push(section)
+      @setState activeSections: sections
 
   getActiveSection: (section) ->
-    active = if section is @state.activeSection then ' active' else ''
+    active = if section in @state.activeSections then ' active' else ''
     return active
 
   isActiveSection: (section) ->
-    active = if section is @state.activeSection then true else false
+    active = if section in @state.activeSections then true else false
     return active
 
   componentWillMount: ->
@@ -39,15 +45,15 @@ module.exports = React.createClass
   render: ->
     div { className: 'edit-admin' },
 
+      section { className: 'edit-admin--section-tags' + @getActiveSection 'section-tags' },
+        printTitle section: 'Verticals & Tagging', className: 'section-tags', onClick: @setActiveSection
+        if @isActiveSection 'section-tags'
+          SectionTags {article: @props.article, onChange: @onChange}
+
       section { className: 'edit-admin--article' + @getActiveSection 'article' },
         printTitle section: 'Article', className: 'article', onClick: @setActiveSection
         if @isActiveSection 'article'
           Article {article: @props.article, channel: @props.channel, onChange: @onChange}
-
-      section { className: 'edit-admin--section-tags' + @getActiveSection 'section-tags' },
-        printTitle section: 'Section & Tagging', className: 'section-tags', onClick: @setActiveSection
-        if @isActiveSection 'section-tags'
-          SectionTags {article: @props.article, onChange: @onChange}
 
       section { className: 'edit-admin--featuring' + @getActiveSection 'featuring' },
         printTitle section:  'Featuring', className: 'featuring', onClick: @setActiveSection
