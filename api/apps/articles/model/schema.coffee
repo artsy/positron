@@ -212,7 +212,7 @@ denormalizedArtwork = (->
   featured: @boolean()
   exclude_google_news: @boolean()
   super_article_for: @objectId()
-  q: @string()
+  q: @string().allow('')
   all_by_author: @objectId()
   tags: @array().items(@string())
   is_super_article: @boolean()

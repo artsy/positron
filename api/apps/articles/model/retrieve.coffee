@@ -62,7 +62,7 @@ moment = require 'moment'
     ) if input.artist_id
 
     # Allow regex searching through the q param
-    query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q
+    query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q and input.q.length
 
     # # Look for articles that are scheduled
     query.scheduled_publish_at = { $ne: null } if input.scheduled

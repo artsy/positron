@@ -62,7 +62,16 @@ describe 'Retrieve', ->
         q: 'Thumbnail Title 101'
         published: true
       }, (err, query) =>
+        query.hasOwnProperty('thumbnail_title').should.be.true()
         query.thumbnail_title['$regex'].should.be.ok()
+        done()
+
+    it 'ignores q if it is empty', (done) ->
+      Retrieve.toQuery {
+        q: ''
+        published: true
+      }, (err, query) =>
+        query.hasOwnProperty('thumbnail_title').should.be.false()
         done()
 
     it 'strips out unknown keys in the query', (done) ->
