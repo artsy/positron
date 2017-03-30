@@ -148,7 +148,10 @@ module.exports = React.createClass
           return span { style: {textDecoration: 'line-through'}}
     })(editorState.getCurrentContent())
     # put the line breaks back for correct client rendering
-    html = html.replace('<p></p>', '<p><br></p>').replace('<p> </p>', '<p><br></p>')
+    html = html
+      .replace '<p></p>', '<p><br></p>'
+      .replace '<p> </p>', '<p><br></p>'
+      .replace '  ', ' &nbsp;'
     return html
 
   stripGoogleStyles: (html) ->
