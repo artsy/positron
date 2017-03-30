@@ -43,7 +43,6 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-title textarea').autosize()
 
   serialize: ->
-    debugger
     {
       author_id: @user.get('id')
       author:
@@ -111,11 +110,9 @@ module.exports = class EditLayout extends Backbone.View
     $(document).ajaxStop @redirectToList
 
   savePublished: =>
-    debugger
     @article.save @serialize()
 
   addRemoveReset: =>
-    debugger
     @changedSection = true
     $('#edit-save').addClass 'attention'
 
@@ -127,8 +124,8 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'keyup :input:not(.tt-input,.edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
-    'change #edit-admin :input': 'onKeyup'
+    'keyup :input:not(.tt-input,.edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
+    # 'change #edit-admin :input': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
@@ -164,12 +161,11 @@ module.exports = class EditLayout extends Backbone.View
     @fullText = @fullText.join()
 
   onKeyup: =>
-    debugger
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'
     else
-      # @article.save @serialize()
+      @article.save @serialize()
     @toggleAstericks()
 
   popLockControls: =>

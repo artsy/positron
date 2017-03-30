@@ -14,7 +14,9 @@ module.exports = React.createClass
   displayName: 'AdminArticle'
 
   getInitialState: ->
-    author: @props.article.get('author').name || ''
+    author:
+      name: @props.article.get('author').name || ''
+      id: @props.article.get('author').id
     contributing_authors: @props.article.get 'contributing_authors' or []
     tier: @props.article.get('tier') || 1
     featured: @props.article.get('featured') || true
@@ -31,22 +33,37 @@ module.exports = React.createClass
   componentDidMount: ->
     @setupAutocomplete()
 
-  onTierChange: (e) ->
-    @setState tier: parseInt(e.target.name)
+  onChange: (key, value)->
+    newState = @state
+    newState[key] = value
+    @setState newState
+    @props.onChange(key, value)
 
-  showActiveTier: (tier) ->
-    active = if @state.tier is tier then ' active' else ''
+  onTierChange: (e) ->
+    tier = parseInt(e.target.name)
+    @onChange('tier', tier)
+
+  onPrimaryAuthorChange: (e) ->
+    @onChange('author', {name: e.target.value, id: @state.author.id})
 
   onMagazineChange: (e) ->
     featured = if e.target.name is 'true' then true else false
-    @setState featured: featured
-
-  showMagazineActive: (status) ->
-    active = if @state.featured is status then ' active' else ''
+    @onChange('featured', featured)
 
   onCheckboxChange: (e) ->
     @setState exclude_google_news: !@state.exclude_google_news
-    @props.article.set('exclude_google_news', !@state.exclude_google_news)
+    @onChange('exclude_google_news', !@state.exclude_google_news)
+
+  onPublishDateChange: (e) ->
+    @onChange 'publish_date', @refs.publish_date.value
+    @onChange 'publish_time', @refs.publish_time.value
+
+  onPublishSchedule: (e) ->
+    publish_date = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
+    @setState scheduled_publish_at: publish_date, is_scheduled: true
+
+  onPublishUnschedule: ->
+    @setState scheduled_publish_at: null, is_scheduled: false
 
   setupPublishDate: ->
     if @props.article.get('scheduled_publish_at')
@@ -63,18 +80,6 @@ module.exports = React.createClass
         publish_date: moment().format('YYYY-MM-DD')
         publish_time: moment().format('HH:mm')
 
-  onPublishDateChange: (e) ->
-    @setState
-      publish_date: @refs.publish_date.value
-      publish_time: @refs.publish_time.value
-
-  onPublishSchedule: (e) ->
-    publish_date = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
-    @setState scheduled_publish_at: publish_date, is_scheduled: true
-
-  onPublishUnschedule: ->
-    @setState scheduled_publish_at: null, is_scheduled: false
-
   focusDate: (e) ->
     @setState focus_date: true
 
@@ -90,6 +95,7 @@ module.exports = React.createClass
         { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
       selected: (e, item, items) =>
         @setState contributing_authors: _.pluck items, 'id'
+        @onChange 'contributing_authors', _.pluck items, 'id'
       removed: (e, item, items) =>
         @setState contributing_authors: _.without(_.pluck(items, 'id'),item.id)
     if @props.article.get('contributing_authors')?.length
@@ -110,9 +116,6 @@ module.exports = React.createClass
     else
       list.setState loading: false
 
-  onPrimaryAuthorChange: (e) ->
-    @setState author: e.target.value
-
   printScheduleButton: ->
     if @state.is_scheduled
       button {
@@ -125,9 +128,10 @@ module.exports = React.createClass
         onClick: @onPublishSchedule
       }, 'Schedule'
 
-  render: ->
-    focus_date = if @state.focus_date then ' focused' else ''
+  showActive: (key, value) ->
+    active = if @state[key] is value then ' active' else ''
 
+  render: ->
     div { className: 'edit-admin--article edit-admin__fields'},
 
       div {className: 'fields-full'},
@@ -137,10 +141,9 @@ module.exports = React.createClass
             input {
               className: 'bordered-input'
               placeholder: 'Move this article to another author’s account'
-              defaultValue: @state.author
+              defaultValue: @state.author.name
               onChange: @onPrimaryAuthorChange
             }
-
         div {className: 'fields-right'},
           div {className: 'field-group'},
             label {}, 'Contributing Author'
@@ -155,7 +158,7 @@ module.exports = React.createClass
             div {className: 'field-group--inline'},
               input {
                 type: 'date'
-                className: 'bordered-input edit-admin-input-date' + focus_date
+                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
                 ref: 'publish_date'
                 onChange: @onPublishDateChange
                 defaultValue: @state.publish_date
@@ -165,7 +168,7 @@ module.exports = React.createClass
               }
               input {
                 type: 'time'
-                className: 'bordered-input edit-admin-input-date' + focus_date
+                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
                 ref: 'publish_time'
                 onChange: @onPublishDateChange
                 value: @state.publish_time
@@ -185,19 +188,18 @@ module.exports = React.createClass
               }
               label {}, 'Exclude from Google News'
 
-
         div {className: 'fields-right'},
           div {className: 'field-group--inline tier-feed'},
             div {className: 'field-group'},
               label {}, 'Article Tier'
               div {className: 'button-group'},
                 button {
-                  className: 'avant-garde-button' + @showActiveTier(1)
+                  className: 'avant-garde-button' + @showActive('tier', 1)
                   onClick: @onTierChange
                   name: '1'
                 }, 'Tier 1'
                 button {
-                  className: 'avant-garde-button' + @showActiveTier(2)
+                  className: 'avant-garde-button' + @showActive('tier', 2)
                   onClick: @onTierChange
                   name: '2'
                 }, 'Tier 2'
@@ -206,11 +208,11 @@ module.exports = React.createClass
               label {}, 'Magazine Feed'
               div {className: 'button-group'},
                 button {
-                  className: 'avant-garde-button' + @showMagazineActive(true)
+                  className: 'avant-garde-button' + @showActive('featured', true)
                   onClick: @onMagazineChange
                   name: 'true'
                 }, 'Yes'
                 button {
-                  className: 'avant-garde-button' + @showMagazineActive(false)
+                  className: 'avant-garde-button' + @showActive('featured', false)
                   onClick: @onMagazineChange
                 }, 'No'

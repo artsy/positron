@@ -32,30 +32,34 @@ module.exports = React.createClass
     @props.article.fetchFeatured()
     @props.article.fetchMentioned()
 
+  onChange: (key, value)->
+    @props.article.set(key, value)
+    @props.article.save()
+
   render: ->
     div { className: 'edit-admin' },
 
       section { className: 'edit-admin--article' + @getActiveSection 'article' },
         printTitle section: 'Article', className: 'article', onClick: @setActiveSection
         if @isActiveSection 'article'
-          Article {article: @props.article, channel: @props.channel}
+          Article {article: @props.article, channel: @props.channel, onChange: @onChange}
 
       section { className: 'edit-admin--section-tags' + @getActiveSection 'section-tags' },
         printTitle section: 'Section & Tagging', className: 'section-tags', onClick: @setActiveSection
         if @isActiveSection 'section-tags'
-          SectionTags {article: @props.article}
+          SectionTags {article: @props.article, onChange: @onChange}
 
       section { className: 'edit-admin--featuring' + @getActiveSection 'featuring' },
         printTitle section:  'Featuring', className: 'featuring', onClick: @setActiveSection
         if @isActiveSection 'featuring'
-          Featuring {article: @props.article, channel: @props.channel}
+          Featuring {article: @props.article, channel: @props.channel, onChange: @onChange}
 
       section { className: 'edit-admin--super-article' + @getActiveSection 'super-article' },
         printTitle section: 'Super Article', className: 'super-article', onClick: @setActiveSection
         if @isActiveSection 'super-article'
-          SuperArticle {article: @props.article}
+          SuperArticle {article: @props.article, channel: @props.channel, onChange: @onChange}
 
       section { className: 'edit-admin--additional-appearances' + @getActiveSection 'additional-appearances' },
         printTitle section: 'Additional Appearances', className: 'additional-appearances', onClick: @setActiveSection
         if @isActiveSection 'additional-appearances'
-          Appearances {article: @props.article}
+          Appearances {article: @props.article, channel: @props.channel, onChange: @onChange}

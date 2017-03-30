@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 async = require 'async'
+request = require 'superagent'
 sd = require('sharify').data
 _ = require 'underscore'
 { div, label, input, form, span } = React.DOM
@@ -14,11 +15,8 @@ module.exports = React.createClass
     show_ids: @props.article.get('show_ids') || null
     fair_ids: @props.article.get('fair_ids') || []
     auction_ids: @props.article.get('auction_ids') || []
-    primary_featured_artist_ids: @props.article.get('primary_featured_artist_ids') || null
     PrimaryArtists: @props.article.featuredPrimaryArtists.models
-    featured_artist_ids: @props.article.get('featured_artist_ids') || null
     Artists: @props.article.featuredArtists.models
-    featured_artwork_ids: @props.article.get('featured_artwork_ids') || null
     Artworks: @props.article.featuredArtworks.models
 
   componentDidMount: ->
@@ -42,10 +40,12 @@ module.exports = React.createClass
         newState = @state
         newState[field] = _.pluck items, 'id'
         @setState newState
+        @props.onChange field, _.pluck items, 'id'
       removed: (e, item, items) =>
         newState = @state
         newState[field] = _.without(_.pluck(items, 'id'),item.id)
         @setState newState
+        @props.onChange field, _.without(_.pluck(items, 'id'),item.id)
     if ids = @props.article.get field
       fieldSingle = if field isnt 'auction_ids' then fieldSingle else 'sale'
       @ids = []
@@ -69,8 +69,10 @@ module.exports = React.createClass
       placeholder: 'Search show by name...'
       selected: (e, item, items) =>
         @setState show_ids: _.pluck items, 'id'
+        @props.onChange 'show_ids', _.pluck items, 'id'
       removed: (e, item, items) =>
         @setState show_ids: _.without(_.pluck(items,'id'),item.id)
+        @props.onChange 'show_ids', _.without(_.pluck(items,'id'),item.id)
     if ids = @show_ids
       @shows = []
       async.each ids, (id, cb) =>
