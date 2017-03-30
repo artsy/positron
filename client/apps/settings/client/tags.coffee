@@ -5,7 +5,8 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 request = require 'superagent'
 Tags = require '../../../collections/tags.coffee'
-FilterSearch = require '../../../components/filter_search/index.coffee'
+FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
+query = require './tagsQuery.coffee'
 { div, nav, a, h1 } = React.DOM
 
 module.exports = TagsView = React.createClass
@@ -58,42 +59,35 @@ module.exports = TagsView = React.createClass
   # searchResults: (results) ->
   #   @setState publishedArticles: results
 
-  # setFeed: (type) ->
-  #   @setState feed: type
-  #   @fetchFeed type
-
-  # fetchFeed: (type) ->
-  #   published = type in ['daily_email', 'weekly_email']
-  #   feedQuery = query "#{type}: true, published: #{published}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
-  #   request
-  #     .post sd.API_URL + '/graphql'
-  #     .set 'X-Access-Token', sd.USER?.access_token
-  #     .send query: feedQuery
-  #     .end (err, res) =>
-  #       return if err or not res.body?.data
-  #       if type is 'scheduled'
-  #         @setState scheduledArticles: res.body.data.articles
-  #       else
-  #         @setState queuedArticles: res.body.data.articles
-  #         @fetchLatest()
-
-  # fetchLatest: ->
-  #   latestQuery = query "channel_id: \"#{sd.CURRENT_CHANNEL.id}\", published: true, sort: \"-published_at\", daily_email: false"
-  #   request
-  #     .post sd.API_URL + '/graphql'
-  #     .set 'X-Access-Token', sd.USER?.access_token
-  #     .send query: latestQuery
-  #     .end (err, res) =>
-  #       return if err or not res.body?.data
-  #       @setState publishedArticles: res.body.data.articles
+  searchResults: (results) ->
 
   setResults: (results) ->
     @setState topicTags: results
 
+  setPublic: (isPublic) ->
+    @setState public: isPublic
+    @fetchTags isPublic
+
+  fetchTags: (isPublic) ->
+    tagQuery = query "published: #{isPublic}"
+    request
+      .post sd.API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: tagQuery
+      .end (err, res) =>
+        return if err or not res.body?.data
+        if isPublic
+          @setState topicTags: res.body.data.tags
+        else
+          @setState internalTags: res.body.data.tags
+
+  getActiveState: (type) ->
+    if @getType() is type then 'is-active' else ''
+
   render: ->
     div {
       'data-state': @getType()
-      className: 'tags-root-container'
+      className: 'tags-container'
       'data-loading': @state.loading
     },
       div { className: 'tags-loading-container'},
@@ -104,37 +98,37 @@ module.exports = TagsView = React.createClass
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},
             a {
-                className: "#{ if @getType() is 'topic' then 'is-active' else '' } topic"
-                # onClick: => @setFeed ''
+              className: "topic #{@getActiveState('topic')}"
+              onClick: => @setPublic true
               }, "Topic Tags"
             a {
-                className: "#{ if @getType() is 'internal' then 'is-active' else '' } internal"
-                # onClick: => @setFeed ''
+              className: "internal #{@getActiveState('internal')}"
+              onClick: => @setPublic false
               }, "Internal Tags"
-      div {},
-        div { className: 'tags-topic max-width-container' },
-          FilterSearch {
-            url: sd.API_URL + "/tags?public=true&q=%QUERY"
-            placeholder: 'Search Tags...'
-            collection: @props.topicTags
-            headerText: "Latest Tags"
-            selected: null
-            searchResults: @searchResults
-            contentType: 'tag'
-          }
-        # div { className: 'tags-internal max-width-container' },
-        #   FilterSearch {
-        #     url: sd.API_URL + "/articles?public=false&q=%QUERY"
-        #     placeholder: 'Search Tags...'
-        #     articles: @state.publishedArticles
-        #     display: 'email'
-        #     headerText: "Latest Articles"
-        #     selected: @selected
-        #     searchResults: @searchResults
-        #   }
+      div { className: 'tags-panel' },
+        if @state.public
+          div { className: 'tags-topic max-width-container' },
+            FilterSearch {
+              url: sd.API_URL + "/tags?public=true&q=%QUERY"
+              placeholder: 'Search Tags...'
+              collection: @props.topicTags
+              searchResults: @searchResults
+              contentType: 'tag'
+            }
+        else
+          div { className: 'tags-internal max-width-container' },
+            FilterSearch {
+              url: sd.API_URL + "/tags?public=true&q=%QUERY"
+              placeholder: 'Search Tags...'
+              collection: @props.internalTags
+              searchResults: @searchResults
+              contentType: 'tag'
+            }
 
 module.exports.init = ->
   props =
     topicTags: sd.TAGS
     public: true
-  ReactDOM.render React.createElement(TagsView, props), document.getElementById('tags-root')
+  ReactDOM.render(
+    React.createElement(TagsView, props), document.getElementById('tags-root')
+  )
