@@ -14,13 +14,13 @@ Joi.objectId = require('joi-objectid') Joi
 #
 # Schemas
 #
-schema = (->
+@schema = (->
   id: @objectId()
   name: @string().allow('', null)
   public: @boolean().default(false)
 ).call Joi
 
-querySchema = (->
+@querySchema = (->
   q: @string()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
@@ -36,7 +36,7 @@ querySchema = (->
   db.tags.findOne query, callback
 
 @where = (input, callback) ->
-  Joi.validate input, querySchema, (err, input) =>
+  Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'q', 'limit', 'offset', 'count'
     query.name = { $regex: ///#{input.q}///i } if input.q
@@ -64,7 +64,7 @@ querySchema = (->
 # Persistence
 #
 @save = (input, callback) ->
-  Joi.validate input, schema, (err, input) =>
+  Joi.validate input, @schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: ObjectId(input.id)

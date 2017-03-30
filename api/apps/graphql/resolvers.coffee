@@ -3,6 +3,7 @@ User = require '../users/model.coffee'
 { where, presentCollection } = Article = require '../articles/model'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
+Tag = require '../tags/model'
 
 module.exports.articles = (root, args, req, ast) ->
   if (not args.published or args.scheduled) and not args.channel_id
@@ -26,4 +27,9 @@ module.exports.curations = (root, args, req, ast) ->
 module.exports.channels = (root, args, req, ast) ->
   return new Promise (resolve, reject) ->
     Channel.where args, (err, results) ->
+      resolve results.results
+
+module.exports.tags = (root, args, req, ast) ->
+  return new Promise (resolve, reject) ->
+    Tag.where args, (err, results) ->
       resolve results.results
