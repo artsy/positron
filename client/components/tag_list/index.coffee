@@ -9,7 +9,7 @@ module.exports = React.createClass
     div { className: 'tag-list__results' },
       unless @props.tags?.length
         div { className: 'tag-list__no-results' }, "No Results Found"
-      (@props.tags.map (result) ->
+      (@props.tags?.map (result) ->
         div { className: 'tag-list__result', key: result.id},
           result.name
       )

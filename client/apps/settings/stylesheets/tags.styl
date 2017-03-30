@@ -1,4 +1,14 @@
 .tags-container
+  &[data-state='internalTags']
+    .tags-internal
+      display block
+    .tags-topic
+      display none
+  &[data-state='topicTags']
+    .tags-internal
+      display none
+    .tags-topic
+      display block
   &[data-loading='true']
     .loading-spinner
       display block

@@ -16,11 +16,9 @@ module.exports = TagsView = React.createClass
     internalTags: @props.internalTags or []
     topicTags: @props.topicTags or []
     public: @props.public or true
+    currentView: 'topicTags'
     loading: false
     errorMessage: ''
-
-  getType: ->
-    if @state.public then 'topic' else 'internal'
 
   # saveSelected: (data, isQueued) ->
   #   article =
@@ -60,16 +58,11 @@ module.exports = TagsView = React.createClass
   #   @setState publishedArticles: results
 
   searchResults: (results) ->
+    @setState "#{@state.currentView}": results
 
-  setResults: (results) ->
-    @setState topicTags: results
-
-  setPublic: (isPublic) ->
-    @setState public: isPublic
-    @fetchTags isPublic
-
-  fetchTags: (isPublic) ->
-    tagQuery = query "published: #{isPublic}"
+  setView: (view) ->
+    isPublic = view is 'topicTags'
+    tagQuery = query "public: #{isPublic}"
     request
       .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
@@ -77,16 +70,16 @@ module.exports = TagsView = React.createClass
       .end (err, res) =>
         return if err or not res.body?.data
         if isPublic
-          @setState topicTags: res.body.data.tags
+          @setState topicTags: res.body.data.tags, currentView: view
         else
-          @setState internalTags: res.body.data.tags
+          @setState internalTags: res.body.data.tags, currentView: view
 
   getActiveState: (type) ->
-    if @getType() is type then 'is-active' else ''
+    if @state.currentView is type then 'is-active' else ''
 
   render: ->
     div {
-      'data-state': @getType()
+      'data-state': @state.currentView
       className: 'tags-container'
       'data-loading': @state.loading
     },
@@ -98,32 +91,30 @@ module.exports = TagsView = React.createClass
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},
             a {
-              className: "topic #{@getActiveState('topic')}"
-              onClick: => @setPublic true
+              className: "topic #{@getActiveState('topicTags')}"
+              onClick: => @setView 'topicTags'
               }, "Topic Tags"
             a {
-              className: "internal #{@getActiveState('internal')}"
-              onClick: => @setPublic false
+              className: "internal #{@getActiveState('internalTags')}"
+              onClick: => @setView 'internalTags'
               }, "Internal Tags"
       div { className: 'tags-panel' },
-        if @state.public
-          div { className: 'tags-topic max-width-container' },
-            FilterSearch {
-              url: sd.API_URL + "/tags?public=true&q=%QUERY"
-              placeholder: 'Search Tags...'
-              collection: @props.topicTags
-              searchResults: @searchResults
-              contentType: 'tag'
-            }
-        else
-          div { className: 'tags-internal max-width-container' },
-            FilterSearch {
-              url: sd.API_URL + "/tags?public=true&q=%QUERY"
-              placeholder: 'Search Tags...'
-              collection: @props.internalTags
-              searchResults: @searchResults
-              contentType: 'tag'
-            }
+        div { className: 'tags-topic max-width-container' },
+          FilterSearch {
+            url: sd.API_URL + "/tags?public=true&q=%QUERY"
+            placeholder: 'Search Tags...'
+            collection: @state.topicTags
+            searchResults: @searchResults
+            contentType: 'tag'
+          }
+        div { className: 'tags-internal max-width-container' },
+          FilterSearch {
+            url: sd.API_URL + "/tags?public=false&q=%QUERY"
+            placeholder: 'Search Tags...'
+            collection: @state.internalTags
+            searchResults: @searchResults
+            contentType: 'tag'
+          }
 
 module.exports.init = ->
   props =
