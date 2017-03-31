@@ -8,7 +8,7 @@ _ = require 'underscore'
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = React.createClass
-  displayName: 'AdminAutocomplete'
+  displayName: 'AdminAutocompleteList'
 
   componentDidMount: ->
     @setupAutocomplete(@props.field)

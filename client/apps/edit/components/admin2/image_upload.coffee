@@ -9,7 +9,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     progress: 0
-    src: ''
+    src: @props.src || ''
     error: false
 
   upload: (e) ->
