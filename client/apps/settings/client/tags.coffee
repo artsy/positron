@@ -5,63 +5,48 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 request = require 'superagent'
 Tags = require '../../../collections/tags.coffee'
+Tag = require '../../../models/tag.coffee'
 FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
+AddTag = React.createFactory require './add_tag.coffee'
 query = require './tagsQuery.coffee'
-{ div, nav, a, h1 } = React.DOM
+{ div, nav, a, h1, input, button } = React.DOM
 
 module.exports = TagsView = React.createClass
   displayName: 'TagsView'
 
   getInitialState: ->
-    internalTags: @props.internalTags or []
-    topicTags: @props.topicTags or []
+    tags: @props.tags or []
     public: @props.public or true
-    currentView: 'topicTags'
     loading: false
     errorMessage: ''
 
-  # saveSelected: (data, isQueued) ->
-  #   article =
-  #     id: data.id
-  #     channel_id: data.channel_id
-  #     "#{@state.feed}": isQueued
-  #   @setState loading: true
-  #   # Initialize new article with `simple` mode on to prevent default associations
-  #   new Article({}, simple: true).save article,
-  #     success: =>
-  #       @setState loading: false
-  #     error: =>
-  #       @setState
-  #         loading: false
-  #         errorMessage: 'There has been an error. Please contact support.'
-  #       setTimeout ( => @setState(errorMessage: '')), 2000
+  addTag: (name) ->
+    data =
+      name: name
+      public: @state.public
+    new Tag().save data,
+      success: (model, res) =>
+        @setState tags: @state.tags.concat res
+      error: (model, res) =>
+        msg = res.responseJSON?.message or 'There has been an error. Please contact support.'
+        @flashError msg
 
-  # selected: (article, type) ->
-  #   if type is 'select'
-  #     published = _.reject @state.publishedArticles, (a) ->
-  #       a.id is article.id
-  #     queued = [article].concat(@state.queuedArticles.slice(0))
-  #     @setState
-  #       publishedArticles: published
-  #       queuedArticles: _.uniq queued, 'id'
-  #     @saveSelected article, true
-  #   else
-  #     queued = _.reject @state.queuedArticles, (a) ->
-  #       a.id is article.id
-  #     published = [article].concat(@state.publishedArticles.slice(0))
-  #     @setState
-  #       queuedArticles: queued
-  #       publishedArticles: _.uniq published, 'id'
-  #     @saveSelected article, false
+  flashError: (msg) ->
+    @setState errorMessage: msg
+    setTimeout ( => @setState(errorMessage: '')), 1000
 
-  # searchResults: (results) ->
-  #   @setState publishedArticles: results
+  deleteTag: (tag) ->
+    new Tag(id: tag.id).destroy
+      success: (model, res) =>
+        @setState tags: _.filter @state.tags, (t) -> tag.id isnt t.id
+      error: (model, res) =>
+        msg = res.responseJSON?.message or 'There has been an error. Please contact support.'
+        @flashError msg
 
   searchResults: (results) ->
-    @setState "#{@state.currentView}": results
+    @setState tags: results
 
-  setView: (view) ->
-    isPublic = view is 'topicTags'
+  setView: (isPublic) ->
     tagQuery = query "public: #{isPublic}"
     request
       .post sd.API_URL + '/graphql'
@@ -69,20 +54,20 @@ module.exports = TagsView = React.createClass
       .send query: tagQuery
       .end (err, res) =>
         return if err or not res.body?.data
-        if isPublic
-          @setState topicTags: res.body.data.tags, currentView: view
-        else
-          @setState internalTags: res.body.data.tags, currentView: view
+        @setState
+          tags: res.body.data.tags
+          public: isPublic
 
   getActiveState: (type) ->
-    if @state.currentView is type then 'is-active' else ''
+    if @state.public is type then 'is-active' else ''
 
   render: ->
     div {
-      'data-state': @state.currentView
       className: 'tags-container'
       'data-loading': @state.loading
     },
+      if @state.errorMessage
+        div { className: 'flash-error' }, @state.errorMessage
       div { className: 'tags-loading-container'},
         div { className: 'loading-spinner' }
         if @state.errorMessage
@@ -91,34 +76,30 @@ module.exports = TagsView = React.createClass
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},
             a {
-              className: "topic #{@getActiveState('topicTags')}"
-              onClick: => @setView 'topicTags'
-              }, "Topic Tags"
+              className: "topic #{@getActiveState(true)}"
+              onClick: => @setView true
+            }, "Topic Tags"
             a {
-              className: "internal #{@getActiveState('internalTags')}"
-              onClick: => @setView 'internalTags'
-              }, "Internal Tags"
+              className: "internal #{@getActiveState(false)}"
+              onClick: => @setView false
+            }, "Internal Tags"
       div { className: 'tags-panel' },
-        div { className: 'tags-topic max-width-container' },
-          FilterSearch {
-            url: sd.API_URL + "/tags?public=true&q=%QUERY"
-            placeholder: 'Search Tags...'
-            collection: @state.topicTags
-            searchResults: @searchResults
-            contentType: 'tag'
+        div { className: 'max-width-container' },
+          AddTag {
+            addTag: @addTag
           }
-        div { className: 'tags-internal max-width-container' },
           FilterSearch {
-            url: sd.API_URL + "/tags?public=false&q=%QUERY"
-            placeholder: 'Search Tags...'
-            collection: @state.internalTags
+            url: sd.API_URL + "/tags?public=#{@state.public}&q=%QUERY"
+            placeholder: 'Search for tag...'
+            collection: @state.tags
             searchResults: @searchResults
             contentType: 'tag'
+            deleteTag: @deleteTag
           }
 
 module.exports.init = ->
   props =
-    topicTags: sd.TAGS
+    tags: sd.TAGS
     public: true
   ReactDOM.render(
     React.createElement(TagsView, props), document.getElementById('tags-root')

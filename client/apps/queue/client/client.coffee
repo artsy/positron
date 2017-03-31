@@ -97,7 +97,7 @@ module.exports = QueueView = React.createClass
       div { className: 'queue-loading-container'},
         div { className: 'loading-spinner' }
         if @state.errorMessage
-          div { className: 'queue-loading__error' }, @state.errorMessage
+          div { className: 'flash-error' }, @state.errorMessage
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},

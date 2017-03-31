@@ -1,16 +1,3 @@
-# Generic Filter Component that uses Bloodhound to search
-#
-# Prop List
-# url:
-# filter:
-# searchResults:
-# selected:
-# headerText:
-# placeholder:
-# checkable:
-# display:
-# contentType:
-
 _ = require 'underscore'
 React = require 'react'
 { label, input, div, button, a, h1, h2 } = React.DOM
@@ -43,7 +30,10 @@ module.exports = React.createClass
     @props.selected article, 'select'
 
   render: ->
-    div { className: 'filter-search__container' },
+    div {
+      className: 'filter-search__container'
+      'data-type': @props.contentType
+    },
       div { className: 'filter-search__header-container' },
         div { className: 'filter-search__header-text' }, @props.headerText
         input {
@@ -62,4 +52,5 @@ module.exports = React.createClass
       else if @props.contentType is 'tag'
         TagList {
           tags: @props.collection
+          deleteTag: @props.deleteTag
         }

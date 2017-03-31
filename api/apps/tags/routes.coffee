@@ -11,8 +11,17 @@ _ = require 'underscore'
 @show = (req, res, next) ->
   res.send present req.tag
 
-# POST /api/tags & PUT /api/tags/:id
+# POST /api/tags
 @save = (req, res, next) ->
+  Tag.find req.body.name, (err, tag) ->
+    if tag
+      return res.err 409, 'Tag already exists'
+    Tag.save _.extend(req.body, id: req.params.id), (err, tag) ->
+      return next err if err
+      res.send present tag
+
+# PUT /api/tags/:id
+@update = (req, res, next) ->
   Tag.save _.extend(req.body, id: req.params.id), (err, tag) ->
     return next err if err
     res.send present tag

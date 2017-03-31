@@ -44,7 +44,7 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
     else if @state.value
       label {}, @props.label,
         div { className: 'autocomplete-select-selected' }, @state.value,
-          button { className: 'autocomplete-select-remove', onClick: @clear }
+          button { className: 'remove-button', onClick: @clear }
         hidden
     else
       label {}, @props.label,

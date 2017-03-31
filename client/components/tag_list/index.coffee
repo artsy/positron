@@ -1,6 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
-{ input, div, h1, h2 } = React.DOM
+{ div, button } = React.DOM
 
 module.exports = React.createClass
   displayName: 'TagList'
@@ -9,7 +9,11 @@ module.exports = React.createClass
     div { className: 'tag-list__results' },
       unless @props.tags?.length
         div { className: 'tag-list__no-results' }, "No Results Found"
-      (@props.tags?.map (result) ->
+      (@props.tags?.map (result) =>
         div { className: 'tag-list__result', key: result.id},
-          result.name
+          result.name,
+          div {
+            className: 'remove-button'
+            onClick: => @props.deleteTag(result)
+          }
       )

@@ -110,3 +110,39 @@ em
   .max-width-container
     padding 0 20px
 
+.remove-button
+  background transparent center center no-repeat url("/icons/remove_g.svg")
+  position absolute
+  right 0
+  border 0
+  height 35px
+  width @height
+  top 0
+  background-size 13px
+  outline none
+  cursor pointer
+  &:hover
+    background transparent center center no-repeat url("/icons/remove_r.svg")
+    position absolute
+    right 0
+    border 0
+    height 35px
+    width @height
+    top 0
+    background-size 13px
+    outline none
+    cursor pointer
+
+.flash-error
+  position fixed
+  display flex
+  justify-content center
+  align-items center
+  garamond 'headline'
+  top 0
+  bottom 0
+  right 0
+  left 0
+  z-index 4
+  background rgba(0,0,0,0.5)
+  color white

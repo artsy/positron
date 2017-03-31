@@ -16,12 +16,12 @@ Joi.objectId = require('joi-objectid') Joi
 #
 @schema = (->
   id: @objectId()
-  name: @string().allow('', null)
+  name: @string().allow('', null).required()
   public: @boolean().default(false)
 ).call Joi
 
 @querySchema = (->
-  q: @string()
+  q: @string().allow('')
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   count: @boolean().default(false)
@@ -39,7 +39,7 @@ Joi.objectId = require('joi-objectid') Joi
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'q', 'limit', 'offset', 'count'
-    query.name = { $regex: ///#{input.q}///i } if input.q
+    query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
     cursor = db.tags
       .find(query)
       .limit(input.limit)

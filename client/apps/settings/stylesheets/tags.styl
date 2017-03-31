@@ -1,14 +1,4 @@
 .tags-container
-  &[data-state='internalTags']
-    .tags-internal
-      display block
-    .tags-topic
-      display none
-  &[data-state='topicTags']
-    .tags-internal
-      display none
-    .tags-topic
-      display block
   &[data-loading='true']
     .loading-spinner
       display block
@@ -38,3 +28,13 @@
     color white
   .tags-panel
     margin-top 60px
+    &__add
+      display flex
+      position absolute
+      input
+        margin-right 15px
+        width 360px
+      button
+        width 60px
+        height 40px
+        padding 11px 16px
