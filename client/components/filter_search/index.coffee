@@ -21,10 +21,9 @@ module.exports = React.createClass
     @engine.initialize()
 
   search: ->
-    if @refs.searchQuery.value.length
-      if @engine.remote.url != @props.url then @engine.remote.url = @props.url
-      @engine.get @refs.searchQuery.value, ([results]) =>
-        @props.searchResults results
+    if @engine.remote.url != @props.url then @engine.remote.url = @props.url
+    @engine.get @refs.searchQuery.value, ([results]) =>
+      @props.searchResults results
 
   selected: (article) ->
     @props.selected article, 'select'
