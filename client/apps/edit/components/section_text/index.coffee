@@ -149,14 +149,14 @@ module.exports = React.createClass
     })(editorState.getCurrentContent())
     # put the line breaks back for correct client rendering
     html = html
-      .replace '<p></p>', '<p><br></p>'
-      .replace '<p> </p>', '<p><br></p>'
-      .replace '  ', ' &nbsp;'
+      .replace /<p><\/\p>/g, '<p><br></p>'
+      .replace /<p> <\/\p>/g, '<p><br></p>'
+      .replace(/  /g, ' &nbsp;')
     return html
 
   stripGoogleStyles: (html) ->
     # remove non-breaking spaces between paragraphs
-    html = html.replace('</p><br>', '</p>').replace('<br class="Apple-interchange-newline">', '')
+    html = html.replace(/<\/\p><br>/g, '</p>').replace('<br class="Apple-interchange-newline">', '')
     doc = document.createElement('div')
     doc.innerHTML = html
     # remove dummy b tags google docs wraps document in

@@ -84,7 +84,7 @@ module.exports = React.createClass
     html = html
       .replace /(\r\n|\n|\r)/gm, ''
       .replace /<\/p><p>/g, ' '
-      .replace '  ', ' &nbsp;'
+      .replace(/  /g, ' &nbsp;')
     return html
 
   onPaste: (text, html) ->

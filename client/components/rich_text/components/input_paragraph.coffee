@@ -52,7 +52,7 @@ module.exports = React.createClass
 
   convertToHtml: (editorState) ->
     html = convertToHTML({})(editorState.getCurrentContent())
-    html = html.replace('  ', ' &nbsp;')
+    html = html.replace(/  /g, ' &nbsp;')
     return html
 
   onPaste: (text, html) ->

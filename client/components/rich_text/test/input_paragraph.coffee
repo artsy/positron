@@ -23,7 +23,7 @@ describe 'RichTextParagraph', ->
       global.HTMLAnchorElement = () => {}
       @RichTextParagraph = benv.require resolve __dirname, '../components/input_paragraph'
       @props = {
-        text: '<p>Here is  the <em>lead</em> paragraph for <b>this</b> article.</p>'
+        text: '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'
         placeholder: 'Lead paragraph (optional)'
         onChange: sinon.stub()
         }
@@ -49,20 +49,20 @@ describe 'RichTextParagraph', ->
     $(@rendered).text().should.eql 'Lead paragraph (optional)'
 
   it 'Renders an existing lead paragraph', ->
-    $(ReactDOM.findDOMNode(@component)).text().should.eql 'Here is  the lead paragraph for this article.'
-    @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    $(ReactDOM.findDOMNode(@component)).text().should.eql 'Here is  the lead paragraph for  this article.'
+    @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Can toggle bold styles by default', ->
     @component.handleKeyCommand('bold')
-    @component.state.html.should.eql '<p><strong>Here is</strong> &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    @component.state.html.should.eql '<p><strong>Here is</strong> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Can toggle italic styles by default', ->
     @component.handleKeyCommand('italic')
-    @component.state.html.should.eql '<p><em>Here is</em> &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    @component.state.html.should.eql '<p><em>Here is</em> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Ignores unsuppored styles', ->
     @component.handleKeyCommand('underline')
-    @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Can override default styles via props.styleMap', ->
     @props.styleMap = ['bold']
@@ -87,9 +87,9 @@ describe 'RichTextParagraph', ->
 
   it 'Strips unsuported html out of pasted text', ->
     @component.onPaste 'Available at: Espacio Valverde Galleries Sector, Booth 9F01', '<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><h1><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></h1>'
-    @component.state.html.should.eql '<p>Available at: Espacio Valverde • Galleries Sector, Booth 9F01 &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    @component.state.html.should.eql '<p>Available at: Espacio Valverde • Galleries Sector, Booth 9F01 &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Sends converted html to parent onChange', ->
     @component.onChange @component.state.editorState
     @component.props.onChange.called.should.eql true
-    @component.props.onChange.args[0][0].should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for <strong>this</strong> article.</p>'
+    @component.props.onChange.args[0][0].should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
