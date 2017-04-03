@@ -22,15 +22,16 @@ describe 'AdminSuperArticle', ->
       window.jQuery = $
       Backbone.$ = $
       $.onInfiniteScroll = sinon.stub()
-      AdminSuperArticle = mod =  benv.require resolve(__dirname, '../super_article/index.coffee')
-      mod.__set__ 'setupSuperArticleAutocomplete', sinon.stub()
-      mod.__set__ 'sd', {
+      AdminSuperArticle = benv.require resolve(__dirname, '../super_article/index.coffee')
+      AdminSuperArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
       ImageUpload = benv.require resolve(__dirname, '../image_upload.coffee')
-      mod.__set__ 'ImageUpload', React.createFactory(ImageUpload)
+      AdminSuperArticle.__set__ 'ImageUpload', React.createFactory(ImageUpload)
+      # sinon.stub AdminSuperArticle, 'AutocompleteList'
+      AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = sinon.stub()
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns false
       @article = new Article
@@ -42,7 +43,9 @@ describe 'AdminSuperArticle', ->
         }
       @component = ReactDOM.render React.createElement(AdminSuperArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
-          sinon.stub @component, 'setupSuperArticleAutocomplete'
+          @component.setState is_super_article: true
+          # console.log @component.setupSuperArticleAutocomplete
+          # @component.setupSuperArticleAutocomplete = sinon.stub()
           done()
 
   afterEach ->
@@ -51,10 +54,9 @@ describe 'AdminSuperArticle', ->
   it 'renders the fields', ->
     $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
-    console.log @component.setupSuperArticleAutocomplete.callCount
-    # $(@rendered).html().should.containEql 'Published'
-    # $(@rendered).html().should.containEql 'Drafts'
-    # $(@rendered).html().should.containEql 'Artsy Editorial'
+    console.log @Autocomplete.args
+    # @component.setupSuperArticleAutocomplete.called.should.eql true
+    # console.log @component.setupSuperArticleAutocomplete
 
   it 'Inputs are populated with article data', ->
     $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').val().should.eql 'Download The App'
@@ -67,9 +69,23 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/blacklogo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://secondarypartner.com/logo.png'
 
+  it 'disables input unless is_super_article is enabled', ->
+    @component.setState is_super_article: false
+    $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').prop('disabled').should.eql true
+    $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql true
 
+  it 'enables input when is_super_article', ->
+    $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').prop('disabled').should.eql false
+    $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql false
 
-  xit 'updates feed when nav is clicked', ->
-    # @component.state.published.should.equal true
-    # r.simulate.click r.find @component, 'drafts'
-    # @component.setState.args[0][0].published.should.equal false
+  it 'updates state with user input', ->
+    input = ReactDOM.findDOMNode(@component.refs.partner_link_title)
+    input.value = 'A new value'
+    r.simulate.change(input)
+    @component.state.super_article.partner_link_title.should.eql 'A new value'
+
+  it 'updates state on image upload', ->
+    @component.props.onChange = sinon.stub()
+    @component.upload 'http://partnerlogo.com/image.jpg', 'partner_logo'
+    @component.state.super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
+    @component.props.onChange.args[0][0].super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'

@@ -40,7 +40,10 @@ module.exports = React.createClass
 
   onChange: (key, value)->
     @props.article.set(key, value)
-    @props.article.save()
+    if !@props.article.get('published')
+      @props.article.save()
+    else
+      $('#edit-save').removeClass('is-saving').addClass 'attention'
 
   render: ->
     div { className: 'edit-admin' },

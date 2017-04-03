@@ -11,10 +11,18 @@ module.exports = React.createClass
     progress: 0
     src: @props.src || ''
     error: false
+    errorType: null
+    isDragover: false
+    size: @props.size || 10
 
   upload: (e) ->
-    if e.target.files[0]?.size > 10000000
-      @setState error: true
+    @onDragLeave()
+    if e.target.files[0]?.size > (@state.size * 1000000)
+      @setState error: true, errorType: 'size'
+      return
+    acceptedTypes = ['image/jpg','image/jpeg','image/gif','image/png']
+    if e.target.files[0]?.type not in acceptedTypes
+      @setState error: true, errorType: 'type'
       return
     gemup e.target.files[0],
       app: sd.GEMINI_APP
@@ -22,17 +30,24 @@ module.exports = React.createClass
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
-        @setState src: src, progress: 0.1
+        @setState src: src, progress: 0.1, isDragover: false
       done: (src) =>
-        @setState src: src, progress: 0
-        @props.upload(src, @props.name) if @props.upload
+        @setState src: src, progress: 0, error: false, errorType: null
+        @props.onChange(src, @props.name) if @props.onChange
 
   onClick: ->
-    @setState error: false
+    @setState error: false, errorType: null
+
+  onDragEnter: ->
+    unless @props.disabled
+      @setState isDragover: true
+
+  onDragLeave: ->
+    @setState isDragover: false
 
   remove: ->
     @setState src: ''
-    @props.upload('', @props.name) if @props.upload
+    @props.onChange('', @props.name) if @props.onChange
 
   progressBar: ->
     if @state.progress
@@ -58,13 +73,20 @@ module.exports = React.createClass
 
   render: ->
     disabled = if @props.disabled then ' disabled' else ''
+    isDragover = if @state.isDragover then ' is-dragover' else ''
+    error = if @state.errorType is 'size' then 'File is too large' else 'Please choose .png, .jpg, or .gif'
 
-    section { className: 'image-upload-form' + disabled, onClick: @onClick },
+    section {
+      className: 'image-upload-form' + disabled + isDragover
+      onClick: @onClick
+      onDragEnter: @onDragEnter
+      onDragLeave: @onDragLeave
+    },
       h1 {}, 'Drag & ',
         span { className: 'image-upload-form-drop' }, 'drop'
         ' or '
         span { className: 'image-upload-form-click' }, 'click'
-      h2 {}, 'Up to 10mb'
+      h2 {}, 'Up to ' + @state.size + 'mb'
       input {
         type: 'file'
         accept: ['image/jpg','image/jpeg','image/gif','image/png']
@@ -74,8 +96,9 @@ module.exports = React.createClass
       }
       @previewImage()
       @progressBar()
+
       if @state.error
         div {
           className: 'size-error'
           style: display: 'block'
-        }, 'File is too large'
+        }, error

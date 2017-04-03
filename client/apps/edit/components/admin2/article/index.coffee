@@ -10,13 +10,13 @@ sd = require('sharify').data
 Autocomplete = require '../../../../../components/autocomplete/index.coffee'
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
-module.exports = React.createClass
+module.exports = AdminArticle = React.createClass
   displayName: 'AdminArticle'
 
   getInitialState: ->
     author:
-      name: @props.article.get('author').name || ''
-      id: @props.article.get('author').id
+      name: @props.article.get('author')?.name || ''
+      id: @props.article.get('author')?.id
     contributing_authors: @props.article.get 'contributing_authors' or []
     tier: @props.article.get('tier') || 1
     featured: @props.article.get('featured') || true
@@ -100,10 +100,11 @@ module.exports = React.createClass
       filter: (users) -> for user in users
         { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
       selected: (e, item, items) =>
-        @setState contributing_authors: _.pluck items, 'id'
+        # @setState contributing_authors: _.pluck items, 'id'
         @onChange 'contributing_authors', _.pluck items, 'id'
       removed: (e, item, items) =>
-        @setState contributing_authors: _.without(_.pluck(items, 'id'),item.id)
+        # @setState contributing_authors: _.without(_.pluck(items, 'id'),item.id)
+        @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
     if @props.article.get('contributing_authors')?.length
       @authors = []
       ids = @props.article.get('contributing_authors')
@@ -204,7 +205,7 @@ module.exports = React.createClass
             },
               input {
                 type: 'checkbox'
-                checked: @state.exclude_google_news
+                defaultChecked: @state.exclude_google_news
                 ref: 'exclude_google_news'
               }
               label {}, 'Exclude from Google News'

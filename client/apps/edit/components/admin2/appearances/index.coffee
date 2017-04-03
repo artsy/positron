@@ -1,6 +1,9 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, label, input } = React.DOM
+# async = require 'async'
+request = require 'superagent'
+sd = require('sharify').data
 
 AutocompleteSelect = require '../../../../../components/autocomplete_select/index.coffee'
 AutocompleteList = React.createFactory require '../featuring/autocomplete.coffee'
@@ -31,8 +34,10 @@ module.exports = React.createClass
       selected: (e, item) =>
         @setState biography_for_artist_id: item.id
         select.setState value: item.name, loading: false
+        @props.onChange 'biography_for_artist_id', item.id
       cleared: =>
         @setState biography_for_artist_id: null
+        @props.onChange 'biography_for_artist_id', null
     if id = @props.article.get 'biography_for_artist_id'
       request
         .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")

@@ -43,18 +43,12 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-title textarea').autosize()
 
   serialize: ->
+    debugger
     {
-      author_id: @user.get('id')
-      author:
-        name: @$('#edit-admin-change-author :input').val() or @channel.get('name')
-        id: @user.get('id')
-      tier: Number @$('[name=tier]:checked').val()
-      featured: @$('[name=featured]').is(':checked')
-      exclude_google_news: @$('[name=exclude_google_news]').is(':checked')
       title: @$('#edit-title textarea').val()
       thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(
-        _.map @$('.edit-admin-tags-input').val().split(','), (tag) -> _s.clean tag
+        _.map @$('.edit-admin-tags-input').val()?.split(','), (tag) -> _s.clean tag
         (filled) -> not filled
       )
       description: @$('.edit-display--magazine .edit-display__description textarea').val()
@@ -69,20 +63,7 @@ module.exports = class EditLayout extends Backbone.View
         credit_url: @$(".edit-display--email input[name='credit_url']").val()
         image_url: @article.getObjectAttribute('email_metadata','image_url')
         custom_text: @$(".edit-display--email input[name='custom_text']").val()
-      is_super_article: @$('[name=is_super_article]').is(':checked')
-      super_article:
-        partner_link: @$("#edit-super-article input[name='partner_link']").val()
-        partner_logo: @article.getObjectAttribute 'super_article', 'partner_logo'
-        partner_link_title: @$("#edit-super-article input[name='partner_link_title']").val()
-        partner_logo_link: @$("#edit-super-article input[name='partner_logo_link']").val()
-        partner_fullscreen_header_logo: @article.getObjectAttribute 'super_article', 'partner_fullscreen_header_logo'
-        secondary_partner_logo: @article.getObjectAttribute 'super_article', 'secondary_partner_logo'
-        secondary_logo_text: @$("#edit-super-article input[name='secondary_logo_text']").val()
-        secondary_logo_link: @$("#edit-super-article input[name='secondary_logo_link']").val()
-        footer_blurb: @$("#edit-super-article textarea[name='footer_blurb']").val()
-        related_articles: if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
       send_body: @$('[name=send_body]').is(':checked')
-      layout: @$('[name=layout]:checked').val()
       seo_keyword: @$('input#edit-seo__focus-keyword').val()
     }
 
@@ -110,6 +91,7 @@ module.exports = class EditLayout extends Backbone.View
     $(document).ajaxStop @redirectToList
 
   savePublished: =>
+    debugger
     @article.save @serialize()
 
   addRemoveReset: =>
@@ -125,7 +107,6 @@ module.exports = class EditLayout extends Backbone.View
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input:not(.tt-input,.edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
-    # 'change #edit-admin :input': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
@@ -161,6 +142,7 @@ module.exports = class EditLayout extends Backbone.View
     @fullText = @fullText.join()
 
   onKeyup: =>
+    debugger
     console.log 'in layout save action'
     if @article.get('published')
       @changedSection = true

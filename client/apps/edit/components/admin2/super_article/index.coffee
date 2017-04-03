@@ -21,6 +21,7 @@ module.exports = React.createClass
     $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@state.is_super_article)
 
   componentWillUnmount: ->
+    @props.article.save()
     $(@refs['autocomplete']).each (i, ref) ->
       ReactDOM.unmountComponentAtNode(ref)
 
@@ -42,10 +43,9 @@ module.exports = React.createClass
     @props.onChange super_article: newSuperArticle
 
   setupSuperArticleAutocomplete: ->
+    console.log 'in here'
     return unless @props.channel.hasFeature 'superArticle'
-    console.log @props.article
     @related_articles = if @props.article.get('super_article')?.related_articles then @props.article.get('super_article').related_articles else []
-    console.log list
     list = new AutocompleteList $(@refs['autocomplete'])[0],
       name: 'related_articles[]'
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
@@ -83,7 +83,18 @@ module.exports = React.createClass
         value: @state.super_article[field]
         onChange: @onInputChange
         name: field
+        ref: field
         className: 'bordered-input'
+        disabled: !@state.is_super_article
+      }
+
+  printUploadGroup: (field, title) ->
+    div {className: 'field-group'},
+      label {}, title
+      ImageUpload {
+        name: field
+        src: @state.super_article[field]
+        onChange: @upload
         disabled: !@state.is_super_article
       }
 
@@ -121,32 +132,9 @@ module.exports = React.createClass
             }
 
         div {className: 'fields-col-3'},
-          div {className: 'field-group'},
-            label {}, 'Partner Logo'
-            ImageUpload {
-              upload: @upload
-              name: 'partner_logo'
-              disabled: !@state.is_super_article
-              src: @state.super_article.partner_logo
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Partner Fullscreen'
-            ImageUpload {
-              upload: @upload
-              name: 'partner_fullscreen_header_logo'
-              disabled: !@state.is_super_article
-              src: @state.super_article.partner_fullscreen_header_logo
-            }
-
-          div {className: 'field-group'},
-            label {}, 'Secondary Logo'
-            ImageUpload {
-              upload: @upload
-              name: 'secondary_partner_logo'
-              disabled: !@state.is_super_article
-              src: @state.super_article.secondary_partner_logo
-            }
+          @printUploadGroup 'partner_logo', 'Partner Logo'
+          @printUploadGroup 'partner_fullscreen_header_logo', 'Partner Fullscreen'
+          @printUploadGroup 'secondary_partner_logo', 'Secondary Logo'
 
         div {className: 'fields-col-3'},
           div {className: 'field-group'},

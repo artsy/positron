@@ -12,7 +12,7 @@ module.exports = React.createClass
 
   render: ->
   	div {
-  		className: 'dropdown-header'
+  		className: 'dropdown-header ' + @props.className
   		onClick: @setActiveSection
   	},
 	  	h1 {}, @props.section
