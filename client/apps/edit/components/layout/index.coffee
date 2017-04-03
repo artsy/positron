@@ -161,6 +161,7 @@ module.exports = class EditLayout extends Backbone.View
     @fullText = @fullText.join()
 
   onKeyup: =>
+    console.log 'in layout save action'
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'

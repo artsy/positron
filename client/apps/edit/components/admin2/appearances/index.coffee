@@ -17,6 +17,10 @@ module.exports = React.createClass
   componentDidMount: ->
     @setupBiographyAutocomplete()
 
+  componentWillUnmount: ->
+    $(@refs.biography_for_artist_id).each (i, ref) ->
+      ReactDOM.unmountComponentAtNode(ref)
+
   setupBiographyAutocomplete: ->
     $el = $(@refs.biography_for_artist_id)[0]
     select = new AutocompleteSelect $el,

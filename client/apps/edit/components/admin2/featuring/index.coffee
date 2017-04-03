@@ -25,6 +25,10 @@ module.exports = React.createClass
   componentDidMount: ->
     @setupShowsAutocomplete()
 
+  componentWillUnmount: ->
+    $(@refs['show_ids']).each (i, ref) ->
+      ReactDOM.unmountComponentAtNode(ref)
+
   setupShowsAutocomplete: ->
     return unless @props.channel.hasAssociation 'shows'
     @show_ids = @props.article.get 'show_ids' or []

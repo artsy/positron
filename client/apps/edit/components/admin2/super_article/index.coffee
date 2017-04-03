@@ -14,11 +14,15 @@ module.exports = React.createClass
 
   getInitialState: ->
     is_super_article: false
-    super_article: @props.article.get('super_article')
+    super_article: @props.article.get('super_article') || {}
 
   componentDidMount: ->
     @setupSuperArticleAutocomplete()
     $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@state.is_super_article)
+
+  componentWillUnmount: ->
+    $(@refs['autocomplete']).each (i, ref) ->
+      ReactDOM.unmountComponentAtNode(ref)
 
   onInputChange: (e) ->
     newSuperArticle = @state.super_article

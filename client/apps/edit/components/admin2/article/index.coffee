@@ -33,6 +33,10 @@ module.exports = React.createClass
   componentDidMount: ->
     @setupAutocomplete()
 
+  componentWillUnmount: ->
+    $(@refs['autocomplete']).each (i, ref) ->
+      ReactDOM.unmountComponentAtNode(ref)
+
   onChange: (key, value)->
     newState = @state
     newState[key] = value

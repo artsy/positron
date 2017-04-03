@@ -49,11 +49,12 @@ module.exports = React.createClass
           className: 'image-upload-form-preview'
           style: backgroundImage: 'url(' + @state.src + ')', display: 'block'
         }
-        div {
-          className: 'image-upload-form-remove'
-          style: display: 'block'
-          onClick: @remove
-        }, 'x'
+        unless  @props.disabled
+          div {
+            className: 'image-upload-form-remove'
+            style: display: 'block'
+            onClick: @remove
+          }
 
   render: ->
     disabled = if @props.disabled then ' disabled' else ''
