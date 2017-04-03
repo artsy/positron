@@ -1,14 +1,13 @@
 _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
-Curation = require '../../../models/curation'
+Curation = require '../../../../models/curation'
 Backbone = require 'backbone'
 moment = require 'moment'
 should = require 'should'
-fixtures = require '../../../../test/helpers/fixtures'
+fixtures = require '../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 rewire = require 'rewire'
-
 
 describe 'EditCuration', ->
 
@@ -27,10 +26,10 @@ describe 'EditCuration', ->
       locals = _.extend(fixtures().locals,
         curation: @curation
       )
-      tmpl = resolve __dirname, '../templates/curations/curation_edit.jade'
+      tmpl = resolve __dirname, '../../templates/curations/curation_edit.jade'
       benv.render tmpl, locals, =>
         { @CurationEditView } = mod = benv.requireWithJadeify(
-          resolve(__dirname, '../client/curations'), []
+          resolve(__dirname, '../../client/curations'), []
         )
         mod.__set__ 'AdminEditView', sinon.stub()
         @view = new @CurationEditView el: $('body'), curation: @curation

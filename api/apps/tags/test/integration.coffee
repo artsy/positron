@@ -29,10 +29,10 @@ describe 'tags endpoints', ->
           res.body.results[0].name.should.equal 'Asia'
           done()
 
-  it 'gets a list of tags by type', (done) ->
+  it 'gets a list of tags by publicity', (done) ->
     fabricate 'tags', [
       { name: 'Asia', public: true }
-      { name: 'Berlin', public: true }
+      { name: 'Berlin', public: false }
       {}
     ], (err, tags) ->
       request

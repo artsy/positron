@@ -28,7 +28,7 @@ describe 'ArticlesListView', ->
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
       props = {
-          articles: [_.extend fixtures().articles, id: '456']
+          collection: [_.extend fixtures().articles, id: '456']
           published: true
           offset: 0
           channel: {name: 'Artsy Editorial'}
@@ -48,8 +48,8 @@ describe 'ArticlesListView', ->
     $(@rendered).html().should.containEql 'Artsy Editorial'
 
   it 'articles get passed along to list component', ->
-    @component.state.articles.length.should.equal 1
-    @FilterSearch.args[0][0].articles.length.should.equal 1
+    @component.state.collection.length.should.equal 1
+    @FilterSearch.args[0][0].collection.length.should.equal 1
 
   it 'updates feed when nav is clicked', ->
     @component.state.published.should.equal true

@@ -11,7 +11,7 @@ AddTag = React.createFactory require './add_tag.coffee'
 query = require './tagsQuery.coffee'
 { div, nav, a, h1, input, button } = React.DOM
 
-module.exports = TagsView = React.createClass
+module.exports.TagsView = TagsView = React.createClass
   displayName: 'TagsView'
 
   getInitialState: ->
@@ -28,20 +28,20 @@ module.exports = TagsView = React.createClass
       success: (model, res) =>
         @setState tags: @state.tags.concat res
       error: (model, res) =>
-        msg = res.responseJSON?.message or 'There has been an error. Please contact support.'
+        msg = res?.responseJSON?.message or 'There has been an error. Please contact support.'
         @flashError msg
-
-  flashError: (msg) ->
-    @setState errorMessage: msg
-    setTimeout ( => @setState(errorMessage: '')), 1000
 
   deleteTag: (tag) ->
     new Tag(id: tag.id).destroy
       success: (model, res) =>
         @setState tags: _.filter @state.tags, (t) -> tag.id isnt t.id
       error: (model, res) =>
-        msg = res.responseJSON?.message or 'There has been an error. Please contact support.'
+        msg = res?.responseJSON?.message or 'There has been an error. Please contact support.'
         @flashError msg
+
+  flashError: (msg) ->
+    @setState errorMessage: msg
+    setTimeout ( => @setState(errorMessage: '')), 1000
 
   searchResults: (results) ->
     @setState tags: results
@@ -65,22 +65,23 @@ module.exports = TagsView = React.createClass
     div {
       className: 'tags-container'
       'data-loading': @state.loading
+      ref: 'tagsContainer'
     },
       if @state.errorMessage
         div { className: 'flash-error' }, @state.errorMessage
       div { className: 'tags-loading-container'},
         div { className: 'loading-spinner' }
-        if @state.errorMessage
-          div { className: 'tags-loading__error' }, @state.errorMessage
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},
             a {
               className: "topic #{@getActiveState(true)}"
+              ref: 'topicTab'
               onClick: => @setView true
             }, "Topic Tags"
             a {
               className: "internal #{@getActiveState(false)}"
+              ref: 'internalTab'
               onClick: => @setView false
             }, "Internal Tags"
       div { className: 'tags-panel' },

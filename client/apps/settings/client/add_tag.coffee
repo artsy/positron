@@ -2,7 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 { div, input, button } = React.DOM
 
-module.exports = TagsView = React.createClass
+module.exports = AddTag = React.createClass
   displayName: 'TagsView'
 
   addTag: ->

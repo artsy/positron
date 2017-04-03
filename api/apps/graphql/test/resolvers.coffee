@@ -20,9 +20,11 @@ describe 'resolvers', ->
     articles = total: 20, count: 1, results: [_.extend fixtures().articles, {slugs: ['slug-1']} ]
     curations = total: 20, count: 1, results: [fixtures().curations]
     channels = total: 20, count: 1, results: [fixtures().channels]
+    tags = total: 20, count: 1, results: [fixtures().tags]
     resolvers.__set__ 'where', @where = sinon.stub().yields null, articles
     resolvers.__set__ 'Curation', { where: @curationWhere = sinon.stub().yields null, curations }
     resolvers.__set__ 'Channel', { where: @channelWhere = sinon.stub().yields null, channels }
+    resolvers.__set__ 'Tag', { where: @tagWhere = sinon.stub().yields null, tags }
     @req = user: channel_ids: ['456']
 
   describe 'articles', ->
@@ -65,3 +67,11 @@ describe 'resolvers', ->
       .then (results) ->
         results.length.should.equal 1
         results[0].name.should.equal 'Featured Articles'
+
+  describe 'tags', ->
+
+    it 'can find tags', ->
+      resolvers.tags {}, {}, @req, {}
+      .then (results) ->
+        results.length.should.equal 1
+        results[0].name.should.equal 'Show Reviews'

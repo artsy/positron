@@ -61,4 +61,4 @@ Tags = require '../../collections/tags'
     error: res.backboneError
     success: (tags) ->
       res.locals.sd.TAGS = tags.toJSON()
-      res.render 'tags/tags_index', tags: tags
+      res.render 'tags/tags_index'
