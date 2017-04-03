@@ -7,7 +7,6 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../test/helpers/fixtures.coffee'
-
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
@@ -19,7 +18,10 @@ describe 'ArticlesListView', ->
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
       $.onInfiniteScroll = sinon.stub()
-      ArticlesListView = mod =  benv.require resolve(__dirname, '../../client/client')
+      { ArticlesListView } = mod = benv.requireWithJadeify(
+        resolve(__dirname, '../../client/client'),
+        ['icons']
+      )
       mod.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
@@ -28,7 +30,7 @@ describe 'ArticlesListView', ->
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
       props = {
-          collection: [_.extend fixtures().articles, id: '456']
+          articles: [_.extend fixtures().articles, id: '456']
           published: true
           offset: 0
           channel: {name: 'Artsy Editorial'}
@@ -48,7 +50,7 @@ describe 'ArticlesListView', ->
     $(@rendered).html().should.containEql 'Artsy Editorial'
 
   it 'articles get passed along to list component', ->
-    @component.state.collection.length.should.equal 1
+    @component.state.articles.length.should.equal 1
     @FilterSearch.args[0][0].collection.length.should.equal 1
 
   it 'updates feed when nav is clicked', ->
