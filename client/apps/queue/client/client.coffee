@@ -11,7 +11,7 @@ query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
 
-module.exports = QueueView = React.createClass
+module.exports.QueueView = QueueView = React.createClass
   displayName: 'QueueView'
 
   getInitialState: ->

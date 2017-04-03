@@ -18,7 +18,7 @@ describe 'QueueView', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      QueueView = mod = benv.require resolve(__dirname, '../../client/client')
+      { QueueView } = mod = benv.require resolve(__dirname, '../../client/client')
       mod.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
