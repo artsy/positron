@@ -65,7 +65,6 @@ module.exports.TagsView = TagsView = React.createClass
     div {
       className: 'tags-container'
       'data-loading': @state.loading
-      ref: 'tagsContainer'
     },
       if @state.errorMessage
         div { className: 'flash-error' }, @state.errorMessage

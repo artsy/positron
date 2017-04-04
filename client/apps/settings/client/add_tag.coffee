@@ -5,16 +5,23 @@ ReactDOM = require 'react-dom'
 module.exports = AddTag = React.createClass
   displayName: 'TagsView'
 
+  getInitialState: ->
+    value: ''
+
   addTag: ->
-    @props.addTag @refs.addTagInput.value
-    @refs.addTagInput.value = ''
+    @props.addTag @state.value
+    @setState value: ''
+
+  handleChange: (e) ->
+    @setState value: e.target.value
 
   render: ->
     div { className: 'tags-panel__add' },
       input {
         className: 'bordered-input'
-        ref: 'addTagInput'
         placeholder: 'Enter tag title...'
+        value: @state.value
+        onChange: @handleChange
       }
       button {
         className: 'avant-garde-button avant-garde-button-black'

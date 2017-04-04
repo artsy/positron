@@ -110,7 +110,10 @@ describe 'TagsView', ->
     it 'displays an error message on error', ->
       @component.addTag 'Repeat Tag'
       Backbone.sync.args[0][2].error()
-      $(@component.refs.tagsContainer).html().should.containEql 'There has been an error. Please contact support.'
+
+      $(r.find(@component, 'tags-container')).html().should.containEql(
+        'There has been an error. Please contact support.'
+      )
 
   describe '#deleteTag', ->
 
@@ -123,4 +126,6 @@ describe 'TagsView', ->
     it 'displays an error message on error', ->
       @component.deleteTag id: '55356a9deca560a0137aa4b7'
       Backbone.sync.args[0][2].error()
-      $(@component.refs.tagsContainer).html().should.containEql 'There has been an error. Please contact support.'
+      $(r.find(@component, 'tags-container')).html().should.containEql(
+        'There has been an error. Please contact support.'
+      )
