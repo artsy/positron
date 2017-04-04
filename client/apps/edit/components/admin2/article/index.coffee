@@ -7,25 +7,15 @@ request = require 'superagent'
 sd = require('sharify').data
 { div, label, input, button } = React.DOM
 
-Autocomplete = require '../../../../../components/autocomplete/index.coffee'
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = AdminArticle = React.createClass
   displayName: 'AdminArticle'
 
   getInitialState: ->
-    author:
-      name: @props.article.get('author')?.name || ''
-      id: @props.article.get('author')?.id
-    contributing_authors: @props.article.get 'contributing_authors' or []
-    tier: @props.article.get('tier') || 1
-    featured: @props.article.get('featured') || true
-    exclude_google_news: @props.article.get('exclude_google_news') || false
     publish_date: moment().format('YYYY-MM-DD')
     publish_time: moment().format('HH:mm')
-    scheduled_publish_at: @props.article.get('scheduled_publish_at') || null
     focus_date: false
-    is_scheduled: false
 
   componentWillMount: ->
     @setupPublishDate()
@@ -38,45 +28,41 @@ module.exports = AdminArticle = React.createClass
       ReactDOM.unmountComponentAtNode(ref)
 
   onChange: (key, value)->
-    newState = @state
-    newState[key] = value
-    @setState newState
     @props.onChange(key, value)
+    @forceUpdate()
 
   onTierChange: (e) ->
     tier = parseInt(e.target.name)
     @onChange('tier', tier)
 
   onPrimaryAuthorChange: (e) ->
-    @onChange('author', {name: e.target.value, id: @state.author.id})
+    @onChange('author', {name: e.target.value, id: @props.article.get('author').id})
 
   onMagazineChange: (e) ->
     featured = if e.target.name is 'true' then true else false
     @onChange('featured', featured)
 
   onCheckboxChange: (e) ->
-    @setState exclude_google_news: !@state.exclude_google_news
-    @onChange('exclude_google_news', !@state.exclude_google_news)
+    @onChange 'exclude_google_news', !@props.article.get('exclude_google_news')
 
   onPublishDateChange: (e) ->
     @setState publish_date: @refs.publish_date.value
     @setState publish_time: @refs.publish_time.value
-    published_at = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
-    @onChange 'published_at', published_at
-
-  onPublishSchedule: (e) ->
-    publish_date = moment(@state.publish_date + ' ' + @state.publish_time).toISOString()
-    @setState scheduled_publish_at: publish_date, is_scheduled: true
-
-  onPublishUnschedule: ->
-    @setState scheduled_publish_at: null, is_scheduled: false
+    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
+    # if draft and date is future, set scheduled
+    if !@props.article.get('published')
+      # ignore if draft and date is past
+      return unless published_at > moment()
+        @onChange 'scheduled_publish_at', published_at.toISOString()
+    # if article is published, reset published date
+    else
+      @onChange 'published_at', published_at.toISOString()
 
   setupPublishDate: ->
     if @props.article.get('scheduled_publish_at')
       @setState
         publish_date: moment(@props.article.get('scheduled_publish_at')).format('YYYY-MM-DD')
         publish_time: moment(@props.article.get('scheduled_publish_at')).format('HH:mm')
-        is_scheduled: true
     if @props.article.get('published_at')
       @setState
         publish_date: moment(@props.article.get('published_at')).format('YYYY-MM-DD')
@@ -100,10 +86,8 @@ module.exports = AdminArticle = React.createClass
       filter: (users) -> for user in users
         { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
       selected: (e, item, items) =>
-        # @setState contributing_authors: _.pluck items, 'id'
         @onChange 'contributing_authors', _.pluck items, 'id'
       removed: (e, item, items) =>
-        # @setState contributing_authors: _.without(_.pluck(items, 'id'),item.id)
         @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
     if @props.article.get('contributing_authors')?.length
       @authors = []
@@ -119,12 +103,12 @@ module.exports = AdminArticle = React.createClass
               })
             cb()
       , =>
-        list.setState loading: false, items: @authors
+        list?.setState loading: false, items: @authors
     else
-      list.setState loading: false
+      list?.setState loading: false
 
   showActive: (key, value) ->
-    active = if @state[key] is value then ' active' else ''
+    active = if @props.article.get(key) is value then ' active' else ''
 
   render: ->
     div { className: 'edit-admin--article edit-admin__fields'},
@@ -136,7 +120,7 @@ module.exports = AdminArticle = React.createClass
             input {
               className: 'bordered-input'
               placeholder: 'Change Primary Author name'
-              defaultValue: @state.author.name
+              defaultValue: @props.article.get('author')?.name || ''
               onChange: @onPrimaryAuthorChange
             }
         div {className: 'fields-right'},
@@ -205,8 +189,7 @@ module.exports = AdminArticle = React.createClass
             },
               input {
                 type: 'checkbox'
-                defaultChecked: @state.exclude_google_news
-                ref: 'exclude_google_news'
+                checked: @props.article.get('exclude_google_news')
               }
               label {}, 'Exclude from Google News'
 

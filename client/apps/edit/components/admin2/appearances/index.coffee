@@ -1,7 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, label, input } = React.DOM
-# async = require 'async'
 request = require 'superagent'
 sd = require('sharify').data
 
@@ -10,12 +9,6 @@ AutocompleteList = React.createFactory require '../featuring/autocomplete.coffee
 
 module.exports = React.createClass
   displayName: 'AdminAppearances'
-
-  getInitialState: ->
-    fair_programming_ids: @props.article.get('fair_programming_ids') || []
-    fair_about_ids: @props.article.get('fair_about_ids') || []
-    fair_artsy_ids: @props.article.get('fair_artsy_ids') || []
-    biography_for_artist_id: @props.article.get('biography_for_artist_id') || null
 
   componentDidMount: ->
     @setupBiographyAutocomplete()
@@ -32,11 +25,9 @@ module.exports = React.createClass
       filter: (artists) -> for artist in artists
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
-        @setState biography_for_artist_id: item.id
         select.setState value: item.name, loading: false
         @props.onChange 'biography_for_artist_id', item.id
       cleared: =>
-        @setState biography_for_artist_id: null
         @props.onChange 'biography_for_artist_id', null
     if id = @props.article.get 'biography_for_artist_id'
       request
@@ -45,7 +36,6 @@ module.exports = React.createClass
           select.setState value: res.body.name, loading: false
     else
       select.setState loading: false
-
 
   render: ->
     div { className: 'edit-admin--appearances edit-admin__fields'},
@@ -82,4 +72,4 @@ module.exports = React.createClass
         div {className: 'fields-right'},
           div {className: 'field-group'},
             label {}, 'Extended Artist Biography'
-            div { ref: 'biography_for_artist_id', value: @state.biography_for_artist_id }
+            div { ref: 'biography_for_artist_id' }

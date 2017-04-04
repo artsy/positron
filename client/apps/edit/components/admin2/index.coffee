@@ -4,7 +4,7 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 
 Article = React.createFactory require './article/index.coffee'
-SectionTags = React.createFactory require './section_tags/index.coffee'
+SectionTags = React.createFactory require './verticals_tags/index.coffee'
 Featuring = React.createFactory require './featuring/index.coffee'
 SuperArticle = React.createFactory require './super_article/index.coffee'
 Appearances = React.createFactory require './appearances/index.coffee'
@@ -15,7 +15,7 @@ module.exports = React.createClass
   displayName: 'AdminSections'
 
   getInitialState: ->
-    activeSections: ['article', 'section-tags']
+    activeSections: ['article', 'verticals-tags']
 
   setActiveSection: (section) ->
     sections = @state.activeSections || []
@@ -38,7 +38,7 @@ module.exports = React.createClass
     @props.article.fetchFeatured()
     @props.article.fetchMentioned()
 
-  onChange: (key, value)->
+  onChange: (key, value) ->
     @props.article.set(key, value)
     if !@props.article.get('published')
       @props.article.save()
@@ -48,9 +48,9 @@ module.exports = React.createClass
   render: ->
     div { className: 'edit-admin' },
 
-      section { className: 'edit-admin--section-tags' + @getActiveSection 'section-tags' },
-        printTitle section: 'Verticals & Tagging', className: 'section-tags', onClick: @setActiveSection
-        if @isActiveSection 'section-tags'
+      section { className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags' },
+        printTitle section: 'Verticals & Tagging', className: 'verticals-tags', onClick: @setActiveSection
+        if @isActiveSection 'verticals-tags'
           SectionTags {article: @props.article, onChange: @onChange}
 
       section { className: 'edit-admin--article' + @getActiveSection 'article' },

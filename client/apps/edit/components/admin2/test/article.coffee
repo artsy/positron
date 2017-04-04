@@ -1,11 +1,9 @@
 benv = require 'benv'
 sinon = require 'sinon'
 { resolve } = require 'path'
-# _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
-# ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
@@ -28,6 +26,7 @@ describe 'AdminArticle', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
+      AdminArticle.__set__ 'AutocompleteList', sinon.stub()
       @channel = {id: '123'}
       @article = new Article
       @article.attributes = fixtures().articles
@@ -38,7 +37,8 @@ describe 'AdminArticle', ->
         }
       @component = ReactDOM.render React.createElement(AdminArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
-          # sinon.stub @component, 'setupAutocomplete'
+          sinon.stub @component, 'ComponentDidMount'
+          sinon.stub @component, 'setupAutocomplete'
           done()
 
   afterEach ->

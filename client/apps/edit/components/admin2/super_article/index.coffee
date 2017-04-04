@@ -13,15 +13,13 @@ module.exports = React.createClass
   displayName: 'AdminSuperArticle'
 
   getInitialState: ->
-    is_super_article: false
     super_article: @props.article.get('super_article') || {}
 
   componentDidMount: ->
     @setupSuperArticleAutocomplete()
-    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@state.is_super_article)
+    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@props.article.get('is_super_article'))
 
   componentWillUnmount: ->
-    @props.article.save()
     $(@refs['autocomplete']).each (i, ref) ->
       ReactDOM.unmountComponentAtNode(ref)
 
@@ -32,9 +30,9 @@ module.exports = React.createClass
     @props.onChange 'super_article', newSuperArticle
 
   onCheckboxChange: (e) ->
-    @setState is_super_article: !@state.is_super_article
-    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', @state.is_super_article)
-    @props.onChange 'is_super_article', !@state.is_super_article
+    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', @props.article.get('is_super_article'))
+    @props.onChange 'is_super_article', !@props.article.get('is_super_article')
+    @forceUpdate()
 
   upload: (src, field) ->
     newSuperArticle = @state.super_article
@@ -43,7 +41,6 @@ module.exports = React.createClass
     @props.onChange super_article: newSuperArticle
 
   setupSuperArticleAutocomplete: ->
-    console.log 'in here'
     return unless @props.channel.hasFeature 'superArticle'
     @related_articles = if @props.article.get('super_article')?.related_articles then @props.article.get('super_article').related_articles else []
     list = new AutocompleteList $(@refs['autocomplete'])[0],
@@ -83,9 +80,8 @@ module.exports = React.createClass
         value: @state.super_article[field]
         onChange: @onInputChange
         name: field
-        ref: field
-        className: 'bordered-input'
-        disabled: !@state.is_super_article
+        className: 'bordered-input ' + field
+        disabled: !@props.article.get('is_super_article')
       }
 
   printUploadGroup: (field, title) ->
@@ -95,7 +91,7 @@ module.exports = React.createClass
         name: field
         src: @state.super_article[field]
         onChange: @upload
-        disabled: !@state.is_super_article
+        disabled: !@props.article.get('is_super_article')
       }
 
   render: ->
@@ -107,20 +103,18 @@ module.exports = React.createClass
         },
           input {
             type: 'checkbox'
-            checked: @state.is_super_article
-            ref: 'is_super_article'
+            checked: @props.article.get('is_super_article')
+            name: 'is_super_article'
           }
           label {}, 'Enable Super Article'
 
       div {className: 'fields-full'},
-
         div {className: 'fields-col-3'},
           @printFieldGroup 'partner_link_title', 'Partner Link Title'
           @printFieldGroup 'partner_link', 'Partner Link'
           @printFieldGroup 'partner_logo_link', 'Partner Logo Link'
           @printFieldGroup 'secondary_logo_text', 'Secondary Logo Text'
           @printFieldGroup 'secondary_logo_link', 'Secondary Logo Link'
-
           div {className: 'field-group'},
             label {}, 'Footer Blurb'
             textarea {
@@ -128,14 +122,12 @@ module.exports = React.createClass
               onChange: @onInputChange
               name: 'footer_blurb'
               className: 'bordered-input'
-              disabled: !@state.is_super_article
+              disabled: !@props.article.get('is_super_article')
             }
-
         div {className: 'fields-col-3'},
           @printUploadGroup 'partner_logo', 'Partner Logo'
           @printUploadGroup 'partner_fullscreen_header_logo', 'Partner Fullscreen'
           @printUploadGroup 'secondary_partner_logo', 'Secondary Logo'
-
         div {className: 'fields-col-3'},
           div {className: 'field-group'},
             label {}, 'SubArticles'

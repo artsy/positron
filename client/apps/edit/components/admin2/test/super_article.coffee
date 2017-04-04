@@ -30,7 +30,6 @@ describe 'AdminSuperArticle', ->
       }
       ImageUpload = benv.require resolve(__dirname, '../image_upload.coffee')
       AdminSuperArticle.__set__ 'ImageUpload', React.createFactory(ImageUpload)
-      # sinon.stub AdminSuperArticle, 'AutocompleteList'
       AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = sinon.stub()
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns false
@@ -44,8 +43,6 @@ describe 'AdminSuperArticle', ->
       @component = ReactDOM.render React.createElement(AdminSuperArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           @component.setState is_super_article: true
-          # console.log @component.setupSuperArticleAutocomplete
-          # @component.setupSuperArticleAutocomplete = sinon.stub()
           done()
 
   afterEach ->
@@ -53,10 +50,8 @@ describe 'AdminSuperArticle', ->
 
   it 'renders the fields', ->
     $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
+    $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
-    console.log @Autocomplete.args
-    # @component.setupSuperArticleAutocomplete.called.should.eql true
-    # console.log @component.setupSuperArticleAutocomplete
 
   it 'Inputs are populated with article data', ->
     $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').val().should.eql 'Download The App'
@@ -79,13 +74,13 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql false
 
   it 'updates state with user input', ->
-    input = ReactDOM.findDOMNode(@component.refs.partner_link_title)
+    input = ReactDOM.findDOMNode(r.find @component, 'partner_link_title')
     input.value = 'A new value'
     r.simulate.change(input)
     @component.state.super_article.partner_link_title.should.eql 'A new value'
+    @component.props.onChange.args[0][1].partner_link_title.should.eql 'A new value'
 
   it 'updates state on image upload', ->
-    @component.props.onChange = sinon.stub()
     @component.upload 'http://partnerlogo.com/image.jpg', 'partner_logo'
     @component.state.super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
     @component.props.onChange.args[0][0].super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'

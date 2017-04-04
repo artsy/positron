@@ -33,10 +33,6 @@ module.exports = class EditAdmin extends Backbone.View
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
 
-  # onAuthorSelect: (e, item) =>
-  #   return unless confirm "Are you sure you want to change the author?"
-  #   @article.trigger('finished').save(author_id: item.id)
-
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
     list = new AutocompleteList @$('#edit-admin-fair')[0],

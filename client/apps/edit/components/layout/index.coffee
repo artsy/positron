@@ -43,7 +43,6 @@ module.exports = class EditLayout extends Backbone.View
     @$('#edit-title textarea').autosize()
 
   serialize: ->
-    debugger
     {
       title: @$('#edit-title textarea').val()
       thumbnail_title: @$('.edit-title-textarea').val()
@@ -91,7 +90,6 @@ module.exports = class EditLayout extends Backbone.View
     $(document).ajaxStop @redirectToList
 
   savePublished: =>
-    debugger
     @article.save @serialize()
 
   addRemoveReset: =>
@@ -142,8 +140,6 @@ module.exports = class EditLayout extends Backbone.View
     @fullText = @fullText.join()
 
   onKeyup: =>
-    debugger
-    console.log 'in layout save action'
     if @article.get('published')
       @changedSection = true
       $('#edit-save').addClass 'attention'

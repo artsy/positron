@@ -51,17 +51,21 @@ describe 'AdminSections', ->
   it 'Adds a section to activeSections on click', ->
     r.simulate.click r.find @component, 'featuring'
     $(ReactDOM.findDOMNode(@component)).find('.edit-admin--featuring').hasClass('active').should.eql true
-    @component.state.activeSections.should.eql ['article', 'section-tags', 'featuring']
+    @component.state.activeSections.should.eql ['article', 'verticals-tags', 'featuring']
 
   it 'Removes a section from activeSections on click', ->
-    r.simulate.click r.find @component, 'section-tags'
-    $(ReactDOM.findDOMNode(@component)).find('.edit-admin--section-tags').hasClass('active').should.eql false
+    r.simulate.click r.find @component, 'verticals-tags'
+    $(ReactDOM.findDOMNode(@component)).find('.edit-admin--verticals-tags').hasClass('active').should.eql false
     @component.state.activeSections.should.eql ['article']
 
   it '#onChange updates the article attributes', ->
     @component.onChange('tier', 2)
     @component.props.article.get('tier').should.eql 2
+
+  it 'If unpublished, #onChange does not save and shows indicator', ->
+    @component.onChange('tier', 2)
     @component.props.article.save.callCount.should.eql 0
+    # is there a way to show jquery changes outside the component?
 
   it '#onChange saves the article if unpublished', ->
     @component.props.article.set('published', false)
