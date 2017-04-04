@@ -35,12 +35,12 @@ describe 'AddTag', ->
     @rendered.should.containEql 'Enter tag title...'
 
   it 'calls addTag when new tag is submitted', ->
-    @component.refs.addTagInput.value = 'New Tag'
+    @component.setState value: 'New Tag'
     r.simulate.click r.find @component, 'avant-garde-button'
     @component.props.addTag.called.should.be.true()
     @component.props.addTag.args[0][0].should.equal 'New Tag'
 
   it 'clears the input after button is clicked', ->
-    @component.refs.addTagInput.value = 'New Tag'
+    @component.setState value: 'New Tag'
     r.simulate.click r.find @component, 'avant-garde-button'
-    @component.refs.addTagInput.value.length.should.equal 0
+    @component.state.value.length.should.equal 0
