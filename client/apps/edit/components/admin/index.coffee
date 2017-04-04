@@ -39,7 +39,7 @@ module.exports = class EditAdmin extends Backbone.View
 
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    list = new AutocompleteList @$('#edit-admin-fair')[0],
+    new AutocompleteList @$('#edit-admin-fair')[0],
       name: 'fair_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
@@ -49,6 +49,7 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save fair_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
+      idsToFetch: @article.get('fair_ids')
     if ids = @article.get('fair_ids')
       @fairs = []
       async.each ids, (id, cb) =>
