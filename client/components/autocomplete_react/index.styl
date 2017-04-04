@@ -1,0 +1,63 @@
+@import '../stylus_lib'
+
+.twitter-typeahead
+  position relative
+
+.tt-dropdown-menu
+  width 100%
+  border 2px solid purple-color
+  z-index 3
+  background white
+  margin-top -2px
+
+.tt-suggestion, .autocomplete-empty
+  garamond()
+  text-transform none
+  letter-spacing 0
+
+.tt-suggestion
+  padding 10px
+  border-bottom 1px solid gray-lighter-color
+  cursor pointer
+  &:last-child
+    border-bottom 0
+
+.tt-cursor
+  background-color gray-lighter-color
+
+.tt-hint
+  display none
+
+.twitter-typeahead
+  width 100%
+
+.twitter-typeahead input
+  padding-left 36px
+  background url("/autocomplete_search.svg") 9px 9px no-repeat
+  background-size 18px
+  &:active, &:focus
+    border-color purple-color
+
+.tt-input:focus
+  border-color gray-lighter-color
+
+.twitter-typeahead.is-loading
+  position relative
+  &::after
+    content '.'
+    spinner(17px, 4px, black)
+    left inherit
+    top 50%
+    right 12px
+    color transparent
+    margin-top -1px
+
+.autocomplete-empty
+  padding 10px
+  background gray-lighter-color
+  color gray-darker-color
+
+.autocomplete-header
+  padding 10px
+  background gray-lighter-color
+  font-weight bold
