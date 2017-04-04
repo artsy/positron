@@ -5,6 +5,7 @@ joiql = require 'joiql'
 Article = require '../articles/model/schema'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
+Tag = require '../tags/model'
 { setUser } = require '../users/routes.coffee'
 User = require '../users/model.coffee'
 resolvers = require './resolvers'
@@ -31,11 +32,17 @@ schema = joiql
       args: Channel.querySchema
       resolve: resolvers.channels
     )
+    tags: array().items(object(
+      Tag.schema
+    )).meta(
+      args: Tag.querySchema
+      resolve: resolvers.tags
+    )
 
 app.use '/graphql', setUser, graphqlHTTP(
   schema: schema
   graphiql: true
-  formatError: (error) => ({
+  formatError: (error) -> ({
     message: error.message,
     locations: error.locations,
     stack: error.stack

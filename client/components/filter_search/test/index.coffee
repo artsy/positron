@@ -1,6 +1,7 @@
 benv = require 'benv'
 sinon = require 'sinon'
 { resolve } = require 'path'
+fixtures = require '../../../../test/helpers/fixtures.coffee'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
@@ -8,7 +9,7 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-describe 'FilterSearch', ->
+describe 'FilterSearch Article', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -27,17 +28,18 @@ describe 'FilterSearch', ->
       FilterSearch.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
       FilterSearch.__set__ 'ArticleList', React.createFactory(ArticleList)
       props = {
-          articles: [{id: '123', thumbnail_title: 'Game of Thrones', slug: 'artsy-editorial-game-of-thrones'}]
+          collection: [{id: '123', thumbnail_title: 'Game of Thrones', slug: 'artsy-editorial-game-of-thrones'}]
           url: 'url'
           selected: sinon.stub()
           checkable: true
           searchResults: sinon.stub()
+          contentType: 'article'
         }
       @component = ReactDOM.render React.createElement(FilterSearch, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           sinon.stub @component, 'setState'
           sinon.stub @component, 'addAutocomplete'
-          sinon.stub(@component.engine, 'get').yields [0,0,[{id: '456', thumbnail_title: 'finding nemo'}]]
+          sinon.stub(@component.engine, 'get').yields [[{id: '456', thumbnail_title: 'finding nemo'}]]
           done()
 
   afterEach ->
@@ -58,3 +60,50 @@ describe 'FilterSearch', ->
     r.simulate.keyUp(@component.refs.searchQuery)
     @component.props.searchResults.args[0][0][0].id.should.equal '456'
     @component.props.searchResults.args[0][0][0].thumbnail_title.should.equal 'finding nemo'
+
+describe 'FilterSearch Tag', ->
+
+  beforeEach (done) ->
+    benv.setup =>
+      benv.expose $: benv.require 'jquery'
+      window.jQuery = $
+      require 'typeahead.js'
+      FilterSearch = benv.requireWithJadeify(
+        resolve(__dirname, '../index')
+        []
+      )
+      TagList = benv.requireWithJadeify(
+        resolve(__dirname, '../../tag_list/index')
+        []
+      )
+      TagList.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
+      FilterSearch.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
+      FilterSearch.__set__ 'TagList', React.createFactory(TagList)
+      props = {
+        collection: [
+          fixtures().tags
+          { id: '123', name: 'Berlin', public: true }
+        ]
+        url: 'url'
+        searchResults: sinon.stub()
+        deleteTag: sinon.stub()
+        contentType: 'tag'
+      }
+      @component = ReactDOM.render React.createElement(FilterSearch, props), (@$el = $ "<div></div>")[0], =>
+        setTimeout =>
+          sinon.stub @component, 'setState'
+          sinon.stub @component, 'addAutocomplete'
+          sinon.stub(@component.engine, 'get').yields [[{id: '123', name: 'Berlin'}]]
+          done()
+
+  afterEach ->
+    benv.teardown()
+
+  it 'renders an initial set of tags', ->
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Show Reviews'
+
+  it 'searches tags given a query', ->
+    ReactDOM.findDOMNode(@component.refs.searchQuery).value = 'Berlin'
+    r.simulate.keyUp(@component.refs.searchQuery)
+    @component.props.searchResults.args[0][0][0].id.should.equal '123'
+    @component.props.searchResults.args[0][0][0].name.should.equal 'Berlin'

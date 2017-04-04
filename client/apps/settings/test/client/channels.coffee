@@ -1,11 +1,11 @@
 _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
-Channel = require '../../../models/channel'
+Channel = require '../../../../models/channel'
 Backbone = require 'backbone'
 moment = require 'moment'
 should = require 'should'
-fixtures = require '../../../../test/helpers/fixtures'
+fixtures = require '../../../../../test/helpers/fixtures'
 { resolve } = require 'path'
 rewire = require 'rewire'
 
@@ -21,9 +21,9 @@ describe 'EditChannel', ->
         channel: new Channel @channel
       )
       locals.sd = _.extend locals.sd, { CHANNEL: @channel }
-      tmpl = resolve __dirname, '../templates/channels/channel_edit.jade'
+      tmpl = resolve __dirname, '../../templates/channels/channel_edit.jade'
       benv.render tmpl, locals, =>
-        { @EditChannel } = mod = rewire '../client/channels.coffee'
+        { @EditChannel } = mod = rewire '../../client/channels.coffee'
         mod.__set__ 'AutocompleteSortableList', sinon.stub()
         mod.__set__ 'sd', { CHANNEL: @channel }
         @EditChannel::setupUserAutocomplete = sinon.stub()

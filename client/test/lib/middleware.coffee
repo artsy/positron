@@ -2,6 +2,7 @@ express = require 'express'
 sinon = require 'sinon'
 middleware = require '../../lib/middleware'
 Backbone = require 'backbone'
+_ = require 'underscore'
 
 describe 'middleware', ->
 
@@ -44,3 +45,19 @@ describe 'middleware', ->
       @req.get = -> 'http:'
       middleware.sameOrigin @req, @res, @next
       @res.headers['X-Frame-Options'].should.equal 'SAMEORIGIN'
+
+  describe 'adminOnly middleware', ->
+
+    describe 'is an admin', ->
+      beforeEach ->
+        @req = user: new Backbone.Model type: 'Admin'
+
+      it 'passes through without error', ->
+        middleware.adminOnly @req, {}, @next
+        _.isUndefined(@next.args[0][0]).should.be.true()
+
+    describe 'is not an admin', ->
+      it 'passes through with the appropriate error', ->
+        middleware.adminOnly {}, {}, @next
+        @next.args[0][0].message.should.equal 'You must be logged in as an admin'
+        @next.args[0][0].status.should.equal 403
