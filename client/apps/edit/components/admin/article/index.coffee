@@ -49,13 +49,13 @@ module.exports = AdminArticle = React.createClass
     @setState publish_date: @refs.publish_date.value
     @setState publish_time: @refs.publish_time.value
     published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
-    # if draft and date is future, set scheduled
     if !@props.article.get('published')
       # ignore if draft and date is past
       return unless published_at > moment()
-        @onChange 'scheduled_publish_at', published_at.toISOString()
-    # if article is published, reset published date
+      # if draft and date is future, set scheduled
+      @onChange 'scheduled_publish_at', published_at.toISOString()
     else
+      # if article is published, reset published date
       @onChange 'published_at', published_at.toISOString()
 
   setupPublishDate: ->
@@ -103,9 +103,9 @@ module.exports = AdminArticle = React.createClass
               })
             cb()
       , =>
-        list?.setState loading: false, items: @authors
+        list.setState loading: false, items: @authors
     else
-      list?.setState loading: false
+      list.setState loading: false
 
   showActive: (key, value) ->
     active = if @props.article.get(key) is value then ' active' else ''

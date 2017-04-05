@@ -7,7 +7,7 @@ _ = require 'underscore'
 { div, label, input, form, span } = React.DOM
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
-Autocomplete = React.createFactory require './autocomplete.coffee'
+Autocomplete = React.createFactory require '../components/autocomplete.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminFeaturing'
@@ -116,7 +116,7 @@ module.exports = React.createClass
     @isFeatured = @props.article['featured' + featureType].models.map (item, i) -> item.id
     mentioned = @sortFeatured @props.article[ 'mentioned' + type]
     mentioned.models?.map (item, i) =>
-      unless @isFeatured.includes(item.id)
+      if !@isFeatured.includes(item.id)
         div {
           key: i
           className: 'feature-mention mention'
@@ -126,6 +126,8 @@ module.exports = React.createClass
         },
           span {className: 'name' }, item.get('name') || item.get('title')
           span {className: 'mention' }
+      else
+        return false
 
   showSelectAllMentioned: (type, featureType) ->
     if @props.article[ 'mentioned' + type].models?.length

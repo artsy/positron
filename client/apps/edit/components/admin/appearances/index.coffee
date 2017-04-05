@@ -5,7 +5,7 @@ request = require 'superagent'
 sd = require('sharify').data
 
 AutocompleteSelect = require '../../../../../components/autocomplete_select/index.coffee'
-AutocompleteList = React.createFactory require '../featuring/autocomplete.coffee'
+AutocompleteList = React.createFactory require '../components/autocomplete.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminAppearances'

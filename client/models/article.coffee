@@ -117,10 +117,4 @@ module.exports = class Article extends Backbone.Model
       extended.hero_section = null
     if @leadParagraph?.get('text')?.length
       extended.lead_paragraph = @leadParagraph.get('text')
-    if @featuredArtworks?.length
-      extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
-    if @featuredArtists?.length
-      extended.featured_artist_ids = @featuredArtists.pluck('_id')
-    if @featuredPrimaryArtists?.length
-      extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('_id')
     _.extend super, extended

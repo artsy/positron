@@ -44,6 +44,7 @@ module.exports = class EditLayout extends Backbone.View
 
   serialize: ->
     {
+      author_id: @user.get('id')
       title: @$('#edit-title textarea').val()
       thumbnail_title: @$('.edit-title-textarea').val()
       tags: _.reject(

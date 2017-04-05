@@ -28,11 +28,14 @@ describe 'AdminSuperArticle', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      ImageUpload = benv.require resolve(__dirname, '../image_upload.coffee')
+      ImageUpload = benv.require resolve(__dirname, '../components/image_upload.coffee')
+      AdminSuperArticle.__set__ 'async', async = sinon.stub()
+      async.each = sinon.stub()
+      AdminSuperArticle.__set__ 'request', request = sinon.stub().returns({get: get = sinon.stub()})
       AdminSuperArticle.__set__ 'ImageUpload', React.createFactory(ImageUpload)
-      AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = sinon.stub()
+      AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = sinon.stub().returns({setState: setState = sinon.stub()})
       @channel = {id: '123'}
-      @channel.hasFeature = sinon.stub().returns false
+      @channel.hasFeature = sinon.stub().returns true
       @article = new Article
       @article.attributes = fixtures().articles
       props = {
@@ -42,7 +45,6 @@ describe 'AdminSuperArticle', ->
         }
       @component = ReactDOM.render React.createElement(AdminSuperArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
-          @component.setState is_super_article: true
           done()
 
   afterEach ->
@@ -52,6 +54,7 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
     $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
+    @Autocomplete.callCount.should.eql 1
 
   it 'Inputs are populated with article data', ->
     $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').val().should.eql 'Download The App'
@@ -64,14 +67,15 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/blacklogo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://secondarypartner.com/logo.png'
 
-  it 'disables input unless is_super_article is enabled', ->
-    @component.setState is_super_article: false
-    $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').prop('disabled').should.eql true
-    $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql true
-
-  it 'enables input when is_super_article', ->
+  it 'enables input when is_super_article is enabled', ->
+    @component.props.article.set 'is_super_article', true
+    @component.forceUpdate()
     $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').prop('disabled').should.eql false
     $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql false
+
+  it 'disables input unless is_super_article is enabled', ->
+    $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').prop('disabled').should.eql true
+    $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').prop('disabled').should.eql true
 
   it 'updates state with user input', ->
     input = ReactDOM.findDOMNode(r.find @component, 'partner_link_title')

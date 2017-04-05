@@ -12,7 +12,7 @@ SUBVERTICALS = [
 ]
 
 module.exports = React.createClass
-  displayName: 'AdminVerticals'
+  displayName: 'AdminVerticalsTags'
 
   getInitialState: ->
     vertical: null

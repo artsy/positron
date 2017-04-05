@@ -6,7 +6,7 @@ sd = require('sharify').data
 _ = require 'underscore'
 { div, input, label, textarea, section, h1, h2, span } = React.DOM
 
-ImageUpload = React.createFactory require '../image_upload.coffee'
+ImageUpload = React.createFactory require '../components/image_upload.coffee'
 AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = React.createClass
@@ -69,9 +69,9 @@ module.exports = React.createClass
             @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
             cb()
       , =>
-        list?.setState loading: false, items: @articles
+        list.setState loading: false, items: @articles
     else
-      list?.setState loading: false
+      list.setState loading: false
 
   printFieldGroup: (field, title) ->
     div {className: 'field-group'},
