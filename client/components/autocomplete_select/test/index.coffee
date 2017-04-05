@@ -12,7 +12,6 @@ describe 'AutocompleteSelect', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
-      mod.__set__ 'Autocomplete', @Autocomplete = sinon.stub()
       @component = ReactDOM.render React.createElement(AutocompleteSelect,
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'

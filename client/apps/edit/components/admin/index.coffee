@@ -49,7 +49,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('fair_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -65,7 +65,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save fair_programming_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('fair_programming_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -81,7 +81,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save fair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('fair_artsy_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -97,7 +97,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save fair_about_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('fair_about_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -113,7 +113,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('partner_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/partner/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/partner/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -129,7 +129,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save auction_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('auction_ids')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/sale/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/sale/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -144,7 +144,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save section_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get 'section_ids'
-      urlForItem: (id) -> "#{sd.API_URL}/sections/#{id}"
+      fetchUrl: (id) -> "#{sd.API_URL}/sections/#{id}"
       resObject: (res) ->
         id: res.body.id, value: res.body.title
 
@@ -158,7 +158,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
       idsToFetch: @article.get 'show_ids'
-      urlForItem: (id) -> "#{sd.API_URL}/show/#{id}"
+      fetchUrl: (id) -> "#{sd.API_URL}/show/#{id}"
       resObject: (res) ->
         id: res.body._id, value: res.body.name
 
@@ -170,16 +170,12 @@ module.exports = class EditAdmin extends Backbone.View
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
         @article.save biography_for_artist_id: item.id
-        select.setState value: item.name, loading: false
       cleared: =>
         @article.save biography_for_artist_id: null
-    if id = @article.get 'biography_for_artist_id'
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
-    else
-      select.setState loading: false
+      idToFetch: @article.get('biography_for_artist_id')
+      fetchUrl: sd.ARTSY_URL + '/api/v1/artist/' + @article.get('biography_for_artist_id')
+      resObject: (res) ->
+        name: res.body.name, id: res.body.id
 
   setupContributingAuthors: ->
     @contributing_authors = @article.get 'contributing_authors' or []
@@ -193,7 +189,7 @@ module.exports = class EditAdmin extends Backbone.View
       removed: (e, item, items) =>
         @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @article.get('contributing_authors')
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
       resObject: (res) ->
         id: { id: res.body.id , name: res.body.name },
         value: _.compact([res.body.name, res.body.email]).join(', ')
@@ -299,7 +295,7 @@ module.exports = class EditAdmin extends Backbone.View
         superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
         @article.save super_article: superArticle
       idsToFetch: @related_articles
-      urlForItem: (id) -> "#{sd.API_URL}/articles/#{id}"
+      fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
       resObject: (res) ->
         id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
 

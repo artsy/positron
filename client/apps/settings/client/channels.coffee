@@ -32,7 +32,7 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
       removed: (e, item, items) =>
         @channel.save user_ids: _.without(_.pluck(items, 'id'),item.id)
       idsToFetch: @user_ids
-      urlForItem: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id}"
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id}"
       resObject: (res) -> {
         id: res.body.id,
         value: _.compact([res.body.name, res.body.email]).join(', ')

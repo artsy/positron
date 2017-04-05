@@ -20,7 +20,6 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
 
   componentDidMount: ->
     @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-input')
-    # console.log @$input
     @addAutocomplete()
     @fetchItems()
 
@@ -29,7 +28,7 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
       fetchedItems = []
       async.each @props.idsToFetch, (id, cb) =>
         request
-          .get(@props.urlForItem(id))
+          .get(@props.fetchUrl(id))
           .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
             fetchedItems.push(@props.resObject(res))
             cb()
@@ -49,8 +48,6 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
           beforeSend: =>
             @$input.closest('.twitter-typeahead').addClass 'is-loading'
           complete: =>
-            console.log 'complete'
-            console.log @$input
             @$input.closest('.twitter-typeahead').removeClass 'is-loading'
     search.initialize()
     templates = @props.templates or {
