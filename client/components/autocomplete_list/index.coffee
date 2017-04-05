@@ -15,16 +15,17 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
 
   getInitialState: ->
     loading: true
-    items: @props.items or []
+    items: []
     value: ''
 
   componentDidMount: ->
-    @$el = $('.autocomplete-input')
+    @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-input')
+    # console.log @$input
     @addAutocomplete()
     @fetchItems()
 
   fetchItems: ->
-    if @props.idsToFetch.length
+    if @props.idsToFetch?.length > 0
       fetchedItems = []
       async.each @props.idsToFetch, (id, cb) =>
         request
@@ -46,19 +47,21 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
         filter: @props.filter
         ajax:
           beforeSend: =>
-            @$el.closest('.twitter-typeahead').addClass 'is-loading'
+            @$input.closest('.twitter-typeahead').addClass 'is-loading'
           complete: =>
-            @$el.closest('.twitter-typeahead').removeClass 'is-loading'
+            console.log 'complete'
+            console.log @$input
+            @$input.closest('.twitter-typeahead').removeClass 'is-loading'
     search.initialize()
     templates = @props.templates or {
       empty: """
         <div class='autocomplete-empty'>No results</div>
       """
     }
-    @$el.typeahead { highlight: true },
+    @$input.typeahead { highlight: true },
       source: search.ttAdapter()
       templates: templates
-    @$el.on 'typeahead:selected', @onSelect
+    @$input.on 'typeahead:selected', @onSelect
 
   onSelect: (e, item) ->
     @setState items: @state.items.concat [item]
@@ -67,7 +70,7 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
 
   removeItem: (item) -> (e) =>
     e.preventDefault()
-    @$el.typeahead('destroy')
+    @$input.typeahead('destroy')
     newItems = _.reject(@state.items, (i) -> i.id is item.id)
     @setState items: newItems
     @props.removed? e, item, newItems
