@@ -35,9 +35,10 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 ```
 yarn install
 ```
-- Create a .env file in the root of the project and paste in sensitive configuration. You can copy the .env.example and fill in the sensitive config with the config vars from staging `heroku config --app=positron-staging`.
-
-  ( note: Leave non-sensitive configuration as it appears in the .env.example rather than copying over the config vars from `heroku config --app=positron-staging`. )
+- Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
+```
+heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
+```
 - Positron uses MongoDB as a database. To install MongoDB using homebrew do the following, if you would prefer to install manually check the documentation at [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
 ```
 brew install mongodb
@@ -49,7 +50,7 @@ mongod
 - Install and run elasticsearch
 ```
 brew install elasticsearch
-elasticsearch -d
+brew services start elasticsearch
 ```
 - Start the server
 ```
