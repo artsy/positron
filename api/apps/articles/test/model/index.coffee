@@ -1090,6 +1090,11 @@ describe 'Article', ->
             count.should.equal 10
             done()
 
+    it 'returns an error message', (done) ->
+      Article.destroy '5086df098523e60002000019', (err) ->
+        err.should.equal 'Article not found.'
+        done()
+
     it 'removes the article from elasticsearch', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
         setTimeout( =>
