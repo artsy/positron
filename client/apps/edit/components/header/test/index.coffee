@@ -30,7 +30,7 @@ describe 'EditHeader', ->
 
     it 'indicates saving on change', ->
       @view.article.trigger 'change'
-      @view.$('#edit-save').hasClass('is-saving').should.be.ok
+      @view.$('#edit-save').hasClass('is-saving').should.be.true()
 
   describe '#delete', ->
 
@@ -77,3 +77,9 @@ describe 'EditHeader', ->
       @view.save preventDefault: ->
       spy.called.should.be.ok
       Backbone.sync.args[0][0].should.equal 'create'
+      @view.$('#edit-error').text().should.equal('')
+
+    it 'reports the error', ->
+      @view.article.trigger 'error', @view.article, { responseText: 'unexpected error' }
+      @view.$('#edit-error').text().should.equal('unexpected error')
+
