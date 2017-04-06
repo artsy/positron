@@ -5,6 +5,7 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
+RichTextCaption = React.createFactory require '../../../../components/rich_text_caption/index.coffee'
 { getIframeUrl } = require '../../../../models/section.coffee'
 sd = require('sharify').data
 { section, h1, header, input, button, div, iframe, form, span, h2, img, label, nav, a } = React.DOM
@@ -14,20 +15,20 @@ module.exports = React.createClass
 
   getInitialState: ->
     progress: null
+    url: @props.section.get('url')
+    caption: @props.section.get('caption')
     coverSrc: @props.section.get('cover_image_url')
     background_color: @props.section.get('background_color') or 'white'
     layout: @props.section.get('layout') or 'column_width'
 
   componentDidMount: ->
-    $(@refs.input).focus() unless @props.section.get('url')
+    $(@refs.input).focus() unless @state.url
 
   changeLayout: (layout) -> =>
     @setState layout: layout
-    @props.section.set layout: layout
 
   setBackgroundColor: (e) ->
     @setState background_color: e.currentTarget.value
-    @props.section.set background_color: e.currentTarget.value
 
   getVideoHeight: ->
     if @state.layout is 'column_width' then '313px' else '600px'
@@ -36,14 +37,21 @@ module.exports = React.createClass
     if @state.layout is 'column_width' then '100%' else '1060px'
 
   onClickOff: ->
-    if not @props.section.get('url') and not @props.section.get('cover_image_url')
+    if not @state.url and not @state.cover_image_url and not @state.caption
       @props.section.destroy()
     else
-      @props.section.set cover_image_url: @state.coverSrc
+      @props.section.set
+        url: @state.url
+        cover_image_url: @state.coverSrc
+        caption: @state.caption
+        background_color: @state.background_color
+        layout: @state.layout
 
   onChangeUrl: (e) ->
-    @props.section.set url: $(@refs.input).val()
-    @forceUpdate()
+    @setState url: $(@refs.input).val()
+
+  onCaptionChange: (html) ->
+    @setState caption: html
 
   uploadCoverImage: (e) ->
     gemup e.target.files[0],
@@ -102,17 +110,22 @@ module.exports = React.createClass
             placeholder: 'Paste a youtube or vimeo url ' +
               '(e.g. http://youtube.com/watch?v=id)'
             ref: 'input'
-            defaultValue: @props.section.get('url')
+            defaultValue: @state.url
             onKeyDown: _.debounce(_.bind(@onChangeUrl, this), 500)
           }
+          div { className: 'esi-caption-container' },
+            RichTextCaption {
+              item: @state
+              key: 'caption-edit' + @props.section.cid
+              onChange: @onCaptionChange
+            }
           h2 {}, "Cover image"
           section { className: 'dashed-file-upload-container' },
             h1 {}, 'Drag & ',
               span { className: 'dashed-file-upload-container-drop' }, 'drop'
               ' or '
               span { className: 'dashed-file-upload-container-click' }, 'click'
-              span {}, (' to ' +
-                if @props.section.get('cover_image_url') then 'replace' else 'upload')
+              span {}, (' to ' + if @state.cover_image_url then 'replace' else 'upload')
             h2 {}, 'Up to 30mb'
             input { type: 'file', onChange: @uploadCoverImage }
           div { className: 'esv-background-color flat-radio-button' },
@@ -146,11 +159,19 @@ module.exports = React.createClass
         ]
       else if @state.coverSrc
         coverImage
-      else if @props.section.get('url')
-        iframe {
-          src: getIframeUrl(@props.section.get 'url')
-          width: @getVideoWidth()
-          height: @getVideoHeight()
-        }
+      else if @state.url
+        [
+          iframe {
+            src: getIframeUrl(@state.url)
+            width: @getVideoWidth()
+            height: @getVideoHeight()
+            key: 1
+          }
+          div {
+            className: 'esi-inline-caption'
+            dangerouslySetInnerHTML: __html: @state.caption
+            key: 2
+          }
+        ]
       else
         div { className: 'esv-placeholder' }, 'Add a video above'
