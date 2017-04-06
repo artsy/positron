@@ -103,11 +103,14 @@ Q = require 'bluebird-q'
 # Destroy
 #
 @destroy = (id, callback) ->
-  @find id, (err, article = {}) =>
+  @find id, (err, article) =>
+    return callback err if err
+    return callback 'Article not found.' unless article
     deleteArticleFromSailthru _.last(article.slugs), =>
-      db.articles.remove { _id: ObjectId(id) }, =>
+      db.articles.remove { _id: ObjectId(id) }, (err, res) =>
+        return callback err if err
         removeFromSearch id.toString()
-        callback(id)
+        callback null, id
 
 #
 # JSON views

@@ -1085,15 +1085,20 @@ describe 'Article', ->
 
     it 'removes an article', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000018') }, ->
-        Article.destroy '5086df098523e60002000018', (err) ->
+        Article.destroy '5086df098523e60002000018', (err, id) ->
           db.articles.count (err, count) ->
             count.should.equal 10
             done()
 
+    it 'returns an error message', (done) ->
+      Article.destroy '5086df098523e60002000000', (err, id) ->
+        err.should.equal 'Article not found.'
+        done()
+
     it 'removes the article from elasticsearch', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
         setTimeout( =>
-          Article.destroy '5086df098523e60002000019', (err) ->
+          Article.destroy '5086df098523e60002000019', (err, id) ->
             setTimeout( =>
               search.client.search(
                 index: search.index
