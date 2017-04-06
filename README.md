@@ -22,43 +22,58 @@ Set-Up
 
 - Install [NVM](https://github.com/creationix/nvm)
 - Install Node 6
+
 ```
 nvm install 6
 nvm alias default 6
 ```
+
 - Fork Positron to your Github account in the Github UI.
 - Clone your repo locally (substitute your Github username).
+
 ```
 git clone git@github.com:craigspaeth/positron.git && cd positron
 ```
+
 - Install node modules
+
 ```
 yarn install
 ```
+
 - Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
+
 ```
 heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
 ```
+
 - Positron uses MongoDB as a database. To install MongoDB using homebrew do the following, if you would prefer to install manually check the documentation at [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
+
 ```
 brew install mongodb
 ```
+
 - Start the MongoDB database
+
 ```
 mongod
 ```
+
 - Install and run elasticsearch
+
 ```
 brew install elasticsearch
 brew services start elasticsearch
 ```
+
 - Start the server
+
 ```
 make s
 ```
-- Positron should now be running at [http://localhost:3005/](http://localhost:3005/)
+- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer with the default partner gallery channel (David Zwirner).
 
 Additional docs
 ---
 
-You can find additional documentation about Positron (deployments etc) in this repository's /doc directory.
+You can find additional documentation about Positron in [doc](/doc).

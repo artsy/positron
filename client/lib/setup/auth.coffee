@@ -26,7 +26,9 @@ setupPassport = ->
         id = process.env.DEFAULT_PARTNER_ID if not id and user.get('type') is 'Admin'
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
-          error: (m, err) -> done err
+          error: (m, err) ->
+            console.warn "Warning: unauthorized user #{user.get('id')} (#{user.get('email')})."
+            done err
           success: (channel) =>
             user.set 'current_channel', channel.denormalized()
             done null, user
