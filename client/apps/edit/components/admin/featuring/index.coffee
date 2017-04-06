@@ -14,6 +14,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupShowsAutocomplete()
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   componentWillUnmount: ->
     $(@refs['show_ids']).each (i, ref) ->
@@ -148,7 +149,7 @@ module.exports = React.createClass
           label {}, 'Feature all mentioned ' + type
 
   render: ->
-    div { className: 'edit-admin--featuring edit-admin__fields'},
+    div { className: 'edit-admin--featuring edit-admin__fields', ref: 'container'},
       div {className: 'fields-full'},
         div {className: 'fields-left'},
           div {className: 'field-group'},

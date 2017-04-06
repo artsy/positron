@@ -22,6 +22,7 @@ module.exports = AdminArticle = React.createClass
 
   componentDidMount: ->
     @setupAutocomplete()
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   componentWillUnmount: ->
     $(@refs['autocomplete']).each (i, ref) ->
@@ -111,7 +112,7 @@ module.exports = AdminArticle = React.createClass
     active = if @props.article.get(key) is value then ' active' else ''
 
   render: ->
-    div { className: 'edit-admin--article edit-admin__fields'},
+    div { className: 'edit-admin--article edit-admin__fields', ref: 'container'},
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},

@@ -12,6 +12,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @setupBiographyAutocomplete()
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   componentWillUnmount: ->
     $(@refs.biography_for_artist_id).each (i, ref) ->
@@ -38,7 +39,7 @@ module.exports = React.createClass
       select.setState loading: false
 
   render: ->
-    div { className: 'edit-admin--appearances edit-admin__fields'},
+    div { className: 'edit-admin--appearances edit-admin__fields', ref: 'container'},
       div {className: 'fields-full'},
         div {className: 'fields-left'},
           div {className: 'field-group'},

@@ -18,6 +18,7 @@ module.exports = React.createClass
   componentDidMount: ->
     @setupSuperArticleAutocomplete()
     $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@props.article.get('is_super_article'))
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   componentWillUnmount: ->
     $(@refs['autocomplete']).each (i, ref) ->
@@ -95,7 +96,7 @@ module.exports = React.createClass
       }
 
   render: ->
-    div { className: 'edit-admin--super-article edit-admin__fields'},
+    div { className: 'edit-admin--super-article edit-admin__fields', ref: 'container'},
       div {className: 'fields-full'},
         div {
           className: 'field-group--inline flat-checkbox fields-col-3'

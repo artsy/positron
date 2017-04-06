@@ -79,8 +79,6 @@ module.exports = class Article extends Backbone.Model
     options.success = _.after 3, options.success if options.success?
     @featuredPrimaryArtists.getOrFetchIds(
       @get('primary_featured_artist_ids'), options)
-    @featuredArtists.getOrFetchIds(
-      @get('featured_artist_ids'), options)
     @featuredArtworks.getOrFetchIds(
       @get('featured_artwork_ids'), options)
 
