@@ -53,7 +53,7 @@ User = require '../users/model.coffee'
   unless User.hasChannelAccess req.user, (req.article.channel_id or req.article.partner_channel_id)
     return res.err(401, 'Unauthorized')
 
-  Article.destroy req.article._id, (err, id) ->
+  Article.destroy req.article._id, (err) ->
     return next err if err
     res.send present req.article
 

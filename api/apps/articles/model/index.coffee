@@ -110,7 +110,7 @@ Q = require 'bluebird-q'
       db.articles.remove { _id: ObjectId(id) }, (err, res) =>
         return callback err if err
         removeFromSearch id.toString()
-        callback null, id
+        callback null
 
 #
 # JSON views
