@@ -175,7 +175,7 @@ module.exports = class EditAdmin extends Backbone.View
       idToFetch: @article.get('biography_for_artist_id')
       fetchUrl: sd.ARTSY_URL + '/api/v1/artist/' + @article.get('biography_for_artist_id')
       resObject: (res) ->
-        name: res.body.name, id: res.body.id
+        value: res.body.name, id: res.body.id
 
   setupContributingAuthors: ->
     @contributing_authors = @article.get 'contributing_authors' or []

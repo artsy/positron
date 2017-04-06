@@ -18,11 +18,11 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
     id: null
 
   componentDidMount: ->
-    @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-input')
     @addAutocomplete()
     @fetchItem()
 
   addAutocomplete: ->
+    @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-select-input')
     search = new Bloodhound
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
       queryTokenizer: Bloodhound.tokenizers.whitespace
@@ -54,7 +54,6 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
 
   removeItem: ->
     @setState value: null, id: null
-    @addAutocomplete()
     @props.cleared()
 
   onSelect: (e, item) ->
@@ -62,14 +61,14 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
     @props.selected? e, item
 
   render: ->
-    if @state.id
-      label {}, @props.label,
-        div { className: 'autocomplete-select-selected' },
-          @state.value
-          button { className: 'remove-button', onClick: @removeItem }
-    else
-      label {}, @props.label,
-        input {
-          className: 'bordered-input autocomplete-input'
-          placeholder: @props.placeholder
-        }
+    div {
+      className: 'autocomplete-select'
+      'data-state': if @state.id then 'selected' else 'empty'
+    }, @props.label,
+      div { className: 'autocomplete-select-selected' },
+        @state.value
+        button { className: 'remove-button', onClick: @removeItem }
+      input {
+        className: 'bordered-input autocomplete-select-input'
+        placeholder: @props.placeholder
+      }
