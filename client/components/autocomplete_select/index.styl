@@ -1,17 +1,15 @@
 @import '../stylus_lib'
 
 .autocomplete-select[data-state='selected']
-  .twitter-typeahead
+  .autocomplete-select-input, .twitter-typeahead
     display none
-  &-input
-    display none
-  &-selected
+  .autocomplete-select-selected
     display block
 
 .autocomplete-select[data-state='empty']
-  &-input, .twitter-typeahead input
+  .autocomplete-select-input, .twitter-typeahead
     display block
-  &-selected
+  .autocomplete-select-selected
     display none
 
 .autocomplete-select-selected

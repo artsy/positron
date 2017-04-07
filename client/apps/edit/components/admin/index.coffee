@@ -33,10 +33,6 @@ module.exports = class EditAdmin extends Backbone.View
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
 
-  onAuthorSelect: (e, item) =>
-    return unless confirm "Are you sure you want to change the author?"
-    @article.trigger('finished').save(author_id: item.id)
-
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
     new AutocompleteList @$('#edit-admin-fair')[0],
@@ -170,7 +166,7 @@ module.exports = class EditAdmin extends Backbone.View
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
         @article.save biography_for_artist_id: item.id
-      cleared: =>
+      removed: =>
         @article.save biography_for_artist_id: null
       idToFetch: @article.get('biography_for_artist_id')
       fetchUrl: sd.ARTSY_URL + '/api/v1/artist/' + @article.get('biography_for_artist_id')

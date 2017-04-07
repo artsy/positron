@@ -24,8 +24,8 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
   addAutocomplete: ->
     @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-select-input')
     search = new Bloodhound
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
-      queryTokenizer: Bloodhound.tokenizers.whitespace
+      datumTokenizer: Bloodhound?.tokenizers?.obj?.whitespace('value')
+      queryTokenizer: Bloodhound?.tokenizers?.whitespace
       remote:
         url: @props.url
         filter: @props.filter
@@ -54,7 +54,7 @@ module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
 
   removeItem: ->
     @setState value: null, id: null
-    @props.cleared()
+    @props.removed()
 
   onSelect: (e, item) ->
     @setState value: item.value, id: item.id

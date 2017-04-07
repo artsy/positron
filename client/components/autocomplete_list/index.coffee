@@ -29,7 +29,8 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
       async.each @props.idsToFetch, (id, cb) =>
         request
           .get(@props.fetchUrl(id))
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
+          .set('X-Access-Token': sd.USER?.access_token)
+          .end (err, res) =>
             fetchedItems.push(@props.resObject(res))
             cb()
       , =>
@@ -39,8 +40,8 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
 
   addAutocomplete: ->
     search = new Bloodhound
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
-      queryTokenizer: Bloodhound.tokenizers.whitespace
+      datumTokenizer: Bloodhound?.tokenizers?.obj?.whitespace('value')
+      queryTokenizer: Bloodhound?.tokenizers?.whitespace
       remote:
         url: @props.url
         filter: @props.filter
@@ -61,8 +62,7 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
     @$input.on 'typeahead:selected', @onSelect
 
   onSelect: (e, item) ->
-    @setState items: @state.items.concat [item]
-    @setState value: ''
+    @setState value: '', items: @state.items.concat [item]
     @props.selected? e, item, @state.items
 
   removeItem: (item) -> (e) =>
