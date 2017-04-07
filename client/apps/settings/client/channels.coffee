@@ -21,7 +21,7 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
 
   setupUserAutocomplete: ->
     @user_ids = @channel.get 'user_ids' or []
-    list = new AutocompleteList $('#channel-edit__users')[0],
+    new AutocompleteList $('#channel-edit__users')[0],
       name: 'user_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
@@ -31,22 +31,12 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
         @channel.save user_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @channel.save user_ids: _.without(_.pluck(items, 'id'),item.id)
-    if @user_ids.length > 0
-      @users = []
-      async.each @user_ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/user/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @users.push(
-              {
-                id: res.body.id,
-                value: _.compact([res.body.name, res.body.email]).join(', ')
-              })
-            cb()
-      , =>
-        list.setState loading: false, items: @users
-    else
-      list.setState loading: false
+      idsToFetch: @user_ids
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id}"
+      resObject: (res) -> {
+        id: res.body.id,
+        value: _.compact([res.body.name, res.body.email]).join(', ')
+      }
 
   setupPinnedArticlesAutocomplete: ->
     @pinnedArticles = @channel.get('pinned_articles') or []

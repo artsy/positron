@@ -6,7 +6,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 
-describe 'AutocompleteSelect', ->
+describe 'AutocompleteList', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -17,7 +17,7 @@ describe 'AutocompleteSelect', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
+      { AutocompleteList } = mod = benv.require resolve __dirname, '../index'
       mod.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
@@ -27,11 +27,11 @@ describe 'AutocompleteSelect', ->
         filter: @filter = sinon.stub()
         selected: @selected = sinon.stub()
         removed: @removed = sinon.stub()
-        idToFetch: '123'
+        idsToFetch: ['123']
         fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
         resObject: (res) -> id: res.id, value: res.value
-      @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteSelect, props)
-      @component = ReactDOM.render React.createElement(AutocompleteSelect, props), (@$el = $ "<div></div>")[0], => setTimeout =>
+      @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteList, props)
+      @component = ReactDOM.render React.createElement(AutocompleteList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @setState = sinon.stub @component, 'setState'
         done()
 
@@ -40,17 +40,21 @@ describe 'AutocompleteSelect', ->
 
   it 'renders fetched items', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Andy Warhol'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'value="123"'
 
   it 'initializes autocomplete with args', ->
     @Bloodhound.args[0][0].remote.url.should.equal 'https://api.artsy.net/search?term=%QUERY'
 
-  it 'removes an item', ->
-    @component.removeItem()
-    (@setState.args[0][0].value?).should.be.false()
-    (@setState.args[0][0].id?).should.be.false()
-
   it 'selects an item', ->
     @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
-    @setState.args[0][0].value.should.equal 'Yayoi Kusama'
-    @setState.args[0][0].id.should.equal '1234'
+    @setState.args[0][0].value.should.equal ''
+    @setState.args[0][0].items[0].value.should.equal 'Andy Warhol'
+    @setState.args[0][0].items[1].value.should.equal 'Yayoi Kusama'
+    @selected.callCount.should.equal 1
+
+  it 'removes an item', ->
+    @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
+    @setState.args[0][0].value.should.equal ''
+    @setState.args[0][0].items[0].value.should.equal 'Andy Warhol'
+    @setState.args[0][0].items[1].value.should.equal 'Yayoi Kusama'
     @selected.callCount.should.equal 1

@@ -90,14 +90,6 @@ describe 'EditAdmin', ->
       )
       (@view.article.featuredArtists.get('bar')?).should.be.ok
 
-  describe '#onAuthorSelect', ->
-
-    it 'changes the author', ->
-      global.confirm = -> true
-      @view.onAuthorSelect {}, { id: 'foo' }
-      @view.article.get('author_id').should.equal 'foo'
-      delete global.confirm
-
   describe '#toggleScheduled', ->
 
     it 'can save the scheduled publish date and time', ->

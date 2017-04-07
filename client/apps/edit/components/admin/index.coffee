@@ -33,14 +33,9 @@ module.exports = class EditAdmin extends Backbone.View
     @setupSuperArticleImages()
     @setupSuperArticleAutocomplete()
 
-  onAuthorSelect: (e, item) =>
-    return unless confirm "Are you sure you want to change the author?"
-    @article.trigger('finished').save(author_id: item.id)
-
   setupFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    list = new AutocompleteList @$('#edit-admin-fair')[0],
-      name: 'fair_ids[]'
+    new AutocompleteList @$('#edit-admin-fair')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -49,23 +44,14 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save fair_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save fair_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('fair_ids')
-      @fairs = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @fairs.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @fairs
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('fair_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupFairProgrammingAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    list = new AutocompleteList @$('#edit-admin-fair-programming')[0],
-      name: 'fair_programming_ids[]'
+    new AutocompleteList @$('#edit-admin-fair-programming')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -74,23 +60,14 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save fair_programming_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save fair_programming_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('fair_programming_ids')
-      @fairs = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @fairs.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @fairs
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('fair_programming_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupArtsyAtTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    list = new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
-      name: 'fair_artsy_ids[]'
+    new AutocompleteList @$('#edit-admin-artsy-at-the-fair')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -99,23 +76,14 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save fair_artsy_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save fair_artsy_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('fair_artsy_ids')
-      @fairs = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @fairs.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @fairs
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('fair_artsy_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupAboutTheFairAutocomplete: ->
     return unless @channel.hasAssociation 'fairs'
-    list = new AutocompleteList @$('#edit-admin-about-the-fair')[0],
-      name: 'fair_about_ids[]'
+    new AutocompleteList @$('#edit-admin-about-the-fair')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
       placeholder: 'Search fair by name...'
       filter: (res) -> for r in res
@@ -124,23 +92,14 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save fair_about_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save fair_about_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('fair_about_ids')
-      @fairs = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/fair/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @fairs.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @fairs
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('fair_about_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupPartnerAutocomplete: ->
     return unless @channel.hasAssociation 'partners'
-    list = new AutocompleteList @$('#edit-admin-partner')[0],
-      name: 'partner_ids[]'
+    new AutocompleteList @$('#edit-admin-partner')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
       placeholder: 'Search partner by name...'
       filter: (res) -> for r in res
@@ -149,23 +108,14 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save partner_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save partner_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('partner_ids')
-      @partners = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/partner/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @partners.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @partners
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('partner_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/partner/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupAuctionAutocomplete: ->
     return unless @channel.hasAssociation 'auctions'
-    list = new AutocompleteList @$('#edit-admin-auction')[0],
-      name: 'auction_ids[]'
+    new AutocompleteList @$('#edit-admin-auction')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
       placeholder: 'Search auction by name...'
       filter: (res) -> for r in res
@@ -174,23 +124,13 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save auction_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save auction_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @article.get('auction_ids')
-      @auctions = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/sale/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @auctions.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @auctions
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('auction_ids')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/sale/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupSectionAutocomplete: ->
-    @section_ids = @article.get 'section_ids' or []
-    list = new AutocompleteList @$('#edit-admin-section')[0],
-      name: 'section_ids[]'
+    new AutocompleteList @$('#edit-admin-section')[0],
       url: "#{sd.API_URL}/sections?q=%QUERY"
       placeholder: 'Search section by name...'
       filter: (sections) -> for section in sections.results
@@ -199,41 +139,24 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save section_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save section_ids: _.without(_.pluck(items, 'id'),item.id)
-    if ids = @section_ids
-      @sections = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.API_URL}/sections/#{id}").end (err, res) =>
-            @sections.push id: res.body.id, value: res.body.title
-            cb()
-      , =>
-        list.setState loading: false, items: @sections
-    else
-      list.setState loading: false
+      idsToFetch: @article.get 'section_ids'
+      fetchUrl: (id) -> "#{sd.API_URL}/sections/#{id}"
+      resObject: (res) ->
+        id: res.body.id, value: res.body.title
 
   setupShowsAutocomplete: ->
     return unless @channel.hasAssociation 'shows'
-    @show_ids = @article.get 'show_ids' or []
-    list = new AutocompleteList @$('#edit-admin-shows')[0],
-      name: 'show_ids[]'
+    new AutocompleteList @$('#edit-admin-shows')[0],
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
       selected: (e, item, items) =>
         @article.save show_ids: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save show_ids: _.without(_.pluck(items,'id'),item.id)
-    if ids = @show_ids
-      @shows = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.API_URL}/show/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @shows.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @shows
-    else
-      list.setState loading: false
+      idsToFetch: @article.get 'show_ids'
+      fetchUrl: (id) -> "#{sd.API_URL}/show/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   setupBiographyAutocomplete: ->
     select = new AutocompleteSelect @$('#edit-admin-biography')[0],
@@ -243,21 +166,16 @@ module.exports = class EditAdmin extends Backbone.View
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
         @article.save biography_for_artist_id: item.id
-        select.setState value: item.name, loading: false
-      cleared: =>
+      removed: =>
         @article.save biography_for_artist_id: null
-    if id = @article.get 'biography_for_artist_id'
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
-    else
-      select.setState loading: false
+      idToFetch: @article.get('biography_for_artist_id')
+      fetchUrl: sd.ARTSY_URL + '/api/v1/artist/' + @article.get('biography_for_artist_id')
+      resObject: (res) ->
+        value: res.body.name, id: res.body.id
 
   setupContributingAuthors: ->
     @contributing_authors = @article.get 'contributing_authors' or []
-    list = new AutocompleteList @$('#edit-admin-contributing-authors')[0],
-      name: 'contributing_authors[]'
+    new AutocompleteList @$('#edit-admin-contributing-authors')[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
       filter: (users) -> for user in users
@@ -266,23 +184,11 @@ module.exports = class EditAdmin extends Backbone.View
         @article.save contributing_authors: _.pluck items, 'id'
       removed: (e, item, items) =>
         @article.save contributing_authors: _.without(_.pluck(items, 'id'),item.id)
-    if @article.get('contributing_authors')?.length
-      @authors = []
-      ids = @article.get('contributing_authors')
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/user/#{id.id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @authors.push(
-              {
-                id: { id: res.body.id , name: res.body.name },
-                value: _.compact([res.body.name, res.body.email]).join(', ')
-              })
-            cb()
-      , =>
-        list.setState loading: false, items: @authors
-    else
-      list.setState loading: false
+      idsToFetch: @article.get('contributing_authors')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
+      resObject: (res) ->
+        id: { id: res.body.id , name: res.body.name },
+        value: _.compact([res.body.name, res.body.email]).join(', ')
 
   onOpen: =>
     async.parallel [
@@ -370,8 +276,7 @@ module.exports = class EditAdmin extends Backbone.View
   setupSuperArticleAutocomplete: ->
     return unless @channel.hasFeature 'superArticle'
     @related_articles = if @article.get('super_article')?.related_articles then @article.get('super_article').related_articles else []
-    list = new AutocompleteList @$('#edit-admin-related-articles')[0],
-      name: 'related_articles[]'
+    new AutocompleteList @$('#edit-admin-related-articles')[0],
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
       placeholder: 'Search article by title...'
       filter: (articles) ->
@@ -385,18 +290,10 @@ module.exports = class EditAdmin extends Backbone.View
         superArticle = @article.get('super_article') or {}
         superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
         @article.save super_article: superArticle
-    if ids = @related_articles
-      @articles = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.API_URL}/articles/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
-            cb()
-      , =>
-        list.setState loading: false, items: @articles
-    else
-      list.setState loading: false
+      idsToFetch: @related_articles
+      fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+      resObject: (res) ->
+        id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
 
   events:
     'change #eaf-primary-artists .eaf-artist-input': (e) ->
