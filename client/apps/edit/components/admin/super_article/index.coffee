@@ -16,6 +16,7 @@ module.exports = React.createClass
     super_article: @props.article.get('super_article') || {}
 
   componentDidMount: ->
+    return unless @props.channel.hasFeature 'superArticle'
     @setupSuperArticleAutocomplete()
     $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@props.article.get('is_super_article'))
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -42,7 +43,6 @@ module.exports = React.createClass
     @props.onChange super_article: newSuperArticle
 
   setupSuperArticleAutocomplete: ->
-    return unless @props.channel.hasFeature 'superArticle'
     @related_articles = if @props.article.get('super_article')?.related_articles then @props.article.get('super_article').related_articles else []
     new AutocompleteList $(@refs['autocomplete'])[0],
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"

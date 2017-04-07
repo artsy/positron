@@ -18,10 +18,15 @@ describe 'AdminSuperArticle', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
       window.jQuery = $
       Backbone.$ = $
-      $.onInfiniteScroll = sinon.stub()
+      $.fn.typeahead = sinon.stub()
       AdminSuperArticle = benv.require resolve(__dirname, '../super_article/index.coffee')
       AdminSuperArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
@@ -29,11 +34,11 @@ describe 'AdminSuperArticle', ->
         USER: access_token: ''
       }
       ImageUpload = benv.require resolve(__dirname, '../components/image_upload.coffee')
-      AdminSuperArticle.__set__ 'async', async = sinon.stub()
-      async.each = sinon.stub()
-      AdminSuperArticle.__set__ 'request', request = sinon.stub().returns({get: get = sinon.stub()})
       AdminSuperArticle.__set__ 'ImageUpload', React.createFactory(ImageUpload)
-      AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = sinon.stub().returns({setState: setState = sinon.stub()})
+      AdminSuperArticle.__set__ 'AutocompleteList', @Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      @Autocomplete.__set__ 'request', get: sinon.stub().returns
+        set: sinon.stub().returns
+          end: sinon.stub().yields(null, body: { id: '123', title: 'This cool article', author: {name: 'Artsy Editorial'}})
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns true
       @article = new Article
@@ -51,10 +56,10 @@ describe 'AdminSuperArticle', ->
     benv.teardown()
 
   it 'renders the fields', ->
-    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
+    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 11
     $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
-    @Autocomplete.callCount.should.eql 1
+    $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').first().attr('placeholder').should.eql 'Search article by title...'
 
   it 'Inputs are populated with article data', ->
     $(ReactDOM.findDOMNode(@component)).find('input[name=partner_link_title]').val().should.eql 'Download The App'
@@ -66,6 +71,7 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/logo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/blacklogo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://secondarypartner.com/logo.png'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'This cool article, Artsy Editorial'
 
   it 'enables input when is_super_article is enabled', ->
     @component.props.article.set 'is_super_article', true

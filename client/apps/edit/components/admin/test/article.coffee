@@ -24,18 +24,21 @@ describe 'AdminArticle', ->
           initialize: ->
           ttAdapter: ->
         )
+      $.fn.typeahead = sinon.stub()
       AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
       AdminArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminArticle.__set__ 'async', async = sinon.stub().returns({each: sinon.stub()})
       AdminArticle.__set__ 'AutocompleteList', @Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
-      sinon.spy @Autocomplete, 'Bloodhound'
+      @Autocomplete.__set__ 'request', get: sinon.stub().returns
+        set: sinon.stub().returns
+          end: sinon.stub().yields(null, body: { id: '123', name: 'Molly Gottschalk'})
       @article = new Article
       @article.attributes = fixtures().articles
       @article.set('author', {name: 'Artsy Editorial', id: '123'})
+      @article.set('contributing_authors', [{name: 'Molly Gottschalk', id: '123'}])
       @article.set('featured', true)
       props = {
         article: @article
@@ -56,12 +59,13 @@ describe 'AdminArticle', ->
       $(ReactDOM.findDOMNode(@component)).find('input').first().attr('placeholder').should.eql 'Change Primary Author name'
 
     it 'Renders the contributing author field', ->
-      # @Autocomplete.callCount.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').first().attr('placeholder').should.eql 'Search by user name or email...'
       $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Contributing Author'
+      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-selected').text().should.containEql 'Molly Gottschalk'
 
     it 'Renders tier and magazine buttons', ->
       $(ReactDOM.findDOMNode(@component)).find('.button-group').length.should.eql 2
-      $(ReactDOM.findDOMNode(@component)).find('button').length.should.eql 4
+      $(ReactDOM.findDOMNode(@component)).find('.button-group button').length.should.eql 4
       $(ReactDOM.findDOMNode(@component)).find('button.active').first().attr('name').should.eql '1'
       $(ReactDOM.findDOMNode(@component)).find('button.active').last().attr('name').should.eql 'true'
 

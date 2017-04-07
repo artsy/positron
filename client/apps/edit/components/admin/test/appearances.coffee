@@ -12,7 +12,13 @@ describe 'AdminAppearances', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
+      $.fn.typeahead = sinon.stub()
       window.jQuery = $
       Backbone.$ = $
       AdminAppearances = benv.require resolve __dirname, '../appearances/index.coffee'
@@ -21,8 +27,11 @@ describe 'AdminAppearances', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminAppearances.__set__ 'AutocompleteSelect', @AutocompleteSelect = sinon.stub().returns({setState: setState = sinon.stub()})
-      AdminAppearances.__set__ 'AutocompleteList', @AutocompleteList = sinon.stub()
+      AdminAppearances.__set__ 'AutocompleteSelect', @AutocompleteSelect = benv.require(
+        resolve __dirname, '../../../../../components/autocomplete_select/index.coffee'
+      )
+      @AutocompleteList = benv.require resolve __dirname, '../components/autocomplete.coffee'
+      AdminAppearances.__set__ 'AutocompleteList', React.createFactory @AutocompleteList
       @article = new Article
       @article.attributes = fixtures().articles
       @channel = {id: '123'}
@@ -48,5 +57,8 @@ describe 'AdminAppearances', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Extended Artist Biography'
 
     it 'Sets up autocompletes', ->
-      @AutocompleteSelect.callCount.should.eql 1
-      @AutocompleteList.callCount.should.eql 3
+      autocompletes = $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input')
+      $(autocompletes[0]).prop('placeholder').should.eql 'Search fair by name...'
+      $(autocompletes[1]).prop('placeholder').should.eql 'Search fair by name...'
+      $(autocompletes[2]).prop('placeholder').should.eql 'Search fair by name...'
+      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-input').prop('placeholder').should.eql 'Search artist by name...'

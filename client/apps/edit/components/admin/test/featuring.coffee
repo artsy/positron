@@ -18,16 +18,24 @@ describe 'AdminFeaturing', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
+      $.fn.typeahead = sinon.stub()
       AdminFeaturing = benv.require resolve __dirname, '../featuring/index.coffee'
       AdminFeaturing.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminFeaturing.__set__ 'async', async = sinon.stub().returns({each: sinon.stub()})
-      AdminFeaturing.__set__ 'AutocompleteList', @AutocompleteList = sinon.stub().returns({setState: setState = sinon.stub()})
-      AdminFeaturing.__set__ 'Autocomplete', @Autocomplete = sinon.stub()
+      AdminFeaturing.__set__ 'AutocompleteList', @AutocompleteList = benv.require(
+        resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      )
+      @Autocomplete = benv.require resolve __dirname, '../components/autocomplete.coffee'
+      AdminFeaturing.__set__ 'Autocomplete', React.createFactory @Autocomplete
       @article = new Article
       @article.attributes = fixtures().articles
       @channel = {id: '123'}
@@ -58,12 +66,15 @@ describe 'AdminFeaturing', ->
   describe 'AdminFeaturing', ->
 
     it 'Renders the autocomplete fields', ->
-      @Autocomplete.callCount.should.eql 3
-      @AutocompleteList.callCount.should.eql 1
+      autocompletes = $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').toArray()
+      $(autocompletes[0]).prop('placeholder').should.eql 'Search partner by name...'
+      $(autocompletes[1]).prop('placeholder').should.eql 'Search fair by name...'
+      $(autocompletes[2]).prop('placeholder').should.eql 'Search show by name...'
+      $(autocompletes[3]).prop('placeholder').should.eql 'Search auction by name...'
 
     it 'Renders the featured and mentioned fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('input').first().attr('placeholder').should.eql 'Add an artist by slug or url...'
-      $(ReactDOM.findDOMNode(@component)).find('input').last().attr('placeholder').should.eql 'Add an artwork by slug or url...'
+      $(ReactDOM.findDOMNode(@component)).find('form input').first().attr('placeholder').should.eql 'Add an artist by slug or url...'
+      $(ReactDOM.findDOMNode(@component)).find('form input').last().attr('placeholder').should.eql 'Add an artwork by slug or url...'
       $(ReactDOM.findDOMNode(@component)).find('.feature').length.should.eql 2
       $(ReactDOM.findDOMNode(@component)).find('.feature-mention').length.should.eql 4
 

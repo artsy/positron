@@ -89,7 +89,7 @@ module.exports = AdminArticle = React.createClass
         @onChange 'contributing_authors', _.pluck items, 'id'
       removed: (e, item, items) =>
         @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
-      idsToFetch: @props.article.get('contributing_authors')
+      idsToFetch: @props.article.get('contributing_authors') || []
       fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
       resObject: (res) ->
         id: { id: res.body.id , name: res.body.name },
