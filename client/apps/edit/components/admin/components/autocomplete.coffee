@@ -27,8 +27,7 @@ module.exports = React.createClass
     return unless @props.channel.hasAssociation fieldPlural
     fieldPlural = if field isnt 'auction_ids' then fieldPlural else 'sales'
     url = "#{sd.ARTSY_URL}/api/v1/match/#{fieldPlural}?term=%QUERY"
-    @list = new AutocompleteList $(@refs['autocomplete'])[0],
-      name: field + '[]'
+    new AutocompleteList $(@refs['autocomplete'])[0],
       url: url
       placeholder: "Search #{fieldSingle} by name..."
       filter: (res) -> for r in res
@@ -37,19 +36,10 @@ module.exports = React.createClass
         @props.onChange field, _.pluck items, 'id'
       removed: (e, item, items) =>
         @props.onChange field, _.without(_.pluck(items, 'id'),item.id)
-    if ids = @props.article.get field
-      fieldSingle = if field isnt 'auction_ids' then fieldSingle else 'sale'
-      @ids = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/#{fieldSingle}/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @ids.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        @list.setState loading: false, items: @ids
-    else
-      @list.setState loading: false
+      idsToFetch: @props.article.get field
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/#{fieldSingle}/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   render: ->
     div { ref: 'autocomplete' }

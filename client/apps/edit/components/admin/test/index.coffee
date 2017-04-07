@@ -48,6 +48,81 @@ describe 'AdminSections', ->
   afterEach ->
     benv.teardown()
 
+
+  # describe '#onOpen', ->
+
+  #   it 'fetches featured and mentioned articles', ->
+  #     @view.article.fetchFeatured = sinon.stub()
+  #     @view.article.fetchMentioned = sinon.stub()
+  #     @view.onOpen()
+  #     @view.article.fetchFeatured.called.should.be.ok
+  #     @view.article.fetchMentioned.called.should.be.ok
+
+  # describe '#renderFeatured', ->
+
+  #   it 'renders the featured artists', ->
+  #     artist = fabricate('artist')
+  #     artist.name = 'Andy Foobar'
+  #     @view.article.featuredArtists.set [artist]
+  #     @view.renderFeatured()
+  #     @view.$el.html().should.containEql 'Andy Foobar'
+
+  #   it 'renders primary featured', ->
+  #     artist = fabricate('artist')
+  #     artist.name = 'Andy Moobar'
+  #     @view.article.featuredPrimaryArtists.set [artist]
+  #     @view.renderFeatured()
+  #     @view.$el.html().should.containEql 'Andy Moobar'
+
+  # describe '#featureFromInput', ->
+
+  #   it 'adds a featured artist from a url put in an input', ->
+  #     @view.article.featuredArtists.add = sinon.stub()
+  #     @view.featureFromInput('Artists')(
+  #       currentTarget: $ "<input value='/andy-warhol' />"
+  #     )
+  #     Backbone.sync.args[0][1].id.should.equal 'andy-warhol'
+
+  # describe '#featureMentioned', ->
+
+  #   it 'adds a featured article on clicking a mention', ->
+  #     @view.article.featuredArtists.set { id: 'foo', artist: {} }
+  #     @view.article.mentionedArtists.set { id: 'bar', artist: {} }
+  #     @view.featureMentioned('Artists')(
+  #       currentTarget: $ "<input data-id='bar' />"
+  #     )
+  #     (@view.article.featuredArtists.get('bar')?).should.be.ok
+
+  # describe '#toggleScheduled', ->
+
+  #   it 'can save the scheduled publish date and time', ->
+  #     @view.article.set {scheduled_publish_at: null}
+  #     date = '11/11/11'
+  #     time = '12:30'
+  #     dateAndTime = moment(date + ' ' + time).toISOString
+  #     global.confirm = -> true
+  #     @view.$('.edit-admin-input-date').val(date)
+  #     @view.$('.edit-admin-input-time').val(time)
+  #     @view.toggleScheduled(@e)
+  #     @view.article.get('scheduled_publish_at').should.containEql moment(dateAndTime, 'MM/DD/YYYY HH:mm').toDate()
+  #     delete global.confirm
+
+  #   it 'can unset the scheduled publish time', ->
+  #     @view.article.set {scheduled_publish_at: '2015-11-11T22:59:00.000Z'}
+  #     @view.toggleScheduled(@e)
+  #     should.equal(@view.article.get('scheduled_publish_at'), null)
+
+  # describe '#setupPublishDate', ->
+
+  #   it 'can set the publish date and time', ->
+  #     date = '11/11/11'
+  #     time = '12:30'
+  #     dateAndTime = date + ' ' + time
+  #     @view.$('.edit-admin-input-date').val(date)
+  #     @view.$('.edit-admin-input-time').val(time)
+  #     @view.$('.edit-admin-input-time').trigger('blur')
+  #     @view.article.get('published_at').should.containEql moment(dateAndTime).toISOString()
+
   it '#componentWillMount fetches featured and mentioned artists/artworks', ->
     @component.props.article.fetchFeatured = sinon.stub()
     @component.props.article.fetchMentioned = sinon.stub()

@@ -2,8 +2,6 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 _ = require 'underscore'
 moment = require 'moment'
-async = require 'async'
-request = require 'superagent'
 sd = require('sharify').data
 { div, label, input, button } = React.DOM
 
@@ -52,9 +50,11 @@ module.exports = AdminArticle = React.createClass
     published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
     if !@props.article.get('published')
       # ignore if draft and date is past
-      return unless published_at > moment()
+      if published_at < moment()
+        @onChange 'published_at', null
       # if draft and date is future, set scheduled
-      @onChange 'scheduled_publish_at', published_at.toISOString()
+      else
+        @onChange 'scheduled_publish_at', published_at.toISOString()
     else
       # if article is published, reset published date
       @onChange 'published_at', published_at.toISOString()
@@ -80,8 +80,7 @@ module.exports = AdminArticle = React.createClass
     @setState focus_date: false
 
   setupAutocomplete: ->
-    list = new AutocompleteList $(@refs.autocomplete)[0],
-      name: 'contributing_authors[]'
+    new AutocompleteList $(@refs.autocomplete)[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
       filter: (users) -> for user in users
@@ -90,23 +89,11 @@ module.exports = AdminArticle = React.createClass
         @onChange 'contributing_authors', _.pluck items, 'id'
       removed: (e, item, items) =>
         @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
-    if @props.article.get('contributing_authors')?.length
-      @authors = []
-      ids = @props.article.get('contributing_authors')
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.ARTSY_URL}/api/v1/user/#{id.id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @authors.push(
-              {
-                id: { id: res.body.id , name: res.body.name },
-                value: _.compact([res.body.name, res.body.email]).join(', ')
-              })
-            cb()
-      , =>
-        list.setState loading: false, items: @authors
-    else
-      list.setState loading: false
+      idsToFetch: @props.article.get('contributing_authors')
+      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
+      resObject: (res) ->
+        id: { id: res.body.id , name: res.body.name },
+        value: _.compact([res.body.name, res.body.email]).join(', ')
 
   showActive: (key, value) ->
     active = if @props.article.get(key) is value then ' active' else ''

@@ -205,7 +205,7 @@ module.exports = React.createClass
       },
         editor {
           ref: 'editor'
-          placeholder: 'Image caption'
+          placeholder: 'Media caption'
           editorState: @state.editorState
           spellCheck: true
           onChange: @onChange

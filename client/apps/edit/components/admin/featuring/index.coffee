@@ -22,27 +22,17 @@ module.exports = React.createClass
 
   setupShowsAutocomplete: ->
     return unless @props.channel.hasAssociation 'shows'
-    @show_ids = @props.article.get 'show_ids' or []
-    list = new AutocompleteList $(@refs['show_ids'])[0],
-      name: 'show_ids[]'
+    new AutocompleteList $(@refs['show_ids'])[0],
       url: "#{sd.API_URL}/shows?q=%QUERY"
       placeholder: 'Search show by name...'
       selected: (e, item, items) =>
         @props.onChange 'show_ids', _.pluck items, 'id'
       removed: (e, item, items) =>
         @props.onChange 'show_ids', _.without(_.pluck(items,'id'),item.id)
-    if ids = @show_ids
-      @shows = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.API_URL}/show/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @shows.push id: res.body._id, value: res.body.name
-            cb()
-      , =>
-        list.setState loading: false, items: @shows
-    else
-      list.setState loading: false
+      idsToFetch: @props.article.get 'show_ids'
+      fetchUrl: (id) -> "#{sd.API_URL}/show/#{id}"
+      resObject: (res) ->
+        id: res.body._id, value: res.body.name
 
   onInputChange: (e) ->
     e.preventDefault()

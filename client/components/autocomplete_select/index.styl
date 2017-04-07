@@ -1,5 +1,17 @@
 @import '../stylus_lib'
 
+.autocomplete-select[data-state='selected']
+  .autocomplete-select-input, .twitter-typeahead
+    display none
+  .autocomplete-select-selected
+    display block
+
+.autocomplete-select[data-state='empty']
+  .autocomplete-select-input, .twitter-typeahead
+    display block
+  .autocomplete-select-selected
+    display none
+
 .autocomplete-select-selected
   garamond()
   text-transform none

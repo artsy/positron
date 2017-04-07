@@ -44,8 +44,7 @@ module.exports = React.createClass
   setupSuperArticleAutocomplete: ->
     return unless @props.channel.hasFeature 'superArticle'
     @related_articles = if @props.article.get('super_article')?.related_articles then @props.article.get('super_article').related_articles else []
-    list = new AutocompleteList $(@refs['autocomplete'])[0],
-      name: 'related_articles[]'
+    new AutocompleteList $(@refs['autocomplete'])[0],
       url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
       placeholder: 'Search article by title...'
       filter: (articles) ->
@@ -61,18 +60,10 @@ module.exports = React.createClass
         superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
         @setState super_article: superArticle
         @props.onChange 'super_article', superArticle
-    if ids = @related_articles
-      @articles = []
-      async.each ids, (id, cb) =>
-        request
-          .get("#{sd.API_URL}/articles/#{id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @articles.push id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
-            cb()
-      , =>
-        list.setState loading: false, items: @articles
-    else
-      list.setState loading: false
+      idsToFetch: @related_articles
+      fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+      resObject: (res) ->
+        id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
 
   printFieldGroup: (field, title) ->
     div {className: 'field-group'},

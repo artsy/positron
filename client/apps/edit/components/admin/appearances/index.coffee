@@ -19,24 +19,19 @@ module.exports = React.createClass
       ReactDOM.unmountComponentAtNode(ref)
 
   setupBiographyAutocomplete: ->
-    $el = $(@refs.biography_for_artist_id)[0]
-    select = new AutocompleteSelect $el,
+    new AutocompleteSelect $(@refs.biography_for_artist_id)[0],
       url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
       placeholder: 'Search artist by name...'
       filter: (artists) -> for artist in artists
         { id: artist._id, value: artist.name }
       selected: (e, item) =>
-        select.setState value: item.name, loading: false
         @props.onChange 'biography_for_artist_id', item.id
-      cleared: =>
+      removed: =>
         @props.onChange 'biography_for_artist_id', null
-    if id = @props.article.get 'biography_for_artist_id'
-      request
-        .get("#{sd.ARTSY_URL}/api/v1/artist/#{id}")
-        .set('X-Access-Token': sd.USER.access_token).end (err, res) ->
-          select.setState value: res.body.name, loading: false
-    else
-      select.setState loading: false
+      idToFetch: @props.article.get('biography_for_artist_id')
+      fetchUrl: sd.ARTSY_URL + '/api/v1/artist/' + @props.article.get('biography_for_artist_id')
+      resObject: (res) ->
+        value: res.body.name, id: res.body.id
 
   render: ->
     div { className: 'edit-admin--appearances edit-admin__fields', ref: 'container'},
