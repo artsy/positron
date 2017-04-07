@@ -142,38 +142,42 @@ module.exports = React.createClass
     div { className: 'edit-admin--featuring edit-admin__fields', ref: 'container'},
       div {className: 'fields-full'},
         div {className: 'fields-left'},
-          div {className: 'field-group'},
-            label {}, 'Partner'
-            Autocomplete {
-              field: 'partner_ids'
-              onChange: @props.onChange
-              article: @props.article
-              channel: @props.channel
-            }
+          if @props.channel.hasAssociation 'partners'
+            div {className: 'field-group'},
+              label {}, 'Partner'
+              Autocomplete {
+                field: 'partner_ids'
+                onChange: @props.onChange
+                article: @props.article
+                channel: @props.channel
+              }
         div {className: 'fields-right'},
-          div {className: 'field-group'},
-            label {}, 'Fair'
-            Autocomplete {
-              field: 'fair_ids'
-              onChange: @props.onChange
-              article: @props.article
-              channel: @props.channel
-            }
+          if @props.channel.hasAssociation 'fairs'
+            div {className: 'field-group'},
+              label {}, 'Fair'
+              Autocomplete {
+                field: 'fair_ids'
+                onChange: @props.onChange
+                article: @props.article
+                channel: @props.channel
+              }
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},
-          div {className: 'field-group'},
-            label {}, 'Show'
-            div { ref: 'show_ids' }
+          if @props.channel.hasAssociation 'shows'
+            div {className: 'field-group'},
+              label {}, 'Show'
+              div { ref: 'show_ids' }
         div {className: 'fields-right'},
-          div {className: 'field-group'},
-            label {}, 'Auction'
-            Autocomplete {
-              field: 'auction_ids'
-              onChange: @props.onChange
-              article: @props.article
-              channel: @props.channel
-            }
+          if @props.channel.hasAssociation 'auctions'
+            div {className: 'field-group'},
+              label {}, 'Auction'
+              Autocomplete {
+                field: 'auction_ids'
+                onChange: @props.onChange
+                article: @props.article
+                channel: @props.channel
+              }
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},

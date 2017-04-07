@@ -65,6 +65,9 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
     @props.selected? e, item, @state.items
     @$input.val('')
 
+  onBlur: ->
+    @$input.val('')
+
   removeItem: (item) -> (e) =>
     e.preventDefault()
     @$input.typeahead('destroy').val('')
@@ -84,4 +87,5 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
       input {
         className: 'bordered-input autocomplete-input'
         placeholder: @props.placeholder
+        onBlur: @onBlur
       }

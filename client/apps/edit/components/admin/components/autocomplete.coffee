@@ -23,13 +23,13 @@ module.exports = React.createClass
       .replace('_artsy', '')
       .replace('_about', '')
       .replace('_programming', '')
+    placeholder = "Search #{fieldSingle} by name..."
+    fieldSingle = fieldSingle.replace('auction', 'sale')
     fieldPlural = fieldSingle + 's'
-    return unless @props.channel.hasAssociation fieldPlural
-    fieldPlural = if field isnt 'auction_ids' then fieldPlural else 'sales'
     url = "#{sd.ARTSY_URL}/api/v1/match/#{fieldPlural}?term=%QUERY"
     new AutocompleteList $(@refs['autocomplete'])[0],
       url: url
-      placeholder: "Search #{fieldSingle} by name..."
+      placeholder: placeholder
       filter: (res) -> for r in res
         { id: r._id, value: r.name }
       selected: (e, item, items) =>
