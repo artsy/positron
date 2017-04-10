@@ -40,7 +40,7 @@ moment = require 'moment'
 
     # Only add the $or array for queries that require it (blank $or array causes problems)
     query.$or ?= [] if input.artist_id or input.all_by_author or
-      input.has_video or input.channel_id
+      input.has_video or input.channel_id or input.vertical
 
     # Convert query for channel_id to include partner_channel_id
     query.$or.push(
@@ -53,6 +53,11 @@ moment = require 'moment'
       { author_id: ObjectId(input.all_by_author) }
       { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
     ) if input.all_by_author
+
+    # Convert query for articles by vertical
+    query.$or.push(
+      { vertical: { $elemMatch: { id: ObjectId input.vertical} } }
+    ) if input.vertical
 
     # Convert query for articles featured to an artist or artwork
     query.$or.push(

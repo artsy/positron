@@ -213,6 +213,7 @@ denormalizedArtwork = (->
   auction_id: @objectId()
   sort: @string()
   tier: @number()
+  vertical: @objectId()
   featured: @boolean()
   exclude_google_news: @boolean()
   super_article_for: @objectId()
