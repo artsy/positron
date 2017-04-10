@@ -145,6 +145,7 @@ typecastIds = (article) ->
       author
     ) if article.contributing_authors
     author_id: article.author_id.toString() if article.author_id
+    vertical: { id: article.vertical.id.toString(), name: article.vertical.name } if article.vertical
     fair_ids: article.fair_ids.map(String) if article.fair_ids
     fair_programming_ids: article.fair_programming_ids.map(String) if article.fair_programming_ids
     fair_artsy_ids: article.fair_artsy_ids.map(String) if article.fair_artsy_ids

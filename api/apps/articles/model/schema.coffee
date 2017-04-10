@@ -77,6 +77,9 @@ denormalizedArtwork = (->
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string()).default([])
+  vertical: @object().keys
+    name: @string().allow('').default('')
+    id: @objectId()
   title: @string().allow('', null)
   layout: @string().allow('left', 'center', null).default('center')
   updated_at: @date()

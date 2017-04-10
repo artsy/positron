@@ -982,6 +982,15 @@ describe 'Article', ->
         article.description.should.containEql 'lines start forming'
         done()
 
+    it 'saves verticals', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        vertical: {name: 'Culture', id: '4d8b92b34eb68a1b2c0003f4'}
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.vertical.name.should.eql 'Culture'
+        done()
+
     it 'saves social metadata', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
