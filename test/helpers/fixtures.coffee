@@ -165,6 +165,9 @@ module.exports = ->
     id: '55356a9deca560a0137aa4b7'
     name: 'Show Reviews'
     public: true
+  fixtures.verticals =
+    id: '55356a9deca560a0137bb4a7'
+    name: 'Culture'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
