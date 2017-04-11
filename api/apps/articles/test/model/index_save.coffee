@@ -1,0 +1,664 @@
+_ = require 'underscore'
+rewire = require 'rewire'
+moment = require 'moment'
+{ db, fabricate, empty, fixtures } = require '../../../../test/helpers/db'
+Article = rewire '../../model/index'
+{ ObjectId } = require 'mongojs'
+express = require 'express'
+gravity = require('antigravity').server
+app = require('express')()
+sinon = require 'sinon'
+search = require '../../../../lib/elasticsearch'
+
+describe 'Index Save', ->
+
+  before (done) ->
+    app.use '/__gravity', gravity
+    @server = app.listen 5000, ->
+      search.client.indices.create
+        index: 'articles_' + process.env.NODE_ENV
+      , ->
+        done()
+
+  after ->
+    @server.close()
+    search.client.indices.delete
+      index: 'articles_' + process.env.NODE_ENV
+
+  beforeEach (done) ->
+    empty ->
+      fabricate 'articles', _.times(10, -> {}), ->
+        done()
+
+  describe '#save', ->
+
+    it 'saves valid article input data', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        id: '5086df098523e60002002222'
+        channel_id: '5086df098523e60002002223'
+      }, 'foo', (err, article) ->
+        article.title.should.equal 'Top Ten Shows'
+        article.channel_id.toString().should.equal '5086df098523e60002002223'
+        db.articles.count (err, count) ->
+          count.should.equal 11
+          done()
+
+    it 'requires an author', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+      }, 'foo', (err, article) ->
+        err.message.should.containEql '"author_id" is required'
+        done()
+
+    it 'adds an updated_at as a date', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        article.updated_at.should.be.an.instanceOf(Date)
+        moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
+        done()
+
+    it 'input updated_at must be a date', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        updated_at: 'foo'
+      }, 'foo', (err, article) ->
+        err.message.should.containEql '"updated_at" must be a number of milliseconds or valid date string'
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        updated_at: new Date
+      }, 'foo', (err, article) ->
+        moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
+        done()
+
+    it 'includes the id for a new article', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        (article._id?).should.be.ok
+        done()
+
+    it 'adds a slug based off the thumbnail title', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        author: name: 'Craig Spaeth'
+      }, 'foo', (err, article) ->
+        article.slugs[0].should.equal 'craig-spaeth-ten-shows'
+        done()
+
+    it 'adds a slug based off a user and thumbnail title', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+        Article.save {
+          thumbnail_title: 'Foo Baz'
+          author_id: @user._id
+          author: name: @user.name
+        }, 'foo', (err, article) ->
+          article.slugs[0].should.equal 'molly-foo-baz'
+          done()
+
+    it 'saves slug history when publishing', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+        Article.save {
+          thumbnail_title: 'Foo Baz'
+          author_id: @user._id
+          published: false
+          author: name: @user.name
+        }, 'foo', (err, article) =>
+          Article.save {
+            id: article._id.toString()
+            thumbnail_title: 'Foo Bar Baz'
+            author_id: @user._id
+            published: true
+            author: name: @user.name
+          }, 'foo', (err, article) ->
+            article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
+            Article.find article.slugs[0], (err, article) ->
+              article.thumbnail_title.should.equal 'Foo Bar Baz'
+              done()
+
+    it 'appends the date to an article URL when its slug already exists', (done) ->
+      fabricate 'articles', {
+        id: '5086df098523e60002002222'
+        slugs: ['craig-spaeth-heyo']
+        author: name: 'Craig Spaeth'
+      }, ->
+        Article.save {
+          thumbnail_title: 'heyo'
+          author_id: '5086df098523e60002000018'
+          published_at: '01-01-99'
+          id: '5086df098523e60002002222'
+          author: name: 'Craig Spaeth'
+          }, 'foo', (err, article) ->
+            article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
+            db.articles.count (err, count) ->
+              count.should.equal 12
+              done()
+
+    it 'saves published_at when the article is published', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+        id: '5086df098523e60002002222'
+      }, 'foo', (err, article) ->
+        article.published_at.should.be.an.instanceOf(Date)
+        moment(article.published_at).format('YYYY').should
+          .equal moment().format('YYYY')
+        done()
+
+    it 'updates published_at when admin changes it', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, 'foo', (err, article) =>
+        Article.save {
+          id: article._id.toString()
+          author_id: '5086df098523e60002000018'
+          published_at: moment().add(1, 'year').toDate()
+        }, 'foo', (err, updatedArticle) ->
+          updatedArticle.published_at.should.be.an.instanceOf(Date)
+          moment(updatedArticle.published_at).format('YYYY').should
+            .equal moment().add(1, 'year').format('YYYY')
+          done()
+
+    it 'doesnt save a fair unless explictly set', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        fair_ids: []
+        published: true
+      }, 'foo', (err, article) ->
+        (article.fair_ids?).should.not.be.ok
+        done()
+
+    it 'escapes xss', (done) ->
+      body = '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+      badBody = '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+      Article.save {
+        id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+        hero_section:
+          type: 'image'
+          caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+        lead_paragraph: '<p>abcd abcd</p><svg/onload=alert(1)>'
+        sections: [
+          {
+            type: 'text'
+            body: body
+          }
+          {
+            type: 'text'
+            body: badBody
+          }
+          {
+            type: 'image'
+            caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+          }
+          {
+            type: 'slideshow'
+            items: [
+              {
+                type: 'image'
+                caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+              }
+            ]
+          }
+          {
+            type: 'embed'
+            url: 'http://maps.google.com'
+            height: '400'
+            mobile_height: '300'
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.hero_section.caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[0].body.should.equal body
+        article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
+        article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[4].url.should.equal 'http://maps.google.com'
+        article.sections[4].height.should.equal '400'
+        article.sections[4].mobile_height.should.equal '300'
+        done()
+
+    it 'doesnt escape smart quotes', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        title: 'Dr. Evil demands “one million dollars”.'
+        thumbnail_title: 'Dr. Evil demands “one billion dollars”.'
+      }, 'foo', (err, article) ->
+        article.title.should.containEql '“'
+        article.thumbnail_title.should.containEql '“'
+        done()
+
+    it 'fixes anchors urls', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'text'
+            body: '<a href="foo.com">Foo</a>'
+          }
+          {
+            type: 'text'
+            body: '<a href="www.bar.com">Foo</a>'
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
+        article.sections[1].body.should.equal '<a href="http://www.bar.com">Foo</a>'
+        done()
+
+    it 'retains non-text sections', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'text'
+            body: '<a href="foo.com">Foo</a>'
+          }
+          {
+            type: 'image'
+            url: 'http://foo.com'
+          }
+          {
+            type: 'video'
+            url: 'foo.com/watch'
+          }
+          {
+            type: 'slideshow'
+            items: [
+              {
+                type: 'video'
+                url: 'foo.com/watch'
+              }
+            ]
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
+        article.sections[1].url.should.equal 'http://foo.com'
+        article.sections[2].url.should.equal 'http://foo.com/watch'
+        article.sections[3].items[0].url.should.equal 'http://foo.com/watch'
+        done()
+
+    it 'maintains the original slug when publishing with a new title', (done) ->
+      fabricate 'users', { name: 'Molly'}, (err, @user) ->
+        Article.save {
+          thumbnail_title: 'Foo Baz'
+          author_id: @user._id
+          published: true
+          author: name: @user.name
+        }, 'foo', (err, article) =>
+          Article.save {
+            id: article._id.toString()
+            thumbnail_title: 'Foo Bar Baz'
+            author_id: @user._id
+            published: true
+          }, 'foo', (err, article) ->
+            article.slugs.join('').should.equal 'molly-foo-baz'
+            article.thumbnail_title.should.equal 'Foo Bar Baz'
+            done()
+
+    it 'generates keywords on publish', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        primary_featured_artist_ids: ['4d8b92b34eb68a1b2c0003f4']
+        featured_artist_ids: ['52868347b202a37bb000072a']
+        fair_ids: ['5530e72f7261696238050000']
+        partner_ids: ['4f5228a1de92d1000100076e']
+        tags: ['cool', 'art']
+        contributing_authors: [{name: 'kana'}]
+        published: true
+      }, 'foo', (err, article) ->
+        article.keywords.join(',').should.equal 'cool,art,Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,kana'
+        done()
+
+    it 'indexes the article in elasticsearch on save', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        title: 'foo article'
+        published: true
+        channel_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        setTimeout( =>
+          search.client.search(
+            index: search.index
+            q: 'name:foo'
+            , (error, response) ->
+              response.hits.hits[0]._source.name.should.equal 'foo article'
+              response.hits.hits[0]._source.visible_to_public.should.equal true
+              done()
+          )
+        , 1000)
+
+    it 'saves Super Articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        is_super_article: true
+        super_article: {
+          partner_link: 'http://partnerlink.com'
+          partner_logo: 'http://partnerlink.com/logo.jpg'
+          partner_fullscreen_header_logo: 'http://partnerlink.com/blacklogo.jpg'
+          partner_link_title: 'Download The App'
+          partner_logo_link: 'http://itunes'
+          secondary_partner_logo: 'http://secondarypartner.com/logo.png'
+          secondary_logo_text: 'In Partnership With'
+          secondary_logo_link: 'http://secondary'
+          footer_blurb: 'This is a Footer Blurb'
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+      }, 'foo', (err, article) ->
+        article.super_article.partner_link.should.equal 'http://partnerlink.com'
+        article.super_article.partner_logo.should.equal 'http://partnerlink.com/logo.jpg'
+        article.super_article.partner_link_title.should.equal 'Download The App'
+        article.super_article.partner_logo_link.should.equal 'http://itunes'
+        article.super_article.partner_fullscreen_header_logo.should.equal 'http://partnerlink.com/blacklogo.jpg'
+        article.super_article.secondary_partner_logo.should.equal 'http://secondarypartner.com/logo.png'
+        article.super_article.secondary_logo_text.should.equal 'In Partnership With'
+        article.super_article.secondary_logo_link.should.equal 'http://secondary'
+        article.super_article.footer_blurb.should.equal 'This is a Footer Blurb'
+        article.is_super_article.should.equal true
+        article.super_article.related_articles.length.should.equal 1
+        done()
+
+    it 'type casts ObjectId over articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        super_article: {
+          related_articles: [ '5530e72f7261696238050000' ]
+        }
+        published: true
+        fair_programming_ids: [ '52617c6c8b3b81f094000013' ]
+        fair_artsy_ids: [ '53da550a726169083c0a0700' ]
+        fair_about_ids: [ '53da550a726169083c0a0700' ]
+      }, 'foo', (err, article) ->
+        (article.author_id instanceof ObjectId).should.be.true()
+        (article.super_article.related_articles[0] instanceof ObjectId).should.be.true()
+        done()
+
+    it 'saves a callout section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'callout'
+            text: 'The Title Goes Here'
+            article: ''
+            thumbnail_url: 'http://image.jpg'
+            hide_image: false
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          },
+          {
+            type: 'callout'
+            text: ''
+            article: '53da550a726169083c0a0700'
+            thumbnail_url: ''
+          },
+          {
+            type: 'text'
+            body: 'badBody'
+          }
+        ]
+        published: true
+      }, 'foo', (err, article) ->
+        article.sections[0].type.should.equal 'callout'
+        article.sections[0].text.should.equal 'The Title Goes Here'
+        article.sections[0].thumbnail_url.should.equal 'http://image.jpg'
+        article.sections[1].type.should.equal 'text'
+        article.sections[3].type.should.equal 'text'
+        article.sections[2].article.should.equal '53da550a726169083c0a0700'
+        done()
+
+    it 'saves an article that does not have sections in input', (done) ->
+      fabricate 'articles',
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: ObjectId('5086df098523e60002000018')
+        published: false
+        author: {
+          name: 'Kana Abe'
+        }
+        sections: [
+          {
+            type: 'text'
+            body: 'The start of a new article'
+          }
+          {
+            type: 'image'
+            url: 'https://image.png'
+            caption: 'Trademarked'
+          }
+        ]
+      , ->
+        Article.save {
+          _id: ObjectId('5086df098523e60002000018')
+          id: '5086df098523e60002000018'
+          author_id: '5086df098523e60002000018'
+          published: true
+        }, 'foo', (err, article) ->
+          article.published.should.be.true()
+          article.sections.length.should.equal 2
+          article.sections[0].body.should.containEql 'The start of a new article'
+          done()
+
+    it 'saves a TOC section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'toc'
+            links: [
+              { name: 'kana', value: 'Kana' }
+              { name: 'andy warhol', value: 'Andy Warhol' }
+            ]
+          }
+        ]
+        published: true
+      }, 'foo', (err, article) ->
+        article.sections[0].type.should.equal 'toc'
+        article.sections[0].links[0].name.should.equal 'kana'
+        article.sections[0].links[0].value.should.equal 'Kana'
+        article.sections[0].links[1].name.should.equal 'andy warhol'
+        article.sections[0].links[1].value.should.equal 'Andy Warhol'
+        done()
+
+    it 'saves an image set section', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'image_set'
+            images: [
+              {
+                type: 'image'
+                url: 'https://image.png'
+                caption: 'Trademarked'
+              }
+              {
+                type: 'artwork'
+                id: '123'
+                slug: 'andy-warhol'
+                title: 'The Piece'
+                date: '2015-04-01'
+                image: 'http://image.png'
+              }
+            ]
+          }
+        ]
+      }, 'foo', (err, article) ->
+        article.sections[0].type.should.equal 'image_set'
+        article.sections[0].images[0].type.should.equal 'image'
+        article.sections[0].images[0].url.should.equal 'https://image.png'
+        article.sections[0].images[1].type.should.equal 'artwork'
+        article.sections[0].images[1].id.should.equal '123'
+        article.sections[0].images[1].slug.should.equal 'andy-warhol'
+        done()
+
+    it 'saves layouts', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        layout: 'left'
+      }, 'foo', (err, article) ->
+        article.layout.should.equal 'left'
+        done()
+
+    it 'it defaults to center if layout is not specified', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        article.layout.should.equal 'center'
+        done()
+
+    it 'saves the channel_id', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+      }, 'foo', (err, article) ->
+        article.channel_id.toString().should.equal '5086df098523e60002000015'
+        done()
+
+    it 'saves the partner_channel_id', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        partner_channel_id: '5086df098523e60002000015'
+      }, 'foo', (err, article) ->
+        article.partner_channel_id.toString().should.equal '5086df098523e60002000015'
+        done()
+
+    it 'saves the author', (done) ->
+      Article.save {
+        author:
+          name: 'Jon Snow'
+          id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) ->
+        article.author.id.toString().should.equal '5086df098523e60002000018'
+        article.author.name.should.equal 'Jon Snow'
+        done()
+
+    it 'saves a description', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        description: 'Just before the lines start forming, we predict where they will go.'
+      }, 'foo', (err, article) ->
+        article.description.should.containEql 'lines start forming'
+        done()
+
+    it 'saves social metadata', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        social_title: 'social title'
+        social_description: 'social description'
+        social_image: 'social image'
+      }, 'foo', (err, article) ->
+        article.social_title.should.containEql 'social title'
+        article.social_description.should.containEql 'social description'
+        article.social_image.should.containEql 'social image'
+        done()
+
+    it 'saves search metadata', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        search_title: 'search title'
+        search_description: 'search description'
+      }, 'foo', (err, article) ->
+        article.search_title.should.containEql 'search title'
+        article.search_description.should.containEql 'search description'
+        done()
+
+    it 'saves the seo_keyword', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        seo_keyword: 'focus'
+      }, 'foo', (err, article) ->
+        article.seo_keyword.should.equal 'focus'
+        done()
+
+    it 'saves tags', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        tags: ['startup', 'artsy', 'technology']
+        title: 'some title'
+      }, 'foo', (err, article) ->
+        article.tags.length.should.equal 3
+        article.tags[0].should.equal 'startup'
+        article.tags[1].should.equal 'artsy'
+        article.tags[2].should.equal 'technology'
+        done()
+
+    it 'saves internal_tags', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        internal_tags: ['startup', 'artsy', 'technology']
+      }, 'foo', (err, article) ->
+        article.internal_tags.length.should.equal 3
+        article.internal_tags[0].should.equal 'startup'
+        article.internal_tags[1].should.equal 'artsy'
+        article.internal_tags[2].should.equal 'technology'
+        done()
+
+    it 'saves verticals', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        vertical: ['art']
+        title: 'Art History 101'
+      }, 'foo', (err, article) ->
+        article.vertical[0].should.equal 'art'
+        article.title.should.equal 'Art History 101'
+        done()
+
+    it 'saves sub_verticals', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sub_vertical: ['Art History']
+        title: 'Art History 101'
+      }, 'foo', (err, article) ->
+        article.sub_vertical[0].should.equal 'Art History'
+        article.title.should.equal 'Art History 101'
+        done()
+
+    it 'deletes article from sailthru if it is being unpublished', (done) ->
+      article = {
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+        published: false
+      }
+      Article.__set__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
+      fabricate 'articles',
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: ObjectId('5086df098523e60002000018')
+        published: true
+      , =>
+        Article.save article, 'foo', (err, article) =>
+          article.published.should.be.false()
+          @onUnpublish.callCount.should.equal 1
+          done()
