@@ -79,8 +79,6 @@ module.exports = class Article extends Backbone.Model
     options.success = _.after 3, options.success if options.success?
     @featuredPrimaryArtists.getOrFetchIds(
       @get('primary_featured_artist_ids'), options)
-    @featuredArtists.getOrFetchIds(
-      @get('featured_artist_ids'), options)
     @featuredArtworks.getOrFetchIds(
       @get('featured_artwork_ids'), options)
 
@@ -117,10 +115,4 @@ module.exports = class Article extends Backbone.Model
       extended.hero_section = null
     if @leadParagraph?.get('text')?.length
       extended.lead_paragraph = @leadParagraph.get('text')
-    if @featuredArtworks?.length
-      extended.featured_artwork_ids = @featuredArtworks.pluck('_id')
-    if @featuredArtists?.length
-      extended.featured_artist_ids = @featuredArtists.pluck('_id')
-    if @featuredPrimaryArtists?.length
-      extended.primary_featured_artist_ids = @featuredPrimaryArtists.pluck('_id')
     _.extend super, extended

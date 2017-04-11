@@ -10,13 +10,12 @@ request = require 'superagent'
 module.exports = (el, props) ->
   ReactDOM.render React.createElement(AutocompleteList, props), el
 
-module.exports.AutocompleteList = AutocompleteList = React.createClass
+module.exports = AutocompleteList = React.createClass
   displayName: 'AutocompleteList'
 
   getInitialState: ->
     loading: true
     items: []
-    value: ''
 
   componentDidMount: ->
     @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-input')
@@ -62,18 +61,20 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
     @$input.on 'typeahead:selected', @onSelect
 
   onSelect: (e, item) ->
-    @setState value: '', items: @state.items.concat [item]
+    @setState items: @state.items.concat [item]
     @props.selected? e, item, @state.items
+    @$input.val('')
+
+  onBlur: ->
+    @$input.val('')
 
   removeItem: (item) -> (e) =>
     e.preventDefault()
-    @$input.typeahead('destroy')
+    @$input.typeahead('destroy').val('')
     newItems = _.reject(@state.items, (i) -> i.id is item.id)
     @setState items: newItems
     @props.removed? e, item, newItems
-
-  handleChange: (e) ->
-    @setState value: e.target.value
+    @addAutocomplete()
 
   render: ->
     div { className: 'autocomplete-container' },
@@ -86,6 +87,6 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
       input {
         className: 'bordered-input autocomplete-input'
         placeholder: @props.placeholder
-        value: @state.value
-        onChange: @handleChange
+        onBlur: @onBlur
+        disabled: @props.disabled
       }

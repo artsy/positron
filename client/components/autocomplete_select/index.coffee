@@ -10,7 +10,7 @@ request = require 'superagent'
 module.exports = (el, props) ->
   ReactDOM.render React.createElement(AutocompleteSelect, props), el
 
-module.exports.AutocompleteSelect = AutocompleteSelect = React.createClass
+module.exports = AutocompleteSelect = React.createClass
   displayName: 'AutocompleteSelect'
 
   getInitialState: ->

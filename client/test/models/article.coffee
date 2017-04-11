@@ -31,14 +31,6 @@ describe "Article", ->
       @article.sections.reset []
       @article.toJSON().sections[0].body.should.equal 'Foobar'
 
-    it 'injects features artworks & artists', ->
-      @article.featuredArtworks.set [fabricate('artist')]
-      @article.featuredArtists.set [fabricate('artist')]
-      @article.featuredPrimaryArtists.set [fabricate('artist')]
-      @article.toJSON().featured_artwork_ids.length.should.equal 1
-      @article.toJSON().featured_artist_ids.length.should.equal 1
-      @article.toJSON().primary_featured_artist_ids.length.should.equal 1
-
     it 'serializes the hero section if there is data', ->
       @article.set hero_section: {}
       @article.heroSection.set type: 'video', url: 'foo'
