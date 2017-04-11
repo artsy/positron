@@ -25,6 +25,7 @@ appleNews = require('apple-news')({
   apiId: APPLE_NEWS_KEY,
   apiSecret: APPLE_NEWS_SECRET
 })
+{ formatAppleNews } = require '../components/apple_news/index.coffee'
 async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
@@ -119,8 +120,10 @@ postSailthruAPI = (article, cb) ->
     cb response
 
 postAppleNewsAPI = (article, cb) ->
-  appleNews.createArticle { channelId: APPLE_NEWS_CHANNEL }, (err, res) ->
-    cb()
+  formattedArticle = formatAppleNews article
+  console.log formattedArticle
+  # appleNews.createArticle { channelId: APPLE_NEWS_CHANNEL }, (err, res) ->
+  cb()
 
 #
 # Search
