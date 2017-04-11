@@ -120,8 +120,6 @@ postSailthruAPI = (article, cb) ->
 
 postAppleNewsAPI = (article, cb) ->
   appleNews.createArticle { channelId: APPLE_NEWS_CHANNEL }, (err, res) ->
-    console.log err
-    console.log res
     cb()
 
 #
