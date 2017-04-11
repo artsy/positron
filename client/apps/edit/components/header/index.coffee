@@ -8,18 +8,28 @@ module.exports = class EditHeader extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
+    @finished = false
     @user = new User sd.USER
     @article.on 'change', @saving
     @article.on 'change', @toggleCheckmarks
-    @article.on 'sync', @doneSaving
+    @article.on 'error', @error
+    @article.on 'sync', @done
     @toggleCheckmarks()
 
-  saving: =>
-    @$('#edit-save').addClass 'is-saving'
-    @$('#edit-save').removeClass 'attention'
+  error: (model, e) =>
+    @finished = false
+    console.error "#{e.status}: #{e.responseText}."
+    @$('#edit-delete').text 'Delete'
+    @$('#edit-save').removeClass('is-saving').text('Save')
+    @$('#edit-error').text(e.responseText).show()
 
-  doneSaving: =>
-    @$('#edit-save').removeClass 'is-saving'
+  saving: =>
+    @$('#edit-error').hide()
+    @$('#edit-save').addClass('is-saving')
+
+  done: =>
+    @$('#edit-save').removeClass('is-saving')
+    @article.trigger('finished') if @finished
 
   toggleCheckmarks: =>
     @$('#edit-tabs a:eq(0)').attr 'data-complete', @article.finishedContent()
@@ -33,13 +43,14 @@ module.exports = class EditHeader extends Backbone.View
     'click #edit-save': 'save'
 
   togglePublished: (e) ->
+    @finished = true
     e.preventDefault()
     e.stopPropagation()
     if @article.finishedContent() and @article.finishedThumbnail()
       @$('#edit-publish').text(
         if @article.get('published') then 'Unpublishing...' else 'Publishing...'
       )
-      @article.trigger('finished').save published: not @article.get 'published'
+      @article.save(published: not @article.get 'published')
     else
       @article.trigger 'missing'
 
@@ -47,14 +58,16 @@ module.exports = class EditHeader extends Backbone.View
     e.preventDefault()
     return unless confirm "Are you sure?" # TODO: Implement Artsy branded dialog
     @$('#edit-delete').text 'Deleting...'
-    @article.trigger('finished').destroy()
+    @finished = true
+    @article.destroy()
 
   save: (e) ->
     e.preventDefault()
     # Handles race condition to set props in a section that hasn't been clicked out of
     $('.edit-section-container-bg')[0]?.click()
-    @$('#edit-save').text('Saving...').removeClass('attention')
+    @$('#edit-save').text('Saving...')
+    @finished = true
     if @article.get('published')
-      @article.trigger('savePublished').trigger('finished')
+      @article.trigger('savePublished')
     else
-      @article.trigger('finished').save()
+      @article.save()

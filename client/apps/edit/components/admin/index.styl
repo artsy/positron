@@ -1,123 +1,67 @@
 @import '../stylus_lib'
-
-gutter-size = 30px
+@import './article'
+@import './verticals_tags'
+@import './featuring'
+@import './super_article'
 
 #edit-admin
   padding-top header-size
   display none
 
-#edit-admin-feature
-  margin-top 20px
-  label
-    margin 10px 0 5px 0
+  .dropdown-header
+    display flex
+    align-items center
+    padding 15px 0
+    border-bottom 1px solid gray-lighter-color
+    h1
+      garamond headline
+    div
+      height 1.25em
+    svg
+      margin-left 15px
+      transform rotate(270deg)
 
-.eaf-input-li
-  label, input
-    margin 0 !important
+  .active
+    .dropdown-header svg
+      transform rotate(0deg)
 
-.edit-admin-feature-list li:not(.eaf-input-li)
-  border 2px solid gray-lighter-color
-  padding 10px 12px
-  position relative
-  height 40px
-  line-height 1em
-  span
-    display inline-block
-    overflow ellipsis
-    max-width 240px
-  &.eaf-mentioned
-    color gray-dark-color
-    position relative
-    cursor pointer
-    span
-      max-width 170px
-    &::after
-      content 'Mentioned'
-      float right
-      avant-garde()
-      font-size default-avant-garde-font-size - 2
-      color gray-color
-      margin-top 2px
-      position absolute
-      right 10px
-    &::before
-      content '.'
-      color transparent
-      background url(/icons/check.svg) center center no-repeat
-      position absolute
-      right 10px
-      background-size 100%
-      width 15px
-      height 14px
-      display none
-    &:hover
-      color purple-color
-      &:before
-        display block
-        background-image url(/icons/check_p.svg)
-      &:after
-        content 'Feature'
-        right 30px
-        color purple-color
-  &.eaf-featured
-  &.eaf-contributing
-    color purple-color
-    position relative
-    cursor pointer
-    &::after
-      content '.'
-      color transparent
-      background url(/icons/remove_g.svg) center center no-repeat
-      position absolute
-      right 10px
-      top 11px
-      background-size 100%
-      width 15px
-      height 14px
+  .edit-admin__fields
+    display flex
+    justify-content space-between
+    height 0
+    opacity 0
+    overflow hidden
+    transition all .65s
+    &.active
+      margin-top 30px
+      margin-bottom 120px
+      height initial
+      opacity 1
+      transition all .65s
+    .fields-left,
+    .fields-right
+      width calc(50% \- 15px)
+    .field-group
+      margin-bottom 40px
+      &--inline
+        display flex
+        align-items center
+    .fields-full
+      min-width 100%
+      display flex
+      justify-content space-between
+    .fields-col-3
+      width calc(33% \- 20px)
+    input[disabled], textarea[disabled]
+      background-color gray-lightest-color
+      border-color gray-lighter-color
+      cursor no-drop
+    .tt-hint
+      visibility hidden
+    .autocomplete-select-input
+      margin-top 5px
 
-.eaf-input, .edit-admin-feature-list li
-  width "calc(50% - %s)" % (gutter-size / 2)
-  margin-right (gutter-size / 2)
-  margin-bottom 10px
-
-.edit-admin-feature-list li:nth-child(2n+2)
-  margin-right 0
-  margin-left (gutter-size / 2)
-
-.eaf-input, .edit-admin-feature-list, .edit-admin-feature-list li
-  display inline-block
-  vertical-align top
-
-.edit-admin-feature-list
-  width 100%
-
-.edit-admin-autocomplete-list-item
-  margin-top 5px
-
-#edit-admin-publish-date, #edit-admin-schedule-publish-time
-  margin-bottom 10px
-
-#edit-schedule-button
-  width 100%
-  &::after
-    content 'Schedule'
-  &.edit-button-when-scheduled
-    &::after
-      content 'Scheduled'
-      color purple-color
-    &:hover::after
-      content 'Unschedule'
-      color red-color
-
-#edit-admin-share-description
-  margin-top 10px
-
-#edit-admin-tags, #edit-admin-description
-  margin-bottom 10px
-
-.admin-send-body-to-sailthru
-  margin-top 15px
-  .flat-checkbox
-    float left
-  input
-    vertical-align middle
+  .edit-admin--appearances
+    flex-direction column
+    .autocomplete-select
+      height 250px

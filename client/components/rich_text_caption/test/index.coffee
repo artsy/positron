@@ -56,7 +56,7 @@ describe 'RichTextCaption', ->
   it 'Shows a placeholder if caption is empty', ->
     @props.item.caption = ''
     component = ReactDOM.render React.createElement(@RichTextCaption, @props), (@$el = $ "<div></div>")[0]
-    $(ReactDOM.findDOMNode(component)).html().should.containEql 'Image caption'
+    $(ReactDOM.findDOMNode(component)).html().should.containEql 'Media caption'
 
   it 'Renders an existing caption', ->
     @component.onChange(@component.state.editorState)
@@ -80,4 +80,4 @@ describe 'RichTextCaption', ->
   it 'Strips unsupported html and linebreaks on paste', ->
     @component.onPaste('Here is a caption about an image yep.', '<p>Here is a</p><ul><li><b>caption</b></li><li>about an image</li></ul><p>yep.</p>')
     @component.state.html.should.eql '<p>Here is a caption about an image yep.<a href="http://link.com/">A link</a> is &nbsp;inside a &nbsp;<em>caption</em>.</p>'
-    
+

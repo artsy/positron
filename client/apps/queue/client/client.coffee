@@ -11,7 +11,7 @@ query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
 
-module.exports = QueueView = React.createClass
+module.exports.QueueView = QueueView = React.createClass
   displayName: 'QueueView'
 
   getInitialState: ->
@@ -97,7 +97,7 @@ module.exports = QueueView = React.createClass
       div { className: 'queue-loading-container'},
         div { className: 'loading-spinner' }
         if @state.errorMessage
-          div { className: 'queue-loading__error' }, @state.errorMessage
+          div { className: 'flash-error' }, @state.errorMessage
       h1 { className: 'page-header' },
         div { className: 'max-width-container' },
           nav {className: 'nav-tabs'},
@@ -132,12 +132,13 @@ module.exports = QueueView = React.createClass
           FilterSearch {
             url: sd.API_URL + "/articles?published=true&channel_id=#{sd.CURRENT_CHANNEL.id}&q=%QUERY"
             placeholder: 'Search Articles...'
-            articles: @state.publishedArticles
+            collection: @state.publishedArticles
             checkable: true
             display: 'email'
             headerText: "Latest Articles"
             selected: @selected
             searchResults: @searchResults
+            contentType: 'article'
           }
 
 module.exports.init = ->

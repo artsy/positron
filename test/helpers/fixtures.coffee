@@ -161,6 +161,10 @@ module.exports = ->
         index: 1
       }
     ]
+  fixtures.tags =
+    id: '55356a9deca560a0137aa4b7'
+    name: 'Show Reviews'
+    public: true
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

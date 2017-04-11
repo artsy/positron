@@ -35,7 +35,6 @@ describe 'routes', ->
       @res.render.args[0][1].curation.get('id')
         .should.equal '55356a9deca560a0137aa4b7'
 
-
   describe 'Channels', ->
 
     it 'saves the serialized form data to the channel', ->
@@ -55,3 +54,9 @@ describe 'routes', ->
       @res.render.args[0][1].channel.get('id')
         .should.equal '5086df098523e60002000018'
 
+  describe 'Tags', ->
+
+    it 'renders the tag page', ->
+      routes.tags @req, @res
+      Backbone.sync.args[0][2].success fixtures().tags
+      @res.render.args[0][0].should.equal 'tags/tags_index'

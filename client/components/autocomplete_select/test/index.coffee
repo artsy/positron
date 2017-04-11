@@ -10,18 +10,47 @@ describe 'AutocompleteSelect', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
+      $.fn.typeahead = sinon.stub()
       { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
-      mod.__set__ 'Autocomplete', @Autocomplete = sinon.stub()
-      @component = ReactDOM.render React.createElement(AutocompleteSelect,
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'setState'
+      mod.__set__ 'request', get: sinon.stub().returns
+        set: sinon.stub().returns
+          end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
+      props =
+        url: 'https://api.artsy.net/search?term=%QUERY'
+        placeholder: 'Search for an artist...'
+        filter: @filter = sinon.stub()
+        selected: @selected = sinon.stub()
+        removed: @removed = sinon.stub()
+        idToFetch: '123'
+        fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
+        resObject: (res) -> id: res.id, value: res.value
+      @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteSelect, props)
+      @component = ReactDOM.render React.createElement(AutocompleteSelect, props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @setState = sinon.stub @component, 'setState'
         done()
 
   afterEach ->
     benv.teardown()
 
-  it 'adds an autocomplete component that when selected updates value state', ->
-    @component.addAutocomplete()
-    @Autocomplete.args[0][0].selected({}, { value: 'Moo' })
-    @component.setState.args[0][0].value.should.equal 'Moo'
+  it 'renders fetched items', ->
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Andy Warhol'
+
+  it 'initializes autocomplete with args', ->
+    @Bloodhound.args[0][0].remote.url.should.equal 'https://api.artsy.net/search?term=%QUERY'
+
+  it 'removes an item', ->
+    @component.removeItem()
+    (@setState.args[0][0].value?).should.be.false()
+    (@setState.args[0][0].id?).should.be.false()
+
+  it 'selects an item', ->
+    @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
+    @setState.args[0][0].value.should.equal 'Yayoi Kusama'
+    @setState.args[0][0].id.should.equal '1234'
+    @selected.callCount.should.equal 1

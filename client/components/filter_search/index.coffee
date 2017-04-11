@@ -4,6 +4,7 @@ React = require 'react'
 moment = require 'moment'
 sd = require('sharify').data
 ArticleList = React.createFactory require '../article_list/index.coffee'
+TagList = React.createFactory require '../tag_list/index.coffee'
 
 module.exports = React.createClass
   displayName: 'FilterSearch'
@@ -29,7 +30,10 @@ module.exports = React.createClass
     @props.selected article, 'select'
 
   render: ->
-    div { className: 'filter-search__container' },
+    div {
+      className: 'filter-search__container'
+      'data-type': @props.contentType
+    },
       div { className: 'filter-search__header-container' },
         div { className: 'filter-search__header-text' }, @props.headerText
         input {
@@ -38,9 +42,15 @@ module.exports = React.createClass
           onKeyUp: @search
           ref: 'searchQuery'
         }
-      ArticleList {
-        articles: @props.articles
-        checkable: @props.checkable
-        selected: @selected
-        display: @props.display
-      }
+      if @props.contentType is 'article'
+        ArticleList {
+          articles: @props.collection
+          checkable: @props.checkable
+          selected: @selected
+          display: @props.display
+        }
+      else if @props.contentType is 'tag'
+        TagList {
+          tags: @props.collection
+          deleteTag: @props.deleteTag
+        }

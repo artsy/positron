@@ -1,4 +1,7 @@
 .filter-search
+  &__container[data-type='tag']
+    .filter-search__input
+      width 280px
   &__header-container
     display flex
     border-bottom 1px solid gray-lighter-color
@@ -7,7 +10,7 @@
   &__input
     width 350px
     padding-left 36px
-    background url("/autocomplete_search.svg") 9px 9px no-repeat
+    background url("/icons/search.svg") 9px 9px no-repeat
     background-size 20px
   &__header-text
     garamond('headline')

@@ -67,23 +67,11 @@ describe 'EditLayout', ->
 
     it 'turns form elements into data', ->
       @view.$('.edit-title-textarea').val('foobar')
-      @view.$('#edit-admin-tags :input').val('house, couch')
-      @view.$('#edit-admin-change-author input').val('Jon Snow')
       @view.serialize().thumbnail_title.should.equal 'foobar'
-      @view.serialize().tags[0].should.equal 'house'
-      @view.serialize().tags[1].should.equal 'couch'
-      @view.serialize().author.name.should.equal 'Jon Snow'
 
     it 'adds the current user as the author_id', ->
       @view.user.set id: 'foo'
       @view.serialize().author_id.should.equal 'foo'
-
-    it 'adds tier', ->
-      @view.$('[type=radio]').first().click()
-      @view.serialize().tier.should.equal 1
-      @view.$('[type=radio]').eq(1).click()
-      @view.serialize().tier.should.equal 2
-
 
   describe '#popLockControls', ->
 

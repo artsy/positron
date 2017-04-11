@@ -1,0 +1,23 @@
+@import '../stylus_lib'
+
+.tag-list
+  &__results
+    display flex
+    justify-content space-between
+    flex-wrap wrap
+  &__result
+    garamond()
+    font-size 25px
+    display flex
+    align-items center
+    justify-content space-between
+    padding 0 15px
+    width 280px
+    height 50px
+    border 1px solid gray-lighter-color
+    margin-top 30px
+    position relative
+    .remove-button
+      height 100%
+  &__no-results
+    margin-top 30px

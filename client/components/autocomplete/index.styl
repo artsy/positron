@@ -33,10 +33,12 @@
 
 .twitter-typeahead input
   padding-left 36px
-  background url("/autocomplete_search.svg") 9px 9px no-repeat
+  background url("/icons/search.svg") 9px 9px no-repeat
   background-size 18px
   &:active, &:focus
     border-color purple-color
+  &[disabled]
+    background-color gray-lightest-color !important
 
 .tt-input:focus
   border-color gray-lighter-color

@@ -8,5 +8,6 @@ routes = require './routes'
 app = module.exports = express()
 app.set 'views', __dirname
 app.set 'view engine', 'jade'
+{ adminOnly } = require '../../lib/middleware.coffee'
 
-app.get '/queue', routes.queue
+app.get '/queue', adminOnly, routes.queue
