@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, section, label, input } = React.DOM
+{ div, label, input } = React.DOM
 _s = require 'underscore.string'
 
 module.exports = React.createClass
@@ -15,13 +15,14 @@ module.exports = React.createClass
     @props.onChange('tags', tagsArray)
 
   render: ->
-    section { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
-      div {className: 'fields-left'},
-        div {className: 'field-group'},
-          label {}, 'Tags'
-          input {
-            className: 'bordered-input'
-            placeholder: 'Start typing tags...'
-            defaultValue: @props.article.get('tags').join(', ') || ''
-            onChange: @onChange
-          }
+    div { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
+      div {className: 'fields-full'},
+        div {className: 'fields-left'},
+          div {className: 'field-group'},
+            label {}, 'Tags'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Start typing tags...'
+              defaultValue: @props.article.get('tags').join(', ') || ''
+              onChange: @onChange
+            }

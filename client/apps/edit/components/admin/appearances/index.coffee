@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, label, input } = React.DOM
+{ div, label } = React.DOM
 sd = require('sharify').data
 AutocompleteSelect = React.createFactory require '../../../../../components/autocomplete_select/index.coffee'
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
