@@ -52,8 +52,8 @@ describe 'Retrieve', ->
         vertical: '55356a9deca560a0137bb4a7'
         published: true
       }, (err, query) =>
-        query['$or'][0].vertical['$elemMatch'].should.be.ok()
-        query['$or'][0].vertical['$elemMatch'].id.should.containEql ObjectId '55356a9deca560a0137bb4a7'
+        query.vertical['$elemMatch'].should.be.ok()
+        query.vertical['$elemMatch'].id.should.containEql ObjectId '55356a9deca560a0137bb4a7'
         done()
 
     it 'aggregates the query for artist_id', (done) ->
