@@ -10,7 +10,7 @@ request = require 'superagent'
 module.exports = (el, props) ->
   ReactDOM.render React.createElement(AutocompleteList, props), el
 
-module.exports.AutocompleteList = AutocompleteList = React.createClass
+module.exports = AutocompleteList = React.createClass
   displayName: 'AutocompleteList'
 
   getInitialState: ->
@@ -88,4 +88,5 @@ module.exports.AutocompleteList = AutocompleteList = React.createClass
         className: 'bordered-input autocomplete-input'
         placeholder: @props.placeholder
         onBlur: @onBlur
+        disabled: @props.disabled
       }

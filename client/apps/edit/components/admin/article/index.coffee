@@ -4,8 +4,7 @@ _ = require 'underscore'
 moment = require 'moment'
 sd = require('sharify').data
 { div, label, input, button } = React.DOM
-
-AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
+AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = AdminArticle = React.createClass
   displayName: 'AdminArticle'
@@ -19,36 +18,32 @@ module.exports = AdminArticle = React.createClass
     @setupPublishDate()
 
   componentDidMount: ->
-    @setupAutocomplete()
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
-  componentWillUnmount: ->
-    $(@refs['autocomplete']).each (i, ref) ->
-      ReactDOM.unmountComponentAtNode(ref)
-
   onChange: (key, value)->
-    @props.onChange(key, value)
+    @props.onChange key, value
     @forceUpdate()
 
   onTierChange: (e) ->
-    tier = parseInt(e.target.name)
-    @onChange('tier', tier)
+    tier = parseInt e.target.name
+    @onChange 'tier', tier
 
   onPrimaryAuthorChange: (e) ->
-    @onChange('author', {name: e.target.value, id: @props.article.get('author').id})
+    @onChange 'author', {name: e.target.value, id: @props.article.get('author').id}
 
   onMagazineChange: (e) ->
     featured = if e.target.name is 'true' then true else false
-    @onChange('featured', featured)
+    @onChange 'featured', featured
 
   onCheckboxChange: (e) ->
-    @onChange 'exclude_google_news', !@props.article.get('exclude_google_news')
+    @onChange 'exclude_google_news', !@props.article.get 'exclude_google_news'
 
   onPublishDateChange: (e) ->
-    @setState publish_date: @refs.publish_date.value
-    @setState publish_time: @refs.publish_time.value
+    @setState
+      publish_date: @refs.publish_date.value
+      publish_time: @refs.publish_time.value
     published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
-    if !@props.article.get('published')
+    if !@props.article.get 'published'
       # ignore if draft and date is past
       if published_at < moment()
         @onChange 'published_at', null
@@ -60,11 +55,11 @@ module.exports = AdminArticle = React.createClass
       @onChange 'published_at', published_at.toISOString()
 
   setupPublishDate: ->
-    if @props.article.get('scheduled_publish_at')
+    if @props.article.get 'scheduled_publish_at'
       @setState
         publish_date: moment(@props.article.get('scheduled_publish_at')).format('YYYY-MM-DD')
         publish_time: moment(@props.article.get('scheduled_publish_at')).format('HH:mm')
-    if @props.article.get('published_at')
+    if @props.article.get 'published_at'
       @setState
         publish_date: moment(@props.article.get('published_at')).format('YYYY-MM-DD')
         publish_time: moment(@props.article.get('published_at')).format('HH:mm')
@@ -78,22 +73,6 @@ module.exports = AdminArticle = React.createClass
 
   blurDate: (e) ->
     @setState focus_date: false
-
-  setupAutocomplete: ->
-    new AutocompleteList $(@refs.autocomplete)[0],
-      url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-      placeholder: 'Search by user name or email...'
-      filter: (users) -> for user in users
-        { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
-      selected: (e, item, items) =>
-        @onChange 'contributing_authors', _.pluck items, 'id'
-      removed: (e, item, items) =>
-        @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
-      idsToFetch: @props.article.get('contributing_authors') || []
-      fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
-      resObject: (res) ->
-        id: { id: res.body.id , name: res.body.name },
-        value: _.compact([res.body.name, res.body.email]).join(', ')
 
   showActive: (key, value) ->
     active = if @props.article.get(key) is value then ' active' else ''
@@ -114,12 +93,23 @@ module.exports = AdminArticle = React.createClass
         div {className: 'fields-right'},
           div {className: 'field-group'},
             label {}, 'Contributing Author'
-            div {
-              ref: 'autocomplete'
+            AutocompleteList {
+              url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+              placeholder: 'Search by user name or email...'
+              filter: (users) -> for user in users
+                { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
+              selected: (e, item, items) =>
+                @onChange 'contributing_authors', _.pluck items, 'id'
+              removed: (e, item, items) =>
+                @onChange 'contributing_authors', _.without(_.pluck(items, 'id'),item.id)
+              idsToFetch: @props.article.get('contributing_authors') || []
+              fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/user/#{id.id}"
+              resObject: (res) ->
+                id: { id: res.body.id , name: res.body.name },
+                value: _.compact([res.body.name, res.body.email]).join(', ')
             }
 
       div {className: 'fields-full'},
-
         div {className: 'fields-left'},
           div {className: 'field-group--inline tier-feed'},
             div {className: 'field-group'},
@@ -135,17 +125,16 @@ module.exports = AdminArticle = React.createClass
                   onClick: @onTierChange
                   name: '2'
                 }, 'Tier 2'
-
             div {className: 'field-group'},
               label {}, 'Magazine Feed'
               div {className: 'button-group'},
                 button {
-                  className: 'avant-garde-button' + @showActive('featured', true)
+                  className: 'avant-garde-button' + @showActive 'featured', true
                   onClick: @onMagazineChange
                   name: 'true'
                 }, 'Yes'
                 button {
-                  className: 'avant-garde-button' + @showActive('featured', false)
+                  className: 'avant-garde-button' + @showActive 'featured', false
                   onClick: @onMagazineChange
                 }, 'No'
 
@@ -155,7 +144,7 @@ module.exports = AdminArticle = React.createClass
             div {className: 'field-group--inline'},
               input {
                 type: 'date'
-                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
+                className: 'bordered-input edit-admin-input-date' + @showActive 'focus_date', true
                 ref: 'publish_date'
                 onChange: @onPublishDateChange
                 defaultValue: @state.publish_date
@@ -164,7 +153,7 @@ module.exports = AdminArticle = React.createClass
               }
               input {
                 type: 'time'
-                className: 'bordered-input edit-admin-input-date' + @showActive('focus_date', true)
+                className: 'bordered-input edit-admin-input-date' + @showActive 'focus_date', true
                 ref: 'publish_time'
                 onChange: @onPublishDateChange
                 value: @state.publish_time
@@ -177,7 +166,7 @@ module.exports = AdminArticle = React.createClass
             },
               input {
                 type: 'checkbox'
-                checked: @props.article.get('exclude_google_news')
+                checked: @props.article.get 'exclude_google_news'
               }
               label {}, 'Exclude from Google News'
 

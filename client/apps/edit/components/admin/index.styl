@@ -37,6 +37,7 @@
       margin-bottom 120px
       height initial
       opacity 1
+      transition all .65s
     .fields-left,
     .fields-right
       width calc(50% \- 15px)
@@ -55,6 +56,12 @@
       background-color gray-lightest-color
       border-color gray-lighter-color
       cursor no-drop
+    .tt-hint
+      visibility hidden
+    .autocomplete-select-input
+      margin-top 5px
 
   .edit-admin--appearances
     flex-direction column
+    .autocomplete-select
+      height 250px

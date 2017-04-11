@@ -4,7 +4,7 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 
 Article = React.createFactory require './article/index.coffee'
-SectionTags = React.createFactory require './verticals_tags/index.coffee'
+VerticalsTags = React.createFactory require './verticals_tags/index.coffee'
 Featuring = React.createFactory require './featuring/index.coffee'
 SuperArticle = React.createFactory require './super_article/index.coffee'
 Appearances = React.createFactory require './appearances/index.coffee'
@@ -50,7 +50,7 @@ module.exports = React.createClass
       section { className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags' },
         printTitle section: 'Verticals & Tagging', className: 'verticals-tags', onClick: @setActiveSection
         if @isActiveSection 'verticals-tags'
-          SectionTags {article: @props.article, onChange: @onChange}
+          VerticalsTags {article: @props.article, onChange: @onChange}
 
       section { className: 'edit-admin--article' + @getActiveSection 'article' },
         printTitle section: 'Article', className: 'article', onClick: @setActiveSection
@@ -62,10 +62,11 @@ module.exports = React.createClass
         if @isActiveSection 'featuring'
           Featuring {article: @props.article, channel: @props.channel, onChange: @onChange}
 
-      section { className: 'edit-admin--super-article' + @getActiveSection 'super-article' },
-        printTitle section: 'Super Article', className: 'super-article', onClick: @setActiveSection
-        if @isActiveSection 'super-article'
-          SuperArticle {article: @props.article, channel: @props.channel, onChange: @onChange}
+      if @props.channel.hasFeature 'superArticle'
+        section { className: 'edit-admin--super-article' + @getActiveSection 'super-article' },
+          printTitle section: 'Super Article', className: 'super-article', onClick: @setActiveSection
+          if @isActiveSection 'super-article'
+            SuperArticle {article: @props.article, channel: @props.channel, onChange: @onChange}
 
       section { className: 'edit-admin--additional-appearances' + @getActiveSection 'additional-appearances' },
         printTitle section: 'Additional Appearances', className: 'additional-appearances', onClick: @setActiveSection

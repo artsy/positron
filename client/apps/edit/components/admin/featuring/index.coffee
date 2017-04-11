@@ -1,38 +1,15 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-async = require 'async'
-request = require 'superagent'
 sd = require('sharify').data
 _ = require 'underscore'
 { div, label, input, form, span } = React.DOM
-AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
-
-Autocomplete = React.createFactory require '../components/autocomplete.coffee'
+AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminFeaturing'
 
   componentDidMount: ->
-    @setupShowsAutocomplete()
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
-
-  componentWillUnmount: ->
-    $(@refs['show_ids']).each (i, ref) ->
-      ReactDOM.unmountComponentAtNode(ref)
-
-  setupShowsAutocomplete: ->
-    return unless @props.channel.hasAssociation 'shows'
-    new AutocompleteList $(@refs['show_ids'])[0],
-      url: "#{sd.API_URL}/shows?q=%QUERY"
-      placeholder: 'Search show by name...'
-      selected: (e, item, items) =>
-        @props.onChange 'show_ids', _.pluck items, 'id'
-      removed: (e, item, items) =>
-        @props.onChange 'show_ids', _.without(_.pluck(items,'id'),item.id)
-      idsToFetch: @props.article.get 'show_ids'
-      fetchUrl: (id) -> "#{sd.API_URL}/show/#{id}"
-      resObject: (res) ->
-        id: res.body._id, value: res.body.name
 
   onInputChange: (e) ->
     e.preventDefault()
@@ -83,8 +60,8 @@ module.exports = React.createClass
 
   sortFeatured: (featured) ->
     featured.models?.sort (a, b) ->
-      nameA = a.get('name').toLowerCase() || a.get('title').toLowerCase()
-      nameB = b.get('name').toLowerCase() || b.get('title').toLowerCase()
+      nameA = a.get('name')?.toLowerCase() || a.get('title')?.toLowerCase()
+      nameB = b.get('name')?.toLowerCase() || b.get('title')?.toLowerCase()
       return -1 if nameA < nameB
       return 1 if nameA > nameB
       return 0
@@ -145,21 +122,37 @@ module.exports = React.createClass
           if @props.channel.hasAssociation 'partners'
             div {className: 'field-group'},
               label {}, 'Partner'
-              Autocomplete {
-                field: 'partner_ids'
-                onChange: @props.onChange
-                article: @props.article
-                channel: @props.channel
+              AutocompleteList {
+                url: "#{sd.ARTSY_URL}/api/v1/match/partners?term=%QUERY"
+                placeholder: "Search partners by name..."
+                filter: (res) -> for r in res
+                  { id: r._id, value: r.name }
+                selected: (e, item, items) =>
+                  @props.onChange 'partner_ids', _.pluck items, 'id'
+                removed: (e, item, items) =>
+                  @props.onChange 'partner_ids', _.without(_.pluck(items, 'id'),item.id)
+                idsToFetch: @props.article.get 'partner_ids'
+                fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/partner/#{id}"
+                resObject: (res) ->
+                  id: res.body._id, value: res.body.name
               }
         div {className: 'fields-right'},
           if @props.channel.hasAssociation 'fairs'
             div {className: 'field-group'},
               label {}, 'Fair'
-              Autocomplete {
-                field: 'fair_ids'
-                onChange: @props.onChange
-                article: @props.article
-                channel: @props.channel
+              AutocompleteList {
+                url: "#{sd.ARTSY_URL}/api/v1/match/fairs?term=%QUERY"
+                placeholder: "Search fairs by name..."
+                filter: (res) -> for r in res
+                  { id: r._id, value: r.name }
+                selected: (e, item, items) =>
+                  @props.onChange 'fair_ids', _.pluck items, 'id'
+                removed: (e, item, items) =>
+                  @props.onChange 'fair_ids', _.without(_.pluck(items, 'id'),item.id)
+                idsToFetch: @props.article.get 'fair_ids'
+                fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/fair/#{id}"
+                resObject: (res) ->
+                  id: res.body._id, value: res.body.name
               }
 
       div {className: 'fields-full'},
@@ -168,15 +161,35 @@ module.exports = React.createClass
             div {className: 'field-group'},
               label {}, 'Show'
               div { ref: 'show_ids' }
+              AutocompleteList {
+                url: "#{sd.API_URL}/shows?q=%QUERY"
+                placeholder: "Search shows by name..."
+                selected: (e, item, items) =>
+                  @props.onChange 'show_ids', _.pluck items, 'id'
+                removed: (e, item, items) =>
+                  @props.onChange 'show_ids', _.without(_.pluck(items, 'id'),item.id)
+                idsToFetch: @props.article.get 'show_ids'
+                fetchUrl: (id) -> "#{sd.API_URL}/show/#{id}"
+                resObject: (res) ->
+                  id: res.body._id, value: res.body.name
+              }
         div {className: 'fields-right'},
           if @props.channel.hasAssociation 'auctions'
             div {className: 'field-group'},
               label {}, 'Auction'
-              Autocomplete {
-                field: 'auction_ids'
-                onChange: @props.onChange
-                article: @props.article
-                channel: @props.channel
+              AutocompleteList {
+                url: "#{sd.ARTSY_URL}/api/v1/match/sales?term=%QUERY"
+                placeholder: "Search auctions by name..."
+                filter: (res) -> for r in res
+                  { id: r._id, value: r.name }
+                selected: (e, item, items) =>
+                  @props.onChange 'auction_ids', _.pluck items, 'id'
+                removed: (e, item, items) =>
+                  @props.onChange 'auction_ids', _.without(_.pluck(items, 'id'),item.id)
+                idsToFetch: @props.article.get 'auction_ids'
+                fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/sale/#{id}"
+                resObject: (res) ->
+                  id: res.body._id, value: res.body.name
               }
 
       div {className: 'fields-full'},

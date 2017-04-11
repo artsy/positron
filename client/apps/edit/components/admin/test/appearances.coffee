@@ -14,7 +14,7 @@ describe 'AdminAppearances', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
-        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+        Bloodhound: (Bloodhound = sinon.stub()).returns(
           initialize: ->
           ttAdapter: ->
         )
@@ -27,11 +27,10 @@ describe 'AdminAppearances', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminAppearances.__set__ 'AutocompleteSelect', @AutocompleteSelect = benv.require(
-        resolve __dirname, '../../../../../components/autocomplete_select/index.coffee'
-      )
-      @AutocompleteList = benv.require resolve __dirname, '../components/autocomplete.coffee'
-      AdminAppearances.__set__ 'AutocompleteList', React.createFactory @AutocompleteList
+      AutocompleteSelect = benv.require resolve __dirname, '../../../../../components/autocomplete_select/index.coffee'
+      AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      AdminAppearances.__set__ 'AutocompleteSelect', React.createFactory AutocompleteSelect
+      AdminAppearances.__set__ 'AutocompleteList', React.createFactory AutocompleteList
       @article = new Article
       @article.attributes = fixtures().articles
       @channel = {id: '123'}
@@ -58,7 +57,7 @@ describe 'AdminAppearances', ->
 
     it 'Sets up autocompletes', ->
       autocompletes = $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input')
-      $(autocompletes[0]).prop('placeholder').should.eql 'Search fair by name...'
-      $(autocompletes[1]).prop('placeholder').should.eql 'Search fair by name...'
-      $(autocompletes[2]).prop('placeholder').should.eql 'Search fair by name...'
+      $(autocompletes[0]).prop('placeholder').should.eql 'Search fairs by name...'
+      $(autocompletes[1]).prop('placeholder').should.eql 'Search fairs by name...'
+      $(autocompletes[2]).prop('placeholder').should.eql 'Search fairs by name...'
       $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-input').prop('placeholder').should.eql 'Search artist by name...'

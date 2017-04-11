@@ -5,9 +5,8 @@ request = require 'superagent'
 sd = require('sharify').data
 _ = require 'underscore'
 { div, input, label, textarea, section, h1, h2, span } = React.DOM
-
 ImageUpload = React.createFactory require '../components/image_upload.coffee'
-AutocompleteList = require '../../../../../components/autocomplete_list/index.coffee'
+AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminSuperArticle'
@@ -16,14 +15,7 @@ module.exports = React.createClass
     super_article: @props.article.get('super_article') || {}
 
   componentDidMount: ->
-    return unless @props.channel.hasFeature 'superArticle'
-    @setupSuperArticleAutocomplete()
-    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', !@props.article.get('is_super_article'))
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
-
-  componentWillUnmount: ->
-    $(@refs['autocomplete']).each (i, ref) ->
-      ReactDOM.unmountComponentAtNode(ref)
 
   onInputChange: (e) ->
     newSuperArticle = @state.super_article
@@ -32,7 +24,6 @@ module.exports = React.createClass
     @props.onChange 'super_article', newSuperArticle
 
   onCheckboxChange: (e) ->
-    $(this.refs.autocomplete).find('input.tt-input').prop('disabled', @props.article.get('is_super_article'))
     @props.onChange 'is_super_article', !@props.article.get('is_super_article')
     @forceUpdate()
 
@@ -41,29 +32,6 @@ module.exports = React.createClass
     newSuperArticle[field] = src
     @setState super_article: newSuperArticle
     @props.onChange super_article: newSuperArticle
-
-  setupSuperArticleAutocomplete: ->
-    @related_articles = if @props.article.get('super_article')?.related_articles then @props.article.get('super_article').related_articles else []
-    new AutocompleteList $(@refs['autocomplete'])[0],
-      url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
-      placeholder: 'Search article by title...'
-      filter: (articles) ->
-        for article in articles.results
-          { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
-      selected: (e, item, items) =>
-        superArticle = @state.super_article
-        superArticle.related_articles = _.pluck items, 'id'
-        @setState super_article: superArticle
-        @props.onChange 'super_article', superArticle
-      removed: (e, item, items) =>
-        superArticle = @state.super_article
-        superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
-        @setState super_article: superArticle
-        @props.onChange 'super_article', superArticle
-      idsToFetch: @related_articles
-      fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
-      resObject: (res) ->
-        id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
 
   printFieldGroup: (field, title) ->
     div {className: 'field-group'},
@@ -123,4 +91,25 @@ module.exports = React.createClass
         div {className: 'fields-col-3'},
           div {className: 'field-group'},
             label {}, 'SubArticles'
-            div { ref: 'autocomplete' }
+            AutocompleteList {
+              url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+              placeholder: "Search articles by title..."
+              disabled: !@props.article.get 'is_super_article'
+              filter: (articles) ->
+                for article in articles.results
+                  { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
+              selected: (e, item, items) =>
+                superArticle = @state.super_article
+                superArticle.related_articles = _.pluck items, 'id'
+                @setState super_article: superArticle
+                @props.onChange 'super_article', superArticle
+              removed: (e, item, items) =>
+                superArticle = @state.super_article
+                superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
+                @setState super_article: superArticle
+                @props.onChange 'super_article', superArticle
+              idsToFetch: @props.article.get 'fair_about_ids'
+              fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+              resObject: (res) ->
+                id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
+            }

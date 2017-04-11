@@ -1,60 +1,41 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, label, button, input } = React.DOM
-
-
-VERTICALS = ['Art', 'Art Market', 'Culture', 'Creativity']
-SUBVERTICALS = [
-  ['Art World', 'Art History', 'Artists']
-  ['Collecting', 'Market Analysis', 'Art Industry']
-  ['Visual Culture', 'Photography', 'Politics', 'Architecture', 'Design']
-  ['Innovation', 'Inspiration', 'Business', 'Wellness']
-]
+{ div, section, label, button, input } = React.DOM
 
 module.exports = React.createClass
   displayName: 'AdminVerticalsTags'
 
   getInitialState: ->
     vertical: null
-    subVerticals: null
-    subVertical: null
+    verticals: ['Art', 'Art Market', 'Culture', 'Creativity']
+
+  componentDidMount: ->
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   printButtons: (buttons, handleToggle) ->
-    if buttons
-      buttons.map (tag, i) =>
-        active = ''
-        if @state.vertical is tag or @state.subVertical is tag
-          active = ' avant-garde-button-black'
-        button {
-          key: i
-          name: tag
-          onClick: handleToggle
-          className: 'avant-garde-button' + active
-        }, tag
-      , @
-    else
+    buttons.map (tag, i) =>
+      active = ''
+      if @state.vertical is tag
+        active = ' avant-garde-button-black'
       button {
-        className: 'avant-garde-button disabled'
-        }, 'Please select a vertical first'
-
-  subVerticalToggle: (e)->
-    @setState subVertical: e.target.name
+        key: i
+        name: tag
+        onClick: handleToggle
+        className: 'avant-garde-button' + active
+      }, tag
+    , @
 
   verticalToggle: (e) ->
-    active = VERTICALS.indexOf e.target.name
-    @setState
-      vertical: e.target.name
-      subVerticals: SUBVERTICALS[active]
+    active = @state.verticals.indexOf e.target.name
+    @setState vertical: e.target.name
 
   render: ->
-    div { className: 'edit-admin--verticals-tags edit-admin__fields'},
+    section { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
       div {className: 'fields-left'},
         div { className: 'field-group' },
           label {}, 'Editorial Vertical'
-          @printButtons VERTICALS, @verticalToggle
-        div { className: 'field-group' },
-          label {}, 'Editorial SubVertical'
-          @printButtons @state.subVerticals, @subVerticalToggle
+          @printButtons @state.verticals, @verticalToggle
+
       div {className: 'fields-right'},
         div {className: 'field-group'},
           label {}, 'Topic Tags'

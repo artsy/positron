@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, label, input } = React.DOM
+{ div, section, label, input } = React.DOM
 _s = require 'underscore.string'
 
 module.exports = React.createClass
@@ -15,7 +15,7 @@ module.exports = React.createClass
     @props.onChange('tags', tagsArray)
 
   render: ->
-    div { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
+    section { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
       div {className: 'fields-left'},
         div {className: 'field-group'},
           label {}, 'Tags'

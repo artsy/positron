@@ -20,7 +20,7 @@ describe 'AdminArticle', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
-        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+        Bloodhound: (Bloodhound = sinon.stub()).returns(
           initialize: ->
           ttAdapter: ->
         )
@@ -31,8 +31,9 @@ describe 'AdminArticle', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminArticle.__set__ 'AutocompleteList', @Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
-      @Autocomplete.__set__ 'request', get: sinon.stub().returns
+      AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      AdminArticle.__set__ 'AutocompleteList', React.createFactory AutocompleteList
+      AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: '123', name: 'Molly Gottschalk'})
       @article = new Article
@@ -159,13 +160,13 @@ describe 'AdminArticle', ->
 
     it '#onTierChange updates the tier', ->
       @component.onChange = sinon.stub()
-      r.simulate.click r.findTag(@component, 'button')[1]
+      r.simulate.click r.findTag(@component, 'button')[2]
       @component.onChange.args[0][0].should.eql 'tier'
       @component.onChange.args[0][1].should.eql 2
 
     it '#onMagazineChange toggles featured', ->
       @component.onChange = sinon.stub()
-      r.simulate.click r.findTag(@component, 'button')[3]
+      r.simulate.click r.findTag(@component, 'button')[4]
       @component.onChange.args[0][0].should.eql 'featured'
       @component.onChange.args[0][1].should.eql false
 

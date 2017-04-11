@@ -34,8 +34,8 @@ describe 'AdminFeaturing', ->
       AdminFeaturing.__set__ 'AutocompleteList', @AutocompleteList = benv.require(
         resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
       )
-      @Autocomplete = benv.require resolve __dirname, '../components/autocomplete.coffee'
-      AdminFeaturing.__set__ 'Autocomplete', React.createFactory @Autocomplete
+      AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      AdminFeaturing.__set__ 'AutocompleteList', React.createFactory AutocompleteList
       @article = new Article
       @article.attributes = fixtures().articles
       @channel = {id: '123'}
@@ -67,10 +67,10 @@ describe 'AdminFeaturing', ->
 
     it 'Renders the autocomplete fields', ->
       autocompletes = $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').toArray()
-      $(autocompletes[0]).prop('placeholder').should.eql 'Search partner by name...'
-      $(autocompletes[1]).prop('placeholder').should.eql 'Search fair by name...'
-      $(autocompletes[2]).prop('placeholder').should.eql 'Search show by name...'
-      $(autocompletes[3]).prop('placeholder').should.eql 'Search auction by name...'
+      $(autocompletes[0]).prop('placeholder').should.eql 'Search partners by name...'
+      $(autocompletes[1]).prop('placeholder').should.eql 'Search fairs by name...'
+      $(autocompletes[2]).prop('placeholder').should.eql 'Search shows by name...'
+      $(autocompletes[3]).prop('placeholder').should.eql 'Search auctions by name...'
 
     it 'Renders the featured and mentioned fields', ->
       $(ReactDOM.findDOMNode(@component)).find('form input').first().attr('placeholder').should.eql 'Add an artist by slug or url...'
@@ -80,7 +80,7 @@ describe 'AdminFeaturing', ->
 
     it '#onInputChange', ->
       @component.props.article.featuredPrimaryArtists.getOrFetchIds = sinon.stub()
-      input = r.find(@component, 'bordered-input')[0]
+      input = r.find(@component, 'bordered-input')[4]
       input.value = 'http://artsy.net/artist/dena-yago'
       r.simulate.submit r.findTag(@component, 'form')[0]
       @component.props.article.featuredPrimaryArtists.getOrFetchIds.args[0][0][0].should.eql 'dena-yago'
