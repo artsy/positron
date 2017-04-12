@@ -4,6 +4,7 @@ sinon = require 'sinon'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
@@ -17,8 +18,8 @@ describe 'AdminVerticalsTags', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
-      AdminVerticalsTags = benv.require resolve __dirname, '../verticals_tags/index.coffee'
-      AdminVerticalsTags.__set__ 'sd', {
+      @AdminVerticalsTags = benv.require resolve __dirname, '../verticals_tags/index.coffee'
+      @AdminVerticalsTags.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
@@ -32,7 +33,7 @@ describe 'AdminVerticalsTags', ->
         onChange: sinon.stub()
         channel: @channel
         }
-      @component = ReactDOM.render React.createElement(AdminVerticalsTags, props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@AdminVerticalsTags, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           done()
 
@@ -47,6 +48,15 @@ describe 'AdminVerticalsTags', ->
     it 'Pre-populates the input with article tags', ->
       $(ReactDOM.findDOMNode(@component)).find('input').val().should.eql 'features, emerging artists, awi, asp, commissioned photography, product boost'
 
+    it 'does not render tags when tags do not exist', ->
+      @article.unset 'tags'
+      props = {
+        article: @article
+        onChange: sinon.stub()
+        channel: @channel
+        }
+      rendered = ReactDOMServer.renderToString React.createElement(@AdminVerticalsTags, props)
+      rendered.should.containEql 'value=""'
 
   describe '#onChange', ->
 
@@ -67,7 +77,6 @@ describe 'AdminVerticalsTags', ->
       input.value = ' , new, tags, , , '
       r.simulate.change input
       @component.props.onChange.args[0][1].should.eql [ 'new', 'tags' ]
-
 
   describe 'Verticals', ->
 

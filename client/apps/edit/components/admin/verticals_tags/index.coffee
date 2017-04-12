@@ -23,6 +23,6 @@ module.exports = React.createClass
             input {
               className: 'bordered-input'
               placeholder: 'Start typing tags...'
-              defaultValue: @props.article.get('tags').join(', ') || ''
+              defaultValue: @props.article.get('tags')?.join(', ') or ''
               onChange: @onChange
             }
