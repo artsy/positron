@@ -187,6 +187,7 @@ typecastIds = (article) ->
       author.id = ObjectId(author.id)
       author
     ) if article.contributing_authors
+    vertical: { id: ObjectId(article.vertical.id), name: article.vertical.name } if article.vertical
     author_id: ObjectId(article.author_id) if article.author_id
     fair_ids: article.fair_ids.map(ObjectId) if article.fair_ids
     fair_programming_ids: article.fair_programming_ids.map(ObjectId) if article.fair_programming_ids

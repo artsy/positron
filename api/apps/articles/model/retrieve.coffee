@@ -54,6 +54,9 @@ moment = require 'moment'
       { contributing_authors: { $elemMatch: { id: ObjectId input.all_by_author} } }
     ) if input.all_by_author
 
+    # Convert query for articles by vertical
+    query.vertical = { $elemMatch: { id: ObjectId input.vertical} } if input.vertical
+
     # Convert query for articles featured to an artist or artwork
     query.$or.push(
       { primary_featured_artist_ids: ObjectId(input.artist_id) }

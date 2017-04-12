@@ -77,6 +77,10 @@ denormalizedArtwork = (->
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string()).default([])
+  vertical: @object().keys(
+    name: @string()
+    id: @objectId()
+  ).allow(null)
   title: @string().allow('', null)
   layout: @string().allow('left', 'center', null).default('center')
   updated_at: @date()
@@ -210,6 +214,7 @@ denormalizedArtwork = (->
   auction_id: @objectId()
   sort: @string()
   tier: @number()
+  vertical: @objectId()
   featured: @boolean()
   exclude_google_news: @boolean()
   super_article_for: @objectId()

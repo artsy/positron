@@ -14,6 +14,7 @@ module.exports = ->
     thumbnail_teaser: 'Look here! Before the lines start forming...',
     thumbnail_image: 'http://kitten.com',
     tier: 1,
+    vertical: {name: 'Culture', id: '55356a9deca560a0137bb4a7'}
     tags: ['Fair Coverage', 'Magazine']
     title: 'Top Ten Booths',
     lead_paragraph: '<p>Just before the lines start forming...</p>',
@@ -165,6 +166,9 @@ module.exports = ->
     id: '55356a9deca560a0137aa4b7'
     name: 'Show Reviews'
     public: true
+  fixtures.verticals =
+    id: '55356a9deca560a0137bb4a7'
+    name: 'Culture'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users

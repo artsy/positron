@@ -47,6 +47,15 @@ describe 'Retrieve', ->
         query['$or'][1].contributing_authors['$elemMatch'].id.should.containEql ObjectId '5086df098523e60002000017'
         done()
 
+    it 'aggregates the query for vertical', (done) ->
+      Retrieve.toQuery {
+        vertical: '55356a9deca560a0137bb4a7'
+        published: true
+      }, (err, query) =>
+        query.vertical['$elemMatch'].should.be.ok()
+        query.vertical['$elemMatch'].id.should.containEql ObjectId '55356a9deca560a0137bb4a7'
+        done()
+
     it 'aggregates the query for artist_id', (done) ->
       Retrieve.toQuery {
         artist_id: '5086df098523e60002000016'
