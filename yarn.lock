@@ -162,6 +162,13 @@ arrify@^1.0.0:
   version "0.0.6"
   resolved "git://github.com/artsy/artsy-ezel-components.git#61983f3758ecc4a0a057aa9c830e3552abcaa50e"
 
+"artsy-morgan@git://github.com/artsy/artsy-morgan.git":
+  version "1.0.1"
+  resolved "git://github.com/artsy/artsy-morgan.git#be1c28aadbe18faac80f215f36ebd37aff4c77dc"
+  dependencies:
+    chalk "^1.1.3"
+    morgan "^1.8.1"
+
 "artsy-newrelic@git://github.com/artsy/artsy-newrelic.git":
   version "1.2.0"
   resolved "git://github.com/artsy/artsy-newrelic.git#3384ed8624072a5188b4eb977ef786b32a1fa4ad"
@@ -1586,20 +1593,9 @@ glob-parent@^2.0.0:
   dependencies:
     is-glob "^2.0.0"
 
-glob@7.0.5:
+glob@7.0.5, glob@7.0.x:
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.5.tgz#b4202a69099bbb4d292a7c1b95b6682b67ebdc95"
-  dependencies:
-    fs.realpath "^1.0.0"
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "^3.0.2"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
-
-glob@7.0.x:
-  version "7.0.6"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
   dependencies:
     fs.realpath "^1.0.0"
     inflight "^1.0.4"
@@ -2503,7 +2499,7 @@ mongojs@^2.4.0:
     to-mongodb-core "^2.0.0"
     xtend "^4.0.0"
 
-morgan@^1.6.1:
+morgan@^1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.8.1.tgz#f93023d3887bd27b78dfd6023cea7892ee27a4b1"
   dependencies:

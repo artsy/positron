@@ -1,7 +1,7 @@
 require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
-morgan = require 'morgan'
+logger = require 'artsy-morgan'
 chalk = require 'chalk'
 { helpers, notFound, errorHandler } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
@@ -15,22 +15,7 @@ app.use cors()
 app.use helpers
 app.use bodyParser.json limit:'5mb', extended: true
 app.use bodyParser.urlencoded limit:'5mb', extended: true
-
-app.use morgan if NODE_ENV is 'development' then 'dev' else (tokens, req, res) ->
-  status = tokens.status(req, res)
-  chalk.yellow('API:') +
-    ' ' + chalk.blue(tokens.method(req, res)) +
-    ' ' + (
-            if status >= 500
-              chalk.red(tokens.url(req, res)) + ' ' + chalk.red(status)
-            else if status >= 400
-              chalk.yellow(tokens.url(req, res)) + ' ' + chalk.yellow(status)
-            else
-              chalk.green(tokens.url(req, res)) + ' ' + chalk.green(status)
-          ) +
-    ' ' + chalk.cyan(tokens['response-time'](req, res) + 'ms') +
-    ' ' + chalk.white(tokens['remote-addr'](req, res)) +
-    ' "' + chalk.white(tokens['user-agent'](req, res)) + '"'
+app.use logger
 
 # Apps
 app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
