@@ -47,10 +47,6 @@ module.exports = class EditLayout extends Backbone.View
       author_id: @user.get('id')
       title: @$('#edit-title textarea').val()
       thumbnail_title: @$('.edit-title-textarea').val()
-      tags: _.reject(
-        _.map @$('.edit-admin-tags-input').val()?.split(','), (tag) -> _s.clean tag
-        (filled) -> not filled
-      )
       description: @$('.edit-display--magazine .edit-display__description textarea').val()
       social_title: @$('.edit-display--social .edit-display__headline textarea').val()
       social_description: @$('.edit-display--social .edit-display__description textarea').val()
