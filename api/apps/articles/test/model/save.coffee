@@ -195,3 +195,19 @@ describe 'Save', ->
         ]
         description: 'Do not override me'
       })
+
+    it 'Strips linebreaks from titles', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.title.should.containEql 'A new title'
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        published: true
+        _id: '5086df098523e60002000011'
+        thumbnail_title: 'Thumbnail Title'
+        sections: [
+          { type: 'text', body: '<p>Testing 123</p>' }
+        ]
+        title: 'A new title \n'
+      })

@@ -156,7 +156,7 @@ sanitize = (article) ->
   else
     sections = []
   sanitized = _.extend article,
-    title: sanitizeHtml article.title
+    title: sanitizeHtml article.title?.replace /\n/g, ''
     thumbnail_title: sanitizeHtml article.thumbnail_title
     lead_paragraph: sanitizeHtml article.lead_paragraph
     sections: sections
