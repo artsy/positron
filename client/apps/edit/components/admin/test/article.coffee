@@ -37,10 +37,8 @@ describe 'AdminArticle', ->
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: '123', name: 'Molly Gottschalk'})
       @article = new Article
-      @article.attributes = fixtures().articles
       @article.set('author', {name: 'Artsy Editorial', id: '123'})
       @article.set('contributing_authors', [{name: 'Molly Gottschalk', id: '123'}])
-      @article.set('featured', true)
       props = {
         article: @article
         onChange: sinon.stub()
@@ -67,8 +65,12 @@ describe 'AdminArticle', ->
     it 'Renders tier and magazine buttons', ->
       $(ReactDOM.findDOMNode(@component)).find('.button-group').length.should.eql 2
       $(ReactDOM.findDOMNode(@component)).find('.button-group button').length.should.eql 4
-      $(ReactDOM.findDOMNode(@component)).find('button.active').first().attr('name').should.eql '1'
-      $(ReactDOM.findDOMNode(@component)).find('button.active').last().attr('name').should.eql 'true'
+
+    it 'Sets default values for tier and magazine', ->
+      @component.state.tier.should.eql 2
+      @component.state.featured.should.eql false
+      $(ReactDOM.findDOMNode(@component)).find('button.active').first().attr('name').should.eql '2'
+      $(ReactDOM.findDOMNode(@component)).find('button.active').last().text().should.eql 'No'
 
     it 'Renders google news checkbox', ->
       $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').length.should.eql 1
@@ -81,8 +83,8 @@ describe 'AdminArticle', ->
       $(ReactDOM.findDOMNode(@component)).find('input[type=time]').val().should.containEql moment().format('HH:')
 
     it '#showActive returns a correct class', ->
-      @component.showActive('tier', 1).should.eql ' active'
-      @component.showActive('featured', false).should.eql ''
+      @component.showActive('tier', 2).should.eql ' active'
+      @component.showActive('featured', true).should.eql ''
 
 
   describe 'Publish and scheduled date', ->
@@ -135,6 +137,7 @@ describe 'AdminArticle', ->
     it '#onPublishDateChange saves a changed published_at date on published article', ->
       @component.setState = sinon.stub()
       @component.onChange = sinon.stub()
+      @component.props.article.set('published', true)
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
       input.value = moment().subtract(1, 'years').format('YYYY-MM-DD')
       r.simulate.change input
