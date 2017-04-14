@@ -103,6 +103,7 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input:not(.tt-input,.edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
+    'keydown #edit-title textarea': 'onChangeTitle'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
@@ -135,6 +136,10 @@ module.exports = class EditLayout extends Backbone.View
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
+
+  onChangeTitle: (e) =>
+    return unless e.key is 'Enter'
+    e.preventDefault()
 
   onKeyup: =>
     if @article.get('published')
