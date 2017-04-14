@@ -3,7 +3,9 @@ Backbone = require('backbone')
 Curation = require '../../../models/curation.coffee'
 sd = require('sharify').data
 _ = require('underscore')
-
+React = require 'react'
+ReactDOM = require 'react-dom'
+VeniceAdmin = React.createFactory require './curations/venice_admin.coffee'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
@@ -12,11 +14,17 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
   initialize: ->
     @curation = new Curation sd.CURATION
-    new AdminEditView
-      model: @curation
-      el: $('body')
-      onDeleteUrl: '/settings/curations'
-    @initMenuState() if @curation.get('type') is 'editorial-feature'
+    if @curation.get('name') is 'Inside the Biennale'
+      ReactDOM.render(
+        VeniceAdmin(curation: @curation)
+        $('#venice-root')[0]
+      )
+    else
+      new AdminEditView
+        model: @curation
+        el: $('body')
+        onDeleteUrl: '/settings/curations'
+      @initMenuState() if @curation.get('type') is 'editorial-feature'
 
   initMenuState: =>
     $('.page-header').addClass 'sticky'

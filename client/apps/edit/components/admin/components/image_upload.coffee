@@ -33,7 +33,7 @@ module.exports = React.createClass
         @setState src: src, progress: 0.1, isDragover: false
       done: (src) =>
         @setState src: src, progress: 0, error: false, errorType: null
-        @props.onChange(src, @props.name) if @props.onChange
+        @props.onChange(@props.name, src) if @props.onChange
 
   onClick: ->
     @setState error: false, errorType: null

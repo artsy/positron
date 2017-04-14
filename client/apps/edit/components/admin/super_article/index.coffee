@@ -27,7 +27,7 @@ module.exports = React.createClass
     @props.onChange 'is_super_article', !@props.article.get('is_super_article')
     @forceUpdate()
 
-  upload: (src, field) ->
+  upload: (field, src) ->
     newSuperArticle = @state.super_article
     newSuperArticle[field] = src
     @setState super_article: newSuperArticle
