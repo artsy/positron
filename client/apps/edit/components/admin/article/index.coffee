@@ -13,8 +13,8 @@ module.exports = AdminArticle = React.createClass
     publish_date: moment().format('YYYY-MM-DD')
     publish_time: moment().format('HH:mm')
     focus_date: false
-    tier: @props.article.get('tier') || 2
-    featured: @props.article?.get('featured') || false
+    tier: @props.article.get('tier') or 2
+    featured: @props.article?.get('featured') or false
 
   componentWillMount: ->
     @setupPublishDate()
