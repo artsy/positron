@@ -10,7 +10,6 @@ describe 'index', ->
       setupAuth: @setupAuth = sinon.stub()
       setupEnv: @setupEnv = sinon.stub()
       session: @session = sinon.stub().returns((req, res, next) -> next())
-      morgan: @morgan = sinon.stub().returns((req, res, next) -> next())
       bodyParser:
         json: @json = sinon.stub().returns((req, res, next) -> next())
         urlencoded: @urlencoded = sinon.stub().returns((req, res, next) -> next())
@@ -33,16 +32,7 @@ describe 'index', ->
     @urlencoded.args[0][0].extended.should.be.true()
     @bucketAssets.called.should.be.true()
     @setupAuth.called.should.be.true()
-
-  it 'sets morgan logs to custom mode', ->
-    tokens =
-      status: -> 200
-      method: -> 'GET'
-      url: -> 'https://writer.artsy.net'
-      'response-time': -> 1000
-      'remote-addr': -> '0.0.0.0'
-      'user-agent': -> 'Mozilla'
-    @morgan.args[0][0](tokens, {}, {}).should.equal '\u001b[33mCLIENT:\u001b[39m \u001b[34mGET\u001b[39m \u001b[32mhttps://writer.artsy.net 200\u001b[39m \u001b[36m1000ms\u001b[39m \u001b[37m0.0.0.0\u001b[39m "\u001b[37mMozilla\u001b[39m"'
+    @app.use.args[4][0].name.should.equal 'logger'
 
 describe 'development environment', ->
 
@@ -52,15 +42,14 @@ describe 'development environment', ->
       setupAuth: @setupAuth = sinon.stub()
       setupEnv: @setupEnv = sinon.stub()
       session: @session = sinon.stub().returns((req, res, next) -> next())
-      morgan: @morgan = sinon.stub().returns((req, res, next) -> next())
     @app = express()
     sinon.spy @app, 'use'
     sinon.spy @app, 'get'
     sinon.spy @app, 'set'
     setup @app
 
-  it 'sets morgan logs to dev mode', ->
-    @morgan.args[0][0].should.equal 'dev'
+  it 'mounts logger middleware', ->
+    @app.use.args[4][0].name.should.equal 'logger'
 
 describe 'production environment', ->
 
@@ -70,22 +59,14 @@ describe 'production environment', ->
       setupAuth: @setupAuth = sinon.stub()
       setupEnv: @setupEnv = sinon.stub()
       session: @session = sinon.stub().returns((req, res, next) -> next())
-      morgan: @morgan = sinon.stub().returns((req, res, next) -> next())
     @app = express()
     sinon.spy @app, 'use'
     sinon.spy @app, 'get'
     sinon.spy @app, 'set'
     setup @app
 
-  it 'sets morgan logs to custom mode', ->
-    tokens =
-      status: -> 200
-      method: -> 'GET'
-      url: -> 'https://writer.artsy.net'
-      'response-time': -> 1000
-      'remote-addr': -> '0.0.0.0'
-      'user-agent': -> 'Mozilla'
-    @morgan.args[0][0](tokens, {}, {}).should.equal '\u001b[33mCLIENT:\u001b[39m \u001b[34mGET\u001b[39m \u001b[32mhttps://writer.artsy.net 200\u001b[39m \u001b[36m1000ms\u001b[39m \u001b[37m0.0.0.0\u001b[39m "\u001b[37mMozilla\u001b[39m"'
+  it 'mounts logger middleware', ->
+    @app.use.args[5][0].name.should.equal 'logger'
 
   it 'sets SSL options', ->
     @app.set.args[3][0].should.equal 'forceSSLOptions'

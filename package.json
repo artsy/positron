@@ -13,6 +13,7 @@
   "dependencies": {
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
+    "artsy-morgan": "git://github.com/artsy/artsy-morgan.git",
     "artsy-newrelic": "git://github.com/artsy/artsy-newrelic.git",
     "artsy-xapp": "^1.0.4",
     "async": "^1.4.2",
@@ -52,7 +53,6 @@
     "mocha": "^3.1.2",
     "moment": "^2.10.6",
     "mongojs": "^2.4.0",
-    "morgan": "^1.6.1",
     "nib": "^1.1.0",
     "node-env-file": "^0.1.7",
     "node-mandrill": "^1.0.1",
