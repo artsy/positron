@@ -13,6 +13,8 @@ module.exports = AdminArticle = React.createClass
     publish_date: moment().format('YYYY-MM-DD')
     publish_time: moment().format('HH:mm')
     focus_date: false
+    tier: @props.article.get('tier') or 2
+    featured: @props.article?.get('featured') or false
 
   componentWillMount: ->
     @setupPublishDate()
@@ -26,6 +28,7 @@ module.exports = AdminArticle = React.createClass
 
   onTierChange: (e) ->
     tier = parseInt e.target.name
+    @setState tier: tier
     @onChange 'tier', tier
 
   onPrimaryAuthorChange: (e) ->
@@ -33,6 +36,7 @@ module.exports = AdminArticle = React.createClass
 
   onMagazineChange: (e) ->
     featured = if e.target.name is 'true' then true else false
+    @setState featured: featured
     @onChange 'featured', featured
 
   onCheckboxChange: (e) ->
@@ -75,7 +79,7 @@ module.exports = AdminArticle = React.createClass
     @setState focus_date: false
 
   showActive: (key, value) ->
-    active = if @props.article.get(key) is value then ' active' else ''
+    active = if @state[key] is value then ' active' else ''
 
   render: ->
     div { className: 'edit-admin--article edit-admin__fields', ref: 'container'},
@@ -167,6 +171,8 @@ module.exports = AdminArticle = React.createClass
               input {
                 type: 'checkbox'
                 checked: @props.article.get 'exclude_google_news'
+                value: @props.article.get 'exclude_google_news'
+                readOnly: true
               }
               label {}, 'Exclude from Google News'
 
