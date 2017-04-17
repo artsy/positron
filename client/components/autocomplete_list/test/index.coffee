@@ -5,7 +5,6 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
-_ = require 'underscore'
 
 describe 'AutocompleteList', ->
 
@@ -33,8 +32,8 @@ describe 'AutocompleteList', ->
         resObject: (res) -> id: res.id, value: res.value
       @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteList, props)
       @component = ReactDOM.render React.createElement(AutocompleteList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
-        @setState = sinon.stub @component, 'setState'
-        done()
+          @setState = sinon.stub @component, 'setState'
+          done()
 
   afterEach ->
     benv.teardown()
