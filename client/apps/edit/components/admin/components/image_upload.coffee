@@ -47,7 +47,7 @@ module.exports = React.createClass
 
   remove: ->
     @setState src: ''
-    @props.onChange('', @props.name) if @props.onChange
+    @props.onChange(@props.name, '') if @props.onChange
 
   progressBar: ->
     if @state.progress

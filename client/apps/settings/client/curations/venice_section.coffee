@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, input, label, section, textarea } = React.DOM
+{ div, input, label, section, span, textarea } = React.DOM
 AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
 imageUpload = React.createFactory require '../../../edit/components/admin/components/image_upload.coffee'
 
@@ -13,7 +13,11 @@ module.exports = VeniceSection = React.createClass
     video_url: @props.section.video_url or ''
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
-    published: @props.section.published or ''
+    published: @props.section.published or false
+    release_date: @props.section.release_date or null
+
+  componentDidMount: ->
+    ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   onInputChange: (e) ->
     @onChange e.target.name, e.target.value
@@ -22,30 +26,59 @@ module.exports = VeniceSection = React.createClass
     newState = @state
     newState[key] = value
     @setState newState
+    @props.onChange newState, @props.id
+
+  onCheckboxChange: (e) ->
+    @onChange 'published', !@state.published
 
   render: ->
-    div { className: 'venice-admin__fields'},
+    div { className: 'venice-admin__fields', ref: 'container'},
       div { className: 'fields--full'},
-        div { className: 'field-group fields--left' },
-          label {},'Title'
-          input {
-            className: 'bordered-input'
-            placeholder: 'Title'
-            defaultValue: @state.title
-            onChange: @onInputChange
-            name: 'title'
-          }
-        div { className: 'field-group fields--right' },
-          label {},'Video URL'
-          input {
-            className: 'bordered-input'
-            placeholder: 'Enter a link'
-            defaultValue: @state.video_url
-            onChange: @onInputChange
-            name: 'video_url'
-          }
+        div { className: 'fields--left' },
+          div { className: 'field-group' },
+            label {},'Title'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Title'
+              defaultValue: @state.title
+              onChange: @onInputChange
+              name: 'title'
+            }
+          div { className: 'field-group' },
+            label {},'Video URL'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Enter a link'
+              defaultValue: @state.video_url
+              onChange: @onInputChange
+              name: 'video_url'
+            }
+        div { className: 'fields--right' },
+          div { className: 'field-group' },
+            label {},'Release Date'
+            input {
+              type: 'date'
+              className: 'bordered-input'
+              placeholder: 'Enter a link'
+              defaultValue: @state.release_date
+              onChange: @onInputChange
+              name: 'release_date'
+            }
+          div {
+            className: 'field-group--inline flat-checkbox'
+            onClick: @onCheckboxChange
+          },
+            input {
+              type: 'checkbox'
+              checked: @state.published
+              value: @state.published
+              readOnly: true
+            }
+            label {},'Published'
       div { className: 'field-group' },
-        label {}, 'Description'
+        label {},
+          span {}, 'Description'
+          span { className: 'subtitle' }, 'Accepts Markdown'
         textarea {
           className: 'bordered-input'
           placeholder: 'Description'

@@ -24,7 +24,7 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
         model: @curation
         el: $('body')
         onDeleteUrl: '/settings/curations'
-      @initMenuState() if @curation.get('type') is 'editorial-feature'
+    @initMenuState() if @curation.get('type') is 'editorial-feature'
 
   initMenuState: =>
     $('.page-header').addClass 'sticky'

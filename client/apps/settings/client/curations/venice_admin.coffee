@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, input, label, section, textarea } = React.DOM
+_ = require 'underscore'
+{ div, input, label, section, span, textarea, button } = React.DOM
 dropdownHeader = React.createFactory require '../../../edit/components/admin/components/dropdown_header.coffee'
 sectionFields = React.createFactory require './venice_section.coffee'
 
@@ -10,6 +11,8 @@ module.exports = VeniceAdmin = React.createClass
   getInitialState: ->
     curation: @props.curation
     activeSections: []
+    isChanged: false
+    isSaving: false
 
   revealSection: (section) ->
     sections = @state.activeSections
@@ -28,6 +31,26 @@ module.exports = VeniceAdmin = React.createClass
     active = if section in @state.activeSections then true else false
     return active
 
+  onChangeSection: (section, id) ->
+    @setState isChanged: true
+    newSections = @state.curation.get 'sections'
+    newSections[id] = section
+    @state.curation.set 'sections', newSections
+
+  onInputChange: (e) ->
+    @setState isChanged: true
+    @state.curation.set 'description', e.target.value
+
+  save: ->
+    @setState isSaving: true
+    @state.curation.save()
+    _.defer => @doneSaving()
+
+  doneSaving: ->
+    setTimeout( =>
+      @setState isSaving: false, isChanged: false
+    , 750)
+
   printSections: ->
     @state.curation.get('sections').map (s, i) =>
       section {key: 'section-' + i, className: @getActiveSection 'section-' + i },
@@ -40,14 +63,36 @@ module.exports = VeniceAdmin = React.createClass
         if @isActiveSection 'section-' + i
           sectionFields {
             section: s
+            id: i
+            onChange: @onChangeSection
           }
+
+  getSaveStatus: ->
+    className = ''
+    text = 'Save'
+    if @state.isSaving
+      className = ' is-saving'
+      text = 'Saving...'
+    else if @state.isChanged
+      className = ' attention'
+    { className: className, text: text }
 
   render: ->
     div {},
+      div { className: 'save' },
+        button {
+          className: 'avant-garde-button' + @getSaveStatus().className
+          ref: 'save'
+          onClick: @save
+        }, @getSaveStatus().text
       @printSections()
-      div { className: 'field-group' },
-        label {}, 'About the Series'
+      div { className: 'field-group about' },
+        label {},
+          span {},'About the Series'
+          span { className: 'subtitle' }, 'Accepts Markdown'
         textarea {
           className: 'bordered-input'
           placeholder: 'Description'
+          defaultValue: @state.curation.get 'description'
+          onChange: @onInputChange
         }
