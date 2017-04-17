@@ -7,6 +7,8 @@ Channel = require '../../../models/channel.coffee'
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
+React = require 'react'
+ReactDOM = require 'react-dom'
 
 module.exports.EditChannel = class EditChannel extends Backbone.View
 
@@ -21,7 +23,7 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
 
   setupUserAutocomplete: ->
     @user_ids = @channel.get 'user_ids' or []
-    new AutocompleteList $('#channel-edit__users')[0],
+    props =
       name: 'user_ids[]'
       url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
       placeholder: 'Search by user name or email...'
@@ -37,6 +39,7 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
         id: res.body.id,
         value: _.compact([res.body.name, res.body.email]).join(', ')
       }
+    ReactDOM.render React.createElement(AutocompleteList, props), $('#channel-edit__users')[0]
 
   setupPinnedArticlesAutocomplete: ->
     @pinnedArticles = @channel.get('pinned_articles') or []
