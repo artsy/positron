@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, input, label, section, span, textarea } = React.DOM
+moment = require 'moment'
+{ div, input, label, span, textarea } = React.DOM
 AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
 imageUpload = React.createFactory require '../../../edit/components/admin/components/image_upload.coffee'
 
@@ -14,7 +15,7 @@ module.exports = VeniceSection = React.createClass
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
     published: @props.section.published or false
-    release_date: @props.section.release_date or null
+    release_date: moment(@props.section.release_date).format('YYYY-MM-DD') or null
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -30,6 +31,9 @@ module.exports = VeniceSection = React.createClass
 
   onCheckboxChange: (e) ->
     @onChange 'published', !@state.published
+
+  onDateChange: (e) ->
+    @onChange 'release_date', moment(e.target.value).toISOString()
 
   render: ->
     div { className: 'venice-admin__fields', ref: 'container'},
@@ -59,10 +63,8 @@ module.exports = VeniceSection = React.createClass
             input {
               type: 'date'
               className: 'bordered-input'
-              placeholder: 'Enter a link'
-              defaultValue: @state.release_date
-              onChange: @onInputChange
-              name: 'release_date'
+              defaultValue: moment(@state.release_date).format('YYYY-MM-DD')
+              onChange: @onDateChange
             }
           div {
             className: 'field-group--inline flat-checkbox'

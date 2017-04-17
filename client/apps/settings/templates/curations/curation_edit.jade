@@ -34,7 +34,7 @@ block content
           ) Save Changes
 
     when 'editorial-feature'
-      if curation.get('name') != 'Inside the Biennale'
+      if curation.get('id') != sd.EF_VENICE
         .max-width-container.settings-edit-feature
           include ./editorial_feature_edit.jade
       else

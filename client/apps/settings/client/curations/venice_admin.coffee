@@ -1,7 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 _ = require 'underscore'
-{ div, input, label, section, span, textarea, button } = React.DOM
+{ div, section, label, span, textarea, button } = React.DOM
 dropdownHeader = React.createFactory require '../../../edit/components/admin/components/dropdown_header.coffee'
 sectionFields = React.createFactory require './venice_section.coffee'
 

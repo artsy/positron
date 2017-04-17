@@ -14,7 +14,7 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
   initialize: ->
     @curation = new Curation sd.CURATION
-    if @curation.get('name') is 'Inside the Biennale'
+    if @curation.get('id') is sd.EF_VENICE
       ReactDOM.render(
         VeniceAdmin(curation: @curation)
         $('#venice-root')[0]
