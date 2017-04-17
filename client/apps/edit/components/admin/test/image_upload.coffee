@@ -76,4 +76,4 @@ describe 'ImageUpload', ->
       @component.setState src: 'http://artsy.net/image.jpg'
       r.simulate.click r.find(@component, 'image-upload-form-remove')[0]
       @component.state.src.should.eql ''
-      @component.props.onChange.args[0].should.eql [ '', 'my_image' ]
+      @component.props.onChange.args[0].should.eql [ 'my_image', '' ]
