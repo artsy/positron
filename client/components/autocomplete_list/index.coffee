@@ -7,9 +7,6 @@ sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
 
-module.exports = (el, props) ->
-  ReactDOM.render React.createElement(AutocompleteList, props), el
-
 module.exports = AutocompleteList = React.createClass
   displayName: 'AutocompleteList'
 
@@ -70,7 +67,7 @@ module.exports = AutocompleteList = React.createClass
 
   removeItem: (item) -> (e) =>
     e.preventDefault()
-    @$input.typeahead('destroy').val('')
+    @$input.typeahead('destroy')?.val('')
     newItems = _.reject(@state.items, (i) -> i.id is item.id)
     @setState items: newItems
     @props.removed? e, item, newItems

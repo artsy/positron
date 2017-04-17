@@ -5,6 +5,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
+_ = require 'underscore'
 
 describe 'AutocompleteList', ->
 
@@ -17,8 +18,8 @@ describe 'AutocompleteList', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      { AutocompleteList } = mod = benv.require resolve __dirname, '../index'
-      mod.__set__ 'request', get: sinon.stub().returns
+      AutocompleteList = benv.require resolve __dirname, '../index'
+      AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
       props =
@@ -47,14 +48,11 @@ describe 'AutocompleteList', ->
 
   it 'selects an item', ->
     @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
-    @setState.args[0][0].value.should.equal ''
     @setState.args[0][0].items[0].value.should.equal 'Andy Warhol'
     @setState.args[0][0].items[1].value.should.equal 'Yayoi Kusama'
     @selected.callCount.should.equal 1
 
   it 'removes an item', ->
-    @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
-    @setState.args[0][0].value.should.equal ''
-    @setState.args[0][0].items[0].value.should.equal 'Andy Warhol'
-    @setState.args[0][0].items[1].value.should.equal 'Yayoi Kusama'
-    @selected.callCount.should.equal 1
+    @component.removeItem({ id: '123', value: 'Andy Warhol' })({preventDefault: ->})
+    @setState.args[0][0].items.length.should.equal 0
+    @removed.callCount.should.equal 1
