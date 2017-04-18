@@ -13,6 +13,7 @@ module.exports = VeniceAdmin = React.createClass
     activeSections: []
     isChanged: false
     isSaving: false
+    error: null
 
   revealSection: (section) ->
     sections = @state.activeSections
@@ -43,19 +44,17 @@ module.exports = VeniceAdmin = React.createClass
 
   save: ->
     @setState isSaving: true
-    @state.curation.save()
-    _.defer => @doneSaving()
-
-  doneSaving: ->
-    setTimeout( =>
-      @setState isSaving: false, isChanged: false
-    , 750)
+    @state.curation.save {},
+      success: =>
+        @setState isSaving: false, isChanged: false
+      error: (err) ->
+        @setState error: err, isSaving: false
 
   printSections: ->
     @state.curation.get('sections').map (s, i) =>
       section {key: 'section-' + i, className: @getActiveSection 'section-' + i },
         dropdownHeader {
-          section: s.title
+          section: s.title || 'Missing Title'
           onClick: @revealSection
           key: 'section-' + i
           className: 'section-' + i
@@ -66,6 +65,10 @@ module.exports = VeniceAdmin = React.createClass
             id: i
             onChange: @onChangeSection
           }
+
+  printError: ->
+    if @state.error
+      div { className: 'error' }, '* ' + @state.error
 
   getSaveStatus: ->
     className = ''
@@ -85,6 +88,7 @@ module.exports = VeniceAdmin = React.createClass
           ref: 'save'
           onClick: @save
         }, @getSaveStatus().text
+      @printError()
       @printSections()
       div { className: 'field-group about' },
         label {},
