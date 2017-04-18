@@ -31,6 +31,9 @@ describe 'EditCuration', ->
         { @CurationEditView } = mod = benv.requireWithJadeify(
           resolve(__dirname, '../../client/curations'), []
         )
+        mod.__set__ 'sd', {
+          EF_VENICE: '4321'
+        }
         mod.__set__ 'AdminEditView', sinon.stub()
         @view = new @CurationEditView el: $('body'), curation: @curation
         done()

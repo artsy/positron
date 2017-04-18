@@ -88,6 +88,6 @@ describe 'AdminSuperArticle', ->
     @component.props.onChange.args[0][1].partner_link_title.should.eql 'A new value'
 
   it 'updates state on image upload', ->
-    @component.upload 'http://partnerlogo.com/image.jpg', 'partner_logo'
+    @component.upload 'partner_logo', 'http://partnerlogo.com/image.jpg'
     @component.state.super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
     @component.props.onChange.args[0][0].super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
