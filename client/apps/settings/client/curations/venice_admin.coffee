@@ -115,11 +115,9 @@ module.exports = VeniceAdmin = React.createClass
             for article in articles.results
               { id: article.id, value: "#{article.title}, #{article.author?.name}"}
           selected: (e, item, items) =>
-            subArticles = @state.curation.get 'sub_articles'
             subArticles = _.pluck items, 'id'
             @onChange 'sub_articles', subArticles
           removed: (e, item, items) =>
-            subArticles = @state.curation.get 'sub_articles'
             subArticles = _.without(_.pluck(items,'id'),item.id)
             @onChange 'sub_articles', subArticles
           idsToFetch: @state.curation.get 'sub_articles'
