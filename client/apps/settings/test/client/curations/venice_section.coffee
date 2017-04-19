@@ -36,6 +36,7 @@ describe 'VeniceSection', ->
           title: 'The Title'
           description: 'Cool description'
           video_url: 'http://artsy.net/360.mp4'
+          video_length: '11:22'
           artist_ids: ['123']
           cover_image: 'http://artsy.net/cover.jpg'
           release_date: moment().toISOString()
@@ -53,8 +54,8 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 8
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 8
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 9
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
@@ -65,6 +66,7 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component)).find('input[name=title]').val().should.eql 'The Title'
       $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').val().should.eql 'dawn-kasper'
       $(ReactDOM.findDOMNode(@component)).find('input[name=video_url]').val().should.eql 'http://artsy.net/360.mp4'
+      $(ReactDOM.findDOMNode(@component)).find('input[name=video_length]').val().should.eql '11:22'
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').val().should.eql moment().format('YYYY-MM-DD')
       $(ReactDOM.findDOMNode(@component)).find('textarea').val().should.eql 'Cool description'
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').val().should.eql 'false'

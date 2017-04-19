@@ -13,6 +13,7 @@ module.exports = VeniceSection = React.createClass
     title: @props.section.title or ''
     description: @props.section.description or ''
     video_url: @props.section.video_url or ''
+    video_length: @props.section.video_length or null
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
     published: @props.section.published or false
@@ -88,15 +89,25 @@ module.exports = VeniceSection = React.createClass
                 readOnly: true
               }
               label {},'Published'
-          div { className: 'field-group' },
-            label {},'Video URL'
-            input {
-              className: 'bordered-input'
-              placeholder: 'Enter a link'
-              defaultValue: @state.video_url
-              onChange: @onInputChange
-              name: 'video_url'
-            }
+          div { className: 'fields--full video' },
+            div { className: 'field-group video-url' },
+              label {},'Video URL'
+              input {
+                className: 'bordered-input'
+                placeholder: 'Enter a link'
+                defaultValue: @state.video_url
+                onChange: @onInputChange
+                name: 'video_url'
+              }
+            div { className: 'field-group time' },
+              label {},'Video Length'
+              input {
+                className: 'bordered-input'
+                defaultValue: @state.video_length
+                placeholder: '4:33'
+                onChange: @onInputChange
+                name: 'video_length'
+              }
       div { className: 'field-group' },
         label {},
           span {}, 'Description'
