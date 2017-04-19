@@ -4,6 +4,8 @@ _ = require 'underscore'
 { div, section, label, span, textarea, button } = React.DOM
 dropdownHeader = React.createFactory require '../../../edit/components/admin/components/dropdown_header.coffee'
 sectionFields = React.createFactory require './venice_section.coffee'
+AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
+
 
 module.exports = VeniceAdmin = React.createClass
   displayName: 'VeniceAdmin'
@@ -38,9 +40,12 @@ module.exports = VeniceAdmin = React.createClass
     newSections[id] = section
     @state.curation.set 'sections', newSections
 
-  onInputChange: (e) ->
+  onDescriptionChange: (e) ->
+    @onChange e.target.name, e.target.value
+
+  onChange: (key, value) ->
     @setState isChanged: true
-    @state.curation.set 'description', e.target.value
+    @state.curation.set key, value
 
   save: ->
     @setState isSaving: true
@@ -97,6 +102,26 @@ module.exports = VeniceAdmin = React.createClass
         textarea {
           className: 'bordered-input'
           placeholder: 'Description'
+          name: 'description'
           defaultValue: @state.curation.get 'description'
-          onChange: @onInputChange
+          onChange: @onDescriptionChange
+        }
+      div {className: 'field-group sub-articles'},
+        label {}, 'Related Articles'
+        AutocompleteList {
+          url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+          placeholder: "Search articles by title..."
+          filter: (articles) ->
+            for article in articles.results
+              { id: article.id, value: "#{article.title}, #{article.author?.name}"}
+          selected: (e, item, items) =>
+            subArticles = _.pluck items, 'id'
+            @onChange 'sub_articles', subArticles
+          removed: (e, item, items) =>
+            subArticles = _.without(_.pluck(items,'id'),item.id)
+            @onChange 'sub_articles', subArticles
+          idsToFetch: @state.curation.get 'sub_articles'
+          fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+          resObject: (res) ->
+            id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
         }

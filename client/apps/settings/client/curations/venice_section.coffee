@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 moment = require 'moment'
+_s = require 'underscore.string'
 { div, input, label, span, textarea } = React.DOM
 AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
 imageUpload = React.createFactory require '../../../edit/components/admin/components/image_upload.coffee'
@@ -12,18 +13,27 @@ module.exports = VeniceSection = React.createClass
     title: @props.section.title or ''
     description: @props.section.description or ''
     video_url: @props.section.video_url or ''
+    video_length: @props.section.video_length or null
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
     published: @props.section.published or false
     release_date: moment(@props.section.release_date).format('YYYY-MM-DD') or null
+    slug: @props.section.slug or ''
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
+    @setupSlug()
+
+  setupSlug: ->
+    if !@props.section.slug and @props.section.title
+      @setState slug: _s.slugify @props.section.title
 
   onInputChange: (e) ->
     @onChange e.target.name, e.target.value
 
   onChange: (key, value) ->
+    if key is 'slug'
+      value = _s.slugify value
     newState = @state
     newState[key] = value
     @setState newState
@@ -49,34 +59,55 @@ module.exports = VeniceSection = React.createClass
               name: 'title'
             }
           div { className: 'field-group' },
-            label {},'Video URL'
+            label {},'Slug'
             input {
               className: 'bordered-input'
-              placeholder: 'Enter a link'
-              defaultValue: @state.video_url
+              placeholder: 'enter-a-slug'
+              value: @state.slug
               onChange: @onInputChange
-              name: 'video_url'
+              name: 'slug'
+              disabled: @state.published
             }
         div { className: 'fields--right' },
-          div { className: 'field-group' },
-            label {},'Release Date'
-            input {
-              type: 'date'
-              className: 'bordered-input'
-              defaultValue: moment(@state.release_date).format('YYYY-MM-DD')
-              onChange: @onDateChange
-            }
-          div {
-            className: 'field-group--inline flat-checkbox'
-            onClick: @onCheckboxChange
-          },
-            input {
-              type: 'checkbox'
-              checked: @state.published
-              value: @state.published
-              readOnly: true
-            }
-            label {},'Published'
+          div { className: 'fields--full published' },
+            div { className: 'field-group date' },
+              label {},'Release Date'
+              input {
+                type: 'date'
+                className: 'bordered-input'
+                defaultValue: moment(@state.release_date).format('YYYY-MM-DD')
+                onChange: @onDateChange
+              }
+            div {
+              className: 'field-group--inline flat-checkbox'
+              onClick: @onCheckboxChange
+            },
+              input {
+                type: 'checkbox'
+                checked: @state.published
+                value: @state.published
+                readOnly: true
+              }
+              label {},'Published'
+          div { className: 'fields--full video' },
+            div { className: 'field-group video-url' },
+              label {},'Video URL'
+              input {
+                className: 'bordered-input'
+                placeholder: 'Enter a link'
+                defaultValue: @state.video_url
+                onChange: @onInputChange
+                name: 'video_url'
+              }
+            div { className: 'field-group time' },
+              label {},'Video Length'
+              input {
+                className: 'bordered-input'
+                defaultValue: @state.video_length
+                placeholder: '4:33'
+                onChange: @onInputChange
+                name: 'video_length'
+              }
       div { className: 'field-group' },
         label {},
           span {}, 'Description'

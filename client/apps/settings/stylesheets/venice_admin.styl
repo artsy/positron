@@ -21,10 +21,23 @@
       width 100%
     textarea
       min-height 10em
+  .published
+    display flex
+    align-items center
+    .date
+      width 70%
+  .video
+    .video-url
+      width 70%
+    .time
+      width 115px
+      input
+        height 40px
   .flat-checkbox
     display flex
     align-items center
-    margin-top 4.5em
+    margin-top -10px
+    width 110px
     label
       margin-bottom 0
   .image-upload-form
@@ -39,6 +52,9 @@
     justify-content space-between
   .fields--left, .fields--right
     width calc(50% \- 15px)
+  input[disabled]
+    background-color gray-lightest-color
+    cursor not-allowed
   label
     avant-garde s-headline
     margin-bottom 5px
@@ -46,6 +62,12 @@
     justify-content space-between
     .subtitle
       color gray-color
+  .sub-articles .autocomplete-container
+    display flex
+    flex-direction row-reverse
+    justify-content space-between
+    .autocomplete-selected, .twitter-typeahead
+      width calc(50% \- 15px)
   .save
     position fixed
     top 10px
