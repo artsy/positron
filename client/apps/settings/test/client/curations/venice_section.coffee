@@ -53,21 +53,31 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 7
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 7
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 8
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 8
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').length.should.eql 1
 
     it 'Populates inputs with saved data', ->
+      @component.setState slug: 'dawn-kasper'
       $(ReactDOM.findDOMNode(@component)).find('input[name=title]').val().should.eql 'The Title'
+      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').val().should.eql 'dawn-kasper'
       $(ReactDOM.findDOMNode(@component)).find('input[name=video_url]').val().should.eql 'http://artsy.net/360.mp4'
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').val().should.eql moment().format('YYYY-MM-DD')
       $(ReactDOM.findDOMNode(@component)).find('textarea').val().should.eql 'Cool description'
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').val().should.eql 'false'
       $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-selected').text().should.eql 'An Artist'
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
+
+  describe 'Slugs', ->
+    it 'If slug is undefined, autofills a slug based on a saved section title', ->
+      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').val().should.eql 'the-title'
+
+    it 'Disables the slug field on published sections', ->
+      @component.setState published: true
+      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').prop('disabled').should.eql true
 
   describe '#onChange', ->
 

@@ -76,10 +76,11 @@ module.exports = AutocompleteList = React.createClass
   render: ->
     div { className: 'autocomplete-container' },
       (
-        for item in @state.items
-          div { className: 'autocomplete-select-selected', key: item.value }, item.value,
-            input { type: 'hidden', value: item.id, name: @props.name }
-            button { className: 'remove-button', onClick: @removeItem(item) }
+        div { className: 'autocomplete-selected'},
+          for item in @state.items
+            div { className: 'autocomplete-select-selected', key: item.value }, item.value,
+              input { type: 'hidden', value: item.id, name: @props.name }
+              button { className: 'remove-button', onClick: @removeItem(item) }
       )
       input {
         className: 'bordered-input autocomplete-input'

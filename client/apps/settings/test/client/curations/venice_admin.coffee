@@ -31,6 +31,11 @@ describe 'VeniceSection', ->
       )
       VeniceAdmin.__set__ 'dropdownHeader', React.createFactory dropdownHeader
       VeniceSection = benv.require resolve __dirname, '../../../client/curations/venice_section.coffee'
+      Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      VeniceAdmin.__set__ 'AutocompleteList', React.createFactory Autocomplete
+      Autocomplete.__set__ 'request', get: sinon.stub().returns
+        set: sinon.stub().returns
+          end: sinon.stub().yields(null, body: { id: '123', name: 'An Artist'})
       VeniceSection.__set__ 'sd', {
         ARTSY_URL: 'http://localhost:3005'
         USER: access_token: ''
@@ -52,17 +57,19 @@ describe 'VeniceSection', ->
     $(ReactDOM.findDOMNode(@component)).find('button').length.should.eql 1
     $(ReactDOM.findDOMNode(@component)).find('section').length.should.eql 2
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
+    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 1
 
   it '#revealSection triggers a dropdown', ->
     r.simulate.click r.find(@component, 'dropdown-header')[0]
     $(ReactDOM.findDOMNode(@component)).find('.venice-admin__fields.active').length.should.eql 1
 
-  it '#onInputChange sets the description state', ->
+  it '#onDescriptionChange sets the description state and shows a save warning', ->
     input = r.findTag(@component, 'textarea')[0]
     input.value = 'New Description'
     r.simulate.change input
     @component.state.curation.get('description').should.eql 'New Description'
     @component.state.isChanged.should.eql true
+    $(ReactDOM.findDOMNode(@component)).find('button').hasClass('attention').should.eql true
 
   it '#onChangeSection updates state.curation and shows a save warning', ->
     @component.onChangeSection {title: 'Dawn Kasper', published: true}, 1
