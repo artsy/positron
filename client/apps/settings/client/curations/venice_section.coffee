@@ -11,6 +11,7 @@ module.exports = VeniceSection = React.createClass
 
   getInitialState: ->
     title: @props.section.title or ''
+    subtitle: @props.section.subtitle or ''
     description: @props.section.description or ''
     video_url: @props.section.video_url or ''
     video_length: @props.section.video_length or null
@@ -57,6 +58,15 @@ module.exports = VeniceSection = React.createClass
               defaultValue: @state.title
               onChange: @onInputChange
               name: 'title'
+            }
+          div { className: 'field-group' },
+            label {},'Subtitle'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Subtitle'
+              defaultValue: @state.subtitle
+              onChange: @onInputChange
+              name: 'subtitle'
             }
           div { className: 'field-group' },
             label {},'Slug'

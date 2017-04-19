@@ -34,6 +34,7 @@ describe 'VeniceSection', ->
       props = {
         section: {
           title: 'The Title'
+          subtitle: 'The Subtitle'
           description: 'Cool description'
           video_url: 'http://artsy.net/360.mp4'
           video_length: '11:22'
@@ -54,8 +55,8 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 9
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 10
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 10
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
@@ -72,6 +73,7 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').val().should.eql 'false'
       $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-selected').text().should.eql 'An Artist'
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
+      $(ReactDOM.findDOMNode(@component)).find('input[name=subtitle]').val().should.eql 'The Subtitle'
 
   describe 'Slugs', ->
     it 'If slug is undefined, autofills a slug based on a saved section title', ->
@@ -94,7 +96,7 @@ describe 'VeniceSection', ->
       @component.props.onChange.args[0][0].published.should.eql true
 
     it '#onDateChange can change the date', ->
-      input = r.find(@component, 'bordered-input')[2]
+      input = r.find(@component, 'bordered-input')[3]
       input.value = '2018-01-01'
       r.simulate.change input
       @component.props.onChange.args[0][0].release_date.should.eql moment('2018-01-01').toISOString()
