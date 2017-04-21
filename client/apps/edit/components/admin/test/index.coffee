@@ -7,7 +7,6 @@ ReactTestUtils = require 'react-addons-test-utils'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
-_ = require 'underscore'
 
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
