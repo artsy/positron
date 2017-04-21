@@ -16,6 +16,11 @@ module.exports = React.createClass
   getInitialState: ->
     activeSections: ['article', 'verticals-tags']
 
+  componentWillMount: ->
+    @props.article.fetchFeatured()
+    @props.article.fetchMentioned()
+    @debouncedSave = _.debounce((-> @props.article.save()), 800)
+
   setActiveSection: (section) ->
     sections = @state.activeSections || []
     if section in @state.activeSections
@@ -33,14 +38,10 @@ module.exports = React.createClass
     active = if section in @state.activeSections then true else false
     return active
 
-  componentWillMount: ->
-    @props.article.fetchFeatured()
-    @props.article.fetchMentioned()
-
   onChange: (key, value) ->
     @props.article.set(key, value)
-    if !@props.article.get('published')
-      @props.article.save()
+    unless @props.article.get('published')
+      @debouncedSave()
     else
       $('#edit-save').removeClass('is-saving').addClass 'attention'
 

@@ -7,6 +7,7 @@ ReactTestUtils = require 'react-addons-test-utils'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
+_ = require 'underscore'
 
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
@@ -82,6 +83,7 @@ describe 'AdminSections', ->
     # is there a way to show jquery changes outside the component?
 
   it '#onChange saves the article if unpublished', ->
+    @component.debouncedSave = @component.props.article.save
     @component.props.article.set('published', false)
     @component.onChange('tier', 2)
     @component.props.article.save.callCount.should.eql 1
