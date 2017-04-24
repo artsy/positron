@@ -15,6 +15,7 @@ module.exports = VeniceSection = React.createClass
     video_url: @props.section.video_url or ''
     video_url_medium: @props.section.video_url_medium or ''
     video_url_hls: @props.section.video_url_hls or ''
+    video_url_external: @props.section.video_url_external or ''
     video_length: @props.section.video_length or null
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
@@ -127,6 +128,15 @@ module.exports = VeniceSection = React.createClass
             defaultValue: @state.video_url_hls
             onChange: @onInputChange
             name: 'video_url_hls'
+          }
+        div { className: 'field-group video-url' },
+          label {},'External Video URL'
+          input {
+            className: 'bordered-input'
+            placeholder: 'Enter a link'
+            defaultValue: @state.video_url_external
+            onChange: @onInputChange
+            name: 'video_url_external'
           }
       div { className: 'field-group' },
         label {},

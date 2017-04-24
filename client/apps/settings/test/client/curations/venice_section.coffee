@@ -38,6 +38,7 @@ describe 'VeniceSection', ->
           video_url: 'http://artsy.net/360.mp4'
           video_url_medium: 'http://artsy.net/360_med.mp4'
           video_url_hls: 'http://artsy.net/360.m3u8'
+          video_url_external: 'http://youtube.com/video'
           video_length: '11:22'
           artist_ids: ['123']
           cover_image: 'http://artsy.net/cover.jpg'
@@ -57,8 +58,8 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 11
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 11
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 12
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 12
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
@@ -81,6 +82,9 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component))
         .find('input[name=video_url_hls]')
         .val().should.eql 'http://artsy.net/360.m3u8'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_url_external]')
+        .val().should.eql 'http://youtube.com/video'
       $(ReactDOM.findDOMNode(@component))
         .find('input[name=video_length]')
         .val().should.eql '11:22'
