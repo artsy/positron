@@ -36,6 +36,9 @@ describe 'VeniceSection', ->
           title: 'The Title'
           description: 'Cool description'
           video_url: 'http://artsy.net/360.mp4'
+          video_url_medium: 'http://artsy.net/360_med.mp4'
+          video_url_hls: 'http://artsy.net/360.m3u8'
+          video_url_external: 'http://youtube.com/video'
           video_length: '11:22'
           artist_ids: ['123']
           cover_image: 'http://artsy.net/cover.jpg'
@@ -45,17 +48,18 @@ describe 'VeniceSection', ->
         id: 1
         onChange: sinon.stub()
         }
-      @component = ReactDOM.render React.createElement(VeniceSection, props), (@$el = $ "<div></div>")[0], =>
-        setTimeout =>
-          done()
+      @component = ReactDOM.render React.createElement(VeniceSection, props),
+        (@$el = $ "<div></div>")[0], ->
+          setTimeout ->
+            done()
 
   afterEach ->
     benv.teardown()
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 9
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 9
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 12
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 12
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
@@ -63,23 +67,53 @@ describe 'VeniceSection', ->
 
     it 'Populates inputs with saved data', ->
       @component.setState slug: 'dawn-kasper'
-      $(ReactDOM.findDOMNode(@component)).find('input[name=title]').val().should.eql 'The Title'
-      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').val().should.eql 'dawn-kasper'
-      $(ReactDOM.findDOMNode(@component)).find('input[name=video_url]').val().should.eql 'http://artsy.net/360.mp4'
-      $(ReactDOM.findDOMNode(@component)).find('input[name=video_length]').val().should.eql '11:22'
-      $(ReactDOM.findDOMNode(@component)).find('input[type=date]').val().should.eql moment().format('YYYY-MM-DD')
-      $(ReactDOM.findDOMNode(@component)).find('textarea').val().should.eql 'Cool description'
-      $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').val().should.eql 'false'
-      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-select-selected').text().should.eql 'An Artist'
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=title]')
+        .val().should.eql 'The Title'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=slug]')
+        .val().should.eql 'dawn-kasper'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_url]')
+        .val().should.eql 'http://artsy.net/360.mp4'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_url_medium]')
+        .val().should.eql 'http://artsy.net/360_med.mp4'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_url_hls]')
+        .val().should.eql 'http://artsy.net/360.m3u8'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_url_external]')
+        .val().should.eql 'http://youtube.com/video'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=video_length]')
+        .val().should.eql '11:22'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[type=date]')
+        .val().should.eql moment().format('YYYY-MM-DD')
+      $(ReactDOM.findDOMNode(@component))
+        .find('textarea')
+        .val().should.eql 'Cool description'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[type=checkbox]')
+        .val().should.eql 'false'
+      $(ReactDOM.findDOMNode(@component))
+        .find('.autocomplete-select-selected')
+        .text().should.eql 'An Artist'
+      $(ReactDOM.findDOMNode(@component))
+        .html()
+        .should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
 
   describe 'Slugs', ->
     it 'If slug is undefined, autofills a slug based on a saved section title', ->
-      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').val().should.eql 'the-title'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=slug]')
+        .val().should.eql 'the-title'
 
     it 'Disables the slug field on published sections', ->
       @component.setState published: true
-      $(ReactDOM.findDOMNode(@component)).find('input[name=slug]').prop('disabled').should.eql true
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=slug]').prop('disabled').should.eql true
 
   describe '#onChange', ->
 
@@ -97,4 +131,5 @@ describe 'VeniceSection', ->
       input = r.find(@component, 'bordered-input')[2]
       input.value = '2018-01-01'
       r.simulate.change input
-      @component.props.onChange.args[0][0].release_date.should.eql moment('2018-01-01').toISOString()
+      @component.props.onChange.args[0][0].release_date
+        .should.eql moment('2018-01-01').toISOString()

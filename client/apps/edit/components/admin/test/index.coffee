@@ -82,6 +82,7 @@ describe 'AdminSections', ->
     # is there a way to show jquery changes outside the component?
 
   it '#onChange saves the article if unpublished', ->
+    @component.debouncedSave = @component.props.article.save
     @component.props.article.set('published', false)
     @component.onChange('tier', 2)
     @component.props.article.save.callCount.should.eql 1

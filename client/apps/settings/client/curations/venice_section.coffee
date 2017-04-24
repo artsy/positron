@@ -13,6 +13,9 @@ module.exports = VeniceSection = React.createClass
     title: @props.section.title or ''
     description: @props.section.description or ''
     video_url: @props.section.video_url or ''
+    video_url_medium: @props.section.video_url_medium or ''
+    video_url_hls: @props.section.video_url_hls or ''
+    video_url_external: @props.section.video_url_external or ''
     video_length: @props.section.video_length or null
     artist_ids: @props.section.artist_ids or []
     cover_image: @props.section.cover_image or ''
@@ -89,25 +92,52 @@ module.exports = VeniceSection = React.createClass
                 readOnly: true
               }
               label {},'Published'
-          div { className: 'fields--full video' },
-            div { className: 'field-group video-url' },
-              label {},'Video URL'
-              input {
-                className: 'bordered-input'
-                placeholder: 'Enter a link'
-                defaultValue: @state.video_url
-                onChange: @onInputChange
-                name: 'video_url'
-              }
-            div { className: 'field-group time' },
-              label {},'Video Length'
-              input {
-                className: 'bordered-input'
-                defaultValue: @state.video_length
-                placeholder: '4:33'
-                onChange: @onInputChange
-                name: 'video_length'
-              }
+          div { className: 'field-group time' },
+            label {},'Video Length'
+            input {
+              className: 'bordered-input'
+              defaultValue: @state.video_length
+              placeholder: '4:33'
+              onChange: @onInputChange
+              name: 'video_length'
+            }
+      div { className: 'fields--full video' },
+        div { className: 'field-group video-url' },
+          label {},'High Quality Video URL'
+          input {
+            className: 'bordered-input'
+            placeholder: 'Enter a link'
+            defaultValue: @state.video_url
+            onChange: @onInputChange
+            name: 'video_url'
+          }
+        div { className: 'field-group video-url' },
+          label {},'Medium Quality Video URL'
+          input {
+            className: 'bordered-input'
+            placeholder: 'Enter a link'
+            defaultValue: @state.video_url_medium
+            onChange: @onInputChange
+            name: 'video_url_medium'
+          }
+        div { className: 'field-group video-url' },
+          label {},'HLS Video URL'
+          input {
+            className: 'bordered-input'
+            placeholder: 'Enter a link'
+            defaultValue: @state.video_url_hls
+            onChange: @onInputChange
+            name: 'video_url_hls'
+          }
+        div { className: 'field-group video-url' },
+          label {},'External Video URL'
+          input {
+            className: 'bordered-input'
+            placeholder: 'Enter a link'
+            defaultValue: @state.video_url_external
+            onChange: @onInputChange
+            name: 'video_url_external'
+          }
       div { className: 'field-group' },
         label {},
           span {}, 'Description'
