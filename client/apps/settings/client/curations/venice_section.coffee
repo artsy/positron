@@ -163,13 +163,13 @@ module.exports = VeniceSection = React.createClass
             url: "#{sd.ARTSY_URL}/api/v1/match/artists?term=%QUERY"
             placeholder: "Search artists by name..."
             filter: (res) -> for r in res
-              { id: r._id, value: r.name }
+              { id: r.id, value: r.name }
             selected: (e, item, items) =>
-              @onChange 'artist_ids', _.pluck items, 'id'
+              @onChange 'artist_ids', items
             removed: (e, item, items) =>
-              @onChange 'artist_ids', _.without(_.pluck(items, 'id'),item.id)
-            idsToFetch: @state.artist_ids
+              @onChange 'artist_ids', _.without(items, item)
+            idsToFetch: _.pluck @state.artist_ids, 'id'
             fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/artist/#{id}"
             resObject: (res) ->
-              id: res.body._id, value: res.body.name
+              id: res.body.id, value: res.body.name
           }

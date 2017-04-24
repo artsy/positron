@@ -23,6 +23,7 @@ describe 'VeniceSection', ->
           initialize: ->
           ttAdapter: ->
         )
+        _: benv.require 'underscore'
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
       VeniceAdmin = benv.require resolve __dirname, '../../../client/curations/venice_admin.coffee'
