@@ -38,7 +38,7 @@ describe 'VeniceSection', ->
           description: 'Cool description'
           video_url: 'http://artsy.net/360.mp4'
           video_url_medium: 'http://artsy.net/360_med.mp4'
-          video_url_hls: 'http://artsy.net/360.m3u8'
+          video_url_adaptive: 'http://artsy.net/360.mpd'
           video_url_external: 'http://youtube.com/video'
           video_length: '11:22'
           artist_ids: ['123']
@@ -81,8 +81,8 @@ describe 'VeniceSection', ->
         .find('input[name=video_url_medium]')
         .val().should.eql 'http://artsy.net/360_med.mp4'
       $(ReactDOM.findDOMNode(@component))
-        .find('input[name=video_url_hls]')
-        .val().should.eql 'http://artsy.net/360.m3u8'
+        .find('input[name=video_url_adaptive]')
+        .val().should.eql 'http://artsy.net/360.mpd'
       $(ReactDOM.findDOMNode(@component))
         .find('input[name=video_url_external]')
         .val().should.eql 'http://youtube.com/video'
