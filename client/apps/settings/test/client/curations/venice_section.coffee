@@ -31,7 +31,7 @@ describe 'VeniceSection', ->
       VeniceSection.__set__ 'AutocompleteList', React.createFactory Autocomplete
       Autocomplete.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
-          end: sinon.stub().yields(null, body: { id: '123', name: 'An Artist'})
+          end: sinon.stub().yields(null, body: { id: 'an-artist', name: 'An Artist', _id: '123'})
       props = {
         section: {
           title: 'The Title'
