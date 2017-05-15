@@ -85,7 +85,7 @@ denormalizedArtwork = (->
   layout: @string().allow('left', 'center', null).default('center')
   updated_at: @date()
   published: @boolean().default(false)
-  published_at: @date()
+  published_at: @date().allow(null)
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @objectId().allow('', null)

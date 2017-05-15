@@ -7,6 +7,7 @@ express = require 'express'
 gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
+moment = require 'moment'
 
 describe 'Save', ->
 
@@ -43,6 +44,15 @@ describe 'Save', ->
     it 'if all words are stop words, keep the title', (done) ->
       @removeStopWords("I’ll be there").should.containEql 'Ill be there'
       done()
+
+  describe '#onPublish', (done) ->
+
+    it 'generates slugs and published_at if not present', (done) ->
+      Save.onPublish { thumbnail_title: 'a title' }, (err, article) =>
+        article.slugs.length.should.equal 1
+        moment(article.published_at).format('MM DD YYYY').should
+          .equal moment().format('MM DD YYYY')
+        done()
 
   describe '#onUnpublish', ->
 
