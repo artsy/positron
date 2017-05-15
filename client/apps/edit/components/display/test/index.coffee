@@ -73,8 +73,14 @@ describe 'EditDisplay', ->
       @view.renderPreviews.reset()
       @view.updateCharCount.reset()
 
-    it 'calls renderPreviews and updateCharCount', ->
+    it 'calls renderPreviews and updateCharCount on textarea changes', ->
       input = @view.$('.edit-display--magazine .edit-display__headline textarea')
+      input.trigger 'keyup'
+      @view.renderPreviews.callCount.should.equal 1
+      @view.updateCharCount.callCount.should.equal 1
+
+    it 'calls renderPreviews and updateCharCount on author change', ->
+      input = @view.$('.edit-display__author')
       input.trigger 'keyup'
       @view.renderPreviews.callCount.should.equal 1
       @view.updateCharCount.callCount.should.equal 1
@@ -150,22 +156,6 @@ describe 'EditDisplay Partner', ->
       @view.$('.edit-title-textarea').val('foo')
       @view.checkTitleInput()
       @view.$('.edit-display__use-article-title').attr('style').should.containEql 'display: none'
-
-  describe '#onKeyup', ->
-
-    beforeEach ->
-      @view.renderPreviews = sinon.stub()
-      @view.updateCharCount = sinon.stub()
-
-    afterEach ->
-      @view.renderPreviews.reset()
-      @view.updateCharCount.reset()
-
-    it 'calls renderPreviews and updateCharCount', ->
-      input = @view.$('.edit-title-textarea')
-      input.trigger 'keyup'
-      @view.renderPreviews.callCount.should.equal 1
-      @view.updateCharCount.callCount.should.equal 1
 
   describe '#updateCharCount', ->
 
