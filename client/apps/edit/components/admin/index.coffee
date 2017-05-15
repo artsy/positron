@@ -4,7 +4,7 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 
 Article = React.createFactory require './article/index.coffee'
-VerticalsTags = React.createFactory require './verticals_tags/index.coffee'
+VerticalsTags = React.createFactory require './verticals_tags/index2.coffee'
 Featuring = React.createFactory require './featuring/index.coffee'
 SuperArticle = React.createFactory require './super_article/index.coffee'
 Appearances = React.createFactory require './appearances/index.coffee'

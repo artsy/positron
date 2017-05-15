@@ -23,6 +23,7 @@ module.exports = AutocompleteList = React.createClass
     if @props.idsToFetch?.length > 0
       fetchedItems = []
       async.each @props.idsToFetch, (id, cb) =>
+        id = id.replace(' ', '%20')
         request
           .get(@props.fetchUrl(id))
           .set('X-Access-Token': sd.USER?.access_token)
@@ -30,7 +31,7 @@ module.exports = AutocompleteList = React.createClass
             fetchedItems.push(@props.resObject(res))
             cb()
       , =>
-        @setState loading: false, items: fetchedItems
+        @setState loading: false, items: _.compact fetchedItems
     else
       @setState loading: false
 
