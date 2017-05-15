@@ -13,3 +13,27 @@
       background black
     .field-group:first-child
       margin-bottom 30px
+
+  .autocomplete-container
+    position relative
+    .autocomplete-selected
+      display inline-block
+      position absolute
+      left 0
+      top 13px
+      z-index 100
+      .remove-button
+        height 20px
+        width 15px
+        background transparent center center no-repeat url(/icons/remove.svg)
+        background-size 8px
+    .autocomplete-select-selected
+      display inline-block
+      width inherit
+      background gray-lighter-color
+      color black
+      margin 0 0 0 10px
+      border-radius 2px
+      line-height 1em
+      padding 2px 20px 1px 4px
+      text-transform capitalize

@@ -59,7 +59,7 @@ module.exports = AutocompleteList = React.createClass
     @$input.on 'typeahead:selected', @onSelect
 
   onSelect: (e, item) ->
-    @setState items: @state.items.concat [item]
+    @setState items: _.uniq @state.items.concat [item]
     @props.selected? e, item, @state.items
     @$input.val('')
 
@@ -70,7 +70,7 @@ module.exports = AutocompleteList = React.createClass
     e.preventDefault()
     @$input.typeahead('destroy')?.val('')
     newItems = _.reject(@state.items, (i) -> i.id is item.id)
-    @setState items: newItems
+    @setState items: _.uniq newItems
     @props.removed? e, item, newItems
     @addAutocomplete()
 
@@ -79,7 +79,7 @@ module.exports = AutocompleteList = React.createClass
       (
         div { className: 'autocomplete-selected'},
           for item in @state.items
-            div { className: 'autocomplete-select-selected', key: item.value }, item.value,
+            div { className: 'autocomplete-select-selected', key: 'selected-' + item.value }, item.value,
               input { type: 'hidden', value: item.id, name: @props.name }
               button { className: 'remove-button', onClick: @removeItem(item) }
       )

@@ -1,5 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
+Verticals = require '../../../../../collections/verticals.coffee'
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 { div, section, label, button, input } = React.DOM
 
@@ -7,32 +8,53 @@ module.exports = React.createClass
   displayName: 'AdminVerticalsTags'
 
   getInitialState: ->
-    vertical: null
-    verticals: ['Art', 'Art Market', 'Culture', 'Creativity']
+    vertical: null || @props.article.get('vertical')
+    verticals: []
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
+    @fetchVerticals()
+    @formatTags()
+
+  fetchVerticals: ->
+    new Verticals().fetch
+      data: limit: 10
+      success: (verticals) =>
+        sortedVerticals = verticals.sortBy('name')
+        @setState verticals: sortedVerticals
 
   printButtons: (buttons, handleToggle) ->
-    buttons.map (tag, i) =>
+    buttons.map (vertical, i) =>
       active = ''
-      if @state.vertical is tag
+      if @state.vertical?.name is vertical.get 'name'
         active = ' avant-garde-button-black'
       button {
         key: i
-        name: tag
+        name: vertical.get 'name'
         onClick: handleToggle
         className: 'avant-garde-button' + active
-      }, tag
+      }, vertical.get 'name'
     , @
 
   verticalToggle: (e) ->
-    active = @state.verticals.indexOf e.target.name
-    @setState vertical: e.target.name
+    verticals = new Verticals @state.verticals
+    active = _.first verticals.where name: e.target.name
+    newVertical =
+      name: active.get 'name'
+      id: active.get 'id'
+    @setState vertical: newVertical
+    @props.onChange('vertical', newVertical)
 
   onAddTag: (value) ->
     tags = _.uniq @props.article.get('tags').concat(value)
+    @formatTags()
     @props.onChange('tags', tags)
+
+  formatTags: ->
+    $('.edit-admin--verticals-tags .autocomplete-container').each (i, container) ->
+      input = $(container).find('.autocomplete-input.tt-input')
+      selected = $(container).find('.autocomplete-selected').width() + 10
+      $(input).css('padding-left', selected)
 
   render: ->
     section { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
@@ -57,12 +79,14 @@ module.exports = React.createClass
             removed: (e, item, items) =>
               tags = _.uniq @props.article.get 'tags'
               newTags = _.without(tags,item.value)
+              @formatTags()
               @props.onChange 'tags', newTags
-            fetchUrl: (id) -> "#{sd.API_URL}/tags?public=true&q=#{id}"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"
           }
+
         div {className: 'field-group'},
           label {}, 'Tracking Tags'
           AutocompleteList {
@@ -78,8 +102,9 @@ module.exports = React.createClass
             removed: (e, item, items) =>
               tags = _.uniq @props.article.get 'tags'
               newTags = _.without(tags,item.value)
+              @formatTags()
               @props.onChange 'tags', newTags
-            fetchUrl: (id) -> "#{sd.API_URL}/tags?public=false&q=#{id}"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"
