@@ -74,7 +74,7 @@ module.exports = class EditDisplay extends Backbone.View
   events:
     'click .edit-display__use-article-title': 'useArticleTitle'
     'change .edit-title-textarea': 'checkTitleInput'
-    'keyup .edit-display textarea': 'onKeyup'
+    'keyup .edit-display textarea, .edit-display__author': 'onKeyup'
     'change .edit-display .image-upload-hidden-input': 'renderPreviews'
     'click .edit-display__section-title': 'revealSection'
 

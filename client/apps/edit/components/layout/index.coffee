@@ -54,7 +54,7 @@ module.exports = class EditLayout extends Backbone.View
       search_description: @$('.edit-display--search .edit-display__description textarea').val()
       email_metadata:
         headline: @$(".edit-display--email textarea[name='headline']").val()
-        author: @$(".edit-display--email textarea[name='author']").val()
+        author: @$(".edit-display--email input[name='author']").val()
         credit_line: @$(".edit-display--email input[name='credit_line']").val()
         credit_url: @$(".edit-display--email input[name='credit_url']").val()
         image_url: @article.getObjectAttribute('email_metadata','image_url')

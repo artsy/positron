@@ -134,7 +134,7 @@ else
 
           .admin-form-left
             label Author
-              textarea.bordered-input.edit-display__textarea(
+              input.bordered-input.edit-display__author(
                 name='author'
                 value="#{article.getObjectAttribute('email_metadata','author')}"
                 data-value='author'
@@ -147,6 +147,6 @@ else
               label Credit URL
                 input.bordered-input( name='credit_url' value="#{article.getObjectAttribute('email_metadata','credit_url')}")
           .admin-send-body-to-sailthru
+            .flat-checkbox
+              input( type='checkbox' name='send_body' value=1 checked=article.get('send_body') === true)
             label Send Article Body To Sailthru
-              .flat-checkbox
-                input( type='checkbox' name='send_body' value=1 checked=article.get('send_body') === true)
