@@ -81,7 +81,7 @@ getAirtableFetches = (rows) ->
   _.map rows, (row) ->
     (airtableCb) ->
       landingPage = row.galandingpagepath
-      return airtableCb() unless landingPage
+      return airtableCb() unless landingPage?.length
       base('Archive').select
         filterByFormula: "({Name} = 'https://#{landingPage}')"
         view: 'Archive List'
