@@ -64,7 +64,6 @@ fetches.push (cb) ->
         airtableFetches = getAirtableFetches(rows)
         async.parallel airtableFetches, (err, res) ->
           return debug err if err
-          console.log "Completed creating/updating " + (offset + 5) + " articles."
           clb()
 
   console.log 'Starting fetches...'
@@ -82,7 +81,7 @@ getAirtableFetches = (rows) ->
   _.map rows, (row) ->
     (airtableCb) ->
       landingPage = row.galandingpagepath
-      return airtableCb() unless landingpage
+      return airtableCb() unless landingPage
       base('Archive').select
         filterByFormula: "({Name} = 'https://#{landingPage}')"
         view: 'Archive List'
@@ -96,7 +95,6 @@ getAirtableFetches = (rows) ->
             if err
               debug err if err
               return airtableCb()
-            console.log 'Created record: ' + record.fields["Name"]
             airtableCb()
         else
           return airtableCb() unless records[0]?.getId()
@@ -105,7 +103,6 @@ getAirtableFetches = (rows) ->
             if err
               debug err if err
               return airtableCb()
-            console.log 'Updated record: ' + record.fields["Name"]
             airtableCb()
 
 # Normalize data given a GS row
