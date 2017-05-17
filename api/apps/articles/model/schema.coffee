@@ -77,6 +77,7 @@ denormalizedArtwork = (->
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string()).default([])
+  tracking_tags: @array().items(@string()).default([])
   vertical: @object().keys(
     name: @string()
     id: @objectId()

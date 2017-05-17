@@ -17,13 +17,13 @@ module.exports = React.createClass
 
   fetchVerticals: ->
     new Verticals().fetch
-      data: limit: 10
+      cache: true
       success: (verticals) =>
         sortedVerticals = verticals.sortBy('name')
         @setState verticals: sortedVerticals
 
-  printButtons: (buttons, handleToggle) ->
-    buttons.map (vertical, i) =>
+  printVerticals: (verticals, handleToggle) ->
+    verticals.map (vertical, i) =>
       active = ''
       if @state.vertical?.name is vertical.get 'name'
         active = ' avant-garde-button-black'
@@ -44,16 +44,12 @@ module.exports = React.createClass
     @setState vertical: newVertical
     @props.onChange('vertical', newVertical)
 
-  onAddTag: (value) ->
-    tags = _.uniq @props.article.get('tags').concat(value)
-    @props.onChange('tags', tags)
-
   render: ->
     section { className: 'edit-admin--verticals-tags edit-admin__fields', ref: 'container'},
       div {className: 'fields-left'},
         div { className: 'field-group' },
           label {}, 'Editorial Vertical'
-          @printButtons @state.verticals, @verticalToggle
+          @printVerticals @state.verticals, @verticalToggle
 
       div {className: 'fields-right'},
         div {className: 'field-group'},
@@ -67,11 +63,10 @@ module.exports = React.createClass
               for tag in tags.results
                 { id: tag.id, value: "#{tag.name}"}
             selected: (e, item, items) =>
-              tags = _.pluck items, 'value'
-              @onAddTag tags
+              newTags = _.pluck items, 'value'
+              @props.onChange 'tags', newTags
             removed: (e, item, items) =>
-              tags = _.uniq @props.article.get 'tags'
-              newTags = _.without(tags,item.value)
+              newTags = _.without @props.article.get('tags'), item.value
               @props.onChange 'tags', newTags
             fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}"
             resObject: (res) ->
@@ -84,18 +79,17 @@ module.exports = React.createClass
           AutocompleteList {
             url: "#{sd.API_URL}/tags?public=false&q=%QUERY"
             placeholder: 'Start typing a tracking tag...'
-            idsToFetch: @props.article.get 'tags'
+            idsToFetch: @props.article.get 'tracking_tags'
             inline: true
-            filter: (tags) ->
-              for tag in tags.results
-                { id: tag.id, value: "#{tag.name}"}
+            filter: (tracking_tags) ->
+              for tracking_tag in tracking_tags.results
+                { id: tracking_tag.id, value: "#{tracking_tag.name}"}
             selected: (e, item, items) =>
-              tags = _.pluck items, 'value'
-              @onAddTag tags
+              newTags = _.pluck items, 'value'
+              @props.onChange 'tracking_tags', newTags
             removed: (e, item, items) =>
-              tags = _.uniq @props.article.get 'tags'
-              newTags = _.without(tags,item.value)
-              @props.onChange 'tags', newTags
+              newTags = _.without @props.article.get('tracking_tags'), item.value
+              @props.onChange 'tracking_tags', newTags
             fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}"
             resObject: (res) ->
               return unless res.body.results.length
