@@ -24,7 +24,6 @@ module.exports = AutocompleteList = React.createClass
     if @props.idsToFetch?.length > 0
       fetchedItems = []
       async.each @props.idsToFetch, (id, cb) =>
-        id = id.replace(' ', '%20')
         request
           .get(@props.fetchUrl(id))
           .set('X-Access-Token': sd.USER?.access_token)
@@ -76,9 +75,9 @@ module.exports = AutocompleteList = React.createClass
   removeItem: (item) -> (e) =>
     e.preventDefault()
     @$input.typeahead('destroy')?.val('')
-    items = _.reject(@state.items, (i) -> i.id is item.id)
-    @setState items: _.uniq items
-    @props.removed? e, item, items
+    newItems = _.reject(@state.items, (i) -> i.id is item.id)
+    @setState items: _.uniq newItems
+    @props.removed? e, item, newItems
     @addAutocomplete()
     @$input.focus()
 

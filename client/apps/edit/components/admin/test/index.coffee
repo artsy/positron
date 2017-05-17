@@ -31,6 +31,7 @@ describe 'AdminSections', ->
       }
       AdminSections.__set__ 'Article', sinon.stub()
       AdminSections.__set__ 'Featuring', sinon.stub()
+      AdminSections.__set__ 'VerticalsTags', sinon.stub()
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns false
       @article = new Article
@@ -76,10 +77,9 @@ describe 'AdminSections', ->
     @component.onChange('tier', 2)
     @component.props.article.get('tier').should.eql 2
 
-  it 'If unpublished, #onChange does not save and shows indicator', ->
+  it 'If unpublished, #onChange does not save', ->
     @component.onChange('tier', 2)
     @component.props.article.save.callCount.should.eql 0
-    # is there a way to show jquery changes outside the component?
 
   it '#onChange saves the article if unpublished', ->
     @component.debouncedSave = @component.props.article.save
