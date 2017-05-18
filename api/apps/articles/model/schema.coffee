@@ -222,6 +222,7 @@ denormalizedArtwork = (->
   q: @string().allow('')
   all_by_author: @objectId()
   tags: @array().items(@string())
+  tracking_tags: @array().items(@string())
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()

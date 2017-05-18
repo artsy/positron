@@ -43,6 +43,21 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].tags.should.not.containEql 'artsy-editorial'
           done()
 
+      it 'concats the tracking_tags and vertical', (done) ->
+        Distribute.distributeArticle {
+          author_id: '5086df098523e60002000018'
+          published: true
+          keywords: ['China']
+          tracking_tags: ['explainers', 'profiles']
+          vertical: {name: 'culture', id: '591b0babc88a280f5e9efa7a'}
+        }, (err, article) =>
+          @sailthru.apiPost.calledOnce.should.be.true()
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'China'
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'explainers'
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'profiles'
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'culture'
+          done()
+
       it 'concats the artsy-editorial and magazine tags for specialized articles', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'

@@ -70,7 +70,9 @@ postFacebookAPI = (article, cb) ->
 postSailthruAPI = (article, cb) ->
   tags = ['article']
   tags = tags.concat ['magazine'] if article.featured is true
-  tags = tags.concat article.keywords
+  tags = tags.concat article.keywords if article.keywords
+  tags = tags.concat article.tracking_tags if article.tracking_tags
+  tags = tags.concat article.vertical.name if article.vertical
   imageSrc = article.email_metadata?.image_url
   images =
     full: url: crop(imageSrc, { width: 1200, height: 706 } )
@@ -104,7 +106,8 @@ postSailthruAPI = (article, cb) ->
   if article.sections
     sections = for section in article.sections
       section.body
-
+  tags = article.tags
+  tags = tags.concat article.vertical if article.vertical
   search.client.index(
     index: search.index,
     type: 'article',
@@ -119,7 +122,7 @@ postSailthruAPI = (article, cb) ->
       visible_to_public: article.published and sections?.length > 0 and article.channel_id and article.channel_id.toString() is EDITORIAL_CHANNEL
       author: article.author and article.author.name or ''
       featured: article.featured
-      tags: article.tags
+      tags: tags
       body: sections and stripHtmlTags(sections.join(' ')) or ''
       image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
     , (error, response) ->

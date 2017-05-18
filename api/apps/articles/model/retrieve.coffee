@@ -13,7 +13,7 @@ moment = require 'moment'
     query = _.omit input, 'limit', 'offset', 'sort', 'artist_id', 'artwork_id',
       'super_article_for', 'fair_ids', 'fair_programming_id', 'fair_artsy_id',
       'fair_about_id', 'partner_id', 'auction_id', 'show_id', 'q',
-      'all_by_author', 'section_id', 'tags', 'has_video', 'fair_id',
+      'all_by_author', 'section_id', 'tags', 'tracking_tags', 'has_video', 'fair_id',
       'channel_id', 'ids', 'scheduled', 'count'
     # Type cast IDs
     # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
@@ -33,6 +33,7 @@ moment = require 'moment'
       query.biography_for_artist_id = ObjectId input.biography_for_artist_id
     query.featured_artwork_ids = ObjectId input.artwork_id if input.artwork_id
     query.tags = { $in: input.tags } if input.tags
+    query.tracking_tags = { $in: input.tracking_tags } if input.tracking_tags
 
     # Convert query for super article for article
     if input.super_article_for

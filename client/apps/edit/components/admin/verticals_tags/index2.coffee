@@ -8,7 +8,7 @@ module.exports = React.createClass
   displayName: 'AdminVerticalsTags'
 
   getInitialState: ->
-    vertical: null || @props.article.get('vertical')
+    vertical: null or @props.article.get('vertical')
     verticals: []
 
   componentDidMount: ->
