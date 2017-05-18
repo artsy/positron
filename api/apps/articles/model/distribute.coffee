@@ -107,7 +107,7 @@ postSailthruAPI = (article, cb) ->
     sections = for section in article.sections
       section.body
   tags = article.tags
-  tags = tags.concat article.vertical if article.vertical
+  tags = tags.concat article.vertical.name if article.vertical
   search.client.index(
     index: search.index,
     type: 'article',
