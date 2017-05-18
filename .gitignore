@@ -16,3 +16,4 @@ dump.rdb
 .env
 .env.ignore
 node_modules
+manifest.json
