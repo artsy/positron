@@ -44,7 +44,7 @@ function authenticateGoogle () {
 
 function docInfo () {
   return new Promise((resolve, reject) => {
-    doc.getInfo( (err, res) => {
+    doc.getInfo((err, res) => {
       err ? reject(err) : resolve(res.worksheets[1].rowCount)
     })
   })
@@ -60,7 +60,7 @@ async function copyDataTask (offset) {
       })
     const rows = await getRows()
     let promises = rows.map((row) => airtableFetch(row))
-    let results = await Promise.all(promises)
+    await Promise.all(promises)
   } catch (err) {
     console.log(err)
   }
@@ -68,13 +68,12 @@ async function copyDataTask (offset) {
 
 async function airtableFetch (row) {
   try {
-
     const getRecord = () =>
       new Promise((resolve, reject) => {
         base('Archive').select({
           filterByFormula: "({Name} = 'https://" + landingPage + "')",
           view: 'Archive List'
-        }).firstPage( (err, recs) => {
+        }).firstPage((err, recs) => {
           err ? reject(err) : resolve(recs)
         })
       })
@@ -91,10 +90,10 @@ async function airtableFetch (row) {
         base('Archive').create(rowValues(row, true), (err, record) => {
           err ? reject(err) : resolve(record)
         })
-      });
+      })
 
     const landingPage = row.galandingpagepath
-    if (!landingPage){
+    if (!landingPage) {
       return
     }
     const records = await getRecord()
@@ -111,10 +110,8 @@ async function airtableFetch (row) {
       const update = await updateRecord(recordId, row)
       return update
     }
-
   } catch (err) {
     console.log(err)
-    return
   }
 }
 function rowValues (row) {
@@ -130,18 +127,18 @@ function rowValues (row) {
 (async function () {
   try {
     // Google Auth
-    var authResult = await authenticateGoogle()
+    await authenticateGoogle()
     console.log('Completed Authentication')
 
     // Google Sheet Info
     rowCount = await docInfo()
-    var rowBuckets = Math.ceil(rowCount / 5)
     console.log('Total Rows: ' + rowCount)
+    var rowBuckets = Math.ceil(rowCount / 5)
 
     // Copy Data Tasks
-    for (var i=0; i<=rowBuckets; i++) {
+    for (var i = 0; i <= rowBuckets; i++) {
       let offset = i * 5
-      var task = await copyDataTask(offset)
+      await copyDataTask(offset)
     }
 
     console.log('Completed All Buckets')
