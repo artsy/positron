@@ -63,3 +63,45 @@
   padding 10px
   background gray-lighter-color
   font-weight bold
+
+.autocomplete-container--inline
+  position relative
+  display flex
+  flex-wrap wrap
+  padding 5px 10px 0 10px
+  margin-top 5px
+  border 2px solid gray-lighter-color
+  min-height 40px
+  &.is-focus
+    border-color purple-color
+  .bordered-input
+    border none
+    padding 0
+  .remove-button
+    height 20px
+    width 15px
+    background transparent center center no-repeat url(/icons/remove.svg)
+    background-size 8px
+    &:hover
+      background-image url(/icons/remove_r.svg)
+  .twitter-typeahead
+    width initial
+    flex 1
+    position static !important
+    input
+      background none transparent
+      margin 0
+  .tt-dropdown-menu
+    top calc(100% \+ 2px) !important
+    right 0px !important
+    left -2px !important
+    min-width calc(100% \+ 4px)
+.admin-form-container .autocomplete-container--inline .autocomplete-select-selected
+  width initial
+  background gray-lighter-color
+  color black
+  margin 0 10px 5px 0px
+  border-radius 2px
+  line-height 1em
+  padding 2px 20px 1px 4px
+  text-transform capitalize

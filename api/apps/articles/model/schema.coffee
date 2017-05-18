@@ -77,6 +77,7 @@ denormalizedArtwork = (->
   thumbnail_teaser: @string().allow('', null)
   thumbnail_image: @string().allow('', null)
   tags: @array().items(@string()).default([])
+  tracking_tags: @array().items(@string()).default([])
   vertical: @object().keys(
     name: @string()
     id: @objectId()
@@ -221,6 +222,7 @@ denormalizedArtwork = (->
   q: @string().allow('')
   all_by_author: @objectId()
   tags: @array().items(@string())
+  tracking_tags: @array().items(@string())
   is_super_article: @boolean()
   biography_for_artist_id: @objectId()
   layout: @string()

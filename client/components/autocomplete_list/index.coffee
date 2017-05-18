@@ -2,7 +2,7 @@ _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 Autocomplete = null
-{ label, input, div, button } = React.DOM
+{ label, input, div, button, span } = React.DOM
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
@@ -13,6 +13,7 @@ module.exports = AutocompleteList = React.createClass
   getInitialState: ->
     loading: true
     items: []
+    focus: false
 
   componentDidMount: ->
     @$input = $(ReactDOM.findDOMNode(this)).find('.autocomplete-input')
@@ -30,7 +31,7 @@ module.exports = AutocompleteList = React.createClass
             fetchedItems.push(@props.resObject(res))
             cb()
       , =>
-        @setState loading: false, items: fetchedItems
+        @setState loading: false, items: _.compact fetchedItems
     else
       @setState loading: false
 
@@ -58,33 +59,51 @@ module.exports = AutocompleteList = React.createClass
     @$input.on 'typeahead:selected', @onSelect
 
   onSelect: (e, item) ->
-    @setState items: @state.items.concat [item]
-    @props.selected? e, item, @state.items
-    @$input.val('')
+    items = _.reject(@state.items, (i) -> i.id is item.id).concat [item]
+    unless items.length and items.length is @state.items.length
+      @props.selected? e, item, items
+      @setState items: items
+    @$input.typeahead('val', '')
 
   onBlur: ->
-    @$input.val('')
+    @setState focus: false
+    @$input.typeahead('val', '')
+
+  onFocus: ->
+    @setState focus: true
 
   removeItem: (item) -> (e) =>
     e.preventDefault()
     @$input.typeahead('destroy')?.val('')
     newItems = _.reject(@state.items, (i) -> i.id is item.id)
-    @setState items: newItems
+    @setState items: _.uniq newItems
     @props.removed? e, item, newItems
     @addAutocomplete()
+    @$input.focus()
+
+  printItems: ->
+    for item, i in @state.items
+      div { className: 'autocomplete-select-selected', key: 'selected-' + item.id },
+        span {className: 'selected' }, item.value
+        input { type: 'hidden', value: item.id, name: @props.name }
+        button { className: 'remove-button', onClick: @removeItem(item) }
 
   render: ->
-    div { className: 'autocomplete-container' },
+    inline = if @props.inline then ' autocomplete-container--inline' else ''
+    focus = if @props.inline and @state.focus then ' is-focus' else ''
+
+    div { className: 'autocomplete-container' + inline + focus},
       (
-        div { className: 'autocomplete-selected'},
-          for item in @state.items
-            div { className: 'autocomplete-select-selected', key: item.value }, item.value,
-              input { type: 'hidden', value: item.id, name: @props.name }
-              button { className: 'remove-button', onClick: @removeItem(item) }
+        if @props.inline
+          @printItems()
+        else
+          div { className: 'autocomplete-selected'},
+            @printItems()
       )
       input {
         className: 'bordered-input autocomplete-input'
-        placeholder: @props.placeholder
+        placeholder: if @state.items.length and @props.inline then '' else @props.placeholder
         onBlur: @onBlur
         disabled: @props.disabled
+        onFocus: @onFocus
       }

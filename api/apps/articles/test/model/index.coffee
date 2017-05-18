@@ -332,6 +332,39 @@ describe 'Article', ->
           results[2].title.should.equal 'Hello Wuuuurld - Food'
           done()
 
+    it 'can find articles by tracking_tags', (done) ->
+      fabricate 'articles', [
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002a'
+          tracking_tags: [ 'video', 'evergreen' ]
+          title: 'The Shanghai Art Project That’s Working to Save Us from a Dystopian Future'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002b'
+          tracking_tags: [ 'video', 'evergreen' ]
+          title: '$448 Million Christie’s Post-War and Contemporary Sale Led by Bacon and Twombly'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002c'
+          tracking_tags: [ 'podcast', 'evergreen' ]
+          title: '8 Works to Collect at ARCOlisboa'
+        }
+        {
+          author_id: ObjectId '4d8cd73191a5c50ce220002e'
+          tracking_tags: [ 'op-eds', 'explainers' ]
+          title: 'NYC Releases Data That Will Help Shape the City’s Cultural Future'
+        }
+      ], =>
+        Article.where { tracking_tags: ['video', 'evergreen'], count: true }, (err, res) ->
+          { total, count, results } = res
+          # console.log res
+          total.should.equal 14
+          count.should.equal 3
+          results[0].title.should.equal '8 Works to Collect at ARCOlisboa'
+          results[1].title.should.equal '$448 Million Christie’s Post-War and Contemporary Sale Led by Bacon and Twombly'
+          results[2].title.should.equal 'The Shanghai Art Project That’s Working to Save Us from a Dystopian Future'
+          done()
+
     it 'can find articles by artist biography', (done) ->
       fabricate 'articles', [
         {
@@ -429,9 +462,11 @@ describe 'Article', ->
         author_id: '5086df098523e60002000018'
         id: '5086df098523e60002002222'
         channel_id: '5086df098523e60002002223'
+        vertical: {name: 'Culture', id: '55356a9deca560a0137bb4a7'}
       }, 'foo', (err, article) ->
         article.title.should.equal 'Top Ten Shows'
         article.channel_id.toString().should.equal '5086df098523e60002002223'
+        article.vertical.name.should.eql 'Culture'
         db.articles.count (err, count) ->
           count.should.equal 11
           done()
@@ -989,6 +1024,15 @@ describe 'Article', ->
       }, 'foo', (err, article) ->
         return done err if err
         article.vertical.name.should.eql 'Culture'
+        done()
+
+    it 'saves tracking_tags', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        tracking_tags: ['evergreen', 'video']
+      }, 'foo', (err, article) ->
+        return done err if err
+        article.tracking_tags.should.eql ['evergreen', 'video']
         done()
 
     it 'saves social metadata', (done) ->

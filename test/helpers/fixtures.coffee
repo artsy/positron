@@ -16,6 +16,7 @@ module.exports = ->
     tier: 1,
     vertical: {name: 'Culture', id: '55356a9deca560a0137bb4a7'}
     tags: ['Fair Coverage', 'Magazine']
+    tracking_tags: ['Newsfeed', 'Video']
     title: 'Top Ten Booths',
     lead_paragraph: '<p>Just before the lines start forming...</p>',
     description: 'Just before the lines start forming, we predict where they will go.',

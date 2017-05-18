@@ -17,11 +17,11 @@ describe 'AutocompleteList', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      AutocompleteList = benv.require resolve __dirname, '../index'
-      AutocompleteList.__set__ 'request', get: sinon.stub().returns
+      @AutocompleteList = benv.require resolve __dirname, '../index'
+      @AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
-      props =
+      @props =
         url: 'https://api.artsy.net/search?term=%QUERY'
         placeholder: 'Search for an artist...'
         filter: @filter = sinon.stub()
@@ -30,10 +30,10 @@ describe 'AutocompleteList', ->
         idsToFetch: ['123']
         fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
         resObject: (res) -> id: res.id, value: res.value
-      @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteList, props)
-      @component = ReactDOM.render React.createElement(AutocompleteList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
-          @setState = sinon.stub @component, 'setState'
-          done()
+      @rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
+      @component = ReactDOM.render React.createElement(@AutocompleteList, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @setState = sinon.stub @component, 'setState'
+        done()
 
   afterEach ->
     benv.teardown()
@@ -55,3 +55,8 @@ describe 'AutocompleteList', ->
     @component.removeItem({ id: '123', value: 'Andy Warhol' })({preventDefault: ->})
     @setState.args[0][0].items.length.should.equal 0
     @removed.callCount.should.equal 1
+
+  it 'Accepts an inline option', ->
+    @props.inline = true
+    rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
+    rendered.should.containEql 'autocomplete-container--inline'
