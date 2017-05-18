@@ -11,6 +11,7 @@
     "test": "make test"
   },
   "dependencies": {
+    "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
     "artsy-morgan": "git://github.com/artsy/artsy-morgan.git",
@@ -40,6 +41,7 @@
     "express-ipfilter": "^0.2.3",
     "forever": "^0.15.1",
     "glossary": "^0.1.1",
+    "google-spreadsheet": "^2.0.3",
     "graphql": "^0.7.2",
     "jade": "^1.11.0",
     "joi": "^9.1.0",
@@ -83,6 +85,10 @@
     "browserify-dev-middleware": "^0.1.2",
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "ezel-assets": "^1.0.0",
     "gemup": "git://github.com/artsy/gemup.git",
     "html-janitor": "^2.0.2",
