@@ -1,11 +1,31 @@
+{
+  SAILTHRU_KEY,
+  SAILTHRU_SECRET,
+  FORCE_URL,
+  EDITORIAL_CHANNEL,
+  FB_PAGE_ID,
+  INSTANT_ARTICLE_ACCESS_TOKEN,
+  GEMINI_CLOUDFRONT_URL,
+  NODE_ENV,
+  SEGMENT_WRITE_KEY_MICROGRAVITY,
+  APPLE_NEWS_CHANNEL,
+  APPLE_NEWS_KEY,
+  APPLE_NEWS_SECRET
+} = process.env
+
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
-{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL,
-  FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL,
-  NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
-sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
+sailthru = require('sailthru-client').createSailthruClient(
+  SAILTHRU_KEY,
+  SAILTHRU_SECRET
+)
+appleNews = require('apple-news')({
+  apiId: APPLE_NEWS_KEY,
+  apiSecret: APPLE_NEWS_SECRET
+})
+{ formatAppleNews } = require '../components/apple_news/index.coffee'
 async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
@@ -22,6 +42,8 @@ cloneDeep = require 'lodash.clonedeep'
       postFacebookAPI article, callback
     (callback) ->
       postSailthruAPI article, callback
+    (callback) ->
+      postAppleNewsAPI article, callback
   ], (err, results) ->
     debug err if err
     cb(article)
@@ -98,6 +120,12 @@ postSailthruAPI = (article, cb) ->
       debug err
       return cb err
     cb response
+
+postAppleNewsAPI = (article, cb) ->
+  formattedArticle = formatAppleNews article
+  console.log formattedArticle
+  # appleNews.createArticle { channelId: APPLE_NEWS_CHANNEL }, (err, res) ->
+  cb()
 
 #
 # Search
