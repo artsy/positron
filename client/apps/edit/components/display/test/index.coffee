@@ -98,6 +98,12 @@ describe 'EditDisplay', ->
       input.trigger 'keyup', true
       @view.$('.edit-display--magazine .edit-char-count').text().should.containEql '92'
 
+  describe '#sendBody', ->
+
+    it 'updates article.send_body when clicked', ->
+      @view.$('.admin-send-body-to-sailthru .flat-checkbox').click()
+      @article.get('send_body').should.eql true
+
   describe '#renderPreviews', ->
 
     it 'rerenders the previews when inputs are changed', ->

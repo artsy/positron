@@ -77,6 +77,7 @@ module.exports = class EditDisplay extends Backbone.View
     'keyup .edit-display textarea, .edit-display__author': 'onKeyup'
     'change .edit-display .image-upload-hidden-input': 'renderPreviews'
     'click .edit-display__section-title': 'revealSection'
+    'click .admin-send-body-to-sailthru .flat-checkbox': 'sendBody'
 
   onKeyup: (e, initial = false) ->
     @updateCharCount e
@@ -125,6 +126,9 @@ module.exports = class EditDisplay extends Backbone.View
     titleElement.trigger 'keyup'
     @$('.edit-display__use-article-title').hide()
     @article.save thumbnail_title: @article.get('title')
+
+  sendBody: ->
+    @article.save send_body: !@article.get('send_body')
 
   checkTitleInput: ->
     if $('.edit-title-textarea').val() is @article.get('title')
