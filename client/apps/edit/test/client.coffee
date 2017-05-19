@@ -14,12 +14,14 @@ describe 'init', ->
       onload: ->
       width: 120
       height: 90
+    @article = fixtures().articles
+    @article.author = {id: '123', name: 'Artsy Editorial', profile_id: '123', profile_handle: 'Artsy'}
     benv.setup =>
       benv.expose
         _: require('underscore')
         $: benv.require('jquery')
         jQuery: benv.require('jquery')
-        sd: { ARTICLE: fixtures().articles }
+        sd: { ARTICLE: @article }
       window.jQuery = jQuery
       @client = rewire '../client.coffee'
       @client.__set__ 'EditLayout', @EditLayout = sinon.stub()
@@ -80,4 +82,10 @@ describe 'init', ->
       @client.article.sections.models[6].get('images')[0].height.should.equal 90
       @client.article.sections.models[6].get('images')[1].height.should.equal 90
       @client.article.sections.models[6].get('images')[1].height.should.equal 90
+      done()
+
+  it 'strips profile_id and profile_handle from authors', (done) ->
+    @client.init()
+    _.defer =>
+      @client.article.get('author').should.eql {id: '123', name: 'Artsy Editorial'}
       done()
