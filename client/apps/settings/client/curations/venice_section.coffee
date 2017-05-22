@@ -22,8 +22,10 @@ module.exports = VeniceSection = React.createClass
     published: @props.section.published or false
     release_date: moment(@props.section.release_date).format('YYYY-MM-DD') or null
     slug: @props.section.slug or ''
+    seo_description: @props.section.seo_description or ''
     social_image: @props.section.social_image or @props.section.cover_image or ''
-    social_description: @props.section.social_description or ''
+    social_description: @props.section.social_description or @props.section.seo_description or ''
+    social_title: @props.section.social_title or @props.section.title or ''
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -151,6 +153,16 @@ module.exports = VeniceSection = React.createClass
           onChange: @onInputChange
           name: 'description'
         }
+      div { className: 'field-group' },
+        label {},
+          span {}, 'SEO Description'
+        input {
+          className: 'bordered-input'
+          placeholder: 'SEO Description'
+          defaultValue: @state.seo_description
+          onChange: @onInputChange
+          name: 'seo_description'
+        }
       div { className: 'fields--full'},
         div { className: 'field-group fields--left' },
           label {}, 'Cover Image'
@@ -184,11 +196,21 @@ module.exports = VeniceSection = React.createClass
             onChange: @onChange
           }
         div { className: 'field-group fields--right' },
-          label {}, 'Social Description'
-          textarea {
-            className: 'bordered-input'
-            placeholder: 'Enter a description'
-            defaultValue: @state.social_description
-            onChange: @onInputChange
-            name: 'social_description'
-          }
+          div { className: 'field-group' },
+            label {}, 'Social Title'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Enter a title'
+              defaultValue: @state.social_title
+              onChange: @onInputChange
+              name: 'social_title'
+            }
+          div { className: 'field-group' },
+            label {}, 'Social Description'
+            textarea {
+              className: 'bordered-input'
+              placeholder: 'Enter a description'
+              defaultValue: @state.social_description
+              onChange: @onInputChange
+              name: 'social_description'
+            }
