@@ -48,28 +48,77 @@ module.exports = React.createClass
   render: ->
     div { className: 'edit-admin' },
 
-      section { className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags' },
-        printTitle section: 'Verticals & Tagging', className: 'verticals-tags', onClick: @setActiveSection
+      section {
+        className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags'
+      },
+        printTitle {
+          section: 'Verticals & Tagging'
+          className: 'verticals-tags'
+          onClick: @setActiveSection
+        }
         if @isActiveSection 'verticals-tags'
-          VerticalsTags {article: @props.article, onChange: @onChange}
+          VerticalsTags {
+            article: @props.article
+            onChange: @onChange
+          }
 
-      section { className: 'edit-admin--article' + @getActiveSection 'article' },
-        printTitle section: 'Article', className: 'article', onClick: @setActiveSection
+      section {
+        className: 'edit-admin--article' + @getActiveSection 'article'
+      },
+        printTitle {
+          section: 'Article'
+          className: 'article'
+          onClick: @setActiveSection
+        }
         if @isActiveSection 'article'
-          Article {article: @props.article, channel: @props.channel, onChange: @onChange}
+          Article {
+            article: @props.article
+            channel: @props.channel
+            onChange: @onChange
+        }
 
-      section { className: 'edit-admin--featuring' + @getActiveSection 'featuring' },
-        printTitle section:  'Featuring', className: 'featuring', onClick: @setActiveSection
+      section {
+        className: 'edit-admin--featuring' + @getActiveSection 'featuring'
+      },
+        printTitle {
+          section:  'Featuring'
+          className: 'featuring'
+          onClick: @setActiveSection
+        }
         if @isActiveSection 'featuring'
-          Featuring {article: @props.article, channel: @props.channel, onChange: @onChange}
+          Featuring {
+            article: @props.article
+            channel: @props.channel
+            onChange: @onChange
+          }
 
       if @props.channel.hasFeature 'superArticle'
-        section { className: 'edit-admin--super-article' + @getActiveSection 'super-article' },
-          printTitle section: 'Super Article', className: 'super-article', onClick: @setActiveSection
+        section {
+          className: 'edit-admin--super-article' + @getActiveSection 'super-article'
+        },
+          printTitle {
+            section: 'Super Article'
+            className: 'super-article'
+            onClick: @setActiveSection
+          }
           if @isActiveSection 'super-article'
-            SuperArticle {article: @props.article, channel: @props.channel, onChange: @onChange}
+            SuperArticle {
+              article: @props.article
+              channel: @props.channel
+              onChange: @onChange
+            }
 
-      section { className: 'edit-admin--additional-appearances' + @getActiveSection 'additional-appearances' },
-        printTitle section: 'Additional Appearances', className: 'additional-appearances', onClick: @setActiveSection
+      section {
+        className: 'edit-admin--additional-appearances' + @getActiveSection 'additional-appearances'
+      },
+        printTitle {
+          section: 'Additional Appearances'
+          className: 'additional-appearances'
+          onClick: @setActiveSection
+        }
         if @isActiveSection 'additional-appearances'
-          Appearances {article: @props.article, channel: @props.channel, onChange: @onChange}
+          Appearances {
+            article: @props.article
+            channel: @props.channel
+            onChange: @onChange
+          }

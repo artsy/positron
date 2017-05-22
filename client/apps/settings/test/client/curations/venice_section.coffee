@@ -45,6 +45,10 @@ describe 'VeniceSection', ->
           cover_image: 'http://artsy.net/cover.jpg'
           release_date: moment().toISOString()
           published: false
+          social_description: 'Click to view this cool 360 video'
+          social_image: 'http://artsy.net/social-cover.jpg'
+          social_title: '[Video] Here is a Social Title'
+          seo_description: 'SEO Description'
         }
         id: 1
         onChange: sinon.stub()
@@ -59,11 +63,11 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 12
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 12
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 16
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 15
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
-      $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 2
       $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').length.should.eql 1
 
     it 'Populates inputs with saved data', ->
@@ -93,7 +97,7 @@ describe 'VeniceSection', ->
         .find('input[type=date]')
         .val().should.eql moment().format('YYYY-MM-DD')
       $(ReactDOM.findDOMNode(@component))
-        .find('textarea')
+        .find('textarea[name=description]')
         .val().should.eql 'Cool description'
       $(ReactDOM.findDOMNode(@component))
         .find('input[type=checkbox]')
@@ -104,6 +108,18 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component))
         .html()
         .should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
+      $(ReactDOM.findDOMNode(@component))
+        .html()
+        .should.containEql 'background-image: url(http://artsy.net/social-cover.jpg)'
+      $(ReactDOM.findDOMNode(@component))
+        .find('textarea[name=social_description]')
+        .val().should.eql 'Click to view this cool 360 video'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=social_title]')
+        .val().should.eql '[Video] Here is a Social Title'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=seo_description]')
+        .val().should.eql 'SEO Description'
 
   describe 'Slugs', ->
     it 'If slug is undefined, autofills a slug based on a saved section title', ->
