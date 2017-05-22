@@ -22,6 +22,8 @@ module.exports = VeniceSection = React.createClass
     published: @props.section.published or false
     release_date: moment(@props.section.release_date).format('YYYY-MM-DD') or null
     slug: @props.section.slug or ''
+    social_image: @props.section.social_image or @props.section.cover_image or ''
+    social_description: @props.section.social_description or ''
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -172,4 +174,21 @@ module.exports = VeniceSection = React.createClass
             fetchUrl: (id) -> "#{sd.ARTSY_URL}/api/v1/artist/#{id}"
             resObject: (res) ->
               id: res.body.id, value: res.body.name, _id: res._id
+          }
+      div { className: 'fields--full'},
+        div { className: 'field-group fields--left' },
+          label {}, 'Social Image'
+          imageUpload {
+            name: 'social_image'
+            src: @state.social_image
+            onChange: @onChange
+          }
+        div { className: 'field-group fields--right' },
+          label {}, 'Social Description'
+          textarea {
+            className: 'bordered-input'
+            placeholder: 'Enter a description'
+            defaultValue: @state.social_description
+            onChange: @onInputChange
+            name: 'social_description'
           }
