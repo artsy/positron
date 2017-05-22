@@ -154,8 +154,7 @@ module.exports = VeniceSection = React.createClass
           name: 'description'
         }
       div { className: 'field-group' },
-        label {},
-          span {}, 'SEO Description'
+        label {}, 'SEO Description'
         input {
           className: 'bordered-input'
           placeholder: 'SEO Description'
