@@ -12,7 +12,10 @@ module.exports = React.createClass
   displayName: 'SectionList'
 
   getInitialState: ->
-    { editingIndex: null }
+    editingIndex: null
+    dragging: null
+    dragOver: null
+    draggingHeight: 0
 
   componentDidMount: ->
     @props.sections.on 'add remove reset', => @forceUpdate()
@@ -23,6 +26,30 @@ module.exports = React.createClass
 
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
+
+  onDragStart: (e) ->
+    $(e.currentTarget).find('.edit-section-container').css('opacity', .65)
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/html', e.currentTarget)
+    @setState
+      dragEnd: null
+      dragging: $(e.currentTarget).find('.edit-section-container').data('id')
+      draggingHeight: $(e.currentTarget).find('.edit-section-container').height()
+
+  onDragEnd: (e) ->
+    dragEnd = @state.dragOver
+    $(e.currentTarget).find('.edit-section-container').animate({'opacity': 0}, .35)
+    newSections = @props.sections.models
+    removed = newSections.splice(@state.dragging, 1)
+    newSections.splice(@state.dragOver, 0, removed[0])
+    @setState
+      dragging: null
+      dragOver: null
+      draggingHeight: 0
+      dragEnd: dragEnd
+
+  onSetDragOver: (section) ->
+    @setState dragOver: section
 
   render: ->
     div {},
@@ -42,6 +69,13 @@ module.exports = React.createClass
               ref: 'section' + i
               key: section.cid
               onSetEditing: @onSetEditing
+              onSetDragOver: @onSetDragOver
+              onDragStart: @onDragStart
+              onDragEnd: @onDragEnd
+              dragOver: @state.dragOver
+              dragging: @state.dragging
+              draggingHeight: @state.draggingHeight
+              dragEnd: @state.dragEnd
             }
             SectionTool { sections: @props.sections, index: i, key: i}
           ]

@@ -29,6 +29,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @props.section.on 'change:layout', => @forceUpdate()
+    $(".edit-section-container[data-id=#{@props.dragEnd}]").animate({'opacity': 1}, .5)
 
   setEditing: (editing) -> =>
     @props.onSetEditing if editing then @props.index ? true else null
@@ -37,18 +38,49 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
+  onDragOver: (e) ->
+    isDraggingHeight = $(".edit-section-container[data-id=#{@props.dragging}]").height()
+    isDragOverTop = $(e.currentTarget).position().top
+    isDragOverHeight = $(e.currentTarget).height()
+    mousePosition = e.clientY
+    dragOver = $(e.currentTarget).find('.edit-section-container').data('id')
+    @props.onSetDragOver dragOver unless dragOver is @props.dragOver
+
+  printDropPlaceholder: ->
+    if @props.dragOver is @props.index
+      unless @props.index is @props.dragging
+        div {
+          className: 'edit-section-drag-placeholder'
+          style: height: @props.draggingHeight
+        }
+
   render: ->
-    div {},
+    div {
+        draggable: true
+        onDragStart: @props.onDragStart
+        onDragEnd: @props.onDragEnd
+        onDragOver: @onDragOver
+      },
+      if @props.dragOver < @props.dragging
+        @printDropPlaceholder()
+
       div {
         className: 'edit-section-container'
         'data-editing': @props.editing
         'data-type': @props.section.get('type')
         'data-layout': @props.section.get('layout')
+        'data-id': @props.index
+        'data-dragging': @props.dragging is @props.index
+        'data-dragend': @props.dragEnd is @props.index
       },
         div {
           className: 'edit-section-hover-controls'
           onClick: @setEditing(on)
         },
+          button {
+            className: "edit-section-drag button-reset #{'is-hidden' if @props.section.get('type') is 'fullscreen'}"
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
+          }
           button {
             className: "edit-section-remove button-reset #{'is-hidden' if @props.section.get('type') is 'fullscreen'}"
             onClick: @removeSection
@@ -80,3 +112,6 @@ module.exports = React.createClass
         if @props.section.get('type') is 'fullscreen'
           div { className: 'edit-section-container-block' }
       )
+      if @props.dragOver > @props.dragging
+        @printDropPlaceholder()
+

@@ -30,7 +30,7 @@ async = require 'async'
       $('#edit-admin')[0]
     )
     ReactDOM.render(
-      SectionList(sections: @article.sections)
+      SectionList(sections: @article.sections, article: @article)
       $('#edit-sections')[0]
     )
     ReactDOM.render(

@@ -26,6 +26,19 @@
     polygon
       fill white !important
 
+.edit-section-drag
+  position absolute
+  top -(section-tool-size / 2)
+  left -(section-tool-size / 2)
+  background-color gray-color
+  z-index 2
+  width section-tool-size
+  height section-tool-size
+  border-radius 50%
+  svg
+    width section-tool-size
+    fill-color white
+
 // Fields with red asktericks
 .edit-required
   &::after
