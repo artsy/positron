@@ -29,6 +29,21 @@ describe 'tags endpoints', ->
           res.body.results[0].name.should.equal 'Asia'
           done()
 
+  it 'strict mode gets a list of tags by exact match', (done) ->
+    fabricate 'tags', [
+      { name: 'Market' }
+      { name: 'Analysis' }
+      { name: 'Market Analysis' }
+      {}
+    ], (err, tags) ->
+      request
+        .get("http://localhost:5000/tags?q=Market&count=true&strict=true")
+        .end (err, res) ->
+          res.body.total.should.equal 4
+          res.body.count.should.equal 1
+          res.body.results[0].name.should.equal 'Market'
+          done()
+
   it 'gets a list of tags by publicity', (done) ->
     fabricate 'tags', [
       { name: 'Asia', public: true }

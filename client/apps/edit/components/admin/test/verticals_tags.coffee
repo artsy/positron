@@ -27,7 +27,7 @@ describe 'AdminVerticalsTags', ->
         _: benv.require 'underscore'
       window.jQuery = $
       $.fn.typeahead = sinon.stub()
-      @AdminVerticalsTags = benv.require resolve __dirname, '../verticals_tags/index.coffee'
+      @AdminVerticalsTags = benv.require resolve __dirname, '../verticals_tags/editorial.coffee'
       @AdminVerticalsTags.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
@@ -38,7 +38,10 @@ describe 'AdminVerticalsTags', ->
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: {results: [{ id: '123', name: 'Artists'}]})
       @AdminVerticalsTags.__set__ 'AutocompleteList', React.createFactory AutocompleteList
-      @article = new Article
+      @article = new Article _.extend fixtures().articles,
+        tags: ['Artists']
+        tracking_tags: []
+        vertical: {}
       @Verticals = new Verticals([
         { id: '1', name: 'Art'}
         { id: '2', name: 'Art Market'}
@@ -46,10 +49,6 @@ describe 'AdminVerticalsTags', ->
         { id: '4', name: 'Culture'}
       ])
       _.first = sinon.stub().returns new Vertical({ id: '1', name: 'Art'})
-      @article.attributes = fixtures().articles
-      @article.set 'tags', ['Artists']
-      @article.set 'tracking_tags', []
-      @article.set 'vertical', {}
       props = {
         article: @article
         onChange: sinon.stub()
@@ -96,3 +95,64 @@ describe 'AdminVerticalsTags', ->
       @component.state.vertical.should.eql { name: 'Art', id: '1' }
       @component.props.onChange.args[0][0].should.eql 'vertical'
       @component.props.onChange.args[0][1].should.eql { name: 'Art', id: '1' }
+
+    it 'Unsets the vertical if already selected', ->
+      @component.setState vertical: { id: '1', name: 'Art'}
+      r.simulate.click r.find(@component, 'avant-garde-button')[0]
+      @component.props.onChange.args[0].should.eql [ 'vertical', null ]
+
+describe 'AdminTags', ->
+
+  beforeEach (done) ->
+    benv.setup =>
+      benv.expose
+        $: benv.require 'jquery'
+        _: benv.require 'underscore'
+        _s: benv.require 'underscore.string'
+      window.jQuery = $
+      @AdminTags = benv.require resolve __dirname, '../verticals_tags/index.coffee'
+      @AdminTags.__set__ 'sd', {}
+      @article = new Article _.extend fixtures().articles,
+        tags: ['Artists']
+        tracking_tags: ['op-ed', 'profile']
+      props = {
+        article: @article
+        onChange: sinon.stub()
+      }
+      sinon.stub Backbone, 'sync'
+      @component = ReactDOM.render React.createElement(@AdminTags, props), (@$el = $ "<div></div>")[0], =>
+        setTimeout =>
+          done()
+
+  afterEach ->
+    Backbone.sync.restore()
+    benv.teardown()
+
+  describe 'Topic Tags', ->
+
+    it 'Renders text input', ->
+      $(ReactDOM.findDOMNode(@component)).find('input[name=tags]').prop('placeholder').should.eql 'Start typing a topic tag...'
+
+    it 'Renders saved tags', ->
+      $(ReactDOM.findDOMNode(@component)).find('input[name=tags]').val().should.eql 'Artists'
+
+    it 'Calls onChange with user input', ->
+      input = r.find(@component, 'bordered-input')[0]
+      input.value = 'new, tags'
+      r.simulate.change input
+      @component.props.onChange.args[0].should.eql [ 'tags', [ 'new', 'tags' ] ]
+
+  describe 'Tracking Tags', ->
+
+    it 'Renders text input', ->
+      $(ReactDOM.findDOMNode(@component)).find('input[name=tracking_tags]').prop('placeholder').should.eql 'Start typing a tracking tag...'
+
+    it 'Renders saved tags', ->
+      $(ReactDOM.findDOMNode(@component)).find('input[name=tracking_tags]').val()
+      $(ReactDOM.findDOMNode(@component)).find('input[name=tracking_tags]').val().should.eql 'op-ed, profile'
+
+    it 'Calls onChange with user input', ->
+      input = r.find(@component, 'bordered-input')[1]
+      input.value = 'new, tags'
+      r.simulate.change input
+      @component.props.onChange.args[0].should.eql [ 'tracking_tags', [ 'new', 'tags' ] ]

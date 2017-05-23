@@ -4,7 +4,8 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 
 Article = React.createFactory require './article/index.coffee'
-VerticalsTags = React.createFactory require './verticals_tags/index.coffee'
+VerticalsTags = React.createFactory require './verticals_tags/editorial.coffee'
+Tags = React.createFactory require './verticals_tags/index.coffee'
 Featuring = React.createFactory require './featuring/index.coffee'
 SuperArticle = React.createFactory require './super_article/index.coffee'
 Appearances = React.createFactory require './appearances/index.coffee'
@@ -47,17 +48,21 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-admin' },
-
       section {
         className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags'
       },
         printTitle {
-          section: 'Verticals & Tagging'
+          section: if @props.channel.isEditorial() then 'Verticals & Tagging' else 'Tagging'
           className: 'verticals-tags'
           onClick: @setActiveSection
         }
-        if @isActiveSection 'verticals-tags'
+        if @props.channel.isEditorial() and @isActiveSection 'verticals-tags'
           VerticalsTags {
+            article: @props.article
+            onChange: @onChange
+          }
+        else if @isActiveSection 'verticals-tags'
+          Tags {
             article: @props.article
             onChange: @onChange
           }
