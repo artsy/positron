@@ -69,7 +69,7 @@ module.exports = React.createClass
             removed: (e, item, items) =>
               newTags = _.without @props.article.get('tags'), item.value
               @props.onChange 'tags', newTags
-            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}&safe=true"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}&strict=true"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"
@@ -91,7 +91,7 @@ module.exports = React.createClass
             removed: (e, item, items) =>
               newTags = _.without @props.article.get('tracking_tag'), item.value
               @props.onChange 'tracking_tags', newTags
-            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}&safe=true"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}&strict=true"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"

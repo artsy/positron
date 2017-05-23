@@ -29,7 +29,7 @@ describe 'tags endpoints', ->
           res.body.results[0].name.should.equal 'Asia'
           done()
 
-  it 'safe mode gets a list of tags by exact match', (done) ->
+  it 'strict mode gets a list of tags by exact match', (done) ->
     fabricate 'tags', [
       { name: 'Market' }
       { name: 'Analysis' }
@@ -37,7 +37,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?q=Market&count=true&safe=true")
+        .get("http://localhost:5000/tags?q=Market&count=true&strict=true")
         .end (err, res) ->
           res.body.total.should.equal 4
           res.body.count.should.equal 1
