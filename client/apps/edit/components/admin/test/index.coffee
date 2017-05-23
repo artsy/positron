@@ -3,6 +3,7 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
 ReactDOM = require 'react-dom'
+ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-addons-test-utils'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
@@ -19,28 +20,29 @@ describe 'AdminSections', ->
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
       Backbone.$ = $
-      AdminSections = benv.require resolve __dirname, '../index'
+      @AdminSections = benv.require resolve __dirname, '../index'
       printTitle = benv.requireWithJadeify(
         resolve(__dirname, '../components/dropdown_header'), ['icons']
       )
-      AdminSections.__set__ 'printTitle', React.createFactory printTitle
-      AdminSections.__set__ 'sd', {
+      @AdminSections.__set__ 'printTitle', React.createFactory printTitle
+      @AdminSections.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
-      AdminSections.__set__ 'Article', sinon.stub()
-      AdminSections.__set__ 'Featuring', sinon.stub()
-      AdminSections.__set__ 'VerticalsTags', sinon.stub()
+      @AdminSections.__set__ 'Article', sinon.stub()
+      @AdminSections.__set__ 'Featuring', sinon.stub()
+      @AdminSections.__set__ 'VerticalsTags', @VerticalsTags = sinon.stub()
+      @AdminSections.__set__ 'Tags', @Tags = sinon.stub()
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns false
       @article = new Article
       @article.attributes = fixtures().articles
-      props = {
+      @props = {
         article: @article
         channel: @channel
         }
-      @component = ReactDOM.render React.createElement(AdminSections, props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@AdminSections, @props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           @component.props.article.save = sinon.stub()
           done()
@@ -54,6 +56,23 @@ describe 'AdminSections', ->
     @component.componentWillMount()
     @component.props.article.fetchFeatured.called.should.be.ok
     @component.props.article.fetchMentioned.called.should.be.ok
+
+  it 'Renders the tags panel if channel is not editorial', ->
+    render = ReactDOMServer.renderToString React.createElement(@AdminSections, @props)
+    render.should.not.containEql 'Verticals &amp; Tagging'
+    render.should.containEql 'Tagging'
+    @Tags.called.should.eql true
+    @VerticalsTags.callCount.should.eql 0
+
+  it 'Renders the verticals panel if channel is editorial', ->
+    @AdminSections.__set__ 'sd', {
+      API_URL: 'http://localhost:3005/api'
+      CURRENT_CHANNEL: id: '123', type: 'editorial'
+      USER: access_token: ''
+    }
+    render = ReactDOMServer.renderToString React.createElement(@AdminSections, @props)
+    render.should.containEql 'Verticals &amp; Tagging'
+    @VerticalsTags.called.should.eql true
 
   it 'Adds a section to activeSections on click', ->
     r.simulate.click r.find @component, 'featuring'
