@@ -35,9 +35,9 @@ describe 'AdminSections', ->
       @AdminSections.__set__ 'VerticalsTags', @VerticalsTags = sinon.stub()
       @AdminSections.__set__ 'Tags', @Tags = sinon.stub()
       @channel = {id: '123'}
+      @channel.isEditorial = sinon.stub().returns false
       @channel.hasFeature = sinon.stub().returns false
-      @article = new Article
-      @article.attributes = fixtures().articles
+      @article = new Article fixtures().articles
       @props = {
         article: @article
         channel: @channel
@@ -65,11 +65,7 @@ describe 'AdminSections', ->
     @VerticalsTags.callCount.should.eql 0
 
   it 'Renders the verticals panel if channel is editorial', ->
-    @AdminSections.__set__ 'sd', {
-      API_URL: 'http://localhost:3005/api'
-      CURRENT_CHANNEL: id: '123', type: 'editorial'
-      USER: access_token: ''
-    }
+    @channel.isEditorial = sinon.stub().returns true
     render = ReactDOMServer.renderToString React.createElement(@AdminSections, @props)
     render.should.containEql 'Verticals &amp; Tagging'
     @VerticalsTags.called.should.eql true

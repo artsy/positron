@@ -52,11 +52,11 @@ module.exports = React.createClass
         className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags'
       },
         printTitle {
-          section: if sd.CURRENT_CHANNEL.type is 'editorial' then 'Verticals & Tagging' else 'Tagging'
+          section: if @props.channel.isEditorial() then 'Verticals & Tagging' else 'Tagging'
           className: 'verticals-tags'
           onClick: @setActiveSection
         }
-        if sd.CURRENT_CHANNEL.type is 'editorial' and @isActiveSection 'verticals-tags'
+        if @props.channel.isEditorial() and @isActiveSection 'verticals-tags'
           VerticalsTags {
             article: @props.article
             onChange: @onChange

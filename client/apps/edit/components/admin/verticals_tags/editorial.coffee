@@ -64,12 +64,12 @@ module.exports = React.createClass
               for tag in tags.results
                 { id: tag.id, value: "#{tag.name}"}
             selected: (e, item, items) =>
-              newTags = _.pluck items, 'value'
+              newTags = _.union @props.article.get('tags'), _.pluck(items, 'value')
               @props.onChange 'tags', newTags
             removed: (e, item, items) =>
               newTags = _.without @props.article.get('tags'), item.value
               @props.onChange 'tags', newTags
-            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=true&q=#{name}&safe=true"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"
@@ -86,12 +86,12 @@ module.exports = React.createClass
               for tracking_tag in tracking_tags.results
                 { id: tracking_tag.id, value: "#{tracking_tag.name}"}
             selected: (e, item, items) =>
-              newTags = _.pluck items, 'value'
+              newTags = _.union @props.article.get('tracking_tag'), _.pluck(items, 'value')
               @props.onChange 'tracking_tags', newTags
             removed: (e, item, items) =>
-              newTags = _.without @props.article.get('tracking_tags'), item.value
+              newTags = _.without @props.article.get('tracking_tag'), item.value
               @props.onChange 'tracking_tags', newTags
-            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}"
+            fetchUrl: (name) -> "#{sd.API_URL}/tags?public=false&q=#{name}&safe=true"
             resObject: (res) ->
               return unless res.body.results.length
               id: res.body.results[0].id, value: "#{res.body.results[0].name}"

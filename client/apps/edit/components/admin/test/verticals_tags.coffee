@@ -38,7 +38,10 @@ describe 'AdminVerticalsTags', ->
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: {results: [{ id: '123', name: 'Artists'}]})
       @AdminVerticalsTags.__set__ 'AutocompleteList', React.createFactory AutocompleteList
-      @article = new Article
+      @article = new Article _.extend fixtures().articles,
+        tags: ['Artists']
+        tracking_tags: []
+        vertical: {}
       @Verticals = new Verticals([
         { id: '1', name: 'Art'}
         { id: '2', name: 'Art Market'}
@@ -46,10 +49,6 @@ describe 'AdminVerticalsTags', ->
         { id: '4', name: 'Culture'}
       ])
       _.first = sinon.stub().returns new Vertical({ id: '1', name: 'Art'})
-      @article.attributes = fixtures().articles
-      @article.set 'tags', ['Artists']
-      @article.set 'tracking_tags', []
-      @article.set 'vertical', {}
       props = {
         article: @article
         onChange: sinon.stub()
@@ -113,10 +112,9 @@ describe 'AdminTags', ->
       window.jQuery = $
       @AdminTags = benv.require resolve __dirname, '../verticals_tags/index.coffee'
       @AdminTags.__set__ 'sd', {}
-      @article = new Article
-      @article.attributes = fixtures().articles
-      @article.set 'tags', ['Artists']
-      @article.set 'tracking_tags', ['op-ed', 'profile']
+      @article = new Article _.extend fixtures().articles,
+        tags: ['Artists']
+        tracking_tags: ['op-ed', 'profile']
       props = {
         article: @article
         onChange: sinon.stub()
@@ -142,7 +140,7 @@ describe 'AdminTags', ->
       input = r.find(@component, 'bordered-input')[0]
       input.value = 'new, tags'
       r.simulate.change input
-      @component.props.onChange.args[0][1].should.eql [ 'new', 'tags' ]
+      @component.props.onChange.args[0].should.eql [ 'tags', [ 'new', 'tags' ] ]
 
   describe 'Tracking Tags', ->
 
@@ -157,4 +155,4 @@ describe 'AdminTags', ->
       input = r.find(@component, 'bordered-input')[1]
       input.value = 'new, tags'
       r.simulate.change input
-      @component.props.onChange.args[0][1].should.eql [ 'new', 'tags' ]
+      @component.props.onChange.args[0].should.eql [ 'tracking_tags', [ 'new', 'tags' ] ]
