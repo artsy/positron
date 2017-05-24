@@ -50,7 +50,8 @@ module.exports = React.createClass
     dragOverID = $dragOver.data('id')
     dragOverTop = $dragOver.position().top + 20 - window.scrollY
     dragOverCenter = dragOverTop + ($dragOver.height() / 2)
-    if mousePosition > dragOverCenter and dragOverID is !@props.sections.length or dragOverID is @props.dragging + 1
+    if mousePosition > dragOverCenter and dragOverID is !@props.sections.length or
+     dragOverID is @props.dragging + 1
       @setState dropPosition: 'bottom'
     else
       @setState dropPosition: 'top'
@@ -64,14 +65,21 @@ module.exports = React.createClass
           style: height: @props.draggingHeight
         }
 
-  render: ->
-    div {
+  getContainerProps: ->
+    props = {}
+    unless @props.isHero
+      props = {
         draggable: !@props.editing
         onDragStart: @onDragStart
         onDragEnd: @props.onDragEnd
         onDragOver: @onDragOver
-      },
-      if @state.dropPosition is 'top'
+        style: {'opacity': .65} if @props.dragging is @props.index
+      }
+    return props
+
+  render: ->
+    div @getContainerProps(),
+      if @state.dropPosition is 'top' and !@props.isHero
         @printDropPlaceholder()
       div {
         className: 'edit-section-container'
@@ -79,21 +87,23 @@ module.exports = React.createClass
         'data-type': @props.section.get('type')
         'data-layout': @props.section.get('layout')
         'data-id': @props.index
-        'data-dragging': @props.dragging is @props.index
+        'data-dragging': if @props.isHero then false else (@props.dragging is @props.index)
       },
-        div {
-          className: 'edit-section-hover-controls'
-          onClick: @setEditing(on)
-        },
-          button {
-            className: "edit-section-drag button-reset #{'is-hidden' if @props.section.get('type') is 'fullscreen'}"
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
-          }
-          button {
-            className: "edit-section-remove button-reset #{'is-hidden' if @props.section.get('type') is 'fullscreen'}"
-            onClick: @removeSection
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          }
+        unless @props.section.get('type') is 'fullscreen'
+          div {
+            className: 'edit-section-hover-controls'
+            onClick: @setEditing(on)
+          },
+            unless @props.isHero
+              button {
+                className: "edit-section-drag button-reset"
+                dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
+              }
+            button {
+              className: "edit-section-remove button-reset"
+              onClick: @removeSection
+              dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+            }
         (switch @props.section.get('type')
           when 'text' then SectionText
           when 'video' then SectionVideo
@@ -120,6 +130,6 @@ module.exports = React.createClass
         if @props.section.get('type') is 'fullscreen'
           div { className: 'edit-section-container-block' }
       )
-      if @state.dropPosition is 'bottom'
+      if @state.dropPosition is 'bottom' and !@props.isHero
         @printDropPlaceholder()
 

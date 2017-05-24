@@ -32,7 +32,6 @@ module.exports = React.createClass
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/html', e.currentTarget)
     $dragged = $(e.currentTarget).find('.edit-section-container')
-    $dragged.css('opacity', .65)
     @setState
       dragStart: dragStart
       dragging: $dragged.data('id')
@@ -40,9 +39,9 @@ module.exports = React.createClass
 
   onDragEnd: (e) ->
     newSections = @props.sections.models
-    removed = newSections.splice(@state.dragging, 1)
-    newSections.splice(@state.dragOver, 0, removed[0])
-    @props.sections.reset(newSections)
+    removed = newSections.splice @state.dragging, 1
+    newSections.splice @state.dragOver, 0, removed[0]
+    @props.sections.reset newSections
     @setState
       dragging: null
       dragOver: null

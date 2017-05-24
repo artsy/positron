@@ -36,4 +36,5 @@ module.exports = React.createClass
         section: @props.section
         editing: @state.editing
         onSetEditing: @onSetEditing
+        isHero: true
       }
