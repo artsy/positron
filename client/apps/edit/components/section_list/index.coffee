@@ -15,6 +15,7 @@ module.exports = React.createClass
     editingIndex: null
     dragging: null
     dragOver: null
+    dragStart: null
     draggingHeight: 0
 
   componentDidMount: ->
@@ -27,26 +28,26 @@ module.exports = React.createClass
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
 
-  onDragStart: (e) ->
-    $(e.currentTarget).find('.edit-section-container').css('opacity', .65)
+  onDragStart: (e, dragStart) ->
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/html', e.currentTarget)
+    $dragged = $(e.currentTarget).find('.edit-section-container')
+    $dragged.css('opacity', .65)
     @setState
-      dragEnd: null
-      dragging: $(e.currentTarget).find('.edit-section-container').data('id')
-      draggingHeight: $(e.currentTarget).find('.edit-section-container').height()
+      dragStart: dragStart
+      dragging: $dragged.data('id')
+      draggingHeight: $dragged.height() - 20
 
   onDragEnd: (e) ->
-    dragEnd = @state.dragOver
-    $(e.currentTarget).find('.edit-section-container').animate({'opacity': 0}, .35)
     newSections = @props.sections.models
     removed = newSections.splice(@state.dragging, 1)
     newSections.splice(@state.dragOver, 0, removed[0])
+    @props.sections.reset(newSections)
     @setState
       dragging: null
       dragOver: null
       draggingHeight: 0
-      dragEnd: dragEnd
+      dragStart: null
 
   onSetDragOver: (section) ->
     @setState dragOver: section
@@ -75,7 +76,7 @@ module.exports = React.createClass
               dragOver: @state.dragOver
               dragging: @state.dragging
               draggingHeight: @state.draggingHeight
-              dragEnd: @state.dragEnd
+              dragStart: @state.dragStart
             }
             SectionTool { sections: @props.sections, index: i, key: i}
           ]

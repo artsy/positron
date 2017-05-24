@@ -21,6 +21,9 @@ icons = -> require('./icons.jade') arguments...
 module.exports = React.createClass
   displayName: 'SectionContainer'
 
+  getInitialState: ->
+    dropPosition: 'top'
+
   onClickOff: ->
     @setEditing(off)()
     @refs.section?.onClickOff?()
@@ -29,7 +32,6 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @props.section.on 'change:layout', => @forceUpdate()
-    $(".edit-section-container[data-id=#{@props.dragEnd}]").animate({'opacity': 1}, .5)
 
   setEditing: (editing) -> =>
     @props.onSetEditing if editing then @props.index ? true else null
@@ -38,13 +40,21 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
+  onDragStart: (e) ->
+    dragStart = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
+    @props.onDragStart e, dragStart
+
   onDragOver: (e) ->
-    isDraggingHeight = $(".edit-section-container[data-id=#{@props.dragging}]").height()
-    isDragOverTop = $(e.currentTarget).position().top
-    isDragOverHeight = $(e.currentTarget).height()
-    mousePosition = e.clientY
-    dragOver = $(e.currentTarget).find('.edit-section-container').data('id')
-    @props.onSetDragOver dragOver unless dragOver is @props.dragOver
+    mousePosition = e.clientY - @props.dragStart
+    $dragOver = $(e.currentTarget).find('.edit-section-container')
+    dragOverID = $dragOver.data('id')
+    dragOverTop = $dragOver.position().top + 20 - window.scrollY
+    dragOverCenter = dragOverTop + ($dragOver.height() / 2)
+    if mousePosition > dragOverCenter and dragOverID is !@props.sections.length or dragOverID is @props.dragging + 1
+      @setState dropPosition: 'bottom'
+    else
+      @setState dropPosition: 'top'
+    @props.onSetDragOver dragOverID unless dragOverID is @props.dragOver
 
   printDropPlaceholder: ->
     if @props.dragOver is @props.index
@@ -56,14 +66,13 @@ module.exports = React.createClass
 
   render: ->
     div {
-        draggable: true
-        onDragStart: @props.onDragStart
+        draggable: !@props.editing
+        onDragStart: @onDragStart
         onDragEnd: @props.onDragEnd
         onDragOver: @onDragOver
       },
-      if @props.dragOver < @props.dragging
+      if @state.dropPosition is 'top'
         @printDropPlaceholder()
-
       div {
         className: 'edit-section-container'
         'data-editing': @props.editing
@@ -71,7 +80,6 @@ module.exports = React.createClass
         'data-layout': @props.section.get('layout')
         'data-id': @props.index
         'data-dragging': @props.dragging is @props.index
-        'data-dragend': @props.dragEnd is @props.index
       },
         div {
           className: 'edit-section-hover-controls'
@@ -112,6 +120,6 @@ module.exports = React.createClass
         if @props.section.get('type') is 'fullscreen'
           div { className: 'edit-section-container-block' }
       )
-      if @props.dragOver > @props.dragging
+      if @state.dropPosition is 'bottom'
         @printDropPlaceholder()
 
