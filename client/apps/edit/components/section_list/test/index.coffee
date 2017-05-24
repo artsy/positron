@@ -66,7 +66,12 @@ describe 'SectionList', ->
           }
         ]
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        @component.setState = sinon.stub()
+        # @sections.reset = sinon.stub()
+        @component.setState
+          dragging: 0
+          dragOver: 3
+          dragStart: 400
+          draggingHeight: 300
         @component.props.sections.off()
         done()
 
@@ -82,6 +87,7 @@ describe 'SectionList', ->
     @SectionTool.args[2][0].index.should.equal 1
 
   it 'opens editing mode in the last added section', ->
+    @component.setState = sinon.stub()
     @component.onNewSection @component.props.sections.last()
     @component.setState.args[0][0].editingIndex.should.equal 3
 
@@ -94,3 +100,13 @@ describe 'SectionList', ->
     @component.render()
     @SectionContainer.args[0][0].key.should.equal @sections.at(0).cid
     @SectionContainer.args[1][0].key.should.equal @sections.at(1).cid
+
+  it 'onDragEnd resets the section order', ->
+    @component.props.sections.models[3].get('type').should.eql 'artworks'
+    @component.onDragEnd()
+    @component.props.sections.models[3].get('type').should.eql 'text'
+    (@component.state.dragging?).should.not.be.ok
+    (@component.state.dragOver?).should.not.be.ok
+    (@component.state.dragStart?).should.not.be.ok
+    @component.state.draggingHeight.should.eql 0
+

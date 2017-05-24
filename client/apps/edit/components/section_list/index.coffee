@@ -37,7 +37,7 @@ module.exports = React.createClass
       dragging: $dragged.data('id')
       draggingHeight: $dragged.height() - 20
 
-  onDragEnd: (e) ->
+  onDragEnd: ->
     newSections = @props.sections.models
     removed = newSections.splice @state.dragging, 1
     newSections.splice @state.dragOver, 0, removed[0]
@@ -48,8 +48,8 @@ module.exports = React.createClass
       draggingHeight: 0
       dragStart: null
 
-  onSetDragOver: (section) ->
-    @setState dragOver: section
+  onSetDragOver: (sectionId) ->
+    @setState dragOver: sectionId
 
   render: ->
     div {},
