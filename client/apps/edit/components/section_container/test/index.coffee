@@ -111,7 +111,12 @@ describe 'SectionContainer', ->
       position = @component.getDropZonePosition(300, $(ReactDOM.findDOMNode(@component)), 3)
       position.should.eql 'top'
 
-    it 'returns top if dragOver is last section', ->
+    it 'returns top if dragOver is first section', ->
+      window.scrollY = 800
+      position = @component.getDropZonePosition(300, $(ReactDOM.findDOMNode(@component)), 0)
+      position.should.eql 'top'
+
+    it 'returns bottom if dragOver is last section', ->
       window.scrollY = 800
       position = @component.getDropZonePosition(300, $(ReactDOM.findDOMNode(@component)), 4)
-      position.should.eql 'top'
+      position.should.eql 'bottom'

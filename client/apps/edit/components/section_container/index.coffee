@@ -55,8 +55,12 @@ module.exports = React.createClass
   getDropZonePosition: (mouseY, $dragOver, dragOverID) ->
     dragOverTop = $dragOver.position().top + 20 - window.scrollY
     dragOverCenter = dragOverTop + ($dragOver.height() / 2)
-    mouseBelowCenter = mouseY > dragOverCenter and dragOverID != @props.sections.length
-    if mouseBelowCenter or dragOverID is @props.dragging + 1
+    mouseBelowCenter = mouseY > dragOverCenter
+    dragOverIsNext = dragOverID is @props.dragging + 1
+    dragOverNotFirst = dragOverID != 0
+    draggingNotLast = @props.dragging != @props.sections.length - 1
+
+    if (dragOverNotFirst and draggingNotLast and mouseBelowCenter) or dragOverIsNext
       dropZonePosition = 'bottom'
     else
       dropZonePosition = 'top'
