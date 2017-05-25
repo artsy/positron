@@ -25,21 +25,12 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
   canLoadMore: ->
     return if $('.filter-search__input').val()
     $('.loading-spinner').fadeIn()
-    @fetchFeed @state.published, @state.offset + 10, @appendMore
-
-  setResults: (results) ->
-    @setState articles: results
+    @fetchFeed @state.published, @state.offset + 10
 
   setPublished: (type) ->
-    @setState published: type, offset: 0
-    @fetchFeed type, 0, @setResults
+    @fetchFeed type, 0
 
-  appendMore: (results) ->
-    articles = @state.articles.concat(results)
-    @setState articles: articles
-    $('.loading-spinner').fadeOut()
-
-  fetchFeed: (type, offset, cb) ->
+  fetchFeed: (type, offset) ->
     feedQuery = query "published: #{type}, offset: #{offset}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
     request
       .post sd.API_URL + '/graphql'
@@ -47,8 +38,15 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
       .send query: feedQuery
       .end (err, res) =>
         return if err or not res.body?.data
-        @setState offset: @state.offset + 10
-        cb res.body.data.articles
+        if offset > 0
+          articles = @state.articles.concat(res.body.data.articles)
+        else
+          articles = res.body.data.articles
+        @setState
+          articles: articles
+          published: type
+          offset: offset + 10
+        $('.loading-spinner').fadeOut()
 
   showEmptyMessage: ->
     div { className: 'article-list__empty'},
