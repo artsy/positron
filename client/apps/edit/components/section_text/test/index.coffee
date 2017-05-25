@@ -152,6 +152,36 @@ describe 'SectionText', ->
       @shortComponent.handleKeyCommand('italic')
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
+    it 'Can toggle H2 entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('header-two')
+      @shortComponent.setState.args[0][0].html.should.eql '<p>A <em>short</em> piece of <strong>text</strong></p>'
+
+    it 'Can toggle H3 entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('header-three')
+      @shortComponent.setState.args[0][0].html.should.eql '<h3>A short piece of text</h3>'
+
+    it 'Can toggle UL entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('unordered-list-item')
+      @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
+
+    it 'Can toggle OL entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('ordered-list-item')
+      @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
+
+    it 'Can make plain text', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('custom-clear')
+      @shortComponent.setState.args[0][0].html.should.eql '<p>A short piece of text</p>'
+
+    it 'Can open a link prompt', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('link-prompt')
+      @shortComponent.setState.args[0][0].showUrlInput.should.eql true
+
 
   describe 'Links', ->
 
