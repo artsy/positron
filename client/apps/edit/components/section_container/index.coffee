@@ -41,29 +41,39 @@ module.exports = React.createClass
     @props.section.destroy()
 
   onDragStart: (e) ->
-    dragStart = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
-    @props.onDragStart e, dragStart
+    dragStartY = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
+    @props.onDragStart e, dragStartY
 
   onDragOver: (e) ->
-    mousePosition = e.clientY - @props.dragStart
+    mouseY = e.clientY - @props.dragStartY
     $dragOver = $(e.currentTarget).find('.edit-section-container')
     dragOverID = $dragOver.data('id')
-    dragOverTop = $dragOver.position().top + 20 - window.scrollY
-    dragOverCenter = dragOverTop + ($dragOver.height() / 2)
-    if mousePosition > dragOverCenter and dragOverID is !@props.sections.length or
-     dragOverID is @props.dragging + 1
-      @setState dropPosition: 'bottom'
-    else
-      @setState dropPosition: 'top'
+    @setState
+      dropPosition: @getDropZonePosition(mouseY, $dragOver, dragOverID)
     @props.onSetDragOver dragOverID unless dragOverID is @props.dragOver
 
-  printDropPlaceholder: ->
-    if @props.dragOver is @props.index
-      unless @props.index is @props.dragging
-        div {
-          className: 'edit-section-drag-placeholder'
-          style: height: @props.draggingHeight
-        }
+  getDropZonePosition: (mouseY, $dragOver, dragOverID) ->
+    dragOverTop = $dragOver.position().top + 20 - window.scrollY
+    dragOverCenter = dragOverTop + ($dragOver.height() / 2)
+    mouseBelowCenter = mouseY > dragOverCenter and dragOverID != @props.sections.length
+    if mouseBelowCenter or dragOverID is @props.dragging + 1
+      dropZonePosition = 'bottom'
+    else
+      dropZonePosition = 'top'
+    dropZonePosition
+
+  isDragOver: ->
+    @props.dragOver is @props.index and !@props.isHero
+
+  isDragging: ->
+    @props.dragging is @props.index and !@props.isHero
+
+  dropZone: ->
+    if @isDragOver() and !@isDragging()
+      div {
+        className: 'edit-section-drag-placeholder'
+        style: height: @props.draggingHeight
+      }
 
   getContainerProps: ->
     props = {}
@@ -73,21 +83,20 @@ module.exports = React.createClass
         onDragStart: @onDragStart
         onDragEnd: @props.onDragEnd
         onDragOver: @onDragOver
-        style: {'opacity': .65} if @props.dragging is @props.index
+        style: {'opacity': .65} if @isDragging()
       }
     return props
 
   render: ->
     div @getContainerProps(),
-      if @state.dropPosition is 'top' and !@props.isHero
-        @printDropPlaceholder()
+      @dropZone() if @state.dropPosition is 'top'
       div {
         className: 'edit-section-container'
         'data-editing': @props.editing
         'data-type': @props.section.get('type')
         'data-layout': @props.section.get('layout')
         'data-id': @props.index
-        'data-dragging': if @props.isHero then false else (@props.dragging is @props.index)
+        'data-dragging': @isDragging()
       },
         unless @props.section.get('type') is 'fullscreen'
           div {
@@ -130,6 +139,5 @@ module.exports = React.createClass
         if @props.section.get('type') is 'fullscreen'
           div { className: 'edit-section-container-block' }
       )
-      if @state.dropPosition is 'bottom' and !@props.isHero
-        @printDropPlaceholder()
+      @dropZone() if @state.dropPosition is 'bottom'
 
