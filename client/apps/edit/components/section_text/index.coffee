@@ -11,6 +11,8 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   Entity,
   RichUtils,
   Modifier,
+  KeyBindingUtil,
+  getDefaultKeyBinding,
   DefaultDraftBlockRenderMap,
   getVisibleSelectionRect } = require 'draft-js'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
@@ -214,13 +216,38 @@ module.exports = React.createClass
     return true
 
   handleKeyCommand: (e) ->
-    unless @getSelectedBlock().content.get('type') is 'header-three'
-      if e in ['italic', 'bold']
+    switch e
+      when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
+        @toggleBlockType e
+      when 'custom-clear'
+        @makePlainText()
+      when 'italic', 'bold'
+        return if @getSelectedBlock().content.get('type') is 'header-three'
         newState = RichUtils.handleKeyCommand @state.editorState, e
-        if newState
-          @onChange newState
-          return true
-      return false
+        @onChange newState if newState
+      when 'link-prompt'
+        className = @getExistingLinkData().className
+        return @promptForLink() unless className
+        if className.includes 'is-follow-link'
+          @promptForLink 'artist'
+        else if className.includes 'is-jump-link'
+          @promptForLink 'toc'
+
+  keyBindingFn: (e) ->
+    if KeyBindingUtil.hasCommandModifier(e)
+      if e.keyCode is 50   # command + 2
+        return 'header-two'
+      if e.keyCode is 51   # command + 3
+        return 'header-three'
+      if e.keyCode is 191  # command + /
+        return 'custom-clear'
+      if e.keyCode is 55   # command + 7
+        return 'ordered-list-item'
+      if e.keyCode is 56   # command + 8
+        return 'unordered-list-item'
+      if e.keyCode is 75   # command + K
+        return 'link-prompt'
+    return getDefaultKeyBinding(e)
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
@@ -399,6 +426,7 @@ module.exports = React.createClass
           readOnly: isReadOnly
           decorators: decorators
           handleKeyCommand: @handleKeyCommand
+          keyBindingFn: @keyBindingFn
           handlePastedText: @onPaste
           blockRenderMap: blockRenderMap
         }
