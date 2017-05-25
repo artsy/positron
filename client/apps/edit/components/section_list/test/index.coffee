@@ -66,7 +66,6 @@ describe 'SectionList', ->
           }
         ]
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        # @sections.reset = sinon.stub()
         @component.setState
           dragging: 0
           dragOver: 3
