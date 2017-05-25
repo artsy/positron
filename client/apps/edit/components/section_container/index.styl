@@ -11,6 +11,7 @@
 .edit-section-container
   animation fadein 0.15s
   z-index 1
+  transition transform .15s
 
 .edit-section-container-bg
   width 100%
@@ -66,3 +67,16 @@
 .edit-section-container[data-layout=column_width]
   width 620px
   margin auto
+
+.edit-section-container[data-dragging=true]
+  background-color gray-lightest-color
+  user-select none
+  transform scale(.925)
+
+.edit-section-drag-placeholder
+  width calc(100% \- 40px)
+  min-height 2em
+  background-color white
+  margin 20px
+  border 2px dashed gray-lighter-color
+  max-height 30vh
