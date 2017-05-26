@@ -29,6 +29,10 @@ describe 'ArticlesListView', ->
         ARTICLES: [_.extend fixtures().articles]
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
+      mod.__set__ 'request', post: (@post = sinon.stub()).returns
+        set: (@set = sinon.stub()).returns
+          send: (@send = sinon.stub()).returns
+            end: sinon.stub().yields(null, body: data: articles: [_.extend fixtures().articles] )
       props = {
           articles: [_.extend fixtures().articles, id: '456']
           published: true
@@ -56,4 +60,6 @@ describe 'ArticlesListView', ->
   it 'updates feed when nav is clicked', ->
     @component.state.published.should.equal true
     r.simulate.click r.find @component, 'drafts'
+    @component.setState.args[0][0].articles.length.should.be > 0
     @component.setState.args[0][0].published.should.equal false
+    @component.setState.args[0][0].offset.should.equal 10
