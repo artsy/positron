@@ -39,7 +39,7 @@ We use the [Instant Articles API](https://developers.facebook.com/docs/instant-a
 
 Email has evolved into a complex system and huge traffic driver for Editorial, but the implementation on the content distribution side is pretty simple. Similar to FBIA, we push content changes to Sailthru, our ESP/marketing tool. We use Sailthru's [`content`](https://getstarted.sailthru.com/developers/api/content/) endpoint to do this. We take advantage of an optional field called `vars` that lets us post any custom fields we want on the content, like `html` or `credit_line`. We take advantage of this a lot.
 
-For example, with `html`, we can pass an HTML-d version of the article as a string and actually generate the email based on the content of this field. We use this primarily in our weekly news roundup email. The entire body of the email is based on the HTML of [this article](https://www.artsy.net/article/artsy-editorial-panama-papers-expose-art-world-and-the-9-other-biggest-news-stories-this-week). This is how it looks: 
+For example, with `html`, we can pass an HTML-d version of the article as a string and actually generate the email based on the content of this field. We use this primarily in our weekly news roundup email. The entire body of the email is based on the HTML of [this article](https://www.artsy.net/article/artsy-editorial-panama-papers-expose-art-world-and-the-9-other-biggest-news-stories-this-week). This is how it looks:
 
 ![news-email](http://files.artsy.net/images/screen-shot-2017-05-25-at-60235-pm.png)
 
@@ -51,7 +51,6 @@ For example, with `html`, we can pass an HTML-d version of the article as a stri
 After we simplified the process of pulling content into an email, scheduling content came next. We have two kinds of Editorial emails: daily and weekly. We take advantage of the custom fields again here (`daily_email` and `weekly_email`), to be able to let Sailthru and its data feeds know which pieces of content should appear in the next email. We wipe the queue every day at 11AM EST.
 
 ![queue](http://files.artsy.net/images/screen-shot-2017-05-25-at-63052-pm.png)
-
 
 ## Google AMP
 
