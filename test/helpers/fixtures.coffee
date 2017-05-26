@@ -153,6 +153,7 @@ module.exports = ->
     tagline: 'A bunch of cool stuff at Artsy'
     image_url: 'artsy.net/image.jpg'
     slug: 'editorial'
+    public: true
     pinned_articles: [
       {
         id: '5086df098523e60002000015'
