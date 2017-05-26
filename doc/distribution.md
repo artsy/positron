@@ -2,11 +2,17 @@
 
 When an editor publishes content in Writer, it gets distributed across the web. In this doc, we break down the distribution of this content.
 
-![distribute-content-meme](http://files.artsy.net/images/screen-shot-2017-05-25-at-40907-pm.png)
+### Table of contents
+- [Artsy.net](#artsy.net)
+- [Facebook Instant Articles](#facebook-instant-articles-(fbia))
+- [Email](#email-(sailthru))
+- [Google AMP](#google-amp)
+- [RSS](#rss)
+- [Analytics](#analytics)
 
 ## [Artsy.net](https://www.artsy.net/articles)
 
-We publish all of our content on [Artsy.net](https://www.artsy.net/articles). Each piece of content belongs to a Channel which helps us decide how an article should look.
+We publish all editorial content at Artsy.net/articles, and articles appear in different contexts throughout Artsy.net. Articles by distinct teams at Artsy are distinguished by their association with a Channel.
 
 Because we have multiple channels, each piece of content on the site gets treated differently depending on which channel it belongs to. For example, we have [promoted content](https://www.artsy.net/article/artsy-school-s-out-for-the-summer-paul-winstanley-s-spare-portraits-of-empty-art-schools) written by Artsy staff, [partner-written articles](https://www.artsy.net/waterhouse-and-dodd/article/waterhouse-dodd-interview-juliette-losq), and [Life at Artsy](https://www.artsy.net/article/daniel-doubrovkine-what-do-software-engineers-do) posts which you can see all have different visual treatments.
 
@@ -21,12 +27,10 @@ Bored? Here are some great Artsy Editorial (Channel) articles:
 - [GIPHY Is Helping Get Artists’ Works Viewed 100 Million Times](https://www.artsy.net/article/artsy-editorial-giphy-artists-works-viewed-100-million-times)
 - [What Makes "Bad" Art Good?](https://www.artsy.net/article/artsy-editorial-bad-art-good)
 
-Articles are responsive, so we look good everywhere:
+Articles are responsive, so they look good on all devices
 
 ![responsive-article](http://files.artsy.net/images/screen-shot-2017-05-25-at-13624-pm.png)
 Image from [ami.responsivedesign.is](http://ami.responsivedesign.is/)
-
-Speaking of Facebook...
 
 ## Facebook Instant Articles (FBIA)
 
@@ -54,7 +58,7 @@ After we simplified the process of pulling content into an email, scheduling con
 
 ## Google AMP
 
-We've been tackling [speed issues](http://artsy.github.io/blog/2016/11/02/improving-page-speed-with-graphql/) for a while on Publishing, and once we heard about [Google AMP](https://www.ampproject.org/) and its straightforward implementation, we were on board. 
+We've been tackling [speed issues](http://artsy.github.io/blog/2016/11/02/improving-page-speed-with-graphql/) for a while on Publishing, and once we heard about [Google AMP](https://www.ampproject.org/) and its straightforward implementation, we were on board.
 
 By adhering to the AMP Project rules and using `<html ⚡>` on the page, we get \<1 second load times from Google Search. These pages can be found by adding `/amp` to the end of an article.
 
@@ -81,7 +85,7 @@ Now that we've dispersed all of our content, how do we know it's working?
 
 Our Editorial Team uses [Airtable](https://airtable.com) to organize and plan stories. We run a [data transfer script](https://github.com/artsy/positron/blob/master/scripts/ga_airtable_transfer.js) every hour on the half hour. The script simply takes article analytics from GA and saves them into a table in Airtable.
 
-#### Publishing Quirks
+#### FAQ
 
 **Why don't I see Google AMP calls in the `force-production` Segment.io source?**
 
