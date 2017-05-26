@@ -275,12 +275,17 @@ describe 'SectionText', ->
 
     it 'replaces bold spans with actual b tags', ->
       html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><strong>B. 1981 in Madrid. Lives and works in Madrid.</strong></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><span><strong>B. 1981 in Madrid. Lives and works in Madrid.</strong></span></p>'
 
     it 'replaces italic spans with actual em tags', ->
       html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><em>B. 1981 in Madrid. Lives and works in Madrid.</em></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><span><em>B. 1981 in Madrid. Lives and works in Madrid.</em></span></p>'
 
-    it 'Can replaces spans that are bold and italic', ->
+    it 'replaces spans that are bold and italic', ->
       html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><strong><em>B. 1981 in Madrid. Lives and works in Madrid.</em></strong></p>'
+      @component.stripGoogleStyles(html).should.eql '<p><span><strong><em>B. 1981 in Madrid. Lives and works in Madrid.</em></strong></span></p>'
+
+    it 'replaces styled spans that are nested in links', ->
+      html = '<span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">(via </span><a href="http://theartnewspaper.com/market/dealer-cuts-plea-bargain/" style="text-decoration:none;"><span style="font-size:11pt;color:#1155cc;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:underline;vertical-align:baseline;white-space:pre-wrap;">The Art Newspaper</span></a><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">)</span>'
+      @component.stripGoogleStyles(html).should.eql '<span><em>(via </em></span><a href="http://theartnewspaper.com/market/dealer-cuts-plea-bargain/" style="text-decoration:none;"><span><em>The Art Newspaper</em></span></a><span><em>)</em></span>'
+
