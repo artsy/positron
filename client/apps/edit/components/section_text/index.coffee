@@ -171,11 +171,11 @@ module.exports = React.createClass
     for span, i in spans
       newSpan = span
       if span?.style.fontStyle is 'italic' and span?.style.fontWeight is '700'
-        newSpan = '<strong><em>' + span.innerHTML + '</em></strong>'
+        newSpan = '<span><strong><em>' + span.innerHTML + '</em></strong></span>'
       else if span?.style.fontStyle is 'italic'
-        newSpan = '<em>' + span.innerHTML + '</em>'
+        newSpan = '<span><em>' + span.innerHTML + '</em></span>'
       else if span?.style.fontWeight is '700'
-        newSpan = '<strong>' + span.innerHTML + '</strong>'
+        newSpan = '<span><strong>' + span.innerHTML + '</strong></span>'
       $(doc.getElementsByTagName('SPAN')[i]).replaceWith(newSpan)
     return doc.innerHTML
 
