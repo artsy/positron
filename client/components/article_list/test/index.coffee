@@ -35,6 +35,11 @@ describe 'ArticleList', ->
               thumbnail_image: 'http://artsy.net/thumbnail_image2.jpg'
               email_metadata: {headline: 'Email of Thrones', image_url: 'http://artsy.net/image_url.jpg'}
               slug: 'artsy-editorial-email-of-thrones'
+            },
+            {
+              id: '125'
+              thumbnail_title: '[Draft] Draft Title'
+              slug: 'artsy-editorial-email-of-thrones'
             }
           ]
           selected: sinon.stub()
@@ -62,3 +67,9 @@ describe 'ArticleList', ->
   it 'can render email headlines and images', ->
     $(@rendered).html().should.containEql 'Email of Thrones'
     $(@rendered).html().should.containEql 'image_url.jpg'
+
+  it 'sets the background of the thumbnail image', ->
+    $(@rendered).find('.article-list__image:eq(1)').css('background-image').should.equal 'url(http://artsy.net/image_url.jpg)'
+
+  it 'thumbnail image defaults to not setting background when there is no image', ->
+    $(@rendered).find('.article-list__image:eq(2)').css('background-image').length.should.equal 0
