@@ -11,6 +11,7 @@ sd = require('sharify').data
 User = require '../../models/user.coffee'
 AutocompleteChannels = require '../autocomplete_channels/index.coffee'
 imagesLoaded = require 'imagesloaded'
+RavenClient = require 'raven-js'
 
 # Add jquery plugins
 require 'jquery-autosize'
@@ -23,6 +24,11 @@ module.exports.init = ->
   window[key] = helper for key, helper of viewHelpers
   Backbone.history.start pushState: true
   @user = new User sd.USER
+
+  # Configure Raven
+  RavenClient.config(sd.SENTRY_PUBLIC_DSN).install()
+
+  # Handle channel switching UI
   $('#layout-sidebar-switch-channel').click =>
     new AutocompleteChannels()
 
@@ -32,6 +38,7 @@ module.exports.init = ->
 
   # Ensure a fresh user
   @user.isOutdated (outdated) =>
+    RavenClient.captureMessage('Brooken')
     if outdated
       @user.refresh =>
         window.location.replace "/logout"

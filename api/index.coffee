@@ -2,7 +2,6 @@ require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
-chalk = require 'chalk'
 { helpers, notFound, errorHandler } = require './lib/middleware'
 { NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
 debug = require('debug') 'api'

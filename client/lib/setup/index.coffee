@@ -20,10 +20,10 @@ forceSSL = require 'express-force-ssl'
 setupEnv = require './env'
 setupAuth = require './auth'
 logger = require 'artsy-morgan'
-chalk = require 'chalk'
-{ locals, errorHandler, helpers, ua, sameOrigin } = require '../middleware'
+RavenServer = require 'raven'
+{ locals, helpers, ua, sameOrigin } = require '../middleware'
 { parse } = require 'url'
-{ NODE_ENV, SESSION_SECRET } = process.env
+{ NODE_ENV, SESSION_SECRET, SENTRY_PRIVATE_DSN } = process.env
 
 module.exports = (app) ->
 
@@ -33,6 +33,11 @@ module.exports = (app) ->
   # Route to ping for system up
   app.get '/system/up', (req, res) ->
     res.send 200, { nodejs: true }
+
+  # Error Reporting
+  if SENTRY_PRIVATE_DSN
+    RavenServer.config(SENTRY_PRIVATE_DSN).install()
+    app.use RavenServer.requestHandler()
 
   # Mount generic middleware & run setup modules
   if 'production' is NODE_ENV or 'staging' is NODE_ENV
@@ -49,6 +54,12 @@ module.exports = (app) ->
   app.use bucketAssets()
   setupAuth app
   app.use locals
+
+  if SENTRY_PRIVATE_DSN
+    app.use RavenServer.errorHandler()
+
+  RavenServer.captureMessage('Broken!')
+
   app.use helpers
   app.use ua
   app.use sameOrigin
