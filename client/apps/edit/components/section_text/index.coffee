@@ -35,7 +35,6 @@ BLOCK_TYPES = [
   {label: 'H2', style: 'header-two'}
   {label: 'H3', style: 'header-three'}
   {label: 'UL', style: 'unordered-list-item'}
-  {label: 'OL', style: 'ordered-list-item'}
 ]
 
 blockRenderMap = Immutable.Map({
@@ -76,6 +75,7 @@ module.exports = React.createClass
     showUrlInput: false
     pluginType: null
     urlValue: null
+    showMenu: false
 
   componentWillMount: ->
     @channel = new Channel sd.CURRENT_CHANNEL
@@ -94,6 +94,7 @@ module.exports = React.createClass
       @focus() if @props.editing
 
   onChange: (editorState) ->
+    @checkSelection()
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
@@ -328,6 +329,12 @@ module.exports = React.createClass
     }
     return {target: target, parent: parent}
 
+  stickyMenuBox: ->
+    location = @getSelectionLocation()
+    top = location.target.top - location.parent.top - 90
+    left = location.target.left - location.parent.left + (location.target.width / 2) - 100
+    return {top: top, left: left}
+
   stickyLinkBox: ->
     location = @getSelectionLocation()
     top = location.target.top - location.parent.top + 25
@@ -398,16 +405,25 @@ module.exports = React.createClass
         urlValue: @state.urlValue
       }
 
+  checkSelection: () ->
+    if !window.getSelection().isCollapsed
+      @setState showMenu: true, selectionTarget: @stickyMenuBox()
+    else
+      @setState showMenu: false, selectionTarget: null
+
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
-    isReadOnly = if @props.editing and @state.showUrlInput then true else false
+    hasPlugins = if @channel.hasFeature 'follow' then ' has-plugins' else ''
 
     div {
       className: 'edit-section-text' + isEditing
     },
-      if @props.editing
+      if @state.showMenu
         nav {
-          className: 'edit-section-text__menu edit-section-controls'
+          className: 'edit-section-text__menu edit-section-controls' + hasPlugins
+          style:
+            'top': @state.selectionTarget.top
+            'left': @state.selectionTarget.left
         },
           @printButtons(INLINE_STYLES, @toggleInlineStyle)
           @printButtons(BLOCK_TYPES, @toggleBlockType)
@@ -417,13 +433,14 @@ module.exports = React.createClass
       div {
         className: 'edit-section-text__input'
         onClick: @focus
+        onMouseUp: @checkSelection
+        onKeyUp: @checkSelection
       },
         editor {
           ref: 'editor'
           editorState: @state.editorState
           spellCheck: true
           onChange: @onChange
-          readOnly: isReadOnly
           decorators: decorators
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: @keyBindingFn
