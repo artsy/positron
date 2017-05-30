@@ -70,6 +70,7 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
           searchResults: @setResults
           selected: null
           contentType: 'article'
+          checkable: false
         }
     else
       @showEmptyMessage()

@@ -17,9 +17,15 @@ module.exports = React.createClass
 
   getDisplayAttrs: (article) ->
     if @props.display is 'email' and article.email_metadata
-      return {headline: article.email_metadata.headline, image: article.email_metadata.image_url}
+      return {
+        headline: article.email_metadata.headline
+        image: article.email_metadata.image_url
+      }
     else
-      return {headline: article.thumbnail_title, image: article.thumbnail_image}
+      return {
+        headline: article.thumbnail_title
+        image: article.thumbnail_image
+      }
 
   publishText: (result) ->
     if result.published_at and result.published
@@ -37,7 +43,10 @@ module.exports = React.createClass
         div { className: 'article-list__no-results' }, "No Results Found"
       (@props.articles.map (result) =>
         attrs = @getDisplayAttrs(result)
-        div { className: 'article-list__result paginated-list-item', key: result.id},
+        div {
+          className: 'article-list__result paginated-list-item'
+          key: result.id
+        },
           if @props.checkable
             div {
               ref: result.id
@@ -45,17 +54,25 @@ module.exports = React.createClass
               dangerouslySetInnerHTML: __html: $(icons()).filter('.check-circle').html()
               onClick: => @props.selected(result)
             }
-          a { className: 'article-list__article', href: "/articles/#{result.id}/edit" },
-            div { className: 'article-list__image paginated-list-img', style: backgroundImage: "url(#{attrs.image})" },
+          a {
+            className: 'article-list__article'
+            href: "/articles/#{result.id}/edit"
+          },
+            div {
+              className: 'article-list__image paginated-list-img'
+              style: if attrs.image then backgroundImage: "url(#{attrs.image})" else {}
+            },
               unless attrs.image
-                div { className: 'missing-img'}, "Missing Thumbnail"
+                div { className: 'missing-img' }, "Missing Thumbnail"
             div { className: 'article-list__title paginated-list-text-container' },
               if attrs.headline
                 h1 {}, attrs.headline
               else
-                h1 { className: 'missing-title'}, 'Missing Title'
+                h1 { className: 'missing-title' }, 'Missing Title'
               h2 {}, @publishText(result)
-          a { className: 'paginated-list-preview avant-garde-button'
-            , href: "#{sd.FORCE_URL}/article/#{result.slug}"
-            , target: '_blank' }, "Preview"
+          a {
+            className: 'paginated-list-preview avant-garde-button'
+            href: "#{sd.FORCE_URL}/article/#{result.slug}"
+            target: '_blank'
+          }, "Preview"
       )
