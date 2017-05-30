@@ -28,7 +28,7 @@ module.exports.init = ->
   # Configure Raven
   RavenClient.config(sd.SENTRY_PUBLIC_DSN).install()
 
-  # Handle channel switching UI
+  # Switch Channel UI
   $('#layout-sidebar-switch-channel').click =>
     new AutocompleteChannels()
 

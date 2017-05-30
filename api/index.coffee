@@ -18,7 +18,6 @@ app = module.exports = express()
 if SENTRY_PRIVATE_DSN
   RavenServer.config(SENTRY_PRIVATE_DSN).install()
   app.use RavenServer.requestHandler()
-  app.use RavenServer.errorHandler()
 
 # Middleware
 app.use cors()
@@ -38,6 +37,9 @@ app.use require './apps/channels'
 app.use require './apps/tags'
 app.use require './apps/verticals'
 app.use require './apps/graphql'
+
+if SENTRY_PRIVATE_DSN
+  app.use RavenServer.errorHandler()
 
 # Moar middleware
 app.use notFound
