@@ -3,11 +3,22 @@ express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
 { helpers, notFound, errorHandler } = require './lib/middleware'
-{ NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
+{ NODE_ENV,
+  ARTSY_URL,
+  ARTSY_ID,
+  ARTSY_SECRET,
+  SENTRY_PRIVATE_DSN } = process.env
 debug = require('debug') 'api'
 cors = require 'cors'
+RavenServer = require 'raven'
 
 app = module.exports = express()
+
+# Error Reporting
+if SENTRY_PRIVATE_DSN
+  RavenServer.config(SENTRY_PRIVATE_DSN).install()
+  app.use RavenServer.requestHandler()
+  app.use RavenServer.errorHandler()
 
 # Middleware
 app.use cors()

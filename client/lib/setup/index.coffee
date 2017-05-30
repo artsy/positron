@@ -58,8 +58,6 @@ module.exports = (app) ->
   if SENTRY_PRIVATE_DSN
     app.use RavenServer.errorHandler()
 
-  RavenServer.captureMessage('Broken!')
-
   app.use helpers
   app.use ua
   app.use sameOrigin

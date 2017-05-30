@@ -38,7 +38,6 @@ module.exports.init = ->
 
   # Ensure a fresh user
   @user.isOutdated (outdated) =>
-    RavenClient.captureMessage('Brooken')
     if outdated
       @user.refresh =>
         window.location.replace "/logout"
