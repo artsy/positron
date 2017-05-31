@@ -131,11 +131,11 @@ removeStopWords = (title) ->
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
-    indexForSearch article
+    indexForSearch article if article.indexable
     distributeArticle article, =>
       db.articles.save sanitize(typecastIds article), callback
   else
-    indexForSearch article
+    indexForSearch article if article.indexable
     db.articles.save sanitize(typecastIds article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577

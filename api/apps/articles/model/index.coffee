@@ -57,7 +57,10 @@ Q = require 'bluebird-q'
         debug err if err
         publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
         unPublishing = article.published and not input.published
-        article = _.extend article, _.omit(input, 'slug'), updated_at: new Date
+        indexable = article.indexable or true
+        if input.indexable != indexable
+          indexable = input.indexable
+        article = _.extend article, _.omit(input, 'slug'), {updated_at: new Date, indexable: indexable}
         if input.sections and input.sections.length is 0
           article.sections = []
         # Merge fullscreen title with main article title
