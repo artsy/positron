@@ -15,6 +15,10 @@ module.exports = AddTag = React.createClass
   handleChange: (e) ->
     @setState value: e.target.value
 
+  handleKeyPress: (target) ->
+    if target.charCode is 13
+      @addTag()
+
   render: ->
     div { className: 'tags-panel__add' },
       input {
@@ -22,6 +26,7 @@ module.exports = AddTag = React.createClass
         placeholder: 'Enter tag title...'
         value: @state.value
         onChange: @handleChange
+        onKeyPress: @handleKeyPress
       }
       button {
         className: 'avant-garde-button avant-garde-button-black'
