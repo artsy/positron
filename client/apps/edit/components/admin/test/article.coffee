@@ -4,6 +4,7 @@ sinon = require 'sinon'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
+_ = require 'underscore'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
@@ -36,9 +37,10 @@ describe 'AdminArticle', ->
       AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: '123', name: 'Molly Gottschalk'})
-      @article = new Article
-      @article.set('author', {name: 'Artsy Editorial', id: '123'})
-      @article.set('contributing_authors', [{name: 'Molly Gottschalk', id: '123'}])
+      @article = new Article _.extend {},
+        author: {name: 'Artsy Editorial', id: '123'}
+        contributing_authors: [{name: 'Molly Gottschalk', id: '123'}]
+        indexable: true
       props = {
         article: @article
         onChange: sinon.stub()
@@ -72,9 +74,14 @@ describe 'AdminArticle', ->
       $(ReactDOM.findDOMNode(@component)).find('button.active').first().attr('name').should.eql '2'
       $(ReactDOM.findDOMNode(@component)).find('button.active').last().text().should.eql 'No'
 
+    it 'Renders indexable checkbox', ->
+      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').first().attr('name').should.eql 'indexable'
+      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox input').first().prop('checked').should.eql true
+
     it 'Renders google news checkbox', ->
-      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').length.should.eql 1
-      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox input').prop('checked').should.eql false
+      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').last().attr('name').should.eql 'exclude_google_news'
+      $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox input').last().prop('checked').should.eql false
 
     it 'Renders date and time field', ->
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
@@ -173,8 +180,14 @@ describe 'AdminArticle', ->
       @component.onChange.args[0][0].should.eql 'featured'
       @component.onChange.args[0][1].should.eql false
 
-    it '#onCheckboxChange toggles exclude_google_news', ->
+    it '#onCheckboxChange toggles indexable', ->
       @component.onChange = sinon.stub()
       r.simulate.click r.find(@component, 'flat-checkbox')[0]
+      @component.onChange.args[0][0].should.eql 'indexable'
+      @component.onChange.args[0][1].should.eql false
+
+    it '#onCheckboxChange toggles exclude_google_news', ->
+      @component.onChange = sinon.stub()
+      r.simulate.click r.find(@component, 'flat-checkbox')[1]
       @component.onChange.args[0][0].should.eql 'exclude_google_news'
       @component.onChange.args[0][1].should.eql true
