@@ -69,7 +69,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     editorState: EditorState.createEmpty(new CompositeDecorator(decorators))
-    focus: false
+    focus: false unless @props.editing
     html: null
     selectionTarget: null
     showUrlInput: false
@@ -88,10 +88,8 @@ module.exports = React.createClass
         editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
 
   componentWillReceiveProps: (nextProps) ->
-    if @props.editing and !nextProps.editing
-      @setState focus: false, showUrlInput: false, urlValue: null
-    else
-      @focus() if @props.editing
+    if !@props.editing and nextProps.editing
+      @focus()
 
   onChange: (editorState) ->
     @checkSelection()
@@ -260,12 +258,16 @@ module.exports = React.createClass
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
   promptForLink: (pluginType) ->
-    { editorState } = @state
     selectionTarget = null
-    if !editorState.getSelection().isCollapsed()
-      selectionTarget = @stickyLinkBox()
+    unless window.getSelection().isCollapsed
+      selectionTarget = @stickyControlsBox(25, 200)
       url = @getExistingLinkData().url
-      @setState({showUrlInput: true, focus: false, urlValue: url, selectionTarget: selectionTarget, pluginType: pluginType})
+      @setState
+        showUrlInput: true
+        focus: false
+        urlValue: url
+        selectionTarget: selectionTarget
+        pluginType: pluginType
 
   confirmLink: (urlValue, pluginType='', className='') ->
     { editorState } = @state
@@ -278,12 +280,11 @@ module.exports = React.createClass
     )
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
-    @setState({
+    @setState
       showUrlInput: false
       urlValue: ''
       selectionTarget: null
       pluginType: null
-    })
     @onChange RichUtils.toggleLink(
         newEditorState
         newEditorState.getSelection()
@@ -329,16 +330,10 @@ module.exports = React.createClass
     }
     return {target: target, parent: parent}
 
-  stickyMenuBox: ->
+  stickyControlsBox: (fromTop, fromLeft) ->
     location = @getSelectionLocation()
-    top = location.target.top - location.parent.top - 90
-    left = location.target.left - location.parent.left + (location.target.width / 2) - 100
-    return {top: top, left: left}
-
-  stickyLinkBox: ->
-    location = @getSelectionLocation()
-    top = location.target.top - location.parent.top + 25
-    left = location.target.left - location.parent.left + (location.target.width / 2) - 200
+    top = location.target.top - location.parent.top + fromTop
+    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
     return {top: top, left: left}
 
   setPluginType: (e) ->
@@ -406,10 +401,11 @@ module.exports = React.createClass
       }
 
   checkSelection: () ->
+    selectionTargetL = if @channel.hasFeature 'follow' then 125 else 100
     if !window.getSelection().isCollapsed
-      @setState showMenu: true, selectionTarget: @stickyMenuBox()
+      @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
     else
-      @setState showMenu: false, selectionTarget: null
+      @setState showMenu: false
 
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
@@ -417,13 +413,14 @@ module.exports = React.createClass
 
     div {
       className: 'edit-section-text' + isEditing
+      onClick: @focus
     },
       if @state.showMenu
         nav {
-          className: 'edit-section-text__menu edit-section-controls' + hasPlugins
+          className: 'edit-section-text__menu' + hasPlugins
           style:
-            'top': @state.selectionTarget.top
-            'left': @state.selectionTarget.left
+            top: @state.selectionTarget.top
+            marginLeft: @state.selectionTarget.left
         },
           @printButtons(INLINE_STYLES, @toggleInlineStyle)
           @printButtons(BLOCK_TYPES, @toggleBlockType)
@@ -432,7 +429,6 @@ module.exports = React.createClass
           @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
       div {
         className: 'edit-section-text__input'
-        onClick: @focus
         onMouseUp: @checkSelection
         onKeyUp: @checkSelection
       },
