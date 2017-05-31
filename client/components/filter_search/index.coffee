@@ -31,7 +31,6 @@ module.exports = React.createClass
   search: (value) ->
     if @engine.remote.url isnt @props.url then @engine.remote.url = @props.url
     @engine.get value, ([results]) =>
-      console.log results.length
       @props.searchResults results
 
   selected: (article) ->

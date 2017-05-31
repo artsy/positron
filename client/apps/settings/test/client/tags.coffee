@@ -61,7 +61,7 @@ describe 'TagsView', ->
     $(@component.refs.internalTab).hasClass('is-active').should.be.true()
 
   it 'inits FilterSearch component', ->
-    @FilterSearch.args[0][0].url.should.equal 'https://writer.artsy.net/api/tags?public=true&q=%QUERY'
+    @FilterSearch.args[0][0].url.should.equal 'https://writer.artsy.net/api/tags?public=true&limit=50&q=%QUERY'
     @FilterSearch.args[0][0].placeholder.should.equal 'Search for tag...'
     @FilterSearch.args[0][0].collection[0].name.should.equal 'Show Reviews'
     @FilterSearch.args[0][0].contentType.should.equal 'tag'

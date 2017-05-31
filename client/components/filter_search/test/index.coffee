@@ -56,8 +56,9 @@ describe 'FilterSearch Article', ->
     @component.props.selected.args[0][0].slug.should.containEql 'artsy-editorial-game-of-thrones'
 
   it 'searches articles given a query', ->
-    ReactDOM.findDOMNode(@component.refs.searchQuery).value = 'finding nemo'
-    r.simulate.keyUp(@component.refs.searchQuery)
+    input = r.find @component, 'bordered-input'
+    input.value = 'finding nemo'
+    r.simulate.change input
     @component.props.searchResults.args[0][0][0].id.should.equal '456'
     @component.props.searchResults.args[0][0][0].thumbnail_title.should.equal 'finding nemo'
 
@@ -103,7 +104,8 @@ describe 'FilterSearch Tag', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Show Reviews'
 
   it 'searches tags given a query', ->
-    ReactDOM.findDOMNode(@component.refs.searchQuery).value = 'Berlin'
-    r.simulate.keyUp(@component.refs.searchQuery)
+    input = r.find @component, 'bordered-input'
+    input.value = 'Berlin'
+    r.simulate.change input
     @component.props.searchResults.args[0][0][0].id.should.equal '123'
     @component.props.searchResults.args[0][0][0].name.should.equal 'Berlin'
