@@ -69,7 +69,7 @@ module.exports = React.createClass
 
   getInitialState: ->
     editorState: EditorState.createEmpty(new CompositeDecorator(decorators))
-    focus: false unless @props.editing
+    focus: false
     html: null
     selectionTarget: null
     showUrlInput: false
@@ -86,26 +86,21 @@ module.exports = React.createClass
       @setState
         html: @props.section.get('body')
         editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
-
-  componentWillReceiveProps: (nextProps) ->
-    if !@props.editing and nextProps.editing
+    else if @props.editing
       @focus()
 
   onChange: (editorState) ->
-    @checkSelection()
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
 
-  onClickOff: ->
+  onClickOff: -> #called from sectionContainer
+    @setState focus: false, showMenu: false, showUrlInput: false
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
 
-  focus: (e) ->
+  focus: ->
     @setState focus: true
     @refs.editor.focus()
-
-  onBlur: ->
-    @setState focus: false
 
   convertFromHTML: (html) ->
     blocksFromHTML = convertFromHTML({
@@ -250,6 +245,7 @@ module.exports = React.createClass
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
+    @setState showMenu: false
 
   toggleInlineStyle: (inlineStyle) ->
     if @getSelectedBlock().content.get('type') is 'header-three'
@@ -264,6 +260,7 @@ module.exports = React.createClass
       url = @getExistingLinkData().url
       @setState
         showUrlInput: true
+        showMenu: false
         focus: false
         urlValue: url
         selectionTarget: selectionTarget
@@ -281,6 +278,7 @@ module.exports = React.createClass
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
     @setState
+      showMenu: false
       showUrlInput: false
       urlValue: ''
       selectionTarget: null
@@ -322,7 +320,11 @@ module.exports = React.createClass
     return {key: blockKey, content: closestBlock}
 
   getSelectionLocation: ->
-    target = getVisibleSelectionRect(window)
+    selection = window.getSelection().getRangeAt(0).getClientRects()
+    if selection[0].width is 0
+      target = selection[1]
+    else
+      target = selection[0]
     $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
     parent = {
       top: $parent.top - window.pageYOffset
@@ -383,7 +385,7 @@ module.exports = React.createClass
         onToggle: handleToggle
       }
 
-  hasPlugins: ->
+  getPlugins: ->
     plugins = []
     plugins.push({label: 'artist', style: 'artist'}) if @channel.hasFeature 'follow'
     plugins.push({label: 'toc', style: 'toc'}) if @channel.hasFeature 'toc'
@@ -394,13 +396,12 @@ module.exports = React.createClass
       InputUrl {
         removeLink: @removeLink
         confirmLink: @confirmLink
-        onClick: @blur
         selectionTarget: @state.selectionTarget
         pluginType: @state.pluginType
         urlValue: @state.urlValue
       }
 
-  checkSelection: () ->
+  checkSelection: ->
     selectionTargetL = if @channel.hasFeature 'follow' then 125 else 100
     if !window.getSelection().isCollapsed
       @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
@@ -419,13 +420,13 @@ module.exports = React.createClass
         nav {
           className: 'edit-section-text__menu' + hasPlugins
           style:
-            top: @state.selectionTarget.top
-            marginLeft: @state.selectionTarget.left
+            top: @state.selectionTarget?.top
+            marginLeft: @state.selectionTarget?.left
         },
           @printButtons(INLINE_STYLES, @toggleInlineStyle)
           @printButtons(BLOCK_TYPES, @toggleBlockType)
           @printButtons([{label: 'link', style: 'link'}], @promptForLink)
-          @printButtons(@hasPlugins(), @setPluginType)
+          @printButtons(@getPlugins(), @setPluginType)
           @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
       div {
         className: 'edit-section-text__input'
