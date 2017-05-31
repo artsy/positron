@@ -2,13 +2,22 @@ require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
-chalk = require 'chalk'
 { helpers, notFound, errorHandler } = require './lib/middleware'
-{ NODE_ENV, ARTSY_URL, ARTSY_ID, ARTSY_SECRET } = process.env
+{ NODE_ENV,
+  ARTSY_URL,
+  ARTSY_ID,
+  ARTSY_SECRET,
+  SENTRY_PRIVATE_DSN } = process.env
 debug = require('debug') 'api'
 cors = require 'cors'
+RavenServer = require 'raven'
 
 app = module.exports = express()
+
+# Error Reporting
+if SENTRY_PRIVATE_DSN
+  RavenServer.config(SENTRY_PRIVATE_DSN).install()
+  app.use RavenServer.requestHandler()
 
 # Middleware
 app.use cors()
@@ -28,6 +37,9 @@ app.use require './apps/channels'
 app.use require './apps/tags'
 app.use require './apps/verticals'
 app.use require './apps/graphql'
+
+if SENTRY_PRIVATE_DSN
+  app.use RavenServer.errorHandler()
 
 # Moar middleware
 app.use notFound
