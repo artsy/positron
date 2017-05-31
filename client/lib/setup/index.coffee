@@ -27,17 +27,17 @@ RavenServer = require 'raven'
 
 module.exports = (app) ->
 
+  # Configure Sentry
+  if SENTRY_PRIVATE_DSN
+    RavenServer.config(SENTRY_PRIVATE_DSN).install()
+    app.use RavenServer.requestHandler()
+
   # Override Backbone to use server-side sync
   Backbone.sync = require 'backbone-super-sync'
 
   # Route to ping for system up
   app.get '/system/up', (req, res) ->
     res.send 200, { nodejs: true }
-
-  # Error Reporting
-  if SENTRY_PRIVATE_DSN
-    RavenServer.config(SENTRY_PRIVATE_DSN).install()
-    app.use RavenServer.requestHandler()
 
   # Mount generic middleware & run setup modules
   if 'production' is NODE_ENV or 'staging' is NODE_ENV
@@ -54,10 +54,6 @@ module.exports = (app) ->
   app.use bucketAssets()
   setupAuth app
   app.use locals
-
-  if SENTRY_PRIVATE_DSN
-    app.use RavenServer.errorHandler()
-
   app.use helpers
   app.use ua
   app.use sameOrigin
@@ -77,4 +73,7 @@ module.exports = (app) ->
   app.use express.static(path.resolve __dirname, '../../public')
 
   # Error handler
+  if SENTRY_PRIVATE_DSN
+    app.use RavenServer.errorHandler()
+
   require('../../components/error/server') app
