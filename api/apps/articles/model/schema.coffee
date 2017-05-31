@@ -153,6 +153,7 @@ denormalizedArtwork = (->
   biography_for_artist_id: @objectId().allow(null)
   featured: @boolean().default(false)
   exclude_google_news: @boolean().default(false)
+  indexable: @boolean().default(true)
   contributing_authors: @array().items([
     @object().meta(name: 'ContributingAuthor').keys
       id: @objectId().allow(null)
@@ -218,6 +219,7 @@ denormalizedArtwork = (->
   vertical: @objectId()
   featured: @boolean()
   exclude_google_news: @boolean()
+  indexable: @boolean()
   super_article_for: @objectId()
   q: @string().allow('')
   all_by_author: @objectId()

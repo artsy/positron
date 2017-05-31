@@ -99,6 +99,7 @@ module.exports = ->
     featured_artwork_ids: ['5321b71c275b24bcaa0001a5']
     gravity_id: '502a6debe8b6470002000004'
     featured: false
+    indexable: true
     contributing_authors: []
     email_metadata:
       image_url: 'http://img.png'

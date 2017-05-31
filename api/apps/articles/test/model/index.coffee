@@ -357,7 +357,6 @@ describe 'Article', ->
       ], =>
         Article.where { tracking_tags: ['video', 'evergreen'], count: true }, (err, res) ->
           { total, count, results } = res
-          # console.log res
           total.should.equal 14
           count.should.equal 3
           results[0].title.should.equal '8 Works to Collect at ARCOlisboa'
@@ -434,6 +433,22 @@ describe 'Article', ->
           { total, count, results } = res
           count.should.equal 1
           results[0].title.should.equal 'Hello Wurld'
+          done()
+
+    it 'can return articles by indexable', (done) ->
+      fabricate 'articles', _.times(3, -> { indexable: false, title: 'Moo baz' }), ->
+        Article.where { indexable: true, count: true }, (err, { total, count, results }) ->
+          total.should.equal 13
+          count.should.equal 10
+          results[0].title.should.not.equal 'Moo baz'
+          done()
+
+    it 'can return articles by not indexable', (done) ->
+      fabricate 'articles', _.times(3, -> { indexable: false, title: 'Moo baz' }), ->
+        Article.where { indexable: false, count: true }, (err, { total, count, results }) ->
+          total.should.equal 13
+          count.should.equal 3
+          results[0].title.should.equal 'Moo baz'
           done()
 
   describe '#find', ->
@@ -609,6 +624,34 @@ describe 'Article', ->
           updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
             .equal moment().add(1, 'year').format('YYYY')
+          done()
+
+    it 'saves indexable when the article is published', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+        published: true
+        id: '5086df098523e60002002222'
+      }, 'foo', (err, article) ->
+        article.indexable.should.eql true
+        done()
+
+    it 'updates indexable when admin changes it', (done) ->
+      Article.save {
+        title: 'Top Ten Shows'
+        thumbnail_title: 'Ten Shows'
+        author_id: '5086df098523e60002000018'
+      }, 'foo', (err, article) =>
+        return done err if err
+        article.indexable.should.eql true
+        Article.save {
+          id: article._id.toString()
+          author_id: '5086df098523e60002000018'
+          indexable: false
+        }, 'foo', (err, updatedArticle) ->
+          return done err if err
+          updatedArticle.indexable.should.eql false
           done()
 
     it 'doesnt save a fair unless explictly set', (done) ->

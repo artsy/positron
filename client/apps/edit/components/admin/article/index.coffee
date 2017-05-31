@@ -40,7 +40,8 @@ module.exports = AdminArticle = React.createClass
     @onChange 'featured', featured
 
   onCheckboxChange: (e) ->
-    @onChange 'exclude_google_news', !@props.article.get 'exclude_google_news'
+    key = $(e.currentTarget).attr('name')
+    @onChange key, !@props.article.get key
 
   onPublishDateChange: (e) ->
     @setState
@@ -141,6 +142,18 @@ module.exports = AdminArticle = React.createClass
                   className: 'avant-garde-button' + @showActive 'featured', false
                   onClick: @onMagazineChange
                 }, 'No'
+          div {
+            className: 'field-group--inline flat-checkbox'
+            onClick: @onCheckboxChange
+            name: 'indexable'
+          },
+            input {
+              type: 'checkbox'
+              checked: @props.article.get 'indexable'
+              value: @props.article.get 'indexable'
+              readOnly: true
+            }
+            label {}, 'Index for Search'
 
         div {className: 'fields-right'},
           div {className: 'field-group publish-time'},
@@ -167,6 +180,7 @@ module.exports = AdminArticle = React.createClass
             div {
               className: 'field-group--inline flat-checkbox'
               onClick: @onCheckboxChange
+              name: 'exclude_google_news'
             },
               input {
                 type: 'checkbox'
@@ -175,4 +189,3 @@ module.exports = AdminArticle = React.createClass
                 readOnly: true
               }
               label {}, 'Exclude from Google News'
-

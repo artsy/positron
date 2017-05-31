@@ -134,6 +134,28 @@ describe 'Save', ->
         ]
       })
 
+    it 'indexes articles that are indexable', (done) ->
+      Save.sanitizeAndSave( =>
+        Article.find '5086df098523e60002000011', (err, article) =>
+          @indexForSearch.callCount.should.eql 1
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        indexable: true
+        _id: '5086df098523e60002000011'
+      })
+
+    it 'skips indexing articles that are not indexable', (done) ->
+      Save.sanitizeAndSave( =>
+        Article.find '5086df098523e60002000011', (err, article) =>
+          @indexForSearch.callCount.should.eql 0
+          done()
+      )(null, {
+        author_id: '5086df098523e60002000018'
+        indexable: false
+        _id: '5086df098523e60002000011'
+      })
+
     it 'saves email metadata', (done) ->
       Save.sanitizeAndSave( ->
         Article.find '5086df098523e60002000011', (err, article) =>

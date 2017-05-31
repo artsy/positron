@@ -25,44 +25,44 @@
     .dropdown-header svg
       transform rotate(0deg)
 
-  .edit-admin__fields
+.edit-admin__fields
+  display flex
+  justify-content space-between
+  height 0
+  opacity 0
+  overflow hidden
+  transition all .65s
+  &.active
+    margin-top 30px
+    margin-bottom 120px
+    height initial
+    opacity 1
+    transition all .65s
+    overflow visible
+  .fields-left,
+  .fields-right
+    width calc(50% \- 15px)
+  .field-group
+    margin-bottom 40px
+    &--inline
+      display flex
+      align-items center
+  .fields-full
+    min-width 100%
     display flex
     justify-content space-between
-    height 0
-    opacity 0
-    overflow hidden
-    transition all .65s
-    &.active
-      margin-top 30px
-      margin-bottom 120px
-      height initial
-      opacity 1
-      transition all .65s
-      overflow visible
-    .fields-left,
-    .fields-right
-      width calc(50% \- 15px)
-    .field-group
-      margin-bottom 40px
-      &--inline
-        display flex
-        align-items center
-    .fields-full
-      min-width 100%
-      display flex
-      justify-content space-between
-    .fields-col-3
-      width calc(33% \- 20px)
-    input[disabled], textarea[disabled]
-      background-color gray-lightest-color
-      border-color gray-lighter-color
-      cursor no-drop
-    .tt-hint
-      visibility hidden
-    .autocomplete-select-input
-      margin-top 5px
+  .fields-col-3
+    width calc(33% \- 20px)
+  input[disabled], textarea[disabled]
+    background-color gray-lightest-color
+    border-color gray-lighter-color
+    cursor no-drop
+  .tt-hint
+    visibility hidden
+  .autocomplete-select-input
+    margin-top 5px
 
-  .edit-admin--appearances
-    flex-direction column
-    .autocomplete-select
-      height 250px
+.edit-admin--appearances
+  flex-direction column
+  .autocomplete-select
+    height 250px
