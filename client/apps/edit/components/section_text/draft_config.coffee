@@ -1,5 +1,5 @@
 Immutable = require 'immutable'
-Decorators = require '../../../../components/rich_text/decorators.coffee'
+Decorators = require '../../../../components/rich_text/utils/decorators.coffee'
 
 exports.inlineStyles = ->
   return [

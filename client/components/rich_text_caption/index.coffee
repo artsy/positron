@@ -12,8 +12,8 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   getVisibleSelectionRect } = require 'draft-js'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 InputUrl = React.createFactory require '../rich_text/components/input_url.coffee'
-Decorators = require '../rich_text/decorators.coffee'
-icons = -> require('../rich_text/icons.jade') arguments...
+Decorators = require '../rich_text/utils/decorators.coffee'
+icons = -> require('../rich_text/utils/icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
 

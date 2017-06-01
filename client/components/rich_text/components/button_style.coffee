@@ -1,6 +1,6 @@
 React = require 'react'
 { div, button } = React.DOM
-icons = -> require('../icons.jade') arguments...
+icons = -> require('../utils/icons.jade') arguments...
 
 module.exports = React.createClass
   displayName: 'RichTextButtonStyle'

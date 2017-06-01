@@ -271,31 +271,3 @@ describe 'SectionText', ->
   it '#onPaste strips or converts unsupported html and linebreaks', ->
     @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
     @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
-
-
-  describe '#stripGoogleStyles', ->
-
-    it 'removes non-breaking spaces between paragraphs', ->
-      html = '<p>hello</p><br><p>here again.</p><br class="Apple-interchange-newline">'
-      @component.stripGoogleStyles(html).should.eql '<p>hello</p><p>here again.</p>'
-
-    it 'removes dummy b tags google docs wraps document in', ->
-      html = '<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>'
-
-    it 'replaces bold spans with actual b tags', ->
-      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><span><strong>B. 1981 in Madrid. Lives and works in Madrid.</strong></span></p>'
-
-    it 'replaces italic spans with actual em tags', ->
-      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><span><em>B. 1981 in Madrid. Lives and works in Madrid.</em></span></p>'
-
-    it 'replaces spans that are bold and italic', ->
-      html = '<p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:700;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">B. 1981 in Madrid. Lives and works in Madrid.</span></p>'
-      @component.stripGoogleStyles(html).should.eql '<p><span><strong><em>B. 1981 in Madrid. Lives and works in Madrid.</em></strong></span></p>'
-
-    it 'replaces styled spans that are nested in links', ->
-      html = '<span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">(via </span><a href="http://theartnewspaper.com/market/dealer-cuts-plea-bargain/" style="text-decoration:none;"><span style="font-size:11pt;color:#1155cc;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:underline;vertical-align:baseline;white-space:pre-wrap;">The Art Newspaper</span></a><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">)</span>'
-      @component.stripGoogleStyles(html).should.eql '<span><em>(via </em></span><a href="http://theartnewspaper.com/market/dealer-cuts-plea-bargain/" style="text-decoration:none;"><span><em>The Art Newspaper</em></span></a><span><em>)</em></span>'
-
