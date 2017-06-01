@@ -15,13 +15,14 @@ EditAdmin = React.createFactory require './components/admin/index.coffee'
 SectionList = React.createFactory require './components/section_list/index.coffee'
 HeroSection = React.createFactory require './components/hero_section/index.coffee'
 RichTextParagraph = React.createFactory require '../../components/rich_text/components/input_paragraph.coffee'
-
+sd = require('sharify').data
 async = require 'async'
 
 @init = ->
   @article = new Article sd.ARTICLE
   convertSections @article, =>
     channel = new Channel sd.CURRENT_CHANNEL
+    setChannelIndexable channel, @article
     new EditLayout el: $('#layout-content'), article: @article, channel: channel
     new EditHeader el: $('#edit-header'), article: @article
     new EditDisplay el: $('#edit-display'), article: @article
@@ -122,3 +123,8 @@ convertArtworks = (section, callback) ->
 
 convertAuthor = (article) ->
   article.set 'author', _.pick article.get('author'), 'id', 'name'
+
+setChannelIndexable = (channel, article) ->
+  noIndex = sd.NO_INDEX_CHANNELS.split '|'
+  if noIndex.includes channel.get('id')
+    article.set 'indexable', false

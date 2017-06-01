@@ -20,7 +20,7 @@ describe 'init', ->
         _: require('underscore')
         $: benv.require('jquery')
         jQuery: benv.require('jquery')
-        sd: { ARTICLE: @article }
+        sd: { ARTICLE: @article, NO_INDEX_CHANNELS: '123|456', CURRENT_CHANNEL: id: '456' }
       window.jQuery = jQuery
       @client = rewire '../client.coffee'
       @client.__set__ 'EditLayout', @EditLayout = sinon.stub()
@@ -28,6 +28,7 @@ describe 'init', ->
       @client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
       @client.__set__ 'EditDisplay', @EditDisplay = sinon.stub()
       @client.__set__ 'ReactDOM', @ReactDOM = render: sinon.stub()
+      @client.__set__ 'sd', sd
       done()
 
   afterEach ->
@@ -81,6 +82,12 @@ describe 'init', ->
       @client.article.sections.models[6].get('images')[0].height.should.equal 90
       @client.article.sections.models[6].get('images')[1].height.should.equal 90
       @client.article.sections.models[6].get('images')[1].height.should.equal 90
+      done()
+
+  it 'sets article indexable to false if channel is in NO_INDEX_CHANNELS', (done) ->
+    @client.init()
+    _.defer =>
+      @client.article.get('indexable').should.not.be.ok
       done()
 
   it 'strips handle fields from authors', (done) ->
