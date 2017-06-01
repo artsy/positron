@@ -44,3 +44,8 @@ describe 'AddTag', ->
     @component.setState value: 'New Tag'
     r.simulate.click r.find @component, 'avant-garde-button'
     @component.state.value.length.should.equal 0
+
+  it 'calls addTag when hitting enter in the input field', ->
+    @component.setState value: 'New Tag'
+    r.simulate.keyPress (r.find @component, 'bordered-input'), {key: "Enter", charCode: 13}
+    @component.props.addTag.args[0][0].should.equal 'New Tag'

@@ -9,6 +9,9 @@ TagList = React.createFactory require '../tag_list/index.coffee'
 module.exports = React.createClass
   displayName: 'FilterSearch'
 
+  getInitialState: ->
+    value: ''
+
   componentDidMount: ->
     @addAutocomplete()
 
@@ -21,9 +24,13 @@ module.exports = React.createClass
         filter: @props.filter
     @engine.initialize()
 
-  search: ->
-    if @engine.remote.url != @props.url then @engine.remote.url = @props.url
-    @engine.get @refs.searchQuery.value, ([results]) =>
+  onChange: (e) ->
+    @setState value: e.target.value
+    @search e.target.value
+
+  search: (value) ->
+    if @engine.remote.url isnt @props.url then @engine.remote.url = @props.url
+    @engine.get value, ([results]) =>
       @props.searchResults results
 
   selected: (article) ->
@@ -39,8 +46,8 @@ module.exports = React.createClass
         input {
           className: 'filter-search__input bordered-input'
           placeholder: @props.placeholder
-          onKeyUp: @search
-          ref: 'searchQuery'
+          onChange: @onChange
+          value: @state.value
         }
       if @props.contentType is 'article'
         ArticleList {

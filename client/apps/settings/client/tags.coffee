@@ -47,7 +47,7 @@ module.exports.TagsView = TagsView = React.createClass
     @setState tags: results
 
   setView: (isPublic) ->
-    tagQuery = query "public: #{isPublic}"
+    tagQuery = query "public: #{isPublic}, limit: 50"
     request
       .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
@@ -89,7 +89,7 @@ module.exports.TagsView = TagsView = React.createClass
             addTag: @addTag
           }
           FilterSearch {
-            url: sd.API_URL + "/tags?public=#{@state.public}&q=%QUERY"
+            url: sd.API_URL + "/tags?public=#{@state.public}&limit=50&q=%QUERY"
             placeholder: 'Search for tag...'
             collection: @state.tags
             searchResults: @searchResults
