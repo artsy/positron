@@ -88,6 +88,7 @@ describe 'init', ->
     @client.init()
     _.defer =>
       @client.article.get('indexable').should.not.be.ok
+      sd.IS_INDEXABLE.should.not.be.ok
       done()
 
   it 'strips handle fields from authors', (done) ->

@@ -128,3 +128,4 @@ setChannelIndexable = (channel, article) ->
   noIndex = sd.NO_INDEX_CHANNELS.split '|'
   if noIndex.includes channel.get('id')
     article.set 'indexable', false
+  sd.IS_INDEXABLE = article.get 'indexable'
