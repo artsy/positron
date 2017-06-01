@@ -97,6 +97,7 @@ module.exports = React.createClass
   onClickOff: -> #called from sectionContainer
     @setState focus: false, showMenu: false, showUrlInput: false
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
+    @refs.editor.blur()
 
   focus: ->
     @setState focus: true
@@ -148,6 +149,7 @@ module.exports = React.createClass
       .replace /<p><\/\p>/g, '<p><br></p>'
       .replace /<p> <\/\p>/g, '<p><br></p>'
       .replace(/  /g, ' &nbsp;')
+    html = if html is '<p><br></p>' then '' else html
     return html
 
   stripGoogleStyles: (html) ->
