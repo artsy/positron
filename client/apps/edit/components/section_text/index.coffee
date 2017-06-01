@@ -16,59 +16,23 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   DefaultDraftBlockRenderMap,
   getVisibleSelectionRect } = require 'draft-js'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
-Immutable = require 'immutable'
-Decorators = require '../../../../components/rich_text/decorators.coffee'
-icons = -> require('../../../../components/rich_text/icons.jade') arguments...
-{ div, nav, a, button, span, p, br, h3 } = React.DOM
+{ inlineStyles,
+  blockTypes,
+  blockRenderMap,
+  decorators } = require './draft_config.coffee'
+
+editor = (props) -> React.createElement Editor, props
+{ div, nav, a, span, p, h3 } = React.DOM
 ButtonStyle = React.createFactory require '../../../../components/rich_text/components/button_style.coffee'
 InputUrl = React.createFactory require '../../../../components/rich_text/components/input_url.coffee'
-editor = (props) -> React.createElement Editor, props
 Channel = require '../../../../models/channel.coffee'
 
-INLINE_STYLES = [
-  {label: 'B', style: 'BOLD'}
-  {label: 'I', style: 'ITALIC'}
-  {label: ' S ', style: 'STRIKETHROUGH'}
-]
-
-BLOCK_TYPES = [
-  {label: 'H2', style: 'header-two'}
-  {label: 'H3', style: 'header-three'}
-  {label: 'UL', style: 'unordered-list-item'}
-]
-
-blockRenderMap = Immutable.Map({
-  'header-two': {
-    element: 'h2'
-  },
-  'header-three': {
-    element: 'h3'
-  },
-  'unordered-list-item': {
-    element: 'li'
-  },
-  'ordered-list-item': {
-    element: 'li'
-  },
-  'unstyled': {
-    element: 'div'
-    aliasedElements: ['p']
-    className: 'unstyled'
-  }
-})
-
-decorators = [
-  {
-    strategy: Decorators.findLinkEntities
-    component: Decorators.Link
-  }
-]
 
 module.exports = React.createClass
   displayName: 'SectionText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty(new CompositeDecorator(decorators))
+    editorState: EditorState.createEmpty(new CompositeDecorator(decorators()))
     focus: false
     html: null
     selectionTarget: null
@@ -78,14 +42,17 @@ module.exports = React.createClass
     showMenu: false
 
   componentWillMount: ->
-    @channel = new Channel sd.CURRENT_CHANNEL
+    channel = new Channel sd.CURRENT_CHANNEL
+    @hasFollow = channel.hasFeature 'follow'
+    @hasToc = channel.hasFeature 'toc'
+    @hasFeatures = @hasFollow or @hasToc
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = @convertFromHTML(@props.section.get('body'))
+      blocksFromHTML = @convertFromHTML @props.section.get('body')
       @setState
         html: @props.section.get('body')
-        editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
+        editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
     else if @props.editing
       @focus()
 
@@ -389,8 +356,8 @@ module.exports = React.createClass
 
   getPlugins: ->
     plugins = []
-    plugins.push({label: 'artist', style: 'artist'}) if @channel.hasFeature 'follow'
-    plugins.push({label: 'toc', style: 'toc'}) if @channel.hasFeature 'toc'
+    plugins.push({label: 'artist', style: 'artist'}) if @hasFollow
+    plugins.push({label: 'toc', style: 'toc'}) if @hasToc
     return plugins
 
   printUrlInput: ->
@@ -404,7 +371,7 @@ module.exports = React.createClass
       }
 
   checkSelection: ->
-    selectionTargetL = if @channel.hasFeature 'follow' then 125 else 100
+    selectionTargetL = if @hasFeatures then 125 else 100
     if !window.getSelection().isCollapsed
       @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
     else
@@ -412,7 +379,7 @@ module.exports = React.createClass
 
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
-    hasPlugins = if @channel.hasFeature 'follow' then ' has-plugins' else ''
+    hasPlugins = if @hasFeatures then ' has-plugins' else ''
 
     div {
       className: 'edit-section-text' + isEditing
@@ -425,8 +392,8 @@ module.exports = React.createClass
             top: @state.selectionTarget?.top
             marginLeft: @state.selectionTarget?.left
         },
-          @printButtons(INLINE_STYLES, @toggleInlineStyle)
-          @printButtons(BLOCK_TYPES, @toggleBlockType)
+          @printButtons(inlineStyles(), @toggleInlineStyle)
+          @printButtons(blockTypes(), @toggleBlockType)
           @printButtons([{label: 'link', style: 'link'}], @promptForLink)
           @printButtons(@getPlugins(), @setPluginType)
           @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
@@ -444,6 +411,6 @@ module.exports = React.createClass
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: @keyBindingFn
           handlePastedText: @onPaste
-          blockRenderMap: blockRenderMap
+          blockRenderMap: blockRenderMap()
         }
         @printUrlInput()

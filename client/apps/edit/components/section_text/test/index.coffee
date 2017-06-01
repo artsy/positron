@@ -23,9 +23,7 @@ describe 'SectionText', ->
         EditorState: Draft.EditorState
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}
-      @SectionText = benv.requireWithJadeify(
-        resolve(__dirname, '../index'), ['icons']
-      )
+      @SectionText = benv.require resolve(__dirname, '../index')
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../components/rich_text/components/input_url'), ['icons']
       )
