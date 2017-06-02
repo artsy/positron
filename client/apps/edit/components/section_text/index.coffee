@@ -16,97 +16,60 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   DefaultDraftBlockRenderMap,
   getVisibleSelectionRect } = require 'draft-js'
 { convertFromHTML, convertToHTML } = require 'draft-convert'
-Immutable = require 'immutable'
-Decorators = require '../../../../components/rich_text/decorators.coffee'
-icons = -> require('../../../../components/rich_text/icons.jade') arguments...
-{ div, nav, a, button, span, p, br, h3 } = React.DOM
+{ inlineStyles,
+  blockTypes,
+  blockRenderMap,
+  decorators } = require './draft_config.coffee'
+{ stripGoogleStyles, keyBindingFn } = require '../../../../components/rich_text/utils/index.coffee'
+
+editor = (props) -> React.createElement Editor, props
+{ div, nav, a, span, p, h3 } = React.DOM
 ButtonStyle = React.createFactory require '../../../../components/rich_text/components/button_style.coffee'
 InputUrl = React.createFactory require '../../../../components/rich_text/components/input_url.coffee'
-editor = (props) -> React.createElement Editor, props
 Channel = require '../../../../models/channel.coffee'
 
-INLINE_STYLES = [
-  {label: 'B', style: 'BOLD'}
-  {label: 'I', style: 'ITALIC'}
-  {label: ' S ', style: 'STRIKETHROUGH'}
-]
-
-BLOCK_TYPES = [
-  {label: 'H2', style: 'header-two'}
-  {label: 'H3', style: 'header-three'}
-  {label: 'UL', style: 'unordered-list-item'}
-  {label: 'OL', style: 'ordered-list-item'}
-]
-
-blockRenderMap = Immutable.Map({
-  'header-two': {
-    element: 'h2'
-  },
-  'header-three': {
-    element: 'h3'
-  },
-  'unordered-list-item': {
-    element: 'li'
-  },
-  'ordered-list-item': {
-    element: 'li'
-  },
-  'unstyled': {
-    element: 'div'
-    aliasedElements: ['p']
-    className: 'unstyled'
-  }
-})
-
-decorators = [
-  {
-    strategy: Decorators.findLinkEntities
-    component: Decorators.Link
-  }
-]
 
 module.exports = React.createClass
   displayName: 'SectionText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty(new CompositeDecorator(decorators))
+    editorState: EditorState.createEmpty(new CompositeDecorator(decorators()))
     focus: false
     html: null
     selectionTarget: null
     showUrlInput: false
     pluginType: null
     urlValue: null
+    showMenu: false
 
   componentWillMount: ->
-    @channel = new Channel sd.CURRENT_CHANNEL
+    channel = new Channel sd.CURRENT_CHANNEL
+    @hasFollow = channel.hasFeature 'follow'
+    @hasToc = channel.hasFeature 'toc'
+    @hasFeatures = @hasFollow or @hasToc
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = @convertFromHTML(@props.section.get('body'))
+      blocksFromHTML = @convertFromHTML @props.section.get('body')
       @setState
         html: @props.section.get('body')
-        editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators))
-
-  componentWillReceiveProps: (nextProps) ->
-    if @props.editing and !nextProps.editing
-      @setState focus: false, showUrlInput: false, urlValue: null
-    else
-      @focus() if @props.editing
+        editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+    else if @props.editing
+      @focus()
 
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
 
-  onClickOff: ->
+  onClickOff: -> #called from sectionContainer
+    @setState focus: false, showMenu: false, showUrlInput: false
     @props.section.destroy() if $(@props.section.get('body')).text() is ''
+    @refs.editor.blur()
 
-  focus: (e) ->
+  focus: ->
     @setState focus: true
     @refs.editor.focus()
-
-  onBlur: ->
-    @setState focus: false
 
   convertFromHTML: (html) ->
     blocksFromHTML = convertFromHTML({
@@ -154,30 +117,8 @@ module.exports = React.createClass
       .replace /<p><\/\p>/g, '<p><br></p>'
       .replace /<p> <\/\p>/g, '<p><br></p>'
       .replace(/  /g, ' &nbsp;')
+    html = if html is '<p><br></p>' then '' else html
     return html
-
-  stripGoogleStyles: (html) ->
-    # remove non-breaking spaces between paragraphs
-    html = html.replace(/<\/\p><br>/g, '</p>').replace('<br class="Apple-interchange-newline">', '')
-    doc = document.createElement('div')
-    doc.innerHTML = html
-    # remove dummy b tags google docs wraps document in
-    boldBlocks = doc.getElementsByTagName('B')
-    for block, i in boldBlocks
-      if block.style.fontWeight is 'normal'
-        $(doc.getElementsByTagName('B')[i]).replaceWith(doc.getElementsByTagName('B')[i].innerHTML)
-    # replace bold and italic spans with actual b or em tags
-    spans = doc.getElementsByTagName('SPAN')
-    for span, i in spans
-      newSpan = span
-      if span?.style.fontStyle is 'italic' and span?.style.fontWeight is '700'
-        newSpan = '<span><strong><em>' + span.innerHTML + '</em></strong></span>'
-      else if span?.style.fontStyle is 'italic'
-        newSpan = '<span><em>' + span.innerHTML + '</em></span>'
-      else if span?.style.fontWeight is '700'
-        newSpan = '<span><strong>' + span.innerHTML + '</strong></span>'
-      $(doc.getElementsByTagName('SPAN')[i]).replaceWith(newSpan)
-    return doc.innerHTML
 
   makePlainText: () ->
     { editorState } = @state
@@ -203,7 +144,7 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = @stripGoogleStyles(html)
+    html = stripGoogleStyles(html)
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripCharacterStyles contentBlock, true
@@ -233,24 +174,9 @@ module.exports = React.createClass
         else if className.includes 'is-jump-link'
           @promptForLink 'toc'
 
-  keyBindingFn: (e) ->
-    if KeyBindingUtil.hasCommandModifier(e)
-      if e.keyCode is 50   # command + 2
-        return 'header-two'
-      if e.keyCode is 51   # command + 3
-        return 'header-three'
-      if e.keyCode is 191  # command + /
-        return 'custom-clear'
-      if e.keyCode is 55   # command + 7
-        return 'ordered-list-item'
-      if e.keyCode is 56   # command + 8
-        return 'unordered-list-item'
-      if e.keyCode is 75   # command + K
-        return 'link-prompt'
-    return getDefaultKeyBinding(e)
-
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
+    @setState showMenu: false
 
   toggleInlineStyle: (inlineStyle) ->
     if @getSelectedBlock().content.get('type') is 'header-three'
@@ -259,12 +185,17 @@ module.exports = React.createClass
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
   promptForLink: (pluginType) ->
-    { editorState } = @state
     selectionTarget = null
-    if !editorState.getSelection().isCollapsed()
-      selectionTarget = @stickyLinkBox()
+    unless window.getSelection().isCollapsed
+      selectionTarget = @stickyControlsBox(25, 200)
       url = @getExistingLinkData().url
-      @setState({showUrlInput: true, focus: false, urlValue: url, selectionTarget: selectionTarget, pluginType: pluginType})
+      @setState
+        showUrlInput: true
+        showMenu: false
+        focus: false
+        urlValue: url
+        selectionTarget: selectionTarget
+        pluginType: pluginType
 
   confirmLink: (urlValue, pluginType='', className='') ->
     { editorState } = @state
@@ -277,12 +208,12 @@ module.exports = React.createClass
     )
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
-    @setState({
+    @setState
+      showMenu: false
       showUrlInput: false
       urlValue: ''
       selectionTarget: null
       pluginType: null
-    })
     @onChange RichUtils.toggleLink(
         newEditorState
         newEditorState.getSelection()
@@ -320,7 +251,11 @@ module.exports = React.createClass
     return {key: blockKey, content: closestBlock}
 
   getSelectionLocation: ->
-    target = getVisibleSelectionRect(window)
+    selection = window.getSelection().getRangeAt(0).getClientRects()
+    if selection[0].width is 0
+      target = selection[1]
+    else
+      target = selection[0]
     $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
     parent = {
       top: $parent.top - window.pageYOffset
@@ -328,10 +263,10 @@ module.exports = React.createClass
     }
     return {target: target, parent: parent}
 
-  stickyLinkBox: ->
+  stickyControlsBox: (fromTop, fromLeft) ->
     location = @getSelectionLocation()
-    top = location.target.top - location.parent.top + 25
-    left = location.target.left - location.parent.left + (location.target.width / 2) - 200
+    top = location.target.top - location.parent.top + fromTop
+    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
     return {top: top, left: left}
 
   setPluginType: (e) ->
@@ -381,53 +316,60 @@ module.exports = React.createClass
         onToggle: handleToggle
       }
 
-  hasPlugins: ->
+  getPlugins: ->
     plugins = []
-    plugins.push({label: 'artist', style: 'artist'}) if @channel.hasFeature 'follow'
-    plugins.push({label: 'toc', style: 'toc'}) if @channel.hasFeature 'toc'
+    plugins.push({label: 'artist', style: 'artist'}) if @hasFollow
+    plugins.push({label: 'toc', style: 'toc'}) if @hasToc
     return plugins
 
-  printUrlInput: ->
-    if @props.editing and @state.showUrlInput
-      InputUrl {
-        removeLink: @removeLink
-        confirmLink: @confirmLink
-        onClick: @blur
-        selectionTarget: @state.selectionTarget
-        pluginType: @state.pluginType
-        urlValue: @state.urlValue
-      }
+  checkSelection: ->
+    selectionTargetL = if @hasFeatures then 125 else 100
+    if !window.getSelection().isCollapsed
+      @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
+    else
+      @setState showMenu: false
 
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
-    isReadOnly = if @props.editing and @state.showUrlInput then true else false
+    hasPlugins = if @hasFeatures then ' has-plugins' else ''
 
     div {
       className: 'edit-section-text' + isEditing
+      onClick: @focus
     },
-      if @props.editing
+      if @state.showMenu
         nav {
-          className: 'edit-section-text__menu edit-section-controls'
+          className: 'edit-section-text__menu' + hasPlugins
+          style:
+            top: @state.selectionTarget?.top
+            marginLeft: @state.selectionTarget?.left
         },
-          @printButtons(INLINE_STYLES, @toggleInlineStyle)
-          @printButtons(BLOCK_TYPES, @toggleBlockType)
+          @printButtons(inlineStyles(), @toggleInlineStyle)
+          @printButtons(blockTypes(), @toggleBlockType)
           @printButtons([{label: 'link', style: 'link'}], @promptForLink)
-          @printButtons(@hasPlugins(), @setPluginType)
+          @printButtons(@getPlugins(), @setPluginType)
           @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
       div {
         className: 'edit-section-text__input'
-        onClick: @focus
+        onMouseUp: @checkSelection
+        onKeyUp: @checkSelection
       },
         editor {
           ref: 'editor'
           editorState: @state.editorState
           spellCheck: true
           onChange: @onChange
-          readOnly: isReadOnly
           decorators: decorators
           handleKeyCommand: @handleKeyCommand
-          keyBindingFn: @keyBindingFn
+          keyBindingFn: keyBindingFn
           handlePastedText: @onPaste
-          blockRenderMap: blockRenderMap
+          blockRenderMap: blockRenderMap()
         }
-        @printUrlInput()
+        if @props.editing and @state.showUrlInput
+          InputUrl {
+            removeLink: @removeLink
+            confirmLink: @confirmLink
+            selectionTarget: @state.selectionTarget
+            pluginType: @state.pluginType
+            urlValue: @state.urlValue
+          }

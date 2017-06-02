@@ -34,6 +34,8 @@ module.exports = React.createClass
     @props.section.on 'change:layout', => @forceUpdate()
 
   setEditing: (editing) -> =>
+    if @props.section.get('type') is 'text'
+      @refs.section?.focus?()
     @props.onSetEditing if editing then @props.index ? true else null
 
   removeSection: (e) ->

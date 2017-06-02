@@ -42,10 +42,29 @@
   nav
     position absolute
     top -40px
+    left 0
     display flex !important
+    flex-wrap wrap
     background black
-    width 100%
     justify-content center
+    width 200px
+    border-radius 5px
+    z-index 6
+    &.has-plugins
+      width 250px
+      button[name='remove-formatting'],
+      button[name='header-three']
+        border-right none
+    ::after
+      content ''
+      width 0
+      height 0
+      border-left 7px solid transparent
+      border-right 7px solid transparent
+      border-top 7px solid #000
+      position absolute
+      bottom -7px
+      left calc(50% \- 7px)
     button
       font-weight 600
       height 40px

@@ -173,7 +173,7 @@ module.exports = class EditLayout extends Backbone.View
 
   toggleSectionTool: (e) ->
     $t = $(e.currentTarget)
-    e.preventDefault() if $t.siblings('.edit-section-container').is('[data-editing=true]')
+    return if $t.siblings().find('.edit-section-container').is('[data-editing=true]')
     $t.toggleClass 'is-active'
 
   toggleSectionTools: (e) ->
