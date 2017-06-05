@@ -49,6 +49,9 @@ describe 'VeniceSection', ->
           social_image: 'http://artsy.net/social-cover.jpg'
           social_title: '[Video] Here is a Social Title'
           seo_description: 'SEO Description'
+          email_title: 'Email Title'
+          email_image: 'https://artsy.net/email_image.jpg'
+          email_author: 'Artsy Editorial'
         }
         id: 1
         onChange: sinon.stub()
@@ -63,8 +66,8 @@ describe 'VeniceSection', ->
 
   describe 'Render', ->
     it 'Renders the input fields', ->
-      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 16
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 15
+      $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 19
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 18
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 2
@@ -120,6 +123,15 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component))
         .find('input[name=seo_description]')
         .val().should.eql 'SEO Description'
+      $(ReactDOM.findDOMNode(@component))
+        .html()
+        .should.containEql 'background-image: url(https://artsy.net/email_image.jpg)'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=email_title]')
+        .val().should.eql 'Email Title'
+      $(ReactDOM.findDOMNode(@component))
+        .find('input[name=email_author]')
+        .val().should.eql 'Artsy Editorial'
 
   describe 'Slugs', ->
     it 'If slug is undefined, autofills a slug based on a saved section title', ->

@@ -26,6 +26,9 @@ module.exports = VeniceSection = React.createClass
     social_image: @props.section.social_image or @props.section.cover_image or ''
     social_description: @props.section.social_description or @props.section.seo_description or ''
     social_title: @props.section.social_title or @props.section.title or ''
+    email_image: @props.section.email_image or @props.section.cover_image or ''
+    email_title: @props.section.email_title or @props.section.title or ''
+    email_author: @props.section.email_author or 'Artsy Editorial'
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -212,4 +215,31 @@ module.exports = VeniceSection = React.createClass
               defaultValue: @state.social_description
               onChange: @onInputChange
               name: 'social_description'
+            }
+      div { className: 'fields--full'},
+        div { className: 'field-group fields--left' },
+          label {}, 'Email Image'
+          imageUpload {
+            name: 'email_image'
+            src: @state.email_image
+            onChange: @onChange
+          }
+        div { className: 'field-group fields--right' },
+          div { className: 'field-group' },
+            label {}, 'Email Title'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Enter a title'
+              defaultValue: @state.email_title
+              onChange: @onInputChange
+              name: 'email_title'
+            }
+          div { className: 'field-group' },
+            label {}, 'Email Author'
+            input {
+              className: 'bordered-input'
+              placeholder: 'Enter a description'
+              defaultValue: @state.email_author
+              onChange: @onInputChange
+              name: 'email_author'
             }
