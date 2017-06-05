@@ -142,19 +142,18 @@ module.exports = AdminArticle = React.createClass
                   className: 'avant-garde-button' + @showActive 'featured', false
                   onClick: @onMagazineChange
                 }, 'No'
-          if sd.IS_INDEXABLE
-            div {
-              className: 'field-group--inline flat-checkbox'
-              onClick: @onCheckboxChange
-              name: 'indexable'
-            },
-              input {
-                type: 'checkbox'
-                checked: @props.article.get 'indexable'
-                value: @props.article.get 'indexable'
-                readOnly: true
-              }
-              label {}, 'Index for Search'
+          div {
+            className: 'field-group--inline flat-checkbox'
+            onClick: @onCheckboxChange
+            name: 'indexable'
+          },
+            input {
+              type: 'checkbox'
+              checked: @props.article.get 'indexable'
+              value: @props.article.get 'indexable'
+              readOnly: true
+            }
+            label {}, 'Index for Search'
 
         div {className: 'fields-right'},
           div {className: 'field-group publish-time'},

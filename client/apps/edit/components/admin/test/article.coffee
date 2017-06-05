@@ -3,7 +3,6 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-addons-test-utils'
 _ = require 'underscore'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
@@ -27,16 +26,14 @@ describe 'AdminArticle', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      @AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
-      @sd = {
+      AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
+      AdminArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
-        IS_INDEXABLE: true
       }
-      @AdminArticle.__set__ 'sd', @sd
       AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
-      @AdminArticle.__set__ 'AutocompleteList', React.createFactory AutocompleteList
+      AdminArticle.__set__ 'AutocompleteList', React.createFactory AutocompleteList
       AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: '123', name: 'Molly Gottschalk'})
@@ -44,11 +41,11 @@ describe 'AdminArticle', ->
         author: {name: 'Artsy Editorial', id: '123'}
         contributing_authors: [{name: 'Molly Gottschalk', id: '123'}]
         indexable: true
-      @props = {
+      props = {
         article: @article
         onChange: sinon.stub()
         }
-      @component = ReactDOM.render React.createElement(@AdminArticle, @props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(AdminArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           done()
 
@@ -81,11 +78,6 @@ describe 'AdminArticle', ->
       $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').length.should.eql 2
       $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').first().attr('name').should.eql 'indexable'
       $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox input').first().prop('checked').should.eql true
-
-    it 'Hidex indexable checkbox if not IS_INDEXABLE', ->
-      @sd.IS_INDEXABLE = false
-      render = ReactDOMServer.renderToString React.createElement(@AdminArticle, @props)
-      render.should.not.containEql 'indexable'
 
     it 'Renders google news checkbox', ->
       $(ReactDOM.findDOMNode(@component)).find('.flat-checkbox').last().attr('name').should.eql 'exclude_google_news'
