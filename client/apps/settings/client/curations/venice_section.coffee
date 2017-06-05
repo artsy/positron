@@ -238,7 +238,7 @@ module.exports = VeniceSection = React.createClass
             label {}, 'Email Author'
             input {
               className: 'bordered-input'
-              placeholder: 'Enter a description'
+              placeholder: 'Enter an author'
               defaultValue: @state.email_author
               onChange: @onInputChange
               name: 'email_author'
