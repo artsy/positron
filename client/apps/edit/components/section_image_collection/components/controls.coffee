@@ -18,7 +18,7 @@ module.exports = React.createClass
 
   changeLayout: (e) ->
     e = if e.target then e.target.name else e
-    @props.section.set layout: e.target.name
+    @props.section.set layout: e
     @props.onChange()
 
   addArtworkFromUrl: (newImages) ->
@@ -85,11 +85,13 @@ module.exports = React.createClass
       nav { className: 'esic-nav es-layout' },
         a {
           name: 'overflow_fillwidth'
+          className: 'layout'
           onClick: @changeLayout
-          'data-active': @props.section.get('layout') is 'overflow_fillwidth'
+          'data-active': @props.section.get('layout') != 'column_width'
         }
         a {
           name: 'column_width'
+          className: 'layout'
           onClick: @changeLayout
           'data-active': @props.section.get('layout') is 'column_width'
         }

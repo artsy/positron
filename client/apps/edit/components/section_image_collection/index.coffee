@@ -64,7 +64,6 @@ module.exports = React.createClass
       Controls {
         section: @props.section
         images: @props.section.get('images') || []
-        addArtworkFromUrl: @addArtworkFromUrl
         setProgress: @setProgress
         onChange: @onChange
       }
