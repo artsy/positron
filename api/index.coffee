@@ -36,6 +36,7 @@ app.use require './apps/curations'
 app.use require './apps/channels'
 app.use require './apps/tags'
 app.use require './apps/verticals'
+app.use require './apps/authors'
 app.use require './apps/graphql'
 
 if SENTRY_PRIVATE_DSN
