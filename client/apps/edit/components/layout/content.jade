@@ -1,3 +1,8 @@
+if article.get('published')
+  - date = article.get('published_at')
+else
+  - date = article.get('scheduled_publish_at') ? article.get('scheduled_publish_at') : ''
+
 section#edit-content
   #edit-hero-section
   .edit-header-container
@@ -8,6 +13,6 @@ section#edit-content
     .edit-author-section
       if article.get('author')
         p.article-author= article.get('author').name
-      p.article-date= moment(article.get('published_at') || moment()).format('MMM D, YYYY h:mm a')
+      p.article-date= moment(date).format('MMM D, YYYY h:mm a')
   .edit-body-container
   #edit-sections.edit-body-container
