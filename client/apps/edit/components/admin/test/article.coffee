@@ -121,25 +121,16 @@ describe 'AdminArticle', ->
       r.simulate.change input
       @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').format('YYYY-MM-DD')
 
-    it '#onPublishDateChange sets scheduled date if article is draft', ->
+    it '#onPublishDateChange sets scheduled date, and sets published_at to null if article is draft', ->
       @component.setState = sinon.stub()
       @component.onChange = sinon.stub()
       @component.props.article.set('published', false)
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
       input.value = moment().add(1, 'years').format('YYYY-MM-DD')
       r.simulate.change input
-      moment(@component.onChange.args[0][1]).format('YYYY-MM-DD').should.eql moment().add(1, 'years').format('YYYY-MM-DD')
-      @component.onChange.args[0][0].should.eql 'scheduled_publish_at'
-
-    it '#onPublishDateChange published_at is null if input date has passed and article is draft', ->
-      @component.setState = sinon.stub()
-      @component.onChange = sinon.stub()
-      @component.props.article.set('published', false)
-      input = ReactDOM.findDOMNode(@component.refs.publish_date)
-      input.value = moment().subtract(1, 'years').format('YYYY-MM-DD')
-      r.simulate.change input
-      @component.setState.args[0][0].publish_date.should.eql moment().subtract(1, 'years').format('YYYY-MM-DD')
-      @component.onChange.args[0].should.eql [ 'published_at', null ]
+      @component.onChange.args[0].should.eql ['published_at', null]
+      moment(@component.onChange.args[1][1]).format('YYYY-MM-DD').should.eql moment().add(1, 'years').format('YYYY-MM-DD')
+      @component.onChange.args[1][0].should.eql 'scheduled_publish_at'
 
     it '#onPublishDateChange saves a changed published_at date on published article', ->
       @component.setState = sinon.stub()
