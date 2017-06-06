@@ -1,3 +1,4 @@
+_ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
 Backbone = require 'backbone'
@@ -6,28 +7,34 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
+r =
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 
-fixtures = require '../../../../../../test/helpers/fixtures'
-
-describe 'SectionImageCollection', ->
+describe 'ImageCollection', ->
 
   beforeEach (done) ->
-    global.Image = class Image
-      constructor: ->
-        setTimeout => @onload()
-      onload: ->
-      width: 120
-      height: 90
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      SectionImageCollection = benv.requireWithJadeify(
-        resolve(__dirname, '../index'), ['icons']
+      $.fn.fillwidthLite = sinon.stub()
+      @ImageCollection = benv.require resolve(__dirname, '../index')
+      DisplayArtwork = benv.requireWithJadeify(
+        resolve(__dirname, '../components/artwork')
+        ['icons']
       )
-      SectionImageCollection.__set__ 'gemup', @gemup = sinon.stub()
-      SectionImageCollection.__set__ 'imagesLoaded', sinon.stub()
-      SectionImageCollection.__set__ 'Autocomplete', sinon.stub()
-      SectionImageCollection.__set__ 'resize', (url)-> url
-      props = {
+      DisplayImage = benv.requireWithJadeify(
+        resolve(__dirname, '../components/image')
+        ['icons']
+      )
+      DisplayImage.__set__ 'RichTextCaption', sinon.stub()
+      Controls = benv.require resolve(__dirname, '../components/controls')
+      Controls.__set__ 'Autocomplete', sinon.stub()
+      Controls.__set__ 'UrlArtworkInput', sinon.stub()
+      @ImageCollection.__set__ 'DisplayArtwork', React.createFactory DisplayArtwork
+      @ImageCollection.__set__ 'DisplayImage', React.createFactory DisplayImage
+      @ImageCollection.__set__ 'Controls', React.createFactory Controls
+      @ImageCollection.__set__ 'imagesLoaded', sinon.stub()
+      @props = {
         section: new Backbone.Model
           type: 'image_collection'
           images: [
@@ -48,44 +55,50 @@ describe 'SectionImageCollection', ->
             }
           ]
         editing: false
-        setEditing: -> ->
+        setEditing: @setEditing = sinon.stub()
       }
-      @rendered = ReactDOMServer.renderToString React.createElement(SectionImageCollection, props)
-      @component = ReactDOM.render React.createElement(SectionImageCollection, props), (@$el = $ "<div></div>")[0], => setTimeout =>
-        sinon.stub @component, 'setState'
-        sinon.stub Backbone, 'sync'
-        sinon.stub @component, 'removeItem'
-        sinon.stub $, 'ajax'
-        done()
-
-  afterEach ->
-    $.ajax.restore()
-    Backbone.sync.restore()
-    benv.teardown()
-    delete global.Image
-
-  it 'saves image info after upload', (done) ->
-    @component.upload target: files: ['foo']
-    @gemup.args[0][1].done('fooza')
-    setTimeout =>
-      @component.setState.args[0][0].images[2].type.should.equal 'image'
-      @component.props.section.get('images')[2].url.should.equal 'fooza'
-      @component.props.section.get('images')[2].width.should.equal 120
-      @component.props.section.get('images')[2].height.should.equal 90
+      @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
+      @component.fillwidth = sinon.stub()
+      @component.removeFillwidth = sinon.stub()
       done()
 
-  it 'renders an image', ->
-    $(@rendered).html().should.containEql 'https://artsy.net/image.png'
+  afterEach ->
+    benv.teardown()
 
-  it 'renders an artwork', ->
-    $(@rendered).html().should.containEql 'https://artsy.net/artwork.jpg'
+  it 'renders an image collection component with preview', ->
+    rendered = ReactDOMServer.renderToString React.createElement(@ImageCollection, @props)
+    $(rendered).find('img').length.should.eql 2
+    $(rendered).find('.esic-caption--display').css('display').should.equal 'block'
+    $(rendered).find('.esic-caption--display').html().should.containEql '<p>Here is a caption</p>'
 
-  it 'renders artwork data', ->
-    $(@rendered).html().should.containEql 'The Four Hedgehogs'
-    $(@rendered).html().should.containEql 'Guggenheim'
-    $(@rendered).html().should.containEql 'Van Gogh'
+  it 'renders a placeholder if no images', ->
+    @props.section.set 'images', []
+    rendered = ReactDOMServer.renderToString React.createElement(@ImageCollection, @props)
+    $(rendered).find('.esic-placeholder').html().should.containEql 'Add images and artworks above'
 
-  it 'renders a preview', ->
-    $(@rendered).find('img').length.should.equal 2
-    $(@rendered).find('.esic-caption--display').css('display').should.equal 'block'
-    $(@rendered).find('.esic-caption--display').html().should.containEql '<p>Here is a caption</p>'
+  it 'renders a progress indicator if progress', ->
+    @component.setState progress: .5
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
+
+  it 'sets editing mode on click', ->
+    r.simulate.click r.find @component, 'edit-section-image-container'
+    @setEditing.called.should.eql true
+    @setEditing.args[0][0].should.eql true
+
+  it '#removeItem updates the images array', ->
+    @component.removeItem(@props.section.get('images')[0])()
+    @props.section.get('images').length.should.eql 1
+
+  it '#onChange calls @fillwidth if > 1 image and layout overflow_fillwidth', ->
+    @component.onChange()
+    @component.fillwidth.called.should.eql true
+
+  it '#onChange calls @removefillwidth if < 1 image and layout overflow_fillwidth', ->
+    @component.props.section.set 'images', []
+    @component.onChange()
+    @component.removeFillwidth.called.should.eql true
+
+  it '#onChange calls @removefillwidth if > 1 image and layout column_width', ->
+    @component.props.section.set 'layout', 'column_width'
+    @component.onChange()
+    @component.removeFillwidth.called.should.eql true

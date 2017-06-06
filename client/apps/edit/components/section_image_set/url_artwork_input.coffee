@@ -6,6 +6,7 @@
 
 React = require 'react'
 Artwork = require '../../../../models/artwork.coffee'
+_ = require 'underscore'
 { div, input, button } = React.DOM
 
 module.exports = React.createClass
