@@ -23,4 +23,5 @@ sharify.data = _.pick process.env,
   'GEMINI_CLOUDFRONT_URL',
   'TOPIC_TAG_CURATION',
   'EF_VENICE',
-  'SENTRY_PUBLIC_DSN'
+  'SENTRY_PUBLIC_DSN',
+  'NO_INDEX_CHANNELS'

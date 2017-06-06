@@ -1,16 +1,19 @@
 Article = require '../../models/article'
 User = require '../../models/user'
 Channel = require '../../models/channel'
+sd = require('sharify').data
 
 @create = (req, res, next) ->
   channel = new Channel req.user.get('current_channel')
   res.locals.sd.CURRENT_CHANNEL = channel
-  render req, res, new Article {
+  article = new Article {
     channel_id: channel.get('id') if channel.get('type') isnt 'partner'
     partner_channel_id: channel.get('id') if channel.get('type') is 'partner'
     partner_ids: [channel.get('id')] if channel.get('type') is 'partner'
     author: { name: channel.get('name'), id: req.user.get('id') }
   }
+  setChannelIndexable channel, article
+  render req, res, article
 
 @edit = (req, res, next) ->
   new Article(id: req.params.id).fetch
@@ -29,3 +32,8 @@ render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()
   view = if res.locals.sd.IS_MOBILE then 'mobile/index' else 'layout/index'
   res.render view, article: article
+
+setChannelIndexable = (channel, article) ->
+  noIndex = sd.NO_INDEX_CHANNELS.split '|'
+  if noIndex.includes channel.get('id')
+    article.set 'indexable', false

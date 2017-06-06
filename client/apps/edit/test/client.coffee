@@ -20,7 +20,7 @@ describe 'init', ->
         _: require('underscore')
         $: benv.require('jquery')
         jQuery: benv.require('jquery')
-        sd: { ARTICLE: @article }
+        sd: { ARTICLE: @article, CURRENT_CHANNEL: id: '456' }
       window.jQuery = jQuery
       @client = rewire '../client.coffee'
       @client.__set__ 'EditLayout', @EditLayout = sinon.stub()
@@ -28,6 +28,7 @@ describe 'init', ->
       @client.__set__ 'EditAdmin', @EditAdmin = sinon.stub()
       @client.__set__ 'EditDisplay', @EditDisplay = sinon.stub()
       @client.__set__ 'ReactDOM', @ReactDOM = render: sinon.stub()
+      @client.__set__ 'sd', sd
       done()
 
   afterEach ->
