@@ -15,7 +15,8 @@ module.exports = React.createClass
       @props.article.save()
       @forceUpdate()
     ), 800)
-    @props.article.sections.on 'change', => @saveArticle()
+    @props.article.sections.on 'change add remove reset', => @saveArticle()
+    @props.article.heroSection.on 'change remove', => @saveArticle()
 
   saveArticle: ->
     unless @props.article.get('published')

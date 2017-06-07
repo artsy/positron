@@ -55,7 +55,7 @@ describe 'EditLayout', ->
 
     it 'does not autosave on debounce keyup when editing a published article', ->
       @view.article.set { published: true }
-      $('#edit-title textarea').trigger 'keyup'
+      $('input[name="credit_line"]').trigger 'keyup'
       @view.changedSection.should.equal true
 
     it 'does not autosave on section changes when editing a published article', ->

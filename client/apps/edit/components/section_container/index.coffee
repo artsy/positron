@@ -30,9 +30,6 @@ module.exports = React.createClass
     if @props.section.get('type') is 'image_set' or 'image_collection'
       @props.section.destroy() if @props.section.get('images')?.length is 0
 
-  componentDidMount: ->
-    @props.section.on 'change:layout', => @forceUpdate()
-
   setEditing: (editing) -> =>
     if @props.section.get('type') is 'text'
       @refs.section?.focus?()

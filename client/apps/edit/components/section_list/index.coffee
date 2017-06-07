@@ -19,7 +19,6 @@ module.exports = React.createClass
     draggingHeight: 0
 
   componentDidMount: ->
-    @props.sections.on 'add remove reset', => @props.saveArticle()
     @props.sections.on 'add', @onNewSection
 
   onSetEditing: (i) ->
