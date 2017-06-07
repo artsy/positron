@@ -62,3 +62,25 @@ Tags = require '../../collections/tags'
     success: (tags) ->
       res.locals.sd.TAGS = tags.toJSON()
       res.render 'tags/tags_index'
+
+@authors = (req, res) ->
+  new Authors().fetch
+    data: limit: 100
+    error: res.backboneError
+    success: (authors) ->
+      res.render 'authors/authors_index', authors: authors
+
+@editAuthor = (req, res) ->
+  new Author(id: req.params.id).fetch
+    error: res.backboneError
+    success: (author) ->
+      res.locals.sd.AUTHOR = author.toJSON()
+      res.render 'authors/author_edit', author: author
+
+@saveAuthor = (req, res) ->
+  data = _.pick req.body, _.identity
+  new Author(id: req.params.id).save data,
+    headers: 'X-Access-Token': req.user?.get('access_token')
+    error: res.backboneError
+    success: ->
+      res.redirect '/settings/authors'

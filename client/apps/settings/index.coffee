@@ -18,3 +18,6 @@ app.get '/settings/channels', adminOnly, routes.channels
 app.get '/settings/channels/:id/edit', adminOnly, routes.editChannel
 app.post '/settings/channels/:id', adminOnly, routes.saveChannel
 app.get '/settings/tags', adminOnly, routes.tags
+app.get '/settings/authors', adminOnly, routes.authors
+app.get '/settings/authors/:id/edit', adminOnly, routes.editAuthor
+app.post '/settings/authors/:id', adminOnly, routes.saveAuthor
