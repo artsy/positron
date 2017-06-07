@@ -171,6 +171,12 @@ module.exports = ->
   fixtures.verticals =
     id: '55356a9deca560a0137bb4a7'
     name: 'Culture'
+  fixtures.authors =
+    id: '55356a9deca560a0137bb4a7'
+    name: 'Halley Johnson'
+    bio: 'Writer based in NYC'
+    twitter_handle: '@kanaabe'
+    image_url: 'https://artsy-media.net/halley.jpg'
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
