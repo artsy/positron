@@ -4,6 +4,7 @@ User = require '../users/model.coffee'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
 Tag = require '../tags/model'
+Author = require '../authors/model'
 
 module.exports.articles = (root, args, req, ast) ->
   if (not args.published or args.scheduled) and not args.channel_id
@@ -32,4 +33,9 @@ module.exports.channels = (root, args, req, ast) ->
 module.exports.tags = (root, args, req, ast) ->
   return new Promise (resolve, reject) ->
     Tag.where args, (err, results) ->
+      resolve results.results
+
+module.exports.authors = (root, args, req, ast) ->
+  return new Promise (resolve, reject) ->
+    Author.where args, (err, results) ->
       resolve results.results

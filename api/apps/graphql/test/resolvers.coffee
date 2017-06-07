@@ -21,10 +21,12 @@ describe 'resolvers', ->
     curations = total: 20, count: 1, results: [fixtures().curations]
     channels = total: 20, count: 1, results: [fixtures().channels]
     tags = total: 20, count: 1, results: [fixtures().tags]
+    authors = total: 20, count: 1, results: [fixtures().authors]
     resolvers.__set__ 'where', @where = sinon.stub().yields null, articles
     resolvers.__set__ 'Curation', { where: @curationWhere = sinon.stub().yields null, curations }
     resolvers.__set__ 'Channel', { where: @channelWhere = sinon.stub().yields null, channels }
     resolvers.__set__ 'Tag', { where: @tagWhere = sinon.stub().yields null, tags }
+    resolvers.__set__ 'Author', { where: @authorWhere = sinon.stub().yields null, authors }
     @req = user: channel_ids: ['456']
 
   describe 'articles', ->
@@ -75,3 +77,14 @@ describe 'resolvers', ->
       .then (results) ->
         results.length.should.equal 1
         results[0].name.should.equal 'Show Reviews'
+
+  describe 'authors', ->
+
+    it 'can find authors', ->
+      resolvers.authors {}, {}, @req, {}
+      .then (results) ->
+        results.length.should.equal 1
+        results[0].name.should.equal 'Halley Johnson'
+        results[0].bio.should.equal 'Writer based in NYC'
+        results[0].twitter_handle.should.equal '@kanaabe'
+        results[0].image_url.should.equal 'https://artsy-media.net/halley.jpg'
