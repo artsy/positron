@@ -20,7 +20,7 @@ describe 'authors endpoints', ->
       { name: 'Alex' }
       { name: 'Molly' }
       {}
-    ], (err, tags) ->
+    ], (err, authors) ->
       request
         .get("http://localhost:5000/authors?count=true")
         .end (err, res) ->

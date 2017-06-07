@@ -55,6 +55,7 @@ describe 'Author', ->
     it 'can return a validation error', (done) ->
       Author.save {
         name: 500
+        id: '5936f5530fae440cda9ae052'
       }, (err, author) ->
         err.details[0].message.should.containEql '"name" must be a string'
         done()
