@@ -30,6 +30,7 @@ request = require 'superagent'
     text: @string().allow('',null)
   ]).allow(null).default([])
   slug: @string().allow('',null)
+  public: @boolean().default(true)
   pinned_articles: @array().max(6).items(
     @object().keys
       index: @number()
@@ -41,6 +42,7 @@ request = require 'superagent'
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   user_id: @objectId()
+  public: @boolean()
   q: @string()
 ).call Joi
 

@@ -3,6 +3,7 @@ moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Channel = require '../model'
 { ObjectId } = require 'mongojs'
+request = require 'superagent'
 
 describe 'Channel', ->
 
@@ -48,6 +49,22 @@ describe 'Channel', ->
       fabricate 'channels', { slug: 'life-at-artsy' }, ->
         Channel.find 'life-at-artsy', (err, channel) ->
           channel.slug.should.equal 'life-at-artsy'
+          done()
+
+    it 'finds a channel by a publicity', (done) ->
+      fabricate 'channels', { public: false, slug: 'life-at-artsy' }, ->
+        Channel.where { public: false }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 1
+          results[0].slug.should.equal 'life-at-artsy'
+          results[0].public.should.be.false()
+        Channel.where { public: true }, (err, res) ->
+          { total, count, results } = res
+          total.should.equal 11
+          count.should.equal 10
+          results[0].slug.should.equal 'editorial'
+          results[0].public.should.be.true()
           done()
 
   describe '#save', ->
