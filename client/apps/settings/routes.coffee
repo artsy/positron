@@ -4,9 +4,10 @@ Curation = require '../../models/curation'
 Channels = require '../../collections/channels'
 Channel = require '../../models/channel'
 Tags = require '../../collections/tags'
-
-@index = (req, res) ->
-  res.render 'index'
+authorsQuery = require './queries/authors_query.coffee'
+Lokka = require('lokka').Lokka
+Transport = require('lokka-transport-http').Transport
+{ API_URL } = process.env
 
 @curations = (req, res) ->
   new Curations().fetch
@@ -64,23 +65,15 @@ Tags = require '../../collections/tags'
       res.render 'tags/tags_index'
 
 @authors = (req, res) ->
-  new Authors().fetch
-    data: limit: 100
-    error: res.backboneError
-    success: (authors) ->
+  headers =
+    'X-Access-Token': req.user.get('access_token')
+
+  client = new Lokka
+    transport: new Transport(API_URL + '/graphql', {headers})
+
+  client.query(authorsQuery)
+    .then (result) =>
+      console.log result
+      res.locals.sd.AUTHORS = result.authors
       res.render 'authors/authors_index', authors: authors
-
-@editAuthor = (req, res) ->
-  new Author(id: req.params.id).fetch
-    error: res.backboneError
-    success: (author) ->
-      res.locals.sd.AUTHOR = author.toJSON()
-      res.render 'authors/author_edit', author: author
-
-@saveAuthor = (req, res) ->
-  data = _.pick req.body, _.identity
-  new Author(id: req.params.id).save data,
-    headers: 'X-Access-Token': req.user?.get('access_token')
-    error: res.backboneError
-    success: ->
-      res.redirect '/settings/authors'
+    .catch -> next()

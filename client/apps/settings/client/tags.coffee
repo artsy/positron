@@ -1,4 +1,3 @@
-Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'

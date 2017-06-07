@@ -17,6 +17,7 @@ class Router extends Backbone.Router
     'queue': 'queueEdit'
     'articles': 'articlesListView'
     'settings/tags': 'tagsEdit'
+    'settings/authors': 'authorsEdit'
 
   articleEdit: ->
     require('../apps/edit/client.coffee').init()
@@ -35,6 +36,9 @@ class Router extends Backbone.Router
 
   tagsEdit: ->
     require('../apps/settings/client/tags.coffee').init()
+
+  authorsEdit: ->
+    require('../apps/settings/client/authors/index.coffee').init()
 
 new Router()
 $ ->
