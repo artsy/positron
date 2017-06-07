@@ -14,9 +14,6 @@ module.exports = React.createClass
   getInitialState: ->
     { editing: false }
 
-  componentDidMount: ->
-    @props.section.on 'change', => @forceUpdate()
-
   setHero: (type) -> =>
     @props.section.set type: type
     @setState editing: true

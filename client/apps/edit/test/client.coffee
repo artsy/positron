@@ -40,7 +40,7 @@ describe 'init', ->
       @EditLayout.callCount.should.equal 1
       @EditHeader.callCount.should.equal 1
       @EditAdmin.callCount.should.equal 1
-      @ReactDOM.render.callCount.should.equal 4
+      @ReactDOM.render.callCount.should.equal 2
       done()
 
   it 'converts images and artworks to ImageCollection', (done) ->

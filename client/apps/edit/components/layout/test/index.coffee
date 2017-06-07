@@ -55,7 +55,7 @@ describe 'EditLayout', ->
 
     it 'does not autosave on debounce keyup when editing a published article', ->
       @view.article.set { published: true }
-      $('#edit-title textarea').trigger 'keyup'
+      $('input[name="credit_line"]').trigger 'keyup'
       @view.changedSection.should.equal true
 
     it 'does not autosave on section changes when editing a published article', ->
@@ -117,20 +117,6 @@ describe 'EditLayout', ->
       @view.finished = false
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'do you wish to continue'
-
-  describe '#onChangeTitle', ->
-
-    it 'prevents the keyup function from firing on enter key', ->
-      e = {key: 'Enter', preventDefault: sinon.stub()}
-      @view.onKeyup = sinon.stub()
-      @view.onChangeTitle(e)
-      e.preventDefault.called.should.eql true
-      @view.onKeyup.called.should.eql false
-
-    it 'does not prevent default on keys that are not enter', ->
-      e = {key: 's', preventDefault: sinon.stub()}
-      @view.onChangeTitle(e)
-      e.preventDefault.called.should.eql false
 
   describe '#getBodyText', ->
 

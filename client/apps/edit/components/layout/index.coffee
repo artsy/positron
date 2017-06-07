@@ -22,7 +22,6 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'savePublished', @savePublished
     @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
-    @setupTitleAutosize()
     @toggleAstericks()
     @setupYoast() if @channel.isEditorial()
     @$('#edit-sections-spinner').hide()
@@ -38,9 +37,6 @@ module.exports = class EditLayout extends Backbone.View
         "You have unsaved changes, do you wish to continue?"
       else
         null
-
-  setupTitleAutosize: ->
-    @$('#edit-title textarea').autosize()
 
   serialize: ->
     {
@@ -91,7 +87,6 @@ module.exports = class EditLayout extends Backbone.View
 
   addRemoveReset: =>
     @changedSection = true
-    $('#edit-save').addClass 'attention'
 
   highlightMissingFields: =>
     @openTab 1
@@ -103,7 +98,6 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input:not(.tt-input,.edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
-    'keydown #edit-title textarea': 'onChangeTitle'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
@@ -136,10 +130,6 @@ module.exports = class EditLayout extends Backbone.View
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
-
-  onChangeTitle: (e) =>
-    return unless e.key is 'Enter'
-    e.preventDefault()
 
   onKeyup: =>
     if @article.get('published')

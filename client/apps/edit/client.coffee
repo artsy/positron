@@ -12,9 +12,7 @@ EditLayout = require './components/layout/index.coffee'
 EditHeader = require './components/header/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 EditAdmin = React.createFactory require './components/admin/index.coffee'
-SectionList = React.createFactory require './components/section_list/index.coffee'
-HeroSection = React.createFactory require './components/hero_section/index.coffee'
-RichTextParagraph = React.createFactory require '../../components/rich_text/components/input_paragraph.coffee'
+EditContent = React.createFactory require './components/content/index.coffee'
 
 async = require 'async'
 
@@ -30,22 +28,9 @@ async = require 'async'
       $('#edit-admin')[0]
     )
     ReactDOM.render(
-      SectionList(sections: @article.sections)
-      $('#edit-sections')[0]
+      EditContent(article: @article, channel: channel)
+      $('#edit-content')[0]
     )
-    ReactDOM.render(
-      RichTextParagraph(
-        text: @article.get('lead_paragraph')
-        onChange: @article.setLeadParagraph
-        placeholder: 'Lead paragraph (optional)'
-      )
-      $('#edit-lead-paragraph')[0]
-    )
-    if @article.get('hero_section') != null or channel.hasFeature 'hero'
-      ReactDOM.render(
-        HeroSection section: @article.heroSection
-        $('#edit-hero-section')[0]
-      )
 
 convertSections = (article, callback) ->
   async.parallel(
