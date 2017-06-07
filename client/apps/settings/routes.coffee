@@ -9,6 +9,9 @@ Lokka = require('lokka').Lokka
 Transport = require('lokka-transport-http').Transport
 { API_URL } = process.env
 
+@index = (req, res) ->
+  res.render 'index'
+
 @curations = (req, res) ->
   new Curations().fetch
     data: limit: 100
@@ -64,16 +67,14 @@ Transport = require('lokka-transport-http').Transport
       res.locals.sd.TAGS = tags.toJSON()
       res.render 'tags/tags_index'
 
-@authors = (req, res) ->
+@authors = (req, res, next) ->
   headers =
-    'X-Access-Token': req.user.get('access_token')
+    'X-Access-Token': req?.user.get('access_token')
 
   client = new Lokka
     transport: new Transport(API_URL + '/graphql', {headers})
-
-  client.query(authorsQuery)
-    .then (result) =>
-      console.log result
+  client.query(authorsQuery())
+    .then (result) ->
       res.locals.sd.AUTHORS = result.authors
-      res.render 'authors/authors_index', authors: authors
-    .catch -> next()
+      res.render 'authors/authors_index', authors: result.authors
+    .catch next

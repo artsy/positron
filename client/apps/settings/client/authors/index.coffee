@@ -15,7 +15,11 @@ AuthorsView = React.createClass
     div {
       className: 'authors-container'
       'data-loading': @state.loading
-    }
+    },
+      @props.authors.map (author) ->
+        div {
+          className: 'authors-list__item'
+        }, author.name
 
 module.exports.init = ->
   props =

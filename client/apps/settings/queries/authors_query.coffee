@@ -1,8 +1,10 @@
-module.exports = (argString = '') ->
+module.exports = ->
   """
   {
-    authors(#{argString}){
+    authors(count: true){
       name
+      bio
+      twitter_handle
     }
   }
   """
