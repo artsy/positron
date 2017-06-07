@@ -8,7 +8,7 @@ SectionList = React.createFactory require '../section_list/index.coffee'
 
 
 module.exports = React.createClass
-  displayName: 'SectionLayout'
+  displayName: 'EditContent'
 
   componentWillMount: ->
     @debouncedSave = _.debounce((->

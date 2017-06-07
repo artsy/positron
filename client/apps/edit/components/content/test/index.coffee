@@ -12,19 +12,19 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-describe 'SectionLayout', ->
+describe 'EditContent', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
-      @SectionLayout = benv.require resolve(__dirname, '../index.coffee')
+      @EditContent = benv.require resolve(__dirname, '../index.coffee')
       HeroSection = @HeroSection = sinon.stub()
       HeaderSection = benv.require resolve(__dirname, '../../section_header/index.coffee')
       SectionList = @SectionList = sinon.stub()
-      @SectionLayout.__set__ 'HeroSection', HeroSection
-      @SectionLayout.__set__ 'HeaderSection', React.createFactory HeaderSection
-      @SectionLayout.__set__ 'SectionList', SectionList
+      @EditContent.__set__ 'HeroSection', HeroSection
+      @EditContent.__set__ 'HeaderSection', React.createFactory HeaderSection
+      @EditContent.__set__ 'SectionList', SectionList
       @article = new Article _.extend fixtures().articles,
         author:
           name: 'Artsy Editorial'
@@ -35,7 +35,7 @@ describe 'SectionLayout', ->
         article: @article
         channel: {hasFeature: @hasFeature = sinon.stub().returns(true)}
       }
-      @component = ReactDOM.render React.createElement(@SectionLayout, @props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@EditContent, @props), (@$el = $ "<div></div>")[0], =>
       @component.debouncedSave = sinon.stub()
       done()
 
@@ -51,7 +51,7 @@ describe 'SectionLayout', ->
     it 'does not render the hero section if hasFeature is false', ->
       @props.channel.hasFeature = sinon.stub().returns(false)
       @props.article.set 'hero_section', null
-      component = ReactDOM.render React.createElement(@SectionLayout, @props), (@$el = $ "<div></div>")[0], =>
+      component = ReactDOM.render React.createElement(@EditContent, @props), (@$el = $ "<div></div>")[0], =>
       $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<div id="edit-hero-section">'
 
     it 'renders the header section', ->

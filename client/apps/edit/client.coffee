@@ -12,7 +12,7 @@ EditLayout = require './components/layout/index.coffee'
 EditHeader = require './components/header/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 EditAdmin = React.createFactory require './components/admin/index.coffee'
-SectionLayout = React.createFactory require './components/section_layout/index.coffee'
+EditContent = React.createFactory require './components/content/index.coffee'
 
 async = require 'async'
 
@@ -28,8 +28,8 @@ async = require 'async'
       $('#edit-admin')[0]
     )
     ReactDOM.render(
-      SectionLayout(article: @article, channel: channel)
-      $('#edit-layout')[0]
+      EditContent(article: @article, channel: channel)
+      $('#edit-content')[0]
     )
 
 convertSections = (article, callback) ->
