@@ -118,20 +118,6 @@ describe 'EditLayout', ->
       @view.setupOnBeforeUnload()
       window.onbeforeunload().should.containEql 'do you wish to continue'
 
-  describe '#onChangeTitle', ->
-
-    it 'prevents the keyup function from firing on enter key', ->
-      e = {key: 'Enter', preventDefault: sinon.stub()}
-      @view.onKeyup = sinon.stub()
-      @view.onChangeTitle(e)
-      e.preventDefault.called.should.eql true
-      @view.onKeyup.called.should.eql false
-
-    it 'does not prevent default on keys that are not enter', ->
-      e = {key: 's', preventDefault: sinon.stub()}
-      @view.onChangeTitle(e)
-      e.preventDefault.called.should.eql false
-
   describe '#getBodyText', ->
 
     it 'parses the article and pulls out an html string of its text', ->

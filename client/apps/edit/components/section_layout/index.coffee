@@ -28,7 +28,7 @@ module.exports = React.createClass
     div {className: 'edit-section-layout'},
 
       if @props.article.get('hero_section') != null or @props.channel.hasFeature 'hero'
-        div { id: 'edit-hero-section' },
+        div { id: 'edit-hero-section'},
           HeroSection {
             section: @props.article.heroSection
           }
