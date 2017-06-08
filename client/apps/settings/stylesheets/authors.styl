@@ -2,3 +2,41 @@
   width 100%
   display flex
   justify-content space-between
+  align-items center
+
+.authors-list
+  margin-top 60px
+  &__item
+    font-size 30px
+    display flex
+    align-items center
+  &__item-edit
+    background-color gray-lightest-color
+    border-color gray-lightest-color
+    margin-left auto
+
+// Modal
+.modal[data-open=false]
+  .modal-container, .modal-container__overlay
+    display none
+.modal[data-open=true]
+  .modal-container, .modal-container__overlay
+    display block
+.modal-container
+  padding 30px
+  position absolute
+  display flex
+  background-color white
+.modal-container__overlay
+  position absolute
+  width 100vw
+  height 100vh
+  background-color black
+  opacity 0.5
+.author-edit
+  h1
+    garamond('headline')
+  label
+    avant-garde('body')
+  &__button
+    height 50px

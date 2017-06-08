@@ -6,7 +6,7 @@ module.exports = ->
       bio
       twitter_handle
       id
-      img_url
+      image_url
     }
   }
   """

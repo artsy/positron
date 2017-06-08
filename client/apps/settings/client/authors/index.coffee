@@ -3,38 +3,53 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
 request = require 'superagent'
-{ div, nav, a, h1, input, button, img } = React.DOM
+{ div, input, button, img } = React.DOM
+AuthorModal = React.createFactory require './author_modal.coffee'
 
 AuthorsView = React.createClass
   displayName: 'AuthorsView'
 
   getInitialState: ->
     loading: false
-    author: {}
+    author: null
+    isModalOpen: false
+    authors: @props.authors
 
   editAuthor: (e) ->
-    console.log e
-    console.log 'here'
+    @setState
+      author: {}
+      isModalOpen: true
 
   addAuthor: ->
-    console.log 'adding an author'
+    @setState
+      author: null
+      isModalOpen: true
+
+  onCancel: ->
+    @setState isModalOpen: false
 
   render: ->
     div {
       className: 'authors-container'
       'data-loading': @state.loading
     },
+      AuthorModal {
+        author: @state.author
+        isOpen: @state.isModalOpen
+        onCancel: @onCancel
+      }
+      console.log @state.isModalOpen
       div { className: 'page-header'},
         div { className: 'authors-header max-width-container'},
-          div {}, "Authors"
+          div {}, 'Authors'
           button {
-            className: 'authors-header__button'
+            className: 'authors-header__button avant-garde-button'
             onClick: @addAuthor
-          }, "Add Author"
+          }, 'Add Author'
       div {
         className: 'authors-list max-width-container'
       },
-        (@props.authors.map (author) ->
+        (@props.authors.map (author) =>
           div {
             className: 'authors-list__item'
             key: author.id
@@ -45,14 +60,14 @@ AuthorsView = React.createClass
             }
             author.name
             button {
-              className: 'authors-list__item-edit'
+              className: 'authors-list__item-edit avant-garde-button'
               onClick: @editAuthor
-            }, "Edit"
+              key: author.id
+            }, 'Edit'
         )
 
 module.exports.init = ->
-  props =
-    authors: sd.AUTHORS
+  props = authors: sd.AUTHORS
   ReactDOM.render(
     React.createElement(AuthorsView, props), document.getElementById('authors-root')
   )
