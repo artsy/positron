@@ -10,20 +10,14 @@ module.exports = React.createClass
   changeTitle: (e) ->
     if e.key is 'Enter'
       e.preventDefault()
+
+  setTitle: ->
     @props.article.set 'title', this.refs.title.value
     @props.saveArticle()
 
-  changeLeadParagraph: (html) ->
+  setLeadParagraph: (html) ->
     @props.article.setLeadParagraph(html)
     @props.saveArticle()
-
-  getPublishDate: ->
-    date = new Date
-    if @props.article.get('published')
-      date = @props.article.get('published_at')
-    else if @props.article.get('scheduled_publish_at')
-      date = @props.article.get('scheduled_publish_at')
-    return moment(date).format('MMM D, YYYY h:mm a')
 
   render: ->
     div { className: 'edit-header-container' },
@@ -34,6 +28,7 @@ module.exports = React.createClass
           placeholder: 'Type a title'
           defaultValue: @props.article.get 'title'
           onKeyPress: @changeTitle
+          onKeyUp: @setTitle
           ref: 'title'
         }
         unless @props.article.get('title')?.length > 0
@@ -45,7 +40,7 @@ module.exports = React.createClass
       },
         RichTextParagraph {
           text: @props.article.get('lead_paragraph')
-          onChange: @changeLeadParagraph
+          onChange: @setLeadParagraph
           placeholder: 'Lead paragraph (optional)'
         }
 
@@ -53,4 +48,4 @@ module.exports = React.createClass
         if @props.article.get('author')
           p { className: 'article-author' },
             @props.article.get('author').name
-        p { className: 'article-date' }, @getPublishDate()
+        p { className: 'article-date' }, @props.article.getPublishDate()
