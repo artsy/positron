@@ -50,6 +50,14 @@ module.exports = class Article extends Backbone.Model
     return @get('author').name if @get('author')
     ''
 
+  getPublishDate: ->
+    date = new Date
+    if @get('published')
+      date = @get('published_at')
+    else if @get('scheduled_publish_at')
+      date = @get('scheduled_publish_at')
+    return moment(date).format('MMM D, YYYY h:mm a')
+
   date: (attr) ->
     if @get(attr)
       moment(new Date(@get(attr))).local()

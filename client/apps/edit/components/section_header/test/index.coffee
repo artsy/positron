@@ -45,10 +45,10 @@ describe 'SectionHeader', ->
     it 'Can display a saved title', ->
       $(ReactDOM.findDOMNode(@component)).find('#edit-title textarea').val().should.eql 'Top Ten Booths'
 
-    it '#changeTitle sets article title on change', ->
+    it '#setTitle sets article title on change', ->
       input = r.find @component, 'invisible-input'
       input.value = 'Top 8 Booths'
-      r.simulate.keyPress input
+      r.simulate.keyUp input
       @component.props.article.get('title').should.eql 'Top 8 Booths'
 
     it '#changeTitle does not allow linebreaks', ->
@@ -62,7 +62,7 @@ describe 'SectionHeader', ->
     it 'Calls #saveArticle on change', ->
       input = r.find @component, 'invisible-input'
       input.value = 'Top 8 Booths'
-      r.simulate.keyPress input
+      r.simulate.keyUp input
       @component.props.saveArticle.called.should.eql true
 
   describe 'Lead Paragraph', ->
@@ -73,8 +73,8 @@ describe 'SectionHeader', ->
     it 'Can display a saved lead paragraph', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Just before the lines start forming...'
 
-    it '#changeLeadParagraph sets and saves article lead paragraph on change', ->
-      @component.changeLeadParagraph('<p>A new paragraph</p>')
+    it '#setLeadParagraph sets and saves article lead paragraph on change', ->
+      @component.setLeadParagraph('<p>A new paragraph</p>')
       @component.props.article.leadParagraph.get('text').should.eql '<p>A new paragraph</p>'
       @component.props.saveArticle.called.should.eql true
 
@@ -88,15 +88,17 @@ describe 'SectionHeader', ->
 
     it '#getPublishDate returns the current date if unpublished and no scheduled_publish_at', ->
       now = moment().format('MMM D, YYYY')
-      @component.getPublishDate().should.containEql now
+      $(ReactDOM.findDOMNode(@component)).find('.article-date').text().should.containEql now
 
     it 'renders scheduled_publish_at if unpublished and scheduled', ->
       scheduled = moment().add(1, 'years')
       @component.props.article.set('scheduled_publish_at', scheduled.toISOString())
-      @component.getPublishDate().should.containEql scheduled.format('MMM D, YYYY')
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).find('.article-date').text().should.containEql scheduled.format('MMM D, YYYY')
 
     it 'renders a published_at if published', ->
       published = moment().subtract(1, 'years')
       @component.props.article.set('published', true)
       @component.props.article.set('published_at', published.toISOString())
-      @component.getPublishDate().should.containEql published.format('MMM D, YYYY')
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).find('.article-date').text().should.containEql published.format('MMM D, YYYY')

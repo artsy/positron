@@ -41,7 +41,7 @@ module.exports = class EditLayout extends Backbone.View
   serialize: ->
     {
       author_id: @user.get('id')
-      title: @$('#edit-title textarea').val()
+      title: @article.get 'title'
       thumbnail_title: @$('.edit-title-textarea').val()
       description: @$('.edit-display--magazine .edit-display__description textarea').val()
       social_title: @$('.edit-display--social .edit-display__headline textarea').val()
@@ -96,7 +96,7 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'keyup :input:not(.tt-input,.edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
+    'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
