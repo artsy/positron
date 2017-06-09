@@ -20,23 +20,69 @@
   .modal-container, .modal-container__overlay
     display none
 .modal[data-open=true]
+  display flex
+  justify-content center
+  align-items center
+  width calc(100vw \- 110px)
+  height 100vh
+  position absolute
   .modal-container, .modal-container__overlay
     display block
 .modal-container
-  padding 30px
+  padding 60px 100px
   position absolute
   display flex
   background-color white
+  h1
+    garamond('headline')
+    margin-bottom 60px
 .modal-container__overlay
-  position absolute
-  width 100vw
+  position fixed
+  width calc(100vw \- 110px)
   height 100vh
   background-color black
   opacity 0.5
 .author-edit
-  h1
-    garamond('headline')
-  label
-    avant-garde('body')
+  width 700px
+  margin-bottom 30px
   &__button
     height 50px
+  &__markdown
+    font-style italic
+    garamond('l-caption')
+  &__chars
+    avant-garde('s-headline')
+  &__chars, &__markdown, &__image
+    color gray-dark-color
+  &__bio-footer
+    display flex
+    justify-content space-between
+    margin-top 10px
+  &__bio
+    resize none
+    height 80%
+  &__change-image
+    text-decoration underline
+  &__image
+    display flex
+  &__image-missing
+    width 40px
+    height 40px
+    border-radius 50%
+    border 2px solid gray-color
+    &:after
+      content '+'
+      line-height 40px
+      text-align center
+      garamond('headline')
+  &__close
+    position absolute
+    top 30px
+    right 30px
+    avant-garde('s-headline')
+    &:after
+      content '+'
+      line-height 40px
+      text-align center
+      garamond('headline')
+      transform rotate(45deg)

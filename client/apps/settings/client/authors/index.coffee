@@ -11,22 +11,21 @@ AuthorsView = React.createClass
 
   getInitialState: ->
     loading: false
-    author: null
+    editingAuthor: null
     isModalOpen: false
     authors: @props.authors
 
-  editAuthor: (e) ->
+  openModal: (author = null) ->
     @setState
-      author: {}
+      editingAuthor: author
       isModalOpen: true
 
-  addAuthor: ->
-    @setState
-      author: null
-      isModalOpen: true
-
-  onCancel: ->
+  closeModal: ->
     @setState isModalOpen: false
+
+  saveAuthor: (author) ->
+    console.log author
+    # request.post
 
   render: ->
     div {
@@ -34,17 +33,17 @@ AuthorsView = React.createClass
       'data-loading': @state.loading
     },
       AuthorModal {
-        author: @state.author
+        author: @state.editingAuthor
         isOpen: @state.isModalOpen
-        onCancel: @onCancel
+        onClose: @closeModal
+        onSave: @saveAuthor
       }
-      console.log @state.isModalOpen
       div { className: 'page-header'},
         div { className: 'authors-header max-width-container'},
           div {}, 'Authors'
           button {
             className: 'authors-header__button avant-garde-button'
-            onClick: @addAuthor
+            onClick: @openModal
           }, 'Add Author'
       div {
         className: 'authors-list max-width-container'
@@ -61,7 +60,7 @@ AuthorsView = React.createClass
             author.name
             button {
               className: 'authors-list__item-edit avant-garde-button'
-              onClick: @editAuthor
+              onClick: => @openModal(author)
               key: author.id
             }, 'Edit'
         )
