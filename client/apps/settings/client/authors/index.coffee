@@ -5,6 +5,7 @@ sd = require('sharify').data
 request = require 'superagent'
 { div, input, button, img } = React.DOM
 AuthorModal = React.createFactory require './author_modal.coffee'
+Author = require '../../../../models/author.coffee'
 
 AuthorsView = React.createClass
   displayName: 'AuthorsView'
@@ -25,7 +26,11 @@ AuthorsView = React.createClass
 
   saveAuthor: (author) ->
     console.log author
-    # request.post
+    new Author().save author,
+      success: ->
+        console.log 'save success'
+      error: ->
+        console.log 'save error'
 
   render: ->
     div {
@@ -50,12 +55,12 @@ AuthorsView = React.createClass
       },
         (@props.authors.map (author) =>
           div {
-            className: 'authors-list__item'
+            className: 'authors-list__item paginated-list-item'
             key: author.id
           },
             img {
-              src: author.img_url
-              className: 'authors-list__item-image'
+              src: author.image_url
+              className: 'author-image'
             }
             author.name
             button {

@@ -2,20 +2,14 @@ _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, input, button, img, h1, label, textarea, a } = React.DOM
-Modal = require '../../../../components/modal/index.coffee'
+icons = -> require('../../templates/authors/authors_icons.jade') arguments...
 
 module.exports = AuthorModal = React.createClass
   displayName: 'AuthorModal'
 
   getInitialState: ->
-    author: @props.author or @emptyAuthor()
+    author: @props.author or {}
     remainingChars: 200
-
-  emptyAuthor: ->
-    name: ''
-    bio: ''
-    twitter_handle: ''
-    image_url: ''
 
   componentWillReceiveProps: (nextProps) ->
     @setState author: nextProps.author
@@ -50,24 +44,34 @@ module.exports = AuthorModal = React.createClass
                 if @state.author?.image_url
                   img {src: @state.author?.image_url}
                 else
-                  div {className: 'author-edit__image-missing'}
-                div {className: 'author-edit__change-image'}, 'Click to ' +
+                  div {
+                    className: 'author-edit__image-missing'
+                    dangerouslySetInnerHTML: __html:
+                      $(icons()).filter('.profile-icon').html()
+                  }
+                div {
+                  className: 'author-edit__change-image'
+                  onClick: @onUploadImage
+                }, 'Click to ' +
                   if @state.author?.image_url then 'Replace' else 'Upload'
             div {className: 'field-group'},
               label {}, 'Name'
               input {
                 className: 'bordered-input'
                 placeholder: 'Enter name here...'
-                value: @state.author.name
+                value: @state.author.name or ''
                 name: 'name'
                 onChange: @onInputChange
               }
             div {className: 'field-group'},
               label {}, 'Twitter Handle'
+              div {
+                className: 'author-edit__twitter-at'
+              }, '@'
               input {
-                className: 'bordered-input'
+                className: 'bordered-input author-edit__twitter'
                 placeholder: 'Enter Twitter handle here...'
-                value: @state.author.twitter_handle
+                value: @state.author.twitter_handle or ''
                 name: 'twitter_handle'
                 onChange: @onInputChange
               }
@@ -78,7 +82,7 @@ module.exports = AuthorModal = React.createClass
               placeholder: 'Write brief biography...'
               onChange: @onBioChange
               maxLength: 200
-              value: @state.author.bio
+              value: @state.author.bio or ''
             }
             div {className: 'author-edit__bio-footer'},
               div {className: 'author-edit__markdown'}, '* Supports Markdown'
@@ -86,7 +90,7 @@ module.exports = AuthorModal = React.createClass
         div {className: 'fields-full'},
           button {
             className: 'author-edit__button avant-garde-button avant-garde-button-black fields-left'
-            onClick: @props.onSave
+            onClick: => @props.onSave @state.author
           }, 'Save'
           button {
             className: 'author-edit__button avant-garde-button fields-right'

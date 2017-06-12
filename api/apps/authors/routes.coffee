@@ -13,7 +13,7 @@
 
 # POST /api/authors & PUT /api/authors/:id
 @save = (req, res, next) ->
-  Author.save _.extend(req.body, id: req.params.id), (err, author) ->
+  Author.save extend(req.body, id: req.params.id), (err, author) ->
     return next err if err
     res.send present author
 

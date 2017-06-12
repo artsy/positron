@@ -14,10 +14,10 @@ Joi = require '../../lib/joi'
 #
 @schema = ( ->
   id: @string().objectid()
-  name: @string().allow('')
-  bio: @string().allow('')
-  image_url: @string().allow('')
-  twitter_handle: @string().allow('')
+  name: @string().allow('', null).default('')
+  bio: @string().allow('', null).default('')
+  image_url: @string().allow('', null).default('')
+  twitter_handle: @string().allow('', null).default('')
 ).call Joi
 
 @querySchema = (->
