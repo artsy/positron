@@ -130,13 +130,6 @@
     svg
       fill-color black
 
-[data-layout=overflow_fillwidth]
-  .edit-section-controls
-    width 900px
-  .esic-images-list .drag-container
-    display flex
-    justify-content space-between
-
 .esic-image-container
   margin-right 30px
   &:last-of-type
@@ -166,3 +159,11 @@
 .edit-section-container[data-layout=overflow_fillwidth]
   nav .esic-overflow-fillwidth
     opacity 1
+  .edit-section-controls
+    width 900px
+  .esic-images-list
+    .drag-container
+      display flex
+      justify-content space-between
+    &--placeholder .drag-container
+      justify-content center

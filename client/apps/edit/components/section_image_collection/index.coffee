@@ -8,9 +8,7 @@ imagesLoaded = require 'imagesloaded'
 DisplayArtwork = React.createFactory require './components/artwork.coffee'
 DisplayImage = React.createFactory require './components/image.coffee'
 Controls = React.createFactory require './components/controls.coffee'
-
 DragContainer = React.createFactory require '../../../../components/drag_drop/index.coffee'
-
 { div, section, ul, li } = React.DOM
 
 module.exports = React.createClass
@@ -27,7 +25,7 @@ module.exports = React.createClass
 
   onChange: ->
     @forceUpdate() if @$list.children().length isnt @props.section.get('images').length
-    if @props.section.get('images').length > 1 and @props.section.get('layout') != 'column_width'
+    unless @props.section.get('layout') is 'column_width'
       @setState imagesLoaded: false
       @fillwidth()
     else
@@ -74,6 +72,9 @@ module.exports = React.createClass
       @onChange()
 
   render: ->
+    hasImages = @props.section.get('images').length > 0
+    listClass = if hasImages then '' else ' esic-images-list--placeholder'
+
     section {
       className: 'edit-section-image-collection edit-section-image-container'
       onClick: @props.setEditing(true)
@@ -90,37 +91,34 @@ module.exports = React.createClass
             className: 'upload-progress'
             style: width: (@state.progress * 100) + '%'
           }
-      (
-        if @props.section.get('images').length > 0
-          div {
-            className: 'esic-images-list'
-            ref: 'images'
-            style:
-              opacity: if @state.imagesLoaded then 1 else 0
-          },
-            DragContainer {
-              items: @props.section.get('images')
-              onDragEnd: @onDragEnd
-              isDraggable: @props.editing
-            },
-              @props.section.get('images').map (item, i) =>
-                if item.type is 'artwork'
-                  DisplayArtwork {
-                    key: i
-                    index: i
-                    artwork: item
-                    removeItem: @removeItem
-                  }
-                else
-                  DisplayImage {
-                    index: i
-                    key: i
-                    image: item
-                    removeItem: @removeItem
-                    progress: @state.progress
-                    editing:  @props.editing
-                  }
-        else
-          div { className: 'esic-images-list--placeholder', ref: 'images' },
+      div {
+        className: 'esic-images-list' + listClass
+        ref: 'images'
+        style:
+          opacity: if @state.imagesLoaded then 1 else 0
+      },
+        DragContainer {
+          items: @props.section.get('images')
+          onDragEnd: @onDragEnd
+          isDraggable: @props.editing
+        },
+          if hasImages
+            @props.section.get('images').map (item, i) =>
+              if item.type is 'artwork'
+                DisplayArtwork {
+                  key: i
+                  index: i
+                  artwork: item
+                  removeItem: @removeItem
+                }
+              else
+                DisplayImage {
+                  index: i
+                  key: i
+                  image: item
+                  removeItem: @removeItem
+                  progress: @state.progress
+                  editing:  @props.editing
+                }
+          else
             div { className: 'esic-placeholder' }, 'Add images and artworks above'
-      )

@@ -1,9 +1,7 @@
 React = require 'react'
 _ = require 'underscore'
-
 DragTarget = React.createFactory require './drag_target.coffee'
 DragSource = React.createFactory require './drag_source.coffee'
-
 { div } = React.DOM
 
 module.exports = React.createClass
