@@ -15,6 +15,7 @@ AuthorsView = React.createClass
     editingAuthor: null
     isModalOpen: false
     authors: @props.authors
+    errorMessage: ''
 
   openModal: (author = null) ->
     @setState
@@ -25,18 +26,24 @@ AuthorsView = React.createClass
     @setState isModalOpen: false
 
   saveAuthor: (author) ->
-    console.log author
     new Author().save author,
-      success: ->
-        console.log 'save success'
-      error: ->
-        console.log 'save error'
+      success: =>
+        @closeModal()
+      error: (model, res) =>
+        msg = res?.responseJSON?.message or 'There has been an error. Please contact support.'
+        @flashError msg
+
+  flashError: (msg) ->
+    @setState errorMessage: msg
+    setTimeout ( => @setState(errorMessage: '')), 1000
 
   render: ->
     div {
       className: 'authors-container'
       'data-loading': @state.loading
     },
+      if @state.errorMessage
+        div { className: 'flash-error' }, @state.errorMessage
       AuthorModal {
         author: @state.editingAuthor
         isOpen: @state.isModalOpen
