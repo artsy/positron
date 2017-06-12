@@ -17,7 +17,7 @@ AuthorsView = React.createClass
     authors: @props.authors
     errorMessage: ''
 
-  openModal: (author = null) ->
+  openModal: (author) ->
     @setState
       editingAuthor: author
       isModalOpen: true
@@ -26,11 +26,15 @@ AuthorsView = React.createClass
     @setState isModalOpen: false
 
   saveAuthor: (author) ->
+    authors = _.reject @state.authors, (a) -> a.id is author.id
+    authors.unshift author
     new Author().save author,
       success: =>
         @closeModal()
+        @setState authors: authors
       error: (model, res) =>
-        msg = res?.responseJSON?.message or 'There has been an error. Please contact support.'
+        msg = res?.responseJSON?.message or
+          'There has been an error. Please contact support.'
         @flashError msg
 
   flashError: (msg) ->
@@ -55,18 +59,18 @@ AuthorsView = React.createClass
           div {}, 'Authors'
           button {
             className: 'authors-header__button avant-garde-button'
-            onClick: @openModal
+            onClick: => @openModal null
           }, 'Add Author'
       div {
         className: 'authors-list max-width-container'
       },
-        (@props.authors.map (author) =>
+        (@state.authors.map (author) =>
           div {
             className: 'authors-list__item paginated-list-item'
             key: author.id
           },
             img {
-              src: author.image_url
+              src: crop(author.image_url, {width: 80, height: 80}) if author.image_url
               className: 'author-image'
             }
             author.name

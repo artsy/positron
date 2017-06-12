@@ -10,6 +10,7 @@
     font-size 30px
     display flex
     align-items center
+    cursor default
     &:first-child
       border-top 1px solid gray-lighter-color
     &:last-child
@@ -68,9 +69,14 @@
   &__change-image
     text-decoration underline
     margin-left 10px
+    position relative
   &__image
     display flex
     align-items center
+    img
+      border-radius 50%
+      width 40px
+      height 40px
   &__image-missing
     width 40px
     height 40px
@@ -78,13 +84,10 @@
     position absolute
     top 30px
     right 30px
-    avant-garde('s-headline')
-    &:after
-      content '+'
-      line-height 40px
-      text-align center
-      garamond('headline')
-      transform rotate(45deg)
+    svg
+      fill gray-dark-color
+      width 15px
+      height 15px
   &__twitter
     padding-left 30px
   &__twitter-at
@@ -94,3 +97,5 @@
     color gray-dark-color
 .author-image
   border-radius 50%
+  width 40px
+  margin-right 20px

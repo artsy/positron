@@ -1,104 +1,66 @@
-# React = require 'react'
-# ReactDOM = require 'react-dom'
-# gemup = require 'gemup'
-# sd = require('sharify').data
-# { section, h1, h2, span, input, div } = React.DOM
+React = require 'react'
+ReactDOM = require 'react-dom'
+gemup = require 'gemup'
+sd = require('sharify').data
+{ section, h1, h2, span, input, div, label, img } = React.DOM
+icons = -> require('../../templates/authors/authors_icons.jade') arguments...
+{ crop } = require '../../../../components/resizer/index.coffee'
 
-# module.exports = React.createClass
-#   displayName: 'ImageUploadAuthor'
+module.exports = React.createClass
+  displayName: 'ImageUploadAuthor'
 
-#   getInitialState: ->
-#     progress: 0
-#     src: @props.src || ''
-#     error: false
-#     errorType: null
-#     isDragover: false
-#     size: @props.size || 10
+  getInitialState: ->
+    src: @props.src || ''
+    error: false
+    errorType: null
 
-#   upload: (e) ->
-#     @onDragLeave()
-#     if e.target.files[0]?.size > (@state.size * 1000000)
-#       @setState error: true, errorType: 'size'
-#       return
-#     acceptedTypes = ['image/jpg','image/jpeg','image/gif','image/png']
-#     if e.target.files[0]?.type not in acceptedTypes
-#       @setState error: true, errorType: 'type'
-#       return
-#     gemup e.target.files[0],
-#       app: sd.GEMINI_APP
-#       key: sd.GEMINI_KEY
-#       progress: (percent) =>
-#         @setState progress: percent
-#       add: (src) =>
-#         @setState src: src, progress: 0.1, isDragover: false
-#       done: (src) =>
-#         @setState src: src, progress: 0, error: false, errorType: null
-#         @props.onChange(@props.name, src) if @props.onChange
+  componentWillReceiveProps: (nextProps) ->
+    @setState src: nextProps.src
 
-#   onClick: ->
-#     @setState error: false, errorType: null
+  upload: (e) ->
+    if e.target.files[0]?.size > 500000
+      @setState error: true, errorType: 'size'
+      return
+    acceptedTypes = ['image/jpg','image/jpeg','image/png']
+    if e.target.files[0]?.type not in acceptedTypes
+      @setState error: true, errorType: 'type'
+      return
+    gemup e.target.files[0],
+      app: sd.GEMINI_APP
+      key: sd.GEMINI_KEY
+      done: (src) =>
+        @setState src: src, error: false, errorType: null
+        @props.onChange src
 
-#   onDragEnter: ->
-#     unless @props.disabled
-#       @setState isDragover: true
+  render: ->
+    console.log 'props: ' + @props.src
+    console.log 'state: ' + @state.src
+    error = if @state.errorType is 'size' then 'File is too large. 500KB Limit.' else 'Please choose .png, .jpg, or .gif'
 
-#   onDragLeave: ->
-#     @setState isDragover: false
-
-#   remove: ->
-#     @setState src: ''
-#     @props.onChange(@props.name, '') if @props.onChange
-
-#   progressBar: ->
-#     if @state.progress
-#       div { className: 'upload-progress-container' },
-#         div {
-#           className: 'upload-progress'
-#           style: width: (@state.progress * 100) + '%'
-#         }
-
-#   previewImage: ->
-#     if @state.src and !@state.progress > 0
-#       div { className: 'preview' },
-#         div {
-#           className: 'image-upload-form-preview'
-#           style: backgroundImage: 'url(' + @state.src + ')', display: 'block'
-#         }
-#         unless  @props.disabled
-#           div {
-#             className: 'image-upload-form-remove'
-#             style: display: 'block'
-#             onClick: @remove
-#           }
-
-#   render: ->
-#     disabled = if @props.disabled then ' disabled' else ''
-#     isDragover = if @state.isDragover then ' is-dragover' else ''
-#     error = if @state.errorType is 'size' then 'File is too large' else 'Please choose .png, .jpg, or .gif'
-
-#     section {
-#       className: 'image-upload-form' + disabled + isDragover
-#       onClick: @onClick
-#       onDragEnter: @onDragEnter
-#       onDragLeave: @onDragLeave
-#     },
-#       h1 {}, 'Drag & ',
-#         span { className: 'image-upload-form-drop' }, 'drop'
-#         ' or '
-#         span { className: 'image-upload-form-click' }, 'click'
-#       h2 {}, 'Up to ' + @state.size + 'mb'
-#       input {
-#         type: 'file'
-#         accept: ['image/jpg','image/jpeg','image/gif','image/png']
-#         onChange: @upload
-#         className: 'image-upload-form-input'
-#         disabled: @props.disabled
-#       }
-#       @previewImage()
-#       @progressBar()
-
-#       if @state.error
-#         div {
-#           className: 'size-error'
-#           style: display: 'block'
-#         }, error
+    div {className: 'field-group'},
+      label {}, 'Profile Photo'
+      div { className: 'author-edit__image'},
+        if @state.src
+          img {src: crop(@state.src, {width: 80, height: 80})}
+        else
+          div {
+            className: 'author-edit__image-missing'
+            dangerouslySetInnerHTML: __html:
+              $(icons()).filter('.profile-icon').html()
+          }
+        div {
+          className: 'author-edit__change-image'
+        },
+          'Click to ' +
+            if @state.src then 'Replace' else 'Upload'
+          input {
+            type: 'file'
+            accept: ['image/jpg','image/jpeg','image/gif','image/png']
+            onChange: @upload
+            className: 'image-upload-form-input'
+          }
+      if @state.error
+        div {
+          className: 'size-error'
+          style: display: 'block'
+        }, error
