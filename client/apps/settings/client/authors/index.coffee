@@ -6,8 +6,9 @@ request = require 'superagent'
 { div, input, button, img } = React.DOM
 AuthorModal = React.createFactory require './author_modal.coffee'
 Author = require '../../../../models/author.coffee'
+{ crop } = require '../../../../components/resizer/index.coffee'
 
-AuthorsView = React.createClass
+module.exports.AuthorsView = AuthorsView = React.createClass
   displayName: 'AuthorsView'
 
   getInitialState: ->
@@ -58,7 +59,7 @@ AuthorsView = React.createClass
         div { className: 'authors-header max-width-container'},
           div {}, 'Authors'
           button {
-            className: 'authors-header__button avant-garde-button'
+            className: 'authors-header__add-author avant-garde-button'
             onClick: => @openModal null
           }, 'Add Author'
       div {

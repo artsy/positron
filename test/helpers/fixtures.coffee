@@ -175,7 +175,7 @@ module.exports = ->
     id: '55356a9deca560a0137bb4a7'
     name: 'Halley Johnson'
     bio: 'Writer based in NYC'
-    twitter_handle: '@kanaabe'
+    twitter_handle: 'kanaabe'
     image_url: 'https://artsy-media.net/halley.jpg'
   fixtures.locals =
     asset: ->

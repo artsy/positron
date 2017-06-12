@@ -3,7 +3,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 { div, input, button, img, h1, label, textarea, a } = React.DOM
 icons = -> require('../../templates/authors/authors_icons.jade') arguments...
-ImageUpload = React.createFactory require './image_upload_author.coffee'
+AuthorImage = React.createFactory require './author_image.coffee'
 
 module.exports = AuthorModal = React.createClass
   displayName: 'AuthorModal'
@@ -26,7 +26,6 @@ module.exports = AuthorModal = React.createClass
     @setState author: author
 
   onImageChange: (src) ->
-    console.log 'changing the image url'
     author = _.extend {}, @state.author, image_url: src
     @setState author: author
 
@@ -50,7 +49,7 @@ module.exports = AuthorModal = React.createClass
         div {className: 'author-edit fields-full admin-form-container'},
           div {className: 'fields-left'},
             console.log @state.author
-            ImageUpload {
+            AuthorImage {
               onChange: @onImageChange
               src: @state.author?.image_url
             }

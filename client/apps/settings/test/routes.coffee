@@ -1,4 +1,5 @@
-routes = require '../routes'
+rewire = require 'rewire'
+routes = rewire '../routes'
 _ = require 'underscore'
 Backbone = require 'backbone'
 sinon = require 'sinon'
@@ -9,8 +10,14 @@ describe 'routes', ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
+    routes.__set__ 'Lokka', sinon.stub().returns(
+      query: sinon.stub().returns
+        then: sinon.stub().yields({ authors: [fixtures().authors] }).returns
+          catch: sinon.stub().yields()
+    )
     @req = { query: {}, user: new User(fixtures().users), params: {} }
     @res = { render: sinon.stub(), redirect: sinon.stub(), locals: fixtures().locals }
+    @next = ->
 
   afterEach ->
     Backbone.sync.restore()
@@ -60,3 +67,14 @@ describe 'routes', ->
       routes.tags @req, @res
       Backbone.sync.args[0][2].success fixtures().tags
       @res.render.args[0][0].should.equal 'tags/tags_index'
+
+  describe 'Authors', ->
+
+    it 'fetches authors', ->
+      routes.authors @req, @res, @next
+      @res.locals.sd.AUTHORS.length.should.equal 1
+
+    it 'renders authors page', ->
+      routes.authors @req, @res, @next
+      @res.render.args[0][0].should.equal 'authors/authors_index'
+      @res.render.args[0][1].authors.length.should.equal 1

@@ -86,5 +86,5 @@ describe 'resolvers', ->
         results.length.should.equal 1
         results[0].name.should.equal 'Halley Johnson'
         results[0].bio.should.equal 'Writer based in NYC'
-        results[0].twitter_handle.should.equal '@kanaabe'
+        results[0].twitter_handle.should.equal 'kanaabe'
         results[0].image_url.should.equal 'https://artsy-media.net/halley.jpg'

@@ -7,7 +7,7 @@ icons = -> require('../../templates/authors/authors_icons.jade') arguments...
 { crop } = require '../../../../components/resizer/index.coffee'
 
 module.exports = React.createClass
-  displayName: 'ImageUploadAuthor'
+  displayName: 'AuthorImage'
 
   getInitialState: ->
     src: @props.src || ''
