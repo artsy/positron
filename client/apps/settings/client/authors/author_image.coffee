@@ -6,7 +6,7 @@ sd = require('sharify').data
 icons = -> require('../../templates/authors/authors_icons.jade') arguments...
 { crop } = require '../../../../components/resizer/index.coffee'
 
-module.exports = React.createClass
+module.exports = AuthorImage = React.createClass
   displayName: 'AuthorImage'
 
   getInitialState: ->
@@ -33,8 +33,6 @@ module.exports = React.createClass
         @props.onChange src
 
   render: ->
-    console.log 'props: ' + @props.src
-    console.log 'state: ' + @state.src
     error = if @state.errorType is 'size' then 'File is too large. 500KB Limit.' else 'Please choose .png, .jpg, or .gif'
 
     div {className: 'field-group'},

@@ -11,39 +11,48 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-describe 'AuthorsView', ->
+describe 'AuthorImage', ->
 
   beforeEach (done) ->
     benv.setup =>
-      { AuthorsView } = mod = benv.requireWithJadeify(
-        resolve(__dirname, '../../client/authors/')
-        []
+      benv.expose $: benv.require 'jquery'
+      AuthorImage = benv.requireWithJadeify(
+        resolve(__dirname, '../../../client/authors/author_image')
+        ['icons']
       )
-      mod.__set__ 'AuthorImage', @AuthorImage = sinon.stub()
-      # mod.__set__ 'sd', { API_URL: 'https://writer.artsy.net/api' }
-      # mod.__set__ 'request', @request
-      sinon.stub Backbone, 'sync'
-      props = authors: [fixtures().authors]
+      AuthorImage.__set__ 'AuthorImage', @AuthorImage = sinon.stub()
+      AuthorImage.__set__ 'gemup', @gemup = sinon.stub()
+      props =
+        src: 'https://artsy.net/image.jpg'
+        onChange: @onChange = sinon.stub()
       @rendered = ReactDOMServer.renderToString(
-        React.createElement(AuthorsView, props)
+        React.createElement(AuthorImage, props)
       )
       @component = ReactDOM.render(
-        React.createElement(AuthorsView, props),
+        React.createElement(AuthorImage, props),
         (@$el = $ "<div></div>")[0],
         =>
       )
       done()
 
   afterEach ->
-    Backbone.sync.restore()
     benv.teardown()
 
-  it 'renders list of authors', ->
-    @rendered.should.containEql 'Halley Johnson'
+  it 'renders image src', ->
+    @rendered.should.containEql '?resize_to=fill&amp;src=https%3A%2F%2Fartsy.net%2Fimage.jpg&amp;width=80&amp;height=80&amp;quality=95'
 
-  it 'opens the modal with an empty author on Add Author', ->
-    r.simulate.click r.find @component, 'authors-header__add-author'
-    console.log @AuthorModal.args
+  it 'uploads image', ->
+    @component.upload target: files: [size: 400000, type: 'image/jpg']
+    @gemup.args[0][1].done('http://gemini-uploaded/img.jpg')
+    @component.state.src.should.equal 'http://gemini-uploaded/img.jpg'
+    @onChange.args[0][0].should.equal 'http://gemini-uploaded/img.jpg'
 
-  it 'opens the modal with an author on Edit Author', ->
-    r.simulate.click r.find @component, 'authors-list__item-edit'
+  it 'displays an error if image is too large', ->
+    @component.upload target: files: [size: 6000000]
+    @component.state.error.should.be.true()
+    @component.state.errorType.should.equal 'size'
+
+  it 'displays an error if image is not an accepted type', ->
+    @component.upload target: files: [size: 400000, type: 'gif']
+    @component.state.error.should.be.true()
+    @component.state.errorType.should.equal 'type'

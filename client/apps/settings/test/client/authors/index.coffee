@@ -1,6 +1,7 @@
 _ = require 'underscore'
 benv = require 'benv'
 sinon = require 'sinon'
+Backbone = require 'backbone'
 { resolve } = require 'path'
 fixtures = require '../../../../../../test/helpers/fixtures'
 React = require 'react'
@@ -16,6 +17,7 @@ describe 'AuthorsView', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
+      sinon.stub Backbone, 'sync'
       { AuthorsView } = mod = benv.requireWithJadeify(
         resolve(__dirname, '../../../client/authors/index')
         []
@@ -33,6 +35,7 @@ describe 'AuthorsView', ->
       done()
 
   afterEach ->
+    Backbone.sync.restore()
     benv.teardown()
 
   it 'renders list of authors', ->
@@ -41,7 +44,7 @@ describe 'AuthorsView', ->
   it 'opens the modal with an empty author on Add Author', ->
     r.simulate.click r.find @component, 'authors-header__add-author'
     @AuthorModal.args[2][0].isOpen.should.be.true()
-    # should.equal @AuthorModal.args[2].author, null
+    (@AuthorModal.args[2][0].author is null).should.be.true()
 
   it 'opens the modal with an author on Edit Author', ->
     r.simulate.click r.find @component, 'authors-list__item-edit'
@@ -51,3 +54,18 @@ describe 'AuthorsView', ->
     @AuthorModal.args[2][0].author.bio.should.equal 'Writer based in NYC'
     @AuthorModal.args[2][0].author.twitter_handle.should.equal 'kanaabe'
     @AuthorModal.args[2][0].author.image_url.should.equal 'https://artsy-media.net/halley.jpg'
+
+  it 'closes the modal', ->
+    @component.closeModal()
+    @component.state.isModalOpen.should.be.false()
+
+  it 'saves an author', ->
+    @component.saveAuthor(id: '123456', name: 'Kana Abe')
+    Backbone.sync.args[0][2].success()
+    @component.state.authors.length.should.equal 2
+    @component.state.authors[0].name.should.equal 'Kana Abe'
+
+  it ' displays a save error', ->
+    @component.saveAuthor(id: '123456', name: 123)
+    Backbone.sync.args[0][2].error()
+    @component.state.errorMessage.should.equal 'There has been an error. Please contact support.'

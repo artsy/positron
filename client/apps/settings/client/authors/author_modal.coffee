@@ -15,15 +15,15 @@ module.exports = AuthorModal = React.createClass
   componentWillReceiveProps: (nextProps) ->
     @setState author: nextProps.author
 
-  onBioChange: (e) ->
-    author = _.extend {}, @state.author, bio: e.target.value
-    @setState
-      remainingChars: 200 - e.target.value.length
-      author: author
-
   onInputChange: (e) ->
     author = _.extend {}, @state.author, "#{e.target.name}": e.target.value
-    @setState author: author
+    if e.target.name is 'bio'
+      remainingChars = 200 - e.target.value.length
+    else
+      remainingChars = @state.remainingChars
+    @setState
+      author: author
+      remainingChars: remainingChars if remainingChars
 
   onImageChange: (src) ->
     author = _.extend {}, @state.author, image_url: src
@@ -48,7 +48,6 @@ module.exports = AuthorModal = React.createClass
           h1 {}, 'Add New Author'
         div {className: 'author-edit fields-full admin-form-container'},
           div {className: 'fields-left'},
-            console.log @state.author
             AuthorImage {
               onChange: @onImageChange
               src: @state.author?.image_url
@@ -56,7 +55,7 @@ module.exports = AuthorModal = React.createClass
             div {className: 'field-group'},
               label {}, 'Name'
               input {
-                className: 'bordered-input'
+                className: 'bordered-input author-edit__name'
                 placeholder: 'Enter name here...'
                 value: @state.author?.name or ''
                 name: 'name'
@@ -79,9 +78,10 @@ module.exports = AuthorModal = React.createClass
             textarea {
               className: 'author-edit__bio bordered-input'
               placeholder: 'Write brief biography...'
-              onChange: @onBioChange
+              onChange: @onInputChange
               maxLength: 200
               value: @state.author?.bio or ''
+              name: 'bio'
             }
             div {className: 'author-edit__bio-footer'},
               div {className: 'author-edit__markdown'}, '* Supports Markdown'
