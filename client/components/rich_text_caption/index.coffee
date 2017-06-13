@@ -1,4 +1,5 @@
 React = require 'react'
+ReactDOM = require 'react-dom'
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 { convertToRaw,
@@ -13,6 +14,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 InputUrl = React.createFactory require '../rich_text/components/input_url.coffee'
 Decorators = require '../rich_text/utils/decorators.coffee'
+{ keyBindingFnCaption }  = require '../rich_text/utils/index.coffee'
 icons = -> require('../rich_text/utils/icons.jade') arguments...
 { div, button, p, a, input } = React.DOM
 editor = (props) -> React.createElement Editor, props
@@ -34,6 +36,7 @@ module.exports = React.createClass
     html: null
     focus: false
     selectionTarget: null
+    showMenu: false
 
   componentDidMount: ->
     if @props.item.caption?.length
@@ -55,7 +58,9 @@ module.exports = React.createClass
     @refs.editor.focus()
 
   onBlur: ->
-    @setState focus: false
+    @setState
+      focus: false
+      showMenu: false
 
   onStyleChange: (e) ->
     e.preventDefault()
@@ -111,12 +116,12 @@ module.exports = React.createClass
 
   promptForLink: (e) ->
     { editorState } = @state
-    e.preventDefault()
+    e.preventDefault() if e
     selection = editorState.getSelection()
     selectionTarget = {top: 0, left: 0}
     url = ''
     if !selection.isCollapsed()
-      selectionTarget = @stickyLinkBox()
+      selectionTarget = @stickyControlsBox(25, 200)
       contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
@@ -125,21 +130,36 @@ module.exports = React.createClass
       if linkKey
         linkInstance = contentState.getEntity(linkKey)
         url = linkInstance.getData().url
-    @setState({showUrlInput: true, urlValue: url, selectionTarget: selectionTarget})
+    @setState
+      showUrlInput: true
+      showMenu: false
+      urlValue: url
+      selectionTarget: selectionTarget
 
   getSelectionLocation: ->
-    target = getVisibleSelectionRect(window)
+    selection = window.getSelection().getRangeAt(0).getClientRects()
+    if selection[0].width is 0
+      target = selection[1]
+    else
+      target = selection[0]
+    $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
     parent = {
-      top: $('.rich-text--caption__input').offset().top - window.pageYOffset
-      left: $('.rich-text--caption__input').offset().left
+      top: $parent.top - window.pageYOffset
+      left: $parent.left
     }
     return {target: target, parent: parent}
 
-  stickyLinkBox: ->
+  stickyControlsBox: (fromTop, fromLeft) ->
     location = @getSelectionLocation()
-    top = location.target.top - location.parent.top + 25
-    left = location.target.left - location.parent.left + (location.target.width / 2) - 200
+    top = location.target.top - location.parent.top + fromTop
+    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
     return {top: top, left: left}
+
+  checkSelection: ->
+    if !window.getSelection().isCollapsed
+      @setState showMenu: true, selectionTarget: @stickyControlsBox(-50, 45)
+    else
+      @setState showMenu: false
 
   confirmLink: (urlValue) ->
     { editorState } = @state
@@ -153,6 +173,7 @@ module.exports = React.createClass
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
     @setState({
       showUrlInput: false
+      showMenu: false
       urlValue: ''
       selectionTarget: null
     })
@@ -180,9 +201,9 @@ module.exports = React.createClass
   handleKeyCommand: (e) ->
     if e is 'italic'
       newState = RichUtils.handleKeyCommand @state.editorState, e
-      if newState
-        @onChange newState
-        return true
+      return @onChange newState if newState
+    if e is 'link-prompt'
+      return @promptForLink()
     return false
 
   printUrlInput: ->
@@ -195,32 +216,40 @@ module.exports = React.createClass
       }
 
   render: ->
-    hasFocus = if @state.focus then ' has-focus' else ' no-focus'
-
     div { className: 'rich-text--caption' },
       div {
-        className: 'rich-text--caption__input bordered-input' + hasFocus
+        className: 'rich-text--caption__input'
         onClick: @focus
         onBlur: @onBlur
+        onMouseUp: @checkSelection
+        onKeyUp: @checkSelection
       },
         editor {
           ref: 'editor'
-          placeholder: 'Media caption'
+          placeholder: @props.placeholder or 'Media caption'
           editorState: @state.editorState
           spellCheck: true
+          readOnly: !@props.editing or false
           onChange: @onChange
           handlePastedText: @onPaste
           handleReturn: @handleReturn
           handleKeyCommand: @handleKeyCommand
+          keyBindingFn: keyBindingFnCaption
         }
-      div { className: 'rich-text--caption__actions'},
-        button {
-          onMouseDown: @onStyleChange
-          className: 'italic'
-        }, 'I'
-        button {
-          onMouseDown: @promptForLink
-          className: 'link'
-          dangerouslySetInnerHTML: __html: $(icons()).filter('.link').html()
-        }
+      if @state.showMenu and @props.editing
+        div {
+          className: 'rich-text--caption__actions rich-text--nav'
+          style:
+            top: @state.selectionTarget?.top
+            marginLeft: @state.selectionTarget?.left
+        },
+          button {
+            onMouseDown: @onStyleChange
+            className: 'italic'
+          }, 'I'
+          button {
+            onMouseDown: @promptForLink
+            className: 'link'
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.link').html()
+          }
       @printUrlInput()

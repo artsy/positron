@@ -16,15 +16,11 @@ module.exports = React.createClass
         src: if @props.progress then image.url else resize image.url, width: 900
         style: opacity: if @props.progress then @props.progress else '1'
       }
-      if @props.editing
-        RichTextCaption {
-          item: image
-        }
-      else
-        div {
-          dangerouslySetInnerHTML: __html: image.caption
-          className: 'esic-caption esic-caption--display'
-        }
+      RichTextCaption {
+        item: image
+        editing: @props.editing
+        placeholder: 'Image Caption'
+      }
       button {
         className: 'edit-section-remove button-reset esic-img-remove'
         onClick: @props.removeItem(image)
