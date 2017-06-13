@@ -130,11 +130,6 @@
     svg
       fill-color black
 
-.esic-image-container
-  margin-right 30px
-  &:last-of-type
-    margin-right 0
-
 .edit-section-container[data-editing=false][data-type=image_collection]
   .edit-section-remove
     display block
@@ -148,6 +143,10 @@
     display block
   .esic-nav
     display inline-block
+  .drag-target[data-target=true]
+    .esic-img-remove,
+    .esic-caption
+      display none
 
 //
 // Varying layouts
@@ -165,5 +164,6 @@
     .drag-container
       display flex
       justify-content space-between
-    &--placeholder .drag-container
-      justify-content center
+    &--placeholder, &.single
+      .drag-container
+        justify-content center

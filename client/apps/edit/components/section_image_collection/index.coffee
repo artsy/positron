@@ -25,7 +25,7 @@ module.exports = React.createClass
 
   onChange: ->
     @forceUpdate() if @$list.children().length isnt @props.section.get('images').length
-    unless @props.section.get('layout') is 'column_width'
+    unless @props.section.get('layout') is 'column_width' or @props.section.get('images').length < 2
       @setState imagesLoaded: false
       @fillwidth()
     else
@@ -73,6 +73,7 @@ module.exports = React.createClass
 
   render: ->
     hasImages = @props.section.get('images').length > 0
+    isSingle = if @props.section.get('images').length is 1 then ' single' else ''
     listClass = if hasImages then '' else ' esic-images-list--placeholder'
 
     section {
@@ -92,7 +93,7 @@ module.exports = React.createClass
             style: width: (@state.progress * 100) + '%'
           }
       div {
-        className: 'esic-images-list' + listClass
+        className: 'esic-images-list' + listClass + isSingle
         ref: 'images'
         style:
           opacity: if @state.imagesLoaded then 1 else 0
