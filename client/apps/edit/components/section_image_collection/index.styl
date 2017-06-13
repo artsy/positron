@@ -89,19 +89,20 @@
   opacity 0
   &--placeholder
     opacity 1
-  li
-    margin-bottom 30px
-    position relative
-    p
-      color gray-darker-color
-      garamond l-caption
-      white-space initial
-      .title
-        font-style italic
+  p
+    color gray-darker-color
+    garamond l-caption
+    white-space initial
+    .title
+      font-style italic
   img
     max-width 100%
     width 100%
     height auto
+
+  .esic-img-container
+    position relative
+    margin-bottom 30px
 
   .esis-caption-container
     display flex
@@ -129,17 +130,6 @@
     svg
       fill-color black
 
-[data-layout=overflow_fillwidth]
-  .edit-section-controls
-    width 900px
-  .esic-images-list
-    display flex
-    justify-content center
-    li
-      margin-right 30px
-      &:last-of-type
-        margin-right 0
-
 .edit-section-container[data-editing=false][data-type=image_collection]
   .edit-section-remove
     display block
@@ -153,6 +143,10 @@
     display block
   .esic-nav
     display inline-block
+  .drag-target[data-target=true]
+    .esic-img-remove,
+    .esic-caption
+      display none
 
 //
 // Varying layouts
@@ -164,3 +158,12 @@
 .edit-section-container[data-layout=overflow_fillwidth]
   nav .esic-overflow-fillwidth
     opacity 1
+  .edit-section-controls
+    width 900px
+  .esic-images-list
+    .drag-container
+      display flex
+      justify-content space-between
+    &--placeholder, &.single
+      .drag-container
+        justify-content center

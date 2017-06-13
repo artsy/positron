@@ -86,7 +86,7 @@ module.exports = React.createClass
         onDragStart: @onDragStart
         onDragEnd: @props.onDragEnd
         onDragOver: @onDragOver
-        style: {'opacity': .65} if @isDragging()
+        style: {'opacity': .65} if @isDragging() and !@props.editing
       }
     return props
 
@@ -99,7 +99,7 @@ module.exports = React.createClass
         'data-type': @props.section.get('type')
         'data-layout': @props.section.get('layout')
         'data-id': @props.index
-        'data-dragging': @isDragging()
+        'data-dragging': @isDragging() and !@props.editing
       },
         unless @props.section.get('type') is 'fullscreen'
           div {

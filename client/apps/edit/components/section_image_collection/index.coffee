@@ -8,6 +8,7 @@ imagesLoaded = require 'imagesloaded'
 DisplayArtwork = React.createFactory require './components/artwork.coffee'
 DisplayImage = React.createFactory require './components/image.coffee'
 Controls = React.createFactory require './components/controls.coffee'
+DragContainer = React.createFactory require '../../../../components/drag_drop/index.coffee'
 { div, section, ul, li } = React.DOM
 
 module.exports = React.createClass
@@ -15,48 +16,66 @@ module.exports = React.createClass
 
   getInitialState: ->
     progress: null
+    imagesLoaded: false
 
   componentDidMount: ->
-    @$list = $(@refs.images)
+    @$list = $(@refs.images).find('.drag-container')
     imagesLoaded @$list, =>
       @onChange()
-      @$list.animate({opacity: 1}, 250) if @props.section.get('layout') != 'column_width'
 
   onChange: ->
     @forceUpdate() if @$list.children().length isnt @props.section.get('images').length
-    if @props.section.get('images').length > 1 and @props.section.get('layout') != 'column_width'
+    unless @props.section.get('layout') is 'column_width' or @props.section.get('images').length < 2
+      @setState imagesLoaded: false
       @fillwidth()
     else
       @removeFillwidth()
+      @setState imagesLoaded: true
 
   setProgress: (progress) ->
     if progress
-      @setState progress: progress
+      @setState
+        progress: progress
+        imagesLoaded: false
     else
       imagesLoaded @$list, =>
         @onChange()
-        @setState progress: progress
+        @setState
+          progress: progress
 
   removeItem: (item) -> =>
+    @setState imagesLoaded: false
     newImages = _.without @props.section.get('images'), item
     @props.section.set images: newImages
-    @onChange()
+    imagesLoaded @$list, =>
+      @onChange()
 
   fillwidth: ->
-    @$list.css('opacity', 0)
     @removeFillwidth()
     @$list.fillwidthLite
       gutterSize: 30
       apply: (img, i) ->
-        img.$el.closest('li').width(img.width)
+        img.$el.closest('.esic-img-container').width(img.width)
       done: (imgs) =>
-        @setState progress: null
-        @$list.animate({opacity: 1}, 250)
+        @setState
+          progress: null
+          imagesLoaded: true
 
   removeFillwidth: ->
-    @$list.find('li').css(width: '', padding: '')
+    @setState imagesLoaded: false
+    @$list.find('.esic-img-container').css(width: '', padding: '')
+
+  onDragEnd: (images) ->
+    @setState imagesLoaded: false
+    @props.section.set 'images', images
+    imagesLoaded @$list, =>
+      @onChange()
 
   render: ->
+    hasImages = @props.section.get('images').length > 0
+    isSingle = if @props.section.get('images').length is 1 then ' single' else ''
+    listClass = if hasImages then '' else ' esic-images-list--placeholder'
+
     section {
       className: 'edit-section-image-collection edit-section-image-container'
       onClick: @props.setEditing(true)
@@ -73,32 +92,34 @@ module.exports = React.createClass
             className: 'upload-progress'
             style: width: (@state.progress * 100) + '%'
           }
-      (
-        if @props.section.get('images').length > 0
-          ul { className: 'esic-images-list', ref: 'images' },
+      div {
+        className: 'esic-images-list' + listClass + isSingle
+        ref: 'images'
+        style:
+          opacity: if @state.imagesLoaded then 1 else 0
+      },
+        DragContainer {
+          items: @props.section.get('images')
+          onDragEnd: @onDragEnd
+          isDraggable: @props.editing
+        },
+          if hasImages
             @props.section.get('images').map (item, i) =>
-              li {
-                key: i
-                style:
-                  opacity: if @state.progress then 0 else 1
-              },
-                if item.type is 'artwork'
-                  DisplayArtwork {
-                    key: 'artwork-' + i
-                    index: i
-                    artwork: item
-                    removeItem: @removeItem
-                  }
-                else
-                  DisplayImage {
-                    key: 'image-' + i
-                    index: i
-                    image: item
-                    removeItem: @removeItem
-                    progress: @state.progress
-                    editing:  @props.editing
-                  }
-        else
-          ul { className: 'esic-images-list--placeholder', ref: 'images' },
-            li { className: 'esic-placeholder' }, 'Add images and artworks above'
-      )
+              if item.type is 'artwork'
+                DisplayArtwork {
+                  key: i
+                  index: i
+                  artwork: item
+                  removeItem: @removeItem
+                }
+              else
+                DisplayImage {
+                  index: i
+                  key: i
+                  image: item
+                  removeItem: @removeItem
+                  progress: @state.progress
+                  editing:  @props.editing
+                }
+          else
+            div { className: 'esic-placeholder' }, 'Add images and artworks above'
