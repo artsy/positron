@@ -42,7 +42,7 @@ module.exports = AuthorModal = React.createClass
           dangerouslySetInnerHTML: __html:
             $(icons()).filter('.close').html()
         }
-        if @state.author
+        if @state.author?.name
           h1 {}, "Edit #{@state.author.name}"
         else
           h1 {}, 'Add New Author'
@@ -85,7 +85,8 @@ module.exports = AuthorModal = React.createClass
             }
             div {className: 'author-edit__bio-footer'},
               div {className: 'author-edit__markdown'}, '* Supports Markdown'
-              div {className: 'author-edit__chars'}, @state.remainingChars.toString() + '/200'
+              div {className: 'author-edit__chars'},
+                @state.remainingChars.toString() + '/200'
         div {className: 'fields-full'},
           button {
             className: 'author-edit__button avant-garde-button avant-garde-button-black fields-left'
