@@ -6,6 +6,7 @@ Article = require '../articles/model/schema'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
 Tag = require '../tags/model'
+Author = require '../authors/model'
 { setUser } = require '../users/routes.coffee'
 User = require '../users/model.coffee'
 resolvers = require './resolvers'
@@ -37,6 +38,12 @@ schema = joiql
     )).meta(
       args: Tag.querySchema
       resolve: resolvers.tags
+    )
+    authors: array().items(object(
+      Author.schema
+    )).meta(
+      args: Author.querySchema
+      resolve: resolvers.authors
     )
 
 app.use '/graphql', setUser, graphqlHTTP(

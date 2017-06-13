@@ -4,6 +4,10 @@ Curation = require '../../models/curation'
 Channels = require '../../collections/channels'
 Channel = require '../../models/channel'
 Tags = require '../../collections/tags'
+authorsQuery = require './queries/authors_query.coffee'
+Lokka = require('lokka').Lokka
+Transport = require('lokka-transport-http').Transport
+{ API_URL } = process.env
 
 @index = (req, res) ->
   res.render 'index'
@@ -62,3 +66,15 @@ Tags = require '../../collections/tags'
     success: (tags) ->
       res.locals.sd.TAGS = tags.toJSON()
       res.render 'tags/tags_index'
+
+@authors = (req, res, next) ->
+  headers =
+    'X-Access-Token': req?.user.get('access_token')
+
+  client = new Lokka
+    transport: new Transport(API_URL + '/graphql', {headers})
+  client.query(authorsQuery())
+    .then (result) ->
+      res.locals.sd.AUTHORS = result.authors
+      res.render 'authors/authors_index', authors: result.authors
+    .catch next
