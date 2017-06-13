@@ -1,7 +1,7 @@
 _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
-{ div, input, button, img, h1, label, textarea, a } = React.DOM
+{ div, input, button, h1, label, textarea } = React.DOM
 icons = -> require('../../templates/authors/authors_icons.jade') arguments...
 AuthorImage = React.createFactory require './author_image.coffee'
 
@@ -23,7 +23,7 @@ module.exports = AuthorModal = React.createClass
       remainingChars = @state.remainingChars
     @setState
       author: author
-      remainingChars: remainingChars if remainingChars
+      remainingChars: remainingChars
 
   onImageChange: (src) ->
     author = _.extend {}, @state.author, image_url: src

@@ -2,7 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 gemup = require 'gemup'
 sd = require('sharify').data
-{ section, h1, h2, span, input, div, label, img } = React.DOM
+{ input, div, label, img } = React.DOM
 icons = -> require('../../templates/authors/authors_icons.jade') arguments...
 { crop } = require '../../../../components/resizer/index.coffee'
 
@@ -33,7 +33,7 @@ module.exports = AuthorImage = React.createClass
         @props.onChange src
 
   render: ->
-    error = if @state.errorType is 'size' then 'File is too large. 500KB Limit.' else 'Please choose .png, .jpg, or .gif'
+    error = if @state.errorType is 'size' then 'File is too large. 500KB Limit.' else 'Please choose .png, or .jpg'
 
     div {className: 'field-group'},
       label {}, 'Profile Photo'
@@ -53,7 +53,7 @@ module.exports = AuthorImage = React.createClass
             if @state.src then 'Replace' else 'Upload'
           input {
             type: 'file'
-            accept: ['image/jpg','image/jpeg','image/gif','image/png']
+            accept: ['image/jpg','image/jpeg','image/png']
             onChange: @upload
             className: 'image-upload-form-input'
           }

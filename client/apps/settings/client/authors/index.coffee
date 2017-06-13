@@ -2,8 +2,7 @@ _ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
-request = require 'superagent'
-{ div, input, button, img } = React.DOM
+{ div, button, img } = React.DOM
 AuthorModal = React.createFactory require './author_modal.coffee'
 Author = require '../../../../models/author.coffee'
 { crop } = require '../../../../components/resizer/index.coffee'
@@ -12,10 +11,9 @@ module.exports.AuthorsView = AuthorsView = React.createClass
   displayName: 'AuthorsView'
 
   getInitialState: ->
-    loading: false
     editingAuthor: null
     isModalOpen: false
-    authors: @props.authors
+    authors: @props.authors or []
     errorMessage: ''
 
   openModal: (author) ->
@@ -45,7 +43,6 @@ module.exports.AuthorsView = AuthorsView = React.createClass
   render: ->
     div {
       className: 'authors-container'
-      'data-loading': @state.loading
     },
       if @state.errorMessage
         div { className: 'flash-error' }, @state.errorMessage
