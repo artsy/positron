@@ -17,6 +17,7 @@ describe 'ImageCollection', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       $.fn.fillwidthLite = sinon.stub()
+      global.HTMLElement = () => {}
       @ImageCollection = benv.require resolve(__dirname, '../index')
       DisplayArtwork = benv.requireWithJadeify(
         resolve(__dirname, '../components/artwork')
@@ -26,7 +27,11 @@ describe 'ImageCollection', ->
         resolve(__dirname, '../components/image')
         ['icons']
       )
-      DisplayImage.__set__ 'RichTextCaption', sinon.stub()
+      RichTextCaption = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../components/rich_text_caption/index')
+        ['icons']
+      )
+      DisplayImage.__set__ 'RichTextCaption', React.createFactory RichTextCaption
       Controls = benv.require resolve(__dirname, '../components/controls')
       Controls.__set__ 'Autocomplete', sinon.stub()
       Controls.__set__ 'UrlArtworkInput', sinon.stub()
@@ -66,15 +71,14 @@ describe 'ImageCollection', ->
     benv.teardown()
 
   it 'renders an image collection component with preview', ->
-    rendered = ReactDOMServer.renderToString React.createElement(@ImageCollection, @props)
-    $(rendered).find('img').length.should.eql 2
-    $(rendered).find('.esic-caption--display').css('display').should.equal 'block'
-    $(rendered).find('.esic-caption--display').html().should.containEql '<p>Here is a caption</p>'
+    $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
   it 'renders a placeholder if no images', ->
-    @props.section.set 'images', []
-    rendered = ReactDOMServer.renderToString React.createElement(@ImageCollection, @props)
-    $(rendered).find('.esic-placeholder').html().should.containEql 'Add images and artworks above'
+    @component.props.section.set 'images', []
+    @component.forceUpdate()
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add images and artworks above'
 
   it 'renders a progress indicator if progress', ->
     @component.setState progress: .5

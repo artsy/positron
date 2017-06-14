@@ -20,7 +20,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   blockTypes,
   blockRenderMap,
   decorators } = require './draft_config.coffee'
-{ stripGoogleStyles, keyBindingFn } = require '../../../../components/rich_text/utils/index.coffee'
+{ stripGoogleStyles, keyBindingFnFull } = require '../../../../components/rich_text/utils/index.coffee'
 
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
@@ -339,7 +339,7 @@ module.exports = React.createClass
     },
       if @state.showMenu
         nav {
-          className: 'edit-section-text__menu' + hasPlugins
+          className: 'edit-section-text__menu rich-text--nav' + hasPlugins
           style:
             top: @state.selectionTarget?.top
             marginLeft: @state.selectionTarget?.left
@@ -361,7 +361,7 @@ module.exports = React.createClass
           onChange: @onChange
           decorators: decorators
           handleKeyCommand: @handleKeyCommand
-          keyBindingFn: keyBindingFn
+          keyBindingFn: keyBindingFnFull
           handlePastedText: @onPaste
           blockRenderMap: blockRenderMap()
         }

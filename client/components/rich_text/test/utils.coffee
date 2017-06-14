@@ -49,30 +49,48 @@ describe 'Utils', ->
       @utils.stripGoogleStyles(html).should.eql '<span><em>(via </em></span><a href="http://theartnewspaper.com/market/dealer-cuts-plea-bargain/" style="text-decoration:none;"><span><em>The Art Newspaper</em></span></a><span><em>)</em></span>'
 
 
-  describe '#keyBindingFn', ->
+  describe '#keyBindingFnFull', ->
 
     it 'returns the name of a recognized key binding', ->
       e = { keyCode: 50 }
-      @utils.keyBindingFn(e).should.eql 'header-two'
+      @utils.keyBindingFnFull(e).should.eql 'header-two'
       e = { keyCode: 51 }
-      @utils.keyBindingFn(e).should.eql 'header-three'
+      @utils.keyBindingFnFull(e).should.eql 'header-three'
       e = { keyCode: 191 }
-      @utils.keyBindingFn(e).should.eql 'custom-clear'
+      @utils.keyBindingFnFull(e).should.eql 'custom-clear'
       e = { keyCode: 55 }
-      @utils.keyBindingFn(e).should.eql 'ordered-list-item'
+      @utils.keyBindingFnFull(e).should.eql 'ordered-list-item'
       e = { keyCode: 56 }
-      @utils.keyBindingFn(e).should.eql 'unordered-list-item'
+      @utils.keyBindingFnFull(e).should.eql 'unordered-list-item'
       e = { keyCode: 75 }
-      @utils.keyBindingFn(e).should.eql 'link-prompt'
+      @utils.keyBindingFnFull(e).should.eql 'link-prompt'
       @getDefaultKeyBinding.callCount.should.eql 0
 
     it 'returns the default key binding if no command modifier', ->
       @KeyBindingUtil.hasCommandModifier = sinon.stub().returns(false)
       e = { keyCode: 75 }
-      @utils.keyBindingFn(e)
+      @utils.keyBindingFnFull(e)
       @getDefaultKeyBinding.callCount.should.eql 1
 
     it 'returns the default key binding if no custom setting specified', ->
       e = { keyCode: 45 }
-      @utils.keyBindingFn(e)
+      @utils.keyBindingFnFull(e)
+      @getDefaultKeyBinding.callCount.should.eql 1
+
+  describe '#keyBindingFnCaption', ->
+
+    it 'returns the name of a recognized key binding', ->
+      e = { keyCode: 75 }
+      @utils.keyBindingFnCaption(e).should.eql 'link-prompt'
+      @getDefaultKeyBinding.callCount.should.eql 0
+
+    it 'returns the default key binding if no command modifier', ->
+      @KeyBindingUtil.hasCommandModifier = sinon.stub().returns(false)
+      e = { keyCode: 75 }
+      @utils.keyBindingFnCaption(e)
+      @getDefaultKeyBinding.callCount.should.eql 1
+
+    it 'returns the default key binding if no custom setting specified', ->
+      e = { keyCode: 45 }
+      @utils.keyBindingFnCaption(e)
       @getDefaultKeyBinding.callCount.should.eql 1

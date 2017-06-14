@@ -39,71 +39,15 @@
     ul li .public-DraftStyleDefault-ltr,
     li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
       list-style disc
+
   nav
-    position absolute
-    top -40px
-    left 0
-    display flex !important
-    flex-wrap wrap
-    background black
-    justify-content center
     width 200px
-    border-radius 5px
-    z-index 6
     &.has-plugins
       width 250px
       button[name='remove-formatting'],
       button[name='header-three']
         border-right none
-    ::after
-      content ''
-      width 0
-      height 0
-      border-left 7px solid transparent
-      border-right 7px solid transparent
-      border-top 7px solid #000
-      position absolute
-      bottom -7px
-      left calc(50% \- 7px)
-    button
-      font-weight 600
-      height 40px
-      width 50px
-      color gray-dark-color
-      line-height 1em !important
-      background none
-      border none
-      border-right 1px solid gray-darkest-color
-      transition color .15s
-      &:hover
-        color gray-color
-      &[name='ITALIC'],
-      &[name='STRIKETHROUGH'],
-      &[name='header-two'],
-      &[name='header-three']
-        garamond l-body
-      &[name='BOLD']
-        font-weight 600
-        avant-garde l-headline
-      &[name='STRIKETHROUGH']
-        text-decoration line-through
-      svg
-        width 18px
-        height 18px
-      .st0, circle, g, path
-        fill gray-dark-color
-        transition color .15s
-      &:hover
-        .st0, circle, g, path
-          fill gray-color
-      &[name='toc']
-        svg
-          width 22px
-          height 22px
-          #Group-2-Copy
-            fill black
-        &:hover g
-          stroke gray-color
+
   &__input
     position relative
     .artist-follow
