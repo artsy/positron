@@ -1,0 +1,56 @@
+@import '../../../stylus_lib'
+
+img-height = 500px
+li-height = 620px
+
+.edit-section-container[data-type=slideshow]
+  width 100%
+  position inherit
+
+.edit-section-container[data-type=slideshow]
+.edit-section-container[data-type=slideshow] .edit-section-hover-controls
+.edit-section-container[data-type=slideshow][data-editing=true]::after
+.edit-section-slideshow li
+  height li-height
+
+.edit-section-slideshow li
+
+.edit-section-slideshow li
+  display inline-block
+  vertical-align top
+  margin-right controls-padding
+  text-align left
+  img
+    max-height 100%
+    height img-height
+
+.ess-container
+  margin-left (sidebar-width + controls-padding * 2)
+  width "calc(100% - %s)" % (sidebar-width + controls-padding * 2)
+  left 0
+  position absolute
+  overflow scroll
+  text-align center
+
+.ess-list
+  width 99999px
+  position relative
+  z-index -1
+  height (li-height - 40px)
+  overflow-y hidden
+  display inline-block
+
+.ess-loading-artwork
+  height img-height
+  width 500px
+  background gray-lightest-color
+  position relative
+
+.ess-artwork-details
+  margin-top 5px
+  line-height 20px
+  font-size 15px
+  color gray-dark-color
+  width 100%
+  > *
+    overflow ellipsis
