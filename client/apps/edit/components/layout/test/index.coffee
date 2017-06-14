@@ -43,8 +43,12 @@ describe 'EditLayout', ->
 
   describe '#autosave', ->
 
-    it 'autosaves on debounce keyup', ->
+    it 'autosaves on from the content section on debounce keyup', ->
       $('#edit-title textarea').trigger 'keyup'
+      Backbone.sync.called.should.be.ok
+
+    it 'autosaves on from the display section on debounce keyup', ->
+      $('.edit-display__textarea').trigger 'keyup'
       Backbone.sync.called.should.be.ok
 
     it 'autosaves on section changes', ->
