@@ -5,11 +5,12 @@
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
-RichTextCaption = React.createFactory require '../../../../components/rich_text_caption/index.coffee'
+DisplayImage = React.createFactory require '../section_image_collection/components/image.coffee'
 sd = require('sharify').data
 icons = -> require('./icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
 { crop, resize, fill } = require '../../../../components/resizer/index.coffee'
+
 
 module.exports = React.createClass
   displayName: 'SectionImage'
@@ -17,7 +18,7 @@ module.exports = React.createClass
   getInitialState: ->
     src: @props.section.get('url')
     progress: null
-    caption: @props.section.get('caption')
+    caption: @props.section.get('caption') or ''
     width: @props.section.get('width')
     height: @props.section.get('height')
 
@@ -71,13 +72,6 @@ module.exports = React.createClass
                 if @props.section.get('url') then 'replace' else 'upload')
             h2 {}, 'Up to 30mb'
             input { type: 'file', onChange: @upload }
-          div { className: 'esi-caption-container' },
-            RichTextCaption {
-              item: @state
-              key: 'caption-edit' + @props.section.cid
-              onChange: @onCaptionChange
-            }
-
       (
         if @state.progress
           div { className: 'upload-progress-container' },
@@ -88,18 +82,13 @@ module.exports = React.createClass
       )
       (
         if @state.src
-          div { className: 'esi-preview' },
-            img {
-              className: 'esi-image'
-              src: if @state.progress then @state.src else resize(@state.src, width: 900)
-              style: opacity: if @state.progress then @state.progress else '1'
-              key: 0
-            }
-            div {
-              className: 'esi-inline-caption'
-              dangerouslySetInnerHTML: __html: @state.caption
-              key: 1
-            }
+          image = _.extend {}, url: @state.src, caption: @state.caption
+          console.log image
+          DisplayImage {
+            image: image
+            progress: @state.progress
+            editing:  @props.editing
+          }
         else
           div { className: 'esi-placeholder' }, 'Add an image above'
       )

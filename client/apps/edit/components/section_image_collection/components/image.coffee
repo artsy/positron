@@ -21,8 +21,9 @@ module.exports = React.createClass
         editing: @props.editing
         placeholder: 'Image Caption'
       }
-      button {
-        className: 'edit-section-remove button-reset esic-img-remove'
-        onClick: @props.removeItem(image)
-        dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-      }
+      if @props.removeItem
+        button {
+          className: 'edit-section-remove button-reset esic-img-remove'
+          onClick: @props.removeItem(image)
+          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+        }

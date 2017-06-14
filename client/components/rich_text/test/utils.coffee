@@ -76,3 +76,21 @@ describe 'Utils', ->
       e = { keyCode: 45 }
       @utils.keyBindingFnFull(e)
       @getDefaultKeyBinding.callCount.should.eql 1
+
+  describe '#keyBindingFnCaption', ->
+
+    it 'returns the name of a recognized key binding', ->
+      e = { keyCode: 75 }
+      @utils.keyBindingFnCaption(e).should.eql 'link-prompt'
+      @getDefaultKeyBinding.callCount.should.eql 0
+
+    it 'returns the default key binding if no command modifier', ->
+      @KeyBindingUtil.hasCommandModifier = sinon.stub().returns(false)
+      e = { keyCode: 75 }
+      @utils.keyBindingFnCaption(e)
+      @getDefaultKeyBinding.callCount.should.eql 1
+
+    it 'returns the default key binding if no custom setting specified', ->
+      e = { keyCode: 45 }
+      @utils.keyBindingFnCaption(e)
+      @getDefaultKeyBinding.callCount.should.eql 1
