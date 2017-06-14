@@ -83,7 +83,6 @@ module.exports = React.createClass
       (
         if @state.src
           image = _.extend {}, url: @state.src, caption: @state.caption
-          console.log image
           DisplayImage {
             image: image
             progress: @state.progress

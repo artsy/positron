@@ -90,6 +90,7 @@ module.exports = React.createClass
       .replace /(\r\n|\n|\r)/gm, ''
       .replace /<\/p><p>/g, ' '
       .replace(/  /g, ' &nbsp;')
+    html = if html is '<p></p>' then '' else html
     return html
 
   onPaste: (text, html) ->

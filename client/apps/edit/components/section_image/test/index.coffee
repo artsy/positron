@@ -75,12 +75,11 @@ describe 'SectionImage', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'foobaz'
 
   it 'renders a caption', ->
+    @component.setState({ src: 'foobaz.jpg' })
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'hello!'
 
-  it 'previews captions on keyup', ->
-    @component.setState({ src: 'foobaz.jpg' })
-    @component.onCaptionChange('<p>foobar</p>')
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'foobar'
+  it 'does not render a caption without an image', ->
+    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql '<div class="rich-text--caption">'
 
   it 'saves captions on click off', ->
     @component.state.caption = 'foobar'

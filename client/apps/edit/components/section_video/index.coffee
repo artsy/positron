@@ -62,15 +62,12 @@ module.exports = React.createClass
     @setState coverSrc: null
 
   render: ->
-    coverUrl = if @state.progress then @state.coverSrc \
-          else resize(@state.coverSrc, width: 1100)
-
     coverPreview = div {
       className: 'esv-cover-image-container'
       onClick: @props.setEditing(on)
       key: 'cover' + @props.section.cid
       style:
-        backgroundImage: "url(#{coverUrl})"
+        backgroundImage: "url(#{@state.coverSrc})"
         height: @getVideoHeight()
         opacity: if @state.progress then @state.progress else '1'
     },
@@ -117,7 +114,10 @@ module.exports = React.createClass
               span {}, (' to ' + if @state.cover_image_url then 'replace' else 'upload')
             h2 {}, 'Up to 30mb'
             input { type: 'file', onChange: @uploadCoverImage }
-      div { className: 'esv-video-container' },
+      div {
+        className: 'esv-video-container'
+        onClick: @props.setEditing(on)
+      },
         if @state.progress
           div { className: 'upload-progress-container' },
             div {
@@ -126,12 +126,13 @@ module.exports = React.createClass
             }
         if @state.coverSrc or @state.url
           [
+            if @state.url.length
+              iframe {
+                src: getIframeUrl(@state.url)
+                height: @getVideoHeight()
+                key: 1
+              }
             coverPreview if @state.coverSrc
-            iframe {
-              src: getIframeUrl(@state.url)
-              height: @getVideoHeight()
-              key: 1
-            }
             RichTextCaption {
               item: @state
               key: 'caption-edit' + @props.section.cid
