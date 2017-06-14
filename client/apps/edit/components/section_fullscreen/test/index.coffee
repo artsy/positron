@@ -22,7 +22,6 @@ describe 'SectionFullscreen', ->
       @component = ReactDOM.render React.createElement(SectionFullscreen,
         section: new Backbone.Model
           type: 'fullscreen'
-          intro: ''
           title: ''
           background_url: ''
           background_image_url: ''
@@ -70,16 +69,7 @@ describe 'SectionFullscreen', ->
     ReactTestUtils.Simulate.keyUp(@component.refs.editableTitle)
     @component.setState.args[0][0].title.should.equal 'foobar'
 
-  it 'onChangeIntro sets state.intro', ->
-    @component.onChangeIntro('<p>foobar</p>')
-    @component.setState.args[0][0].intro.should.equal '<p>foobar</p>'
-
   it 'saves titles on click off', ->
     @component.state.title = 'foobar'
     @component.onClickOff()
     @component.props.section.get('title').should.equal 'foobar'
-
-  it 'saves intros on click off', ->
-    @component.state.intro = 'foobar'
-    @component.onClickOff()
-    @component.props.section.get('intro').should.equal 'foobar'

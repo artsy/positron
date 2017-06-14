@@ -83,41 +83,23 @@
 .esf-text-container
   z-index 4
   position absolute
-  top 50%
-  left 50%
-  transform translate(-50%, -50%)
-
-.esf-intro[contentEditable=true]:empty:not(:focus):before
-  content attr('Introduction *')
 
 .esf-text-container.is-super-article
   width 900px
-  .esf-intro
-    margin-top 0px
   .esf-title
     text-align left
 
-.esf-title, .esf-intro
+.esf-title
   cursor text
   width 100%
   display block
-  font-style italic
   position relative
   color white
-
-textarea.esf-title
   garamond 'xxl-headline'
   overflow hidden
   word-wrap break-word
   resize horizontal
   max-height 152px
-  text-align center
+  text-align left
   &::-webkit-input-placeholder
     color white
-
-.esf-intro
-  garamond()
-  font-size 22px
-  margin-top 40px
-  .public-DraftEditorPlaceholder-root
-     position absolute

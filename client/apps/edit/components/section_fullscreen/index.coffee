@@ -1,5 +1,5 @@
 #
-# Fullscreen section that allows uploading large overflowing images and an intro text.
+# Fullscreen section that allows uploading large overflowing images or video
 #
 
 _ = require 'underscore'
@@ -16,7 +16,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     title: @props.section.get('title')
-    intro: @props.section.get('intro')
     background_url: @props.section.get('background_url')
     background_image_url: @props.section.get('background_image_url')
     progress: ''
@@ -28,18 +27,14 @@ module.exports = React.createClass
     @removeSection() unless @setSection()
 
   setSection: ->
-    return false unless @state.background_url or @state.title or @state.intro or @state.background_image_url
+    return false unless @state.background_url or @state.title or @state.background_image_url
     @props.section.set
       title: @state.title
-      intro: @state.intro
       background_url: @state.background_url
       background_image_url: @state.background_image_url
 
   onEditableKeyup: ->
     @setState title: $(@refs.editableTitle).val()
-
-  onChangeIntro: (html) ->
-    @setState intro: html
 
   removeSection: ->
     $('.edit-header-container').show()
@@ -90,13 +85,6 @@ module.exports = React.createClass
                 p {}, sd.ARTICLE.author.name if sd.ARTICLE?.author
                 p {}, moment(sd.ARTICLE?.published_at || moment()).format('MMM D, YYYY h:mm a')
           )
-            div {className: 'esf-intro'},
-              RichTextParagraph {
-                text: @props.section.get('intro')
-                onChange: @onChangeIntro
-                styleMap: ['bold']
-                placeholder: 'Introduction *'
-              }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
