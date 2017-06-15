@@ -20,7 +20,7 @@ describe 'EditContent', ->
       global.HTMLElement = () => {}
       @EditContent = benv.require resolve(__dirname, '../index.coffee')
       HeroSection = @HeroSection = sinon.stub()
-      HeaderSection = benv.require resolve(__dirname, '../../section_header/index.coffee')
+      HeaderSection = benv.require resolve(__dirname, '../sections/header/index.coffee')
       SectionList = @SectionList = sinon.stub()
       @EditContent.__set__ 'HeroSection', HeroSection
       @EditContent.__set__ 'HeaderSection', React.createFactory HeaderSection

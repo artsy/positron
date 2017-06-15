@@ -1,7 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, h1 } = React.DOM
-icons = -> require('../icons.jade') arguments...
+icons = -> require('../../icons.jade') arguments...
 
 module.exports = React.createClass
   displayName: 'DropdownHeader'
