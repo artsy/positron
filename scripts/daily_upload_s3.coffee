@@ -85,14 +85,13 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
       a.tier
       published_at
       stringify a.show_ids
-      stringify a.section_ids
-      a.thumbnail_image
+      stringify a.thumbnail_image
       stringify a.thumbnail_title
       stringify a.keywords
       stringify a.slug
       a.channel_id
       a.partner_channel_id
-      a.vertical.name
+      a.vertical?.name or null
       stringify a.tracking_tags
       a.exclude_google_news
       a.indexable
