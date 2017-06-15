@@ -58,6 +58,19 @@ describe "Article", ->
       @article.getAuthorArray()[1].should.equal 'Molly'
       @article.getAuthorArray()[2].should.equal 'Kana'
 
+  describe '#searchBoost', ->
+    it 'creates a freshness score for search with a maximum cap', ->
+      @article.set 'published', true
+      @article.set 'published_at', new Date()
+      @article.searchBoost().should.be.below(1001)
+      @article.searchBoost().should.be.above(999)
+
+    it 'creates a lower score for an older article', ->
+      @article.set 'published', true
+      @article.set 'published_at', new Date(2016, 4, 10)
+      @article.searchBoost().should.be.below(1000)
+      @article.searchBoost().should.be.above(100)
+
   describe '#date', ->
 
     it 'return a moment object with the attribute', ->

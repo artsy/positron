@@ -30,6 +30,16 @@ module.exports = class Article extends Backbone.Model
     creator = _.union(creator, _.pluck(@get('contributing_authors'), 'name')) if @get('contributing_authors')?.length
     creator
 
+  # freshness boost as exponential decay on published_at date
+  searchBoost: ->
+    if @get('published')
+      maxBoost = 1000.0
+      meanLifetime = 365 * 3.0
+      decayDays = (new Date().getTime() - moment(@get('published_at')).toDate().getTime())/(1000 * 60 * 60 * 24)
+      maxBoost * Math.exp(-(decayDays/meanLifetime))
+    else
+      0
+
   isEditorial: ->
     @get('featured')
 

@@ -96,7 +96,7 @@ module.exports = class EditLayout extends Backbone.View
 
   events:
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
-    'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input, .edit-display__textarea,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
+    'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'click .edit-section-container *': 'popLockControls'
     'click .edit-section-tool-menu li': -> _.defer => @popLockControls()

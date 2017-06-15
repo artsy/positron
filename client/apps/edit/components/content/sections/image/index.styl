@@ -1,0 +1,38 @@
+@import '../../../stylus_lib'
+
+.edit-section-image
+  position relative
+
+.edit-section-image .edit-section-controls
+  background black
+  left -(controls-padding)
+  display none
+  z-index 2
+  width 1100px
+
+.esi-placeholder
+  text-align center
+  color gray-darker-color
+  height 200px
+  line-height @height
+
+.edit-section-container[data-type=image]
+  padding 0
+  &[data-editing=true]
+    .edit-section-controls
+      display block
+
+    .esi-inputs
+      padding 20px
+      color #fff
+      background #000
+      border-top 1px solid #333
+
+.esic-image
+  width 100%
+  transition opacity 0.5s
+
+#edit-thumbnail-upload
+  position relative
+  .upload-progress-container
+    display none

@@ -24,7 +24,7 @@ exports.stripGoogleStyles = (html) ->
     $(doc.getElementsByTagName('SPAN')[i]).replaceWith(newSpan)
   return doc.innerHTML
 
-exports.keyBindingFn = (e) ->
+exports.keyBindingFnFull = (e) ->
   if KeyBindingUtil.hasCommandModifier(e)
     if e.keyCode is 50   # command + 2
       return 'header-two'
@@ -36,6 +36,12 @@ exports.keyBindingFn = (e) ->
       return 'ordered-list-item'
     if e.keyCode is 56   # command + 8
       return 'unordered-list-item'
+    if e.keyCode is 75   # command + K
+      return 'link-prompt'
+  return getDefaultKeyBinding(e)
+
+exports.keyBindingFnCaption= (e) ->
+  if KeyBindingUtil.hasCommandModifier(e)
     if e.keyCode is 75   # command + K
       return 'link-prompt'
   return getDefaultKeyBinding(e)
