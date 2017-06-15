@@ -10,6 +10,7 @@ DisplayImage = React.createFactory require './components/image.coffee'
 Controls = React.createFactory require './components/controls.coffee'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 { div, section, ul, li } = React.DOM
+ImagesetPreview = React.createFactory require('particle2').ImagesetPreview
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'
@@ -104,22 +105,25 @@ module.exports = React.createClass
           isDraggable: @props.editing
         },
           if hasImages
-            @props.section.get('images').map (item, i) =>
-              if item.type is 'artwork'
-                DisplayArtwork {
-                  key: i
-                  index: i
-                  artwork: item
-                  removeItem: @removeItem
-                }
-              else
-                DisplayImage {
-                  index: i
-                  key: i
-                  image: item
-                  removeItem: @removeItem
-                  progress: @state.progress
-                  editing:  @props.editing
-                }
+            ImagesetPreview {
+              images: @props.section.get('images')
+            }
+            # @props.section.get('images').map (item, i) =>
+            #   if item.type is 'artwork'
+            #     DisplayArtwork {
+            #       key: i
+            #       index: i
+            #       artwork: item
+            #       removeItem: @removeItem
+            #     }
+            #   else
+            #     DisplayImage {
+            #       index: i
+            #       key: i
+            #       image: item
+            #       removeItem: @removeItem
+            #       progress: @state.progress
+            #       editing:  @props.editing
+            #     }
           else
             div { className: 'esic-placeholder' }, 'Add images and artworks above'
