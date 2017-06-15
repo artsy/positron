@@ -125,6 +125,7 @@ postSailthruAPI = (article, cb) ->
       tags: tags
       body: sections and stripHtmlTags(sections.join(' ')) or ''
       image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
+      search_boost: article.searchBoost
     , (error, response) ->
       console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
   )
