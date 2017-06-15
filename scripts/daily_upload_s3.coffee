@@ -24,7 +24,36 @@ db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 filename = "export_" + moment().format('YYYYMMDDhhmmss') + ".csv"
 dir = 'scripts/tmp/'
 
-attrs = ['id', 'author_id', 'auction_ids', 'contributing_authors', 'fair_ids', 'featured', 'featured_artist_ids', 'featured_artwork_ids', 'partner_ids', 'primary_featured_artist_ids', 'slugs', 'tags', 'title', 'tier', 'published_at', 'show_ids', 'section_ids', 'thumbnail_image', 'thumbnail_title', 'keywords', 'slug', 'channel_id', 'partner_channel_id']
+attrs = [
+  'id'
+  'author_id'
+  'auction_ids'
+  'contributing_authors'
+  'fair_ids'
+  'featured'
+  'featured_artist_ids'
+  'featured_artwork_ids'
+  'partner_ids'
+  'primary_featured_artist_ids'
+  'slugs'
+  'tags'
+  'title'
+  'tier'
+  'published_at'
+  'show_ids'
+  'thumbnail_image'
+  'thumbnail_title'
+  'keywords'
+  'slug'
+  'channel_id'
+  'partner_channel_id'
+  'vertical'
+  'tracking_tags'
+  'exclude_google_news'
+  'indexable'
+  'is_super_article'
+  'description'
+]
 projections = object attrs, attrs.map -> 1
 
 db.articles.find({ published: true }, projections).toArray (err, articles) ->
@@ -63,6 +92,12 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
       stringify a.slug
       a.channel_id
       a.partner_channel_id
+      a.vertical.name
+      stringify a.tracking_tags
+      a.exclude_google_news
+      a.indexable
+      a.is_super_article
+      stringify a.description
     ].join(',')
     csv.push row
 
