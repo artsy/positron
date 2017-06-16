@@ -67,6 +67,7 @@ module.exports = React.createClass
               editing: @state.editingIndex is i
               ref: 'section' + i
               key: section.cid
+              channel: @props.channel
               onSetEditing: @onSetEditing
               onSetDragOver: @onSetDragOver
               onDragStart: @onDragStart

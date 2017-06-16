@@ -9,25 +9,12 @@ module.exports = React.createClass
   render: ->
     artwork = @props.artwork
 
-    DisplayArtwork {
-      artwork: artwork
-    }
-    # div { className: 'esic-img-container' },
-    #   img {
-    #     src: artwork.image
-    #     className: 'esic-artwork'
-    #   }
-    #   div {
-    #     className: 'esic-caption'
-    #   },
-    #     p {},
-    #       strong {}, @formatArtistNames artwork
-    #     p {},
-    #       span { className: 'title' }, artwork.title if artwork.title
-    #       span { className: 'date' }, ", " + artwork.date if artwork.date
-    #     p {}, artwork.partner.name if artwork.partner.name
-    #   button {
-    #     className: 'edit-section-remove button-reset esic-img-remove'
-    #     onClick: @props.removeItem(artwork)
-    #     dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-    #   }
+    div { className: 'esic-img-container'},
+      DisplayArtwork {
+        artwork: artwork
+      }
+      button {
+        className: 'edit-section-remove button-reset esic-img-remove'
+        onClick: @props.removeItem(artwork)
+        dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+      }

@@ -17,8 +17,20 @@ module.exports = React.createClass
     @autocomplete.remove()
 
   changeLayout: (e) ->
+    if @props.section.get('type') is 'image_set'
+      @props.section.set 'type', 'image_collection'
     e = if e.target then e.target.name else e
     @props.section.set layout: e
+    @props.onChange()
+
+  toggleImageSet: ->
+    newSection = @props.section
+    if newSection.get('type') is 'image_collection'
+      newSection.unset 'layout'
+      newSection.set 'type', 'image_set'
+    else
+      newSection.set 'layout', 'overflow_fillwidth'
+      newSection.set 'type', 'image_collection'
     @props.onChange()
 
   addArtworkFromUrl: (newImages) ->
@@ -87,7 +99,7 @@ module.exports = React.createClass
           name: 'overflow_fillwidth'
           className: 'layout'
           onClick: @changeLayout
-          'data-active': @props.section.get('layout') != 'column_width'
+          'data-active': @props.section.get('layout') is 'overflow_fillwidth'
         }
         a {
           name: 'column_width'
@@ -95,6 +107,13 @@ module.exports = React.createClass
           onClick: @changeLayout
           'data-active': @props.section.get('layout') is 'column_width'
         }
+        if @props.channel.hasFeature 'image_set'
+          a {
+            name: 'image_set'
+            className: 'layout'
+            onClick: @toggleImageSet
+            'data-active': @props.section.get('type') is 'image_set'
+          }
 
         section { className: 'dashed-file-upload-container' },
           h1 {}, 'Drag & ',
