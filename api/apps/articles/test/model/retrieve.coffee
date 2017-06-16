@@ -7,9 +7,6 @@ gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 _ = require 'underscore'
-Joi = require 'joi'
-Joi.objectId = require('joi-objectid') Joi
-schema = require '../../model/schema.coffee'
 { ObjectId } = require 'mongojs'
 
 describe 'Retrieve', ->
