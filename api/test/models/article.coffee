@@ -63,7 +63,7 @@ describe "Article", ->
       @article.set 'published', true
       @article.set 'published_at', new Date()
       @article.searchBoost().should.be.below(1001)
-      @article.searchBoost().should.be.above(999)
+      @article.searchBoost().should.be.above(998)
 
     it 'creates a lower score for an older article', ->
       @article.set 'published', true
