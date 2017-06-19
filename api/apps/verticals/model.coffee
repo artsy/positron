@@ -6,7 +6,8 @@
 _ = require 'underscore'
 db = require '../../lib/db'
 async = require 'async'
-Joi = require '../../lib/joi'
+Joi = require 'joi'
+Joi.objectId = require('joi-objectid') Joi
 { ObjectId } = require 'mongojs'
 { API_MAX, API_PAGE_SIZE } = process.env
 
@@ -14,7 +15,7 @@ Joi = require '../../lib/joi'
 # Schemas
 #
 @schema = (->
-  id: @string().objectid()
+  id: @objectId()
   name: @string().allow('', null).required()
 ).call Joi
 
@@ -64,7 +65,7 @@ Joi = require '../../lib/joi'
   Joi.validate input, @schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
-      _id: input.id
+      _id: ObjectId(input.id)
     db.verticals.save data, callback
 
 @destroy = (id, callback) ->

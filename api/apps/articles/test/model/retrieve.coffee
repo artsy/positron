@@ -7,6 +7,9 @@ gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 _ = require 'underscore'
+Joi = require 'joi'
+Joi.objectId = require('joi-objectid') Joi
+schema = require '../../model/schema.coffee'
 { ObjectId } = require 'mongojs'
 
 describe 'Retrieve', ->
@@ -25,6 +28,14 @@ describe 'Retrieve', ->
         done()
 
   describe '#toQuery', ->
+
+    it 'type casts ids', (done) ->
+      Retrieve.toQuery {
+        author_id: '5086df098523e60002000018'
+        published: true
+      }, (err, query) =>
+        query.author_id.should.containEql ObjectId '5086df098523e60002000018'
+        done()
 
     it 'aggregates the query for all_by_author', (done) ->
       Retrieve.toQuery {
@@ -98,8 +109,8 @@ describe 'Retrieve', ->
         published: true
       }, (err, query) =>
         query.fair_ids['$elemMatch'].should.be.ok()
-        query.fair_ids['$elemMatch']['$in'][0].should.containEql ObjectId '5086df098523e60002000016'
-        query.fair_ids['$elemMatch']['$in'][1].should.containEql ObjectId '5086df098523e60002000015'
+        query.fair_ids['$elemMatch']['$in'][0].toString().should.equal '5086df098523e60002000016'
+        query.fair_ids['$elemMatch']['$in'][1].toString().should.equal '5086df098523e60002000015'
         done()
 
     it 'finds articles by multiple ids', (done) ->
@@ -108,8 +119,8 @@ describe 'Retrieve', ->
         published: true
       }, (err, query) =>
         query._id['$in'].should.be.ok()
-        query._id['$in'][0].should.containEql ObjectId '54276766fd4f50996aeca2b8'
-        query._id['$in'][1].should.containEql ObjectId '54276766fd4f50996aeca2b7'
+        query._id['$in'][0].toString().should.equal '54276766fd4f50996aeca2b8'
+        query._id['$in'][1].toString().should.equal '54276766fd4f50996aeca2b7'
         done()
 
     it 'finds scheduled articles', (done) ->

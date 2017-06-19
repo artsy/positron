@@ -8,7 +8,8 @@ _s = require 'underscore.string'
 db = require '../../lib/db'
 User = require '../users/model'
 async = require 'async'
-Joi = require '../../lib/joi'
+Joi = require 'joi'
+Joi.objectId = require('joi-objectid') Joi
 moment = require 'moment'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
@@ -18,7 +19,7 @@ request = require 'superagent'
 # Schemas
 #
 schema = (->
-  id: @string().objectid()
+  id: @objectId()
   title: @string().allow('', null)
   meta_title: @string().allow('', null)
   description: @string().allow('', null)
@@ -81,7 +82,9 @@ querySchema = (->
   Joi.validate input, schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
-      _id: input.id
+      _id: ObjectId(input.id)
+      # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+      featured_article_ids: input.featured_article_ids.map(ObjectId) if input.featured_article_ids
     db.sections.save data, callback
 
 @destroy = (id, callback) ->
