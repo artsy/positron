@@ -8,7 +8,8 @@ _s = require 'underscore.string'
 db = require '../../lib/db'
 User = require '../users/model'
 async = require 'async'
-Joi = require '../../lib/joi'
+Joi = require 'joi'
+Joi.objectId = require('joi-objectid') Joi
 moment = require 'moment'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
@@ -18,9 +19,9 @@ request = require 'superagent'
 # Schemas
 #
 @schema = (->
-  id: @string().objectid()
+  id: @objectId()
   name: @string().allow('', null)
-  user_ids: @array().items(@string().objectid()).default([])
+  user_ids: @array().items(@objectId()).default([])
   type: @string().allow('', null)
   image_url: @string().allow('',null)
   tagline: @string().allow('',null)
@@ -32,14 +33,14 @@ request = require 'superagent'
   pinned_articles: @array().max(6).items(
     @object().keys
       index: @number()
-      id: @string().objectid()
+      id: @objectId()
   ).default([])
 ).call Joi
 
 @querySchema = (->
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
-  user_id: @string().objectid()
+  user_id: @objectId()
   q: @string()
 ).call Joi
 
@@ -55,9 +56,9 @@ request = require 'superagent'
 @where = (input, callback) ->
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset', 'q', 'user_id'
+    query = _.omit input, 'limit', 'offset', 'user_id', 'q'
+    query.user_ids = ObjectId input.user_id if input.user_id
     query.name = { $regex: ///#{input.q}///i } if input.q
-    query.user_ids = input.user_id if input.user_id
     cursor = db.channels
       .find(query)
       .limit(input.limit)
@@ -81,7 +82,13 @@ request = require 'superagent'
   Joi.validate input, @schema, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
-      _id: input.id
+      # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+      _id: ObjectId(input.id)
+      user_ids: input.user_ids.map(ObjectId) if input.user_ids
+      pinned_articles: input.pinned_articles.map( (article)->
+        article.id = ObjectId(article.id)
+        article
+      ) if input.pinned_articles
       slug: _s.slugify(input.slug) if input.slug
     db.channels.save data, callback
 
