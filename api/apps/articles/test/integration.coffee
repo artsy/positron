@@ -3,12 +3,10 @@ _ = require 'underscore'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
-artsyXapp = require 'artsy-xapp'
 
 describe 'articles endpoints', ->
 
   beforeEach (done) ->
-    artsyXapp.token = ''
     empty =>
       fabricate 'users', {}, (err, @user) =>
         @server = app.listen 5000, ->
@@ -61,7 +59,11 @@ describe 'articles endpoints', ->
       request
         .post("http://localhost:5000/articles")
         .set('X-Access-Token': @user.access_token)
-        .send(title: 'Hi', partner_channel_id: ObjectId('5086df098523e60002000012')).end (err, res) ->
+        .send(
+          title: 'Hi'
+          partner_channel_id: '5086df098523e60002000012'
+          author_id: '5086df098523e60002000012'
+        ).end (err, res) ->
           res.body.title.should.equal 'Hi'
           done()
       return
@@ -83,7 +85,11 @@ describe 'articles endpoints', ->
 
     it 'gets a list of articles by channel', (done) ->
       fabricate 'articles', [
-        { title: 'Winter Is Coming', channel_id: ObjectId('5086df098523e60002000012'), published: true }
+        {
+          title: 'Winter Is Coming'
+          channel_id: ObjectId '5086df098523e60002000012'
+          published: true
+        }
       ], (err, articles) =>
         request
         .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true")
@@ -110,7 +116,7 @@ describe 'articles endpoints', ->
       fabricate 'articles', [
         {
           title: 'Cows on the prarie'
-          _id: ObjectId('5086df098523e60002000012')
+          _id: ObjectId '5086df098523e60002000012'
           published: true
         }
       ], (err, articles) =>
@@ -125,8 +131,8 @@ describe 'articles endpoints', ->
       fabricate 'articles', [
         {
           title: 'Cows on the prarie'
-          _id: ObjectId('5086df098523e60002000012')
-          partner_channel_id: ObjectId('5086df098523e60002000012')
+          _id: ObjectId '5086df098523e60002000012'
+          partner_channel_id: ObjectId '5086df098523e60002000012'
           published: false
         }
       ], (err, articles) =>
@@ -142,14 +148,19 @@ describe 'articles endpoints', ->
         { title: 'Flowers on Flowers' }
         {
           title: 'Cows on the prarie'
-          _id: ObjectId('5086df098523e60002000012')
-          partner_channel_id: '5086df098523e60002000012'
+          _id: ObjectId '5086df098523e60002000012'
+          partner_channel_id: ObjectId '5086df098523e60002000012'
         }
       ], (err, articles) =>
+        console.log err
+
         request
           .put("http://localhost:5000/articles/5086df098523e60002000012")
-          .send(title: 'Hellow Wrld')
-          .set('X-Access-Token': @user.access_token)
+          .send({
+            title: 'Hellow Wrld'
+            author_id: '5086df098523e60002000012'
+            channel_id: '5086df098523e60002000013'
+          }).set('X-Access-Token': @user.access_token)
           .end (err, res) ->
             res.body.title.should.equal 'Hellow Wrld'
             done()
@@ -159,8 +170,8 @@ describe 'articles endpoints', ->
         { title: 'Flowers on Flowers' }
         {
           title: 'Cows on the prarie'
-          _id: ObjectId('5086df098523e60002000012')
-          partner_channel_id: '5086df098523e60002000012'
+          _id: ObjectId '5086df098523e60002000012'
+          partner_channel_id: ObjectId '5086df098523e60002000012'
         }
       ], (err, articles) =>
         request

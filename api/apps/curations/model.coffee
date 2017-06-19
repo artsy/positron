@@ -8,8 +8,7 @@ _s = require 'underscore.string'
 db = require '../../lib/db'
 User = require '../users/model'
 async = require 'async'
-Joi = require 'joi'
-Joi.objectId = require('joi-objectid') Joi
+Joi = require '../../lib/joi'
 moment = require 'moment'
 request = require 'superagent'
 { ObjectId } = require 'mongojs'
@@ -21,7 +20,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
 # Schemas
 #
 @schema = (->
-  id: @objectId()
+  id: @string().objectid()
   name: @string().allow('', null)
 ).call Joi
 
@@ -64,8 +63,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
   Joi.validate input, @schema, OPTIONS, (err, input) =>
     return callback err if err
     data = _.extend _.omit(input, 'id'),
-      _id: ObjectId(input.id)
-      # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
+      _id: input.id
     db.curations.save data, callback
 
 @destroy = (id, callback) ->

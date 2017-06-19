@@ -4,8 +4,7 @@ db = require '../../../lib/db'
 stopWords = require '../../../lib/stopwords'
 User = require '../../users/model'
 async = require 'async'
-Joi = require 'joi'
-Joi.objectId = require('joi-objectid') Joi
+Joi = require '../../../lib/joi'
 moment = require 'moment'
 xss = require 'xss'
 cheerio = require 'cheerio'
@@ -23,8 +22,6 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @validate = (input, callback) ->
   whitelisted = _.pick input, _.keys schema.inputSchema
-  # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-  whitelisted.author_id = whitelisted.author_id?.toString()
   Joi.validate whitelisted, schema.inputSchema, callback
 
 @onPublish = (article, cb) =>
@@ -133,10 +130,10 @@ removeStopWords = (title) ->
     article = setOnPublishFields article
     indexForSearch article if article.indexable
     distributeArticle article, =>
-      db.articles.save sanitize(typecastIds article), callback
+      db.articles.save sanitize(article), callback
   else
     indexForSearch article if article.indexable
-    db.articles.save sanitize(typecastIds article), callback
+    db.articles.save sanitize(article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
@@ -178,32 +175,6 @@ sanitizeHtml = (html) ->
     whiteList: _.extend xss.getDefaultWhiteList(),
       a: ['target', 'href', 'title', 'name', 'class', 'data-id']
       span: ['style']
-
-typecastIds = (article) ->
-  _.extend article,
-    # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-    _id: ObjectId(article._id)
-    contributing_authors: article.contributing_authors.map( (author)->
-      author.id = ObjectId(author.id)
-      author
-    ) if article.contributing_authors
-    vertical: { id: ObjectId(article.vertical.id), name: article.vertical.name } if article.vertical
-    author_id: ObjectId(article.author_id) if article.author_id
-    fair_ids: article.fair_ids.map(ObjectId) if article.fair_ids
-    fair_programming_ids: article.fair_programming_ids.map(ObjectId) if article.fair_programming_ids
-    fair_artsy_ids: article.fair_artsy_ids.map(ObjectId) if article.fair_artsy_ids
-    fair_about_ids: article.fair_about_ids.map(ObjectId) if article.fair_about_ids
-    section_ids: article.section_ids.map(ObjectId) if article.section_ids
-    auction_ids: article.auction_ids.map(ObjectId) if article.auction_ids
-    partner_ids: article.partner_ids.map(ObjectId) if article.partner_ids
-    show_ids: article.show_ids.map(ObjectId) if article.show_ids
-    primary_featured_artist_ids: article.primary_featured_artist_ids.map(ObjectId) if article.primary_featured_artist_ids
-    featured_artist_ids: article.featured_artist_ids.map(ObjectId) if article.featured_artist_ids
-    featured_artwork_ids: article.featured_artwork_ids.map(ObjectId) if article.featured_artwork_ids
-    biography_for_artist_id: ObjectId(article.biography_for_artist_id) if article.biography_for_artist_id
-    super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(ObjectId) else {}
-    channel_id: ObjectId(article.channel_id) if article.channel_id
-    partner_channel_id: ObjectId(article.partner_channel_id) if article.partner_channel_id
 
 @getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''
