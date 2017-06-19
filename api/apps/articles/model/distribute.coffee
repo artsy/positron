@@ -1,10 +1,18 @@
+{
+  SAILTHRU_KEY
+  SAILTHRU_SECRET
+  FORCE_URL
+  EDITORIAL_CHANNEL
+  FB_PAGE_ID
+  INSTANT_ARTICLE_ACCESS_TOKEN
+  GEMINI_CLOUDFRONT_URL
+  NODE_ENV
+  SEGMENT_WRITE_KEY_MICROGRAVITY
+} = process.env
 _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
-{ SAILTHRU_KEY, SAILTHRU_SECRET, FORCE_URL, EDITORIAL_CHANNEL,
-  FB_PAGE_ID, INSTANT_ARTICLE_ACCESS_TOKEN, GEMINI_CLOUDFRONT_URL,
-  NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 async = require 'async'
 debug = require('debug') 'api'

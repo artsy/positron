@@ -8,6 +8,7 @@ gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 moment = require 'moment'
+{ ObjectId } = require 'mongojs'
 
 describe 'Save', ->
 
@@ -89,9 +90,7 @@ describe 'Save', ->
           article.sections[0].body.should.containEql '<a></a>'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         sections: [
           {
             type: 'text'
@@ -106,9 +105,7 @@ describe 'Save', ->
           article.sections[0].body.should.containEql '<a name="andy" class="is-jump-link">Andy</a>'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         sections: [
           {
             type: 'text'
@@ -123,9 +120,7 @@ describe 'Save', ->
           article.sections[0].body.should.containEql '<a data-id="andy-warhol"></a>'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         sections: [
           {
             type: 'text'
@@ -140,9 +135,8 @@ describe 'Save', ->
           @indexForSearch.callCount.should.eql 1
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
         indexable: true
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
       })
 
     it 'skips indexing articles that are not indexable', (done) ->
@@ -151,9 +145,8 @@ describe 'Save', ->
           @indexForSearch.callCount.should.eql 0
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
         indexable: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
       })
 
     it 'saves email metadata', (done) ->
@@ -164,9 +157,7 @@ describe 'Save', ->
           article.email_metadata.headline.should.containEql 'Thumbnail Title'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         thumbnail_title: 'Thumbnail Title'
         thumbnail_image: 'foo.png'
         scheduled_publish_at: '123'
@@ -183,9 +174,7 @@ describe 'Save', ->
           article.email_metadata.credit_line.should.containEql 'Guggenheim'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: false
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         thumbnail_title: 'Thumbnail Title'
         thumbnail_image: 'foo.png'
         email_metadata:
@@ -203,13 +192,11 @@ describe 'Save', ->
           article.description.should.containEql 'Testing 123'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
+        _id: ObjectId '5086df098523e60002000011'
         published: true
-        _id: '5086df098523e60002000011'
         sections: [
           { type: 'text', body: '<p>Testing 123</p>' }
         ]
-        author: name: 'Kana'
       })
 
     it 'does not override description', (done) ->
@@ -218,10 +205,7 @@ describe 'Save', ->
           article.description.should.containEql 'Do not override me'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: true
-        _id: '5086df098523e60002000011'
-        thumbnail_title: 'Thumbnail Title'
+        _id: ObjectId '5086df098523e60002000011'
         sections: [
           { type: 'text', body: '<p>Testing 123</p>' }
         ]
@@ -234,9 +218,7 @@ describe 'Save', ->
           article.title.should.containEql 'A new title'
           done()
       )(null, {
-        author_id: '5086df098523e60002000018'
-        published: true
-        _id: '5086df098523e60002000011'
+        _id: ObjectId '5086df098523e60002000011'
         thumbnail_title: 'Thumbnail Title'
         sections: [
           { type: 'text', body: '<p>Testing 123</p>' }
