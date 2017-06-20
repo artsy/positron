@@ -84,6 +84,7 @@ module.exports = React.createClass
               className: 'bordered-input'
               disabled: !@props.article.get('is_super_article')
             }
+            div {className: 'edit-admin--super-article__markdown'}, '* Supports Markdown'
         div {className: 'fields-col-3'},
           @printUploadGroup 'partner_logo', 'Partner Logo'
           @printUploadGroup 'partner_fullscreen_header_logo', 'Partner Fullscreen'
