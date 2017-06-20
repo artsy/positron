@@ -3,7 +3,7 @@ Joi = require '../../../lib/joi'
 schema = require './schema'
 moment = require 'moment'
 
-@toQuery = (input, callback) ->
+@toQuery = (input, callback, options) ->
   Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) ->
     return callback err if err
     { limit, offset, sort, count } = input

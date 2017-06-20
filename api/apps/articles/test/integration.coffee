@@ -152,8 +152,6 @@ describe 'articles endpoints', ->
           partner_channel_id: ObjectId '5086df098523e60002000012'
         }
       ], (err, articles) =>
-        console.log err
-
         request
           .put("http://localhost:5000/articles/5086df098523e60002000012")
           .send({

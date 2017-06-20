@@ -19,6 +19,7 @@ Q = require 'bluebird-q'
 #
 @where = (input, callback) ->
   retrieve.toQuery input, (err, query, limit, offset, sort, count) ->
+    console.log err
     return callback err if err
     cursor = db.articles
       .find(query)
@@ -33,7 +34,13 @@ Q = require 'bluebird-q'
         return cb() unless count
         cursor.count cb
       (cb) -> cursor.toArray cb
-    ], (err, [ total, articleCount, results ]) ->
+    ], (err, results) ->
+      console.log 'hererer...'
+      console.log results
+      console.log err
+      console.log total
+      console.log articleCount
+      console.log results
       return callback err if err
       callback null, {
         results: results
