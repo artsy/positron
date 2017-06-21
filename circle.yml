@@ -1,0 +1,17 @@
+machine:
+  node:
+    version: 7
+deployment:
+  staging:
+    branch: master
+    owner: artsy
+    commands:
+      - NODE_ENV=production make deploy env=staging
+dependencies:
+  override:
+    - yarn install
+test:
+  override:
+    - "npm run danger"
+    - yarn test:
+        parallel: true
