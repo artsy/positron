@@ -1,6 +1,6 @@
 _ = require 'underscore'
 User = require '../users/model.coffee'
-{ where, presentCollection } = Article = require '../articles/model'
+{ queryDatabase, presentCollection } = Article = require '../articles/model'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
 Tag = require '../tags/model'
@@ -17,7 +17,7 @@ module.exports.articles = (root, args, req, ast) ->
       'Pass published: true to only view published articles.'
 
   return new Promise (resolve, reject) ->
-    where args, (err, results) ->
+    queryDatabase args, (err, results) ->
       resolve presentCollection(results).results
 
 module.exports.curations = (root, args, req, ast) ->

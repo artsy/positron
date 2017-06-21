@@ -18,35 +18,32 @@ Q = require 'bluebird-q'
 # Retrieval
 #
 @where = (input, callback) ->
-  retrieve.toQuery input, (err, query, limit, offset, sort, count) ->
-    console.log err
+  Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) ->
     return callback err if err
-    cursor = db.articles
-      .find(query)
-      .skip(offset or 0)
-      .sort(sort)
-      .limit(limit)
-    async.parallel [
-      (cb) ->
-        return cb() unless count
-        db.articles.count cb
-      (cb) ->
-        return cb() unless count
-        cursor.count cb
-      (cb) -> cursor.toArray cb
-    ], (err, results) ->
-      console.log 'hererer...'
-      console.log results
-      console.log err
-      console.log total
-      console.log articleCount
-      console.log results
-      return callback err if err
-      callback null, {
-        results: results
-        total: total if total
-        count: articleCount if articleCount
-      }
+    queryDatabase input, callback
+
+@queryDatabase = (input, callback) ->
+  { query, limit, offset, sort, count } = retrieve.toQuery input
+  cursor = db.articles
+    .find(query)
+    .skip(offset or 0)
+    .sort(sort)
+    .limit(limit)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) ->
+      return cb() unless count
+      db.articles.count cb
+    (cb) ->
+      return cb() unless count
+      cursor.count cb
+  ], (err, [articles, total, articleCount]) ->
+    return callback err if err
+    callback null, {
+      results: articles
+      total: total
+      count: articleCount
+    }
 
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
@@ -122,11 +119,11 @@ Q = require 'bluebird-q'
 #
 # JSON views
 #
-@presentCollection = (article) =>
+@presentCollection = (articles) =>
   {
-    total: article.total
-    count: article.count
-    results: (@present(obj) for obj in article.results)
+    total: articles.total
+    count: articles.count
+    results: (@present(obj) for obj in articles.results)
   }
 
 @present = (article) =>
