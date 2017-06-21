@@ -66,11 +66,13 @@ module.exports.QueueView = QueueView = React.createClass
   fetchFeed: (type) ->
     published = type in ['daily_email', 'weekly_email']
     feedQuery = query "#{type}: true, published: #{published}, channel_id: \"#{sd.CURRENT_CHANNEL.id}\""
+    console.log feedQuery
     request
       .post sd.API_URL + '/graphql'
       .set 'X-Access-Token', sd.USER?.access_token
       .send query: feedQuery
       .end (err, res) =>
+        console.log res
         return if err or not res.body?.data
         if type is 'scheduled'
           @setState scheduledArticles: res.body.data.articles

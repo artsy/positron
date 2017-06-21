@@ -1,6 +1,4 @@
 _ = require 'underscore'
-Joi = require '../../../lib/joi'
-schema = require './schema'
 moment = require 'moment'
 
 @toQuery = (input, callback) ->

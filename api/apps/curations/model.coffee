@@ -36,25 +36,28 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) }
   db.curations.findOne query, callback
 
-@where = (input, callback) ->
+@where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset'
-    cursor = db.curations
-      .find(query)
-      .limit(input.limit)
-      .sort($natural: -1)
-      .skip(input.offset or 0)
-    async.parallel [
-      (cb) -> cursor.toArray cb
-      (cb) -> cursor.count cb
-      (cb) -> db.curations.count cb
-    ], (err, [curations, count, total]) =>
-      callback err, {
-        total: total
-        count: count
-        results: curations.map(@present)
-      }
+    @mongoFetch input, callback
+
+@mongoFetch = (input, callback) ->
+  query = _.omit input, 'limit', 'offset'
+  cursor = db.curations
+    .find(query)
+    .limit(input.limit)
+    .sort($natural: -1)
+    .skip(input.offset or 0)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) -> cursor.count cb
+    (cb) -> db.curations.count cb
+  ], (err, [curations, count, total]) =>
+    callback err, {
+      total: total
+      count: count
+      results: curations.map(@present)
+    }
 
 #
 # Persistence

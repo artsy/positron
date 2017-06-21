@@ -6,8 +6,10 @@ _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
-{ validate, onPublish, generateSlugs, generateKeywords,
+{ onPublish, generateSlugs, generateKeywords,
   sanitizeAndSave, onUnpublish } = Save = require './save'
+Joi = require '../../../lib/joi'
+schema = require './schema'
 { removeFromSearch, deleteArticleFromSailthru } = require './distribute'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
@@ -17,12 +19,12 @@ Q = require 'bluebird-q'
 #
 # Retrieval
 #
-@where = (input, callback) ->
-  Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) ->
+@where = (input, callback) =>
+  Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) =>
     return callback err if err
-    queryDatabase input, callback
+    @mongoFetch input, callback
 
-@queryDatabase = (input, callback) ->
+@mongoFetch = (input, callback) ->
   { query, limit, offset, sort, count } = retrieve.toQuery input
   cursor = db.articles
     .find(query)
@@ -53,7 +55,7 @@ Q = require 'bluebird-q'
 # Persistence
 #
 @save = (input, accessToken, callback) =>
-  validate input, (err, input) =>
+  Joi.validate input, schema.inputSchema, { stripUnknown: true }, (err, input) =>
     return callback err if err
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err

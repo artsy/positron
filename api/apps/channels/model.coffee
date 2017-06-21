@@ -52,27 +52,30 @@ request = require 'superagent'
     return callback new Error 'No channel found' unless channel
     callback null, channel
 
-@where = (input, callback) ->
+@where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'limit', 'offset', 'q', 'user_id'
-    query.name = { $regex: ///#{input.q}///i } if input.q
-    query.user_ids = input.user_id if input.user_id
-    cursor = db.channels
-      .find(query)
-      .limit(input.limit)
-      .sort($natural: -1)
-      .skip(input.offset or 0)
-    async.parallel [
-      (cb) -> cursor.toArray cb
-      (cb) -> cursor.count cb
-      (cb) -> db.channels.count cb
-    ], (err, [channels, count, total]) =>
-      callback err, {
-        total: total
-        count: count
-        results: channels.map(@present)
-      }
+    @mongoFetch input, callback
+
+@mongoFetch = (input, callback) ->
+  query = _.omit input, 'limit', 'offset', 'q', 'user_id'
+  query.name = { $regex: ///#{input.q}///i } if input.q
+  query.user_ids = input.user_id if input.user_id
+  cursor = db.channels
+    .find(query)
+    .limit(input.limit)
+    .sort($natural: -1)
+    .skip(input.offset or 0)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) -> cursor.count cb
+    (cb) -> db.channels.count cb
+  ], (err, [channels, count, total]) =>
+    callback err, {
+      total: total
+      count: count
+      results: channels.map(@present)
+    }
 
 #
 # Persistence

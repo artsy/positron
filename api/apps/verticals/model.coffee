@@ -32,30 +32,33 @@ Joi = require '../../lib/joi'
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { name: id }
   db.verticals.findOne query, callback
 
-@where = (input, callback) ->
+@where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
-    query = _.omit input, 'q', 'limit', 'offset', 'count'
-    query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
-    cursor = db.verticals
-      .find(query)
-      .limit(input.limit)
-      .sort($natural: -1)
-      .skip(input.offset or 0)
-    async.parallel [
-      (cb) -> cursor.toArray cb
-      (cb) ->
-        return cb() unless input.count
-        cursor.count cb
-      (cb) ->
-        return cb() unless input.count
-        db.verticals.count cb
-    ], (err, [verticals, verticalCount, total]) =>
-      callback err, {
-        total: total if input.count
-        count: verticalCount if input.count
-        results: verticals.map(@present)
-      }
+    @mongoFetch input, callback
+
+@mongoFetch = (input, callback) =>
+  query = _.omit input, 'q', 'limit', 'offset', 'count'
+  query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
+  cursor = db.verticals
+    .find(query)
+    .limit(input.limit)
+    .sort($natural: -1)
+    .skip(input.offset or 0)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) ->
+      return cb() unless input.count
+      cursor.count cb
+    (cb) ->
+      return cb() unless input.count
+      db.verticals.count cb
+  ], (err, [verticals, verticalCount, total]) =>
+    callback err, {
+      total: total if input.count
+      count: verticalCount if input.count
+      results: verticals.map(@present)
+    }
 
 #
 # Persistence

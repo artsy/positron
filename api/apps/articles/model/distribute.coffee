@@ -119,7 +119,7 @@ postSailthruAPI = (article, cb) ->
   search.client.index(
     index: search.index,
     type: 'article',
-    id: article.id,
+    id: article.id?.toString(),
     body:
       slug: article.slug
       name: article.title

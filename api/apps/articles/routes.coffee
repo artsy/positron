@@ -40,7 +40,7 @@ User = require '../users/model.coffee'
 
 # PUT /api/articles/:id
 @update = (req, res, next) ->
-  unless User.hasChannelAccess req.user, (req.body.channel_id or req.body.partner_channel_id)
+  unless User.hasChannelAccess req.user, (req.article.channel_id or req.article.partner_channel_id)
     return res.err(401, 'Unauthorized')
 
   data = _.extend { author_id: req.user._id }, req.body

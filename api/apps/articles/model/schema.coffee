@@ -67,7 +67,7 @@ denormalizedArtwork = (->
 
 @inputSchema = (->
   id: @string().objectid()
-  author_id: @string().objectid().required()
+  author_id: @string().objectid()
   author: @object().keys
     name: @string().allow('').default('')
     id: @string().objectid()

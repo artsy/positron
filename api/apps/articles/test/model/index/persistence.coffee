@@ -10,7 +10,7 @@ app = require('express')()
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
 
-describe 'Article', ->
+describe 'Article Persistence', ->
 
   before (done) ->
     app.use '/__gravity', gravity

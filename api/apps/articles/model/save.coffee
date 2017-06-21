@@ -2,27 +2,17 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
 stopWords = require '../../../lib/stopwords'
-User = require '../../users/model'
 async = require 'async'
-Joi = require '../../../lib/joi'
 moment = require 'moment'
 xss = require 'xss'
 cheerio = require 'cheerio'
 url = require 'url'
 Q = require 'bluebird-q'
 request = require 'superagent'
-Backbone = require 'backbone'
-debug = require('debug') 'api'
-schema = require './schema'
 Article = require './index'
 { distributeArticle, deleteArticleFromSailthru, indexForSearch } = require './distribute'
-{ ObjectId } = require 'mongojs'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp').token or ''
-
-@validate = (input, callback) ->
-  whitelisted = _.pick input, _.keys schema.inputSchema
-  Joi.validate whitelisted, schema.inputSchema, callback
 
 @onPublish = (article, cb) =>
   unless article.published_at

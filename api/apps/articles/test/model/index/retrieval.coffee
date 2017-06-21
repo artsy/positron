@@ -12,7 +12,7 @@ bodyParser = require 'body-parser'
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
 
-describe 'Article', ->
+describe 'Article Retrieval', ->
 
   before (done) ->
     app.use '/__gravity', gravity
