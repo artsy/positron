@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 sd = require('sharify').data
 gemup = require 'gemup'
-UrlArtworkInput = React.createFactory require '../../image_set/url_artwork_input.coffee'
+UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
 { div, section, h1, h2, span, header, input, a, nav } = React.DOM
@@ -94,7 +94,7 @@ module.exports = React.createClass
 
   render: ->
     header { className: 'edit-section-controls' },
-      nav { className: 'esic-nav es-layout' },
+      nav { className: 'es-layout' },
         a {
           name: 'overflow_fillwidth'
           className: 'layout'

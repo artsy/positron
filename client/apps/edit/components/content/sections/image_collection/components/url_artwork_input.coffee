@@ -5,7 +5,7 @@
 # UrlArtworkInput { images: @state.images, addArtworkFromUrl: @addArtworkFromUrl}
 
 React = require 'react'
-Artwork = require '../../../../../../models/artwork.coffee'
+Artwork = require '../../../../../../../models/artwork.coffee'
 _ = require 'underscore'
 { div, input, button } = React.DOM
 

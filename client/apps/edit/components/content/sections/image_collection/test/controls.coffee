@@ -34,24 +34,25 @@ describe 'ImageCollectionControls', ->
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
       Backbone.sync.yieldsTo('success', new Artwork _.extend fixtures().artwork, {bestImageUrl: 'large'} )
-      Controls = benv.require (
+      @Controls = benv.require (
         resolve(__dirname, '../components/controls')
       )
       UrlArtworkInput = benv.require (
-        resolve(__dirname, '../../image_set/url_artwork_input.coffee')
+        resolve(__dirname, '../components/url_artwork_input.coffee')
       )
       UrlArtworkInput.__set__ 'setState', sinon.stub()
-      Controls.__set__ 'UrlArtworkInput', React.createFactory UrlArtworkInput
-      Controls.__set__ 'Autocomplete', sinon.stub()
-      Controls.__set__ 'gemup', @gemup = sinon.stub()
+      @Controls.__set__ 'UrlArtworkInput', React.createFactory UrlArtworkInput
+      @Controls.__set__ 'Autocomplete', sinon.stub()
+      @Controls.__set__ 'gemup', @gemup = sinon.stub()
       UrlArtworkInput.__set__ 'addArtworkFromUrl', @addArtworkFromUrl = sinon.stub()
-      props = {
+      @props = {
         section: new Backbone.Model {}
         images: []
         setProgress: @setProgress = sinon.stub()
         onChange: @onChange = sinon.stub()
+        channel: { hasFeature: @hasFeature = sinon.stub().returns(true) }
       }
-      @component = ReactDOM.render React.createElement(Controls, props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@Controls, @props), (@$el = $ "<div></div>")[0], =>
       done()
 
   afterEach ->
@@ -61,6 +62,7 @@ describe 'ImageCollectionControls', ->
   it 'renders all fields', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'overflow_fillwidth'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'column_width'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'image_set'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'dashed-file-upload-container'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search for artwork by title"'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Add artwork url"'

@@ -1,20 +1,20 @@
 React = require 'react'
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+Artwork = React.createFactory components.Artwork
 icons = -> require('../../../../icons.jade') arguments...
 { div, span, img, button, p, strong } = React.DOM
-DisplayArtwork = React.createFactory require('particle2').DisplayArtwork
 
 module.exports = React.createClass
   displayName: 'ImageCollectionDisplayArtwork'
 
   render: ->
-    artwork = @props.artwork
-
     div { className: 'esic-img-container'},
-      DisplayArtwork {
-        artwork: artwork
+      Artwork {
+        artwork: @props.artwork
       }
       button {
         className: 'edit-section-remove button-reset esic-img-remove'
-        onClick: @props.removeItem(artwork)
+        onClick: @props.removeItem(@props.artwork)
         dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
       }
+

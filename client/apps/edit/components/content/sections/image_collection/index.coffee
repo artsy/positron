@@ -9,8 +9,10 @@ Image = React.createFactory require './components/image.coffee'
 Controls = React.createFactory require './components/controls.coffee'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 { fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
-ImagesetPreview = React.createFactory require('particle2').ImagesetPreview
 { div, section, ul, li } = React.DOM
+
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+ImagesetPreview = React.createFactory components.ImagesetPreview
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'

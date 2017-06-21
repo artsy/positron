@@ -92,14 +92,6 @@
   opacity 0
   &--placeholder
     opacity 1
-  p
-    color gray-darker-color
-    garamond l-caption
-    white-space initial
-  img
-    max-width 100%
-    width 100%
-    height auto
 
   .esic-img-container
     position relative
@@ -111,6 +103,9 @@
       fill-color red-color
     svg
       fill-color black
+
+.imageset-preview
+  margin 0 auto
 
 .edit-section-image-collection.imageset-block
   .esic-images-list
@@ -130,7 +125,7 @@
 .edit-section-container[data-editing=false][data-type=image_set]
   .edit-section-remove
     display block
-  .edit-section-controls, .esic-controls-container, .esic-nav, .esic-img-remove
+  .edit-section-controls, .esic-controls-container, .esic-img-remove
     display none
 
 .edit-section-container[data-editing=true][data-type=image_collection],
@@ -139,8 +134,6 @@
     display none
   .edit-section-controls, .esic-controls-container, .esic-img-remove
     display block
-  .esic-nav
-    display inline-block
   .drag-target[data-target=true]
     .esic-img-remove,
     .esic-caption
