@@ -1,7 +1,6 @@
 #
 # Image Set section that allows uploading a mix of images and artworks
 #
-
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
