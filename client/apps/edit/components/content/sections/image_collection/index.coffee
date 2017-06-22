@@ -28,22 +28,24 @@ module.exports = React.createClass
 
   onChange: ->
     sizes = @getFillWidthSizes()
-    imagesLoaded $(@refs.images), =>
-      @setState
-        progress: null
-        imagesLoaded: true
-        dimensions: fillWidth(
-          @props.section.get('images'),
-          sizes.targetHeight,
-          sizes.containerSize,
-          @props.section.get('layout') || @props.section.get('type')
-        )
+    imagesLoaded $(@refs.images), @onImagesLoaded(sizes)
+
+  onImagesLoaded: (sizes) ->
+    @setState
+      progress: null
+      imagesLoaded: true
+      dimensions: fillWidth(
+        @props.section.get('images'),
+        sizes.targetHeight,
+        sizes.containerSize,
+        @props.section.get('layout') || @props.section.get('type')
+      )
 
   getFillWidthSizes: ->
     containerSize = 860
     targetHeight = 450
     if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
-      targetHeight = 250
+      targetHeight = 300
     else if @props.section.get('layout') is 'column_width'
       containerSize = 580
       targetHeight = 550

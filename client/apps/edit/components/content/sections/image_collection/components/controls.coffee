@@ -24,13 +24,12 @@ module.exports = React.createClass
     @props.onChange()
 
   toggleImageSet: ->
-    newSection = @props.section
-    if newSection.get('type') is 'image_collection'
-      newSection.unset 'layout'
-      newSection.set 'type', 'image_set'
+    if @props.section.get('type') is 'image_collection'
+      @props.section.unset 'layout'
+      @props.section.set 'type', 'image_set'
     else
-      newSection.set 'layout', 'overflow_fillwidth'
-      newSection.set 'type', 'image_collection'
+      @props.section.set 'layout', 'overflow_fillwidth'
+      @props.section.set 'type', 'image_collection'
     @props.onChange()
 
   addArtworkFromUrl: (newImages) ->

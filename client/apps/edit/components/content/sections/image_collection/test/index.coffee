@@ -38,7 +38,7 @@ describe 'ImageCollection', ->
       @ImageCollection.__set__ 'Artwork', React.createFactory Artwork
       @ImageCollection.__set__ 'Image', React.createFactory Image
       @ImageCollection.__set__ 'Controls', React.createFactory Controls
-      @ImageCollection.__set__ 'imagesLoaded', sinon.stub()
+      @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @props = {
         section: new Backbone.Model
           type: 'image_collection'
@@ -64,8 +64,7 @@ describe 'ImageCollection', ->
         channel: { hasFeature: hasFeature = sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
-      @component.fillwidth = sinon.stub()
-      @component.removeFillwidth = sinon.stub()
+      @component.onImagesLoaded = sinon.stub()
       done()
 
   afterEach ->
@@ -75,6 +74,16 @@ describe 'ImageCollection', ->
     $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
+
+  it 'renders an image set component with preview', ->
+    @component.props.section.unset 'layout'
+    @component.props.section.set 'type', 'image_set'
+    @component.forceUpdate()
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'imageset-preview'
+    $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+    $(ReactDOM.findDOMNode(@component)).find('svg').length.should.eql 1
+    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'Here is a caption'
+    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'The Four Hedgehogs'
 
   it 'renders a placeholder if no images', ->
     @component.props.section.set 'images', []
@@ -93,17 +102,32 @@ describe 'ImageCollection', ->
   it '#removeItem updates the images array', ->
     @component.removeItem(@props.section.get('images')[0])()
     @props.section.get('images').length.should.eql 1
+    @component.onImagesLoaded.called.should.eql true
 
-  xit '#onChange calls @fillwidth if > 1 image and layout overflow_fillwidth', ->
-    @component.onChange()
-    @component.fillwidth.called.should.eql true
 
-  xit '#onChange calls @removefillwidth if < 1 image and layout overflow_fillwidth', ->
-    @component.props.section.set 'images', []
+  it '#onChange calls @fillwidth', ->
     @component.onChange()
-    @component.removeFillwidth.called.should.eql true
+    @component.onImagesLoaded.called.should.eql true
 
-  xit '#onChange calls @removefillwidth if > 1 image and layout column_width', ->
-    @component.props.section.set 'layout', 'column_width'
-    @component.onChange()
-    @component.removeFillwidth.called.should.eql true
+  describe '#getFillWidthSizes', ->
+
+    it 'returns expected container and target for overflow_fillwidth', ->
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 860
+      sizes.targetHeight.should.eql 450
+
+    it 'returns expected container and target for column_width', ->
+      @component.props.section.set 'layout', 'column_width'
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 580
+      sizes.targetHeight.should.eql 550
+
+    it 'returns expected container and target for image_set with many images', ->
+      @component.props.section.unset 'layout'
+      @component.props.section.set 'type', 'image_set'
+      @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 860
+      sizes.targetHeight.should.eql 300
+
+
