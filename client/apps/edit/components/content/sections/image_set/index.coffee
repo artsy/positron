@@ -184,6 +184,7 @@ module.exports = React.createClass
                         RichTextCaption {
                           item: item
                           key: 'caption-edit-' + i
+                          editing: @props.editing
                         }
                       ]
                     button {
