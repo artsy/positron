@@ -15,6 +15,7 @@ retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
 Q = require 'bluebird-q'
+cloneDeep = require 'lodash.clonedeep'
 
 #
 # Retrieval
@@ -54,29 +55,38 @@ Q = require 'bluebird-q'
 #
 # Persistence
 #
-@save = (input, accessToken, callback) =>
-  Joi.validate input, schema.inputSchema, { stripUnknown: true }, (err, input) =>
+@save = (input, accessToken, options, callback) =>
+  # Validate the input with Joi
+  validationOptions = _.extend { stripUnknown: true }, options.validation
+  Joi.validate input, schema.inputSchema, validationOptions, (err, input) =>
     return callback err if err
+
+    # Find the original article or create an empty one
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
-      generateKeywords input, article, (err, article) ->
-        debug err if err
-        publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
-        unPublishing = article.published and not input.published
-        article = _.extend article, _.omit(input, 'slug'), {updated_at: new Date}
-        if input.sections and input.sections.length is 0
-          article.sections = []
-        # Merge fullscreen title with main article title
-        article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-        article.author = input.author
+
+      # Create a new article by merging the values of input and article
+      modifiedArticle = _.extend(cloneDeep(article), input)
+
+      generateKeywords input, modifiedArticle, (err, modifiedArticle) ->
+        return callback err if err
+
+        # Eventually convert these to Joi custom extensions
+        modifiedArticle.updated_at = new Date
+        modifiedArticle.title = modifiedArticle.hero_section.title if input.hero_section?.type is 'fullscreen'
+        modifiedArticle.author = input.author if input.author
+
+        # Handle publishing, unpublishing, published, draft
+        publishing = (modifiedArticle.published and not article.published) or (modifiedArticle.scheduled_publish_at and not article.published)
+        unPublishing = article.published and not modifiedArticle.published
         if publishing
-          onPublish article, sanitizeAndSave(callback)
+          onPublish modifiedArticle, sanitizeAndSave(callback)
         else if unPublishing
-          onUnpublish article, sanitizeAndSave(callback)
-        else if not publishing and not article.slugs?.length > 0
-          generateSlugs article, sanitizeAndSave(callback)
+          onUnpublish modifiedArticle, sanitizeAndSave(callback)
+        else if not publishing and not modifiedArticle.slugs?.length > 0
+          generateSlugs modifiedArticle, sanitizeAndSave(callback)
         else
-          sanitizeAndSave(callback)(null, article)
+          sanitizeAndSave(callback)(null, modifiedArticle)
 
 @publishScheduledArticles = (callback) ->
   db.articles.find { scheduled_publish_at: { $lt: new Date } } , (err, articles) =>

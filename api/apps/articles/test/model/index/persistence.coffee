@@ -40,7 +40,7 @@ describe 'Article Persistence', ->
         id: '5086df098523e60002002222'
         channel_id: '5086df098523e60002002223'
         vertical: {name: 'Culture', id: '55356a9deca560a0137bb4a7'}
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.title.should.equal 'Top Ten Shows'
         article.channel_id.toString().should.equal '5086df098523e60002002223'
         article.vertical.name.should.eql 'Culture'
@@ -48,20 +48,12 @@ describe 'Article Persistence', ->
           count.should.equal 11
           done()
 
-    it 'requires an author', (done) ->
-      Article.save {
-        title: 'Top Ten Shows'
-        thumbnail_title: 'Ten Shows'
-      }, 'foo', (err, article) ->
-        err.message.should.containEql '"author_id" is required'
-        done()
-
     it 'adds an updated_at as a date', (done) ->
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.updated_at.should.be.an.instanceOf(Date)
         moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
         done()
@@ -72,14 +64,14 @@ describe 'Article Persistence', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         updated_at: 'foo'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         err.message.should.containEql '"updated_at" must be a number of milliseconds or valid date string'
       Article.save {
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         updated_at: new Date
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         moment(article.updated_at).format('YYYY-MM-DD').should.equal moment().format('YYYY-MM-DD')
         done()
 
@@ -88,7 +80,7 @@ describe 'Article Persistence', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         (article._id?).should.be.ok
         done()
@@ -99,7 +91,7 @@ describe 'Article Persistence', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         author: name: 'Craig Spaeth'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.slugs[0].should.equal 'craig-spaeth-ten-shows'
         done()
@@ -110,7 +102,7 @@ describe 'Article Persistence', ->
           thumbnail_title: 'Foo Baz'
           author_id: @user._id.toString()
           author: name: @user.name
-        }, 'foo', (err, article) ->
+        }, 'foo', {}, (err, article) ->
           return done err if err
           article.slugs[0].should.equal 'molly-foo-baz'
           done()
@@ -122,7 +114,7 @@ describe 'Article Persistence', ->
           author_id: @user._id.toString()
           published: false
           author: name: @user.name
-        }, 'foo', (err, article) =>
+        }, 'foo', {}, (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
@@ -130,7 +122,7 @@ describe 'Article Persistence', ->
             author_id: @user._id.toString()
             published: true
             author: name: @user.name
-          }, 'foo', (err, article) ->
+          }, 'foo', {}, (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-bazmolly-foo-bar-baz'
             Article.find article.slugs[0], (err, article) ->
@@ -149,7 +141,7 @@ describe 'Article Persistence', ->
           published_at: '01-01-99'
           id: '5086df098523e60002002222'
           author: name: 'Craig Spaeth'
-          }, 'foo', (err, article) ->
+          }, 'foo', {}, (err, article) ->
             return done err if err
             article.slugs[0].should.equal 'craig-spaeth-heyo-01-01-99'
             db.articles.count (err, count) ->
@@ -163,7 +155,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         published: true
         id: '5086df098523e60002002222'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.published_at.should.be.an.instanceOf(Date)
         moment(article.published_at).format('YYYY').should
           .equal moment().format('YYYY')
@@ -175,13 +167,13 @@ describe 'Article Persistence', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
-      }, 'foo', (err, article) =>
+      }, 'foo', {}, (err, article) =>
         return done err if err
         Article.save {
           id: article._id.toString()
           author_id: '5086df098523e60002000018'
           published_at: moment().add(1, 'year').toDate()
-        }, 'foo', (err, updatedArticle) ->
+        }, 'foo', {}, (err, updatedArticle) ->
           return done err if err
           updatedArticle.published_at.should.be.an.instanceOf(Date)
           moment(updatedArticle.published_at).format('YYYY').should
@@ -195,7 +187,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         published: true
         id: '5086df098523e60002002222'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.indexable.should.eql true
         done()
 
@@ -204,14 +196,14 @@ describe 'Article Persistence', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) =>
+      }, 'foo', {}, (err, article) =>
         return done err if err
         article.indexable.should.eql true
         Article.save {
           id: article._id.toString()
           author_id: '5086df098523e60002000018'
           indexable: false
-        }, 'foo', (err, updatedArticle) ->
+        }, 'foo', {}, (err, updatedArticle) ->
           return done err if err
           updatedArticle.indexable.should.eql false
           done()
@@ -223,7 +215,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         fair_ids: []
         published: true
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         (article.fair_ids?).should.not.be.ok
         done()
 
@@ -266,7 +258,7 @@ describe 'Article Persistence', ->
             mobile_height: '300'
           }
         ]
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.hero_section.caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[0].body.should.equal body
@@ -283,7 +275,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         title: 'Dr. Evil demands “one million dollars”.'
         thumbnail_title: 'Dr. Evil demands “one billion dollars”.'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.title.should.containEql '“'
         article.thumbnail_title.should.containEql '“'
         done()
@@ -301,7 +293,7 @@ describe 'Article Persistence', ->
             body: '<a href="www.bar.com">Foo</a>'
           }
         ]
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].body.should.equal '<a href="http://www.bar.com">Foo</a>'
         done()
@@ -332,7 +324,7 @@ describe 'Article Persistence', ->
             ]
           }
         ]
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
         article.sections[1].url.should.equal 'http://foo.com'
         article.sections[2].url.should.equal 'http://foo.com/watch'
@@ -346,14 +338,14 @@ describe 'Article Persistence', ->
           author_id: @user._id.toString()
           published: true
           author: name: @user.name
-        }, 'foo', (err, article) =>
+        }, 'foo', {}, (err, article) =>
           return done err if err
           Article.save {
             id: article._id.toString()
             thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id.toString()
             published: true
-          }, 'foo', (err, article) ->
+          }, 'foo', {}, (err, article) ->
             return done err if err
             article.slugs.join('').should.equal 'molly-foo-baz'
             article.thumbnail_title.should.equal 'Foo Bar Baz'
@@ -369,7 +361,7 @@ describe 'Article Persistence', ->
         tags: ['cool', 'art']
         contributing_authors: [{name: 'kana'}]
         published: true
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.keywords.join(',').should.equal 'cool,art,Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,kana'
         done()
@@ -380,7 +372,7 @@ describe 'Article Persistence', ->
         title: 'foo article'
         published: true
         channel_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         setTimeout( =>
           search.client.search(
@@ -410,7 +402,7 @@ describe 'Article Persistence', ->
           related_articles: [ '5530e72f7261696238050000' ]
         }
         published: true
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.super_article.partner_link.should.equal 'http://partnerlink.com'
         article.super_article.partner_logo.should.equal 'http://partnerlink.com/logo.jpg'
@@ -435,7 +427,7 @@ describe 'Article Persistence', ->
         fair_programming_ids: [ '52617c6c8b3b81f094000013' ]
         fair_artsy_ids: [ '53da550a726169083c0a0700' ]
         fair_about_ids: [ '53da550a726169083c0a0700' ]
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         (article.author_id instanceof ObjectId).should.be.true()
         (article.super_article.related_articles[0] instanceof ObjectId).should.be.true()
@@ -468,7 +460,7 @@ describe 'Article Persistence', ->
           }
         ]
         published: true
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.sections[0].type.should.equal 'callout'
         article.sections[0].text.should.equal 'The Title Goes Here'
@@ -504,7 +496,7 @@ describe 'Article Persistence', ->
           id: '5086df098523e60002000018'
           author_id: '5086df098523e60002000018'
           published: true
-        }, 'foo', (err, article) ->
+        }, 'foo', {}, (err, article) ->
           article.published.should.be.true()
           article.sections.length.should.equal 2
           article.sections[0].body.should.containEql 'The start of a new article'
@@ -523,7 +515,7 @@ describe 'Article Persistence', ->
           }
         ]
         published: true
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.sections[0].type.should.equal 'toc'
         article.sections[0].links[0].name.should.equal 'kana'
@@ -555,7 +547,7 @@ describe 'Article Persistence', ->
             ]
           }
         ]
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.sections[0].type.should.equal 'image_set'
         article.sections[0].images[0].type.should.equal 'image'
@@ -569,7 +561,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         layout: 'left'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.layout.should.equal 'left'
         done()
@@ -577,7 +569,7 @@ describe 'Article Persistence', ->
     it 'it defaults to center if layout is not specified', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.layout.should.equal 'center'
         done()
@@ -586,7 +578,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         channel_id: '5086df098523e60002000015'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.channel_id.toString().should.equal '5086df098523e60002000015'
         done()
@@ -595,7 +587,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         partner_channel_id: '5086df098523e60002000015'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.partner_channel_id.toString().should.equal '5086df098523e60002000015'
         done()
@@ -606,7 +598,7 @@ describe 'Article Persistence', ->
           name: 'Jon Snow'
           id: '5086df098523e60002000018'
         author_id: '5086df098523e60002000018'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.author.id.toString().should.equal '5086df098523e60002000018'
         article.author.name.should.equal 'Jon Snow'
@@ -617,7 +609,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         channel_id: '5086df098523e60002000015'
         description: 'Just before the lines start forming, we predict where they will go.'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.description.should.containEql 'lines start forming'
         done()
@@ -626,7 +618,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         vertical: {name: 'Culture', id: '4d8b92b34eb68a1b2c0003f4'}
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.vertical.name.should.eql 'Culture'
         done()
@@ -635,7 +627,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         tracking_tags: ['evergreen', 'video']
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.tracking_tags.should.eql ['evergreen', 'video']
         done()
@@ -647,7 +639,7 @@ describe 'Article Persistence', ->
         social_title: 'social title'
         social_description: 'social description'
         social_image: 'social image'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.social_title.should.containEql 'social title'
         article.social_description.should.containEql 'social description'
@@ -660,7 +652,7 @@ describe 'Article Persistence', ->
         channel_id: '5086df098523e60002000015'
         search_title: 'search title'
         search_description: 'search description'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.search_title.should.containEql 'search title'
         article.search_description.should.containEql 'search description'
@@ -670,7 +662,7 @@ describe 'Article Persistence', ->
       Article.save {
         author_id: '5086df098523e60002000018'
         seo_keyword: 'focus'
-      }, 'foo', (err, article) ->
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.seo_keyword.should.equal 'focus'
         done()
@@ -689,7 +681,7 @@ describe 'Article Persistence', ->
         author_id: ObjectId('5086df098523e60002000018')
         published: true
       , =>
-        Article.save article, 'foo', (err, article) =>
+        Article.save article, 'foo', {}, (err, article) =>
           article.published.should.be.false()
           @onUnpublish.callCount.should.equal 1
           done()

@@ -55,6 +55,8 @@ removeStopWords = (title) ->
     stoppedTitle = removeStopWords article.thumbnail_title
   slug = _s.slugify article.author?.name + ' ' + stoppedTitle
   return cb null, article if slug is _.last(article.slugs)
+
+  # Append published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
     slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count
@@ -62,15 +64,17 @@ removeStopWords = (title) ->
     cb(null, article)
 
 @generateKeywords = (input, article, cb) ->
+  unless (
+    input.primary_featured_artist_ids or
+    input.featured_artist_ids or
+    input.fair_ids or
+    input.partner_ids or
+    input.contributing_authors or
+    input.tags
+  )
+    return cb null, article
   keywords = []
   callbacks = []
-  if (input.primary_featured_artist_ids is not article.primary_featured_artist_ids or
-      input.featured_artist_ids is not article.featured_artist_ids or
-      input.fair_ids is not article.fair_ids or
-      input.partner_ids is not article.partner_ids or
-      input.contributing_authors is not article.contributing_authors or
-      input.tags is not article.tags)
-    return cb(null, article)
   if input.primary_featured_artist_ids
     for artistId in input.primary_featured_artist_ids
       do (artistId) ->
@@ -105,10 +109,10 @@ removeStopWords = (title) ->
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err
-    keywords = input.tags or []
+    keywords = article.tags or []
     keywords = keywords.concat (res.body.name for res in results)
-    if input.contributing_authors?.length > 0
-      for author in input.contributing_authors
+    if article.contributing_authors?.length > 0
+      for author in article.contributing_authors
         keywords.push author.name
     article.keywords = keywords[0..9]
     cb(null, article)
