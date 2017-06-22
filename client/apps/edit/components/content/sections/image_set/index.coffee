@@ -1,7 +1,6 @@
 #
 # Image Set section that allows uploading a mix of images and artworks
 #
-
 _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
@@ -184,6 +183,7 @@ module.exports = React.createClass
                         RichTextCaption {
                           item: item
                           key: 'caption-edit-' + i
+                          editing: @props.editing
                         }
                       ]
                     button {
