@@ -104,7 +104,6 @@ describe 'ImageCollection', ->
     @props.section.get('images').length.should.eql 1
     @component.onImagesLoaded.called.should.eql true
 
-
   it '#onChange calls @fillwidth', ->
     @component.onChange()
     @component.onImagesLoaded.called.should.eql true
