@@ -28,8 +28,9 @@ module.exports = React.createClass
       @props.section.unset 'layout'
       @props.section.set 'type', 'image_set'
     else
-      @props.section.set 'layout', 'overflow_fillwidth'
-      @props.section.set 'type', 'image_collection'
+      @props.section.set
+        layout: 'overflow_fillwidth'
+        type: 'image_collection'
     @props.onChange()
 
   addArtworkFromUrl: (newImages) ->
