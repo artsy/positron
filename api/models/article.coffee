@@ -36,7 +36,7 @@ module.exports = class Article extends Backbone.Model
       maxBoost = 1000.0
       meanLifetime = 365 * 3.0
       decayDays = (new Date().getTime() - moment(@get('published_at')).toDate().getTime())/(1000 * 60 * 60 * 24)
-      maxBoost * Math.exp(-(decayDays/meanLifetime))
+      Math.floor(maxBoost * Math.exp(-(decayDays/meanLifetime)))
     else
       0
 

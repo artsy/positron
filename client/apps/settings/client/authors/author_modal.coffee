@@ -84,7 +84,7 @@ module.exports = AuthorModal = React.createClass
               name: 'bio'
             }
             div {className: 'author-edit__bio-footer'},
-              div {className: 'author-edit__markdown'}, '* Supports Markdown'
+              div {className: 'supports-markdown'}
               div {className: 'author-edit__chars'},
                 @state.remainingChars.toString() + '/200'
         div {className: 'fields-full'},
