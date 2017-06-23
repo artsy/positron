@@ -18,7 +18,7 @@ dependencies:
   override:
     - yarn install
   post:
-    - /etc/init.d/elasticsearch start
+    - sudo /etc/init.d/elasticsearch start
   cache_directories:
     - ~/.yarn-cache
 test:
