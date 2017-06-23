@@ -771,9 +771,9 @@ bson@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/bson/-/bson-1.0.4.tgz#93c10d39eaa5b58415cbc4052f3e53e562b0b72c"
 
-bucket-assets@^0.2.11:
-  version "0.2.12"
-  resolved "https://registry.yarnpkg.com/bucket-assets/-/bucket-assets-0.2.12.tgz#4a57e9c1cf378c0e4eadd6e0a8ae597acf72cbcf"
+bucket-assets@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/bucket-assets/-/bucket-assets-1.0.2.tgz#e927b5594ff1ae3e40f2ad652aa38d49bb0c5239"
   dependencies:
     async "^0.9.0"
     commander "^2.8.1"
