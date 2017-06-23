@@ -20,12 +20,17 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @props.sections.on 'add', @onNewSection
+    @props.sections.on 'remove', @onRemoveSection
 
   onSetEditing: (i) ->
     @setState editingIndex: i
 
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
+
+  onRemoveSection: ->
+    if @props.sections.isEmpty()
+      @props.article.set 'sections', []
 
   onDragStart: (e, dragStartY) ->
     e.dataTransfer.effectAllowed = 'move'
