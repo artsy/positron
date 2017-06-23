@@ -64,6 +64,7 @@ cloneDeep = require 'lodash.clonedeep'
     # Find the original article or create an empty one
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
+
       # Create a new article by merging the values of input and article
       modifiedArticle = _.extend(cloneDeep(article), input)
 
