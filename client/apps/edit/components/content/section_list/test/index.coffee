@@ -9,63 +9,49 @@ ReactDOMServer = require 'react-dom/server'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
-{ div } = React.DOM
 
 describe 'SectionList', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
-      SectionList = benv.require resolve(__dirname, '../index')
-      SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
-      SectionList.__set__ 'SectionContainer', @SectionContainer = sinon.stub()
-      @component = ReactDOM.render React.createElement(SectionList,
+      global.HTMLElement = () => {}
+      @SectionList = benv.require resolve(__dirname, '../index')
+      @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
+      @SectionContainer = benv.requireWithJadeify(
+        resolve(__dirname, '../../section_container/index'), ['icons']
+      )
+      @SectionContainer.__set__ 'SectionText', text = sinon.stub()
+      @SectionContainer.__set__ 'SectionImageCollection', image_collection = sinon.stub()
+      @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
+      @props = {
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }
           { type: 'image', url: 'http://artsy.net/image.jpg', caption: '<p>An image caption</p>', layout: 'column_width'}
           {
-            type: 'artworks'
-            layout: 'overflow_fillwidth'
-            ids: [
-                "568eda976428704baf0001b8",
-                "568eda927076d0705d000204"
-            ]
-            artworks: [
-                {
-                    id: "568eda976428704baf0001b8",
-                    slug: "rodrigo-valenzuela-hedonic-reversal-no-13-1",
-                    date: "2014",
-                    title: "Hedonic Reversal No. 13",
-                    image: "https://d32dm0rphc51dk.cloudfront.net/p1OpunHRxT3_0__lSxw_8g/larger.jpg",
-                    partner: {
-                        name: "envoy enterprises",
-                        slug: "envoy-enterprises"
-                    },
-                    artists: [{
-                        name: "Rodrigo Valenzuela",
-                        slug: "rodrigo-valenzuela"
-                    }]
-                },
-                {
-                    id: "568eda927076d0705d000204",
-                    slug: "rodrigo-valenzuela-hedonic-reversal-no-12-1",
-                    date: "2014",
-                    title: "Hedonic Reversal No. 12",
-                    image: "https://d32dm0rphc51dk.cloudfront.net/HG8Usf5i3O5tZbBSzKn9Ew/larger.jpg",
-                    partner: {
-                        name: "envoy enterprises",
-                        slug: "envoy-enterprises"
-                    },
-                    artists: [{
-                        name: "Rodrigo Valenzuela 2",
-                        slug: "rodrigo-valenzuela-2"
-                    }]
-                }
+            type: 'image_collection'
+            images: [
+              {
+                type: 'image'
+                url: 'https://artsy.net/image.png'
+                caption: '<p>Here is a caption</p>'
+              }
+              {
+                type: 'artwork'
+                title: 'The Four Hedgehogs'
+                id: '123'
+                image: 'https://artsy.net/artwork.jpg'
+                partner: name: 'Guggenheim'
+                artists: [
+                  {name: 'Van Gogh'}
+                ]
+              }
             ]
           }
         ]
-      ), (@$el = $ "<div></div>")[0], => setTimeout =>
+      }
+      @component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.setState
           dragging: 0
           dragOver: 3
@@ -77,8 +63,9 @@ describe 'SectionList', ->
   afterEach ->
     benv.teardown()
 
-  xit 'renders the sections', ->
-    @$el.html().should.containEql 'Foo to the bar'
+  it 'renders the sections', ->
+    @component.render()
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'An image caption'
 
   it 'sets an index for the section tools', ->
     @SectionTool.args[0][0].index.should.equal -1
@@ -91,17 +78,21 @@ describe 'SectionList', ->
     @component.setState.args[0][0].editingIndex.should.equal 3
 
   it 'toggles editing state when a child section callsback', ->
-    @SectionContainer.args[0][0].onSetEditing
-      .should.equal @component.onSetEditing
+    @SectionList.__set__ 'SectionContainer', sectionContainer = sinon.stub()
+    component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], =>
+    sectionContainer.args[0][0].onSetEditing
+      .should.equal component.onSetEditing
 
   it 'uses the section cid as a key b/c they have to be unique AND a \
       property specific to that piece of data, or model in our case', ->
-    @component.render()
-    @SectionContainer.args[0][0].key.should.equal @sections.at(0).cid
-    @SectionContainer.args[1][0].key.should.equal @sections.at(1).cid
+    @SectionList.__set__ 'SectionContainer', sectionContainer = sinon.stub()
+    component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], =>
+    component.render()
+    sectionContainer.args[0][0].key.should.equal @sections.at(0).cid
+    sectionContainer.args[1][0].key.should.equal @sections.at(1).cid
 
   it 'onDragEnd resets the section order', ->
-    @component.props.sections.models[3].get('type').should.eql 'artworks'
+    @component.props.sections.models[3].get('type').should.eql 'image_collection'
     @component.onDragEnd()
     @component.props.sections.models[3].get('type').should.eql 'text'
     (@component.state.dragging?).should.not.be.ok
@@ -109,3 +100,10 @@ describe 'SectionList', ->
     (@component.state.dragStart?).should.not.be.ok
     @component.state.draggingHeight.should.eql 0
 
+  it 'onRemoveSection resets the article sections if empty', ->
+    @props.sections = new Backbone.Collection [{ body: 'Foo to the bar', type: 'text' }]
+    @props.article = new Backbone.Model {sections: [{ body: 'Foo to the bar', type: 'text' }]}
+    component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], =>
+    component.render()
+    r.simulate.click r.find(component, 'edit-section-remove')
+    @props.article.get('sections').length.should.eql 0

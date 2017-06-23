@@ -86,7 +86,7 @@ describe 'routes', ->
       @User.hasChannelAccess = sinon.stub().returns true
       @req.body.title = "Foo Bar"
       routes.create @req, @res
-      @Article.save.args[0][2] null, fixtures().articles
+      @Article.save.args[0][3] null, fixtures().articles
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
   describe '#update', ->
@@ -95,7 +95,7 @@ describe 'routes', ->
       @req.article = fixtures().articles
       @req.body.title = "Foo Bar"
       routes.create @req, @res
-      @Article.save.args[0][2] null, fixtures().articles
+      @Article.save.args[0][3] null, fixtures().articles
       @res.send.args[0][0].title.should.containEql 'Top Ten'
 
     it 'defaults to the logged in user for author_id', ->

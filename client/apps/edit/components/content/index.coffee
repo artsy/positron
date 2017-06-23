@@ -43,4 +43,5 @@ module.exports = React.createClass
         SectionList {
           sections: @props.article.sections
           saveArticle: @saveArticle
+          article: @props.article
         }

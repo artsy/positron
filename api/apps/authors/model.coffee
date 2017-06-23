@@ -34,28 +34,31 @@ Joi = require '../../lib/joi'
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { name: id }
   db.authors.findOne query, callback
 
-@where = (input, callback) ->
+@where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
     return callback err if err
-    cursor = db.authors
-      .find({})
-      .limit(input.limit)
-      .sort($natural: -1)
-      .skip(input.offset or 0)
-    async.parallel [
-      (cb) -> cursor.toArray cb
-      (cb) ->
-        return cb() unless input.count
-        cursor.count cb
-      (cb) ->
-        return cb() unless input.count
-        db.authors.count cb
-    ], (err, [authors, authorCount, total]) =>
-      callback err, {
-        total: total if input.count
-        count: authorCount if input.count
-        results: authors.map(@present)
-      }
+    @mongoFetch input, callback
+
+@mongoFetch = (input, callback) ->
+  cursor = db.authors
+    .find({})
+    .limit(input.limit)
+    .sort($natural: -1)
+    .skip(input.offset or 0)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) ->
+      return cb() unless input.count
+      cursor.count cb
+    (cb) ->
+      return cb() unless input.count
+      db.authors.count cb
+  ], (err, [authors, authorCount, total]) =>
+    callback err, {
+      total: total if input.count
+      count: authorCount if input.count
+      results: authors.map(@present)
+    }
 
 #
 # Persistence
