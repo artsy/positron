@@ -6,6 +6,7 @@ Autocomplete = null
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
+DragContainer = React.createFactory require '../drag_drop/index.coffee'
 
 module.exports = AutocompleteList = React.createClass
   displayName: 'AutocompleteList'
@@ -81,12 +82,21 @@ module.exports = AutocompleteList = React.createClass
     @addAutocomplete()
     @$input.focus()
 
+  onDragEnd: (items) ->
+    @setState items: items
+    @props.selected? null, null, items
+
   printItems: ->
-    for item, i in @state.items
-      div { className: 'autocomplete-select-selected', key: 'selected-' + item.id },
-        span {className: 'selected' }, item.value
-        input { type: 'hidden', value: item.id, name: @props.name }
-        button { className: 'remove-button', onClick: @removeItem(item) }
+    DragContainer {
+      items: @state.items
+      onDragEnd: @onDragEnd
+      isDraggable: @props.draggable
+    },
+      for item, i in @state.items
+        div { className: 'autocomplete-select-selected', key: 'selected-' + item.id },
+          span {className: 'selected' }, item.value
+          input { type: 'hidden', value: item.id, name: @props.name }
+          button { className: 'remove-button', onClick: @removeItem(item) }
 
   render: ->
     inline = if @props.inline then ' autocomplete-container--inline' else ''

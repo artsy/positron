@@ -1,7 +1,6 @@
 Backbone = require 'backbone'
 _ = require 'underscore'
 AutocompleteList = require '../../../components/autocomplete_list/index.coffee'
-AutocompleteSortableList = require '../../../components/autocomplete_sortable_list/index.coffee'
 ImageUploadForm = require '../../../components/image_upload_form/index.coffee'
 Channel = require '../../../models/channel.coffee'
 sd = require('sharify').data
@@ -43,35 +42,24 @@ module.exports.EditChannel = class EditChannel extends Backbone.View
 
   setupPinnedArticlesAutocomplete: ->
     @pinnedArticles = @channel.get('pinned_articles') or []
-    pinned = new AutocompleteSortableList $('#channel-edit__pinned-articles')[0],
+    props =
       name: 'pinned_articles[]'
       url: "#{sd.APP_URL}/api/articles?published=true&channel_id=#{@channel.get('id')}&q=%QUERY"
       placeholder: 'Search by article title...'
+      draggable: true
       filter: (articles) -> for article in articles.results
         { id: article.id, value: article.thumbnail_title }
       selected: (e, item, items) =>
         @channel.save pinned_articles: @indexPinnedArticles items
+      idsToFetch: @pinnedArticles
+      fetchUrl: (id) -> "#{sd.APP_URL}/api/articles/#{id.id}"
       removed: (e, item, items) =>
         @channel.save pinned_articles: @indexPinnedArticles items
-      moved: (items) =>
-        @channel.save pinned_articles: @indexPinnedArticles items
-    if @pinnedArticles.length > 0
-      @articles = []
-      async.each @pinnedArticles, (article, cb) =>
-        request
-          .get("#{sd.APP_URL}/api/articles/#{article.id}")
-          .set('X-Access-Token': sd.USER.access_token).end (err, res) =>
-            @articles.push(
-              {
-                id: res.body.id,
-                value: res.body.thumbnail_title
-                index: article.index
-              })
-            cb()
-      , =>
-        pinned.setState loading: false, items: _.sortBy @articles, 'index'
-    else
-      pinned.setState loading: false
+      resObject: (res) -> {
+        id: res.body.id,
+        value: res.body.thumbnail_title
+      }
+    ReactDOM.render React.createElement(AutocompleteList, props), $('#channel-edit__pinned-articles')[0]
 
   indexPinnedArticles: (items) ->
     _.map items, (item, i) ->
