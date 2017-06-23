@@ -70,43 +70,85 @@ describe 'ImageCollection', ->
   afterEach ->
     benv.teardown()
 
-  it 'renders an image collection component with preview', ->
-    $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
+  describe 'ImageCollection', ->
 
-  it 'renders an image set component with preview', ->
-    @component.props.section.unset 'layout'
-    @component.props.section.set 'type', 'image_set'
-    @component.forceUpdate()
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'imageset-preview'
-    $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
-    $(ReactDOM.findDOMNode(@component)).find('svg').length.should.eql 1
-    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'Here is a caption'
-    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'The Four Hedgehogs'
+    it 'renders an image collection component with preview', ->
+      $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
-  it 'renders a placeholder if no images', ->
-    @component.props.section.set 'images', []
-    @component.forceUpdate()
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add images and artworks above'
+    it 'renders a placeholder if no images', ->
+      @component.props.section.set 'images', []
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add images and artworks above'
 
-  it 'renders a progress indicator if progress', ->
-    @component.setState progress: .5
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
+    it 'renders a progress indicator if progress', ->
+      @component.setState progress: .5
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
 
-  it 'sets editing mode on click', ->
-    r.simulate.click r.find @component, 'edit-section-image-container'
-    @setEditing.called.should.eql true
-    @setEditing.args[0][0].should.eql true
+    it 'sets editing mode on click', ->
+      r.simulate.click r.find @component, 'edit-section-image-container'
+      @setEditing.called.should.eql true
+      @setEditing.args[0][0].should.eql true
 
-  it '#removeItem updates the images array', ->
-    @component.removeItem(@props.section.get('images')[0])()
-    @props.section.get('images').length.should.eql 1
-    @component.onImagesLoaded.called.should.eql true
+    it '#removeItem updates the images array', ->
+      @component.removeItem(@props.section.get('images')[0])()
+      @props.section.get('images').length.should.eql 1
+      @component.onImagesLoaded.called.should.eql true
 
-  it '#onChange calls @fillwidth', ->
-    @component.onChange()
-    @component.onImagesLoaded.called.should.eql true
+    it '#onChange calls @fillwidth', ->
+      @component.onChange()
+      @component.onImagesLoaded.called.should.eql true
+
+
+  describe 'ImageSet', ->
+
+    it 'renders an image set component with preview', ->
+      @component.props.section.unset 'layout'
+      @component.props.section.set 'type', 'image_set'
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'imageset-preview'
+      $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).find('svg').length.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'The Four Hedgehogs'
+
+    it 'renders an image set edit view', ->
+      @props.editing = true
+      @props.section.set 'type', 'image_set'
+      component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<div class="drag-container">'
+
+    it 'adds classes to image sets with many images', ->
+      images = [
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        }
+      ]
+      @props.editing = true
+      @props.section.set
+        images: images
+        type: 'image_set'
+      component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).attr('class').should.containEql 'imageset-block'
+
 
   describe '#getFillWidthSizes', ->
 
