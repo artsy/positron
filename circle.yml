@@ -22,6 +22,7 @@ deployment:
       - node_modules/.bin/bucket-assets -b positron-staging
       - heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
       - git push --force git@heroku.com:positron-staging.git $CIRCLE_SHA1:refs/heads/master
+      - git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging
   production:
     branch: release
     owner: artsy
