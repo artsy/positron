@@ -98,6 +98,7 @@ module.exports = AdminArticle = React.createClass
             AutocompleteList {
               url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
               placeholder: 'Search by user name or email...'
+              draggable: true
               filter: (users) -> for user in users
                 { id: { id: user.id, name: user.name }, value: _.compact([user.name, user.email]).join(', ') }
               selected: (e, item, items) =>
