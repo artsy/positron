@@ -45,10 +45,4 @@ link-artists:
 	$(BIN)/coffee scripts/get_artist_names.coffee
 	$(BIN)/coffee scripts/link_artists.coffee
 
-
-# Deploys to Heroku. Run with `make deploy env=staging` or `make deploy env=production`.
-deploy: assets
-	$(BIN)/bucket-assets -b positron-$(env)
-	heroku config:set COMMIT_HASH=$(shell git rev-parse --short HEAD) --app=positron-$(env)
-	git push --force git@heroku.com:positron-$(env).git $CIRCLE_SHA1:refs/heads/master
 .PHONY: test assets
