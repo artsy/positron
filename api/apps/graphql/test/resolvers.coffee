@@ -22,11 +22,11 @@ describe 'resolvers', ->
     channels = total: 20, count: 1, results: [fixtures().channels]
     tags = total: 20, count: 1, results: [fixtures().tags]
     authors = total: 20, count: 1, results: [fixtures().authors]
-    resolvers.__set__ 'where', @where = sinon.stub().yields null, articles
-    resolvers.__set__ 'Curation', { where: @curationWhere = sinon.stub().yields null, curations }
-    resolvers.__set__ 'Channel', { where: @channelWhere = sinon.stub().yields null, channels }
-    resolvers.__set__ 'Tag', { where: @tagWhere = sinon.stub().yields null, tags }
-    resolvers.__set__ 'Author', { where: @authorWhere = sinon.stub().yields null, authors }
+    resolvers.__set__ 'mongoFetch', @mongoFetch = sinon.stub().yields null, articles
+    resolvers.__set__ 'Curation', { mongoFetch: @curationWhere = sinon.stub().yields null, curations }
+    resolvers.__set__ 'Channel', { mongoFetch: @channelWhere = sinon.stub().yields null, channels }
+    resolvers.__set__ 'Tag', { mongoFetch: @tagWhere = sinon.stub().yields null, tags }
+    resolvers.__set__ 'Author', { mongoFetch: @authorWhere = sinon.stub().yields null, authors }
     @req = user: channel_ids: ['456']
 
   describe 'articles', ->
