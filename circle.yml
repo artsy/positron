@@ -9,9 +9,16 @@ deployment:
     owner: artsy
     commands:
       - NODE_ENV=production make deploy env=staging
+  production:
+    branch: release
+    owner: artsy
+    commands:
+      - NODE_ENV=production make deploy env=production
 dependencies:
   override:
     - yarn install
+  post:
+    - /etc/init.d/elasticsearch start
   cache_directories:
     - ~/.yarn-cache
 test:
