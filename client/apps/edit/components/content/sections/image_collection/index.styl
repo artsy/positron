@@ -103,6 +103,7 @@
   position relative
   z-index 2 !important
   opacity 0
+  transition opacity 500ms ease-in
   &--placeholder
     opacity 1
 
@@ -138,14 +139,14 @@
 .edit-section-container[data-editing=false][data-type=image_set]
   .edit-section-remove
     display block
-  .edit-section-controls, .esic-controls-container, .esic-img-remove
+  .edit-section-controls, .esic-controls-container
     display none
 
 .edit-section-container[data-editing=true][data-type=image_collection],
 .edit-section-container[data-editing=true][data-type=image_set]
-  .edit-section-remove, .esic-caption--display
+  .esic-caption--display
     display none
-  .edit-section-controls, .esic-controls-container, .esic-img-remove
+  .edit-section-controls, .esic-controls-container
     display block
   .drag-target[data-target=true]
     .esic-img-remove,

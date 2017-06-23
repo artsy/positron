@@ -93,8 +93,7 @@ section-btn-height = 130px
     text-align center
     cursor pointer
     position relative
-    &:last-child,
-    &:nth-child(3)
+    &:last-child
       border-right none
     svg
       max-width 40px
@@ -151,7 +150,7 @@ section-btn-height = 130px
     opacity 1
     max-height (section-btn-height * 2)
     transition max-height 0.15s linear, opacity 0.15s linear
-    display block
+    display flex
 
 .edit-section-tool-callout
   &.is-disabled

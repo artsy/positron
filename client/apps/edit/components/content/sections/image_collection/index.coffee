@@ -127,6 +127,8 @@ module.exports = React.createClass
                     index: i
                     artwork: item
                     removeItem: @removeItem
+                    editing:  @props.editing
+                    imagesLoaded: @state.imagesLoaded
                   }
                 else
                   Image {
@@ -134,8 +136,9 @@ module.exports = React.createClass
                     key: i
                     image: item
                     removeItem: @removeItem
-                    progress: @state.progress
                     editing:  @props.editing
+                    dimensions: @state.dimensions
+                    imagesLoaded: @state.imagesLoaded
                   }
         else
           div { className: 'esic-placeholder' }, 'Add images and artworks above'
