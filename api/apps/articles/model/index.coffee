@@ -6,40 +6,47 @@ _ = require 'underscore'
 db = require '../../../lib/db'
 async = require 'async'
 debug = require('debug') 'api'
-{ validate, onPublish, generateSlugs, generateKeywords,
+{ onPublish, generateSlugs, generateKeywords,
   sanitizeAndSave, onUnpublish } = Save = require './save'
+Joi = require '../../../lib/joi'
+schema = require './schema'
 { removeFromSearch, deleteArticleFromSailthru } = require './distribute'
 retrieve = require './retrieve'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
 Q = require 'bluebird-q'
+cloneDeep = require 'lodash.clonedeep'
 
 #
 # Retrieval
 #
-@where = (input, callback) ->
-  retrieve.toQuery input, (err, query, limit, offset, sort, count) ->
+@where = (input, callback) =>
+  Joi.validate input, schema.querySchema, { stripUnknown: true }, (err, input) =>
     return callback err if err
-    cursor = db.articles
-      .find(query)
-      .skip(offset or 0)
-      .sort(sort)
-      .limit(limit)
-    async.parallel [
-      (cb) ->
-        return cb() unless count
-        db.articles.count cb
-      (cb) ->
-        return cb() unless count
-        cursor.count cb
-      (cb) -> cursor.toArray cb
-    ], (err, [ total, articleCount, results ]) ->
-      return callback err if err
-      callback null, {
-        results: results
-        total: total if total
-        count: articleCount if articleCount
-      }
+    @mongoFetch input, callback
+
+@mongoFetch = (input, callback) ->
+  { query, limit, offset, sort, count } = retrieve.toQuery input
+  cursor = db.articles
+    .find(query)
+    .skip(offset or 0)
+    .sort(sort)
+    .limit(limit)
+  async.parallel [
+    (cb) -> cursor.toArray cb
+    (cb) ->
+      return cb() unless count
+      db.articles.count cb
+    (cb) ->
+      return cb() unless count
+      cursor.count cb
+  ], (err, [articles, total, articleCount]) ->
+    return callback err if err
+    callback null, {
+      results: articles
+      total: total
+      count: articleCount
+    }
 
 @find = (id, callback) ->
   query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slugs: id }
@@ -48,30 +55,37 @@ Q = require 'bluebird-q'
 #
 # Persistence
 #
-@save = (input, accessToken, callback) =>
-  validate typecastIds(input), (err, input) =>
+@save = (input, accessToken, options, callback) =>
+  # Validate the input with Joi
+  validationOptions = _.extend { stripUnknown: true }, options.validation
+  Joi.validate input, schema.inputSchema, validationOptions, (err, input) =>
     return callback err if err
+
+    # Find the original article or create an empty one
     @find (input.id or input._id)?.toString(), (err, article = {}) =>
       return callback err if err
-      generateKeywords input, article, (err, article) ->
-        debug err if err
-        publishing = (input.published and not article.published) or (input.scheduled_publish_at and not article.published)
-        unPublishing = article.published and not input.published
-        article = _.extend article, _.omit(input, 'slug'), {updated_at: new Date}
-        console.log input.sections
-        if input.sections and input.sections.length is 0
-          article.sections = []
-        # Merge fullscreen title with main article title
-        article.title = article.hero_section.title if article.hero_section?.type is 'fullscreen'
-        article.author = input.author
+      # Create a new article by merging the values of input and article
+      modifiedArticle = _.extend(cloneDeep(article), input)
+
+      generateKeywords input, modifiedArticle, (err, modifiedArticle) ->
+        return callback err if err
+
+        # Eventually convert these to Joi custom extensions
+        modifiedArticle.updated_at = new Date
+        modifiedArticle.title = modifiedArticle.hero_section.title if input.hero_section?.type is 'fullscreen'
+        modifiedArticle.author = input.author if input.author
+
+        # Handle publishing, unpublishing, published, draft
+        publishing = (modifiedArticle.published and not article.published) or (modifiedArticle.scheduled_publish_at and not article.published)
+        unPublishing = article.published and not modifiedArticle.published
         if publishing
-          onPublish article, sanitizeAndSave(callback)
+          onPublish modifiedArticle, sanitizeAndSave(callback)
         else if unPublishing
-          onUnpublish article, sanitizeAndSave(callback)
-        else if not publishing and not article.slugs?.length > 0
-          generateSlugs article, sanitizeAndSave(callback)
+          onUnpublish modifiedArticle, sanitizeAndSave(callback)
+        else if not publishing and not modifiedArticle.slugs?.length > 0
+          generateSlugs modifiedArticle, sanitizeAndSave(callback)
         else
-          sanitizeAndSave(callback)(null, article)
+          sanitizeAndSave(callback)(null, modifiedArticle)
 
 @publishScheduledArticles = (callback) ->
   db.articles.find { scheduled_publish_at: { $lt: new Date } } , (err, articles) =>
@@ -116,11 +130,11 @@ Q = require 'bluebird-q'
 #
 # JSON views
 #
-@presentCollection = (article) =>
+@presentCollection = (articles) =>
   {
-    total: article.total
-    count: article.count
-    results: (@present(obj) for obj in article.results)
+    total: articles.total
+    count: articles.count
+    results: (@present(obj) for obj in articles.results)
   }
 
 @present = (article) =>
@@ -134,31 +148,3 @@ Q = require 'bluebird-q'
     published_at: published
     scheduled_publish_at: scheduled
     updated_at: moment(article?.updated_at).toISOString()
-
-# Converts an input from the db that use ObjectId to String
-typecastIds = (article) ->
-  _.extend article,
-    # TODO: https://github.com/pebble/joi-objectid/issues/2#issuecomment-75189638
-    _id: article._id.toString() if article._id
-    author: if article.author? then _.extend article.author, id: article.author.id?.toString() else {}
-    contributing_authors: article.contributing_authors.map( (author)->
-      author.id = author.id.toString() if author.id
-      author
-    ) if article.contributing_authors
-    author_id: article.author_id.toString() if article.author_id
-    vertical: { id: article.vertical.id.toString(), name: article.vertical.name } if article.vertical
-    fair_ids: article.fair_ids.map(String) if article.fair_ids
-    fair_programming_ids: article.fair_programming_ids.map(String) if article.fair_programming_ids
-    fair_artsy_ids: article.fair_artsy_ids.map(String) if article.fair_artsy_ids
-    fair_about_ids: article.fair_about_ids.map(String) if article.fair_about_ids
-    section_ids: article.section_ids.map(String) if article.section_ids
-    auction_ids: article.auction_ids.map(String) if article.auction_ids
-    partner_ids: article.partner_ids.map(String) if article.partner_ids
-    show_ids: article.show_ids.map(String) if article.show_ids
-    primary_featured_artist_ids: article.primary_featured_artist_ids.map(String) if article.primary_featured_artist_ids
-    featured_artist_ids: article.featured_artist_ids.map(String) if article.featured_artist_ids
-    featured_artwork_ids: article.featured_artwork_ids.map(String) if article.featured_artwork_ids
-    biography_for_artist_id: article.biography_for_artist_id.toString() if article.biography_for_artist_id
-    super_article: if article.super_article?.related_articles then _.extend article.super_article, related_articles: article.super_article.related_articles.map(String) else {}
-    channel_id: article.channel_id.toString() if article.channel_id
-    partner_channel_id: article.partner_channel_id.toString() if article.partner_channel_id
