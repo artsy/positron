@@ -1,23 +1,28 @@
 # Autocomplete List
 
-An autocomplete box that when selected adds to a list. Useful for "arrays" of data e.g. curating a list of contributing authors or a list of "featured artists".
+An autocomplete input that adds selected items to a list. Useful for "arrays" of data e.g. curating a list of contributing authors or a list of "featured artists".
+
+Add the optional prop ```draggable: true``` to enable drag and drop sorting.
 
 ## Example
 
 ````coffeescript
-list = AutocompleteList @$('#input-container')[0],
-  label: 'Authors'
-  name: 'author_ids'
-  url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
-  selected: (e, item, items) ->
-    article.save contributing_authors: _.pluck items, 'id'
-  removed: (e, item, items) ->
-    article.save contributing_authors: _.pluck items, 'id'
-  filter: (users) -> for user in users
-    { id: user.id, value: _.compact([user.name, user.email]).join(', ') }
+  AutocompleteList {
+    name: 'user_ids[]'
+    url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
+    placeholder: 'Search by user name...'
+    draggable: true
+    filter: (users) -> for user in users
+      { id: user.id, value: user.name}
+    selected: (e, item, items) =>
+      @channel.save user_ids: _.pluck items, 'id'
+    removed: (e, item, items) =>
+      @channel.save user_ids: _.without(_.pluck(items, 'id'),item.id)
+    idsToFetch: @user_ids
+    fetchUrl: (id) ->
+      "#{sd.ARTSY_URL}/api/v1/user/#{id}"
+    resObject: (res) ->
+      { id: res.body.id, value: res.body.name }
+  }
 
-fetchAuthors success: (authors) ->
-  items = authors.map (author) ->
-    { id: author.get('id'), value: author.get('name') }
-  list.setState loading: false, items: items
 ````
