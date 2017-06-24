@@ -28,7 +28,6 @@ describe 'VeniceAdmin', ->
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
       VeniceAdmin = benv.require resolve __dirname, '../../../client/curations/venice_admin.coffee'
-      # VeniceSection = benv.require resolve __dirname, '../../../client/curations/venice_section.coffee'
       Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
       dropdownHeader = benv.requireWithJadeify(
         resolve(__dirname, '../../../../edit/components/admin/components/dropdown_header.coffee'), ['icons']
@@ -38,10 +37,6 @@ describe 'VeniceAdmin', ->
         ARTSY_URL: 'http://localhost:3005'
         USER: access_token: ''
       }
-      # VeniceSection.__set__ 'sd', {
-      #   ARTSY_URL: 'http://localhost:3005'
-      #   USER: access_token: ''
-      # }
       Autocomplete.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: '123', name: 'An Artist'})
@@ -51,7 +46,6 @@ describe 'VeniceAdmin', ->
       props = curation: @curation
       @component = ReactDOM.render React.createElement(VeniceAdmin, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
-          # @component.state.curation.save = sinon.stub()
           done()
 
   afterEach ->
