@@ -9,7 +9,8 @@
   "scripts": {
     "start": "make s",
     "test": "make test",
-    "danger": "danger"
+    "assets": "sh scripts/assets.sh",
+    "deploy": "sh scripts/deploy.sh"
   },
   "dependencies": {
     "airtable": "^0.4.5",
