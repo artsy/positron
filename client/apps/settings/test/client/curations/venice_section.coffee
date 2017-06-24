@@ -9,7 +9,7 @@ r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 
-xdescribe 'VeniceSection', ->
+describe 'VeniceSection', ->
 
   beforeEach (done) ->
     benv.setup =>
