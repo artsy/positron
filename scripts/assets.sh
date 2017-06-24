@@ -5,7 +5,6 @@
 set -e -x
 
 NODE_ENV=production
-rm -rf client/public
-mkdir client/public
+rm -rf client/public/assets
 mkdir client/public/assets
 ezel-assets client/assets/ client/public/assets/
