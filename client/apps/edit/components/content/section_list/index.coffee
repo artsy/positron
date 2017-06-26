@@ -68,7 +68,7 @@ module.exports = React.createClass
         DragContainer {
           items: @props.sections
           onDragEnd: @onDragEnd
-          isDraggable: true #@props.editing
+          isDraggable: if @state.editingIndex then false else true
           # dimensions: @state.dimensions
         },
           @props.sections.map (section, i) =>

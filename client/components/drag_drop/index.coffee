@@ -32,10 +32,10 @@ module.exports = React.createClass
 
     div { className: 'drag-container' },
       children.map (child, i) =>
-        console.log child.props
         if child.type.displayName is 'SectionTool'
           child
         else
+          i = child.props.index or i
           DragTarget {
             key: i
             i: i
