@@ -129,6 +129,7 @@ module.exports = React.createClass
                     removeItem: @removeItem
                     editing:  @props.editing
                     imagesLoaded: @state.imagesLoaded
+                    dimensions: @state.dimensions
                   }
                 else
                   Image {

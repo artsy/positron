@@ -8,7 +8,10 @@ module.exports = React.createClass
   displayName: 'ImageCollectionDisplayArtwork'
 
   render: ->
-    div { className: 'esic-img-container'},
+    div {
+      className: 'esic-img-container'
+      style: {width: @props.dimensions?[@props.index]?.width or 'auto'}
+    },
       Artwork {
         artwork: @props.artwork
       }

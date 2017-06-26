@@ -14,10 +14,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     editingIndex: null
-    dragging: null
-    dragOver: null
-    dragStartY: null
-    draggingHeight: 0
 
   componentDidMount: ->
     @props.sections.on 'add', @onNewSection
@@ -33,62 +29,40 @@ module.exports = React.createClass
     if @props.sections.isEmpty()
       @props.article.set 'sections', []
 
-  onDragStart: (e, dragStartY) ->
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/html', e.currentTarget)
-    $dragged = $(e.currentTarget).find('.edit-section-container')
-    @setState
-      dragStartY: dragStartY
-      dragging: $dragged.data('id')
-      draggingHeight: $dragged.height() - 20
-
-  onDragEnd: ->
-    debugger
-    # newSections = @props.sections.models
-    # removed = newSections.splice @state.dragging, 1
-    # newSections.splice @state.dragOver, 0, removed[0]
-    # @props.sections.reset newSections
-    # @setState
-    #   dragging: null
-    #   dragOver: null
-    #   draggingHeight: 0
-    #   dragStartY: null
-
-  onSetDragOver: (sectionId) ->
-    @setState dragOver: sectionId
+  onDragEnd: (sections) ->
+    @props.sections.reset sections
 
   render: ->
-    div {},
-      div {
-        className: 'edit-section-list' +
-          (if @props.sections.length then ' esl-children' else '')
-        ref: 'sections'
+    div {
+      className: 'edit-section-list' +
+        (if @props.sections.length then ' esl-children' else '')
+      ref: 'sections'
+    },
+      SectionTool { sections: @props.sections, index: -1, key: 1}
+      DragContainer {
+        items: @props.sections.models
+        onDragEnd: @onDragEnd
+        isDraggable: if @state.editingIndex or @state.editingIndex is 0 then false else true
+        layout: 'vertical'
       },
-        SectionTool { sections: @props.sections, index: -1, key: 1}
-        DragContainer {
-          items: @props.sections
-          onDragEnd: @onDragEnd
-          isDraggable: if @state.editingIndex then false else true
-          # dimensions: @state.dimensions
-        },
-          @props.sections.map (section, i) =>
-            [
-              SectionContainer {
-                sections: @props.sections
-                section: section
-                index: i
-                editing: @state.editingIndex is i
-                ref: 'section' + i
-                key: section.cid
-                channel: @props.channel
-                onSetEditing: @onSetEditing
-                onSetDragOver: @onSetDragOver
-                onDragStart: @onDragStart
-                onDragEnd: @onDragEnd
-                dragOver: @state.dragOver
-                dragging: @state.dragging
-                draggingHeight: @state.draggingHeight
-                dragStartY: @state.dragStartY
-              }
-              SectionTool { sections: @props.sections, index: i, key: i}
-            ]
+        @props.sections.map (section, i) =>
+          [
+            SectionContainer {
+              sections: @props.sections
+              section: section
+              index: i
+              editing: @state.editingIndex is i
+              ref: 'section' + i
+              key: section.cid
+              channel: @props.channel
+              onSetEditing: @onSetEditing
+              onSetDragOver: @onSetDragOver
+              onDragStart: @onDragStart
+              onDragEnd: @onDragEnd
+              dragOver: @state.dragOver
+              dragging: @state.dragging
+              draggingHeight: @state.draggingHeight
+              dragStartY: @state.dragStartY
+            }
+            SectionTool { sections: @props.sections, index: i, key: i}
+          ]

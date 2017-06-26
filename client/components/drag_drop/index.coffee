@@ -32,7 +32,7 @@ module.exports = React.createClass
 
     div { className: 'drag-container' },
       children.map (child, i) =>
-        if child.type.displayName is 'SectionTool'
+        if child.type.displayName is 'SectionTool' or !@props.isDraggable
           child
         else
           i = child.props.index or i
