@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 sd = require('sharify').data
 gemup = require 'gemup'
-UrlArtworkInput = React.createFactory require '../../image_set/url_artwork_input.coffee'
+UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
 { div, section, h1, h2, span, header, input, a, nav } = React.DOM
@@ -17,8 +17,20 @@ module.exports = React.createClass
     @autocomplete.remove()
 
   changeLayout: (e) ->
+    if @props.section.get('type') is 'image_set'
+      @props.section.set 'type', 'image_collection'
     e = if e.target then e.target.name else e
     @props.section.set layout: e
+    @props.onChange()
+
+  toggleImageSet: ->
+    if @props.section.get('type') is 'image_collection'
+      @props.section.unset 'layout'
+      @props.section.set 'type', 'image_set'
+    else
+      @props.section.set
+        layout: 'overflow_fillwidth'
+        type: 'image_collection'
     @props.onChange()
 
   addArtworkFromUrl: (newImages) ->
@@ -82,12 +94,12 @@ module.exports = React.createClass
 
   render: ->
     header { className: 'edit-section-controls' },
-      nav { className: 'esic-nav es-layout' },
+      nav { className: 'es-layout' },
         a {
           name: 'overflow_fillwidth'
           className: 'layout'
           onClick: @changeLayout
-          'data-active': @props.section.get('layout') != 'column_width'
+          'data-active': @props.section.get('layout') is 'overflow_fillwidth'
         }
         a {
           name: 'column_width'
@@ -95,6 +107,13 @@ module.exports = React.createClass
           onClick: @changeLayout
           'data-active': @props.section.get('layout') is 'column_width'
         }
+        if @props.channel.hasFeature 'image_set'
+          a {
+            name: 'image_set'
+            className: 'layout'
+            onClick: @toggleImageSet
+            'data-active': @props.section.get('type') is 'image_set'
+          }
 
         section { className: 'dashed-file-upload-container' },
           h1 {}, 'Drag & ',

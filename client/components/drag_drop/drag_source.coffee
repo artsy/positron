@@ -5,7 +5,8 @@ module.exports = React.createClass
   displayName: 'DragSource'
 
   setDragSource: ->
-    @props.setDragSource(@props.i)
+    unless !@props.isDraggable
+      @props.setDragSource(@props.i)
 
   render: ->
     div {

@@ -8,7 +8,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 Artwork = require '../../../../../../../models/artwork'
 fixtures = require '../../../../../../../../test/helpers/fixtures'
-
+{ fabricate } = require 'antigravity'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -33,25 +33,28 @@ describe 'ImageCollectionControls', ->
       $.fn.typeahead = sinon.stub()
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
-      Backbone.sync.yieldsTo('success', new Artwork _.extend fixtures().artwork, {bestImageUrl: 'large'} )
-      Controls = benv.require (
+      @Controls = benv.require (
         resolve(__dirname, '../components/controls')
       )
       UrlArtworkInput = benv.require (
-        resolve(__dirname, '../../image_set/url_artwork_input.coffee')
+        resolve(__dirname, '../components/url_artwork_input.coffee')
       )
       UrlArtworkInput.__set__ 'setState', sinon.stub()
-      Controls.__set__ 'UrlArtworkInput', React.createFactory UrlArtworkInput
-      Controls.__set__ 'Autocomplete', sinon.stub()
-      Controls.__set__ 'gemup', @gemup = sinon.stub()
-      UrlArtworkInput.__set__ 'addArtworkFromUrl', @addArtworkFromUrl = sinon.stub()
-      props = {
-        section: new Backbone.Model {}
+      @Controls.__set__ 'UrlArtworkInput', React.createFactory UrlArtworkInput
+      @Controls.__set__ 'Autocomplete', sinon.stub()
+      @Controls.__set__ 'gemup', @gemup = sinon.stub()
+      @props = {
+        section: new Backbone.Model {
+          type: 'image_collection'
+          layout: 'overflow_fillwidth'
+          images: []
+        }
         images: []
         setProgress: @setProgress = sinon.stub()
         onChange: @onChange = sinon.stub()
+        channel: { hasFeature: @hasFeature = sinon.stub().returns(true) }
       }
-      @component = ReactDOM.render React.createElement(Controls, props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@Controls, @props), (@$el = $ "<div></div>")[0], =>
       done()
 
   afterEach ->
@@ -61,6 +64,7 @@ describe 'ImageCollectionControls', ->
   it 'renders all fields', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'overflow_fillwidth'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'column_width'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'image_set'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'dashed-file-upload-container'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search for artwork by title"'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Add artwork url"'
@@ -68,12 +72,37 @@ describe 'ImageCollectionControls', ->
   it 'sets layout to overflow_fillwidth by default', ->
     $(ReactDOM.findDOMNode(@component)).find('a[name="overflow_fillwidth"]').data('active').should.eql true
 
-  it 'changes layout on icon click', ->
+  it 'changes layout on layout button click', ->
     r.simulate.click(r.find(@component, 'layout')[1], {target: {name:'column_width'}})
     @component.props.section.get('layout').should.eql 'column_width'
     @component.forceUpdate()
     $(ReactDOM.findDOMNode(@component)).find('a[name="column_width"]').data('active').should.eql true
     @onChange.called.should.eql true
+
+  it 'can toggle from image_collection to image_set on layout button click', ->
+    r.simulate.click(r.find(@component, 'layout')[2], {target: {name:'image_set'}})
+    @component.forceUpdate()
+    @component.props.section.get('type').should.eql 'image_set'
+    @component.props.section.toJSON().should.not.containEql 'image_collection'
+    @component.props.section.toJSON().should.not.containEql 'layout'
+    $(ReactDOM.findDOMNode(@component)).find('a[name="image_set"]').data('active').should.eql true
+    @onChange.called.should.eql true
+
+  it 'can toggle from image_set to image_collection on layout button click', ->
+    @component.props.section.unset 'layout'
+    @component.props.section.set 'type', 'image_set'
+    r.simulate.click(r.find(@component, 'layout')[1], {target: {name:'column_width'}})
+    @component.forceUpdate()
+    @component.props.section.get('type').should.eql 'image_collection'
+    @component.props.section.get('layout').should.eql 'column_width'
+    $(ReactDOM.findDOMNode(@component)).find('a[name="column_width"]').data('active').should.eql true
+    @onChange.called.should.eql true
+
+  it 'does not display image_set option unless channel has feature', ->
+    @component.props.channel.hasFeature = sinon.stub().returns(false)
+    @component.forceUpdate()
+    r.find(@component, 'layout').length.should.eql 2
+    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'image_set'
 
   it 'saves image info after upload', (done) ->
     @component.setState = sinon.stub()
@@ -86,11 +115,14 @@ describe 'ImageCollectionControls', ->
       @component.props.section.get('images')[0].height.should.equal 90
       done()
 
-  xit 'saves an artwork by url', ->
+  it 'saves an artwork by url', ->
     input = r.find(@component, 'bordered-input')[1]
-    input.value = 'http://artsy.net/artwork/this-art'
+    input.value = 'http://artsy.net/artwork/skull7'
     r.simulate.change input
     r.simulate.click r.find(@component, 'esis-byurl-button')[0]
+    Backbone.sync.args[0][2].success fabricate 'artwork'
+    @component.props.section.get('images')[0].type.should.eql 'artwork'
+    @onChange.called.should.eql true
 
   it '#addArtworkFromUrl updates the section images', ->
     @component.addArtworkFromUrl([{type:'image', url:'image.com'}, {type: 'artwork', image:'artwork.jpg'}])

@@ -37,11 +37,6 @@ module.exports = React.createClass
           background_color: ''
           layout: 'column_width'
         }, at: @props.index + 1
-      when 'slideshow'
-        @props.sections.add {
-          type: 'slideshow'
-          items: []
-        }, at: @props.index + 1
       when 'embed'
         @props.sections.add {
           type: 'embed'
@@ -69,11 +64,6 @@ module.exports = React.createClass
         @props.sections.add {
           type: 'toc'
           links: @props.sections.getJumpLinks()
-        }, at: @props.index + 1
-      when 'image_set'
-        @props.sections.add {
-          type: 'image_set'
-          images: []
         }, at: @props.index + 1
       when 'image_collection'
         @props.sections.add {
@@ -147,14 +137,6 @@ module.exports = React.createClass
               className: 'edit-menu-icon-video'
               dangerouslySetInnerHTML: __html: $(icons()).filter('.video').html()
             }
-          li {
-            className: 'edit-section-tool-slideshow'
-            onClick: @newSection('slideshow')
-          }, 'Slideshow',
-            div {
-              className: 'edit-menu-icon-slideshow'
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.slideshow').html()
-            }
           if @channel.hasFeature 'embed'
             li {
               className: 'edit-section-tool-embed'
@@ -182,12 +164,4 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-toc'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
               }
-          if @channel.hasFeature 'image_set'
-            li {
-              className: 'edit-section-tool-image-set'
-              onClick: @newSection('image_set')
-            }, 'Image Set',
-              div {
-                className: 'edit-menu-icon-image-set'
-                dangerouslySetInnerHTML: __html: $(icons()).filter('.image-set-menu').html()
-              }
+

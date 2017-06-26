@@ -32,6 +32,7 @@ describe 'AdminArticle', ->
         CURRENT_CHANNEL: id: '123'
         USER: access_token: ''
       }
+      DragContainer = benv.require resolve __dirname, '../../../../../components/drag_drop/index.coffee'
       AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
       AdminArticle.__set__ 'AutocompleteList', React.createFactory AutocompleteList
       AutocompleteList.__set__ 'request', get: sinon.stub().returns

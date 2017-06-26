@@ -7,7 +7,6 @@
 @import './components/content/section_tool'
 @import './components/content/sections/embed'
 @import './components/content/sections/text'
-@import './components/content/sections/artworks'
 @import './components/content/sections/image'
 @import './components/content/sections/video'
 @import './components/content/sections/slideshow'
@@ -15,97 +14,10 @@
 @import './components/content/sections/callout'
 @import './components/content/sections/toc'
 @import './components/content/sections/hero'
-@import './components/content/sections/image_set'
 @import './components/content/sections/image_collection'
 @import './components/admin'
 @import './components/mobile'
 
-.edit-scribe-nav
-  background black
-  z-index 3
-  avant-garde()
-  display none
-  text-align center
-  button
-    color gray-dark-color
-    border 0
-    border-right 1px solid gray-darkest-color
-    padding 12px 20px
-    background transparent
-    font-size 12px
-    cursor pointer
-    display inline-block
-    vertical-align top
-    outline none
-    position relative
-    transition color 0.15s
-    &:last-child
-      border-right 0
-    &.active
-      color white
-      svg
-        fill-color white 0.15s
-    svg
-      fill-color gray-dark-color 0.15s
-      position absolute
-    &[data-command-name=linkPrompt] svg
-      width 13px
-      height 14px
-      top 12px
-      left 16px
-    &[data-command-name=removeFormat] svg
-      height 20px
-      width 19px
-      left 15px
-      top 12px
-    &[data-command-name=italic]::after
-      content 'I'
-      garamond()
-      font-style italic
-      position absolute
-      font-size 18px
-      font-weight bold
-      top 8px
-      left 17px
-    &[data-command-name=bold]::after
-      content 'B'
-      avant-garde()
-      position absolute
-      top 11px
-      left 17px
-      font-size 16px
-    &[data-command-name=h2], &[data-command-name=h3]
-      padding 12px 24px
-      height 100%
-      &::after
-        content 'H2'
-        garamond()
-        font-size 18px
-        font-weight bold
-        position absolute
-        top 8px
-        left 13px
-    &[data-command-name=h3]::after
-      content 'H3'
-    &[data-command-name=insertOrderedList] svg
-      width 13px
-      height 14px
-      top 12px
-      left 16px
-    &[data-command-name=insertUnorderedList] svg
-      width 13px
-      height 14px
-      top 12px
-      left 16px
-    &[data-command-name=jumpLink] svg
-      transform translate(-14px, -16px)
-      fill-color black
-    &[data-command-name=followLink] svg
-      transform translate(-8px, -16px)
-      stroke none
-    &[disabled=disabled]
-      color gray-darkest-color
-      fill-color gray-darkest-color 0.15s
 
 .edit-section-controls .dashed-file-upload-container
   border-color gray-darker-color
