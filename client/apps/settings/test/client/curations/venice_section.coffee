@@ -72,7 +72,7 @@ describe 'VeniceSection', ->
   describe 'Render', ->
     it 'Renders the input fields', ->
       $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 19
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 17
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 18
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 2

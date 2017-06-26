@@ -87,16 +87,11 @@ module.exports = AutocompleteList = React.createClass
     @props.selected? null, null, items
 
   printItems: ->
-    DragContainer {
-      items: @state.items
-      onDragEnd: @onDragEnd
-      isDraggable: @props.draggable
-    },
-      for item, i in @state.items
-        div { className: 'autocomplete-select-selected', key: 'selected-' + item.id },
-          span {className: 'selected' }, item.value
-          input { type: 'hidden', value: item.id, name: @props.name }
-          button { className: 'remove-button', onClick: @removeItem(item) }
+    for item, i in @state.items
+      div { className: 'autocomplete-select-selected', key: 'selected-' + item.id },
+        span {className: 'selected' }, item.value
+        input { type: 'hidden', value: item.id, name: @props.name }
+        button { className: 'remove-button', onClick: @removeItem(item) }
 
   render: ->
     inline = if @props.inline then ' autocomplete-container--inline' else ''
@@ -106,6 +101,13 @@ module.exports = AutocompleteList = React.createClass
       (
         if @props.inline
           @printItems()
+        else if @props.draggable
+          DragContainer {
+            items: @state.items
+            onDragEnd: @onDragEnd
+            isDraggable: @props.draggable
+          },
+            @printItems()
         else
           div { className: 'autocomplete-selected'},
             @printItems()
