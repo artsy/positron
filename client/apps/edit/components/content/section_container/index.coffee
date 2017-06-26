@@ -43,6 +43,7 @@ module.exports = React.createClass
     @props.onDragStart e, dragStartY
 
   onDragOver: (e) ->
+    e.preventDefault()
     mouseY = e.clientY - @props.dragStartY
     $dragOver = $(e.currentTarget).find('.edit-section-container')
     dragOverID = $dragOver.data('id')

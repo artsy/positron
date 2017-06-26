@@ -4,9 +4,11 @@ React = require 'react'
 module.exports = React.createClass
   displayName: 'DragSource'
 
-  setDragSource: ->
+  setDragSource: (e) ->
     unless !@props.isDraggable
-      @props.setDragSource(@props.i)
+      dragStartY = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
+      dragHeight = $(e.currentTarget).height()
+      @props.setDragSource(@props.i, dragHeight, dragStartY)
 
   render: ->
     div {

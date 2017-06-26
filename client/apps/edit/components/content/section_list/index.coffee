@@ -30,6 +30,7 @@ module.exports = React.createClass
       @props.article.set 'sections', []
 
   onDragEnd: (sections) ->
+    debugger
     @props.sections.reset sections
 
   render: ->
@@ -39,30 +40,24 @@ module.exports = React.createClass
       ref: 'sections'
     },
       SectionTool { sections: @props.sections, index: -1, key: 1}
-      DragContainer {
-        items: @props.sections.models
-        onDragEnd: @onDragEnd
-        isDraggable: if @state.editingIndex or @state.editingIndex is 0 then false else true
-        layout: 'vertical'
-      },
-        @props.sections.map (section, i) =>
-          [
-            SectionContainer {
-              sections: @props.sections
-              section: section
-              index: i
-              editing: @state.editingIndex is i
-              ref: 'section' + i
-              key: section.cid
-              channel: @props.channel
-              onSetEditing: @onSetEditing
-              onSetDragOver: @onSetDragOver
-              onDragStart: @onDragStart
-              onDragEnd: @onDragEnd
-              dragOver: @state.dragOver
-              dragging: @state.dragging
-              draggingHeight: @state.draggingHeight
-              dragStartY: @state.dragStartY
-            }
-            SectionTool { sections: @props.sections, index: i, key: i}
-          ]
+      if @props.sections.length > 1
+        DragContainer {
+          items: @props.sections.models
+          onDragEnd: @onDragEnd
+          isDraggable: if @state.editingIndex or @state.editingIndex is 0 then false else true
+          layout: 'vertical'
+        },
+          @props.sections.map (section, i) =>
+            [
+              SectionContainer {
+                sections: @props.sections
+                section: section
+                index: i
+                editing: @state.editingIndex is i
+                ref: 'section' + i
+                key: section.cid
+                channel: @props.channel
+                onSetEditing: @onSetEditing
+              }
+              SectionTool { sections: @props.sections, index: i, key: i}
+            ]

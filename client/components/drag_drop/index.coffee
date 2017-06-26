@@ -10,9 +10,14 @@ module.exports = React.createClass
   getInitialState: ->
     dragSource: null
     dragTarget: null
+    dragStartY: null
+    draggingHeight: 0
 
-  setDragSource: (index) ->
-    @setState dragSource: index
+  setDragSource: (index, draggingHeight, clientY) ->
+    @setState
+      dragSource: index
+      dragStartY: clientY
+      draggingHeight: draggingHeight
 
   setDragTarget: (index) ->
     @setState dragTarget: index
@@ -26,6 +31,8 @@ module.exports = React.createClass
     @setState
       dragSource: null
       dragTarget: null
+      dragStartY: null
+      draggingHeight: 0
 
   render: ->
     children = React.Children.toArray(@props.children)
@@ -43,7 +50,7 @@ module.exports = React.createClass
             activeSource: @state.dragSource is i
             activeTarget: @state.dragTarget is i
             isDraggable: @props.isDraggable
-            width: @props.dimensions
+            width: @props.dimensions?[i]?.width
           },
             DragSource {
               i: i
