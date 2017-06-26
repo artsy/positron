@@ -58,7 +58,7 @@ describe 'AdminSuperArticle', ->
     benv.teardown()
 
   it 'renders the fields', ->
-    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 10
+    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 11
     $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
     $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').first().attr('placeholder').should.eql 'Search articles by title...'
