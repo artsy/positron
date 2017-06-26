@@ -24,7 +24,7 @@ describe 'EditChannel', ->
       tmpl = resolve __dirname, '../../templates/channels/channel_edit.jade'
       benv.render tmpl, locals, =>
         { @EditChannel } = mod = rewire '../../client/channels.coffee'
-        mod.__set__ 'AutocompleteSortableList', sinon.stub()
+        mod.__set__ 'AutocompleteList', sinon.stub()
         mod.__set__ 'sd', { CHANNEL: @channel }
         @EditChannel::setupUserAutocomplete = sinon.stub()
         @EditChannel::setupPinnedArticlesAutocomplete = sinon.stub()

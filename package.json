@@ -9,7 +9,8 @@
   "scripts": {
     "start": "make s",
     "test": "make test",
-    "danger": "danger"
+    "assets": "sh scripts/assets.sh",
+    "deploy": "sh scripts/deploy.sh"
   },
   "dependencies": {
     "@artsy/reaction-force": "^0.1.44",
@@ -26,7 +27,7 @@
     "bluebird": "^3.3.4",
     "bluebird-q": "^1.0.3",
     "body-parser": "^1.14.1",
-    "bucket-assets": "^0.2.11",
+    "bucket-assets": "^1.0.2",
     "cheerio": "^0.19.0",
     "coffee-script": "^1.10.0",
     "cookie-parser": "^1.4.0",
@@ -66,7 +67,6 @@
     "raven-js": "^3.15.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "react-sortable-mixin": "^0.0.1",
     "sailthru-client": "^2.0.3",
     "sharify": "^0.1.6",
     "stylus": "^0.54.5",
@@ -86,7 +86,6 @@
     "browserify-dev-middleware": "^0.1.2",
     "caching-coffeeify": "^0.5.1",
     "cssify": "^0.7.0",
-    "danger": "^0.19.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-promise": "^3.5.0",

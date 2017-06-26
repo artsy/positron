@@ -15,7 +15,6 @@ describe 'EditCuration', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       Backbone.$ = $
-      sinon.stub Backbone, 'sync'
       @curation = new Curation
         name: 'Artsy Editorial Feature'
         id: '1234'
@@ -23,7 +22,7 @@ describe 'EditCuration', ->
         sections: [{body: 'foo'}]
         carousel: []
         placeholder: ""
-      locals = _.extend(fixtures().locals,
+      locals = _.extend(_.clone(fixtures().locals),
         curation: @curation
       )
       tmpl = resolve __dirname, '../../templates/curations/curation_edit.jade'
@@ -40,13 +39,11 @@ describe 'EditCuration', ->
 
   afterEach ->
     benv.teardown()
-    Backbone.sync.restore()
 
   describe '#initialize', ->
 
     it 'populates the form saved curation data', ->
       $('body textarea').html().should.containEql 'foo'
-
 
   describe '#initMenuState', ->
 

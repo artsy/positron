@@ -13,7 +13,7 @@ r =
   simulate: ReactTestUtils.Simulate
   findTag: ReactTestUtils.scryRenderedDOMComponentsWithTag
 
-describe 'VeniceSection', ->
+describe 'VeniceAdmin', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -24,35 +24,33 @@ describe 'VeniceSection', ->
           ttAdapter: ->
         )
         _: benv.require 'underscore'
+      sinon.stub Backbone, 'sync'
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
       VeniceAdmin = benv.require resolve __dirname, '../../../client/curations/venice_admin.coffee'
+      Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
       dropdownHeader = benv.requireWithJadeify(
         resolve(__dirname, '../../../../edit/components/admin/components/dropdown_header.coffee'), ['icons']
       )
       VeniceAdmin.__set__ 'dropdownHeader', React.createFactory dropdownHeader
-      VeniceSection = benv.require resolve __dirname, '../../../client/curations/venice_section.coffee'
-      Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
-      VeniceAdmin.__set__ 'AutocompleteList', React.createFactory Autocomplete
-      Autocomplete.__set__ 'request', get: sinon.stub().returns
-        set: sinon.stub().returns
-          end: sinon.stub().yields(null, body: { id: '123', name: 'An Artist'})
-      VeniceSection.__set__ 'sd', {
+      VeniceAdmin.__set__ 'sd', {
         ARTSY_URL: 'http://localhost:3005'
         USER: access_token: ''
       }
-      @curation = new Curation
-      @curation.set 'sections', [{title: 'Searching For Venice'}, {title: 'Dawn Kasper'}]
-      props = {
-        curation: @curation
-      }
+      Autocomplete.__set__ 'request', get: sinon.stub().returns
+        set: sinon.stub().returns
+          end: sinon.stub().yields(null, body: { id: '123', name: 'An Artist'})
+      VeniceAdmin.__set__ 'AutocompleteList', React.createFactory Autocomplete
+
+      @curation = new Curation sections: [{title: 'Searching For Venice'}, {title: 'Dawn Kasper'}]
+      props = curation: @curation
       @component = ReactDOM.render React.createElement(VeniceAdmin, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
-          @component.state.curation.save = sinon.stub()
           done()
 
   afterEach ->
     benv.teardown()
+    Backbone.sync.restore()
 
   it 'Renders the content', ->
     $(ReactDOM.findDOMNode(@component)).find('button').length.should.eql 1
@@ -81,8 +79,7 @@ describe 'VeniceSection', ->
   it 'Clicking save button saves the curation and removes warnings from save button', ->
     r.simulate.click r.findTag(@component, 'button')[0]
     @component.state.isSaving.should.eql true
-    @component.state.curation.save.callCount.should.eql 1
-    setTimeout( =>
-      @component.state.isSaving.should.eql false
-      @component.state.isChanged.should.eql false
-    , 750)
+    Backbone.sync.args[0][0].should.equal 'create'
+    Backbone.sync.args[0][2].success()
+    @component.state.isSaving.should.eql false
+    @component.state.isChanged.should.eql false
