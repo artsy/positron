@@ -32,21 +32,25 @@ module.exports = React.createClass
 
     div { className: 'drag-container' },
       children.map (child, i) =>
-        DragTarget {
-          key: i
-          i: i
-          setDragTarget: @setDragTarget
-          activeSource: @state.dragSource is i
-          activeTarget: @state.dragTarget is i
-          isDraggable: @props.isDraggable
-          width: @props.dimensions
-        },
-          DragSource {
+        console.log child.props
+        if child.type.displayName is 'SectionTool'
+          child
+        else
+          DragTarget {
+            key: i
             i: i
-            setDragSource: @setDragSource
+            setDragTarget: @setDragTarget
             activeSource: @state.dragSource is i
             activeTarget: @state.dragTarget is i
-            onDragEnd: @onDragEnd
             isDraggable: @props.isDraggable
+            width: @props.dimensions
           },
-            child
+            DragSource {
+              i: i
+              setDragSource: @setDragSource
+              activeSource: @state.dragSource is i
+              activeTarget: @state.dragTarget is i
+              onDragEnd: @onDragEnd
+              isDraggable: @props.isDraggable
+            },
+              child

@@ -6,6 +6,7 @@
 React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
+DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -42,15 +43,16 @@ module.exports = React.createClass
       draggingHeight: $dragged.height() - 20
 
   onDragEnd: ->
-    newSections = @props.sections.models
-    removed = newSections.splice @state.dragging, 1
-    newSections.splice @state.dragOver, 0, removed[0]
-    @props.sections.reset newSections
-    @setState
-      dragging: null
-      dragOver: null
-      draggingHeight: 0
-      dragStartY: null
+    debugger
+    # newSections = @props.sections.models
+    # removed = newSections.splice @state.dragging, 1
+    # newSections.splice @state.dragOver, 0, removed[0]
+    # @props.sections.reset newSections
+    # @setState
+    #   dragging: null
+    #   dragOver: null
+    #   draggingHeight: 0
+    #   dragStartY: null
 
   onSetDragOver: (sectionId) ->
     @setState dragOver: sectionId
@@ -63,24 +65,30 @@ module.exports = React.createClass
         ref: 'sections'
       },
         SectionTool { sections: @props.sections, index: -1, key: 1}
-        @props.sections.map (section, i) =>
-          [
-            SectionContainer {
-              sections: @props.sections
-              section: section
-              index: i
-              editing: @state.editingIndex is i
-              ref: 'section' + i
-              key: section.cid
-              channel: @props.channel
-              onSetEditing: @onSetEditing
-              onSetDragOver: @onSetDragOver
-              onDragStart: @onDragStart
-              onDragEnd: @onDragEnd
-              dragOver: @state.dragOver
-              dragging: @state.dragging
-              draggingHeight: @state.draggingHeight
-              dragStartY: @state.dragStartY
-            }
-            SectionTool { sections: @props.sections, index: i, key: i}
-          ]
+        DragContainer {
+          items: @props.sections
+          onDragEnd: @onDragEnd
+          isDraggable: true #@props.editing
+          # dimensions: @state.dimensions
+        },
+          @props.sections.map (section, i) =>
+            [
+              SectionContainer {
+                sections: @props.sections
+                section: section
+                index: i
+                editing: @state.editingIndex is i
+                ref: 'section' + i
+                key: section.cid
+                channel: @props.channel
+                onSetEditing: @onSetEditing
+                onSetDragOver: @onSetDragOver
+                onDragStart: @onDragStart
+                onDragEnd: @onDragEnd
+                dragOver: @state.dragOver
+                dragging: @state.dragging
+                draggingHeight: @state.draggingHeight
+                dragStartY: @state.dragStartY
+              }
+              SectionTool { sections: @props.sections, index: i, key: i}
+            ]
