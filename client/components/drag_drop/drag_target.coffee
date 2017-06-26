@@ -9,7 +9,7 @@ module.exports = React.createClass
       @props.setDragTarget(@props.i)
 
   setWidth: ->
-    if @props.width[@props.i]
+    if @props.width and @props.width[@props.i]
       return @props.width[@props.i].width
     else
       return '100%'

@@ -109,7 +109,7 @@ module.exports = React.createClass
                 superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
                 @setState super_article: superArticle
                 @props.onChange 'super_article', superArticle
-              idsToFetch: @props.article.get('super_article').related_articles
+              idsToFetch: @props.article.get('super_article')?.related_articles
               fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
               resObject: (res) ->
                 id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"

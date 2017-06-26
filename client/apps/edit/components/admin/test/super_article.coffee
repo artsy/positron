@@ -36,6 +36,7 @@ describe 'AdminSuperArticle', ->
       ImageUpload = benv.require resolve(__dirname, '../components/image_upload.coffee')
       AdminSuperArticle.__set__ 'ImageUpload', React.createFactory ImageUpload
       @AutocompleteList = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      @AutocompleteList.__set__ 'DragContainer', sinon.stub()
       @AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: {results: [{ id: '123', title: 'Artists'}]})
@@ -57,7 +58,7 @@ describe 'AdminSuperArticle', ->
     benv.teardown()
 
   it 'renders the fields', ->
-    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 11
+    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 10
     $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
     $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').first().attr('placeholder').should.eql 'Search articles by title...'
