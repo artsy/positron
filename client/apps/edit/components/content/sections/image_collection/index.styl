@@ -43,6 +43,9 @@
     &[name=column_width]
       background-image url(/icons/edit_artworks_column_width.svg)
       background-size 22px
+    &[name=image_set]
+      background-image url(/icons/edit_image_set_slideshow.svg)
+      background-size 22px
 
 .esic-artwork-inputs
   clearfix()
@@ -76,6 +79,19 @@
     display inline-block
     width 50%
     padding-right 10px
+    input
+      padding-left 12px
+    .tt-suggestion
+      clearfix()
+      line-height 1.2em
+      color black
+      .esis-suggestion
+        width 50px
+        height @width
+        background center center gray-lighter-color
+        background-size cover
+        margin-right 10px
+        float left
 
 .esic-placeholder
   text-align center
@@ -87,42 +103,14 @@
   position relative
   z-index 2 !important
   opacity 0
+  transition opacity 500ms ease-in
   &--placeholder
     opacity 1
-  p
-    color gray-darker-color
-    garamond l-caption
-    white-space initial
-    .title
-      font-style italic
-  img
-    max-width 100%
-    width 100%
-    height auto
 
   .esic-img-container
     position relative
     margin-bottom 30px
 
-  .esis-caption-container
-    display flex
-    .esis-nav.edit-scribe-nav
-      display flex
-  p.esic-artwork
-    overflow ellipsis
-    white-space nowrap
-    overflow hidden
-  .esis-caption
-    background transparent
-    text-transform none
-    letter-spacing 0
-    cursor text
-    color white
-    &.bordered-input
-      padding-top 10px
-      padding-bottom 10px
-      height auto
-      min-height 40px
   .edit-section-remove
     display none
     &:hover svg
@@ -130,34 +118,47 @@
     svg
       fill-color black
 
-.edit-section-container[data-editing=false][data-type=image_collection]
+.imageset-preview
+  margin 0 auto
+
+.edit-section-image-collection.imageset-block
+  .esic-images-list
+    overflow hidden
+    overflow-x scroll
+  .drag-container
+    width 200%
+    margin-top 15px
+    .drag-target
+      margin-right 30px
+      &:last-child
+        margin-right 0
+  &--long .drag-container
+    width 300%
+
+.edit-section-container[data-editing=false][data-type=image_collection],
+.edit-section-container[data-editing=false][data-type=image_set]
   .edit-section-remove
     display block
-  .edit-section-controls, .esic-controls-container, .esic-images-list .esis-caption-container, .esic-nav, .esic-img-remove
+  .edit-section-controls, .esic-controls-container
     display none
 
-.edit-section-container[data-editing=true][data-type=image_collection]
-  .edit-section-remove, .esic-caption--display
+.edit-section-container[data-editing=true][data-type=image_collection],
+.edit-section-container[data-editing=true][data-type=image_set]
+  .esic-caption--display
     display none
-  .edit-section-controls, .esic-controls-container, .esic-img-remove
+  .edit-section-controls, .esic-controls-container
     display block
-  .esic-nav
-    display inline-block
   .drag-target[data-target=true]
     .esic-img-remove,
-    .esic-caption
+    .rich-text--caption
       display none
 
 //
 // Varying layouts
 //
-.edit-section-container[data-layout=column_width]
-  nav .esic-column-width
-    opacity 1
 
-.edit-section-container[data-layout=overflow_fillwidth]
-  nav .esic-overflow-fillwidth
-    opacity 1
+.edit-section-container[data-layout=overflow_fillwidth],
+.edit-section-container[data-editing=true][data-type=image_set]
   .edit-section-controls
     width 900px
   .esic-images-list

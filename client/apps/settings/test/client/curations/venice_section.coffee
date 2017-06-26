@@ -27,11 +27,15 @@ describe 'VeniceSection', ->
         ARTSY_URL: 'http://localhost:3005'
         USER: access_token: ''
       }
+      DragContainer = benv.require resolve __dirname, '../../../../../components/drag_drop/index.coffee'
       Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      DragContainer.__set__ 'DragTarget', sinon.stub()
+      DragContainer.__set__ 'DragSource', sinon.stub()
       Autocomplete.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: { id: 'an-artist', name: 'An Artist', _id: '123'})
       Autocomplete.__set__ 'sd', {}
+      Autocomplete.__set__ 'DragContainer', React.createFactory DragContainer
       VeniceSection.__set__ 'AutocompleteList', React.createFactory Autocomplete
       props = {
         section: {
@@ -68,7 +72,7 @@ describe 'VeniceSection', ->
   describe 'Render', ->
     it 'Renders the input fields', ->
       $(ReactDOM.findDOMNode(@component)).find('label').length.should.eql 19
-      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 18
+      $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 17
       $(ReactDOM.findDOMNode(@component)).find('input[type=date]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('input[type=checkbox]').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 2
@@ -106,9 +110,6 @@ describe 'VeniceSection', ->
       $(ReactDOM.findDOMNode(@component))
         .find('input[type=checkbox]')
         .val().should.eql 'false'
-      $(ReactDOM.findDOMNode(@component))
-        .find('.autocomplete-select-selected')
-        .text().should.eql 'An Artist'
       $(ReactDOM.findDOMNode(@component))
         .html()
         .should.containEql 'background-image: url(http://artsy.net/cover.jpg)'

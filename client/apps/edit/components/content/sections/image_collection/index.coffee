@@ -1,15 +1,18 @@
 #
 # Image Collection section allows uploading a mix of images and artworks
 #
-
 _ = require 'underscore'
 React = require 'react'
 imagesLoaded = require 'imagesloaded'
-DisplayArtwork = React.createFactory require './components/artwork.coffee'
-DisplayImage = React.createFactory require './components/image.coffee'
+Artwork = React.createFactory require './components/artwork.coffee'
+Image = React.createFactory require './components/image.coffee'
 Controls = React.createFactory require './components/controls.coffee'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
+{ fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
 { div, section, ul, li } = React.DOM
+
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+ImagesetPreview = React.createFactory components.ImagesetPreview
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'
@@ -17,20 +20,36 @@ module.exports = React.createClass
   getInitialState: ->
     progress: null
     imagesLoaded: false
+    dimensions: []
 
   componentDidMount: ->
-    @$list = $(@refs.images).find('.drag-container')
-    imagesLoaded @$list, =>
-      @onChange()
+    @$list = $(@refs.images)
+    @onChange()
 
   onChange: ->
-    @forceUpdate() if @$list.children().length isnt @props.section.get('images').length
-    unless @props.section.get('layout') is 'column_width' or @props.section.get('images').length < 2
-      @setState imagesLoaded: false
-      @fillwidth()
-    else
-      @removeFillwidth()
-      @setState imagesLoaded: true
+    sizes = @getFillWidthSizes()
+    imagesLoaded $(@refs.images), @onImagesLoaded(sizes)
+
+  onImagesLoaded: (sizes) ->
+    @setState
+      progress: null
+      imagesLoaded: true
+      dimensions: fillWidth(
+        @props.section.get('images'),
+        sizes.targetHeight,
+        sizes.containerSize,
+        @props.section.get('layout') || @props.section.get('type')
+      )
+
+  getFillWidthSizes: ->
+    containerSize = 860
+    targetHeight = 450
+    if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
+      targetHeight = 300
+    else if @props.section.get('layout') is 'column_width'
+      containerSize = 580
+      targetHeight = 550
+    return {containerSize: containerSize, targetHeight: targetHeight}
 
   setProgress: (progress) ->
     if progress
@@ -38,53 +57,44 @@ module.exports = React.createClass
         progress: progress
         imagesLoaded: false
     else
-      imagesLoaded @$list, =>
-        @onChange()
-        @setState
-          progress: progress
+      @onChange()
 
   removeItem: (item) -> =>
     @setState imagesLoaded: false
     newImages = _.without @props.section.get('images'), item
     @props.section.set images: newImages
-    imagesLoaded @$list, =>
-      @onChange()
-
-  fillwidth: ->
-    @removeFillwidth()
-    @$list.fillwidthLite
-      gutterSize: 30
-      apply: (img, i) ->
-        img.$el.closest('.esic-img-container').width(img.width)
-      done: (imgs) =>
-        @setState
-          progress: null
-          imagesLoaded: true
-
-  removeFillwidth: ->
-    @setState imagesLoaded: false
-    @$list.find('.esic-img-container').css(width: '', padding: '')
+    @onChange()
 
   onDragEnd: (images) ->
     @setState imagesLoaded: false
-    @props.section.set 'images', images
-    imagesLoaded @$list, =>
-      @onChange()
+    @props.section.set images: images
+    @onChange()
+
+  largeImagesetClass: ->
+    imagesetClass = ''
+    if @props.section.get('type') is 'image_set'
+      if @props.section.get('images').length > 3
+        imagesetClass = ' imageset-block'
+      if @props.section.get('images').length > 6
+        imagesetClass = ' imageset-block imageset-block--long'
+    imagesetClass
 
   render: ->
-    hasImages = @props.section.get('images').length > 0
-    isSingle = if @props.section.get('images').length is 1 then ' single' else ''
+    images = @props.section.get 'images' or []
+    hasImages = images.length > 0
+    isSingle = if images.length is 1 then ' single' else ''
     listClass = if hasImages then '' else ' esic-images-list--placeholder'
 
     section {
-      className: 'edit-section-image-collection edit-section-image-container'
+      className: 'edit-section-image-collection edit-section-image-container' + @largeImagesetClass()
       onClick: @props.setEditing(true)
     },
       Controls {
         section: @props.section
-        images: @props.section.get('images') || []
+        images: images
         setProgress: @setProgress
         onChange: @onChange
+        channel: @props.channel
       }
       if @state.progress
         div { className: 'upload-progress-container' },
@@ -98,28 +108,37 @@ module.exports = React.createClass
         style:
           opacity: if @state.imagesLoaded then 1 else 0
       },
-        DragContainer {
-          items: @props.section.get('images')
-          onDragEnd: @onDragEnd
-          isDraggable: @props.editing
-        },
-          if hasImages
-            @props.section.get('images').map (item, i) =>
-              if item.type is 'artwork'
-                DisplayArtwork {
-                  key: i
-                  index: i
-                  artwork: item
-                  removeItem: @removeItem
-                }
-              else
-                DisplayImage {
-                  index: i
-                  key: i
-                  image: item
-                  removeItem: @removeItem
-                  progress: @state.progress
-                  editing:  @props.editing
-                }
+        if hasImages
+          if !@props.editing and @props.section.get('type') is 'image_set'
+            ImagesetPreview {
+              images: images
+            }
           else
-            div { className: 'esic-placeholder' }, 'Add images and artworks above'
+            DragContainer {
+              items: images
+              onDragEnd: @onDragEnd
+              isDraggable: @props.editing
+              dimensions: @state.dimensions
+            },
+              images.map (item, i) =>
+                if item.type is 'artwork'
+                  Artwork {
+                    key: i
+                    index: i
+                    artwork: item
+                    removeItem: @removeItem
+                    editing:  @props.editing
+                    imagesLoaded: @state.imagesLoaded
+                  }
+                else
+                  Image {
+                    index: i
+                    key: i
+                    image: item
+                    removeItem: @removeItem
+                    editing:  @props.editing
+                    dimensions: @state.dimensions
+                    imagesLoaded: @state.imagesLoaded
+                  }
+        else
+          div { className: 'esic-placeholder' }, 'Add images and artworks above'

@@ -44,4 +44,5 @@ module.exports = React.createClass
           sections: @props.article.sections
           saveArticle: @saveArticle
           article: @props.article
+          channel: @props.channel
         }

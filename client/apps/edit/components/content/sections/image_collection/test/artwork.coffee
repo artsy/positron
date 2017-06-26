@@ -40,9 +40,10 @@ describe 'ImageCollectionArtwork', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'https://artsy.net/artwork.jpg'
 
   it 'renders artwork data', ->
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql '<em>The Four Hedgehogs'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Guggenheim'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Van Gogh'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Van Dogh'
 
   it 'calls removeItem when clicking remove icon', ->
     r.simulate.click r.find @component, 'esic-img-remove'

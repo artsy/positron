@@ -39,6 +39,7 @@ module.exports = React.createClass
           activeSource: @state.dragSource is i
           activeTarget: @state.dragTarget is i
           isDraggable: @props.isDraggable
+          width: @props.dimensions
         },
           DragSource {
             i: i

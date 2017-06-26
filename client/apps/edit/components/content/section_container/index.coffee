@@ -12,7 +12,6 @@ SectionEmbed = React.createFactory require '../sections/embed/index.coffee'
 SectionFullscreen = React.createFactory require '../sections/fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../sections/callout/index.coffee'
 SectionToc = React.createFactory require '../sections/toc/index.coffee'
-SectionImageSet = React.createFactory require '../sections/image_set/index.coffee'
 SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 SectionImage = React.createFactory require '../sections/image/index.coffee'
 { div, nav, button } = React.DOM
@@ -124,7 +123,7 @@ module.exports = React.createClass
           when 'fullscreen' then SectionFullscreen
           when 'callout' then SectionCallout
           when 'toc' then SectionToc
-          when 'image_set' then SectionImageSet
+          when 'image_set' then SectionImageCollection
           when 'image_collection' then SectionImageCollection
           when 'image' then SectionImage
         )(
@@ -133,6 +132,7 @@ module.exports = React.createClass
           ref: 'section'
           onClick: @setEditing(on)
           setEditing: @setEditing
+          channel: @props.channel
         )
         div {
           className: 'edit-section-container-bg'

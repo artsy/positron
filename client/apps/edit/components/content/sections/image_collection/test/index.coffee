@@ -19,11 +19,11 @@ describe 'ImageCollection', ->
       $.fn.fillwidthLite = sinon.stub()
       global.HTMLElement = () => {}
       @ImageCollection = benv.require resolve(__dirname, '../index')
-      DisplayArtwork = benv.requireWithJadeify(
+      Artwork = benv.requireWithJadeify(
         resolve(__dirname, '../components/artwork')
         ['icons']
       )
-      DisplayImage = benv.requireWithJadeify(
+      Image = benv.requireWithJadeify(
         resolve(__dirname, '../components/image')
         ['icons']
       )
@@ -31,14 +31,14 @@ describe 'ImageCollection', ->
         resolve(__dirname, '../../../../../../../components/rich_text_caption/index')
         ['icons']
       )
-      DisplayImage.__set__ 'RichTextCaption', React.createFactory RichTextCaption
+      Image.__set__ 'RichTextCaption', React.createFactory RichTextCaption
       Controls = benv.require resolve(__dirname, '../components/controls')
       Controls.__set__ 'Autocomplete', sinon.stub()
       Controls.__set__ 'UrlArtworkInput', sinon.stub()
-      @ImageCollection.__set__ 'DisplayArtwork', React.createFactory DisplayArtwork
-      @ImageCollection.__set__ 'DisplayImage', React.createFactory DisplayImage
+      @ImageCollection.__set__ 'Artwork', React.createFactory Artwork
+      @ImageCollection.__set__ 'Image', React.createFactory Image
       @ImageCollection.__set__ 'Controls', React.createFactory Controls
-      @ImageCollection.__set__ 'imagesLoaded', sinon.stub()
+      @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @props = {
         section: new Backbone.Model
           type: 'image_collection'
@@ -61,48 +61,114 @@ describe 'ImageCollection', ->
           ]
         editing: false
         setEditing: @setEditing = sinon.stub()
+        channel: { hasFeature: hasFeature = sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
-      @component.fillwidth = sinon.stub()
-      @component.removeFillwidth = sinon.stub()
+      @component.onImagesLoaded = sinon.stub()
       done()
 
   afterEach ->
     benv.teardown()
 
-  it 'renders an image collection component with preview', ->
-    $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
+  describe 'ImageCollection', ->
 
-  it 'renders a placeholder if no images', ->
-    @component.props.section.set 'images', []
-    @component.forceUpdate()
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add images and artworks above'
+    it 'renders an image collection component with preview', ->
+      $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
-  it 'renders a progress indicator if progress', ->
-    @component.setState progress: .5
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
+    it 'renders a placeholder if no images', ->
+      @component.props.section.set 'images', []
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Add images and artworks above'
 
-  it 'sets editing mode on click', ->
-    r.simulate.click r.find @component, 'edit-section-image-container'
-    @setEditing.called.should.eql true
-    @setEditing.args[0][0].should.eql true
+    it 'renders a progress indicator if progress', ->
+      @component.setState progress: .5
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
 
-  it '#removeItem updates the images array', ->
-    @component.removeItem(@props.section.get('images')[0])()
-    @props.section.get('images').length.should.eql 1
+    it 'sets editing mode on click', ->
+      r.simulate.click r.find @component, 'edit-section-image-container'
+      @setEditing.called.should.eql true
+      @setEditing.args[0][0].should.eql true
 
-  it '#onChange calls @fillwidth if > 1 image and layout overflow_fillwidth', ->
-    @component.onChange()
-    @component.fillwidth.called.should.eql true
+    it '#removeItem updates the images array', ->
+      @component.removeItem(@props.section.get('images')[0])()
+      @props.section.get('images').length.should.eql 1
+      @component.onImagesLoaded.called.should.eql true
 
-  it '#onChange calls @removefillwidth if < 1 image and layout overflow_fillwidth', ->
-    @component.props.section.set 'images', []
-    @component.onChange()
-    @component.removeFillwidth.called.should.eql true
+    it '#onChange calls @fillwidth', ->
+      @component.onChange()
+      @component.onImagesLoaded.called.should.eql true
 
-  it '#onChange calls @removefillwidth if > 1 image and layout column_width', ->
-    @component.props.section.set 'layout', 'column_width'
-    @component.onChange()
-    @component.removeFillwidth.called.should.eql true
+
+  describe 'ImageSet', ->
+
+    it 'renders an image set component with preview', ->
+      @component.props.section.unset 'layout'
+      @component.props.section.set 'type', 'image_set'
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'imageset-preview'
+      $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).find('svg').length.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'The Four Hedgehogs'
+
+    it 'renders an image set edit view', ->
+      @props.editing = true
+      @props.section.set 'type', 'image_set'
+      component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<div class="drag-container">'
+
+    it 'adds classes to image sets with many images', ->
+      images = [
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        },
+        {
+          type: 'image'
+          url: 'https://artsy.net/image.png'
+          caption: '<p>Here is a caption</p>'
+        }
+      ]
+      @props.editing = true
+      @props.section.set
+        images: images
+        type: 'image_set'
+      component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).attr('class').should.containEql 'imageset-block'
+
+
+  describe '#getFillWidthSizes', ->
+
+    it 'returns expected container and target for overflow_fillwidth', ->
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 860
+      sizes.targetHeight.should.eql 450
+
+    it 'returns expected container and target for column_width', ->
+      @component.props.section.set 'layout', 'column_width'
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 580
+      sizes.targetHeight.should.eql 550
+
+    it 'returns expected container and target for image_set with many images', ->
+      @component.props.section.unset 'layout'
+      @component.props.section.set 'type', 'image_set'
+      @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+      sizes = @component.getFillWidthSizes()
+      sizes.containerSize.should.eql 860
+      sizes.targetHeight.should.eql 300
+
+
