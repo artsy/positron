@@ -21,6 +21,8 @@ describe 'AutocompleteList', ->
         )
       $.fn.typeahead = sinon.stub()
       @AutocompleteList = benv.require resolve __dirname, '../index'
+      DragContainer = benv.require resolve __dirname, '../../drag_drop/index'
+      @AutocompleteList.__set__ 'DragContainer', React.createFactory DragContainer
       @AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: set = sinon.stub()
       set.onCall(0).returns
@@ -37,7 +39,6 @@ describe 'AutocompleteList', ->
         fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
         resObject: (res) -> id: res.id, value: res.value
         draggable: true
-      @rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
       @component = ReactDOM.render React.createElement(@AutocompleteList, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @setState = sinon.stub @component, 'setState'
         done()
@@ -81,6 +82,7 @@ describe 'AutocompleteList', ->
   it 'Disables draggable if no @props.draggable', ->
     @props.draggable = false
     rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
+    rendered.should.not.containEql '<div class="drag-container">'
     rendered.should.not.containEql 'draggable="true"'
 
 
