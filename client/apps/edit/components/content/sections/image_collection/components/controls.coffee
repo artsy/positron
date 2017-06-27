@@ -2,6 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 sd = require('sharify').data
 gemup = require 'gemup'
+SectionControls = React.createFactory require '../../../section_controls/index.coffee'
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
@@ -93,7 +94,10 @@ module.exports = React.createClass
           @props.setProgress null
 
   render: ->
-    header { className: 'edit-section-controls' },
+    SectionControls {
+      editing: @props.editing
+      section: @props.section
+    },
       nav { className: 'es-layout' },
         a {
           name: 'overflow_fillwidth'

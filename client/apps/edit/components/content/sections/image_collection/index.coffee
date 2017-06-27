@@ -95,6 +95,7 @@ module.exports = React.createClass
         setProgress: @setProgress
         onChange: @onChange
         channel: @props.channel
+        editing: @props.editing
       }
       if @state.progress
         div { className: 'upload-progress-container' },
