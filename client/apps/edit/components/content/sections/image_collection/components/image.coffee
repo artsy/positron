@@ -8,7 +8,7 @@ module.exports = React.createClass
   displayName: 'ImageCollectionDisplayImage'
 
   setHeight: ->
-    if @props.dimensions[@props.index]
+    if @props.dimensions?[@props.index]
       return @props.dimensions[@props.index].height
     else
       return 'auto'
