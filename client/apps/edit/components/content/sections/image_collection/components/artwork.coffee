@@ -12,10 +12,9 @@ module.exports = React.createClass
       Artwork {
         artwork: @props.artwork
       }
-      if @props.editing
+      if @props.removeItem and @props.editing
         button {
           className: 'edit-section-remove button-reset esic-img-remove'
           onClick: @props.removeItem(@props.artwork)
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }
-

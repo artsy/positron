@@ -43,12 +43,11 @@ module.exports = React.createClass
 
   getFillWidthSizes: ->
     containerSize = 860
-    targetHeight = 450
+    targetHeight = window.innerHeight * .7
     if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
-      targetHeight = 300
+      targetHeight = 400
     else if @props.section.get('layout') is 'column_width'
       containerSize = 580
-      targetHeight = 550
     return {containerSize: containerSize, targetHeight: targetHeight}
 
   setProgress: (progress) ->
