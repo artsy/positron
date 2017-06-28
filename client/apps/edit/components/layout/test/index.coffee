@@ -77,7 +77,7 @@ describe 'EditLayout', ->
       @view.user.set id: 'foo'
       @view.serialize().author_id.should.equal 'foo'
 
-  describe '#popLockControls', ->
+  xdescribe '#popLockControls', ->
 
     it 'locks the controls to the top when you scroll', ->
       @view.$el.append( $section = $

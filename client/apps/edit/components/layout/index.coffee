@@ -18,9 +18,7 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
     @article.once 'sync', @onFirstSave if @article.isNew()
-    @article.sections.on 'change:layout', => _.defer => @popLockControls()
     @article.on 'savePublished', @savePublished
-    @$window.on 'scroll', @popLockControls
     @setupOnBeforeUnload()
     @toggleAstericks()
     @setupYoast() if @channel.isEditorial()
@@ -98,8 +96,6 @@ module.exports = class EditLayout extends Backbone.View
     'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
     'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
-    'click .edit-section-container *': 'popLockControls'
-    'click .edit-section-tool-menu li': -> _.defer => @popLockControls()
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
@@ -133,24 +129,6 @@ module.exports = class EditLayout extends Backbone.View
     else
       @article.save @serialize()
     @toggleAstericks()
-
-  popLockControls: =>
-    # $section = @$('.edit-section-container[data-editing=true]')
-    # return unless $section.length
-    # $controls = $section.find('.edit-section-controls')
-    # $controls.css width: $section.outerWidth(), left: ''
-    # insideComponent = @$window.scrollTop() + @$('#edit-header').outerHeight() >
-    #   ($section.offset().top or 0) - $controls.height()
-    # if (@$window.scrollTop() + $controls.outerHeight() >
-    #     $section.offset().top + $section.height())
-    #   insideComponent = false
-    # left = ($controls.outerWidth() / 2) - ($('#layout-sidebar').width() / 2)
-    # type = $section.data('type')
-    # unless type is 'fullscreen' or type is 'callout'
-    #   $controls.css(
-    #     width: if insideComponent then $controls.outerWidth() else ''
-    #     left: if insideComponent then "calc(50% - #{left}px)" else ''
-    #   ).attr('data-fixed', insideComponent)
 
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')

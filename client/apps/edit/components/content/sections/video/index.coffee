@@ -6,6 +6,7 @@ _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
 RichTextCaption = React.createFactory require '../../../../../../components/rich_text_caption/index.coffee'
+SectionControls = React.createFactory require '../../section_controls/index.coffee'
 icons = -> require('../../../icons.jade') arguments...
 { getIframeUrl } = require '../../../../../../models/section.coffee'
 sd = require('sharify').data
@@ -85,35 +86,45 @@ module.exports = React.createClass
     section {
       className: 'edit-section-video'
     },
-      div { className: 'esv-controls-container edit-section-controls' },
-        nav { className: 'esv-nav' },
-          a {
-            className: 'esv-overflow-fillwidth'
-            onClick: @changeLayout('overflow_fillwidth')
-          }
-          a {
-            className: 'esv-column-width'
-            onClick: @changeLayout('column_width')
-          }
-        div { className: 'esv-inputs' },
-          h2 {}, 'Video'
-          input {
-            className: 'bordered-input bordered-input-dark'
-            placeholder: 'Paste a youtube or vimeo url ' +
-              '(e.g. http://youtube.com/watch?v=id)'
-            ref: 'input'
-            defaultValue: @state.url
-            onKeyDown: _.debounce(_.bind(@onChangeUrl, this), 500)
-          }
-          h2 {}, "Cover image"
-          section { className: 'dashed-file-upload-container' },
-            h1 {}, 'Drag & ',
-              span { className: 'dashed-file-upload-container-drop' }, 'drop'
-              ' or '
-              span { className: 'dashed-file-upload-container-click' }, 'click'
-              span {}, (' to ' + if @state.cover_image_url then 'replace' else 'upload')
-            h2 {}, 'Up to 30mb'
-            input { type: 'file', onChange: @uploadCoverImage }
+      if @props.editing
+        SectionControls {
+          section: @props.section
+          channel: @props.channel
+          isHero: @props.isHero
+        },
+          unless @props.isHero
+            nav { className: 'es-layout' },
+              a {
+                name: 'overflow_fillwidth'
+                className: 'layout'
+                onClick: @changeLayout('overflow_fillwidth')
+                'data-active': @props.section.get('layout') is 'overflow_fillwidth'
+              }
+              a {
+                name: 'column_width'
+                className: 'layout'
+                onClick: @changeLayout('column_width')
+                'data-active': @props.section.get('layout') is 'column_width'
+              }
+          div { className: 'esv-inputs' },
+            h2 {}, 'Video'
+            input {
+              className: 'bordered-input bordered-input-dark'
+              placeholder: 'Paste a youtube or vimeo url ' +
+                '(e.g. http://youtube.com/watch?v=id)'
+              ref: 'input'
+              defaultValue: @state.url
+              onKeyDown: _.debounce(_.bind(@onChangeUrl, this), 500)
+            }
+            h2 {}, "Cover image"
+            section { className: 'dashed-file-upload-container' },
+              h1 {}, 'Drag & ',
+                span { className: 'dashed-file-upload-container-drop' }, 'drop'
+                ' or '
+                span { className: 'dashed-file-upload-container-click' }, 'click'
+                span {}, (' to ' + if @state.cover_image_url then 'replace' else 'upload')
+              h2 {}, 'Up to 30mb'
+              input { type: 'file', onChange: @uploadCoverImage }
       div {
         className: 'esv-video-container'
         onClick: @props.setEditing(on)

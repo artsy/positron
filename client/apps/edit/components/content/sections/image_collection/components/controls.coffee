@@ -97,6 +97,7 @@ module.exports = React.createClass
     SectionControls {
       editing: @props.editing
       section: @props.section
+      channel: @props.channel
     },
       nav { className: 'es-layout' },
         a {
@@ -119,23 +120,23 @@ module.exports = React.createClass
             'data-active': @props.section.get('type') is 'image_set'
           }
 
-        section { className: 'dashed-file-upload-container' },
-          h1 {}, 'Drag & ',
-            span { className: 'dashed-file-upload-container-drop' }, 'drop'
-            ' or '
-            span { className: 'dashed-file-upload-container-click' }, 'click'
-            span {}, ' to upload'
-          h2 {}, 'Up to 30mb'
-          input { type: 'file', onChange: @upload }
+      section { className: 'dashed-file-upload-container' },
+        h1 {}, 'Drag & ',
+          span { className: 'dashed-file-upload-container-drop' }, 'drop'
+          ' or '
+          span { className: 'dashed-file-upload-container-click' }, 'click'
+          span {}, ' to upload'
+        h2 {}, 'Up to 30mb'
+        input { type: 'file', onChange: @upload }
 
-        section { className: 'esic-artwork-inputs' },
-          div { className: 'esis-autocomplete-input' },
-            input {
-              ref: 'autocomplete'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Search for artwork by title'
-            }
-          UrlArtworkInput {
-            images: @props.images
-            addArtworkFromUrl: @addArtworkFromUrl
+      section { className: 'esic-artwork-inputs' },
+        div { className: 'esis-autocomplete-input' },
+          input {
+            ref: 'autocomplete'
+            className: 'bordered-input bordered-input-dark'
+            placeholder: 'Search for artwork by title'
           }
+        UrlArtworkInput {
+          images: @props.images
+          addArtworkFromUrl: @addArtworkFromUrl
+        }
