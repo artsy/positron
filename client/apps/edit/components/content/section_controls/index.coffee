@@ -9,13 +9,13 @@ module.exports = React.createClass
     insideComponent: false
 
   componentDidMount: ->
-    @setInside()
-    window.addEventListener 'scroll', @setInside
+    @setInsideComponent()
+    window.addEventListener 'scroll', @setInsideComponent
 
   componentWillUnmount: ->
-    window.removeEventListener 'scroll', @setInside
+    window.removeEventListener 'scroll', @setInsideComponent
 
-  setInside: ->
+  setInsideComponent: ->
     if @insideComponent() != @state.insideComponent
       @setState insideComponent: @insideComponent()
 
@@ -27,11 +27,13 @@ module.exports = React.createClass
     height
 
   getControlsWidth: ->
-    if @props.section.get('layout')?.includes('overflow') or
-     @props.section.get('type') is 'image_set'
-      width = 900
-    else if @props.section.get('type') is 'embed' or @props.isHero
+    section = @props.section
+    if @props.isHero or
+     (section.get('type') is 'embed' and section.get('layout') is 'overflow')
         width = 1100
+    else if section.get('layout')?.includes('overflow') or
+     section.get('type') is 'image_set'
+      width = 900
     else
       width = 620
     width
@@ -39,34 +41,31 @@ module.exports = React.createClass
   getPositionLeft: ->
     if @state.insideComponent
       left = (window.innerWidth / 2) - (@getControlsWidth() / 2) + 55
-    else if @isImages()
-      left = -20
     else
-      left = 0
+      left = if @isImages() then -20 else 0
     left
 
-  getPositionTop: ->
+  getPositionBottom: ->
     if @state.insideComponent
-      top = window.innerHeight - $(@refs.controls).height() - @getHeaderSize()
+      bottom = window.innerHeight - $(@refs.controls).height() - @getHeaderSize()
       if @isImages()
-        top = top - 20
+        bottom = bottom - 20
     else
-      top = '100%'
-      if @isImages()
-        top = 'calc(100% + 20px)'
-    top
+      bottom = if @isImages() then 'calc(100% + 20px)' else '100%'
+    bottom
+
+  isScrollingOver: ($section) ->
+    window.scrollY + @getHeaderSize() > $section.offset().top - $(@refs.controls).height()
+
+  isScrolledPast: ($section) ->
+    window.scrollY + $(@refs.controls).height() > $section.offset().top + $section.height()
 
   insideComponent: ->
     $section = $(@refs.controls).closest('section')
     insideComponent = false
-    if $section.offset()
-      insideComponent = window.scrollY + @getHeaderSize() >
-        $section.offset().top - $(@refs.controls).height()
-      if (window.scrollY + $(@refs.controls).height() >
-       $section.offset().top + $section.height()) or
-       (@props.section.get('type') in ['fullscreen'])
-        insideComponent = false
-      if @props.isHero
+    if $section
+      if @isScrollingOver($section) and !@isScrolledPast($section) or
+       @props.isHero and !@isScrolledPast($section)
         insideComponent = true
     insideComponent
 
@@ -77,7 +76,7 @@ module.exports = React.createClass
       style:
         width: @getControlsWidth()
         position: if @state.insideComponent then 'fixed' else 'absolute'
-        bottom: @getPositionTop()
+        bottom: @getPositionBottom()
         left: @getPositionLeft()
     },
       @props.children
