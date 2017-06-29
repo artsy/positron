@@ -32,6 +32,7 @@ module.exports = React.createClass
         div { id: 'edit-hero-section'},
           HeroSection {
             section: @props.article.heroSection
+            channel: @props.channel
           }
 
       HeaderSection {

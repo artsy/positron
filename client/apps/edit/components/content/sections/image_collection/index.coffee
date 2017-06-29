@@ -88,13 +88,15 @@ module.exports = React.createClass
       className: 'edit-section-image-collection edit-section-image-container' + @largeImagesetClass()
       onClick: @props.setEditing(true)
     },
-      Controls {
-        section: @props.section
-        images: images
-        setProgress: @setProgress
-        onChange: @onChange
-        channel: @props.channel
-      }
+      if @props.editing
+        Controls {
+          section: @props.section
+          images: images
+          setProgress: @setProgress
+          onChange: @onChange
+          channel: @props.channel
+          editing: @props.editing
+        }
       if @state.progress
         div { className: 'upload-progress-container' },
           div {

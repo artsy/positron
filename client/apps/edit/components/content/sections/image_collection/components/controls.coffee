@@ -2,6 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 sd = require('sharify').data
 gemup = require 'gemup'
+SectionControls = React.createFactory require '../../../section_controls/index.coffee'
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
@@ -93,7 +94,11 @@ module.exports = React.createClass
           @props.setProgress null
 
   render: ->
-    header { className: 'edit-section-controls' },
+    SectionControls {
+      editing: @props.editing
+      section: @props.section
+      channel: @props.channel
+    },
       nav { className: 'es-layout' },
         a {
           name: 'overflow_fillwidth'
@@ -115,23 +120,23 @@ module.exports = React.createClass
             'data-active': @props.section.get('type') is 'image_set'
           }
 
-        section { className: 'dashed-file-upload-container' },
-          h1 {}, 'Drag & ',
-            span { className: 'dashed-file-upload-container-drop' }, 'drop'
-            ' or '
-            span { className: 'dashed-file-upload-container-click' }, 'click'
-            span {}, ' to upload'
-          h2 {}, 'Up to 30mb'
-          input { type: 'file', onChange: @upload }
+      section { className: 'dashed-file-upload-container' },
+        h1 {}, 'Drag & ',
+          span { className: 'dashed-file-upload-container-drop' }, 'drop'
+          ' or '
+          span { className: 'dashed-file-upload-container-click' }, 'click'
+          span {}, ' to upload'
+        h2 {}, 'Up to 30mb'
+        input { type: 'file', onChange: @upload }
 
-        section { className: 'esic-artwork-inputs' },
-          div { className: 'esis-autocomplete-input' },
-            input {
-              ref: 'autocomplete'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Search for artwork by title'
-            }
-          UrlArtworkInput {
-            images: @props.images
-            addArtworkFromUrl: @addArtworkFromUrl
+      section { className: 'esic-artwork-inputs' },
+        div { className: 'esis-autocomplete-input' },
+          input {
+            ref: 'autocomplete'
+            className: 'bordered-input bordered-input-dark'
+            placeholder: 'Search for artwork by title'
           }
+        UrlArtworkInput {
+          images: @props.images
+          addArtworkFromUrl: @addArtworkFromUrl
+        }

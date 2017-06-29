@@ -133,6 +133,7 @@ module.exports = React.createClass
           onClick: @setEditing(on)
           setEditing: @setEditing
           channel: @props.channel
+          isHero: @props.isHero
         )
         div {
           className: 'edit-section-container-bg'
