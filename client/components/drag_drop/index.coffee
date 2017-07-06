@@ -36,10 +36,8 @@ module.exports = React.createClass
     dragSourceNotLast = @state.dragSource != @props.children.length - 1
 
     if (dragTargetNotFirst and dragSourceNotLast and mouseBelowCenter) or dragTargetIsNext
-      console.log 'bottom'
       dropZonePosition = 'bottom'
     else
-      console.log 'top'
       dropZonePosition = 'top'
     dropZonePosition
 

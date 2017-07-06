@@ -42,7 +42,7 @@ module.exports = React.createClass
       ref: 'sections'
     },
       SectionTool { sections: @props.sections, index: -1, key: 1}
-      if @props.sections.length > 1
+      if @props.sections.length > 0
         DragContainer {
           items: @props.sections.models
           onDragEnd: @onDragEnd

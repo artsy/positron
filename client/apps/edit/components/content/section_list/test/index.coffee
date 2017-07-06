@@ -7,7 +7,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 
 describe 'SectionList', ->
@@ -17,6 +17,11 @@ describe 'SectionList', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       @SectionList = benv.require resolve(__dirname, '../index')
+      DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
+      DragTarget = benv.require resolve(__dirname, '../../../../../../components/drag_drop/drag_target')
+      DragSource = benv.require resolve(__dirname, '../../../../../../components/drag_drop/drag_source')
+      DragContainer.__set__ 'DragTarget', React.createFactory DragTarget
+      DragContainer.__set__ 'DragSource', React.createFactory DragSource
       @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
@@ -24,6 +29,7 @@ describe 'SectionList', ->
       @SectionContainer.__set__ 'SectionText', text = sinon.stub()
       @SectionContainer.__set__ 'SectionImageCollection', image_collection = sinon.stub()
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
+      @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @props = {
         sections: @sections = new Backbone.Collection [
           { body: 'Foo to the bar', type: 'text' }
@@ -50,14 +56,9 @@ describe 'SectionList', ->
             ]
           }
         ]
+        article: new Backbone.Model {sections: @sections.models}
       }
       @component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], => setTimeout =>
-        @component.setState
-          dragging: 0
-          dragOver: 3
-          dragStart: 400
-          draggingHeight: 300
-        @component.props.sections.off()
         done()
 
   afterEach ->
@@ -91,19 +92,14 @@ describe 'SectionList', ->
     sectionContainer.args[0][0].key.should.equal @sections.at(0).cid
     sectionContainer.args[1][0].key.should.equal @sections.at(1).cid
 
-  it 'onDragEnd resets the section order', ->
-    @component.props.sections.models[3].get('type').should.eql 'image_collection'
-    @component.onDragEnd()
-    @component.props.sections.models[3].get('type').should.eql 'text'
-    (@component.state.dragging?).should.not.be.ok
-    (@component.state.dragOver?).should.not.be.ok
-    (@component.state.dragStart?).should.not.be.ok
-    @component.state.draggingHeight.should.eql 0
+  it 'onRemoveSection removes sections from the article', ->
+    r.simulate.click r.find(@component, 'edit-section-remove')[0]
+    @component.props.sections.length.should.eql 3
 
   it 'onRemoveSection resets the article sections if empty', ->
     @props.sections = new Backbone.Collection [{ body: 'Foo to the bar', type: 'text' }]
     @props.article = new Backbone.Model {sections: [{ body: 'Foo to the bar', type: 'text' }]}
-    component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], =>
+    component = ReactDOM.render React.createElement(@SectionList, @props ), ($el = $ "<div></div>")[0], =>
     component.render()
-    r.simulate.click r.find(component, 'edit-section-remove')
+    r.simulate.click r.find(component, 'edit-section-remove')[0]
     @props.article.get('sections').length.should.eql 0
