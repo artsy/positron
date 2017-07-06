@@ -37,7 +37,6 @@ describe 'AutocompleteList', ->
         fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
         resObject: (res) -> id: res.id, value: res.value
         draggable: true
-      @rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
       @component = ReactDOM.render React.createElement(@AutocompleteList, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @setState = sinon.stub @component, 'setState'
         done()
@@ -67,6 +66,8 @@ describe 'AutocompleteList', ->
     @props.inline = true
     rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
     rendered.should.containEql 'autocomplete-container--inline'
+    rendered.should.not.containEql '<div class="drag-container">'
+    rendered.should.not.containEql 'draggable="true"'
 
   it 'Accepts a draggable option', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="drag-container">'
@@ -81,6 +82,7 @@ describe 'AutocompleteList', ->
   it 'Disables draggable if no @props.draggable', ->
     @props.draggable = false
     rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
+    rendered.should.not.containEql '<div class="drag-container">'
     rendered.should.not.containEql 'draggable="true"'
 
 

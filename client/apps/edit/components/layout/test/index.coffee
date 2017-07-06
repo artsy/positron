@@ -77,19 +77,6 @@ describe 'EditLayout', ->
       @view.user.set id: 'foo'
       @view.serialize().author_id.should.equal 'foo'
 
-  describe '#popLockControls', ->
-
-    it 'locks the controls to the top when you scroll', ->
-      @view.$el.append( $section = $
-        "<div class='edit-section-container' data-editing='true' style='height:300px'>
-          <div class='edit-section-controls'></div>
-        </div>"
-      )
-      @view.$window = scrollTop: -> 100
-      @view.popLockControls()
-      $($section.find('.edit-section-controls')).attr('data-fixed')
-        .should.equal 'true'
-
   describe '#onFinished', ->
 
     it 'redirects to the list if the articles is saved', ->

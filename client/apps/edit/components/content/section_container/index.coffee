@@ -41,7 +41,6 @@ module.exports = React.createClass
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
       'data-layout': @props.section.get('layout')
-      'data-id': @props.index
     },
       unless @props.section.get('type') is 'fullscreen'
         div {
@@ -53,11 +52,6 @@ module.exports = React.createClass
               className: "edit-section-drag button-reset"
               dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
             }
-          button {
-            className: "edit-section-remove button-reset"
-            onClick: @removeSection
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          }
       (switch @props.section.get('type')
         when 'text' then SectionText
         when 'video' then SectionVideo
@@ -76,6 +70,7 @@ module.exports = React.createClass
         onClick: @setEditing(on)
         setEditing: @setEditing
         channel: @props.channel
+        isHero: @props.isHero
       )
       div {
         className: 'edit-section-container-bg'

@@ -18,7 +18,6 @@ module.exports = React.createClass
   render: ->
     div {
       className: 'edit-section-toc-container'
-      onClick: @props.setEditing(on)
     },
       div { className: 'es-toc-headline' }, "Table Of Contents"
       ul { className: 'es-toc-list', ref: 'links' },
