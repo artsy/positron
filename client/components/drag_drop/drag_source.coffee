@@ -5,7 +5,7 @@ module.exports = React.createClass
   displayName: 'DragSource'
 
   setDragSource: (e) ->
-    unless !@props.isDraggable
+    if @props.isDraggable
       dragStartY = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
       dragHeight = $(e.currentTarget).height()
       @props.setDragSource(@props.i, dragHeight, dragStartY)

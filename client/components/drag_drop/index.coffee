@@ -12,6 +12,7 @@ module.exports = React.createClass
     dragTarget: null
     dragStartY: null
     draggingHeight: 0
+    dropPosition: 'top'
 
   setDragSource: (index, draggingHeight, clientY) ->
     @setState
@@ -19,14 +20,34 @@ module.exports = React.createClass
       dragStartY: clientY
       draggingHeight: draggingHeight
 
-  setDragTarget: (index) ->
-    @setState dragTarget: index
+  setDragTarget: (index, $dragTarget, mouseY) ->
+    if @state.dragSource or @state.dragSource is 0
+      @setState
+        dragTarget: index
+        dropPosition: @setDropZonePosition($dragTarget, index, mouseY)
+
+  setDropZonePosition: ($dragTarget, dragTargetId, mouseY) ->
+    return 'top' if @props.layout != 'vertical'
+    dragTargetTop = $dragTarget.position().top + 20 - window.scrollY
+    dragTargetCenter = dragTargetTop + ($dragTarget.height() / 2)
+    mouseBelowCenter = mouseY > dragTargetCenter
+    dragTargetIsNext = dragTargetId is @state.dragSource + 1
+    dragTargetNotFirst = dragTargetId != 0
+    dragSourceNotLast = @state.dragSource != @props.children.length - 1
+
+    if (dragTargetNotFirst and dragSourceNotLast and mouseBelowCenter) or dragTargetIsNext
+      console.log 'bottom'
+      dropZonePosition = 'bottom'
+    else
+      console.log 'top'
+      dropZonePosition = 'top'
+    dropZonePosition
 
   onDragEnd: ->
     newItems = @props.items
     moved = newItems.splice @state.dragSource, 1
     newItems.splice @state.dragTarget, 0, moved[0]
-    unless @state.dragSource is @state.dragTarget
+    if @state.dragSource != @state.dragTarget
       @props.onDragEnd(newItems)
     @setState
       dragSource: null
@@ -51,6 +72,10 @@ module.exports = React.createClass
             activeTarget: @state.dragTarget is i
             isDraggable: @props.isDraggable
             width: @props.dimensions?[i]?.width
+            height: if @props.layout is 'vertical' then @state.draggingHeight else null
+            vertical: if @props.layout is 'vertical' then true else false
+            dropPosition: @state.dropPosition
+            dragStartY: @state.dragStartY
           },
             DragSource {
               i: i

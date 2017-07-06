@@ -30,8 +30,10 @@ module.exports = React.createClass
       @props.article.set 'sections', []
 
   onDragEnd: (sections) ->
-    debugger
     @props.sections.reset sections
+
+  isDraggable: ->
+    if @state.editingIndex or @state.editingIndex is 0 then false else true
 
   render: ->
     div {
@@ -44,7 +46,7 @@ module.exports = React.createClass
         DragContainer {
           items: @props.sections.models
           onDragEnd: @onDragEnd
-          isDraggable: if @state.editingIndex or @state.editingIndex is 0 then false else true
+          isDraggable: @isDraggable()
           layout: 'vertical'
         },
           @props.sections.map (section, i) =>

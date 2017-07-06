@@ -20,9 +20,6 @@ icons = -> require('../../icons.jade') arguments...
 module.exports = React.createClass
   displayName: 'SectionContainer'
 
-  getInitialState: ->
-    dropPosition: 'top'
-
   onClickOff: ->
     @setEditing(off)()
     @refs.section?.onClickOff?()
@@ -38,58 +35,6 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
-  onDragStart: (e) ->
-    dragStartY = e.clientY - ($(e.currentTarget).position().top - window.scrollY)
-    @props.onDragStart e, dragStartY
-
-  onDragOver: (e) ->
-    e.preventDefault()
-    mouseY = e.clientY - @props.dragStartY
-    $dragOver = $(e.currentTarget).find('.edit-section-container')
-    dragOverID = $dragOver.data('id')
-    @setState
-      dropPosition: @getDropZonePosition(mouseY, $dragOver, dragOverID)
-    @props.onSetDragOver dragOverID unless dragOverID is @props.dragOver
-
-  getDropZonePosition: (mouseY, $dragOver, dragOverID) ->
-    dragOverTop = $dragOver.position().top + 20 - window.scrollY
-    dragOverCenter = dragOverTop + ($dragOver.height() / 2)
-    mouseBelowCenter = mouseY > dragOverCenter
-    dragOverIsNext = dragOverID is @props.dragging + 1
-    dragOverNotFirst = dragOverID != 0
-    draggingNotLast = @props.dragging != @props.sections.length - 1
-
-    if (dragOverNotFirst and draggingNotLast and mouseBelowCenter) or dragOverIsNext
-      dropZonePosition = 'bottom'
-    else
-      dropZonePosition = 'top'
-    dropZonePosition
-
-  isDragOver: ->
-    @props.dragOver is @props.index and !@props.isHero
-
-  isDragging: ->
-    @props.dragging is @props.index and !@props.isHero
-
-  dropZone: ->
-    if @isDragOver() and !@isDragging()
-      div {
-        className: 'edit-section-drag-placeholder'
-        style: height: @props.draggingHeight
-      }
-
-  getContainerProps: ->
-    # props = {}
-    # unless @props.isHero
-    #   props = {
-    #     draggable: !@props.editing
-    #     onDragStart: @onDragStart
-    #     onDragEnd: @props.onDragEnd
-    #     onDragOver: @onDragOver
-    #     style: {'opacity': .65} if @isDragging() and !@props.editing
-    #   }
-    # return props
-
   render: ->
     div {
       className: 'edit-section-container'
@@ -97,7 +42,6 @@ module.exports = React.createClass
       'data-type': @props.section.get('type')
       'data-layout': @props.section.get('layout')
       'data-id': @props.index
-      # 'data-dragging': @isDragging() and !@props.editing
     },
       unless @props.section.get('type') is 'fullscreen'
         div {
