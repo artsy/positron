@@ -41,7 +41,7 @@ module.exports = React.createClass
         (if @props.sections.length then ' esl-children' else '')
       ref: 'sections'
     },
-      SectionTool { sections: @props.sections, index: -1, key: 1}
+      SectionTool { sections: @props.sections, index: -1, key: 1 }
       if @props.sections.length > 0
         DragContainer {
           items: @props.sections.models
