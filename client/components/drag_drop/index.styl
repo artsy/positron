@@ -1,15 +1,21 @@
 .drag-container
   width 100%
+
   .drag-target
     position relative
+    .drag-placeholder
+      border 2px dashed gray-color
+      min-height 2em
+      background-color white
+      position absolute
+      top 0
+      bottom 0
+      left 0
+      right 0
+      z-index 1
+      &.vertical
+        position relative
+        margin-bottom 20px
 
-  .drag-placeholder
-    border 2px dashed gray-color
-    min-height 2em
+  .drag-source[data-source='true']
     background-color white
-    position absolute
-    top 0
-    bottom 0
-    left 0
-    right 0
-    z-index 1

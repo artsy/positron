@@ -1,27 +1,40 @@
 React = require 'react'
+_ = require 'underscore'
 { div } = React.DOM
 
 module.exports = React.createClass
   displayName: 'DragTarget'
 
+  componentWillMount: ->
+    @debouncedDragTarget = _.debounce((($dragTarget, mouseY) =>
+      $dragTarget = $(@refs.target)
+      @props.setDragTarget(@props.i, $dragTarget, mouseY)
+    ), 3)
+
   setDragTarget: (e) ->
     unless @props.i is @props.activeTarget
-      @props.setDragTarget(@props.i)
+      mouseY = e.clientY - @props.dragStartY
+      @debouncedDragTarget(mouseY)
 
-  setWidth: ->
-    if @props.width?[@props.i]
-      return @props.width[@props.i].width
-    else
-      return '100%'
+  renderDropZone: ->
+    verticalClass = if @props.vertical then ' vertical' else ''
+    if @props.activeTarget and @props.isDraggable
+      div {
+        className: 'drag-placeholder' + verticalClass
+        style:
+          height: @props.height or 'auto'
+      }
 
   render: ->
     div {
+      ref: 'target'
       className: 'drag-target'
       onDragOver: @setDragTarget
       'data-target': @props.activeTarget
+      'data-source': @props.activeSource
       style:
-        width: @setWidth()
+        width: @props.width or '100%'
     },
-      if @props.activeTarget and @props.isDraggable
-        div { className: 'drag-placeholder' }
+      @renderDropZone() if @props.dropPosition is 'top'
       @props.children
+      @renderDropZone() if @props.dropPosition is 'bottom'

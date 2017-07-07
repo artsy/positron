@@ -10,43 +10,77 @@ module.exports = React.createClass
   getInitialState: ->
     dragSource: null
     dragTarget: null
+    dragStartY: null
+    draggingHeight: 0
+    dropPosition: 'top'
 
-  setDragSource: (index) ->
-    @setState dragSource: index
+  setDragSource: (index, draggingHeight, clientY) ->
+    @setState
+      dragSource: index
+      dragStartY: clientY
+      draggingHeight: draggingHeight
 
-  setDragTarget: (index) ->
-    @setState dragTarget: index
+  setDragTarget: (index, $dragTarget, mouseY) ->
+    if @state.dragSource or @state.dragSource is 0
+      @setState
+        dragTarget: index
+        dropPosition: @setDropZonePosition($dragTarget, index, mouseY)
+
+  setDropZonePosition: ($dragTarget, dragTargetId, mouseY) ->
+    return 'top' if @props.layout != 'vertical'
+    dragTargetTop = $dragTarget.position().top + 20 - window.scrollY
+    dragTargetCenter = dragTargetTop + ($dragTarget.height() / 2)
+    mouseBelowCenter = mouseY > dragTargetCenter
+    dragTargetIsNext = dragTargetId is @state.dragSource + 1
+    dragTargetNotFirst = dragTargetId != 0
+    dragSourceNotLast = @state.dragSource != @props.children.length - 1
+
+    if (dragTargetNotFirst and dragSourceNotLast and mouseBelowCenter) or dragTargetIsNext
+      dropZonePosition = 'bottom'
+    else
+      dropZonePosition = 'top'
+    dropZonePosition
 
   onDragEnd: ->
     newItems = @props.items
     moved = newItems.splice @state.dragSource, 1
     newItems.splice @state.dragTarget, 0, moved[0]
-    unless @state.dragSource is @state.dragTarget
+    if @state.dragSource != @state.dragTarget
       @props.onDragEnd(newItems)
     @setState
       dragSource: null
       dragTarget: null
+      dragStartY: null
+      draggingHeight: 0
 
   render: ->
     children = React.Children.toArray(@props.children)
 
     div { className: 'drag-container' },
       children.map (child, i) =>
-        DragTarget {
-          key: i
-          i: i
-          setDragTarget: @setDragTarget
-          activeSource: @state.dragSource is i
-          activeTarget: @state.dragTarget is i
-          isDraggable: @props.isDraggable
-          width: @props.dimensions
-        },
-          DragSource {
+        if child.type.displayName is 'SectionTool' or !@props.isDraggable
+          child
+        else
+          i = child.props.index or i
+          DragTarget {
+            key: i
             i: i
-            setDragSource: @setDragSource
+            setDragTarget: @setDragTarget
             activeSource: @state.dragSource is i
             activeTarget: @state.dragTarget is i
-            onDragEnd: @onDragEnd
             isDraggable: @props.isDraggable
+            width: @props.dimensions?[i]?.width
+            height: if @props.layout is 'vertical' then @state.draggingHeight else null
+            vertical: if @props.layout is 'vertical' then true else false
+            dropPosition: @state.dropPosition
+            dragStartY: @state.dragStartY
           },
-            child
+            DragSource {
+              i: i
+              setDragSource: @setDragSource
+              activeSource: @state.dragSource is i
+              activeTarget: @state.dragTarget is i
+              onDragEnd: @onDragEnd
+              isDraggable: @props.isDraggable
+            },
+              child
