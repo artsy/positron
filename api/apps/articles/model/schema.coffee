@@ -43,7 +43,10 @@ fullscreenSection = (->
 ).call Joi
 
 denormalizedArtwork = (->
-  @object().meta(name: 'Artwork').keys
+  @object().meta(
+    name: 'Artwork'
+    isTypeOf: (data) => data.type is 'artwork'
+  ).keys
     type: @string().valid('artwork').default('artwork')
     id: @string().allow('', null)
     slug: @string().allow('', null)
@@ -130,10 +133,16 @@ denormalizedArtwork = (->
           type: @string().valid('artwork')
           id: @string()
       ]
-    @object().meta(name: 'ImageSet').keys
+    @object().meta(
+      name: 'ImageSet'
+      isTypeOf: (data) => data.type is 'image_set'
+    ).keys
       type: 'image_set'
       images: @array().items([denormalizedArtwork, imageSection])
-    @object().meta(name: 'ImageCollection').keys
+    @object().meta(
+      name: 'ImageCollection'
+      isTypeOf: (data) => data.type is 'image_collection'
+    ).keys
       type: 'image_collection'
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       images: @array().items([denormalizedArtwork, imageSection])
