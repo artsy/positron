@@ -112,4 +112,9 @@ describe 'RichTextCaption', ->
     @component.onChange(@component.state.editorState)
     @component.state.html.should.eql ''
 
-
+  it 're-converts html via componentDidMount if props.caption changes', ->
+    @component.componentDidMount = sinon.stub()
+    @component.convertFromHTML = sinon.stub()
+    @component.componentDidUpdate item: caption: '<p>new</p>'
+    @component.componentDidMount.called.should.eql.true
+    @component.convertFromHTML.called.should.eql.true
