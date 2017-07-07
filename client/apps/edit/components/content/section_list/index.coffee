@@ -31,6 +31,7 @@ module.exports = React.createClass
 
   onDragEnd: (sections) ->
     @props.sections.reset sections
+    @forceUpdate() if @props.article.get 'published'
 
   isDraggable: ->
     if @state.editingIndex or @state.editingIndex is 0 then false else true
