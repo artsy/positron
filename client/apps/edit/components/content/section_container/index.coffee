@@ -52,6 +52,11 @@ module.exports = React.createClass
               className: "edit-section-drag button-reset"
               dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
             }
+          button {
+            className: "edit-section-remove button-reset"
+            onClick: @removeSection
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+          }
       (switch @props.section.get('type')
         when 'text' then SectionText
         when 'video' then SectionVideo

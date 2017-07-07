@@ -6,7 +6,7 @@ module.exports = React.createClass
   displayName: 'DragTarget'
 
   componentWillMount: ->
-    @debouncedDragTarget = _.debounce(((mouseY) =>
+    @debouncedDragTarget = _.debounce((($dragTarget, mouseY) =>
       $dragTarget = $(@refs.target)
       @props.setDragTarget(@props.i, $dragTarget, mouseY)
     ), 3)
@@ -31,6 +31,7 @@ module.exports = React.createClass
       className: 'drag-target'
       onDragOver: @setDragTarget
       'data-target': @props.activeTarget
+      'data-source': @props.activeSource
       style:
         width: @props.width or '100%'
     },

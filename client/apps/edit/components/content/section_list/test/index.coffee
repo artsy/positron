@@ -18,10 +18,6 @@ describe 'SectionList', ->
       global.HTMLElement = () => {}
       @SectionList = benv.require resolve(__dirname, '../index')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
-      DragTarget = benv.require resolve(__dirname, '../../../../../../components/drag_drop/drag_target')
-      DragSource = benv.require resolve(__dirname, '../../../../../../components/drag_drop/drag_source')
-      DragContainer.__set__ 'DragTarget', React.createFactory DragTarget
-      DragContainer.__set__ 'DragSource', React.createFactory DragSource
       @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
@@ -56,7 +52,6 @@ describe 'SectionList', ->
             ]
           }
         ]
-        article: new Backbone.Model {sections: @sections.models}
       }
       @component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], => setTimeout =>
         done()
