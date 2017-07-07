@@ -6,6 +6,7 @@ _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
 DisplayImage = React.createFactory require '../image_collection/components/image.coffee'
+imagesLoaded = require 'imagesloaded'
 sd = require('sharify').data
 icons = -> require('../../../icons.jade') arguments...
 { div, section, h1, h2, span, img, header, input, nav, a, button, p } = React.DOM
@@ -21,6 +22,12 @@ module.exports = React.createClass
     caption: @props.section.get('caption') or ''
     width: @props.section.get('width')
     height: @props.section.get('height')
+    imagesLoaded: false
+
+  componentWillMount: ->
+    imagesLoaded $(@refs.image), =>
+      @setState
+        imagesLoaded: true
 
   onClickOff: ->
     if @state.src
@@ -87,6 +94,8 @@ module.exports = React.createClass
             image: image
             progress: @state.progress
             editing:  @props.editing
+            imagesLoaded: @state.imagesLoaded
+            ref: 'image'
           }
         else
           div { className: 'esi-placeholder' }, 'Add an image above'

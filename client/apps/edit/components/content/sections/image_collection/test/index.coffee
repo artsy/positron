@@ -18,6 +18,7 @@ describe 'ImageCollection', ->
       benv.expose $: benv.require 'jquery'
       $.fn.fillwidthLite = sinon.stub()
       global.HTMLElement = () => {}
+      window = {innerHeight: 800}
       @ImageCollection = benv.require resolve(__dirname, '../index')
       Artwork = benv.requireWithJadeify(
         resolve(__dirname, '../components/artwork')
@@ -155,13 +156,13 @@ describe 'ImageCollection', ->
     it 'returns expected container and target for overflow_fillwidth', ->
       sizes = @component.getFillWidthSizes()
       sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 450
+      sizes.targetHeight.should.eql 537.5999999999999
 
     it 'returns expected container and target for column_width', ->
       @component.props.section.set 'layout', 'column_width'
       sizes = @component.getFillWidthSizes()
       sizes.containerSize.should.eql 580
-      sizes.targetHeight.should.eql 550
+      sizes.targetHeight.should.eql 537.5999999999999
 
     it 'returns expected container and target for image_set with many images', ->
       @component.props.section.unset 'layout'
@@ -169,6 +170,4 @@ describe 'ImageCollection', ->
       @component.props.section.set 'images', ['img', 'img', 'img', 'img']
       sizes = @component.getFillWidthSizes()
       sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 300
-
-
+      sizes.targetHeight.should.eql 400

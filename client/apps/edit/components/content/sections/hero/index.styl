@@ -10,14 +10,11 @@
     &:hover
       fill-color black
   .edit-section-container[data-type=video], .edit-section-container[data-type=image]
-    min-height 400px
     width 1100px
     .esv-controls-container
       height 243px
     .esv-nav, .esv-background-color
       display none
-  .esi-placeholder
-    line-height 480px
   .edit-section-container[data-type=image]
     left calc(50% - 410px)
   .edit-section-container[data-type=video]
@@ -31,9 +28,11 @@
     li:first-child:nth-last-child(3) ~ li
       width 33.3%
   .edit-section-video
-    .esv-placeholder
-      line-height 500px
     iframe
       min-height 590px
   .esic-img-container
     padding 20px
+  .edit-section-image
+    z-index 1
+  .edit-section-container-bg
+    z-index -1

@@ -8,14 +8,16 @@ module.exports = React.createClass
   displayName: 'ImageCollectionDisplayArtwork'
 
   render: ->
-    div { className: 'esic-img-container'},
+    div {
+      className: 'esic-img-container'
+      style: {width: @props.dimensions?[@props.index]?.width or 'auto'}
+    },
       Artwork {
         artwork: @props.artwork
       }
-      if @props.editing
+      if @props.removeItem and @props.editing
         button {
           className: 'edit-section-remove button-reset esic-img-remove'
           onClick: @props.removeItem(@props.artwork)
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }
-

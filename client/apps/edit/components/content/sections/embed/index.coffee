@@ -5,6 +5,7 @@
 _ = require 'underscore'
 React = require 'react'
 sd = require('sharify').data
+SectionControls = React.createFactory require '../../section_controls/index.coffee'
 { div, section, label, nav, input, a, h1, p, strong, span, form, button, iframe } = React.DOM
 
 module.exports = React.createClass
@@ -47,71 +48,62 @@ module.exports = React.createClass
     if @props.section.get('layout') is 'overflow' then 1060 else 500
 
   render: ->
-    div {
+    section {
       className: 'edit-section-embed-container'
       onClick: @props.setEditing(on)
     },
-      div { className: 'ese-controls-container edit-section-controls' },
-        nav {},
-          a {
-            style: {
-              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'backgroundSize': '38px'
+      if @props.editing
+        SectionControls {
+          section: @props.section
+          channel: @props.channel
+        },
+          nav { className: 'es-layout' },
+            a {
+              name: 'overflow_fillwidth'
+              className: 'layout'
+              onClick: @changeLayout('overflow')
+              'data-active': @props.section.get('layout') is 'overflow'
             }
-            className: 'ese-overflow'
-            onClick: @changeLayout('overflow')
-          }
-          a {
-            style: {
-              'backgroundImage': 'url(/icons/edit_artworks_column_width.svg)'
-              'backgroundSize': '22px'
+            a {
+              name: 'column_width'
+              className: 'layout'
+              onClick: @changeLayout('column_width')
+              'data-active': @props.section.get('layout') is 'column_width'
             }
-            className: 'ese-column-width'
-            onClick: @changeLayout('column_width')
-          }
-          a {
-            style: {
-              'backgroundImage': 'url(/icons/edit_artworks_overflow_fillwidth.svg)'
-              'backgroundSize': '22px'
+          section { className: 'ese-inputs' },
+            div {
+              className: 'ese-iframe-error'
+              dangerouslySetInnerHTML: __html: @state.errorMessage
             }
-            className: 'ese-overflow-fillwidth'
-            onClick: @changeLayout('overflow_fillwidth')
-          }
-        section { className: 'ese-inputs' },
-          h1 {}, 'Add embedded content to this section'
-          div {
-            className: 'ese-iframe-error'
-            dangerouslySetInnerHTML: __html: @state.errorMessage
-          }
-          form {
-            className: 'ese-input-form-container'
-            onSubmit: @submitUrl
-          },
-            div { className: 'ese-input' }, "URL",
-              input {
-                placeholder: 'https://files.artsy.net'
-                className: 'bordered-input bordered-input-dark'
-                ref: 'url'
-                defaultValue: @props.section.get('url')
-              },
-            div { className: 'ese-input ese-input-height' }, "Height (optional)",
-              input {
-                placeholder: '400'
-                className: 'bordered-input bordered-input-dark'
-                ref: 'height'
-                defaultValue: @props.section.get('height')
+            form {
+              className: 'ese-input-form-container'
+              onSubmit: @submitUrl
+            },
+              div { className: 'ese-input' }, "URL",
+                input {
+                  placeholder: 'https://files.artsy.net'
+                  className: 'bordered-input bordered-input-dark'
+                  ref: 'url'
+                  defaultValue: @props.section.get('url')
+                },
+              div { className: 'ese-input ese-input-height' }, "Height (optional)",
+                input {
+                  placeholder: '400'
+                  className: 'bordered-input bordered-input-dark'
+                  ref: 'height'
+                  defaultValue: @props.section.get('height')
+                }
+              div { className: 'ese-input ese-input-height' }, "Mobile Height (optional)",
+                input {
+                  placeholder: '300'
+                  className: 'bordered-input bordered-input-dark'
+                  ref: 'mobileHeight'
+                  defaultValue: @props.section.get('mobile_height')
               }
-            div { className: 'ese-input ese-input-height' }, "Mobile Height (optional)",
-              input {
-                placeholder: '300'
-                className: 'bordered-input bordered-input-dark'
-                ref: 'mobileHeight'
-                defaultValue: @props.section.get('mobile_height')
-            }
-            button {
-              className: 'avant-garde-button avant-garde-button-dark'
-              'data-state': if @state.loading then 'loading' else ''
-            }, 'Add URL'
+              button {
+                className: 'avant-garde-button avant-garde-button-dark'
+                'data-state': if @state.loading then 'loading' else ''
+              }, 'Add URL'
       div {
         className: 'embed-container'
         ref: 'embed'

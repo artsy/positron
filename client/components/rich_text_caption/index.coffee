@@ -45,6 +45,10 @@ module.exports = React.createClass
         html: @props.item.caption
         editorState: EditorState.createWithContent(blocksFromHTML, decorator)
 
+  componentDidUpdate: (prevProps) ->
+    if (prevProps.item.caption != @props.item.caption)
+      @componentDidMount()
+
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html

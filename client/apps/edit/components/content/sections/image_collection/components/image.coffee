@@ -7,21 +7,18 @@ RichTextCaption = React.createFactory require '../../../../../../../components/r
 module.exports = React.createClass
   displayName: 'ImageCollectionDisplayImage'
 
-  setHeight: ->
-    if @props.dimensions[@props.index]
-      return @props.dimensions[@props.index].height
-    else
-      return 'auto'
-
   render: ->
     image = @props.image
     url = resize image.url, width: 900
 
-    div { className: 'esic-img-container' },
+    div {
+      className: 'esic-img-container'
+      style: {width: @props.dimensions?[@props.index]?.width or 'auto'}
+    },
       img {
         className: 'esic-image'
         src: if @props.progress then image.url else url
-        height: @setHeight()
+        height: @props.dimensions?[@props.index]?.height or 'auto'
         style: opacity: if !@props.imagesLoaded then 0 else 1
       }
       unless @props.progress

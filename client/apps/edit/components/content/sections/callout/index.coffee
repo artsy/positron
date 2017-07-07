@@ -13,6 +13,7 @@ Autocomplete = require '../../../../../../components/autocomplete/index.coffee'
 { div, section, input, a, h1, h2, button, img, p, strong, span } = React.DOM
 { crop } = require '../../../../../../components/resizer/index.coffee'
 Article = require '../../../../../../models/article.coffee'
+SectionControls = React.createFactory require '../../section_controls/index.coffee'
 
 module.exports = React.createClass
   displayName: 'SectionCallout'
@@ -135,53 +136,57 @@ module.exports = React.createClass
         @setState error: 'Article Not Found'
 
   render: ->
-    div {
+    section {
       className: 'edit-section-callout-container'
       onClick: @props.setEditing(on)
     },
-      div { className: 'esc-controls-container edit-section-controls' },
-        section { className: 'esc-inputs' },
-          h1 {}, 'Article (optional)'
-          div { className: 'esc-autocomplete-input' },
-            input {
-              ref: 'autocomplete'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Search for an Article by name'
-            }
-          h1 {}, 'Text'
-          div { className: 'esc-text-input' },
-            input {
-              ref: 'textInput'
-              className: 'bordered-input bordered-input-dark'
-              placeholder: 'Enter Text Here...'
-              onBlur: @setText
-            }
-          h1 {}, 'Thumbnail Image (optional)'
-          section { className: 'dashed-file-upload-container' },
-            h1 {}, 'Drag & ',
-              span { className: 'dashed-file-upload-container-drop' }, 'drop'
-              ' or '
-              span { className: 'dashed-file-upload-container-click' }, 'click'
-              span {}, (' to ' +
-                if @props.section.get('thumbnail_url') then 'replace' else 'upload')
-            h2 {}, 'Up to 30mb'
-            input { type: 'file', onChange: @upload }
-          div { className: 'esc-hide-thumbnail' },
-            h1 {}, 'Hide Thumbnail?'
-            input {
-              type: 'checkbox'
-              ref: 'checkInput'
-              value: @state.hide_image?
-              onChange: @setHideImage
-            }
-          div { className: 'esc-top-stories' },
-            h1 {}, 'Top Stories on Artsy'
-            input {
-              type: 'checkbox'
-              ref: 'topStories'
-              value: @state.top_stories?
-              onChange: @setTopStories
-            }
+      if @props.editing
+        SectionControls {
+          section: @props.section
+          channel: @props.channel
+        },
+          div { className: 'esc-inputs' },
+            h1 {}, 'Article (optional)'
+            div { className: 'esc-autocomplete-input' },
+              input {
+                ref: 'autocomplete'
+                className: 'bordered-input bordered-input-dark'
+                placeholder: 'Search for an Article by name'
+              }
+            h1 {}, 'Text'
+            div { className: 'esc-text-input' },
+              input {
+                ref: 'textInput'
+                className: 'bordered-input bordered-input-dark'
+                placeholder: 'Enter Text Here...'
+                onBlur: @setText
+              }
+            h1 {}, 'Thumbnail Image (optional)'
+            div { className: 'dashed-file-upload-container' },
+              h1 {}, 'Drag & ',
+                span { className: 'dashed-file-upload-container-drop' }, 'drop'
+                ' or '
+                span { className: 'dashed-file-upload-container-click' }, 'click'
+                span {}, (' to ' +
+                  if @props.section.get('thumbnail_url') then 'replace' else 'upload')
+              h2 {}, 'Up to 30mb'
+              input { type: 'file', onChange: @upload }
+            div { className: 'esc-hide-thumbnail' },
+              h1 {}, 'Hide Thumbnail?'
+              input {
+                type: 'checkbox'
+                ref: 'checkInput'
+                value: @state.hide_image?
+                onChange: @setHideImage
+              }
+            div { className: 'esc-top-stories' },
+              h1 {}, 'Top Stories on Artsy'
+              input {
+                type: 'checkbox'
+                ref: 'topStories'
+                value: @state.top_stories?
+                onChange: @setTopStories
+              }
       (
         if @state.progress
           div { className: 'upload-progress-container' },

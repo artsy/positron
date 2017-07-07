@@ -43,12 +43,11 @@ module.exports = React.createClass
 
   getFillWidthSizes: ->
     containerSize = 860
-    targetHeight = 450
+    targetHeight = window.innerHeight * .7
     if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
-      targetHeight = 300
+      targetHeight = 400
     else if @props.section.get('layout') is 'column_width'
       containerSize = 580
-      targetHeight = 550
     return {containerSize: containerSize, targetHeight: targetHeight}
 
   setProgress: (progress) ->
@@ -89,13 +88,15 @@ module.exports = React.createClass
       className: 'edit-section-image-collection edit-section-image-container' + @largeImagesetClass()
       onClick: @props.setEditing(true)
     },
-      Controls {
-        section: @props.section
-        images: images
-        setProgress: @setProgress
-        onChange: @onChange
-        channel: @props.channel
-      }
+      if @props.editing
+        Controls {
+          section: @props.section
+          images: images
+          setProgress: @setProgress
+          onChange: @onChange
+          channel: @props.channel
+          editing: @props.editing
+        }
       if @state.progress
         div { className: 'upload-progress-container' },
           div {
@@ -129,6 +130,7 @@ module.exports = React.createClass
                     removeItem: @removeItem
                     editing:  @props.editing
                     imagesLoaded: @state.imagesLoaded
+                    dimensions: @state.dimensions
                   }
                 else
                   Image {

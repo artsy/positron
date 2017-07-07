@@ -34,4 +34,5 @@ module.exports = React.createClass
         editing: @state.editing
         onSetEditing: @onSetEditing
         isHero: true
+        channel: @props.channel
       }
