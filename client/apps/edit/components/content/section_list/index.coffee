@@ -61,5 +61,5 @@ module.exports = React.createClass
                 channel: @props.channel
                 onSetEditing: @onSetEditing
               }
-              SectionTool { sections: @props.sections, index: i, key: i}
+              SectionTool { sections: @props.sections, index: i, key: i }
             ]
