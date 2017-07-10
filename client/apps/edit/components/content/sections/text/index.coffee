@@ -41,6 +41,7 @@ module.exports = React.createClass
     pluginType: null
     urlValue: null
     showMenu: false
+    isSplit: false
 
   componentWillMount: ->
     channel = new Channel sd.CURRENT_CHANNEL
@@ -155,6 +156,35 @@ module.exports = React.createClass
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
     this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
+
+  handleReturn: (e) ->
+    { editorState } = @state
+    selectionState = editorState.getSelection()
+    anchorKey = selectionState.getAnchorKey()
+    beforeKey = editorState.getCurrentContent().getKeyBefore(anchorKey)
+    blockBefore = editorState.getCurrentContent().getBlockForKey(beforeKey)
+    if blockBefore?.getLength() or !blockBefore
+      return 'not-handled'
+    else if blockBefore
+      @splitSection(anchorKey)
+
+  splitSection: (anchorKey) ->
+    { editorState } = @state
+    blockArray = editorState.getCurrentContent().getBlocksAsArray()
+    for block, i in blockArray
+      if block?.getKey() is anchorKey
+        currentBlockArray = blockArray.splice(0, i)
+        newBlockArray = blockArray
+    if currentBlockArray
+      currentContent = ContentState.createFromBlockArray currentBlockArray
+      currentState = EditorState.push(editorState, currentContent, 'remove-range')
+      newSectionContent = ContentState.createFromBlockArray newBlockArray
+      newSectionState = EditorState.push(editorState, newSectionContent, null)
+      currentSectionHtml = @convertToHtml currentState
+      newSectionHtml = @convertToHtml newSectionState
+      @onChange(currentState, @afterSplit)
+      @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
+      return 'handled'
 
   handleKeyCommand: (e) ->
     switch e
@@ -364,6 +394,7 @@ module.exports = React.createClass
           keyBindingFn: keyBindingFnFull
           handlePastedText: @onPaste
           blockRenderMap: blockRenderMap()
+          handleReturn: @handleReturn
         }
         if @props.editing and @state.showUrlInput
           InputUrl {

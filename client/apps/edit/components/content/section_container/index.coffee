@@ -27,6 +27,7 @@ module.exports = React.createClass
       @props.section.destroy() if @props.section.get('images')?.length is 0
 
   setEditing: (editing) -> =>
+    debugger
     if @props.section.get('type') is 'text'
       @refs.section?.focus?()
     @props.onSetEditing if editing then @props.index ? true else null
@@ -70,12 +71,15 @@ module.exports = React.createClass
         when 'image' then SectionImage
       )(
         section: @props.section
+        sections: @props.sections
         editing: @props.editing
+        index: @props.index
         ref: 'section'
         onClick: @setEditing(on)
         setEditing: @setEditing
         channel: @props.channel
         isHero: @props.isHero
+        onSetEditing: @props.onSetEditing
       )
       div {
         className: 'edit-section-container-bg'
