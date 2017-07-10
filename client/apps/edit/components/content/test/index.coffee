@@ -45,7 +45,6 @@ describe 'EditContent', ->
   describe 'Render', ->
 
     it 'renders the hero section if channel hasFeature', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div id="edit-hero-section">'
       @HeroSection.called.should.eql true
 
     it 'does not render the hero section if hasFeature is false', ->

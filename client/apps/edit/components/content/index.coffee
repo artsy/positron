@@ -27,13 +27,11 @@ module.exports = React.createClass
 
   render: ->
     div {className: 'edit-section-layout'},
-
       if @props.article.get('hero_section') != null or @props.channel.hasFeature 'hero'
-        div { id: 'edit-hero-section'},
-          HeroSection {
-            section: @props.article.heroSection
-            channel: @props.channel
-          }
+        HeroSection {
+          section: @props.article.heroSection
+          channel: @props.channel
+        }
 
       HeaderSection {
         article: @props.article

@@ -21,27 +21,19 @@
 .edit-section-container[data-type=fullscreen]
   height 800px
   width calc(100vw - 110px)
-  margin-top -55px
   padding 0px
-  left 110px
-  position absolute
   overflow hidden
   &::after
     border 0
-  .edit-section-controls
-    display block
   .edit-author-section
     color white
     border-color white
     margin-top 0px
 
-.edit-section-container[data-type=fullscreen][data-editing=false]
-  .esf-change-background
-    display none
-
-.edit-section-container[data-type=fullscreen][data-editing=true]
-  .esf-change-background
-    display inline-block
+#edit-content .edit-section-container[data-type=fullscreen] .edit-section-controls
+  display block
+  height 100%
+  background transparent
 
 .esf-right-controls-container
   float right
@@ -69,16 +61,21 @@
     cursor pointer
 
 .esf-fullscreen
-  width 100%
-  transition opacity 0.5s
-  opacity 0.5
   position absolute
+  background-color black
+  top 0
+  right 0
+  bottom 0
+  left 0
+  opacity .5
 
 .esf-fullscreen-container
   z-index 3
   background-color black
   width 100%
   height 800px
+  background-size cover
+  background-position 50%
 
 .esf-text-container
   z-index 4
