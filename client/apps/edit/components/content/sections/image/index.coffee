@@ -6,6 +6,7 @@ _ = require 'underscore'
 gemup = require 'gemup'
 React = require 'react'
 DisplayImage = React.createFactory require '../image_collection/components/image.coffee'
+SectionControls = React.createFactory require '../../section_controls/index.coffee'
 imagesLoaded = require 'imagesloaded'
 sd = require('sharify').data
 icons = -> require('../../../icons.jade') arguments...
@@ -68,17 +69,23 @@ module.exports = React.createClass
       className: 'edit-section-image'
       onClick: @props.setEditing(true)
     },
-      div { className: 'esi-controls-container edit-section-controls' },
-        div { className: 'esi-inputs' },
-          section { className: 'dashed-file-upload-container' },
-            h1 {}, 'Drag & ',
-              span { className: 'dashed-file-upload-container-drop' }, 'drop'
-              ' or '
-              span { className: 'dashed-file-upload-container-click' }, 'click'
-              span {}, (' to ' +
-                if @props.section.get('url') then 'replace' else 'upload')
-            h2 {}, 'Up to 30mb'
-            input { type: 'file', onChange: @upload }
+      if @props.editing
+        SectionControls {
+          section: @props.section
+          channel: @props.channel
+          isHero: @props.isHero
+        },
+          div { className: 'esi-controls-container edit-section-controls' },
+            div { className: 'esi-inputs' },
+              section { className: 'dashed-file-upload-container' },
+                h1 {}, 'Drag & ',
+                  span { className: 'dashed-file-upload-container-drop' }, 'drop'
+                  ' or '
+                  span { className: 'dashed-file-upload-container-click' }, 'click'
+                  span {}, (' to ' +
+                    if @props.section.get('url') then 'replace' else 'upload')
+                h2 {}, 'Up to 30mb'
+                input { type: 'file', onChange: @upload }
       (
         if @state.progress
           div { className: 'upload-progress-container' },
