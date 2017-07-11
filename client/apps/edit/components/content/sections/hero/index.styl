@@ -9,24 +9,13 @@
       display none
     &:hover
       fill-color black
-  .edit-section-container[data-type=video], .edit-section-container[data-type=image]
-    width 1100px
-    .esv-controls-container
-      height 243px
-    .esv-nav, .esv-background-color
-      display none
-  .edit-section-container[data-type=image]
-    left calc(50% - 410px)
-  .edit-section-container[data-type=video]
-    left calc(50% - 550px)
 
-#edit-hero-section
-  .edit-section-tool-menu
-    li
-      width 50%
-    li:first-child:nth-last-child(3),
-    li:first-child:nth-last-child(3) ~ li
-      width 33.3%
+.edit-section-container[data-type=video], .edit-section-container[data-type=image]
+  width 1100px
+  .esv-controls-container
+    height 243px
+  .esv-nav, .esv-background-color
+    display none
   .edit-section-video
     iframe
       min-height 590px
@@ -36,3 +25,16 @@
     z-index 1
   .edit-section-container-bg
     z-index -1
+
+.edit-section-container[data-type=image]
+  left calc(50% - 410px)
+.edit-section-container[data-type=video]
+  left calc(50% - 550px)
+
+#edit-hero-section
+  .edit-section-tool-menu
+    li
+      width 50%
+    li:first-child:nth-last-child(3),
+    li:first-child:nth-last-child(3) ~ li
+      width 33.3%

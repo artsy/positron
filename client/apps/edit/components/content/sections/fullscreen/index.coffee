@@ -104,11 +104,12 @@ module.exports = React.createClass
               loop: true
             }
         else if @state.background_image_url
-          div { className: 'esf-fullscreen-container' },
-            img {
-              className: 'esf-fullscreen'
-              src: @state.background_image_url
-            }
+          div {
+            className: 'esf-fullscreen-container'
+            style:
+              backgroundImage: 'url(' + @state.background_image_url + ')'
+          },
+            div { className: 'esf-fullscreen'}
         else
           div { className: 'esf-placeholder' }
       )
