@@ -58,6 +58,11 @@ module.exports = React.createClass
     else if @props.editing
       @focus()
 
+  componentDidUpdate: (prevProps) ->
+    if @props.editing and @props.editing != prevProps.editing
+      debugger
+      @focus()
+
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
@@ -154,18 +159,21 @@ module.exports = React.createClass
       return unstyled
     blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
-    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
+    @onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
 
   handleReturn: (e) ->
     { editorState } = @state
     selectionState = editorState.getSelection()
+    anchorOffset = selectionState.getAnchorOffset()
     anchorKey = selectionState.getAnchorKey()
+    anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
     beforeKey = editorState.getCurrentContent().getKeyBefore(anchorKey)
     blockBefore = editorState.getCurrentContent().getBlockForKey(beforeKey)
-    if blockBefore?.getLength() or !blockBefore
+    if !blockBefore or anchorOffset
       return 'not-handled'
-    else if blockBefore
+    else
+      e.preventDefault()
       @splitSection(anchorKey)
 
   splitSection: (anchorKey) ->
@@ -180,29 +188,100 @@ module.exports = React.createClass
       currentState = EditorState.push(editorState, currentContent, 'remove-range')
       newSectionContent = ContentState.createFromBlockArray newBlockArray
       newSectionState = EditorState.push(editorState, newSectionContent, null)
-      currentSectionHtml = @convertToHtml currentState
-      newSectionHtml = @convertToHtml newSectionState
-      @onChange(currentState, @afterSplit)
+      currentSectionHtml = @convertToHtml(currentState).replace(/<p><br><\/\p>/g, '')
+      newSectionHtml = @convertToHtml(newSectionState).replace(/<p><br><\/\p>/g, '')
+      @onChange(currentState)
       @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
       return 'handled'
 
+  handleTab: (e) ->
+    e.preventDefault()
+    index = @props.index + 1
+    if e.shiftKey
+      index = @props.index - 1
+    @props.onSetEditing index
+    # return 'handled'
+
+  handleBackspace: (e) ->
+    { editorState } = @state
+    selectionState = editorState.getSelection()
+
+    anchorOffset = selectionState.getAnchorOffset()
+    anchorKey = selectionState.getAnchorKey()
+    beforeKey = editorState.getCurrentContent().getKeyBefore(anchorKey)
+    blockBefore = editorState.getCurrentContent().getBlockForKey(beforeKey)
+    if !blockBefore and anchorOffset is 0 and
+     @props.sections.models[@props.index - 1].get('type') is 'text'
+      mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
+      @props.sections.models[@props.index - 1].destroy()
+      newHTML = mergeIntoHTML + @state.html
+      blocksFromHTML = @convertFromHTML newHTML
+      blocksFromHTML.getSelectionAfter().set('hasFocus', true) #does this work?
+      newSectionState = EditorState.push(editorState, blocksFromHTML, null)
+      debugger
+      @onChange(newSectionState)
+      @props.onSetEditing @props.index - 1
+
+  handleChangeSection: (e) ->
+    dir = 0
+    dir =  -1 if e.key in ['ArrowUp', 'ArrowLeft']
+    dir =  1 if e.key in ['ArrowDown', 'ArrowRight']
+    selection = @findSelection()
+    if selection.isLastBlock and selection.isLastCharacter and dir is 1 or
+     selection.isFirstBlock and selection.isFirstCharacter and dir is -1
+      debugger
+      @props.onSetEditing @props.index + dir
+    else
+      debugger
+      getDefaultKeyBinding e
+      return 'handled'
+
+  findSelection: ->
+    { editorState } = @state
+    selectionState = editorState.getSelection()
+    anchorOffset = selectionState.getAnchorOffset()
+    anchorKey = selectionState.getAnchorKey()
+    anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
+    beforeKey = editorState.getCurrentContent().getKeyBefore(anchorKey)
+    blockBefore = editorState.getCurrentContent().getBlockForKey(beforeKey)
+    lastBlock = editorState.getCurrentContent().getLastBlock()
+    isFirstCharacter = selectionState.getStartOffset() is 0 or selectionState.getStartOffset() is 1
+    isLastCharacter = selectionState.getStartOffset() is anchorBlock.getLength()
+    debugger
+    return {
+      state: selectionState
+      anchorKey: anchorKey
+      isFirstBlock: if !blockBefore then true else false
+      isLastBlock: if lastBlock.getKey() is anchorKey then true else false
+      isFirstCharacter: isFirstCharacter
+      isLastCharacter: isLastCharacter
+      cursorOffset: anchorOffset
+    }
+
   handleKeyCommand: (e) ->
-    switch e
-      when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
-        @toggleBlockType e
-      when 'custom-clear'
-        @makePlainText()
-      when 'italic', 'bold'
-        return if @getSelectedBlock().content.get('type') is 'header-three'
-        newState = RichUtils.handleKeyCommand @state.editorState, e
-        @onChange newState if newState
-      when 'link-prompt'
-        className = @getExistingLinkData().className
-        return @promptForLink() unless className
-        if className.includes 'is-follow-link'
-          @promptForLink 'artist'
-        else if className.includes 'is-jump-link'
-          @promptForLink 'toc'
+    if e.key
+      @handleChangeSection e
+    else
+      switch e
+        when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
+          @toggleBlockType e
+        when 'custom-clear'
+          @makePlainText()
+        when 'italic', 'bold'
+          return if @getSelectedBlock().content.get('type') is 'header-three'
+          newState = RichUtils.handleKeyCommand @state.editorState, e
+          @onChange newState if newState
+        when 'backspace'
+          @handleBackspace e
+        # when 'move-selection-left', 'right-arrow'
+        #   @handleChangeSection e
+        when 'link-prompt'
+          className = @getExistingLinkData().className
+          return @promptForLink() unless className
+          if className.includes 'is-follow-link'
+            @promptForLink 'artist'
+          else if className.includes 'is-jump-link'
+            @promptForLink 'toc'
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
@@ -395,6 +474,10 @@ module.exports = React.createClass
           handlePastedText: @onPaste
           blockRenderMap: blockRenderMap()
           handleReturn: @handleReturn
+          onTab: @handleTab
+          onUpArrow: @handleChangeSection
+          onDownArrow: @handleChangeSection
+          onLeftArrow: @handleChangeSection
         }
         if @props.editing and @state.showUrlInput
           InputUrl {

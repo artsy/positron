@@ -38,6 +38,9 @@ exports.keyBindingFnFull = (e) ->
       return 'unordered-list-item'
     if e.keyCode is 75   # command + K
       return 'link-prompt'
+  if e.keyCode is 37 or e.keyCode is 39
+    console.log 'ArrowLeft: ' + e.keyCode
+    return e
   return getDefaultKeyBinding(e)
 
 exports.keyBindingFnCaption= (e) ->

@@ -27,7 +27,6 @@ module.exports = React.createClass
       @props.section.destroy() if @props.section.get('images')?.length is 0
 
   setEditing: (editing) -> =>
-    debugger
     if @props.section.get('type') is 'text'
       @refs.section?.focus?()
     @props.onSetEditing if editing then @props.index ? true else null

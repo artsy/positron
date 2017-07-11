@@ -20,16 +20,15 @@ module.exports = React.createClass
     @props.sections.on 'remove', @onRemoveSection
 
   onSetEditing: (i) ->
-    debugger
     @setState editingIndex: i
 
   onNewSection: (section) ->
     @setState editingIndex: @props.sections.indexOf section
-    debugger
 
   onRemoveSection: ->
     if @props.sections.isEmpty()
       @props.article.set 'sections', []
+    @forceUpdate()
 
   onDragEnd: (sections) ->
     @props.sections.reset sections
