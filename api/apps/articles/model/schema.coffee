@@ -206,7 +206,6 @@ denormalizedArtwork = (->
 #
 @querySchema = (->
   id: @string().objectid()
-  slug: @string()
   access_token: @string()
   author_id: @string().objectid()
   published: @boolean()
