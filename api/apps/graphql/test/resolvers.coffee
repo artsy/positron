@@ -18,6 +18,9 @@ describe 'resolvers', ->
 
   beforeEach ->
     articles = total: 20, count: 1, results: [_.extend fixtures().articles, {slugs: ['slug-1']} ]
+    @article = _.extend {}, fixtures().articles,
+      slugs: ['slug-2']
+      channel_id: '456'
     curations = total: 20, count: 1, results: [fixtures().curations]
     channels = total: 20, count: 1, results: [fixtures().channels]
     tags = total: 20, count: 1, results: [fixtures().tags]
@@ -52,6 +55,38 @@ describe 'resolvers', ->
       .then (results) =>
         results.length.should.equal 1
         results[0].slug.should.equal 'slug-1'
+
+  describe 'article', ->
+
+    it 'rejects with an error when no article is found', ->
+      args = id: '123'
+      resolvers.__set__ 'find', @find = sinon.stub().yields null, null
+      resolvers.article {}, args, {}, {}
+      .catch (err) ->
+        err.toString().should.containEql 'Article not found.'
+
+    it 'rejects with an error when trying to view an unauthorized draft', ->
+      args = id: '123'
+      article = _.extend {}, @article, channel_id: '000', published: false
+      resolvers.__set__ 'find', @find = sinon.stub().yields null, article
+      resolvers.article {}, args, {}, {}
+      .catch (err) ->
+        err.toString().should.containEql 'Must be a member of the channel'
+
+    it 'can view drafts', ->
+      args = id: '123'
+      article = _.extend {}, @article, published: false
+      resolvers.__set__ 'find', @find = sinon.stub().yields null, article
+      resolvers.article {}, args, @req, {}
+      .then (results) =>
+        results.slug.should.equal 'slug-2'
+
+    it 'can view published articles', ->
+      args = id: '123'
+      resolvers.__set__ 'find', @find = sinon.stub().yields null, @article
+      resolvers.article {}, args, @req, {}
+      .then (results) =>
+        results.slug.should.equal 'slug-2'
 
   describe 'channels', ->
 

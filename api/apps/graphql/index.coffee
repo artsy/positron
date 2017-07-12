@@ -1,7 +1,7 @@
 express = require 'express'
 graphqlHTTP = require 'express-graphql'
 joiql = require 'joiql'
-{ object, array } = require 'joi'
+{ object, array, string } = require 'joi'
 Article = require '../articles/model/schema'
 Curation = require '../curations/model'
 Channel = require '../channels/model'
@@ -20,6 +20,11 @@ schema = joiql
     )).meta(
       args: Article.querySchema
       resolve: resolvers.articles
+    )
+    article: object(Article.inputSchema)
+    .meta(
+      args: id: string()
+      resolve: resolvers.article
     )
     curations: array().items(object(
       Curation.schema
