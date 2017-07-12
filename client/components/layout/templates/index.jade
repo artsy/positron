@@ -9,7 +9,8 @@ html( lang="en" data-useragent=sd.USER_AGENT )
     meta( name="apple-mobile-web-app-capable", content="yes" )
     title Artsy Writer
     link( type='text/css' rel='stylesheet' href=asset('/assets/main.css') )
-    link( rel='icon', type='image/png', href=asset('/images/favicon.ico') )
+    link( rel='icon' type='image/png' href=asset('/images/favicon.ico') )
+    link( rel='stylesheet' type='text/css', href=(sd.CDN_URL + '/fonts/unica-stylesheet.css'))
   body
     #layout-content
       unless hideHeader

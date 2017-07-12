@@ -24,4 +24,5 @@ sharify.data = _.pick process.env,
   'TOPIC_TAG_CURATION',
   'EF_VENICE',
   'SENTRY_PUBLIC_DSN',
-  'NO_INDEX_CHANNELS'
+  'NO_INDEX_CHANNELS',
+  'CDN_URL'
