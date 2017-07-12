@@ -119,7 +119,6 @@ exports.getSelectionLocation = ($parent) ->
 
 # IMPORT / EXPORT HTML
 exports.convertToRichHtml = (editorState) ->
-  console.log 'in convert to html'
   html = convertToHTML({
     entityToHTML: (entity, originalText) ->
       if entity.type is 'LINK'
@@ -142,15 +141,11 @@ exports.convertToRichHtml = (editorState) ->
         return span { style: {textDecoration: 'line-through'}}
   })(editorState.getCurrentContent())
   # put the line breaks back for correct client rendering
-  html = html
-    .replace /<p><\/\p>/g, '<p><br></p>'
-    .replace /<p> <\/\p>/g, '<p><br></p>'
-    .replace(/  /g, ' &nbsp;')
+  html = exports.standardizeSpacing html
   html = if html is '<p><br></p>' then '' else html
   return html
 
 exports.convertFromRichHtml = (html) ->
-  console.log 'in convert from html'
   blocksFromHTML = convertFromHTML({
     htmlToStyle: (nodeName, node, currentStyle) ->
       if nodeName is 'span' and node.style.textDecoration is 'line-through'
@@ -169,3 +164,14 @@ exports.convertFromRichHtml = (html) ->
         node.innerHTML = '' # remove <br>, it renders extra breaks in editor
     })(html)
   return blocksFromHTML
+
+exports.standardizeSpacing = (html) ->
+  html = html
+    .replace(/<h2><\/\h2>/g, '<p><br></p>')
+    .replace(/<h3><\/\h3>/g, '<p><br></p>')
+    .replace(/<p><\/\p><p><\/\p>/g, '<p><br></p>')
+    .replace(/<p><\/\p>/g, '<p><br></p>')
+    .replace(/<p> <\/\p>/g, '<p><br></p>')
+    .replace(/<p><br><\/\p><p><br><\/\p>/g, '<p><br></p>')
+    .replace(/  /g, ' &nbsp;')
+  return html

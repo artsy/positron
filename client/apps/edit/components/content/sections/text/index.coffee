@@ -2,7 +2,6 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
-
 { CompositeDecorator,
   ContentState,
   Editor,
@@ -22,7 +21,6 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   keyBindingFnFull,
   moveSelection,
   stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
-
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
 ButtonStyle = React.createFactory require '../../../../../../components/rich_text/components/button_style.coffee'
@@ -53,8 +51,7 @@ module.exports = React.createClass
     if @props.section.get('body')?.length
       blocksFromHTML = convertFromRichHtml @props.section.get('body')
       editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
-      newSelection = SelectionState.createEmpty().set('hasFocus', true)
-      editorState = EditorState.forceSelection editorState, newSelection
+      editorState = @setSelectionToStart(editorState) if @props.editing
       @setState
         html: @props.section.get('body')
         editorState: editorState
@@ -64,6 +61,8 @@ module.exports = React.createClass
   componentDidUpdate: (prevProps) ->
     if @props.editing and @props.editing != prevProps.editing
       @focus()
+    else if !@props.editing and @props.editing != prevProps.editing
+      @refs.editor.blur()
 
   onChange: (editorState) ->
     html = convertToRichHtml editorState
@@ -79,6 +78,16 @@ module.exports = React.createClass
     @setState focus: true
     @refs.editor.focus()
 
+  setSelectionToStart: (editorState) ->
+    firstKey = editorState.getCurrentContent().getFirstBlock().getKey()
+    newSelection = new SelectionState {
+      anchorKey: firstKey
+      anchorOffset: 0
+      focusKey: firstKey
+      focusOffset: 0
+    }
+    return EditorState.forceSelection editorState, newSelection
+
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
     if selection.isFirstBlock or selection.anchorOffset
@@ -86,6 +95,7 @@ module.exports = React.createClass
     else
       e.preventDefault()
       @splitSection(selection.anchorKey)
+      return 'handled'
 
   handleTab: (e) ->
     e.preventDefault()
@@ -103,8 +113,7 @@ module.exports = React.createClass
       newHTML = mergeIntoHTML + @state.html
       blocksFromHTML = convertFromRichHtml newHTML
       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
-      newSelection = SelectionState.createEmpty().set('hasFocus', true)
-      newSectionState = EditorState.forceSelection newSectionState, newSelection
+      newSectionState = @setSelectionToStart(newSectionState)
       @onChange(newSectionState)
       @props.onSetEditing @props.index - 1
 
@@ -134,8 +143,7 @@ module.exports = React.createClass
       currentState = EditorState.push(editorState, currentContent, 'remove-range')
       newSectionContent = ContentState.createFromBlockArray newBlockArray
       newSectionState = EditorState.push(editorState, newSectionContent, null)
-      currentSectionHtml = convertToRichHtml(currentState).replace(/<p><br><\/\p>/g, '')
-      newSectionHtml = convertToRichHtml(newSectionState).replace(/<p><br><\/\p>/g, '')
+      newSectionHtml = convertToRichHtml(newSectionState)
       @onChange currentState
       @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
       return 'handled'
@@ -146,14 +154,12 @@ module.exports = React.createClass
       html = '<div>' + text + '</div>'
     html = stripGoogleStyles(html)
     blocksFromHTML = convertFromRichHtml html
-    console.log 'finished converting'
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripCharacterStyles contentBlock, true
       unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
-    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
-    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    newState = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray())
     @onChange(EditorState.push(editorState, newState, 'insert-fragment'))
     return true
 
@@ -169,12 +175,10 @@ module.exports = React.createClass
       @onChange EditorState.push(editorState, newState, null)
 
   stripCharacterStyles: (contentBlock, keepAllowed) ->
-    console.log 'in character styles'
-    console.log contentBlock
     characterList = contentBlock.getCharacterList().map (character) ->
       if keepAllowed
         unless character.hasStyle 'UNDERLINE'
-          return character if character.hasStyle('BOLD') || character.hasStyle('ITALIC') || character.hasStyle('STRIKETHROUGH')
+          return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
       character.set 'style', character.get('style').clear()
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
@@ -264,7 +268,7 @@ module.exports = React.createClass
     url = ''
     anchorKey = editorState.getSelection().getStartKey()
     anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
-    linkKey = anchorBlock.getEntityAt(editorState.getSelection().getStartOffset())
+    linkKey = anchorBlock?.getEntityAt(editorState.getSelection().getStartOffset())
     if linkKey
       linkInstance = editorState.getCurrentContent().getEntity(linkKey)
       url = linkInstance.getData().url
@@ -277,7 +281,7 @@ module.exports = React.createClass
       @promptForLink e
     if e is 'toc'
       url = @getExistingLinkData().url
-      className = @getExistingLinkData().className || ''
+      className = @getExistingLinkData().className or ''
       if className is 'is-jump-link'
         @removeLink()
       else
