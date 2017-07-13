@@ -6,8 +6,8 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
-Section = require '../../../../../models/section.coffee'
-fixtures = require '../../../../../../test/helpers/fixtures'
+Section = require '../../../../../../../models/section'
+fixtures = require '../../../../../../../../test/helpers/fixtures'
 
 describe 'SectionSlideshow', ->
 
