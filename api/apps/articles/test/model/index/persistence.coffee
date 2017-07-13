@@ -560,18 +560,18 @@ describe 'Article Persistence', ->
     it 'saves layouts', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-        layout: 'left'
+        layout: 'longform'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        article.layout.should.equal 'left'
+        article.layout.should.equal 'longform'
         done()
 
-    it 'it defaults to center if layout is not specified', (done) ->
+    it 'it defaults to classic if layout is not specified', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        article.layout.should.equal 'center'
+        article.layout.should.equal 'classic'
         done()
 
     it 'saves the channel_id', (done) ->

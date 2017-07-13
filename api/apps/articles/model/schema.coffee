@@ -85,7 +85,7 @@ denormalizedArtwork = (->
     id: @string().objectid()
   ).allow(null)
   title: @string().allow('', null)
-  layout: @string().allow('left', 'center', null).default('center')
+  layout: @string().allow('classic', 'standard', 'longform', 'feature').default('classic')
   updated_at: @date()
   published: @boolean().default(false)
   published_at: @date().allow(null)
