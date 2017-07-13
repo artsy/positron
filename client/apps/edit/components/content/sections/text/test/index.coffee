@@ -2,7 +2,7 @@ benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
 Backbone = require 'backbone'
-fixtures = require '../../../../../../test/helpers/fixtures'
+fixtures = require '../../../../../../../../test/helpers/fixtures'
 
 describe 'SectionText', ->
 
@@ -25,10 +25,10 @@ describe 'SectionText', ->
       global.HTMLAnchorElement = () => {}
       @SectionText = benv.require resolve(__dirname, '../index')
       InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../components/rich_text/components/input_url'), ['icons']
+        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
       )
       ButtonStyle = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../components/rich_text/components/button_style'), ['icons']
+        resolve(__dirname, '../../../../../../../components/rich_text/components/button_style'), ['icons']
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
       @SectionText.__set__ 'ButtonStyle', React.createFactory ButtonStyle

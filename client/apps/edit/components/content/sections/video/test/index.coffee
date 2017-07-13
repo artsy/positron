@@ -7,10 +7,10 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 { div } = React.DOM
-fixtures = require '../../../../../../test/helpers/fixtures'
+fixtures = require '../../../../../../../../test/helpers/fixtures'
 
 describe 'SectionVideo', ->
 
@@ -23,7 +23,7 @@ describe 'SectionVideo', ->
         ['icons']
       )
       RichTextCaption = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../components/rich_text_caption/index')
+        resolve(__dirname, '../../../../../../../components/rich_text_caption/index')
         ['icons']
       )
       SectionVideo.__set__ 'RichTextCaption', React.createFactory(RichTextCaption)
@@ -35,6 +35,7 @@ describe 'SectionVideo', ->
           caption: '<p>Rick Astley - Never Gonna Give You Up</p>'
         editing: true
         setEditing: -> ->
+        channel: {isEditorial: sinon.stub().returns(true)}
       }
       @component = ReactDOM.render React.createElement(SectionVideo, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub $, 'ajax'
@@ -75,11 +76,11 @@ describe 'SectionVideo', ->
     @component.state.caption.should.equal '<p>updated</p>'
 
   it 'changes the layout when clicked', ->
-    r.simulate.click r.find @component, 'esv-overflow-fillwidth'
+    r.simulate.click r.find(@component, 'layout')[0]
     @component.props.section.get('layout').should.equal 'overflow_fillwidth'
 
   it 'removes the cover image when remove-button clicked', ->
     @component.setState coverSrc: 'http://image.jpg'
-    r.simulate.click r.find @component, 'edit-section-remove'
+    r.simulate.click r.find(@component, 'edit-section-remove')[0]
     $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'http://image.jpg'
 

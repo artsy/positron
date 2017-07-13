@@ -8,7 +8,7 @@ ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 Section = require '../../../../../../../models/section.coffee'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 { div } = React.DOM
 
@@ -20,9 +20,10 @@ describe 'SectionEmbed', ->
       SectionEmbed = benv.require resolve __dirname, '../index'
       @component = ReactDOM.render React.createElement(SectionEmbed,
         section: new Section { body: 'Foo to the bar', ids: [] }
-        editing: false
+        editing: true
         setEditing: ->
         changeLayout: ->
+        channel: { isEditorial: sinon.stub().returns(true) }
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         sinon.stub @component, 'forceUpdate'
@@ -47,5 +48,5 @@ describe 'SectionEmbed', ->
     @component.getWidth().should.equal 500
 
   it 'changes layout when clicking on layout controls', ->
-    r.simulate.click r.find @component, 'ese-overflow'
+    r.simulate.click r.find(@component, 'layout')[0]
     @component.props.section.get('layout').should.equal 'overflow'

@@ -31,6 +31,7 @@ describe 'ImageCollectionControls', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
+      $.fn.offset = sinon.stub().returns(top: 200)
       Backbone.$ = $
       sinon.stub Backbone, 'sync'
       @Controls = benv.require (
@@ -52,7 +53,7 @@ describe 'ImageCollectionControls', ->
         images: []
         setProgress: @setProgress = sinon.stub()
         onChange: @onChange = sinon.stub()
-        channel: { hasFeature: @hasFeature = sinon.stub().returns(true) }
+        channel: { hasFeature: @hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true)}
       }
       @component = ReactDOM.render React.createElement(@Controls, @props), (@$el = $ "<div></div>")[0], =>
       done()
