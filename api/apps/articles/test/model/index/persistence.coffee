@@ -508,6 +508,8 @@ describe 'Article Persistence', ->
         sections: [
           {
             type: 'image_set'
+            layout: 'mini'
+            title: 'The Best Artworks'
             images: [
               {
                 type: 'image'
@@ -528,6 +530,8 @@ describe 'Article Persistence', ->
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.sections[0].type.should.equal 'image_set'
+        article.sections[0].layout.should.equal 'mini'
+        article.sections[0].title.should.equal 'The Best Artworks'
         article.sections[0].images[0].type.should.equal 'image'
         article.sections[0].images[0].url.should.equal 'https://image.png'
         article.sections[0].images[1].type.should.equal 'artwork'

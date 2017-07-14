@@ -131,6 +131,8 @@ denormalizedArtwork = (->
       isTypeOf: (data) => data.type is 'image_set'
     ).keys
       type: 'image_set'
+      title: @string().allow('',null)
+      layout: @string().allow('full', 'mini', null)
       images: @array().items([denormalizedArtwork, imageSection])
     @object().meta(
       name: 'ImageCollection'
