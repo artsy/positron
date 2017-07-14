@@ -60,11 +60,6 @@ module.exports = React.createClass
           hide_image: false
           top_stories: false
         }, at: @props.index + 1
-      when 'toc'
-        @props.sections.add {
-          type: 'toc'
-          links: @props.sections.getJumpLinks()
-        }, at: @props.index + 1
       when 'image_collection'
         @props.sections.add {
           type: 'image_collection'
@@ -155,13 +150,3 @@ module.exports = React.createClass
                 className: 'edit-menu-icon-callout'
                 dangerouslySetInnerHTML: __html: $(icons()).filter('.callout').html()
               }
-          if @channel.hasFeature 'toc'
-            li {
-              className: 'edit-section-tool-toc'
-              onClick: @newSection('toc')
-            }, 'TOC',
-              div {
-                className: 'edit-menu-icon-toc'
-                dangerouslySetInnerHTML: __html: $(icons()).filter('.toc').html()
-              }
-

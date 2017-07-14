@@ -33,7 +33,6 @@ describe "Channel", ->
       @channel.hasFeature('video').should.be.true()
       @channel.hasFeature('embed').should.be.true()
       @channel.hasFeature('callout').should.be.true()
-      @channel.hasFeature('toc').should.be.true()
 
     it 'returns features for team type', ->
       @channel.set
@@ -48,7 +47,6 @@ describe "Channel", ->
       @channel.hasFeature('video').should.be.true()
       @channel.hasFeature('embed').should.be.true()
       @channel.hasFeature('callout').should.be.true()
-      @channel.hasFeature('toc').should.be.false()
 
     it 'returns features for support type', ->
       @channel.set
@@ -63,7 +61,6 @@ describe "Channel", ->
       @channel.hasFeature('video').should.be.true()
       @channel.hasFeature('embed').should.be.false()
       @channel.hasFeature('callout').should.be.true()
-      @channel.hasFeature('toc').should.be.false()
 
     it 'returns features for partner type', ->
       @channel.set
@@ -78,7 +75,6 @@ describe "Channel", ->
       @channel.hasFeature('video').should.be.true()
       @channel.hasFeature('embed').should.be.false()
       @channel.hasFeature('callout').should.be.false()
-      @channel.hasFeature('toc').should.be.false()
 
   describe '#hasAssociation', ->
 

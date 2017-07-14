@@ -17,23 +17,7 @@ exports.Link = (props) ->
   { url, className, name } = props.contentState.getEntity(props.entityKey).getData()
   text = props.decoratedText.split(' ')[0]
   artist = url.split('/artist/')[1]
-  if className?.includes('is-jump-link') and className?.includes('is-follow-link')
-    link = span {},
-      a {
-        href: url
-        name: text
-        className: className
-      }, props.children
-      a {
-        className: 'entity-follow artist-follow'
-        'data-id' : artist
-      }
-  else if className is 'is-jump-link'
-    link = a {
-      name: text
-      className: className
-    }, props.children
-  else if className is 'is-follow-link'
+  if className is 'is-follow-link'
     link = span {},
       a {
         href: url
