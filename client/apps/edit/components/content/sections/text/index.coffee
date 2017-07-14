@@ -94,7 +94,7 @@ module.exports = React.createClass
     else
       e.preventDefault()
       @splitSection(selection.anchorKey)
-      # return 'handled'
+      return 'handled'
 
   handleTab: (e) ->
     e.preventDefault()
@@ -192,7 +192,7 @@ module.exports = React.createClass
         when 'custom-clear'
           @makePlainText()
         when 'italic', 'bold'
-          return if @getSelectedBlock().content.get('type') is 'header-three'
+          return if getSelectionDetails(@state.editorState).anchorType is 'header-three'
           newState = RichUtils.handleKeyCommand @state.editorState, e
           @onChange newState if newState
         when 'backspace'
