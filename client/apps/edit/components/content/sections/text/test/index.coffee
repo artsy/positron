@@ -97,7 +97,6 @@ describe 'SectionText', ->
       @component.onChange(@component.state.editorState)
       @component.state.html.should.eql '<h2>01 &nbsp;</h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p><br></p>'
 
-
   describe 'Rich text menu events', ->
 
     it 'Opens a link input popup', ->
@@ -141,6 +140,12 @@ describe 'SectionText', ->
       @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
       @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
+
+    it 'Can toggle ol block changes', ->
+      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'ordered-list-item'
+      @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
 
     it '#makePlainText Can strip styles', ->
       @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'

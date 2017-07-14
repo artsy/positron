@@ -13,6 +13,7 @@ exports.blockTypes = ->
     {label: 'H2', style: 'header-two'}
     {label: 'H3', style: 'header-three'}
     {label: 'UL', style: 'unordered-list-item'}
+    {label: 'OL', style: 'ordered-list-item'}
   ]
 
 exports.blockRenderMap = ->
