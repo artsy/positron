@@ -272,7 +272,7 @@ module.exports = React.createClass
   setPluginProps: (urlValue, pluginType, className) ->
     if pluginType is 'artist'
       className = 'is-follow-link'
-      props = { url: urlValue, className: className, name: name }
+      props = { url: urlValue, className: className }
     else
       props = { url: urlValue }
     return props

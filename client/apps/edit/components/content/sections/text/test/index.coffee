@@ -214,7 +214,7 @@ describe 'SectionText', ->
       @SectionText.__set__ 'sd',
         CURRENT_CHANNEL: fixtures().channels
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
-      component.getPlugins().length.should.eql 2
+      component.getPlugins().length.should.eql 1
 
     it 'Can setup link prompt for artist blocks', ->
       @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
@@ -232,7 +232,7 @@ describe 'SectionText', ->
       @component.setPluginType('artist')
       @component.setState.args[0][0].pluginType.should.eql 'artist'
 
-    it 'Calls promt for link if artist', ->
+    it 'Calls prompt for link if artist', ->
       @component.promptForLink = sinon.stub()
       @component.setPluginType('artist')
       @component.promptForLink.called.should.eql true
@@ -242,7 +242,7 @@ describe 'SectionText', ->
     it 'returns props for artist link', ->
       @component.getExistingLinkData = sinon.stub().returns {className: ''}
       artist = @component.setPluginProps('http://link.com', 'artist')
-      artist.should.eql { url: 'http://link.com', className: 'is-follow-link', name: undefined }
+      artist.should.eql { url: 'http://link.com', className: 'is-follow-link' }
 
   it '#onPaste strips or converts unsupported html and linebreaks', ->
     @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
