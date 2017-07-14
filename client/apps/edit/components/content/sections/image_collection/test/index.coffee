@@ -62,7 +62,7 @@ describe 'ImageCollection', ->
           ]
         editing: false
         setEditing: @setEditing = sinon.stub()
-        channel: { hasFeature: hasFeature = sinon.stub().returns(true) }
+        channel: { hasFeature: hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
       @component.onImagesLoaded = sinon.stub()

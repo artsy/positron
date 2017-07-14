@@ -120,8 +120,7 @@ describe 'SectionText', ->
 
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2>01 &nbsp;<a name="here" class="is-jump-link">here is a toc.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p><br></p>'
-
+      @component.state.html.should.eql '<h2>01 &nbsp;</h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p><p><br></p>'
 
   describe 'Rich text menu events', ->
 
@@ -166,6 +165,12 @@ describe 'SectionText', ->
       @shortComponent.setState = sinon.stub()
       @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
       @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
+
+    it 'Can toggle ol block changes', ->
+      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
+      @shortComponent.setState = sinon.stub()
+      @r.simulate.mouseDown @r.find @shortComponent, 'ordered-list-item'
+      @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
 
     it '#makePlainText Can strip styles', ->
       @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
@@ -244,18 +249,13 @@ describe 'SectionText', ->
       @SectionText.__set__ 'sd',
         CURRENT_CHANNEL: fixtures().channels
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
-      component.getPlugins().length.should.eql 2
+      component.getPlugins().length.should.eql 1
 
     it 'Can setup link prompt for artist blocks', ->
       @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
       @r.simulate.mouseDown @r.find @shortComponent, 'artist'
       @shortComponent.state.showUrlInput.should.eql true
       @shortComponent.state.pluginType.should.eql 'artist'
-
-    it 'Can create toc blocks', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section-text__input'
-      @r.simulate.mouseDown @r.find @shortComponent, 'toc'
-      @shortComponent.state.html.should.eql '<h2><a name="A" class="is-jump-link">A <em>short</em> piece of <strong>text</strong></a></h2>'
 
     it 'Adds data-id to artist links', ->
       component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
@@ -272,31 +272,12 @@ describe 'SectionText', ->
       @component.setPluginType('artist')
       @component.promptForLink.called.should.eql true
 
-    it 'Calls confirm link if new TOC', ->
-      @component.confirmLink = sinon.stub()
-      @component.getExistingLinkData = sinon.stub().returns { url: '', className: '' }
-      @component.setPluginType('toc')
-      @component.confirmLink.called.should.eql true
-
-    it 'Removes a TOC if already exists', ->
-      @component.removeLink = sinon.stub()
-      @component.getExistingLinkData = sinon.stub().returns { url: '', className: 'is-jump-link' }
-      @component.setPluginType('toc')
-      @component.removeLink.called.should.eql true
-
-
   describe '#setPluginProps', ->
 
     it 'returns props for artist link', ->
       @component.getExistingLinkData = sinon.stub().returns {className: ''}
       artist = @component.setPluginProps('http://link.com', 'artist')
-      artist.should.eql { url: 'http://link.com', className: 'is-follow-link', name: undefined }
-
-    it 'can combine props for artist and toc links', ->
-      @component.getExistingLinkData = sinon.stub().returns {className: 'is-jump-link'}
-      artistToc = @component.setPluginProps('http://link.com', 'artist')
-      artistToc.should.eql { url: 'http://link.com', className: 'is-follow-link is-jump-link', name: 'toc' }
-
+      artist.should.eql { url: 'http://link.com', className: 'is-follow-link' }
 
   describe '#handleChangeSection', ->
 

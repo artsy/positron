@@ -85,7 +85,7 @@ denormalizedArtwork = (->
     id: @string().objectid()
   ).allow(null)
   title: @string().allow('', null)
-  layout: @string().allow('left', 'center', null).default('center')
+  layout: @string().allow('classic', 'standard', 'longform', 'feature').default('classic')
   updated_at: @date()
   published: @boolean().default(false)
   published_at: @date().allow(null)
@@ -112,13 +112,6 @@ denormalizedArtwork = (->
     @object().meta(name: 'Text').keys
       type: @string().valid('text')
       body: @string().allow('', null)
-    @object().meta(name: 'Toc').keys
-      type: @string().valid('toc')
-      links: @array().items(
-        @object().keys
-          name: @string().allow('', null)
-          value: @string().allow('', null)
-      ).allow(null).default([])
     @object().meta(name: 'Artworks').keys
       type: @string().valid('artworks')
       ids: @array().items(@string().objectid())

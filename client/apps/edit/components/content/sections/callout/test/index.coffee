@@ -26,6 +26,7 @@ describe 'SectionCallout', ->
         section: new Section { article: '', text: '', type: 'callout' }
         editing: true
         setEditing: ->
+        channel: { isEditorial: sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@SectionCallout, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
@@ -49,6 +50,7 @@ describe 'SectionCallout', ->
         article: '123'
       setEditing: ->
       editing: true
+      channel: { isEditorial: sinon.stub().returns(true) }
     )
     render.should.containEql 'Test Title'
     render.should.containEql 'Related Article'
@@ -60,6 +62,7 @@ describe 'SectionCallout', ->
         text: 'Test Title'
       setEditing: ->
       editing: true
+      channel: { isEditorial: sinon.stub().returns(true) }
     }
     render = ReactDOMServer.renderToString React.createElement(@SectionCallout, props)
     render.should.containEql 'Test Title'
@@ -76,5 +79,6 @@ describe 'SectionCallout', ->
         top_stories: true
       setEditing: ->
       editing: true
+      channel: { isEditorial: sinon.stub().returns(true) }
     )
     render.should.containEql 'Top Stories'

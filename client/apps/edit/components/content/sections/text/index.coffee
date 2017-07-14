@@ -44,8 +44,7 @@ module.exports = React.createClass
   componentWillMount: ->
     channel = new Channel sd.CURRENT_CHANNEL
     @hasFollow = channel.hasFeature 'follow'
-    @hasToc = channel.hasFeature 'toc'
-    @hasFeatures = @hasFollow or @hasToc
+    @hasFeatures = @hasFollow
 
   componentDidMount: ->
     if @props.section.get('body')?.length
@@ -95,7 +94,7 @@ module.exports = React.createClass
     else
       e.preventDefault()
       @splitSection(selection.anchorKey)
-      return 'handled'
+      # return 'handled'
 
   handleTab: (e) ->
     e.preventDefault()
@@ -193,7 +192,7 @@ module.exports = React.createClass
         when 'custom-clear'
           @makePlainText()
         when 'italic', 'bold'
-          return if getSelectionDetails(@state.editorState).anchorType is 'header-three'
+          return if @getSelectedBlock().content.get('type') is 'header-three'
           newState = RichUtils.handleKeyCommand @state.editorState, e
           @onChange newState if newState
         when 'backspace'
@@ -203,8 +202,6 @@ module.exports = React.createClass
           return @promptForLink() unless className
           if className.includes 'is-follow-link'
             @promptForLink 'artist'
-          else if className.includes 'is-jump-link'
-            @promptForLink 'toc'
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
@@ -279,36 +276,11 @@ module.exports = React.createClass
     @setState pluginType: e
     if e is 'artist'
       @promptForLink e
-    if e is 'toc'
-      url = @getExistingLinkData().url
-      className = @getExistingLinkData().className or ''
-      if className is 'is-jump-link'
-        @removeLink()
-      else
-        @confirmLink url, e, className
 
   setPluginProps: (urlValue, pluginType, className) ->
     if pluginType is 'artist'
-      className = @getExistingLinkData().className
-      if className?.includes 'is-jump-link'
-        name = 'toc'
-        className = 'is-follow-link is-jump-link'
-      else
-        className = 'is-follow-link'
-      props = { url: urlValue, className: className, name: name }
-    else if pluginType is 'toc'
-      name = 'toc'
-      if className.includes('is-follow-link') and className.includes('is-jump-link')
-        # remove toc but keep existing link
-        name = ''
-        className = 'is-follow-link'
-      else if className.includes 'is-follow-link'
-        # add toc to existing artist link
-        className = 'is-follow-link is-jump-link'
-      else
-        # a plain toc link with no href
-        className = 'is-jump-link'
-      props = { url: urlValue, className: className, name: name  }
+      className = 'is-follow-link'
+      props = { url: urlValue, className: className }
     else
       props = { url: urlValue }
     return props
@@ -325,7 +297,6 @@ module.exports = React.createClass
   getPlugins: ->
     plugins = []
     plugins.push({label: 'artist', style: 'artist'}) if @hasFollow
-    plugins.push({label: 'toc', style: 'toc'}) if @hasToc
     return plugins
 
   checkSelection: ->

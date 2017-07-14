@@ -99,21 +99,6 @@ describe 'Save', ->
         ]
       })
 
-    it 'can save jump links (whitelist name and value)', (done) ->
-      Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
-          article.sections[0].body.should.containEql '<a name="andy" class="is-jump-link">Andy</a>'
-          done()
-      )(null, {
-        _id: ObjectId '5086df098523e60002000011'
-        sections: [
-          {
-            type: 'text'
-            body: '<a name="andy" class="is-jump-link">Andy</a>'
-          }
-        ]
-      })
-
     it 'can save follow artist links (whitelist data-id)', (done) ->
       Save.sanitizeAndSave( ->
         Article.find '5086df098523e60002000011', (err, article) =>
