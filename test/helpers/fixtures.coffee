@@ -76,6 +76,8 @@ module.exports = ->
       }
       {
         type: 'image_set'
+        title: 'The Best Artworks'
+        layout: 'mini'
         images: [
           {
             type: 'artwork'
