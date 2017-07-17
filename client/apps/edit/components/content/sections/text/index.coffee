@@ -2,26 +2,26 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
-
-{ convertToRaw,
-  CompositeDecorator,
+{ CompositeDecorator,
   ContentState,
   Editor,
   EditorState,
-  Entity,
+  getVisibleSelectionRect,
   RichUtils,
   Modifier,
-  KeyBindingUtil,
-  getDefaultKeyBinding,
-  DefaultDraftBlockRenderMap,
-  getVisibleSelectionRect } = require 'draft-js'
-{ convertFromHTML, convertToHTML } = require 'draft-convert'
-{ inlineStyles,
-  blockTypes,
+  SelectionState } = require 'draft-js'
+{ blockTypes,
   blockRenderMap,
-  decorators } = require './draft_config.coffee'
-{ stripGoogleStyles, keyBindingFnFull } = require '../../../../../../components/rich_text/utils/index.coffee'
-
+  decorators,
+  inlineStyles } = require './draft_config.coffee'
+{ convertFromRichHtml,
+  convertToRichHtml,
+  getSelectionDetails,
+  getSelectionLocation,
+  keyBindingFnFull,
+  moveSelection,
+  setSelectionToStart,
+  stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
 ButtonStyle = React.createFactory require '../../../../../../components/rich_text/components/button_style.coffee'
@@ -49,73 +49,116 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = @convertFromHTML @props.section.get('body')
+      blocksFromHTML = convertFromRichHtml @props.section.get('body')
+      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+      editorState = setSelectionToStart(editorState) if @props.editing
       @setState
         html: @props.section.get('body')
-        editorState: EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+        editorState: editorState
     else if @props.editing
       @focus()
 
+  componentDidUpdate: (prevProps) ->
+    if @props.editing and @props.editing != prevProps.editing
+      @focus()
+    else if !@props.editing and @props.editing != prevProps.editing
+      @refs.editor.blur()
+
   onChange: (editorState) ->
-    html = @convertToHtml editorState
+    html = convertToRichHtml editorState
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
 
   onClickOff: -> #called from sectionContainer
     @setState focus: false, showMenu: false, showUrlInput: false
-    @props.section.destroy() if $(@props.section.get('body')).text() is ''
+    @props.section.destroy() if @props.section.get('body') is ''
     @refs.editor.blur()
 
   focus: ->
     @setState focus: true
     @refs.editor.focus()
 
-  convertFromHTML: (html) ->
-    blocksFromHTML = convertFromHTML({
-      htmlToStyle: (nodeName, node, currentStyle) ->
-        if nodeName is 'span' and node.style.textDecoration is 'line-through'
-          return currentStyle.add 'STRIKETHROUGH'
-        else
-          return currentStyle
-      htmlToEntity: (nodeName, node) ->
-        if nodeName is 'a'
-          data = {url: node.href, name: node.name, className: node.classList.toString()}
-          return Entity.create(
-              'LINK',
-              'MUTABLE',
-              data
-          )
-        if nodeName is 'p' and node.innerHTML is '<br>'
-          node.innerHTML = '' # remove <br>, it renders extra breaks in editor
-      })(html)
-    return blocksFromHTML
+  handleReturn: (e) ->
+    selection = getSelectionDetails(@state.editorState)
+    # dont split from the first block, to avoid creating empty blocks
+    # dont split from the middle of a paragraph
+    if selection.isFirstBlock or selection.anchorOffset
+      return 'not-handled'
+    else
+      e.preventDefault()
+      @splitSection(selection.anchorKey)
+      return 'handled'
 
-  convertToHtml: (editorState) ->
-    html = convertToHTML({
-      entityToHTML: (entity, originalText) ->
-        if entity.type is 'LINK'
-          sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\_`’'~()]/g,"")
-          name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
-          if entity.data.className?.includes('is-follow-link')
-            artist = entity.data.url.split('/artist/')[1]
-            return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText + '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
-          else
-            return a { href: entity.data.url}
-        return originalText
-      blockToHTML: (block) ->
-        if block.type is 'header-three'
-          return h3 {}, block.text
-      styleToHTML: (style) ->
-        if style is 'STRIKETHROUGH'
-          return span { style: {textDecoration: 'line-through'}}
-    })(editorState.getCurrentContent())
-    # put the line breaks back for correct client rendering
-    html = html
-      .replace /<p><\/\p>/g, '<p><br></p>'
-      .replace /<p> <\/\p>/g, '<p><br></p>'
-      .replace(/  /g, ' &nbsp;')
-    html = if html is '<p><br></p>' then '' else html
-    return html
+  handleTab: (e) ->
+    e.preventDefault()
+    index = @props.index + 1
+    if e.shiftKey
+      index = @props.index - 1
+    @props.onSetEditing index
+
+  handleBackspace: (e) ->
+    selection = getSelectionDetails(@state.editorState)
+    # only merge a section if cursor is in first character of first block
+    if selection.isFirstBlock and selection.anchorOffset is 0 and
+     @props.sections.models[@props.index - 1].get('type') is 'text'
+      mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
+      @props.sections.models[@props.index - 1].destroy()
+      newHTML = mergeIntoHTML + @state.html
+      blocksFromHTML = convertFromRichHtml newHTML
+      newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
+      newSectionState = setSelectionToStart(newSectionState)
+      @onChange(newSectionState)
+      @props.onSetEditing @props.index - 1
+
+  handleChangeSection: (e) ->
+    direction = 0
+    direction =  -1 if e.key in ['ArrowUp', 'ArrowLeft']
+    direction =  1 if e.key in ['ArrowDown', 'ArrowRight']
+    selection = getSelectionDetails @state.editorState
+    # if cursor is arrowing forward from last charachter of last block,
+    # or cursor is arrowing back from first character of first block,
+    # jump to adjacent section
+    if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
+     selection.isFirstBlock and selection.isFirstCharacter and direction is -1
+      @props.onSetEditing @props.index + direction
+    else if e.key in ['ArrowLeft', 'ArrowRight']
+      # manually move cursor to make up for draft's missing l/r arrow fallbacks
+      newEditorState = moveSelection @state.editorState, selection, direction
+      @onChange(newEditorState)
+    else
+      return true
+
+  splitSection: (anchorKey) ->
+    { editorState } = @state
+    blockArray = editorState.getCurrentContent().getBlocksAsArray()
+    for block, i in blockArray
+      if block?.getKey() is anchorKey
+        currentBlockArray = blockArray.splice(0, i)
+        newBlockArray = blockArray
+    if currentBlockArray
+      currentContent = ContentState.createFromBlockArray currentBlockArray
+      currentState = EditorState.push(editorState, currentContent, 'remove-range')
+      newSectionContent = ContentState.createFromBlockArray newBlockArray
+      newSectionState = EditorState.push(editorState, newSectionContent, null)
+      newSectionHtml = convertToRichHtml(newSectionState)
+      @onChange currentState
+      @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
+      return 'handled'
+
+  onPaste: (text, html) ->
+    { editorState } = @state
+    unless html
+      html = '<div>' + text + '</div>'
+    html = stripGoogleStyles(html)
+    blocksFromHTML = convertFromRichHtml html
+    convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
+      unstyled = @stripCharacterStyles contentBlock, true
+      unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
+        unstyled = unstyled.set 'type', 'unstyled'
+      return unstyled
+    newState = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray())
+    @onChange(EditorState.push(editorState, newState, 'insert-fragment'))
+    return true
 
   makePlainText: () ->
     { editorState } = @state
@@ -132,50 +175,40 @@ module.exports = React.createClass
     characterList = contentBlock.getCharacterList().map (character) ->
       if keepAllowed
         unless character.hasStyle 'UNDERLINE'
-          return character if character.hasStyle('BOLD') || character.hasStyle('ITALIC') || character.hasStyle('STRIKETHROUGH')
+          return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
       character.set 'style', character.get('style').clear()
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
 
-  onPaste: (text, html) ->
-    { editorState } = @state
-    unless html
-      html = '<div>' + text + '</div>'
-    html = stripGoogleStyles(html)
-    blocksFromHTML = @convertFromHTML html
-    convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-      unstyled = @stripCharacterStyles contentBlock, true
-      unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
-        unstyled = unstyled.set 'type', 'unstyled'
-      return unstyled
-    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.entityMap).blockMap
-    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
-    this.onChange(EditorState.push(editorState, newState, 'insert-fragment'))
-    return true
-
   handleKeyCommand: (e) ->
-    switch e
-      when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
-        @toggleBlockType e
-      when 'custom-clear'
-        @makePlainText()
-      when 'italic', 'bold'
-        return if @getSelectedBlock().content.get('type') is 'header-three'
-        newState = RichUtils.handleKeyCommand @state.editorState, e
-        @onChange newState if newState
-      when 'link-prompt'
-        className = @getExistingLinkData().className
-        return @promptForLink() unless className
-        if className.includes 'is-follow-link'
-          @promptForLink 'artist'
+    if e.key
+      @handleChangeSection e
+    else
+      switch e
+        when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
+          @toggleBlockType e
+        when 'custom-clear'
+          @makePlainText()
+        when 'italic', 'bold'
+          return if getSelectionDetails(@state.editorState).anchorType is 'header-three'
+          newState = RichUtils.handleKeyCommand @state.editorState, e
+          @onChange newState if newState
+        when 'backspace'
+          @handleBackspace e
+        when 'link-prompt'
+          className = @getExistingLinkData().className
+          return @promptForLink() unless className
+          if className.includes 'is-follow-link'
+            @promptForLink 'artist'
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
     @setState showMenu: false
 
   toggleInlineStyle: (inlineStyle) ->
-    if @getSelectedBlock().content.get('type') is 'header-three'
-      @stripCharacterStyles @getSelectedBlock().content
+    selection = getSelectionDetails(@state.editorState)
+    if selection.anchorType is 'header-three'
+      @stripCharacterStyles @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
     else
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
@@ -217,52 +250,25 @@ module.exports = React.createClass
 
   removeLink: (e) ->
     e?.preventDefault()
-    { editorState } = @state
-    selection = editorState.getSelection()
+    selection = @state.editorState.getSelection()
     if !selection.isCollapsed()
       @setState({
         showUrlInput: false
         urlValue: ''
-        editorState: RichUtils.toggleLink(editorState, selection, null)
+        editorState: RichUtils.toggleLink(@state.editorState, selection, null)
       })
 
   getExistingLinkData: ->
-    url = ''
-    key = @getSelectedBlock().key
-    if key
-      linkInstance = @state.editorState.getCurrentContent().getEntity(key)
-      url = linkInstance.getData().url
-      className = linkInstance.getData().className || ''
-    return {url: url, key: key, className: className}
-
-  getSelectedBlock: ->
     { editorState } = @state
-    selection = editorState.getSelection()
-    contentState = editorState.getCurrentContent()
-    startKey = selection.getStartKey()
-    startOffset = selection.getStartOffset()
-    closestBlock = contentState.getBlockForKey(startKey)
-    blockKey = closestBlock.getEntityAt(startOffset)
-    return {key: blockKey, content: closestBlock}
-
-  getSelectionLocation: ->
-    selection = window.getSelection().getRangeAt(0).getClientRects()
-    if selection[0].width is 0
-      target = selection[1]
-    else
-      target = selection[0]
-    $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
-    parent = {
-      top: $parent.top - window.pageYOffset
-      left: $parent.left
-    }
-    return {target: target, parent: parent}
-
-  stickyControlsBox: (fromTop, fromLeft) ->
-    location = @getSelectionLocation()
-    top = location.target.top - location.parent.top + fromTop
-    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
-    return {top: top, left: left}
+    url = ''
+    anchorKey = editorState.getSelection().getStartKey()
+    anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
+    linkKey = anchorBlock?.getEntityAt(editorState.getSelection().getStartOffset())
+    if linkKey
+      linkInstance = editorState.getCurrentContent().getEntity(linkKey)
+      url = linkInstance.getData().url
+      className = linkInstance.getData().className or ''
+    return { url: url, key: linkKey, className: className }
 
   setPluginType: (e) ->
     @setState pluginType: e
@@ -297,6 +303,13 @@ module.exports = React.createClass
       @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
     else
       @setState showMenu: false
+
+  stickyControlsBox: (fromTop, fromLeft) ->
+    $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+    location = getSelectionLocation $parent
+    top = location.target.top - location.parent.top + fromTop
+    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
+    return {top: top, left: left}
 
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
@@ -333,6 +346,10 @@ module.exports = React.createClass
           keyBindingFn: keyBindingFnFull
           handlePastedText: @onPaste
           blockRenderMap: blockRenderMap()
+          handleReturn: @handleReturn
+          onTab: @handleTab
+          onUpArrow: @handleChangeSection
+          onDownArrow: @handleChangeSection
         }
         if @props.editing and @state.showUrlInput
           InputUrl {

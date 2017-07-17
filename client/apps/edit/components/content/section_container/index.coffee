@@ -68,12 +68,15 @@ module.exports = React.createClass
         when 'image' then SectionImage
       )(
         section: @props.section
+        sections: @props.sections
         editing: @props.editing
+        index: @props.index
         ref: 'section'
         onClick: @setEditing(on)
         setEditing: @setEditing
         channel: @props.channel
         isHero: @props.isHero
+        onSetEditing: @props.onSetEditing
       )
       div {
         className: 'edit-section-container-bg'
