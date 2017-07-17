@@ -78,6 +78,7 @@ module.exports = React.createClass
     @refs.editor.focus()
 
   setSelectionToStart: (editorState) ->
+    # reset the cursor to the first character of the first block
     firstKey = editorState.getCurrentContent().getFirstBlock().getKey()
     newSelection = new SelectionState {
       anchorKey: firstKey
@@ -89,6 +90,8 @@ module.exports = React.createClass
 
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
+    # dont split from the first block, to avoid creating empty blocks
+    # dont split from the middle of a paragraph
     if selection.isFirstBlock or selection.anchorOffset
       return 'not-handled'
     else
@@ -105,6 +108,7 @@ module.exports = React.createClass
 
   handleBackspace: (e) ->
     selection = getSelectionDetails(@state.editorState)
+    # only merge a section if cursor is in first character of first block
     if selection.isFirstBlock and selection.anchorOffset is 0 and
      @props.sections.models[@props.index - 1].get('type') is 'text'
       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
@@ -121,10 +125,14 @@ module.exports = React.createClass
     direction =  -1 if e.key in ['ArrowUp', 'ArrowLeft']
     direction =  1 if e.key in ['ArrowDown', 'ArrowRight']
     selection = getSelectionDetails @state.editorState
+    # if cursor is arrowing forward from last charachter of last block,
+    # or cursor is arrowing back from first character of first block,
+    # jump to adjacent section
     if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
      selection.isFirstBlock and selection.isFirstCharacter and direction is -1
       @props.onSetEditing @props.index + direction
     else if e.key in ['ArrowLeft', 'ArrowRight']
+      # manually move cursor to make up for draft's missing l/r arrow fallbacks
       newEditorState = moveSelection @state.editorState, selection, direction
       @onChange(newEditorState)
     else
