@@ -20,6 +20,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   getSelectionLocation,
   keyBindingFnFull,
   moveSelection,
+  setSelectionToStart,
   stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
@@ -50,7 +51,7 @@ module.exports = React.createClass
     if @props.section.get('body')?.length
       blocksFromHTML = convertFromRichHtml @props.section.get('body')
       editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
-      editorState = @setSelectionToStart(editorState) if @props.editing
+      editorState = setSelectionToStart(editorState) if @props.editing
       @setState
         html: @props.section.get('body')
         editorState: editorState
@@ -76,17 +77,6 @@ module.exports = React.createClass
   focus: ->
     @setState focus: true
     @refs.editor.focus()
-
-  setSelectionToStart: (editorState) ->
-    # reset the cursor to the first character of the first block
-    firstKey = editorState.getCurrentContent().getFirstBlock().getKey()
-    newSelection = new SelectionState {
-      anchorKey: firstKey
-      anchorOffset: 0
-      focusKey: firstKey
-      focusOffset: 0
-    }
-    return EditorState.forceSelection editorState, newSelection
 
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
@@ -116,7 +106,7 @@ module.exports = React.createClass
       newHTML = mergeIntoHTML + @state.html
       blocksFromHTML = convertFromRichHtml newHTML
       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
-      newSectionState = @setSelectionToStart(newSectionState)
+      newSectionState = setSelectionToStart(newSectionState)
       @onChange(newSectionState)
       @props.onSetEditing @props.index - 1
 

@@ -116,6 +116,16 @@ exports.getSelectionLocation = ($parent) ->
   }
   return { target: target, parent: parent }
 
+exports.setSelectionToStart = (editorState) ->
+  # reset the cursor to the first character of the first block
+  firstKey = editorState.getCurrentContent().getFirstBlock().getKey()
+  newSelection = new SelectionState {
+    anchorKey: firstKey
+    anchorOffset: 0
+    focusKey: firstKey
+    focusOffset: 0
+  }
+  return EditorState.forceSelection editorState, newSelection
 
 # IMPORT / EXPORT HTML
 exports.convertToRichHtml = (editorState) ->
