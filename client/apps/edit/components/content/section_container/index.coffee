@@ -11,7 +11,6 @@ SectionSlideshow = React.createFactory require '../sections/slideshow/index.coff
 SectionEmbed = React.createFactory require '../sections/embed/index.coffee'
 SectionFullscreen = React.createFactory require '../sections/fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../sections/callout/index.coffee'
-SectionToc = React.createFactory require '../sections/toc/index.coffee'
 SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 SectionImage = React.createFactory require '../sections/image/index.coffee'
 { div, nav, button } = React.DOM
@@ -64,18 +63,20 @@ module.exports = React.createClass
         when 'embed' then SectionEmbed
         when 'fullscreen' then SectionFullscreen
         when 'callout' then SectionCallout
-        when 'toc' then SectionToc
         when 'image_set' then SectionImageCollection
         when 'image_collection' then SectionImageCollection
         when 'image' then SectionImage
       )(
         section: @props.section
+        sections: @props.sections
         editing: @props.editing
+        index: @props.index
         ref: 'section'
         onClick: @setEditing(on)
         setEditing: @setEditing
         channel: @props.channel
         isHero: @props.isHero
+        onSetEditing: @props.onSetEditing
       )
       div {
         className: 'edit-section-container-bg'

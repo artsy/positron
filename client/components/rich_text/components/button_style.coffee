@@ -11,7 +11,7 @@ module.exports = React.createClass
     @props.onToggle name
 
   render: ->
-    if @props.label in ['UL','OL', 'artist', 'link', 'toc', 'remove-formatting']
+    if @props.label in ['UL','OL', 'artist', 'link', 'remove-formatting']
       name = '.' + @props.name
       button {
         onMouseDown: @onToggle

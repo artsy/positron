@@ -29,7 +29,6 @@ describe 'SectionTool', ->
       props = {
         sections: @sections = new Backbone.Collection [
           { body: '<p>Foo to the bar</p>', type: 'text' }
-          { body: '<p>Foo to the bar <a class="is-jump-link" name="andy">Andy</a></p>', type: 'text' }
         ]
         index: 2
         toggleEditMode: @toggleEditMode = sinon.stub()

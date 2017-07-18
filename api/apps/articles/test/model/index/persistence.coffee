@@ -502,34 +502,14 @@ describe 'Article Persistence', ->
           article.sections[0].body.should.containEql 'The start of a new article'
           done()
 
-    it 'saves a TOC section', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        sections: [
-          {
-            type: 'toc'
-            links: [
-              { name: 'kana', value: 'Kana' }
-              { name: 'andy warhol', value: 'Andy Warhol' }
-            ]
-          }
-        ]
-        published: true
-      }, 'foo', {}, (err, article) ->
-        return done err if err
-        article.sections[0].type.should.equal 'toc'
-        article.sections[0].links[0].name.should.equal 'kana'
-        article.sections[0].links[0].value.should.equal 'Kana'
-        article.sections[0].links[1].name.should.equal 'andy warhol'
-        article.sections[0].links[1].value.should.equal 'Andy Warhol'
-        done()
-
     it 'saves an image set section', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
         sections: [
           {
             type: 'image_set'
+            layout: 'mini'
+            title: 'The Best Artworks'
             images: [
               {
                 type: 'image'
@@ -550,6 +530,8 @@ describe 'Article Persistence', ->
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.sections[0].type.should.equal 'image_set'
+        article.sections[0].layout.should.equal 'mini'
+        article.sections[0].title.should.equal 'The Best Artworks'
         article.sections[0].images[0].type.should.equal 'image'
         article.sections[0].images[0].url.should.equal 'https://image.png'
         article.sections[0].images[1].type.should.equal 'artwork'
@@ -560,18 +542,18 @@ describe 'Article Persistence', ->
     it 'saves layouts', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-        layout: 'left'
+        layout: 'longform'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        article.layout.should.equal 'left'
+        article.layout.should.equal 'longform'
         done()
 
-    it 'it defaults to center if layout is not specified', (done) ->
+    it 'it defaults to classic if layout is not specified', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        article.layout.should.equal 'center'
+        article.layout.should.equal 'classic'
         done()
 
     it 'saves the channel_id', (done) ->

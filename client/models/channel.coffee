@@ -28,7 +28,6 @@ module.exports = class Channel extends Backbone.Model
         'video'
         'embed'
         'callout'
-        'toc'
         'follow'
         'layout'
         'hero'

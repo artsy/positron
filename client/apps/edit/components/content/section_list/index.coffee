@@ -28,6 +28,7 @@ module.exports = React.createClass
   onRemoveSection: ->
     if @props.sections.isEmpty()
       @props.article.set 'sections', []
+    @forceUpdate()
 
   onDragEnd: (sections) ->
     @props.sections.reset sections
