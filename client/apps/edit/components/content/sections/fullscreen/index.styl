@@ -1,34 +1,46 @@
 @import '../../../stylus_lib'
 
-.edit-section-fullscreen .edit-section-controls
-  fill-container()
-  position absolute
-  top 0
-  left 0
-  z-index 4
-  display none
+.edit-section-fullscreen
+  height 100%
+  .edit-section-controls
+    fill-container()
+    position absolute
+    top 0
+    left 0
+    z-index 4
+    display none
 
 .esf-placeholder
   width 100%
-  height 800px
+  height calc(99vh - 95px)
   background-color gray-lighter-color
   position relative
 
 .edit-section-container-block
   position relative
-  height 800px
+  height calc(99vh - 95px)
 
 .edit-section-container[data-type=fullscreen]
-  height 800px
+  height calc(99vh - 95px)
   width calc(100vw - 110px)
   padding 0px
   overflow hidden
+  margin-bottom 1em
   &::after
     border 0
+  .esf-title
+    garamond xl-headline
   .edit-author-section
     color white
     border-color white
     margin-top 0px
+    width 75%
+    display flex
+    p
+      garamond l-body
+      &:first-child
+        font-weight 600
+        margin-right 20px
 
 #edit-content .edit-section-container[data-type=fullscreen] .edit-section-controls
   display block
@@ -73,9 +85,21 @@
   z-index 3
   background-color black
   width 100%
-  height 800px
+  height 100%
   background-size cover
   background-position 50%
+  video
+    display block
+    position absolute
+    left 50%
+    top 50%
+    transform translate(-50%, -50%)
+    z-index 1
+    @media screen and (max-aspect-ratio: 1920/1080)
+      height 100%
+    @media screen and (min-aspect-ratio: 1920/1080)
+      width 100%
+
 
 .esf-text-container
   z-index 4
