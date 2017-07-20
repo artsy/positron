@@ -88,7 +88,7 @@ describe 'routes', ->
 
     it 'can render the edit2 app', ->
       @req.originalUrl = 'foo/edit2'
-      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b'
+      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b', type: 'editorial'
       @req.params.id = 'foo'
       @routes.edit @req, @res
       Backbone.sync.args[0][2].success a = _.extend fixtures().articles, channel_id: '4d8cd73191a5c50ce200002b'
