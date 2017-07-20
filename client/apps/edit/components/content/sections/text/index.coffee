@@ -156,8 +156,9 @@ module.exports = React.createClass
       unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
-    newState = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray())
-    @onChange(EditorState.push(editorState, newState, 'insert-fragment'))
+    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray()).blockMap
+    newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
+    @onChange EditorState.push(editorState, newState, 'insert-fragment')
     return true
 
   makePlainText: () ->
