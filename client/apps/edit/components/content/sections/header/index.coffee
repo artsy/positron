@@ -16,7 +16,7 @@ module.exports = React.createClass
     @props.saveArticle()
 
   setLeadParagraph: (html) ->
-    @props.article.setLeadParagraph(html)
+    @props.article.set 'lead_paragraph', html
     @props.saveArticle()
 
   render: ->
