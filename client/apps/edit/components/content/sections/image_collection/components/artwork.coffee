@@ -14,6 +14,8 @@ module.exports = React.createClass
     },
       Artwork {
         artwork: @props.artwork
+        linked: false
+        layout: 'classic'
       }
       if @props.removeItem and @props.editing
         button {
