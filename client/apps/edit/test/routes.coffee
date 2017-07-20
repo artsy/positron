@@ -10,7 +10,7 @@ describe 'routes', ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
-    @req = { query: {}, params: {}, user: new User fixtures().users }
+    @req = { query: {}, params: {}, originalUrl: '/edit', user: new User fixtures().users}
     @res = { render: sinon.stub(), locals: { sd: {} }, redirect: sinon.stub() }
     @routes = rewire '../routes.coffee'
     @routes.__set__ 'sd', {NO_INDEX_CHANNELS: '123|456'}
@@ -85,3 +85,11 @@ describe 'routes', ->
         channel_id: null
       @res.redirect.calledOnce.should.be.true()
       @res.redirect.args[0][0].should.containEql '/switch_channel/1234?'
+
+    it 'can render the edit2 app', ->
+      @req.originalUrl = 'foo/edit2'
+      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b', type: 'editorial'
+      @req.params.id = 'foo'
+      @routes.edit @req, @res
+      Backbone.sync.args[0][2].success a = _.extend fixtures().articles, channel_id: '4d8cd73191a5c50ce200002b'
+      @res.locals.sd.EDIT_2.should.eql true
