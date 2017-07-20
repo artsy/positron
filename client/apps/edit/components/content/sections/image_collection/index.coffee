@@ -12,7 +12,7 @@ DragContainer = React.createFactory require '../../../../../../components/drag_d
 { div, section, ul, li } = React.DOM
 
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
-ImageSetPreview = React.createFactory components.ImageSetPreviewClassic
+ImageSetPreview = React.createFactory components.ImagesetPreviewClassic
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'

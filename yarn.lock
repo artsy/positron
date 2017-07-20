@@ -2,13 +2,13 @@
 # yarn lockfile v1
 
 
-"@artsy/reaction-force@^0.1.44":
-  version "0.1.44"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.1.44.tgz#90666f932cfe154911090159a04abde4308d3be5"
+"@artsy/reaction-force@^0.1.49":
+  version "0.1.49"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.1.49.tgz#3899011c56a37b9fdeb92e06532ddc40d3fb4a8d"
   dependencies:
     "@storybook/addon-options" "^3.1.2"
     "@storybook/react" "^3.1.3"
-    artsy-passport "^1.6.1"
+    artsy-passport "^2.0.3"
     artsy-xapp "^1.0.4"
     babel-polyfill "^6.23.0"
     backbone "^1.3.3"
@@ -442,13 +442,12 @@ arrify@^1.0.0:
     connect-timeout "^1.8.0"
     newrelic "^1.22.1"
 
-artsy-passport@^1.6.1:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/artsy-passport/-/artsy-passport-1.7.4.tgz#6e7e32c38e41f223e21f4a70a480022278782d3c"
+artsy-passport@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/artsy-passport/-/artsy-passport-2.0.3.tgz#0a44b02e0adfecf8b04826ff8edee2506cef048b"
   dependencies:
     analytics-node "^2.1.0"
     async "^1.5.0"
-    coffee-script "^1.9.2"
     csurf "^1.8.3"
     dotenv "^4.0.0"
     express "^4.12.3"
@@ -1923,7 +1922,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-coffee-script@^1.10.0, coffee-script@^1.12.0, coffee-script@^1.9.2:
+coffee-script@^1.10.0, coffee-script@^1.12.0:
   version "1.12.4"
   resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.12.4.tgz#fe1bced97fe1fb3927b998f2b45616e0658be1ff"
 
@@ -4196,6 +4195,7 @@ jade@^1.11.0:
     jstransformer "0.0.2"
     mkdirp "~0.5.0"
     transformers "2.1.0"
+    uglify-js "^2.4.19"
     void-elements "~2.0.1"
     with "~4.0.0"
 
