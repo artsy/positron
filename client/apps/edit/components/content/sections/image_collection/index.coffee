@@ -12,7 +12,7 @@ DragContainer = React.createFactory require '../../../../../../components/drag_d
 { div, section, ul, li } = React.DOM
 
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
-ImagesetPreview = React.createFactory components.ImagesetPreview
+ImageSetPreview = React.createFactory components.ImageSetPreviewClassic
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'
@@ -111,7 +111,7 @@ module.exports = React.createClass
       },
         if hasImages
           if !@props.editing and @props.section.get('type') is 'image_set'
-            ImagesetPreview {
+            ImageSetPreview {
               images: images
             }
           else
