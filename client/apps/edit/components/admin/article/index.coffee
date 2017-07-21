@@ -47,14 +47,6 @@ module.exports = AdminArticle = React.createClass
     @setState
       publish_date: @refs.publish_date.value
       publish_time: @refs.publish_time.value
-    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
-    if !@props.article.get 'published'
-      # if draft set scheduled
-      @onChange 'published_at', null
-      @onChange 'scheduled_publish_at', published_at.toISOString()
-    else
-      # if article is published, reset published date
-      @onChange 'published_at', published_at.toISOString()
 
   setupPublishDate: ->
     if @props.article.get 'scheduled_publish_at'
@@ -69,6 +61,28 @@ module.exports = AdminArticle = React.createClass
       @setState
         publish_date: moment().format('YYYY-MM-DD')
         publish_time: moment().format('HH:mm')
+
+  publishButtonText: ->
+    buttonText = 'Schedule'
+    if @props.article.get 'published'
+      buttonText = 'Update'
+    else if @props.article.get 'scheduled_publish_at'
+      buttonText = 'Unschedule'
+    return buttonText
+
+  onScheduleChange: ->
+    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
+    if !@props.article.get 'published'
+      @onChange 'published_at', null
+      if @props.article.get 'scheduled_publish_at'
+        # if draft and has scheduled date, unschedule
+        @onChange 'scheduled_publish_at', null
+      else
+        # if draft and no scheduled date, set scheduled
+        @onChange 'scheduled_publish_at', published_at.toISOString()
+    else
+      # if article is published, reset published date
+      @onChange 'published_at', published_at.toISOString()
 
   focusDate: (e) ->
     @setState focus_date: true
@@ -175,6 +189,10 @@ module.exports = AdminArticle = React.createClass
                 onClick: @focusDate
                 onBlur: @blurDate
               }
+              button {
+                className: 'avant-garde-button date'
+                onClick: @onScheduleChange
+              }, @publishButtonText()
             div {
               className: 'field-group--inline flat-checkbox'
               onClick: @onCheckboxChange

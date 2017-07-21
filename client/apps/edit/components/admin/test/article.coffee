@@ -122,24 +122,42 @@ describe 'AdminArticle', ->
       r.simulate.change input
       @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').format('YYYY-MM-DD')
 
-    it '#onPublishDateChange sets scheduled date, and sets published_at to null if article is draft', ->
+
+  describe 'Publish and scheduled date button', ->
+
+    it 'Can schedule a draft on click', ->
       @component.setState = sinon.stub()
       @component.onChange = sinon.stub()
       @component.props.article.set('published', false)
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
       input.value = moment().add(1, 'years').format('YYYY-MM-DD')
       r.simulate.change input
+      $(ReactDOM.findDOMNode(@component)).find('button.date').text().should.eql 'Schedule'
+      r.simulate.click r.find(@component, 'date')[0]
       @component.onChange.args[0].should.eql ['published_at', null]
       moment(@component.onChange.args[1][1]).format('YYYY-MM-DD').should.eql moment().add(1, 'years').format('YYYY-MM-DD')
       @component.onChange.args[1][0].should.eql 'scheduled_publish_at'
 
-    it '#onPublishDateChange saves a changed published_at date on published article', ->
+    it 'Can unschedule a draft on click', ->
+      @component.props.article.set('published', false)
+      @component.props.article.set('scheduled_publish_at', moment().toISOString())
+      @component.forceUpdate()
+      @component.onChange = sinon.stub()
+      $(ReactDOM.findDOMNode(@component)).find('button.date').text().should.eql 'Unschedule'
+      r.simulate.click r.find(@component, 'date')[0]
+      @component.onChange.args[0].should.eql ['published_at', null]
+      @component.onChange.args[1].should.eql ['scheduled_publish_at', null]
+
+    it 'Can update published_at date for published articles on click', ->
       @component.setState = sinon.stub()
       @component.onChange = sinon.stub()
       @component.props.article.set('published', true)
+      @component.forceUpdate()
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
       input.value = moment().subtract(1, 'years').format('YYYY-MM-DD')
       r.simulate.change input
+      $(ReactDOM.findDOMNode(@component)).find('button.date').text().should.eql 'Update'
+      r.simulate.click r.find(@component, 'date')[0]
       @component.setState.args[0][0].publish_date.should.eql moment().subtract(1, 'years').format('YYYY-MM-DD')
       @component.onChange.args[0][0].should.eql 'published_at'
       @component.onChange.args[0][1].should.containEql moment().subtract(1, 'years').format('YYYY-MM-DD')
