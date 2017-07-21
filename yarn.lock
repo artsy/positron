@@ -5123,7 +5123,11 @@ oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-oauth@0.9.x, "oauth@git://github.com/craigspaeth/node-oauth.git":
+oauth@0.9.x:
+  version "0.9.15"
+  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
+
+"oauth@git://github.com/craigspaeth/node-oauth.git":
   version "0.9.13"
   resolved "git://github.com/craigspaeth/node-oauth.git#9bea5033d38df983f7773d265ee4de2a5b0ff25f"
 
@@ -7366,7 +7370,7 @@ uglify-js@2.x.x, uglify-js@^2.6.2:
     uglify-to-browserify "~1.0.0"
     yargs "~3.10.0"
 
-uglify-js@^2.8.27:
+uglify-js@^2.4.19, uglify-js@^2.8.27:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
