@@ -14,7 +14,7 @@ sd = require('sharify').data
 Sections = require '../collections/sections.coffee'
 Section = require '../models/section.coffee'
 request = require 'superagent'
-moment = require 'moment'
+moment = require 'moment-timezone'
 
 module.exports = class Article extends Backbone.Model
 
@@ -55,13 +55,13 @@ module.exports = class Article extends Backbone.Model
       date = @get('published_at')
     else if @get('scheduled_publish_at')
       date = @get('scheduled_publish_at')
-    return moment(date).format('MMM D, YYYY h:mm a')
+    return moment(date).tz("America/New_York").format('MMM D, YYYY h:mm a')
 
   date: (attr) ->
     if @get(attr)
-      moment(new Date(@get(attr))).local()
+      moment(new Date(@get(attr))).tz("America/New_York")
     else
-      moment(new Date()).local()
+      moment(new Date()).tz("America/New_York")
 
   hasContributingAuthors: ->
     @get('contributing_authors')?.length > 0

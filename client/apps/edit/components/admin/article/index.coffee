@@ -1,7 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 _ = require 'underscore'
-moment = require 'moment'
+moment = require 'moment-timezone'
 sd = require('sharify').data
 { div, label, input, button } = React.DOM
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
@@ -10,8 +10,8 @@ module.exports = AdminArticle = React.createClass
   displayName: 'AdminArticle'
 
   getInitialState: ->
-    publish_date: moment().format('YYYY-MM-DD')
-    publish_time: moment().format('HH:mm')
+    publish_date: moment().tz("America/New_York").format('YYYY-MM-DD')
+    publish_time: moment().tz("America/New_York").format('HH:mm')
     focus_date: false
     tier: @props.article.get('tier') or 2
     featured: @props.article?.get('featured') or false
@@ -51,16 +51,16 @@ module.exports = AdminArticle = React.createClass
   setupPublishDate: ->
     if @props.article.get 'scheduled_publish_at'
       @setState
-        publish_date: moment(@props.article.get('scheduled_publish_at')).format('YYYY-MM-DD')
-        publish_time: moment(@props.article.get('scheduled_publish_at')).format('HH:mm')
+        publish_date: moment(@props.article.get('scheduled_publish_at')).tz("America/New_York").format('YYYY-MM-DD')
+        publish_time: moment(@props.article.get('scheduled_publish_at')).tz("America/New_York").format('HH:mm')
     else if @props.article.get 'published_at'
       @setState
-        publish_date: moment(@props.article.get('published_at')).format('YYYY-MM-DD')
-        publish_time: moment(@props.article.get('published_at')).format('HH:mm')
+        publish_date: moment(@props.article.get('published_at')).tz("America/New_York").format('YYYY-MM-DD')
+        publish_time: moment(@props.article.get('published_at')).tz("America/New_York").format('HH:mm')
     else
       @setState
-        publish_date: moment().format('YYYY-MM-DD')
-        publish_time: moment().format('HH:mm')
+        publish_date: moment().tz("America/New_York").format('YYYY-MM-DD')
+        publish_time: moment().tz("America/New_York").format('HH:mm')
 
   publishButtonText: ->
     buttonText = 'Schedule'
@@ -71,7 +71,7 @@ module.exports = AdminArticle = React.createClass
     return buttonText
 
   onScheduleChange: ->
-    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
+    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value).tz("America/New_York")
     if !@props.article.get 'published'
       @onChange 'published_at', null
       if @props.article.get 'scheduled_publish_at'
