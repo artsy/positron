@@ -31,10 +31,13 @@ module.exports = React.createClass
 
   render: ->
     layout = @props.article.get('layout')
+    vertical = @props.article.get('vertical')?.name
     div { className: 'edit-header' },
       unless layout is 'classic'
-        div { className: 'edit-header__vertical' },
-          @props.article.get('vertical')?.name or 'Missing Vertical'
+        div {
+          className: 'edit-header__vertical' + if vertical then '' else ' placeholder'
+        },
+          vertical or 'Missing Vertical'
 
       div { className: 'edit-header__title' },
         textarea {

@@ -30,6 +30,8 @@ async = require 'async'
     )
     if sd.EDIT_2
       if channel.get('name') is 'Artsy Editorial'
+        # TODO - replace with better conditional (or channel.isEditorial),
+        # using name allows viewing the test channels in classic for interim.
         @article.set('layout', 'standard')
       ReactDOM.render(
         EditContent2(article: @article, channel: channel)

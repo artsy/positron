@@ -1,10 +1,9 @@
 React = require 'react'
-moment = require 'moment'
 _ = require 'underscore'
 HeroSection = React.createFactory require '../content/sections/hero/index.coffee'
 HeaderSection = React.createFactory require './sections/header/index.coffee'
 SectionList = React.createFactory require '../content/section_list/index.coffee'
-{ div, p, textarea } = React.DOM
+{ div } = React.DOM
 
 
 module.exports = React.createClass
