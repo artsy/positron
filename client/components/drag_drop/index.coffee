@@ -62,6 +62,8 @@ module.exports = React.createClass
           child
         else
           i = child.props.index or i
+          type = child.props.section?.get('type') or null
+          layout = child.props.section?.get('layout') or null
           DragTarget {
             key: i
             i: i
@@ -74,6 +76,8 @@ module.exports = React.createClass
             vertical: if @props.layout is 'vertical' then true else false
             dropPosition: @state.dropPosition
             dragStartY: @state.dragStartY
+            type: type
+            layout: layout
           },
             DragSource {
               i: i
