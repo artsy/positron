@@ -19,10 +19,27 @@ module.exports = React.createClass
     @props.article.set 'lead_paragraph', html
     @props.saveArticle()
 
-  render: ->
-    div { className: 'edit-header-container' },
+  renderLeadParagraph: ->
+    div {
+      className: 'edit-header__lead-paragraph'
+    },
+      RichTextParagraph {
+        text: @props.article.get('lead_paragraph')
+        onChange: @setLeadParagraph
+        placeholder: 'Lead paragraph (optional)'
+      }
 
-      div { id: 'edit-title' },
+  render: ->
+    layout = @props.article.get('layout')
+    vertical = @props.article.get('vertical')?.name
+    div { className: 'edit-header' },
+      unless layout is 'classic'
+        div {
+          className: 'edit-header__vertical' + if vertical then '' else ' placeholder'
+        },
+          vertical or 'Missing Vertical'
+
+      div { className: 'edit-header__title' },
         textarea {
           className: 'invisible-input'
           placeholder: 'Type a title'
@@ -34,18 +51,14 @@ module.exports = React.createClass
         unless @props.article.get('title')?.length > 0
           div { className: 'edit-required' }
 
-      div {
-        id: 'edit-lead-paragraph'
-        className: 'edit-body-container'
-      },
-        RichTextParagraph {
-          text: @props.article.get('lead_paragraph')
-          onChange: @setLeadParagraph
-          placeholder: 'Lead paragraph (optional)'
-        }
+      if layout is 'classic'
+        @renderLeadParagraph()
 
-      div { className: 'edit-author-section' },
+      div { className: 'edit-header__author' },
         if @props.article.get('author')
-          p { className: 'article-author' },
+          p { className: 'author' },
             @props.article.get('author').name
-        p { className: 'article-date' }, @props.article.getPublishDate()
+        p { className: 'date' }, @props.article.getPublishDate()
+
+      if layout is 'standard' and @props.article.get('lead_paragraph').length
+        @renderLeadParagraph()

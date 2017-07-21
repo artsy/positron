@@ -456,4 +456,11 @@ describe 'SectionText', ->
 
     it 'strips or converts unsupported html and linebreaks', ->
       @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
+      @component.state.html.should.containEql '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
+
+    it 'does not overwrite existing content', ->
+      @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
       @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
+      @component.state.html.should.containEql '<p>yep.01 &nbsp;<a name="here" class="is-jump-link">here is a toc.</a></p><p>In 2016, K mounted a <a'
+
+

@@ -1,0 +1,81 @@
+.edit-header
+  padding-top 60px
+  .public-DraftEditorPlaceholder-root
+    position absolute
+  &__title
+    position relative
+    width 100%
+    .edit-required
+      position absolute
+      top 0
+      width 100%
+      z-index -1
+      &::after
+        position relative
+    textarea
+      width 100%
+      margin-bottom -20px
+  &__vertical
+    Unica s19, medium
+    &.placeholder
+      color gray-dark-color
+
+.standard
+  .edit-header
+    padding-left 110px
+    padding-right 110px
+    &__title
+      .edit-required::after
+        left 235px
+      textarea
+        Garamond s50
+    &__author
+      padding-top 60px
+      padding-bottom 55px
+      Unica s19, medium
+      display flex
+      p
+        margin-right 30px
+        &::before
+          content ''
+          display inline-block
+          width 10px
+          height 10px
+          border-radius 50%
+          margin-right 10px
+          background-color black
+    &__lead-paragraph
+      font-style italic
+      Garamond s23
+      max-width standard-body-w-margin
+      margin 0 auto
+      padding 0 20px
+
+.classic
+  .edit-header
+    max-width classic-overflow-width
+    margin 0 auto
+    &__title
+      .edit-required
+        text-align center
+        &::after
+          left 100px
+      textarea
+        text-align center
+        garamond l-headline
+    &__author
+      max-width classic-body-width
+      text-align center
+      margin 35px auto 0 auto
+      padding controls-padding 0
+      .author
+        avant-garde m-headline
+      .date
+        avant-garde s-headline
+        line-height 25px
+        color gray-dark-color
+    &__lead-paragraph
+      garamond l-body
+      color gray-dark-color
+      max-width classic-body-width
+      margin 0 auto

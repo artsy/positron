@@ -42,11 +42,11 @@ describe "Article", ->
       JSON.stringify(@article.toJSON()).should.containEql '"hero_section":null'
 
     it 'serializes the lead paragraph if there is data', ->
-      @article.setLeadParagraph('<p>hello</p>')
+      @article.set('lead_paragraph', '<p>hello</p>')
       @article.toJSON().lead_paragraph.should.eql '<p>hello</p>'
 
     it 'serializes the lead paragraph if there isnt any data', ->
-      @article.setLeadParagraph('<p></p>')
+      @article.set('lead_paragraph', '<p></p>')
       (@article.toJSON().lead_paragraph?).should.not.be.ok
 
   describe '#finishedContent', ->
@@ -109,12 +109,6 @@ describe "Article", ->
       published = moment().subtract(1, 'years')
       @article.set published_at: published.toISOString()
       @article.getPublishDate().should.containEql published.format('MMM D, YYYY')
-
-  describe '#setLeadParagraph', ->
-
-    it 'sets @leadParagraph to html contents', ->
-      @article.setLeadParagraph('<p>hello</p>')
-      @article.leadParagraph.get('text').should.equal '<p>hello</p>'
 
   describe '#getObjectAttribute', ->
 

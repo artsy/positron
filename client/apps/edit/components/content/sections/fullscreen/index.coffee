@@ -80,10 +80,9 @@ module.exports = React.createClass
             defaultValue: @state.title
           }
           (
-            unless sd.ARTICLE?.is_super_article
-              div { className: 'edit-author-section'},
-                p {}, sd.ARTICLE.author.name if sd.ARTICLE?.author
-                p {}, moment(sd.ARTICLE?.published_at || moment()).format('MMM D, YYYY h:mm a')
+            div { className: 'edit-author-section'},
+              p {}, sd.ARTICLE.author.name if sd.ARTICLE?.author
+              p {}, moment(sd.ARTICLE?.published_at || moment()).format('MMM D, YYYY h:mm a')
           )
       (
         if @state.progress
