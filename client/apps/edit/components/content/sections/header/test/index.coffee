@@ -75,7 +75,7 @@ describe 'SectionHeader', ->
 
     it '#setLeadParagraph sets and saves article lead paragraph on change', ->
       @component.setLeadParagraph('<p>A new paragraph</p>')
-      @component.props.article.leadParagraph.get('text').should.eql '<p>A new paragraph</p>'
+      @component.props.article.get('lead_paragraph').should.eql '<p>A new paragraph</p>'
       @component.props.saveArticle.called.should.eql true
 
   describe 'Author /Date ', ->

@@ -116,8 +116,8 @@ module.exports = class EditLayout extends Backbone.View
 
   getBodyText: =>
     @fullText = []
-    if $(@article.leadParagraph.get('text')).text().length
-      @fullText.push @article.leadParagraph.get('text')
+    if @article.get('lead_paragraph').length
+      @fullText.push @article.get('lead_paragraph')
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
