@@ -5,7 +5,7 @@
 
 React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
-SectionTool = React.createFactory require '../../content/section_tool/index.coffee'
+SectionTool = React.createFactory require '../section_tool/index.coffee'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
 { div } = React.DOM
 
@@ -62,6 +62,7 @@ module.exports = React.createClass
                 key: section.cid
                 channel: @props.channel
                 onSetEditing: @onSetEditing
+                article: @props.article
               }
               SectionTool { sections: @props.sections, index: i, key: i }
             ]

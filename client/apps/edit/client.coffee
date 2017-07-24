@@ -29,7 +29,6 @@ async = require 'async'
       $('#edit-admin')[0]
     )
     if sd.EDIT_2
-      @article.set('layout', 'standard') if channel.isEditorial()
       ReactDOM.render(
         EditContent2(article: @article, channel: channel)
         $('#edit-content')[0]

@@ -11,7 +11,7 @@ SectionSlideshow = React.createFactory require '../../content/sections/slideshow
 SectionEmbed = React.createFactory require '../../content/sections/embed/index.coffee'
 SectionFullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../../content/sections/callout/index.coffee'
-SectionImageCollection = React.createFactory require '../../content/sections/image_collection/index.coffee'
+SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 SectionImage = React.createFactory require '../../content/sections/image/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
@@ -70,6 +70,7 @@ module.exports = React.createClass
         section: @props.section
         sections: @props.sections
         editing: @props.editing
+        article: @props.article
         index: @props.index
         ref: 'section'
         onClick: @setEditing(on)
@@ -83,7 +84,3 @@ module.exports = React.createClass
         onClick: @onClickOff
       }
       # TODO - FEATURE HEADER
-      # (
-      #   if @props.section.get('type') is 'fullscreen'
-      #     div { className: 'edit-section__container-block' }
-      # )
