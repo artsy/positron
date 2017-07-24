@@ -8,7 +8,7 @@ _ = require 'underscore'
 fixtures = require '../../../../../../test/helpers/fixtures.coffee'
 Article = require '../../../../../models/article.coffee'
 Backbone = require 'backbone'
-moment = require 'moment-timezone'
+moment = require 'moment'
 
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
@@ -100,27 +100,27 @@ describe 'AdminArticle', ->
     it '#setupPublishDate returns current date and time if unpublished', ->
       @component.setState = sinon.stub()
       @component.setupPublishDate()
-      @component.setState.args[0][0].publish_date.should.eql moment().tz("America/New_York").format('YYYY-MM-DD')
-      @component.setState.args[0][0].publish_time.should.containEql moment().tz("America/New_York").format('HH:')
+      @component.setState.args[0][0].publish_date.should.eql moment().local().format('YYYY-MM-DD')
+      @component.setState.args[0][0].publish_time.should.containEql moment().local().format('HH:')
 
     it '#setupPublishDate returns saved date and time if published', ->
       @component.setState = sinon.stub()
-      @component.props.article.set 'published_at', moment().subtract(1, 'years').tz("America/New_York").toISOString()
+      @component.props.article.set 'published_at', moment().subtract(1, 'years').local().toISOString()
       @component.setupPublishDate()
-      @component.setState.args[0][0].publish_date.should.eql moment().subtract(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      @component.setState.args[0][0].publish_date.should.eql moment().subtract(1, 'years').local().format('YYYY-MM-DD')
 
     it '#setupPublishDate returns a scheduled date and time if provided', ->
       @component.setState = sinon.stub()
-      @component.props.article.set 'scheduled_publish_at', moment().add(1, 'years').tz("America/New_York").toISOString()
+      @component.props.article.set 'scheduled_publish_at', moment().add(1, 'years').local().toISOString()
       @component.setupPublishDate()
-      @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').local().format('YYYY-MM-DD')
 
     it '#onPublishDateChange updates the state to input value', ->
       @component.setState = sinon.stub()
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
-      input.value = moment().add(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      input.value = moment().add(1, 'years').local().format('YYYY-MM-DD')
       r.simulate.change input
-      @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      @component.setState.args[0][0].publish_date.should.eql moment().add(1, 'years').local().format('YYYY-MM-DD')
 
 
   describe 'Publish and scheduled date button', ->
@@ -130,12 +130,12 @@ describe 'AdminArticle', ->
       @component.onChange = sinon.stub()
       @component.props.article.set('published', false)
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
-      input.value = moment().add(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      input.value = moment().add(1, 'years').local().format('YYYY-MM-DD')
       r.simulate.change input
       $(ReactDOM.findDOMNode(@component)).find('button.date').text().should.eql 'Schedule'
       r.simulate.click r.find(@component, 'date')[0]
       @component.onChange.args[0].should.eql ['published_at', null]
-      moment(@component.onChange.args[1][1]).tz("America/New_York").format('YYYY-MM-DD').should.eql moment().add(1, 'years').format('YYYY-MM-DD')
+      moment(@component.onChange.args[1][1]).local().format('YYYY-MM-DD').should.eql moment().add(1, 'years').format('YYYY-MM-DD')
       @component.onChange.args[1][0].should.eql 'scheduled_publish_at'
 
     it 'Can unschedule a draft on click', ->
@@ -154,13 +154,13 @@ describe 'AdminArticle', ->
       @component.props.article.set('published', true)
       @component.forceUpdate()
       input = ReactDOM.findDOMNode(@component.refs.publish_date)
-      input.value = moment().subtract(1, 'years').tz("America/New_York").format('YYYY-MM-DD')
+      input.value = moment().subtract(1, 'years').local().format('YYYY-MM-DD')
       r.simulate.change input
       $(ReactDOM.findDOMNode(@component)).find('button.date').text().should.eql 'Update'
       r.simulate.click r.find(@component, 'date')[0]
-      @component.setState.args[0][0].publish_date.should.eql moment().tz("America/New_York").subtract(1, 'years').format('YYYY-MM-DD')
+      @component.setState.args[0][0].publish_date.should.eql moment().local().subtract(1, 'years').format('YYYY-MM-DD')
       @component.onChange.args[0][0].should.eql 'published_at'
-      @component.onChange.args[0][1].should.containEql moment().tz("America/New_York").subtract(1, 'years').format('YYYY-MM-DD')
+      @component.onChange.args[0][1].should.containEql moment().local().subtract(1, 'years').format('YYYY-MM-DD')
 
 
   describe 'onChange', ->
