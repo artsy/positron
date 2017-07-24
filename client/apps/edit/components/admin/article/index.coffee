@@ -10,8 +10,8 @@ module.exports = AdminArticle = React.createClass
   displayName: 'AdminArticle'
 
   getInitialState: ->
-    publish_date: moment().format('YYYY-MM-DD')
-    publish_time: moment().format('HH:mm')
+    publish_date: moment().local().format('YYYY-MM-DD')
+    publish_time: moment().local().format('HH:mm')
     focus_date: false
     tier: @props.article.get('tier') or 2
     featured: @props.article?.get('featured') or false
@@ -47,28 +47,42 @@ module.exports = AdminArticle = React.createClass
     @setState
       publish_date: @refs.publish_date.value
       publish_time: @refs.publish_time.value
-    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value)
-    if !@props.article.get 'published'
-      # if draft set scheduled
-      @onChange 'published_at', null
-      @onChange 'scheduled_publish_at', published_at.toISOString()
-    else
-      # if article is published, reset published date
-      @onChange 'published_at', published_at.toISOString()
 
   setupPublishDate: ->
     if @props.article.get 'scheduled_publish_at'
       @setState
-        publish_date: moment(@props.article.get('scheduled_publish_at')).format('YYYY-MM-DD')
-        publish_time: moment(@props.article.get('scheduled_publish_at')).format('HH:mm')
+        publish_date: @props.article.date('scheduled_publish_at').format('YYYY-MM-DD')
+        publish_time: @props.article.date('scheduled_publish_at').format('HH:mm')
     else if @props.article.get 'published_at'
       @setState
-        publish_date: moment(@props.article.get('published_at')).format('YYYY-MM-DD')
-        publish_time: moment(@props.article.get('published_at')).format('HH:mm')
+        publish_date: @props.article.date('published_at').format('YYYY-MM-DD')
+        publish_time: @props.article.date('published_at').format('HH:mm')
     else
       @setState
-        publish_date: moment().format('YYYY-MM-DD')
-        publish_time: moment().format('HH:mm')
+        publish_date: moment().local().format('YYYY-MM-DD')
+        publish_time: moment().local().format('HH:mm')
+
+  publishButtonText: ->
+    buttonText = 'Schedule'
+    if @props.article.get 'published'
+      buttonText = 'Update'
+    else if @props.article.get 'scheduled_publish_at'
+      buttonText = 'Unschedule'
+    return buttonText
+
+  onScheduleChange: ->
+    published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value).local()
+    if !@props.article.get 'published'
+      @onChange 'published_at', null
+      if @props.article.get 'scheduled_publish_at'
+        # if draft and has scheduled date, unschedule
+        @onChange 'scheduled_publish_at', null
+      else
+        # if draft and no scheduled date, set scheduled
+        @onChange 'scheduled_publish_at', published_at.toISOString()
+    else
+      # if article is published, reset published date
+      @onChange 'published_at', published_at.toISOString()
 
   focusDate: (e) ->
     @setState focus_date: true
@@ -175,6 +189,10 @@ module.exports = AdminArticle = React.createClass
                 onClick: @focusDate
                 onBlur: @blurDate
               }
+              button {
+                className: 'avant-garde-button date'
+                onClick: @onScheduleChange
+              }, @publishButtonText()
             div {
               className: 'field-group--inline flat-checkbox'
               onClick: @onCheckboxChange
