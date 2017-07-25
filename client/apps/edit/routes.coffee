@@ -11,7 +11,6 @@ sd = require('sharify').data
     partner_channel_id: channel.get('id') if channel.get('type') is 'partner'
     partner_ids: [channel.get('id')] if channel.get('type') is 'partner'
     author: { name: channel.get('name'), id: req.user.get('id') }
-    # TODO - set layout if channel is editorial
   }
   setChannelIndexable channel, article
   render req, res, article

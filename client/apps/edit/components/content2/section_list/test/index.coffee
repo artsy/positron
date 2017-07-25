@@ -88,7 +88,7 @@ describe 'SectionList', ->
     sectionContainer.args[1][0].key.should.equal @sections.at(1).cid
 
   it 'onRemoveSection removes sections from the article', ->
-    r.simulate.click r.find(@component, 'edit-section-remove')[0]
+    r.simulate.click r.find(@component, 'edit-section__remove')[0]
     @component.props.sections.length.should.eql 3
 
   it 'onRemoveSection resets the article sections if empty', ->
@@ -96,5 +96,5 @@ describe 'SectionList', ->
     @props.article = new Backbone.Model {sections: [{ body: 'Foo to the bar', type: 'text' }]}
     component = ReactDOM.render React.createElement(@SectionList, @props ), ($el = $ "<div></div>")[0], =>
     component.render()
-    r.simulate.click r.find(component, 'edit-section-remove')[0]
+    r.simulate.click r.find(component, 'edit-section__remove')[0]
     @props.article.get('sections').length.should.eql 0

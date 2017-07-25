@@ -2,7 +2,7 @@ React = require 'react'
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
 Artwork = React.createFactory components.Artwork
 icons = -> require('../../../../icons.jade') arguments...
-{ div } = React.DOM
+{ div, button } = React.DOM
 
 module.exports = React.createClass
   displayName: 'ImageCollectionDisplayArtwork'
@@ -19,7 +19,7 @@ module.exports = React.createClass
       }
       if @props.removeItem and @props.editing
         button {
-          className: 'edit-section-remove button-reset esic-img-remove'
+          className: 'edit-section-remove button-reset'
           onClick: @props.removeItem(@props.artwork)
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }

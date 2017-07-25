@@ -8,7 +8,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 
 describe 'ImageCollection', ->
@@ -90,7 +90,7 @@ describe 'ImageCollection', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
 
     it 'sets editing mode on click', ->
-      r.simulate.click r.find @component, 'edit-section-image-container'
+      r.simulate.click(r.find(@component, 'image-collection__img-container')[0])
       @setEditing.called.should.eql true
       @setEditing.args[0][0].should.eql true
 
@@ -155,21 +155,47 @@ describe 'ImageCollection', ->
 
   describe '#getFillWidthSizes', ->
 
-    it 'returns expected container and target for overflow_fillwidth', ->
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 537.5999999999999
+    describe 'Classic layout', ->
 
-    it 'returns expected container and target for column_width', ->
-      @component.props.section.set 'layout', 'column_width'
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 580
-      sizes.targetHeight.should.eql 537.5999999999999
+      it 'returns expected container and target for overflow_fillwidth', ->
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 900
+        sizes.targetHeight.should.eql 537.5999999999999
 
-    it 'returns expected container and target for image_set with many images', ->
-      @component.props.section.unset 'layout'
-      @component.props.section.set 'type', 'image_set'
-      @component.props.section.set 'images', ['img', 'img', 'img', 'img']
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 400
+      it 'returns expected container and target for column_width', ->
+        @component.props.section.set 'layout', 'column_width'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 580
+        sizes.targetHeight.should.eql 537.5999999999999
+
+      it 'returns expected container and target for image_set with many images', ->
+        @component.props.section.unset 'layout'
+        @component.props.section.set 'type', 'image_set'
+        @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 900
+        sizes.targetHeight.should.eql 400
+
+    describe 'Standard layout', ->
+
+      it 'returns expected container and target for overflow_fillwidth', ->
+        @component.props.article.set 'layout', 'standard'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 780
+        sizes.targetHeight.should.eql 537.5999999999999
+
+      it 'returns expected container and target for column_width', ->
+        @component.props.article.set 'layout', 'standard'
+        @component.props.section.set 'layout', 'column_width'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 680
+        sizes.targetHeight.should.eql 537.5999999999999
+
+      it 'returns expected container and target for image_set with many images', ->
+        @component.props.article.set 'layout', 'standard'
+        @component.props.section.unset 'layout'
+        @component.props.section.set 'type', 'image_set'
+        @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 780
+        sizes.targetHeight.should.eql 400

@@ -24,27 +24,21 @@ module.exports = React.createClass
     height
 
   getControlsWidth: ->
-    section = @props.section
-    if @props.isHero or
-     (section.get('type') is 'embed' and section.get('layout') is 'overflow')
-        width = 1100
-    else if section.get('layout')?.includes('overflow') or
-     section.get('type') is 'image_set'
-      if @props.article?.get('layout') is 'classic'
-        width = 940
-      else
-        width = 820
-    else if @props.article?.get('layout') is 'classic'
-      width = 620
+    # used for classic layout only
+    sectionType = @props.section.get('type')
+    sectionLayout = @props.section.get('layout')
+    if @props.isHero or (sectionType is 'embed' and sectionLayout is 'overflow')
+      width = 1100
+    else if sectionLayout?.includes('overflow') or sectionType is 'image_set'
+      width = 940
     else
-      width = 720
+      width = 620
     width
 
   getPositionLeft: ->
+    left = 0
     if @state.insideComponent
       left = (window.innerWidth / 2) - (@getControlsWidth() / 2) + 55
-    else
-      left = 0
     left
 
   getPositionBottom: ->
@@ -74,13 +68,12 @@ module.exports = React.createClass
 
   render: ->
     header {
-      className: 'edit-section-controls' + if @state.insideComponent then ' sticky' else ''
+      className: 'edit-controls' + if @state.insideComponent then ' sticky' else ''
       ref: 'controls'
       style:
-        width: @getControlsWidth()
         position: if @state.insideComponent then 'fixed' else 'absolute'
         bottom: @getPositionBottom()
-        left: @getPositionLeft() and @props.article?.get('layout') is 'classic'
+        left: @getPositionLeft() if @props.article?.get('layout') is 'classic'
     },
       @props.children
 

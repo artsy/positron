@@ -39,7 +39,7 @@ describe 'SectionTool', ->
     benv.teardown()
 
   it 'opens on click', ->
-    r.simulate.click r.find @component, 'edit-section-tool-icon'
+    r.simulate.click r.find @component, 'edit-tool__icon'
     @component.state.open.should.equal true
 
   it 'adds a new text section when clicking on it', ->

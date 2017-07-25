@@ -56,7 +56,7 @@ module.exports = React.createClass
       templates:
         suggestion: (data) ->
           """
-            <div class='esis-suggestion' \
+            <div class='autocomplete-suggestion' \
                style='background-image: url(#{data.thumbnail})'>
             </div>
             #{data.value}
@@ -100,7 +100,7 @@ module.exports = React.createClass
       channel: @props.channel
       article: @props.article
     },
-      nav { className: 'es-layout' },
+      nav { className: 'edit-controls__layout' },
         a {
           name: 'overflow_fillwidth'
           className: 'layout'
@@ -130,8 +130,8 @@ module.exports = React.createClass
         h2 {}, 'Up to 30mb'
         input { type: 'file', onChange: @upload }
 
-      section { className: 'esic-artwork-inputs' },
-        div { className: 'esis-autocomplete-input' },
+      section { className: 'edit-controls__artwork-inputs' },
+        div { className: 'edit-controls__autocomplete-input' },
           input {
             ref: 'autocomplete'
             className: 'bordered-input bordered-input-dark'

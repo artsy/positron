@@ -48,9 +48,9 @@ module.exports = React.createClass
       containerSize = if sectionLayout is 'column_width' then 580 else 900
     else if articleLayout is 'standard'
       containerSize = if sectionLayout is 'column_width' then 680 else 780
+    targetHeight = window.innerHeight * .7
     if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
       targetHeight = 400
-    targetHeight = window.innerHeight * .7
     return {containerSize: containerSize, targetHeight: targetHeight}
 
   setProgress: (progress) ->

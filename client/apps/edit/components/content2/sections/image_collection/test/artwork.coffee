@@ -47,15 +47,15 @@ describe 'ImageCollectionArtwork', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Van Dogh'
 
   it 'renders the remove button', ->
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'esic-img-remove'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'edit-section-remove'
 
   it 'calls removeItem when clicking remove icon', ->
-    r.simulate.click r.find @component, 'esic-img-remove'
+    r.simulate.click r.find @component, 'edit-section-remove'
     @removeItem.called.should.eql true
     @removeItem.args[0][0].id.should.eql '123'
 
   it 'hides the remove button when not editing', (done) ->
     @props.editing = false
     component = ReactDOM.render React.createElement(@Artwork, @props), (@$el = $ "<div></div>")[0], =>
-    $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'esic-img-remove'
+    $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'edit-section-remove'
     done()

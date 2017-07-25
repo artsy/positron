@@ -28,6 +28,8 @@ describe 'SectionControls', ->
         editing: true
         channel: { isEditorial: sinon.stub().returns(true) }
         isHero: false
+        article: new Backbone.Model
+          layout: 'classic'
       }
 
       @component = ReactDOM.render React.createElement(@SectionControls, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -69,15 +71,15 @@ describe 'SectionControls', ->
 
     it 'returns 900 if image_set or has overflow layout', ->
       width = @component.getControlsWidth()
-      width.should.eql 900
+      width.should.eql 940
 
       @component.props.section.set 'type', 'image_set'
       width = @component.getControlsWidth()
-      width.should.eql 900
+      width.should.eql 940
 
       @component.props.section.set 'type', 'video'
       width = @component.getControlsWidth()
-      width.should.eql 900
+      width.should.eql 940
 
     it 'returns 1100 if hero section', ->
       @props.isHero = true
@@ -128,7 +130,7 @@ describe 'SectionControls', ->
 
     it 'calculates width based on window when insideComponent', ->
       left = @component.getPositionLeft()
-      left.should.eql 305
+      left.should.eql 285
 
     it 'returns 0 if outside component', ->
       @component.props.section.set 'type', 'video'
@@ -136,7 +138,3 @@ describe 'SectionControls', ->
       left = @component.getPositionLeft()
       left.should.eql 0
 
-    it 'adds a 20px buffer for images', ->
-      @component.setState insideComponent: false
-      left = @component.getPositionLeft()
-      left.should.eql -20

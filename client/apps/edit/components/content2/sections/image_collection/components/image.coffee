@@ -29,7 +29,7 @@ module.exports = React.createClass
         }
       if @props.removeItem and @props.editing
         button {
-          className: 'edit-section-remove button-reset esic-img-remove'
+          className: 'edit-section-remove button-reset'
           onClick: @props.removeItem(image)
           dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
         }

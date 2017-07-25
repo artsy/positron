@@ -44,14 +44,14 @@ describe 'SectionContainer', ->
 
   it 'can delete a section', ->
     @component.props.section.destroy = sinon.stub()
-    r.simulate.click r.find(@component, 'edit-section-remove')
+    r.simulate.click r.find(@component, 'edit-section__remove')
     @component.props.section.destroy.called.should.be.ok
 
   it 'calls back to set the editing state upstream', ->
     @component.props.editing = false
-    r.simulate.click r.find @component, 'edit-section-hover-controls'
+    r.simulate.click r.find @component, 'edit-section__hover-controls'
     @onSetEditing.args[0][0].should.equal 1
 
   it 'exits editing mode when clicking off and callsback a parent', ->
-    r.simulate.click r.find @component, 'edit-section-container-bg'
+    r.simulate.click r.find @component, 'edit-section__container-bg'
     (@component.props.onSetEditing.args[0][0]?).should.not.be.ok

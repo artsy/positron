@@ -49,19 +49,19 @@ describe 'ImageCollectionImage', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
 
   it 'hides remove button if not editing', ->
-    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'esic-img-remove'
+    $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'edit-section-remove'
 
   it 'renders image caption input and remove button if editing', (done) ->
     @props.editing = true
     @component = ReactDOM.render React.createElement(@Image, @props), (@$el = $ "<div></div>")[0], =>
     $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="rich-text--caption">'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'esic-img-remove'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'edit-section-remove'
     done()
 
   it 'calls removeItem when clicking remove icon', (done) ->
     @props.editing = true
     component = ReactDOM.render React.createElement(@Image, @props), (@$el = $ "<div></div>")[0], =>
-    r.simulate.click r.find component, 'esic-img-remove'
+    r.simulate.click r.find component, 'edit-section-remove'
     @removeItem.called.should.eql true
     @removeItem.args[0][0].url.should.eql 'https://artsy.net/image.png'
     done()

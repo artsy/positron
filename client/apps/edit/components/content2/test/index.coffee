@@ -65,7 +65,6 @@ describe 'EditContent', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="edit-header">'
 
     it 'renders the section list', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div id="edit-sections" class="edit-body-container">'
       @SectionList.called.should.eql true
 
   describe '#saveArticle', ->

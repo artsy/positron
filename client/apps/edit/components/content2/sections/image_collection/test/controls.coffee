@@ -120,7 +120,7 @@ describe 'ImageCollectionControls', ->
     input = r.find(@component, 'bordered-input')[1]
     input.value = 'http://artsy.net/artwork/skull7'
     r.simulate.change input
-    r.simulate.click r.find(@component, 'esis-byurl-button')[0]
+    r.simulate.click r.find(@component, 'avant-garde-button')[0]
     Backbone.sync.args[0][2].success fabricate 'artwork'
     @component.props.section.get('images')[0].type.should.eql 'artwork'
     @onChange.called.should.eql true

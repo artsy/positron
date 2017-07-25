@@ -42,7 +42,7 @@ module.exports = React.createClass
     isLoading = if @state.isLoading then ' is-loading' else ''
     error = if @state.error then 'Artwork not found' else ''
 
-    div { className: 'esis-byurl-input' },
+    div { className: 'edit-controls__byurl-input' },
       input {
         className: 'bordered-input bordered-input-dark'
         placeholder: 'Add artwork url'
@@ -50,7 +50,7 @@ module.exports = React.createClass
         onChange: @onChange
       }
       button {
-        className: 'esis-byurl-button avant-garde-button' + isLoading
+        className: 'avant-garde-button' + isLoading
         onClick: @addArtworkFromUrl
       }, 'Add'
-      div { className: 'esis-urls-error'}, error
+      div { className: 'edit-controls__byurl-error'}, error
