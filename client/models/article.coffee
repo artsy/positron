@@ -55,7 +55,7 @@ module.exports = class Article extends Backbone.Model
       date = @get('published_at')
     else if @get('scheduled_publish_at')
       date = @get('scheduled_publish_at')
-    return moment(date).format('MMM D, YYYY h:mm a')
+    return moment(date).local().format('MMM D, YYYY h:mm a')
 
   date: (attr) ->
     if @get(attr)
