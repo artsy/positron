@@ -55,6 +55,50 @@ describe 'Save', ->
           .equal moment().format('MM DD YYYY')
         done()
 
+    it 'does not generate published_at if scheduled', (done) ->
+      Save.onPublish { thumbnail_title: 'a title', scheduled_publish_at: '2017-07-26T17:37:03.065Z', published_at: null }, (err, article) =>
+        (article.published_at is null).should.be.true()
+        done()
+
+  describe '#generateSlugs', ->
+
+    it 'generates a slug', (done) ->
+      Save.generateSlugs {
+        thumbnail_title: 'Clockwork'
+        published: true
+        author: name: 'Molly'
+      }, (err, article) =>
+        article.slugs[0].should.equal 'molly-clockwork'
+        done()
+
+    it 'appends a date to the slug if it exists already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-07-26-17'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends unix to the slug if it exists already and it is a draft', ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: false
+          author: name: 'Molly'
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-1501090623'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
   describe '#onUnpublish', ->
 
     it 'generates slugs and deletes article from sailthru', (done) ->
