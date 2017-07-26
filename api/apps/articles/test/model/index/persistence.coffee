@@ -9,6 +9,7 @@ gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
+{ onUnpublish } = require '../../../model/save'
 
 describe 'Article Persistence', ->
 
@@ -666,16 +667,16 @@ describe 'Article Persistence', ->
         Article.save article, 'foo', {}, (err, article) =>
           article.published.should.be.false()
           @onUnpublish.callCount.should.equal 1
+          Article.__set__ 'onUnpublish', onUnpublish
           done()
 
     it 'saves a hero_section', (done) ->
       Article.save {
-        hero_section: {
+        hero_section:
           url: 'http://youtube.com'
           type: 'fullscreen'
           title: 'The Year in Art 2018'
           intro: 'This year was incredible.'
-        }
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.hero_section.url.should.equal 'http://youtube.com'
