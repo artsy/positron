@@ -72,7 +72,7 @@ module.exports = AdminArticle = React.createClass
 
   onScheduleChange: ->
     published_at = moment(@refs.publish_date.value + ' ' + @refs.publish_time.value).local()
-    if !@props.article.get 'published'
+    unless @props.article.get 'published'
       @onChange 'published_at', null
       if @props.article.get 'scheduled_publish_at'
         # if draft and has scheduled date, unschedule

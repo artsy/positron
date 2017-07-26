@@ -15,7 +15,7 @@ Article = require './index'
 artsyXapp = require('artsy-xapp').token or ''
 
 @onPublish = (article, cb) =>
-  unless article.published_at
+  unless article.published_at or article.scheduled_publish_at
     article.published_at = new Date
   @generateSlugs article, cb
 
@@ -59,7 +59,9 @@ removeStopWords = (title) ->
   # Append published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
-    slug = slug + '-' + moment(article.published_at).format('MM-DD-YY') if count
+    if count
+      format = if article.published then 'MM-DD-YY' else 'X'
+      slug = slug + '-' + moment(article.published_at).format(format)
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 
