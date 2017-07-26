@@ -1,23 +1,23 @@
 Immutable = require 'immutable'
 Decorators = require '../../../../../../components/rich_text/utils/decorators.coffee'
 
-exports.inlineStyles = ->
-  return [
-    {label: 'B', style: 'BOLD'}
-    {label: 'I', style: 'ITALIC'}
-    {label: ' S ', style: 'STRIKETHROUGH'}
+exports.inlineStyles = (layout) ->
+  styles = [
+    {label: 'B', name: 'BOLD'}
+    {label: 'I', name: 'ITALIC'}
   ]
+  styles.push({label: ' S ', name: 'STRIKETHROUGH'}) unless layout is 'feature'
+  return styles
 
 exports.blockTypes = (layout) ->
   blocks = [
-    {label: 'H2', style: 'header-two'}
-    {label: 'H3', style: 'header-three'}
-    {label: 'UL', style: 'unordered-list-item'}
-    {label: 'OL', style: 'ordered-list-item'}
-    {label: 'BQ', style: 'blockquote'}
+    {label: 'H2', name: 'header-two'}
+    {label: 'H3', name: 'header-three'}
+    {label: 'BQ', name: 'blockquote'}
+    {name: 'unordered-list-item'}
   ]
-  if layout is 'feature'
-    blocks.push({label: 'H1', style: 'header-one'})
+  blocks.unshift({label: 'H1', name: 'header-one'}) if layout is 'feature'
+  blocks.push({name: 'ordered-list-item'}) if layout is 'classic'
   return blocks
 
 exports.blockRenderMap = (layout) ->

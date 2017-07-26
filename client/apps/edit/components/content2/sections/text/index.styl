@@ -25,6 +25,20 @@
       button[name='remove-formatting'],
       button[name='header-three']
         border-right none
+  &__input
+    position relative
+    .artist-follow
+      background-image none !important
+      &:before
+        content url(/icons/circle_plus.svg)
+        padding-left 10px
+        vertical-align -8.5px
+      &:after
+        content 'Follow'
+        garamond('s-body')
+        text-transform none
+        letter-spacing 0px
+
 
 .classic .edit-section--text
   garamond l-body
@@ -73,16 +87,4 @@
   blockquote
     Unica s69
 
-//   &__input
-//     position relative
-//     .artist-follow
-//       background-image none !important
-//       &:before
-//         content url(/icons/circle_plus.svg)
-//         padding-left 10px
-//         vertical-align -8.5px
-//       &:after
-//         content 'Follow'
-//         garamond('s-body')
-//         text-transform none
-//         letter-spacing 0px
+

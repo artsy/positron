@@ -27,7 +27,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
-ButtonStyle = React.createFactory require '../../../../../../components/rich_text/components/button_style.coffee'
+EditNav = React.createFactory require '../../../../../../components/rich_text/components/edit_nav.coffee'
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Channel = require '../../../../../../models/channel.coffee'
 
@@ -77,11 +77,6 @@ module.exports = React.createClass
     @setState focus: true
     @refs.editor.focus()
 
-  availableBlocks: ->
-    blockMap = blockRenderMap(@props.article.get('layout'))
-    available = Object.keys(blockMap.toObject())
-    return Array.from(available)
-
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
     # dont split from the first block, to avoid creating empty blocks
@@ -110,8 +105,8 @@ module.exports = React.createClass
       newHTML = mergeIntoHTML + @state.html
       blocksFromHTML = convertFromRichHtml newHTML
       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
-      newSectionState = setSelectionToStart(newSectionState)
-      @onChange(newSectionState)
+      newSectionState = setSelectionToStart newSectionState
+      @onChange newSectionState
       @props.onSetEditing @props.index - 1
 
   handleChangeSection: (e) ->
@@ -185,6 +180,11 @@ module.exports = React.createClass
     unstyled = contentBlock.set 'characterList', characterList
     return unstyled
 
+  availableBlocks: ->
+    blockMap = blockRenderMap(@props.article.get('layout'))
+    available = Object.keys(blockMap.toObject())
+    return Array.from(available)
+
   handleKeyCommand: (e) ->
     if e.key
       @handleChangeSection e
@@ -206,13 +206,6 @@ module.exports = React.createClass
       if className.includes 'is-follow-link'
         @promptForLink 'artist'
 
-  toggleBlockType: (blockType) ->
-    @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
-    @setState showMenu: false
-    if blockType is 'blockquote'
-      @toggleBlockQuote()
-    return 'handled'
-
   toggleBlockQuote: ->
     currentHtml = @props.section.get('body')
     beforeBlock = _s(currentHtml).strLeft('<blockquote>')._wrapped
@@ -221,6 +214,14 @@ module.exports = React.createClass
     @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
     @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
     @props.section.set('body', blockquote)
+    @props.onSetEditing @props.index + 1
+
+  toggleBlockType: (blockType) ->
+    @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
+    @setState showMenu: false
+    if blockType is 'blockquote'
+      @toggleBlockQuote()
+    return 'handled'
 
   toggleInlineStyle: (inlineStyle) ->
     selection = getSelectionDetails(@state.editorState)
@@ -243,15 +244,14 @@ module.exports = React.createClass
         selectionTarget: selectionTarget
         pluginType: pluginType
 
-  confirmLink: (urlValue, pluginType='', className='') ->
+  confirmLink: (urlValue) ->
     { editorState } = @state
     contentState = editorState.getCurrentContent()
-    props = @setPluginProps urlValue, pluginType, className
-    contentStateWithEntity = contentState.createEntity(
-      'LINK'
-      'MUTABLE'
-      props
-    )
+    if @state.pluginType
+      props = { url: urlValue, className: 'is-follow-link' }
+    else
+      props = { url: urlValue }
+    contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', props)
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
     @setState
@@ -271,61 +271,38 @@ module.exports = React.createClass
     selection = @state.editorState.getSelection()
     if !selection.isCollapsed()
       @setState({
+        pluginType: null
         showUrlInput: false
         urlValue: ''
         editorState: RichUtils.toggleLink(@state.editorState, selection, null)
       })
 
-  setPluginType: (e) ->
-    @setState pluginType: e
-    if e is 'artist'
-      @promptForLink e
-
-  setPluginProps: (urlValue, pluginType, className) ->
-    if pluginType is 'artist'
-      className = 'is-follow-link'
-      props = { url: urlValue, className: className }
-    else
-      props = { url: urlValue }
-    return props
-
-  printButtons: (buttons, handleToggle) ->
-    buttons.map (type, i) ->
-      ButtonStyle {
-        key: i
-        label: type.label
-        name: type.style
-        onToggle: handleToggle
-      }
-
   checkSelection: ->
-    selectionTargetL = if @state.hasFeatures then 125 else 100
     if !window.getSelection().isCollapsed
       location = getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTargetL = if @state.hasFeatures then 125 else 100
       @setState showMenu: true, selectionTarget: stickyControlsBox(location, -93, selectionTargetL)
     else
       @setState showMenu: false
 
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
-    hasPlugins = if @state.hasFeatures then ' has-plugins' else ''
 
     div {
       className: 'edit-section--text' + isEditing
       onClick: @focus
     },
       if @state.showMenu
-        nav {
-          className: 'edit-section--text__menu rich-text--nav' + hasPlugins
-          style:
-            top: @state.selectionTarget?.top
-            marginLeft: @state.selectionTarget?.left
-        },
-          @printButtons(inlineStyles(), @toggleInlineStyle)
-          @printButtons(blockTypes(@props.article.get('layout')), @toggleBlockType)
-          @printButtons([{label: 'link', style: 'link'}], @promptForLink)
-          @printButtons([{label: 'artist', style: 'artist'}], @setPluginType) if @state.hasFeatures
-          @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
+        EditNav {
+          hasFeatures: @state.hasFeatures
+          blocks: blockTypes @props.article.get('layout')
+          toggleBlock: @toggleBlockType
+          styles: inlineStyles @props.article.get('layout')
+          toggleStyle: @toggleInlineStyle
+          promptForLink: @promptForLink
+          makePlainText: @makePlainText
+          position: @state.selectionTarget
+        }
       div {
         className: 'edit-section--text__input'
         onMouseUp: @checkSelection
