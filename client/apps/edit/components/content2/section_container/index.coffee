@@ -5,7 +5,7 @@
 #
 
 React = require 'react'
-SectionText = React.createFactory require '../../content/sections/text/index.coffee'
+SectionText = React.createFactory require '../sections/text/index.coffee'
 SectionVideo = React.createFactory require '../../content/sections/video/index.coffee'
 SectionSlideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
 SectionEmbed = React.createFactory require '../../content/sections/embed/index.coffee'

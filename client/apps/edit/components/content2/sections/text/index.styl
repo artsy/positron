@@ -1,0 +1,74 @@
+@import '../../../stylus_lib'
+
+.edit-section--text
+  position relative
+  z-index -1
+  &.is-editing
+    z-index 100
+  ol li, ul li, li
+    list-style none
+    .public-DraftStyleDefault-ltr
+      display list-item
+      margin-left 20px
+      padding-left 10px
+  ol li .public-DraftStyleDefault-ltr,
+  li.public-DraftStyleDefault-orderedListItem .public-DraftStyleDefault-ltr
+    list-style decimal
+  ul li .public-DraftStyleDefault-ltr,
+  li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
+    list-style disc
+
+  nav
+    width 200px
+    &.has-plugins
+      width 250px
+      button[name='remove-formatting'],
+      button[name='header-three']
+        border-right none
+
+.classic .edit-section--text
+  garamond l-body
+  p
+    margin-top .75em
+    margin-bottom .75em
+  h2
+    garamond l-header
+    font-size 28px
+    line-height 1.2em
+    margin-top .5em
+  h3
+    avant-garde body
+    line-height 27px
+    span
+      font-style normal !important
+
+.standard .edit-section--text,
+.feature .edit-section--text
+  Garamond s23
+  p
+    margin-top 1em
+    margin-bottom 1em
+    &:first-child
+      margin-top 0
+    &:last-child
+      margin-bottom 0
+  h2
+    Garamond s40
+    margin-bottom 23px
+  h3
+    Unica s19
+    margin-top 23px
+
+//   &__input
+//     position relative
+//     .artist-follow
+//       background-image none !important
+//       &:before
+//         content url(/icons/circle_plus.svg)
+//         padding-left 10px
+//         vertical-align -8.5px
+//       &:after
+//         content 'Follow'
+//         garamond('s-body')
+//         text-transform none
+//         letter-spacing 0px
