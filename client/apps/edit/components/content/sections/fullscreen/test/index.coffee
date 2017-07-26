@@ -46,6 +46,7 @@ describe 'SectionFullscreen', ->
     @gemup.args[0][1].done('fooza.mp4')
     setTimeout =>
       @component.setState.args[0][0].background_url.should.equal 'fooza.mp4'
+      @component.setState.args[0][0].url.should.equal 'fooza.mp4'
       done()
 
   it 'uploads and saves image to gemini', (done) ->
@@ -54,6 +55,7 @@ describe 'SectionFullscreen', ->
     @gemup.args[0][1].done('fooza.jpg')
     setTimeout =>
       @component.setState.args[0][0].background_image_url.should.equal 'fooza.jpg'
+      @component.setState.args[0][0].url.should.equal 'fooza.jpg'
       done()
 
   it 'saves the url after upload', (done) ->

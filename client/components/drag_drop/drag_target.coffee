@@ -32,6 +32,8 @@ module.exports = React.createClass
       onDragOver: @setDragTarget
       'data-target': @props.activeTarget
       'data-source': @props.activeSource
+      'data-type': @props.type
+      'data-layout': @props.layout
       style:
         width: @props.width or '100%'
     },

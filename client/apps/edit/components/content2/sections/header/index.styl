@@ -22,8 +22,8 @@
 
 .standard
   .edit-header
-    padding-left 110px
-    padding-right 110px
+    padding-left 20px
+    padding-right 20px
     &__title
       .edit-required::after
         left 235px
@@ -47,9 +47,10 @@
     &__lead-paragraph
       font-style italic
       Garamond s23
-      max-width standard-body-w-margin
-      margin 0 auto
-      padding 0 20px
+      max-width standard-overflow-w-margin
+      .rich-text--paragraph
+        margin 0 auto
+        max-width standard-body-w-margin
 
 .classic
   .edit-header
@@ -78,4 +79,4 @@
       garamond l-body
       color gray-dark-color
       max-width classic-body-width
-      margin 0 auto
+      margin 20px auto 0 auto

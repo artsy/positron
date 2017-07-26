@@ -18,6 +18,7 @@ module.exports = React.createClass
     title: @props.section.get('title')
     background_url: @props.section.get('background_url')
     background_image_url: @props.section.get('background_image_url')
+    url: @props.section.get('url')
     progress: ''
 
   componentDidMount: ->
@@ -32,6 +33,7 @@ module.exports = React.createClass
       title: @state.title
       background_url: @state.background_url
       background_image_url: @state.background_image_url
+      url: @state.url
 
   onEditableKeyup: ->
     @setState title: $(@refs.editableTitle).val()
@@ -50,9 +52,19 @@ module.exports = React.createClass
         @setState progress: 0.1
       done: (src) =>
         if src.indexOf('.mp4') > 0
-          @setState background_url: src, progress: null, background_image_url: null
+          @setState(
+            background_url: src
+            progress: null
+            background_image_url: null
+            url: src
+          )
         else
-          @setState background_image_url: src, progress: null, background_url: null
+          @setState(
+            background_image_url: src
+            progress: null
+            background_url: null
+            url: src
+          )
         @onClickOff()
 
   render: ->

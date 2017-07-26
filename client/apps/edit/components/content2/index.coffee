@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 HeroSection = React.createFactory require '../content/sections/hero/index.coffee'
 HeaderSection = React.createFactory require './sections/header/index.coffee'
-SectionList = React.createFactory require '../content/section_list/index.coffee'
+SectionList = React.createFactory require './section_list/index.coffee'
 { div } = React.DOM
 
 
@@ -36,11 +36,9 @@ module.exports = React.createClass
         article: @props.article
         saveArticle: @saveArticle
       }
-
-      div { id: 'edit-sections', className: 'edit-body-container' },
-        SectionList {
-          sections: @props.article.sections
-          saveArticle: @saveArticle
-          article: @props.article
-          channel: @props.channel
-        }
+      SectionList {
+        sections: @props.article.sections
+        saveArticle: @saveArticle
+        article: @props.article
+        channel: @props.channel
+      }

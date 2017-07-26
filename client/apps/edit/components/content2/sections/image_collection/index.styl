@@ -1,0 +1,133 @@
+@import '../../../stylus_lib'
+
+.edit-section--image-collection
+  position relative
+  &.imageset-block // scrolling edit view for imageset
+    .image-collection__list
+      overflow hidden
+      overflow-x scroll
+    .drag-container
+      width 200%
+      margin-top 15px
+      .drag-target
+        margin-right 30px
+        &:last-child
+          margin-right 0
+    &--long .drag-container
+      width 300%
+
+.image-collection
+  &__placeholder
+    text-align center
+    color gray-darker-color
+    height 200px
+    line-height 200px
+  &__img-container
+    position relative
+    margin-bottom 30px
+    max-width 100%
+  &.single .image-collection__img-container
+    margin 0 auto 30px auto
+  &__img
+    width 100%
+    height auto
+  &__list
+    position relative
+    z-index 2 !important
+    opacity 0
+    transition opacity 500ms ease-in
+    &--placeholder
+      opacity 1
+    .drag-container
+      display flex
+      justify-content space-between
+    .drag-target
+      max-width 100%
+    .edit-section-remove
+      &:hover svg
+        fill-color red-color
+      svg
+        fill-color black
+
+.edit-section--image-collection
+  .edit-controls
+    padding 5px 20px 20px 20px
+    margin-left -20px
+    width calc(100% \+ 40px)
+    &__artwork-inputs
+      clearfix()
+      color white
+      padding-top controls-padding
+      text-align left
+      border-top 1px solid gray-darkest-color
+      input
+        display inline-block
+        vertical-align top
+        width 100%
+        max-width 100%
+    &__byurl-input
+      position relative
+      display inline-block
+      width 50%
+      padding-left 10px
+      button
+        position relative
+        display inline-block
+        width 75px
+        font-size small-avant-garde-font-size + 1
+        height 40px
+        background-color gray-lighter-color
+      input
+        width calc(100% - 75px)
+    &__autocomplete-input
+      display inline-block
+      width 50%
+      padding-right 10px
+      input
+        padding-left 12px
+      .tt-suggestion
+        clearfix()
+        line-height 1.2em
+        color black
+        z-index 10
+        .autocomplete-suggestion
+          width 50px
+          height @width
+          background center center gray-lighter-color
+          background-size cover
+          margin-right 10px
+          float left
+
+.edit-section__container[data-layout=column_width]
+  .image-collection__list .drag-container
+    flex-direction column
+
+.standard
+  .edit-section--image-collection
+    .rich-text--caption__input
+      Unica s14
+      color gray-dark-color
+  .edit-section__container[data-layout=overflow_fillwidth]
+    .edit-section--image-collection .edit-controls
+      max-width standard-overflow-w-margin
+  .edit-section__container[data-layout=column_width]
+    .edit-section--image-collection .edit-controls
+      max-width standard-body-w-margin
+  .edit-section__container[data-type=image_set][data-editing=true]
+      max-width standard-overflow-w-margin
+    .edit-section--image-collection .edit-controls
+      max-width standard-overflow-w-margin
+
+.classic
+  .edit-section--image-collection .edit-controls.sticky
+    margin-left 0
+  .edit-section__container[data-layout=overflow_fillwidth]
+    .edit-section--image-collection .edit-controls
+      max-width classic-overflow-w-margin
+  .edit-section__container[data-layout=column_width]
+    .edit-section--image-collection .edit-controls
+      max-width classic-body-w-margin
+  .edit-section__container[data-type=image_set][data-editing=true]
+    max-width classic-overflow-w-margin
+    .edit-section--image-collection .edit-controls
+      max-width classic-overflow-w-margin
