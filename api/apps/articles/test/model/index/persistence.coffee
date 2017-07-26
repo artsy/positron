@@ -667,3 +667,19 @@ describe 'Article Persistence', ->
           article.published.should.be.false()
           @onUnpublish.callCount.should.equal 1
           done()
+
+    it 'saves a hero_section', (done) ->
+      Article.save {
+        hero_section: {
+          url: 'http://youtube.com'
+          type: 'fullscreen'
+          title: 'The Year in Art 2018'
+          intro: 'This year was incredible.'
+        }
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.hero_section.url.should.equal 'http://youtube.com'
+        article.hero_section.type.should.equal 'fullscreen'
+        article.hero_section.title.should.equal 'The Year in Art 2018'
+        article.hero_section.intro.should.equal 'This year was incredible.'
+        done()
