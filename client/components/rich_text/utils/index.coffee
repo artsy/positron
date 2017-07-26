@@ -34,6 +34,8 @@ exports.stripGoogleStyles = (html) ->
 
 exports.keyBindingFnFull = (e) ->
   if KeyBindingUtil.hasCommandModifier(e)
+    if e.keyCode is 49   # command + 1
+      return 'header-one'
     if e.keyCode is 50   # command + 2
       return 'header-two'
     if e.keyCode is 51   # command + 3
@@ -46,6 +48,8 @@ exports.keyBindingFnFull = (e) ->
       return 'unordered-list-item'
     if e.keyCode is 75   # command + K
       return 'link-prompt'
+    if e.keyCode is 219   # command + [
+      return 'blockquote'
   if e.keyCode is 37 or e.keyCode is 39 # l/r arrows: no fallback so pass full e
     return e
   return getDefaultKeyBinding(e)
@@ -126,6 +130,23 @@ exports.setSelectionToStart = (editorState) ->
     focusOffset: 0
   }
   return EditorState.forceSelection editorState, newSelection
+
+exports.getExistingLinkData = (editorState) ->
+  # return data of a selected link element
+  url = ''
+  anchorKey = editorState.getSelection().getStartKey()
+  anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
+  linkKey = anchorBlock?.getEntityAt(editorState.getSelection().getStartOffset())
+  if linkKey
+    linkInstance = editorState.getCurrentContent().getEntity(linkKey)
+    url = linkInstance.getData().url
+    className = linkInstance.getData().className or ''
+  return { url: url, key: linkKey, className: className }
+
+exports.stickyControlsBox = (location, fromTop, fromLeft) ->
+  top = location.target.top - location.parent.top + fromTop
+  left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
+  return {top: top, left: left}
 
 # IMPORT / EXPORT HTML
 exports.convertToRichHtml = (editorState) ->

@@ -8,32 +8,30 @@ exports.inlineStyles = ->
     {label: ' S ', style: 'STRIKETHROUGH'}
   ]
 
-exports.blockTypes = ->
-  return [
+exports.blockTypes = (layout) ->
+  blocks = [
     {label: 'H2', style: 'header-two'}
     {label: 'H3', style: 'header-three'}
     {label: 'UL', style: 'unordered-list-item'}
     {label: 'OL', style: 'ordered-list-item'}
+    {label: 'BQ', style: 'blockquote'}
   ]
+  if layout is 'feature'
+    blocks.push({label: 'H1', style: 'header-one'})
+  return blocks
 
-exports.blockRenderMap = ->
-  return Immutable.Map({
-    'header-two': {
-      element: 'h2'
-    },
-    'header-three': {
-      element: 'h3'
-    },
-    'unordered-list-item': {
-      element: 'li'
-    },
-    'ordered-list-item': {
-      element: 'li'
-    },
-    'unstyled': {
-      element: 'p'
-    }
+exports.blockRenderMap = (layout) ->
+  blockRenderMap = Immutable.Map({
+    'header-two': {element: 'h2'}
+    'header-three': {element: 'h3'}
+    'unordered-list-item': {element: 'li'}
+    'ordered-list-item': {element: 'li'}
+    'blockquote': {element: 'blockquote'}
+    'unstyled': {element: 'p'}
   })
+  if layout is 'feature'
+    blockRenderMap = blockRenderMap.merge({'header-one': { element: 'h1' }})
+  return blockRenderMap
 
 exports.decorators = ->
   return [

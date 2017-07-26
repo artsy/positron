@@ -34,9 +34,15 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
+  isCallout: ->
+    isCallout = ''
+    if @props.section.get('type') is 'text'
+      isCallout = ' callout' if @props.section.get('body')?.includes('<blockquote>')
+    return isCallout
+
   render: ->
     div {
-      className: 'edit-section__container'
+      className: 'edit-section__container' + @isCallout()
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
       'data-layout': @props.section.get('layout')

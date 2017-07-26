@@ -1,5 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
+_s = require 'underscore.string'
 sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 { CompositeDecorator,
@@ -16,11 +17,13 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   inlineStyles } = require './draft_config.coffee'
 { convertFromRichHtml,
   convertToRichHtml,
+  getExistingLinkData,
   getSelectionDetails,
   getSelectionLocation,
   keyBindingFnFull,
   moveSelection,
   setSelectionToStart,
+  stickyControlsBox,
   stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
@@ -41,11 +44,7 @@ module.exports = React.createClass
     pluginType: null
     urlValue: null
     showMenu: false
-
-  componentWillMount: ->
-    channel = new Channel sd.CURRENT_CHANNEL
-    @hasFollow = channel.hasFeature 'follow'
-    @hasFeatures = @hasFollow
+    hasFeatures: @props.channel.hasFeature 'follow'
 
   componentDidMount: ->
     if @props.section.get('body')?.length
@@ -77,6 +76,11 @@ module.exports = React.createClass
   focus: ->
     @setState focus: true
     @refs.editor.focus()
+
+  availableBlocks: ->
+    blockMap = blockRenderMap(@props.article.get('layout'))
+    available = Object.keys(blockMap.toObject())
+    return Array.from(available)
 
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
@@ -153,7 +157,7 @@ module.exports = React.createClass
     blocksFromHTML = convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = @stripCharacterStyles contentBlock, true
-      unless unstyled.getType() in ['unstyled', 'LINK', 'header-two', 'header-three', 'unordered-list-item', 'ordered-list-item']
+      unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
     blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray()).blockMap
@@ -184,31 +188,43 @@ module.exports = React.createClass
   handleKeyCommand: (e) ->
     if e.key
       @handleChangeSection e
-    else
-      switch e
-        when 'header-two', 'header-three', 'ordered-list-item', 'unordered-list-item'
-          @toggleBlockType e
-        when 'custom-clear'
-          @makePlainText()
-        when 'italic', 'bold'
-          return if getSelectionDetails(@state.editorState).anchorType is 'header-three'
-          newState = RichUtils.handleKeyCommand @state.editorState, e
-          @onChange newState if newState
-        when 'backspace'
-          @handleBackspace e
-        when 'link-prompt'
-          className = @getExistingLinkData().className
-          return @promptForLink() unless className
-          if className.includes 'is-follow-link'
-            @promptForLink 'artist'
+    else if e in @availableBlocks()
+      @toggleBlockType e
+    else if e is 'custom-clear'
+      @makePlainText()
+    else if e is 'backspace'
+      @handleBackspace e
+    else if e in ['italic', 'bold']
+      if @props.article.get('layout') is 'classic' and
+       getSelectionDetails(@state.editorState).anchorType is 'header-three'
+        return
+      newState = RichUtils.handleKeyCommand @state.editorState, e
+      @onChange newState if newState
+    else if e is 'link-prompt'
+      className = getExistingLinkData(@state.editorState).className
+      return @promptForLink() unless className
+      if className.includes 'is-follow-link'
+        @promptForLink 'artist'
 
   toggleBlockType: (blockType) ->
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
     @setState showMenu: false
+    if blockType is 'blockquote'
+      @toggleBlockQuote()
+    return 'handled'
+
+  toggleBlockQuote: ->
+    currentHtml = @props.section.get('body')
+    beforeBlock = _s(currentHtml).strLeft('<blockquote>')._wrapped
+    afterBlock = _s(currentHtml).strRight('</blockquote>')._wrapped
+    blockquote = currentHtml.replace(beforeBlock, '').replace(afterBlock, '')
+    @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
+    @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
+    @props.section.set('body', blockquote)
 
   toggleInlineStyle: (inlineStyle) ->
     selection = getSelectionDetails(@state.editorState)
-    if selection.anchorType is 'header-three'
+    if selection.anchorType is 'header-three' and @props.article.get('layout') is 'classic'
       @stripCharacterStyles @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
     else
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
@@ -216,8 +232,9 @@ module.exports = React.createClass
   promptForLink: (pluginType) ->
     selectionTarget = null
     unless window.getSelection().isCollapsed
-      selectionTarget = @stickyControlsBox(25, 200)
-      url = @getExistingLinkData().url
+      location = getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTarget = stickyControlsBox(location, 25, 200)
+      url = getExistingLinkData(@state.editorState).url
       @setState
         showUrlInput: true
         showMenu: false
@@ -259,18 +276,6 @@ module.exports = React.createClass
         editorState: RichUtils.toggleLink(@state.editorState, selection, null)
       })
 
-  getExistingLinkData: ->
-    { editorState } = @state
-    url = ''
-    anchorKey = editorState.getSelection().getStartKey()
-    anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
-    linkKey = anchorBlock?.getEntityAt(editorState.getSelection().getStartOffset())
-    if linkKey
-      linkInstance = editorState.getCurrentContent().getEntity(linkKey)
-      url = linkInstance.getData().url
-      className = linkInstance.getData().className or ''
-    return { url: url, key: linkKey, className: className }
-
   setPluginType: (e) ->
     @setState pluginType: e
     if e is 'artist'
@@ -293,28 +298,17 @@ module.exports = React.createClass
         onToggle: handleToggle
       }
 
-  getPlugins: ->
-    plugins = []
-    plugins.push({label: 'artist', style: 'artist'}) if @hasFollow
-    return plugins
-
   checkSelection: ->
-    selectionTargetL = if @hasFeatures then 125 else 100
+    selectionTargetL = if @state.hasFeatures then 125 else 100
     if !window.getSelection().isCollapsed
-      @setState showMenu: true, selectionTarget: @stickyControlsBox(-93, selectionTargetL)
+      location = getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      @setState showMenu: true, selectionTarget: stickyControlsBox(location, -93, selectionTargetL)
     else
       @setState showMenu: false
 
-  stickyControlsBox: (fromTop, fromLeft) ->
-    $parent = $(ReactDOM.findDOMNode(@refs.editor)).offset()
-    location = getSelectionLocation $parent
-    top = location.target.top - location.parent.top + fromTop
-    left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
-    return {top: top, left: left}
-
   render: ->
     isEditing = if @props.editing then ' is-editing' else ''
-    hasPlugins = if @hasFeatures then ' has-plugins' else ''
+    hasPlugins = if @state.hasFeatures then ' has-plugins' else ''
 
     div {
       className: 'edit-section--text' + isEditing
@@ -328,9 +322,9 @@ module.exports = React.createClass
             marginLeft: @state.selectionTarget?.left
         },
           @printButtons(inlineStyles(), @toggleInlineStyle)
-          @printButtons(blockTypes(), @toggleBlockType)
+          @printButtons(blockTypes(@props.article.get('layout')), @toggleBlockType)
           @printButtons([{label: 'link', style: 'link'}], @promptForLink)
-          @printButtons(@getPlugins(), @setPluginType)
+          @printButtons([{label: 'artist', style: 'artist'}], @setPluginType) if @state.hasFeatures
           @printButtons([{label: 'remove-formatting', style: 'remove-formatting'}], @makePlainText)
       div {
         className: 'edit-section--text__input'
@@ -346,7 +340,7 @@ module.exports = React.createClass
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: keyBindingFnFull
           handlePastedText: @onPaste
-          blockRenderMap: blockRenderMap()
+          blockRenderMap: blockRenderMap @props.article.get('layout')
           handleReturn: @handleReturn
           onTab: @handleTab
           onUpArrow: @handleChangeSection
