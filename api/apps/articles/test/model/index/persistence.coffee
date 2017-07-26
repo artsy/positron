@@ -139,6 +139,7 @@ describe 'Article Persistence', ->
           thumbnail_title: 'heyo'
           author_id: '5086df098523e60002000018'
           published_at: '01-01-99'
+          published: true
           id: '5086df098523e60002002222'
           author: name: 'Craig Spaeth'
           }, 'foo', {}, (err, article) ->

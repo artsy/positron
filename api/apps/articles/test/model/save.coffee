@@ -85,7 +85,7 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
-    it 'appends unix to the slug if it exists already and it is a draft', ->
+    it 'appends unix to the slug if it exists already and it is a draft', (done) ->
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
