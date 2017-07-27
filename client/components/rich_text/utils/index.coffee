@@ -60,6 +60,15 @@ exports.keyBindingFnCaption = (e) ->
       return 'link-prompt'
   return getDefaultKeyBinding(e)
 
+exports.stripCharacterStyles = (contentBlock, keepAllowed) ->
+  characterList = contentBlock.getCharacterList().map (character) ->
+    if keepAllowed
+      unless character.hasStyle 'UNDERLINE'
+        return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
+    character.set 'style', character.get('style').clear()
+  unstyled = contentBlock.set 'characterList', characterList
+  return unstyled
+
 
 # SELECTION STATE UTILS
 exports.getSelectionDetails = (editorState) ->
@@ -159,14 +168,12 @@ exports.convertToRichHtml = (editorState) ->
           artist = entity.data.url.split('/artist/')[1]
           return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText +
            '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
-        else if entity.data.className is 'is-jump-link'
-          return a { name: sanitizeName, className: entity.data.className}
         else
           return a { href: entity.data.url}
       return originalText
-    blockToHTML: (block) ->
-      if block.type is 'header-three'
-        return h3 {}, block.text
+    # blockToHTML: (block) ->
+    #   if block.type is 'header-three'
+    #     return h3 {}, block.text
     styleToHTML: (style) ->
       if style is 'STRIKETHROUGH'
         return span { style: {textDecoration: 'line-through'}}

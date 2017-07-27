@@ -18,7 +18,7 @@ module.exports = React.createClass
     else if name is 'artist'
       @props.promptForLink name
     else if name is 'remove-formatting'
-      @props.makePlainText
+      @props.makePlainText()
 
   getButtonsArray: ->
     buttons = []

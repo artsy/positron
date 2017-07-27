@@ -24,6 +24,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   moveSelection,
   setSelectionToStart,
   stickyControlsBox,
+  stripCharacterStyles,
   stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
 { div, nav, a, span, p, h3 } = React.DOM
@@ -151,7 +152,7 @@ module.exports = React.createClass
     html = stripGoogleStyles(html)
     blocksFromHTML = convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-      unstyled = @stripCharacterStyles contentBlock, true
+      unstyled = stripCharacterStyles contentBlock, true
       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
@@ -166,22 +167,13 @@ module.exports = React.createClass
     noLinks = RichUtils.toggleLink editorState, selection, null
     noBlocks = RichUtils.toggleBlockType noLinks, 'unstyled'
     noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) =>
-      @stripCharacterStyles contentBlock
+      stripCharacterStyles contentBlock
     newState = ContentState.createFromBlockArray noStyles
     if !selection.isCollapsed()
       @onChange EditorState.push(editorState, newState, null)
 
-  stripCharacterStyles: (contentBlock, keepAllowed) ->
-    characterList = contentBlock.getCharacterList().map (character) ->
-      if keepAllowed
-        unless character.hasStyle 'UNDERLINE'
-          return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
-      character.set 'style', character.get('style').clear()
-    unstyled = contentBlock.set 'characterList', characterList
-    return unstyled
-
   availableBlocks: ->
-    blockMap = blockRenderMap(@props.article.get('layout'))
+    blockMap = blockRenderMap(@props.article.get('layout'), @state.hasFeatures)
     available = Object.keys(blockMap.toObject())
     return Array.from(available)
 
@@ -202,17 +194,18 @@ module.exports = React.createClass
       @onChange newState if newState
     else if e is 'link-prompt'
       className = getExistingLinkData(@state.editorState).className
-      return @promptForLink() unless className
-      if className.includes 'is-follow-link'
-        @promptForLink 'artist'
+      return @promptForLink() unless className.includes 'is-follow-link'
+      @promptForLink 'artist'
 
   toggleBlockQuote: ->
     currentHtml = @props.section.get('body')
-    beforeBlock = _s(currentHtml).strLeft('<blockquote>')._wrapped
-    afterBlock = _s(currentHtml).strRight('</blockquote>')._wrapped
+    beforeBlock = _s(currentHtml).strLeft('<blockquote>')?._wrapped
+    afterBlock = _s(currentHtml).strRight('</blockquote>')?._wrapped
     blockquote = currentHtml.replace(beforeBlock, '').replace(afterBlock, '')
-    @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
-    @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
+    if afterBlock
+      @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
+    if beforeBlock
+      @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
     @props.section.set('body', blockquote)
     @props.onSetEditing @props.index + 1
 
@@ -226,7 +219,8 @@ module.exports = React.createClass
   toggleInlineStyle: (inlineStyle) ->
     selection = getSelectionDetails(@state.editorState)
     if selection.anchorType is 'header-three' and @props.article.get('layout') is 'classic'
-      @stripCharacterStyles @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
+      block = @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
+      stripCharacterStyles block
     else
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
@@ -247,10 +241,8 @@ module.exports = React.createClass
   confirmLink: (urlValue) ->
     { editorState } = @state
     contentState = editorState.getCurrentContent()
-    if @state.pluginType
-      props = { url: urlValue, className: 'is-follow-link' }
-    else
-      props = { url: urlValue }
+    props = { url: urlValue }
+    props.className = 'is-follow-link' if @state.pluginType
     contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', props)
     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
@@ -260,11 +252,7 @@ module.exports = React.createClass
       urlValue: ''
       selectionTarget: null
       pluginType: null
-    @onChange RichUtils.toggleLink(
-        newEditorState
-        newEditorState.getSelection()
-        entityKey
-      )
+    @onChange RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey)
 
   removeLink: (e) ->
     e?.preventDefault()
@@ -295,9 +283,9 @@ module.exports = React.createClass
       if @state.showMenu
         EditNav {
           hasFeatures: @state.hasFeatures
-          blocks: blockTypes @props.article.get('layout')
+          blocks: blockTypes @props.article.get('layout'), @state.hasFeatures
           toggleBlock: @toggleBlockType
-          styles: inlineStyles @props.article.get('layout')
+          styles: inlineStyles @props.article.get('layout'), @state.hasFeatures
           toggleStyle: @toggleInlineStyle
           promptForLink: @promptForLink
           makePlainText: @makePlainText
@@ -317,7 +305,7 @@ module.exports = React.createClass
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: keyBindingFnFull
           handlePastedText: @onPaste
-          blockRenderMap: blockRenderMap @props.article.get('layout')
+          blockRenderMap: blockRenderMap @props.article.get('layout'), @state.hasFeatures
           handleReturn: @handleReturn
           onTab: @handleTab
           onUpArrow: @handleChangeSection
