@@ -22,9 +22,8 @@ describe 'SectionFullscreen', ->
       @component = ReactDOM.render React.createElement(SectionFullscreen,
         section: new Backbone.Model
           type: 'fullscreen'
-          title: ''
-          background_url: ''
-          background_image_url: ''
+          title: 'Title Here'
+          url: 'video.mp4'
         editing: false
         setEditing: -> ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -45,7 +44,6 @@ describe 'SectionFullscreen', ->
     @gemup.args[0][0].should.equal 'foo.mp4'
     @gemup.args[0][1].done('fooza.mp4')
     setTimeout =>
-      @component.setState.args[0][0].background_url.should.equal 'fooza.mp4'
       @component.setState.args[0][0].url.should.equal 'fooza.mp4'
       done()
 
@@ -54,7 +52,6 @@ describe 'SectionFullscreen', ->
     @gemup.args[0][0].should.equal 'foo.jpg'
     @gemup.args[0][1].done('fooza.jpg')
     setTimeout =>
-      @component.setState.args[0][0].background_image_url.should.equal 'fooza.jpg'
       @component.setState.args[0][0].url.should.equal 'fooza.jpg'
       done()
 

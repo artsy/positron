@@ -16,8 +16,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     title: @props.section.get('title')
-    background_url: @props.section.get('background_url')
-    background_image_url: @props.section.get('background_image_url')
     url: @props.section.get('url')
     progress: ''
 
@@ -28,11 +26,9 @@ module.exports = React.createClass
     @removeSection() unless @setSection()
 
   setSection: ->
-    return false unless @state.background_url or @state.title or @state.background_image_url
+    return false unless @state.url or @state.title
     @props.section.set
       title: @state.title
-      background_url: @state.background_url
-      background_image_url: @state.background_image_url
       url: @state.url
 
   onEditableKeyup: ->
@@ -51,20 +47,7 @@ module.exports = React.createClass
       add: (src) =>
         @setState progress: 0.1
       done: (src) =>
-        if src.indexOf('.mp4') > 0
-          @setState(
-            background_url: src
-            progress: null
-            background_image_url: null
-            url: src
-          )
-        else
-          @setState(
-            background_image_url: src
-            progress: null
-            background_url: null
-            url: src
-          )
+        @setState progress: null, url: src
         @onClickOff()
 
   render: ->
@@ -76,7 +59,7 @@ module.exports = React.createClass
         div { className: 'esf-right-controls-container' },
           section { className: 'esf-change-background'},
             span {},
-              (if @state.background_url or @state.background_image_url then '+ Change Background' else '+ Add Background'),
+              (if @state.url then '+ Change Background' else '+ Add Background'),
             input { type: 'file', onChange: @upload, accept: 'video/mp4,image/jpg,image/png,image/gif,image/jpeg' }
           button {
             className: 'edit-section-remove button-reset'
@@ -105,20 +88,20 @@ module.exports = React.createClass
             }
       )
       (
-        if @state.background_url
+        if @state.url and @state.url.indexOf('.mp4') > -1
           div { className: 'esf-fullscreen-container' },
             video {
               className: 'esf-fullscreen'
-              src: @state.background_url
+              src: @state.url
               key: 0
               autoPlay: true
               loop: true
             }
-        else if @state.background_image_url
+        else if @state.url
           div {
             className: 'esf-fullscreen-container'
             style:
-              backgroundImage: 'url(' + @state.background_image_url + ')'
+              backgroundImage: 'url(' + @state.url + ')'
           },
             div { className: 'esf-fullscreen'}
         else
