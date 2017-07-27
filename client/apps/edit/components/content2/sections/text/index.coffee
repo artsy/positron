@@ -189,12 +189,12 @@ module.exports = React.createClass
     else if e in ['italic', 'bold']
       if @props.article.get('layout') is 'classic' and
        getSelectionDetails(@state.editorState).anchorType is 'header-three'
-        return
+        return 'handled'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
     else if e is 'link-prompt'
       className = getExistingLinkData(@state.editorState).className
-      return @promptForLink() unless className.includes 'is-follow-link'
+      return @promptForLink() unless className?.includes 'is-follow-link'
       @promptForLink 'artist'
 
   toggleBlockQuote: ->
@@ -213,7 +213,7 @@ module.exports = React.createClass
     @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
     @setState showMenu: false
     if blockType is 'blockquote'
-      @toggleBlockQuote()
+      @toggleBlockQuote() if @props.section.get('body').includes('<blockquote>')
     return 'handled'
 
   toggleInlineStyle: (inlineStyle) ->

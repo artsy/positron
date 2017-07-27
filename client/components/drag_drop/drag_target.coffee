@@ -33,7 +33,7 @@ module.exports = React.createClass
       'data-target': @props.activeTarget
       'data-source': @props.activeSource
       'data-type': @props.type
-      'data-layout': @props.layout
+      'data-layout': @props.layout or ''
       style:
         width: @props.width or '100%'
     },

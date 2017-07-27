@@ -25,19 +25,35 @@ exports.blockTypes = (layout, hasFeatures) ->
 
 exports.blockRenderMap = (layout, hasFeatures) ->
   # declares blocks avaialable to the editor
-  blockRenderMap = Immutable.Map({
-    'header-two': {element: 'h2'}
-    'header-three': {element: 'h3'}
-    'unordered-list-item': {element: 'li'}
-    'ordered-list-item': {element: 'li'}
-    'unstyled': {element: 'p'}
-  })
+  unless hasFeatures
+  # classic, partners
+    return Immutable.Map({
+      'header-two': {element: 'h2'}
+      'header-three': {element: 'h3'}
+      'unordered-list-item': {element: 'li'}
+      'ordered-list-item': {element: 'li'}
+      'unstyled': {element: 'p'}
+    })
   if layout is 'feature'
-    blockRenderMap = blockRenderMap.merge({'header-one': { element: 'h1' }})
-  if hasFeatures
-    blockRenderMap = blockRenderMap.merge({'blockquote': {element: 'blockquote'}})
-  console.log blockRenderMap
-  return blockRenderMap
+    return Immutable.Map({
+      'header-one': { element: 'h1' }
+      'header-two': {element: 'h2'}
+      'header-three': {element: 'h3'}
+      'blockquote': {element: 'blockquote'}
+      'unordered-list-item': {element: 'li'}
+      'ordered-list-item': {element: 'li'}
+      'unstyled': {element: 'p'}
+    })
+  else
+    # standard, classic on internal channels
+    return Immutable.Map({
+      'header-two': {element: 'h2'}
+      'header-three': {element: 'h3'}
+      'blockquote': {element: 'blockquote'}
+      'unordered-list-item': {element: 'li'}
+      'ordered-list-item': {element: 'li'}
+      'unstyled': {element: 'p'}
+    })
 
 exports.decorators = ->
   return [

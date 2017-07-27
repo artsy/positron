@@ -53,6 +53,14 @@ module.exports = React.createClass
       dragStartY: null
       draggingHeight: 0
 
+  getLayout: (section) ->
+    layout = 'column_width'
+    if section.get('type') is 'text'
+      layout = 'overflow_fillwidth' if section.get('body')?.includes('<blockquote>')
+    else if section.get('layout')
+      layout = section.get('layout')
+    return layout
+
   render: ->
     children = React.Children.toArray(@props.children)
 
@@ -63,7 +71,8 @@ module.exports = React.createClass
         else
           i = child.props.index or i
           type = child.props.section?.get('type') or null
-          layout = child.props.section?.get('layout') or null
+          if child.type.displayName is 'SectionContainer'
+            layout = @getLayout child.props.section
           DragTarget {
             key: i
             i: i
@@ -77,7 +86,7 @@ module.exports = React.createClass
             dropPosition: @state.dropPosition
             dragStartY: @state.dragStartY
             type: type
-            layout: layout
+            layout: layout or null
           },
             DragSource {
               i: i

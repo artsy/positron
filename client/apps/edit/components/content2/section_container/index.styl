@@ -71,25 +71,18 @@
       border-radius 50%
 
 .classic
-  .edit-section__container
+  [data-layout='column_width']
     max-width classic-body-w-margin
     margin 0 auto
-    &[data-layout='overflow_fillwidth'], &.callout
-      max-width classic-overflow-w-margin
-  .drag-target
-    max-width classic-body-w-margin
+  [data-layout='overflow_fillwidth']
+    max-width classic-overflow-w-margin
     margin 0 auto
-    &[data-layout='overflow_fillwidth']
-      max-width classic-overflow-w-margin
-      .edit-section__container
-        max-width 100%
 
 .standard
-  .edit-section__container, .drag-target
+  [data-layout='column_width']
     max-width standard-body-w-margin
     margin 0 auto
-    &[data-layout='overflow_fillwidth']
-      max-width standard-overflow-w-margin
-      width 100%
-    &.callout
-      max-width standard-overflow-w-margin
+  [data-layout='overflow_fillwidth']
+    max-width standard-overflow-w-margin
+
+

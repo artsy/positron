@@ -34,18 +34,20 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
-  isCallout: ->
-    isCallout = ''
-    if @props.section.get('type') is 'text'
-      isCallout = ' callout' if @props.section.get('body')?.includes('<blockquote>')
-    return isCallout
+  getLayout: (section) ->
+    layout = 'column_width'
+    if section.get('type') is 'text'
+      layout = 'overflow_fillwidth' if section.get('body')?.includes('<blockquote>')
+    else if section.get('layout')
+      layout = section.get('layout')
+    return layout
 
   render: ->
     div {
-      className: 'edit-section__container' + @isCallout()
+      className: 'edit-section__container'
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @props.section.get('layout')
+      'data-layout': @getLayout @props.section
     },
       unless @props.section.get('type') is 'fullscreen'
         div {
