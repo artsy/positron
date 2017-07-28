@@ -3,17 +3,20 @@ benv = require 'benv'
 sinon = require 'sinon'
 Backbone = require 'backbone'
 fixtures = require '../../../../../../../../test/helpers/fixtures'
+React = require 'react'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+{ EditorState } = require 'draft-js'
+r =
+  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  simulate: ReactTestUtils.Simulate
 
-describe 'SectionText', ->
+describe 'Section Text', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
-        React: require 'react'
-        ReactDOM: require 'react-dom'
-        ReactTestUtils: require 'react-addons-test-utils'
-        Draft: require 'draft-js'
       window.jQuery = $
       window.getSelection = sinon.stub().returns(
         isCollapsed: false
@@ -31,11 +34,6 @@ describe 'SectionText', ->
       global.Node = () => {}
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}
-      @r =
-        find: ReactTestUtils.findRenderedDOMComponentWithClass
-        simulate: ReactTestUtils.Simulate
-      @d =
-        EditorState: Draft.EditorState
       @SectionText = benv.require resolve(__dirname, '../index')
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
@@ -49,7 +47,7 @@ describe 'SectionText', ->
       @SectionText.__set__ 'getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
       @sections = new Backbone.Collection [
         {
-          body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
+          body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
           type: 'text'
         },
         {
@@ -86,6 +84,7 @@ describe 'SectionText', ->
         section: @sections.models[2]
         channel: channel
         article: article
+        hasFeatures: true
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.stickyControlsBox = sinon.stub().returns {top: 20, left: 40}
@@ -93,7 +92,6 @@ describe 'SectionText', ->
         @SectionText.__set__ 'sd',
           CURRENT_CHANNEL: fixtures().channels
         @shortComponent = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
-        # @shortComponent.stickyControlsBox = sinon.stub().returns {top: 20, left: 40}
         @shortComponent.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
         shortSelection = @shortComponent.state.editorState.getSelection()
         newSelection = shortSelection.merge({
@@ -102,7 +100,7 @@ describe 'SectionText', ->
           focusKey: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().key
           focusOffset: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().text.length
         })
-        newEditorState = @d.EditorState.acceptSelection(@shortComponent.state.editorState, newSelection)
+        newEditorState = EditorState.acceptSelection(@shortComponent.state.editorState, newSelection)
         @shortComponent.onChange newEditorState
         done()
 
@@ -115,75 +113,146 @@ describe 'SectionText', ->
     it 'Converts existing html to an editorState', ->
       @component.state.editorState.getCurrentContent().getFirstBlock().should.not.eql @component.state.editorState.getCurrentContent().getLastBlock()
 
-    it 'Renders the existing body in the editor', ->
+    it 'Can render saved content in the editor', ->
       editorText = $(ReactDOM.findDOMNode(@component)).find('.edit-section--text__input').text()
       editorText.should.containEql 'K mounted a solo show at prescient Berlin gallery KOW, restaging his installation It’s Spring and the Weather is Great'
 
-    it 'Hides the menu when no text selection', ->
+    it 'Hides the menu when no text selected', ->
       @component.state.showMenu.should.eql false
       $(ReactDOM.findDOMNode(@component)).find('.rich-text--edit-nav').length.should.eql 0
 
-    it 'Shows the menu when text selection', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+    it 'Shows the menu when text is selected', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.state.showMenu.should.eql true
       $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--edit-nav').length.should.eql 1
 
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa-k-this-lemon-tastes-of-apple" class="is-follow-link">solo show</a><a data-id="kow-hiwa-k-this-lemon-tastes-of-apple" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
+      @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
+
+
+  describe '#availableBlocks', ->
+
+    it 'Returns the correct blocks for a feature article', ->
+      @shortComponent.props.article.set 'layout', 'feature'
+      availableBlocks = @shortComponent.availableBlocks()
+      availableBlocks.should.eql [
+        'header-one',
+        'header-two',
+        'header-three',
+        'blockquote',
+        'unordered-list-item',
+        'ordered-list-item',
+        'unstyled'
+      ]
+
+    it 'Returns the correct blocks for a standard article', ->
+      @shortComponent.props.article.set 'layout', 'standard'
+      availableBlocks = @shortComponent.availableBlocks()
+      availableBlocks.should.eql [
+        'header-two',
+        'header-three',
+        'blockquote',
+        'unordered-list-item',
+        'ordered-list-item',
+        'unstyled'
+      ]
+
+    it 'Returns the correct blocks for a classic article with features', ->
+      availableBlocks = @shortComponent.availableBlocks()
+      availableBlocks.should.eql [
+        'header-two',
+        'header-three',
+        'blockquote',
+        'unordered-list-item',
+        'ordered-list-item',
+        'unstyled'
+      ]
+
+    it 'Returns the correct blocks for a classic article without features', ->
+      @shortComponent.setState hasFeatures: false
+      availableBlocks = @shortComponent.availableBlocks()
+      availableBlocks.should.eql [
+        'header-two',
+        'header-three',
+        'unordered-list-item',
+        'ordered-list-item',
+        'unstyled'
+      ]
+
 
   describe 'Rich text menu events', ->
 
-    it 'Opens a link input popup', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
-      @r.simulate.mouseDown @r.find @shortComponent, 'link'
-      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
-      @shortComponent.state.showUrlInput.should.eql true
-
     it 'Can create italic entities', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'ITALIC'
+      r.simulate.mouseDown r.find @shortComponent, 'ITALIC'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
     it 'Can create bold entities', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'BOLD'
+      r.simulate.mouseDown r.find @shortComponent, 'BOLD'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
-    xit 'Can create strikethrough entities', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+    it 'Can create strikethrough entities', ->
+      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.render()
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'STRIKETHROUGH'
+      r.simulate.mouseDown r.find @shortComponent, 'STRIKETHROUGH'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
-    it 'Can toggle h2 block changes', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+    it 'Can toggle h1 block changes (feature)', ->
+      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.render()
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'header-two'
+      r.simulate.mouseDown r.find @shortComponent, 'header-one'
+      @shortComponent.setState.args[0][0].html.should.eql '<h1>A <em>short</em> piece of <strong>text</strong></h1>'
+
+    it 'Can toggle h2 block changes', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      @shortComponent.setState = sinon.stub()
+      r.simulate.mouseDown r.find @shortComponent, 'header-two'
       @shortComponent.setState.args[0][0].html.should.eql '<p>A <em>short</em> piece of <strong>text</strong></p>'
 
-    it 'Can toggle h3 block changes and strips the styles', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+    it 'Can toggle h3 block changes and strip the styles (classic)', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'header-three'
+      r.simulate.mouseDown r.find @shortComponent, 'header-three'
       @shortComponent.setState.args[0][0].html.should.eql '<h3>A short piece of text</h3>'
 
-    it 'Can toggle ul block changes', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+    it 'Can toggle h3 block changes without stripping styles (standard/feature)', ->
+      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.render()
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'unordered-list-item'
+      r.simulate.mouseDown r.find @shortComponent, 'header-three'
+      @shortComponent.setState.args[0][0].html.should.eql '<h3>A <em>short</em> piece of <strong>text</strong></h3>'
+
+    it 'Can toggle ul block changes', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      @shortComponent.setState = sinon.stub()
+      r.simulate.mouseDown r.find @shortComponent, 'unordered-list-item'
       @shortComponent.setState.args[0][0].html.should.eql '<ul><li>A <em>short</em> piece of <strong>text</strong></li></ul>'
 
     it 'Can toggle ol block changes', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      @r.simulate.mouseDown @r.find @shortComponent, 'ordered-list-item'
+      r.simulate.mouseDown r.find @shortComponent, 'ordered-list-item'
       @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
 
+    it 'Can toggle blockquote changes (if hasFeatures)', ->
+      @shortComponent.setState hasFeatures: true
+      @shortComponent.render()
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      @shortComponent.setState = sinon.stub()
+      r.simulate.mouseDown r.find @shortComponent, 'blockquote'
+      @shortComponent.setState.args[0][0].html.should.eql '<blockquote>A <em>short</em> piece of <strong>text</strong></blockquote>'
+
     it '#makePlainText Can strip styles', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.makePlainText()
       @shortComponent.state.html.should.eql '<p>A short piece of text</p>'
 
@@ -199,6 +268,24 @@ describe 'SectionText', ->
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('italic')
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
+
+    it 'Can toggle strikethrough entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('strikethrough')
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
+
+    it 'Can toggle H1 entities (feature)', ->
+      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.render()
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('header-one')
+      @shortComponent.setState.args[0][0].html.should.eql '<h1>A <em>short</em> piece of <strong>text</strong></h1>'
+
+    it 'Cannot toggle H1 entities if not feature layout', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('header-one')
+      @shortComponent.setState.called.should.not.be.ok
+      @shortComponent.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
 
     it 'Can toggle H2 entities', ->
       @shortComponent.setState = sinon.stub()
@@ -219,6 +306,18 @@ describe 'SectionText', ->
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('ordered-list-item')
       @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
+
+    it 'Can toggle Blockquote entities', ->
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('blockquote')
+      @shortComponent.setState.args[0][0].html.should.eql '<blockquote>A <em>short</em> piece of <strong>text</strong></blockquote>'
+
+    it 'Cannot toggle Blockquotes if hasFeatures is false', ->
+      @shortComponent.setState hasFeatures: false
+      @shortComponent.setState = sinon.stub()
+      @shortComponent.handleKeyCommand('blockquote')
+      @shortComponent.setState.called.should.not.be.ok
+      @shortComponent.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
 
     it 'Can make plain text', ->
       @shortComponent.setState = sinon.stub()
@@ -243,27 +342,32 @@ describe 'SectionText', ->
 
   describe 'Links', ->
 
-    it 'Can confirm links without a class', ->
+    it 'Opens a link input popup', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseDown r.find @shortComponent, 'link'
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
+      @shortComponent.state.showUrlInput.should.eql true
+
+    it 'Can confirm links', ->
       @shortComponent.confirmLink 'link.com'
       @shortComponent.state.html.should.containEql '<a href="link.com">'
 
-    it 'Can confirm links with a class', ->
-      @shortComponent.confirmLink 'link.com', '', 'class'
-      @shortComponent.state.html.should.containEql '<a href="link.com">'
 
+  describe 'Artist plugin', ->
 
-  describe 'Plugins', ->
+    it 'Renders an artist menu item if hasFeatures is true', ->
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      r.find(@shortComponent, 'artist').should.be.ok
+      $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 1
 
-    it 'Only shows plugins when channel allows', ->
-      @component.state.hasFeatures.should.not.be.ok
-      @SectionText.__set__ 'sd',
-        CURRENT_CHANNEL: fixtures().channels
-      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
-      @component.state.hasFeatures.should.eql true
+    it 'Does not show artist if hasFeatures is false', ->
+      @shortComponent.setState hasFeatures: false
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 0
 
     it 'Can setup link prompt for artist blocks', ->
-      @r.simulate.mouseUp @r.find @shortComponent, 'edit-section--text__input'
-      @r.simulate.mouseDown @r.find @shortComponent, 'artist'
+      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
+      r.simulate.mouseDown r.find @shortComponent, 'artist'
       @shortComponent.state.showUrlInput.should.eql true
       @shortComponent.state.pluginType.should.eql 'artist'
 
@@ -271,6 +375,34 @@ describe 'SectionText', ->
       component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
       component.onChange(component.state.editorState)
       component.state.html.should.eql '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></h2>'
+
+  describe '#toggleBlockQuote', ->
+
+    it 'Splits a blockquote into its own text section', ->
+      originalLength = @component.props.sections.length
+      @component.props.section.set 'body', '<p>A text before.</p><blockquote>A blockquote.</blockquote><p>A text after.</p>'
+      @component.toggleBlockQuote()
+      @component.props.section.get('type').should.eql 'text'
+      @component.props.section.get('body').should.eql '<blockquote>A blockquote.</blockquote>'
+      @component.props.sections.length.should.eql originalLength + 2
+
+    it 'Creates a new section for text before a blockquote', ->
+      newBody = '<p>A text before.</p><blockquote>A blockquote.</blockquote>'
+      originalLength = @component.props.sections.length
+      @component.props.section.set 'body', newBody
+      @component.props.sections.models[@component.props.index].set 'body', newBody
+      @component.toggleBlockQuote()
+      @component.props.sections.length.should.eql originalLength + 1
+      @component.props.sections.models[@component.props.index].get('body').should.eql '<p>A text before.</p>'
+
+    it 'Creates a new section for text after a blockquote', ->
+      newBody = '<blockquote>A blockquote.</blockquote><p>A text after.</p>'
+      originalLength = @component.props.sections.length
+      @component.props.section.set 'body', newBody
+      @component.props.sections.models[@component.props.index].set 'body', newBody
+      @component.toggleBlockQuote()
+      @component.props.sections.length.should.eql originalLength + 1
+      @component.props.sections.models[@component.props.index + 1].get('body').should.eql '<p>A text after.</p>'
 
 
   describe '#handleChangeSection', ->
@@ -290,7 +422,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.onChange = sinon.stub()
       @component.handleKeyCommand({key: 'ArrowRight'})
@@ -307,7 +439,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.onChange = sinon.stub()
       @component.handleKeyCommand({key: 'ArrowLeft'})
@@ -324,7 +456,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getBlockAfter(firstBlock).key
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.onChange = sinon.stub()
       @component.handleKeyCommand({key: 'ArrowLeft'})
@@ -341,7 +473,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getLastBlock().key
         focusOffset: @component.state.editorState.getCurrentContent().getLastBlock().getLength()
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleKeyCommand({key: 'ArrowRight'})
       @component.props.onSetEditing.args[0][0].should.eql 2
@@ -353,7 +485,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleKeyCommand({key: 'ArrowLeft'})
       @component.props.onSetEditing.args[0][0].should.eql 0
@@ -380,7 +512,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleReturn({key: 'enter'})
       @component.splitSection.notCalled.should.eql true
@@ -393,7 +525,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: 1
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleReturn({key: 'enter'})
       @component.splitSection.notCalled.should.eql true
@@ -406,7 +538,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getLastBlock().key
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleReturn({key: 'enter', preventDefault: sinon.stub()})
       @component.splitSection.called.should.eql true
@@ -420,7 +552,7 @@ describe 'SectionText', ->
         focusKey: @shortComponent.state.editorState.getCurrentContent().getFirstBlock().key
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@shortComponent.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@shortComponent.state.editorState, setSelection)
       @shortComponent.onChange newEditorState
       @shortComponent.handleBackspace {key: 'backspace'}
       @shortComponent.props.onSetEditing.args[0][0].should.eql 0
@@ -437,7 +569,7 @@ describe 'SectionText', ->
         focusKey: @component.state.editorState.getCurrentContent().getKeyAfter(firstBlock)
         focusOffset: 0
       })
-      newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, setSelection)
+      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
       @component.onChange newEditorState
       @component.handleReturn({key: 'enter', preventDefault: sinon.stub()})
       @component.handleReturn({key: 'enter', preventDefault: sinon.stub()})

@@ -14,7 +14,7 @@ exports.findLinkEntities = (contentBlock, callback, contentState) ->
   return
 
 exports.Link = (props) ->
-  { url, className, name } = props.contentState.getEntity(props.entityKey).getData()
+  { url, className } = props.contentState.getEntity(props.entityKey).getData()
   text = props.decoratedText.split(' ')[0]
   artist = url.split('/artist/')[1]
   if className is 'is-follow-link'

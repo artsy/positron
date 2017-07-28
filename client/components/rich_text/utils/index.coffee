@@ -10,6 +10,7 @@ ReactDOM = require 'react-dom'
 
 # CUSTOM KEY BINDINGS
 exports.stripGoogleStyles = (html) ->
+  # applied on paste
   # remove non-breaking spaces between paragraphs
   html = html.replace(/<\/\p><br>/g, '</p>').replace('<br class="Apple-interchange-newline">', '')
   doc = document.createElement('div')
@@ -46,10 +47,12 @@ exports.keyBindingFnFull = (e) ->
       return 'ordered-list-item'
     if e.keyCode is 56   # command + 8
       return 'unordered-list-item'
-    if e.keyCode is 75   # command + K
+    if e.keyCode is 75   # command + k
       return 'link-prompt'
     if e.keyCode is 219   # command + [
       return 'blockquote'
+    if e.keyCode is 88 and e.shiftKey # command + shift + X
+      return 'strikethrough'
   if e.keyCode is 37 or e.keyCode is 39 # l/r arrows: no fallback so pass full e
     return e
   return getDefaultKeyBinding(e)
@@ -59,16 +62,6 @@ exports.keyBindingFnCaption = (e) ->
     if e.keyCode is 75   # command + K
       return 'link-prompt'
   return getDefaultKeyBinding(e)
-
-exports.stripCharacterStyles = (contentBlock, keepAllowed) ->
-  characterList = contentBlock.getCharacterList().map (character) ->
-    if keepAllowed
-      unless character.hasStyle 'UNDERLINE'
-        return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
-    character.set 'style', character.get('style').clear()
-  unstyled = contentBlock.set 'characterList', characterList
-  return unstyled
-
 
 # SELECTION STATE UTILS
 exports.getSelectionDetails = (editorState) ->
@@ -153,33 +146,30 @@ exports.getExistingLinkData = (editorState) ->
   return { url: url, key: linkKey, className: className }
 
 exports.stickyControlsBox = (location, fromTop, fromLeft) ->
+  # use exported selection here instead of passing location
   top = location.target.top - location.parent.top + fromTop
   left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
   return {top: top, left: left}
 
 # IMPORT / EXPORT HTML
-exports.convertToRichHtml = (editorState) ->
+exports.convertToRichHtml = (editorState, layout) ->
   html = convertToHTML({
     entityToHTML: (entity, originalText) ->
       if entity.type is 'LINK'
-        sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\_`’'~()]/g,"")
-        name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
         if entity.data.className?.includes('is-follow-link')
           artist = entity.data.url.split('/artist/')[1]
-          return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText +
+          return '<a href="' + entity.data.url + '" class="' + entity.data.className + '">' + originalText +
            '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
         else
           return a { href: entity.data.url}
       return originalText
-    # blockToHTML: (block) ->
-    #   if block.type is 'header-three'
-    #     return h3 {}, block.text
     styleToHTML: (style) ->
       if style is 'STRIKETHROUGH'
         return span { style: {textDecoration: 'line-through'}}
   })(editorState.getCurrentContent())
   # put the line breaks back for correct client rendering
   html = exports.standardizeSpacing html
+  html = exports.stripH3Tags(html) if layout is 'classic'
   html = if html is '<p><br></p>' then '' else html
   return html
 
@@ -203,8 +193,33 @@ exports.convertFromRichHtml = (html) ->
     })(html)
   return blocksFromHTML
 
+exports.stripCharacterStyles = (contentBlock, keepAllowed) ->
+  characterList = contentBlock.getCharacterList().map (character) ->
+    if keepAllowed
+      unless character.hasStyle 'UNDERLINE'
+        return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
+    character.set 'style', character.get('style').clear()
+  unstyled = contentBlock.set 'characterList', characterList
+  return unstyled
+
+exports.stripH3Tags = (html) ->
+  # replace style tags insize h3 for classic layouts
+  doc = document.createElement('div')
+  doc.innerHTML = html
+  h3s = doc.getElementsByTagName('h3')
+  for h3, i in h3s
+    innerH3 = doc.getElementsByTagName('h3')[i].innerHTML
+      .replace(/<em>/g, '')
+      .replace(/<\/\em>/g, '')
+      .replace(/<strong>/g, '')
+      .replace(/<\/\strong>/g, '')
+    newH3 = '<h3>' + innerH3 + '</h3>'
+    $(doc.getElementsByTagName('h3')[i]).replaceWith(newH3)
+  return doc.innerHTML
+
 exports.standardizeSpacing = (html) ->
   html = html
+    .replace(/<br>/g, '')
     .replace(/<h2><\/\h2>/g, '<p><br></p>')
     .replace(/<h3><\/\h3>/g, '<p><br></p>')
     .replace(/<p><\/\p><p><\/\p>/g, '<p><br></p>')

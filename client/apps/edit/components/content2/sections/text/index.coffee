@@ -65,7 +65,7 @@ module.exports = React.createClass
       @refs.editor.blur()
 
   onChange: (editorState) ->
-    html = convertToRichHtml editorState
+    html = convertToRichHtml editorState, @props.article.get('layout')
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
 
@@ -192,6 +192,8 @@ module.exports = React.createClass
         return 'handled'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
+    else if e is 'strikethrough'
+      @toggleInlineStyle 'STRIKETHROUGH'
     else if e is 'link-prompt'
       className = getExistingLinkData(@state.editorState).className
       return @promptForLink() unless className?.includes 'is-follow-link'
@@ -210,10 +212,11 @@ module.exports = React.createClass
     @props.onSetEditing @props.index + 1
 
   toggleBlockType: (blockType) ->
-    @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
-    @setState showMenu: false
-    if blockType is 'blockquote'
-      @toggleBlockQuote() if @props.section.get('body').includes('<blockquote>')
+    unless blockType is 'blockquote' and !@state.hasFeatures
+      @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
+      @setState showMenu: false
+      if blockType is 'blockquote'
+        @toggleBlockQuote() if @props.section.get('body').includes('<blockquote>')
     return 'handled'
 
   toggleInlineStyle: (inlineStyle) ->

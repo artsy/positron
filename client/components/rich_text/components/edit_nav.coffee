@@ -4,7 +4,7 @@ _ = require 'underscore'
 icons = -> require('../utils/icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'Nav'
+  displayName: 'EditNav'
 
   onToggle: (e) ->
     e.preventDefault()
@@ -30,16 +30,18 @@ module.exports = React.createClass
       buttons.push({name: 'artist'})
     if @props.makePlainText
       buttons.push({name: 'remove-formatting'})
-    buttons = _.flatten(buttons)
+    flattened = _.flatten(buttons)
+    return flattened
 
   render: ->
-    width = if @getButtonsArray().length is 10 then 250 else 200
+    length = @getButtonsArray().length
+    width = if length is 10 then 250 else if length is 8 then 200
     div {
-      className: 'rich-text--edit-nav'
+      className: 'rich-text--nav'
       style:
         top: @props.position?.top
         marginLeft: @props.position?.left
-        width: width
+        width: width or 'inherit'
     },
       @getButtonsArray().map (type, i) =>
         if type.label

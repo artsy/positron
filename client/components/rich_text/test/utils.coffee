@@ -74,6 +74,8 @@ describe 'Utils', ->
     describe '#keyBindingFnFull', ->
 
       it 'returns the name of a recognized key binding', ->
+        e = { keyCode: 49 }
+        @utils.keyBindingFnFull(e).should.eql 'header-one'
         e = { keyCode: 50 }
         @utils.keyBindingFnFull(e).should.eql 'header-two'
         e = { keyCode: 51 }
@@ -86,6 +88,10 @@ describe 'Utils', ->
         @utils.keyBindingFnFull(e).should.eql 'unordered-list-item'
         e = { keyCode: 75 }
         @utils.keyBindingFnFull(e).should.eql 'link-prompt'
+        e = { keyCode: 219 }
+        @utils.keyBindingFnFull(e).should.eql 'blockquote'
+        e = { keyCode: 88 , shiftKey: true}
+        @utils.keyBindingFnFull(e).should.eql 'strikethrough'
         @getDefaultKeyBinding.callCount.should.eql 0
 
       it 'returns the keyboard event of left or right arrow keys', ->
@@ -211,9 +217,10 @@ describe 'Utils', ->
         newState.getSelection().anchorOffset.should.eql 116
         newState.getSelection().anchorKey.should.not.eql editorState.getSelection().anchorKey
 
-    describe '#getSelectionLocation', ->
 
-      it 'returns coordinates of the selection and its parent', ->
+    describe 'Sticky controls', ->
+
+      it '#getSelectionLocation returns coordinates of the selection and its parent', ->
         location = @utils.getSelectionLocation({top: 520, left: 50})
         location.target.should.eql = [{
           bottom: 170
@@ -225,7 +232,16 @@ describe 'Utils', ->
         }]
         location.parent.should.eql { top: 20, left: 50 }
 
+    it '#stickyControlsBox returns coordinates of the sticky item', ->
+      controls = @utils.stickyControlsBox @utils.getSelectionLocation({top: 520, left: 50}), 50, 100
+      controls.should.eql { top: 175, left: 322.5 }
+
+
   describe '#standardizeSpacing', ->
+    it 'removes freestanding linebreaks', ->
+      html = @utils.standardizeSpacing '<br><p><br></p><p></p><br>'
+      html.should.eql '<p><br></p>'
+
     it 'replaces consecutive empty paragraphs with one', ->
       html = @utils.standardizeSpacing '<p></p><p></p>'
       html.should.eql '<p><br></p>'
@@ -241,3 +257,16 @@ describe 'Utils', ->
     it 'converts consecutive spaces into nbsp', ->
       html = @utils.standardizeSpacing '<p>   </p>'
       html.should.eql '<p> &nbsp; </p>'
+
+  describe '#stripH3Tags', ->
+    it 'removes nested html inside h3 blocks', ->
+      html = @utils.stripH3Tags '<h3>A <em>short</em> piece of <strong>text</strong></h3>'
+      html.should.eql '<h3>A short piece of text</h3>'
+
+  describe '#stripCharacterStyles', ->
+
+    it 'removes styles and entities from a block', ->
+
+    it 'removes only forbidden styles if keepAllowed arg is true', ->
+
+
