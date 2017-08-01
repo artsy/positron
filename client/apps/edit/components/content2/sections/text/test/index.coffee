@@ -124,7 +124,7 @@ describe 'Section Text', ->
     it 'Shows the menu when text is selected', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.state.showMenu.should.eql true
-      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--edit-nav').length.should.eql 1
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--nav').length.should.eql 1
 
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)

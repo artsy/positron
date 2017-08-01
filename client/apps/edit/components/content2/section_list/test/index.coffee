@@ -7,6 +7,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 Sections = require '../../../../../../collections/sections.coffee'
+Section = require '../../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate

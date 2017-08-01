@@ -119,7 +119,8 @@ module.exports = React.createClass
       @props.onSetEditing @props.index + direction
     else if e.key in ['ArrowLeft', 'ArrowRight']
       # manually move cursor to make up for draft's missing l/r arrow fallbacks
-      newEditorState = moveSelection @state.editorState, selection, direction
+      shift = if e.shiftKey then true else false
+      newEditorState = moveSelection @state.editorState, selection, direction, shift
       @onChange(newEditorState)
     else
       return true

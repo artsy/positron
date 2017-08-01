@@ -89,7 +89,7 @@ exports.getSelectionDetails = (editorState) ->
     anchorOffset: anchorOffset
   }
 
-exports.moveSelection = (editorState, selection, direction) ->
+exports.moveSelection = (editorState, selection, direction, shift) ->
   # draft has no fallback for interrupted r/l arrow keys
   # here cursor is manually forced r/l within a block,
   # or to the beginning or end of an adjacent block
@@ -98,14 +98,19 @@ exports.moveSelection = (editorState, selection, direction) ->
   if selection.isFirstCharacter and direction is -1
     anchorKey = selection.beforeKey
     offset = editorState.getCurrentContent().getBlockForKey(anchorKey).getLength()
-  if selection.isLastCharacter and direction is 1
+  else if selection.isLastCharacter and direction is 1
     anchorKey = selection.afterKey
     offset = 0
+  else if shift
+    # manually highlight text if shift key is down
+    offset = selection.anchorOffset
+    focusOffset = selection.state.getEndOffset() + direction
   newSelection = new SelectionState {
     anchorKey: anchorKey
     anchorOffset: offset
     focusKey: anchorKey
-    focusOffset: offset
+    focusOffset: focusOffset or offset
+    hasFocus: true
   }
   return EditorState.forceSelection editorState, newSelection
 
