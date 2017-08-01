@@ -36,10 +36,10 @@ describe 'Section Text', ->
       global.HTMLAnchorElement = () => {}
       @SectionText = benv.require resolve(__dirname, '../index')
       InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
+        resolve(__dirname, '../../../../../../../components/rich_text2/components/input_url'), ['icons']
       )
       EditNav = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text/components/edit_nav'), ['icons']
+        resolve(__dirname, '../../../../../../../components/rich_text2/components/edit_nav'), ['icons']
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
       @SectionText.__set__ 'EditNav', React.createFactory EditNav

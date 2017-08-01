@@ -7,10 +7,8 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   ContentState,
   Editor,
   EditorState,
-  getVisibleSelectionRect,
   RichUtils,
-  Modifier,
-  SelectionState } = require 'draft-js'
+  Modifier } = require 'draft-js'
 { blockTypes,
   blockRenderMap,
   decorators,
@@ -25,13 +23,11 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   setSelectionToStart,
   stickyControlsBox,
   stripCharacterStyles,
-  stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.coffee'
+  stripGoogleStyles } = require '../../../../../../components/rich_text2/utils/index.coffee'
 editor = (props) -> React.createElement Editor, props
-{ div, nav, a, span, p, h3 } = React.DOM
-EditNav = React.createFactory require '../../../../../../components/rich_text/components/edit_nav.coffee'
-InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
-Channel = require '../../../../../../models/channel.coffee'
-
+{ div } = React.DOM
+EditNav = React.createFactory require '../../../../../../components/rich_text2/components/edit_nav.coffee'
+InputUrl = React.createFactory require '../../../../../../components/rich_text2/components/input_url.coffee'
 
 module.exports = React.createClass
   displayName: 'SectionText'

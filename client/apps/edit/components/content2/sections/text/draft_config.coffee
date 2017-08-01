@@ -1,5 +1,5 @@
 Immutable = require 'immutable'
-Decorators = require '../../../../../../components/rich_text/utils/decorators.coffee'
+Decorators = require '../../../../../../components/rich_text2/utils/decorators.coffee'
 
 exports.inlineStyles = (layout, hasFeatures) ->
   # for menu display only

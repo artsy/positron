@@ -25,7 +25,7 @@ module.exports = React.createClass
   getInitialState: ->
     editorState: EditorState.createEmpty()
     focus: false
-    styleMap: @props.styleMap || ['bold', 'italic']
+    styleMap: @props.styleMap or ['bold', 'italic']
 
   componentDidMount: ->
     if $(@props.text).text().length
