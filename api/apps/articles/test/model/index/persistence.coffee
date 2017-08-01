@@ -544,10 +544,10 @@ describe 'Article Persistence', ->
     it 'saves layouts', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
-        layout: 'longform'
+        layout: 'feature'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        article.layout.should.equal 'longform'
+        article.layout.should.equal 'feature'
         done()
 
     it 'it defaults to classic if layout is not specified', (done) ->
@@ -596,6 +596,16 @@ describe 'Article Persistence', ->
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.description.should.containEql 'lines start forming'
+        done()
+
+    it 'saves a postscript', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        channel_id: '5086df098523e60002000015'
+        postscript: '<p>Here is some text that follows an article.</p>'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.postscript.should.eql '<p>Here is some text that follows an article.</p>'
         done()
 
     it 'saves verticals', (done) ->

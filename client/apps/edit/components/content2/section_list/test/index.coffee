@@ -7,7 +7,6 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 Sections = require '../../../../../../collections/sections.coffee'
-Section = require '../../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -20,6 +19,9 @@ describe 'SectionList', ->
       global.HTMLElement = () => {}
       @SectionList = benv.require resolve(__dirname, '../index')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
+      RichTextParagraph = benv.require resolve(
+        __dirname, '../../../../../../components/rich_text/components/input_paragraph.coffee'
+      )
       @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
@@ -29,6 +31,7 @@ describe 'SectionList', ->
       @SectionContainer.__set__ 'getLayout', sinon.stub().returns('column_width')
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
+      @SectionList.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
       @props = {
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
@@ -55,6 +58,11 @@ describe 'SectionList', ->
             ]
           }
         ]
+        article: new Backbone.Model
+          sections: @sections
+        saveArticle: @saveArticle = sinon.stub()
+        channel: new Backbone.Model
+          type: 'editorial'
       }
       @component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], => setTimeout =>
         done()
@@ -65,6 +73,16 @@ describe 'SectionList', ->
   it 'renders the sections', ->
     @component.render()
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'An image caption'
+
+  it 'renders the postscript on editorial channels', ->
+    @component.render()
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Postscript (optional)'
+
+  it 'does not render the postscript on non-editorial channels', ->
+    @props.channel.set 'type', 'partner'
+    component = ReactDOM.render React.createElement(@SectionList, @props), ($el = $ "<div></div>")[0], =>
+    component.render()
+    $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'Postscript (optional)'
 
   it 'sets an index for the section tools', ->
     @SectionTool.args[0][0].index.should.equal -1
@@ -101,3 +119,8 @@ describe 'SectionList', ->
     component.render()
     r.simulate.click r.find(component, 'edit-section__remove')[0]
     @props.article.get('sections').length.should.eql 0
+
+  it '#setPostscript sets the postscript and saves article', ->
+    @component.setPostscript '<p>Here is a new postscript.</p>'
+    @component.props.article.get('postscript').should.eql '<p>Here is a new postscript.</p>'
+    @saveArticle.called.should.eql true

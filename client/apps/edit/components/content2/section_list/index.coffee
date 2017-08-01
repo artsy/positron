@@ -7,6 +7,7 @@ React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
+RichTextParagraph = React.createFactory require '../../../../../components/rich_text/components/input_paragraph.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -37,6 +38,10 @@ module.exports = React.createClass
   isDraggable: ->
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
+  setPostscript: (html) ->
+    @props.article.set('postscript', html) unless html is '<p></p>'
+    @props.saveArticle()
+
   render: ->
     div {
       className: 'edit-sections__list' +
@@ -66,3 +71,13 @@ module.exports = React.createClass
               }
               SectionTool { sections: @props.sections, index: i, key: i }
             ]
+      if @props.channel.get('type') is 'editorial'
+        div {
+          className: 'edit-sections__postscript'
+          'data-layout': 'column_width'
+        },
+          RichTextParagraph {
+            text: @props.article.get('postscript') or ''
+            onChange: @setPostscript
+            placeholder: 'Postscript (optional)'
+          }
