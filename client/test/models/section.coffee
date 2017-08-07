@@ -64,3 +64,20 @@ describe "Article", ->
     it 'extracts a slug from a Google link', ->
       @section.set body: '<p><a href="https://www.google.com/url?q=https%3A%2F%2Fwww.artsy.net%2Fartist%2Ftrenton-doyle-hancock&sa=D&sntz=1"></p>'
       @section.slugsFromHTML('body','artist')[0].should.equal 'trenton-doyle-hancock'
+
+  describe '#getLayout', ->
+
+    it 'returns column width by default', ->
+      layout = @section.getLayout()
+      layout.should.eql 'column_width'
+
+    it 'can return an existing layout', ->
+      @section.set layout: 'fullscreen'
+      layout = @section.getLayout()
+      layout.should.eql 'fullscreen'
+
+    it 'returns overflow if blockquote', ->
+      @section.set type: 'text'
+      @section.set body: '<blockquote>Cool pullquote</blockquote>'
+      layout = @section.getLayout()
+      layout.should.eql 'overflow_fillwidth'

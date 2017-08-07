@@ -2,6 +2,7 @@
   padding-top 60px
   .public-DraftEditorPlaceholder-root
     position absolute
+    color gray-dark-color
   &__title
     position relative
     width 100%
@@ -15,6 +16,8 @@
     textarea
       width 100%
       margin-bottom -20px
+      &::placeholder
+        color gray-dark-color
   &__vertical
     Unica s19, medium
     &.placeholder
@@ -77,6 +80,7 @@
         color gray-dark-color
     &__lead-paragraph
       garamond l-body
-      color gray-dark-color
       max-width classic-body-width
       margin 20px auto 0 auto
+      .public-DraftEditorPlaceholder-root
+        color gray-dark-color

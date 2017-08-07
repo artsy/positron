@@ -6,6 +6,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
+Section = require '../../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
@@ -23,7 +24,7 @@ describe 'SectionContainer', ->
         resolve(__dirname, '../index'), ['icons']
       )
       @props = {
-        section: new Backbone.Model(
+        section: new Section(
           { body: 'Foo to the bar', type: 'text', layout: 'foo' }
         )
         sections: {length: 4}

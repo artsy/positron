@@ -6,6 +6,8 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
+Sections = require '../../../../../../collections/sections.coffee'
+Section = require '../../../../../../models/section.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -24,10 +26,11 @@ describe 'SectionList', ->
       )
       @SectionContainer.__set__ 'SectionText', text = sinon.stub()
       @SectionContainer.__set__ 'SectionImageCollection', image_collection = sinon.stub()
+      @SectionContainer.__set__ 'getLayout', sinon.stub().returns('column_width')
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @props = {
-        sections: @sections = new Backbone.Collection [
+        sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }
           { type: 'image', url: 'http://artsy.net/image.jpg', caption: '<p>An image caption</p>', layout: 'column_width'}
@@ -92,8 +95,8 @@ describe 'SectionList', ->
     @component.props.sections.length.should.eql 3
 
   it 'onRemoveSection resets the article sections if empty', ->
-    @props.sections = new Backbone.Collection [{ body: 'Foo to the bar', type: 'text' }]
-    @props.article = new Backbone.Model {sections: [{ body: 'Foo to the bar', type: 'text' }]}
+    @props.sections = new Sections [{ body: 'Foo to the bar', type: 'text' }]
+    @props.article = new Backbone.Model {sections: @props.sections}
     component = ReactDOM.render React.createElement(@SectionList, @props ), ($el = $ "<div></div>")[0], =>
     component.render()
     r.simulate.click r.find(component, 'edit-section__remove')[0]

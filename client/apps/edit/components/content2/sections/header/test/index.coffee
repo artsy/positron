@@ -19,7 +19,7 @@ describe 'SectionHeader: Classic', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       SectionHeader = benv.require resolve(__dirname, '../index.coffee')
-      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text/components/input_paragraph.coffee')
+      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/input_paragraph.coffee')
       SectionHeader.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
       @article = new Article _.extend fixtures().articles,
         layout: 'classic'
@@ -112,7 +112,7 @@ describe 'SectionHeader: Standard', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       SectionHeader = benv.require resolve(__dirname, '../index.coffee')
-      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text/components/input_paragraph.coffee')
+      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/input_paragraph.coffee')
       SectionHeader.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
       @article = new Article _.extend fixtures().articles,
         layout: 'standard'

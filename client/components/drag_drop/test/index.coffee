@@ -6,6 +6,8 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-addons-test-utils'
+Sections = require '../../../collections/sections.coffee'
+Section = require '../../../models/section.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -125,22 +127,22 @@ describe 'DragDropContainer Vertical', ->
       SectionContainer.__set__ 'SectionImageCollection', React.createFactory ImageCollection
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
-      item1 = new Backbone.Model {
+      item1 = new Section {
           type: 'image_collection'
           images: [{image: {url: 'image1.com'}}]
       }
-      item2 = new Backbone.Model {
+      item2 = new Section {
         type: 'image_collection'
         images: [{image: {url: 'image2.com'}}]
       }
-      item3 = new Backbone.Model {
+      item3 = new Section {
         type: 'image_collection'
         images: [{image: {url: 'image3.com'}}]
       }
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
-        items: [item1, item2, item3]
+        items: new Sections [item1, item2, item3]
         layout: 'vertical'
       }
       @children = [
