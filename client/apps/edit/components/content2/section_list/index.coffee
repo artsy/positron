@@ -4,6 +4,7 @@
 #
 
 React = require 'react'
+_ = require 'underscore'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
@@ -16,6 +17,7 @@ module.exports = React.createClass
     editingIndex: null
 
   componentDidMount: ->
+    @getContentStartEnd()
     @props.sections.on 'add', @onNewSection
     @props.sections.on 'remove', @onRemoveSection
 
@@ -37,6 +39,12 @@ module.exports = React.createClass
   isDraggable: ->
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
+  getContentStartEnd: ->
+    types = @props.sections.map (section, i) => return {type: section.get 'type', index: i}
+    start = _.findIndex(types, { type: 'text'})
+    end = _.findLastIndex(types, { type: 'text'})
+    return {start: start, end: end}
+
   render: ->
     div {
       className: 'edit-sections__list' +
@@ -50,6 +58,7 @@ module.exports = React.createClass
           onDragEnd: @onDragEnd
           isDraggable: @isDraggable()
           layout: 'vertical'
+          article: @props.article
         },
           @props.sections.map (section, i) =>
             [
@@ -63,6 +72,8 @@ module.exports = React.createClass
                 channel: @props.channel
                 onSetEditing: @onSetEditing
                 article: @props.article
+                isStartText: @getContentStartEnd().start is i
+                isEndText: @getContentStartEnd().end is i
               }
               SectionTool { sections: @props.sections, index: i, key: i }
             ]

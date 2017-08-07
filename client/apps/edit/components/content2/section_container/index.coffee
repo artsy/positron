@@ -39,7 +39,7 @@ module.exports = React.createClass
       className: 'edit-section__container'
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @props.section.getLayout()
+      'data-layout': @props.section.getLayout(@props.article.get('layout'))
     },
       unless @props.section.get('type') is 'fullscreen'
         div {
@@ -78,6 +78,8 @@ module.exports = React.createClass
         channel: @props.channel
         isHero: @props.isHero
         onSetEditing: @props.onSetEditing
+        isStartText: @props.isStartText
+        isEndText: @props.isEndText
       )
       div {
         className: 'edit-section__container-bg'

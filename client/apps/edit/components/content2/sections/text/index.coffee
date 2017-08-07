@@ -21,6 +21,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   keyBindingFnFull,
   moveSelection,
   setSelectionToStart,
+  standardizeSpacing,
   stickyControlsBox,
   stripCharacterStyles,
   stripGoogleStyles } = require '../../../../../../components/rich_text2/utils/index.coffee'
@@ -33,7 +34,7 @@ module.exports = React.createClass
   displayName: 'SectionText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty(new CompositeDecorator(decorators()))
+    editorState: EditorState.createEmpty(new CompositeDecorator(decorators(@props.article.get('layout'))))
     focus: false
     html: null
     selectionTarget: null
@@ -45,11 +46,14 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = convertFromRichHtml @props.section.get('body')
-      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+      html = standardizeSpacing @props.section.get('body')
+      html = @setContentEnd(html) if @props.article.get('layout') is 'feature'
+      debugger
+      blocksFromHTML = convertFromRichHtml html
+      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators(@props.article.get('layout'))))
       editorState = setSelectionToStart(editorState) if @props.editing
       @setState
-        html: @props.section.get('body')
+        html: html
         editorState: editorState
     else if @props.editing
       @focus()
@@ -73,6 +77,19 @@ module.exports = React.createClass
   focus: ->
     @setState focus: true
     @refs.editor.focus()
+
+  setContentEnd: (html) ->
+    doc = document.createElement('div')
+    doc.innerHTML = html
+    if @props.isEndText
+      endSpan = doc.getElementsByClassName('content-end')
+      console.log 'maybe set end'
+      unless endSpan.length
+        console.log 'setting end'
+        oldHtml = $(doc).children().last().html()
+        newHtml = oldHtml + '<span class="content-end"></span>'
+        $(doc).children().last().html(newHtml)
+    return doc.innerHTML
 
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
@@ -201,12 +218,14 @@ module.exports = React.createClass
     beforeBlock = _s(currentHtml).strLeft('<blockquote>')?._wrapped
     afterBlock = _s(currentHtml).strRight('</blockquote>')?._wrapped
     blockquote = currentHtml.replace(beforeBlock, '').replace(afterBlock, '')
+    increment = 0
     if afterBlock
       @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
     if beforeBlock
       @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
+      increment = 1
     @props.section.set('body', blockquote)
-    @props.onSetEditing @props.index + 1
+    @props.onSetEditing @props.index + increment
 
   toggleBlockType: (blockType) ->
     unless blockType is 'blockquote' and !@state.hasFeatures
@@ -278,6 +297,8 @@ module.exports = React.createClass
 
     div {
       className: 'edit-section--text' + isEditing
+      'data-content-start': @props.isStartText
+      'data-content-end': @props.isEndText
       onClick: @focus
     },
       if @state.showMenu

@@ -102,12 +102,14 @@
   .image-collection__list .drag-container
     flex-direction column
 
-.standard
+.standard, .feature
   .edit-section--image-collection
     .rich-text--caption__input
       margin-top 5px
       Unica s14
       color gray-dark-color
+
+.standard
   .edit-section__container[data-layout=overflow_fillwidth]
     .edit-section--image-collection .edit-controls
       max-width standard-overflow-w-margin
@@ -132,3 +134,11 @@
     max-width classic-overflow-w-margin
     .edit-section--image-collection .edit-controls
       max-width classic-overflow-w-margin
+
+.feature
+  .edit-section__container[data-layout=column_width]
+    .edit-section--image-collection .edit-controls
+      max-width feature-body-w-margin
+  .edit-section__container[data-layout=overflow_fillwidth]
+    .edit-section--image-collection .edit-controls
+      max-width feature-overflow-w-margin

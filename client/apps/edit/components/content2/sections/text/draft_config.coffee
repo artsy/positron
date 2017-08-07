@@ -55,10 +55,22 @@ exports.blockRenderMap = (layout, hasFeatures) ->
       'unstyled': {element: 'p'}
     })
 
-exports.decorators = ->
-  return [
-    {
-      strategy: Decorators.findLinkEntities
-      component: Decorators.Link
-    }
-  ]
+exports.decorators = (layout) ->
+  if layout is 'feature'
+    return [
+      {
+        strategy: Decorators.findLinkEntities
+        component: Decorators.Link
+      },
+      {
+        strategy: Decorators.findContentEndEntities
+        component: Decorators.ContentEnd
+      }
+    ]
+  else
+    return [
+      {
+        strategy: Decorators.findLinkEntities
+        component: Decorators.Link
+      }
+    ]

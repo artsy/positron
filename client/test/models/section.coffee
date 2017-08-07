@@ -81,3 +81,9 @@ describe "Article", ->
       @section.set body: '<blockquote>Cool pullquote</blockquote>'
       layout = @section.getLayout()
       layout.should.eql 'overflow_fillwidth'
+
+    it 'returns blockquote if feature article', ->
+      @section.set type: 'text'
+      @section.set body: '<blockquote>Cool pullquote</blockquote>'
+      layout = @section.getLayout('feature')
+      layout.should.eql 'blockquote'

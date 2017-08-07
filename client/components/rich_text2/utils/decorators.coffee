@@ -35,3 +35,18 @@ exports.Link = (props) ->
   return (
     link
   )
+
+exports.findContentEndEntities = (contentBlock, callback, contentState) ->
+  debugger
+  contentBlock.findEntityRanges ((character) ->
+    entityKey = character.getEntity()
+    debugger
+    entityKey isnt null and contentState.getEntity(entityKey).getType() is 'CONTENT-END'
+  ), callback
+  return
+
+exports.ContentEnd = (props) ->
+  debugger
+  contentEnd = span {
+    className: 'content-end'
+  }

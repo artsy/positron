@@ -167,6 +167,9 @@ exports.convertToRichHtml = (editorState, layout) ->
            '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
         else
           return a { href: entity.data.url}
+      if entity.type is 'CONTENT-END'
+        debugger
+        return span { className: 'content-end'}
       return originalText
     styleToHTML: (style) ->
       if style is 'STRIKETHROUGH'
@@ -195,6 +198,16 @@ exports.convertFromRichHtml = (html) ->
         )
       if nodeName is 'p' and node.innerHTML is '<br>'
         node.innerHTML = '' # remove <br>, it renders extra breaks in editor
+      if nodeName is 'span' and node.innerHTML is '' and node.classList.length
+        debugger
+        data = {className: node.classList.toString()}
+        spanType = if data.className is 'content-start' then 'CONTENT-START' else 'CONTENT-END'
+        debugger
+        return Entity.create(
+            spanType,
+            'IMMUTABLE',
+            data
+        )
     })(html)
   return blocksFromHTML
 
@@ -225,6 +238,7 @@ exports.stripH3Tags = (html) ->
 exports.standardizeSpacing = (html) ->
   html = html
     .replace(/<br>/g, '')
+    .replace(/<span><\/span>/g, '')
     .replace(/<h2><\/\h2>/g, '<p><br></p>')
     .replace(/<h3><\/\h3>/g, '<p><br></p>')
     .replace(/<p><\/\p><p><\/\p>/g, '<p><br></p>')
@@ -232,4 +246,5 @@ exports.standardizeSpacing = (html) ->
     .replace(/<p> <\/\p>/g, '<p><br></p>')
     .replace(/<p><br><\/\p><p><br><\/\p>/g, '<p><br></p>')
     .replace(/  /g, ' &nbsp;')
+  debugger
   return html
