@@ -141,6 +141,7 @@ denormalizedArtwork = (->
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
+  postscript: @string().allow('', null)
   primary_featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artwork_ids: @array().items(@string().objectid()).allow(null)
