@@ -7,6 +7,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 Sections = require '../../../../../../collections/sections.coffee'
+Channel = require '../../../../../../models/channel.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -28,7 +29,6 @@ describe 'SectionList', ->
       )
       @SectionContainer.__set__ 'SectionText', text = sinon.stub()
       @SectionContainer.__set__ 'SectionImageCollection', image_collection = sinon.stub()
-      @SectionContainer.__set__ 'getLayout', sinon.stub().returns('column_width')
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @SectionList.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
@@ -61,7 +61,7 @@ describe 'SectionList', ->
         article: new Backbone.Model
           sections: @sections
         saveArticle: @saveArticle = sinon.stub()
-        channel: new Backbone.Model
+        channel: new Channel
           type: 'editorial'
       }
       @component = ReactDOM.render React.createElement(@SectionList, @props ), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -124,3 +124,8 @@ describe 'SectionList', ->
     @component.setPostscript '<p>Here is a new postscript.</p>'
     @component.props.article.get('postscript').should.eql '<p>Here is a new postscript.</p>'
     @saveArticle.called.should.eql true
+
+  it '#setPostscript does not save empty html', ->
+    @component.setPostscript '<p></p>'
+    @saveArticle.called.should.eql true
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Postscript (optional)'

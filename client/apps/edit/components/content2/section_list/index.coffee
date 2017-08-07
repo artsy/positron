@@ -39,7 +39,8 @@ module.exports = React.createClass
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
   setPostscript: (html) ->
-    @props.article.set('postscript', html) unless html is '<p></p>'
+    html = null if html is '<p></p>'
+    @props.article.set('postscript', html)
     @props.saveArticle()
 
   render: ->
@@ -71,7 +72,7 @@ module.exports = React.createClass
               }
               SectionTool { sections: @props.sections, index: i, key: i }
             ]
-      if @props.channel.get('type') is 'editorial'
+      if @props.channel.isEditorial()
         div {
           className: 'edit-sections__postscript'
           'data-layout': 'column_width'
