@@ -194,6 +194,7 @@ denormalizedArtwork = (->
   search_title: @string().allow('', null)
   search_description: @string().allow('', null)
   seo_keyword: @string().allow('', null)
+  keywords: @array().items(@string()).allow(null)
 ).call Joi
 
 #
