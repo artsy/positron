@@ -39,8 +39,6 @@ fullscreenSection = (->
     title: @string().allow('',null)
     intro: @string().allow('',null)
     url: @string().allow(null)
-    background_url: @string().allow('',null)
-    background_image_url: @string().allow('',null)
 ).call Joi
 
 denormalizedArtwork = (->
@@ -143,6 +141,7 @@ denormalizedArtwork = (->
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
+  postscript: @string().allow('', null)
   primary_featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artwork_ids: @array().items(@string().objectid()).allow(null)
@@ -195,6 +194,7 @@ denormalizedArtwork = (->
   search_title: @string().allow('', null)
   search_description: @string().allow('', null)
   seo_keyword: @string().allow('', null)
+  keywords: @array().items(@string()).allow(null)
 ).call Joi
 
 #
@@ -204,7 +204,7 @@ denormalizedArtwork = (->
   id: @string().objectid()
   access_token: @string()
   author_id: @string().objectid()
-  published: @boolean()
+  published: @boolean().default(true)
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   section_id: @string().objectid()

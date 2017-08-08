@@ -63,7 +63,8 @@ module.exports = React.createClass
         else
           i = child.props.index or i
           type = child.props.section?.get('type') or null
-          layout = child.props.section?.get('layout') or null
+          if child.type.displayName is 'SectionContainer'
+            layout = child.props.section.getLayout()
           DragTarget {
             key: i
             i: i
@@ -77,7 +78,7 @@ module.exports = React.createClass
             dropPosition: @state.dropPosition
             dragStartY: @state.dragStartY
             type: type
-            layout: layout
+            layout: layout or null
           },
             DragSource {
               i: i

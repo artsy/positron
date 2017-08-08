@@ -5,7 +5,7 @@
 #
 
 React = require 'react'
-SectionText = React.createFactory require '../../content/sections/text/index.coffee'
+SectionText = React.createFactory require '../sections/text/index.coffee'
 SectionVideo = React.createFactory require '../../content/sections/video/index.coffee'
 SectionSlideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
 SectionEmbed = React.createFactory require '../../content/sections/embed/index.coffee'
@@ -39,7 +39,7 @@ module.exports = React.createClass
       className: 'edit-section__container'
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @props.section.get('layout')
+      'data-layout': @props.section.getLayout()
     },
       unless @props.section.get('type') is 'fullscreen'
         div {

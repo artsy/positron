@@ -429,6 +429,7 @@ describe 'Article Retrieval', ->
         Article.where {
           scheduled: true
           count: true
+          published: false
         }, (err, res) ->
           { total, count, results } = res
           count.should.equal 1

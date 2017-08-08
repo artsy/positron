@@ -29,6 +29,7 @@ moment = require 'moment'
     'vertical'
     'q'
     'scheduled'
+    'access_token'
   query.fair_ids = input.fair_id if input.fair_id
   if input.fair_programming_id
     query.fair_programming_ids = input.fair_programming_id

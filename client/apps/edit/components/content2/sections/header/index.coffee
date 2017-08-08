@@ -1,6 +1,6 @@
 React = require 'react'
 moment = require 'moment'
-RichTextParagraph = React.createFactory require '../../../../../../components/rich_text/components/input_paragraph.coffee'
+RichTextParagraph = React.createFactory require '../../../../../../components/rich_text2/components/input_paragraph.coffee'
 { div, p, textarea } = React.DOM
 
 

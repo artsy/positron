@@ -5,12 +5,12 @@ mixin hero_section(hero)
         img(src=hero.url)/
         figcaption= hero.caption
       when 'fullscreen'
-        if hero.background_url
+        if hero.url && hero.url.indexOf('.mp4') > -1
           figure
             video(loop=true)
-              source(src=hero.background_url type='video/mp4')
+              source(src=hero.url type='video/mp4')
         else
-          img(src= hero.background_image_url)/
+          img(src= hero.url)/
 
 mixin artworks(section)
   if section.artworks
