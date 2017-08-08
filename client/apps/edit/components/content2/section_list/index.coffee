@@ -56,6 +56,7 @@ module.exports = React.createClass
           onDragEnd: @onDragEnd
           isDraggable: @isDraggable()
           layout: 'vertical'
+          article: @props.article
         },
           @props.sections.map (section, i) =>
             [

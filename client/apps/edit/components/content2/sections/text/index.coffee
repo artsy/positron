@@ -20,7 +20,9 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   getSelectionLocation,
   keyBindingFnFull,
   moveSelection,
+  setContentStartEnd,
   setSelectionToStart,
+  standardizeSpacing,
   stickyControlsBox,
   stripCharacterStyles,
   stripGoogleStyles } = require '../../../../../../components/rich_text2/utils/index.coffee'
@@ -33,7 +35,7 @@ module.exports = React.createClass
   displayName: 'SectionText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty(new CompositeDecorator(decorators()))
+    editorState: EditorState.createEmpty(new CompositeDecorator(decorators(@props.article.get('layout'))))
     focus: false
     html: null
     selectionTarget: null
@@ -45,19 +47,26 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if @props.section.get('body')?.length
-      blocksFromHTML = convertFromRichHtml @props.section.get('body')
-      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+      html = standardizeSpacing @props.section.get('body')
+      unless @props.article.get('layout') is 'classic'
+        html = setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
+      blocksFromHTML = convertFromRichHtml html
+      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators(@props.article.get('layout'))))
       editorState = setSelectionToStart(editorState) if @props.editing
       @setState
-        html: @props.section.get('body')
+        html: html
         editorState: editorState
     else if @props.editing
       @focus()
 
   componentDidUpdate: (prevProps) ->
-    if @props.editing and @props.editing != prevProps.editing
+    if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
+      unless @props.article.get('layout') is 'classic'
+        html = setContentStartEnd(@props.section.get('body'), @props.article.get('layout'), @props.isStartText, @props.isEndText)
+      @props.section.set('body', html)
+    if @props.editing and @props.editing isnt prevProps.editing
       @focus()
-    else if !@props.editing and @props.editing != prevProps.editing
+    else if !@props.editing and @props.editing isnt prevProps.editing
       @refs.editor.blur()
 
   onChange: (editorState) ->
@@ -197,16 +206,19 @@ module.exports = React.createClass
       @promptForLink 'artist'
 
   toggleBlockQuote: ->
-    currentHtml = @props.section.get('body')
-    beforeBlock = _s(currentHtml).strLeft('<blockquote>')?._wrapped
-    afterBlock = _s(currentHtml).strRight('</blockquote>')?._wrapped
-    blockquote = currentHtml.replace(beforeBlock, '').replace(afterBlock, '')
+    blockquote = @props.section.get('body')
+    beforeBlock = _s(blockquote).strLeft('<blockquote>')?._wrapped
+    afterBlock = _s(blockquote).strRight('</blockquote>')?._wrapped
+    increment = 0
     if afterBlock
+      blockquote = blockquote.replace(afterBlock, '')
       @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
     if beforeBlock
+      blockquote = blockquote.replace(beforeBlock, '')
       @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
+      increment = 1
     @props.section.set('body', blockquote)
-    @props.onSetEditing @props.index + 1
+    @props.onSetEditing @props.index + increment
 
   toggleBlockType: (blockType) ->
     unless blockType is 'blockquote' and !@state.hasFeatures

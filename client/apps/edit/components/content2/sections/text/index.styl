@@ -17,7 +17,8 @@
   ul li .public-DraftStyleDefault-ltr,
   li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
     list-style disc
-
+  li
+    padding .5em 0
   nav
     &.has-plugins
       button[name='remove-formatting'],
@@ -41,13 +42,13 @@
 .classic .edit-section--text
   garamond l-body
   p
-    margin-top .75em
-    margin-bottom .75em
+    padding-top .75em
+    padding-bottom .75em
   h2
     garamond l-header
     font-size 28px
     line-height 1.2em
-    margin-top .5em
+    padding-top .5em
   h3
     avant-garde body
     line-height 27px
@@ -61,21 +62,27 @@
 .feature .edit-section--text
   Garamond s23
   p
-    margin-top 1em
-    margin-bottom 1em
+    padding-top 1em
+    padding-bottom 1em
     &:first-child
-      margin-top 0
+      padding-top 0
     &:last-child
-      margin-bottom 0
+      padding-bottom 0
   h2
     Garamond s40
-    margin-bottom 23px
   h3
     Unica s19
-    margin-top 23px
+    padding-top 23px
   blockquote
-    margin-top 46px
-    margin-bottom 46px
+    padding-top 46px
+    padding-bottom 46px
+  .content-end
+    background-color black
+    height 15px
+    width @height
+    border-radius 50%
+    display inline-block
+    margin-left 15px
 
 .standard .edit-section--text
   blockquote
@@ -84,5 +91,27 @@
 .feature .edit-section--text
   blockquote
     Unica s69
-
+  h1
+    Unica s40
+    text-align center
+    padding-bottom 46px
+    padding-top 107px
+    position relative
+    &:before
+      position absolute
+      top 69px
+      right calc(50% \- 7.5px)
+      content '.'
+      height 15px
+      width @height
+      background black
+      border-radius 50%
+      color rgba(0,0,0,0)
+  .content-start
+    Unica s69, medium
+    float left
+    line-height .5em
+    margin-right 10px
+    margin-top .298em
+    text-transform uppercase
 

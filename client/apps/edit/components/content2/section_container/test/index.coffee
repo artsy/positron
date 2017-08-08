@@ -6,7 +6,9 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
+Article = require '../../../../../../models/article.coffee'
 Section = require '../../../../../../models/section.coffee'
+Sections = require '../../../../../../collections/sections.coffee'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
@@ -23,16 +25,18 @@ describe 'SectionContainer', ->
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )
+      section1 = new Section { body: 'Foo to the bar', type: 'text' }
+      section2 = new Section { body: 'Bar to the foo', type: 'text' }
+      section3 = new Section { type: 'image_collection' }
       @props = {
-        section: new Section(
-          { body: 'Foo to the bar', type: 'text', layout: 'foo' }
-        )
-        sections: {length: 4}
+        section: section1
+        sections: new Sections [section1, section2, section3]
         onSetEditing: @onSetEditing = sinon.stub()
         index: 1
         onDragStart: @onDragStart = sinon.stub()
         onDragEnd: @onDragEnd = sinon.stub()
         dragOver: 4
+        article: new Article
       }
       @SectionContainer.__set__ 'SectionText', ->
       @component = ReactDOM.render React.createElement(@SectionContainer, @props
@@ -56,3 +60,8 @@ describe 'SectionContainer', ->
   it 'exits editing mode when clicking off and callsback a parent', ->
     r.simulate.click r.find @component, 'edit-section__container-bg'
     (@component.props.onSetEditing.args[0][0]?).should.not.be.ok
+
+  it '#getContentStartEnd returns the index of first and last text-sections', ->
+    startEnd = @component.getContentStartEnd()
+    startEnd.start.should.eql 0
+    startEnd.end.should.eql 1
