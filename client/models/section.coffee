@@ -50,8 +50,7 @@ module.exports = class Section extends Backbone.Model
    getLayout: (articleLayout) ->
     layout = 'column_width'
     if @get('type') is 'text' and @get('body')?.includes('<blockquote>')
-      layout = 'overflow_fillwidth'
-      layout = 'blockquote' if articleLayout is 'feature'
+      layout = if articleLayout is 'feature' then 'blockquote' else 'overflow_fillwidth'
     else if @get('layout')
       layout = @get('layout')
     return layout

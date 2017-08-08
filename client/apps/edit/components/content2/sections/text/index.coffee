@@ -60,13 +60,13 @@ module.exports = React.createClass
       @focus()
 
   componentDidUpdate: (prevProps) ->
-    if @props.isEndText != prevProps.isEndText or @props.isStartText != prevProps.isStartText
+    if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
       unless @props.article.get('layout') is 'classic'
         html = setContentStartEnd(@props.section.get('body'), @props.article.get('layout'), @props.isStartText, @props.isEndText)
       @props.section.set('body', html)
-    if @props.editing and @props.editing != prevProps.editing
+    if @props.editing and @props.editing isnt prevProps.editing
       @focus()
-    else if !@props.editing and @props.editing != prevProps.editing
+    else if !@props.editing and @props.editing isnt prevProps.editing
       @refs.editor.blur()
 
   onChange: (editorState) ->

@@ -30,6 +30,7 @@ describe 'SectionList', ->
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @props = {
+        article: new Backbone.Model {layout: 'feature'}
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }

@@ -56,36 +56,24 @@ exports.blockRenderMap = (layout, hasFeatures) ->
     })
 
 exports.decorators = (layout) ->
+  decorators = [
+    {
+      strategy: Decorators.findLinkEntities
+      component: Decorators.Link
+    }
+  ]
   if layout is 'feature'
-    return [
-      {
-        strategy: Decorators.findLinkEntities
-        component: Decorators.Link
-      },
-      {
-        strategy: Decorators.findContentStartEntities
-        component: Decorators.ContentStartEnd
-      },
-      {
-        strategy: Decorators.findContentEndEntities
-        component: Decorators.ContentStartEnd
-      }
-    ]
+    decorators.push({
+      strategy: Decorators.findContentStartEntities
+      component: Decorators.ContentStartEnd
+    })
+    decorators.push({
+      strategy: Decorators.findContentEndEntities
+      component: Decorators.ContentStartEnd
+    })
   else if layout is 'standard'
-    return [
-      {
-        strategy: Decorators.findLinkEntities
-        component: Decorators.Link
-      },
-      {
-        strategy: Decorators.findContentEndEntities
-        component: Decorators.ContentStartEnd
-      }
-    ]
-  else
-    return [
-      {
-        strategy: Decorators.findLinkEntities
-        component: Decorators.Link
-      }
-    ]
+    decorators.push({
+      strategy: Decorators.findContentEndEntities
+      component: Decorators.ContentStartEnd
+    })
+  return decorators

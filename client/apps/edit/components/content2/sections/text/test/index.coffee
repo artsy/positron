@@ -78,6 +78,8 @@ describe 'Section Text', ->
         onSetEditing: sinon.stub()
         channel: channel
         article: article
+        isStartText: true
+        isEndText: true
       }
       @artistProps = {
         editing: true
@@ -180,6 +182,29 @@ describe 'Section Text', ->
         'unstyled'
       ]
 
+  describe 'Editorial Features', ->
+
+    it 'Adds drop-caps to first paragraph in feature article', ->
+      @altProps.article.set 'layout', 'feature'
+      @altProps.section.set 'body', '<h2>A short title</h2><p>A short piece of text</p>'
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.state.html.should.containEql '<span class="content-start">A</span>'
+
+    it 'Doesnt add drop-caps if no paragraph', ->
+      @altProps.article.set 'layout', 'feature'
+      @altProps.section.set 'body', '<h2>A short title</h2>'
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.state.html.should.not.containEql '<span class="content-start">A</span>'
+
+    it 'Adds end-marker to a feature article', ->
+      @altProps.article.set 'layout', 'feature'
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.state.html.should.containEql '<span class="content-end"> </span>'
+
+    it 'Adds end-marker to a standard article', ->
+      @altProps.article.set 'layout', 'standard'
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.state.html.should.containEql '<span class="content-end"> </span>'
 
   describe 'Rich text menu events', ->
 
@@ -588,5 +613,3 @@ describe 'Section Text', ->
       @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
       @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
       @component.state.html.should.containEql '<p>yep.01 &nbsp;<a href="artsy.net">here is a link.</a></p><p>In 2016, K mounted a <a'
-
-
