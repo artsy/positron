@@ -110,35 +110,15 @@
       color gray-dark-color
 
 .standard
-  .edit-section__container[data-layout=overflow_fillwidth]
-    .edit-section--image-collection .edit-controls
-      max-width standard-overflow-w-margin
-  .edit-section__container[data-layout=column_width]
-    .edit-section--image-collection .edit-controls
-      max-width standard-body-w-margin
   .edit-section__container[data-type=image_set][data-editing=true]
-      max-width standard-overflow-w-margin
-    .edit-section--image-collection .edit-controls
-      max-width standard-overflow-w-margin
+    max-width standard-overflow-w-margin
+
+.feature
+  .edit-section__container[data-type=image_set][data-editing=true]
+    max-width feature-overflow-w-margin
 
 .classic
   .edit-section--image-collection .edit-controls.sticky
     margin-left 0
-  .edit-section__container[data-layout=overflow_fillwidth]
-    .edit-section--image-collection .edit-controls
-      max-width classic-overflow-w-margin
-  .edit-section__container[data-layout=column_width]
-    .edit-section--image-collection .edit-controls
-      max-width classic-body-w-margin
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width classic-overflow-w-margin
-    .edit-section--image-collection .edit-controls
-      max-width classic-overflow-w-margin
-
-.feature
-  .edit-section__container[data-layout=column_width]
-    .edit-section--image-collection .edit-controls
-      max-width feature-body-w-margin
-  .edit-section__container[data-layout=overflow_fillwidth]
-    .edit-section--image-collection .edit-controls
-      max-width feature-overflow-w-margin

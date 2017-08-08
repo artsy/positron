@@ -5,6 +5,7 @@
 #
 
 React = require 'react'
+_ = require 'underscore'
 SectionText = React.createFactory require '../sections/text/index.coffee'
 SectionVideo = React.createFactory require '../../content/sections/video/index.coffee'
 SectionSlideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
@@ -33,6 +34,12 @@ module.exports = React.createClass
   removeSection: (e) ->
     e.stopPropagation()
     @props.section.destroy()
+
+  getContentStartEnd: ->
+    types = @props.sections.map (section, i) => return {type: section.get 'type', index: i}
+    start = _.findIndex(types, { type: 'text'})
+    end = _.findLastIndex(types, { type: 'text'})
+    return {start: start, end: end}
 
   render: ->
     div {
@@ -78,8 +85,8 @@ module.exports = React.createClass
         channel: @props.channel
         isHero: @props.isHero
         onSetEditing: @props.onSetEditing
-        isStartText: @props.isStartText
-        isEndText: @props.isEndText
+        isStartText: @getContentStartEnd().start is @props.index
+        isEndText: @getContentStartEnd().end is @props.index
       )
       div {
         className: 'edit-section__container-bg'

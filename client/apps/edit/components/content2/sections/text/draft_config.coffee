@@ -63,8 +63,23 @@ exports.decorators = (layout) ->
         component: Decorators.Link
       },
       {
+        strategy: Decorators.findContentStartEntities
+        component: Decorators.ContentStartEnd
+      },
+      {
         strategy: Decorators.findContentEndEntities
-        component: Decorators.ContentEnd
+        component: Decorators.ContentStartEnd
+      }
+    ]
+  else if layout is 'standard'
+    return [
+      {
+        strategy: Decorators.findLinkEntities
+        component: Decorators.Link
+      },
+      {
+        strategy: Decorators.findContentEndEntities
+        component: Decorators.ContentStartEnd
       }
     ]
   else

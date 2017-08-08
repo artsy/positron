@@ -36,17 +36,27 @@ exports.Link = (props) ->
     link
   )
 
-exports.findContentEndEntities = (contentBlock, callback, contentState) ->
-  debugger
+exports.findContentStartEntities = (contentBlock, callback, contentState) ->
   contentBlock.findEntityRanges ((character) ->
     entityKey = character.getEntity()
-    debugger
+    entityKey isnt null and contentState.getEntity(entityKey).getType() is 'CONTENT-START'
+  ), callback
+  return
+
+exports.findContentEndEntities = (contentBlock, callback, contentState) ->
+  contentBlock.findEntityRanges ((character) ->
+    entityKey = character.getEntity()
     entityKey isnt null and contentState.getEntity(entityKey).getType() is 'CONTENT-END'
   ), callback
   return
 
-exports.ContentEnd = (props) ->
-  debugger
-  contentEnd = span {
-    className: 'content-end'
-  }
+exports.ContentStartEnd = (props) ->
+  type = props.contentState.getEntity(props.entityKey).getType()
+  if type is 'CONTENT-START'
+    return span {
+      className: type.toLowerCase()
+    }, props.children
+  else if type is 'CONTENT-END'
+    return span {
+      className: type.toLowerCase()
+    }

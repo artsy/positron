@@ -20,6 +20,7 @@ window.process = {env: {NODE_ENV: sd.NODE_ENV}}
   getSelectionLocation,
   keyBindingFnFull,
   moveSelection,
+  setContentStartEnd,
   setSelectionToStart,
   standardizeSpacing,
   stickyControlsBox,
@@ -47,8 +48,8 @@ module.exports = React.createClass
   componentDidMount: ->
     if @props.section.get('body')?.length
       html = standardizeSpacing @props.section.get('body')
-      html = @setContentEnd(html) if @props.article.get('layout') is 'feature'
-      debugger
+      unless @props.article.get('layout') is 'classic'
+        html = setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
       blocksFromHTML = convertFromRichHtml html
       editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators(@props.article.get('layout'))))
       editorState = setSelectionToStart(editorState) if @props.editing
@@ -59,6 +60,10 @@ module.exports = React.createClass
       @focus()
 
   componentDidUpdate: (prevProps) ->
+    if @props.isEndText != prevProps.isEndText or @props.isStartText != prevProps.isStartText
+      unless @props.article.get('layout') is 'classic'
+        html = setContentStartEnd(@props.section.get('body'), @props.article.get('layout'), @props.isStartText, @props.isEndText)
+      @props.section.set('body', html)
     if @props.editing and @props.editing != prevProps.editing
       @focus()
     else if !@props.editing and @props.editing != prevProps.editing
@@ -77,19 +82,6 @@ module.exports = React.createClass
   focus: ->
     @setState focus: true
     @refs.editor.focus()
-
-  setContentEnd: (html) ->
-    doc = document.createElement('div')
-    doc.innerHTML = html
-    if @props.isEndText
-      endSpan = doc.getElementsByClassName('content-end')
-      console.log 'maybe set end'
-      unless endSpan.length
-        console.log 'setting end'
-        oldHtml = $(doc).children().last().html()
-        newHtml = oldHtml + '<span class="content-end"></span>'
-        $(doc).children().last().html(newHtml)
-    return doc.innerHTML
 
   handleReturn: (e) ->
     selection = getSelectionDetails(@state.editorState)
@@ -214,14 +206,15 @@ module.exports = React.createClass
       @promptForLink 'artist'
 
   toggleBlockQuote: ->
-    currentHtml = @props.section.get('body')
-    beforeBlock = _s(currentHtml).strLeft('<blockquote>')?._wrapped
-    afterBlock = _s(currentHtml).strRight('</blockquote>')?._wrapped
-    blockquote = currentHtml.replace(beforeBlock, '').replace(afterBlock, '')
+    blockquote = @props.section.get('body')
+    beforeBlock = _s(blockquote).strLeft('<blockquote>')?._wrapped
+    afterBlock = _s(blockquote).strRight('</blockquote>')?._wrapped
     increment = 0
     if afterBlock
+      blockquote = blockquote.replace(afterBlock, '')
       @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
     if beforeBlock
+      blockquote = blockquote.replace(beforeBlock, '')
       @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
       increment = 1
     @props.section.set('body', blockquote)
@@ -297,8 +290,6 @@ module.exports = React.createClass
 
     div {
       className: 'edit-section--text' + isEditing
-      'data-content-start': @props.isStartText
-      'data-content-end': @props.isEndText
       onClick: @focus
     },
       if @state.showMenu

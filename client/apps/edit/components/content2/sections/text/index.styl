@@ -17,7 +17,8 @@
   ul li .public-DraftStyleDefault-ltr,
   li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
     list-style disc
-
+  li
+    padding .5em 0
   nav
     &.has-plugins
       button[name='remove-formatting'],
@@ -75,6 +76,13 @@
   blockquote
     padding-top 46px
     padding-bottom 46px
+  .content-end
+    background-color black
+    height 15px
+    width @height
+    border-radius 50%
+    display inline-block
+    margin-left 15px
 
 .standard .edit-section--text
   blockquote
@@ -95,9 +103,15 @@
       right calc(50% \- 7.5px)
       content '.'
       height 15px
-      width 15px
+      width @height
       background black
       border-radius 50%
       color rgba(0,0,0,0)
-
+  .content-start
+    Unica s69, medium
+    float left
+    line-height .5em
+    margin-right 10px
+    margin-top .298em
+    text-transform uppercase
 

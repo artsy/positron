@@ -58,3 +58,27 @@
   &[name=image_set]
     background-image url(/icons/edit_image_set_slideshow.svg)
     background-size 22px
+
+.standard .edit-section__container
+  &[data-layout=column_width] .edit-controls
+    max-width standard-body-w-margin
+  &[data-layout=overflow_fillwidth],
+  &[data-type=image_set]
+    .edit-controls
+      max-width standard-overflow-w-margin
+
+.classic .edit-section__container
+  &[data-layout=column_width] .edit-controls
+    max-width classic-body-w-margin
+  &[data-layout=overflow_fillwidth],
+  &[data-type=image_set]
+    .edit-controls
+      max-width classic-overflow-w-margin
+
+.feature .edit-section__container
+  &[data-layout=column_width] .edit-controls
+    max-width feature-body-w-margin
+  &[data-layout=overflow_fillwidth],
+  &[data-type=image_set]
+    .edit-controls
+      max-width feature-overflow-w-margin
