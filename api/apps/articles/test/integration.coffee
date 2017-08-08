@@ -24,12 +24,12 @@ describe 'articles endpoints', ->
         { published: false }
       ], (err, articles) =>
         request
-          .get("http://localhost:5000/articles?published=true&count=true")
+          .get("http://localhost:5000/articles?count=true")
           .end (err, res) ->
-              res.body.total.should.equal 3
-              res.body.count.should.equal 2
-              res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
-              done()
+            res.body.total.should.equal 3
+            res.body.count.should.equal 2
+            res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
+            done()
 
   describe 'as a non-admin', ->
 
@@ -52,6 +52,21 @@ describe 'articles endpoints', ->
           res.body.message.should.containEql 'must be an admin'
           done()
       return
+
+    it 'does not allow viewing drafts', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Cows on the prarie'
+          _id: ObjectId '5086df098523e60002000012'
+          partner_channel_id: ObjectId '5086df098523e60002000012'
+          published: false
+        }
+      ], (err, articles) =>
+        request
+          .get("http://localhost:5000/articles/5086df098523e60002000012")
+          .end (err, res) ->
+            err.status.should.equal 404
+            done()
 
   describe 'as a channel member', ->
 
