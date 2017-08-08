@@ -203,7 +203,7 @@ denormalizedArtwork = (->
   id: @string().objectid()
   access_token: @string()
   author_id: @string().objectid()
-  published: @boolean()
+  published: @boolean().default(true)
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   section_id: @string().objectid()
