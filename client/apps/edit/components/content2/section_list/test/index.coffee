@@ -33,6 +33,7 @@ describe 'SectionList', ->
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @SectionList.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
       @props = {
+        article: new Backbone.Model {layout: 'feature'}
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }

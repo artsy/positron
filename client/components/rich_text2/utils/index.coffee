@@ -167,6 +167,8 @@ exports.convertToRichHtml = (editorState, layout) ->
            '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
         else
           return a { href: entity.data.url}
+      if entity.type is 'CONTENT-START' or entity.type is 'CONTENT-END'
+        return '<span class="' + entity.data.className + '">' + originalText + '</span>'
       return originalText
     styleToHTML: (style) ->
       if style is 'STRIKETHROUGH'
@@ -195,6 +197,14 @@ exports.convertFromRichHtml = (html) ->
         )
       if nodeName is 'p' and node.innerHTML is '<br>'
         node.innerHTML = '' # remove <br>, it renders extra breaks in editor
+      if nodeName is 'span' and node.classList.length
+        data = {className: node.classList.toString()}
+        spanType = if data.className is 'content-start' then 'CONTENT-START' else 'CONTENT-END'
+        return Entity.create(
+            spanType,
+            'MUTABLE',
+            data
+        )
     })(html)
   return blocksFromHTML
 
@@ -225,11 +235,42 @@ exports.stripH3Tags = (html) ->
 exports.standardizeSpacing = (html) ->
   html = html
     .replace(/<br>/g, '')
-    .replace(/<h2><\/\h2>/g, '<p><br></p>')
-    .replace(/<h3><\/\h3>/g, '<p><br></p>')
-    .replace(/<p><\/\p><p><\/\p>/g, '<p><br></p>')
-    .replace(/<p><\/\p>/g, '<p><br></p>')
-    .replace(/<p> <\/\p>/g, '<p><br></p>')
-    .replace(/<p><br><\/\p><p><br><\/\p>/g, '<p><br></p>')
+    .replace(/<span><\/span>/g, '')
+    .replace(/<h2><\/h2>/g, '<p><br></p>')
+    .replace(/<h3><\/h3>/g, '<p><br></p>')
+    .replace(/<p><\/p><p><\/p>/g, '<p><br></p>')
+    .replace(/<p><\/p>/g, '<p><br></p>')
+    .replace(/<p> <\/p>/g, '<p><br></p>')
+    .replace(/<p><br><\/p><p><br><\/p>/g, '<p><br></p>')
     .replace(/  /g, ' &nbsp;')
   return html
+
+# EDITORIAL CUSTOM TEXT ENTITIES
+exports.setContentStartEnd = (html, layout, isStartText, isEndText) ->
+  doc = document.createElement('div')
+  doc.innerHTML = html
+  doc = exports.setDropCap(doc, isStartText) if layout is 'feature'
+  doc = exports.setContentEndMarker doc, isEndText
+  return doc.innerHTML
+
+exports.setDropCap = (doc, isStartText) ->
+  innerSpan = doc.getElementsByClassName('content-start')[0]?.innerHTML
+  newSpan = innerSpan
+  $(doc.getElementsByClassName('content-start')[0]).replaceWith(newSpan) if newSpan
+  if isStartText
+    oldHtml = $(doc).find("p:first").html()
+    if oldHtml
+      firstLetter = '<span class="content-start">' + oldHtml.substring(0, 1) + '</span>'
+      afterFirst = oldHtml.substring(1, oldHtml.length)
+      newHtml = firstLetter + afterFirst
+      $(doc).find("p:first").html(newHtml)
+  return doc
+
+exports.setContentEndMarker = (doc, isEndText) ->
+  innerSpan = doc.getElementsByClassName('content-end')[0]?.innerHTML
+  $(doc.getElementsByClassName('content-end')[0]).replaceWith('')
+  if isEndText
+    oldHtml = $(doc).children().last().html()
+    newHtml = oldHtml + '<span class="content-end"> </span>'
+    $(doc).children().last().html(newHtml)
+  return doc
