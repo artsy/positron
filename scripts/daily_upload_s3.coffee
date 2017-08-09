@@ -54,6 +54,7 @@ attrs = [
   'is_super_article'
   'description'
   'sections'
+  'hero_section'
 ]
 projections = object attrs, attrs.map -> 1
 
@@ -70,6 +71,8 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
     published_at = if a.published_at then moment(a.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
     contributing_authors = stringify(pluck(a.contributing_authors, 'name'))
     sections = a.sections.map (section) => pick section, 'type'
+    if a.hero_section
+      hero = stringify(JSON.stringify(pick a.hero_section, 'type'))
     row = [
       a._id
       a.author_id
@@ -100,6 +103,7 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
       a.is_super_article
       stringify a.description
       stringify(JSON.stringify(sections))
+      hero
     ].join(',')
     csv.push row
 
