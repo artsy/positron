@@ -8,7 +8,7 @@ mongojs = require 'mongojs'
 fs = require 'fs'
 path = require 'path'
 moment = require 'moment'
-{ pluck, object } = require 'underscore'
+{ pluck, object, pick } = require 'underscore'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -53,6 +53,7 @@ attrs = [
   'indexable'
   'is_super_article'
   'description'
+  'sections'
 ]
 projections = object attrs, attrs.map -> 1
 
@@ -68,6 +69,7 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
   articles.map (a) ->
     published_at = if a.published_at then moment(a.published_at).format('YYYY-MM-DDThh:mm') + "-05:00" else ''
     contributing_authors = stringify(pluck(a.contributing_authors, 'name'))
+    sections = a.sections.map (section) => pick section, 'type'
     row = [
       a._id
       a.author_id
@@ -97,6 +99,7 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
       a.indexable
       a.is_super_article
       stringify a.description
+      stringify(JSON.stringify(sections))
     ].join(',')
     csv.push row
 
