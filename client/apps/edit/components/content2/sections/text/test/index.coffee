@@ -275,6 +275,7 @@ describe 'Section Text', ->
       @shortComponent.setState = sinon.stub()
       r.simulate.mouseDown r.find @shortComponent, 'blockquote'
       @shortComponent.setState.args[0][0].html.should.eql '<blockquote>A <em>short</em> piece of <strong>text</strong></blockquote>'
+      @shortComponent.props.section.get('layout').should.eql 'blockquote'
 
     it '#makePlainText Can strip styles', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
@@ -336,6 +337,7 @@ describe 'Section Text', ->
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('blockquote')
       @shortComponent.setState.args[0][0].html.should.eql '<blockquote>A <em>short</em> piece of <strong>text</strong></blockquote>'
+      @shortComponent.props.section.get('layout').should.eql 'blockquote'
 
     it 'Cannot toggle Blockquotes if hasFeatures is false', ->
       @shortComponent.setState hasFeatures: false

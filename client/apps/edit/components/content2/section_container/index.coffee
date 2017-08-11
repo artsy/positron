@@ -46,7 +46,7 @@ module.exports = React.createClass
       className: 'edit-section__container'
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @props.section.getLayout(@props.article.get('layout'))
+      'data-layout': @props.section.get('layout') or 'column_width'
     },
       unless @props.section.get('type') is 'fullscreen'
         div {

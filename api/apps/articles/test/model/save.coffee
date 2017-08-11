@@ -158,6 +158,22 @@ describe 'Save', ->
         ]
       })
 
+    it 'can save layouts on text sections', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) =>
+          article.sections[0].layout.should.eql 'blockquote'
+          done()
+      )(null, {
+        _id: ObjectId '5086df098523e60002000011'
+        sections: [
+          {
+            type: 'text'
+            body: '<blockquote>Viva Art</blockquote>'
+            layout: 'blockquote'
+          }
+        ]
+      })
+
     it 'indexes articles that are indexable', (done) ->
       Save.sanitizeAndSave( =>
         Article.find '5086df098523e60002000011', (err, article) =>
