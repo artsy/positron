@@ -30,6 +30,8 @@ editor = (props) -> React.createElement Editor, props
 { div } = React.DOM
 EditNav = React.createFactory require '../../../../../../components/rich_text2/components/edit_nav.coffee'
 InputUrl = React.createFactory require '../../../../../../components/rich_text2/components/input_url.coffee'
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+Text = React.createFactory components.Text
 
 module.exports = React.createClass
   displayName: 'SectionText'
@@ -292,42 +294,43 @@ module.exports = React.createClass
       className: 'edit-section--text' + isEditing
       onClick: @focus
     },
-      if @state.showMenu
-        EditNav {
-          hasFeatures: @state.hasFeatures
-          blocks: blockTypes @props.article.get('layout'), @state.hasFeatures
-          toggleBlock: @toggleBlockType
-          styles: inlineStyles @props.article.get('layout'), @state.hasFeatures
-          toggleStyle: @toggleInlineStyle
-          promptForLink: @promptForLink
-          makePlainText: @makePlainText
-          position: @state.selectionTarget
-        }
-      div {
-        className: 'edit-section--text__input'
-        onMouseUp: @checkSelection
-        onKeyUp: @checkSelection
-      },
-        editor {
-          ref: 'editor'
-          editorState: @state.editorState
-          spellCheck: true
-          onChange: @onChange
-          decorators: decorators
-          handleKeyCommand: @handleKeyCommand
-          keyBindingFn: keyBindingFnFull
-          handlePastedText: @onPaste
-          blockRenderMap: blockRenderMap @props.article.get('layout'), @state.hasFeatures
-          handleReturn: @handleReturn
-          onTab: @handleTab
-          onUpArrow: @handleChangeSection
-          onDownArrow: @handleChangeSection
-        }
-        if @props.editing and @state.showUrlInput
-          InputUrl {
-            removeLink: @removeLink
-            confirmLink: @confirmLink
-            selectionTarget: @state.selectionTarget
-            pluginType: @state.pluginType
-            urlValue: @state.urlValue
+      Text { layout: @props.article.get 'layout' },
+        if @state.showMenu
+          EditNav {
+            hasFeatures: @state.hasFeatures
+            blocks: blockTypes @props.article.get('layout'), @state.hasFeatures
+            toggleBlock: @toggleBlockType
+            styles: inlineStyles @props.article.get('layout'), @state.hasFeatures
+            toggleStyle: @toggleInlineStyle
+            promptForLink: @promptForLink
+            makePlainText: @makePlainText
+            position: @state.selectionTarget
           }
+        div {
+          className: 'edit-section--text__input'
+          onMouseUp: @checkSelection
+          onKeyUp: @checkSelection
+        },
+          editor {
+            ref: 'editor'
+            editorState: @state.editorState
+            spellCheck: true
+            onChange: @onChange
+            decorators: decorators
+            handleKeyCommand: @handleKeyCommand
+            keyBindingFn: keyBindingFnFull
+            handlePastedText: @onPaste
+            blockRenderMap: blockRenderMap @props.article.get('layout'), @state.hasFeatures
+            handleReturn: @handleReturn
+            onTab: @handleTab
+            onUpArrow: @handleChangeSection
+            onDownArrow: @handleChangeSection
+          }
+          if @props.editing and @state.showUrlInput
+            InputUrl {
+              removeLink: @removeLink
+              confirmLink: @confirmLink
+              selectionTarget: @state.selectionTarget
+              pluginType: @state.pluginType
+              urlValue: @state.urlValue
+            }

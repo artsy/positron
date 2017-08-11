@@ -7,7 +7,9 @@ React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
-RichTextParagraph = React.createFactory require '../../../../../components/rich_text/components/input_paragraph.coffee'
+RichTextParagraph = React.createFactory require '../../../../../components/rich_text2/components/input_paragraph.coffee'
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+Text = React.createFactory components.Text
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -78,8 +80,9 @@ module.exports = React.createClass
           className: 'edit-sections__postscript'
           'data-layout': 'column_width'
         },
-          RichTextParagraph {
-            text: @props.article.get('postscript') or ''
-            onChange: @setPostscript
-            placeholder: 'Postscript (optional)'
-          }
+          Text { layout: 'postscript'},
+            RichTextParagraph {
+              text: @props.article.get('postscript') or ''
+              onChange: @setPostscript
+              placeholder: 'Postscript (optional)'
+            }

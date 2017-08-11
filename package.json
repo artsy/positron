@@ -13,7 +13,7 @@
     "deploy": "sh scripts/deploy.sh"
   },
   "dependencies": {
-    "@artsy/reaction-force": "^0.1.49",
+    "@artsy/reaction-force": "^0.3.1",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
