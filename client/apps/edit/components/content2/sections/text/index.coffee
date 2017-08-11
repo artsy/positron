@@ -217,7 +217,7 @@ module.exports = React.createClass
       blockquote = blockquote.replace(beforeBlock, '')
       @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
       increment = 1
-    @props.section.set('body', blockquote)
+    @props.section.set({body: blockquote, layout: 'blockquote'})
     @props.onSetEditing @props.index + increment
 
   toggleBlockType: (blockType) ->
@@ -225,7 +225,10 @@ module.exports = React.createClass
       @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
       @setState showMenu: false
       if blockType is 'blockquote'
-        @toggleBlockQuote() if @props.section.get('body').includes('<blockquote>')
+        if @props.section.get('body').includes('<blockquote>')
+          @toggleBlockQuote()
+        else
+          @props.section.set('layout', null)
     return 'handled'
 
   toggleInlineStyle: (inlineStyle) ->
