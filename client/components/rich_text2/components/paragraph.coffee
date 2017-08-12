@@ -1,15 +1,16 @@
-# A basic paragraph component supports bold and italic styles,
-# optionally links, and linebreaks, and can format in
-# types of postscript, caption or lead paragraph
+# A basic paragraph component: supports bold and italic styles
+# optionally allows links and linebreaks
+# or format in types 'postscript', 'caption' and 'lead paragraph'
 
-# RichTextParagraph {
+# Paragraph {
 #   html        *required
 #   onChange    *required
 #   placeholder
 #   layout: article.layout
-#   postscript: default false
-#   linked: default false
-#   linebreaks: default true
+#   postscript: default=false
+#   linked: default=false
+#   linebreaks: default=true
+#   type: 'postscript' | 'caption' | 'lead paragraph'
 # }
 
 React = require 'react'
@@ -22,17 +23,19 @@ Utils = require '../utils/index.coffee'
   CompositeDecorator,
   Editor,
   EditorState,
+  Entity,
   RichUtils,
   Modifier } = require 'draft-js'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
+EditNav = React.createFactory require './edit_nav.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory components.Text
 
 module.exports = React.createClass
-  displayName: 'RichTextParagraph'
+  displayName: 'Paragraph'
 
   getInitialState: ->
     editorState: EditorState.createEmpty(
@@ -46,9 +49,10 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if $(@props.html).text().length
-      blocksFromHTML = @convertFromHTML(@props.html)
+      html = Utils.standardizeSpacing @props.html
+      blocksFromHTML = @convertFromHTML(html)
       @setState
-        html: @props.html
+        html: html
         editorState: EditorState.createWithContent(
           blocksFromHTML,
           new CompositeDecorator Config.decorators(@hasLinks())
@@ -73,7 +77,6 @@ module.exports = React.createClass
     blocksFromHTML = convertFromHTML({
       htmlToEntity: (nodeName, node) ->
         if nodeName is 'a'
-          debugger
           data = {url: node.href}
           return Entity.create(
             'LINK',
@@ -87,16 +90,17 @@ module.exports = React.createClass
     html = convertToHTML({
       entityToHTML: (entity, originalText) ->
         if entity.type is 'LINK'
-          debugger
           return a { href: entity.data.url}
         return originalText
     })(editorState.getCurrentContent())
-    html = html
-      .replace /(\r\n|\n|\r)/gm, ''
-      .replace /<\/p><p>/g, ' '
-      .replace(/  /g, ' &nbsp;')
+    html = Utils.standardizeSpacing html
     html = if html is '<p></p>' then '' else html
     return html
+
+  availableBlocks: ->
+    blockMap = Config.blockRenderMap()
+    available = Object.keys(blockMap.toObject())
+    return Array.from(available)
 
   handleKeyCommand: (e) ->
     return 'handled' if @props.linebreaks is false and e is 'split-block'
@@ -109,6 +113,30 @@ module.exports = React.createClass
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
     return 'not-handled'
+
+  toggleInlineStyle: (inlineStyle) ->
+    selection = Utils.getSelectionDetails(@state.editorState)
+    @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
+
+  onPaste: (text, html) ->
+    { editorState } = @state
+    unless html
+      html = '<div>' + text + '</div>'
+    html = Utils.stripGoogleStyles html
+    blocksFromHTML = @convertFromHTML html
+    convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
+      unstyled = Utils.stripCharacterStyles contentBlock, true
+      unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
+        unstyled = unstyled.set 'type', 'unstyled'
+      return unstyled
+    blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray()).blockMap
+    newState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent()
+      editorState.getSelection()
+      blockMap
+    )
+    @onChange EditorState.push(editorState, newState, 'insert-fragment')
+    return true
 
   promptForLink: (e) ->
     { editorState } = @state
@@ -134,7 +162,6 @@ module.exports = React.createClass
       selectionTarget: selectionTarget
 
   confirmLink: (url) ->
-    debugger
     { editorState } = @state
     contentState = editorState.getCurrentContent()
     contentStateWithEntity = contentState.createEntity(
@@ -176,15 +203,33 @@ module.exports = React.createClass
         urlValue: @state.urlValue
       }
 
+  checkSelection: ->
+    debugger
+    if !window.getSelection().isCollapsed
+      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTargetL = Config.inlineStyles().length * 45
+      @setState showMenu: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
+    else
+      @setState showMenu: false
+
   render: ->
     Text {
       layout: @props.layout
       postscript: @props.postscript
     },
+      if @state.showMenu
+        EditNav {
+          styles: Config.inlineStyles()
+          toggleStyle: @toggleInlineStyle
+          promptForLink: @promptForLink
+          position: @state.selectionTarget
+        }
       div {
         className: 'rich-text--paragraph'
         onClick: @focus
         onBlur: @onBlur
+        onMouseUp: @checkSelection
+        onKeyUp: @checkSelection
       },
         editor {
           ref: 'editor'
@@ -196,6 +241,6 @@ module.exports = React.createClass
           handleReturn: @handleReturn
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: Utils.keyBindingFnCaption
-          # handlePastedText: @onPaste
+          handlePastedText: @onPaste
         }
       @printUrlInput()

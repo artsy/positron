@@ -41,8 +41,7 @@ module.exports = React.createClass
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
   setPostscript: (html) ->
-    html = null if html is '<p></p>'
-    debugger
+    html = null unless html.length
     @props.article.set('postscript', html)
     @props.saveArticle()
 
