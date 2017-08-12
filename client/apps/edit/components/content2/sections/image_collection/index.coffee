@@ -10,9 +10,8 @@ Controls = React.createFactory require './components/controls.coffee'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 { fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
 { div, section, ul, li } = React.DOM
-
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
-ImagesetPreviewClassic = React.createFactory components.ImagesetPreviewClassic
+ImageSetPreviewClassic = React.createFactory components.ImageSetPreviewClassic
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'
@@ -115,7 +114,7 @@ module.exports = React.createClass
       },
         if hasImages
           if !@props.editing and @props.section.get('type') is 'image_set'
-            ImagesetPreviewClassic {
+            ImageSetPreviewClassic {
               images: images
             }
           else

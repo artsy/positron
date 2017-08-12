@@ -30,7 +30,7 @@ Utils = require '../utils/index.coffee'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
-Nav = React.createFactory require './edit_nav.coffee'
+Nav = React.createFactory require './nav.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory components.Text
 
@@ -46,6 +46,7 @@ module.exports = React.createClass
     showNav: false
     urlValue: ''
     selectionTarget: null
+    linebreaks: @props.linebreaks or true
 
   componentDidMount: ->
     if $(@props.html).text().length
@@ -71,7 +72,9 @@ module.exports = React.createClass
     @refs.editor.focus()
 
   onBlur: ->
-    @setState focus: false
+    @setState
+      focus: false
+      showNav: false
 
   convertFromHTML: (html) ->
     blocksFromHTML = convertFromHTML({
@@ -103,7 +106,7 @@ module.exports = React.createClass
     return Array.from(available)
 
   handleKeyCommand: (e) ->
-    return 'handled' if @props.linebreaks is false and e is 'split-block'
+    return 'handled' if @state.linebreaks is false and e is 'split-block'
     if e is 'link-prompt'
       @promptForLink() if @hasLinks()
       return 'handled'
@@ -122,7 +125,10 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
+    html = Utils.standardizeSpacing html
     html = Utils.stripGoogleStyles html
+    unless @state.linebreaks
+      html = html.replace(/<\/p><p>/g, '')
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = Utils.stripCharacterStyles contentBlock, true
@@ -135,7 +141,8 @@ module.exports = React.createClass
       editorState.getSelection()
       blockMap
     )
-    @onChange EditorState.push(editorState, newState, 'insert-fragment')
+    newState = EditorState.push(editorState, newState, 'insert-fragment')
+    @onChange newState
     return true
 
   promptForLink: (e) ->
@@ -206,7 +213,7 @@ module.exports = React.createClass
   checkSelection: ->
     if !window.getSelection().isCollapsed
       location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTargetL = Config.inlineStyles(@props.type).length * 50
+      selectionTargetL = Config.inlineStyles(@props.type).length * 25
       selectionTargetL = selectionTargetL + 50 if @hasLinks()
       @setState showNav: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
     else
@@ -221,7 +228,7 @@ module.exports = React.createClass
         Nav {
           styles: Config.inlineStyles(@props.type)
           toggleStyle: @toggleInlineStyle
-          promptForLink: @promptForLink
+          promptForLink: @promptForLink if @hasLinks()
           position: @state.selectionTarget
         }
       div {

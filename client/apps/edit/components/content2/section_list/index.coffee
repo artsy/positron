@@ -59,20 +59,21 @@ module.exports = React.createClass
           article: @props.article
         },
           @props.sections.map (section, i) =>
-            [
-              SectionContainer {
-                sections: @props.sections
-                section: section
-                index: i
-                editing: @state.editingIndex is i
-                ref: 'section' + i
-                key: section.cid
-                channel: @props.channel
-                onSetEditing: @onSetEditing
-                article: @props.article
-              }
-              SectionTool { sections: @props.sections, index: i, key: i }
-            ]
+             unless section.get('type') is 'callout'
+              [
+                SectionContainer {
+                  sections: @props.sections
+                  section: section
+                  index: i
+                  editing: @state.editingIndex is i
+                  ref: 'section' + i
+                  key: section.cid
+                  channel: @props.channel
+                  onSetEditing: @onSetEditing
+                  article: @props.article
+                }
+                SectionTool { sections: @props.sections, index: i, key: i }
+              ]
       if @props.channel.isEditorial()
         div {
           className: 'edit-sections__postscript'

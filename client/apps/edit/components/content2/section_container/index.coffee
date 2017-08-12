@@ -11,7 +11,6 @@ Video = React.createFactory require '../../content/sections/video/index.coffee'
 Slideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
 Embed = React.createFactory require '../../content/sections/embed/index.coffee'
 Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
-Callout = React.createFactory require '../../content/sections/callout/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 Image = React.createFactory require '../../content/sections/image/index.coffee'
 { div, nav, button } = React.DOM
@@ -69,7 +68,6 @@ module.exports = React.createClass
         when 'slideshow' then Slideshow
         when 'embed' then Embed
         when 'fullscreen' then Fullscreen
-        when 'callout' then Callout
         when 'image_set' then ImageCollection
         when 'image_collection' then ImageCollection
         when 'image' then Image

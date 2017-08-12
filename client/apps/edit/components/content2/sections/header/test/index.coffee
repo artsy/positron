@@ -112,7 +112,7 @@ describe 'SectionHeader: Standard', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       SectionHeader = benv.require resolve(__dirname, '../index.coffee')
-      Paragraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/input_paragraph.coffee')
+      Paragraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/paragraph.coffee')
       SectionHeader.__set__ 'Paragraph', React.createFactory Paragraph
       @article = new Article _.extend fixtures().articles,
         layout: 'standard'

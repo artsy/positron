@@ -23,11 +23,11 @@ module.exports = React.createClass
       className: 'edit-header__lead-paragraph'
     },
       Paragraph {
-        html: @props.article.get('lead_paragraph') or ''
+        html: @props.article.get('lead_paragraph')
         onChange: @setLeadParagraph
         placeholder: 'Lead Paragraph (optional)'
         type: 'lead_paragraph'
-        linked: true
+        linked: false
         linebreaks: false
         layout: @props.article.get('layout')
       }
@@ -63,5 +63,5 @@ module.exports = React.createClass
             @props.article.get('author').name
         p { className: 'date' }, @props.article.getPublishDate()
 
-      if layout is 'standard' and @props.article.get('lead_paragraph').length
+      if layout is 'standard' and @props.article.get('lead_paragraph')?.length
         @renderLeadParagraph()

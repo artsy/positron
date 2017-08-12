@@ -39,7 +39,7 @@ describe 'Section Text', ->
         resolve(__dirname, '../../../../../../../components/rich_text2/components/input_url'), ['icons']
       )
       Nav = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text2/components/edit_nav'), ['icons']
+        resolve(__dirname, '../../../../../../../components/rich_text2/components/nav'), ['icons']
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
       @SectionText.__set__ 'Nav', React.createFactory Nav
