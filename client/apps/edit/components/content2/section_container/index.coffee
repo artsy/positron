@@ -6,14 +6,14 @@
 
 React = require 'react'
 _ = require 'underscore'
-SectionText = React.createFactory require '../sections/text/index.coffee'
-SectionVideo = React.createFactory require '../../content/sections/video/index.coffee'
-SectionSlideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
-SectionEmbed = React.createFactory require '../../content/sections/embed/index.coffee'
-SectionFullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
-SectionCallout = React.createFactory require '../../content/sections/callout/index.coffee'
-SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
-SectionImage = React.createFactory require '../../content/sections/image/index.coffee'
+Text = React.createFactory require '../sections/text/index.coffee'
+Video = React.createFactory require '../../content/sections/video/index.coffee'
+Slideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
+Embed = React.createFactory require '../../content/sections/embed/index.coffee'
+Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
+Callout = React.createFactory require '../../content/sections/callout/index.coffee'
+ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
+Image = React.createFactory require '../../content/sections/image/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
 
@@ -64,15 +64,15 @@ module.exports = React.createClass
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
           }
       (switch @props.section.get('type')
-        when 'text' then SectionText
-        when 'video' then SectionVideo
-        when 'slideshow' then SectionSlideshow
-        when 'embed' then SectionEmbed
-        when 'fullscreen' then SectionFullscreen
-        when 'callout' then SectionCallout
-        when 'image_set' then SectionImageCollection
-        when 'image_collection' then SectionImageCollection
-        when 'image' then SectionImage
+        when 'text' then Text
+        when 'video' then Video
+        when 'slideshow' then Slideshow
+        when 'embed' then Embed
+        when 'fullscreen' then Fullscreen
+        when 'callout' then Callout
+        when 'image_set' then ImageCollection
+        when 'image_collection' then ImageCollection
+        when 'image' then Image
       )(
         section: @props.section
         sections: @props.sections

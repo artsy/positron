@@ -1,8 +1,7 @@
 React = require 'react'
 moment = require 'moment'
-RichTextParagraph = React.createFactory require '../../../../../../components/rich_text2/components/input_paragraph.coffee'
+Paragraph = React.createFactory require '../../../../../../components/rich_text2/components/paragraph.coffee'
 { div, p, textarea } = React.DOM
-
 
 module.exports = React.createClass
   displayName: 'SectionHeader'
@@ -23,10 +22,14 @@ module.exports = React.createClass
     div {
       className: 'edit-header__lead-paragraph'
     },
-      RichTextParagraph {
-        text: @props.article.get('lead_paragraph')
+      Paragraph {
+        html: @props.article.get('lead_paragraph') or ''
         onChange: @setLeadParagraph
-        placeholder: 'Lead paragraph (optional)'
+        placeholder: 'Lead Paragraph (optional)'
+        type: 'lead_paragraph'
+        linked: true
+        linebreaks: false
+        layout: @props.article.get('layout')
       }
 
   render: ->
@@ -48,7 +51,7 @@ module.exports = React.createClass
           onKeyUp: @setTitle
           ref: 'title'
         }
-        unless @props.article.get('title')?.length > 0
+        unless @props.article.get('title')?.length
           div { className: 'edit-required' }
 
       if layout is 'classic'

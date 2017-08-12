@@ -30,7 +30,7 @@ Utils = require '../utils/index.coffee'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
-EditNav = React.createFactory require './edit_nav.coffee'
+Nav = React.createFactory require './edit_nav.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory components.Text
 
@@ -43,7 +43,7 @@ module.exports = React.createClass
     )
     focus: false
     showUrlInput: false
-    showMenu: false
+    showNav: false
     urlValue: ''
     selectionTarget: null
 
@@ -157,7 +157,7 @@ module.exports = React.createClass
         url = linkInstance.getData().url
     @setState
       showUrlInput: true
-      showMenu: false
+      showNav: false
       urlValue: url
       selectionTarget: selectionTarget
 
@@ -173,7 +173,7 @@ module.exports = React.createClass
     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
     @setState({
       showUrlInput: false
-      showMenu: false
+      showNav: false
       urlValue: ''
       selectionTarget: null
     })
@@ -204,22 +204,22 @@ module.exports = React.createClass
       }
 
   checkSelection: ->
-    debugger
     if !window.getSelection().isCollapsed
       location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTargetL = Config.inlineStyles().length * 45
-      @setState showMenu: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
+      selectionTargetL = Config.inlineStyles(@props.type).length * 50
+      selectionTargetL = selectionTargetL + 50 if @hasLinks()
+      @setState showNav: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
     else
-      @setState showMenu: false
+      @setState showNav: false
 
   render: ->
     Text {
       layout: @props.layout
-      postscript: @props.postscript
+      postscript: @props.type is 'postscript'
     },
-      if @state.showMenu
-        EditNav {
-          styles: Config.inlineStyles()
+      if @state.showNav
+        Nav {
+          styles: Config.inlineStyles(@props.type)
           toggleStyle: @toggleInlineStyle
           promptForLink: @promptForLink
           position: @state.selectionTarget

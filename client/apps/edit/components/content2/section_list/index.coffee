@@ -8,8 +8,6 @@ SectionContainer = React.createFactory require '../section_container/index.coffe
 SectionTool = React.createFactory require '../section_tool/index.coffee'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
 Paragraph = React.createFactory require '../../../../../components/rich_text2/components/paragraph.coffee'
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
-Text = React.createFactory components.Text
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -52,7 +50,7 @@ module.exports = React.createClass
       ref: 'sections'
     },
       SectionTool { sections: @props.sections, index: -1, key: 1 }
-      if @props.sections.length > 0
+      if @props.sections.length
         DragContainer {
           items: @props.sections.models
           onDragEnd: @onDragEnd
@@ -84,7 +82,8 @@ module.exports = React.createClass
             html: @props.article.get('postscript') or ''
             onChange: @setPostscript
             placeholder: 'Postscript (optional)'
-            postscript: true
+            type: 'postscript'
             linked: true
             layout: @props.article.get('layout')
           }
+      # TODO - Author Preview

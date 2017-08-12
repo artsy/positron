@@ -38,11 +38,11 @@ describe 'Section Text', ->
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text2/components/input_url'), ['icons']
       )
-      EditNav = benv.requireWithJadeify(
+      Nav = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text2/components/edit_nav'), ['icons']
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
-      @SectionText.__set__ 'EditNav', React.createFactory EditNav
+      @SectionText.__set__ 'Nav', React.createFactory Nav
       @SectionText.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @SectionText.__set__ 'Utils.getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
       @sections = new Backbone.Collection [

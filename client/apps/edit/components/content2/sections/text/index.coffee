@@ -5,7 +5,7 @@ sd = require('sharify').data
 window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
 Config = require './draft_config.coffee'
-EditNav = React.createFactory require '../../../../../../components/rich_text2/components/edit_nav.coffee'
+Nav = React.createFactory require '../../../../../../components/rich_text2/components/edit_nav.coffee'
 InputUrl = React.createFactory require '../../../../../../components/rich_text2/components/input_url.coffee'
 Text = React.createFactory components.Text
 Utils = require '../../../../../../components/rich_text2/utils/index.coffee'
@@ -282,7 +282,7 @@ module.exports = React.createClass
     },
       Text { layout: @props.article.get 'layout' },
         if @state.showMenu
-          EditNav {
+          Nav {
             hasFeatures: @state.hasFeatures
             blocks: Config.blockTypes @props.article.get('layout'), @state.hasFeatures
             toggleBlock: @toggleBlockType
