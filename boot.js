@@ -4,8 +4,10 @@
 
 import artsyXapp from 'artsy-xapp'
 import express from 'express'
-import { IpFilter } from 'express-ipfilter'
 import newrelic from 'artsy-newrelic'
+import path from 'path'
+import { IpFilter } from 'express-ipfilter'
+import { reloadable, isDevelopment } from 'lib/reloadable'
 
 const debug = require('debug')('app')
 const app = module.exports = express()
@@ -14,7 +16,6 @@ const app = module.exports = express()
 app.use(
   IpFilter([process.env.IP_BLACKLIST.split(',')], { log: false, mode: 'deny' })
 )
-
 // Get an xapp token
 artsyXapp.init({
   url: process.env.ARTSY_URL,
@@ -24,7 +25,7 @@ artsyXapp.init({
   app.use(newrelic)
 
   // Put client/api together
-  app.use('/api', require('./api'))
+  // app.use('/api', require('./api'))
 
   // TODO: Possibly a terrible hack to not share `req.user` between both.
   app.use((req, rest, next) => {
@@ -32,7 +33,19 @@ artsyXapp.init({
     next()
   })
 
-  app.use(require('./client'))
+  // app.use(require('./client'))
+
+  // app.use(reloadApp)
+  // reloadable(path.join(__dirname, 'test-reload'))
+
+  if (isDevelopment) {
+    reloadable(app, {
+      folderPath: path.resolve(__dirname, 'test-reload'),
+      onReload: (req, res, next) => require('./test-reload')(req, res, next)
+    })
+  } else {
+    app.use(require('./test-reload'))
+  }
 
   // Start the server and send a message to IPC for the integration test
   // helper to hook into.
