@@ -10,11 +10,11 @@ BIN = node_modules/.bin
 
 # Start the server
 s:
-	$(BIN)/coffee index.coffee
+	DEBUG=app,client,api node ./index.js
 
 # Start the server using forever
 sf:
-	$(BIN)/forever $(BIN)/coffee --nodejs --max-old-space-size=512 index.coffee
+	$(BIN)/forever node ./index.js --max-old-space-size=512
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
