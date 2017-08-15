@@ -14,7 +14,7 @@ s:
 
 # Start the server using forever
 sf:
-	$(BIN)/forever node ./index.js --max-old-space-size=512
+	$(BIN)/forever ./index.js --max-old-space-size=512
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
