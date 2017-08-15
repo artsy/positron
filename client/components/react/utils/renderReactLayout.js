@@ -17,7 +17,7 @@ import { ServerStyleSheet } from 'styled-components'
 export function renderReactLayout (options) {
   const {
     basePath = '',
-    blocks: { head, body } = {},
+    blocks: { header, body } = {},
     locals = {},
     data = {},
     templates = {}
@@ -29,7 +29,7 @@ export function renderReactLayout (options) {
     data
   )
 
-  const { html: headHTML } = render(head)
+  const { html: headHTML } = render(header)
   const { html: bodyHTML, css } = render(body)
 
   const layout = renderTemplate('client/components/layout/templates/react.jade', {

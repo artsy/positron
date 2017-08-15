@@ -1,3 +1,4 @@
+import React from 'react'
 import App from './components/App'
 import { renderReactLayout } from 'client/components/react/utils/renderReactLayout'
 
@@ -5,13 +6,10 @@ export function index (req, res, next) {
   const layout = renderReactLayout({
     basePath: req.app.get('views'),
     blocks: {
-      // head: 'meta.jade',
+      header: () => <div>Hello this is the header!</div>,
       body: App
     },
-    locals: {
-      ...res.locals,
-      assetPackage: 'react_example'
-    },
+    locals: res.locals,
     data: {
       name: 'Leif',
       description: 'hello hi how are you'
