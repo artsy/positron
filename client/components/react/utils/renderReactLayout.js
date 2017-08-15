@@ -32,7 +32,7 @@ export function renderReactLayout (options) {
   const { html: headHTML } = render(head)
   const { html: bodyHTML, css } = render(body)
 
-  const layout = renderTemplate('client/components/layout/templates/index.jade', {
+  const layout = renderTemplate('client/components/layout/templates/react.jade', {
     locals: {
       ...locals,
       data: {

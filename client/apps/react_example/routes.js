@@ -1,11 +1,11 @@
-import App from 'desktop/apps/react_example/components/App'
-import { renderReactLayout } from 'desktop/components/react/utils/renderReactLayout'
+import App from './components/App'
+import { renderReactLayout } from 'client/components/react/utils/renderReactLayout'
 
 export function index (req, res, next) {
   const layout = renderReactLayout({
     basePath: req.app.get('views'),
     blocks: {
-      head: 'meta.jade',
+      // head: 'meta.jade',
       body: App
     },
     locals: {

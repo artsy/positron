@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import { rehydrateClient } from 'desktop/components/react/utils/renderReactLayout'
+import { rehydrateClient } from 'client/components/react/utils/renderReactLayout'
 
 export default () => {
   const bootstrapData = rehydrateClient(window.__BOOTSTRAP__)

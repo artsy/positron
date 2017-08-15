@@ -19,6 +19,7 @@ class Router extends Backbone.Router
     'articles': 'articlesListView'
     'settings/tags': 'tagsEdit'
     'settings/authors': 'authorsEdit'
+    'react-example': 'reactExample'
 
   articleEdit: ->
     require('../apps/edit/client.coffee').init()
@@ -40,6 +41,10 @@ class Router extends Backbone.Router
 
   authorsEdit: ->
     require('../apps/settings/client/authors/index.coffee').init()
+
+  reactExample: ->
+    require('../apps/react_example/client').default()
+
 
 new Router()
 $ ->
