@@ -18,13 +18,8 @@ sf:
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
-	$(BIN)/mocha $(shell find api/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find api/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find client/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find client/apps/*/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find client/apps/*/**/*/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find client/apps/*/**/*/**/test -name '*.coffee' -not -path 'test/helpers/*')
-	$(BIN)/mocha $(shell find client/apps/*/**/*/**/*/test -name '*.coffee' -not -path 'test/helpers/*')
+	$(BIN)/mocha $(shell find api -name '*.test.coffee')
+	$(BIN)/mocha $(shell find client -name '*.test.coffee')
 
 # Run app in test mode
 test-s:
