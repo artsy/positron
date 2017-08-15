@@ -18,4 +18,5 @@ module.exports = React.createClass
       h1 {}, @props.section
       div {
         dangerouslySetInnerHTML: __html: $(icons()).filter('.caret').html()
+        className: 'dropdown-header__caret'
       }
