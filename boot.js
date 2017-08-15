@@ -16,23 +16,32 @@ const app = module.exports = express()
 app.use(
   IpFilter([process.env.IP_BLACKLIST.split(',')], { log: false, mode: 'deny' })
 )
+
 // Get an xapp token
-artsyXapp.init({
+const xappConfig = {
   url: process.env.ARTSY_URL,
   id: process.env.ARTSY_ID,
   secret: process.env.ARTSY_SECRET
-}, () => {
+}
+
+artsyXapp.init(xappConfig, () => {
   app.use(newrelic)
 
   if (isDevelopment) {
-    const reload = createReloadable(app)
-    const reloadPaths = ['api', 'client', 'test-reload']
-    reloadPaths.forEach(reloadPath => reload(path.resolve(__dirname, reloadPath)))
+    const reloadAndMount = createReloadable(app)
+
+    // Enable server-side code hot-swapping on change
+    app.use('/api', reloadAndMount(path.resolve(__dirname, 'api'), {
+      mountPoint: '/api'
+    }))
+
+    invalidateUserMiddleware(app)
+    reloadAndMount(path.resolve(__dirname, 'client'))
 
     // Staging, Prod
   } else {
     app.use('/api', require('./api'))
-    doNotShareUserHack(app)
+    invalidateUserMiddleware(app)
     app.use(require('./client'))
   }
 
@@ -53,8 +62,7 @@ artsyXapp.on('error', (error) => {
   process.exit(1)
 })
 
-// TODO: Possibly a terrible hack to not share `req.user` between both.
-const doNotShareUserHack = (app) => {
+const invalidateUserMiddleware = (app) => {
   app.use((req, rest, next) => {
     req.user = null
     next()
