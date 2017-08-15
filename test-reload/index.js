@@ -1,7 +1,7 @@
 import express from 'express'
 
-const app = module.exports = express.Router()
+const app = module.exports = express()
 
-app.get('/foo', (req, res, next) => {
-  res.send('working! 33')
+app.get('/bar', (req, res, next) => {
+  res.send('working! 41')
 })

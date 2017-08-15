@@ -7,7 +7,7 @@ import express from 'express'
 import newrelic from 'artsy-newrelic'
 import path from 'path'
 import { IpFilter } from 'express-ipfilter'
-import { reloadable, isDevelopment } from 'lib/reloadable'
+import { createReloadable, isDevelopment } from 'lib/reloadable'
 
 const debug = require('debug')('app')
 const app = module.exports = express()
@@ -24,27 +24,16 @@ artsyXapp.init({
 }, () => {
   app.use(newrelic)
 
-  // Put client/api together
-  // app.use('/api', require('./api'))
-
-  // TODO: Possibly a terrible hack to not share `req.user` between both.
-  app.use((req, rest, next) => {
-    req.user = null
-    next()
-  })
-
-  // app.use(require('./client'))
-
-  // app.use(reloadApp)
-  // reloadable(path.join(__dirname, 'test-reload'))
-
   if (isDevelopment) {
-    reloadable(app, {
-      folderPath: path.resolve(__dirname, 'test-reload'),
-      onReload: (req, res, next) => require('./test-reload')(req, res, next)
-    })
+    const reload = createReloadable(app)
+    const reloadPaths = ['api', 'client', 'test-reload']
+    reloadPaths.forEach(reloadPath => reload(path.resolve(__dirname, reloadPath)))
+
+    // Staging, Prod
   } else {
-    app.use(require('./test-reload'))
+    app.use('/api', require('./api'))
+    doNotShareUserHack(app)
+    app.use(require('./client'))
   }
 
   // Start the server and send a message to IPC for the integration test
@@ -63,3 +52,11 @@ artsyXapp.on('error', (error) => {
   console.warn(error)
   process.exit(1)
 })
+
+// TODO: Possibly a terrible hack to not share `req.user` between both.
+const doNotShareUserHack = (app) => {
+  app.use((req, rest, next) => {
+    req.user = null
+    next()
+  })
+}
