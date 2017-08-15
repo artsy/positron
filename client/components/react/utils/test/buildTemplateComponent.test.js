@@ -2,7 +2,7 @@ import React from 'react'
 import buildTemplateComponent from '../buildTemplateComponent'
 import { render } from 'enzyme'
 
-describe('components/react/utils/buildTemplateComponent.js', () => {
+describe('client/components/react/utils/buildTemplateComponent.js', () => {
   beforeEach(() => {
     buildTemplateComponent.__Rewire__('renderTemplate', (html) => html)
   })

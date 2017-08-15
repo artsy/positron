@@ -1,6 +1,6 @@
 import renderTemplate from '../renderTemplate'
 
-describe('components/react/utils/renderTemplate.js', () => {
+describe('client/components/react/utils/renderTemplate.js', () => {
   const output = (content) => (locals = {}) => `
     <html>
       <body>

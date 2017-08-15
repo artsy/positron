@@ -1,6 +1,6 @@
 import React from 'react'
-import renderTemplate from 'desktop/components/react/utils/renderTemplate'
-import buildTemplateComponent from 'desktop/components/react/utils/buildTemplateComponent'
+import renderTemplate from 'client/components/react/utils/renderTemplate'
+import buildTemplateComponent from 'client/components/react/utils/buildTemplateComponent'
 import { isFunction, isString } from 'underscore'
 import { renderToString } from 'react-dom/server'
 import { ServerStyleSheet } from 'styled-components'
@@ -32,7 +32,7 @@ export function renderReactLayout (options) {
   const { html: headHTML } = render(head)
   const { html: bodyHTML, css } = render(body)
 
-  const layout = renderTemplate('desktop/components/main_layout/templates/react_index.jade', {
+  const layout = renderTemplate('client/components/layout/templates/index.jade', {
     locals: {
       ...locals,
       data: {
@@ -87,7 +87,7 @@ export function renderReactLayout (options) {
     } else {
       if (process.env.NODE_ENV === 'development') {
         throw new Error(
-          '(components/reaect/utils/renderReactLayout.js) ' +
+          '(client/components/react/utils/renderReactLayout.js) ' +
           'Error rendering layout: `block` must be a Jade template, React ' +
           'component or string'
         )

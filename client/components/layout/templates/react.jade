@@ -1,0 +1,12 @@
+extends index
+append locals 
+  
+block header
+  != header
+  
+block content
+  script.
+    var __BOOTSTRAP__ = !{JSON.stringify(data)}
+    
+  #react-root
+    != body
