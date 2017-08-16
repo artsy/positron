@@ -12,7 +12,7 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-describe 'Paragraph', ->
+describe 'Rich Text: Paragraph', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -141,10 +141,6 @@ describe 'Paragraph', ->
       @component.onChange = sinon.stub()
       @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
       @stripGoogleStyles.called.should.eql true
-
-    xit 'strips linebreaks if linebreaks is false', ->
-      @component.setState linebreaks: false
-
 
     it 'calls standardizeSpacing', ->
       @Utils.standardizeSpacing = sinon.stub()
