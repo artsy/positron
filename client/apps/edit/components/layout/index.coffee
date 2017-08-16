@@ -141,7 +141,7 @@ module.exports = class EditLayout extends Backbone.View
     fullText = @getBodyText()
     return fullText.match(/==(\S+.*?)==/ig)
 
-  autolinkText: ->
+  autolinkText: =>
     linkableText = @getLinkableText()
     console.log linkableText
     async.mapSeries linkableText, (findText, cb) =>
