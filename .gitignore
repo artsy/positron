@@ -17,3 +17,4 @@ dump.rdb
 .env.ignore
 node_modules
 .vscode
+data
