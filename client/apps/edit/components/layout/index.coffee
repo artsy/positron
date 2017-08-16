@@ -4,6 +4,8 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
+async = require 'async'
+request = require 'superagent'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -93,7 +95,7 @@ module.exports = class EditLayout extends Backbone.View
     setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
 
   events:
-    'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
+    'click #edit-tabs > a:not(#edit-publish):not(#autolink-button)': 'toggleTabs'
     'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'dragenter .dashed-file-upload-container': 'toggleDragover'
@@ -136,8 +138,27 @@ module.exports = class EditLayout extends Backbone.View
       .toggleClass 'is-dragover'
 
   getLinkableText: ->
-    # TODO: Extract list of names to fetch and make searches
-    # See getBodyText method above to get text from article
+    fullText = @getBodyText()
+    return fullText.match(/==(\S+.*?)==/ig)
 
-  replaceLink: ->
-    # TODO: Call article model to make the actual text update
+  autolinkText: ->
+    linkableText = @getLinkableText()
+    console.log linkableText
+    async.mapSeries linkableText, (findText, cb) =>
+      text = findText.split('==').join('')
+      request
+        .get("#{sd.ARTSY_URL}/api/search?q=#{encodeURIComponent(text)}")
+        .set('X-Access-Token': sd.ACCESS_TOKEN)
+        .end (err, res) =>
+          if err or res.body.total_count < 1
+            return @article.replaceLink(findText, text)
+          result = res.body._embedded.results[0]
+          link = result._links.permalink.href
+          name = result.title
+          newLink = @getNewLink(link, name)
+          console.log newLink
+          @article.replaceLink(findText, newLink)
+          cb()
+
+  getNewLink: (link, name) ->
+    "<a href='#{link}'>#{name}</a>"

@@ -119,5 +119,8 @@ module.exports = class Article extends Backbone.Model
       extended.hero_section = null
     _.extend super, extended
 
-  replaceLink: (text, link) ->
-    # TODO: Look for the section and replace the body field
+  replaceLink: (taggedText, link) ->
+    @sections.map (section) ->
+      if section.get('type') is 'text'
+        text = section.get('body')
+        section.set('body', text.replace(taggedText, link))
