@@ -118,3 +118,6 @@ module.exports = class Article extends Backbone.Model
     else if @heroSection
       extended.hero_section = null
     _.extend super, extended
+
+  replaceLink: (text, link) ->
+    # TODO: Look for the section and replace the body field

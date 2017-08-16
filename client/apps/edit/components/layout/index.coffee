@@ -100,6 +100,7 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'blur #edit-title': 'prefillThumbnailTitle'
+    'click #autolink-button' : 'autolinkText'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -133,3 +134,10 @@ module.exports = class EditLayout extends Backbone.View
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')
       .toggleClass 'is-dragover'
+
+  getLinkableText: ->
+    # TODO: Extract list of names to fetch and make searches
+    # See getBodyText method above to get text from article
+
+  replaceLink: ->
+    # TODO: Call article model to make the actual text update
