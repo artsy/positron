@@ -139,7 +139,7 @@ module.exports = class EditLayout extends Backbone.View
 
   getLinkableText: ->
     fullText = @getBodyText()
-    return fullText.match(/==(\S+.*?)==/ig)
+    fullText.match(/==(\S+.*?)==/ig)
 
   autolinkText: =>
     linkableText = @getLinkableText()
@@ -153,7 +153,7 @@ module.exports = class EditLayout extends Backbone.View
           if err or res.body.total_count < 1
             return @article.replaceLink(findText, text)
           result = res.body._embedded.results[0]
-          link = result._links.permalink.href
+          link = @findLinkFromResult(result)
           name = result.title
           newLink = @getNewLink(link, name)
           console.log newLink
@@ -162,3 +162,8 @@ module.exports = class EditLayout extends Backbone.View
 
   getNewLink: (link, name) ->
     "<a href='#{link}'>#{name}</a>"
+
+  findLinkFromResult: (result) ->
+    switch result.type
+      when "profile" then result._links.permalink.href.replace('/profile', '')
+      else result._links.permalink.href
