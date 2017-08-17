@@ -146,7 +146,7 @@ module.exports = class EditLayout extends Backbone.View
     $('#autolink-status').addClass('searching').html('Linking...')
     $('#edit-content__overlay').addClass('disabled')
     linkableText = @getLinkableText()
-    searchTypes = ['artist', 'profile', 'show', 'gene']
+    searchTypes = ['artist', 'profile', 'show', 'gene', 'city']
     searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
     async.mapLimit linkableText, 5, ((findText, cb) =>
       text = findText.split('==').join('')
@@ -159,9 +159,10 @@ module.exports = class EditLayout extends Backbone.View
             return cb()
           result = res.body._embedded.results[0]
           name = result.title
-          if levenshtein.get(name, text) > 2
+          if levenshtein.get(name, text, { useCollator: true}) > 2
             # result string distance was more than threshold, rejecting the match
-            return @article.replaceLink(findText, text)
+            @article.replaceLink(findText, text)
+            return cb()
           link = @findLinkFromResult(result)
           newLink = @getNewLink(link, name)
           @article.replaceLink(findText, newLink)
