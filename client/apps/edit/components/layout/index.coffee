@@ -143,10 +143,12 @@ module.exports = class EditLayout extends Backbone.View
 
   autolinkText: =>
     linkableText = @getLinkableText()
+    searchTypes = ['artist', 'profile', 'show', 'gene']
+    searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
     async.mapSeries linkableText, (findText, cb) =>
       text = findText.split('==').join('')
       request
-        .get("#{sd.ARTSY_URL}/api/search?q=#{encodeURIComponent(text)}")
+        .get("#{sd.ARTSY_URL}/api/search?#{searchQueryParam}&q=#{encodeURIComponent(text)}")
         .set('X-Access-Token': sd.ACCESS_TOKEN)
         .end (err, res) =>
           if err or res.body.total_count < 1
