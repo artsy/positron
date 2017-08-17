@@ -147,24 +147,25 @@ module.exports = class EditLayout extends Backbone.View
     linkableText = @getLinkableText()
     searchTypes = ['artist', 'profile', 'show', 'gene']
     searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
-    async.mapSeries linkableText, (findText, cb) =>
+    async.mapLimit linkableText, 5, ((findText, cb) =>
       text = findText.split('==').join('')
       request
         .get("#{sd.ARTSY_URL}/api/search?#{searchQueryParam}&q=#{encodeURIComponent(text)}")
         .set('X-Access-Token': sd.ACCESS_TOKEN)
         .end (err, res) =>
           if err or res.body.total_count < 1
-            return @article.replaceLink(findText, text)
+            @article.replaceLink(findText, text)
+            return cb()
           result = res.body._embedded.results[0]
           link = @findLinkFromResult(result)
           name = result.title
           newLink = @getNewLink(link, name)
           @article.replaceLink(findText, newLink)
-          cb()
-    , =>
+          return cb()
+    ), (err, result) =>
+      @article.sections.trigger 'change:autolink'
       $('#autolink-status').removeClass('searching').html('Auto-Link')
       $('#edit-content__overlay').removeClass('disabled')
-      @article.sections.trigger 'change:autolink'
 
   getNewLink: (link, name) ->
     "<a href='#{link}'>#{name}</a>"
