@@ -140,7 +140,7 @@ module.exports = class EditLayout extends Backbone.View
 
   getLinkableText: ->
     fullText = @getBodyText()
-    fullText.match(/==(\S+[\w|\s]*?\S)==/ig)
+    fullText.match(/==(\S+.*?\S)==/ig)
 
   autolinkText: ->
     $('#autolink-status').addClass('searching').html('Linking...')
