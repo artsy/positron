@@ -6,6 +6,7 @@ User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
 async = require 'async'
 request = require 'superagent'
+levenshtein = require 'fast-levenshtein'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -157,8 +158,11 @@ module.exports = class EditLayout extends Backbone.View
             @article.replaceLink(findText, text)
             return cb()
           result = res.body._embedded.results[0]
-          link = @findLinkFromResult(result)
           name = result.title
+          if levenshtein.get(name, text) > 2
+            # result string distance was more than threshold, rejecting the match
+            return @article.replaceLink(findText, text)
+          link = @findLinkFromResult(result)
           newLink = @getNewLink(link, name)
           @article.replaceLink(findText, newLink)
           return cb()
