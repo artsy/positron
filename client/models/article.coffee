@@ -123,4 +123,5 @@ module.exports = class Article extends Backbone.Model
     @sections.map (section) ->
       if section.get('type') is 'text'
         text = section.get('body')
-        section.set('body', text.replace(taggedText, link))
+        if text.includes(taggedText)
+          section.set('body', text.replace(taggedText, link))

@@ -62,6 +62,19 @@
 .edit-header-container
   padding-top 20px
 
+#edit-content__overlay
+  width 100vw
+  height 100vh
+  background-color black
+  opacity 0.25
+  display none
+  position fixed
+  top 0
+  z-index 6
+  overflow hidden
+  &.disabled
+    display block
+
 #edit-content
   margin-top header-size
   a
