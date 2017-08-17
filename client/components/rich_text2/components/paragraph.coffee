@@ -1,5 +1,5 @@
 # A basic paragraph component: supports bold and italic styles
-# optionally allows links and linebreaks
+# optionally allows links and stripping of linebreaks
 # or format in types 'postscript', 'caption' and 'lead paragraph'
 
 # Paragraph {
@@ -9,7 +9,7 @@
 #   layout: article.layout
 #   postscript: default=false
 #   linked: default=false
-#   linebreaks: default=true
+#   stripLinebreaks: default=false
 #   type: 'postscript' | 'caption' | 'lead paragraph'
 # }
 
@@ -46,11 +46,11 @@ module.exports = React.createClass
     showNav: false
     urlValue: ''
     selectionTarget: null
-    linebreaks: @props.linebreaks or true
 
   componentDidMount: ->
     if $(@props.html).text().length
       html = Utils.standardizeSpacing @props.html
+      html = @stripLinebreaks(html) if @props.stripLinebreaks
       blocksFromHTML = @convertFromHTML(html)
       @setState
         html: html
@@ -77,6 +77,7 @@ module.exports = React.createClass
       showNav: false
 
   convertFromHTML: (html) ->
+    html = @stripLinebreaks(html) if @props.stripLinebreaks
     blocksFromHTML = convertFromHTML({
       htmlToEntity: (nodeName, node) ->
         if nodeName is 'a'
@@ -106,7 +107,7 @@ module.exports = React.createClass
     return Array.from(available)
 
   handleKeyCommand: (e) ->
-    return 'handled' if @state.linebreaks is false and e is 'split-block'
+    return 'handled' if @props.stripLinebreaks is true and e is 'split-block'
     if e is 'link-prompt'
       @promptForLink() if @hasLinks()
       return 'handled'
@@ -121,14 +122,19 @@ module.exports = React.createClass
     selection = Utils.getSelectionDetails(@state.editorState)
     @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
+
+  stripLinebreaks: (html) ->
+    html = html.replace(/<\/p><p>/g, '')
+    return html
+
   onPaste: (text, html) ->
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
     html = Utils.standardizeSpacing html
     html = Utils.stripGoogleStyles html
-    unless @state.linebreaks
-      html = html.replace(/<\/p><p>/g, '')
+    html = @stripLinebreaks(html) if @props.stripLinebreaks
+    html = html.replace(/<\/p><p>/g, '')
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = Utils.stripCharacterStyles contentBlock, true
@@ -214,7 +220,7 @@ module.exports = React.createClass
     if !window.getSelection().isCollapsed
       location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
       selectionTargetL = Config.inlineStyles(@props.type).length * 25
-      selectionTargetL = selectionTargetL + 50 if @hasLinks()
+      selectionTargetL = selectionTargetL + 25 if @hasLinks()
       @setState showNav: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
     else
       @setState showNav: false

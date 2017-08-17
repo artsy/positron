@@ -108,32 +108,98 @@ describe 'Rich Text: Paragraph', ->
       @component.setState.args[0][0].selectionTarget.should.eql { top: 20, left: 40 }
       @component.setState.args[0][0].showUrlInput.should.eql true
 
-  describe '#hasLinks', ->
+  describe 'Nav', ->
 
-    it 'returns true if props.linked', ->
+    it 'Prints Italic and Bold buttons by default', ->
+      @props.linked = null
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      component.setState showNav: true
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="BOLD" class="BOLD">B</button>'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="link" class="link">'
+
+    it 'Shows correct buttons if type unspecified and linked is true', ->
+      @component.setState showNav: true
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="BOLD" class="BOLD">B</button><button name="link" class="link">'
+
+    it 'Does not show italic if type is postscript', ->
+      @props.linked = null
+      @props.type = 'postscript'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      component.setState showNav: true
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="BOLD" class="BOLD">B</button><button name="link" class="link">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="ITALIC" class="ITALIC">I</button>'
+
+    it 'Does not show bold if type is caption', ->
+      @props.linked = null
+      @props.type = 'caption'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      component.setState showNav: true
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="link" class="link">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="BOLD" class="BOLD">B</button>'
+
+    it 'Can toggle bold styles', ->
+      @component.setState showNav: true
+      @component.setState = sinon.stub()
+      r.simulate.mouseDown r.find @component, 'BOLD'
+      @component.setState.args[0][0].html.should.containEql '<strong>Illustration</strong>'
+
+    it 'Can toggle italic styles', ->
+      @component.setState showNav: true
+      @component.setState = sinon.stub()
+      r.simulate.mouseDown r.find @component, 'ITALIC'
+      @component.setState.args[0][0].html.should.containEql '<em>Illustration</em>'
+
+    it 'Can toggle a link prompt', ->
+      @component.setState showNav: true
+      @component.setState = sinon.stub()
+      r.simulate.mouseDown r.find @component, 'link'
+      @component.setState.args[0][0].selectionTarget.should.eql { top: 20, left: 40 }
+      @component.setState.args[0][0].showUrlInput.should.eql true
+
+  describe 'Links', ->
+
+    it '#hasLinks returns true if props.linked', ->
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
       haslinks = component.hasLinks()
       haslinks.should.eql true
 
-    it 'returns true if type is postscript', ->
+    it '#hasLinks returns true if type is postscript', ->
       @props.type = 'postscript'
       @props.linked = null
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
       haslinks = component.hasLinks()
       haslinks.should.eql true
 
-    it 'returns true if type is caption', ->
+    it '#hasLinks returns true if type is caption', ->
       @props.type = 'caption'
       @props.linked = null
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
       haslinks = component.hasLinks()
       haslinks.should.eql true
 
-  describe 'Links', ->
-
     it '#confirmLink can save a link as html', ->
       @component.confirmLink('http://artsy.net')
       (@component.state.html.match(/<a href=/g) || []).length.should.eql 2
+
+  describe 'Linebreaks', ->
+
+    it 'allows linebreaks by default', ->
+      @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 2
+
+    it 'strips linebreaks if props.stripLinebreaks', ->
+      @props.stripLinebreaks = true
+      @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 1
+
+    it 'interrupts key command for linebreak if props.stripLinebreaks', ->
+      @props.stripLinebreaks = true
+      @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      keyResponse = component.handleKeyCommand('split-block')
+      keyResponse.should.eql 'handled'
 
   describe '#onPaste', ->
 
