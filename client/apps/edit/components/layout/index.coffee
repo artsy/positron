@@ -140,7 +140,7 @@ module.exports = class EditLayout extends Backbone.View
 
   getLinkableText: ->
     fullText = @getBodyText()
-    fullText.match(/==(\S+.*?\S)==/ig)
+    fullText.match(/==(\S+[^==]*\S)==/ig)
 
   autolinkText: ->
     $('#autolink-status').addClass('searching').html('Linking...')
@@ -159,7 +159,8 @@ module.exports = class EditLayout extends Backbone.View
             return cb()
           result = res.body._embedded.results[0]
           name = result.title
-          if levenshtein.get(name, text, { useCollator: true}) > 2
+          if levenshtein.get(name, text, { useCollator: true}) > 3
+            console.log("couldn't match #{name} and #{text} with diff: #{levenshtein.get(name, text, { useCollator: true})}")
             # result string distance was more than threshold, rejecting the match
             @article.replaceLink(findText, text)
             return cb()
