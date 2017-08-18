@@ -7,7 +7,7 @@ import express from 'express'
 import newrelic from 'artsy-newrelic'
 import path from 'path'
 import { IpFilter } from 'express-ipfilter'
-import { createReloadable, isDevelopment } from 'lib/reloadable'
+import { createReloadable, isDevelopment } from '@artsy/express-reloadable'
 
 const debug = require('debug')('app')
 const app = module.exports = express()
@@ -28,7 +28,7 @@ artsyXapp.init(xappConfig, () => {
   app.use(newrelic)
 
   if (isDevelopment) {
-    const reloadAndMount = createReloadable(app)
+    const reloadAndMount = createReloadable(app, require)
 
     // Enable server-side code hot-swapping on change
     app.use('/api', reloadAndMount(path.resolve(__dirname, 'api'), {
