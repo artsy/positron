@@ -28,7 +28,7 @@ heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE 
 
 ### Via Docker Compose
 - Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
-- git clone git@github.com:<your username>/positron.git && cd positron
+- `git clone git@github.com:<your username>/positron.git && cd positron`
 - `docker-compose up`
 
 This starts a new self-contained Docker instance that boots MongoDB, ElasticSearch and Node. Changes made to source-code located in `api` and `client` is [automatically reloaded](https://github.com/artsy/positron/blob/master/boot.js#L34) on browser-refresh; no need to restart the process.
