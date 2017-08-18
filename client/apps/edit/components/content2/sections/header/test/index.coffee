@@ -19,8 +19,8 @@ describe 'SectionHeader: Classic', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       SectionHeader = benv.require resolve(__dirname, '../index.coffee')
-      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/input_paragraph.coffee')
-      SectionHeader.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
+      Paragraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/paragraph.coffee')
+      SectionHeader.__set__ 'Paragraph', React.createFactory Paragraph
       @article = new Article _.extend fixtures().articles,
         layout: 'classic'
         author:
@@ -69,7 +69,7 @@ describe 'SectionHeader: Classic', ->
   describe 'Lead Paragraph', ->
 
     it 'renders a lead paragraph component', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="rich-text--paragraph__input">'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="rich-text--paragraph">'
 
     it 'Can display a saved lead paragraph', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Just before the lines start forming...'
@@ -112,8 +112,8 @@ describe 'SectionHeader: Standard', ->
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
       SectionHeader = benv.require resolve(__dirname, '../index.coffee')
-      RichTextParagraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/input_paragraph.coffee')
-      SectionHeader.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
+      Paragraph = benv.require resolve(__dirname, '../../../../../../../components/rich_text2/components/paragraph.coffee')
+      SectionHeader.__set__ 'Paragraph', React.createFactory Paragraph
       @article = new Article _.extend fixtures().articles,
         layout: 'standard'
         author:
@@ -143,15 +143,15 @@ describe 'SectionHeader: Standard', ->
   describe 'Lead Paragraph', ->
 
     it 'renders a lead paragraph component if field has text', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="rich-text--paragraph__input">'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="rich-text--paragraph">'
+
+    it 'Can display a saved lead paragraph', ->
+      $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Just before the lines start forming...'
 
     it 'does not render lead paragraph component if field is empty', ->
       @component.props.article.set('lead_paragraph', '')
       @component.forceUpdate()
-      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql '<div class="rich-text--paragraph__input">'
-
-    it 'Can display a saved lead paragraph', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Just before the lines start forming...'
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql '<div class="rich-text--paragraph">'
 
     it '#setLeadParagraph sets and saves article lead paragraph on change', ->
       @component.setLeadParagraph('<p>A new paragraph</p>')

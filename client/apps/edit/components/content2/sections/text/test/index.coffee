@@ -38,13 +38,13 @@ describe 'Section Text', ->
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text2/components/input_url'), ['icons']
       )
-      EditNav = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text2/components/edit_nav'), ['icons']
+      Nav = benv.requireWithJadeify(
+        resolve(__dirname, '../../../../../../../components/rich_text2/components/nav'), ['icons']
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
-      @SectionText.__set__ 'EditNav', React.createFactory EditNav
-      @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
-      @SectionText.__set__ 'getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
+      @SectionText.__set__ 'Nav', React.createFactory Nav
+      @SectionText.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
+      @SectionText.__set__ 'Utils.getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
       @sections = new Backbone.Collection [
         {
           body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'

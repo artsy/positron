@@ -20,18 +20,18 @@ describe 'SectionList', ->
       global.HTMLElement = () => {}
       @SectionList = benv.require resolve(__dirname, '../index')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
-      RichTextParagraph = benv.require resolve(
-        __dirname, '../../../../../../components/rich_text/components/input_paragraph.coffee'
+      Paragraph = benv.require resolve(
+        __dirname, '../../../../../../components/rich_text2/components/paragraph.coffee'
       )
       @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
       )
-      @SectionContainer.__set__ 'SectionText', text = sinon.stub()
-      @SectionContainer.__set__ 'SectionImageCollection', image_collection = sinon.stub()
+      @SectionContainer.__set__ 'Text', text = sinon.stub()
+      @SectionContainer.__set__ 'ImageCollection', image_collection = sinon.stub()
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
-      @SectionList.__set__ 'RichTextParagraph', React.createFactory RichTextParagraph
+      @SectionList.__set__ 'Paragraph', React.createFactory Paragraph
       @props = {
         article: new Backbone.Model {layout: 'feature'}
         sections: @sections = new Sections [
