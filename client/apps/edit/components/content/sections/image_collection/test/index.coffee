@@ -75,8 +75,8 @@ describe 'ImageCollection', ->
 
     it 'renders an image collection component with preview', ->
       $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '>Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '>The Four Hedgehogs'
 
     it 'renders a placeholder if no images', ->
       @component.props.section.set 'images', []
@@ -156,13 +156,13 @@ describe 'ImageCollection', ->
     it 'returns expected container and target for overflow_fillwidth', ->
       sizes = @component.getFillWidthSizes()
       sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 537.5999999999999
+      sizes.targetHeight.should.eql 630
 
     it 'returns expected container and target for column_width', ->
       @component.props.section.set 'layout', 'column_width'
       sizes = @component.getFillWidthSizes()
       sizes.containerSize.should.eql 580
-      sizes.targetHeight.should.eql 537.5999999999999
+      sizes.targetHeight.should.eql 630
 
     it 'returns expected container and target for image_set with many images', ->
       @component.props.section.unset 'layout'
