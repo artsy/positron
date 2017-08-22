@@ -1,0 +1,18 @@
+version: '2'
+services:
+  elasticsearch:
+    image: elasticsearch:2.4.5
+    ports:
+      - "${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}"
+  mongodb:
+    image: mongo:3.0
+  server:
+    build: .
+    command: make s
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - elasticsearch
+      - mongodb
+    volumes:
+      - .:/usr/src/app

@@ -20,6 +20,23 @@ Meta
 Set-Up
 ---
 
+- Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
+
+```
+heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
+```
+
+### Via Docker Compose
+- Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+- `git clone git@github.com:<your username>/positron.git && cd positron`
+- `docker-compose up`
+
+This starts a new self-contained Docker instance that boots MongoDB, ElasticSearch and Node. Changes made to source-code located in `api` and `client` is [automatically reloaded](https://github.com/artsy/positron/blob/master/boot.js#L34) on browser-refresh; no need to restart the process.
+
+To shut down the process, press `ctrl+c` or execute `docker-compose down`.
+
+### Manually
+
 - Install [NVM](https://github.com/creationix/nvm)
 - Install Node 6
 
@@ -39,12 +56,6 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 
 ```
 yarn install
-```
-
-- Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
-
-```
-heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
 ```
 
 - Positron uses MongoDB as a database. To install MongoDB using homebrew do the following, if you would prefer to install manually check the documentation at [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)

@@ -111,6 +111,7 @@ denormalizedArtwork = (->
     @object().meta(name: 'Text').keys
       type: @string().valid('text')
       body: @string().allow('', null)
+      layout: @string().allow('blockquote', null)
     @object().meta(name: 'Artworks').keys
       type: @string().valid('artworks')
       ids: @array().items(@string().objectid())

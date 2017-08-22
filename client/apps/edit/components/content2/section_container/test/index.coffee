@@ -38,7 +38,7 @@ describe 'SectionContainer', ->
         dragOver: 4
         article: new Article
       }
-      @SectionContainer.__set__ 'SectionText', ->
+      @SectionContainer.__set__ 'Text', ->
       @component = ReactDOM.render React.createElement(@SectionContainer, @props
       ), $("<div></div>")[0], => setTimeout =>
         @component.setState = sinon.stub()

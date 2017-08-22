@@ -46,11 +46,3 @@ module.exports = class Section extends Backbone.Model
       _.extend super, ids: @artworks.pluck '_id'
     else
       super
-
-   getLayout: (articleLayout) ->
-    layout = 'column_width'
-    if @get('type') is 'text' and @get('body')?.includes('<blockquote>')
-      layout = if articleLayout is 'feature' then 'blockquote' else 'overflow_fillwidth'
-    else if @get('layout')
-      layout = @get('layout')
-    return layout

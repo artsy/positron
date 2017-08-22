@@ -13,14 +13,14 @@ r =
 { blockTypes,
   inlineStyles } = require '../../../apps/edit/components/content2/sections/text/draft_config.coffee'
 
-describe 'RichText: EditNav', ->
+describe 'RichText: Nav', ->
 
   describe 'Classic: partner', ->
     beforeEach (done) ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
-        @EditNav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/edit_nav'), ['icons']
+        @Nav = benv.requireWithJadeify(
+          resolve(__dirname, '../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: false
@@ -32,7 +32,7 @@ describe 'RichText: EditNav', ->
           makePlainText: @makePlainText = sinon.stub()
           position: { top: 20, left: 20 }
         }
-        @component = ReactDOM.render React.createElement(@EditNav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @component = ReactDOM.render React.createElement(@Nav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
           done()
 
     afterEach ->
@@ -81,8 +81,8 @@ describe 'RichText: EditNav', ->
     beforeEach (done) ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
-        @EditNav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/edit_nav'), ['icons']
+        @Nav = benv.requireWithJadeify(
+          resolve(__dirname, '../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true
@@ -94,7 +94,7 @@ describe 'RichText: EditNav', ->
           makePlainText: @makePlainText = sinon.stub()
           position: { top: 20, left: 20 }
         }
-        @component = ReactDOM.render React.createElement(@EditNav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @component = ReactDOM.render React.createElement(@Nav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
           done()
 
     afterEach ->
@@ -128,8 +128,8 @@ describe 'RichText: EditNav', ->
     beforeEach (done) ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
-        @EditNav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/edit_nav'), ['icons']
+        @Nav = benv.requireWithJadeify(
+          resolve(__dirname, '../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true
@@ -141,7 +141,7 @@ describe 'RichText: EditNav', ->
           makePlainText: @makePlainText = sinon.stub()
           position: { top: 20, left: 20 }
         }
-        @component = ReactDOM.render React.createElement(@EditNav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @component = ReactDOM.render React.createElement(@Nav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
           done()
 
     afterEach ->
@@ -176,8 +176,8 @@ describe 'RichText: EditNav', ->
     beforeEach (done) ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
-        @EditNav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/edit_nav'), ['icons']
+        @Nav = benv.requireWithJadeify(
+          resolve(__dirname, '../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true
@@ -189,7 +189,7 @@ describe 'RichText: EditNav', ->
           makePlainText: @makePlainText = sinon.stub()
           position: { top: 20, left: 20 }
         }
-        @component = ReactDOM.render React.createElement(@EditNav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
+        @component = ReactDOM.render React.createElement(@Nav, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
           done()
 
     afterEach ->

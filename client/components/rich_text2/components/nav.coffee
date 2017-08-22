@@ -4,7 +4,7 @@ _ = require 'underscore'
 icons = -> require('../utils/icons.jade') arguments...
 
 module.exports = React.createClass
-  displayName: 'EditNav'
+  displayName: 'RichTextNav'
 
   onToggle: (e) ->
     e.preventDefault()
