@@ -26,10 +26,11 @@ describe 'SectionControls', ->
           type: 'image_collection'
           layout: 'overflow_fillwidth'
         editing: true
-        channel: { isEditorial: sinon.stub().returns(true) }
+        channel:
+          isEditorial: sinon.stub().returns(true)
+          hasFeature: sinon.stub().returns(true)
         isHero: false
-        article: new Backbone.Model
-          layout: 'classic'
+        articleLayout: 'classic'
       }
 
       @component = ReactDOM.render React.createElement(@SectionControls, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
@@ -95,7 +96,7 @@ describe 'SectionControls', ->
       header.should.eql 95
 
     it 'returns 55 when channel is not editorial', ->
-      @props.channel = { isEditorial: sinon.stub().returns(false) }
+      @props.channel = { isEditorial: sinon.stub().returns(false), hasFeature: sinon.stub().returns(false) }
       component = ReactDOM.render React.createElement(@SectionControls, @props), (@$el = $ "<div></div>")[0], =>
       header = component.getHeaderSize()
       header.should.eql 55
