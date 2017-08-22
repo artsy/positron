@@ -69,6 +69,7 @@ module.exports = React.createClass
   changeLayout: (e) ->
     if @props.section.get('type') is 'image_set'
       @props.section.set 'type', 'image_collection'
+      @forceUpdate()
     e = if e.target then e.target.name else e
     @props.section.set layout: e
     @props.onChange() if @props.onChange
@@ -77,10 +78,7 @@ module.exports = React.createClass
     if @props.section.get('type') is 'image_collection'
       @props.section.unset 'layout'
       @props.section.set 'type', 'image_set'
-    else
-      @props.section.set
-        layout: 'overflow_fillwidth'
-        type: 'image_collection'
+      @forceUpdate()
     @props.onChange() if @props.onChange
 
   renderSectionLayouts: ->
