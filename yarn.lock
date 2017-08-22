@@ -8,9 +8,9 @@
   dependencies:
     chokidar "^1.7.0"
 
-"@artsy/reaction-force@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.3.2.tgz#aa3fee9c1bc57b76dcdfadeecf8e169d7bbfe46e"
+"@artsy/reaction-force@^0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.3.3.tgz#0a90f462c4b4fa4943b4ef82dc09863e1f86c503"
   dependencies:
     "@storybook/addon-options" "^3.2.1"
     "@storybook/react" "^3.2.0"
