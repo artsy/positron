@@ -8,10 +8,6 @@ module.exports = React.createClass
   componentDidMount: ->
     $(@refs.input).focus() unless @props.section.get('url')?.length
 
-  changeLayout: (e) ->
-    e = if e.target then e.target.name else e
-    @props.section.set layout: e
-
   onChange: (e) ->
     @props.section.set e.target.name, e.target.value
 
@@ -19,28 +15,9 @@ module.exports = React.createClass
     SectionControls {
       section: @props.section
       channel: @props.channel
-      article: @props.article
+      articleLayout: @props.article.get('layout')
+      sectionLayouts: true
     },
-      nav { className: 'edit-controls__layout' },
-        a {
-          name: 'overflow_fillwidth'
-          className: 'layout'
-          onClick: @changeLayout
-          'data-active': @props.section.get('layout') is 'overflow_fillwidth'
-        }
-        a {
-          name: 'column_width'
-          className: 'layout'
-          onClick: @changeLayout
-          'data-active': @props.section.get('layout') is 'column_width'
-        }
-        if @props.article.get('layout') is 'feature'
-          a {
-            name: 'fillwidth'
-            className: 'layout'
-            onClick: @changeLayout
-            'data-active': @props.section.get('layout') is 'fillwidth'
-          }
       section { className: 'edit-controls__inputs' },
         div { className: 'input-url' },
           h2 {}, 'iFrame URL'
