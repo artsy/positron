@@ -35,8 +35,8 @@ module.exports = React.createClass
         div { className: 'edit-section--embed__content' },
           Embed {
             section:
-              url: @props.section.get('url') or null
+              url: @props.section.get 'url'
               height: @props.section.get 'height'
-              mobile_height: @props.section.get('mobile_height') or null
+              mobile_height: @props.section.get 'mobile_height'
               layout: @props.section.get 'layout'
           }
