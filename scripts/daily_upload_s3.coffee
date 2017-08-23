@@ -61,6 +61,7 @@ attrs = [
   'search_title'
   'search_description'
   'email_title'
+  'postscript'
 ]
 
 db.articles.find({ published: true }).toArray (err, articles) ->
@@ -117,6 +118,7 @@ db.articles.find({ published: true }).toArray (err, articles) ->
       stringify a.search_title
       stringify a.search_description
       email_title
+      stringify a.postscript
     ].join(',')
     csv.push row
 
