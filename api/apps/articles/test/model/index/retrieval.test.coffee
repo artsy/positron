@@ -22,10 +22,12 @@ describe 'Article Retrieval', ->
       , ->
         done()
 
-  after ->
+  after (done) ->
     @server.close()
     search.client.indices.delete
       index: 'articles_' + process.env.NODE_ENV
+    , ->
+      done()
 
   beforeEach (done) ->
     empty ->
