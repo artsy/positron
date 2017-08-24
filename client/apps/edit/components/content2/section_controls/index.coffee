@@ -1,6 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
-{ header, nav, a } = React.DOM
+{ header, nav, div, a } = React.DOM
 
 module.exports = React.createClass
   displayName: 'SectionControls'
@@ -122,5 +122,5 @@ module.exports = React.createClass
     },
       if @props.sectionLayouts
         @renderSectionLayouts()
-      @props.children
-
+      div { className: 'edit-controls__inputs'},
+        @props.children
