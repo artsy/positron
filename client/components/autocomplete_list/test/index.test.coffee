@@ -41,8 +41,9 @@ describe 'AutocompleteList', ->
         @setState = sinon.stub @component, 'setState'
         done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
+    done()
 
   it 'renders fetched items', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Andy Warhol'
@@ -62,27 +63,30 @@ describe 'AutocompleteList', ->
     @setState.args[0][0].items.length.should.equal 1
     @removed.callCount.should.equal 1
 
-  it 'Accepts an inline option', ->
+  it 'Accepts an inline option', (done) ->
     @props.inline = true
     rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
     rendered.should.containEql 'autocomplete-container--inline'
     rendered.should.not.containEql '<div class="drag-container">'
     rendered.should.not.containEql 'draggable="true"'
+    done()
 
   it 'Accepts a draggable option', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="drag-container">'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'draggable="true"'
 
-  it 'Resets the item order onDragEnd', ->
+  it 'Resets the item order onDragEnd', (done) ->
     r.simulate.dragStart r.find(@component, 'drag-source')[1]
     r.simulate.dragOver r.find(@component, 'drag-target')[0]
     r.simulate.dragEnd r.find(@component, 'drag-source')[1]
     @selected.args[0][2][0].value.should.eql 'Mary Heilmann'
+    done()
 
-  it 'Disables draggable if no @props.draggable', ->
+  it 'Disables draggable if no @props.draggable', (done) ->
     @props.draggable = false
     rendered = ReactDOMServer.renderToString React.createElement(@AutocompleteList, @props)
     rendered.should.not.containEql '<div class="drag-container">'
     rendered.should.not.containEql 'draggable="true"'
+    done()
 
 

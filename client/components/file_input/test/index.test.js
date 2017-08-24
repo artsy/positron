@@ -13,7 +13,7 @@ describe('FileInput', () => {
       <FileInput />
     );
     const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch(/Drag & Drop or Click to Upload/)
+    expect(container.text()).toMatch('Drag & Drop or Click to Upload')
   })
 
   it('renders the default size limit', () => {
@@ -21,7 +21,7 @@ describe('FileInput', () => {
       <FileInput />
     );
     const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch(/Up to 30mb/)
+    expect(container.text()).toMatch('Up to 30mb')
   })
 
   it('prompts to replace file if hasImage', () => {
@@ -29,7 +29,7 @@ describe('FileInput', () => {
       <FileInput hasImage />
     );
     const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch(/Drag & Drop or Click to Replace/)
+    expect(container.text()).toMatch('Drag & Drop or Click to Replace')
   })
 
   it('accepts image files by default', () => {
@@ -37,7 +37,7 @@ describe('FileInput', () => {
       <FileInput />
     );
     const container = wrapper.find('.file-input')
-    expect(container.html()).toMatch(/<input type="file" accept=".jpg,.jpeg,.png,.gif">/)
+    expect(container.html()).toMatch('<input type="file" accept=".jpg,.jpeg,.png,.gif">')
   })
 
   it('accepts video files when video prop is passed', () => {
@@ -45,7 +45,7 @@ describe('FileInput', () => {
       <FileInput video />
     );
     const container = wrapper.find('.file-input')
-    expect(container.html()).toMatch(/<input type="file" accept=".jpg,.jpeg,.png,.gif,.mp4">/)
+    expect(container.html()).toMatch('<input type="file" accept=".jpg,.jpeg,.png,.gif,.mp4">')
   })
 
   it('calls upload when a file is selected', () => {
