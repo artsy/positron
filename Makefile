@@ -20,6 +20,7 @@ sf:
 test: assets
 	$(BIN)/mocha $(shell find api -name '*.test.coffee')
 	$(BIN)/mocha $(shell find client -name '*.test.coffee')
+	$(BIN)/jest $(shell find client -name '*.test.js')
 
 # Run app in test mode
 test-s:
