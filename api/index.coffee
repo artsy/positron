@@ -38,6 +38,7 @@ app.use require './apps/tags'
 app.use require './apps/verticals'
 app.use require './apps/authors'
 app.use require './apps/graphql'
+app.use require './apps/search'
 
 if SENTRY_PRIVATE_DSN
   app.use RavenServer.errorHandler()

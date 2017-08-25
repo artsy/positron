@@ -120,8 +120,12 @@ module.exports = class Article extends Backbone.Model
     _.extend super, extended
 
   replaceLink: (taggedText, link) ->
+    console.log("=====>1")
     @sections.map (section) ->
+      console.log("=====>2")
       if section.get('type') is 'text'
+        console.log("=====>3")
         text = section.get('body')
         if text.includes(taggedText)
+          console.log("=====>4 #{taggedText}, link: #{taggedText}")
           section.set('body', text.replace(taggedText, link))

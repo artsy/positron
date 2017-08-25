@@ -56,7 +56,6 @@
     "express-force-ssl": "^0.3.0",
     "express-graphql": "^0.5.4",
     "express-ipfilter": "^0.2.3",
-    "fast-levenshtein": "^2.0.6",
     "forever": "^0.15.1",
     "glossary": "^0.1.1",
     "google-spreadsheet": "^2.0.3",

@@ -6,7 +6,6 @@ User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
 async = require 'async'
 request = require 'superagent'
-levenshtein = require 'fast-levenshtein'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -146,37 +145,41 @@ module.exports = class EditLayout extends Backbone.View
     $('#autolink-status').addClass('searching').html('Linking...')
     $('#edit-content__overlay').addClass('disabled')
     linkableText = @getLinkableText()
-    searchTypes = ['artist', 'profile', 'show', 'gene', 'city']
-    searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
+    # searchTypes = ['artist', 'profile', 'show', 'gene', 'city']
+    # searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
     async.mapLimit linkableText, 5, ((findText, cb) =>
       text = findText.split('==').join('')
       request
-        .get("#{sd.ARTSY_URL}/api/search?#{searchQueryParam}&q=#{encodeURIComponent(text)}")
-        .set('X-Access-Token': sd.ACCESS_TOKEN)
+        .get("/api/search?term=#{text}")
         .end (err, res) =>
-          if err or res.body.total_count < 1
+          if err or res.body.total < 1
             @article.replaceLink(findText, text)
             return cb()
-          result = res.body._embedded.results[0]
-          name = result.title
-          if levenshtein.get(name, text, { useCollator: true}) > 3
-            console.log("couldn't match #{name} and #{text} with diff: #{levenshtein.get(name, text, { useCollator: true})}")
-            # result string distance was more than threshold, rejecting the match
+
+          valid_results = @findValidResults(res.body.hits)
+          if valid_results.length == 0
             @article.replaceLink(findText, text)
             return cb()
-          link = @findLinkFromResult(result)
-          newLink = @getNewLink(link, name)
-          @article.replaceLink(findText, newLink)
+
+          @article.replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
           return cb()
     ), (err, result) =>
       @article.sections.trigger 'change:autolink'
       $('#autolink-status').removeClass('searching').html('Auto-Link')
       $('#edit-content__overlay').removeClass('disabled')
 
-  getNewLink: (link, name) ->
+  findValidResults: (hits) ->
+    _.reject(hits, (h) -> h._score < 6.5 || h._source.visible_to_public == false)
+
+  getNewLinkFromHits: (results) ->
+    result = results[0]
+    name = result._source.name
+    link = @findLinkFromResult(result)
     "<a href='#{link}'>#{name}</a>"
 
   findLinkFromResult: (result) ->
-    switch result.type
-      when "profile" then result._links.permalink.href.replace('/profile', '')
-      else result._links.permalink.href
+    switch result._type
+      when "artist" then "https://artsy.net/artist/#{result._source.slug}"
+      when "partner" then "https://artsy.net/#{result._source.slug}"
+      when "city" then "https://artsy.net/shows/#{result._source.slug}"
+      else null
