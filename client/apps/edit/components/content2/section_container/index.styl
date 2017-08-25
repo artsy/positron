@@ -26,9 +26,16 @@
         display none
     .edit-section__container-bg
       display block
+      z-index -1
     &[data-type=text]
       .edit-section__hover-controls
         border 1px solid rgba(100,100,100,0)
+
+.edit-section__placeholder
+  min-height 150px
+  display flex
+  justify-content center
+  align-items center
 
 .edit-section__container-bg
   width 100%

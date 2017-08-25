@@ -18,33 +18,32 @@ module.exports = React.createClass
       articleLayout: @props.article.get('layout')
       sectionLayouts: true
     },
-      section { className: 'edit-controls__inputs' },
-        div { className: 'input-url' },
-          h2 {}, 'iFrame URL'
+      div { className: 'input-url' },
+        h2 {}, 'iFrame URL'
+        input {
+          placeholder: 'https://files.artsy.net'
+          className: 'bordered-input bordered-input-dark'
+          ref: 'url'
+          name: 'url'
+          defaultValue: @props.section.get('url') || ''
+          onChange: @onChange
+        },
+      div { className: 'input-height' },
+        div { className: 'input-height__item' },
+          h2 {}, 'Height (optional)'
           input {
-            placeholder: 'https://files.artsy.net'
+            placeholder: '400'
             className: 'bordered-input bordered-input-dark'
-            ref: 'url'
-            name: 'url'
-            defaultValue: @props.section.get('url') || ''
+            name: 'height'
+            defaultValue: @props.section.get('height')
             onChange: @onChange
-          },
-        div { className: 'input-height' },
-          div { className: 'input-height__item' },
-            h2 {}, 'Height (optional)'
-            input {
-              placeholder: '400'
-              className: 'bordered-input bordered-input-dark'
-              name: 'height'
-              defaultValue: @props.section.get('height')
-              onChange: @onChange
-            }
-          div { className: 'input-height__item' },
-            h2 {}, 'Mobile Height (optional)'
-            input {
-              placeholder: '300'
-              className: 'bordered-input bordered-input-dark'
-              name: 'mobile_height'
-              defaultValue: @props.section.get('mobile_height')
-              onChange: @onChange
-            }
+          }
+        div { className: 'input-height__item' },
+          h2 {}, 'Mobile Height (optional)'
+          input {
+            placeholder: '300'
+            className: 'bordered-input bordered-input-dark'
+            name: 'mobile_height'
+            defaultValue: @props.section.get('mobile_height')
+            onChange: @onChange
+          }

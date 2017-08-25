@@ -48,7 +48,6 @@ module.exports = React.createClass
       article: @props.article
       index: @props.index
       ref: 'section'
-      onClick: @setEditing(on)
       setEditing: @setEditing
       channel: @props.channel
       isHero: @props.isHero

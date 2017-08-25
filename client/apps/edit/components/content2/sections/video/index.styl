@@ -1,13 +1,25 @@
 .edit-section--video
-  &__placeholder
-    min-height 150px
-    display flex
-    justify-content center
-    align-items center
-
+  button.edit-section__remove
+    width 30px
+    height 30px
+    position absolute
+    top -12px
+    right -12px
+    circle
+      transition all .3s
+    &:hover
+      circle
+        fill red-color
+  div[class*="video__VideoContainer-"]
+    z-index -1
+  &.is-editing
+    z-index 100
+    div[class*="video__VideoContainer-"]
+      z-index 1
   div[class*="caption__CaptionContainer-"]
-    position relative
     > div
       min-width 100%
+    .rich-text--paragraph
+      position relative
     .public-DraftEditorPlaceholder-root
       position absolute

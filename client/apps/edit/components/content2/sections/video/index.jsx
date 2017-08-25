@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import Controls from './controls.jsx'
-import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
+// import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
 import components from '@artsy/reaction-force/dist/components/publishing/index'
 const Video = components.Video
+const IconRemove = components.Icon.Remove
+// const icons = () => { return require('../../../icons.jade')(...arguments) }
+
+console.log(components.Icon)
 
 export default class SectionVideo extends Component {
   constructor (props) {
@@ -11,6 +15,7 @@ export default class SectionVideo extends Component {
       progress: null
     }
     this.onCaptionChange = this.onCaptionChange.bind(this)
+    this.onRemoveImage = this.onRemoveImage.bind(this)
     this.onClickOff = this.onClickOff.bind(this)
     this.onProgress = this.onProgress.bind(this)
   }
@@ -27,6 +32,12 @@ export default class SectionVideo extends Component {
 
   onProgress (progress) {
     this.setState({progress})
+  }
+
+  onRemoveImage () {
+    if (this.props.section.get('cover_image_url')) {
+      this.props.section.set('cover_image_url', null)
+    }
   }
 
   renderUploadProgress () {
@@ -55,26 +66,32 @@ export default class SectionVideo extends Component {
     }
   }
 
+  renderRemoveButton() {
+    if (this.props.section.get('cover_image_url')) {
+      return (
+        <div className='edit-section__remove' onClick={this.onRemoveImage}>
+          <IconRemove />
+        </div>
+      )
+    }
+  }
+
   renderVideoEmbed () {
-    if (this.props.section.get('url')) {
+    const { section, article, editing } = this.props
+    if (section.get('url') && section.get('url').length) {
       return (
         <Video
-          layout={this.props.article.get('layout')}
+          layout={article.get('layout')}
           section={{
-            caption: this.props.section.get('caption'),
-            url: this.props.section.get('url'),
-            cover_image_url: this.props.section.get('cover_image_url')
+            caption: section.get('caption'),
+            url: section.get('url'),
+            cover_image_url: section.get('cover_image_url')
           }}>
-          <Paragraph
-            type='caption'
-            placeholder='Video Caption'
-            html={this.props.section.get('caption')}
-            onChange={this.onCaptionChange}
-            layout={this.props.article.get('layout')} />
+            {editing && this.renderRemoveButton()}
         </Video>
       )
     } else {
-      return <div className='edit-section--video__placeholder'>Add a video above</div>
+      return <div className='edit-section__placeholder'>Add a video above</div>
     }
   }
 
@@ -82,7 +99,6 @@ export default class SectionVideo extends Component {
     const isEditing = this.props.editing ? ' is-editing' : ''
     return (
       <section
-        onClick={this.props.setEditing}
         className={'edit-section--video' + isEditing} >
         {this.renderSectionControls()}
         {this.renderVideoEmbed()}
@@ -91,3 +107,10 @@ export default class SectionVideo extends Component {
     )
   }
 }
+
+// <Paragraph
+//   type='caption'
+//   placeholder='Video Caption (required)'
+//   html={section.get('caption')}
+//   onChange={this.onCaptionChange}
+//   layout={article.get('layout')} />

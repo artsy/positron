@@ -226,7 +226,7 @@ module.exports = React.createClass
       @setState showNav: false
 
   renderEditor: ->
-    div {},
+    div { className: 'rich-text--paragraph' },
       if @state.showNav
         Nav {
           styles: Config.inlineStyles(@props.type)
@@ -235,7 +235,6 @@ module.exports = React.createClass
           position: @state.selectionTarget
         }
       div {
-        className: 'rich-text--paragraph'
         onClick: @focus
         onBlur: @onBlur
         onMouseUp: @checkSelection
