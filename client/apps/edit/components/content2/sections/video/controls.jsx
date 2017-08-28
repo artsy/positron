@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import FileInput from '../../../../../../components/file_input/index.jsx'
-import SectionControls from '../../section_controls/index.jsx'
+import SectionControls from '../../section_controls/index.coffee'
 
 export default class VideoControls extends Component {
   constructor (props) {

@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import Controls from './controls.jsx'
-// import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
+import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
 import components from '@artsy/reaction-force/dist/components/publishing/index'
 const Video = components.Video
 const IconRemove = components.Icon.Remove
-// const icons = () => { return require('../../../icons.jade')(...arguments) }
-
-console.log(components.Icon)
 
 export default class SectionVideo extends Component {
   constructor (props) {
@@ -87,7 +84,13 @@ export default class SectionVideo extends Component {
             url: section.get('url'),
             cover_image_url: section.get('cover_image_url')
           }}>
-            {editing && this.renderRemoveButton()}
+          {editing && this.renderRemoveButton()}
+          <Paragraph
+            type='caption'
+            placeholder='Video Caption (required)'
+            html={section.get('caption')}
+            onChange={this.onCaptionChange}
+            layout={article.get('layout')} />
         </Video>
       )
     } else {
@@ -107,10 +110,3 @@ export default class SectionVideo extends Component {
     )
   }
 }
-
-// <Paragraph
-//   type='caption'
-//   placeholder='Video Caption (required)'
-//   html={section.get('caption')}
-//   onChange={this.onCaptionChange}
-//   layout={article.get('layout')} />

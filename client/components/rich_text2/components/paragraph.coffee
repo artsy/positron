@@ -48,7 +48,7 @@ module.exports = React.createClass
     selectionTarget: null
 
   componentDidMount: ->
-    if $(@props.html).text().length
+    if $(@props.html)?.text().length
       html = Utils.standardizeSpacing @props.html
       html = @stripLinebreaks(html) if @props.stripLinebreaks
       blocksFromHTML = @convertFromHTML(html)

@@ -58,7 +58,7 @@ module.exports = React.createClass
     window.scrollY + $(@refs.controls).height() > $section.offset().top + $section.height()
 
   insideComponent: ->
-    $section = $(@refs.controls).closest('section')
+    $section = $(@refs.controls)?.closest('section')
     insideComponent = false
     if $section
       if @isScrollingOver($section) and !@isScrolledPast($section) or
