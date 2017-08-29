@@ -4,13 +4,14 @@
 _ = require 'underscore'
 React = require 'react'
 imagesLoaded = require 'imagesloaded'
-Artwork = React.createFactory require './components/artwork.coffee'
-Image = React.createFactory require './components/image.coffee'
+Artwork = require './components/artwork.jsx'
+Image = require './components/image.jsx'
 Controls = React.createFactory require './components/controls.coffee'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 { fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
 { div, section, ul, li } = React.DOM
 components = require('@artsy/reaction-force/dist/components/publishing/index').default
+ImageSetPreview = React.createFactory components.ImageSetPreview
 ImageSetPreviewClassic = React.createFactory components.ImageSetPreviewClassic
 
 module.exports = React.createClass
@@ -114,9 +115,16 @@ module.exports = React.createClass
       },
         if hasImages
           if !@props.editing and @props.section.get('type') is 'image_set'
-            ImageSetPreviewClassic {
-              images: images
-            }
+            if @props.article.get('layout') is 'classic'
+              ImageSetPreviewClassic {
+                images: images
+              }
+            else
+              ImageSetPreview {
+                section:
+                  images: images
+                  layout: @props.section.get('layout')
+              }
           else
             DragContainer {
               items: images
@@ -126,25 +134,31 @@ module.exports = React.createClass
             },
               images.map (item, i) =>
                 if item.type is 'artwork'
-                  Artwork {
-                    key: i
-                    index: i
-                    artwork: item
-                    removeItem: @removeItem
-                    editing:  @props.editing
-                    imagesLoaded: @state.imagesLoaded
-                    dimensions: @state.dimensions
-                    article: @props.article
-                  }
+                  React.createElement(
+                    Artwork.default, {
+                      key: i
+                      index: i
+                      artwork: item
+                      removeItem: @removeItem
+                      editing:  @props.editing
+                      imagesLoaded: @state.imagesLoaded
+                      dimensions: @state.dimensions
+                      article: @props.article
+                    }
+                  )
                 else
-                  Image {
-                    index: i
-                    key: i
-                    image: item
-                    removeItem: @removeItem
-                    editing:  @props.editing
-                    dimensions: @state.dimensions
-                    imagesLoaded: @state.imagesLoaded
-                  }
+                  React.createElement(
+                    Image.default, {
+                      index: i
+                      key: i
+                      image: item
+                      removeItem: @removeItem
+                      editing:  @props.editing
+                      dimensions: @state.dimensions
+                      imagesLoaded: @state.imagesLoaded
+                      article: @props.article
+                      onChange: @onChange
+                    }
+                  )
         else
-          div { className: 'image-collection__placeholder' }, 'Add images and artworks above'
+          div { className: 'edit-section__placeholder' }, 'Add images and artworks above'

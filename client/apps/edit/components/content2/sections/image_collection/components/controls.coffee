@@ -6,6 +6,7 @@ SectionControls = React.createFactory require '../../../section_controls/index.c
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
+FileInput = require '../../../../../../../components/file_input/index.jsx'
 { div, section, h1, h2, span, header, input, a, nav } = React.DOM
 
 module.exports = React.createClass
@@ -55,26 +56,14 @@ module.exports = React.createClass
         $(@refs.autocomplete).val('').focus()
         @props.onChange()
 
-  upload: (e) ->
-    gemup e.target.files[0],
-      app: sd.GEMINI_APP
-      key: sd.GEMINI_KEY
-      progress: (percent) =>
-        @props.setProgress percent
-      add: (src) =>
-        @props.setProgress 0.1
-      done: (src) =>
-        image = new Image
-        image.src = src
-        image.onload = =>
-          newImages = @props.images.concat [{
-            url: src
-            type: 'image'
-            width: image.width
-            height: image.height
-          }]
-          @props.section.set images: newImages
-          @props.setProgress null
+  onUpload: (image, width, height) ->
+    newImages = @props.images.concat [{
+      url: image
+      type: 'image'
+      width: width
+      height: height
+    }]
+    @props.section.set images: newImages
 
   render: ->
     SectionControls {
@@ -84,14 +73,9 @@ module.exports = React.createClass
       onChange: @props.onChange
       sectionLayouts: true
     },
-      section { className: 'dashed-file-upload-container' },
-        h1 {}, 'Drag & ',
-          span { className: 'dashed-file-upload-container-drop' }, 'drop'
-          ' or '
-          span { className: 'dashed-file-upload-container-click' }, 'click'
-          span {}, ' to upload'
-        h2 {}, 'Up to 30mb'
-        input { type: 'file', onChange: @upload }
+      React.createElement(
+        FileInput.default, { onUpload: @onUpload, onProgress: @props.setProgress }
+      )
 
       section { className: 'edit-controls__artwork-inputs' },
         div { className: 'edit-controls__autocomplete-input' },
