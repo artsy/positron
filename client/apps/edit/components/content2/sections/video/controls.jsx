@@ -5,8 +5,6 @@ import SectionControls from '../../section_controls/index.coffee'
 export default class VideoControls extends Component {
   constructor (props) {
     super(props)
-    this.onCoverImageChange = this.onCoverImageChange.bind(this)
-    this.onUrlChange = this.onUrlChange.bind(this)
   }
 
   componentDidMount () {
@@ -15,11 +13,11 @@ export default class VideoControls extends Component {
     }
   }
 
-  onCoverImageChange (url) {
+  onCoverImageChange = (url) => {
     this.props.section.set('cover_image_url', url)
   }
 
-  onUrlChange () {
+  onUrlChange = () => {
     this.props.section.set('url', this.refs.input.value)
   }
 

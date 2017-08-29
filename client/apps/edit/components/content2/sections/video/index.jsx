@@ -11,27 +11,23 @@ export default class SectionVideo extends Component {
     this.state = {
       progress: null
     }
-    this.onCaptionChange = this.onCaptionChange.bind(this)
-    this.onRemoveImage = this.onRemoveImage.bind(this)
-    this.onClickOff = this.onClickOff.bind(this)
-    this.onProgress = this.onProgress.bind(this)
   }
 
-  onCaptionChange (html) {
+  onCaptionChange = (html) => {
     this.props.section.set('caption', html)
   }
 
-  onClickOff () {
+  onClickOff = () => {
     if (!this.props.section.get('url')) {
       this.props.section.destroy()
     }
   }
 
-  onProgress (progress) {
+  onProgress = (progress) => {
     this.setState({progress})
   }
 
-  onRemoveImage () {
+  onRemoveImage = () => {
     if (this.props.section.get('cover_image_url')) {
       this.props.section.set('cover_image_url', null)
     }
