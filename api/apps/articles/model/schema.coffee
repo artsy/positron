@@ -7,7 +7,7 @@ Joi = require '../../../lib/joi'
 imageSection = (->
   @object().meta(
     name: 'Image'
-    isTypeOf: (data) => data.type is 'image'
+    isTypeOf: (data) -> data.type is 'image'
   ).keys
     type: @string().valid('image')
     url: @string().allow('', null)
@@ -20,7 +20,7 @@ imageSection = (->
 videoSection = (->
   @object().meta(
     name: 'Video'
-    isTypeOf: (data) => data.type is 'video'
+    isTypeOf: (data) -> data.type is 'video'
   ).keys
     type: @string().valid('video')
     url: @string().allow('', null)
@@ -33,7 +33,7 @@ videoSection = (->
 fullscreenSection = (->
   @object().meta(
     name: 'Fullscreen'
-    isTypeOf: (data) => data.type is 'fullscreen'
+    isTypeOf: (data) -> data.type is 'fullscreen'
   ).keys
     type: @string().valid('fullscreen')
     title: @string().allow('',null)
@@ -44,7 +44,7 @@ fullscreenSection = (->
 denormalizedArtwork = (->
   @object().meta(
     name: 'Artwork'
-    isTypeOf: (data) => data.type is 'artwork'
+    isTypeOf: (data) -> data.type is 'artwork'
   ).keys
     type: @string().valid('artwork').default('artwork')
     id: @string().allow('', null)
@@ -95,29 +95,44 @@ denormalizedArtwork = (->
   sections: @array().items([
     imageSection
     videoSection
-    @object().meta(name: 'Callout').keys
+    @object().meta(
+      name: 'Callout'
+      isTypeOf: (data) -> data.type is 'callout'
+    ).keys
       type: @string().valid('callout')
       thumbnail_url: @string().allow('',null)
       text: @string().allow('',null)
       article: @string().allow('',null)
       hide_image: @boolean().default(false)
       top_stories: @boolean().default(false)
-    @object().meta(name: 'Embed').keys
+    @object().meta(
+      name: 'Embed'
+      isTypeOf: (data) -> data.type is 'embed'
+    ).keys
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
       layout: @string().allow('',null)
-    @object().meta(name: 'Text').keys
+    @object().meta(
+      name: 'Text'
+      isTypeOf: (data) -> data.type is 'text'
+    ).keys
       type: @string().valid('text')
       body: @string().allow('', null)
       layout: @string().allow('blockquote', null)
-    @object().meta(name: 'Artworks').keys
+    @object().meta(
+      name: 'Artworks'
+      isTypeOf: (data) -> data.type is 'artworks'
+    ).keys
       type: @string().valid('artworks')
       ids: @array().items(@string().objectid())
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
       artworks: @array().items(denormalizedArtwork).allow(null).default([])
-    @object().meta(name: 'Slideshow').keys
+    @object().meta(
+      name: 'Slideshow'
+      isTypeOf: (data) -> data.type is 'slideshow'
+    ).keys
       type: @string().valid('slideshow')
       items: @array().items [
         imageSection
@@ -128,7 +143,7 @@ denormalizedArtwork = (->
       ]
     @object().meta(
       name: 'ImageSet'
-      isTypeOf: (data) => data.type is 'image_set'
+      isTypeOf: (data) -> data.type is 'image_set'
     ).keys
       type: 'image_set'
       title: @string().allow('',null)
@@ -136,7 +151,7 @@ denormalizedArtwork = (->
       images: @array().items([denormalizedArtwork, imageSection])
     @object().meta(
       name: 'ImageCollection'
-      isTypeOf: (data) => data.type is 'image_collection'
+      isTypeOf: (data) -> data.type is 'image_collection'
     ).keys
       type: 'image_collection'
       layout: @string().allow('overflow_fillwidth', 'column_width', null)
