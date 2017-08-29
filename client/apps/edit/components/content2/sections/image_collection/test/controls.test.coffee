@@ -53,6 +53,7 @@ describe 'ImageCollectionControls', ->
         images: []
         setProgress: @setProgress = sinon.stub()
         onChange: @onChange = sinon.stub()
+        article: new Backbone.Model layout: 'standard'
         channel: { hasFeature: @hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true)}
       }
       @component = ReactDOM.render React.createElement(@Controls, @props), (@$el = $ "<div></div>")[0], =>

@@ -17,23 +17,6 @@ module.exports = React.createClass
   componentWillUnmount: ->
     @autocomplete.remove()
 
-  changeLayout: (e) ->
-    if @props.section.get('type') is 'image_set'
-      @props.section.set 'type', 'image_collection'
-    e = if e.target then e.target.name else e
-    @props.section.set layout: e
-    @props.onChange()
-
-  toggleImageSet: ->
-    if @props.section.get('type') is 'image_collection'
-      @props.section.unset 'layout'
-      @props.section.set 'type', 'image_set'
-    else
-      @props.section.set
-        layout: 'overflow_fillwidth'
-        type: 'image_collection'
-    @props.onChange()
-
   addArtworkFromUrl: (newImages) ->
     @props.section.set images: newImages
     @props.onChange()
@@ -95,32 +78,12 @@ module.exports = React.createClass
 
   render: ->
     SectionControls {
-      editing: @props.editing
       section: @props.section
       channel: @props.channel
-      article: @props.article
+      articleLayout: @props.article.get('layout')
+      onChange: @props.onChange
+      sectionLayouts: true
     },
-      nav { className: 'edit-controls__layout' },
-        a {
-          name: 'overflow_fillwidth'
-          className: 'layout'
-          onClick: @changeLayout
-          'data-active': @props.section.get('layout') is 'overflow_fillwidth'
-        }
-        a {
-          name: 'column_width'
-          className: 'layout'
-          onClick: @changeLayout
-          'data-active': @props.section.get('layout') is 'column_width'
-        }
-        if @props.channel.hasFeature 'image_set'
-          a {
-            name: 'image_set'
-            className: 'layout'
-            onClick: @toggleImageSet
-            'data-active': @props.section.get('type') is 'image_set'
-          }
-
       section { className: 'dashed-file-upload-container' },
         h1 {}, 'Drag & ',
           span { className: 'dashed-file-upload-container-drop' }, 'drop'

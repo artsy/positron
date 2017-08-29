@@ -7,9 +7,9 @@
 React = require 'react'
 _ = require 'underscore'
 Text = React.createFactory require '../sections/text/index.coffee'
-Video = React.createFactory require '../../content/sections/video/index.coffee'
+Video = require '../sections/video/index.jsx'
 Slideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
-Embed = React.createFactory require '../../content/sections/embed/index.coffee'
+Embed = React.createFactory require '../sections/embed/index.coffee'
 Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 Image = React.createFactory require '../../content/sections/image/index.coffee'
@@ -40,6 +40,22 @@ module.exports = React.createClass
     end = _.findLastIndex(types, { type: 'text'})
     return {start: start, end: end}
 
+  sectionProps: ->
+    return {
+      section: @props.section
+      sections: @props.sections
+      editing: @props.editing
+      article: @props.article
+      index: @props.index
+      ref: 'section'
+      setEditing: @setEditing
+      channel: @props.channel
+      isHero: @props.isHero
+      onSetEditing: @props.onSetEditing
+      isStartText: @getContentStartEnd().start is @props.index
+      isEndText: @getContentStartEnd().end is @props.index
+    }
+
   render: ->
     div {
       className: 'edit-section__container'
@@ -62,30 +78,20 @@ module.exports = React.createClass
             onClick: @removeSection
             dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
           }
-      (switch @props.section.get('type')
-        when 'text' then Text
-        when 'video' then Video
-        when 'slideshow' then Slideshow
-        when 'embed' then Embed
-        when 'fullscreen' then Fullscreen
-        when 'image_set' then ImageCollection
-        when 'image_collection' then ImageCollection
-        when 'image' then Image
-      )(
-        section: @props.section
-        sections: @props.sections
-        editing: @props.editing
-        article: @props.article
-        index: @props.index
-        ref: 'section'
-        onClick: @setEditing(on)
-        setEditing: @setEditing
-        channel: @props.channel
-        isHero: @props.isHero
-        onSetEditing: @props.onSetEditing
-        isStartText: @getContentStartEnd().start is @props.index
-        isEndText: @getContentStartEnd().end is @props.index
-      )
+      if @props.section.get('type') is 'video'
+        React.createElement(
+          Video.default, @sectionProps()
+        )
+      else
+        (switch @props.section.get('type')
+          when 'text' then Text
+          when 'slideshow' then Slideshow
+          when 'embed' then Embed
+          when 'fullscreen' then Fullscreen
+          when 'image_set' then ImageCollection
+          when 'image_collection' then ImageCollection
+          when 'image' then Image
+        )( @sectionProps() )
       div {
         className: 'edit-section__container-bg'
         onClick: @onClickOff

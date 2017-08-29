@@ -8,6 +8,7 @@ ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-addons-test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
+Article = require '../../../models/article.coffee'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -22,7 +23,7 @@ describe 'DragDropContainer Default', ->
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
       ImageDisplay = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.coffee'
+        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.coffee'
         ['icons']
       )
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
@@ -114,17 +115,17 @@ describe 'DragDropContainer Vertical', ->
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
       SectionContainer = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content/section_container/index.coffee'
+        resolve __dirname, '../../../apps/edit/components/content2/section_container/index.coffee'
         ['icons']
       )
       SectionTool = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content/section_tool/index.coffee'
+        resolve __dirname, '../../../apps/edit/components/content2/section_tool/index.coffee'
         ['icons']
       )
-      ImageCollection = benv.require resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/index.coffee'
+      ImageCollection = benv.require resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/index.coffee'
       ImageCollection.__set__ 'Controls', sinon.stub()
       ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns(true)
-      SectionContainer.__set__ 'SectionImageCollection', React.createFactory ImageCollection
+      SectionContainer.__set__ 'ImageCollection', React.createFactory ImageCollection
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
       item1 = new Section {
@@ -142,14 +143,15 @@ describe 'DragDropContainer Vertical', ->
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
-        items: new Sections [item1, item2, item3]
+        items: @sections = new Sections [item1, item2, item3]
         layout: 'vertical'
+        article: @article = new Article layout: 'standard'
       }
       @children = [
-        React.createElement(SectionContainer, {key:'child-1', i: 0, section: item1, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionTool, {key:'child-2', i: 1, sections: [item1, item2, item3], channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionContainer, {key:'child-3', i: 2, section: item2, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionContainer, {key:'child-4', i: 3, section: item3, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
+        React.createElement(SectionContainer, {key:'child-1', i: 0, article: @article, section: item1, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
+        React.createElement(SectionTool, {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: sinon.stub().returns(true)}})
+        React.createElement(SectionContainer, {key:'child-3', i: 2, article: @article, section: item2, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
+        React.createElement(SectionContainer, {key:'child-4', i: 3, article: @article, section: item3, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
       ]
       @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], =>
       done()

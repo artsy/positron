@@ -4,37 +4,21 @@
   height auto
   top inherit
   width 100%
+  margin-left -20px
   &__layout
     width 100%
     text-align center
     height 45px
-  .dashed-file-upload-container
-    border-color gray-darker-color
-    transition border-color 0.3s, color 0.3s
-    padding controls-padding
-    avant-garde()
-    background black
-    color white
-    text-align center
-    &:hover, &.is-dragover
-      border-color white
-      span
-        color gray-darker-color
-    &.is-dragover
-      .dashed-file-upload-container-drop
-        color white
-    &:hover
-      border-color gray-darker-color
-      .dashed-file-upload-container-click
-        color white
-    span
-      transition color 0.3s
-    h1
-      font-size default-avant-garde-font-size - 1
+  &__inputs
+    padding 0 20px 20px
     h2
-      font-size small-avant-garde-font-size
-      color gray-darker-color
-      margin-top 10px
+      color white
+      avant-garde()
+      font-size 11px
+      margin-bottom 10px
+    input
+      width 100%
+      margin-bottom 20px
 
 #edit-content .edit-controls a
   display inline-block
