@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.0.2",
-    "@artsy/reaction-force": "^0.3.3",
+    "@artsy/reaction-force": "^0.3.5",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
@@ -125,6 +125,7 @@
     "imagesloaded": "^3.1.8",
     "jadeify": "^4.4.0",
     "jest": "^20.0.4",
+    "jest-coffee-preprocessor": "^1.0.0",
     "jquery": "^2.1.4",
     "jquery-autosize": "^1.18.18",
     "jquery-fillwidth-lite": "^1.0.3",
@@ -138,6 +139,18 @@
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "zombie": "^5.0.5"
+  },
+  "jest" :{
+    "transform": {
+      "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
+    },
+    "moduleFileExtensions": [
+      "coffee",
+      "js",
+      "json",
+      "jsx"
+    ]
   },
   "license": "MIT"
 }

@@ -48,7 +48,7 @@ module.exports = React.createClass
     selectionTarget: null
 
   componentDidMount: ->
-    if $(@props.html).text().length
+    if $(@props.html)?.text().length
       html = Utils.standardizeSpacing @props.html
       html = @stripLinebreaks(html) if @props.stripLinebreaks
       blocksFromHTML = @convertFromHTML(html)
@@ -98,7 +98,7 @@ module.exports = React.createClass
         return originalText
     })(editorState.getCurrentContent())
     html = Utils.standardizeSpacing html
-    html = if html is '<p></p>' then '' else html
+    html = if html in ['<p></p>', '<p><br></p>'] then '' else html
     return html
 
   availableBlocks: ->
@@ -225,11 +225,8 @@ module.exports = React.createClass
     else
       @setState showNav: false
 
-  render: ->
-    Text {
-      layout: @props.layout
-      postscript: @props.type is 'postscript'
-    },
+  renderEditor: ->
+    div { className: 'rich-text--paragraph' },
       if @state.showNav
         Nav {
           styles: Config.inlineStyles(@props.type)
@@ -238,7 +235,6 @@ module.exports = React.createClass
           position: @state.selectionTarget
         }
       div {
-        className: 'rich-text--paragraph'
         onClick: @focus
         onBlur: @onBlur
         onMouseUp: @checkSelection
@@ -257,3 +253,13 @@ module.exports = React.createClass
           handlePastedText: @onPaste
         }
       @printUrlInput()
+
+  render: ->
+    if @props.type is 'caption'
+      @renderEditor()
+    else
+      Text {
+        layout: @props.layout
+        postscript: @props.type is 'postscript'
+      },
+        @renderEditor()
