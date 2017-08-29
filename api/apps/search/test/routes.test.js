@@ -1,6 +1,5 @@
 import sinon from 'sinon'
-import rewire from 'rewire'
-const routes = rewire('../routes')
+import {index, __RewireAPI__ as RewiredRoute} from '../routes'
 
 describe('Search route', () => {
   const req = {
@@ -8,18 +7,28 @@ describe('Search route', () => {
       term: 'apples'
     }
   }
-  const res = {}
+  const res = {send: sinon.stub()}
   const next = () => {}
   const search = sinon.stub()
 
   beforeEach(() => {
-    routes.__set__('search', sinon.stub().returns({
-      client: { search }
-    }))
+    RewiredRoute.__Rewire__('search', {client: {search}})
   })
 
   it('makes a search request', () => {
-    routes.index(req, res, next)
-    console.log(search.args)
+    index(req, res, next)
+    search.args[0][0].body.query.bool.must.multi_match.query.should.equal('apples')
+  })
+
+  it('does not send back results if there is an error', () => {
+    index(req, res, next)
+    search.args[0][1]('error')
+    res.send.called.should.be.false()
+  })
+
+  it('returns results from search', () => {
+    index(req, res, next)
+    search.args[0][1](null, {hits: ['Abigail']})
+    res.send.args[0][0][0].should.equal('Abigail')
   })
 })

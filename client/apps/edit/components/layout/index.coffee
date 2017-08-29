@@ -145,12 +145,11 @@ module.exports = class EditLayout extends Backbone.View
     $('#autolink-status').addClass('searching').html('Linking...')
     $('#edit-content__overlay').addClass('disabled')
     linkableText = @getLinkableText()
-    # searchTypes = ['artist', 'profile', 'show', 'gene', 'city']
-    # searchQueryParam = searchTypes.map((t) -> "type[]=#{t}").join("&")
     async.mapLimit linkableText, 5, ((findText, cb) =>
       text = findText.split('==').join('')
       request
         .get("/api/search?term=#{text}")
+        .set('X-Access-Token': sd.USER?.access_token)
         .end (err, res) =>
           if err or res.body.total < 1
             @article.replaceLink(findText, text)

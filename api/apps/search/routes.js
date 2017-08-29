@@ -2,7 +2,7 @@ import search from '../../lib/elasticsearch.coffee'
 import { matchAll } from './queries'
 
 // GET /api/search
-const index = (req, res, next) => {
+export const index = (req, res, next) => {
   search.client.search({
     body: {
       query: matchAll(req.query.term)
@@ -15,5 +15,3 @@ const index = (req, res, next) => {
     }
   )
 }
-
-export default index

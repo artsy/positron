@@ -132,3 +132,11 @@ describe 'EditLayout', ->
     it 'initializes YoastView with args', ->
       @YoastView.args[0][0].contentField.should.containEql 'Just before the lines start forming...'
       @YoastView.args[0][0].contentField.should.containEql 'Check out this video art'
+
+  describe '#getLinkableText', ->
+  describe '#autolinkText', ->
+    it 'creates links from search', ->
+    it 'removes delims if no good result is found', ->
+  describe '#findValidResults', ->
+  describe '#getNewLinkFromHits', ->
+  describe '#findLinkFromResult', ->

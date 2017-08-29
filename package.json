@@ -140,7 +140,7 @@
     "typeahead.js": "0.10.x",
     "zombie": "^5.0.5"
   },
-  "jest" :{
+  "jest": {
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
