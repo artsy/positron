@@ -79,15 +79,15 @@ describe 'SectionControls', ->
 
     it 'returns 900 if image_set or has overflow layout', ->
       width = @component.getControlsWidth()
-      width.should.eql 940
+      width.should.eql 900
 
       @component.props.section.set 'type', 'image_set'
       width = @component.getControlsWidth()
-      width.should.eql 940
+      width.should.eql 900
 
       @component.props.section.set 'type', 'video'
       width = @component.getControlsWidth()
-      width.should.eql 940
+      width.should.eql 900
 
     it 'returns 1100 if hero section', ->
       @props.isHero = true
@@ -121,39 +121,36 @@ describe 'SectionControls', ->
   describe '#getPositionBottom', ->
 
     it 'when inside component, calculates based on window scroll position', ->
-      @component.props.section.set 'type', 'video'
       @component.setState insideComponent: true
       bottom = @component.getPositionBottom()
       bottom.should.eql 605
 
-    it 'when inside component, adds a 20px buffer for images', ->
-      @component.setState insideComponent: true
-      bottom = @component.getPositionBottom()
-      bottom.should.eql 585
-
     it 'when outside component, returns 100%', ->
-      @component.props.section.set 'type', 'video'
       @component.setState insideComponent: false
       bottom = @component.getPositionBottom()
       bottom.should.eql '100%'
-
-    it 'when outside component, adds a 20px buffer for images', ->
-      @component.setState insideComponent: false
-      bottom = @component.getPositionBottom()
-      bottom.should.eql 'calc(100% + 20px)'
 
 
   describe '#getPositionLeft', ->
 
     it 'calculates width based on window when insideComponent', ->
       left = @component.getPositionLeft()
-      left.should.eql 285
+      left.should.eql 305
 
-    it 'returns 0 if outside component', ->
-      @component.props.section.set 'type', 'video'
+    it 'returns 0 if outside component and standard/feature layout', ->
+      @props.articleLayout = 'standard'
+      component = ReactDOM.render React.createElement(
+        @SectionControls
+        @props
+      ), (@$el = $ "<div></div>")[0], =>
+      component.setState insideComponent: false
+      left = component.getPositionLeft()
+      left.should.eql 0
+
+    it 'returns 20px if outside component and classic layout', ->
       @component.setState insideComponent: false
       left = @component.getPositionLeft()
-      left.should.eql 0
+      left.should.eql '20px'
 
 
   describe 'Section Layouts', ->

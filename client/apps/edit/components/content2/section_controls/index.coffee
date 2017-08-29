@@ -23,11 +23,24 @@ module.exports = React.createClass
     height = if @props.channel.isEditorial() then 95 else 55
     height
 
+  getControlsWidth: ->
+    # used for classic layout only
+    section = @props.section
+    if @props.isHero or
+     (section.get('type') is 'embed' and section.get('layout') is 'overflow')
+        width = 1100
+    else if section.get('layout')?.includes('overflow') or
+     section.get('type') is 'image_set'
+      width = 900
+    else
+      width = 620
+    width
+
   getPositionLeft: ->
     if @state.insideComponent
       return (window.innerWidth / 2) - (@getControlsWidth() / 2) + 55
     else
-      return 0
+      return if @props.articleLayout is 'classic' then '20px' else 0
 
   getPositionBottom: ->
     if @state.insideComponent

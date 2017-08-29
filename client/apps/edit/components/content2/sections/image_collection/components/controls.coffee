@@ -62,6 +62,7 @@ module.exports = React.createClass
       type: 'image'
       width: width
       height: height
+      caption: ''
     }]
     @props.section.set images: newImages
 
@@ -74,9 +75,9 @@ module.exports = React.createClass
       sectionLayouts: true
     },
       React.createElement(
-        FileInput.default, { onUpload: @onUpload, onProgress: @props.setProgress }
+        FileInput.default,
+        { onUpload: @onUpload, onProgress: @props.setProgress }
       )
-
       section { className: 'edit-controls__artwork-inputs' },
         div { className: 'edit-controls__autocomplete-input' },
           input {

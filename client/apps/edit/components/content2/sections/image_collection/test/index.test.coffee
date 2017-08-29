@@ -20,24 +20,13 @@ describe 'ImageCollection', ->
       global.HTMLElement = () => {}
       window = {innerHeight: 800}
       @ImageCollection = benv.require resolve(__dirname, '../index')
-      Artwork = benv.requireWithJadeify(
-        resolve(__dirname, '../components/artwork')
-        ['icons']
-      )
-      Image = benv.requireWithJadeify(
-        resolve(__dirname, '../components/image')
-        ['icons']
-      )
-      RichTextCaption = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text_caption/index')
-        ['icons']
-      )
-      Image.__set__ 'RichTextCaption', React.createFactory RichTextCaption
+      Artwork = benv.require resolve(__dirname, '../components/artwork')
+      Image = benv.require resolve(__dirname, '../components/image')
       Controls = benv.require resolve(__dirname, '../components/controls')
       Controls.__set__ 'Autocomplete', sinon.stub()
       Controls.__set__ 'UrlArtworkInput', sinon.stub()
-      @ImageCollection.__set__ 'Artwork', React.createFactory Artwork
-      @ImageCollection.__set__ 'Image', React.createFactory Image
+      @ImageCollection.__set__ 'Artwork', Artwork
+      @ImageCollection.__set__ 'Image', Image
       @ImageCollection.__set__ 'Controls', React.createFactory Controls
       @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @props = {
@@ -160,13 +149,13 @@ describe 'ImageCollection', ->
       it 'returns expected container and target for overflow_fillwidth', ->
         sizes = @component.getFillWidthSizes()
         sizes.containerSize.should.eql 900
-        # sizes.targetHeight.should.eql 630
+        sizes.targetHeight.should.eql 630
 
       it 'returns expected container and target for column_width', ->
         @component.props.section.set 'layout', 'column_width'
         sizes = @component.getFillWidthSizes()
         sizes.containerSize.should.eql 580
-        # sizes.targetHeight.should.eql 630
+        sizes.targetHeight.should.eql 630
 
       it 'returns expected container and target for image_set with many images', ->
         @component.props.section.unset 'layout'
