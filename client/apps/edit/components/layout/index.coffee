@@ -148,13 +148,12 @@ module.exports = class EditLayout extends Backbone.View
     async.mapLimit linkableText, 5, ((findText, cb) =>
       text = findText.split('==').join('')
       request
-        .get("/api/search?term=#{text}")
+        .get("/api/search?term=#{text}&type=artists,partners,cities")
         .set('X-Access-Token': sd.USER?.access_token)
         .end (err, res) =>
           if err or res.body.total < 1
             @article.replaceLink(findText, text)
             return cb()
-
           valid_results = @findValidResults(res.body.hits)
           if valid_results.length == 0
             @article.replaceLink(findText, text)
@@ -168,7 +167,7 @@ module.exports = class EditLayout extends Backbone.View
       $('#edit-content__overlay').removeClass('disabled')
 
   findValidResults: (hits) ->
-    _.reject(hits, (h) -> h._score < 6.5 || h._source.visible_to_public == false)
+    _.reject(hits, (h) -> h._score < 6 || h._source.visible_to_public == false)
 
   getNewLinkFromHits: (results) ->
     result = results[0]
