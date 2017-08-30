@@ -26,8 +26,7 @@ module.exports = React.createClass
   getControlsWidth: ->
     # used for classic layout only
     section = @props.section
-    if @props.isHero or
-     (section.get('type') is 'embed' and section.get('layout') is 'overflow')
+    if @props.isHero
         width = 1100
     else if section.get('layout')?.includes('overflow') or
      section.get('type') is 'image_set'
