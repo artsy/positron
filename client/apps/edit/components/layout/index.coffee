@@ -179,7 +179,7 @@ module.exports = class EditLayout extends Backbone.View
 
   findLinkFromResult: (result) ->
     switch result._type
-      when "artist" then "https://artsy.net/artist/#{result._source.slug}"
-      when "partner" then "https://artsy.net/#{result._source.slug}"
-      when "city" then "https://artsy.net/shows/#{result._source.slug}"
+      when "artist" then "#{sd.FORCE_URL}/artist/#{result._source.slug}"
+      when "partner" then "#{sd.FORCE_URL}/#{result._source.slug}"
+      when "city" then "#{sd.FORCE_URL}/#{result._source.slug}"
       else null
