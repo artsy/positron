@@ -1,5 +1,5 @@
-import search from '../../lib/elasticsearch.coffee'
-import { matchAll } from './queries'
+import search from 'api/lib/elasticsearch.coffee'
+import { matchAll } from 'api/apps/search/queries'
 
 // GET /api/search
 export const index = (req, res, next) => {

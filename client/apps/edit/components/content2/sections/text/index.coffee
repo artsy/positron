@@ -34,7 +34,13 @@ module.exports = React.createClass
     hasFeatures: @props.channel.hasFeature 'follow'
 
   componentDidMount: ->
+    @props.sections.on 'change:autolink', @editorStateFromProps
     if @props.section.get('body')?.length
+      @editorStateFromProps()
+    else if @props.editing
+      @focus()
+
+  editorStateFromProps: ->
       html = Utils.standardizeSpacing @props.section.get('body')
       unless @props.article.get('layout') is 'classic'
         html = Utils.setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
@@ -44,8 +50,6 @@ module.exports = React.createClass
       @setState
         html: html
         editorState: editorState
-    else if @props.editing
-      @focus()
 
   componentDidUpdate: (prevProps) ->
     if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
