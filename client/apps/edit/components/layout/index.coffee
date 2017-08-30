@@ -163,6 +163,7 @@ module.exports = class EditLayout extends Backbone.View
           @article.replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
           return cb()
     ), (err, result) =>
+      console.log 'herererere'
       @article.sections.trigger 'change:autolink'
       $('#autolink-status').removeClass('searching').html('Auto-Link')
       $('#edit-content__overlay').removeClass('disabled')

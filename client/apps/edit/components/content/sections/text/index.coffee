@@ -50,12 +50,7 @@ module.exports = React.createClass
   componentDidMount: ->
     @props.sections.on 'change:autolink', @editorStateFromProps
     if @props.section.get('body')?.length
-      blocksFromHTML = convertFromRichHtml @props.section.get('body')
-      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
-      editorState = setSelectionToStart(editorState) if @props.editing
-      @setState
-        html: @props.section.get('body')
-        editorState: editorState
+      @editorStateFromProps()
     else if @props.editing
       @focus()
 
@@ -64,6 +59,14 @@ module.exports = React.createClass
       @focus()
     else if !@props.editing and @props.editing != prevProps.editing
       @refs.editor.blur()
+
+  editorStateFromProps: ->
+    blocksFromHTML = convertFromRichHtml @props.section.get('body')
+    editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+    editorState = setSelectionToStart(editorState) if @props.editing
+    @setState
+      html: @props.section.get('body')
+      editorState: editorState
 
   onChange: (editorState) ->
     html = convertToRichHtml editorState
