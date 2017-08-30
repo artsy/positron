@@ -43,7 +43,6 @@ describe 'ImageCollectionControls', ->
       UrlArtworkInput.__set__ 'setState', sinon.stub()
       @Controls.__set__ 'UrlArtworkInput', React.createFactory UrlArtworkInput
       @Controls.__set__ 'Autocomplete', sinon.stub()
-      @Controls.__set__ 'gemup', @gemup = sinon.stub()
       @props = {
         section: new Backbone.Model {
           type: 'image_collection'
@@ -67,7 +66,7 @@ describe 'ImageCollectionControls', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'overflow_fillwidth'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'column_width'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'image_set'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'dashed-file-upload-container'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql '<input type="file"'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search for artwork by title"'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Add artwork url"'
 
@@ -106,16 +105,12 @@ describe 'ImageCollectionControls', ->
     r.find(@component, 'layout').length.should.eql 2
     $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'image_set'
 
-  it 'saves image info after upload', (done) ->
-    @component.setState = sinon.stub()
-    @component.upload target: files: ['foo']
-    @gemup.args[0][1].done('fooza')
-    setTimeout =>
-      @component.props.section.get('images')[0].type.should.equal 'image'
-      @component.props.section.get('images')[0].url.should.equal 'fooza'
-      @component.props.section.get('images')[0].width.should.equal 120
-      @component.props.section.get('images')[0].height.should.equal 90
-      done()
+  it 'saves image info after upload', ->
+    @component.onUpload 'http://image.jpg', 400, 800
+    @component.props.section.get('images')[0].type.should.equal 'image'
+    @component.props.section.get('images')[0].url.should.equal 'http://image.jpg'
+    @component.props.section.get('images')[0].width.should.equal 400
+    @component.props.section.get('images')[0].height.should.equal 800
 
   it 'saves an artwork by url', ->
     input = r.find(@component, 'bordered-input')[1]

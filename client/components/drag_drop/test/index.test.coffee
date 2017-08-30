@@ -22,9 +22,8 @@ describe 'DragDropContainer Default', ->
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
-      ImageDisplay = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.coffee'
-        ['icons']
+      ImageDisplay = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.jsx'
       )
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
@@ -33,9 +32,10 @@ describe 'DragDropContainer Default', ->
         onDragEnd: @onDragEnd = sinon.stub()
         items: [ {image: {url: 'image1.com'}}, {image: {url: 'image2.com'}} ]
       }
+      article = new Article layout: 'standard'
       @children = [
-        React.createElement(ImageDisplay, {key:'child-1', i: 0, image: {url: 'image1.com'}, removeItem: sinon.stub()})
-        React.createElement(ImageDisplay, {key:'child-2', i: 1, image: {url: 'image2.com'}, removeItem: sinon.stub()})
+        React.createElement(ImageDisplay.default, {key:'child-1', i: 0, article: article, dimensions: [], image: {url: 'image1.com', caption: ''}, removeItem: sinon.stub()})
+        React.createElement(ImageDisplay.default, {key:'child-2', i: 1, article: article, dimensions: [], image: {url: 'image2.com', caption: ''}, removeItem: sinon.stub()})
       ]
       @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], =>
       done()
@@ -130,15 +130,15 @@ describe 'DragDropContainer Vertical', ->
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
       item1 = new Section {
           type: 'image_collection'
-          images: [{image: {url: 'image1.com'}}]
+          images: [{type: 'image', url: 'image1.com', caption: ''}]
       }
       item2 = new Section {
         type: 'image_collection'
-        images: [{image: {url: 'image2.com'}}]
+        images: [{type: 'image', url: 'image1.com', caption: ''}]
       }
       item3 = new Section {
         type: 'image_collection'
-        images: [{image: {url: 'image3.com'}}]
+        images: [{type: 'image', url: 'image1.com', caption: ''}]
       }
       @props = {
         isDraggable: true

@@ -1,7 +1,6 @@
 @import '../../../stylus_lib'
 
 .edit-section--image-collection
-  position relative
   &.imageset-block // scrolling edit view for imageset
     .image-collection__list
       overflow hidden
@@ -15,13 +14,23 @@
           margin-right 0
     &--long .drag-container
       width 300%
+  .edit-section__remove
+    position absolute
+    top -12px
+    right -12px
+    height 30px
+    width 30px
+    circle
+      transition all .3s
+    &:hover
+      cursor pointer
+      circle
+        fill red-color
+  [data-target=true] .edit-section__remove
+    display none
+
 
 .image-collection
-  &__placeholder
-    text-align center
-    color gray-darker-color
-    height 200px
-    line-height 200px
   &__img-container
     position relative
     margin-bottom 30px
@@ -43,28 +52,17 @@
       justify-content space-between
     .drag-target
       max-width 100%
-    .edit-section-remove
-      &:hover svg
-        fill-color red-color
-      svg
-        fill-color black
 
 .edit-section--image-collection
   .edit-controls
-    padding 5px 20px 20px 20px
-    margin-left -20px
-    width calc(100% \+ 40px)
     &__artwork-inputs
-      clearfix()
-      color white
       padding-top controls-padding
-      text-align left
-      border-top 1px solid gray-darkest-color
       input
         display inline-block
         vertical-align top
         width 100%
         max-width 100%
+        margin 0
     &__byurl-input
       position relative
       display inline-block
@@ -97,17 +95,12 @@
           background-size cover
           margin-right 10px
           float left
+      .tt-dropdown-menu
+        margin-top -20px
 
 .edit-section__container[data-layout=column_width]
   .image-collection__list .drag-container
     flex-direction column
-
-.standard, .feature
-  .edit-section--image-collection
-    .rich-text--caption__input
-      margin-top 5px
-      Unica s14
-      color gray-dark-color
 
 .standard
   .edit-section__container[data-type=image_set][data-editing=true]
@@ -118,7 +111,5 @@
     max-width feature-overflow-w-margin
 
 .classic
-  .edit-section--image-collection .edit-controls.sticky
-    margin-left 0
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width classic-overflow-w-margin
