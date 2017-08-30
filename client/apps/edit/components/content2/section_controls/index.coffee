@@ -27,7 +27,7 @@ module.exports = React.createClass
     # used for classic layout only
     sectionType = @props.section.get('type')
     sectionLayout = @props.section.get('layout')
-    if @props.isHero or (sectionType is 'embed' and sectionLayout is 'overflow')
+    if @props.isHero
       width = 1100
     else if sectionLayout?.includes('overflow') or sectionType is 'image_set'
       width = 940
