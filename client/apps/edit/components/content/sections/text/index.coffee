@@ -28,7 +28,6 @@ ButtonStyle = React.createFactory require '../../../../../../components/rich_tex
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Channel = require '../../../../../../models/channel.coffee'
 
-
 module.exports = React.createClass
   displayName: 'SectionText'
 
@@ -48,13 +47,9 @@ module.exports = React.createClass
     @hasFeatures = @hasFollow
 
   componentDidMount: ->
+    @props.sections.on 'change:autolink', @editorStateFromProps
     if @props.section.get('body')?.length
-      blocksFromHTML = convertFromRichHtml @props.section.get('body')
-      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
-      editorState = setSelectionToStart(editorState) if @props.editing
-      @setState
-        html: @props.section.get('body')
-        editorState: editorState
+      @editorStateFromProps()
     else if @props.editing
       @focus()
 
@@ -63,6 +58,14 @@ module.exports = React.createClass
       @focus()
     else if !@props.editing and @props.editing != prevProps.editing
       @refs.editor.blur()
+
+  editorStateFromProps: ->
+    blocksFromHTML = convertFromRichHtml @props.section.get('body')
+    editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(decorators()))
+    editorState = setSelectionToStart(editorState) if @props.editing
+    @setState
+      html: @props.section.get('body')
+      editorState: editorState
 
   onChange: (editorState) ->
     html = convertToRichHtml editorState
@@ -100,7 +103,7 @@ module.exports = React.createClass
     selection = getSelectionDetails(@state.editorState)
     # only merge a section if cursor is in first character of first block
     if selection.isFirstBlock and selection.anchorOffset is 0 and
-     @props.sections.models[@props.index - 1].get('type') is 'text'
+    @props.sections.models[@props.index - 1].get('type') is 'text'
       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
       @props.sections.models[@props.index - 1].destroy()
       newHTML = mergeIntoHTML + @state.html
@@ -119,7 +122,7 @@ module.exports = React.createClass
     # or cursor is arrowing back from first character of first block,
     # jump to adjacent section
     if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
-     selection.isFirstBlock and selection.isFirstCharacter and direction is -1
+    selection.isFirstBlock and selection.isFirstCharacter and direction is -1
       @props.onSetEditing @props.index + direction
     else if e.key in ['ArrowLeft', 'ArrowRight']
       # manually move cursor to make up for draft's missing l/r arrow fallbacks
@@ -244,10 +247,10 @@ module.exports = React.createClass
       selectionTarget: null
       pluginType: null
     @onChange RichUtils.toggleLink(
-        newEditorState
-        newEditorState.getSelection()
-        entityKey
-      )
+      newEditorState
+      newEditorState.getSelection()
+      entityKey
+    )
 
   removeLink: (e) ->
     e?.preventDefault()
