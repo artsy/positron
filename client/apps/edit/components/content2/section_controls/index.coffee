@@ -25,31 +25,27 @@ module.exports = React.createClass
 
   getControlsWidth: ->
     # used for classic layout only
-    sectionType = @props.section.get('type')
-    sectionLayout = @props.section.get('layout')
-    if @props.isHero or (sectionType is 'embed' and sectionLayout is 'overflow')
-      width = 1100
-    else if sectionLayout?.includes('overflow') or sectionType is 'image_set'
-      width = 940
+    section = @props.section
+    if @props.isHero
+        width = 1100
+    else if section.get('layout')?.includes('overflow') or
+     section.get('type') is 'image_set'
+      width = 900
     else
       width = 620
     width
 
   getPositionLeft: ->
-    left = 0
     if @state.insideComponent
-      left = (window.innerWidth / 2) - (@getControlsWidth() / 2) + 55
-    left
+      return (window.innerWidth / 2) - (@getControlsWidth() / 2) + 55
+    else
+      return if @props.articleLayout is 'classic' then '20px' else 0
 
   getPositionBottom: ->
-    isImages = @props.section.get('type') in ['image_set', 'image_collection']
     if @state.insideComponent
-      bottom = window.innerHeight - $(@refs.controls).height() - @getHeaderSize()
-      if isImages
-        bottom = bottom - 20
+      return window.innerHeight - $(@refs.controls).height() - @getHeaderSize()
     else
-      bottom = if isImages then 'calc(100% + 20px)' else '100%'
-    bottom
+      return '100%'
 
   isScrollingOver: ($section) ->
     window.scrollY + @getHeaderSize() > $section.offset().top - $(@refs.controls).height()

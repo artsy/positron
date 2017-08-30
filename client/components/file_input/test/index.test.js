@@ -1,11 +1,17 @@
 import FileInput from '../index.jsx';
+import gemup from 'gemup';
 import React from 'react';
 import { mount } from 'enzyme';
+
+jest.mock('gemup', () => {
+  return jest.fn()
+})
 
 describe('FileInput', () => {
   beforeAll(() => {
     global.window.$ = jest.fn()
     global.window.$.ajax = jest.fn()
+    global.alert = jest.fn()
   })
 
   it('renders drag-drop container', () => {
@@ -21,7 +27,15 @@ describe('FileInput', () => {
       <FileInput />
     );
     const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch('Up to 30mb')
+    expect(container.text()).toMatch('Up to 30MB')
+  })
+
+  it('renders props.sizeLimit', () => {
+    const wrapper = mount(
+      <FileInput sizeLimit={10} />
+    );
+    const container = wrapper.find('.file-input')
+    expect(container.text()).toMatch('Up to 10MB')
   })
 
   it('prompts to replace file if hasImage', () => {
@@ -49,13 +63,11 @@ describe('FileInput', () => {
   })
 
   it('calls upload when a file is selected', () => {
-    const spy = jest.fn()
-    FileInput.prototype.uploadFile = (e) => { spy(e) }
     const wrapper = mount(
       <FileInput />
     );
-    const file = new Blob([], {type : 'img/jpg', name: 'name'})
+    const file = new Blob([], {type: 'img/jpg'})
     wrapper.find('input').simulate('change', {target: {files: [file]}})
-    expect(spy).toHaveBeenCalled()
+    expect(gemup).toHaveBeenCalled()
   })
 })
