@@ -1,6 +1,6 @@
 import express from 'express'
-import { index } from './routes'
-import { setUser, authenticated, adminOnly } from '../users/routes.coffee'
+import { index } from 'api/apps/search/routes'
+import { setUser, authenticated, adminOnly } from 'api/apps/users/routes.coffee'
 
 const app = module.exports = express()
 
