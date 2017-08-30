@@ -28,7 +28,6 @@ ButtonStyle = React.createFactory require '../../../../../../components/rich_tex
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Channel = require '../../../../../../models/channel.coffee'
 
-
 module.exports = React.createClass
   displayName: 'SectionText'
 

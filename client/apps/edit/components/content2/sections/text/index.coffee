@@ -41,15 +41,15 @@ module.exports = React.createClass
       @focus()
 
   editorStateFromProps: ->
-      html = Utils.standardizeSpacing @props.section.get('body')
-      unless @props.article.get('layout') is 'classic'
-        html = Utils.setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
-      blocksFromHTML = Utils.convertFromRichHtml html
-      editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
-      editorState = Utils.setSelectionToStart(editorState) if @props.editing
-      @setState
-        html: html
-        editorState: editorState
+    html = Utils.standardizeSpacing @props.section.get('body')
+    unless @props.article.get('layout') is 'classic'
+      html = Utils.setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
+    blocksFromHTML = Utils.convertFromRichHtml html
+    editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
+    editorState = Utils.setSelectionToStart(editorState) if @props.editing
+    @setState
+      html: html
+      editorState: editorState
 
   componentDidUpdate: (prevProps) ->
     if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
