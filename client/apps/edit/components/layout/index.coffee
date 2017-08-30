@@ -163,7 +163,6 @@ module.exports = class EditLayout extends Backbone.View
           @article.replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
           return cb()
     ), (err, result) =>
-      console.log 'herererere'
       @article.sections.trigger 'change:autolink'
       $('#autolink-status').removeClass('searching').html('Auto-Link')
       $('#edit-content__overlay').removeClass('disabled')
@@ -175,7 +174,7 @@ module.exports = class EditLayout extends Backbone.View
     result = results[0]
     name = result._source.name
     link = @findLinkFromResult(result)
-    "<a href='#{link}'>#{name}</a>"
+    return "<a href='#{link}'>#{name}</a>" if link
 
   findLinkFromResult: (result) ->
     switch result._type
