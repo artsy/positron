@@ -84,6 +84,7 @@ describe 'Section Text', ->
       @artistProps = {
         editing: true
         section: @sections.models[2]
+        sections: @sections
         channel: channel
         article: article
         hasFeatures: true

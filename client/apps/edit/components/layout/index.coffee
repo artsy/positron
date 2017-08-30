@@ -4,6 +4,8 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
+async = require 'async'
+request = require 'superagent'
 
 module.exports = class EditLayout extends Backbone.View
 
@@ -93,13 +95,14 @@ module.exports = class EditLayout extends Backbone.View
     setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
 
   events:
-    'click #edit-tabs > a:not(#edit-publish)': 'toggleTabs'
+    'click #edit-tabs > a:not(#edit-publish):not(#autolink-button)': 'toggleTabs'
     'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
     'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
     'dragenter .dashed-file-upload-container': 'toggleDragover'
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'blur #edit-title': 'prefillThumbnailTitle'
+    'click #autolink-button' : 'autolinkText'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()
@@ -133,3 +136,50 @@ module.exports = class EditLayout extends Backbone.View
   toggleDragover: (e) ->
     $(e.currentTarget).closest('.dashed-file-upload-container')
       .toggleClass 'is-dragover'
+
+  getLinkableText: ->
+    fullText = @getBodyText()
+    fullText.match(/==(\S[^==]*\S)==/ig)
+
+  autolinkText: ->
+    $('#autolink-status').addClass('searching').html('Linking...')
+    $('#edit-content__overlay').addClass('disabled')
+    linkableText = @getLinkableText()
+    async.mapLimit linkableText, 5, ((findText, cb) =>
+      text = findText.split('==').join('')
+      request
+        .get("/api/search?term=#{text}")
+        .set('X-Access-Token': sd.USER?.access_token)
+        .end (err, res) =>
+          if err or res.body.total < 1
+            @article.replaceLink(findText, text)
+            return cb()
+
+          valid_results = @findValidResults(res.body.hits)
+          if valid_results.length == 0
+            @article.replaceLink(findText, text)
+            return cb()
+
+          @article.replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
+          return cb()
+    ), (err, result) =>
+      console.log 'herererere'
+      @article.sections.trigger 'change:autolink'
+      $('#autolink-status').removeClass('searching').html('Auto-Link')
+      $('#edit-content__overlay').removeClass('disabled')
+
+  findValidResults: (hits) ->
+    _.reject(hits, (h) -> h._score < 6.5 || h._source.visible_to_public == false)
+
+  getNewLinkFromHits: (results) ->
+    result = results[0]
+    name = result._source.name
+    link = @findLinkFromResult(result)
+    "<a href='#{link}'>#{name}</a>"
+
+  findLinkFromResult: (result) ->
+    switch result._type
+      when "artist" then "#{sd.FORCE_URL}/artist/#{result._source.slug}"
+      when "partner" then "#{sd.FORCE_URL}/#{result._source.slug}"
+      when "city" then "#{sd.FORCE_URL}/#{result._source.slug}"
+      else null

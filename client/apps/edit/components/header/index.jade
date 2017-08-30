@@ -8,6 +8,8 @@ header#edit-header
       a#edit-admin-button.avant-garde-button Admin
     a#edit-publish.avant-garde-button( data-disabled='true' )
       = article.get('published') ? 'Unpublish' : 'Publish'
+    if sd.CURRENT_CHANNEL.get('type') === 'editorial'
+      a#autolink-button.avant-garde-button Auto-Link
   #edit-header-right
     span#edit-error.attention
     a#edit-delete.avant-garde-button Delete

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.0.2",
-    "@artsy/reaction-force": "^0.3.5",
+    "@artsy/reaction-force": "^0.3.6",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
@@ -140,7 +140,7 @@
     "typeahead.js": "0.10.x",
     "zombie": "^5.0.5"
   },
-  "jest" :{
+  "jest": {
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"

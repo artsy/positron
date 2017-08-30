@@ -17,6 +17,9 @@
     color white
     text-align center
     padding 20px
+    display flex
+    flex-direction column
+    justify-content center
     &:hover, &.is-dragover
       border-color white
       span
@@ -32,7 +35,10 @@
       transition color 0.3s
     h1
       font-size default-avant-garde-font-size - 1
+      margin-bottom 10px
     h2
       font-size small-avant-garde-font-size
       color gray-darker-color
-      margin-top 10px
+
+.edit-controls__inputs .file-input__upload-container h2
+  margin 0
