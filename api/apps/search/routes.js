@@ -5,7 +5,7 @@ const { NODE_ENV } = process.env
 
 // GET /api/search
 export const index = (req, res, next) => {
-  const env = NODE_ENV === 'production' ? 'production' : 'production'
+  const env = NODE_ENV === 'production' ? 'production' : 'staging'
   let index = ''
   if (req.query.type) {
     index = _.map(req.query.type.split(','), term => {
