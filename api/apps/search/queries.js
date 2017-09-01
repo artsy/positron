@@ -5,7 +5,7 @@ export const matchAll = (term) => {
         multi_match: {
           query: term,
           type: 'best_fields',
-          fields: ['name.*', 'alternate_names.*'],
+          fields: ['name.*^4', 'alternate_names.*'],
           fuzziness: 2
         }
       },

@@ -5,7 +5,7 @@ const { NODE_ENV } = process.env
 
 // GET /api/search
 export const index = (req, res, next) => {
-  const env = NODE_ENV === 'production' ? 'production' : 'staging'
+  const env = NODE_ENV === 'production' ? 'production' : 'production'
   let index = ''
   if (req.query.type) {
     index = _.map(req.query.type.split(','), term => {
@@ -15,6 +15,11 @@ export const index = (req, res, next) => {
   search.client.search({
     index,
     body: {
+      indices_boost: {
+        artists_production: 4,
+        tags_production: 3,
+        partners_production: 2
+      },
       query: matchAll(req.query.term)
     }},
     (error, response) => {
