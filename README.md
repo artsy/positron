@@ -84,6 +84,23 @@ make s
 ```
 - Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer with the default partner gallery channel (David Zwirner).
 
+
+Debugging
+---
+
+### Server side
+Start the server using
+```
+make dev
+```
+This will start the server on port `3005` with `inspect` option.
+
+- In your Chrome go to: [Chrome Inspect](chrome://inspect)
+- Under Remote Target now you should see `./index.js`, click on `inspect` link below it which will open a Chrome developer tools.
+
+Now anywhere in your server side code you can put `debugger` and you should be able to debug.
+
+
 Additional docs
 ---
 

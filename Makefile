@@ -8,6 +8,10 @@
 
 BIN = node_modules/.bin
 
+# Start the server with inspect
+dev:
+	DEBUG=app,client,api node --inspect ./index.js
+
 # Start the server
 s:
 	DEBUG=app,client,api node ./index.js
