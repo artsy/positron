@@ -9,11 +9,11 @@ Meta
 ---
 
 * __State:__ production
-* __Production:__ [https://www.artsy.net/](https://www.artsy.net/) | [Heroku](https://dashboard.heroku.com/apps/positron-production/resources)
-* __Staging:__ [https://staging.artsy.net/](https://staging.artsy.net/) | [Heroku](https://dashboard.heroku.com/apps/positron-staging/resources)
+* __Production:__ [https://writer.artsy.net/](https://writer.artsy.net/) | [Heroku](https://dashboard.heroku.com/apps/positron-production/resources)
+* __Staging:__ [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Heroku](https://dashboard.heroku.com/apps/positron-staging/resources)
 * __Github:__ [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 * __CI:__ [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
-* __Point People:__ [@craigspaeth](https://github.com/craigspaeth), [@kanaabe](https://github.com/kanaabe)
+* __Point People:__ [@craigspaeth](https://github.com/craigspaeth), [@kanaabe](https://github.com/kanaabe), [@eessex](https://github.com/eessex)
 
 [![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master)
 
@@ -83,6 +83,23 @@ brew services start elasticsearch
 make s
 ```
 - Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer with the default partner gallery channel (David Zwirner).
+
+
+Debugging
+---
+
+### Server side
+Start the server using
+```
+make dev
+```
+This will start the server on port `3005` with `inspect` option.
+
+- In your Chrome go to: [Chrome Inspect](chrome://inspect)
+- Under Remote Target now you should see `./index.js`, click on `inspect` link below it which will open a Chrome developer tools.
+
+Now anywhere in your server side code you can put `debugger` and you should be able to debug.
+
 
 Additional docs
 ---

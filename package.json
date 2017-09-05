@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "make s",
+    "dev": "make dev",
     "test": "make test",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh"
@@ -140,7 +141,7 @@
     "typeahead.js": "0.10.x",
     "zombie": "^5.0.5"
   },
-  "jest" :{
+  "jest": {
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
