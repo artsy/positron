@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "make s",
+    "dev": "make dev",
     "test": "make test",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh"

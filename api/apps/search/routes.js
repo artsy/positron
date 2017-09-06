@@ -15,6 +15,11 @@ export const index = (req, res, next) => {
   search.client.search({
     index,
     body: {
+      indices_boost: {
+        artists_production: 4,
+        tags_production: 3,
+        partners_production: 2
+      },
       query: matchAll(req.query.term)
     }},
     (error, response) => {
