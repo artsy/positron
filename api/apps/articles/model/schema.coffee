@@ -30,15 +30,16 @@ videoSection = (->
     background_color: @string().allow('',null)
 ).call Joi
 
-fullscreenSection = (->
+featureSection = (->
   @object().meta(
-    name: 'Fullscreen'
-    isTypeOf: (data) -> data.type is 'fullscreen'
+    name: 'FeatureHeader'
+    isTypeOf: (data) -> data.type in ['fullscreen', 'split', 'text']
   ).keys
-    type: @string().valid('fullscreen')
+    type: @string().valid('fullscreen', 'split', 'text')
     title: @string().allow('',null)
-    intro: @string().allow('',null)
-    url: @string().allow(null)
+    intro: @string().allow('',null) # TODO - Remove after backfill
+    deck: @string().allow('',null)
+    url: @string().allow('',null)
 ).call Joi
 
 denormalizedArtwork = (->
@@ -91,7 +92,7 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null).default(null)
+  hero_section: @alternatives().try(videoSection, imageSection, featureSection).allow(null).default(null)
   sections: @array().items([
     imageSection
     videoSection
