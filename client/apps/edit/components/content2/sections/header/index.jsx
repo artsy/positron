@@ -11,6 +11,7 @@ const IconRemove = components.Icon.Remove
 export default class SectionHeader extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       progress: null
     }
@@ -23,6 +24,7 @@ export default class SectionHeader extends Component {
   onChangeHero = (key, value) => {
     const heroSection = this.props.article.heroSection
     heroSection.set(key, value)
+    this.onChange('hero_section', heroSection.attributes)
   }
 
   onChangeLeadParagraph = (html) => {
@@ -53,21 +55,33 @@ export default class SectionHeader extends Component {
     }
   }
 
+  renderFileUpload(prompt) {
+    return (
+      <FileInput
+        type='simple'
+        onUpload={this.onUpload}
+        prompt={prompt}
+        onProgress={this.onProgress} />
+    )
+  }
+
   renderImage(article) {
-    let prompt = 'Add Image or Video'
-    if (article.heroSection.get('type') === 'fullscreen') {
-      prompt = 'Add Background'
-    }
+    const isFullscreen = article.heroSection.get('type') === 'fullscreen'
+    const hasUrl = article.heroSection.get('url')
+    const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
+
     if (article.get('layout') === 'feature') {
-      if(!article.heroSection.get('url')) {
+      if(!hasUrl) {
         return (
           <div className='edit-header__image-container'>
-            <FileInput
-              type='simple'
-              onUpload={this.onUpload}
-              prompt={prompt}
-              onProgress={this.onProgress} />
+            {this.renderFileUpload(prompt)}
             {this.renderProgress()}
+          </div>
+        )
+      } else if (isFullscreen && hasUrl) {
+        return (
+          <div className='edit-header__image-container has-image'>
+            {this.renderFileUpload('Change Background')}
           </div>
         )
       } else {

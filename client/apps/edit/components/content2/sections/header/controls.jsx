@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import components from '@artsy/reaction-force/dist/components/publishing/index'
 
+const IconFullscreen = components.Icon.LayoutFullscreen
+const IconSplit = components.Icon.LayoutSplit
+const IconText = components.Icon.LayoutText
+
 export default class FeatureHeaderControls extends Component {
   constructor (props) {
     super(props)
@@ -14,7 +18,8 @@ export default class FeatureHeaderControls extends Component {
   }
 
   onChangeLayout = (e) => {
-    this.props.onChange('type', e.target.name)
+    const type = e.target.name ? e.target.name : $(e.target).closest('a').attr('name')
+    this.props.onChange('type', type)
   }
 
   renderLayouts() {
@@ -24,16 +29,19 @@ export default class FeatureHeaderControls extends Component {
           <a
             onClick={this.onChangeLayout}
             name='text'>
+            <IconText />
             Default
           </a>
           <a
             onClick={this.onChangeLayout}
             name='fullscreen'>
+            <IconFullscreen />
             Overlay
           </a>
           <a
             onClick={this.onChangeLayout}
             name='split'>
+            <IconSplit />
             Split
           </a>
         </div>

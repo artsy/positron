@@ -1,6 +1,7 @@
 
 .edit-header
   position relative
+  min-height calc(100vh \- 95px)
   .DraftEditor-root
     position relative
   .public-DraftEditorPlaceholder-inner
@@ -58,7 +59,7 @@
   position absolute
   z-index 1
   right 20px
-  top 20px
+  top 15px
   AvantGarde('s13')
   text-transform uppercase
   text-align right
@@ -82,8 +83,13 @@
       border-right 1px solid gray-color
       background white
       cursor pointer
+      display flex
+      flex-direction column
+      align-items center
       &:last-child
         border-right none
+      svg
+        margin 0 10px 10px 10px
 
 .classic .edit-header
   padding-top 10px
@@ -101,7 +107,8 @@
 
 .feature .edit-header
   [data-type=split]
-      max-height calc(100vh \- 95px)
+    max-height calc(100vh \- 115px)
+    padding-top 20px
     .file-input.simple
       max-height 100%
     .edit-header__image-container
@@ -111,20 +118,31 @@
       bottom 0
     .feature__deck
       max-width 100%
+  &.split
+    .edit-header__remove
+      right -8px
+      top -8px
+  &.fullscreen
+    .edit-header--controls-open
+      color white
   [data-type=fullscreen]
     max-height calc(100vh \- 95px)
     .file-input.simple
       height inherit
       min-height 0
       max-height 100%
-      width 200px
+      width 235px
       z-index 1
       padding 0
       h1
         font-size 13px
+      h2
+        display none
+    .edit-header__image-container
+      top 10px
+      left 0
     .file-input__upload-container
       align-items flex-start
-      left -20px
       background none
     .public-DraftEditorPlaceholder-inner
       color white
