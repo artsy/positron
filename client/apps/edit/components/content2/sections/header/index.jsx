@@ -43,16 +43,24 @@ export default class SectionHeader extends Component {
     this.onChangeHero('url', '')
   }
 
+  renderTitle(article) {
+    return (
+      <PlainText
+        content={article.attributes.title}
+        onChange={this.onChange}
+        name='title'
+        placeholder='Title' />
+    )
+  }
+
   renderFeatureDeck(article) {
-    if (article.get('layout') === 'feature') {
-      return (
-        <PlainText
-          content={article.heroSection.get('deck')}
-          onChange={this.onChangeHero}
-          name='deck'
-          placeholder='Deck (optional)' />
-      )
-    }
+    return (
+      <PlainText
+        content={article.heroSection.get('deck')}
+        onChange={this.onChangeHero}
+        name='deck'
+        placeholder='Deck (optional)' />
+    )
   }
 
   renderFileUpload(prompt) {
@@ -61,94 +69,94 @@ export default class SectionHeader extends Component {
         type='simple'
         onUpload={this.onUpload}
         prompt={prompt}
+        video={true}
         onProgress={this.onProgress} />
     )
   }
 
   renderImage(article) {
     const isFullscreen = article.heroSection.get('type') === 'fullscreen'
-    const hasUrl = article.heroSection.get('url')
+    const hasUrl = article.heroSection.get('url').length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
 
-    if (article.get('layout') === 'feature') {
-      if(!hasUrl) {
-        return (
-          <div className='edit-header__image-container'>
-            {this.renderFileUpload(prompt)}
-            {this.renderProgress()}
-          </div>
-        )
-      } else if (isFullscreen && hasUrl) {
-        return (
-          <div className='edit-header__image-container has-image'>
-            {this.renderFileUpload('Change Background')}
-          </div>
-        )
-      } else {
-        return (
-          <div
-            className='edit-header__remove'
-            onClick={this.onRemoveImage}>
-            <IconRemove />
-          </div>
-        )
-      }
-    }
-  }
-
-  renderProgress() {
-    if (this.state.progress) {
+    if (isFullscreen && hasUrl) {
       return (
-        <div className='upload-progress-container'>
-          <div
-            className='upload-progress'
-            style={{width: (this.state.progress * 100) + '%'}}>
-          </div>
+        <div className='edit-header__image-container has-image'>
+          {this.renderFileUpload('Change Background')}
+        </div>
+      )
+    } else if(hasUrl) {
+      return (
+        <div
+          className='edit-header__remove'
+          onClick={this.onRemoveImage}>
+          <IconRemove />
+        </div>
+      )
+    } else {
+      return (
+        <div className='edit-header__image-container'>
+          {this.renderFileUpload(prompt)}
+          {this.state.progress && this.renderProgress()}
         </div>
       )
     }
   }
 
-  renderLeadParagraph(article) {
-    if (article.get('layout') === 'classic') {
-      return (
-        <Paragraph
-          html={article.get('lead_paragraph')}
-          onChange={this.onChangeLeadParagraph}
-          placeholder='Lead Paragraph (optional)'
-          type='lead_paragraph'
-          linked={false}
-          stripLinebreaks={true}
-          layout={article.get('layout')} />
-      )
-    }
+  renderProgress() {
+    return (
+      <div className='upload-progress-container'>
+        <div
+          className='upload-progress'
+          style={{width: (this.state.progress * 100) + '%'}}>
+        </div>
+      </div>
+    )
   }
 
-  renderLayoutControls(article) {
-    if (article.get('layout') === 'feature') {
-      return (
-        <Controls onChange={this.onChangeHero} />
-      )
-    }
+  renderLeadParagraph(article) {
+    return (
+      <Paragraph
+        html={article.get('lead_paragraph')}
+        onChange={this.onChangeLeadParagraph}
+        placeholder='Lead Paragraph (optional)'
+        type='lead_paragraph'
+        linked={false}
+        stripLinebreaks={true}
+        layout={article.get('layout')} />
+    )
   }
 
   render() {
     const { article } = this.props
-    const headerClass = ' ' + article.heroSection.get('type') || ' text'
-    return(
-      <div className={'edit-header' + headerClass}>
-        {this.renderLayoutControls(article)}
-        <Header article={article.attributes}>
-          <PlainText
-            content={article.attributes.title}
-            onChange={this.onChange}
-            name='title'
-            placeholder='Title' />
-          {this.renderFeatureDeck(article)}
-          {this.renderImage(article)}
-          {this.renderLeadParagraph(article)}
-        </Header>
-      </div>
-    )
+    const isFeature = article.get('layout') === 'feature'
+    const isClassic = article.get('layout') === 'classic'
+
+    let headerClass = ''
+    if (isFeature) {
+      headerClass = ' ' + article.heroSection.get('type') || ' text'
+    }
+    if (isClassic) {
+      return (
+        <div className={'edit-header' + headerClass}>
+          <Header article={article.attributes}>
+            {this.renderTitle(article)}
+            {this.renderLeadParagraph(article)}
+          </Header>
+        </div>
+      )
+    } else {
+      return (
+        <div className={'edit-header' + headerClass}>
+          {isFeature && <Controls onChange={this.onChangeHero} />}
+          <Header article={article.attributes}>
+            <span>Missing Vertical</span>
+            {this.renderTitle(article)}
+            {isFeature && this.renderFeatureDeck(article)}
+            {isFeature && this.renderImage(article)}
+          </Header>
+        </div>
+      )
+    }
   }
 }

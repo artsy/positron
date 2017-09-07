@@ -67,7 +67,7 @@ export default class FileInput extends Component {
           <span className='file-input__upload-container-drop'>Drop</span>
           <span> or </span>
           <span className='file-input__upload-container-click'>Click</span>
-          <span> to {hasImage ? 'Replace' : 'Upload'}</span>
+          <span> to {this.props.hasImage ? 'Replace' : 'Upload'}</span>
         </h1>
       )
     }

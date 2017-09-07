@@ -1,7 +1,7 @@
+@import './controls'
 
 .edit-header
   position relative
-  min-height calc(100vh \- 95px)
   .DraftEditor-root
     position relative
   .public-DraftEditorPlaceholder-inner
@@ -14,7 +14,7 @@
       color red-color
   .upload-progress
     min-width 0
-  .feature__deck
+  div[class^='feature_header__Deck']
     min-width 30%
     max-width 50%
   div[class^='feature_header__TextAsset']
@@ -55,41 +55,6 @@
 #edit-content .edit-header a
   background-image none
 
-.edit-header--controls
-  position absolute
-  z-index 1
-  right 20px
-  top 15px
-  AvantGarde('s13')
-  text-transform uppercase
-  text-align right
-  &-open
-    cursor pointer
-  &__bg
-    position fixed
-    top 0
-    left 0
-    right 0
-    bottom 0
-    z-index -1
-  &__layout
-    border 2px solid
-    display flex
-    AvantGarde('s11')
-    margin-top 5px
-    text-align center
-    a
-      padding 20px
-      border-right 1px solid gray-color
-      background white
-      cursor pointer
-      display flex
-      flex-direction column
-      align-items center
-      &:last-child
-        border-right none
-      svg
-        margin 0 10px 10px 10px
 
 .classic .edit-header
   padding-top 10px
@@ -101,11 +66,17 @@
     line-height 26px
     text-align left
     margin-top 10px
+    max-width 580px
+    margin 10px auto 30px auto
 
 .standard .edit-header
   padding-top 10px
+  div[class^='standard_header__Vertical'] span
+    color gray-dark-color
 
 .feature .edit-header
+  div[class^='feature_header__Vertical'] span
+    color gray-dark-color
   [data-type=split]
     max-height calc(100vh \- 115px)
     padding-top 20px
@@ -116,7 +87,7 @@
       left 0
       right 0
       bottom 0
-    .feature__deck
+    div[class^='feature_header__Deck']
       max-width 100%
   &.split
     .edit-header__remove
@@ -126,7 +97,7 @@
     .edit-header--controls-open
       color white
   [data-type=fullscreen]
-    max-height calc(100vh \- 95px)
+    height calc(100vh \- 95px)
     .file-input.simple
       height inherit
       min-height 0
@@ -145,4 +116,6 @@
       align-items flex-start
       background none
     .public-DraftEditorPlaceholder-inner
+      color white
+    div[class^='feature_header__Vertical'] span
       color white

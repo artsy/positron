@@ -25,12 +25,12 @@ module.exports = React.createClass
 
   render: ->
     div {className: 'edit-section-layout ' + @props.article.get('layout')},
-      # if @props.article.get('layout') is 'classic' and
-      #  (@props.article.get('hero_section') != null or @props.channel.hasFeature('hero'))
-      #   HeroSection {
-      #     section: @props.article.heroSection
-      #     channel: @props.channel
-      #   }
+      if @props.article.get('layout') is 'classic' and
+       (@props.article.get('hero_section') != null or @props.channel.hasFeature('hero'))
+        HeroSection {
+          section: @props.article.heroSection
+          channel: @props.channel
+        }
       React.createElement(
         Header.default,
         { article: @props.article, saveArticle: @saveArticle }
