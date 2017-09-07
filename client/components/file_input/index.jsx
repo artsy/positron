@@ -47,7 +47,7 @@ export default class FileInput extends Component {
     })
   }
 
-  getAccepted () {
+  getAccepted() {
     const accept = ['.jpg', '.jpeg', '.png', '.gif']
     if (this.props.video) {
       accept.push('.mp4')
@@ -55,23 +55,36 @@ export default class FileInput extends Component {
     return accept.toString()
   }
 
-  render () {
-    const { label, hasImage, sizeLimit } = this.props
+  renderUploadPrompt() {
+    if (this.props.prompt) {
+      return (
+        <h1>{this.props.prompt}</h1>
+      )
+    } else {
+      return (
+        <h1>
+          <span>Drag & </span>
+          <span className='file-input__upload-container-drop'>Drop</span>
+          <span> or </span>
+          <span className='file-input__upload-container-click'>Click</span>
+          <span> to {hasImage ? 'Replace' : 'Upload'}</span>
+        </h1>
+      )
+    }
+  }
+
+  render() {
+    const { label, hasImage, sizeLimit, type } = this.props
+    const typeClass = type ? ' ' + type : ''
     return (
-      <div className='file-input'>
+      <div className={'file-input' + typeClass}>
         {label && <h2>{label}</h2>}
         <div className='file-input__upload-container'>
-          <h1>
-            <span>Drag & </span>
-            <span className='file-input__upload-container-drop'>Drop</span>
-            <span> or </span>
-            <span className='file-input__upload-container-click'>Click</span>
-            <span> to {hasImage ? 'Replace' : 'Upload'}</span>
-          </h1>
+          {this.renderUploadPrompt()}
           <h2>Up to {sizeLimit ? sizeLimit.toString() : '30'}MB</h2>
           <input type='file' onChange={this.uploadFile} accept={this.getAccepted()} />
         </div>
       </div>
-    );
+    )
   }
 }
