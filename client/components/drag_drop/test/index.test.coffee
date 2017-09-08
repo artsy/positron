@@ -19,6 +19,13 @@ describe 'DragDropContainer Default', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'

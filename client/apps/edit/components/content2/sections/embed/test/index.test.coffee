@@ -16,6 +16,13 @@ describe 'SectionEmbed', ->
   beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @SectionEmbed = benv.require resolve __dirname, '../index'
       @component = ReactDOM.render React.createElement(@SectionEmbed,
         section: new Section

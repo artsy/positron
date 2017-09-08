@@ -32,7 +32,7 @@ describe('Feature Header Controls', () => {
     expect(wrapper.find(Text).length).toBe(1)
   })
 
-  it('opens the menu on click', () => {
+  it('changes the layout click', () => {
     const wrapper = mount(
       <Controls {...props} />
     )
