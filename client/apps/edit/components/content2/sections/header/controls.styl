@@ -1,0 +1,35 @@
+.edit-header--controls
+  position absolute
+  z-index 1
+  right 20px
+  top 15px
+  AvantGarde('s13')
+  text-transform uppercase
+  text-align right
+  &-open
+    cursor pointer
+  &__bg
+    position fixed
+    top 0
+    left 0
+    right 0
+    bottom 0
+    z-index -1
+  &__layout
+    border 2px solid
+    display flex
+    AvantGarde('s11')
+    margin-top 5px
+    text-align center
+    a
+      padding 20px
+      border-right 1px solid gray-color
+      background white
+      cursor pointer
+      display flex
+      flex-direction column
+      align-items center
+      &:last-child
+        border-right none
+      svg
+        margin 0 10px 10px 10px

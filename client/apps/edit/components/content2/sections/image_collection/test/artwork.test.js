@@ -30,7 +30,9 @@ describe('Artwork', () => {
       <Artwork {...props} />
     )
     expect(wrapper.html()).toMatch('class="image-collection__img-container" style="width:200px;opacity:1;"')
-    expect(wrapper.html()).toMatch('src="https://d32dm0rphc51dk.cloudfront.net/OBKPvGFAx1qgakm5x7ik0Q/larger.jpg"')
+    expect(wrapper.html()).toMatch(
+      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FOBKPvGFAx1qgakm5x7ik0Q%2Flarger.jpg&amp;width=1200&amp;quality=95'
+      )
     expect(wrapper.html()).toMatch('<span class="name">Gerald Machona</span>')
     expect(wrapper.html()).toMatch('<em>Keep calm and unti the noose I</em>')
     expect(wrapper.html()).toMatch('<span class="date">2015</span>')

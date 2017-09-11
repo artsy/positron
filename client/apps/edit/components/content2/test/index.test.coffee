@@ -18,14 +18,21 @@ describe 'EditContent', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @EditContent = benv.require resolve(__dirname, '../index.coffee')
       HeroSection = benv.require resolve(__dirname, '../../content/sections/hero/index.coffee')
       HeroSection.__set__ 'SectionContainer', sinon.stub()
       HeroSection.__set__ 'SectionTool', sinon.stub()
-      HeaderSection = benv.require resolve(__dirname, '../sections/header/index.coffee')
       SectionList = @SectionList = sinon.stub()
+      Header = benv.require resolve(__dirname, '../sections/header')
       @EditContent.__set__ 'HeroSection', React.createFactory HeroSection
-      @EditContent.__set__ 'HeaderSection', React.createFactory HeaderSection
+      @EditContent.__set__ 'Header', Header
       @EditContent.__set__ 'SectionList', SectionList
       @article = new Article _.extend fixtures().articles,
         layout: 'classic'
