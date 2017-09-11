@@ -1,25 +1,21 @@
 benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
+React = require 'react'
+ReactDOM = require 'react-dom'
+ReactTestUtils = require 'react-addons-test-utils'
+ReactDOMServer = require 'react-dom/server'
+Draft = require 'draft-js'
+{ EditorState, Modifier } = require 'draft-js'
 
-# FIXME: Invariant Violation: dangerouslyReplaceNodeWithMarkup(...): Cannot render markup in a worker thread. Make sure `window` and `document` are available globally before requiring React when unit testing or use ReactDOMServer.renderToString() for server rendering.
-describe.skip 'RichTextParagraph', ->
+describe 'RichTextParagraph', ->
 
   beforeEach (done) ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
-        React: require 'react'
-        ReactDOM: require 'react-dom'
-        ReactTestUtils: require 'react-addons-test-utils'
-        ReactDOMServer: require 'react-dom/server'
-        Draft: require 'draft-js'
       window.jQuery = $
-      @r =
-        find: ReactTestUtils.findRenderedDOMComponentWithClass
-        simulate: ReactTestUtils.Simulate
-      @d =
-        EditorState: Draft.EditorState
+      global.Node = () => {}
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}
       @RichTextParagraph = benv.require resolve __dirname, '../components/input_paragraph'
@@ -39,12 +35,13 @@ describe.skip 'RichTextParagraph', ->
           focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
           focusOffset: 7
         })
-        newEditorState = @d.EditorState.acceptSelection(@component.state.editorState, newSelection)
+        newEditorState = EditorState.acceptSelection(@component.state.editorState, newSelection)
         @component.onChange newEditorState
         done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
+    done()
 
   it 'Shows a placeholder if provided and empty', ->
     $(@rendered).text().should.eql 'Lead paragraph (optional)'
@@ -54,18 +51,21 @@ describe.skip 'RichTextParagraph', ->
     @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Can toggle bold styles by default', ->
+    @component.setState = sinon.stub()
     @component.handleKeyCommand('bold')
-    @component.state.html.should.eql '<p><strong>Here is</strong> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
+    @component.setState.args[0][0].html.should.eql '<p><strong>Here is</strong> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Can toggle italic styles by default', ->
+    @component.setState = sinon.stub()
     @component.handleKeyCommand('italic')
-    @component.state.html.should.eql '<p><em>Here is</em> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
+    @component.setState.args[0][0].html.should.eql '<p><em>Here is</em> &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
-  it 'Ignores unsuppored styles', ->
+  it 'Ignores unsuppored styles', (done) ->
     @component.handleKeyCommand('underline')
     @component.state.html.should.eql '<p>Here is &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
+    done()
 
-  it 'Can override default styles via props.styleMap', ->
+  it 'Can override default styles by providing props.styleMap', (done) ->
     @props.styleMap = ['bold']
     @props.text = '<p>Here is the a paragraph for <b>this</b> article.</p>'
     component = ReactDOM.render React.createElement(@RichTextParagraph, @props), (@$el = $ "<div></div>")[0]
@@ -77,18 +77,16 @@ describe.skip 'RichTextParagraph', ->
       focusKey: component.state.editorState.getCurrentContent().getFirstBlock().key
       focusOffset: 7
     })
-    newEditorState = @d.EditorState.acceptSelection(component.state.editorState, newSelection)
+    newEditorState = EditorState.acceptSelection(component.state.editorState, newSelection)
     component.onChange newEditorState
-
     component.handleKeyCommand('italic')
-    component.state.html.should.eql '<p>Here is the a paragraph for <strong>this</strong> article.</p>'
-
-    component.handleKeyCommand('bold')
-    component.state.html.should.eql '<p><strong>Here is</strong> the a paragraph for <strong>this</strong> article.</p>'
+    component.state.html.should.not.containEql '<em>'
+    done()
 
   it 'Strips unsuported html out of pasted text', ->
+    @component.setState = sinon.stub()
     @component.onPaste 'Available at: Espacio Valverde Galleries Sector, Booth 9F01', '<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><h1><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></h1>'
-    @component.state.html.should.eql '<p>Available at: Espacio Valverde • Galleries Sector, Booth 9F01 &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
+    @component.setState.args[0][0].html.should.eql '<p>Available at: Espacio Valverde • Galleries Sector, Booth 9F01 &nbsp;the <em>lead</em> paragraph for &nbsp;<strong>this</strong> article.</p>'
 
   it 'Sends converted html to parent onChange', ->
     @component.onChange @component.state.editorState
