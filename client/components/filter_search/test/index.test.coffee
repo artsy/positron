@@ -9,12 +9,24 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-# FIXME: ReferenceError: Bloodhound is not defined
-describe.skip 'FilterSearch Article', ->
+
+describe 'FilterSearch Article', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+          remote: {
+            url: ''
+          }
+          get: sinon.stub().yields(
+            [[{id: '456', thumbnail_title: 'finding nemo'}]]
+          )
+        )
+      Bloodhound.tokenizers = { obj: { whitespace: sinon.stub() } }
       window.jQuery = $
       require 'typeahead.js'
       FilterSearch = benv.requireWithJadeify(
@@ -40,7 +52,6 @@ describe.skip 'FilterSearch Article', ->
         setTimeout =>
           sinon.stub @component, 'setState'
           sinon.stub @component, 'addAutocomplete'
-          sinon.stub(@component.engine, 'get').yields [[{id: '456', thumbnail_title: 'finding nemo'}]]
           done()
 
   afterEach ->
@@ -63,12 +74,22 @@ describe.skip 'FilterSearch Article', ->
     @component.props.searchResults.args[0][0][0].id.should.equal '456'
     @component.props.searchResults.args[0][0][0].thumbnail_title.should.equal 'finding nemo'
 
-# FIXME:
-describe.skip 'FilterSearch Tag', ->
+
+describe 'FilterSearch Tag', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (@Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+          remote: {
+            url: ''
+          }
+          get: sinon.stub().yields [[{id: '123', name: 'Berlin'}]]
+        )
+      Bloodhound.tokenizers = { obj: { whitespace: sinon.stub() } }
       window.jQuery = $
       require 'typeahead.js'
       FilterSearch = benv.requireWithJadeify(
@@ -96,7 +117,6 @@ describe.skip 'FilterSearch Tag', ->
         setTimeout =>
           sinon.stub @component, 'setState'
           sinon.stub @component, 'addAutocomplete'
-          sinon.stub(@component.engine, 'get').yields [[{id: '123', name: 'Berlin'}]]
           done()
 
   afterEach ->

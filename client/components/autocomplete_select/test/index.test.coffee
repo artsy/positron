@@ -6,8 +6,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 
-# FIXME: Invariant Violation: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in.
-describe.skip 'AutocompleteSelect', ->
+describe 'AutocompleteSelect', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -18,7 +17,7 @@ describe.skip 'AutocompleteSelect', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
+      AutocompleteSelect = mod = benv.require resolve __dirname, '../index'
       mod.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
