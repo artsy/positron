@@ -1,86 +1,121 @@
+@import './controls'
+
 .edit-header
-  padding-top 60px
-  .public-DraftEditorPlaceholder-root
-    position absolute
-    top 1em
-    color gray-dark-color
-  &__title
+  position relative
+  .DraftEditor-root
     position relative
-    width 100%
-    .edit-required
+  .public-DraftEditorPlaceholder-inner
+    position absolute
+    top 0
+    color gray-dark-color
+  .plain-text[name='title']
+    .public-DraftEditorPlaceholder-inner:after
+      content ' *'
+      color red-color
+  .upload-progress
+    min-width 0
+  div[class^='feature_header__Deck']
+    min-width 30%
+    max-width 50%
+  div[class^='feature_header__TextAsset']
+    position relative
+    min-height 440px
+  &__image-container
+    position absolute
+    top 20px
+    left 20px
+    right 20px
+    bottom 20px
+  .file-input.simple
+    height 100%
+    max-height 400px
+    min-height 400px
+    .file-input__upload-container
       position absolute
       top 0
-      width 100%
-      z-index -1
-      &::after
-        position relative
-    textarea
-      width 100%
-      margin-bottom -20px
-      &::placeholder
-        color gray-dark-color
-  &__vertical
-    Unica s19, medium
-    &.placeholder
-      color gray-dark-color
+      left 0
+      right 0
+      bottom 0
+      h1:before
+        content '+ '
+        font-size 1.5em
+  &__remove
+    width 30px
+    height 30px
+    position absolute
+    right 8px
+    top 8px
+    circle
+      transition all .3s
+    &:hover
+      cursor pointer
+      circle
+        fill red-color
 
-.standard
-  .edit-header
-    padding-left 20px
-    padding-right 20px
-    &__title
-      .edit-required::after
-        left 235px
-      textarea
-        Garamond s50
-    &__author
-      padding-top 60px
-      padding-bottom 55px
-      Unica s19, medium
-      display flex
-      p
-        margin-right 30px
-        &::before
-          content ''
-          display inline-block
-          width 10px
-          height 10px
-          border-radius 50%
-          margin-right 10px
-          background-color black
-    &__lead-paragraph
-      font-style italic
-      Garamond s23
-      max-width standard-overflow-w-margin
-      .rich-text--paragraph
-        margin 0 auto
-        max-width standard-body-w-margin
+#edit-content .edit-header a
+  background-image none
 
-.classic
-  .edit-header
-    max-width classic-overflow-width
-    margin 0 auto
-    &__title
-      .edit-required
-        text-align center
-        &::after
-          left 100px
-      textarea
-        text-align center
-        garamond l-headline
-    &__author
-      max-width classic-body-width
-      text-align center
-      margin 35px auto 0 auto
-      padding controls-padding 0
-      .author
-        avant-garde m-headline
-      .date
-        avant-garde s-headline
-        line-height 25px
-        color gray-dark-color
-    &__lead-paragraph
-      garamond l-body
-      max-width classic-body-width
-      margin 20px auto 0 auto
 
+.classic .edit-header
+  padding-top 10px
+  .plain-text .public-DraftEditorPlaceholder-inner
+    left 0
+    right 0
+  .rich-text--paragraph
+    font-size 20px
+    line-height 26px
+    text-align left
+    margin-top 10px
+    max-width 580px
+    margin 10px auto 30px auto
+
+.standard .edit-header
+  padding-top 10px
+  div[class^='standard_header__Vertical'] span
+    color gray-dark-color
+
+.feature .edit-header
+  div[class^='feature_header__Vertical'] span
+    color gray-dark-color
+  [data-type=split]
+    max-height calc(100vh \- 115px)
+    padding-top 20px
+    .file-input.simple
+      max-height 100%
+    .edit-header__image-container
+      top 0
+      left 0
+      right 0
+      bottom 0
+    div[class^='feature_header__Deck']
+      max-width 100%
+  &.split
+    .edit-header__remove
+      right -8px
+      top -8px
+  &.fullscreen
+    .edit-header--controls-open
+      color white
+  [data-type=fullscreen]
+    height calc(100vh \- 95px)
+    .file-input.simple
+      height inherit
+      min-height 0
+      max-height 100%
+      width 235px
+      z-index 1
+      padding 0
+      h1
+        font-size 13px
+      h2
+        display none
+    .edit-header__image-container
+      top 10px
+      left 0
+    .file-input__upload-container
+      align-items flex-start
+      background none
+    .public-DraftEditorPlaceholder-inner
+      color white
+    div[class^='feature_header__Vertical'] span
+      color white

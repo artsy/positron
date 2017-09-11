@@ -22,6 +22,13 @@ describe 'SectionContainer', ->
       $.fn.position = sinon.stub().returns(top: 800)
       $.fn.height = sinon.stub().returns(300)
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../index'), ['icons']
       )

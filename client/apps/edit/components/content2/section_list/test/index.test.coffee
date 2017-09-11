@@ -18,6 +18,13 @@ describe 'SectionList', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @SectionList = benv.require resolve(__dirname, '../index')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
       Paragraph = benv.require resolve(
