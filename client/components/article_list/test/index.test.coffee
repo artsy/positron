@@ -51,8 +51,9 @@ describe 'ArticleList', ->
         sinon.stub @component, 'setState'
         done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
+    done()
 
   it 'renders an initial set of articles', ->
     $(@rendered).html().should.containEql 'Game of Thrones'

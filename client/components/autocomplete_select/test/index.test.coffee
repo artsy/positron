@@ -6,8 +6,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 
-# FIXME: Invariant Violation: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in.
-describe.skip 'AutocompleteSelect', ->
+describe 'AutocompleteSelect', ->
 
   beforeEach (done) ->
     benv.setup =>
@@ -18,7 +17,7 @@ describe.skip 'AutocompleteSelect', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
-      { AutocompleteSelect } = mod = benv.require resolve __dirname, '../index'
+      AutocompleteSelect = mod = benv.require resolve __dirname, '../index'
       mod.__set__ 'request', get: sinon.stub().returns
         set: sinon.stub().returns
           end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
@@ -31,13 +30,13 @@ describe.skip 'AutocompleteSelect', ->
         idToFetch: '123'
         fetchUrl: (id) -> 'https://api.artsy.net/search/' + id
         resObject: (res) -> id: res.id, value: res.value
-      @rendered = ReactDOMServer.renderToString React.createElement(AutocompleteSelect, props)
       @component = ReactDOM.render React.createElement(AutocompleteSelect, props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @setState = sinon.stub @component, 'setState'
         done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
+    done()
 
   it 'renders fetched items', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Andy Warhol'

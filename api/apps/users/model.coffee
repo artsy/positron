@@ -92,6 +92,6 @@ save = (user, accessToken, callback) ->
 #
 @present = (data) =>
   _.extend data,
-    id: data._id?.toString()
+    id: data?._id?.toString()
     _id: undefined
     access_token: undefined

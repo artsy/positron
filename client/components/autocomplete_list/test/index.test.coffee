@@ -19,6 +19,7 @@ describe 'AutocompleteList', ->
           initialize: ->
           ttAdapter: ->
         )
+      window.jQuery = $
       $.fn.typeahead = sinon.stub()
       @AutocompleteList = benv.require resolve __dirname, '../index'
       @AutocompleteList.__set__ 'request', get: sinon.stub().returns
@@ -27,6 +28,11 @@ describe 'AutocompleteList', ->
         end: sinon.stub().yields(null, { id: '123', value: 'Andy Warhol'})
       set.onCall(1).returns
         end: sinon.stub().yields(null, { id: '456', value: 'Mary Heilmann'})
+      DragContainer = benv.require resolve __dirname, '../../drag_drop/index'
+      DragTarget = benv.require resolve __dirname, '../../drag_drop/drag_target'
+      # DragContainer = benv.require resolve __dirname, '../../drag_drop/index'
+      DragContainer.__set__ 'DragTarget', React.createFactory DragTarget
+      @AutocompleteList.__set__ 'DragContainer', React.createFactory DragContainer
       @props =
         url: 'https://api.artsy.net/search?term=%QUERY'
         placeholder: 'Search for an artist...'
@@ -52,16 +58,18 @@ describe 'AutocompleteList', ->
   it 'initializes autocomplete with args', ->
     @Bloodhound.args[0][0].remote.url.should.equal 'https://api.artsy.net/search?term=%QUERY'
 
-  it 'selects an item', ->
+  it 'selects an item', (done) ->
     @component.onSelect {}, { id: '1234', value: 'Yayoi Kusama' }
     @setState.args[0][0].items[0].value.should.equal 'Andy Warhol'
     @setState.args[0][0].items[2].value.should.equal 'Yayoi Kusama'
     @selected.callCount.should.equal 1
+    done()
 
-  it 'removes an item', ->
+  it 'removes an item', (done) ->
     @component.removeItem({ id: '123', value: 'Andy Warhol' })({preventDefault: ->})
     @setState.args[0][0].items.length.should.equal 1
     @removed.callCount.should.equal 1
+    done()
 
   it 'Accepts an inline option', (done) ->
     @props.inline = true
