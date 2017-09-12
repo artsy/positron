@@ -27,8 +27,6 @@ cloneDeep = require 'lodash.clonedeep'
 
 @mongoFetch = (input, callback) ->
   { query, limit, offset, sort, count } = retrieve.toQuery input
-  console.log(query)
-  
   cursor = db.articles
     .find(query)
     .skip(offset or 0)
