@@ -9,12 +9,15 @@ Tag = require '../tags/model'
 Author = require '../authors/model'
 { setUser } = require '../users/routes.coffee'
 User = require '../users/model.coffee'
-resolvers = require './resolvers'
+resolvers = require './resolvers.js'
 
 app = module.exports = express()
 
 relatedArticles =
-  relatedArticles: array().items(object(Article.inputSchema))
+  relatedArticles: array().items(object(Article.inputSchema)).meta(
+    args: Article.querySchema
+    resolve: resolvers.articles
+  )
 
 schema = joiql
   query:
