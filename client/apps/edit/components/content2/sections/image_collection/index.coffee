@@ -81,6 +81,37 @@ module.exports = React.createClass
         imagesetClass = ' imageset-block imageset-block--long'
     imagesetClass
 
+  renderImages: (images) ->
+    images.map (item, i) =>
+      if item.type is 'artwork'
+        React.createElement(
+          Artwork.default, {
+            key: i
+            index: i
+            artwork: item
+            removeItem: @removeItem
+            editing:  @props.editing
+            imagesLoaded: @state.imagesLoaded
+            dimensions: @state.dimensions
+            article: @props.article
+          }
+        )
+      else
+        React.createElement(
+          Image.default, {
+            index: i
+            key: i
+            image: item
+            removeItem: @removeItem
+            editing:  @props.editing
+            dimensions: @state.dimensions
+            imagesLoaded: @state.imagesLoaded
+            article: @props.article
+            section: @props.section
+            onChange: @onChange
+          }
+        )
+
   render: ->
     images = @props.section.get 'images' or []
     hasImages = images.length > 0
@@ -125,40 +156,16 @@ module.exports = React.createClass
                   images: images
                   layout: @props.section.get('layout')
               }
-          else
+          else if images.length > 1
             DragContainer {
               items: images
               onDragEnd: @onDragEnd
               isDraggable: @props.editing
               dimensions: @state.dimensions
             },
-              images.map (item, i) =>
-                if item.type is 'artwork'
-                  React.createElement(
-                    Artwork.default, {
-                      key: i
-                      index: i
-                      artwork: item
-                      removeItem: @removeItem
-                      editing:  @props.editing
-                      imagesLoaded: @state.imagesLoaded
-                      dimensions: @state.dimensions
-                      article: @props.article
-                    }
-                  )
-                else
-                  React.createElement(
-                    Image.default, {
-                      index: i
-                      key: i
-                      image: item
-                      removeItem: @removeItem
-                      editing:  @props.editing
-                      dimensions: @state.dimensions
-                      imagesLoaded: @state.imagesLoaded
-                      article: @props.article
-                      onChange: @onChange
-                    }
-                  )
+              @renderImages(images)
+          else
+            @renderImages(images)
+
         else
           div { className: 'edit-section__placeholder' }, 'Add images and artworks above'

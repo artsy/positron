@@ -40,7 +40,8 @@ export default class ImageCollectionImage extends Component {
   }
 
   getContainerWidth(dimensions) {
-    if (dimensions && dimensions[this.props.index]) {
+    if (dimensions && dimensions[this.props.index] &&
+      this.props.section.get('layout') !== 'fillwidth') {
       return dimensions[this.props.index].width
     } else {
       return 'auto'
@@ -56,7 +57,7 @@ export default class ImageCollectionImage extends Component {
           width: this.getContainerWidth(dimensions),
           opacity: imagesLoaded ? 1 : 0
         }} >
-        <Image image={image}>
+        <Image image={image} layout={this.props.article.get('layout')}>
           {this.renderCaption(image)}
         </Image>
         {this.renderRemoveButton(image)}
