@@ -6,42 +6,41 @@ const IconImageFullscreen = components.Icon.ImageFullscreen
 export default class SectionControls extends Component {
   constructor (props) {
     super(props)
-
-    this.state = {
-      insideComponent: false
-    }
+    this.state = { insideComponent: false }
   }
 
   componentDidMount() {
     this.setInsideComponent()
-    return window.addEventListener('scroll', this.setInsideComponent)
+    window.addEventListener('scroll', this.setInsideComponent)
   }
 
   componentWillUnmount() {
-    return window.removeEventListener('scroll', this.setInsideComponent)
+    window.removeEventListener('scroll', this.setInsideComponent)
   }
 
   setInsideComponent = () => {
     const insideComponent = this.insideComponent()
+
     if (insideComponent !== this.state.insideComponent) {
-      return this.setState({ insideComponent })
+      this.setState({ insideComponent })
     }
   }
 
   getHeaderSize() {
+    // Add extra space for channels with Yoast
     return  this.props.channel.isEditorial() ? 95 : 55
   }
 
   getControlsWidth() {
     // used for classic layout only
     const { section } = this.props
+    const isOverflow = section.get('layout').includes('overflow') ||
+     section.get('type') === 'image_set'
+
     if (this.props.isHero) {
       return 1100
-    } else if (section.get('layout').includes('overflow') ||
-     (section.get('type') === 'image_set')) {
-      return 900
     } else {
-      return 620
+      return isOverflow ? 900 : 620
     }
   }
 
@@ -49,11 +48,7 @@ export default class SectionControls extends Component {
     if (this.state.insideComponent) {
       return ((window.innerWidth / 2) - (this.getControlsWidth() / 2)) + 55
     } else {
-      if (this.props.articleLayout === 'classic') {
-        return '20px'
-      } else {
-        return 0
-      }
+      return this.props.articleLayout === 'classic' ? '20px' : 0
     }
   }
 
@@ -78,8 +73,9 @@ export default class SectionControls extends Component {
   }
 
   insideComponent = () => {
-    const $section = $(this.refs.controls) ? $(this.refs.controls).closest('section') : false
     let insideComponent = false
+    const $section = $(this.refs.controls) ? $(this.refs.controls).closest('section') : false
+
     if ($section) {
       if ((this.isScrollingOver($section) && !this.isScrolledPast($section)) ||
        (this.props.isHero && !this.isScrolledPast($section))) {
@@ -95,9 +91,7 @@ export default class SectionControls extends Component {
       this.forceUpdate()
     }
     this.props.section.set({ layout })
-    if (this.props.onChange) {
-      return this.props.onChange()
-    }
+    this.props.onChange && this.props.onChange()
   }
 
   toggleImageSet = () => {
@@ -106,52 +100,49 @@ export default class SectionControls extends Component {
       this.props.section.set('type', 'image_set')
       this.forceUpdate()
     }
-    if (this.props.onChange) {
-      return this.props.onChange()
-    }
+    this.props.onChange && this.props.onChange()
   }
 
   hasImageSet() {
-    const sectionisImage = ['image_set', 'image_collection'].includes(
-      this.props.section.get('type')
-    )
-    return this.props.channel.hasFeature('image_set') && sectionisImage
+    return this.sectionIsImage() && this.props.channel.hasFeature('image_set')
+  }
+
+  sectionIsImage() {
+    return this.props.section.get('type').includes('image')
   }
 
   renderSectionLayouts(sectionLayouts, section) {
-    if (sectionLayouts) {
-      return (
-        <nav className='edit-controls__layout'>
+    return (
+      <nav className='edit-controls__layout'>
+        <a
+          name='overflow_fillwidth'
+          className='layout'
+          onClick={() => this.changeLayout('overflow_fillwidth')}
+          data-active={section.get('layout') === 'overflow_fillwidth'} />
+        <a
+          name='column_width'
+          className='layout'
+          onClick={() => this.changeLayout('column_width')}
+          data-active={section.get('layout') === 'column_width'} />
+        { this.sectionIsImage() &&
+          this.props.articleLayout === 'feature' &&
           <a
-            name='overflow_fillwidth'
+            name='fillwidth'
             className='layout'
-            onClick={() => this.changeLayout('overflow_fillwidth')}
-            data-active={section.get('layout') === 'overflow_fillwidth'} />
+            onClick={() => this.changeLayout('fillwidth')}
+            data-active={section.get('layout') === 'fillwidth'}>
+            <IconImageFullscreen fill={'white'} />
+          </a>
+        }
+        { this.hasImageSet() &&
           <a
-            name='column_width'
+            name='image_set'
             className='layout'
-            onClick={() => this.changeLayout('column_width')}
-            data-active={section.get('layout') === 'column_width'} />
-          {
-            this.props.articleLayout === 'feature' &&
-            <a
-              name='fillwidth'
-              className='layout'
-              onClick={() => this.changeLayout('fillwidth')}
-              data-active={section.get('layout') === 'fillwidth'}>
-              <IconImageFullscreen fill={'white'} />
-            </a>
-          }
-          { this.hasImageSet() &&
-            <a
-              name='image_set'
-              className='layout'
-              onClick={this.toggleImageSet}
-              data-active={section.get('type') === 'image_set'} />
-          }
-        </nav>
-      )
-    }
+            onClick={this.toggleImageSet}
+            data-active={section.get('type') === 'image_set'} />
+        }
+      </nav>
+    )
   }
 
   render() {
@@ -162,14 +153,14 @@ export default class SectionControls extends Component {
     return (
       <div
         ref='controls'
-        className={'edit-controls' + isSticky}
+        className={ 'edit-controls' + isSticky }
         style={{
-          color: 'white',
           position: insideComponent ? 'fixed' : 'absolute',
           bottom: this.getPositionBottom(),
           left: articleLayout === 'classic' ? this.getPositionLeft() : ''
       }}>
-        {this.renderSectionLayouts(sectionLayouts, section)}
+        { sectionLayouts &&
+          this.renderSectionLayouts(sectionLayouts, section) }
         <div className='edit-controls__inputs'>
           {this.props.children}
         </div>

@@ -90,7 +90,7 @@ module.exports = React.createClass
           when 'fullscreen' then Fullscreen
           when 'image_set' then ImageCollection
           when 'image_collection' then ImageCollection
-          when 'image' then ImageCollection
+          when 'image' then Image
         )( @sectionProps() )
       div {
         className: 'edit-section__container-bg'

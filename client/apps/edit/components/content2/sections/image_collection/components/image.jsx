@@ -57,7 +57,7 @@ export default class ImageCollectionImage extends Component {
           width: this.getContainerWidth(dimensions),
           opacity: imagesLoaded ? 1 : 0
         }} >
-        <Image image={image} layout={this.props.article.get('layout')}>
+        <Image image={image}>
           {this.renderCaption(image)}
         </Image>
         {this.renderRemoveButton(image)}
