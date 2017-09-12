@@ -1,10 +1,9 @@
 React = require 'react'
 _ = require 'underscore'
 HeroSection = React.createFactory require '../content/sections/hero/index.coffee'
-HeaderSection = React.createFactory require './sections/header/index.coffee'
+Header = require './sections/header/index.jsx'
 SectionList = React.createFactory require './section_list/index.coffee'
 { div } = React.DOM
-
 
 module.exports = React.createClass
   displayName: 'EditContent'
@@ -32,10 +31,10 @@ module.exports = React.createClass
           section: @props.article.heroSection
           channel: @props.channel
         }
-      HeaderSection {
-        article: @props.article
-        saveArticle: @saveArticle
-      }
+      React.createElement(
+        Header.default,
+        { article: @props.article, saveArticle: @saveArticle }
+      )
       SectionList {
         sections: @props.article.sections
         saveArticle: @saveArticle

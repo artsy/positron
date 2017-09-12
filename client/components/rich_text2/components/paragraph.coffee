@@ -247,7 +247,6 @@ module.exports = React.createClass
           spellCheck: true
           onChange: @onChange
           blockRenderMap: Config.blockRenderMap()
-          handleReturn: @handleReturn
           handleKeyCommand: @handleKeyCommand
           keyBindingFn: Utils.keyBindingFnCaption
           handlePastedText: @onPaste

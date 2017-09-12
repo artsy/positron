@@ -35,6 +35,13 @@ describe 'Rich Text: Paragraph', ->
           }])
         )
       )
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @Paragraph = benv.require resolve __dirname, '../components/paragraph'
       @Paragraph.__set__ 'Modifier', Modifier
       @Paragraph.__set__ 'EditorState', EditorState

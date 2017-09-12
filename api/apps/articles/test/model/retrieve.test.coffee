@@ -101,3 +101,9 @@ describe 'Retrieve', ->
         scheduled: true
       }
       query.scheduled_publish_at.should.have.keys '$ne'
+
+    it 'omits articles', ->
+      { query } = Retrieve.toQuery {
+        omit: ['54276766fd4f50996aeca2b7']
+      }
+      query._id.should.have.keys '$nin'
