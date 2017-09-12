@@ -31,6 +31,13 @@ describe 'Section Text', ->
           }])
         )
       )
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       global.Node = () => {}
       global.HTMLElement = () => {}
       global.HTMLAnchorElement = () => {}

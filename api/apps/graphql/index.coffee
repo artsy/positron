@@ -51,6 +51,8 @@ schema = joiql
       resolve: resolvers.authors
     )
 
+module.exports.schema = schema
+
 app.use '/graphql', setUser, graphqlHTTP(
   schema: schema
   graphiql: true

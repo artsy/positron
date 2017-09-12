@@ -29,7 +29,9 @@ describe('Image', () => {
       <Image {...props} />
     )
     expect(wrapper.html()).toMatch('class="image-collection__img-container" style="width:200px;opacity:1;"')
-    expect(wrapper.html()).toMatch('src="https://artsy-media-uploads.s3.amazonaws.com/g_1Kjl.jpg"')
+    expect(wrapper.html()).toMatch(
+      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-'
+      )
     expect(wrapper.html()).toMatch('alt="Cai Guo-Qiang, Sky Ladder, June 2015. Courtesy of Cai Studio."')
   })
 
