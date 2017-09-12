@@ -13,6 +13,9 @@ resolvers = require './resolvers'
 
 app = module.exports = express()
 
+relatedArticles =
+  relatedArticles: array().items(object(Article.inputSchema))
+
 schema = joiql
   query:
     articles: array().items(object(
@@ -21,7 +24,7 @@ schema = joiql
       args: Article.querySchema
       resolve: resolvers.articles
     )
-    article: object(Article.inputSchema)
+    article: object(Article.inputSchema).concat(object(relatedArticles))
     .meta(
       args: id: string()
       resolve: resolvers.article
@@ -50,8 +53,6 @@ schema = joiql
       args: Author.querySchema
       resolve: resolvers.authors
     )
-
-module.exports.schema = schema
 
 app.use '/graphql', setUser, graphqlHTTP(
   schema: schema
