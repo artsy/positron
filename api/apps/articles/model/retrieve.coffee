@@ -105,8 +105,6 @@ moment = require 'moment'
     query.slugs = { $nin: slugs } if slugs?
     query._id = { $nin: objectids } if objectids?
 
-  console.log(query)
-
   {
     query: query
     limit: limit

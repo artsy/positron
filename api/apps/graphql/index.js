@@ -14,6 +14,7 @@ const app = module.exports = express()
 
 const relatedArticles = {
   relatedArticles: array().items(object(Article.inputSchema)).meta({
+    name: 'RelatedArticles',
     args: Article.querySchema,
     resolve: resolvers.articles
   })

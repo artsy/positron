@@ -1,9 +1,9 @@
-import User from 'api/apps/users/model.coffee'
-import { mongoFetch, present, presentCollection, find } from 'api/apps/articles/model/index.coffee'
-import Curation from 'api/apps/curations/model.coffee'
-import Channel from 'api/apps/channels/model.coffee'
-import Tag from 'api/apps/tags/model.coffee'
-import Author from 'api/apps/authors/model.coffee'
+const User = require('api/apps/users/model.coffee')
+const Curation = require('api/apps/curations/model.coffee')
+const Channel = require('api/apps/channels/model.coffee')
+const Tag = require('api/apps/tags/model.coffee')
+const Author = require('api/apps/authors/model.coffee')
+const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.coffee')
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -19,45 +19,15 @@ export const articles = (root, args, req, ast) => {
       'Pass published: true to only view published articles.'
     )
   }
-
   return new Promise((resolve, reject) => {
-    mongoFetch(args, (err, results) => {
+    mongoFetch(args, (err, res) => {
       if (err) {
         reject(new Error('Articles not found.'))
       }
-      resolve(presentCollection(results).results)
+      resolve(presentCollection(res).results)
     })
   })
 }
-
-// export const article = (root, args, req, ast) => {
-//   return new Promise((resolve, reject) => {
-//     find(args.id, async (err, result) => {
-//       if (err) {
-//         reject(new Error(err))
-//       }
-//       if (result) {
-//         const unpublished = !result.published || result.scheduled_publish_at
-//         const unauthorized = !User.hasChannelAccess(req.user, result.channel_id)
-//         if (unpublished && unauthorized) {
-//           reject(new Error('Must be a member of the channel to view an unpublished article.'))
-//         } else {
-//           try {
-//             const related = await relatedArticles(result)
-//             if (related && related.results.length) {
-//               result.relatedArticles = presentCollection(related).results
-//             }
-//             resolve(present(result))
-//           } catch (err) {
-//             reject(new Error(err))
-//           }
-//         }
-//       } else {
-//         reject(new Error('Article not found.'))
-//       }
-//     })
-//   })
-// }
 
 export const article = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
@@ -123,21 +93,3 @@ export const authors = (root, args, req, ast) => {
     })
   })
 }
-
-// const relatedArticles = ({id, channel_id, tags}) => {
-//   const args = {
-//     omit: [id],
-//     published: true,
-//     channel_id,
-//     tags,
-//     limit: 5
-//   }
-//   return new Promise((resolve, reject) => {
-//     mongoFetch(args, (err, results) => {
-//       if (err) {
-//         reject(new Error(err))
-//       }
-//       resolve(results)
-//     })
-//   })
-// }
