@@ -1,6 +1,8 @@
 React = require 'react'
 _ = require 'underscore'
 { header, nav, div, a } = React.DOM
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+IconImageFullscreen = React.createFactory components.Icon.ImageFullscreen
 
 module.exports = React.createClass
   displayName: 'SectionControls'
@@ -97,7 +99,10 @@ module.exports = React.createClass
           className: 'layout'
           onClick: @changeLayout
           'data-active': @props.section.get('layout') is 'fillwidth'
-        }
+        },
+          React.createElement(
+            IconImageFullscreen, { fill: 'white' }
+          )
       if @props.section.get('type') in ['image_set', 'image_collection'] and
        @props.channel.hasFeature 'image_set'
         a {
