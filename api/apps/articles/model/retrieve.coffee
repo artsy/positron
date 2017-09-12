@@ -30,6 +30,7 @@ moment = require 'moment'
     'q'
     'scheduled'
     'access_token'
+    'omit'
   query.fair_ids = input.fair_id if input.fair_id
   if input.fair_programming_id
     query.fair_programming_ids = input.fair_programming_id
@@ -89,6 +90,9 @@ moment = require 'moment'
 
   # Look for articles that are scheduled
   query.scheduled_publish_at = { $ne: null } if input.scheduled
+
+  # Omit articles from query
+  query._id = { $nin: input.omit } if input.omit
 
   {
     query: query

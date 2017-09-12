@@ -454,6 +454,19 @@ describe 'Article Retrieval', ->
           results[0].title.should.equal 'Moo baz'
           done()
 
+    it 'can omit articles', (done) ->
+      fabricate 'articles', [
+        {
+          title: 'Hello Wurld'
+          _id: ObjectId('5086df098523e60002000018')
+          published: true
+        }
+      ], ->
+        Article.where { omit: ['5086df098523e60002000018'], count: true }, (err, { total, count, results }) ->
+          total.should.equal 11
+          count.should.equal 10
+          done()
+
   describe '#find', ->
 
     it 'finds an article by an id string', (done) ->

@@ -256,4 +256,5 @@ denormalizedArtwork = (->
   weekly_email: @boolean()
   scheduled: @boolean()
   count: @boolean().default(false)
+  omit: @array().items(@string().objectid())
 ).call Joi
