@@ -98,12 +98,11 @@ moment = require 'moment'
     slugs = []
     _.each input.omit, (id) ->
       if ObjectId.isValid(id)
-        objectids.push(id)
+        objectids.push(ObjectId(id))
       else
         slugs.push(id)
-
-    query.slugs = { $nin: slugs } if slugs?
-    query._id = { $nin: objectids } if objectids?
+    query.slugs = { $nin: slugs } if slugs.length
+    query._id = { $nin: objectids } if objectids.length
 
   {
     query: query
