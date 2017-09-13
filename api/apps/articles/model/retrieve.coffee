@@ -1,5 +1,6 @@
 _ = require 'underscore'
 moment = require 'moment'
+{ ObjectId } = require 'mongojs'
 
 @toQuery = (input, callback) ->
   { limit, offset, sort, count } = input
@@ -92,7 +93,16 @@ moment = require 'moment'
   query.scheduled_publish_at = { $ne: null } if input.scheduled
 
   # Omit articles from query
-  query._id = { $nin: input.omit } if input.omit
+  if input.omit
+    objectids = []
+    slugs = []
+    _.each input.omit, (id) ->
+      if ObjectId.isValid(id)
+        objectids.push(ObjectId(id))
+      else
+        slugs.push(id)
+    query.slugs = { $nin: slugs } if slugs.length
+    query._id = { $nin: objectids } if objectids.length
 
   {
     query: query
