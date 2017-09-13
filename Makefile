@@ -22,10 +22,10 @@ sf:
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
-	$(BIN)/mocha $(shell find api -name '*.test.coffee')
-	$(BIN)/mocha $(shell find api -name '*.test.js')
-	$(BIN)/mocha $(shell find client -name '*.test.coffee')
-	$(BIN)/jest $(shell find client -name '*.test.js')
+	NODE_ENV=test $(BIN)/mocha $(shell find api -name '*.test.coffee')
+	NODE_ENV=test $(BIN)/mocha $(shell find api -name '*.test.js')
+	NODE_ENV=test $(BIN)/mocha $(shell find client -name '*.test.coffee')
+	NODE_ENV=test $(BIN)/jest $(shell find client -name '*.test.js')
 
 # Run app in test mode
 test-s:

@@ -1,4 +1,9 @@
-require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
+path = require 'path'
+env = require 'node-env-file'
+switch process.env.NODE_ENV
+  when 'test' then env path.resolve __dirname, '../.env.test'
+  when 'production', 'staging' then ''
+  else env path.resolve __dirname, '../.env'
 express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
