@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-const _ = require('underscore')
 import components from '@artsy/reaction-force/dist/components/publishing/index'
 const IconImageFullscreen = components.Icon.ImageFullscreen
 
@@ -34,7 +33,8 @@ export default class SectionControls extends Component {
   getControlsWidth() {
     // used for classic layout only
     const { section } = this.props
-    const isOverflow = section.get('layout').includes('overflow') ||
+    const isOverflow = section.get('layout') &&
+     section.get('layout').includes('overflow') ||
      section.get('type') === 'image_set'
 
     if (this.props.isHero) {
@@ -74,7 +74,7 @@ export default class SectionControls extends Component {
 
   insideComponent = () => {
     let insideComponent = false
-    const $section = $(this.refs.controls) ? $(this.refs.controls).closest('section') : false
+    const $section = $(this.refs.controls) && $(this.refs.controls).closest('section')
 
     if ($section) {
       if ((this.isScrollingOver($section) && !this.isScrolledPast($section)) ||
@@ -89,6 +89,9 @@ export default class SectionControls extends Component {
     if (this.props.section.get('type') === 'image_set') {
       this.props.section.set('type', 'image_collection')
       this.forceUpdate()
+    }
+    if (layout === 'fillwidth' && this.props.section.get('images').length > 1) {
+      return this.props.disabledAlert()
     }
     this.props.section.set({ layout })
     this.props.onChange && this.props.onChange()

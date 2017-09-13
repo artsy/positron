@@ -74,15 +74,19 @@ export default class FileInput extends Component {
   }
 
   render() {
-    const { label, hasImage, sizeLimit, type } = this.props
+    const { label, hasImage, sizeLimit, type, disabled } = this.props
     const typeClass = type ? ' ' + type : ''
+    const disabledClass = disabled ? ' disabled' : ''
     return (
-      <div className={'file-input' + typeClass}>
+      <div className={'file-input' + typeClass + disabledClass}>
         {label && <h2>{label}</h2>}
         <div className='file-input__upload-container'>
           {this.renderUploadPrompt()}
           <h2>Up to {sizeLimit ? sizeLimit.toString() : '30'}MB</h2>
-          <input type='file' onChange={this.uploadFile} accept={this.getAccepted()} />
+          <input
+            type='file'
+            onChange={this.uploadFile}
+            accept={this.getAccepted()} />
         </div>
       </div>
     )

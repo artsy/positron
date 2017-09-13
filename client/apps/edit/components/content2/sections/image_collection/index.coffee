@@ -94,6 +94,7 @@ module.exports = React.createClass
             imagesLoaded: @state.imagesLoaded
             dimensions: @state.dimensions
             article: @props.article
+            section: @props.section
           }
         )
       else

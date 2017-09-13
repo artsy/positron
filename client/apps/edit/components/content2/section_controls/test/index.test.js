@@ -21,7 +21,8 @@ describe('Section Controls', () => {
     channel: new Channel(),
     section: new Section(StandardArticle.sections[4]),
     articleLayout: 'standard',
-    onChange: sinon.stub()
+    onChange: sinon.stub(),
+    disabledAlert: sinon.stub()
   }
 
   describe('Section Layouts', () => {
@@ -92,6 +93,15 @@ describe('Section Controls', () => {
         <SectionControls {...props} />
       )
       component.find('.layout').at(1).simulate('click')
+      expect(component.instance().props.section.get('layout')).toMatch('column_width')
+    })
+
+    it('when toggling fullscreen, alerts the user if too many images', () => {
+      const component = mount(
+        <SectionControls {...props} />
+      )
+      component.find('.layout').at(2).simulate('click')
+      expect(props.disabledAlert.called).toBe(true)
       expect(component.instance().props.section.get('layout')).toMatch('column_width')
     })
 
