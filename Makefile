@@ -10,26 +10,22 @@ BIN = node_modules/.bin
 
 # Start the server with inspect
 dev:
-	DEBUG=app,client,api node --inspect ./index.js
+	DEBUG=app,client,api node -r dotenv/config --inspect ./index.js
 
 # Start the server
 s:
-	DEBUG=app,client,api node ./index.js
+	DEBUG=app,client,api node -r dotenv/config ./index.js
 
 # Start the server using forever
 sf:
-	$(BIN)/forever ./index.js --max-old-space-size=512
+	$(BIN)/forever -c "node -r dotenv/config --max_old_space_size=512" ./index.js
 
 # Run all of the project-level tests, followed by app-level tests
 test: assets
-	NODE_ENV=test $(BIN)/mocha $(shell find api -name '*.test.coffee')
-	NODE_ENV=test $(BIN)/mocha $(shell find api -name '*.test.js')
-	NODE_ENV=test $(BIN)/mocha $(shell find client -name '*.test.coffee')
-	NODE_ENV=test $(BIN)/jest $(shell find client -name '*.test.js')
-
-# Run app in test mode
-test-s:
-	$(BIN)/coffee test/helpers/integration.coffee
+	$(BIN)/mocha $(shell find api -name '*.test.coffee')
+	$(BIN)/mocha $(shell find api -name '*.test.js')
+	$(BIN)/mocha $(shell find client -name '*.test.coffee')
+	$(BIN)/jest $(shell find client -name '*.test.js')
 
 # Generate minified assets from the /assets folder and output it to /public.
 assets:

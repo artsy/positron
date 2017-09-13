@@ -1,5 +1,6 @@
 --require should
---require test/mocha.env.js
+--require dotenv/config
+dotenv_config_path=.env.test
 --ui bdd
 --timeout 10000
 --compilers js:babel-core/register,coffee:coffee-script/register
