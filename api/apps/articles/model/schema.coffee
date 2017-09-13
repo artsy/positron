@@ -155,7 +155,7 @@ denormalizedArtwork = (->
       isTypeOf: (data) -> data.type is 'image_collection'
     ).keys
       type: 'image_collection'
-      layout: @string().allow('overflow_fillwidth', 'column_width', null)
+      layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   postscript: @string().allow('', null)

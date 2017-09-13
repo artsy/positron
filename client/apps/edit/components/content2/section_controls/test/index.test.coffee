@@ -11,7 +11,7 @@ r =
   simulate: ReactTestUtils.Simulate
   render: ReactTestUtils.renderIntoDocument
 
-describe 'SectionControls', ->
+describe.skip 'SectionControls', ->
 
   beforeEach (done) ->
     benv.setup =>

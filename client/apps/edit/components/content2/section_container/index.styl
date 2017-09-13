@@ -77,6 +77,18 @@
       height 30px
       border-radius 50%
 
+[data-layout='fillwidth']
+  &[data-editing='false']
+     .edit-section__hover-controls
+        z-index 100
+  .edit-section__hover-controls
+    button
+      right 18px
+      &.edit-section__remove
+        top 20px
+      &.edit-section__drag
+        top 60px
+
 .classic
   [data-layout='column_width'], [data-layout='blockquote']
     max-width classic-body-w-margin
@@ -104,4 +116,3 @@
     margin 0 auto
   [data-layout='fillwidth']
     max-width 100%
-

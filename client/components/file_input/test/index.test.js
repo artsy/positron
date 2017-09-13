@@ -1,7 +1,7 @@
-import FileInput from '../index.jsx';
-import gemup from 'gemup';
-import React from 'react';
-import { mount } from 'enzyme';
+import FileInput from '../index.jsx'
+import gemup from 'gemup'
+import React from 'react'
+import { mount } from 'enzyme'
 
 jest.mock('gemup', () => {
   return jest.fn()
@@ -9,65 +9,69 @@ jest.mock('gemup', () => {
 
 describe('FileInput', () => {
   beforeAll(() => {
-    global.window.$ = jest.fn()
     global.window.$.ajax = jest.fn()
     global.alert = jest.fn()
   })
 
   it('renders drag-drop container', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch('Drag & Drop or Click to Upload')
+    )
+    expect(component.find('.file-input').text()).toMatch('Drag & Drop or Click to Upload')
   })
 
   it('renders the default size limit', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch('Up to 30MB')
+    )
+    expect(component.find('.file-input').text()).toMatch('Up to 30MB')
   })
 
   it('renders props.sizeLimit', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput sizeLimit={10} />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch('Up to 10MB')
+    )
+    expect(component.find('.file-input').text()).toMatch('Up to 10MB')
   })
 
   it('prompts to replace file if hasImage', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput hasImage />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.text()).toMatch('Drag & Drop or Click to Replace')
+    )
+    expect(component.find('.file-input').text()).toMatch('Drag & Drop or Click to Replace')
   })
 
   it('accepts image files by default', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.html()).toMatch('<input type="file" accept=".jpg,.jpeg,.png,.gif">')
+    )
+    expect(component.find('.file-input').html()).toMatch(
+      '<input type="file" accept=".jpg,.jpeg,.png,.gif">'
+    )
   })
 
   it('accepts video files when video prop is passed', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput video />
-    );
-    const container = wrapper.find('.file-input')
-    expect(container.html()).toMatch('<input type="file" accept=".jpg,.jpeg,.png,.gif,.mp4">')
+    )
+    expect(component.find('.file-input').html()).toMatch(
+      '<input type="file" accept=".jpg,.jpeg,.png,.gif,.mp4">'
+    )
+  })
+
+  it('disables the input when disabled prop is passed', () => {
+    const component = mount(
+      <FileInput disabled />
+    )
+    expect(component.html()).toMatch('<div class="file-input disabled">')
   })
 
   it('calls upload when a file is selected', () => {
-    const wrapper = mount(
+    const component = mount(
       <FileInput />
-    );
+    )
     const file = new Blob([], {type: 'img/jpg'})
-    wrapper.find('input').simulate('change', {target: {files: [file]}})
+    component.find('input').simulate('change', {target: {files: [file]}})
     expect(gemup).toHaveBeenCalled()
   })
 })
