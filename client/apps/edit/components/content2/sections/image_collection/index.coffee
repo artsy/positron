@@ -6,7 +6,7 @@ React = require 'react'
 imagesLoaded = require 'imagesloaded'
 Artwork = require './components/artwork.jsx'
 Image = require './components/image.jsx'
-Controls = React.createFactory require './components/controls.coffee'
+Controls = require './components/controls.jsx'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 { fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
 { div, section, ul, li } = React.DOM
@@ -124,15 +124,17 @@ module.exports = React.createClass
       onClick: @props.setEditing(true)
     },
       if @props.editing
-        Controls {
-          section: @props.section
-          images: images
-          setProgress: @setProgress
-          onChange: @onChange
-          channel: @props.channel
-          editing: @props.editing
-          article: @props.article
-        }
+        React.createElement(
+          Controls.default, {
+            section: @props.section
+            images: images
+            setProgress: @setProgress
+            onChange: @onChange
+            channel: @props.channel
+            editing: @props.editing
+            article: @props.article
+          }
+        )
       if @state.progress
         div { className: 'upload-progress-container' },
           div {
