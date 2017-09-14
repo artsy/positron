@@ -50,12 +50,12 @@ export default class Controls extends Component {
           return `<div class='autocomplete-suggestion' style='background-image: url(${data.thumbnail})'></div>${data.value}`
         }
       },
-      selected: this.onSelect
+      selected: this.onSelectArtwork
     })
     return _.defer(() => $el.focus())
   }
 
-  onSelect = (e, selected) => {
+  onSelectArtwork = (e, selected) => {
     new Artwork({id: selected.id}).fetch({
       success: artwork => {
         const newImages = this.props.images.concat([artwork.denormalized()])
@@ -75,6 +75,10 @@ export default class Controls extends Component {
       caption: ''
     })
     this.props.section.set('images', newImages)
+  }
+
+  toggleImagesetLayout = (layout) => {
+    this.props.section.set('layout', layout)
   }
 
   inputsAreDisabled(section) {
@@ -121,7 +125,31 @@ export default class Controls extends Component {
               disabled={inputsAreDisabled} />
           </section>
 
-        </SectionControls>
+        { section.get('type') === 'image_set' &&
+          <section
+            className='edit-controls__image-set-inputs'>
+            <label>Entry Point:</label>
+            <div className='inputs'>
+              <div className='input-group'>
+                <div
+                  className='radio-input'
+                  onClick={() => this.toggleImagesetLayout('mini')}
+                  data-active={section.get('layout') !== 'full'} >
+                </div>
+                Mini
+              </div>
+              <div className='input-group'>
+                <div
+                  className='radio-input'
+                  onClick={() => this.toggleImagesetLayout('full')}
+                  data-active={section.get('layout') === 'full'} >
+                </div>
+                Full
+              </div>
+            </div>
+          </section>
+        }
+      </SectionControls>
     )
   }
 }

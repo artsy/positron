@@ -86,13 +86,13 @@ export default class SectionControls extends Component {
   }
 
   changeLayout(layout) {
-    if (this.props.section.get('type') === 'image_set') {
-      this.props.section.set('type', 'image_collection')
-      this.forceUpdate()
-    }
     if (layout === 'fillwidth' && this.sectionIsImage() &&
      this.props.section.get('images').length > 1) {
       return this.props.disabledAlert()
+    }
+    if (this.props.section.get('type') === 'image_set') {
+      this.props.section.set('type', 'image_collection')
+      this.forceUpdate()
     }
     this.props.section.set({ layout })
     this.props.onChange && this.props.onChange()
@@ -101,7 +101,7 @@ export default class SectionControls extends Component {
   toggleImageSet = () => {
     if (this.props.section.get('type') === 'image_collection') {
       this.props.section.unset('layout')
-      this.props.section.set('type', 'image_set')
+      this.props.section.set({type: 'image_set', layout: 'mini'})
       this.forceUpdate()
     }
     this.props.onChange && this.props.onChange()
