@@ -26,7 +26,7 @@ videoSection = (->
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)
-    layout: @string().allow('',null)
+    layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', '', null)
     background_color: @string().allow('',null)
 ).call Joi
 
@@ -114,7 +114,7 @@ denormalizedArtwork = (->
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
-      layout: @string().allow('',null)
+      layout: @string().allow('column_width', 'overflow', 'overflow_fillwidth', 'fillwidth', '', null)
     @object().meta(
       name: 'Text'
       isTypeOf: (data) -> data.type is 'text'
