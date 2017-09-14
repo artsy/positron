@@ -25,7 +25,11 @@ describe('resolvers', () => {
       total: 20,
       count: 1,
       results: [
-        _.extend(fixtures().articles, { slugs: ['slug-1'] })
+        _.extend(fixtures().articles, {
+          slugs: ['slug-1'],
+          tags: ['dog'],
+          vertical: { id: '54276766fd4f50996aeca2b3' }
+        })
       ]
     }
     article = _.extend({}, fixtures().articles, {
@@ -144,6 +148,28 @@ describe('resolvers', () => {
       results[0].bio.should.equal('Writer based in NYC')
       results[0].twitter_handle.should.equal('kanaabe')
       results[0].image_url.should.equal('https://artsy-media.net/halley.jpg')
+    })
+  })
+
+  describe('relatedArticlesPanel', () => {
+    it('can find related articles for the panel', async () => {
+      const results = await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: ['dog', 'cat']
+      })
+      results.length.should.equal(1)
+      results[0].tags[0].should.equal('dog')
+    })
+  })
+
+  describe('relatedArticlesCanvas', () => {
+    it('can find related articles for the canvas', async () => {
+      const results = await resolvers.relatedArticlesCanvas({
+        id: '54276766fd4f50996aeca2b8',
+        vertical: { id: '54276766fd4f50996aeca2b3' }
+      })
+      results.length.should.equal(1)
+      results[0].vertical.id.should.equal('54276766fd4f50996aeca2b3')
     })
   })
 })

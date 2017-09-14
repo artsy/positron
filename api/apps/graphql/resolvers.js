@@ -1,9 +1,11 @@
+import _ from 'underscore'
 const User = require('api/apps/users/model.coffee')
 const Curation = require('api/apps/curations/model.coffee')
 const Channel = require('api/apps/channels/model.coffee')
 const Tag = require('api/apps/tags/model.coffee')
 const Author = require('api/apps/authors/model.coffee')
 const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.coffee')
+const { ObjectId } = require('mongojs')
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -86,6 +88,48 @@ export const tags = (root, args, req, ast) => {
 export const authors = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
     Author.mongoFetch(args, (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
+export const relatedArticlesPanel = (root) => {
+  const tags = root.tags || null
+  const args = {
+    omit: [ObjectId(root.id)],
+    published: true,
+    featured: true,
+    channel_id: ObjectId(root.channel_id),
+    tags: tags,
+    limit: 3,
+    sort: '-published_at'
+  }
+  return new Promise((resolve, reject) => {
+    mongoFetch(_.pick(args, _.identity), (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
+export const relatedArticlesCanvas = (root) => {
+  const vertical = root.vertical && root.vertical.id ? ObjectId(root.vertical.id) : null
+  const args = {
+    omit: [ObjectId(root.id)],
+    published: true,
+    featured: true,
+    channel_id: ObjectId(root.channel_id),
+    vertical,
+    limit: 4,
+    sort: '-published_at'
+  }
+  return new Promise((resolve, reject) => {
+    mongoFetch(_.pick(args, _.identity), (err, results) => {
       if (err) {
         reject(new Error(err))
       }

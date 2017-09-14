@@ -32,6 +32,7 @@ cloneDeep = require 'lodash.clonedeep'
     .skip(offset or 0)
     .sort(sort)
     .limit(limit)
+
   async.parallel [
     (cb) -> cursor.toArray cb
     (cb) ->
