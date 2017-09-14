@@ -13,10 +13,13 @@ import * as resolvers from 'api/apps/graphql/resolvers.js'
 const app = module.exports = express()
 
 const relatedArticles = {
-  relatedArticles: array().items(object(Article.inputSchema)).meta({
-    name: 'RelatedArticles',
-    args: Article.querySchema,
-    resolve: resolvers.articles
+  relatedArticlesCanvas: array().items(object(Article.inputSchema)).meta({
+    name: 'RelatedArticlesCanvas',
+    resolve: resolvers.relatedArticlesCanvas
+  }),
+  relatedArticlesPanel: array().items(object(Article.inputSchema)).meta({
+    name: 'RelatedArticlesPanel',
+    resolve: resolvers.relatedArticlesPanel
   })
 }
 

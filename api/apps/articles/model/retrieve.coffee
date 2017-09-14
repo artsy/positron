@@ -84,7 +84,7 @@ moment = require 'moment'
     query.fair_ids = { $elemMatch: { $in: input.fair_ids } }
 
   # Convert query for articles by vertical
-  query.vertical = { $elemMatch: { id: input.vertical } } if input.vertical
+  query["vertical.id"] = input.vertical if input.vertical
 
   # Allow regex searching through the q param
   query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q and input.q.length
