@@ -90,7 +90,8 @@ export default class SectionControls extends Component {
       this.props.section.set('type', 'image_collection')
       this.forceUpdate()
     }
-    if (layout === 'fillwidth' && this.props.section.get('images').length > 1) {
+    if (layout === 'fillwidth' && this.sectionIsImage() &&
+     this.props.section.get('images').length > 1) {
       return this.props.disabledAlert()
     }
     this.props.section.set({ layout })
@@ -114,7 +115,12 @@ export default class SectionControls extends Component {
     return this.props.section.get('type').includes('image')
   }
 
-  renderSectionLayouts(sectionLayouts, section) {
+  sectionHasFullscreen(section) {
+    const hasFullscreen = ['embed', 'video'].includes(section.get('type')) || this.sectionIsImage()
+    return this.props.articleLayout === 'feature' && hasFullscreen
+  }
+
+  renderSectionLayouts(section) {
     return (
       <nav className='edit-controls__layout'>
         <a
@@ -127,8 +133,8 @@ export default class SectionControls extends Component {
           className='layout'
           onClick={() => this.changeLayout('column_width')}
           data-active={section.get('layout') === 'column_width'} />
-        { this.sectionIsImage() &&
-          this.props.articleLayout === 'feature' &&
+        {
+          this.sectionHasFullscreen(section) &&
           <a
             name='fillwidth'
             className='layout'
@@ -137,7 +143,8 @@ export default class SectionControls extends Component {
             <IconImageFullscreen fill={'white'} />
           </a>
         }
-        { this.hasImageSet() &&
+        {
+          this.hasImageSet() &&
           <a
             name='image_set'
             className='layout'
@@ -163,7 +170,7 @@ export default class SectionControls extends Component {
           left: articleLayout === 'classic' ? this.getPositionLeft() : ''
       }}>
         { sectionLayouts &&
-          this.renderSectionLayouts(sectionLayouts, section) }
+          this.renderSectionLayouts(section) }
         <div className='edit-controls__inputs'>
           {this.props.children}
         </div>

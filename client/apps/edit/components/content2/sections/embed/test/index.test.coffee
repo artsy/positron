@@ -25,7 +25,7 @@ describe 'SectionEmbed', ->
       )
       @SectionEmbed = benv.require resolve __dirname, '../index'
       @component = ReactDOM.render React.createElement(@SectionEmbed,
-        section: new Section
+        section: new Section {type: 'embed'}
         editing: true
         article: new Backbone.Model {layout: 'standard'}
         channel: { isEditorial: sinon.stub().returns(true) }

@@ -5,7 +5,7 @@ import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
 import SectionControls from '../index.jsx'
 import components from '@artsy/reaction-force/dist/components/publishing/index'
-const StandardArticle = components.Fixtures.StandardArticle
+const { StandardArticle, FeatureArticle } = components.Fixtures
 
 describe('Section Controls', () => {
 
@@ -39,17 +39,16 @@ describe('Section Controls', () => {
       const component = mount(
         <SectionControls {...props} />
       )
-      expect(component.html()).toMatch(
-        '<a name="overflow_fillwidth" class="layout" data-active="true">'
-      )
+      expect(component.find('.layout').length).toBe(2)
     })
 
     it('adds a data-active attr to the current section layout icon', () => {
-      props.sectionLayouts = true
       const component = mount(
         <SectionControls {...props} />
       )
-      expect(component.find('.layout').length).toBe(2)
+      expect(component.html()).toMatch(
+        '<a name="overflow_fillwidth" class="layout" data-active="true">'
+      )
     })
 
     it('does not render image_set icon if channel.hasFeature is false', () => {
@@ -76,8 +75,26 @@ describe('Section Controls', () => {
       expect(component.html()).not.toMatch('<a name="image_set"')
     })
 
-    it('shows the fullscreen icon if articleLayout is feature', () => {
+    it('shows a fullscreen icon if layout is feature and section has images', () => {
       props.section = new Section(StandardArticle.sections[4])
+      props.articleLayout = 'feature'
+      const component = mount(
+        <SectionControls {...props} />
+      )
+      expect(component.html()).toMatch('<a name="fillwidth')
+    })
+
+    it('shows a fullscreen icon if layout is feature and section is embed', () => {
+      props.section = new Section(StandardArticle.sections[10])
+      props.articleLayout = 'feature'
+      const component = mount(
+        <SectionControls {...props} />
+      )
+      expect(component.html()).toMatch('<a name="fillwidth')
+    })
+
+    it('shows a fullscreen icon if layout is feature and section is video', () => {
+      props.section = new Section(FeatureArticle.sections[6])
       props.articleLayout = 'feature'
       const component = mount(
         <SectionControls {...props} />
@@ -89,6 +106,7 @@ describe('Section Controls', () => {
   describe('#changeLayout', () => {
 
     it('changes the layout on click', () => {
+      props.section = new Section(StandardArticle.sections[4])
       const component = mount(
         <SectionControls {...props} />
       )
