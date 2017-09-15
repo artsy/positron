@@ -26,7 +26,7 @@ videoSection = (->
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)
-    layout: @string().allow('',null)
+    layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', '', null)
     background_color: @string().allow('',null)
 ).call Joi
 
@@ -114,7 +114,7 @@ denormalizedArtwork = (->
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
-      layout: @string().allow('',null)
+      layout: @string().allow('column_width', 'overflow', 'overflow_fillwidth', 'fillwidth', '', null)
     @object().meta(
       name: 'Text'
       isTypeOf: (data) -> data.type is 'text'
@@ -155,7 +155,7 @@ denormalizedArtwork = (->
       isTypeOf: (data) -> data.type is 'image_collection'
     ).keys
       type: 'image_collection'
-      layout: @string().allow('overflow_fillwidth', 'column_width', null)
+      layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   postscript: @string().allow('', null)
@@ -256,5 +256,5 @@ denormalizedArtwork = (->
   weekly_email: @boolean()
   scheduled: @boolean()
   count: @boolean().default(false)
-  omit: @array().items(@string().objectid())
+  omit: @array().items(@string())
 ).call Joi

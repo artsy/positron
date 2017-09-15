@@ -40,8 +40,7 @@ describe 'Retrieve', ->
         vertical: '55356a9deca560a0137bb4a7'
         published: true
       }
-      query.vertical['$elemMatch'].should.be.ok()
-      query.vertical['$elemMatch'].id.should.containEql ObjectId '55356a9deca560a0137bb4a7'
+      query['vertical.id'].should.containEql(ObjectId '55356a9deca560a0137bb4a7')
 
     it 'aggregates the query for artist_id', ->
       { query } = Retrieve.toQuery {

@@ -21,7 +21,8 @@ export default class ImageCollectionArtwork extends Component {
   }
 
   getContainerWidth(dimensions) {
-    if (dimensions && dimensions[this.props.index]) {
+    if (dimensions && dimensions[this.props.index] &&
+      this.props.section.get('layout') !== 'fillwidth') {
       return dimensions[this.props.index].width
     } else {
       return 'auto'
@@ -29,13 +30,13 @@ export default class ImageCollectionArtwork extends Component {
   }
 
   render() {
-    const { artwork, article, dimensions } = this.props
+    const { artwork, article, dimensions, imagesLoaded } = this.props
     return (
       <div
         className='image-collection__img-container'
         style={{
           width: this.getContainerWidth(dimensions),
-          opacity: this.props.imagesLoaded ? 1 : 0
+          opacity: imagesLoaded ? 1 : 0
         }} >
         <Artwork
           layout={article.get('layout')}

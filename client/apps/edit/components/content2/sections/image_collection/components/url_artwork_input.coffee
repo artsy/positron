@@ -48,6 +48,7 @@ module.exports = React.createClass
         placeholder: 'Add artwork url'
         value: @state.url
         onChange: @onChange
+        disabled: @props.disabled
       }
       button {
         className: 'avant-garde-button' + isLoading

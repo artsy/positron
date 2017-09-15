@@ -30,6 +30,13 @@ describe 'ImageCollectionControls', ->
           initialize: ->
           ttAdapter: ->
         )
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       $.fn.typeahead = sinon.stub()
       $.fn.offset = sinon.stub().returns(top: 200)
       Backbone.$ = $
@@ -56,6 +63,7 @@ describe 'ImageCollectionControls', ->
         channel: { hasFeature: @hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true)}
       }
       @component = ReactDOM.render React.createElement(@Controls, @props), (@$el = $ "<div></div>")[0], =>
+      @component.fillwidthAlert = sinon.stub()
       done()
 
   afterEach ->
@@ -125,3 +133,11 @@ describe 'ImageCollectionControls', ->
     @component.addArtworkFromUrl([{type:'image', url:'image.com'}, {type: 'artwork', image:'artwork.jpg'}])
     @component.props.section.get('images')[0].should.eql {type:'image', url: 'image.com'}
     @component.props.section.get('images')[1].should.eql {type: 'artwork', image:'artwork.jpg'}
+
+  it 'disables inputs and gives an alert on click if fillwidth layout and has image', ->
+    @component.props.section.set 'layout', 'fillwidth'
+    @component.onUpload 'http://image.jpg', 400, 800
+    @component.forceUpdate()
+    r.simulate.click r.find(@component, 'edit-controls__artwork-inputs')[0]
+    @component.fillwidthAlert.called.should.eql true
+

@@ -4,6 +4,7 @@
   height auto
   top inherit
   width 100%
+  max-width calc(100vw \- 110px)
   margin-left -20px
   &__layout
     width 100%
@@ -33,6 +34,9 @@
       opacity 1
   &[data-active=true]
     opacity 1
+  &[name=fillwidth]
+    svg
+      margin-bottom 9px
   &[name=overflow_fillwidth]
     background-image url(/icons/edit_artworks_overflow_fillwidth.svg)
     background-size 38px
@@ -62,6 +66,8 @@
 .feature .edit-section__container
   &[data-layout=column_width] .edit-controls
     max-width feature-body-w-margin
+  &[data-layout=fillwidth] .edit-controls
+    margin-left 0
   &[data-layout=overflow_fillwidth],
   &[data-type=image_set]
     .edit-controls

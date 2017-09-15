@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 sd = require('sharify').data
 gemup = require 'gemup'
-SectionControls = React.createFactory require '../../../section_controls/index.coffee'
+SectionControls = require '../../../section_controls/index.jsx'
 UrlArtworkInput = React.createFactory require './url_artwork_input.coffee'
 Autocomplete = require '../../../../../../../components/autocomplete/index.coffee'
 Artwork = require '../../../../../../../models/artwork.coffee'
@@ -66,26 +66,45 @@ module.exports = React.createClass
     }]
     @props.section.set images: newImages
 
+  inputsAreDisabled: ->
+    return @props.section.get('layout') is 'fillwidth' and @props.section.get('images').length > 0
+
+  fillwidthAlert: ->
+    return alert('Fullscreen layouts accept one asset, please remove extra images.')
+
   render: ->
-    SectionControls {
-      section: @props.section
-      channel: @props.channel
-      articleLayout: @props.article.get('layout')
-      onChange: @props.onChange
-      sectionLayouts: true
-    },
-      React.createElement(
-        FileInput.default,
-        { onUpload: @onUpload, onProgress: @props.setProgress }
-      )
-      section { className: 'edit-controls__artwork-inputs' },
-        div { className: 'edit-controls__autocomplete-input' },
-          input {
-            ref: 'autocomplete'
-            className: 'bordered-input bordered-input-dark'
-            placeholder: 'Search for artwork by title'
+    inputsAreDisabled = @inputsAreDisabled()
+    React.createElement(
+      SectionControls.default, {
+        section: @props.section
+        channel: @props.channel
+        articleLayout: @props.article.get('layout')
+        onChange: @props.onChange
+        sectionLayouts: true
+        disabledAlert: @fillwidthAlert
+      },
+        div { onClick: @fillwidthAlert if inputsAreDisabled },
+          React.createElement(
+            FileInput.default, {
+              onUpload: @onUpload
+              onProgress: @props.setProgress
+              disabled: inputsAreDisabled
+            }
+          )
+        section {
+          className: 'edit-controls__artwork-inputs'
+          onClick: @fillwidthAlert if inputsAreDisabled
+        },
+          div { className: 'edit-controls__autocomplete-input' },
+            input {
+              ref: 'autocomplete'
+              className: 'bordered-input bordered-input-dark'
+              placeholder: 'Search for artwork by title'
+              disabled: inputsAreDisabled
+            }
+          UrlArtworkInput {
+            images: @props.images
+            addArtworkFromUrl: @addArtworkFromUrl
+            disabled: inputsAreDisabled
           }
-        UrlArtworkInput {
-          images: @props.images
-          addArtworkFromUrl: @addArtworkFromUrl
-        }
+    )

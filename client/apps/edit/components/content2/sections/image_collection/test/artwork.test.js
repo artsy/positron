@@ -19,6 +19,7 @@ describe('Artwork', () => {
       width: 2002
     },
     article: new Backbone.Model({layout: 'standard'}),
+    section: new Backbone.Model({layout: 'overflow_fillwidth'}),
     index: 0,
     imagesLoaded: true,
     dimensions: [{width: 200}],

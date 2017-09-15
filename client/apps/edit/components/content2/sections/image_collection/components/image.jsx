@@ -40,7 +40,8 @@ export default class ImageCollectionImage extends Component {
   }
 
   getContainerWidth(dimensions) {
-    if (dimensions && dimensions[this.props.index]) {
+    if (dimensions && dimensions[this.props.index] &&
+      this.props.section.get('layout') !== 'fillwidth') {
       return dimensions[this.props.index].width
     } else {
       return 'auto'
