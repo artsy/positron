@@ -21,7 +21,7 @@ export default class ImageCollectionArtwork extends Component {
   }
 
   render() {
-    const { article, artwork, imagesLoaded, width } = this.props
+    const { article, artwork, imagesLoaded, section, width } = this.props
     return (
       <div
         className='image-collection__img-container'
@@ -31,6 +31,7 @@ export default class ImageCollectionArtwork extends Component {
         }} >
         <Artwork
           layout={article.get('layout')}
+          sectionLayout={section.get('layout')}
           artwork={artwork}
           linked={false} />
         {this.renderRemoveButton(artwork)}

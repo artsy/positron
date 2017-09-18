@@ -19,7 +19,7 @@
 .image-collection
   &__img-container
     position relative
-    margin-bottom 30px
+    padding-bottom 30px
     max-width 100%
   &.single .image-collection__img-container
     margin 0 auto 30px auto
@@ -122,6 +122,9 @@
       margin-right 30px
       margin-left 0
 
+.edit-section__container[data-type=image_collection]
+  padding-bottom 0
+
 .edit-section__container[data-layout=column_width]
   .image-collection__list .drag-container
     flex-direction column
@@ -141,6 +144,7 @@
         min-width 100%
     .image-collection__img-container
       width 100%
+      min-width 100%
     .edit-section--image-collection .edit-section__remove
       top 20px
       right 20px

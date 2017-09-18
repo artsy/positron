@@ -40,7 +40,7 @@ export default class ImageCollectionImage extends Component {
   }
 
   render() {
-    const { image, imagesLoaded, width } = this.props
+    const { image, imagesLoaded, section, width } = this.props
     return (
       <div
         className='image-collection__img-container'
@@ -48,7 +48,7 @@ export default class ImageCollectionImage extends Component {
           width: width,
           opacity: imagesLoaded ? 1 : 0
         }} >
-        <Image image={image}>
+        <Image image={image} sectionLayout={section.get('layout')}>
           {this.renderCaption(image)}
         </Image>
         {this.renderRemoveButton(image)}
