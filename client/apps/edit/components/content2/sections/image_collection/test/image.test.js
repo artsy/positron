@@ -1,71 +1,68 @@
 import React from 'react'
-import Image from '../components/image.jsx'
-import { mount, shallow } from 'enzyme'
 import Backbone from 'backbone'
+import components from '@artsy/reaction-force/dist/components/publishing/index'
+import Image from '../components/image.jsx'
+import { mount } from 'enzyme'
+const { StandardArticle } = components.Fixtures
 
 describe('Image', () => {
 
   const props = {
-    image: {
-      caption: '<p>Cai Guo-Qiang, <em>Sky Ladder</em>, June 2015. Courtesy of Cai Studio.</p>',
-      height: 616,
-      type: 'image',
-      url: 'https://artsy-media-uploads.s3.amazonaws.com/g_1Kjl.jpg',
-      width: 1200
-    },
-    article: new Backbone.Model({layout: 'standard'}),
-    section: new Backbone.Model({layout: 'overflow_fillwidth'}),
+    image: StandardArticle.sections[4].images[0],
+    article: new Backbone.Model(StandardArticle),
+    section: new Backbone.Model(StandardArticle.sections[4]),
     index: 0,
     imagesLoaded: true,
-    dimensions: [{width: 200}],
+    width: 200,
     removeItem: jest.fn()
   }
 
-  beforeAll(() => {
-    global.window.$ = jest.fn()
-  })
-
   it('renders the image', () => {
-    const wrapper = shallow(
+    const component = mount(
       <Image {...props} />
     )
-    expect(wrapper.html()).toMatch('class="image-collection__img-container" style="width:200px;opacity:1;"')
-    expect(wrapper.html()).toMatch(
-      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-'
-      )
-    expect(wrapper.html()).toMatch('alt="Cai Guo-Qiang, Sky Ladder, June 2015. Courtesy of Cai Studio."')
+    expect(component.html()).toMatch(
+      'class="image-collection__img-container" style="width: 200px; opacity: 1;"'
+    )
+    expect(component.html()).toMatch(
+      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=95'
+    )
+    expect(component.html()).toMatch(
+      'alt="John Elisle, The Star, from the reimagined female Tarot cards. Courtesy of the artist.'
+    )
   })
 
   it('renders an editable caption with placeholder', () => {
-    const wrapper = shallow(
+    props.image.caption = ''
+    const component = mount(
       <Image {...props} />
     )
-    expect(wrapper.html()).toMatch('<div class="rich-text--paragraph">')
-    expect(wrapper.html()).toMatch('class="public-DraftEditorPlaceholder-root"')
+    expect(component.html()).toMatch('<div class="rich-text--paragraph">')
+    expect(component.html()).toMatch('class="public-DraftEditorPlaceholder-root"')
   })
 
   it('hides the remove button when not editing', () => {
-    const wrapper = mount(
+    const component = mount(
       <Image {...props} />
     )
-    expect(wrapper.html()).not.toMatch('<div class="edit-section__remove">')
+    expect(component.html()).not.toMatch('<div class="edit-section__remove">')
   })
 
   it('renders the remove button if editing and props.removeItem', () => {
     props.editing = true
-    const wrapper = mount(
+    const component = mount(
       <Image {...props} />
     )
-    expect(wrapper.html()).toMatch('<div class="edit-section__remove">')
-    expect(wrapper.html()).toMatch('<svg id="remove"')
+    expect(component.html()).toMatch('<div class="edit-section__remove">')
+    expect(component.html()).toMatch('<svg id="remove"')
   })
 
   it('calls removeItem when clicking remove icon', () => {
     props.editing = true
-    const wrapper = mount(
+    const component = mount(
       <Image {...props} />
     )
-    wrapper.find('.edit-section__remove').simulate('click')
+    component.find('.edit-section__remove').simulate('click')
     expect(props.removeItem).toBeCalled()
   })
 })

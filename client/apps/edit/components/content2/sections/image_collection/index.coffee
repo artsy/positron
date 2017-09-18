@@ -165,6 +165,7 @@ module.exports = React.createClass
                 section:
                   images: images
                   layout: @props.section.get('layout')
+                  title: @props.section.get('title')
               }
           else if images.length > 1
             DragContainer {

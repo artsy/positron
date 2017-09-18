@@ -9,8 +9,7 @@ ReactTestUtils = require 'react-addons-test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
 Article = require '../../../models/article.coffee'
-{ StandardArticle,
-  FeatureArticle } = require('@artsy/reaction-force/dist/components/publishing/index').default.Fixtures
+{ StandardArticle } = require('@artsy/reaction-force/dist/components/publishing/index').default.Fixtures
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -52,7 +51,7 @@ describe 'DragDropContainer Default', ->
             i: 0,
             article: article,
             section: section,
-            dimensions: [],
+            width: null,
             image: StandardArticle.sections[4].images[0],
             removeItem: sinon.stub()
           }
@@ -64,7 +63,7 @@ describe 'DragDropContainer Default', ->
             i: 1,
             article: article,
             section: section,
-            dimensions: [],
+            width: null,
             image: StandardArticle.sections[4].images[1],
             removeItem: sinon.stub()
           }

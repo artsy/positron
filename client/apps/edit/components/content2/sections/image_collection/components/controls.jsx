@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-const _ = require('underscore')
-const sd = require('sharify').data
 const gemup = require('gemup')
+const sd = require('sharify').data
+import { defer } from 'lodash'
 import Artwork from '/client/models/artwork.coffee'
 import Autocomplete from '/client/components/autocomplete/index.coffee'
 import FileInput from '/client/components/file_input/index.jsx'
@@ -52,7 +52,7 @@ export default class Controls extends Component {
       },
       selected: this.onSelectArtwork
     })
-    return _.defer(() => $el.focus())
+    return defer(() => $el.focus())
   }
 
   onSelectArtwork = (e, selected) => {
@@ -77,6 +77,10 @@ export default class Controls extends Component {
     this.props.section.set('images', newImages)
   }
 
+  onChangeImageSetTitle = (e) => {
+    this.props.section.set('title', e.target.value)
+  }
+
   toggleImagesetLayout = (layout) => {
     this.props.section.set('layout', layout)
   }
@@ -98,7 +102,7 @@ export default class Controls extends Component {
           section={section}
           channel={channel}
           articleLayout={article.get('layout')}
-          onChange={this.props.onChange}
+          onChange={onChange}
           sectionLayouts={true}
           disabledAlert={this.fillwidthAlert}>
 
@@ -128,23 +132,32 @@ export default class Controls extends Component {
         { section.get('type') === 'image_set' &&
           <section
             className='edit-controls__image-set-inputs'>
-            <label>Entry Point:</label>
+            <input
+              ref='title'
+              className='bordered-input bordered-input-dark'
+              defaultValue={this.props.section.get('title')}
+              onChange={this.onChangeImageSetTitle}
+              placeholder='Image Set Title (optional)' />
+
             <div className='inputs'>
-              <div className='input-group'>
-                <div
-                  className='radio-input'
-                  onClick={() => this.toggleImagesetLayout('mini')}
-                  data-active={section.get('layout') !== 'full'} >
+              <label>Entry Point:</label>
+              <div className='layout-inputs'>
+                <div className='input-group'>
+                  <div
+                    className='radio-input'
+                    onClick={() => this.toggleImagesetLayout('mini')}
+                    data-active={section.get('layout') !== 'full'} >
+                  </div>
+                  Mini
                 </div>
-                Mini
-              </div>
-              <div className='input-group'>
-                <div
-                  className='radio-input'
-                  onClick={() => this.toggleImagesetLayout('full')}
-                  data-active={section.get('layout') === 'full'} >
+                <div className='input-group'>
+                  <div
+                    className='radio-input'
+                    onClick={() => this.toggleImagesetLayout('full')}
+                    data-active={section.get('layout') === 'full'} >
+                  </div>
+                  Full
                 </div>
-                Full
               </div>
             </div>
           </section>
