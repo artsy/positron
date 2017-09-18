@@ -3,16 +3,17 @@
 #
 _ = require 'underscore'
 React = require 'react'
+components = require('@artsy/reaction-force/dist/components/publishing/index').default
+FillWidth = require('@artsy/reaction-force/dist/utils/fillwidth').default
 imagesLoaded = require 'imagesloaded'
+
 Artwork = require './components/artwork.jsx'
-Image = require './components/image.jsx'
 Controls = require './components/controls.jsx'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
-{ fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
-{ div, section, ul, li } = React.DOM
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
+Image = require './components/image.jsx'
 ImageSetPreview = React.createFactory components.ImageSetPreview
 ImageSetPreviewClassic = React.createFactory components.ImageSetPreviewClassic
+{ div, section, ul, li } = React.DOM
 
 module.exports = React.createClass
   displayName: 'SectionImageCollection'
@@ -34,11 +35,11 @@ module.exports = React.createClass
     @setState
       progress: null
       imagesLoaded: true
-      dimensions: fillWidth(
+      dimensions: FillWidth(
         @props.section.get('images'),
-        sizes.targetHeight,
         sizes.containerSize,
-        @props.section.get('layout') or @props.section.get('type')
+        30,
+        sizes.targetHeight
       )
 
   getFillWidthSizes: ->
@@ -72,17 +73,22 @@ module.exports = React.createClass
     @props.section.set images: images
     @onChange()
 
-  largeImagesetClass: ->
-    imagesetClass = ''
-    if @props.section.get('type') is 'image_set'
-      if @props.section.get('images').length > 3
-        imagesetClass = ' imageset-block'
-      if @props.section.get('images').length > 6
-        imagesetClass = ' imageset-block imageset-block--long'
-    imagesetClass
+  isImageSetWrapping: ->
+    return true if @props.section.get('type') is 'image_set' &&
+     @props.section.get('images').length > 3
+
+  getImageWidth: (i) ->
+    unless @state.dimensions[i]?.width
+      return 'auto'
+    if this.isImageSetWrapping()
+      return @state.dimensions[i]?.width * 2
+    else
+      return @state.dimensions[i]?.width
 
   renderImages: (images) ->
     images.map (item, i) =>
+      width = this.getImageWidth()
+
       if item.type is 'artwork'
         React.createElement(
           Artwork.default, {
@@ -92,9 +98,9 @@ module.exports = React.createClass
             removeItem: @removeItem
             editing:  @props.editing
             imagesLoaded: @state.imagesLoaded
-            dimensions: @state.dimensions
             article: @props.article
             section: @props.section
+            width: @getImageWidth(i)
           }
         )
       else
@@ -105,11 +111,11 @@ module.exports = React.createClass
             image: item
             removeItem: @removeItem
             editing:  @props.editing
-            dimensions: @state.dimensions
             imagesLoaded: @state.imagesLoaded
             article: @props.article
             section: @props.section
             onChange: @onChange
+            width: @getImageWidth(i)
           }
         )
 
@@ -120,8 +126,9 @@ module.exports = React.createClass
     listClass = if hasImages then '' else ' image-collection__list--placeholder'
 
     section {
-      className: 'edit-section--image-collection' + @largeImagesetClass()
+      className: 'edit-section--image-collection'
       onClick: @props.setEditing(true)
+      'data-overflow': @isImageSetWrapping()
     },
       if @props.editing
         React.createElement(
@@ -165,6 +172,7 @@ module.exports = React.createClass
               onDragEnd: @onDragEnd
               isDraggable: @props.editing
               dimensions: @state.dimensions
+              isWrapping: @isImageSetWrapping
             },
               @renderImages(images)
           else

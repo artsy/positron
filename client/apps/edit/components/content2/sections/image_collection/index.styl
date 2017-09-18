@@ -35,7 +35,7 @@
       opacity 1
     .drag-container
       display flex
-      justify-content space-between
+      justify-content space-evenly
     .drag-target
       max-width 100%
 
@@ -115,6 +115,12 @@
             position absolute
             left 1px
             top 1px
+  &[data-overflow=true] // for image sets with many images
+    .drag-container
+      flex-wrap wrap
+    .drag-target
+      margin-right 30px
+      margin-left 0
 
 .edit-section__container[data-layout=column_width]
   .image-collection__list .drag-container

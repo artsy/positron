@@ -53,6 +53,12 @@ module.exports = React.createClass
       dragStartY: null
       draggingHeight: 0
 
+  setTargetWidth: (i) ->
+    if @props.isWrapping
+      return @props.dimensions?[i]?.width * 2
+    else
+      return @props.dimensions?[i]?.width
+
   render: ->
     children = React.Children.toArray(@props.children)
 
@@ -72,7 +78,7 @@ module.exports = React.createClass
             activeSource: @state.dragSource is i
             activeTarget: @state.dragTarget is i
             isDraggable: @props.isDraggable
-            width: @props.dimensions?[i]?.width
+            width: @setTargetWidth(i)
             height: if @props.layout is 'vertical' then @state.draggingHeight else null
             vertical: if @props.layout is 'vertical' then true else false
             dropPosition: @state.dropPosition

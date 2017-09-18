@@ -39,22 +39,13 @@ export default class ImageCollectionImage extends Component {
     }
   }
 
-  getContainerWidth(dimensions) {
-    if (dimensions && dimensions[this.props.index] &&
-      this.props.section.get('layout') !== 'fillwidth') {
-      return dimensions[this.props.index].width
-    } else {
-      return 'auto'
-    }
-  }
-
   render() {
-    const { image, dimensions, imagesLoaded } = this.props
+    const { image, imagesLoaded, width } = this.props
     return (
       <div
         className='image-collection__img-container'
         style={{
-          width: this.getContainerWidth(dimensions),
+          width: width,
           opacity: imagesLoaded ? 1 : 0
         }} >
         <Image image={image}>

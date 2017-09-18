@@ -100,7 +100,6 @@ export default class SectionControls extends Component {
 
   toggleImageSet = () => {
     if (this.props.section.get('type') === 'image_collection') {
-      this.props.section.unset('layout')
       this.props.section.set({type: 'image_set', layout: 'mini'})
       this.forceUpdate()
     }
