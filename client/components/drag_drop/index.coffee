@@ -70,7 +70,7 @@ module.exports = React.createClass
           i = child.props.index or i
           type = child.props.section?.get('type') or null
           if child.type.displayName is 'SectionContainer'
-            layout = child.props.section.get('layout') or 'column_width'
+            layout = child.props.section?.get('layout') or 'column_width'
           DragTarget {
             key: i
             i: i

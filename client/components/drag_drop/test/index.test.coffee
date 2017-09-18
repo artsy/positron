@@ -9,6 +9,8 @@ ReactTestUtils = require 'react-addons-test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
 Article = require '../../../models/article.coffee'
+{ StandardArticle,
+  FeatureArticle } = require('@artsy/reaction-force/dist/components/publishing/index').default.Fixtures
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -19,6 +21,7 @@ describe 'DragDropContainer Default', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
+      global.HTMLElement = () => {}
       window.matchMedia = sinon.stub().returns(
         {
           matches: false
@@ -29,26 +32,50 @@ describe 'DragDropContainer Default', ->
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
-      ImageDisplay = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.jsx'
-      )
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
-        items: [ {image: {url: 'image1.com'}}, {image: {url: 'image2.com'}} ]
+        items: StandardArticle.sections[4].images
       }
       article = new Article layout: 'standard'
+      section = new Section StandardArticle.sections[4]
+      ImageDisplay = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.jsx'
+      )
       @children = [
-        React.createElement(ImageDisplay.default, {key:'child-1', i: 0, article: article, dimensions: [], image: {url: 'image1.com', caption: ''}, removeItem: sinon.stub()})
-        React.createElement(ImageDisplay.default, {key:'child-2', i: 1, article: article, dimensions: [], image: {url: 'image2.com', caption: ''}, removeItem: sinon.stub()})
+        React.createElement(
+          ImageDisplay.default,
+          {
+            key:'child-1',
+            i: 0,
+            article: article,
+            section: section,
+            dimensions: [],
+            image: StandardArticle.sections[4].images[0],
+            removeItem: sinon.stub()
+          }
+        )
+        React.createElement(
+          ImageDisplay.default,
+          {
+            key:'child-2',
+            i: 1,
+            article: article,
+            section: section,
+            dimensions: [],
+            image: StandardArticle.sections[4].images[1],
+            removeItem: sinon.stub()
+          }
+        )
       ]
       @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], =>
       done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
+    done()
 
   it 'renders a drag container with children', ->
     @$el.find('.drag-target').length.should.eql 2
@@ -96,8 +123,8 @@ describe 'DragDropContainer Default', ->
       r.simulate.dragStart r.find(@component, 'drag-source')[1]
       r.simulate.dragOver r.find(@component, 'drag-target')[0]
       r.simulate.dragEnd r.find(@component, 'drag-source')[1]
-      @onDragEnd.args[0][0][0].image.url.should.eql 'image2.com'
-      @onDragEnd.args[0][0][1].image.url.should.eql 'image1.com'
+      @onDragEnd.args[0][0][0].url.should.eql StandardArticle.sections[4].images[0].url
+      @onDragEnd.args[0][0][1].url.should.eql StandardArticle.sections[4].images[1].url
 
     it 'Resets the state on DragEnd', ->
       r.simulate.dragStart r.find(@component, 'drag-source')[1]
@@ -121,46 +148,82 @@ describe 'DragDropContainer Vertical', ->
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
-      SectionContainer = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content2/section_container/index.coffee'
-        ['icons']
-      )
+      @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
+      @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
       SectionTool = benv.requireWithJadeify(
         resolve __dirname, '../../../apps/edit/components/content2/section_tool/index.coffee'
         ['icons']
       )
-      ImageCollection = benv.require resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/index.coffee'
+      SectionContainer = benv.requireWithJadeify(
+        resolve __dirname, '../../../apps/edit/components/content2/section_container/index.coffee'
+        ['icons']
+      )
+      ImageCollection = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/index.coffee'
+      )
       ImageCollection.__set__ 'Controls', sinon.stub()
       ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns(true)
       SectionContainer.__set__ 'ImageCollection', React.createFactory ImageCollection
-      @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
-      @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
-      item1 = new Section {
-          type: 'image_collection'
-          images: [{type: 'image', url: 'image1.com', caption: ''}]
-      }
-      item2 = new Section {
-        type: 'image_collection'
-        images: [{type: 'image', url: 'image1.com', caption: ''}]
-      }
-      item3 = new Section {
-        type: 'image_collection'
-        images: [{type: 'image', url: 'image1.com', caption: ''}]
-      }
+      hasFeature = sinon.stub().returns(true)
+      section2 = new Section StandardArticle.sections[16]
+      section3 = new Section StandardArticle.sections[8]
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
-        items: @sections = new Sections [item1, item2, item3]
+        items: @sections = new Sections([
+            StandardArticle.sections[8]
+            StandardArticle.sections[8]
+            StandardArticle.sections[16]
+          ])
         layout: 'vertical'
         article: @article = new Article layout: 'standard'
       }
       @children = [
-        React.createElement(SectionContainer, {key:'child-1', i: 0, article: @article, section: item1, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionTool, {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionContainer, {key:'child-3', i: 2, article: @article, section: item2, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
-        React.createElement(SectionContainer, {key:'child-4', i: 3, article: @article, section: item3, sections: @sections, editing: false, channel: {hasFeature: sinon.stub().returns(true)}})
+        React.createElement(
+          SectionContainer
+          {
+            key:'child-1'
+            i: 0
+            article: @article
+            section: @sections.models[0]
+            sections: @sections
+            editing: false
+            channel: {hasFeature: hasFeature}
+          }
+        )
+        React.createElement(
+          SectionTool
+          {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}}
+        )
+        React.createElement(
+          SectionContainer
+          {
+            key:'child-3'
+            i: 2
+            article: @article
+            section: @sections.models[1]
+            sections: @sections
+            editing: false
+            channel: {hasFeature: hasFeature}
+          }
+        )
+        React.createElement(
+          SectionContainer
+          {
+            key:'child-4'
+            i: 3
+            article: @article
+            section: @sections.models[2]
+            sections: @sections
+            editing: false
+            channel: {hasFeature: hasFeature}
+          }
+        )
       ]
-      @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render(
+        React.createElement(@DragDropContainer, @props, @children)
+        (@$el = $ "<div></div>")[0], =>
+      )
       done()
 
   afterEach ->
