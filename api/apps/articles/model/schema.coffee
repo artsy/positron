@@ -159,7 +159,7 @@ denormalizedArtwork = (->
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   postscript: @string().allow('', null)
-  related_articles: @array().items(@string().objectid()).allow(null)
+  related_article_ids: @array().items(@string().objectid()).default([])
   primary_featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artwork_ids: @array().items(@string().objectid()).allow(null)

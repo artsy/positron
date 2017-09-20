@@ -16,7 +16,7 @@ module.exports = AdminArticle = React.createClass
     tier: @props.article.get('tier') or 2
     featured: @props.article?.get('featured') or false
     layout: @setInitialLayout()
-    relatedArticles: @props.article?.get('related_articles') or []
+    relatedArticles: @props.article?.get('related_article_ids') or []
 
   componentWillMount: ->
     @setupPublishDate()
@@ -47,8 +47,8 @@ module.exports = AdminArticle = React.createClass
 
   onLayoutChange: (e) ->
     if e.target.name is 'standard' and @props.article.get('layout') is 'feature'
-      canLooseData = confirm 'Some header and section layout data may be lost. Change anyways?'
-      return false unless canLooseData
+      canLoseData = confirm 'Some header and section layout data may be lost. Change anyways?'
+      return false unless canLoseData
     @setState layout: e.target.name
     @onChange 'layout', e.target.name
 
@@ -248,13 +248,13 @@ module.exports = AdminArticle = React.createClass
                   relatedArticles = @state.relatedArticles
                   relatedArticles = _.pluck items, 'id'
                   @setState relatedArticles: relatedArticles
-                  @props.onChange 'related_articles', relatedArticles
+                  @props.onChange 'related_article_ids', relatedArticles
                 removed: (e, item, items) =>
                   relatedArticles = @state.relatedArticles
                   relatedArticles = _.without(_.pluck(items,'id'),item.id)
                   @setState relatedArticles: relatedArticles
-                  @props.onChange 'related_articles', relatedArticles
-                idsToFetch: @props.article.get('related_articles')
+                  @props.onChange 'related_article_ids', relatedArticles
+                idsToFetch: @props.article.get('related_article_ids')
                 fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
                 resObject: (res) ->
                   id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
