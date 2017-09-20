@@ -14,30 +14,30 @@ describe('Feature Header Controls', () => {
   }
 
   it('renders menu prompt', () => {
-    const wrapper = mount(
+    const component = mount(
       <Controls {...props} />
     )
-    expect(wrapper.html()).toMatch('<div class="edit-header--controls-open">Change Header</div>')
-    expect(wrapper.state().isOpen).toBe(false)
+    expect(component.html()).toMatch('<div class="edit-header--controls-open">Change Header</div>')
+    expect(component.state().isOpen).toBe(false)
   })
 
   it('opens the menu on click', () => {
-    const wrapper = mount(
+    const component = mount(
       <Controls {...props} />
     )
-    wrapper.find('.edit-header--controls-open').simulate('click')
-    expect(wrapper.state().isOpen).toBe(true)
-    expect(wrapper.find(Fullscreen).length).toBe(1)
-    expect(wrapper.find(Split).length).toBe(1)
-    expect(wrapper.find(Text).length).toBe(1)
+    component.find('.edit-header--controls-open').simulate('click')
+    expect(component.state().isOpen).toBe(true)
+    expect(component.find(Fullscreen).length).toBe(1)
+    expect(component.find(Split).length).toBe(1)
+    expect(component.find(Text).length).toBe(1)
   })
 
   it('changes the layout click', () => {
-    const wrapper = mount(
+    const component = mount(
       <Controls {...props} />
     )
-    wrapper.find('.edit-header--controls-open').simulate('click')
-    wrapper.find('a').first().simulate('click')
+    component.find('.edit-header--controls-open').simulate('click')
+    component.find('a').first().simulate('click')
     expect(props.onChange.mock.calls[0][0]).toMatch('type')
     expect(props.onChange.mock.calls[0][1]).toMatch('text')
   })
