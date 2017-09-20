@@ -34,6 +34,7 @@ export default class ImageCollectionImage extends Component {
           placeholder='Image Caption'
           html={image.caption || ''}
           onChange={this.onCaptionChange}
+          stripLinebreaks={true}
           layout={this.props.article.get('layout')} />
       )
     }
