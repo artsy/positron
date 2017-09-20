@@ -173,7 +173,7 @@ module.exports = React.createClass
               onDragEnd: @onDragEnd
               isDraggable: @props.editing
               dimensions: @state.dimensions
-              isWrapping: @isImageSetWrapping
+              isWrapping: @isImageSetWrapping()
             },
               @renderImages(images)
           else

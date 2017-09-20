@@ -49,7 +49,12 @@ module.exports = React.createClass
         (if @props.sections.length then ' esl-children' else '')
       ref: 'sections'
     },
-      SectionTool { sections: @props.sections, index: -1, key: 1 }
+      SectionTool {
+        sections: @props.sections
+        index: -1
+        key: 1
+        isEditing: @state.editingIndex isnt null
+      }
       if @props.sections.length
         DragContainer {
           items: @props.sections.models
@@ -72,7 +77,12 @@ module.exports = React.createClass
                   onSetEditing: @onSetEditing
                   article: @props.article
                 }
-                SectionTool { sections: @props.sections, index: i, key: i }
+                SectionTool {
+                  sections: @props.sections
+                  index: i
+                  key: i
+                  isEditing: @state.editingIndex isnt null
+                }
               ]
       if @props.channel.isEditorial()
         div {
