@@ -42,9 +42,11 @@ describe 'AdminArticle', ->
         author: {name: 'Artsy Editorial', id: '123'}
         contributing_authors: [{name: 'Molly Gottschalk', id: '123'}]
         indexable: true
+      @channel = { isEditorial: sinon.stub().returns(false) }
       props = {
         article: @article
         onChange: sinon.stub()
+        channel: @channel
         }
       @component = ReactDOM.render React.createElement(AdminArticle, props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
@@ -94,6 +96,19 @@ describe 'AdminArticle', ->
       @component.showActive('tier', 2).should.eql ' active'
       @component.showActive('featured', true).should.eql ''
 
+  describe 'Display: Editorial features', ->
+
+    it 'Renders the layout buttons', ->
+      @channel.isEditorial.returns(true)
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).find('.article-layout .button-group').length.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).find('.article-layout .button-group button').length.should.eql 2
+
+    it 'Renders the related article autocomplete', ->
+      @channel.isEditorial.returns(true)
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Related Articles'
+      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').length.should.eql 2
 
   describe 'Publish and scheduled date', ->
 
@@ -189,6 +204,14 @@ describe 'AdminArticle', ->
       r.simulate.click r.findTag(@component, 'button')[4]
       @component.onChange.args[0][0].should.eql 'featured'
       @component.onChange.args[0][1].should.eql false
+
+    it '#onLayoutChange updates the layout', ->
+      @component.onChange = sinon.stub()
+      @channel.isEditorial.returns(true)
+      @component.forceUpdate()
+      r.simulate.click r.findTag(@component, 'button')[5]
+      @component.onChange.args[0][0].should.eql 'layout'
+      @component.onChange.args[0][1].should.eql 'standard'
 
     it '#onCheckboxChange toggles indexable', ->
       @component.onChange = sinon.stub()

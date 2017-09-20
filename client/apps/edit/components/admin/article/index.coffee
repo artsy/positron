@@ -15,12 +15,18 @@ module.exports = AdminArticle = React.createClass
     focus_date: false
     tier: @props.article.get('tier') or 2
     featured: @props.article?.get('featured') or false
+    layout: @setInitialLayout()
+    relatedArticles: @props.article?.get('related_articles') or []
 
   componentWillMount: ->
     @setupPublishDate()
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
+
+  setInitialLayout: ->
+    return 'classic' unless @props.channel?.isEditorial()
+    return @props.article?.get('layout') or 'standard'
 
   onChange: (key, value)->
     @props.onChange key, value
@@ -38,6 +44,10 @@ module.exports = AdminArticle = React.createClass
     featured = if e.target.name is 'true' then true else false
     @setState featured: featured
     @onChange 'featured', featured
+
+  onLayoutChange: (e) ->
+    @setState layout: e.target.name
+    @onChange 'layout', e.target.name
 
   onCheckboxChange: (e) ->
     key = $(e.currentTarget).attr('name')
@@ -154,6 +164,22 @@ module.exports = AdminArticle = React.createClass
                   className: 'avant-garde-button' + @showActive 'featured', false
                   onClick: @onMagazineChange
                 }, 'No'
+
+          if @props.channel.isEditorial()
+            div {className: 'field-group article-layout'},
+              label {}, 'Article Layout'
+              div {className: 'button-group'},
+                button {
+                  className: 'avant-garde-button' + @showActive('layout', 'standard')
+                  onClick: @onLayoutChange
+                  name: 'standard'
+                }, 'Standard'
+                button {
+                  className: 'avant-garde-button' + @showActive('layout', 'feature')
+                  onClick: @onLayoutChange
+                  name: 'feature'
+                }, 'Feature'
+
           div {
             className: 'field-group--inline flat-checkbox'
             onClick: @onCheckboxChange
@@ -166,6 +192,18 @@ module.exports = AdminArticle = React.createClass
               readOnly: true
             }
             label {}, 'Index for Search'
+          div {
+            className: 'field-group--inline flat-checkbox'
+            onClick: @onCheckboxChange
+            name: 'exclude_google_news'
+          },
+            input {
+              type: 'checkbox'
+              checked: @props.article.get 'exclude_google_news'
+              value: @props.article.get 'exclude_google_news'
+              readOnly: true
+            }
+            label {}, 'Exclude from Google News'
 
         div {className: 'fields-right'},
           div {className: 'field-group publish-time'},
@@ -193,15 +231,28 @@ module.exports = AdminArticle = React.createClass
                 className: 'avant-garde-button date'
                 onClick: @onScheduleChange
               }, @publishButtonText()
-            div {
-              className: 'field-group--inline flat-checkbox'
-              onClick: @onCheckboxChange
-              name: 'exclude_google_news'
-            },
-              input {
-                type: 'checkbox'
-                checked: @props.article.get 'exclude_google_news'
-                value: @props.article.get 'exclude_google_news'
-                readOnly: true
+
+          if @props.channel.isEditorial()
+            div {className: 'field-group'},
+              label {}, 'Related Articles'
+              AutocompleteList {
+                url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+                placeholder: "Search articles by title..."
+                filter: (articles) ->
+                  for article in articles.results
+                    { id: article.id, value: "#{article.title}, #{article.author?.name}"}
+                selected: (e, item, items) =>
+                  relatedArticles = @state.relatedArticles
+                  relatedArticles = _.pluck items, 'id'
+                  @setState relatedArticles: relatedArticles
+                  @props.onChange 'related_articles', relatedArticles
+                removed: (e, item, items) =>
+                  relatedArticles = @state.relatedArticles
+                  relatedArticles = _.without(_.pluck(items,'id'),item.id)
+                  @setState relatedArticles: relatedArticles
+                  @props.onChange 'related_articles', relatedArticles
+                idsToFetch: @props.article.get('related_articles')
+                fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+                resObject: (res) ->
+                  id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
               }
-              label {}, 'Exclude from Google News'
