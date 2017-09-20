@@ -26,6 +26,7 @@ describe 'AdminArticle', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
+      global.confirm = @confirm = sinon.stub()
       AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
       AdminArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
@@ -42,6 +43,7 @@ describe 'AdminArticle', ->
         author: {name: 'Artsy Editorial', id: '123'}
         contributing_authors: [{name: 'Molly Gottschalk', id: '123'}]
         indexable: true
+        layout: 'standard'
       @channel = { isEditorial: sinon.stub().returns(false) }
       props = {
         article: @article
@@ -209,9 +211,17 @@ describe 'AdminArticle', ->
       @component.onChange = sinon.stub()
       @channel.isEditorial.returns(true)
       @component.forceUpdate()
-      r.simulate.click r.findTag(@component, 'button')[5]
+      r.simulate.click r.findTag(@component, 'button')[6]
       @component.onChange.args[0][0].should.eql 'layout'
-      @component.onChange.args[0][1].should.eql 'standard'
+      @component.onChange.args[0][1].should.eql 'feature'
+
+    it '#onLayoutChange warns a user if data will be lost', ->
+      @component.onChange = sinon.stub()
+      @channel.isEditorial.returns(true)
+      @component.props.article.set('layout', 'feature')
+      @component.forceUpdate()
+      r.simulate.click r.findTag(@component, 'button')[5]
+      @confirm.called.should.eql true
 
     it '#onCheckboxChange toggles indexable', ->
       @component.onChange = sinon.stub()

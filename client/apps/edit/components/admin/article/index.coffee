@@ -46,6 +46,9 @@ module.exports = AdminArticle = React.createClass
     @onChange 'featured', featured
 
   onLayoutChange: (e) ->
+    if e.target.name is 'standard' and @props.article.get('layout') is 'feature'
+      canLooseData = confirm 'Some header and section layout data may be lost. Change anyways?'
+      return false unless canLooseData
     @setState layout: e.target.name
     @onChange 'layout', e.target.name
 
