@@ -43,8 +43,7 @@ describe 'AdminSuperArticle', ->
       AdminSuperArticle.__set__ 'AutocompleteList', React.createFactory @AutocompleteList
       @channel = {id: '123'}
       @channel.hasFeature = sinon.stub().returns true
-      @article = new Article
-      @article.attributes = fixtures().articles
+      @article = new Article fixtures().articles
       props = {
         article: @article
         channel: @channel
@@ -58,7 +57,7 @@ describe 'AdminSuperArticle', ->
     benv.teardown()
 
   it 'renders the fields', ->
-    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 11
+    $(ReactDOM.findDOMNode(@component)).find('input').length.should.eql 12
     $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 3
     $(ReactDOM.findDOMNode(@component)).find('textarea').length.should.eql 1
     $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').first().attr('placeholder').should.eql 'Search articles by title...'
@@ -73,6 +72,7 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/logo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/blacklogo.jpg'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://secondarypartner.com/logo.png'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Footer Title'
 
   it 'enables input when is_super_article is enabled', ->
     @component.props.article.set 'is_super_article', true

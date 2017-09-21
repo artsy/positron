@@ -120,6 +120,7 @@ module.exports = ->
       secondary_logo_link: 'http://secondary'
       footer_blurb: 'This is a Footer Blurb'
       related_articles: [ '5530e72f7261696238050000' ]
+      footer_title: 'Footer Title'
     social_description: 'Social Description Here.'
     social_title: 'Social Title'
     social_image: 'http://socialimage.jpg'
