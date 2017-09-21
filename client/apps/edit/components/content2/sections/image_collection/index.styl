@@ -1,19 +1,6 @@
 @import '../../../stylus_lib'
 
 .edit-section--image-collection
-  &.imageset-block // scrolling edit view for imageset
-    .image-collection__list
-      overflow hidden
-      overflow-x scroll
-    .drag-container
-      width 200%
-      margin-top 15px
-      .drag-target
-        margin-right 30px
-        &:last-child
-          margin-right 0
-    &--long .drag-container
-      width 300%
   .edit-section__remove
     position absolute
     top -12px
@@ -29,12 +16,14 @@
   [data-target=true] .edit-section__remove
     display none
 
-
 .image-collection
   &__img-container
     position relative
-    margin-bottom 30px
+    padding-bottom 30px
     max-width 100%
+    margin-right 30px
+    &:last-child
+      margin-right 0
   &.single .image-collection__img-container
     margin 0 auto 30px auto
   &__img
@@ -45,13 +34,18 @@
     z-index 2 !important
     opacity 0
     transition opacity 500ms ease-in
+    display flex
+    justify-content center
     &--placeholder
       opacity 1
     .drag-container
       display flex
-      justify-content space-between
+      justify-content center
     .drag-target
       max-width 100%
+      margin-right 30px
+      &:last-child
+        margin-right 0
 
 .edit-section--image-collection
   .edit-controls
@@ -95,8 +89,53 @@
           background-size cover
           margin-right 10px
           float left
-      .tt-dropdown-menu
-        margin-top -20px
+    &__image-set-inputs
+      color white
+      avant-garde()
+      font-size 13px
+      display flex
+      justify-content space-between
+      align-items center
+      margin-top 20px
+      input
+        width calc(50% - 15px)
+        margin-bottom 0
+      .inputs
+        display flex
+        width calc(50% - 15px)
+      .layout-inputs
+        display flex
+        margin-left 20px
+      .input-group
+        display flex
+        align-items center
+        margin-right 20px
+        .radio-input
+          border 2px solid white
+          width 16px
+          height 16px
+          border-radius 50%
+          margin-right 10px
+          position relative
+          &[data-active=true]::after
+            content ''
+            background white
+            width .6em
+            height .62em
+            border-radius 50%
+            border 1px solid black
+            position absolute
+            left 1px
+            top 1px
+  &[data-overflow=true] // for image sets with many images
+    .drag-container
+      flex-wrap wrap
+    .drag-target
+      margin-right 30px
+      margin-left 0
+
+.edit-section__container[data-type=image_collection]
+  padding-bottom 0
 
 .edit-section__container[data-layout=column_width]
   .image-collection__list .drag-container
@@ -109,6 +148,7 @@
 .feature
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width feature-overflow-w-margin
+    margin 0 auto
   .edit-section__container[data-type=image_collection][data-layout=fillwidth]
     .drag-container
       flex-direction column
@@ -116,6 +156,7 @@
         min-width 100%
     .image-collection__img-container
       width 100%
+      min-width 100%
     .edit-section--image-collection .edit-section__remove
       top 20px
       right 20px

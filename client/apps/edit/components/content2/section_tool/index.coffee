@@ -60,7 +60,11 @@ module.exports = React.createClass
     @setState open: false
 
   render: ->
-    div { className: 'edit-tool', 'data-state-open': @state.open },
+    div {
+      className: 'edit-tool'
+      'data-state-open': @state.open
+      'data-editing': @props.isEditing
+    },
       div { className: 'edit-tool__container'},
         div {
           className: 'edit-tool__icon'

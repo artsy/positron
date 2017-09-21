@@ -34,30 +34,22 @@ export default class ImageCollectionImage extends Component {
           placeholder='Image Caption'
           html={image.caption || ''}
           onChange={this.onCaptionChange}
+          stripLinebreaks={true}
           layout={this.props.article.get('layout')} />
       )
     }
   }
 
-  getContainerWidth(dimensions) {
-    if (dimensions && dimensions[this.props.index] &&
-      this.props.section.get('layout') !== 'fillwidth') {
-      return dimensions[this.props.index].width
-    } else {
-      return 'auto'
-    }
-  }
-
   render() {
-    const { image, dimensions, imagesLoaded } = this.props
+    const { image, imagesLoaded, section, width } = this.props
     return (
       <div
         className='image-collection__img-container'
         style={{
-          width: this.getContainerWidth(dimensions),
+          width: width,
           opacity: imagesLoaded ? 1 : 0
         }} >
-        <Image image={image}>
+        <Image image={image} sectionLayout={section.get('layout')}>
           {this.renderCaption(image)}
         </Image>
         {this.renderRemoveButton(image)}

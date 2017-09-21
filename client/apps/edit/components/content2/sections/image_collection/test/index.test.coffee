@@ -15,7 +15,17 @@ describe 'ImageCollection', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
+      window.jQuery = $
+      require 'typeahead.js'
+      Backbone.$ = $
+      Bloodhound.tokenizers = { obj: { whitespace: sinon.stub() } }
+      $.fn.typeahead = sinon.stub()
       $.fn.fillwidthLite = sinon.stub()
       global.HTMLElement = () => {}
       window.innerHeight = 800
@@ -30,11 +40,10 @@ describe 'ImageCollection', ->
       Artwork = benv.require resolve(__dirname, '../components/artwork')
       Image = benv.require resolve(__dirname, '../components/image')
       Controls = benv.require resolve(__dirname, '../components/controls')
-      Controls.__set__ 'Autocomplete', sinon.stub()
-      Controls.__set__ 'UrlArtworkInput', sinon.stub()
+
       @ImageCollection.__set__ 'Artwork', Artwork
       @ImageCollection.__set__ 'Image', Image
-      @ImageCollection.__set__ 'Controls', React.createFactory Controls
+      @ImageCollection.__set__ 'Controls', Controls
       @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @props = {
         section: new Backbone.Model
@@ -146,7 +155,7 @@ describe 'ImageCollection', ->
         images: images
         type: 'image_set'
       component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
-      $(ReactDOM.findDOMNode(component)).attr('class').should.containEql 'imageset-block'
+      $(ReactDOM.findDOMNode(component)).attr('data-overflow').should.eql 'true'
 
 
   describe '#getFillWidthSizes', ->

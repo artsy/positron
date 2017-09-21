@@ -86,6 +86,7 @@ export default class SectionVideo extends Component {
             placeholder='Video Caption (required)'
             html={section.get('caption')}
             onChange={this.onCaptionChange}
+            stripLinebreaks={true}
             layout={article.get('layout')} />
         </Video>
       )
