@@ -1,1 +1,1 @@
-web: make sf
+web: npm start
