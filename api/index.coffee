@@ -1,4 +1,3 @@
-require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
