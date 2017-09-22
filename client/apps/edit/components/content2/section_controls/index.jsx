@@ -30,30 +30,8 @@ export default class SectionControls extends Component {
     return  this.props.channel.isEditorial() ? 95 : 55
   }
 
-  getControlsWidth() {
-    // used for classic layout only
-    const { section } = this.props
-    const isOverflow = section.get('layout') &&
-     section.get('layout').includes('overflow') ||
-     section.get('type') === 'image_set'
-
-    if (this.props.isHero) {
-      return 1100
-    } else {
-      return isOverflow ? 900 : 620
-    }
-  }
-
-  getPositionLeft() {
-    if (this.state.insideComponent) {
-      return ((window.innerWidth / 2) - (this.getControlsWidth() / 2)) + 55
-    } else {
-      return this.props.articleLayout === 'classic' ? '20px' : 0
-    }
-  }
-
   getPositionBottom() {
-    if (this.state.insideComponent) {
+    if (this.state.insideComponent && !this.props.isHero) {
       return window.innerHeight - $(this.refs.controls).height() - this.getHeaderSize()
     } else {
       return '100%'
@@ -76,7 +54,7 @@ export default class SectionControls extends Component {
     let insideComponent = false
     const $section = $(this.refs.controls) && $(this.refs.controls).closest('section')
 
-    if ($section) {
+    if ($section && !this.props.isHero) {
       if ((this.isScrollingOver($section) && !this.isScrolledPast($section)) ||
        (this.props.isHero && !this.isScrolledPast($section))) {
         insideComponent = true
@@ -155,18 +133,18 @@ export default class SectionControls extends Component {
   }
 
   render() {
-    const { articleLayout, section, sectionLayouts } = this.props
+    const { articleLayout, isHero, section, sectionLayouts } = this.props
     const { insideComponent } = this.state
     const isSticky = insideComponent ? ' sticky' : ''
+    const staticPosition = isHero ? 'relative' : 'absolute'
 
     return (
       <div
         ref='controls'
         className={ 'edit-controls' + isSticky }
         style={{
-          position: insideComponent ? 'fixed' : 'absolute',
-          bottom: this.getPositionBottom(),
-          left: articleLayout === 'classic' ? this.getPositionLeft() : ''
+          position: insideComponent ? 'fixed' : staticPosition,
+          bottom: this.getPositionBottom()
       }}>
         { sectionLayouts &&
           this.renderSectionLayouts(section) }

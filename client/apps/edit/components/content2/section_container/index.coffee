@@ -96,4 +96,3 @@ module.exports = React.createClass
         className: 'edit-section__container-bg'
         onClick: @onClickOff
       }
-      # TODO - FEATURE HEADER

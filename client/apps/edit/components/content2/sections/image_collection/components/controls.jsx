@@ -94,7 +94,7 @@ export default class Controls extends Component {
   }
 
   render() {
-    const { article, channel, images, section, setProgress, onChange } = this.props
+    const { article, channel, images, isHero, section, setProgress, onChange } = this.props
     const inputsAreDisabled = this.inputsAreDisabled(section)
 
     return (
@@ -103,7 +103,8 @@ export default class Controls extends Component {
           channel={channel}
           articleLayout={article.get('layout')}
           onChange={onChange}
-          sectionLayouts={true}
+          sectionLayouts={isHero ? false : true}
+          isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
           <div onClick={inputsAreDisabled && this.fillwidthAlert}>

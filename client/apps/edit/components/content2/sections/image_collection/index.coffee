@@ -135,6 +135,7 @@ module.exports = React.createClass
           Controls.default, {
             section: @props.section
             images: images
+            isHero: @props.isHero
             setProgress: @setProgress
             onChange: @onChange
             channel: @props.channel
