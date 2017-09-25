@@ -3,7 +3,6 @@
 section-btn-height = 130px
 
 .edit-tool
-  opacity 0
   z-index 1
   max-height 0
   position relative
@@ -18,14 +17,11 @@ section-btn-height = 130px
   &__container
     width section-tool-size - 11px
   &:hover
-    opacity 1
     .edit-tool__container
       width 100%
-    &::after
-      opacity 0
     .edit-tool__icon
-      svg
-        fill-color black
+      svg path
+        fill black
       &::before
         opacity 1
         max-width 800px
@@ -55,21 +51,17 @@ section-btn-height = 130px
     position absolute
     left -18px
     top -13px
-    rect
-      fill white !important
 
 .edit-tool__menu
-  display none
+  display flex
   border 2px solid black
   position relative
   left 0
   width 100%
   overflow hidden
-  opacity 0
   border-top-color transparent
   background gray-lightest-color
   li
-    width 33.33%
     avant-garde()
     background white
     height 89px
@@ -101,29 +93,16 @@ section-btn-height = 130px
 .edit-tool[data-state-open="true"]
   max-height (section-btn-height * 4)
   width 100%
-  opacity 1
-  position relative
   transition max-height 0.15s linear, opacity 0.15s linear
-  .edit-tool__container
-    width 100%
   .edit-tool__icon::before
     opacity 1
     max-width 800px
-  &::after
-    opacity 0
-  .edit-tool__menu
-    opacity 1
-    max-height (section-btn-height * 2)
-    transition max-height 0.15s linear, opacity 0.15s linear
-    display flex
 
 .edit-sections__list
   .edit-tool[data-state-open="true"]
     .edit-tool__icon
       &::after
         display block
-      svg
-        fill-color black
   .edit-tool
     &::after
       content 'Add a section'
@@ -141,8 +120,6 @@ section-btn-height = 130px
       &::after
         opacity 1
         color black
-      svg
-        fill-color black
 
 .classic .edit-tool
   max-width classic-body-w-margin

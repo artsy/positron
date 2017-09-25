@@ -73,53 +73,57 @@ export default class SectionTool extends Component {
   }
 
   renderHeroMenu() {
-    return (
-      <ul className='edit-tool__menu'>
-        <li
-          className='edit-tool__hero-image'
-          onClick={ () => this.setHero('image_collection')}>
-          <IconHeroImage />
-          Large Format Image
-        </li>
-        <li
-          className='edit-tool__hero-video'
-          onClick={ () => this.setHero('video')}>
-          <IconHeroVideo />
-          Large Format Video
-        </li>
-      </ul>
-    )
+    if (this.state.open) {
+      return (
+        <ul className='edit-tool__menu'>
+          <li
+            className='edit-tool__hero-image'
+            onClick={ () => this.setHero('image_collection')}>
+            <IconHeroImage />
+            Large Format Image
+          </li>
+          <li
+            className='edit-tool__hero-video'
+            onClick={ () => this.setHero('video')}>
+            <IconHeroVideo />
+            Large Format Video
+          </li>
+        </ul>
+      )
+    }
   }
 
   renderSectionMenu() {
-    return (
-      <ul className='edit-tool__menu'>
-        <li
-          className='edit-tool__edit-text'
-          onClick={ () => this.newSection('text')}>
-          <IconEditText />
-          Text
-        </li>
-        <li
-          className='edit-tool__edit-images'
-          onClick={ () => this.newSection('image_collection')}>
-          <IconEditImages />
-          Images
-        </li>
-        <li
-          className='edit-tool__edit-video'
-          onClick={ () => this.newSection('video')}>
-          <IconEditVideo />
-          Video
-        </li>
-        <li
-          className='edit-tool__edit-embed'
-          onClick={ () => this.newSection('embed')}>
-          <IconEditEmbed />
-          Embed
-        </li>
-      </ul>
-    )
+    if (this.state.open) {
+      return (
+        <ul className='edit-tool__menu'>
+          <li
+            className='edit-tool__edit-text'
+            onClick={ () => this.newSection('text')}>
+            <IconEditText />
+            Text
+          </li>
+          <li
+            className='edit-tool__edit-images'
+            onClick={ () => this.newSection('image_collection')}>
+            <IconEditImages />
+            Images
+          </li>
+          <li
+            className='edit-tool__edit-video'
+            onClick={ () => this.newSection('video')}>
+            <IconEditVideo />
+            Video
+          </li>
+          <li
+            className='edit-tool__edit-embed'
+            onClick={ () => this.newSection('embed')}>
+            <IconEditEmbed />
+            Embed
+          </li>
+        </ul>
+      )
+    }
   }
 
   render() {
@@ -134,7 +138,7 @@ export default class SectionTool extends Component {
           className='edit-tool__icon'
           onClick={this.toggleOpen}>
           <IconEditSection
-            fill={this.state.open ? '#000' : '#CCC'}
+            fill={this.state.open || !isHero ? '#000' : '#CCC'}
             isClosing={this.state.open} />
         </div>
         { isHero
