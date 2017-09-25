@@ -1,14 +1,13 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { extend } from 'lodash'
-import { mount, shallow } from 'enzyme'
+import { mount } from 'enzyme'
 
+import HeroSection from '../index.jsx'
 import SectionContainer from '../../../section_container/index.coffee'
 import SectionTool from '../../../section_tool/index.jsx'
 
 import components from '@artsy/reaction-force/dist/components/publishing/index'
-import HeroSection from '../index.jsx'
-
 const { FeatureArticle } = components.Fixtures
 
 describe('HeroSection', () => {

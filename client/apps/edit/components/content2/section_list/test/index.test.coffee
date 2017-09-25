@@ -35,13 +35,16 @@ describe 'SectionList', ->
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
       )
+      @ImageCollection = benv.require(
+        resolve(__dirname, '../../sections/image_collection/index')
+      )
+      @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @SectionContainer.__set__ 'Text', text = sinon.stub()
-      @SectionContainer.__set__ 'ImageCollection', image_collection = sinon.stub()
+      @SectionContainer.__set__ 'ImageCollection', React.createFactory @ImageCollection
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @SectionList.__set__ 'Paragraph', React.createFactory Paragraph
       @props = {
-        article: new Backbone.Model {layout: 'feature'}
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }
@@ -67,8 +70,10 @@ describe 'SectionList', ->
             ]
           }
         ]
-        article: new Backbone.Model
+        article: new Backbone.Model {
+          layout: 'feature'
           sections: @sections
+        }
         saveArticle: @saveArticle = sinon.stub()
         channel: new Channel
           type: 'editorial'
@@ -81,7 +86,7 @@ describe 'SectionList', ->
 
   it 'renders the sections', ->
     @component.render()
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'An image caption'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
   it 'renders the postscript on editorial channels', ->
     @component.render()

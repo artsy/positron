@@ -14,6 +14,7 @@ export default class SectionTool extends Component {
   constructor (props) {
     super(props)
 
+    this.type = {displayName: 'SectionTool'}
     this.state = {
       open: false
     }

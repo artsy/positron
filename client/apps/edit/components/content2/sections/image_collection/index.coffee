@@ -36,7 +36,7 @@ module.exports = React.createClass
       progress: null
       imagesLoaded: true
       dimensions: FillWidth(
-        @props.section.get('images'),
+        @props.section.get('images') or [],
         sizes.containerSize,
         30,
         sizes.targetHeight
@@ -120,7 +120,7 @@ module.exports = React.createClass
         )
 
   render: ->
-    images = @props.section.get 'images' or []
+    images = @props.section.get('images') or []
     hasImages = images.length > 0
     isSingle = if images.length is 1 then ' single' else ''
     listClass = if hasImages then '' else ' image-collection__list--placeholder'

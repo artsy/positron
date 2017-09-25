@@ -12,6 +12,7 @@ SectionEmbed = React.createFactory require '../sections/embed/index.coffee'
 SectionFullscreen = React.createFactory require '../sections/fullscreen/index.coffee'
 SectionCallout = React.createFactory require '../sections/callout/index.coffee'
 SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
+SectionImage = React.createFactory require '../sections/image/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
 
@@ -64,6 +65,7 @@ module.exports = React.createClass
         when 'callout' then SectionCallout
         when 'image_set' then SectionImageCollection
         when 'image_collection' then SectionImageCollection
+        when 'image' then SectionImage
       )(
         section: @props.section
         sections: @props.sections

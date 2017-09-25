@@ -2,6 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 DragTarget = React.createFactory require './drag_target.coffee'
 DragSource = React.createFactory require './drag_source.coffee'
+SectionTool = require '../../apps/edit/components/content2/section_tool/index.jsx'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -90,7 +91,8 @@ module.exports = React.createClass
             layout: layout or null
           },
             DragSource {
-              i: uniqueKey + '-source'
+              i: i
+              key: uniqueKey + '-source'
               setDragSource: @setDragSource
               activeSource: @state.dragSource is i
               activeTarget: @state.dragTarget is i

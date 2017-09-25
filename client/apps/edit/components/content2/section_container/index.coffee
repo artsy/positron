@@ -12,7 +12,6 @@ Slideshow = React.createFactory require '../../content/sections/slideshow/index.
 Embed = React.createFactory require '../sections/embed/index.coffee'
 Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
-Image = React.createFactory require '../../content/sections/image/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
 
@@ -90,7 +89,7 @@ module.exports = React.createClass
           when 'fullscreen' then Fullscreen
           when 'image_set' then ImageCollection
           when 'image_collection' then ImageCollection
-          when 'image' then Image
+          when 'image' then ImageCollection
         )( @sectionProps() )
       div {
         className: 'edit-section__container-bg'

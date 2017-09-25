@@ -1,6 +1,6 @@
 React = require 'react'
 _ = require 'underscore'
-HeroSection = require './sections/hero/index.jsx'
+Hero = require './sections/hero/index.jsx'
 Header = require './sections/header/index.jsx'
 SectionList = React.createFactory require './section_list/index.coffee'
 { div } = React.DOM
@@ -28,7 +28,7 @@ module.exports = React.createClass
       if @props.article.get('layout') is 'classic' and
        (@props.article.get('hero_section') != null or @props.channel.hasFeature('hero'))
         React.createElement(
-          HeroSection.default,
+          Hero.default,
           {
             article: @props.article
             section: @props.article.heroSection

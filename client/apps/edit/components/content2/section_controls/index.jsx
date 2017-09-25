@@ -136,14 +136,14 @@ export default class SectionControls extends Component {
     const { articleLayout, isHero, section, sectionLayouts } = this.props
     const { insideComponent } = this.state
     const isSticky = insideComponent ? ' sticky' : ''
-    const staticPosition = isHero ? 'relative' : 'absolute'
+    const outsidePosition = isHero ? 'relative' : 'absolute'
 
     return (
       <div
         ref='controls'
         className={ 'edit-controls' + isSticky }
         style={{
-          position: insideComponent ? 'fixed' : staticPosition,
+          position: insideComponent ? 'fixed' : outsidePosition,
           bottom: this.getPositionBottom()
       }}>
         { sectionLayouts &&
