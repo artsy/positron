@@ -24,46 +24,39 @@ export default class SectionTool extends Component {
   }
 
   getProps(type) {
-    if (type === 'video') {
-      return {
-        type: 'video',
-        url: '',
-        layout: 'column_width'
-      }
-    } else if (type === 'image_collection') {
-      return {
-        type: 'image_collection',
-        layout: 'overflow_fillwidth',
-        images: []
-      }
-    }
-  }
-
-  newSection = (type) => {
     switch (type) {
+      case 'video':
+        return {
+          type: 'video',
+          url: '',
+          layout: 'column_width'
+        }
+      case 'image_collection':
+        return {
+          type: 'image_collection',
+          layout: 'overflow_fillwidth',
+          images: []
+        }
       case 'embed':
-        this.props.sections.add({
+        return {
           type: 'embed',
           url: '',
           layout: 'column_width',
           height: ''
-        }, {at: this.props.index + 1})
-      case 'image_collection':
-        this.props.sections.add(
-          this.getProps(type),
-          {at: this.props.index + 1}
-        )
+        }
       case 'text':
-        this.props.sections.add({
+        return {
           type: 'text',
           body: ''
-        }, {at: this.props.index + 1})
-      case 'video':
-        this.props.sections.add(
-          this.getProps(type),
-          {at: this.props.index + 1}
-        )
+        }
     }
+  }
+
+  newSection = (type) => {
+    this.props.sections.add(
+      this.getProps(type),
+      {at: this.props.index + 1}
+    )
     this.setState({open: false})
   }
 
@@ -128,9 +121,10 @@ export default class SectionTool extends Component {
 
   render() {
     const { isEditing, isHero, sections } = this.props
+    const isFirstSection = this.props.firstSection && sections.length === 0 ? ' first' : ''
     return (
       <div
-        className='edit-tool'
+        className={'edit-tool' + isFirstSection}
         data-state-open={this.state.open}
         data-editing={isEditing}
         data-hero={isHero}>

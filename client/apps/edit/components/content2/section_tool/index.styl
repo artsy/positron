@@ -62,6 +62,7 @@ section-btn-height = 130px
   border-top-color transparent
   background gray-lightest-color
   li
+    flex 1
     avant-garde()
     background white
     height 89px
@@ -82,13 +83,6 @@ section-btn-height = 130px
       max-height 35px
       height 35px
       margin-bottom 5px
-    .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg
-      width 50px
-      left calc(50% - 21px)
-      top 20px
-    .edit-menu-icon-hero-fullscreen svg
-      top 11px
-
 
 .edit-tool[data-state-open="true"]
   max-height (section-btn-height * 4)
@@ -103,26 +97,33 @@ section-btn-height = 130px
     .edit-tool__icon
       &::after
         display block
-  .edit-tool
-    &::after
-      content 'Add a section'
-      width 150px
-      display block
-      float left
-      position absolute
-      top -6px
-      left 35px
-      avant-garde()
-      color gray-dark-color
-      font-size default-avant-garde-font-size - 1
+  .edit-tool[data-state-open="false"]
+    .edit-tool__icon
       opacity 0
-    &:only-child
-      &::after
+      &:hover
         opacity 1
-        color black
+    &.first
+      padding-bottom 40px
+      .edit-tool__icon
+        opacity 1
+      &::after
+        content 'Add a section'
+        width 150px
+        display block
+        float left
+        position absolute
+        top -6px
+        left 35px
+        avant-garde()
+        font-size default-avant-garde-font-size - 1
+      &:hover::after,
+      &[data-state-open="true"]::after
+        display none
 
 .classic .edit-tool
   max-width classic-body-w-margin
+  &[data-hero=true]
+    max-width 640px
 
 .standard .edit-tool
   max-width standard-body-w-margin

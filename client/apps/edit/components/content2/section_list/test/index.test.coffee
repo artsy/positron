@@ -26,11 +26,12 @@ describe 'SectionList', ->
         }
       )
       @SectionList = benv.require resolve(__dirname, '../index')
+      @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
       Paragraph = benv.require resolve(
         __dirname, '../../../../../../components/rich_text2/components/paragraph.coffee'
       )
-      @SectionList.__set__ 'SectionTool', @SectionTool = sinon.stub()
+      @SectionList.__set__ 'SectionTool', @SectionTool
       @SectionContainer = benv.requireWithJadeify(
         resolve(__dirname, '../../section_container/index'), ['icons']
       )
@@ -91,11 +92,6 @@ describe 'SectionList', ->
     component = ReactDOM.render React.createElement(@SectionList, @props), ($el = $ "<div></div>")[0], =>
     component.render()
     $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'Postscript (optional)'
-
-  it 'sets an index for the section tools', ->
-    @SectionTool.args[0][0].index.should.equal -1
-    @SectionTool.args[1][0].index.should.equal 0
-    @SectionTool.args[2][0].index.should.equal 1
 
   it 'opens editing mode in the last added section', ->
     @component.setState = sinon.stub()
