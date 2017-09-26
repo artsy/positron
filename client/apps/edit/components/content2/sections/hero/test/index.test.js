@@ -1,7 +1,7 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { extend } from 'lodash'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 
 import HeroSection from '../index.jsx'
 import SectionContainer from '../../../section_container/index.coffee'
@@ -20,7 +20,7 @@ describe('HeroSection', () => {
   }
 
   it('Displays a sectionTool if no section', () => {
-    const component = mount(
+    const component = shallow(
       <HeroSection {...props} />
     )
     expect(component.find(SectionTool).length).toBe(1)

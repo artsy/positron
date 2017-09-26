@@ -113,22 +113,23 @@ export default class Controls extends Component {
               onProgress={setProgress}
               onUpload={this.onUpload} />
           </div>
-
-          <section
-            className='edit-controls__artwork-inputs'
-            onClick={inputsAreDisabled && this.fillwidthAlert}>
-            <div className='edit-controls__autocomplete-input'>
-              <input
-                ref='autocomplete'
-                className='bordered-input bordered-input-dark'
-                placeholder='Search for artwork by title'
+          { !isHero &&
+            <section
+              className='edit-controls__artwork-inputs'
+              onClick={inputsAreDisabled && this.fillwidthAlert}>
+              <div className='edit-controls__autocomplete-input'>
+                <input
+                  ref='autocomplete'
+                  className='bordered-input bordered-input-dark'
+                  placeholder='Search for artwork by title'
+                  disabled={inputsAreDisabled} />
+              </div>
+              <UrlArtworkInput
+                images={images}
+                addArtworkFromUrl={this.addArtworkFromUrl}
                 disabled={inputsAreDisabled} />
-            </div>
-            <UrlArtworkInput
-              images={images}
-              addArtworkFromUrl={this.addArtworkFromUrl}
-              disabled={inputsAreDisabled} />
-          </section>
+            </section>
+          }
 
         { section.get('type') === 'image_set' &&
           <section
