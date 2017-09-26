@@ -80,8 +80,7 @@ module.exports = React.createClass
             article: @props.article
             channel: @props.channel
             onChange: @onChange
-        }
-
+          }
       section {
         className: 'edit-admin--featuring' + @getActiveSection 'featuring'
       },
