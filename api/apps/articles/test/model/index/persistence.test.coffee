@@ -590,6 +590,15 @@ describe 'Article Persistence', ->
         article.author.name.should.equal 'Jon Snow'
         done()
 
+    it 'saves the author_ids field', (done) ->
+      Article.save {
+        author_ids: [ '5086df098523e60002000018', '5086df098523e60002000015' ]
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.author_ids[0].toString().should.equal '5086df098523e60002000018'
+        article.author_ids[1].toString().should.equal '5086df098523e60002000015'
+        done()
+
     it 'saves a description', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'

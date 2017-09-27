@@ -3,7 +3,7 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 moment = require 'moment'
 sd = require('sharify').data
-{ div, label, input, button } = React.DOM
+{ div, label, span, input, button } = React.DOM
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = AdminArticle = React.createClass
@@ -121,7 +121,11 @@ module.exports = AdminArticle = React.createClass
             }
         div {className: 'fields-right'},
           div {className: 'field-group'},
-            label {}, 'Contributing Author'
+            label {},
+              'Contributing Author'
+              if @props.channel.isEditorial()
+                span {},
+                  '* will be deprecated'
             AutocompleteList {
               url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
               placeholder: 'Search by user name or email...'
@@ -138,6 +142,28 @@ module.exports = AdminArticle = React.createClass
                 id: { id: res.body.id , name: res.body.name },
                 value: _.compact([res.body.name, res.body.email]).join(', ')
             }
+          div {className: 'field-group'},
+            label {}, 'Authors'
+            AutocompleteList {
+              url: "#{sd.API_URL}/authors?q=%QUERY"
+              placeholder: 'Search by author name...'
+              draggable: true
+              filter: (authors) -> for author in authors.results
+                id: { id: author.id, name: author.name }
+                value: author.name
+              selected: (e, item, items) =>
+                selectedAuthors = _.pluck(items, 'id')
+                authorIds = _.map(selectedAuthors, 'id')
+                @onChange 'author_ids', authorIds
+              removed: (e, item, items) =>
+                @onChange 'author_ids', _.without(_.pluck(items, 'id'),item.id)
+              idsToFetch: @props.article.get('author_ids') || []
+              fetchUrl: (id) -> "#{sd.API_URL}/authors/#{id}"
+              resObject: (res) ->
+                id: { id: res.body.id, name: res.body.name }
+                value: res.body.name
+            }
+
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},

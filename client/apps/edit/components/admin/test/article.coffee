@@ -110,7 +110,13 @@ describe 'AdminArticle', ->
       @channel.isEditorial.returns(true)
       @component.forceUpdate()
       $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Related Articles'
-      $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').length.should.eql 2
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search articles by title..."'
+
+    it 'Renders the author_ids autocomplete', ->
+      @channel.isEditorial.returns(true)
+      @component.forceUpdate()
+      $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Authors'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search by author name..."'
 
   describe 'Publish and scheduled date', ->
 

@@ -29,6 +29,20 @@ describe 'authors endpoints', ->
           res.body.results[2].name.should.equal 'Alex'
           done()
 
+  it 'gets a list of authors by query', (done) ->
+    fabricate 'authors', [
+      { name: 'Alex' }
+      { name: 'Molly' }
+      {}
+    ], (err, authors) ->
+      request
+        .get("http://localhost:5000/authors?q=Alex&count=true")
+        .end (err, res) ->
+          res.body.total.should.equal 3
+          res.body.count.should.equal 1
+          res.body.results[0].name.should.equal 'Alex'
+          done()
+
   it 'gets a single author', (done) ->
     fabricate 'authors', [
       {
