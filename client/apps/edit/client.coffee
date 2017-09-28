@@ -19,6 +19,7 @@ async = require 'async'
 
 @init = ->
   @article = new Article sd.ARTICLE
+  @article.set 'author', _.pick @article.get('author'), 'id', 'name'
   channel = new Channel sd.CURRENT_CHANNEL
   new EditLayout el: $('#layout-content'), article: @article, channel: channel
   new EditHeader el: $('#edit-header'), article: @article
@@ -37,6 +38,3 @@ async = require 'async'
       EditContent(article: @article, channel: channel)
       $('#edit-content')[0]
     )
-
-convertAuthor = (article) ->
-  article.set 'author', _.pick article.get('author'), 'id', 'name'
