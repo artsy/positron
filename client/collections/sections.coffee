@@ -9,31 +9,31 @@ module.exports = class Sections extends Backbone.Collection
   mentionedArtistSlugs: ->
     _.compact _.flatten @map (section) ->
       switch section.get 'type'
-        when 'artworks'
-          section.artworks.map (artwork) -> artwork.get('artist')?.id
         when 'text'
-          section.slugsFromHTML 'body', 'artist'
-        when 'image'
-          section.slugsFromHTML 'caption', 'artist'
+          section.slugsFromHTML(section.get('body'), 'artist')
+        when 'image_set', 'image_collection'
+          _.map section.get('images'), (image) ->
+            if image.type is 'artwork'
+              _.map image.artists, (artist) -> artist.id
+            else
+              section.slugsFromHTML(image.caption, 'artist')
 
   mentionedArtworkSlugs: ->
     _.compact _.flatten @map (section) ->
       switch section.get 'type'
-        when 'artworks'
-          section.get 'ids'
         when 'text'
-          section.slugsFromHTML 'body', 'artwork'
-        when 'image'
-          section.slugsFromHTML 'caption', 'artwork'
-        when 'image_set'
+          section.slugsFromHTML(section.get('body'), 'artwork')
+        when 'image_set', 'image_collection'
           _.map section.get('images'), (image) ->
-            image.slug if image.type is 'artwork'
+            if image.type is 'artwork'
+              image.slug
+            else
+              section.slugsFromHTML(image.caption, 'artwork')
 
   removeBlank: ->
     blanks = @select (section) ->
       switch section.get('type')
-        when 'image', 'video' then not section.get('url')
+        when 'video' then not section.get('url')
         when 'text' then not section.get('body')
-        when 'artworks' then not section.get('ids')?.length
         else false
     @remove section for section in blanks

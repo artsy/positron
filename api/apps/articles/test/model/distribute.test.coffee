@@ -114,9 +114,11 @@ describe 'Save', ->
               body: '<html>BODY OF TEXT</html>'
             }
             {
-              type: 'image'
-              caption: 'This Caption'
-              url: 'URL'
+              type: 'image_collection'
+              images: [
+                caption: 'This Caption'
+                url: 'URL'
+              ]
             }
           ]
         }, (err, article) =>

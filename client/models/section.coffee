@@ -3,6 +3,7 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 Artworks = require '../collections/artworks.coffee'
 url = require 'url'
+cheerio = require 'cheerio'
 
 module.exports = class Section extends Backbone.Model
 
@@ -11,10 +12,9 @@ module.exports = class Section extends Backbone.Model
   initialize: ->
     @artworks = new Artworks
 
-  slugsFromHTML: (attr, resource) ->
-    # TODO: Isomorphic DOM reader... cheerio?
-    return throw Error 'Missing jQuery' unless $?
-    _.compact $(@get attr).find('a').map(->
+  slugsFromHTML: (str, resource) ->
+    $ = cheerio.load(str)
+    _.compact $('a').map( ->
       href = $(this).attr('href')
       if href?.match('google')
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
