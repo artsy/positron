@@ -14,8 +14,7 @@ module.exports = class Sections extends Backbone.Collection
         when 'image_set'
           _.map section.images, (image) ->
             if image.type is 'artwork' and image.artists
-              _.map image.artists, (artist) ->
-                artist.id
+              _.map image.artists, (artist) -> artist.id
 
   mentionedArtworkSlugs: ->
     _.compact _.flatten @map (section) ->
