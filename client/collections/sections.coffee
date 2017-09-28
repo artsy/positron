@@ -9,22 +9,19 @@ module.exports = class Sections extends Backbone.Collection
   mentionedArtistSlugs: ->
     _.compact _.flatten @map (section) ->
       switch section.get 'type'
-        when 'artworks'
-          section.artworks.map (artwork) -> artwork.get('artist')?.id
         when 'text'
           section.slugsFromHTML 'body', 'artist'
-        when 'image'
-          section.slugsFromHTML 'caption', 'artist'
+        when 'image_set'
+          _.map section.images, (image) ->
+            if image.type is 'artwork' and image.artists
+              _.map image.artists, (artist) ->
+                artist.id
 
   mentionedArtworkSlugs: ->
     _.compact _.flatten @map (section) ->
       switch section.get 'type'
-        when 'artworks'
-          section.get 'ids'
         when 'text'
           section.slugsFromHTML 'body', 'artwork'
-        when 'image'
-          section.slugsFromHTML 'caption', 'artwork'
         when 'image_set'
           _.map section.get('images'), (image) ->
             image.slug if image.type is 'artwork'

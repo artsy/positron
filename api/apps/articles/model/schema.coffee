@@ -107,7 +107,6 @@ ImageCollectionSection = (->
   gravity_id: @string().objectid().allow('', null)
   hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection).allow(null).default(null)
   sections: @array().items([
-    imageSection
     ImageCollectionSection
     videoSection
     @object().meta(
@@ -136,14 +135,6 @@ ImageCollectionSection = (->
       type: @string().valid('text')
       body: @string().allow('', null)
       layout: @string().allow('blockquote', null)
-    @object().meta(
-      name: 'Artworks'
-      isTypeOf: (data) -> data.type is 'artworks'
-    ).keys
-      type: @string().valid('artworks')
-      ids: @array().items(@string().objectid())
-      layout: @string().allow('overflow_fillwidth', 'column_width', null)
-      artworks: @array().items(denormalizedArtwork).allow(null).default([])
     @object().meta(
       name: 'Slideshow'
       isTypeOf: (data) -> data.type is 'slideshow'

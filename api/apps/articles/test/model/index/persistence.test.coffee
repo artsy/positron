@@ -241,8 +241,11 @@ describe 'Article Persistence', ->
             body: badBody
           }
           {
-            type: 'image'
-            caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+            type: 'image_collection'
+            images: [
+              type: 'image'
+              caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+            ]
           }
           {
             type: 'slideshow'
@@ -265,7 +268,7 @@ describe 'Article Persistence', ->
         article.hero_section.caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[0].body.should.equal body
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
-        article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[2].images[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[4].url.should.equal 'http://maps.google.com'
         article.sections[4].height.should.equal '400'
@@ -309,28 +312,21 @@ describe 'Article Persistence', ->
             body: '<a href="foo.com">Foo</a>'
           }
           {
-            type: 'image'
-            url: 'http://foo.com'
+            type: 'image_collection'
+            images: [
+              type: 'image'
+              url: 'http://foo.com'
+            ]
           }
           {
             type: 'video'
             url: 'foo.com/watch'
           }
-          {
-            type: 'slideshow'
-            items: [
-              {
-                type: 'video'
-                url: 'foo.com/watch'
-              }
-            ]
-          }
         ]
       }, 'foo', {}, (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
-        article.sections[1].url.should.equal 'http://foo.com'
+        article.sections[1].images[0].url.should.equal 'http://foo.com'
         article.sections[2].url.should.equal 'http://foo.com/watch'
-        article.sections[3].items[0].url.should.equal 'http://foo.com/watch'
         done()
 
     it 'maintains the original slug when publishing with a new title', (done) ->
@@ -488,11 +484,6 @@ describe 'Article Persistence', ->
             type: 'text'
             body: 'The start of a new article'
           }
-          {
-            type: 'image'
-            url: 'https://image.png'
-            caption: 'Trademarked'
-          }
         ]
       , ->
         Article.save {
@@ -502,7 +493,7 @@ describe 'Article Persistence', ->
           published: true
         }, 'foo', {}, (err, article) ->
           article.published.should.be.true()
-          article.sections.length.should.equal 2
+          article.sections.length.should.equal 1
           article.sections[0].body.should.containEql 'The start of a new article'
           done()
 

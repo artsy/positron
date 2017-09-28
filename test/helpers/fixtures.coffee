@@ -33,19 +33,21 @@ module.exports = ->
         ]
       }
       {
-        type: 'image',
-        url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
-        caption: 'This is a terrible caption'
+        type: 'image_collection',
+        images: [
+          type: 'image'
+          url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
+          caption: 'This is a terrible caption'
+        ]
       }
       {
         type: 'text',
         body: '<p><h1>10. Lisson Gallery</h1></p><p>Mia Bergeron merges the <em>personal</em> and <em>universal</em>...',
       }
       {
-        type: 'artworks',
-        ids: ['5321b73dc9dc2458c4000196', '5321b71c275b24bcaa0001a5'],
+        type: 'image_collection',
         layout: 'overflow_fillwidth'
-        artworks: [
+        images: [
           {
             type: 'artwork'
             title: 'The Four Hedgehogs'
