@@ -122,12 +122,13 @@ export default class SectionTool extends Component {
 
   render() {
     const { isEditing, isHero, sections } = this.props
-    const isFirstSection = this.props.firstSection && sections.length === 0 ? ' first' : ''
+    const isFirstSection = this.props.firstSection && sections.length === 0 ? true : false
     return (
       <div
-        className={'edit-tool' + isFirstSection}
+        className={'edit-tool'}
         data-state-open={this.state.open}
         data-editing={isEditing}
+        data-first={isFirstSection}
         data-hero={isHero}>
         <div
           className='edit-tool__icon'

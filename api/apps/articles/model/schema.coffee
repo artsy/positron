@@ -74,7 +74,9 @@ ImageCollectionSection = (->
     isTypeOf: (data) -> data.type is 'image_collection'
   ).keys
     type: 'image_collection'
-    layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', null)
+    layout: @string().allow(
+      'column_width', 'overflow_fillwidth', 'fillwidth'
+    ).default('overflow_fillwidth')
     images: @array().items([denormalizedArtwork, imageSection])
 ).call Joi
 
