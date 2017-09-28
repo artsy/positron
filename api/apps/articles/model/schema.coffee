@@ -68,6 +68,18 @@ denormalizedArtwork = (->
     height: @number().allow(null)
 ).call Joi
 
+ImageCollectionSection = (->
+  @object().meta(
+    name: 'ImageCollection'
+    isTypeOf: (data) -> data.type is 'image_collection'
+  ).keys
+    type: 'image_collection'
+    layout: @string().allow(
+      'column_width', 'overflow_fillwidth', 'fillwidth'
+    ).default('overflow_fillwidth')
+    images: @array().items([denormalizedArtwork, imageSection])
+).call Joi
+
 @inputSchema = (->
   id: @string().objectid()
   author_id: @string().objectid()
@@ -93,9 +105,10 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection, featureSection).allow(null).default(null)
+  hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection).allow(null).default(null)
   sections: @array().items([
     imageSection
+    ImageCollectionSection
     videoSection
     @object().meta(
       name: 'Callout'
@@ -150,13 +163,6 @@ denormalizedArtwork = (->
       type: 'image_set'
       title: @string().allow('',null)
       layout: @string().allow('full', 'mini', null)
-      images: @array().items([denormalizedArtwork, imageSection])
-    @object().meta(
-      name: 'ImageCollection'
-      isTypeOf: (data) -> data.type is 'image_collection'
-    ).keys
-      type: 'image_collection'
-      layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   postscript: @string().allow('', null)

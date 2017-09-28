@@ -26,12 +26,10 @@ describe 'EditContent', ->
         }
       )
       @EditContent = benv.require resolve(__dirname, '../index.coffee')
-      HeroSection = benv.require resolve(__dirname, '../../content/sections/hero/index.coffee')
-      HeroSection.__set__ 'SectionContainer', sinon.stub()
-      HeroSection.__set__ 'SectionTool', sinon.stub()
+      HeroSection = benv.require resolve(__dirname, '../sections/hero/index.jsx')
       SectionList = @SectionList = sinon.stub()
       Header = benv.require resolve(__dirname, '../sections/header')
-      @EditContent.__set__ 'HeroSection', React.createFactory HeroSection
+      @EditContent.__set__ 'HeroSection', HeroSection
       @EditContent.__set__ 'Header', Header
       @EditContent.__set__ 'SectionList', SectionList
       @article = new Article _.extend fixtures().articles,
@@ -55,18 +53,18 @@ describe 'EditContent', ->
   describe 'Render', ->
 
     it 'renders the hero section if channel hasFeature and layout is classic', ->
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div id="edit-hero-section">'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="edit-section--hero">'
 
     it 'does not render the hero section if hasFeature is false', ->
       @props.channel.hasFeature = sinon.stub().returns(false)
       @props.article.set 'hero_section', null
       component = ReactDOM.render React.createElement(@EditContent, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<div id="edit-hero-section">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<div class="edit-section--hero">'
 
     it 'does not render the hero section if layout is standard', ->
       @props.article.set 'layout', 'standard'
       component = ReactDOM.render React.createElement(@EditContent, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<div id="edit-hero-section">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<div class="edit-section--hero">'
 
     it 'renders the header section', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="edit-header">'

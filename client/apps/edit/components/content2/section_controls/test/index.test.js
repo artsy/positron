@@ -175,55 +175,16 @@ describe('Section Controls', () => {
       expect(component.state().insideComponent).toBe(false)
     })
 
-    it('returns true when hero section and not scrolled past', () => {
+    it('returns false when hero section', () => {
       SectionControls.prototype.isScrolledPast = sinon.stub().returns(false)
       props.isHero = true
       const component = mount(
         <SectionControls {...props} />
       )
       component.instance().setInsideComponent()
-      expect(component.state().insideComponent).toBe(true)
+      expect(component.state().insideComponent).toBe(false)
     })
 
-  })
-
-  describe('#getControlsWidth', () => {
-
-    it('returns 1100 if hero section', () => {
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      const width = component.instance().getControlsWidth()
-      expect(width).toBe(1100)
-    })
-
-    it('returns 900 if image_set', () => {
-      props.isHero = false
-      props.section.set('type', 'image_set')
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      const width = component.instance().getControlsWidth()
-      expect(width).toBe(900)
-    })
-
-    it('returns 900 for overflow_fillwidth sections', () => {
-      props.section.set({layout: 'overflow_fillwidth', type: 'image_collection'})
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      const width = component.instance().getControlsWidth()
-      expect(width).toBe(900)
-    })
-
-    it('returns 620 for column_width sections', () => {
-      props.section.set('layout', 'column_width')
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      const width = component.instance().getControlsWidth()
-      expect(width).toBe(620)
-    })
   })
 
   describe('#getHeaderSize', () => {
@@ -250,6 +211,7 @@ describe('Section Controls', () => {
   describe('#getPositionBottom', () => {
 
     it('when insideComponent, calculates based on window scroll position', () => {
+      props.isHero = false
       const component = mount(
         <SectionControls {...props} />
       )
@@ -265,37 +227,6 @@ describe('Section Controls', () => {
       component.instance().setState({insideComponent: false})
       const bottom = component.instance().getPositionBottom()
       expect(bottom).toBe('100%')
-    })
-  })
-
-  describe('#getPositionLeft', () => {
-
-    it('when insideComponent, calculates width based on window', () => {
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      component.instance().setState({insideComponent: true})
-      const left = component.instance().getPositionLeft()
-      expect(left).toBe(445)
-    })
-
-    it('returns 0 if outside component and standard/feature layout', () => {
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      component.instance().setState({insideComponent: false})
-      const left = component.instance().getPositionLeft()
-      expect(left).toBe(0)
-    })
-
-    it('returns 20px if outside component and classic layout', () => {
-      props.articleLayout = 'classic'
-      const component = mount(
-        <SectionControls {...props} />
-      )
-      component.instance().setState({insideComponent: false})
-      const left = component.instance().getPositionLeft()
-      expect(left).toBe('20px')
     })
   })
 })

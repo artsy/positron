@@ -47,9 +47,20 @@ describe('ImageCollectionControls', () => {
     expect(component.html()).toMatch('placeholder="Add artwork url"')
   })
 
+  it('does not display artwork inputs or layouts if heroSection', () => {
+    props.isHero = true
+    const component = mount(
+      <Controls {...props} />
+    )
+    expect(component.html()).not.toMatch('class="layout"')
+    expect(component.html()).not.toMatch('placeholder="Search for artwork by title"')
+    expect(component.html()).not.toMatch('placeholder="Add artwork url"')
+  })
+
   describe('Artwork inputs', () => {
 
     it('#onUpload saves an image info after upload', () => {
+      props.isHero = false
       const component = mount(
         <Controls {...props} />
       )

@@ -8,9 +8,9 @@
   dependencies:
     chokidar "^1.7.0"
 
-"@artsy/reaction-force@^0.5.7":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.5.7.tgz#c03d1f622fdc971f7f67d2fe04c86fdb3f97d7e9"
+"@artsy/reaction-force@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.5.9.tgz#cc78fb645a834831446af32635589e97b2f7f45d"
   dependencies:
     "@storybook/addon-options" "^3.2.1"
     "@storybook/react" "^3.2.0"
@@ -36,6 +36,7 @@
     react-sizeme "^2.3.2"
     react-slick "^0.14.11"
     react-styled-flexboxgrid "^2.0.0"
+    react-tracking "^4.2.1"
     react-url-query "^1.1.4"
     request "^2.81.0"
     sharify "^0.1.6"
@@ -5613,7 +5614,7 @@ lodash.memoize@~3.0.3:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-3.0.4.tgz#2dcbd2c287cbc0a55cc42328bd0c736150d53e3f"
 
-lodash.merge@^4.4.0:
+lodash.merge@^4.4.0, lodash.merge@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
 
@@ -7353,6 +7354,12 @@ react-styled-flexboxgrid@^2.0.0, react-styled-flexboxgrid@^2.0.3:
   resolved "https://registry.yarnpkg.com/react-styled-flexboxgrid/-/react-styled-flexboxgrid-2.0.3.tgz#308a8bbc80b1737a65f4ccf35d02afe20932a2f2"
   dependencies:
     lodash.isinteger "^4.0.4"
+
+react-tracking@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-4.2.1.tgz#c34619ddd205609ea46281a6c8c8e1243e910e81"
+  dependencies:
+    lodash.merge "^4.6.0"
 
 react-transition-group@^1.1.2:
   version "1.2.0"

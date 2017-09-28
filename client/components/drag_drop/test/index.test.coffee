@@ -149,9 +149,8 @@ describe 'DragDropContainer Vertical', ->
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
-      SectionTool = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content2/section_tool/index.coffee'
-        ['icons']
+      SectionTool = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content2/section_tool/index.jsx'
       )
       SectionContainer = benv.requireWithJadeify(
         resolve __dirname, '../../../apps/edit/components/content2/section_container/index.coffee'
@@ -191,8 +190,8 @@ describe 'DragDropContainer Vertical', ->
           }
         )
         React.createElement(
-          SectionTool
-          {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}}
+          SectionTool.default
+          {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}, editing: false}
         )
         React.createElement(
           SectionContainer
@@ -229,13 +228,13 @@ describe 'DragDropContainer Vertical', ->
     benv.teardown()
 
   it 'renders a drag container with children', ->
-    @$el.find('.drag-target').length.should.eql 3
-    @$el.find('.drag-source').length.should.eql 3
+    @$el.find('.drag-target').length.should.eql 4
+    @$el.find('.drag-source').length.should.eql 4
     @$el.find('img').length.should.eql 3
 
   it 'does not add draggable properties to sectionTool', ->
-    @$el.find('.edit-section-tool-menu').parent().hasClass('.drag-source').should.not.be.ok
-    @$el.find('.edit-section-tool-menu').parent().hasClass('.drag-container').should.be.ok
+    @$el.find('.edit-tool').parent().hasClass('.drag-source').should.not.be.ok
+    @$el.find('.edit-tool').parent().hasClass('.drag-container').should.be.ok
 
   it 'adds a vertical class to active drag-targets', ->
     @component.setState
