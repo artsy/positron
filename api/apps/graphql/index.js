@@ -1,7 +1,7 @@
 import express from 'express'
 import graphqlHTTP from 'express-graphql'
 import joiql from 'joiql'
-import { object, array, string } from 'joi'
+import { object, array, string, boolean } from 'joi'
 import Article from 'api/apps/articles/model/schema.coffee'
 import Curation from 'api/apps/curations/model.coffee'
 import Channel from 'api/apps/channels/model.coffee'
@@ -12,7 +12,7 @@ import * as resolvers from 'api/apps/graphql/resolvers.js'
 
 const app = module.exports = express()
 
-const relatedArticles = {
+const metaFields = {
   relatedArticlesCanvas: array().items(object(Article.inputSchema)).meta({
     name: 'RelatedArticlesCanvas',
     resolve: resolvers.relatedArticlesCanvas
@@ -20,10 +20,11 @@ const relatedArticles = {
   relatedArticlesPanel: array().items(object(Article.inputSchema)).meta({
     name: 'RelatedArticlesPanel',
     resolve: resolvers.relatedArticlesPanel
-  })
+  }),
+  is_super_sub_article: boolean()
 }
 
-const ArticleSchema = object(Article.inputSchema).concat(object(relatedArticles))
+const ArticleSchema = object(Article.inputSchema).concat(object(metaFields))
 
 const schema = joiql({
   query: {

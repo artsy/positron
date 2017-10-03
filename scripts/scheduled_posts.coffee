@@ -1,3 +1,4 @@
+require('babel-core/register')
 path = require 'path'
 debug = require('debug') 'api'
 
@@ -8,7 +9,7 @@ switch process.env.NODE_ENV
   when 'production', 'staging' then ''
   else env path.resolve __dirname, '../.env'
 
-Article = require '../api/apps/articles/model/index.coffee'
+Article = require '../api/apps/articles/model/index.js'
 Article.publishScheduledArticles (err, results) ->
   console.log "Completed Scheduling #{results.length} articles."
   return process.exit(err) if err

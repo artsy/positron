@@ -4,8 +4,8 @@ const Curation = require('api/apps/curations/model.coffee')
 const Channel = require('api/apps/channels/model.coffee')
 const Tag = require('api/apps/tags/model.coffee')
 const Author = require('api/apps/authors/model.coffee')
-const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.coffee')
 const { ObjectId } = require('mongojs')
+const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -22,11 +22,12 @@ export const articles = (root, args, req, ast) => {
     )
   }
   return new Promise((resolve, reject) => {
-    mongoFetch(args, (err, res) => {
+    mongoFetch(args, async (err, res) => {
       if (err) {
         reject(new Error('Articles not found.'))
       }
-      resolve(presentCollection(res).results)
+      const { results } = await presentCollection(res)
+      resolve(results)
     })
   })
 }

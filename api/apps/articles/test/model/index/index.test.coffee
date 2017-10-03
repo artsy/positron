@@ -4,8 +4,7 @@ sinon = require 'sinon'
 gravity = require('antigravity').server
 express = require 'express'
 app = require('express')()
-rewire = require 'rewire'
-Article = rewire '../../../model/index'
+Article = require '../../../model/index.js'
 search = require '../../../../../lib/elasticsearch'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -89,7 +88,7 @@ describe 'Article', ->
 
     it 'returns an error message', (done) ->
       Article.destroy '5086df098523e60002000019', (err) ->
-        err.should.equal 'Article not found.'
+        err.message.should.equal 'Article not found.'
         done()
 
     it 'removes the article from elasticsearch', (done) ->
@@ -110,21 +109,24 @@ describe 'Article', ->
   describe '#present', ->
 
     it 'adds both _id and id', ->
-      data = Article.present _.extend {}, fixtures().articles, _id: 'foo'
-      (data._id?).should.be.ok
-      data.id.should.equal 'foo'
+      Article.present _.extend({}, fixtures().articles, _id: 'foo')
+      .then (result) =>
+        result.id.should.equal 'foo'
+        result._id.should.equal 'foo'
 
     it 'converts dates to ISO strings', ->
-      data = Article.present _.extend {}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date
-      moment(data.updated_at).toISOString().should.equal data.updated_at
-      moment(data.published_at).toISOString().should.equal data.published_at
-      moment(data.scheduled_publish_at).toISOString().should.equal data.scheduled_publish_at
+      Article.present _.extend({}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date)
+      .then (result) =>
+        moment(result.updated_at).toISOString().should.equal result.updated_at
+        moment(result.published_at).toISOString().should.equal result.published_at
+        moment(result.scheduled_publish_at).toISOString().should.equal result.scheduled_publish_at
 
   describe '#presentCollection', ->
 
     it 'shows a total/count/results hash for arrays of articles', ->
-      data = Article.presentCollection
+      Article.presentCollection
         total: 10
         count: 1
         results: [_.extend {}, fixtures().articles, _id: 'baz']
-      data.results[0].id.should.equal 'baz'
+      .then (result) =>
+        result.results[0].id.should.equal 'baz'

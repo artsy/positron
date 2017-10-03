@@ -1,15 +1,13 @@
 _ = require 'underscore'
-rewire = require 'rewire'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../../../test/helpers/db'
-Article = rewire '../../../model/index'
+Article = require '../../../model/index.js'
 { ObjectId } = require 'mongojs'
 express = require 'express'
 gravity = require('antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
-{ onUnpublish } = require '../../../model/save'
 
 describe 'Article Persistence', ->
 
@@ -417,17 +415,6 @@ describe 'Article Persistence', ->
         article.super_article.footer_title.should.equal 'Footer Title'
         done()
 
-    it 'saves super sub articles', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        is_super_article: false
-        is_super_sub_article: true
-        published: true
-      }, 'foo', {}, (err, article) ->
-        return done err if err
-        article.is_super_sub_article.should.be.true()
-        done()
-
     it 'type casts ObjectId over articles', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
@@ -681,7 +668,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         published: false
       }
-      Article.__set__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
+      Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
       fabricate 'articles',
         _id: ObjectId('5086df098523e60002000018')
         id: '5086df098523e60002000018'
@@ -691,7 +678,7 @@ describe 'Article Persistence', ->
         Article.save article, 'foo', {}, (err, article) =>
           article.published.should.be.false()
           @onUnpublish.callCount.should.equal 1
-          Article.__set__ 'onUnpublish', onUnpublish
+          Article.__ResetDependency__ 'onUnpublish'
           done()
 
     it 'saves a hero_section', (done) ->

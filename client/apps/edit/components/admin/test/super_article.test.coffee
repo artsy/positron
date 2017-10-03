@@ -100,23 +100,3 @@ describe 'AdminSuperArticle', ->
     @component.upload 'partner_logo', 'http://partnerlogo.com/image.jpg'
     @component.state.super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
     @component.props.onChange.args[0][0].super_article.partner_logo.should.eql 'http://partnerlogo.com/image.jpg'
-
-  it 'adds a flag to super sub articles when they are added', ->
-    @component.saveWithRelatedArticle([id: '123'], '123', true)
-    Backbone.sync.args[0][2].success()
-    @component.state.super_article.related_articles.should.containEql('123')
-
-  it 'does not add article if there is an error adding one', ->
-    @component.saveWithRelatedArticle([id: '123'], '123', true)
-    Backbone.sync.args[0][2].error()
-    @component.state.super_article.related_articles.length.should.equal 1
-
-  it 'adds a flag to super sub articles when they are removed', ->
-    @component.saveWithRelatedArticle([id: '123'], '123', false)
-    Backbone.sync.args[0][2].success()
-    @component.state.super_article.related_articles.length.should.equal 0
-
-  it 'does not remove article if there is an error removing one', ->
-    @component.saveWithRelatedArticle([id: '123'], '123', false)
-    Backbone.sync.args[0][2].error()
-    @component.state.super_article.related_articles.length.should.equal 1

@@ -186,7 +186,6 @@ ImageCollectionSection = (->
     credit_url: @string().allow('',null)
     custom_text: @string().allow('',null)
   is_super_article: @boolean().default(false)
-  is_super_sub_article: @boolean().default(false)
   super_article: @object().keys
     partner_link: @string().allow('',null)
     partner_link_title: @string().allow('',null)
