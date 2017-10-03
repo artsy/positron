@@ -7,12 +7,14 @@ _ = require 'underscore'
 { div, input, label, textarea, section, h1, h2, span } = React.DOM
 ImageUpload = React.createFactory require '../components/image_upload.coffee'
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
+Article = require '../../../../../models/article.coffee'
 
 module.exports = React.createClass
   displayName: 'AdminSuperArticle'
 
   getInitialState: ->
     super_article: @props.article.get('super_article') || {}
+    errorMessage: ''
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
@@ -54,8 +56,28 @@ module.exports = React.createClass
         disabled: !@props.article.get('is_super_article')
       }
 
+  saveWithRelatedArticle: (items, id, isSubArticle) ->
+    superArticle = @state.super_article
+    article =
+      id: id
+      is_super_sub_article: isSubArticle
+      channel_id: @props.article.get('channel_id')
+    new Article({}, simple: true).save article,
+      success: =>
+        superArticle.related_articles = if isSubArticle then _.pluck(items, 'id') else _.without(_.pluck(items,'id'), id)
+        @setState super_article: superArticle
+        @props.onChange 'super_article', superArticle
+      error: =>
+        @setState
+          errorMessage: 'There has been an error. Please contact support.'
+          super_article: superArticle
+        setTimeout ( => @setState(errorMessage: '')), 2000
+        @props.onChange 'super_article', superArticle
+
   render: ->
     div { className: 'edit-admin--super-article edit-admin__fields', ref: 'container'},
+      if @state.errorMessage
+        div { className: 'flash-error' }, @state.errorMessage
       div {className: 'fields-full'},
         div {
           className: 'field-group--inline flat-checkbox fields-col-3'
@@ -94,22 +116,16 @@ module.exports = React.createClass
           div {className: 'field-group'},
             label {}, 'SubArticles'
             AutocompleteList {
-              url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+              url: "#{sd.API_URL}/articles?published=true&q=%QUERY&channel_id=#{@props.article.get('channel_id')}"
               placeholder: "Search articles by title..."
               disabled: !@props.article.get 'is_super_article'
               filter: (articles) ->
                 for article in articles.results
                   { id: article.id, value: "#{article.title}, #{article.author?.name}"} unless article.is_super_article
               selected: (e, item, items) =>
-                superArticle = @state.super_article
-                superArticle.related_articles = _.pluck items, 'id'
-                @setState super_article: superArticle
-                @props.onChange 'super_article', superArticle
+                @saveWithRelatedArticle(items, item.id, true)
               removed: (e, item, items) =>
-                superArticle = @state.super_article
-                superArticle.related_articles = _.without(_.pluck(items,'id'),item.id)
-                @setState super_article: superArticle
-                @props.onChange 'super_article', superArticle
+                @saveWithRelatedArticle(items, item.id, false)
               idsToFetch: @props.article.get('super_article')?.related_articles
               fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
               resObject: (res) ->

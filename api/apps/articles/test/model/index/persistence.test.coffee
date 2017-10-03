@@ -417,6 +417,17 @@ describe 'Article Persistence', ->
         article.super_article.footer_title.should.equal 'Footer Title'
         done()
 
+    it 'saves super sub articles', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        is_super_article: false
+        is_super_sub_article: true
+        published: true
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.is_super_sub_article.should.be.true()
+        done()
+
     it 'type casts ObjectId over articles', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
