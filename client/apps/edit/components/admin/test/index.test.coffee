@@ -19,6 +19,9 @@ describe 'AdminSections', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       Backbone.$ = $
       @AdminSections = benv.require resolve __dirname, '../index'
       printTitle = benv.requireWithJadeify(
