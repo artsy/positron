@@ -161,11 +161,8 @@ export const destroy = (id, callback) => {
 //
 // JSON views
 //
-export const presentCollection = async (articles) => {
-  const results = await Promise.all(_.map(articles.results, async (article) => {
-    const data = await present(article)
-    return data
-  }))
+export const presentCollection = (articles) => {
+  const results = _.map(articles.results, present)
   return {
     total: articles.total,
     count: articles.count,
@@ -173,13 +170,12 @@ export const presentCollection = async (articles) => {
   }
 }
 
-export const present = async (article) => {
+export const present = (article) => {
   if (!article) { return {} }
   const id = article._id ? article._id.toString() : null
   const scheduled_publish_at = article.scheduled_publish_at ? moment(article.scheduled_publish_at).toISOString() : null
   const published_at = article.published_at ? moment(article.published_at).toISOString() : null
   const updated_at = article.updated_at ? moment(article.updated_at).toISOString() : null
-  const superArticleCount = await getSuperArticleCount(id)
   return _.extend(article, {
     id,
     _id: id,
@@ -187,12 +183,11 @@ export const present = async (article) => {
     slugs: undefined,
     published_at,
     scheduled_publish_at,
-    updated_at,
-    is_super_sub_article: superArticleCount > 0
+    updated_at
   })
 }
 
-const getSuperArticleCount = (id) => {
+export const getSuperArticleCount = (id) => {
   return new Promise((resolve, reject) => {
     if (!ObjectId.isValid(id)) { return resolve(0) }
     db.articles.find({ 'super_article.related_articles': ObjectId(id) }).count((err, count) => {

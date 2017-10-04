@@ -26,7 +26,7 @@ describe 'routes', ->
 
   describe '#index', ->
 
-    it 'sends a list of published articles by author', (done) ->
+    it 'sends a list of published articles by author', ->
       @req.query.author_id = @req.user._id = 'fooid'
       @req.query.published = 'true'
       routes.index(@req, @res, @next)
@@ -36,9 +36,7 @@ describe 'routes', ->
         count: 1
         results: [fixtures().articles]
       })
-      _.defer =>
-        @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
     it 'returns an error if channel_id is not provided for unpublished', ->
       @req.query.published = 'false'
@@ -54,7 +52,7 @@ describe 'routes', ->
       @res.err.args[0][0].should.equal 401
       @res.err.args[0][1].should.containEql 'Must be a member of this channel'
 
-    it 'allows unpublished for a channel member', (done) ->
+    it 'allows unpublished for a channel member', ->
       @User.hasChannelAccess = sinon.stub().returns true
       @req.query.published = 'false'
       @req.query.channel_id = '123456'
@@ -64,18 +62,14 @@ describe 'routes', ->
         count: 1
         results: [fixtures().articles]
       }
-      _.defer =>
-        @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
   describe '#show', ->
 
-    it 'sends a single article', (done) ->
+    it 'sends a single article', ->
       @req.article = fixtures().articles
       routes.show @req, @res
-      _.defer =>
-        @res.send.args[0][0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].title.should.containEql 'Top Ten'
 
     it 'throws a 404 for articles from non channel members', ->
       @User.hasChannelAccess = sinon.stub().returns false
@@ -88,25 +82,21 @@ describe 'routes', ->
 
   describe '#create', ->
 
-    it 'creates an article with data', (done) ->
+    it 'creates an article with data', ->
       @User.hasChannelAccess = sinon.stub().returns true
       @req.body.title = "Foo Bar"
       routes.create @req, @res
       @Article.save.args[0][3] null, fixtures().articles
-      _.defer =>
-        @res.send.args[0][0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].title.should.containEql 'Top Ten'
 
   describe '#update', ->
 
-    it 'updates an existing article', (done) ->
+    it 'updates an existing article', ->
       @req.article = fixtures().articles
       @req.body.title = "Foo Bar"
       routes.create @req, @res
       @Article.save.args[0][3] null, fixtures().articles
-      _.defer =>
-        @res.send.args[0][0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].title.should.containEql 'Top Ten'
 
     it 'defaults to the logged in user for author_id', ->
       @req.user = _.extend(fixtures().users,
@@ -118,13 +108,11 @@ describe 'routes', ->
 
   describe '#delete', ->
 
-    it 'deletes an existing article', (done) ->
+    it 'deletes an existing article', ->
       @req.article = fixtures().articles
       routes.delete @req, @res
       @Article.destroy.args[0][1]()
-      _.defer =>
-        @res.send.args[0][0].title.should.containEql 'Top Ten'
-        done()
+      @res.send.args[0][0].title.should.containEql 'Top Ten'
 
   describe '#find', ->
 

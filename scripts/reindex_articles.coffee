@@ -5,6 +5,7 @@ path = require 'path'
 { indexForSearch } = Save = require '../api/apps/articles/model/distribute'
 Article = require '../api/apps/articles/model/index.js'
 search = require '../api/lib/elasticsearch'
+async = require 'async'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -18,15 +19,13 @@ db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
 db.articles.find({}).toArray (err, articles) ->
   console.log(err) if err
-  indexWorker(articles, 0)
-
-indexWorker = (articles, i) ->
-  a = articles[i]
-  console.log('indexing ' + a._id)
-  Article.present(a).then((results) =>
-    indexForSearch results
-    setTimeout( =>
-      console.log('indexed ' + a.id or a._id)
-      indexWorker(articles, ++i)
-    , 30)
+  console.log(articles.length)
+  async.mapSeries(articles, indexWorker, (err, results) =>
+    console.log('Completed indexing ' + results.length + 'articles.')
   )
+
+indexWorker = (article, cb) ->
+  console.log('indexing ' + article._id)
+  indexForSearch Article.present(article), () =>
+    console.log('indexed ' + article.id or article._id)
+    cb()

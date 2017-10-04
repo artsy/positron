@@ -17,14 +17,14 @@ User = require '../users/model.coffee'
 
   Article.where req.query, (err, results) ->
     return next err if err
-    presentCollection(results).then((results) => res.send results)
+    res.send presentCollection results
 
 # GET /api/articles/:id
 @show = (req, res, next) ->
-  return present(req.article).then((results) => res.send(results)) if req.article.published
+  return res.send present req.article if req.article.published
 
   if User.hasChannelAccess req.user, (req.article.channel_id or req.article.partner_channel_id)
-    present(req.article).then((results) => res.send(results))
+    res.send present req.article
   else
     res.err 404, 'Article not found.'
 
@@ -36,7 +36,7 @@ User = require '../users/model.coffee'
   data = _.extend { author_id: req.user._id }, req.body
   Article.save data, req.user?.access_token, {}, (err, article) ->
     return next err if err
-    present(article).then((results) => res.send(results))
+    res.send present article
 
 # PUT /api/articles/:id
 @update = (req, res, next) ->
@@ -45,7 +45,7 @@ User = require '../users/model.coffee'
 
   Article.save req.body, req.user?.access_token, validation: noDefaults: true , (err, article) ->
     return next err if err
-    present(article).then((results) => res.send(results))
+    res.send present article
 
 # DELETE /api/articles/:id
 @delete = (req, res, next) ->
@@ -54,7 +54,7 @@ User = require '../users/model.coffee'
 
   Article.destroy req.article._id, (err) ->
     return next err if err
-    present(req.article).then((results) => res.send(results))
+    res.send present req.article
 
 # Don't let non-admins feature
 @restrictFeature = (req, res, next) ->

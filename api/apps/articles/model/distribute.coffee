@@ -136,6 +136,7 @@ postSailthruAPI = (article, cb) ->
       search_boost: new Article(cloneDeep article).searchBoost()
     , (error, response) ->
       console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
+      cb()
   )
 
 @removeFromSearch = (id) ->

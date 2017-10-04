@@ -3,6 +3,7 @@ import graphqlHTTP from 'express-graphql'
 import joiql from 'joiql'
 import { object, array, string, boolean } from 'joi'
 import Article from 'api/apps/articles/model/schema.coffee'
+import { getSuperArticleCount } from 'api/apps/articles/model'
 import Curation from 'api/apps/curations/model.coffee'
 import Channel from 'api/apps/channels/model.coffee'
 import Tag from 'api/apps/tags/model.coffee'
@@ -21,7 +22,9 @@ const metaFields = {
     name: 'RelatedArticlesPanel',
     resolve: resolvers.relatedArticlesPanel
   }),
-  is_super_sub_article: boolean()
+  is_super_sub_article: boolean().meta({
+    resolve: async (root) => (await getSuperArticleCount(root.id)) > 0
+  })
 }
 
 const ArticleSchema = object(Article.inputSchema).concat(object(metaFields))

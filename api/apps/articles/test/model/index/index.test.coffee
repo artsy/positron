@@ -109,24 +109,40 @@ describe 'Article', ->
   describe '#present', ->
 
     it 'adds both _id and id', ->
-      Article.present _.extend({}, fixtures().articles, _id: 'foo')
-      .then (result) =>
-        result.id.should.equal 'foo'
-        result._id.should.equal 'foo'
+      result = Article.present _.extend({}, fixtures().articles, _id: 'foo')
+      result.id.should.equal 'foo'
+      result._id.should.equal 'foo'
 
     it 'converts dates to ISO strings', ->
-      Article.present _.extend({}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date)
-      .then (result) =>
-        moment(result.updated_at).toISOString().should.equal result.updated_at
-        moment(result.published_at).toISOString().should.equal result.published_at
-        moment(result.scheduled_publish_at).toISOString().should.equal result.scheduled_publish_at
+      result = Article.present _.extend({}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date)
+      moment(result.updated_at).toISOString().should.equal result.updated_at
+      moment(result.published_at).toISOString().should.equal result.published_at
+      moment(result.scheduled_publish_at).toISOString().should.equal result.scheduled_publish_at
 
   describe '#presentCollection', ->
 
     it 'shows a total/count/results hash for arrays of articles', ->
-      Article.presentCollection
+      result = Article.presentCollection
         total: 10
         count: 1
         results: [_.extend {}, fixtures().articles, _id: 'baz']
-      .then (result) =>
-        result.results[0].id.should.equal 'baz'
+      result.results[0].id.should.equal 'baz'
+
+  describe '#getSuperArticleCount', ->
+    it 'returns 0 if the id is invalid', ->
+      id = '123'
+      Article.getSuperArticleCount(id)
+      .then (count) =>
+        count.should.equal 0
+
+    it 'returns a count of super articles that have the given id as a related article', ->
+      fabricate 'articles',
+        _id: ObjectId('54276766fd4f50996aeca2b8')
+        super_article: {
+          related_articles: [ObjectId('5086df098523e60002000018')]
+        }
+      , ->
+      id = '5086df098523e60002000018'
+      Article.getSuperArticleCount(id)
+      .then (count) =>
+        count.should.equal 1
