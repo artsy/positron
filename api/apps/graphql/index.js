@@ -5,6 +5,7 @@ import { object, array, string } from 'joi'
 import Article from 'api/apps/articles/model/schema.coffee'
 import Curation from 'api/apps/curations/model.coffee'
 import Channel from 'api/apps/channels/model.coffee'
+import Display from './schemas/display.js'
 import Tag from 'api/apps/tags/model.coffee'
 import Author from 'api/apps/authors/model.coffee'
 import { setUser } from 'api/apps/users/routes.coffee'
@@ -44,6 +45,10 @@ const schema = joiql({
     )).meta({
       args: Channel.querySchema,
       resolve: resolvers.channels
+    }),
+    display: array().items(Display.schema).meta({
+      args: Display.querySchema,
+      resolve: resolvers.display
     }),
     tags: array().items(object(
       Tag.schema
