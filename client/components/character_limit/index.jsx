@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react'
 
 export default class CharacterLimitInput extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -9,19 +9,19 @@ export default class CharacterLimitInput extends React.Component {
     }
   }
 
-  onInputChange(e) {
+  onInputChange = (e) => {
     const remainingChars = this.props.limit - e.target.value.length
 
     this.setState({ remainingChars })
     this.props.onChange(e)
   }
 
-  render() {
+  render () {
     const propsForInput = {
-      className: "bordered-input",
+      className: 'bordered-input',
       placeholder: this.props.placeholder,
       defaultValue: this.props.defaultValue,
-      onChange: this.onInputChange.bind(this),
+      onChange: this.onInputChange,
       name: this.props.name,
       maxLength: this.props.limit
     }
