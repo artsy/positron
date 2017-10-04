@@ -80,10 +80,17 @@ brew services start elasticsearch
 - Start the server
 
 ```
-make s
+yarn start
 ```
 - Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer with the default partner gallery channel (David Zwirner).
 
+- Run tests
+
+```
+yarn test
+```
+
+- Make sure you have mongo running in the background or most tests will not work.
 
 Debugging
 ---
@@ -91,7 +98,7 @@ Debugging
 ### Server side
 Start the server using
 ```
-make dev
+yarn dev
 ```
 This will start the server on port `3005` with `inspect` option.
 

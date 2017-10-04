@@ -27,14 +27,12 @@ describe "Article", ->
 
     it 'returns the article with captions p tags replaced by h1', ->
       @article.set 'sections', [
-        { type: 'image', caption: '<p>First Paragraph</p>' },
         { type: 'image_set', images: [
           { type: 'image', caption: '<p>A place for credit</p>' }
         ]}
       ]
       @article.prepForInstant()
-      @article.get('sections')[0].caption.should.equal '<h1>First Paragraph</h1>'
-      @article.get('sections')[1].images[0].caption.should.equal '<h1>A place for credit</h1>'
+      @article.get('sections')[0].images[0].caption.should.equal '<h1>A place for credit</h1>'
 
   describe '#isEditorial', ->
 

@@ -46,9 +46,12 @@ describe 'Article', ->
             body: 'The start of a new article'
           }
           {
-            type: 'image'
-            url: 'https://image.png'
-            caption: 'Trademarked'
+            type: 'image_collection'
+            layout: 'overflow_fillwidth'
+            images: [
+              url: 'https://image.png'
+              caption: 'Trademarked'
+            ]
           }
         ]
       , ->
@@ -56,7 +59,7 @@ describe 'Article', ->
           results[0].published.should.be.true()
           results[0].published_at.toString().should.equal moment('2016-01-01').toDate().toString()
           results[0].sections[0].body.should.containEql 'The start of a new article'
-          results[0].sections[1].url.should.containEql 'https://image.png'
+          results[0].sections[1].images[0].url.should.containEql 'https://image.png'
           done()
 
   describe '#unqueue', ->

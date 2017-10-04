@@ -94,7 +94,7 @@ export default class Controls extends Component {
   }
 
   render() {
-    const { article, channel, images, section, setProgress, onChange } = this.props
+    const { article, channel, images, isHero, section, setProgress, onChange } = this.props
     const inputsAreDisabled = this.inputsAreDisabled(section)
 
     return (
@@ -103,7 +103,8 @@ export default class Controls extends Component {
           channel={channel}
           articleLayout={article.get('layout')}
           onChange={onChange}
-          sectionLayouts={true}
+          sectionLayouts={isHero ? false : true}
+          isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
           <div onClick={inputsAreDisabled && this.fillwidthAlert}>
@@ -112,22 +113,23 @@ export default class Controls extends Component {
               onProgress={setProgress}
               onUpload={this.onUpload} />
           </div>
-
-          <section
-            className='edit-controls__artwork-inputs'
-            onClick={inputsAreDisabled && this.fillwidthAlert}>
-            <div className='edit-controls__autocomplete-input'>
-              <input
-                ref='autocomplete'
-                className='bordered-input bordered-input-dark'
-                placeholder='Search for artwork by title'
+          { !isHero &&
+            <section
+              className='edit-controls__artwork-inputs'
+              onClick={inputsAreDisabled && this.fillwidthAlert}>
+              <div className='edit-controls__autocomplete-input'>
+                <input
+                  ref='autocomplete'
+                  className='bordered-input bordered-input-dark'
+                  placeholder='Search for artwork by title'
+                  disabled={inputsAreDisabled} />
+              </div>
+              <UrlArtworkInput
+                images={images}
+                addArtworkFromUrl={this.addArtworkFromUrl}
                 disabled={inputsAreDisabled} />
-            </div>
-            <UrlArtworkInput
-              images={images}
-              addArtworkFromUrl={this.addArtworkFromUrl}
-              disabled={inputsAreDisabled} />
-          </section>
+            </section>
+          }
 
         { section.get('type') === 'image_set' &&
           <section

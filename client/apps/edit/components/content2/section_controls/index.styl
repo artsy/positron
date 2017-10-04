@@ -55,13 +55,23 @@
     .edit-controls
       max-width standard-overflow-w-margin
 
-.classic .edit-section__container
-  &[data-layout=column_width] .edit-controls
-    max-width classic-body-w-margin
-  &[data-layout=overflow_fillwidth],
-  &[data-type=image_set]
-    .edit-controls
-      max-width classic-overflow-w-margin
+.classic
+  .edit-section__container
+    &[data-layout=column_width] .edit-controls
+      max-width classic-body-w-margin
+    &[data-layout=overflow_fillwidth],
+    &[data-type=image_set]
+      .edit-controls
+        max-width classic-overflow-w-margin
+  .edit-section--hero
+    .edit-section__container
+      &[data-layout=column_width]
+      &[data-layout=overflow_fillwidth]
+        .edit-controls
+          min-width calc(100% + 40px)
+          margin-top -20px
+          margin-bottom 30px
+          padding-top 20px
 
 .feature .edit-section__container
   &[data-layout=column_width] .edit-controls

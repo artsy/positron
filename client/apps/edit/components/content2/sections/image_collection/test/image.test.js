@@ -54,7 +54,7 @@ describe('Image', () => {
       <Image {...props} />
     )
     expect(component.html()).toMatch('<div class="edit-section__remove">')
-    expect(component.html()).toMatch('<svg id="remove"')
+    expect(component.html()).toMatch('<svg class="remove"')
   })
 
   it('calls removeItem when clicking remove icon', () => {

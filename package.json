@@ -8,15 +8,16 @@
     "yarn": "0.27.x"
   },
   "scripts": {
-    "start": "make s",
-    "dev": "make dev",
-    "test": "make test",
+    "start": "sh scripts/start.sh",
+    "dev": "sh scripts/dev.sh",
+    "test": "sh scripts/test.sh",
     "assets": "sh scripts/assets.sh",
-    "deploy": "sh scripts/deploy.sh"
+    "deploy": "sh scripts/deploy.sh",
+    "mocha": "sh scripts/mocha.sh"
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.0.2",
-    "@artsy/reaction-force": "^0.5.7",
+    "@artsy/reaction-force": "^0.5.9",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "git://github.com/artsy/artsy-backbone-mixins.git",
     "artsy-ezel-components": "git://github.com/artsy/artsy-ezel-components.git",
@@ -49,6 +50,7 @@
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
+    "dotenv": "^4.0.0",
     "draft-convert": "^1.4.2",
     "draft-js": "^0.10.0",
     "elasticsearch": "^11.0.0",
