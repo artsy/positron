@@ -40,8 +40,13 @@ Joi = require '../../lib/joi'
     @mongoFetch input, callback
 
 @mongoFetch = (input, callback) ->
+  query = omit input, 'q', 'limit', 'offset', 'count', 'strict'
+  if input.strict
+    query.name = { $eq: input.q } if input.q and input.q.length
+  else
+    query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
   cursor = db.authors
-    .find({})
+    .find(query)
     .limit(input.limit)
     .sort($natural: -1)
     .skip(input.offset or 0)

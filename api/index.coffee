@@ -1,4 +1,3 @@
-require('node-env-file')("#{process.cwd()}/.env") unless process.env.NODE_ENV?
 express = require "express"
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
@@ -37,7 +36,8 @@ app.use require './apps/channels'
 app.use require './apps/tags'
 app.use require './apps/verticals'
 app.use require './apps/authors'
-app.use require './apps/graphql'
+app.use require './apps/graphql/index.js'
+app.use require './apps/search/index.js'
 
 if SENTRY_PRIVATE_DSN
   app.use RavenServer.errorHandler()

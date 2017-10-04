@@ -75,6 +75,7 @@ module.exports = React.createClass
           @printFieldGroup 'partner_logo_link', 'Partner Logo Link'
           @printFieldGroup 'secondary_logo_text', 'Secondary Logo Text'
           @printFieldGroup 'secondary_logo_link', 'Secondary Logo Link'
+          @printFieldGroup 'footer_title', 'Footer Title'
           div {className: 'field-group'},
             label {}, 'Footer Blurb'
             textarea {

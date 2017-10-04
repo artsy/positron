@@ -20,21 +20,20 @@ describe "Sections", ->
 
   describe '#mentionedArtistSlugs', ->
 
-    it 'finds artists mentioned in links and such', ->
+    it 'finds artists mentioned in links and artworks', ->
       @sections.set [
-        { type: 'artworks' }
+        { type: 'image_collection', images: [ type: 'artwork', artists: [ id: 'baz'] ] }
         { type: 'text', body: "<p><a href='artsy.net/artist/foo'>Foo</a></p>" }
-        { type: 'image', caption: "<p><a href='artsy.net/artist/bar'>Bar</a></p>" }
+        { type: 'image_set', images: [ type: 'image', caption: "<p><a href='artsy.net/artist/bar'>Bar</a></p>" ]}
       ]
-      @sections.first().artworks.set { artist: { id: 'baz' } }
       @sections.mentionedArtistSlugs().join('').should.equal 'bazfoobar'
 
   describe '#mentionedArtworkSlugs', ->
 
-    it 'finds artists mentioned in links and such', ->
+    it 'finds artists mentioned in links and artworks', ->
       @sections.set [
-        { type: 'artworks', ids: ['baz'] }
+        { type: 'image_collection', images: [ type: 'artwork', slug: 'baz' ] }
         { type: 'text', body: "<p><a href='artsy.net/artworks/foo'>Foo</a></p>" }
-        { type: 'image', caption: "<p><a href='artsy.net/artworks/bar'>Bar</a></p>" }
+        { type: 'image_set', images: [type: 'image', caption: "<p><a href='artsy.net/artworks/bar'>Bar</a></p>"]}
       ]
       @sections.mentionedArtworkSlugs().join('').should.equal 'bazfoobar'

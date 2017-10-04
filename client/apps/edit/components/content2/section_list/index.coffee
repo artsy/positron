@@ -5,9 +5,9 @@
 
 React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
-SectionTool = React.createFactory require '../section_tool/index.coffee'
+SectionTool = require '../section_tool/index.jsx'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
-RichTextParagraph = React.createFactory require '../../../../../components/rich_text/components/input_paragraph.coffee'
+Paragraph = React.createFactory require '../../../../../components/rich_text2/components/paragraph.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -39,18 +39,26 @@ module.exports = React.createClass
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
   setPostscript: (html) ->
-    html = null if html is '<p></p>'
+    html = null unless html.length
     @props.article.set('postscript', html)
     @props.saveArticle()
 
   render: ->
     div {
-      className: 'edit-sections__list' +
-        (if @props.sections.length then ' esl-children' else '')
+      className: 'edit-sections__list'
       ref: 'sections'
     },
-      SectionTool { sections: @props.sections, index: -1, key: 1 }
-      if @props.sections.length > 0
+      React.createElement(
+        SectionTool.default,
+        {
+          sections: @props.sections
+          index: -1
+          key: 1
+          isEditing: @state.editingIndex isnt null
+          firstSection: true
+        }
+      )
+      if @props.sections.length
         DragContainer {
           items: @props.sections.models
           onDragEnd: @onDragEnd
@@ -59,27 +67,40 @@ module.exports = React.createClass
           article: @props.article
         },
           @props.sections.map (section, i) =>
-            [
-              SectionContainer {
-                sections: @props.sections
-                section: section
-                index: i
-                editing: @state.editingIndex is i
-                ref: 'section' + i
-                key: section.cid
-                channel: @props.channel
-                onSetEditing: @onSetEditing
-                article: @props.article
-              }
-              SectionTool { sections: @props.sections, index: i, key: i }
-            ]
+             unless section.get('type') is 'callout'
+              [
+                SectionContainer {
+                  sections: @props.sections
+                  section: section
+                  index: i
+                  editing: @state.editingIndex is i
+                  ref: 'section-' + i
+                  key: section.cid
+                  channel: @props.channel
+                  onSetEditing: @onSetEditing
+                  article: @props.article
+                }
+                React.createElement(
+                  SectionTool.default,
+                  {
+                    sections: @props.sections
+                    index: i
+                    key: 'tool-' + i
+                    isEditing: @state.editingIndex isnt null
+                  }
+                )
+              ]
       if @props.channel.isEditorial()
         div {
           className: 'edit-sections__postscript'
           'data-layout': 'column_width'
         },
-          RichTextParagraph {
-            text: @props.article.get('postscript') or ''
+          Paragraph {
+            html: @props.article.get('postscript') or ''
             onChange: @setPostscript
             placeholder: 'Postscript (optional)'
+            type: 'postscript'
+            linked: true
+            layout: @props.article.get('layout')
           }
+      # TODO - Author Preview

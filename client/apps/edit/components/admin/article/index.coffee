@@ -3,7 +3,7 @@ ReactDOM = require 'react-dom'
 _ = require 'underscore'
 moment = require 'moment'
 sd = require('sharify').data
-{ div, label, input, button } = React.DOM
+{ div, label, span, input, button } = React.DOM
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 
 module.exports = AdminArticle = React.createClass
@@ -15,12 +15,18 @@ module.exports = AdminArticle = React.createClass
     focus_date: false
     tier: @props.article.get('tier') or 2
     featured: @props.article?.get('featured') or false
+    layout: @setInitialLayout()
+    relatedArticles: @props.article?.get('related_article_ids') or []
 
   componentWillMount: ->
     @setupPublishDate()
 
   componentDidMount: ->
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
+
+  setInitialLayout: ->
+    return 'classic' unless @props.channel?.isEditorial()
+    return @props.article?.get('layout') or 'standard'
 
   onChange: (key, value)->
     @props.onChange key, value
@@ -38,6 +44,13 @@ module.exports = AdminArticle = React.createClass
     featured = if e.target.name is 'true' then true else false
     @setState featured: featured
     @onChange 'featured', featured
+
+  onLayoutChange: (e) ->
+    if e.target.name is 'standard' and @props.article.get('layout') is 'feature'
+      canLoseData = confirm 'Some header and section layout data may be lost. Change anyways?'
+      return false unless canLoseData
+    @setState layout: e.target.name
+    @onChange 'layout', e.target.name
 
   onCheckboxChange: (e) ->
     key = $(e.currentTarget).attr('name')
@@ -108,7 +121,11 @@ module.exports = AdminArticle = React.createClass
             }
         div {className: 'fields-right'},
           div {className: 'field-group'},
-            label {}, 'Contributing Author'
+            label {},
+              'Contributing Author'
+              if @props.channel.isEditorial()
+                span {},
+                  '* will be deprecated'
             AutocompleteList {
               url: "#{sd.ARTSY_URL}/api/v1/match/users?term=%QUERY"
               placeholder: 'Search by user name or email...'
@@ -125,6 +142,28 @@ module.exports = AdminArticle = React.createClass
                 id: { id: res.body.id , name: res.body.name },
                 value: _.compact([res.body.name, res.body.email]).join(', ')
             }
+          div {className: 'field-group'},
+            label {}, 'Authors'
+            AutocompleteList {
+              url: "#{sd.API_URL}/authors?q=%QUERY"
+              placeholder: 'Search by author name...'
+              draggable: true
+              filter: (authors) -> for author in authors.results
+                id: { id: author.id, name: author.name }
+                value: author.name
+              selected: (e, item, items) =>
+                selectedAuthors = _.pluck(items, 'id')
+                authorIds = _.map(selectedAuthors, 'id')
+                @onChange 'author_ids', authorIds
+              removed: (e, item, items) =>
+                @onChange 'author_ids', _.without(_.pluck(items, 'id'),item.id)
+              idsToFetch: @props.article.get('author_ids') || []
+              fetchUrl: (id) -> "#{sd.API_URL}/authors/#{id}"
+              resObject: (res) ->
+                id: { id: res.body.id, name: res.body.name }
+                value: res.body.name
+            }
+
 
       div {className: 'fields-full'},
         div {className: 'fields-left'},
@@ -154,6 +193,22 @@ module.exports = AdminArticle = React.createClass
                   className: 'avant-garde-button' + @showActive 'featured', false
                   onClick: @onMagazineChange
                 }, 'No'
+
+          if @props.channel.isEditorial()
+            div {className: 'field-group article-layout'},
+              label {}, 'Article Layout'
+              div {className: 'button-group'},
+                button {
+                  className: 'avant-garde-button' + @showActive('layout', 'standard')
+                  onClick: @onLayoutChange
+                  name: 'standard'
+                }, 'Standard'
+                button {
+                  className: 'avant-garde-button' + @showActive('layout', 'feature')
+                  onClick: @onLayoutChange
+                  name: 'feature'
+                }, 'Feature'
+
           div {
             className: 'field-group--inline flat-checkbox'
             onClick: @onCheckboxChange
@@ -166,6 +221,18 @@ module.exports = AdminArticle = React.createClass
               readOnly: true
             }
             label {}, 'Index for Search'
+          div {
+            className: 'field-group--inline flat-checkbox'
+            onClick: @onCheckboxChange
+            name: 'exclude_google_news'
+          },
+            input {
+              type: 'checkbox'
+              checked: @props.article.get 'exclude_google_news'
+              value: @props.article.get 'exclude_google_news'
+              readOnly: true
+            }
+            label {}, 'Exclude from Google News'
 
         div {className: 'fields-right'},
           div {className: 'field-group publish-time'},
@@ -193,15 +260,28 @@ module.exports = AdminArticle = React.createClass
                 className: 'avant-garde-button date'
                 onClick: @onScheduleChange
               }, @publishButtonText()
-            div {
-              className: 'field-group--inline flat-checkbox'
-              onClick: @onCheckboxChange
-              name: 'exclude_google_news'
-            },
-              input {
-                type: 'checkbox'
-                checked: @props.article.get 'exclude_google_news'
-                value: @props.article.get 'exclude_google_news'
-                readOnly: true
+
+          if @props.channel.isEditorial()
+            div {className: 'field-group'},
+              label {}, 'Related Articles'
+              AutocompleteList {
+                url: "#{sd.API_URL}/articles?published=true&q=%QUERY"
+                placeholder: "Search articles by title..."
+                filter: (articles) ->
+                  for article in articles.results
+                    { id: article.id, value: "#{article.title}, #{article.author?.name}"}
+                selected: (e, item, items) =>
+                  relatedArticles = @state.relatedArticles
+                  relatedArticles = _.pluck items, 'id'
+                  @setState relatedArticles: relatedArticles
+                  @props.onChange 'related_article_ids', relatedArticles
+                removed: (e, item, items) =>
+                  relatedArticles = @state.relatedArticles
+                  relatedArticles = _.without(_.pluck(items,'id'),item.id)
+                  @setState relatedArticles: relatedArticles
+                  @props.onChange 'related_article_ids', relatedArticles
+                idsToFetch: @props.article.get('related_article_ids')
+                fetchUrl: (id) -> "#{sd.API_URL}/articles/#{id}"
+                resObject: (res) ->
+                  id: res.body.id, value: "#{res.body.title}, #{res.body.author?.name}"
               }
-              label {}, 'Exclude from Google News'

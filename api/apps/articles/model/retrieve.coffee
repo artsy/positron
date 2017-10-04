@@ -1,5 +1,6 @@
 _ = require 'underscore'
 moment = require 'moment'
+{ ObjectId } = require 'mongojs'
 
 @toQuery = (input, callback) ->
   { limit, offset, sort, count } = input
@@ -30,6 +31,7 @@ moment = require 'moment'
     'q'
     'scheduled'
     'access_token'
+    'omit'
   query.fair_ids = input.fair_id if input.fair_id
   if input.fair_programming_id
     query.fair_programming_ids = input.fair_programming_id
@@ -82,13 +84,25 @@ moment = require 'moment'
     query.fair_ids = { $elemMatch: { $in: input.fair_ids } }
 
   # Convert query for articles by vertical
-  query.vertical = { $elemMatch: { id: input.vertical } } if input.vertical
+  query["vertical.id"] = input.vertical if input.vertical
 
   # Allow regex searching through the q param
   query.thumbnail_title = { $regex: new RegExp(input.q, 'i') } if input.q and input.q.length
 
   # Look for articles that are scheduled
   query.scheduled_publish_at = { $ne: null } if input.scheduled
+
+  # Omit articles from query
+  if input.omit
+    objectids = []
+    slugs = []
+    _.each input.omit, (id) ->
+      if ObjectId.isValid(id)
+        objectids.push(ObjectId(id))
+      else
+        slugs.push(id)
+    query.slugs = { $nin: slugs } if slugs.length
+    query._id = { $nin: objectids } if objectids.length
 
   {
     query: query

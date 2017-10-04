@@ -26,9 +26,16 @@
         display none
     .edit-section__container-bg
       display block
+      z-index -1
     &[data-type=text]
       .edit-section__hover-controls
         border 1px solid rgba(100,100,100,0)
+
+.edit-section__placeholder
+  min-height 150px
+  display flex
+  justify-content center
+  align-items center
 
 .edit-section__container-bg
   width 100%
@@ -70,6 +77,29 @@
       height 30px
       border-radius 50%
 
+#edit-content
+  div[class*="caption__CaptionContainer-"]
+    > div
+      min-width 100%
+    .rich-text--paragraph
+      position relative
+    .public-DraftEditorPlaceholder-root
+      position absolute
+    a
+      background-size 1px 1px
+
+[data-layout='fillwidth']
+  &[data-editing='false']
+     .edit-section__hover-controls
+        z-index 100
+  .edit-section__hover-controls
+    button
+      right 18px
+      &.edit-section__remove
+        top 20px
+      &.edit-section__drag
+        top 60px
+
 .classic
   [data-layout='column_width'], [data-layout='blockquote']
     max-width classic-body-w-margin
@@ -77,16 +107,20 @@
   [data-layout='overflow_fillwidth']
     max-width classic-overflow-w-margin
     margin 0 auto
+  .edit-section--hero
+    margin 130px auto 20px auto
+    [data-layout='column_width'], [data-layout='overflow_fillwidth']
+      max-width 1140px
 
 .standard
-  [data-layout='column_width']
+  [data-layout='column_width'], [data-type=image_set]
     max-width standard-body-w-margin
     margin 0 auto
   [data-layout='overflow_fillwidth'], [data-layout='blockquote']
     max-width standard-overflow-w-margin
 
 .feature
-  [data-layout='column_width']
+  [data-layout='column_width'], [data-type=image_set]
     max-width feature-body-w-margin
     margin 0 auto
   [data-layout='overflow_fillwidth']
@@ -97,4 +131,4 @@
     margin 0 auto
   [data-layout='fillwidth']
     max-width 100%
-
+    padding 0 0 20px 0

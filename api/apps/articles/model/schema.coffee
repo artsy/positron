@@ -7,7 +7,7 @@ Joi = require '../../../lib/joi'
 imageSection = (->
   @object().meta(
     name: 'Image'
-    isTypeOf: (data) => data.type is 'image'
+    isTypeOf: (data) -> data.type is 'image'
   ).keys
     type: @string().valid('image')
     url: @string().allow('', null)
@@ -20,31 +20,32 @@ imageSection = (->
 videoSection = (->
   @object().meta(
     name: 'Video'
-    isTypeOf: (data) => data.type is 'video'
+    isTypeOf: (data) -> data.type is 'video'
   ).keys
     type: @string().valid('video')
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)
-    layout: @string().allow('',null)
+    layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', '', null)
     background_color: @string().allow('',null)
 ).call Joi
 
-fullscreenSection = (->
+featureSection = (->
   @object().meta(
-    name: 'Fullscreen'
-    isTypeOf: (data) => data.type is 'fullscreen'
+    name: 'FeatureHeader'
+    isTypeOf: (data) -> data.type in ['fullscreen', 'split', 'text']
   ).keys
-    type: @string().valid('fullscreen')
+    type: @string().valid('fullscreen', 'split', 'text')
     title: @string().allow('',null)
-    intro: @string().allow('',null)
-    url: @string().allow(null)
+    intro: @string().allow('',null) # TODO - Remove after backfill
+    deck: @string().allow('',null)
+    url: @string().allow('',null)
 ).call Joi
 
 denormalizedArtwork = (->
   @object().meta(
     name: 'Artwork'
-    isTypeOf: (data) => data.type is 'artwork'
+    isTypeOf: (data) -> data.type is 'artwork'
   ).keys
     type: @string().valid('artwork').default('artwork')
     id: @string().allow('', null)
@@ -67,9 +68,22 @@ denormalizedArtwork = (->
     height: @number().allow(null)
 ).call Joi
 
+ImageCollectionSection = (->
+  @object().meta(
+    name: 'ImageCollection'
+    isTypeOf: (data) -> data.type is 'image_collection'
+  ).keys
+    type: 'image_collection'
+    layout: @string().allow(
+      'column_width', 'overflow_fillwidth', 'fillwidth'
+    ).default('overflow_fillwidth')
+    images: @array().items([denormalizedArtwork, imageSection])
+).call Joi
+
 @inputSchema = (->
   id: @string().objectid()
   author_id: @string().objectid()
+  author_ids: @array().items(@string().objectid()).default([])
   author: @object().keys
     name: @string().allow('').default('')
     id: @string().objectid()
@@ -91,33 +105,40 @@ denormalizedArtwork = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
-  hero_section: @alternatives().try(videoSection, imageSection, fullscreenSection).allow(null).default(null)
+  hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection).allow(null).default(null)
   sections: @array().items([
-    imageSection
+    ImageCollectionSection
     videoSection
-    @object().meta(name: 'Callout').keys
+    @object().meta(
+      name: 'Callout'
+      isTypeOf: (data) -> data.type is 'callout'
+    ).keys
       type: @string().valid('callout')
       thumbnail_url: @string().allow('',null)
       text: @string().allow('',null)
       article: @string().allow('',null)
       hide_image: @boolean().default(false)
       top_stories: @boolean().default(false)
-    @object().meta(name: 'Embed').keys
+    @object().meta(
+      name: 'Embed'
+      isTypeOf: (data) -> data.type is 'embed'
+    ).keys
       type: @string().valid('embed')
       url: @string().allow('',null)
       height: @string().allow('',null)
       mobile_height: @string().allow('',null)
-      layout: @string().allow('',null)
-    @object().meta(name: 'Text').keys
+      layout: @string().allow('column_width', 'overflow', 'overflow_fillwidth', 'fillwidth', '', null)
+    @object().meta(
+      name: 'Text'
+      isTypeOf: (data) -> data.type is 'text'
+    ).keys
       type: @string().valid('text')
       body: @string().allow('', null)
       layout: @string().allow('blockquote', null)
-    @object().meta(name: 'Artworks').keys
-      type: @string().valid('artworks')
-      ids: @array().items(@string().objectid())
-      layout: @string().allow('overflow_fillwidth', 'column_width', null)
-      artworks: @array().items(denormalizedArtwork).allow(null).default([])
-    @object().meta(name: 'Slideshow').keys
+    @object().meta(
+      name: 'Slideshow'
+      isTypeOf: (data) -> data.type is 'slideshow'
+    ).keys
       type: @string().valid('slideshow')
       items: @array().items [
         imageSection
@@ -128,21 +149,15 @@ denormalizedArtwork = (->
       ]
     @object().meta(
       name: 'ImageSet'
-      isTypeOf: (data) => data.type is 'image_set'
+      isTypeOf: (data) -> data.type is 'image_set'
     ).keys
       type: 'image_set'
       title: @string().allow('',null)
       layout: @string().allow('full', 'mini', null)
       images: @array().items([denormalizedArtwork, imageSection])
-    @object().meta(
-      name: 'ImageCollection'
-      isTypeOf: (data) => data.type is 'image_collection'
-    ).keys
-      type: 'image_collection'
-      layout: @string().allow('overflow_fillwidth', 'column_width', null)
-      images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
   postscript: @string().allow('', null)
+  related_article_ids: @array().items(@string().objectid()).default([])
   primary_featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artist_ids: @array().items(@string().objectid()).allow(null)
   featured_artwork_ids: @array().items(@string().objectid()).allow(null)
@@ -181,7 +196,8 @@ denormalizedArtwork = (->
     secondary_logo_text: @string().allow('',null)
     secondary_logo_link: @string().allow('',null)
     footer_blurb: @string().allow('',null)
-    related_articles: @array().items(@string().objectid()).allow(null)
+    related_articles: @array().items(@string().objectid()).default([])
+    footer_title: @string().allow('', null)
   send_body: @boolean().default(false)
   channel_id: @string().objectid().allow(null).default(null)
   partner_channel_id: @string().objectid().allow(null).default(null)
@@ -240,4 +256,5 @@ denormalizedArtwork = (->
   weekly_email: @boolean()
   scheduled: @boolean()
   count: @boolean().default(false)
+  omit: @array().items(@string())
 ).call Joi

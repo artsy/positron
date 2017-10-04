@@ -241,8 +241,11 @@ describe 'Article Persistence', ->
             body: badBody
           }
           {
-            type: 'image'
-            caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+            type: 'image_collection'
+            images: [
+              type: 'image'
+              caption: '<p>abcd abcd</p><svg/onload=alert(1)>'
+            ]
           }
           {
             type: 'slideshow'
@@ -265,7 +268,7 @@ describe 'Article Persistence', ->
         article.hero_section.caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[0].body.should.equal body
         article.sections[1].body.should.equal '&lt;script&gt;alert(foo)&lt;/script&gt;' + body
-        article.sections[2].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
+        article.sections[2].images[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[3].items[0].caption.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
         article.sections[4].url.should.equal 'http://maps.google.com'
         article.sections[4].height.should.equal '400'
@@ -309,28 +312,21 @@ describe 'Article Persistence', ->
             body: '<a href="foo.com">Foo</a>'
           }
           {
-            type: 'image'
-            url: 'http://foo.com'
+            type: 'image_collection'
+            images: [
+              type: 'image'
+              url: 'http://foo.com'
+            ]
           }
           {
             type: 'video'
             url: 'foo.com/watch'
           }
-          {
-            type: 'slideshow'
-            items: [
-              {
-                type: 'video'
-                url: 'foo.com/watch'
-              }
-            ]
-          }
         ]
       }, 'foo', {}, (err, article) ->
         article.sections[0].body.should.equal '<a href="http://foo.com">Foo</a>'
-        article.sections[1].url.should.equal 'http://foo.com'
+        article.sections[1].images[0].url.should.equal 'http://foo.com'
         article.sections[2].url.should.equal 'http://foo.com/watch'
-        article.sections[3].items[0].url.should.equal 'http://foo.com/watch'
         done()
 
     it 'maintains the original slug when publishing with a new title', (done) ->
@@ -402,6 +398,7 @@ describe 'Article Persistence', ->
           secondary_logo_link: 'http://secondary'
           footer_blurb: 'This is a Footer Blurb'
           related_articles: [ '5530e72f7261696238050000' ]
+          footer_title: 'Footer Title'
         }
         published: true
       }, 'foo', {}, (err, article) ->
@@ -417,6 +414,7 @@ describe 'Article Persistence', ->
         article.super_article.footer_blurb.should.equal 'This is a Footer Blurb'
         article.is_super_article.should.equal true
         article.super_article.related_articles.length.should.equal 1
+        article.super_article.footer_title.should.equal 'Footer Title'
         done()
 
     it 'type casts ObjectId over articles', (done) ->
@@ -486,11 +484,6 @@ describe 'Article Persistence', ->
             type: 'text'
             body: 'The start of a new article'
           }
-          {
-            type: 'image'
-            url: 'https://image.png'
-            caption: 'Trademarked'
-          }
         ]
       , ->
         Article.save {
@@ -500,7 +493,7 @@ describe 'Article Persistence', ->
           published: true
         }, 'foo', {}, (err, article) ->
           article.published.should.be.true()
-          article.sections.length.should.equal 2
+          article.sections.length.should.equal 1
           article.sections[0].body.should.containEql 'The start of a new article'
           done()
 
@@ -586,6 +579,15 @@ describe 'Article Persistence', ->
         return done err if err
         article.author.id.toString().should.equal '5086df098523e60002000018'
         article.author.name.should.equal 'Jon Snow'
+        done()
+
+    it 'saves the author_ids field', (done) ->
+      Article.save {
+        author_ids: [ '5086df098523e60002000018', '5086df098523e60002000015' ]
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.author_ids[0].toString().should.equal '5086df098523e60002000018'
+        article.author_ids[1].toString().should.equal '5086df098523e60002000015'
         done()
 
     it 'saves a description', (done) ->

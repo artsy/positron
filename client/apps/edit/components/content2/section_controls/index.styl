@@ -4,37 +4,22 @@
   height auto
   top inherit
   width 100%
+  max-width calc(100vw \- 110px)
+  margin-left -20px
   &__layout
     width 100%
     text-align center
     height 45px
-  .dashed-file-upload-container
-    border-color gray-darker-color
-    transition border-color 0.3s, color 0.3s
-    padding controls-padding
-    avant-garde()
-    background black
-    color white
-    text-align center
-    &:hover, &.is-dragover
-      border-color white
-      span
-        color gray-darker-color
-    &.is-dragover
-      .dashed-file-upload-container-drop
-        color white
-    &:hover
-      border-color gray-darker-color
-      .dashed-file-upload-container-click
-        color white
-    span
-      transition color 0.3s
-    h1
-      font-size default-avant-garde-font-size - 1
+  &__inputs
+    padding 0 20px 20px
     h2
-      font-size small-avant-garde-font-size
-      color gray-darker-color
-      margin-top 10px
+      color white
+      avant-garde()
+      font-size 11px
+      margin-bottom 10px
+    input
+      width 100%
+      margin-bottom 20px
 
 #edit-content .edit-controls a
   display inline-block
@@ -49,6 +34,9 @@
       opacity 1
   &[data-active=true]
     opacity 1
+  &[name=fillwidth]
+    svg
+      margin-bottom 9px
   &[name=overflow_fillwidth]
     background-image url(/icons/edit_artworks_overflow_fillwidth.svg)
     background-size 38px
@@ -67,17 +55,29 @@
     .edit-controls
       max-width standard-overflow-w-margin
 
-.classic .edit-section__container
-  &[data-layout=column_width] .edit-controls
-    max-width classic-body-w-margin
-  &[data-layout=overflow_fillwidth],
-  &[data-type=image_set]
-    .edit-controls
-      max-width classic-overflow-w-margin
+.classic
+  .edit-section__container
+    &[data-layout=column_width] .edit-controls
+      max-width classic-body-w-margin
+    &[data-layout=overflow_fillwidth],
+    &[data-type=image_set]
+      .edit-controls
+        max-width classic-overflow-w-margin
+  .edit-section--hero
+    .edit-section__container
+      &[data-layout=column_width]
+      &[data-layout=overflow_fillwidth]
+        .edit-controls
+          min-width calc(100% + 40px)
+          margin-top -20px
+          margin-bottom 30px
+          padding-top 20px
 
 .feature .edit-section__container
   &[data-layout=column_width] .edit-controls
     max-width feature-body-w-margin
+  &[data-layout=fillwidth] .edit-controls
+    margin-left 0
   &[data-layout=overflow_fillwidth],
   &[data-type=image_set]
     .edit-controls

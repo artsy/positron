@@ -55,10 +55,16 @@ attrs = [
   'description'
   'sections'
   'hero_section'
+  'social_title'
+  'social_image'
+  'social_description'
+  'search_title'
+  'search_description'
+  'email_title'
+  'postscript'
 ]
-projections = object attrs, attrs.map -> 1
 
-db.articles.find({ published: true }, projections).toArray (err, articles) ->
+db.articles.find({ published: true }).toArray (err, articles) ->
 
   stringify = (arr) ->
     return null unless arr
@@ -73,6 +79,8 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
     sections = a.sections.map (section) => pick section, 'type'
     if a.hero_section
       hero = stringify(JSON.stringify(pick a.hero_section, 'type'))
+    if headline = a.email_metadata?.headline
+      email_title = stringify headline
     row = [
       a._id
       a.author_id
@@ -104,6 +112,13 @@ db.articles.find({ published: true }, projections).toArray (err, articles) ->
       stringify a.description
       stringify(JSON.stringify(sections))
       hero
+      stringify a.social_title
+      stringify a.social_image
+      stringify a.social_description
+      stringify a.search_title
+      stringify a.search_description
+      email_title
+      stringify a.postscript
     ].join(',')
     csv.push row
 

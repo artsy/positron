@@ -40,8 +40,7 @@ describe 'Retrieve', ->
         vertical: '55356a9deca560a0137bb4a7'
         published: true
       }
-      query.vertical['$elemMatch'].should.be.ok()
-      query.vertical['$elemMatch'].id.should.containEql ObjectId '55356a9deca560a0137bb4a7'
+      query['vertical.id'].should.containEql(ObjectId '55356a9deca560a0137bb4a7')
 
     it 'aggregates the query for artist_id', ->
       { query } = Retrieve.toQuery {
@@ -101,3 +100,9 @@ describe 'Retrieve', ->
         scheduled: true
       }
       query.scheduled_publish_at.should.have.keys '$ne'
+
+    it 'omits articles', ->
+      { query } = Retrieve.toQuery {
+        omit: ['54276766fd4f50996aeca2b7']
+      }
+      query._id.should.have.keys '$nin'
