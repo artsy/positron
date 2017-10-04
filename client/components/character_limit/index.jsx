@@ -29,7 +29,7 @@ export default class CharacterLimitInput extends React.Component {
     return (
       <div>
         <label>{this.props.label}</label>
-        <div>{this.state.remainingChars} Charactors</div>
+        <div>{this.state.remainingChars} Characters</div>
         {this.props.type === 'textarea' ? <textarea {...propsForInput} /> : <input {...propsForInput} />}
       </div>
     )
