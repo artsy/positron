@@ -20,7 +20,7 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
         VeniceAdmin(curation: @curation)
         $('#venice-root')[0]
       )
-    else if @curation.get('type') is 'promoted-admin'
+    else if @curation.get('type') is 'display-admin'
       ReactDOM.render(
         React.createElement(PromotedAdmin.default, { curation: @curation })
         $('#react-root')[0]

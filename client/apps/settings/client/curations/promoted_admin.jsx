@@ -25,8 +25,8 @@ export default class PromotedAdmin extends React.Component {
 
   onChange(key, value, index) {
     const newCuration = this.state.curation.clone()
-    const section = newCuration.get("sections")[index]
-    set(section, key, value)
+    const campaign = newCuration.get("campaigns")[index]
+    set(campaign, key, value)
 
     return this.setState({
       curation: newCuration,
@@ -44,10 +44,10 @@ export default class PromotedAdmin extends React.Component {
   render() {
     return (
       <div>
-        {_.map(this.state.curation.get("sections"), (section, index) =>
+        {_.map(this.state.curation.get("campaigns"), (campaign, index) =>
           <div className="promoted-admin__container admin-form-container" key={`promoted-admin-${index}`}>
             <DropdownHeader
-              section={section.name}
+              section={campaign.name}
               key={`dropdown-${index}`}
               className="promoted-admin__section-header" />
             <div className="promoted-admin__section">
@@ -57,7 +57,7 @@ export default class PromotedAdmin extends React.Component {
                   <input
                     className="bordered-input"
                     placeholder="Title"
-                    defaultValue={section.name}
+                    defaultValue={campaign.name}
                     onChange={ ((e) => this.onInputChange(e, index)).bind(this) }
                     name="name" />
                 </Col>
@@ -67,7 +67,7 @@ export default class PromotedAdmin extends React.Component {
                     type="date"
                     className="bordered-input"
                     placeholder="Start Date"
-                    defaultValue={section.start_date}
+                    defaultValue={campaign.start_date}
                     onChange={ ((e) => this.onInputChange(e, index)).bind(this) }
                     name="start_date" />
                 </Col>
@@ -77,7 +77,7 @@ export default class PromotedAdmin extends React.Component {
                     type="date"
                     className="bordered-input"
                     placeholder="Title"
-                    defaultValue={section.end_date}
+                    defaultValue={campaign.end_date}
                     onChange={ ((e) => this.onInputChange(e, index)).bind(this) }
                     name="end_date" />
                 </Col>
@@ -102,7 +102,7 @@ export default class PromotedAdmin extends React.Component {
                     <CharacterLimitInput
                       label="headline"
                       placeholder="Headline"
-                      defaultValue={section.panel.headline}
+                      defaultValue={campaign.panel ? campaign.panel.headline : ''}
                       onChange={ ((e) => this.onInputChange(e, index)).bind(this) }
                       name="panel.headline"
                       limit={25} />
@@ -112,7 +112,7 @@ export default class PromotedAdmin extends React.Component {
                       type="textarea"
                       label="Body"
                       placeholder="Body"
-                      defaultValue={section.panel.body}
+                      defaultValue={campaign.panel ? campaign.panel.body : ''}
                       onChange={ ((e) => this.onInputChange(e, index)).bind(this) }
                       name="panel.body"
                       limit={90} />
@@ -123,8 +123,8 @@ export default class PromotedAdmin extends React.Component {
                     <Col lg>
                       <label>Image</label>
                       <ImageUpload
-                        name='panel.image'
-                        src={section.panel.image}
+                        name='panel.assets[0]'
+                        src={campaign.panel.assets[0] ? campaign.panel.assets[0].url : ''}
                         onChange={ (name, url) => this.onImageInputChange(name, url, index).bind(this) }
                         disabled={false} />
                     </Col>
@@ -132,7 +132,7 @@ export default class PromotedAdmin extends React.Component {
                       <label>Logo</label>
                       <ImageUpload
                         name='panel.logo'
-                        src={section.panel.logo}
+                        src={campaign.panel && campaign.panel.logo}
                           onChange={ (name, url) => this.onImageInputChange(name, url, index).bind(this) }
                         disabled={false} />
                     </Col>
