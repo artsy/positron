@@ -23,8 +23,10 @@ describe 'Utils', ->
           }])
         )
       )
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       @d =
         EditorState: Draft.EditorState
       copy = '<p>While auction houses will vouch for a piece’s authenticity, issues of title are the responsibility of the consignor.</p><p>Meaning there aren’t other people or organizations with a financial interest in the piece.</p>'

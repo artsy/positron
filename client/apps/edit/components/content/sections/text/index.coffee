@@ -103,7 +103,7 @@ module.exports = React.createClass
     selection = getSelectionDetails(@state.editorState)
     # only merge a section if cursor is in first character of first block
     if selection.isFirstBlock and selection.anchorOffset is 0 and
-    @props.sections.models[@props.index - 1].get('type') is 'text'
+    @props.sections.models[@props.index - 1]?.get('type') is 'text'
       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
       @props.sections.models[@props.index - 1].destroy()
       newHTML = mergeIntoHTML + @state.html

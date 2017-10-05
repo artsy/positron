@@ -4,7 +4,7 @@ const Curation = require('api/apps/curations/model.coffee')
 const Channel = require('api/apps/channels/model.coffee')
 const Tag = require('api/apps/tags/model.coffee')
 const Author = require('api/apps/authors/model.coffee')
-const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.coffee')
+const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
 const { ObjectId } = require('mongojs')
 
 export const articles = (root, args, req, ast) => {

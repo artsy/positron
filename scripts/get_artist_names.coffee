@@ -21,7 +21,7 @@ artsyXapp.init { url: ARTSY_URL, id: ARTSY_ID, secret: ARTSY_SECRET }, ->
     request
       .get("#{ARTSY_URL}/api/v1/artist/#{id}")
       .set('X-XAPP-TOKEN': artsyXapp.token)
-      .end (err, sres) => 
+      .end (err, sres) =>
         console.error err if err
         name = sres.body.name
         fs.appendFile(__dirname + '/tmp/artist_names.txt', name + '\n', cb)

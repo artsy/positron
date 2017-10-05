@@ -29,13 +29,13 @@ describe 'routes', ->
     it 'sends a list of published articles by author', ->
       @req.query.author_id = @req.user._id = 'fooid'
       @req.query.published = 'true'
-      routes.index @req, @res, @next
+      routes.index(@req, @res, @next)
       @Article.where.args[0][0].author_id.should.equal @req.user._id
-      @Article.where.args[0][1] null, {
+      @Article.where.args[0][1](null, {
         total: 10
         count: 1
         results: [fixtures().articles]
-      }
+      })
       @res.send.args[0][0].results[0].title.should.containEql 'Top Ten'
 
     it 'returns an error if channel_id is not provided for unpublished', ->
@@ -108,7 +108,7 @@ describe 'routes', ->
 
   describe '#delete', ->
 
-    it 'delets an existing article', ->
+    it 'deletes an existing article', ->
       @req.article = fixtures().articles
       routes.delete @req, @res
       @Article.destroy.args[0][1]()

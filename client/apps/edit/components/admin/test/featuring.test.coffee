@@ -24,6 +24,9 @@ describe 'AdminFeaturing', ->
           initialize: ->
           ttAdapter: ->
         )
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       $.fn.typeahead = sinon.stub()
       AdminFeaturing = benv.require resolve __dirname, '../featuring/index.coffee'
       AdminFeaturing.__set__ 'sd', {

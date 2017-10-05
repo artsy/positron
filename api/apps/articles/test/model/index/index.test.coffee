@@ -4,8 +4,7 @@ sinon = require 'sinon'
 gravity = require('antigravity').server
 express = require 'express'
 app = require('express')()
-rewire = require 'rewire'
-Article = rewire '../../../model/index'
+Article = require '../../../model/index.js'
 search = require '../../../../../lib/elasticsearch'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
@@ -89,7 +88,7 @@ describe 'Article', ->
 
     it 'returns an error message', (done) ->
       Article.destroy '5086df098523e60002000019', (err) ->
-        err.should.equal 'Article not found.'
+        err.message.should.equal 'Article not found.'
         done()
 
     it 'removes the article from elasticsearch', (done) ->
@@ -110,21 +109,40 @@ describe 'Article', ->
   describe '#present', ->
 
     it 'adds both _id and id', ->
-      data = Article.present _.extend {}, fixtures().articles, _id: 'foo'
-      (data._id?).should.be.ok
-      data.id.should.equal 'foo'
+      result = Article.present _.extend({}, fixtures().articles, _id: 'foo')
+      result.id.should.equal 'foo'
+      result._id.should.equal 'foo'
 
     it 'converts dates to ISO strings', ->
-      data = Article.present _.extend {}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date
-      moment(data.updated_at).toISOString().should.equal data.updated_at
-      moment(data.published_at).toISOString().should.equal data.published_at
-      moment(data.scheduled_publish_at).toISOString().should.equal data.scheduled_publish_at
+      result = Article.present _.extend({}, fixtures().articles, published_at: new Date, scheduled_publish_at: new Date)
+      moment(result.updated_at).toISOString().should.equal result.updated_at
+      moment(result.published_at).toISOString().should.equal result.published_at
+      moment(result.scheduled_publish_at).toISOString().should.equal result.scheduled_publish_at
 
   describe '#presentCollection', ->
 
     it 'shows a total/count/results hash for arrays of articles', ->
-      data = Article.presentCollection
+      result = Article.presentCollection
         total: 10
         count: 1
         results: [_.extend {}, fixtures().articles, _id: 'baz']
-      data.results[0].id.should.equal 'baz'
+      result.results[0].id.should.equal 'baz'
+
+  describe '#getSuperArticleCount', ->
+    it 'returns 0 if the id is invalid', ->
+      id = '123'
+      Article.getSuperArticleCount(id)
+      .then (count) =>
+        count.should.equal 0
+
+    it 'returns a count of super articles that have the given id as a related article', ->
+      fabricate 'articles',
+        _id: ObjectId('54276766fd4f50996aeca2b8')
+        super_article: {
+          related_articles: [ObjectId('5086df098523e60002000018')]
+        }
+      , ->
+      id = '5086df098523e60002000018'
+      Article.getSuperArticleCount(id)
+      .then (count) =>
+        count.should.equal 1

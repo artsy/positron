@@ -28,9 +28,10 @@ describe 'SectionText', ->
           }])
         )
       )
-      global.Node = () => {}
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       @r =
         find: ReactTestUtils.findRenderedDOMComponentWithClass
         simulate: ReactTestUtils.Simulate
@@ -76,6 +77,7 @@ describe 'SectionText', ->
       @artistProps = {
         editing: true
         section: @sections.models[2]
+        sections: @sections
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.stickyControlsBox = sinon.stub().returns {top: 20, left: 40}

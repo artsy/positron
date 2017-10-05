@@ -20,6 +20,9 @@ describe 'AdminAppearances', ->
         )
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       Backbone.$ = $
       AdminAppearances = benv.require resolve __dirname, '../appearances/index.coffee'
       AdminAppearances.__set__ 'sd', {

@@ -16,8 +16,10 @@ describe 'RichTextInputUrl', ->
       @r =
         find: ReactTestUtils.findRenderedDOMComponentWithClass
         simulate: ReactTestUtils.Simulate
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       DraftInputUrl = benv.requireWithJadeify resolve(__dirname, '../components/input_url'), ['icons']
       props = {
         selectionTarget:

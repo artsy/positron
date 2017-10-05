@@ -23,8 +23,10 @@ describe 'RichTextCaption', ->
         simulate: ReactTestUtils.Simulate
       @d =
         EditorState: Draft.EditorState
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       @RichTextCaption = benv.requireWithJadeify resolve(__dirname, '../../rich_text_caption/index'), ['icons']
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../rich_text/components/input_url'), ['icons']
