@@ -1,9 +1,11 @@
+require('babel-core/register')
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
 { indexForSearch } = Save = require '../api/apps/articles/model/distribute'
-Article = require '../api/apps/articles/model/index'
+Article = require '../api/apps/articles/model/index.js'
 search = require '../api/lib/elasticsearch'
+async = require 'async'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -15,15 +17,15 @@ switch process.env.NODE_ENV
 # Connect to database
 db = mongojs(process.env.MONGOHQ_URL, ['articles'])
 
-db.articles.find({ }).toArray (err, articles) ->
+db.articles.find({}).toArray (err, articles) ->
   console.log(err) if err
-  indexWorker(articles, 0)
+  console.log(articles.length)
+  async.mapSeries(articles, indexWorker, (err, results) =>
+    console.log('Completed indexing ' + results.length + 'articles.')
+  )
 
-indexWorker = (articles, i) ->
-  a = articles[i]
-  console.log('indexing ' + a._id)
-  indexForSearch Article.present(a)
-  setTimeout( =>
-    console.log('indexed ' + a.id or a._id)
-    indexWorker(articles, ++i)
-  , 30)
+indexWorker = (article, cb) ->
+  console.log('indexing ' + article._id)
+  indexForSearch Article.present(article), () =>
+    console.log('indexed ' + article.id or article._id)
+    cb()

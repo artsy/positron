@@ -25,8 +25,12 @@ describe 'AdminSuperArticle', ->
           ttAdapter: ->
         )
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       Backbone.$ = $
       $.fn.typeahead = sinon.stub()
+      sinon.stub(Backbone, 'sync')
       AdminSuperArticle = benv.require resolve(__dirname, '../super_article/index.coffee')
       AdminSuperArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
@@ -54,6 +58,7 @@ describe 'AdminSuperArticle', ->
           done()
 
   afterEach ->
+    Backbone.sync.restore()
     benv.teardown()
 
   it 'renders the fields', ->

@@ -26,6 +26,9 @@ describe 'AdminVerticalsTags', ->
         )
         _: benv.require 'underscore'
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       $.fn.typeahead = sinon.stub()
       @AdminVerticalsTags = benv.require resolve __dirname, '../verticals_tags/editorial.coffee'
       @AdminVerticalsTags.__set__ 'sd', {

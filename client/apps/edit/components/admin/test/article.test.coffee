@@ -25,6 +25,9 @@ describe 'AdminArticle', ->
           initialize: ->
           ttAdapter: ->
         )
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       $.fn.typeahead = sinon.stub()
       global.confirm = @confirm = sinon.stub()
       AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
