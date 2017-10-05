@@ -6,6 +6,7 @@ _ = require('underscore')
 React = require 'react'
 ReactDOM = require 'react-dom'
 VeniceAdmin = React.createFactory require './curations/venice_admin.coffee'
+DisplayAdmin = require './curations/display_admin.jsx'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
@@ -18,6 +19,11 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
       ReactDOM.render(
         VeniceAdmin(curation: @curation)
         $('#venice-root')[0]
+      )
+    else if @curation.get('type') is 'display-admin'
+      ReactDOM.render(
+        React.createElement(DisplayAdmin.default, { curation: @curation })
+        $('#react-root')[0]
       )
     else
       new AdminEditView

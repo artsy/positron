@@ -74,6 +74,23 @@ export const channels = (root, args, req, ast) => {
   })
 }
 
+export const display = (root, args, req, ast) => {
+  return new Promise((resolve, reject) => {
+    Curation.mongoFetch({'type': 'display-admin'}, (err, results) => { // TODO - Use env var
+      if (err) {
+        reject(new Error(err))
+      }
+      const outcomes = []
+      results.results[0].campaigns.map(campaign => {
+        outcomes.push(_.times((campaign.sov * 100), () => campaign.name))
+      })
+      const result = _.sample(_.flatten(outcomes))
+      const data = _.where(results.results[0].campaigns, {name: result})
+      resolve(data)
+    })
+  })
+}
+
 export const tags = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
     Tag.mongoFetch(args, (err, results) => {
