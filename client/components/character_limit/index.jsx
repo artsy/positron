@@ -1,3 +1,5 @@
+import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+import PropTypes from 'prop-types'
 import React from 'react'
 
 export default class CharacterLimitInput extends React.Component {
@@ -5,15 +7,36 @@ export default class CharacterLimitInput extends React.Component {
     super(props)
 
     this.state = {
-      remainingChars: props.limit - props.defaultValue.length
+      remainingChars: props.limit - this.getTextLength(props.defaultValue, props.html)
     }
   }
 
-  onInputChange = (e) => {
-    const remainingChars = this.props.limit - e.target.value.length
+  getTextLength = (text, isHtml) => {
+    return isHtml ? $(text).text().length : text.length
+  }
 
+  onInputChange = (e) => {
+    const input = this.props.html ? e : e.target.value
+    const remainingChars = this.props.limit - this.getTextLength(input, this.props.html)
     this.setState({ remainingChars })
-    this.props.onChange(e)
+    this.props.onChange(input)
+  }
+
+  renderTextArea = (propsForInput) => {
+    if (this.props.html) {
+      return (
+        <div className='bordered-input'>
+          <Paragraph
+            onChange={this.onInputChange}
+            html={this.props.defaultValue}
+            linked
+            stripLinebreaks
+            placeholder={this.props.placeholder} />
+        </div>
+      )
+    } else {
+      return <textarea {...propsForInput} />
+    }
   }
 
   render () {
@@ -28,10 +51,26 @@ export default class CharacterLimitInput extends React.Component {
 
     return (
       <div>
-        <label>{this.props.label}</label>
-        <div>{this.state.remainingChars} Characters</div>
-        {this.props.type === 'textarea' ? <textarea {...propsForInput} /> : <input {...propsForInput} />}
+        <label>
+          {this.props.label}
+          <span>{this.state.remainingChars} Characters</span>
+        </label>
+        {this.props.type === 'textarea'
+          ? this.renderTextArea(propsForInput)
+          : <input {...propsForInput} />
+        }
       </div>
     )
   }
+}
+
+CharacterLimitInput.propTypes = {
+  defaultValue: PropTypes.string.isRequired,
+  html: PropTypes.bool,
+  label: PropTypes.string,
+  limit: PropTypes.number.isRequired,
+  name: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string
 }

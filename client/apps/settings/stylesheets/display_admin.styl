@@ -1,18 +1,26 @@
 .display-admin
-  &__section-header
-    display flex
-    align-items center
-    border-bottom 1px solid gray-color
-    margin-top 30px
-    padding-bottom 10px
-    h1
-      Garamond()
-      font-size 30px
-      padding-right 20px
-    .dropdown-header__caret
-      display flex
-  &__section_title
-    Garamond()
-    font-size 23px
-  &__section
+  &__section-title
+    Garamond s23
+    margin-bottom 20px
+  &__section-inner,
+  &__section--campaign,
+  &__section--panel
     margin 30px 0
+  .rich-text--paragraph p
+    font-size 1em
+  label
+    display flex
+    justify-content space-between
+    span
+      color gray-color
+      garamond s-caption
+      text-transform none
+      letter-spacing 0
+  select
+    height 2.5em
+  .field-group
+    margin-bottom 20px
+  .save-campaign
+    position absolute
+    top 10px
+    right calc(50vw + 55px - (1120px / 2))

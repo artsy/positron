@@ -6,7 +6,7 @@ _ = require('underscore')
 React = require 'react'
 ReactDOM = require 'react-dom'
 VeniceAdmin = React.createFactory require './curations/venice_admin.coffee'
-DisplayAdmin = require './curations/display_admin.jsx'
+DisplayAdmin = require './curations/display/index.jsx'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
