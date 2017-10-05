@@ -38,9 +38,10 @@ describe 'Section Text', ->
           removeListener: sinon.stub()
         }
       )
-      global.Node = () => {}
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       @SectionText = benv.require resolve(__dirname, '../index')
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text2/components/input_url'), ['icons']

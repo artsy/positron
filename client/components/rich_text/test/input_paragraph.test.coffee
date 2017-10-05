@@ -14,6 +14,10 @@ describe 'RichTextParagraph', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
+        React: require 'react'
+        ReactDOM: require 'react-dom'
+        ReactTestUtils: require 'react-addons-test-utils'
+        ReactDOMServer: require 'react-dom/server'
       window.jQuery = $
       global.Node = () => {}
       global.HTMLElement = () => {}

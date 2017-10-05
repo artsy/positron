@@ -13,7 +13,7 @@ describe('PlainText', () => {
       <PlainText {...props} />
     )
     expect(wrapper.html()).toMatch('<div class="plain-text" name="title">')
-    expect(wrapper.html()).toMatch('class="public-DraftEditor-content" contenteditable="true"')
+    expect(wrapper.html()).toMatch('public-DraftEditor-content" contenteditable="true"')
     expect(wrapper.html()).toMatch('Start Typing...')
     expect(wrapper.html()).toMatch('public-DraftEditorPlaceholder-inner')
   })
