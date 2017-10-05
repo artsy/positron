@@ -19,9 +19,10 @@ describe 'Rich Text: Paragraph', ->
       benv.expose
         $: benv.require 'jquery'
       window.jQuery = $
-      global.Node = () => {}
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       window.getSelection = sinon.stub().returns(
         isCollapsed: false
         getRangeAt: sinon.stub().returns(
