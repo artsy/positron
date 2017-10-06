@@ -7,7 +7,7 @@ import CharacterLimitInput from 'client/components/character_limit/index.jsx'
 const DisplayAdminPanel = (props) => {
   const {campaign, index, onChange} = props
   return (
-    <div className='admin__section--panel'>
+    <div className='display-admin__section--panel'>
       <div className='display-admin__section-title'>Panel</div>
         <Row key={index}>
           <Col lg>
@@ -18,6 +18,14 @@ const DisplayAdminPanel = (props) => {
                 defaultValue={campaign.panel ? campaign.panel.headline : ''}
                 onChange={(e) => onChange('panel.headline', e.target.value, index)}
                 limit={25} />
+            </div>
+            <div className='field-group'>
+            <label>CTA link</label>
+            <input
+              className='bordered-input'
+              placeholder='Find Out More'
+              defaultValue={campaign.canvas && campaign.panel.link ? campaign.panel.link.url : ''}
+              onChange={(e) => onChange('canvas.link.url', e.target.value, index)} />
             </div>
             <div className='field-group'>
               <CharacterLimitInput

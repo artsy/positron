@@ -1,10 +1,10 @@
-import React from 'react'
-import _ from 'underscore'
 import set from 'lodash.set'
-import Campaign from './campaign.jsx'
-import Panel from './panel.jsx'
-import DropdownHeader from 'client/apps/edit/components/admin/components/dropdown_header.coffee'
+import PropTypes from 'prop-types'
+import React from 'react'
 
+import CanvasContainer from './components/canvas_container.jsx'
+import Campaign from './components/campaign.jsx'
+import Panel from './components/panel.jsx'
 import DropDownItem from 'client/components/dropdown/index'
 
 export default class DisplayAdmin extends React.Component {
@@ -42,7 +42,7 @@ export default class DisplayAdmin extends React.Component {
   render () {
     return (
       <div className='display-admin'>
-        {_.map(this.state.curation.get('campaigns'), (campaign, index) =>
+        {this.state.curation.get('campaigns').map((campaign, index) =>
           <div className='admin-form-container' key={`display-admin-${index}`}>
             <DropDownItem
               active={index === this.state.activeSection}
@@ -53,6 +53,7 @@ export default class DisplayAdmin extends React.Component {
                 <div className='display-admin__section-inner'>
                   <Campaign campaign={campaign} index={index} onChange={this.onChange} />
                   <Panel campaign={campaign} index={index} onChange={this.onChange} />
+                  <CanvasContainer campaign={campaign} index={index} onChange={this.onChange} />
                 </div>
               }
             </DropDownItem>
@@ -64,4 +65,8 @@ export default class DisplayAdmin extends React.Component {
       </div>
     )
   }
+}
+
+DisplayAdmin.propTypes = {
+  curation: PropTypes.object.isRequired
 }
