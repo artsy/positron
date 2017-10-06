@@ -101,6 +101,7 @@ postSailthruAPI = (article, cb) ->
     custom_text: article.email_metadata?.custom_text
     daily_email: article.daily_email
     weekly_email: article.weekly_email
+    vertical: article.vertical?.name
   , (err, response) =>
     if err
       debug err

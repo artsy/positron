@@ -58,6 +58,16 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].tags.should.containEql 'culture'
           done()
 
+      it 'sends vertical as a custom variable', (done) ->
+        Distribute.distributeArticle {
+          author_id: '5086df098523e60002000018'
+          published: true
+          vertical: { name: 'culture', id: '591b0babc88a280f5e9efa7a' }
+        }, (err, article) =>
+          @sailthru.apiPost.calledOnce.should.be.true()
+          @sailthru.apiPost.args[0][1].vars.vertical.should.equal 'culture'
+          done()
+
       it 'concats the artsy-editorial and magazine tags for specialized articles', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
