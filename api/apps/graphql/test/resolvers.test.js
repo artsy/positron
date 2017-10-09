@@ -1,8 +1,8 @@
 import _ from 'underscore'
-import sinon from 'sinon'
 import rewire from 'rewire'
-const { fixtures, fabricate, empty } = require('api/test/helpers/db.coffee')
+import sinon from 'sinon'
 const app = require('api/index.coffee')
+const { fixtures, fabricate, empty } = require('api/test/helpers/db.coffee')
 const resolvers = rewire('../resolvers.js')
 
 describe('resolvers', () => {
@@ -36,15 +36,16 @@ describe('resolvers', () => {
       slugs: ['slug-2'],
       channel_id: '456'
     })
-    const curations = { total: 20, count: 1, results: [fixtures().curations] }
-    const channels = { total: 20, count: 1, results: [fixtures().channels] }
-    const tags = { total: 20, count: 1, results: [fixtures().tags] }
     const authors = { total: 20, count: 1, results: [fixtures().authors] }
+    const channels = { total: 20, count: 1, results: [fixtures().channels] }
+    const curations = { total: 20, count: 1, results: [fixtures().curations] }
+    const tags = { total: 20, count: 1, results: [fixtures().tags] }
     resolvers.__set__('mongoFetch', sinon.stub().yields(null, articles))
-    resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, curations)) })
-    resolvers.__set__('Channel', { mongoFetch: (sinon.stub().yields(null, channels)) })
-    resolvers.__set__('Tag', { mongoFetch: (sinon.stub().yields(null, tags)) })
     resolvers.__set__('Author', { mongoFetch: (sinon.stub().yields(null, authors)) })
+    resolvers.__set__('Channel', { mongoFetch: (sinon.stub().yields(null, channels)) })
+    resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, curations)) })
+    resolvers.__set__('Tag', { mongoFetch: (sinon.stub().yields(null, tags)) })
+
   })
 
   afterEach(() => {
@@ -115,6 +116,17 @@ describe('resolvers', () => {
     })
   })
 
+  describe('authors', () => {
+    it('can find authors', async () => {
+      const results = await resolvers.authors({}, {}, req, {})
+      results.length.should.equal(1)
+      results[0].name.should.equal('Halley Johnson')
+      results[0].bio.should.equal('Writer based in NYC')
+      results[0].twitter_handle.should.equal('kanaabe')
+      results[0].image_url.should.equal('https://artsy-media.net/halley.jpg')
+    })
+  })
+
   describe('channels', () => {
     it('can find channels', async () => {
       const results = await resolvers.channels({}, {}, req, {})
@@ -132,22 +144,27 @@ describe('resolvers', () => {
     })
   })
 
-  describe('tags', () => {
-    it('can find tags', async () => {
-      const results = await resolvers.tags({}, {}, req, {})
+  describe('display', () => {
+    it('can fetch campaign data', async () => {
+      const display = { total: 20, count: 1, results: [fixtures().display] }
+      resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
+
+      const results = await resolvers.curations({}, {}, req, {})
       results.length.should.equal(1)
-      results[0].name.should.equal('Show Reviews')
+      results[0].name.should.equal('Sample Campaign')
+      results[0].canvas.headline.should.containEql('Sample copy')
+      results[0].panel.headline.should.containEql('Euismod Inceptos Quam')
     })
   })
 
-  describe('authors', () => {
-    it('can find authors', async () => {
-      const results = await resolvers.authors({}, {}, req, {})
+  describe('relatedArticlesCanvas', () => {
+    it('can find related articles for the canvas', async () => {
+      const results = await resolvers.relatedArticlesCanvas({
+        id: '54276766fd4f50996aeca2b8',
+        vertical: { id: '54276766fd4f50996aeca2b3' }
+      })
       results.length.should.equal(1)
-      results[0].name.should.equal('Halley Johnson')
-      results[0].bio.should.equal('Writer based in NYC')
-      results[0].twitter_handle.should.equal('kanaabe')
-      results[0].image_url.should.equal('https://artsy-media.net/halley.jpg')
+      results[0].vertical.id.should.equal('54276766fd4f50996aeca2b3')
     })
   })
 
@@ -162,14 +179,11 @@ describe('resolvers', () => {
     })
   })
 
-  describe('relatedArticlesCanvas', () => {
-    it('can find related articles for the canvas', async () => {
-      const results = await resolvers.relatedArticlesCanvas({
-        id: '54276766fd4f50996aeca2b8',
-        vertical: { id: '54276766fd4f50996aeca2b3' }
-      })
+  describe('tags', () => {
+    it('can find tags', async () => {
+      const results = await resolvers.tags({}, {}, req, {})
       results.length.should.equal(1)
-      results[0].vertical.id.should.equal('54276766fd4f50996aeca2b3')
+      results[0].name.should.equal('Show Reviews')
     })
   })
 })

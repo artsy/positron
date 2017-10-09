@@ -1,11 +1,12 @@
 import _ from 'underscore'
-const User = require('api/apps/users/model.coffee')
-const Curation = require('api/apps/curations/model.coffee')
-const Channel = require('api/apps/channels/model.coffee')
-const Tag = require('api/apps/tags/model.coffee')
 const Author = require('api/apps/authors/model.coffee')
+const Channel = require('api/apps/channels/model.coffee')
+const Curation = require('api/apps/curations/model.coffee')
+const Tag = require('api/apps/tags/model.coffee')
+const User = require('api/apps/users/model.coffee')
 const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
 const { ObjectId } = require('mongojs')
+const { DISPLAY_ID } = process.env
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -52,6 +53,17 @@ export const article = (root, args, req, ast) => {
   })
 }
 
+export const authors = (root, args, req, ast) => {
+  return new Promise((resolve, reject) => {
+    Author.mongoFetch(args, (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
 export const curations = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
     Curation.mongoFetch(args, (err, results) => {
@@ -74,24 +86,19 @@ export const channels = (root, args, req, ast) => {
   })
 }
 
-export const tags = (root, args, req, ast) => {
+export const display = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
-    Tag.mongoFetch(args, (err, results) => {
+    Curation.mongoFetch({'_id': ObjectId(DISPLAY_ID)}, (err, results) => {
       if (err) {
         reject(new Error(err))
       }
-      resolve(results.results)
-    })
-  })
-}
-
-export const authors = (root, args, req, ast) => {
-  return new Promise((resolve, reject) => {
-    Author.mongoFetch(args, (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
-      resolve(results.results)
+      const outcomes = []
+      results.results[0].campaigns.map(campaign => {
+        outcomes.push(_.times((campaign.sov * 100), () => campaign.name))
+      })
+      const result = _.sample(_.flatten(outcomes))
+      const data = _.where(results.results[0].campaigns, {name: result})
+      resolve(data)
     })
   })
 }
@@ -130,6 +137,17 @@ export const relatedArticlesCanvas = (root) => {
   }
   return new Promise((resolve, reject) => {
     mongoFetch(_.pick(args, _.identity), (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
+export const tags = (root, args, req, ast) => {
+  return new Promise((resolve, reject) => {
+    Tag.mongoFetch(args, (err, results) => {
       if (err) {
         reject(new Error(err))
       }
