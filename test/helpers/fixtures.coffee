@@ -2,6 +2,7 @@ User = require '../../client/models/user'
 { ObjectId } = require 'mongojs'
 moment = require 'moment'
 
+
 timeCount = 0
 
 module.exports = ->
@@ -182,6 +183,35 @@ module.exports = ->
     bio: 'Writer based in NYC'
     twitter_handle: 'kanaabe'
     image_url: 'https://artsy-media.net/halley.jpg'
+  fixtures.display =
+    canvas:
+      layout: 'slideshow'
+      headline: 'Sample copy sed posuere consectetur est at lobortis. Nullam id dolor ultricies vehicula.'
+      body: ''
+      link:
+        text: 'Link Example'
+        url: 'http://artsy.net'
+      assets: [
+        {
+          url: 'https://artsy-media-uploads.s3.amazonaws.com/YqTtwB7AWqKD95NGItwjJg%2FRachel_Rossin_portrait_2.jpg'
+          caption: 'Nullam id dolor ultricies vehicula.'
+        },
+        { url: 'https://d32dm0rphc51dk.cloudfront.net/0aRUvnVgQKbQk5dj8xcCAg/larger.jpg'}
+      ]
+      logo: 'http://files.artsy.net/images/artsy-logo-wide-black.png'
+      disclaimer: 'Donec id elit non mi porta gravida at eget metus. Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
+    end_date: new Date
+    name: 'Sample Campaign'
+    panel:
+      headline: 'Euismod Inceptos Quam'
+      body: '<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. <a href="http://artsy.net/articles">Example Link</a></p>'
+      assets: [
+        { url: 'https://artsy-media-uploads.s3.amazonaws.com/YqTtwB7AWqKD95NGItwjJg%2FRachel_Rossin_portrait_2.jpg' }
+      ]
+      logo: 'https://artsy-vanity-files-production.s3.amazonaws.com/images/artsy_logo_square_white_transparent.png',
+      link: { text: '', url: 'http://artsy.net' }
+    sov: .75
+    start_date: new Date
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
