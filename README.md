@@ -41,8 +41,8 @@ To shut down the process, press `ctrl+c` or execute `docker-compose down`.
 - Install Node 6
 
 ```
-nvm install 6
-nvm alias default 6
+nvm install 8
+nvm alias default 8
 ```
 
 - Fork Positron to your Github account in the Github UI.

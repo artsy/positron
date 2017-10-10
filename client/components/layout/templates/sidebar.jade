@@ -2,13 +2,23 @@
   nav#layout-sidebar
     a#layout-sidebar-home( href='/' )
       include ../public/icons/logo.svg
-    a#layout-sidebar-new-article(
-      href='/articles/new'
-      class=(sd.URL == '/articles/new' ? 'is-active' : '')
-    )
-      include ../public/icons/layout_new_article.svg
-      br
-      | New Article
+    if channel && channel.isEditorial()
+      #layout-sidebar-new-article(
+        class=(sd.URL == '/articles/new' ? 'is-active' : '')
+      )
+        include ../public/icons/layout_new_article.svg
+        br
+        | New Article
+        nav.layout-sidebar-dropdown
+          a( href='/articles/new?layout=standard' ) Standard Article
+          a( href='/articles/new?layout=feature' ) Feature Article
+    else
+      a#layout-sidebar-new-article(
+        class=(sd.URL == '/articles/new' ? 'is-active' : '')
+      )
+        include ../public/icons/layout_new_article.svg
+        br
+        | New Article
     a( href='/articles'
        class=(sd.URL == '/articles' ? 'is-active' : '') )
       include ../public/icons/layout_published.svg
@@ -33,7 +43,9 @@
         = user.get('name').split(' ')[0]
 
       - var hasChannelMenu = (user.get('channel_ids') && user.get('channel_ids').length > 1) || (user.get('partner_ids') && user.get('partner_ids').length > 1) || user.isAdmin()
-      nav#layout-sidebar-profile-menu(class="#{ hasChannelMenu ? '' : 'has-only-child'}")
+      nav.layout-sidebar-dropdown(
+        class="#{ hasChannelMenu ? '' : 'has-only-child'}"
+      )
         a( href='/logout' ) Sign out
         if hasChannelMenu
           a#layout-sidebar-switch-channel Switch channel
