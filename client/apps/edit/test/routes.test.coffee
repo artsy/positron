@@ -30,21 +30,13 @@ describe 'routes', ->
       @res.render.args[0][1].article.get('channel_id').should.equal '4d8cd73191a5c50ce200002b'
       @res.render.args[0][1].article.get('author').name.should.equal 'Editorial'
 
-    it 'sets layout to standard for editorial channels', ->
-      @req.user.set('current_channel', {
-        id: '456'
-        name: 'Test Channel'
-        type: 'editorial'
-      })
+    it 'sets layout to the query param', ->
+      @req.query.layout = 'standard'
       @routes.create @req, @res
       @res.render.args[0][1].article.get('layout').should.equal 'standard'
 
-    it 'sets layout to classic for non-editorial channels', ->
-      @req.user.set('current_channel', {
-        id: '4d8cd73191a5c50ce200002b'
-        name: 'Gagosian'
-        type: 'partner'
-      })
+    it 'sets layout to default to classic', ->
+      @req.query.layout = null
       @routes.create @req, @res
       @res.render.args[0][1].article.get('layout').should.equal 'classic'
 

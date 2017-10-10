@@ -6,6 +6,7 @@
 viewHelpers = require './view_helpers'
 uaParser = require 'ua-parser'
 crypto = require 'crypto'
+Channel = require '../models/channel'
 
 @helpers = (req, res, next) ->
   res.backboneError = (model, err) -> next err
@@ -15,6 +16,7 @@ crypto = require 'crypto'
   res.locals.sd.URL = req.url
   res.locals.sd.USER = req.user?.toJSON()
   res.locals.user = req.user
+  res.locals.channel = new Channel req.user.get('current_channel') if req.user
   res.locals[key] = helper for key, helper of viewHelpers
   next()
 

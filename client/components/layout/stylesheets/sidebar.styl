@@ -13,18 +13,21 @@ triangle-size = 12px
   text-align center
   padding-top 20px
   z-index 8
-  a:not(#layout-sidebar-home), #layout-sidebar-profile
+  > *:not(#layout-sidebar-home), #layout-sidebar-profile
     display block
     margin-top 40px
     avant-garde(s-headline)
     color gray-dark-color
     transition color 0.3s
     text-decoration none
+    position relative
     &:hover, &.is-active
       cursor pointer
       color white
       svg
         fill-color white
+    &:hover .layout-sidebar-dropdown
+      display block
 
   svg
     width 22px
@@ -65,37 +68,14 @@ triangle-size = 12px
     img
       opacity 1
       filter none
-    #layout-sidebar-profile-menu
-      display block
   svg
-    width 40px
-    height @width
+    width 41px
+    height 40px
     display inline-block
     margin-bottom 10px
     filter grayscale(100%)
     transition filter 0.3s ease-in-out, opacity 0.3s ease-in-out
     opacity 0.8
-  #layout-sidebar-profile-menu
-    position absolute
-    width 232px
-    background black
-    left sidebar-width
-    border-left 20px solid white
-    text-align left
-    top -55px
-    padding 15px
-    display none
-    &::before
-      content '.'
-      color transparent
-      width 0
-      height 0
-      border-top triangle-size solid transparent
-      border-bottom triangle-size solid transparent
-      border-right triangle-size solid black
-      left -(triangle-size)
-      position absolute
-      top 68px
     a
       color white
       padding 15px
@@ -162,3 +142,44 @@ triangle-size = 12px
     color white
     br
       display none
+
+.layout-sidebar-dropdown
+  padding 30px
+  background black
+  position absolute
+  left sidebar-width
+  border-left 30px solid white
+  list-style none
+  text-align left
+  avant-garde(s-headline)
+  white-space nowrap
+  line-height 0
+  display none
+  top 50%
+  margin-top -50%
+  z-index 2
+  &::after
+    content '.'
+    color transparent
+    width 20px
+    height 20px
+    background #000
+    -webkit-transform rotate(60deg)
+    -moz-transform: rotate(60deg)
+    -o-transform rotate(60deg)
+    -ms-transform rotate(60deg)
+    transform rotate(45deg)
+    position absolute
+    left -10px
+    top calc(50% - 10px)
+    z-index 2
+  a
+    margin-bottom 30px
+    display block
+    color gray-dark-color
+    text-decoration none
+    transition color 0.3s
+    &:last-child
+      margin-bottom 0px
+    &:hover
+      color white
