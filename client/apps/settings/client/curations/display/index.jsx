@@ -13,7 +13,7 @@ export default class DisplayAdmin extends React.Component {
     this.state = {
       curation: props.curation,
       saveStatus: 'Saved',
-      activeSection: 0
+      activeSection: null
     }
   }
 
@@ -36,6 +36,16 @@ export default class DisplayAdmin extends React.Component {
     this.state.curation.save({}, {
       success: () => this.setState({ saveStatus: 'Saved' }),
       error: error => this.setState({ saveStatus: 'Error' })
+    })
+  }
+
+  newCampaign = () => {
+    const newCuration = this.state.curation.clone()
+    const newCampaign = {panel: {assets: []}, canvas: {assets: []}}
+    newCuration.get('campaigns').push(newCampaign)
+    this.setState({
+      curation: newCuration,
+      saveStatus: 'Save'
     })
   }
 
@@ -65,6 +75,11 @@ export default class DisplayAdmin extends React.Component {
           onClick={this.save}
           style={{color: saveColor}}>
           {this.state.saveStatus}
+        </button>
+        <button
+          className='new-campaign avant-garde-button avant-garde-button-dark'
+          onClick={this.newCampaign}>
+          Add New Campaign
         </button>
       </div>
     )
