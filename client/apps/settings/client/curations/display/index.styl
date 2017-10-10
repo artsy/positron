@@ -1,0 +1,44 @@
+.display-admin
+  margin-top 80px
+  &__section-title
+    Garamond s23
+    margin-bottom 20px
+  &__section-inner,
+  &__section--campaign,
+  &__section--panel
+    margin 30px 0
+  .rich-text--paragraph
+    position relative
+    min-height 4.25em
+    p
+      font-size 1em
+    .public-DraftEditorPlaceholder-root
+      position absolute
+      color gray-darker-color
+  label
+    display flex
+    justify-content space-between
+    span
+      color gray-color
+      garamond s-caption
+      text-transform none
+      letter-spacing 0
+  select
+    height 2.5em
+  .field-group
+    margin-bottom 20px
+  .save-campaign
+    position fixed
+    top 10px
+    right calc(50vw + 55px - (1120px / 2))
+    z-index 110
+
+.display-admin--canvas
+  &__layouts button
+    padding 12px 20px
+    &:first-child,
+    &:nth-child(2)
+      border-right 0
+    &[data-active=true]
+      color white
+      background black

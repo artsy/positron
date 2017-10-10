@@ -2,7 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 gemup = require 'gemup'
 sd = require('sharify').data
-{ section, h1, h2, span, input, div } = React.DOM
+{ section, h1, h2, span, input, div, video } = React.DOM
 
 module.exports = React.createClass
   displayName: 'ImageUpload'
@@ -15,13 +15,17 @@ module.exports = React.createClass
     isDragover: false
     size: @props.size || 10
 
+  getAcceptedTypes: () ->
+    acceptedTypes = ['image/jpg','image/jpeg','image/gif','image/png']
+    acceptedTypes.push 'video/mp4' if @props.hasVideo
+    return acceptedTypes
+
   upload: (e) ->
     @onDragLeave()
     if e.target.files[0]?.size > (@state.size * 1000000)
       @setState error: true, errorType: 'size'
       return
-    acceptedTypes = ['image/jpg','image/jpeg','image/gif','image/png']
-    if e.target.files[0]?.type not in acceptedTypes
+    if e.target.files[0]?.type not in @getAcceptedTypes()
       @setState error: true, errorType: 'type'
       return
     gemup e.target.files[0],
@@ -60,10 +64,19 @@ module.exports = React.createClass
   previewImage: ->
     if @state.src and !@state.progress > 0
       div { className: 'preview' },
-        div {
-          className: 'image-upload-form-preview'
-          style: backgroundImage: 'url(' + @state.src + ')', display: 'block'
-        }
+        if @state.src.includes('.mp4')
+            div {
+              className: 'image-upload-form-preview'
+              style: display: 'block'
+            },
+              video {
+                src: @state.src
+              }
+        else
+          div {
+            className: 'image-upload-form-preview'
+            style: backgroundImage: 'url(' + @state.src + ')', display: 'block'
+          }
         unless  @props.disabled
           div {
             className: 'image-upload-form-remove'
@@ -74,7 +87,8 @@ module.exports = React.createClass
   render: ->
     disabled = if @props.disabled then ' disabled' else ''
     isDragover = if @state.isDragover then ' is-dragover' else ''
-    error = if @state.errorType is 'size' then 'File is too large' else 'Please choose .png, .jpg, or .gif'
+    fileTypeError = if @props.hasVideo then 'Please choose .png, .jpg, .gif, or .mp4' else 'Please choose .png, .jpg, or .gif'
+    error = if @state.errorType is 'size' then 'File is too large' else fileTypeError
 
     section {
       className: 'image-upload-form' + disabled + isDragover
@@ -89,7 +103,7 @@ module.exports = React.createClass
       h2 {}, 'Up to ' + @state.size + 'mb'
       input {
         type: 'file'
-        accept: ['image/jpg','image/jpeg','image/gif','image/png']
+        accept: @getAcceptedTypes()
         onChange: @upload
         className: 'image-upload-form-input'
         disabled: @props.disabled
