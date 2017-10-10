@@ -36,8 +36,9 @@ module.exports = React.createClass
       add: (src) =>
         @setState src: src, progress: 0.1, isDragover: false
       done: (src) =>
-        @setState src: src, progress: 0, error: false, errorType: null
         @props.onChange(@props.name, src) if @props.onChange
+        src = '' if @props.hidePreview
+        @setState src: src, progress: 0, error: false, errorType: null
 
   onClick: ->
     @setState error: false, errorType: null
@@ -108,7 +109,7 @@ module.exports = React.createClass
         className: 'image-upload-form-input'
         disabled: @props.disabled
       }
-      @previewImage()
+      @previewImage() unless @props.hidePreview
       @progressBar()
 
       if @state.error
