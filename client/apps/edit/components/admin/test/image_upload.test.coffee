@@ -34,16 +34,32 @@ describe 'ImageUpload', ->
 
     it 'Renders the file input', ->
       $(ReactDOM.findDOMNode(@component)).find('input[type=file]').length.should.eql 1
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'accept="image/jpg,image/jpeg,image/gif,image/png"'
 
-    it 'Renders an image preview if image is present', ->
+    it 'Renders an image preview if file is present', ->
       @component.setState src: 'http://artsy.net/image.jpg'
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'background-image: url(http://artsy.net/image.jpg)'
 
+    it 'Hides the preview if props.hidePreview is true', ->
+      @props.hidePreview = true
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      component.setState src: 'http://artsy.net/image.jpg'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'background-image: url(http://artsy.net/image.jpg)'
+
+    it 'Allows video uploads if props.hasVideo is true', ->
+      @props.hasVideo = true
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql 'accept="image/jpg,image/jpeg,image/gif,image/png,video/mp4"'
+
+    it 'Renders a video preview if file is present', ->
+      @component.setState src: 'http://artsy.net/video.mp4'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<video src="http://artsy.net/video.mp4">'
+      
     it 'Disables the file input if prop includes disabled', ->
-      @props['disabled'] = true
-      @component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
-      $(ReactDOM.findDOMNode(@component)).hasClass('disabled').should.eql true
-      $(ReactDOM.findDOMNode(@component)).find('input[type=file]').prop('disabled').should.eql true
+      @props.disabled = true
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).hasClass('disabled').should.eql true
+      $(ReactDOM.findDOMNode(component)).find('input[type=file]').prop('disabled').should.eql true
 
     it 'Renders a progress bar if progress', ->
       @component.setState progress: .5
