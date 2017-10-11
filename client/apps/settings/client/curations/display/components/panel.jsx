@@ -35,7 +35,7 @@ const Panel = (props) => {
                 defaultValue={campaign.panel ? campaign.panel.body : ''}
                 onChange={(html) => onChange('panel.body', html, index)}
                 html
-                limit={90} />
+                limit={45} />
             </div>
           </Col>
           <Col lg>

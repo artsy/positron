@@ -64,16 +64,16 @@ export default class Canvas extends React.Component {
                     type='textarea'
                     label='Body'
                     placeholder='Body'
-                    defaultValue={campaign.canvas ? campaign.canvas.body : ''}
+                    defaultValue={campaign.canvas ? campaign.canvas.headline : ''}
                     onChange={(html) => onChange('canvas.body', html, index)}
                     html
-                    limit={90} />
+                    limit={70} />
                 : <CharacterLimitInput
                     label='headline'
                     placeholder='Headline'
                     defaultValue={campaign.canvas ? campaign.canvas.headline : ''}
                     onChange={(e) => onChange('canvas.headline', e.target.value, index)}
-                    limit={25} />
+                    limit={45} />
                 }
             </div>
             <div className='field-group'>
@@ -99,7 +99,7 @@ export default class Canvas extends React.Component {
                 placeholder='Enter legal disclaimer here'
                 defaultValue={campaign.canvas ? campaign.canvas.body : ''}
                 onChange={(e) => onChange('canvas.body', e.target.value, index)}
-                limit={90} />
+                limit={150} />
             </div>
           </Col>
           <Col lg>

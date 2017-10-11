@@ -3,7 +3,7 @@ import Canvas from '../../components/canvas.jsx'
 import CanvasContainer from '../../components/canvas_container.jsx'
 import { mount } from 'enzyme'
 
-describe('CanvasContainer', () => {
+describe('Canvas Container', () => {
   const props = {
     campaign: {
       canvas: {},
