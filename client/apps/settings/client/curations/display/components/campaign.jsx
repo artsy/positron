@@ -1,6 +1,12 @@
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+
+function onChangeDate (name, value, index, onChange) {
+  const date = moment(value).toISOString()
+  onChange(name, date, index)
+}
 
 const Campaign = (props) => {
   const {campaign, index, onChange} = props
@@ -20,24 +26,23 @@ const Campaign = (props) => {
           <input
             type='date'
             className='bordered-input'
-            placeholder='Start Date'
-            defaultValue={campaign.start_date}
-            onChange={(e) => onChange('start_date', e.target.value, index)} />
+            defaultValue={moment(campaign.start_date).format('YYYY-MM-DD')}
+            onChange={(e) => onChangeDate('start_date', e.target.value, index, onChange)} />
         </Col>
         <Col lg>
           <label>End Date</label>
           <input
             type='date'
             className='bordered-input'
-            placeholder='Title'
-            defaultValue={campaign.end_date}
+            defaultValue={campaign.end_date && moment(campaign.end_date).format('YYYY-MM-DD')}
             onChange={(e) => onChange('end_date', e.target.value, index)} />
         </Col>
         <Col lg>
           <label>Traffic Quantity</label>
           <select
+            defaultValue={campaign.sov}
             className='bordered-input'
-            onChange={(e) => onChange('sov', e.target.value, index)} >
+            onChange={(e) => onChange('sov', parseFloat(e.target.value), index)} >
             <option value='0.25'>25%</option>
             <option value='0.50'>50%</option>
             <option value='0.75'>75%</option>
