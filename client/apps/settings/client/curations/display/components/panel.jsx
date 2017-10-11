@@ -13,10 +13,10 @@ const Panel = (props) => {
           <Col lg>
             <div className='field-group'>
               <CharacterLimitInput
-                label='headline'
+                label='Headline'
                 placeholder='Headline'
                 defaultValue={campaign.panel ? campaign.panel.headline : ''}
-                onChange={(e) => onChange('panel.headline', e.target.value, index)}
+                onChange={(value) => onChange('panel.headline', value, index)}
                 limit={25} />
             </div>
             <div className='field-group'>
@@ -25,7 +25,7 @@ const Panel = (props) => {
               className='bordered-input'
               placeholder='Find Out More'
               defaultValue={campaign.canvas && campaign.panel.link ? campaign.panel.link.url : ''}
-              onChange={(e) => onChange('canvas.link.url', e.target.value, index)} />
+              onChange={(e) => onChange('panel.link.url', e.target.value, index)} />
             </div>
             <div className='field-group'>
               <CharacterLimitInput
@@ -33,7 +33,7 @@ const Panel = (props) => {
                 label='Body'
                 placeholder='Body'
                 defaultValue={campaign.panel ? campaign.panel.body : ''}
-                onChange={(html) => onChange('panel.body', html, index)}
+                onChange={(value) => onChange('panel.body', value, index)}
                 html
                 limit={45} />
             </div>
@@ -45,16 +45,14 @@ const Panel = (props) => {
                 <ImageUpload
                   name='panel.assets'
                   src={campaign.panel.assets && campaign.panel.assets[0] ? campaign.panel.assets[0].url : ''}
-                  onChange={(name, url) => onImageInputChange(name, url, index, onChange)}
-                  disabled={false} />
+                  onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
               </Col>
               <Col lg>
                 <label>Logo</label>
                 <ImageUpload
                   name='panel.logo'
                   src={campaign.panel && campaign.panel.logo}
-                  onChange={(name, url) => onImageInputChange(name, url, index, onChange)}
-                  disabled={false} />
+                  onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
               </Col>
             </Row>
           </Col>

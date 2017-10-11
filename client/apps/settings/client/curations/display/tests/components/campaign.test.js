@@ -75,7 +75,7 @@ describe('Campaign Admin', () => {
     expect(props.onChange.mock.calls[2][2]).toBe(props.index)
   })
 
-  it('changes the sov on select', () => {
+  it('Changes the sov on select', () => {
     const component = mount(
       <Campaign {...props} />
     )

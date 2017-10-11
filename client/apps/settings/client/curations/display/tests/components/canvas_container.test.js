@@ -13,7 +13,7 @@ describe('Canvas Container', () => {
     onChange: jest.fn()
   }
 
-  it('renders all fields', () => {
+  it('Renders all fields', () => {
     const component = mount(
       <CanvasContainer {...props} />
     )
@@ -28,7 +28,7 @@ describe('Canvas Container', () => {
     expect(component.find('.display-admin--canvas__layouts button').at(0).props()['data-active']).toBe(true)
   })
 
-  it('Canges the canvas layout on button click', () => {
+  it('Changes the canvas layout on button click', () => {
     const component = mount(
       <CanvasContainer {...props} />
     )
