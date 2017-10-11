@@ -6,11 +6,8 @@ import CanvasImages from './canvas_images.jsx'
 import CharacterLimitInput from 'client/components/character_limit/index.jsx'
 
 export default class Canvas extends React.Component {
-
   render () {
     const {campaign, index, onChange} = this.props
-    const isSlideshow = campaign.canvas && campaign.canvas.layout === 'slideshow'
-
     return (
       <div className='display-admin__section--campaign'>
         <Row key={index} className='inputs--text'>
@@ -23,7 +20,6 @@ export default class Canvas extends React.Component {
                     placeholder='Body'
                     defaultValue={campaign.canvas ? campaign.canvas.headline : ''}
                     onChange={(html) => onChange('canvas.headline', html, index)}
-                    html
                     limit={70} />
                 : <CharacterLimitInput
                     label='headline'
@@ -64,8 +60,7 @@ export default class Canvas extends React.Component {
               key={index}
               campaign={campaign}
               index={index}
-              onChange={onChange}
-              isSlideshow={isSlideshow} />
+              onChange={onChange} />
           </Col>
         </Row>
       </div>

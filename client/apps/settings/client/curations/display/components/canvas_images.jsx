@@ -28,6 +28,10 @@ export default class CanvasImages extends React.Component {
     this.props.onChange(key, newValue, this.props.index)
   }
 
+  isSlideshow = () => {
+    return this.props.campaign.canvas && this.props.campaign.canvas.layout === 'slideshow'
+  }
+
   renderAssets = () => {
     const { assets } = this.props.campaign.canvas
     const uploads = assets.map((asset, imgIndex) => {
@@ -46,13 +50,14 @@ export default class CanvasImages extends React.Component {
   }
 
   renderSlideshowImages = () => {
+    const { assets } = this.props.campaign.canvas
+    const newImage = <Col lg className='add-new'>{this.renderImageUpload(assets)}</Col>
     return (
       <Row className='slideshow-images'>
         {this.renderAssets()}
-        {this.props.campaign.canvas.assets.length < 5 &&
-          <Col lg className='add-new'>
-            {this.renderImageUpload(this.props.campaign.canvas.assets)}
-          </Col>
+        {assets.length && assets.length < 5 
+          ? newImage
+          : false
         }
       </Row>
     )
@@ -73,7 +78,7 @@ export default class CanvasImages extends React.Component {
   }
 
   renderImageUpload = (assets, imgIndex) => {
-    const hasVideo = this.props.campaign.canvas.layout !== 'slideshow'
+    const hasVideo = this.props.campaign.canvas.layout === 'standard'
     const hidePreview = !imgIndex && imgIndex !== 0 && !hasVideo
     return (
       <ImageUpload
@@ -82,15 +87,15 @@ export default class CanvasImages extends React.Component {
         hasVideo={hasVideo}
         hidePreview={hidePreview}
         src={assets[imgIndex] ? assets[imgIndex].url : ''}
-        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
+        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex || null)} />
     )
   }
 
   renderLabel = (imgIndex) => {
-    const { campaign, isSlideshow } = this.props
+    const { campaign } = this.props
     if (campaign.canvas.layout === 'overlay') {
       return 'Background Image'
-    } else if (isSlideshow) {
+    } else if (this.isSlideshow()) {
       const index = imgIndex ? imgIndex + 1 : 1
       return 'Image ' + index.toString()
     } else {
@@ -99,8 +104,7 @@ export default class CanvasImages extends React.Component {
   }
 
   render () {
-    const { campaign, isSlideshow } = this.props
-
+    const { campaign } = this.props
     return (
       <div
         className='display-admin--canvas-images'
@@ -112,7 +116,7 @@ export default class CanvasImages extends React.Component {
             {this.renderImageUpload(campaign.canvas.assets || [], 0)}
           </Col>
         </Row>
-        {isSlideshow && this.renderSlideshowImages()}
+        {this.isSlideshow() && this.renderSlideshowImages()}
       </div>
     )
   }
@@ -121,6 +125,5 @@ export default class CanvasImages extends React.Component {
 CanvasImages.propTypes = {
   campaign: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  isSlideshow: PropTypes.bool,
   onChange: PropTypes.func.isRequired
 }

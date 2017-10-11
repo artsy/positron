@@ -1,16 +1,16 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { ContentState, Editor, EditorState } from 'draft-js'
 
 export default class PlainText extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     const editorState = this.setEditorState()
     this.state = { editorState }
   }
 
-  setEditorState() {
+  setEditorState () {
     if (this.props.content) {
       return this.setStateWithContent()
     } else {
@@ -18,7 +18,7 @@ export default class PlainText extends React.Component {
     }
   }
 
-  setStateWithContent() {
+  setStateWithContent () {
     const content = ContentState.createFromText(this.props.content)
     return EditorState.createWithContent(content)
   }
@@ -26,7 +26,11 @@ export default class PlainText extends React.Component {
   onChange = (editorState) => {
     this.setState({ editorState })
     const content = editorState.getCurrentContent().getPlainText()
-    this.props.onChange(this.props.name, content)
+    if (this.props.name) {
+      this.props.onChange(this.props.name, content)
+    } else {
+      this.props.onChange(content)
+    }
   }
 
   focus = () => {
@@ -37,7 +41,7 @@ export default class PlainText extends React.Component {
     return 'handled'
   }
 
-  render() {
+  render () {
     return (
       <div
         className='plain-text'
@@ -49,8 +53,15 @@ export default class PlainText extends React.Component {
           placeholder={this.props.placeholder || 'Start Typing...'}
           handleReturn={this.handleReturn}
           onChange={this.onChange}
-          spellcheck={true} />
+          spellcheck />
       </div>
     )
   }
+}
+
+PlainText.propTypes = {
+  content: PropTypes.string,
+  name: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string
 }

@@ -11,7 +11,6 @@ export default class CanvasContainer extends React.Component {
   }
 
   setActiveLayout = (layout) => {
-    layout = layout === this.state.activeLayout ? null : layout
     this.setState({activeLayout: layout})
     this.props.onChange('canvas.layout', layout, this.props.index)
   }
