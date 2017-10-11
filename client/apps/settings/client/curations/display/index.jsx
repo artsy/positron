@@ -45,7 +45,8 @@ export default class DisplayAdmin extends React.Component {
     newCuration.get('campaigns').push(newCampaign)
     this.setState({
       curation: newCuration,
-      saveStatus: 'Save'
+      saveStatus: 'Save',
+      activeSection: newCuration.get('campaigns').length - 1
     })
   }
 

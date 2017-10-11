@@ -17,7 +17,7 @@ describe('Campaign Admin', () => {
     onChange: jest.fn()
   }
 
-  it('renders all fields ', () => {
+  it('renders all fields', () => {
     const component = mount(
       <Campaign {...props} />
     )
@@ -26,7 +26,7 @@ describe('Campaign Admin', () => {
     expect(component.find('select').length).toBe(1)
   })
 
-  it('renders saved data ', () => {
+  it('renders saved data', () => {
     const component = mount(
       <Campaign {...props} />
     )
@@ -63,7 +63,7 @@ describe('Campaign Admin', () => {
     expect(props.onChange.mock.calls[1][2]).toBe(props.index)
   })
 
-  it('Changes the start date on input', () => {
+  it('Changes the end date on input', () => {
     const component = mount(
       <Campaign {...props} />
     )

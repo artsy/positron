@@ -20,7 +20,7 @@ export default class Canvas extends React.Component {
         key={'canvas-assets-' + imgIndex}
         name='canvas.assets'
         hasVideo
-        src={assets[imgIndex].url}
+        src={assets[imgIndex] ? assets[imgIndex].url : ''}
         onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)}
         disabled={false} />
     )
@@ -108,7 +108,7 @@ export default class Canvas extends React.Component {
                 <label>Image</label>
                 {campaign.canvas.layout === 'slideshow'
                   ? this.renderAssets(campaign, index, onChange)
-                  : this.renderImageUpload(campaign.canvas.assets, 0)
+                  : this.renderImageUpload(campaign.canvas.assets || [], 0)
                 }
               </Col>
               <Col lg>

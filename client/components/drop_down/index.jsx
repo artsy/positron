@@ -13,7 +13,7 @@ export default class DropDown extends React.Component {
     return (
       <div className='drop-down'>
         <div className='drop-down__title' onClick={() => onClick(index)} data-active={active}>
-          <h1>{title || 'Missing Title'}</h1>
+          <h1 className={!title && 'placeholder'}>{title || 'Missing Title'}</h1>
           <div className='icon' />
         </div>
         {active &&

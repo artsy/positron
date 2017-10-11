@@ -26,7 +26,7 @@ const Campaign = (props) => {
           <input
             type='date'
             className='bordered-input'
-            defaultValue={moment(campaign.start_date).format('YYYY-MM-DD')}
+            defaultValue={campaign.start_date && moment(campaign.start_date).format('YYYY-MM-DD')}
             onChange={(e) => onChangeDate('start_date', e.target.value, index, onChange)} />
         </Col>
         <Col lg>
@@ -35,7 +35,7 @@ const Campaign = (props) => {
             type='date'
             className='bordered-input'
             defaultValue={campaign.end_date && moment(campaign.end_date).format('YYYY-MM-DD')}
-            onChange={(e) => onChange('end_date', e.target.value, index)} />
+            onChange={(e) => onChangeDate('end_date', e.target.value, index, onChange)} />
         </Col>
         <Col lg>
           <label>Traffic Quantity</label>

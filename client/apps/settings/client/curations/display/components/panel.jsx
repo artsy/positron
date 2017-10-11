@@ -44,7 +44,7 @@ const Panel = (props) => {
                 <label>Image</label>
                 <ImageUpload
                   name='panel.assets'
-                  src={campaign.panel.assets[0] ? campaign.panel.assets[0].url : ''}
+                  src={campaign.panel.assets && campaign.panel.assets[0] ? campaign.panel.assets[0].url : ''}
                   onChange={(name, url) => onImageInputChange(name, url, index, onChange)}
                   disabled={false} />
               </Col>
