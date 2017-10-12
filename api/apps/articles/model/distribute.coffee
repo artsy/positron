@@ -21,7 +21,7 @@ jade = require 'jade'
 Article = require '../../../models/article.coffee'
 moment = require 'moment'
 particle = require 'particle'
-cloneDeep = require 'lodash.clonedeep'
+{ cloneDeep } = require 'lodash'
 
 @distributeArticle = (article, cb) =>
   cleanArticlesInSailthru article.slugs

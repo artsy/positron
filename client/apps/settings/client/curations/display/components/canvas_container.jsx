@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import Canvas from './canvas.jsx'
+import { Canvas } from './canvas.jsx'
 
-export default class CanvasContainer extends React.Component {
+export class CanvasContainer extends React.Component {
   constructor (props) {
     super(props)
     this.state = {

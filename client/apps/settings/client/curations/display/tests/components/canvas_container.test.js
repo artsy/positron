@@ -1,6 +1,6 @@
 import React from 'react'
-import Canvas from '../../components/canvas.jsx'
-import CanvasContainer from '../../components/canvas_container.jsx'
+import { Canvas } from '../../components/canvas.jsx'
+import { CanvasContainer } from '../../components/canvas_container.jsx'
 import { mount } from 'enzyme'
 
 describe('Canvas Container', () => {

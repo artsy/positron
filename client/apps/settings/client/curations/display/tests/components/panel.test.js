@@ -1,9 +1,9 @@
 import React from 'react'
-import Panel from '../../components/panel.jsx'
+import { Panel } from '../../components/panel.jsx'
 import { mount } from 'enzyme'
 
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import CharacterLimitInput from 'client/components/character_limit/index.jsx'
+import { CharacterLimit } from 'client/components/character_limit/index.jsx'
 
 global.window.getSelection = jest.fn(() => {
   return {
@@ -27,7 +27,7 @@ describe('Panel', () => {
       <Panel {...props} />
     )
     expect(component.find('input').length).toBe(4)
-    expect(component.find(CharacterLimitInput).length).toBe(2)
+    expect(component.find(CharacterLimit).length).toBe(2)
     expect(component.find(ImageUpload).length).toBe(2)
     expect(component.find('label').at(0).text()).toMatch('Headline')
     expect(component.find('label').at(0).text()).toMatch('25 Characters')
@@ -88,7 +88,7 @@ describe('Panel', () => {
     const component = mount(
       <Panel {...props} />
     )
-    component.find(CharacterLimitInput).at(1).node.onChange('new value')
+    component.find(CharacterLimit).at(1).node.onChange('new value')
     expect(props.onChange.mock.calls[2][0]).toMatch('panel.body')
     expect(props.onChange.mock.calls[2][1]).toMatch('new value')
     expect(props.onChange.mock.calls[2][2]).toBe(props.index)

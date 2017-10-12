@@ -8,7 +8,7 @@ function onChangeDate (name, value, index, onChange) {
   onChange(name, date, index)
 }
 
-const Campaign = (props) => {
+export const Campaign = (props) => {
   const {campaign, index, onChange} = props
   return (
     <div className='display-admin__section--campaign'>

@@ -3,7 +3,7 @@ import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
-export default class CanvasImages extends React.Component {
+export class CanvasImages extends React.Component {
   onSlideshowImageChange = (imgIndex, url) => {
     const { assets } = this.props.campaign.canvas
     if (imgIndex || imgIndex === 0) {

@@ -2,17 +2,17 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import CharacterLimitInput from 'client/components/character_limit/index.jsx'
+import { CharacterLimit } from 'client/components/character_limit/index.jsx'
 
-const Panel = (props) => {
-  const {campaign, index, onChange} = props
+export const Panel = (props) => {
+  const { campaign, index, onChange } = props
   return (
     <div className='display-admin__section--panel'>
       <div className='display-admin__section-title'>Panel</div>
         <Row key={index}>
           <Col lg>
             <div className='field-group'>
-              <CharacterLimitInput
+              <CharacterLimit
                 label='Headline'
                 placeholder='Headline'
                 defaultValue={campaign.panel ? campaign.panel.headline : ''}
@@ -28,7 +28,7 @@ const Panel = (props) => {
               onChange={(e) => onChange('panel.link.url', e.target.value, index)} />
             </div>
             <div className='field-group'>
-              <CharacterLimitInput
+              <CharacterLimit
                 type='textarea'
                 label='Body'
                 placeholder='Body'
@@ -44,7 +44,7 @@ const Panel = (props) => {
                 <label>Image</label>
                 <ImageUpload
                   name='panel.assets'
-                  src={campaign.panel.assets && campaign.panel.assets[0] ? campaign.panel.assets[0].url : ''}
+                  src={campaign.panel.assets && campaign.panel.assets.length ? campaign.panel.assets[0].url : ''}
                   onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
               </Col>
               <Col lg>

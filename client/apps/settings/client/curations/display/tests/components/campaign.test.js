@@ -1,6 +1,6 @@
 import moment from 'moment'
 import React from 'react'
-import Campaign from '../../components/campaign.jsx'
+import { Campaign } from '../../components/campaign.jsx'
 import { mount } from 'enzyme'
 
 describe('Campaign Admin', () => {
