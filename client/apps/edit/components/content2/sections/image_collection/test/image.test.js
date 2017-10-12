@@ -13,7 +13,8 @@ describe('Image', () => {
     index: 0,
     imagesLoaded: true,
     width: 200,
-    removeItem: jest.fn()
+    removeItem: jest.fn(),
+    onChange: jest.fn()
   }
 
   it('renders the image', () => {

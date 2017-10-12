@@ -91,7 +91,7 @@
     "sharify": "^0.1.6",
     "styled-components": "^2.1.2",
     "stylus": "^0.54.5",
-    "superagent": "^3.3.1",
+    "superagent": "^3.6.3",
     "superagent-bluebird-promise": "^3.0.0",
     "ua-parser": "^0.3.5",
     "uglifyify": "^3.0.1",

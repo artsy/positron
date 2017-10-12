@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { ContentState, Editor, EditorState } from 'draft-js'
 
-export default class PlainText extends React.Component {
+export class PlainText extends React.Component {
   constructor (props) {
     super(props)
 
