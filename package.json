@@ -12,7 +12,8 @@
     "test:watch": "yarn jest -- --watch --runInBand",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh",
-    "mocha": "sh scripts/mocha.sh"
+    "mocha": "sh scripts/mocha.sh",
+    "task": "node -r coffee-script/register -r babel-core/register -r dotenv/config"
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.1.0",
