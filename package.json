@@ -69,7 +69,6 @@
     "kerberos": "0.0.21",
     "knox": "^0.9.2",
     "lodash": "^4.17.4",
-    "lodash.clonedeep": "^4.3.1",
     "lokka": "^1.7.0",
     "lokka-transport-http": "^1.6.1",
     "mocha": "^3.1.2",

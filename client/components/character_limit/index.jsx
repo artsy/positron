@@ -3,7 +3,7 @@ import PlainText from '/client/components/rich_text2/components/plain_text.jsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-export default class CharacterLimitInput extends React.Component {
+export class CharacterLimit extends React.Component {
   constructor (props) {
     super(props)
 
@@ -72,7 +72,7 @@ export default class CharacterLimitInput extends React.Component {
   }
 }
 
-CharacterLimitInput.propTypes = {
+CharacterLimit.propTypes = {
   defaultValue: PropTypes.string,
   html: PropTypes.bool,
   label: PropTypes.string,
