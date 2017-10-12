@@ -1,7 +1,6 @@
 import React from 'react'
 import Backbone from 'backbone'
-import Autocomplete from '/client/components/autocomplete/index.coffee'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import Controls from '../components/controls.jsx'
 import SectionControls from '../../../section_controls/index.jsx'
 import sinon from 'sinon'
@@ -58,7 +57,6 @@ describe('ImageCollectionControls', () => {
   })
 
   describe('Artwork inputs', () => {
-
     it('#onUpload saves an image info after upload', () => {
       props.isHero = false
       const component = mount(
@@ -134,7 +132,6 @@ describe('ImageCollectionControls', () => {
   })
 
   describe('Image Set inputs', () => {
-
     it('Renders the active image_set layout', () => {
       props.section.set({type: 'image_set', layout: 'mini'})
       const component = shallow(

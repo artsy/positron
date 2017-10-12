@@ -1,20 +1,17 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Paragraph from '../../../../../../../components/rich_text2/components/paragraph.coffee'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const IconRemove = components.Icon.Remove
 const Image = components.Image
 
 export default class ImageCollectionImage extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   onCaptionChange = (html) => {
     this.props.image.caption = html
     this.props.onChange()
   }
 
-  renderRemoveButton(image) {
+  renderRemoveButton (image) {
     if (this.props.removeItem && this.props.editing) {
       return (
         <div
@@ -26,21 +23,21 @@ export default class ImageCollectionImage extends Component {
     }
   }
 
-  renderCaption(image) {
+  renderCaption (image) {
     if (!this.props.progress) {
-      return(
+      return (
         <Paragraph
           type='caption'
           placeholder='Image Caption'
           html={image.caption || ''}
           onChange={this.onCaptionChange}
-          stripLinebreaks={true}
+          stripLinebreaks
           layout={this.props.article.get('layout')} />
       )
     }
   }
 
-  render() {
+  render () {
     const { image, imagesLoaded, section, width } = this.props
     return (
       <div
@@ -56,4 +53,16 @@ export default class ImageCollectionImage extends Component {
       </div>
     )
   }
+}
+
+ImageCollectionImage.propTypes = {
+  article: PropTypes.object.isRequired,
+  editing: PropTypes.bool,
+  image: PropTypes.object.isRequired,
+  imagesLoaded: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  removeItem: PropTypes.func,
+  progress: PropTypes.number,
+  section: PropTypes.object.isRequired,
+  width: PropTypes.any
 }

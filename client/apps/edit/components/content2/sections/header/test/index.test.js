@@ -5,7 +5,7 @@ import Paragraph from '/client/components/rich_text2/components/paragraph.coffee
 import SectionHeader from '../index.jsx'
 import { mount } from 'enzyme'
 
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const Header = components.Header
 const ClassicArticle = components.Fixtures.ClassicArticle
 const FeatureArticle = components.Fixtures.FeatureArticle
@@ -15,12 +15,7 @@ jest.mock("react-sizeme", () => jest.fn(c => d => d))
 
 describe('Header', () => {
 
-  beforeAll(() => {
-    global.window.$ = jest.fn()
-  })
-
   describe('Classic', () => {
-
     const props = {
       article: new Article(ClassicArticle)
     }
@@ -64,12 +59,11 @@ describe('Header', () => {
       expect(wrapper.find('.public-DraftEditorPlaceholder-inner').length).toBe(2)
       expect(wrapper.find(Paragraph).props().html).toMatch(
         '<p>Critics were skeptical of Bambi when it was first released in 1942'
-        )
+      )
     })
   })
 
   describe('Feature', () => {
-
     const props = {
       article: new Article(FeatureArticle)
     }
@@ -166,7 +160,6 @@ describe('Header', () => {
   })
 
   describe('Standard', () => {
-
     const props = {
       article: new Article(StandardArticle)
     }

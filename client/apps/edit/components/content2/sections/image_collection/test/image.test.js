@@ -1,12 +1,11 @@
 import React from 'react'
 import Backbone from 'backbone'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import Image from '../components/image.jsx'
 import { mount } from 'enzyme'
 const { StandardArticle } = components.Fixtures
 
 describe('Image', () => {
-
   const props = {
     image: StandardArticle.sections[4].images[0],
     article: new Backbone.Model(StandardArticle),

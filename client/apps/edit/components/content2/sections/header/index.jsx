@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import Controls from './controls.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
 import PlainText from '/client/components/rich_text2/components/plain_text.jsx'

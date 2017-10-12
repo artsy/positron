@@ -1,13 +1,12 @@
 import React from 'react'
 import Artwork from '../components/artwork.jsx'
 import Backbone from 'backbone'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import { extend } from 'lodash'
 import { mount } from 'enzyme'
 const { StandardArticle } = components.Fixtures
 
 describe('Artwork', () => {
-
   const props = {
     artwork: extend(StandardArticle.sections[4].images[2], {date: '2015'}),
     article: new Backbone.Model(StandardArticle),
@@ -29,7 +28,7 @@ describe('Artwork', () => {
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=95'
     )
     expect(component.html()).toMatch('<span class="name">Matt Devine</span>')
-    expect(component.html()).toMatch('<em>Brass Tax</em>')
+    expect(component.html()).toMatch('Brass Tax')
     expect(component.html()).toMatch('<span class="date">2015</span>')
     expect(component.text()).toMatch(', Joanne Artman Gallery')
   })
