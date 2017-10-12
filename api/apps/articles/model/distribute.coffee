@@ -76,6 +76,7 @@ postFacebookAPI = (article, cb) ->
           cb response
 
 postSailthruAPI = (article, cb) ->
+  return cb() if article.scheduled_publish_at
   tags = ['article']
   tags = tags.concat ['magazine'] if article.featured is true
   tags = tags.concat article.keywords if article.keywords
