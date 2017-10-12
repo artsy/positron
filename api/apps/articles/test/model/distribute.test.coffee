@@ -43,6 +43,15 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].tags.should.not.containEql 'artsy-editorial'
           done()
 
+      it 'does not send if it is scheduled', (done) ->
+        Distribute.distributeArticle {
+          author_id: '5086df098523e60002000018'
+          published: false
+          scheduled_publish_at: '10-10-11'
+        }, (err, article) =>
+          @sailthru.apiPost.calledOnce.should.be.false()
+          done()
+
       it 'concats the tracking_tags and vertical', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'

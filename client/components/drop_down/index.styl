@@ -1,0 +1,20 @@
+.drop-down
+  &__title
+    display flex
+    align-items center
+    padding 15px 0
+    border-bottom 1px solid gray-lighter-color
+    h1
+      garamond headline
+      margin-right 20px
+      &.placeholder
+        color gray-color
+    div
+      height 1.25em
+    .icon
+      width 1.25em
+      height 1.25em
+      background-image url(/icons/edit_caret_down.svg)
+      transform rotate(270deg)
+    &[data-active='true'] .icon
+      transform rotate(0deg)

@@ -4,7 +4,7 @@
 //
 import _ from 'underscore'
 import async from 'async'
-import cloneDeep from 'lodash.clonedeep'
+import { cloneDeep } from 'lodash'
 import schema from './schema.coffee'
 import Joi from '../../../lib/joi.coffee'
 import retrieve from './retrieve.coffee'
