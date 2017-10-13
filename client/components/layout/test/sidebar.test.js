@@ -15,6 +15,6 @@ describe('sidebar template', () => {
         current_channel: 'normies'
       })
     })
-    html.should.containEql('/articles/new')
+    expect(html).toMatch('/articles/new')
   })
 })
