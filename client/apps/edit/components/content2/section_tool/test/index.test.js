@@ -2,7 +2,7 @@ import React from 'react'
 import Backbone from 'backbone'
 import { mount } from 'enzyme'
 
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import SectionTool from '../index.jsx'
 
 const IconEditEmbed = components.Icon.EditEmbed

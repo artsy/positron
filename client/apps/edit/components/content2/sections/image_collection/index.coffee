@@ -3,8 +3,8 @@
 #
 _ = require 'underscore'
 React = require 'react'
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
-FillWidth = require('@artsy/reaction-force/dist/utils/fillwidth').default
+components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
+FillWidth = require('@artsy/reaction-force/dist/Utils/fillwidth').default
 imagesLoaded = require 'imagesloaded'
 
 Artwork = require './components/artwork.jsx'

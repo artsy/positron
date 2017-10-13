@@ -9,7 +9,7 @@ ReactTestUtils = require 'react-addons-test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
 Article = require '../../../models/article.coffee'
-{ StandardArticle } = require('@artsy/reaction-force/dist/components/publishing/index').default.Fixtures
+{ StandardArticle } = require('@artsy/reaction-force/dist/Components/Publishing/index').default.Fixtures
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate

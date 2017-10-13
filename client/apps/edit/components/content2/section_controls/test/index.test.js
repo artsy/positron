@@ -4,11 +4,10 @@ import { mount } from 'enzyme'
 import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
 import SectionControls from '../index.jsx'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const { StandardArticle, FeatureArticle } = components.Fixtures
 
 describe('Section Controls', () => {
-
   beforeAll(() => {
     SectionControls.prototype.isScrollingOver = sinon.stub().returns(true)
     SectionControls.prototype.isScrolledPast = sinon.stub().returns(false)
@@ -26,7 +25,6 @@ describe('Section Controls', () => {
   }
 
   describe('Section Layouts', () => {
-
     it('does not render section layouts unless sectionLayouts', () => {
       const component = mount(
         <SectionControls {...props} />
@@ -104,7 +102,6 @@ describe('Section Controls', () => {
   })
 
   describe('#changeLayout', () => {
-
     it('changes the layout on click', () => {
       props.section = new Section(StandardArticle.sections[4])
       const component = mount(
@@ -156,7 +153,6 @@ describe('Section Controls', () => {
   })
 
   describe('#setInsideComponent', () => {
-
     it('returns true if item is scrolled over and not scrolled past', () => {
       props.section = new Section(StandardArticle.sections[4])
       const component = mount(
@@ -184,11 +180,9 @@ describe('Section Controls', () => {
       component.instance().setInsideComponent()
       expect(component.state().insideComponent).toBe(false)
     })
-
   })
 
   describe('#getHeaderSize', () => {
-
     it('returns 55 when channel is not editorial', () => {
       const component = mount(
         <SectionControls {...props} />
@@ -209,7 +203,6 @@ describe('Section Controls', () => {
   })
 
   describe('#getPositionBottom', () => {
-
     it('when insideComponent, calculates based on window scroll position', () => {
       props.isHero = false
       const component = mount(

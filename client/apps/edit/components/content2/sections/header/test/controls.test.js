@@ -2,7 +2,7 @@ import React from 'react'
 import Controls from '../controls.jsx'
 import { mount } from 'enzyme'
 
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const Fullscreen = components.Icon.LayoutFullscreen
 const Split = components.Icon.LayoutSplit
 const Text = components.Icon.LayoutText

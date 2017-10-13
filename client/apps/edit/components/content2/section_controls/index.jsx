@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const IconImageFullscreen = components.Icon.ImageFullscreen
 
 export default class SectionControls extends Component {
@@ -8,12 +9,12 @@ export default class SectionControls extends Component {
     this.state = { insideComponent: false }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.setInsideComponent()
     window.addEventListener('scroll', this.setInsideComponent)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     window.removeEventListener('scroll', this.setInsideComponent)
   }
 
@@ -25,12 +26,12 @@ export default class SectionControls extends Component {
     }
   }
 
-  getHeaderSize() {
+  getHeaderSize = () => {
     // Add extra space for channels with Yoast
-    return  this.props.channel.isEditorial() ? 95 : 55
+    return this.props.channel.isEditorial() ? 95 : 55
   }
 
-  getPositionBottom() {
+  getPositionBottom () {
     if (this.state.insideComponent && !this.props.isHero) {
       return window.innerHeight - $(this.refs.controls).height() - this.getHeaderSize()
     } else {
@@ -38,13 +39,13 @@ export default class SectionControls extends Component {
     }
   }
 
-  isScrollingOver($section) {
+  isScrollingOver ($section) {
     const scrollPlusHeader = window.scrollY + this.getHeaderSize()
     const offsetMinusControls = $section.offset().top - $(this.refs.controls).height()
     return scrollPlusHeader > offsetMinusControls
   }
 
-  isScrolledPast($section) {
+  isScrolledPast ($section) {
     const scrollPlusControls = window.scrollY + $(this.refs.controls).height()
     const scrollPlusSection = $section.offset().top + $section.height()
     return scrollPlusControls > scrollPlusSection
@@ -63,7 +64,7 @@ export default class SectionControls extends Component {
     return insideComponent
   }
 
-  changeLayout(layout) {
+  changeLayout (layout) {
     if (layout === 'fillwidth' && this.sectionIsImage() &&
      this.props.section.get('images').length > 1) {
       return this.props.disabledAlert()
@@ -84,20 +85,20 @@ export default class SectionControls extends Component {
     this.props.onChange && this.props.onChange()
   }
 
-  hasImageSet() {
+  hasImageSet () {
     return this.sectionIsImage() && this.props.channel.hasFeature('image_set')
   }
 
-  sectionIsImage() {
+  sectionIsImage () {
     return this.props.section.get('type').includes('image')
   }
 
-  sectionHasFullscreen(section) {
+  sectionHasFullscreen (section) {
     const hasFullscreen = ['embed', 'video'].includes(section.get('type')) || this.sectionIsImage()
     return this.props.articleLayout === 'feature' && hasFullscreen
   }
 
-  renderSectionLayouts(section) {
+  renderSectionLayouts (section) {
     return (
       <nav className='edit-controls__layout'>
         <a
@@ -132,8 +133,8 @@ export default class SectionControls extends Component {
     )
   }
 
-  render() {
-    const { articleLayout, isHero, section, sectionLayouts } = this.props
+  render () {
+    const { isHero, section, sectionLayouts } = this.props
     const { insideComponent } = this.state
     const isSticky = insideComponent ? ' sticky' : ''
     const outsidePosition = isHero ? 'relative' : 'absolute'
@@ -141,11 +142,12 @@ export default class SectionControls extends Component {
     return (
       <div
         ref='controls'
-        className={ 'edit-controls' + isSticky }
+        className={'edit-controls' + isSticky}
         style={{
           position: insideComponent ? 'fixed' : outsidePosition,
           bottom: this.getPositionBottom()
-      }}>
+        }
+      }>
         { sectionLayouts &&
           this.renderSectionLayouts(section) }
         <div className='edit-controls__inputs'>
@@ -154,4 +156,15 @@ export default class SectionControls extends Component {
       </div>
     )
   }
+}
+
+SectionControls.propTypes = {
+  articleLayout: PropTypes.string,
+  channel: PropTypes.object,
+  children: PropTypes.any,
+  disabledAlert: PropTypes.func,
+  isHero: PropTypes.bool,
+  onChange: PropTypes.func,
+  section: PropTypes.object.isRequired,
+  sectionLayouts: PropTypes.bool
 }

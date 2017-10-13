@@ -16,7 +16,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
-window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 Config = require '../utils/config.coffee'
 Utils = require '../utils/index.coffee'
 { ContentState,
@@ -29,7 +28,7 @@ Utils = require '../utils/index.coffee'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
+components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
 Nav = React.createFactory require './nav.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory components.Text
