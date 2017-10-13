@@ -16,7 +16,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
-window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 Config = require '../utils/config.coffee'
 Utils = require '../utils/index.coffee'
 { ContentState,

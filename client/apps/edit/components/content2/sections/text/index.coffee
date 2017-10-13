@@ -2,7 +2,6 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 _s = require 'underscore.string'
 sd = require('sharify').data
-window.process = {env: {NODE_ENV: sd.NODE_ENV}}
 components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
 Config = require './draft_config.coffee'
 Nav = React.createFactory require '../../../../../../components/rich_text2/components/nav.coffee'

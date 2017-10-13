@@ -12,9 +12,18 @@ const IconRemove = components.Icon.Remove
 export default class SectionHeader extends Component {
   constructor (props) {
     super(props)
-
+    this.onLoadHeader()
     this.state = {
       progress: null
+    }
+  }
+
+  onLoadHeader = () => {
+    const { article } = this.props
+    if (article.get('layout') === 'feature') {
+      if (!article.get('hero_section')) {
+        article.set('hero_section', {type: 'text'})
+      }
     }
   }
 
@@ -77,7 +86,7 @@ export default class SectionHeader extends Component {
 
   renderImage (article) {
     const isFullscreen = article.heroSection.get('type') === 'fullscreen'
-    const hasUrl = article.heroSection.get('url').length
+    const hasUrl = article.heroSection.get('url') && article.heroSection.get('url').length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
 
     if (isFullscreen && hasUrl) {
