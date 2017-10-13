@@ -88,7 +88,7 @@ export const channels = (root, args, req, ast) => {
 
 export const display = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
-    Curation.mongoFetch({'_id': ObjectId(DISPLAY_ID)}, (err, results) => {
+    Curation.mongoFetch({ '_id': ObjectId(DISPLAY_ID) }, (err, results) => {
       if (err) {
         reject(new Error(err))
       }
@@ -97,7 +97,7 @@ export const display = (root, args, req, ast) => {
         outcomes.push(_.times((campaign.sov * 100), () => campaign.name))
       })
       const result = _.sample(_.flatten(outcomes))
-      const data = _.where(results.results[0].campaigns, {name: result})
+      const data = _.findWhere(results.results[0].campaigns, { name: result })
       resolve(data)
     })
   })
