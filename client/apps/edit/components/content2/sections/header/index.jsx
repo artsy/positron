@@ -12,18 +12,8 @@ const IconRemove = components.Icon.Remove
 export default class SectionHeader extends Component {
   constructor (props) {
     super(props)
-    this.onLoadHeader()
     this.state = {
       progress: null
-    }
-  }
-
-  onLoadHeader = () => {
-    const { article } = this.props
-    if (article.get('layout') === 'feature') {
-      if (!article.get('hero_section')) {
-        article.set('hero_section', {type: 'text'})
-      }
     }
   }
 
@@ -105,7 +95,7 @@ export default class SectionHeader extends Component {
       )
     } else {
       return (
-        <div className='edit-header__image-container'>
+        <div className='edit-header__image-container' data-has-image={false}>
           {this.renderFileUpload(prompt)}
           {this.state.progress && this.renderProgress()}
         </div>
@@ -140,10 +130,9 @@ export default class SectionHeader extends Component {
     const { article } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
-
     let headerClass = ''
     if (isFeature) {
-      headerClass = ' ' + article.heroSection.get('type') || ' text'
+      headerClass = ' ' + article.heroSection.get('type') || 'text'
     }
     if (isClassic) {
       return (
@@ -157,7 +146,7 @@ export default class SectionHeader extends Component {
     } else {
       return (
         <div className={'edit-header' + headerClass}>
-          {isFeature && <Controls onChange={this.onChangeHero} />}
+          {isFeature && <Controls onChange={this.onChangeHero} hero={article.heroSection.attributes} />}
           <Header article={article.attributes}>
             <span>Missing Vertical</span>
             {this.renderTitle(article)}

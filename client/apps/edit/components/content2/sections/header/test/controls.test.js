@@ -17,7 +17,8 @@ describe('Feature Header Controls', () => {
     const component = mount(
       <Controls {...props} />
     )
-    expect(component.html()).toMatch('<div class="edit-header--controls-open">Change Header</div>')
+    expect(component.html()).toMatch('class="edit-header--controls-open"')
+    expect(component.html()).toMatch('Change Header')
     expect(component.state().isOpen).toBe(false)
   })
 
