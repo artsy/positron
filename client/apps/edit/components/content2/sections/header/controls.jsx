@@ -16,8 +16,7 @@ export default class FeatureHeaderControls extends Component {
     this.setState({isOpen: !this.state.isOpen})
   }
 
-  onChangeLayout = (e) => {
-    const type = e.target.name ? e.target.name : $(e.target).closest('a').attr('name')
+  onChangeLayout = (type) => {
     this.props.onChange('type', type)
   }
 
@@ -26,19 +25,19 @@ export default class FeatureHeaderControls extends Component {
       return (
         <div className='edit-header--controls__layout'>
           <a
-            onClick={this.onChangeLayout}
+            onClick={() => this.onChangeLayout('text')}
             name='text'>
             <IconText />
             Default
           </a>
           <a
-            onClick={this.onChangeLayout}
+            onClick={() => this.onChangeLayout('fullscreen')}
             name='fullscreen'>
             <IconFullscreen />
             Overlay
           </a>
           <a
-            onClick={this.onChangeLayout}
+            onClick={() => this.onChangeLayout('split')}
             name='split'>
             <IconSplit />
             Split
@@ -53,8 +52,7 @@ export default class FeatureHeaderControls extends Component {
       return (
         <div
           onClick={this.toggleLayoutControls}
-          className='edit-header--controls__bg'>
-        </div>
+          className='edit-header--controls__bg' />
       )
     }
   }
