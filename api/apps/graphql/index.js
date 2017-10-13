@@ -37,7 +37,7 @@ const schema = joiql({
       resolve: resolvers.articles
     }),
     article: ArticleSchema.meta({
-      args: {id: string()},
+      args: { id: string() },
       resolve: resolvers.article
     }),
     authors: array().items(object(
@@ -56,7 +56,7 @@ const schema = joiql({
       args: Channel.querySchema,
       resolve: resolvers.channels
     }),
-    display: array().items(Display.schema).meta({
+    display: Display.schema.meta({
       args: Display.querySchema,
       resolve: resolvers.display
     }),
