@@ -1,5 +1,5 @@
 import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
-import PlainText from '/client/components/rich_text2/components/plain_text.jsx'
+import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 

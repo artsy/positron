@@ -1,21 +1,19 @@
 import React from 'react'
 import Backbone from 'backbone'
-import { extend } from 'lodash'
 import { shallow } from 'enzyme'
 
 import HeroSection from '../index.jsx'
 import SectionContainer from '../../../section_container/index.coffee'
 import SectionTool from '../../../section_tool/index.jsx'
 
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const { FeatureArticle } = components.Fixtures
 
 describe('HeroSection', () => {
-
   const props = {
-    section: new Backbone.Model,
+    section: new Backbone.Model(),
     sections: new Backbone.Collection(FeatureArticle.sections),
-    channel: new Backbone.Model,
+    channel: new Backbone.Model(),
     article: new Backbone.Model(FeatureArticle)
   }
 

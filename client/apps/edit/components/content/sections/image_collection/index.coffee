@@ -11,7 +11,7 @@ DragContainer = React.createFactory require '../../../../../../components/drag_d
 { fillWidth }  = require '../../../../../../components/fill_width/index.coffee'
 { div, section, ul, li } = React.DOM
 
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
+components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
 ImageSetPreview = React.createFactory components.ImageSetPreviewClassic
 
 module.exports = React.createClass

@@ -1,11 +1,11 @@
-import PlainText from '../components/plain_text.jsx'
+import { PlainText } from '../components/plain_text.jsx'
 import React from 'react'
 import { mount } from 'enzyme'
-import { EditorState } from 'draft-js'
 
 describe('PlainText', () => {
   const props = {
-    name: 'title'
+    name: 'title',
+    onChange: jest.fn()
   }
 
   it('renders a draft editor with placeholder', () => {
@@ -45,7 +45,6 @@ describe('PlainText', () => {
   })
 
   it('does not allow linebreaks', () => {
-    props.onChange = jest.fn()
     const wrapper = mount(
       <PlainText {...props} />
     )
@@ -57,7 +56,6 @@ describe('PlainText', () => {
   })
 
   it('calls props.onChange when content changes', () => {
-    props.onChange = jest.fn()
     const wrapper = mount(
       <PlainText {...props} />
     )
@@ -65,5 +63,4 @@ describe('PlainText', () => {
     wrapper.find('.public-DraftEditor-content').simulate('keyUp', { keyCode: 70, which: 70 })
     expect(wrapper.instance().props.onChange).toHaveBeenCalled()
   })
-
 })

@@ -1,14 +1,11 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const IconRemove = components.Icon.Remove
 const Artwork = components.Artwork
 
 export default class ImageCollectionArtwork extends Component {
-  constructor (props) {
-    super(props)
-  }
-
-  renderRemoveButton(artwork) {
+  renderRemoveButton (artwork) {
     if (this.props.removeItem && this.props.editing) {
       return (
         <div
@@ -20,7 +17,7 @@ export default class ImageCollectionArtwork extends Component {
     }
   }
 
-  render() {
+  render () {
     const { article, artwork, imagesLoaded, section, width } = this.props
     return (
       <div
@@ -38,4 +35,13 @@ export default class ImageCollectionArtwork extends Component {
       </div>
     )
   }
+}
+ImageCollectionArtwork.propTypes = {
+  article: PropTypes.object.isRequired,
+  editing: PropTypes.bool,
+  artwork: PropTypes.object.isRequired,
+  imagesLoaded: PropTypes.bool,
+  removeItem: PropTypes.func,
+  section: PropTypes.object.isRequired,
+  width: PropTypes.any
 }

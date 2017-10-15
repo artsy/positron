@@ -80,7 +80,7 @@ describe('resolvers', () => {
 
   describe('article', () => {
     it('rejects with an error when no article is found', async () => {
-      const args = {id: '123'}
+      const args = { id: '123' }
       resolvers.__set__('find', (sinon.stub().yields(null, null)))
       try {
         await resolvers.article({}, args, {}, {})
@@ -90,8 +90,8 @@ describe('resolvers', () => {
     })
 
     it('rejects with an error when trying to view an unauthorized draft', async () => {
-      const args = {id: '123'}
-      const newArticle = _.extend({}, article, {channel_id: '000', published: false})
+      const args = { id: '123' }
+      const newArticle = _.extend({}, article, { channel_id: '000', published: false })
       resolvers.__set__('find', (sinon.stub().yields(null, newArticle)))
       try {
         await resolvers.article({}, args, {}, {})
@@ -101,15 +101,15 @@ describe('resolvers', () => {
     })
 
     it('can view drafts', async () => {
-      const args = {id: '123'}
-      const newArticle = _.extend({}, article, {published: false})
+      const args = { id: '123' }
+      const newArticle = _.extend({}, article, { published: false })
       resolvers.__set__('find', (sinon.stub().yields(null, newArticle)))
       const results = await resolvers.article({}, args, req, {})
       results.slug.should.equal('slug-2')
     })
 
     it('can view published articles', async () => {
-      const args = {id: '123'}
+      const args = { id: '123' }
       resolvers.__set__('find', (sinon.stub().yields(null, article)))
       const results = await resolvers.article({}, args, req, {})
       results.slug.should.equal('slug-2')
@@ -146,14 +146,17 @@ describe('resolvers', () => {
 
   describe('display', () => {
     it('can fetch campaign data', async () => {
-      const display = { total: 20, count: 1, results: [fixtures().display] }
+      const display = {
+        total: 20,
+        count: 1,
+        results: [{ campaigns: [fixtures().display] }]
+      }
       resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
 
-      const results = await resolvers.curations({}, {}, req, {})
-      results.length.should.equal(1)
-      results[0].name.should.equal('Sample Campaign')
-      results[0].canvas.headline.should.containEql('Sample copy')
-      results[0].panel.headline.should.containEql('Euismod Inceptos Quam')
+      const result = await resolvers.display({}, {}, req, {})
+      result.name.should.equal('Sample Campaign')
+      result.canvas.headline.should.containEql('Sample copy')
+      result.panel.headline.should.containEql('Euismod Inceptos Quam')
     })
   })
 

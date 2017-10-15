@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 import Controls from './controls.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
-import PlainText from '/client/components/rich_text2/components/plain_text.jsx'
+import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 
 const Header = components.Header
@@ -11,9 +12,18 @@ const IconRemove = components.Icon.Remove
 export default class SectionHeader extends Component {
   constructor (props) {
     super(props)
-
+    this.onLoadHeader()
     this.state = {
       progress: null
+    }
+  }
+
+  onLoadHeader = () => {
+    const { article } = this.props
+    if (article.get('layout') === 'feature') {
+      if (!article.get('hero_section')) {
+        article.set('hero_section', {type: 'text'})
+      }
     }
   }
 
@@ -43,7 +53,7 @@ export default class SectionHeader extends Component {
     this.onChangeHero('url', '')
   }
 
-  renderTitle(article) {
+  renderTitle (article) {
     return (
       <PlainText
         content={article.attributes.title}
@@ -53,7 +63,7 @@ export default class SectionHeader extends Component {
     )
   }
 
-  renderFeatureDeck(article) {
+  renderFeatureDeck (article) {
     return (
       <PlainText
         content={article.heroSection.get('deck')}
@@ -63,20 +73,20 @@ export default class SectionHeader extends Component {
     )
   }
 
-  renderFileUpload(prompt) {
+  renderFileUpload (prompt) {
     return (
       <FileInput
         type='simple'
         onUpload={this.onUpload}
         prompt={prompt}
-        video={true}
+        video
         onProgress={this.onProgress} />
     )
   }
 
-  renderImage(article) {
+  renderImage (article) {
     const isFullscreen = article.heroSection.get('type') === 'fullscreen'
-    const hasUrl = article.heroSection.get('url').length
+    const hasUrl = article.heroSection.get('url') && article.heroSection.get('url').length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
 
     if (isFullscreen && hasUrl) {
@@ -85,7 +95,7 @@ export default class SectionHeader extends Component {
           {this.renderFileUpload('Change Background')}
         </div>
       )
-    } else if(hasUrl) {
+    } else if (hasUrl) {
       return (
         <div
           className='edit-header__remove'
@@ -103,18 +113,17 @@ export default class SectionHeader extends Component {
     }
   }
 
-  renderProgress() {
+  renderProgress () {
     return (
       <div className='upload-progress-container'>
         <div
           className='upload-progress'
-          style={{width: (this.state.progress * 100) + '%'}}>
-        </div>
+          style={{width: (this.state.progress * 100) + '%'}} />
       </div>
     )
   }
 
-  renderLeadParagraph(article) {
+  renderLeadParagraph (article) {
     return (
       <Paragraph
         html={article.get('lead_paragraph')}
@@ -122,12 +131,12 @@ export default class SectionHeader extends Component {
         placeholder='Lead Paragraph (optional)'
         type='lead_paragraph'
         linked={false}
-        stripLinebreaks={true}
+        stripLinebreaks
         layout={article.get('layout')} />
     )
   }
 
-  render() {
+  render () {
     const { article } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
@@ -159,4 +168,8 @@ export default class SectionHeader extends Component {
       )
     }
   }
+}
+
+SectionHeader.propTypes = {
+  article: PropTypes.object.isRequired
 }

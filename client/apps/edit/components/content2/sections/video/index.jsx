@@ -1,16 +1,15 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Controls from './controls.jsx'
 import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 const Video = components.Video
 const IconRemove = components.Icon.Remove
 
 export default class SectionVideo extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      progress: null
-    }
+    this.state = { progress: null }
   }
 
   onCaptionChange = (html) => {
@@ -39,7 +38,7 @@ export default class SectionVideo extends Component {
         <div className='upload-progress-container'>
           <div
             className='upload-progress'
-            style={{width: (this.state.progress * 100) + '%'}}></div>
+            style={{width: (this.state.progress * 100) + '%'}} />
         </div>
       )
     }
@@ -59,7 +58,7 @@ export default class SectionVideo extends Component {
     }
   }
 
-  renderRemoveButton() {
+  renderRemoveButton () {
     if (this.props.section.get('cover_image_url')) {
       return (
         <div className='edit-section__remove' onClick={this.onRemoveImage}>
@@ -86,7 +85,7 @@ export default class SectionVideo extends Component {
             placeholder='Video Caption (required)'
             html={section.get('caption')}
             onChange={this.onCaptionChange}
-            stripLinebreaks={true}
+            stripLinebreaks
             layout={article.get('layout')} />
         </Video>
       )
@@ -106,4 +105,12 @@ export default class SectionVideo extends Component {
       </section>
     )
   }
+}
+
+SectionVideo.propTypes = {
+  article: PropTypes.object.isRequired,
+  channel: PropTypes.object.isRequired,
+  editing: PropTypes.bool,
+  isHero: PropTypes.bool,
+  section: PropTypes.object.isRequired
 }

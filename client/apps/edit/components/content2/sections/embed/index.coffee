@@ -4,7 +4,7 @@
 
 React = require 'react'
 Controls = React.createFactory require './controls.coffee'
-components = require('@artsy/reaction-force/dist/components/publishing/index').default
+components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
 Embed = React.createFactory components.Embed
 { div, section } = React.DOM
 

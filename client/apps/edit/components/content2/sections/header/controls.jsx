@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/components/publishing/index'
+import components from '@artsy/reaction-force/dist/Components/Publishing/index'
 
 const IconFullscreen = components.Icon.LayoutFullscreen
 const IconSplit = components.Icon.LayoutSplit
@@ -8,9 +9,7 @@ const IconText = components.Icon.LayoutText
 export default class FeatureHeaderControls extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      isOpen: false
-    }
+    this.state = { isOpen: false }
   }
 
   toggleLayoutControls = () => {
@@ -22,7 +21,7 @@ export default class FeatureHeaderControls extends Component {
     this.props.onChange('type', type)
   }
 
-  renderLayouts() {
+  renderLayouts () {
     if (this.state.isOpen) {
       return (
         <div className='edit-header--controls__layout'>
@@ -49,7 +48,7 @@ export default class FeatureHeaderControls extends Component {
     }
   }
 
-  renderModal() {
+  renderModal () {
     if (this.state.isOpen) {
       return (
         <div
@@ -60,7 +59,7 @@ export default class FeatureHeaderControls extends Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <div className='edit-header--controls'>
         {this.renderModal()}
@@ -73,4 +72,8 @@ export default class FeatureHeaderControls extends Component {
       </div>
     )
   }
+}
+
+FeatureHeaderControls.propTypes = {
+  onChange: PropTypes.func.isRequired
 }
