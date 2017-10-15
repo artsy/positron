@@ -2,9 +2,9 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Controls from './controls.jsx'
 import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
-const Video = components.Video
-const IconRemove = components.Icon.Remove
+import { Video as VideoComponent, Icon } from '@artsy/reaction-force/dist/Components/Publishing'
+const Video = VideoComponent
+const IconRemove = Icon.IconRemove
 
 export default class SectionVideo extends Component {
   constructor (props) {

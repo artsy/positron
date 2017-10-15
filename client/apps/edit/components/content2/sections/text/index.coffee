@@ -2,11 +2,11 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 _s = require 'underscore.string'
 sd = require('sharify').data
-components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
+{ Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Config = require './draft_config.coffee'
 Nav = React.createFactory require '../../../../../../components/rich_text2/components/nav.coffee'
 InputUrl = React.createFactory require '../../../../../../components/rich_text2/components/input_url.coffee'
-Text = React.createFactory components.Text
+Text = React.createFactory Text
 Utils = require '../../../../../../components/rich_text2/utils/index.coffee'
 { CompositeDecorator,
   ContentState,
@@ -16,7 +16,6 @@ Utils = require '../../../../../../components/rich_text2/utils/index.coffee'
   Modifier } = require 'draft-js'
 editor = (props) -> React.createElement Editor, props
 { div } = React.DOM
-
 
 module.exports = React.createClass
   displayName: 'SectionText'
@@ -96,7 +95,7 @@ module.exports = React.createClass
     selection = Utils.getSelectionDetails(@state.editorState)
     # only merge a section if cursor is in first character of first block
     if selection.isFirstBlock and selection.anchorOffset is 0 and
-     @props.sections.models[@props.index - 1]?.get('type') is 'text'
+    @props.sections.models[@props.index - 1]?.get('type') is 'text'
       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
       @props.sections.models[@props.index - 1].destroy()
       newHTML = mergeIntoHTML + @state.html
@@ -115,7 +114,7 @@ module.exports = React.createClass
     # or cursor is arrowing back from first character of first block,
     # jump to adjacent section
     if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
-     selection.isFirstBlock and selection.isFirstCharacter and direction is -1
+    selection.isFirstBlock and selection.isFirstCharacter and direction is -1
       @props.onSetEditing @props.index + direction
     else if e.key in ['ArrowLeft', 'ArrowRight']
       # manually move cursor to make up for draft's missing l/r arrow fallbacks
@@ -163,7 +162,7 @@ module.exports = React.createClass
     selection = editorState.getSelection()
     noLinks = RichUtils.toggleLink editorState, selection, null
     noBlocks = RichUtils.toggleBlockType noLinks, 'unstyled'
-    noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) =>
+    noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) ->
       Utils.stripCharacterStyles contentBlock
     newState = ContentState.createFromBlockArray noStyles
     if !selection.isCollapsed()
@@ -185,7 +184,7 @@ module.exports = React.createClass
       @handleBackspace e
     else if e in ['italic', 'bold']
       if @props.article.get('layout') is 'classic' and
-       Utils.getSelectionDetails(@state.editorState).anchorType is 'header-three'
+      Utils.getSelectionDetails(@state.editorState).anchorType is 'header-three'
         return 'handled'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState

@@ -28,10 +28,10 @@ Utils = require '../utils/index.coffee'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
-components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
+{ Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Nav = React.createFactory require './nav.coffee'
 InputUrl = React.createFactory require './input_url.coffee'
-Text = React.createFactory components.Text
+Text = React.createFactory Text
 
 module.exports = React.createClass
   displayName: 'Paragraph'
@@ -190,10 +190,10 @@ module.exports = React.createClass
       selectionTarget: null
     })
     @onChange RichUtils.toggleLink(
-        newEditorState
-        newEditorState.getSelection()
-        entityKey
-      )
+      newEditorState
+      newEditorState.getSelection()
+      entityKey
+    )
 
   removeLink: (e) ->
     e.preventDefault()

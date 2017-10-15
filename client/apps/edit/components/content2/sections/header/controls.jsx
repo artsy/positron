@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
+import { Icon } from '@artsy/reaction-force/dist/Components/Publishing'
 
-const IconFullscreen = components.Icon.LayoutFullscreen
-const IconSplit = components.Icon.LayoutSplit
-const IconText = components.Icon.LayoutText
+const IconFullscreen = Icon.IconLayoutFullscreen
+const IconSplit = Icon.IconLayoutSplit
+const IconText = Icon.IconLayoutText
 
 export default class FeatureHeaderControls extends Component {
   constructor (props) {
@@ -53,8 +53,8 @@ export default class FeatureHeaderControls extends Component {
       return (
         <div
           onClick={this.toggleLayoutControls}
-          className='edit-header--controls__bg'>
-        </div>
+          className='edit-header--controls__bg'
+        />
       )
     }
   }

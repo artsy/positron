@@ -4,8 +4,8 @@
 
 React = require 'react'
 Controls = React.createFactory require './controls.coffee'
-components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
-Embed = React.createFactory components.Embed
+{ Embed } = require('@artsy/reaction-force/dist/Components/Publishing')
+Embed = React.createFactory Embed
 { div, section } = React.DOM
 
 module.exports = React.createClass

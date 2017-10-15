@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Paragraph from '../../../../../../../components/rich_text2/components/paragraph.coffee'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
-const IconRemove = components.Icon.Remove
-const Image = components.Image
+import { Icon, Image } from '@artsy/reaction-force/dist/Components/Publishing'
+const IconRemove = Icon.IconRemove
 
 export default class ImageCollectionImage extends Component {
   onCaptionChange = (html) => {
