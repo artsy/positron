@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Icon } from '@artsy/reaction-force/dist/Components/Publishing'
-const IconImageFullscreen = Icon.IconImageFullscreen
+import { IconImageFullscreen } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class SectionControls extends Component {
   constructor (props) {

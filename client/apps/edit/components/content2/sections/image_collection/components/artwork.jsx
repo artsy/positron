@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Artwork, Icon } from '@artsy/reaction-force/dist/Components/Publishing'
-const IconRemove = Icon.IconRemove
+import { Artwork, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class ImageCollectionArtwork extends Component {
   renderRemoveButton (artwork) {

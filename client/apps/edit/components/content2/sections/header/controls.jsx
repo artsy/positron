@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Icon } from '@artsy/reaction-force/dist/Components/Publishing'
-
-const IconFullscreen = Icon.IconLayoutFullscreen
-const IconSplit = Icon.IconLayoutSplit
-const IconText = Icon.IconLayoutText
+import {
+  IconLayoutFullscreen,
+  IconLayoutSplit,
+  IconLayoutText
+ } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class FeatureHeaderControls extends Component {
   constructor (props) {
@@ -28,19 +28,19 @@ export default class FeatureHeaderControls extends Component {
           <a
             onClick={this.onChangeLayout}
             name='text'>
-            <IconText />
+            <IconLayoutText />
             Default
           </a>
           <a
             onClick={this.onChangeLayout}
             name='fullscreen'>
-            <IconFullscreen />
+            <IconLayoutFullscreen />
             Overlay
           </a>
           <a
             onClick={this.onChangeLayout}
             name='split'>
-            <IconSplit />
+            <IconLayoutSplit />
             Split
           </a>
         </div>

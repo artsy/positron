@@ -1,15 +1,16 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { mount } from 'enzyme'
-import { Icon, Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import {
+  Fixtures,
+  IconEditEmbed,
+  IconEditImages,
+  IconEditText,
+  IconEditVideo,
+  IconHeroImage,
+  IconHeroVideo
+} from '@artsy/reaction-force/dist/Components/Publishing'
 import SectionTool from '../index.jsx'
-
-const IconEditEmbed = Icon.EditEmbed
-const IconEditImages = Icon.EditImages
-const IconEditText = Icon.EditText
-const IconEditVideo = Icon.EditVideo
-const IconHeroImage = Icon.HeroImage
-const IconHeroVideo = Icon.HeroVideo
 const { FeatureArticle } = Fixtures
 
 describe('SectionTool', () => {

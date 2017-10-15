@@ -1,11 +1,11 @@
 import React from 'react'
 import Controls from '../controls.jsx'
 import { mount } from 'enzyme'
-
-import { Icon } from '@artsy/reaction-force/dist/Components/Publishing'
-const Fullscreen = Icon.IconLayoutFullscreen
-const Split = Icon.IconLayoutSplit
-const Text = Icon.IconLayoutText
+import {
+  IconLayoutFullscreen,
+  IconLayoutSplit,
+  IconLayoutText
+} from '@artsy/reaction-force/dist/Components/Publishing'
 
 describe('Feature Header Controls', () => {
 
@@ -27,9 +27,9 @@ describe('Feature Header Controls', () => {
     )
     component.find('.edit-header--controls-open').simulate('click')
     expect(component.state().isOpen).toBe(true)
-    expect(component.find(Fullscreen).length).toBe(1)
-    expect(component.find(Split).length).toBe(1)
-    expect(component.find(Text).length).toBe(1)
+    expect(component.find(IconLayoutFullscreen).length).toBe(1)
+    expect(component.find(IconLayoutSplit).length).toBe(1)
+    expect(component.find(IconLayoutText).length).toBe(1)
   })
 
   it('changes the layout click', () => {
