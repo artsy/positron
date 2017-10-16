@@ -7,6 +7,7 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 fixtures = require '../../../../../test/helpers/fixtures.coffee'
+Channel = require '../../../../../client/models/channel.coffee'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
@@ -33,7 +34,7 @@ describe 'ArticlesListView', ->
           articles: [_.extend fixtures().articles, id: '456']
           published: true
           offset: 0
-          channel: {name: 'Artsy Editorial'}
+          channel: new Channel {name: 'Artsy Editorial'}
         }
       @rendered = ReactDOMServer.renderToString React.createElement(ArticlesListView, props)
       @component = ReactDOM.render React.createElement(ArticlesListView, props), (@$el = $ "<div></div>")[0], =>
