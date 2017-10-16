@@ -4,9 +4,11 @@ import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/D
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
 import { ServerStyleSheet } from 'styled-components'
+import { displayQuery, displayFragment } from 'client/apps/display/query'
+
 const { API_URL } = process.env
 
-export const display = (req, res, next) => {
+export const display = async (req, res, next) => {
   const headers = {
     'X-Access-Token': req.user.get('access_token')
   }
@@ -15,45 +17,36 @@ export const display = (req, res, next) => {
     transport: new Transport(API_URL + '/graphql', { headers })
   })
 
-  const DisplayUnit = client.createFragment(`
-    fragment on DisplayUnit {
-      assets {
-        url
-      }
-      body
-      disclaimer
-      headline
-      layout
-      link {
-        text
-        url
-      }
-      logo
-      name
-    }
-  `)
-
-  const DisplayQuery = `
-    {
-      display {
-        name
-        canvas {
-          ...${DisplayUnit}
-        }
-        panel {
-          ...${DisplayUnit}
-        }
-      }
-    }
-  `
+  const lokkaFragment = client.createFragment(displayFragment)
+  const query = displayQuery(lokkaFragment)
 
   client
-  .query(DisplayQuery)
-  .then((result) => {
+  .query(query)
+  .then((results) => {
     const DisplayPanelComponent = React.createFactory(DisplayPanel)
     const sheet = new ServerStyleSheet()
-    const body = ReactDOM.renderToString(sheet.collectStyles(DisplayPanelComponent({unit: result.display.panel, campaign: display})))
+    const body = ReactDOM.renderToString(
+      sheet.collectStyles(
+        DisplayPanelComponent({
+          unit: results.display.panel,
+          campaign: results.display
+        })
+      )
+    )
     const css = sheet.getStyleTags()
     res.render('index', { css, body })
   })
 }
+
+// const { display } = await exports.promisedLokka(client, query)
+// export const promisedLokka = (client, query) => {
+//   return new Promise((resolve, reject) => {
+//     client
+//     .query(query)
+//     .then((results) => {
+//       resolve(results)
+//     }).catch((err) => {
+//       if (err) { reject(new Error('Error fetching display')) }
+//     })
+//   })
+// }
