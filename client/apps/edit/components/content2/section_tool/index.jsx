@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
-
-const IconEditEmbed = components.Icon.EditEmbed
-const IconEditImages = components.Icon.EditImages
-const IconEditSection = components.Icon.EditSection
-const IconEditText = components.Icon.EditText
-const IconEditVideo = components.Icon.EditVideo
-
-const IconHeroImage = components.Icon.HeroImage
-const IconHeroVideo = components.Icon.HeroVideo
+import {
+  IconEditEmbed,
+  IconEditImages,
+  IconEditSection,
+  IconEditText,
+  IconEditVideo,
+  IconHeroImage,
+  IconHeroVideo
+} from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class SectionTool extends Component {
   constructor (props) {

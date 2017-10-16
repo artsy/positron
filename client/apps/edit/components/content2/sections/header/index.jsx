@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
+import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 import Controls from './controls.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
 import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
-
-const Header = components.Header
-const IconRemove = components.Icon.Remove
 
 export default class SectionHeader extends Component {
   constructor (props) {
