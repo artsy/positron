@@ -1,11 +1,11 @@
 import React from 'react'
 import Controls from '../controls.jsx'
 import { mount } from 'enzyme'
-
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
-const Fullscreen = components.Icon.LayoutFullscreen
-const Split = components.Icon.LayoutSplit
-const Text = components.Icon.LayoutText
+import {
+  IconLayoutFullscreen,
+  IconLayoutSplit,
+  IconLayoutText
+} from '@artsy/reaction-force/dist/Components/Publishing'
 
 describe('Feature Header Controls', () => {
 
@@ -17,7 +17,8 @@ describe('Feature Header Controls', () => {
     const component = mount(
       <Controls {...props} />
     )
-    expect(component.html()).toMatch('<div class="edit-header--controls-open">Change Header</div>')
+    expect(component.html()).toMatch('class="edit-header--controls-open"')
+    expect(component.html()).toMatch('Change Header')
     expect(component.state().isOpen).toBe(false)
   })
 
@@ -27,9 +28,9 @@ describe('Feature Header Controls', () => {
     )
     component.find('.edit-header--controls-open').simulate('click')
     expect(component.state().isOpen).toBe(true)
-    expect(component.find(Fullscreen).length).toBe(1)
-    expect(component.find(Split).length).toBe(1)
-    expect(component.find(Text).length).toBe(1)
+    expect(component.find(IconLayoutFullscreen).length).toBe(1)
+    expect(component.find(IconLayoutSplit).length).toBe(1)
+    expect(component.find(IconLayoutText).length).toBe(1)
   })
 
   it('changes the layout click', () => {

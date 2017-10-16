@@ -35,7 +35,7 @@ featureSection = (->
     name: 'FeatureHeader'
     isTypeOf: (data) -> data.type in ['fullscreen', 'split', 'text']
   ).keys
-    type: @string().valid('fullscreen', 'split', 'text')
+    type: @string().valid('fullscreen', 'split', 'text').default('text')
     title: @string().allow('',null)
     intro: @string().allow('',null) # TODO - Remove after backfill
     deck: @string().allow('',null)
