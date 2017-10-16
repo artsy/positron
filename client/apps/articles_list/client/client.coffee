@@ -4,6 +4,7 @@ ReactDOM = require 'react-dom'
 onInfiniteScroll = require 'jquery-on-infinite-scroll'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
+Channel = require '../../../models/channel.coffee'
 FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
 query = require '../query.coffee'
 sd = require('sharify').data
@@ -71,6 +72,7 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
           selected: null
           contentType: 'article'
           checkable: false
+          isEditorial: @props.channel.isEditorial() # TODO - REMOVE POST ARTICLE2
         }
     else
       @showEmptyMessage()
@@ -90,12 +92,12 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
               className: "#{if @state.published is false then 'is-active' else ''} drafts"
               onClick: => @setPublished false
               }, "Drafts"
-          div {className: 'channel-name'}, "#{@props.channel.name}"
+          div {className: 'channel-name'}, "#{@props.channel.get('name')}"
       @showArticlesList()
 
 module.exports.init = ->
   props =
     articles: sd.ARTICLES
     published: sd.HAS_PUBLISHED
-    channel: sd.CURRENT_CHANNEL
+    channel: new Channel sd.CURRENT_CHANNEL
   ReactDOM.render React.createElement(ArticlesListView, props), document.getElementById('articles-list')
