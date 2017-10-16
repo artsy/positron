@@ -25,6 +25,10 @@ const metaFields = {
   relatedArticlesPanel: array().items(object(Article.inputSchema)).meta({
     name: 'RelatedArticlesPanel',
     resolve: resolvers.relatedArticlesPanel
+  }),
+  display: Display.schema.meta({
+    args: Display.querySchema,
+    resolve: resolvers.display
   })
 }
 
