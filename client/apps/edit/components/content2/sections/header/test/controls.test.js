@@ -10,6 +10,7 @@ import {
 describe('Feature Header Controls', () => {
 
   const props = {
+    hero: {},
     onChange: jest.fn()
   }
 

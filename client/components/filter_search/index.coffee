@@ -55,6 +55,7 @@ module.exports = React.createClass
           checkable: @props.checkable
           selected: @selected
           display: @props.display
+          isEditorial: @props.isEditorial  # TODO - REMOVE POST ARTICLE2
         }
       else if @props.contentType is 'tag'
         TagList {
