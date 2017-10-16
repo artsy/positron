@@ -1,10 +1,10 @@
 import React from 'react'
 import Artwork from '../components/artwork.jsx'
 import Backbone from 'backbone'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
+import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import { extend } from 'lodash'
 import { mount } from 'enzyme'
-const { StandardArticle } = components.Fixtures
+const { StandardArticle } = Fixtures
 
 describe('Artwork', () => {
   const props = {

@@ -9,7 +9,8 @@ ReactTestUtils = require 'react-addons-test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
 Article = require '../../../models/article.coffee'
-{ StandardArticle } = require('@artsy/reaction-force/dist/Components/Publishing/index').default.Fixtures
+{ Fixtures } = require('@artsy/reaction-force/dist/Components/Publishing')
+StandardArticle = Fixtures.StandardArticle
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -20,7 +21,7 @@ describe 'DragDropContainer Default', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
-      global.HTMLElement = () => {}
+      global.HTMLElement = () -> {}
       window.matchMedia = sinon.stub().returns(
         {
           matches: false
@@ -69,7 +70,7 @@ describe 'DragDropContainer Default', ->
           }
         )
       ]
-      @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], ->
       done()
 
   afterEach (done) ->
@@ -220,7 +221,7 @@ describe 'DragDropContainer Vertical', ->
       ]
       @component = ReactDOM.render(
         React.createElement(@DragDropContainer, @props, @children)
-        (@$el = $ "<div></div>")[0], =>
+        (@$el = $ "<div></div>")[0], ->
       )
       done()
 

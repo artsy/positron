@@ -1,16 +1,15 @@
 import React from 'react'
 import Backbone from 'backbone'
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
+import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Controls from '../components/controls.jsx'
 import SectionControls from '../../../section_controls/index.jsx'
 import sinon from 'sinon'
 import { extend } from 'lodash'
 import { mount, shallow } from 'enzyme'
-const { StandardArticle } = components.Fixtures
+const { StandardArticle } = Fixtures
 require('typeahead.js')
 
 describe('ImageCollectionControls', () => {
-
   const props = {
     article: new Backbone.Model(StandardArticle),
     channel: {

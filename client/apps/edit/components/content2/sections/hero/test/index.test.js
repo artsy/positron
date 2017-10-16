@@ -6,8 +6,8 @@ import HeroSection from '../index.jsx'
 import SectionContainer from '../../../section_container/index.coffee'
 import SectionTool from '../../../section_tool/index.jsx'
 
-import components from '@artsy/reaction-force/dist/Components/Publishing/index'
-const { FeatureArticle } = components.Fixtures
+import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+const { FeatureArticle } = Fixtures
 
 describe('HeroSection', () => {
   const props = {

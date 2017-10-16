@@ -3,16 +3,15 @@
 #
 _ = require 'underscore'
 React = require 'react'
-components = require('@artsy/reaction-force/dist/Components/Publishing/index').default
+{ ImageSetPreview, ImageSetPreviewClassic } = require('@artsy/reaction-force/dist/Components/Publishing')
 FillWidth = require('@artsy/reaction-force/dist/Utils/fillwidth').default
 imagesLoaded = require 'imagesloaded'
-
 Artwork = require './components/artwork.jsx'
 Controls = require './components/controls.jsx'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
 Image = require './components/image.jsx'
-ImageSetPreview = React.createFactory components.ImageSetPreview
-ImageSetPreviewClassic = React.createFactory components.ImageSetPreviewClassic
+ImageSetPreview = React.createFactory ImageSetPreview
+ImageSetPreviewClassic = React.createFactory ImageSetPreviewClassic
 { div, section, ul, li } = React.DOM
 
 module.exports = React.createClass
@@ -65,12 +64,12 @@ module.exports = React.createClass
   removeItem: (item) -> =>
     @setState imagesLoaded: false
     newImages = _.without @props.section.get('images'), item
-    @props.section.set images: newImages
+    @props.section.set(images: newImages)
     @onChange()
 
   onDragEnd: (images) ->
     @setState imagesLoaded: false
-    @props.section.set images: images
+    @props.section.set(images: images)
     @onChange()
 
   isImageSetWrapping: ->
