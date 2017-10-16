@@ -96,7 +96,7 @@ describe 'DragDropContainer Default', ->
     r.simulate.dragStart r.find(@component, 'drag-source')[1]
     @component.setState.args[0][0].dragSource.should.eql 1
 
-  it 'sets state.dragTarget on DragEnd', (done) ->
+  xit 'sets state.dragTarget on DragEnd', (done) ->
     @component.setState dragSource: 1
     @component.setState = sinon.stub()
     r.simulate.dragOver r.find(@component, 'drag-target')[0]
