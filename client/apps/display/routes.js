@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/server'
-import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing'
-// import { DisplayQuery } from 'client/apps/display/display_query'
+import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/Display/DisplayPanel'
 import { Lokka } from 'lokka'
 import { Transport } from 'lokka-transport-http'
+import { ServerStyleSheet } from 'styled-components'
 const { API_URL } = process.env
-console.log(DisplayPanel)
 
-export const display = async (req, res, next) => {
+export const display = (req, res, next) => {
   const headers = {
     'X-Access-Token': req.user.get('access_token')
   }
@@ -48,12 +47,13 @@ export const display = async (req, res, next) => {
     }
   `
 
-  client.query(DisplayQuery)
+  client
+  .query(DisplayQuery)
   .then((result) => {
-    console.log(result)
     const DisplayPanelComponent = React.createFactory(DisplayPanel)
-    const appString = ReactDOM.renderToString(DisplayPanelComponent({unit: result.display.panel, campaign: display}))
-    console.log(appString)
-    res.render('helloooo')
+    const sheet = new ServerStyleSheet()
+    const body = ReactDOM.renderToString(sheet.collectStyles(DisplayPanelComponent({unit: result.display.panel, campaign: display})))
+    const css = sheet.getStyleTags()
+    res.render('index', { css, body })
   })
 }
