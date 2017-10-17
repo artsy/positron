@@ -45,7 +45,6 @@ describe('resolvers', () => {
     resolvers.__set__('Channel', { mongoFetch: (sinon.stub().yields(null, channels)) })
     resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, curations)) })
     resolvers.__set__('Tag', { mongoFetch: (sinon.stub().yields(null, tags)) })
-
   })
 
   afterEach(() => {
