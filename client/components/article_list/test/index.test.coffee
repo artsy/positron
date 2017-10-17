@@ -16,12 +16,12 @@ describe 'ArticleList', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
-      ArticleList = benv.requireWithJadeify(
+      @ArticleList = benv.requireWithJadeify(
         resolve(__dirname, '../index')
         ['icons']
       )
-      ArticleList.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
-      props = {
+      @ArticleList.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
+      @props = {
           articles: [
             {
               id: '123'
@@ -46,8 +46,7 @@ describe 'ArticleList', ->
           checkable: true
           display: 'email'
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(ArticleList, props)
-      @component = ReactDOM.render React.createElement(ArticleList, props), (@$el = $ "<div></div>")[0], => setTimeout =>
+      @component = ReactDOM.render React.createElement(@ArticleList, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub @component, 'setState'
         done()
 
@@ -55,8 +54,17 @@ describe 'ArticleList', ->
     benv.teardown()
 
   it 'renders an initial set of articles', ->
-    $(@rendered).html().should.containEql 'Game of Thrones'
-    $(@rendered).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Game of Thrones'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+
+  it 'renders a link to /edit if not props.isEditorial', ->
+    rendered = ReactDOMServer.renderToString React.createElement(@ArticleList, @props)
+    $(rendered).html().should.containEql 'href="/articles/125/edit"'
+
+  it 'renders a link to /edit2 if props.isEditorial', ->
+    @props.isEditorial = true
+    rendered = ReactDOMServer.renderToString React.createElement(@ArticleList, @props)
+    $(rendered).html().should.containEql 'href="/articles/125/edit2"'
 
   it 'selects the article when clicking the check button', ->
     r.simulate.click @component.refs['123']
@@ -65,11 +73,11 @@ describe 'ArticleList', ->
     @component.props.selected.args[0][0].slug.should.containEql 'artsy-editorial-game-of-thrones'
 
   it 'can render email headlines and images', ->
-    $(@rendered).html().should.containEql 'Email of Thrones'
-    $(@rendered).html().should.containEql 'image_url.jpg'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Email of Thrones'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'image_url.jpg'
 
   it 'sets the background of the thumbnail image', ->
-    $(@rendered).find('.article-list__image:eq(1)').css('background-image').should.equal 'url(http://artsy.net/image_url.jpg)'
+    $(ReactDOM.findDOMNode(@component)).find('.article-list__image:eq(1)').css('background-image').should.equal 'url(http://artsy.net/image_url.jpg)'
 
   it 'thumbnail image defaults to not setting background when there is no image', ->
-    $(@rendered).find('.article-list__image:eq(2)').css('background-image').length.should.equal 0
+    $(ReactDOM.findDOMNode(@component)).find('.article-list__image:eq(2)').css('background-image').length.should.equal 0
