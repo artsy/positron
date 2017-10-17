@@ -10,6 +10,7 @@ function onChangeDate (name, value, index, onChange) {
 
 export const Campaign = (props) => {
   const {campaign, index, onChange} = props
+
   return (
     <div className='display-admin__section--campaign'>
       <Row key={index}>
@@ -40,7 +41,7 @@ export const Campaign = (props) => {
         <Col lg>
           <label>Traffic Quantity</label>
           <select
-            defaultValue={campaign.sov}
+            value={campaign.sov.toFixed(2)}
             className='bordered-input'
             onChange={(e) => onChange('sov', parseFloat(e.target.value), index)} >
             <option value='0.25'>25%</option>
@@ -58,5 +59,3 @@ Campaign.propTypes = {
   index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired
 }
-
-export default Campaign

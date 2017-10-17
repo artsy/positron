@@ -22,10 +22,10 @@ export const Canvas = (props) => {
                   onChange={(html) => onChange('canvas.headline', html, index)}
                   limit={70} />
               : <CharacterLimit
-                  label='headline'
+                  label='Headline'
                   placeholder='Headline'
                   defaultValue={canvas.headline || ''}
-                  onChange={(e) => onChange('canvas.headline', e.target.value, index)}
+                  onChange={(value) => onChange('canvas.headline', value, index)}
                   limit={45} />
               }
           </div>
@@ -34,14 +34,14 @@ export const Canvas = (props) => {
               label='CTA Text'
               placeholder='Find Out More'
               defaultValue={canvas.link ? canvas.link.text : ''}
-              onChange={(e) => onChange('canvas.link.text', e.target.value, index)}
+              onChange={(value) => onChange('canvas.link.text', value, index)}
               limit={25} />
           </div>
           <div className='field-group'>
             <label>CTA Link</label>
             <input
               className='bordered-input'
-              placeholder='Find Out More'
+              placeholder='http://example.com'
               defaultValue={canvas.link ? campaign.canvas.link.url : ''}
               onChange={(e) => onChange('canvas.link.url', e.target.value, index)} />
           </div>
@@ -50,8 +50,8 @@ export const Canvas = (props) => {
               type='textarea'
               label='Disclaimer (optional)'
               placeholder='Enter legal disclaimer here'
-              defaultValue={canvas.body || ''}
-              onChange={(e) => onChange('canvas.body', e.target.value, index)}
+              defaultValue={canvas.disclaimer || ''}
+              onChange={(value) => onChange('canvas.disclaimer', value, index)}
               limit={150} />
           </div>
         </Col>
