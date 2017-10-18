@@ -1,17 +1,13 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import Controls from './controls.jsx'
 import Paragraph from '../../../../../../components/rich_text2/components/paragraph.coffee'
+import React, { Component } from 'react'
+import { Controls } from './controls.jsx'
 import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 
-export default class SectionVideo extends Component {
+export class SectionVideo extends Component {
   constructor (props) {
     super(props)
     this.state = { progress: null }
-  }
-
-  onCaptionChange = (html) => {
-    this.props.section.set('caption', html)
   }
 
   onClickOff = () => {
@@ -22,12 +18,6 @@ export default class SectionVideo extends Component {
 
   onProgress = (progress) => {
     this.setState({progress})
-  }
-
-  onRemoveImage = () => {
-    if (this.props.section.get('cover_image_url')) {
-      this.props.section.set('cover_image_url', null)
-    }
   }
 
   renderUploadProgress () {
@@ -59,7 +49,9 @@ export default class SectionVideo extends Component {
   renderRemoveButton () {
     if (this.props.section.get('cover_image_url')) {
       return (
-        <div className='edit-section__remove' onClick={this.onRemoveImage}>
+        <div
+          className='edit-section__remove'
+          onClick={() => this.props.section.set('cover_image_url', null)}>
           <IconRemove />
         </div>
       )
@@ -72,17 +64,13 @@ export default class SectionVideo extends Component {
       return (
         <Video
           layout={article.get('layout')}
-          section={{
-            caption: section.get('caption'),
-            url: section.get('url'),
-            cover_image_url: section.get('cover_image_url')
-          }}>
+          section={section.attributes}>
           {editing && this.renderRemoveButton()}
           <Paragraph
             type='caption'
             placeholder='Video Caption (required)'
             html={section.get('caption')}
-            onChange={this.onCaptionChange}
+            onChange={(html) => section.set('caption', html)}
             stripLinebreaks
             layout={article.get('layout')} />
         </Video>

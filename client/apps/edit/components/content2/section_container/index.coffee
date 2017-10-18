@@ -7,7 +7,7 @@
 React = require 'react'
 _ = require 'underscore'
 Text = React.createFactory require '../sections/text/index.coffee'
-Video = require '../sections/video/index.jsx'
+{ SectionVideo } = require '../sections/video/index.jsx'
 Slideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
 Embed = React.createFactory require '../sections/embed/index.coffee'
 Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
@@ -79,7 +79,7 @@ module.exports = React.createClass
           }
       if @props.section.get('type') is 'video'
         React.createElement(
-          Video.default, @sectionProps()
+          SectionVideo, @sectionProps()
         )
       else
         (switch @props.section.get('type')

@@ -10,7 +10,8 @@ module.exports = class EditHeader extends Backbone.View
     { @article } = options
     @finished = false
     @user = new User sd.USER
-    @article.on 'change', @saving
+    unless sd.EDIT_2
+      @article.on 'change', @saving
     @article.on 'change', @toggleCheckmarks
     @article.on 'error', @error
     @article.on 'sync', @done

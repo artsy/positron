@@ -1,7 +1,7 @@
-import React from 'react'
-import Video from '../index.jsx'
-import { mount, shallow } from 'enzyme'
 import Backbone from 'backbone'
+import React from 'react'
+import { mount, shallow } from 'enzyme'
+import { SectionVideo } from '../index.jsx'
 
 describe('Video', () => {
 
@@ -23,7 +23,7 @@ describe('Video', () => {
 
   it('renders a placeholder', () => {
     const component = shallow(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     expect(component.html()).toMatch('edit-section__placeholder')
     expect(component.text()).toMatch('Add a video above')
@@ -32,7 +32,7 @@ describe('Video', () => {
   it('renders a saved video and cover image', () => {
     props.section.set('url', 'https://youtu.be/Bv_5Zv5c-Ts')
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     expect(component.children().nodes[0].props.section.url).toMatch('https://youtu.be/Bv_5Zv5c-Ts')
     expect(component.children().nodes[0].props.section.cover_image_url).toMatch('http://image.jpg')
@@ -43,7 +43,7 @@ describe('Video', () => {
   it('renders the section controls when editing', () => {
     props.editing = true
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     expect(component.html()).toMatch('<div class="edit-controls"')
     expect(component.find('a.layout').length).toEqual(2)
@@ -55,7 +55,7 @@ describe('Video', () => {
     props.editing = true
     props.article.set('layout', 'feature')
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     expect(component.find('a.layout').length).toEqual(3)
   })
@@ -65,23 +65,23 @@ describe('Video', () => {
     props.editing = true
     props.section.set('url', 'https://youtu.be/Bv_5Zv5c-Ts')
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     expect(component.children().nodes[1].props.children[0].props.className).toMatch('edit-section__remove')
   })
 
-  it('#onRemoveImage removes the cover_image_url', () => {
+  it('Can remove the cover_image_url', () => {
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
-    component.instance().onRemoveImage()
+    component.find('.edit-section__remove').simulate('click')
     expect(component.props().section.get('cover_image_url')).toBeFalsy()
   })
 
-  it('#onProgress sets state.progress and renders progress container if state.propgress is not null', () => {
+  it('#onProgress sets state.progress and renders progress container if state.progress is not null', () => {
     props.editing = true
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     component.instance().onProgress(.5)
     expect(component.state().progress).toEqual(.5)
@@ -92,7 +92,7 @@ describe('Video', () => {
     props.section.set('url', '')
     const spy = jest.spyOn(props.section, 'destroy')
     const component = mount(
-      <Video {...props} />
+      <SectionVideo {...props} />
     )
     component.instance().onClickOff()
     expect(spy).toHaveBeenCalled()

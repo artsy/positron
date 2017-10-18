@@ -201,3 +201,8 @@ describe "Article simple mode", ->
 
     it 'does not serialize associations', ->
       JSON.stringify(@article.toJSON()).should.not.containEql '"hero_section"'
+
+    it 'serializes a hero_section with keys', ->
+      @article.set('hero_section', {type: 'text'})
+      JSON.stringify(@article.toJSON()).should.containEql '"hero_section"'
+      JSON.stringify(@article.toJSON().hero_section.type).should.containEql '"text"'

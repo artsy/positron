@@ -43,6 +43,17 @@
     superagent "^3.6.3"
     uuid "^3.0.1"
 
+"@artsy/stitch@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/stitch/-/stitch-1.1.0.tgz#2e61d5957c240896b5d972f5ec512739d66d6d80"
+  dependencies:
+    babel-runtime "^6.26.0"
+    consolidate "^0.14.5"
+    lodash "^4.17.4"
+    react "^15.6.1"
+    react-dom "^15.6.1"
+    styled-components "^2.1.2"
+
 "@hypnosphi/fuse.js@^3.0.9":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@hypnosphi/fuse.js/-/fuse.js-3.0.9.tgz#ea99f6121b4a8f065b4c71f85595db2714498807"
@@ -1938,6 +1949,10 @@ bluebird@^2.8.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
+bluebird@^3.1.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.6"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.6.tgz#53344adb14617a13f6e8dd2ce28905d1c0ba3215"
@@ -2732,6 +2747,12 @@ console-browserify@^1.1.0:
 console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
+
+consolidate@^0.14.5:
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/consolidate/-/consolidate-0.14.5.tgz#5a25047bc76f73072667c8cb52c989888f494c63"
+  dependencies:
+    bluebird "^3.1.1"
 
 constantinople@~3.0.1:
   version "3.0.2"
@@ -7844,7 +7865,7 @@ react-docgen@^2.15.0:
     node-dir "^0.1.10"
     recast "^0.11.5"
 
-react-dom@^15.5.4:
+react-dom@^15.5.4, react-dom@^15.6.1:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
   dependencies:
@@ -8017,6 +8038,16 @@ react-url-query@^1.1.4:
 react@^15.5.4:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
+  dependencies:
+    create-react-class "^15.6.0"
+    fbjs "^0.8.9"
+    loose-envify "^1.1.0"
+    object-assign "^4.1.0"
+    prop-types "^15.5.10"
+
+react@^15.6.1:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   dependencies:
     create-react-class "^15.6.0"
     fbjs "^0.8.9"
