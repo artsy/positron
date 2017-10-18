@@ -59,7 +59,7 @@ export const promisedMongoFetch = (input) => {
     .find(query)
     .skip(offset || 0)
     .sort(sort)
-    .limit(limit)
+    .limit(limit || 10)
   return new Promise((resolve, reject) => {
     async.parallel([
       cb => cursor.toArray(cb),
