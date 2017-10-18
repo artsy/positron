@@ -67,7 +67,8 @@ module.exports = React.createClass
       children.map (child, i) =>
         uniqueKey = if child.props.section then child.props.section.cid + i else i
 
-        if child.type.displayName is 'SectionTool' or !@props.isDraggable
+        if child.type.displayName is 'SectionTool' or #TODO - REMOVE DISPLAYNAME CHECK POST ARTICLE2
+         child.props.isDraggable is false or !@props.isDraggable
           child
         else
           i = child.props.index or i
