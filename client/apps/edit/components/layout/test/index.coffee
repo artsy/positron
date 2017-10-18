@@ -17,6 +17,7 @@ describe 'EditLayout', ->
       sd = _.extend fixtures().locals.sd,
         CURRENT_CHANNEL: @channel = new Channel fixtures().channels
         USER: accessToken: 'foo'
+        FORCE_URL: 'https://artsy.net'
       locals = _.extend fixtures().locals,
         article: @article = new Article fixtures().articles
         sd: sd
@@ -27,6 +28,7 @@ describe 'EditLayout', ->
         sinon.stub Backbone.history, 'navigate'
         @EditLayout = rewire '../index.coffee'
         @EditLayout.__set__ 'YoastView', @YoastView = sinon.stub().returns onKeyup: @yoastKeyup = sinon.stub()
+        @EditLayout.__set__ 'sd', sd
         sinon.stub _, 'debounce'
         $.fn.autosize = sinon.stub()
         _.debounce.callsArg 0
@@ -119,12 +121,13 @@ describe 'EditLayout', ->
 
   describe '#onYoastKeyup', ->
 
-    it 'returns if its not an editorial channel', ->
-      @view.channel.set 'type', 'team'
+    it 'returns if its not an artsy internal channel', ->
+      @view.channel.set 'type', 'partner'
       @view.onYoastKeyup()
       @yoastKeyup.callCount.should.equal 0
 
     it 'calls onKeyup on the yoast view', ->
+      @view.channel.set 'type', 'team'
       @view.onYoastKeyup()
       @yoastKeyup.callCount.should.equal 1
 

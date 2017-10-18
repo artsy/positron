@@ -15,6 +15,9 @@ module.exports = class Channel extends Backbone.Model
   isEditorial: ->
     @get('type') is 'editorial'
 
+  isArtsyChannel: ->
+    @get('type') in ['editorial', 'support', 'team']
+
   hasFeature: (feature) ->
     type = @get('type')
     if type is 'editorial'

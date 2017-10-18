@@ -183,7 +183,7 @@ describe('Section Controls', () => {
   })
 
   describe('#getHeaderSize', () => {
-    it('returns 55 when channel is not editorial', () => {
+    it('returns 55 when channel is not artsy channel', () => {
       const component = mount(
         <SectionControls {...props} />
       )
@@ -191,9 +191,8 @@ describe('Section Controls', () => {
       expect(header).toBe(55)
     })
 
-    it('returns 95 when channel is editorial', () => {
-      Channel.prototype.isEditorial = sinon.stub().returns(true)
-      Channel.prototype.hasFeature = sinon.stub().returns(true)
+    it('returns 95 when channel is artsy channel', () => {
+      Channel.prototype.isArtsyChannel = sinon.stub().returns(true)
       const component = mount(
         <SectionControls {...props} />
       )

@@ -6,7 +6,7 @@ block locals
 block content
   include ../header/index
   #edit-tab-pages
-    if sd.CURRENT_CHANNEL.get('type') === 'editorial'
+    if sd.CURRENT_CHANNEL.isArtsyChannel()
       #edit-seo
         .edit-seo__header-container
           .edit-seo__header

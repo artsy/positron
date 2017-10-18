@@ -27,7 +27,7 @@ export default class SectionControls extends Component {
 
   getHeaderSize = () => {
     // Add extra space for channels with Yoast
-    return this.props.channel.isEditorial() ? 95 : 55
+    return this.props.channel.isArtsyChannel() ? 95 : 55
   }
 
   getPositionBottom () {

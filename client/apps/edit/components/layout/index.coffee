@@ -21,9 +21,11 @@ module.exports = class EditLayout extends Backbone.View
     @article.on 'loading', @showSpinner
     @article.once 'sync', @onFirstSave if @article.isNew()
     @article.on 'savePublished', @savePublished
+    if @channel?.isArtsyChannel()
+      @setupYoast()
+      @article.on 'change', @onYoastKeyup
     @setupOnBeforeUnload()
     @toggleAstericks()
-    @setupYoast() if @channel.isEditorial()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
@@ -114,7 +116,7 @@ module.exports = class EditLayout extends Backbone.View
       contentField: @getBodyText()
 
   onYoastKeyup: ->
-    return unless @channel.isEditorial()
+    return unless @channel?.isArtsyChannel()
     @yoastView.onKeyup @getBodyText()
 
   getBodyText: =>
@@ -179,5 +181,5 @@ module.exports = class EditLayout extends Backbone.View
     switch result._type
       when "artist" then "#{sd.FORCE_URL}/artist/#{result._source.slug}"
       when "partner" then "#{sd.FORCE_URL}/#{result._source.slug}"
-      when "city" then "#{sd.FORCE_URL}/#{result._source.slug}"
+      when "city" then "#{sd.FORCE_URL}/shows/#{result._source.slug}"
       else null
