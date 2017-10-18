@@ -81,9 +81,7 @@ export const save = (input, accessToken, options, callback) => {
 
         // Eventually convert these to Joi custom extensions
         modifiedArticle.updated_at = new Date()
-        if (input.hero_section && input.hero_section.type === 'fullscreen') {
-          modifiedArticle.title = modifiedArticle.hero_section.title
-        }
+
         if (input.author) { modifiedArticle.author = input.author }
 
         // Handle publishing, unpublishing, published, draft
