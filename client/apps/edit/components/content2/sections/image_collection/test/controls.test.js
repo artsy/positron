@@ -14,7 +14,7 @@ describe('ImageCollectionControls', () => {
     article: new Backbone.Model(StandardArticle),
     channel: {
       hasFeature: sinon.stub().returns(true),
-      isEditorial: sinon.stub().returns(true)
+      isArtsyChannel: sinon.stub().returns(true)
     },
     editing: true,
     onChange: jest.fn(),

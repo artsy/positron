@@ -28,7 +28,7 @@ describe 'SectionEmbed', ->
         section: new Section {type: 'embed'}
         editing: true
         article: new Backbone.Model {layout: 'standard'}
-        channel: { isEditorial: sinon.stub().returns(true) }
+        channel: { isArtsyChannel: sinon.stub().returns(true) }
         setEditing: ->
       ), (@$el = $ "<div></div>")[0], => setTimeout =>
         sinon.stub Backbone, 'sync'

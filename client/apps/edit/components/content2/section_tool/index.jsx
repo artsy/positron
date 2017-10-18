@@ -14,7 +14,6 @@ export default class SectionTool extends Component {
   constructor (props) {
     super(props)
 
-    this.type = {displayName: 'SectionTool'}
     this.state = {
       open: false
     }
@@ -150,6 +149,7 @@ SectionTool.propTypes = {
   firstSection: PropTypes.bool,
   index: PropTypes.number,
   isEditing: PropTypes.bool,
+  isDraggable: PropTypes.bool,
   isHero: PropTypes.bool,
   onSetEditing: PropTypes.func,
   section: PropTypes.object,

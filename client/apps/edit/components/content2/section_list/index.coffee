@@ -56,6 +56,7 @@ module.exports = React.createClass
           key: 1
           isEditing: @state.editingIndex isnt null
           firstSection: true
+          isDraggable: false
         }
       )
       if @props.sections.length
@@ -87,6 +88,7 @@ module.exports = React.createClass
                     index: i
                     key: 'tool-' + i
                     isEditing: @state.editingIndex isnt null
+                    isDraggable: false
                   }
                 )
               ]

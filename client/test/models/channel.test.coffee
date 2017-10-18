@@ -125,6 +125,23 @@ describe "Channel", ->
       @channel.hasAssociation('partners').should.be.true()
       @channel.hasAssociation('auctions').should.be.true()
 
+  describe '#isArtsyChannel', ->
+
+    beforeEach ->
+      @channel = new Channel fixtures().channels
+
+    it 'returns true for editorial type', ->
+      @channel.set
+        name: 'Editorial'
+        type: 'editorial'
+      @channel.isArtsyChannel().should.be.true()
+
+    it 'returns false for partner type', ->
+      @channel.set
+        name: 'Gagosian'
+        type: 'partner'
+      @channel.isArtsyChannel().should.be.false()
+
   describe '#fetchChannelOrPartner' , ->
 
     it 'returns an error if it cannot find either' , (done) ->

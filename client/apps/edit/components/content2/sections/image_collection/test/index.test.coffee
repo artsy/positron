@@ -69,7 +69,7 @@ describe 'ImageCollection', ->
         setEditing: @setEditing = sinon.stub()
         article: new Backbone.Model
           layout: 'classic'
-        channel: { hasFeature: hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true) }
+        channel: { hasFeature: hasFeature = sinon.stub().returns(true), isArtsyChannel: sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
       @component.onImagesLoaded = sinon.stub()
