@@ -681,17 +681,54 @@ describe 'Article Persistence', ->
           Article.__ResetDependency__ 'onUnpublish'
           done()
 
-    it 'saves a hero_section', (done) ->
+    it 'saves a classic hero_section', (done) ->
       Article.save {
         hero_section:
           url: 'http://youtube.com'
-          type: 'fullscreen'
-          title: 'The Year in Art 2018'
-          intro: 'This year was incredible.'
+          type: 'video'
+          caption: 'This year was incredible.'
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.hero_section.url.should.equal 'http://youtube.com'
+        article.hero_section.type.should.equal 'video'
+        article.hero_section.caption.should.equal 'This year was incredible.'
+        done()
+
+    it 'saves a feature hero_section in fullscreen', (done) ->
+      Article.save {
+        hero_section:
+          url: 'http://image.com'
+          type: 'fullscreen'
+          deck: 'This year was incredible.'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.hero_section.url.should.equal 'http://image.com'
         article.hero_section.type.should.equal 'fullscreen'
-        article.hero_section.title.should.equal 'The Year in Art 2018'
-        article.hero_section.intro.should.equal 'This year was incredible.'
+        article.hero_section.deck.should.equal 'This year was incredible.'
+        done()
+
+    it 'saves a feature hero_section in text', (done) ->
+      Article.save {
+        hero_section:
+          url: 'http://image.com'
+          type: 'text'
+          deck: 'This year was incredible.'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.hero_section.url.should.equal 'http://image.com'
+        article.hero_section.type.should.equal 'text'
+        article.hero_section.deck.should.equal 'This year was incredible.'
+        done()
+
+    it 'saves a feature hero_section in split', (done) ->
+      Article.save {
+        hero_section:
+          url: 'http://image.com'
+          type: 'split'
+          deck: 'This year was incredible.'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.hero_section.url.should.equal 'http://image.com'
+        article.hero_section.type.should.equal 'split'
+        article.hero_section.deck.should.equal 'This year was incredible.'
         done()

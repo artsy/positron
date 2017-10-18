@@ -9,6 +9,7 @@ import Paragraph from '/client/components/rich_text2/components/paragraph.coffee
 export default class SectionHeader extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       progress: null
     }
@@ -24,20 +25,8 @@ export default class SectionHeader extends Component {
     this.onChange('hero_section', heroSection.attributes)
   }
 
-  onChangeLeadParagraph = (html) => {
-    this.onChange('lead_paragraph', html)
-  }
-
-  onUpload = (image, width, height) => {
-    this.onChangeHero('url', image)
-  }
-
   onProgress = (progress) => {
     this.setState({ progress })
-  }
-
-  onRemoveImage = () => {
-    this.onChangeHero('url', '')
   }
 
   renderTitle (article) {
@@ -64,7 +53,7 @@ export default class SectionHeader extends Component {
     return (
       <FileInput
         type='simple'
-        onUpload={this.onUpload}
+        onUpload={(image) => this.onChangeHero('url', image)}
         prompt={prompt}
         video
         onProgress={this.onProgress} />
@@ -86,7 +75,7 @@ export default class SectionHeader extends Component {
       return (
         <div
           className='edit-header__remove'
-          onClick={this.onRemoveImage}>
+          onClick={() => this.onChangeHero('url', '')}>
           <IconRemove />
         </div>
       )
@@ -114,7 +103,7 @@ export default class SectionHeader extends Component {
     return (
       <Paragraph
         html={article.get('lead_paragraph')}
-        onChange={this.onChangeLeadParagraph}
+        onChange={(input) => this.onChange('lead_paragraph', input)}
         placeholder='Lead Paragraph (optional)'
         type='lead_paragraph'
         linked={false}
@@ -133,7 +122,7 @@ export default class SectionHeader extends Component {
     }
     if (isClassic) {
       return (
-        <div className={'edit-header' + headerClass}>
+        <div className='edit-header'>
           <Header article={article.attributes}>
             {this.renderTitle(article)}
             {this.renderLeadParagraph(article)}
