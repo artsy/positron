@@ -104,9 +104,14 @@ export const display = (root, args, req, ast) => {
 }
 
 export const relatedArticlesPanel = (root) => {
+  const omittedIds = [ObjectId(root.id)]
+  if (root.related_articles_ids) {
+    omittedIds.concat(root.related_article_ids)
+  }
+  console.log(omittedIds)
   const tags = root.tags || null
   const args = {
-    omit: [ObjectId(root.id)],
+    omit: omittedIds,
     published: true,
     featured: true,
     channel_id: ObjectId(root.channel_id),
@@ -114,13 +119,27 @@ export const relatedArticlesPanel = (root) => {
     limit: 3,
     sort: '-published_at'
   }
+  const relatedArticleArgs = {
+    ids: root.related_article_ids,
+    limit: 3,
+    published: true
+  }
   return new Promise((resolve, reject) => {
-    mongoFetch(_.pick(args, _.identity), (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
-      resolve(results.results)
-    })
+    if (root.related_article_ids && root.related_article_ids.length > 0) {
+      mongoFetch(relatedArticleArgs, (err, relatedArticleResults) => {
+        if (err) { return reject(new Error(err)) }
+        mongoFetch(_.pick(args, _.identity), (err, results) => {
+          if (err) { return reject(new Error(err)) }
+          const limitedArticles = _.first(relatedArticleResults.results.concat(results.results), 3)
+          resolve(limitedArticles)
+        })
+      })
+    } else {
+      mongoFetch(_.pick(args, _.identity), (err, results) => {
+        if (err) { return reject(new Error(err)) }
+        resolve(results.results)
+      })
+    }
   })
 }
 
