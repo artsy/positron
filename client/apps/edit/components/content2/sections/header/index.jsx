@@ -23,7 +23,6 @@ export default class SectionHeader extends Component {
     const heroSection = this.props.article.heroSection
     heroSection.set(key, value)
     this.onChange('hero_section', heroSection.attributes)
-    this.forceUpdate() // re-render reaction header
   }
 
   onProgress = (progress) => {

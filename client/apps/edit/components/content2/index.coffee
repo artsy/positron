@@ -11,8 +11,9 @@ module.exports = React.createClass
   componentWillMount: ->
     @debouncedSave = _.debounce((->
       @props.article.save()
-      @forceUpdate()
+      @onChange()
     ), 800)
+    @props.article.on 'change', => @saveArticle()
     @props.article.sections.on 'change add remove reset', => @saveArticle()
     @props.article.heroSection.on 'change remove', => @saveArticle()
 
@@ -22,6 +23,11 @@ module.exports = React.createClass
       @debouncedSave()
     else
       $('#edit-save').removeClass('is-saving').addClass 'attention'
+      @onChange()
+
+  onChange: ->
+    # force an update to reaction components & after admin panel changes
+    @setState lastUpdate: Date.now()
 
   render: ->
     div {className: 'edit-section-layout ' + @props.article.get('layout')},

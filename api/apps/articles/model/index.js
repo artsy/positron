@@ -20,7 +20,9 @@ const { removeFromSearch, deleteArticleFromSailthru } = require('./distribute.co
 //
 export const where = (input, callback) => {
   return Joi.validate(input, schema.querySchema, { stripUnknown: true }, (err, input) => {
-    if (err) { return callback(err) }
+    if (err) {
+      return callback(err)
+    }
     return mongoFetch(input, callback)
   })
 }
@@ -44,7 +46,9 @@ export const mongoFetch = (input, callback) => {
     }
   ], (err, results) => {
     const [articles, total, articleCount] = results
-    if (err) { return callback(err) }
+    if (err) {
+      return callback(err)
+    }
     return callback(null, {
       results: articles,
       total,
@@ -70,19 +74,27 @@ export const save = (input, accessToken, options, callback) => {
     // Find the original article or create an empty one
     const articleId = (input.id || input._id) ? (input.id || input._id).toString() : null
     find(articleId, (err, article) => {
-      if (article == null) { article = {} }
-      if (err) { return callback(err) }
+      if (article == null) {
+        article = {}
+      }
+      if (err) {
+        return callback(err)
+      }
 
       // Create a new article by merging the values of input and article
       const modifiedArticle = _.extend(cloneDeep(article), input)
 
       generateKeywords(input, modifiedArticle, (err, modifiedArticle) => {
-        if (err) { return callback(err) }
+        if (err) {
+          return callback(err)
+        }
 
         // Eventually convert these to Joi custom extensions
         modifiedArticle.updated_at = new Date()
 
-        if (input.author) { modifiedArticle.author = input.author }
+        if (input.author) {
+          modifiedArticle.author = input.author
+        }
 
         // Handle publishing, unpublishing, published, draft
         const publishing = (modifiedArticle.published && !article.published) || (modifiedArticle.scheduled_publish_at && !article.published)
@@ -104,8 +116,12 @@ export const save = (input, accessToken, options, callback) => {
 
 export const publishScheduledArticles = callback => {
   db.articles.find({ scheduled_publish_at: { $lt: new Date() } }, (err, articles) => {
-    if (err) { return callback(err, []) }
-    if (articles.length === 0) { return callback(null, []) }
+    if (err) {
+      return callback(err, [])
+    }
+    if (articles.length === 0) {
+      return callback(null, [])
+    }
     async.map(articles, (article, cb) => {
       article = _.extend(article, {
         published: true,
@@ -115,7 +131,9 @@ export const publishScheduledArticles = callback => {
       return onPublish(article, sanitizeAndSave(cb))
     }
     , (err, results) => {
-      if (err) { return callback(err, []) }
+      if (err) {
+        return callback(err, [])
+      }
       return callback(null, results)
     })
   })
@@ -123,8 +141,12 @@ export const publishScheduledArticles = callback => {
 
 export const unqueue = callback => {
   db.articles.find({ $or: [ { weekly_email: true }, { daily_email: true } ] }, (err, articles) => {
-    if (err) { return callback(err, []) }
-    if (articles.length === 0) { return callback(null, []) }
+    if (err) {
+      return callback(err, [])
+    }
+    if (articles.length === 0) {
+      return callback(null, [])
+    }
     async.map(articles, (article, cb) => {
       article = _.extend(article, {
         weekly_email: false,
@@ -133,7 +155,9 @@ export const unqueue = callback => {
       return onPublish(article, sanitizeAndSave(cb))
     }
     , (err, results) => {
-      if (err) { return callback(err, []) }
+      if (err) {
+        return callback(err, [])
+      }
       return callback(null, results)
     })
   })
@@ -144,11 +168,17 @@ export const unqueue = callback => {
 //
 export const destroy = (id, callback) => {
   find(id, (err, article) => {
-    if (err) { return callback(err) }
-    if (!article) { return callback(new Error('Article not found.')) }
+    if (err) {
+      return callback(err)
+    }
+    if (!article) {
+      return callback(new Error('Article not found.'))
+    }
     deleteArticleFromSailthru(_.last(article.slugs), () => {
       db.articles.remove({ _id: ObjectId(id) }, (err, res) => {
-        if (err) { return callback(err) }
+        if (err) {
+          return callback(err)
+        }
         removeFromSearch(id.toString())
         return callback(null)
       })
@@ -169,7 +199,9 @@ export const presentCollection = (articles) => {
 }
 
 export const present = (article) => {
-  if (!article) { return {} }
+  if (!article) {
+    return {}
+  }
   const id = article._id ? article._id.toString() : null
   const scheduled_publish_at = article.scheduled_publish_at ? moment(article.scheduled_publish_at).toISOString() : null
   const published_at = article.published_at ? moment(article.published_at).toISOString() : null
@@ -187,7 +219,9 @@ export const present = (article) => {
 
 export const getSuperArticleCount = (id) => {
   return new Promise((resolve, reject) => {
-    if (!ObjectId.isValid(id)) { return resolve(0) }
+    if (!ObjectId.isValid(id)) {
+      return resolve(0)
+    }
     db.articles.find({ 'super_article.related_articles': ObjectId(id) }).count((err, count) => {
       if (err) { return reject(err) }
       resolve(count)
