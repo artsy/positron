@@ -132,10 +132,8 @@ export const relatedArticlesPanel = (root) => {
     .catch((e) => reject(e))
 
     if (root.related_article_ids && root.related_article_ids.length) {
-      // Fetch by related_article_ids and tags
       const relatedArticleResults = await promisedMongoFetch(relatedArticleArgs)
       .catch((e) => reject(e))
-
       relatedArticles = _.first(relatedArticleResults.results.concat(articleResults.results), 3)
     } else {
       relatedArticles = articleResults.results
