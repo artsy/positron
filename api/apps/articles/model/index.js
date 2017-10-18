@@ -53,6 +53,36 @@ export const mongoFetch = (input, callback) => {
   })
 }
 
+export const promisedMongoFetch = (input) => {
+  const { query, limit, offset, sort, count } = retrieve.toQuery(input)
+  const cursor = db.articles
+    .find(query)
+    .skip(offset || 0)
+    .sort(sort)
+    .limit(limit)
+  return new Promise((resolve, reject) => {
+    async.parallel([
+      cb => cursor.toArray(cb),
+      cb => {
+        if (!count) { return cb() }
+        return db.articles.count(cb)
+      },
+      (cb) => {
+        if (!count) { return cb() }
+        return cursor.count(cb)
+      }
+    ], (err, results) => {
+      const [articles, total, articleCount] = results
+      if (err) { return reject(err) }
+      return resolve({
+        results: articles,
+        total,
+        count: articleCount
+      })
+    })
+  })
+}
+
 export const find = (id, callback) => {
   const query = ObjectId.isValid(id) ? { _id: ObjectId(id) } : { slugs: id }
   db.articles.findOne(query, callback)
