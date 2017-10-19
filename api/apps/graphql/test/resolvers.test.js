@@ -149,8 +149,15 @@ describe('resolvers', () => {
     it('can fetch campaign data', async () => {
       const display = {
         total: 20,
-        count: 1,
-        results: [{ campaigns: [fixtures().display] }]
+        count: 4,
+        results: [{
+          campaigns: [
+            fixtures().display,
+            fixtures().display,
+            fixtures().display,
+            fixtures().display
+          ]
+        }]
       }
       resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
 
@@ -158,6 +165,39 @@ describe('resolvers', () => {
       result.name.should.equal('Sample Campaign')
       result.canvas.headline.should.containEql('Sample copy')
       result.panel.headline.should.containEql('Euismod Inceptos Quam')
+    })
+
+    it('rejects if SOV is over 100%', async () => {
+      const display = {
+        total: 20,
+        count: 2,
+        results: [{
+          campaigns: [
+            fixtures().display,
+            fixtures().display,
+            fixtures().display,
+            fixtures().display,
+            fixtures().display
+          ]
+        }]
+      }
+      resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
+
+      await resolvers.display({}, {}, req, {}).catch((e) => {
+        e.message.should.containEql('Share of voice sum cannot be greater than 100')
+      })
+    })
+
+    it('resolves null if there are no campaigns', async () => {
+      const display = {
+        total: 20,
+        count: 1,
+        results: [{ campaigns: [] }]
+      }
+      resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
+
+      const result = await resolvers.display({}, {}, req, {})
+      result.should.be.false()
     })
   })
 
