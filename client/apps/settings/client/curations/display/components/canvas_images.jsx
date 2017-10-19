@@ -6,7 +6,7 @@ import ImageUpload from 'client/apps/edit/components/admin/components/image_uplo
 export class CanvasImages extends React.Component {
   updateImageUrls = (imgIndex, url) => {
     const { assets } = this.props.campaign.canvas
-    if (imgIndex || imgIndex === 0) {
+    if (assets.length && Number.isInteger(imgIndex)) {
       if (url.length) {
         assets[imgIndex].url = url
       } else {
@@ -19,12 +19,14 @@ export class CanvasImages extends React.Component {
   }
 
   onImageInputChange = (key, value, imgIndex) => {
+    const { index, onChange } = this.props
     const assets = this.updateImageUrls(imgIndex, value)
-    this.props.onChange(key, assets, this.props.index)
+    onChange(key, assets, index)
   }
 
   isSlideshow = () => {
-    return this.props.campaign.canvas && this.props.campaign.canvas.layout === 'slideshow'
+    const { canvas } = this.props.campaign
+    return canvas && canvas.layout === 'slideshow'
   }
 
   renderAssets = () => {
@@ -82,7 +84,7 @@ export class CanvasImages extends React.Component {
         hasVideo={hasVideo}
         hidePreview={hidePreview}
         src={assets[imgIndex] ? assets[imgIndex].url : ''}
-        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex || 0)} />
+        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
     )
   }
 

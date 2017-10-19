@@ -37,7 +37,6 @@ module.exports = React.createClass
         @setState progress: 0.1, isDragover: false
       done: (src) =>
         @props.onChange(@props.name, src) if @props.onChange
-        src = '' if @props.hidePreview
         @setState progress: 0, error: false, errorType: null
 
   onClick: ->
@@ -61,14 +60,8 @@ module.exports = React.createClass
           style: width: (@state.progress * 100) + '%'
         }
 
-  videoNotAllowed: ->
-    if @props.src?.includes('.mp4') and !@props.hasVideo
-      div {
-        className: 'video-error'
-      }, 'Video files are not allowed in this format.'
-
   previewImage: ->
-    if @props.src and !@state.progress > 0
+    if @props.src and !@state.progress > 0 and !@props.hidePreview
       div { className: 'preview' },
         if @props.src.includes('.mp4')
             div {
@@ -78,11 +71,14 @@ module.exports = React.createClass
               video {
                 src: @props.src
               }
-              @videoNotAllowed()
+              if !@props.hasVideo
+                div {
+                  className: 'video-error'
+                }, 'Video files are not allowed in this format.'
         else
           div {
             className: 'image-upload-form-preview'
-            style: backgroundImage: 'url(' + crop(@props.src, width: 250) + ')', display: 'block'
+            style: backgroundImage: 'url(' + crop(@props.src, width: 215, height: 150) + ')', display: 'block'
           }
         unless  @props.disabled
           div {

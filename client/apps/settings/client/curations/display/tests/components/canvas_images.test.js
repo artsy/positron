@@ -37,15 +37,13 @@ describe('Canvas Images', () => {
       expect(component.find(ImageUpload).at(0).props().src).toMatch(
         props.campaign.canvas.logo
       )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/logo.jpg)'
-      )
+      expect(component.find('.image-upload-form-preview').at(0).props().style.backgroundImage)
+      .toMatch('logo.jpg')
       expect(component.find(ImageUpload).at(1).props().src).toMatch(
         props.campaign.canvas.assets[0].url
       )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/image.jpg)'
-      )
+      expect(component.find('.image-upload-form-preview').at(1).props().style.backgroundImage)
+        .toMatch('image.jpg')
     })
   })
 
@@ -68,18 +66,12 @@ describe('Canvas Images', () => {
       const component = mount(
         <CanvasImages {...props} />
       )
-      expect(component.find(ImageUpload).at(0).props().src).toMatch(
-        props.campaign.canvas.logo
-      )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/logo.jpg)'
-      )
-      expect(component.find(ImageUpload).at(1).props().src).toMatch(
-        props.campaign.canvas.assets[0].url
-      )
-      expect(component.html()).not.toMatch(
-        'style="background-image: url(http://artsy.net/image.jpg)'
-      )
+      expect(component.find(ImageUpload).at(0).props().src)
+        .toMatch(props.campaign.canvas.logo)
+      expect(component.find('.image-upload-form-preview').at(0).props().style.backgroundImage)
+        .toMatch('logo.jpg')
+      expect(component.find(ImageUpload).at(1).props().src)
+        .toMatch(props.campaign.canvas.assets[0].url)
       expect(component.html()).toMatch(
         '<video src="http://artsy.net/video.mp4">'
       )
@@ -112,22 +104,17 @@ describe('Canvas Images', () => {
       expect(component.find(ImageUpload).at(0).props().src).toMatch(
         props.campaign.canvas.logo
       )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/logo.jpg)'
-      )
-      expect(component.find(ImageUpload).at(1).props().src).toMatch(
-        props.campaign.canvas.assets[0].url
-      )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/image1.jpg)'
-      )
+      expect(component.find('.image-upload-form-preview').at(0).props().style.backgroundImage)
+        .toMatch('logo.jpg')
+      expect(component.find(ImageUpload).at(1).props().src)
+        .toMatch(props.campaign.canvas.assets[0].url)
+      expect(component.find('.image-upload-form-preview').at(1).props().style.backgroundImage)
+        .toMatch('image1.jpg')
       expect(component.find('label').at(2).text()).toMatch('Image 2')
-      expect(component.find(ImageUpload).at(2).props().src).toMatch(
-        props.campaign.canvas.assets[1].url
-      )
-      expect(component.html()).toMatch(
-        'style="background-image: url(http://artsy.net/image2.jpg)'
-      )
+      expect(component.find(ImageUpload).at(2).props().src)
+        .toMatch(props.campaign.canvas.assets[1].url)
+      expect(component.find('.image-upload-form-preview').at(2).props().style.backgroundImage)
+        .toMatch('image2.jpg')
     })
   })
 

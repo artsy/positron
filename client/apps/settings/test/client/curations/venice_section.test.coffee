@@ -22,6 +22,9 @@ describe 'VeniceSection', ->
         _: benv.require 'underscore'
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       VeniceSection = benv.require resolve __dirname, '../../../client/curations/venice_section.coffee'
       VeniceSection.__set__ 'sd', {
         ARTSY_URL: 'http://localhost:3005'
@@ -112,10 +115,10 @@ describe 'VeniceSection', ->
         .val().should.eql 'false'
       $(ReactDOM.findDOMNode(@component))
         .html()
-        .should.containEql 'background-image: url(http://artsy.net/cover.jpg)'
+        .should.containEql 'artsy.net%2Fcover.jpg'
       $(ReactDOM.findDOMNode(@component))
         .html()
-        .should.containEql 'background-image: url(http://artsy.net/social-cover.jpg)'
+        .should.containEql 'artsy.net%2Fsocial-cover.jpg'
       $(ReactDOM.findDOMNode(@component))
         .find('textarea[name=social_description]')
         .val().should.eql 'Click to view this cool 360 video'
@@ -127,7 +130,7 @@ describe 'VeniceSection', ->
         .val().should.eql 'SEO Description'
       $(ReactDOM.findDOMNode(@component))
         .html()
-        .should.containEql 'background-image: url(https://artsy.net/email_image.jpg)'
+        .should.containEql 'artsy.net%2Femail_image.jpg'
       $(ReactDOM.findDOMNode(@component))
         .find('input[name=email_title]')
         .val().should.eql 'Email Title'
