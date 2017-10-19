@@ -7,7 +7,6 @@ const User = require('api/apps/users/model.coffee')
 const { promisedMongoFetch, mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
 const { ObjectId } = require('mongojs')
 const { DISPLAY_ID } = process.env
-const debug = require('debug')('api')
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
