@@ -4,7 +4,7 @@ const Channel = require('api/apps/channels/model.coffee')
 const Curation = require('api/apps/curations/model.coffee')
 const Tag = require('api/apps/tags/model.coffee')
 const User = require('api/apps/users/model.coffee')
-const { mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
+const { promisedMongoFetch, mongoFetch, present, presentCollection, find } = require('api/apps/articles/model/index.js')
 const { ObjectId } = require('mongojs')
 const { DISPLAY_ID } = process.env
 
@@ -104,9 +104,13 @@ export const display = (root, args, req, ast) => {
 }
 
 export const relatedArticlesPanel = (root) => {
+  const omittedIds = [ObjectId(root.id)]
+  if (root.related_articles_ids) {
+    omittedIds.concat(root.related_article_ids)
+  }
   const tags = root.tags || null
   const args = {
-    omit: [ObjectId(root.id)],
+    omit: omittedIds,
     published: true,
     featured: true,
     channel_id: ObjectId(root.channel_id),
@@ -114,13 +118,31 @@ export const relatedArticlesPanel = (root) => {
     limit: 3,
     sort: '-published_at'
   }
-  return new Promise((resolve, reject) => {
-    mongoFetch(_.pick(args, _.identity), (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
-      resolve(results.results)
-    })
+  const relatedArticleArgs = {
+    ids: root.related_article_ids,
+    limit: 3,
+    published: true
+  }
+
+  return new Promise(async (resolve, reject) => {
+    let relatedArticles = []
+
+    const articleResults = await promisedMongoFetch(_.pick(args, _.identity))
+    .catch((e) => reject(e))
+
+    if (root.related_article_ids && root.related_article_ids.length) {
+      const relatedArticleResults = await promisedMongoFetch(relatedArticleArgs)
+      .catch((e) => reject(e))
+      relatedArticles = _.first(relatedArticleResults.results.concat(articleResults.results), 3)
+    } else {
+      relatedArticles = articleResults.results
+    }
+
+    if (relatedArticles.length) {
+      resolve(relatedArticles)
+    } else {
+      reject(new Error('No Results'))
+    }
   })
 }
 

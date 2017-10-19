@@ -146,3 +146,13 @@ describe 'Article', ->
       Article.getSuperArticleCount(id)
       .then (count) =>
         count.should.equal 1
+
+  describe '#promisedMongoFetch', ->
+    it 'returns results, counts, and totals', ->
+      fabricate 'articles', { _id: ObjectId('5086df098523e60002000018') }, ->
+        Article.promisedMongoFetch({ count: true, ids: [ObjectId('5086df098523e60002000018')] })
+        .then ({ count, total, results }) =>
+          count.should.equal 1
+          total.should.equal 11
+          results.length.should.equal 1
+
