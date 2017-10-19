@@ -4,9 +4,9 @@ import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
 export class CanvasImages extends React.Component {
-  onSlideshowImageChange = (imgIndex, url) => {
+  updateImageUrls = (imgIndex, url) => {
     const { assets } = this.props.campaign.canvas
-    if (imgIndex || imgIndex === 0) {
+    if (assets.length && Number.isInteger(imgIndex)) {
       if (url.length) {
         assets[imgIndex].url = url
       } else {
@@ -19,17 +19,14 @@ export class CanvasImages extends React.Component {
   }
 
   onImageInputChange = (key, value, imgIndex) => {
-    let newValue
-    if (this.props.campaign.canvas.layout === 'slideshow') {
-      newValue = this.onSlideshowImageChange(imgIndex, value)
-    } else {
-      newValue = value.length ? [{url: value}] : []
-    }
-    this.props.onChange(key, newValue, this.props.index)
+    const { index, onChange } = this.props
+    const assets = this.updateImageUrls(imgIndex, value)
+    onChange(key, assets, index)
   }
 
   isSlideshow = () => {
-    return this.props.campaign.canvas && this.props.campaign.canvas.layout === 'slideshow'
+    const { canvas } = this.props.campaign
+    return canvas && canvas.layout === 'slideshow'
   }
 
   renderAssets = () => {
@@ -66,7 +63,7 @@ export class CanvasImages extends React.Component {
   renderLogoUpload = () => {
     const {campaign, index, onChange} = this.props
     return (
-      <Col lg>
+      <Col lg className='img-logo'>
         <label>Logo</label>
         <ImageUpload
           name='canvas.logo'
@@ -87,7 +84,7 @@ export class CanvasImages extends React.Component {
         hasVideo={hasVideo}
         hidePreview={hidePreview}
         src={assets[imgIndex] ? assets[imgIndex].url : ''}
-        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex || null)} />
+        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
     )
   }
 

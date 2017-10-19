@@ -53,7 +53,7 @@ describe 'AdminSuperArticle', ->
         channel: @channel
         onChange: sinon.stub()
         }
-      @component = ReactDOM.render React.createElement(AdminSuperArticle, props), (@$el = $ "<div></div>")[0], =>
+      @component = ReactDOM.render React.createElement(AdminSuperArticle, props), (@$el = $ "<div />")[0], =>
         setTimeout =>
           done()
 
@@ -74,9 +74,9 @@ describe 'AdminSuperArticle', ->
     $(ReactDOM.findDOMNode(@component)).find('input[name=secondary_logo_text]').val().should.eql 'In Partnership With'
     $(ReactDOM.findDOMNode(@component)).find('input[name=secondary_logo_link]').val().should.eql 'http://secondary'
     $(ReactDOM.findDOMNode(@component)).find('textarea[name=footer_blurb]').val().should.eql 'This is a Footer Blurb'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/logo.jpg'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://partnerlink.com/blacklogo.jpg'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://secondarypartner.com/logo.png'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'partnerlink.com%2Flogo.jpg'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'partnerlink.com%2Fblacklogo.jpg'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'secondarypartner.com%2Flogo.png'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Footer Title'
 
   it 'enables input when is_super_article is enabled', ->

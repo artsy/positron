@@ -41,7 +41,7 @@ export const Campaign = (props) => {
         <Col lg>
           <label>Traffic Quantity</label>
           <select
-            value={campaign.sov.toFixed(2)}
+            value={campaign.sov && campaign.sov.toFixed(2)}
             className='bordered-input'
             onChange={(e) => onChange('sov', parseFloat(e.target.value), index)} >
             <option value='0.25'>25%</option>

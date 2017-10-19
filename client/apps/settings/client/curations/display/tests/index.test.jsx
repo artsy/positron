@@ -3,10 +3,10 @@ import React from 'react'
 import DisplayAdmin from '../index.jsx'
 import { mount } from 'enzyme'
 
-import CanvasContainer from '../components/canvas_container.jsx'
-import Campaign from '../components/campaign.jsx'
-import Panel from '../components/panel.jsx'
 import DropDownItem from 'client/components/drop_down/index.jsx'
+import { CanvasContainer } from '../components/canvas_container.jsx'
+import { Campaign } from '../components/campaign.jsx'
+import { Panel } from '../components/panel.jsx'
 
 describe('Display Admin', () => {
   const curation = new Backbone.Model({

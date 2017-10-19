@@ -59,9 +59,11 @@ describe('Panel', () => {
       <Panel {...props} />
     )
     expect(component.find(ImageUpload).at(0).props().src).toMatch(props.campaign.panel.assets[0].url)
-    expect(component.html()).toMatch('style="background-image: url(http://artsy.net/image.jpg)')
+    expect(component.find('.image-upload-form-preview').at(0).props().style.backgroundImage)
+      .toMatch('image.jpg')
     expect(component.find(ImageUpload).at(1).props().src).toMatch(props.campaign.panel.logo)
-    expect(component.html()).toMatch('style="background-image: url(http://artsy.net/logo.jpg)')
+    expect(component.find('.image-upload-form-preview').at(1).props().style.backgroundImage)
+      .toMatch('logo.jpg')
   })
 
   it('Calls props.onChange on headline change', () => {

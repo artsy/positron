@@ -37,13 +37,15 @@ describe 'ImageUpload', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'accept="image/jpg,image/jpeg,image/gif,image/png"'
 
     it 'Renders an image preview if file is present', ->
-      @component.setState src: 'http://artsy.net/image.jpg'
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'background-image: url(http://artsy.net/image.jpg)'
+      @props.src = 'http://artsy.net/image.jpg'
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql 'background-image: url('
+      $(ReactDOM.findDOMNode(component)).html().should.containEql 'image.jpg'
 
     it 'Hides the preview if props.hidePreview is true', ->
       @props.hidePreview = true
+      @props.src = 'http://artsy.net/image.jpg'
       component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
-      component.setState src: 'http://artsy.net/image.jpg'
       $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'background-image: url(http://artsy.net/image.jpg)'
 
     it 'Allows video uploads if props.hasVideo is true', ->
@@ -52,9 +54,18 @@ describe 'ImageUpload', ->
       $(ReactDOM.findDOMNode(component)).html().should.containEql 'accept="image/jpg,image/jpeg,image/gif,image/png,video/mp4"'
 
     it 'Renders a video preview if file is present', ->
-      @component.setState src: 'http://artsy.net/video.mp4'
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<video src="http://artsy.net/video.mp4">'
-      
+      @props.src ='http://artsy.net/video.mp4'
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<video src="http://artsy.net/video.mp4">'
+
+    it 'Renders an error if props.src is video and video not allowed', ->
+      @props.hasVideo = false
+      @props.src ='http://artsy.net/video.mp4'
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<video src="http://artsy.net/video.mp4">'
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<div class="video-error">'
+      $(ReactDOM.findDOMNode(component)).html().should.containEql 'Video files are not allowed'
+
     it 'Disables the file input if prop includes disabled', ->
       @props.disabled = true
       component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
@@ -89,7 +100,7 @@ describe 'ImageUpload', ->
   describe '#onRemove', ->
 
     it 'removes the state and callsback', ->
-      @component.setState src: 'http://artsy.net/image.jpg'
-      r.simulate.click r.find(@component, 'image-upload-form-remove')[0]
-      @component.state.src.should.eql ''
-      @component.props.onChange.args[0].should.eql [ 'my_image', '' ]
+      @props.src = 'http://artsy.net/image.jpg'
+      component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
+      r.simulate.click r.find(component, 'image-upload-form-remove')[0]
+      component.props.onChange.args[0].should.eql [ 'my_image', '' ]
