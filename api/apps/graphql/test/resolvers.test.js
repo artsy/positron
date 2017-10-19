@@ -6,7 +6,7 @@ const { fixtures, fabricate, empty } = require('api/test/helpers/db.coffee')
 const resolvers = rewire('../resolvers.js')
 
 describe('resolvers', () => {
-  let article, server
+  let article, articles, server, promisedMongoFetch
   const req = { user: { channel_ids: ['456'] } }
 
   before((done) => {
@@ -21,7 +21,7 @@ describe('resolvers', () => {
   })
 
   beforeEach(() => {
-    const articles = {
+    articles = {
       total: 20,
       count: 1,
       results: [
@@ -40,7 +40,9 @@ describe('resolvers', () => {
     const channels = { total: 20, count: 1, results: [fixtures().channels] }
     const curations = { total: 20, count: 1, results: [fixtures().curations] }
     const tags = { total: 20, count: 1, results: [fixtures().tags] }
+    promisedMongoFetch = sinon.stub()
     resolvers.__set__('mongoFetch', sinon.stub().yields(null, articles))
+    resolvers.__set__('promisedMongoFetch', promisedMongoFetch)
     resolvers.__set__('Author', { mongoFetch: (sinon.stub().yields(null, authors)) })
     resolvers.__set__('Channel', { mongoFetch: (sinon.stub().yields(null, channels)) })
     resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, curations)) })
@@ -171,13 +173,55 @@ describe('resolvers', () => {
   })
 
   describe('relatedArticlesPanel', () => {
-    it('can find related articles for the panel', async () => {
+    it('can find related articles for the panel without related_article_ids', async () => {
+      promisedMongoFetch.onFirstCall().resolves(articles)
       const results = await resolvers.relatedArticlesPanel({
         id: '54276766fd4f50996aeca2b8',
         tags: ['dog', 'cat']
       })
       results.length.should.equal(1)
       results[0].tags[0].should.equal('dog')
+    })
+
+    it('can find related articles for the panel with related_article_ids', async () => {
+      const relatedArticles = {
+        results: [
+          _.extend({}, fixtures.article, {
+            title: 'Related Article'
+          })
+        ]
+      }
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      promisedMongoFetch.onSecondCall().resolves(relatedArticles)
+      const results = await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: ['dog', 'cat'],
+        related_article_ids: ['54276766fd4f50996aeca2b1']
+      })
+      results.length.should.equal(2)
+      results[0].title.should.equal('Related Article')
+      results[1].tags[0].should.equal('dog')
+    })
+
+    it('returns an error on the mongo fetch', async () => {
+      promisedMongoFetch.onFirstCall().rejects()
+      await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: ['dog', 'cat'],
+        related_article_ids: ['54276766fd4f50996aeca2b1']
+      }).catch((e) => {
+        e.message.should.containEql('Error')
+      })
+    })
+
+    it('returns an error if there are no articles', async () => {
+      promisedMongoFetch.onFirstCall().resolves({ results: [] })
+      await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: ['dog', 'cat']
+      }).catch((e) => {
+        e.message.should.containEql('No Results')
+      })
     })
   })
 

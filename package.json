@@ -139,7 +139,7 @@
     "rewire": "2.2.0",
     "should": "^7.1.0",
     "simple-modal": "git://github.com/craigspaeth/simple-modal.git",
-    "sinon": "^1.17.1",
+    "sinon": "^4.x.x",
     "sqwish": "^0.2.2",
     "typeahead.js": "0.10.x",
     "zombie": "^5.0.5"
