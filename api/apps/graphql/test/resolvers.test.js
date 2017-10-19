@@ -223,6 +223,15 @@ describe('resolvers', () => {
         e.message.should.containEql('No Results')
       })
     })
+
+    it('strips tags from args when the article does not have tags', async () => {
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: []
+      })
+      Object.keys(promisedMongoFetch.args[0][0]).should.not.containEql('tags')
+    })
   })
 
   describe('tags', () => {
