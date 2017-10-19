@@ -2,6 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 gemup = require 'gemup'
 sd = require('sharify').data
+{ crop } = require '../../../../../components/resizer/index.coffee'
 { section, h1, h2, span, input, div, video } = React.DOM
 
 module.exports = React.createClass
@@ -9,7 +10,6 @@ module.exports = React.createClass
 
   getInitialState: ->
     progress: 0
-    src: @props.src || ''
     error: false
     errorType: null
     isDragover: false
@@ -34,11 +34,11 @@ module.exports = React.createClass
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
-        @setState src: src, progress: 0.1, isDragover: false
+        @setState progress: 0.1, isDragover: false
       done: (src) =>
         @props.onChange(@props.name, src) if @props.onChange
         src = '' if @props.hidePreview
-        @setState src: src, progress: 0, error: false, errorType: null
+        @setState progress: 0, error: false, errorType: null
 
   onClick: ->
     @setState error: false, errorType: null
@@ -51,7 +51,6 @@ module.exports = React.createClass
     @setState isDragover: false
 
   remove: ->
-    @setState src: ''
     @props.onChange(@props.name, '') if @props.onChange
 
   progressBar: ->
@@ -62,21 +61,28 @@ module.exports = React.createClass
           style: width: (@state.progress * 100) + '%'
         }
 
+  videoNotAllowed: ->
+    if @props.src?.includes('.mp4') and !@props.hasVideo
+      div {
+        className: 'video-error'
+      }, 'Video files are not allowed in this format.'
+
   previewImage: ->
-    if @state.src and !@state.progress > 0
+    if @props.src and !@state.progress > 0
       div { className: 'preview' },
-        if @state.src.includes('.mp4')
+        if @props.src.includes('.mp4')
             div {
               className: 'image-upload-form-preview'
               style: display: 'block'
             },
               video {
-                src: @state.src
+                src: @props.src
               }
+              @videoNotAllowed()
         else
           div {
             className: 'image-upload-form-preview'
-            style: backgroundImage: 'url(' + @state.src + ')', display: 'block'
+            style: backgroundImage: 'url(' + crop(@props.src, width: 250) + ')', display: 'block'
           }
         unless  @props.disabled
           div {

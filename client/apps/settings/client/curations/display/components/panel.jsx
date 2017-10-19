@@ -47,7 +47,7 @@ export const Panel = (props) => {
                   src={campaign.panel.assets && campaign.panel.assets.length ? campaign.panel.assets[0].url : ''}
                   onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
               </Col>
-              <Col lg>
+              <Col lg className='img-logo'>
                 <label>Logo</label>
                 <ImageUpload
                   name='panel.logo'
