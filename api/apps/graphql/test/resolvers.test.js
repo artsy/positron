@@ -1,4 +1,5 @@
 import _ from 'underscore'
+import should from 'should'
 import rewire from 'rewire'
 import sinon from 'sinon'
 const app = require('api/index.coffee')
@@ -197,7 +198,7 @@ describe('resolvers', () => {
       resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
 
       const result = await resolvers.display({}, {}, req, {})
-      result.should.be.false()
+      _.isNull(result).should.be.true()
     })
   })
 
