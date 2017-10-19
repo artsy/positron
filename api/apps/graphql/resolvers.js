@@ -108,7 +108,8 @@ export const relatedArticlesPanel = (root) => {
   if (root.related_articles_ids) {
     omittedIds.concat(root.related_article_ids)
   }
-  const tags = root.tags || null
+  const tags = (root.tags && root.tags.length > 0) ? root.tags : null
+
   const args = {
     omit: omittedIds,
     published: true,
@@ -118,6 +119,7 @@ export const relatedArticlesPanel = (root) => {
     limit: 3,
     sort: '-published_at'
   }
+
   const relatedArticleArgs = {
     ids: root.related_article_ids,
     limit: 3,
