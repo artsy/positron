@@ -172,13 +172,16 @@ export const relatedArticlesCanvas = (root) => {
     limit: 4,
     sort: '-published_at'
   }
-  return new Promise((resolve, reject) => {
-    mongoFetch(_.pick(args, _.identity), (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
-      resolve(results.results)
-    })
+
+  return new Promise(async (resolve, reject) => {
+    const { results } = await promisedMongoFetch(_.pick(args, _.identity))
+    .catch((e) => reject(e))
+
+    if (results.length) {
+      resolve(results)
+    } else {
+      resolve(null)
+    }
   })
 }
 
