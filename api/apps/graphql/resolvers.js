@@ -88,17 +88,30 @@ export const channels = (root, args, req, ast) => {
 
 export const display = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
-    Curation.mongoFetch({ '_id': ObjectId(DISPLAY_ID) }, (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
+    Curation.mongoFetch({
+      '_id': ObjectId(DISPLAY_ID)
+    }, (err, { results }) => {
+      if (err) { reject(new Error(err)) }
+
       const outcomes = []
-      results.results[0].campaigns.map(campaign => {
-        outcomes.push(_.times((campaign.sov * 100), () => campaign.name))
+      results[0].campaigns.map((campaign, i) => {
+        const weightedCampaignArray = _.times((campaign.sov * 100), () => campaign.name)
+        outcomes.push(...weightedCampaignArray)
       })
-      const result = _.sample(_.flatten(outcomes))
-      const data = _.findWhere(results.results[0].campaigns, { name: result })
-      resolve(data)
+
+      if (outcomes.length > 100) {
+        reject(new Error('Share of voice sum cannot be greater than 100'))
+      } else if (outcomes.length < 100) {
+        const weightedEmptyArray = _.times((100 - outcomes.length), () => 0)
+        outcomes.push(...weightedEmptyArray)
+      }
+
+      const result = _.sample(outcomes)
+      if (result === 0) {
+        resolve(null)
+      } else {
+        resolve(_.findWhere(results[0].campaigns, { name: result }))
+      }
     })
   })
 }

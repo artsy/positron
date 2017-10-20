@@ -210,7 +210,7 @@ module.exports = ->
       ]
       logo: 'https://artsy-vanity-files-production.s3.amazonaws.com/images/artsy_logo_square_white_transparent.png',
       link: { text: '', url: 'http://artsy.net' }
-    sov: .75
+    sov: .25
     start_date: new Date
   fixtures.locals =
     asset: ->
