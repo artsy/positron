@@ -156,7 +156,7 @@ export const relatedArticlesPanel = (root) => {
     if (relatedArticles.length) {
       resolve(relatedArticles)
     } else {
-      reject(new Error('No Results'))
+      resolve(null)
     }
   })
 }

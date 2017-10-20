@@ -255,14 +255,13 @@ describe('resolvers', () => {
       })
     })
 
-    it('returns an error if there are no articles', async () => {
+    it('resolves null if there are no articles', async () => {
       promisedMongoFetch.onFirstCall().resolves({ results: [] })
-      await resolvers.relatedArticlesPanel({
+      const result = await resolvers.relatedArticlesPanel({
         id: '54276766fd4f50996aeca2b8',
         tags: ['dog', 'cat']
-      }).catch((e) => {
-        e.message.should.containEql('No Results')
       })
+      _.isNull(result).should.be.true()
     })
 
     it('strips tags from args when the article does not have tags', async () => {
