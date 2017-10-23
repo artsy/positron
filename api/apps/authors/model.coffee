@@ -51,7 +51,7 @@ Joi = require '../../lib/joi'
 
   cursor = db.authors
     .find(query)
-    .limit(input.limit)
+    .limit(input.limit or Number API_PAGE_SIZE)
     .sort($natural: -1)
     .skip(input.offset or 0)
   async.parallel [
