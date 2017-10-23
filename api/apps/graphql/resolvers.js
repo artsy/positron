@@ -64,6 +64,20 @@ export const authors = (root, args, req, ast) => {
   })
 }
 
+export const relatedAuthors = (root) => {
+  const args = {
+    ids: root.author_ids
+  }
+  return new Promise(async (resolve, reject) => {
+    Author.mongoFetch(args, (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
 export const curations = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
     Curation.mongoFetch(args, (err, results) => {

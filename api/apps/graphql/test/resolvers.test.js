@@ -128,6 +128,18 @@ describe('resolvers', () => {
     })
   })
 
+  describe('relatedAuthors', () => {
+    it('can find authors', async () => {
+      const args = {ids: [{ id: '123' }]}
+      const results = await resolvers.relatedAuthors({}, args, req, {})
+      results.length.should.equal(1)
+      results[0].name.should.equal('Halley Johnson')
+      results[0].bio.should.equal('Writer based in NYC')
+      results[0].twitter_handle.should.equal('kanaabe')
+      results[0].image_url.should.equal('https://artsy-media.net/halley.jpg')
+    })
+  })
+
   describe('channels', () => {
     it('can find channels', async () => {
       const results = await resolvers.channels({}, {}, req, {})

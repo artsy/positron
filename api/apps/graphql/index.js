@@ -29,6 +29,9 @@ const metaFields = {
   display: Display.schema.meta({
     args: Display.querySchema,
     resolve: resolvers.display
+  }),
+  authors: array().items(object(Author.schema)).meta({
+    resolve: resolvers.relatedAuthors
   })
 }
 
