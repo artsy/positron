@@ -1,5 +1,4 @@
 import _ from 'underscore'
-import should from 'should'
 import rewire from 'rewire'
 import sinon from 'sinon'
 const app = require('api/index.coffee')
@@ -204,12 +203,22 @@ describe('resolvers', () => {
 
   describe('relatedArticlesCanvas', () => {
     it('can find related articles for the canvas', async () => {
+      promisedMongoFetch.onFirstCall().resolves(articles)
       const results = await resolvers.relatedArticlesCanvas({
         id: '54276766fd4f50996aeca2b8',
         vertical: { id: '54276766fd4f50996aeca2b3' }
       })
       results.length.should.equal(1)
       results[0].vertical.id.should.equal('54276766fd4f50996aeca2b3')
+    })
+
+    it('resolves null if it does not have articles', async () => {
+      promisedMongoFetch.onFirstCall().resolves({ results: [] })
+      const results = await resolvers.relatedArticlesCanvas({
+        id: '54276766fd4f50996aeca2b8',
+        vertical: { id: '54276766fd4f50996aeca2b3' }
+      })
+      _.isNull(results).should.be.true()
     })
   })
 
@@ -255,14 +264,13 @@ describe('resolvers', () => {
       })
     })
 
-    it('returns an error if there are no articles', async () => {
+    it('resolves null if there are no articles', async () => {
       promisedMongoFetch.onFirstCall().resolves({ results: [] })
-      await resolvers.relatedArticlesPanel({
+      const result = await resolvers.relatedArticlesPanel({
         id: '54276766fd4f50996aeca2b8',
         tags: ['dog', 'cat']
-      }).catch((e) => {
-        e.message.should.containEql('No Results')
       })
+      _.isNull(result).should.be.true()
     })
 
     it('strips tags from args when the article does not have tags', async () => {
