@@ -77,7 +77,7 @@ describe('Display Admin', () => {
     component.find('button').at(1).simulate('click')
     expect(component.find(DropDownItem).length).toBe(3)
     expect(component.state().curation.get('campaigns').length).toBe(3)
-    expect(component.state().curation.get('campaigns')[2].sov).toBe(0.25)
+    expect(component.state().curation.get('campaigns')[2].sov).toBe(0.2)
     expect(component.state().activeSection).toBe(2)
   })
 })

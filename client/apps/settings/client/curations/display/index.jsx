@@ -41,7 +41,7 @@ export default class DisplayAdmin extends React.Component {
 
   newCampaign = () => {
     const newCuration = this.state.curation.clone()
-    const newCampaign = {sov: 0.25, panel: {assets: []}, canvas: {assets: []}}
+    const newCampaign = {sov: 0.2, panel: {assets: []}, canvas: {assets: []}}
     newCuration.get('campaigns').push(newCampaign)
     this.setState({
       curation: newCuration,
