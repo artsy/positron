@@ -11,7 +11,7 @@ describe('Campaign Admin', () => {
       name: 'Sample Campaign',
       start_date,
       end_date,
-      sov: 0.75
+      sov: 0
     },
     index: 0,
     onChange: jest.fn()
@@ -80,9 +80,9 @@ describe('Campaign Admin', () => {
       <Campaign {...props} />
     )
     const input = component.find('select')
-    input.simulate('change', { target: { value: '0.25' } })
+    input.simulate('change', { target: { value: '0.2' } })
     expect(props.onChange.mock.calls[3][0]).toMatch('sov')
-    expect(props.onChange.mock.calls[3][1]).toBe(0.25)
+    expect(props.onChange.mock.calls[3][1]).toBe(0.2)
     expect(props.onChange.mock.calls[3][2]).toBe(props.index)
   })
 })
