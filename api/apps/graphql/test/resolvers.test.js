@@ -1,4 +1,5 @@
 import _ from 'underscore'
+import moment from 'moment'
 import rewire from 'rewire'
 import sinon from 'sinon'
 const app = require('api/index.coffee')
@@ -210,6 +211,62 @@ describe('resolvers', () => {
 
       const result = await resolvers.display({}, {}, req, {})
       _.isNull(result).should.be.true()
+    })
+
+    describe('inactive campaigns', () => {
+      const now = () => moment(new Date())
+
+      const getDisplayData = async ({ startDate, endDate }) => {
+        const campaign = {
+          ...fixtures().display,
+          start_date: startDate.toDate(),
+          end_date: endDate.toDate()
+        }
+
+        const display = {
+          total: 20,
+          count: 4,
+          results: [{
+            campaigns: [
+              campaign,
+              campaign,
+              campaign,
+              campaign
+            ]
+          }]
+        }
+
+        resolvers.__set__('Curation', {
+          mongoFetch: sinon.stub().yields(null, display)
+        })
+
+        const result = await resolvers.display({}, {}, req, {})
+        return result
+      }
+
+      it('does not filter active campaigns', async () => {
+        const inValidRange = await getDisplayData({
+          startDate: now().subtract(1, 'day'),
+          endDate: now().add(1, 'day')
+        })
+        inValidRange.should.not.equal(null)
+      })
+
+      it('filters out if start date greater than now', async () => {
+        const result = await getDisplayData({
+          startDate: now().add(1, 'days'),
+          endDate: now().add(2, 'days')
+        })
+        _.isNull(result).should.be.true()
+      })
+
+      it('filters out if end date less than now', async () => {
+        const result = await getDisplayData({
+          startDate: now().subtract(3, 'days'),
+          endDate: now().subtract(2, 'days')
+        })
+        _.isNull(result).should.be.true()
+      })
     })
   })
 

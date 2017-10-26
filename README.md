@@ -33,7 +33,7 @@ heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE 
 
 This starts a new self-contained Docker instance that boots MongoDB, ElasticSearch and Node. Changes made to source-code located in `api` and `client` is [automatically reloaded](https://github.com/artsy/positron/blob/master/boot.js#L34) on browser-refresh; no need to restart the process.
 
-To shut down the process, press `ctrl+c` or execute `docker-compose down`.
+To shut down, press `ctrl+c` or execute `docker-compose down`.
 
 ### Manually
 
