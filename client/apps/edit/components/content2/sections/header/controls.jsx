@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import {
   IconLayoutFullscreen,
   IconLayoutSplit,
-  IconLayoutText
+  IconLayoutText,
+  IconLayoutBasic
  } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class FeatureHeaderControls extends Component {
@@ -50,6 +51,12 @@ export default class FeatureHeaderControls extends Component {
             name='split'>
             <IconLayoutSplit />
             Split
+          </a>
+          <a
+            onClick={() => this.onChangeLayout('basic')}
+            name='split'>
+            <IconLayoutBasic />
+            Basic
           </a>
         </div>
       )

@@ -732,3 +732,16 @@ describe 'Article Persistence', ->
         article.hero_section.type.should.equal 'split'
         article.hero_section.deck.should.equal 'This year was incredible.'
         done()
+
+    it 'saves a feature hero_section in basic', (done) ->
+      Article.save {
+        hero_section:
+          url: 'http://image.com'
+          type: 'basic'
+          deck: 'This year was incredible.'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.hero_section.url.should.equal 'http://image.com'
+        article.hero_section.type.should.equal 'basic'
+        article.hero_section.deck.should.equal 'This year was incredible.'
+        done()

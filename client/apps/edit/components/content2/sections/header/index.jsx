@@ -117,9 +117,13 @@ export default class SectionHeader extends Component {
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
     let headerClass = ''
+
+    // Feature
     if (isFeature) {
       headerClass = ' ' + article.heroSection.get('type') || 'text'
     }
+
+    // Classic
     if (isClassic) {
       return (
         <div className='edit-header'>
@@ -129,10 +133,17 @@ export default class SectionHeader extends Component {
           </Header>
         </div>
       )
+
+      // Standard
     } else {
       return (
         <div className={'edit-header' + headerClass}>
-          {isFeature && <Controls onChange={this.onChangeHero} hero={article.heroSection.attributes} />}
+          {isFeature &&
+            <Controls
+              onChange={this.onChangeHero}
+              hero={article.heroSection.attributes}
+            />}
+
           <Header article={article.attributes}>
             <span>Missing Vertical</span>
             {this.renderTitle(article)}
