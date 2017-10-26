@@ -50,12 +50,27 @@ export default class DisplayAdmin extends React.Component {
     })
   }
 
+  deleteCampaign = (index) => {
+    const confirmDelete = confirm('Are you sure?')
+    if (confirmDelete) {
+      const newCuration = this.state.curation.clone()
+      newCuration.get('campaigns').splice(index, 1)
+      this.setState({
+        curation: newCuration,
+        saveStatus: 'Save'
+      })
+    }
+  }
+
   render () {
     const saveColor = this.state.saveStatus !== 'Saved' ? 'rgb(247, 98, 90)' : 'black'
     return (
       <div className='display-admin'>
         {this.state.curation.get('campaigns').map((campaign, index) =>
           <div className='admin-form-container' key={`display-admin-${index}`}>
+            <div className='display-admin__section--actions'>
+              <button className='avant-garde-button' onClick={() => this.deleteCampaign(index)}>Delete</button>
+            </div>
             <DropDownItem
               active={index === this.state.activeSection}
               index={index}
