@@ -8,6 +8,7 @@ timeCount = 0
 module.exports = ->
   timeCount++
   fixtures = {}
+
   fixtures.articles =
     id: '54276766fd4f50996aeca2b8'
     author_id: ObjectId('4d8cd73191a5c50ce210002a')
@@ -129,6 +130,7 @@ module.exports = ->
     social_image: 'http://socialimage.jpg'
     search_title: 'Search Title'
     search_description: 'Search Description Here.'
+
   fixtures.users =
     id: '4d8cd73191a5c50ce200002a'
     name: 'Craig Spaeth'
@@ -141,6 +143,7 @@ module.exports = ->
       id: '4d8cd73191a5c50ce200002b'
     channel_ids: ['4d8cd73191a5c50ce200002b']
     partner_ids: []
+
   fixtures.sections =
     id: '55356a9deca560a0137aa4b7'
     title: 'Vennice Biennalez'
@@ -149,9 +152,11 @@ module.exports = ->
     partner_logo_url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     thumbnail_url: 'http://gemini.herokuapp.com/123/miaart-banner.jpg'
     featured_article_ids: [ '5522d03ae8e369060053d953' ]
+
   fixtures.curations =
     id: '55356a9deca560a0137aa4b7'
     name: 'Featured Articles'
+
   fixtures.channels =
     id: '5086df098523e60002000018'
     name: 'Editorial'
@@ -174,15 +179,18 @@ module.exports = ->
     id: '55356a9deca560a0137aa4b7'
     name: 'Show Reviews'
     public: true
+
   fixtures.verticals =
     id: '55356a9deca560a0137bb4a7'
     name: 'Culture'
+
   fixtures.authors =
     id: '55356a9deca560a0137bb4a7'
     name: 'Halley Johnson'
     bio: 'Writer based in NYC'
     twitter_handle: 'kanaabe'
     image_url: 'https://artsy-media.net/halley.jpg'
+
   fixtures.display =
     canvas:
       layout: 'slideshow'
@@ -200,7 +208,6 @@ module.exports = ->
       ]
       logo: 'http://files.artsy.net/images/artsy-logo-wide-black.png'
       disclaimer: 'Donec id elit non mi porta gravida at eget metus. Cras justo odio, dapibus ac facilisis in, egestas eget quam.'
-    end_date: new Date
     name: 'Sample Campaign'
     panel:
       headline: 'Euismod Inceptos Quam'
@@ -211,7 +218,9 @@ module.exports = ->
       logo: 'https://artsy-vanity-files-production.s3.amazonaws.com/images/artsy_logo_square_white_transparent.png',
       link: { text: '', url: 'http://artsy.net' }
     sov: .25
-    start_date: new Date
+    start_date: moment(new Date()).subtract(1, 'days').toDate()
+    end_date: moment(new Date()).add(1, 'days').toDate()
+
   fixtures.locals =
     asset: ->
     user: new User fixtures.users
@@ -224,4 +233,5 @@ module.exports = ->
     crop: (url) -> url
     resize: (url) -> url
     fill: (url) -> url
+
   fixtures

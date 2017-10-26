@@ -44,9 +44,8 @@ export const Campaign = (props) => {
             value={campaign.sov && campaign.sov.toFixed(2)}
             className='bordered-input'
             onChange={(e) => onChange('sov', parseFloat(e.target.value), index)} >
-            <option value='0.25'>25%</option>
-            <option value='0.50'>50%</option>
-            <option value='0.75'>75%</option>
+            <option value='0'>0</option>
+            <option value='0.20'>20%</option>
           </select>
         </Col>
       </Row>

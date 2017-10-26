@@ -1,4 +1,5 @@
 import _ from 'underscore'
+import moment from 'moment'
 const Author = require('api/apps/authors/model.coffee')
 const Channel = require('api/apps/channels/model.coffee')
 const Curation = require('api/apps/curations/model.coffee')
@@ -64,6 +65,20 @@ export const authors = (root, args, req, ast) => {
   })
 }
 
+export const relatedAuthors = (root) => {
+  const args = {
+    ids: root.author_ids
+  }
+  return new Promise(async (resolve, reject) => {
+    Author.mongoFetch(args, (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results.results)
+    })
+  })
+}
+
 export const curations = (root, args, req, ast) => {
   return new Promise((resolve, reject) => {
     Curation.mongoFetch(args, (err, results) => {
@@ -107,10 +122,23 @@ export const display = (root, args, req, ast) => {
       }
 
       const result = _.sample(outcomes)
+
       if (result === 0) {
         resolve(null)
       } else {
-        resolve(_.findWhere(results[0].campaigns, { name: result }))
+        const campaign = _.findWhere(results[0].campaigns, { name: result })
+        const { start_date, end_date } = campaign
+
+        // Only return results that start or end after now
+        const now = moment(new Date())
+        const startsAfterNow = moment(start_date).isAfter(now)
+        const endsBeforeNow = moment(end_date).isBefore(now)
+
+        if (startsAfterNow || endsBeforeNow) {
+          resolve(null)
+        } else {
+          resolve(campaign)
+        }
       }
     })
   })

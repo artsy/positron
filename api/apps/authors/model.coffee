@@ -25,6 +25,7 @@ Joi = require '../../lib/joi'
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
   offset: @number()
   count: @boolean().default(false)
+  ids: @array().items(@string().objectid())
 ).call Joi
 
 #
@@ -40,14 +41,17 @@ Joi = require '../../lib/joi'
     @mongoFetch input, callback
 
 @mongoFetch = (input, callback) ->
-  query = omit input, 'q', 'limit', 'offset', 'count', 'strict'
+  query = omit input, 'q', 'limit', 'offset', 'count', 'strict', 'ids'
+
   if input.strict
     query.name = { $eq: input.q } if input.q and input.q.length
   else
     query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
+  query._id = { $in: input.ids } if input.ids
+
   cursor = db.authors
     .find(query)
-    .limit(input.limit)
+    .limit(input.limit or Number API_PAGE_SIZE)
     .sort($natural: -1)
     .skip(input.offset or 0)
   async.parallel [

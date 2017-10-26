@@ -21,6 +21,22 @@ describe 'Author', ->
         results[0].name.should.equal 'Halley Johnson'
         done()
 
+    it 'can return authors by multiple ids', (done) ->
+      fabricate 'authors', [
+        { _id: ObjectId('5086df098523e60002000018'), name: "Eve" },
+        { _id: ObjectId('55356a9deca560a0137bb4a7'), name: "Kana" }
+      ], ->
+          Author.where {
+            count: true
+            ids: ['5086df098523e60002000018', '55356a9deca560a0137bb4a7']
+          }, (err, res) ->
+            { total, count, results } = res
+            total.should.equal 12
+            count.should.equal 2
+            results[0].name.should.equal 'Kana'
+            results[1].name.should.equal 'Eve'
+            done()
+
   describe '#find', ->
 
     it 'finds an author by an id string', (done) ->
