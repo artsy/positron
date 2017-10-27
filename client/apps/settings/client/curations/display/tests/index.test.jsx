@@ -9,6 +9,8 @@ import { Campaign } from '../components/campaign.jsx'
 import { Panel } from '../components/panel.jsx'
 
 describe('Display Admin', () => {
+  global.confirm = jest.fn( () => true )
+
   const curation = new Backbone.Model({
     name: 'Display Admin',
     type: 'display-admin',
@@ -34,8 +36,8 @@ describe('Display Admin', () => {
       <DisplayAdmin {...props} />
     )
     expect(component.find(DropDownItem).length).toBe(2)
-    expect(component.find('button').at(0).text()).toMatch('Saved')
-    expect(component.find('button').at(1).text()).toMatch('Add New Campaign')
+    expect(component.find('button').at(2).text()).toMatch('Saved')
+    expect(component.find('button').at(3).text()).toMatch('Add New Campaign')
   })
 
   it('opens a campaign admin panel on click', () => {
@@ -57,7 +59,7 @@ describe('Display Admin', () => {
     component.instance().onChange('canvas.name', 'New Title', 0)
     expect(component.state().curation.get('campaigns')[0].canvas.name).toMatch('New Title')
     expect(component.state().saveStatus).toMatch('Save')
-    expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
+    expect(component.find('button').at(2).props().style.color).toMatch('rgb(247, 98, 90)')
   })
 
   it('Save button saves the curation', () => {
@@ -66,7 +68,7 @@ describe('Display Admin', () => {
     )
     component.instance().save = jest.fn()
     component.instance().onChange('canvas.name', 'New Title', 0)
-    component.find('button').at(0).simulate('click')
+    component.find('button').at(2).simulate('click')
     expect(component.instance().save).toHaveBeenCalled()
   })
 
@@ -74,10 +76,19 @@ describe('Display Admin', () => {
     const component = mount(
       <DisplayAdmin {...props} />
     )
-    component.find('button').at(1).simulate('click')
+    component.find('button').at(3).simulate('click')
     expect(component.find(DropDownItem).length).toBe(3)
     expect(component.state().curation.get('campaigns').length).toBe(3)
     expect(component.state().curation.get('campaigns')[2].sov).toBe(0.2)
     expect(component.state().activeSection).toBe(2)
+  })
+
+  it('Delete Campaign button prompts alert and removes campaign if confirmed', () => {
+    const component = mount(
+      <DisplayAdmin {...props} />
+    )
+    component.find('button').at(0).simulate('click')
+    expect(global.confirm.mock.calls[0][0]).toMatch('Are you sure?')
+    expect(component.state().curation.get('campaigns').length).toBe(2)
   })
 })
