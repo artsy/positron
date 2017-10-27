@@ -114,14 +114,16 @@ export default class SectionHeader extends Component {
 
   render () {
     const { article } = this.props
-    const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
+    const isFeature = article.get('layout') === 'feature'
     let headerClass = ''
 
     // Feature
     if (isFeature) {
       headerClass = ' ' + article.heroSection.get('type') || 'text'
     }
+
+    // article.heroSection.get('type')
 
     // Classic
     if (isClassic) {
@@ -136,6 +138,7 @@ export default class SectionHeader extends Component {
 
       // Standard
     } else {
+
       return (
         <div className={'edit-header' + headerClass}>
           {isFeature &&
