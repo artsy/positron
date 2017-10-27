@@ -10,11 +10,12 @@ module.exports = React.createClass
 
   componentWillMount: ->
     @debouncedSave = _.debounce((->
-      @props.article.save()
+      @props.article.save() # TODO: Why is this not saving updates from #19?
       @onChange()
     ), 800)
     @props.article.on 'change', => @saveArticle()
     @props.article.sections.on 'change add remove reset', => @saveArticle()
+    @props.article.heroSection.on 'change remove', => @saveArticle()
     @props.article.heroSection.on 'change remove', => @saveArticle()
 
   saveArticle: ->

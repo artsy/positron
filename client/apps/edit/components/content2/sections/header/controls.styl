@@ -5,6 +5,7 @@
     padding 20px
 
   &--video
+    background rgba(255, 255, 255, .5)
     position absolute
     left 20px
     z-index 2
@@ -13,13 +14,16 @@
     user-select none
 
     .edit-section-container
-      margin-top: 272px
+      margin-top 239px
       width: 520px
+
+    .edit-controls
+      padding-top 12px
 
   &--controls
     position absolute
     right 20px
-    z-index 1
+    z-index 3
     text-align right
     user-select none
 
@@ -32,7 +36,7 @@
       left 0
       right 0
       bottom 0
-      z-index -1
+      z-index 2
 
     &__layout
       border 2px solid

@@ -1,4 +1,3 @@
-import Backbone from 'backbone'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { SectionVideo } from '../video/index.jsx'
@@ -11,17 +10,15 @@ import {
  } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class FeatureHeaderControls extends Component {
+  static propTypes = {
+    article: PropTypes.object,
+    onChange: PropTypes.func.isRequired,
+    hero: PropTypes.object
+  }
+
   state = {
-    isOpen: false,
-    isVideoEmbedOpen: true
-  }
-
-  toggleVideoEmbedControls = () => {
-    this.setState({isVideoEmbedOpen: !this.state.isVideoEmbedOpen})
-  }
-
-  toggleLayoutControls = () => {
-    this.setState({isOpen: !this.state.isOpen})
+    isLayoutOpen: false,
+    isVideoOpen: false
   }
 
   onChangeLayout = (type) => {
@@ -30,6 +27,7 @@ export default class FeatureHeaderControls extends Component {
 
   getMenuColor = () => {
     const { hero } = this.props
+
     if (hero && hero.type === 'fullscreen' && hero.url && hero.url.length) {
       return 'white'
     } else {
@@ -37,36 +35,54 @@ export default class FeatureHeaderControls extends Component {
     }
   }
 
-  renderVideoEmbed () {
-    const props = {
-      section: new Backbone.Model({
-        type: 'video',
-        url: 'https://www.youtube.com/watch?v=PXi7Kjlsz9A',
-        caption: '<p>What motivates patrons to fund artists’ wildest dreams?</p>',
-        cover_image_url: 'https://artsy-media-uploads.s3.amazonaws.com/IB6epb5L_l0rm9btaDsY7Q%2F14183_MDP_Evening_240.jpg',
-      }),
-      article: new Backbone.Model({layout: 'feature'}),
-      channel: {
-        isArtsyChannel: () => false
-      },
-      editing: true
+  toggleLayoutControls = () => {
+    const { isLayoutOpen, isVideoOpen } = this.state
+
+    this.setState({
+      isLayoutOpen: !isLayoutOpen
+    })
+
+    if (isVideoOpen) {
+      this.toggleVideoControls() // hide
     }
 
-    if (this.state.isVideoEmbedOpen) {
+  }
+
+  toggleVideoControls = () => {
+    const { isLayoutOpen, isVideoOpen } = this.state
+
+    this.setState({
+      isVideoOpen: !isVideoOpen
+    })
+
+    if (isLayoutOpen) {
+      this.toggleLayoutControls()
+    }
+  }
+
+  renderVideoEmbed () {
+    const { article } = this.props
+
+    if (this.state.isVideoOpen) {
       return (
         <div
           className='edit-section-container'
           data-editing
           data-type='video'
         >
-          <SectionVideo {...props} />
+          <SectionVideo editing
+            article={article}
+            section={article.heroSection}
+            channel={{ isArtsyChannel: () => false }}
+            headerType={'basic-embed'}
+          />
         </div>
       )
     }
   }
 
   renderLayouts () {
-    if (this.state.isOpen) {
+    if (this.state.isLayoutOpen) {
       return (
         <div className='edit-header--controls__layout'>
           <a
@@ -99,10 +115,17 @@ export default class FeatureHeaderControls extends Component {
   }
 
   renderModal () {
-    if (this.state.isOpen) {
+    const { isLayoutOpen, isVideoOpen } = this.state
+    const showModal = isLayoutOpen || isVideoOpen
+
+    if (showModal) {
+      const toggleControls = isLayoutOpen
+        ? this.toggleLayoutControls
+        : this.toggleVideoControls
+
       return (
         <div
-          onClick={this.toggleLayoutControls}
+          onClick={toggleControls}
           className='edit-header--controls__bg'
         />
       )
@@ -114,9 +137,11 @@ export default class FeatureHeaderControls extends Component {
 
     return (
       <div className='edit-header__container'>
+        {this.renderModal()}
+
         { isBasicFeature &&
           <div className='edit-header--video'>
-            <div onClick={this.toggleVideoEmbedControls}>
+            <div onClick={this.toggleVideoControls}>
               Add Video Embed
             </div>
             <div>
@@ -125,10 +150,7 @@ export default class FeatureHeaderControls extends Component {
           </div>
         }
 
-
         <div className='edit-header--controls'>
-          {this.renderModal()}
-
           <div className='edit-header--controls__menu'>
             <div
               onClick={this.toggleLayoutControls}
@@ -143,9 +165,4 @@ export default class FeatureHeaderControls extends Component {
       </div>
     )
   }
-}
-
-FeatureHeaderControls.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  hero: PropTypes.object
 }
