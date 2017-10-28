@@ -6,6 +6,9 @@ sd = require('sharify').data
 AuthorModal = React.createFactory require './author_modal.coffee'
 Author = require '../../../../models/author.coffee'
 { crop } = require '../../../../components/resizer/index.coffee'
+Waypoint = React.createFactory require 'react-waypoint'
+request = require 'superagent'
+authorsQuery = require '../../queries/authors_query.coffee'
 
 module.exports.AuthorsView = AuthorsView = React.createClass
   displayName: 'AuthorsView'
@@ -15,6 +18,21 @@ module.exports.AuthorsView = AuthorsView = React.createClass
     isModalOpen: false
     authors: @props.authors or []
     errorMessage: ''
+    offset: 10
+
+  fetchFeed: ->
+    request
+      .post sd.API_URL + '/graphql'
+      .set 'X-Access-Token', sd.USER?.access_token
+      .send query: authorsQuery(@state.offset)
+      .end (err, res) =>
+        return if err or not res.body?.data
+        @setState offset: @state.offset + 10
+        @appendMore res.body.data.authors
+
+  appendMore: (results) ->
+    authors = @state.authors.concat(results)
+    @setState authors: authors
 
   openModal: (author) ->
     @setState
@@ -78,6 +96,9 @@ module.exports.AuthorsView = AuthorsView = React.createClass
               key: author.id
             }, 'Edit'
         )
+      Waypoint {
+        onEnter: @fetchFeed
+      }
 
 module.exports.init = ->
   props = authors: sd.AUTHORS

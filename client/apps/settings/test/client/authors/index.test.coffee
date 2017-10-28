@@ -23,6 +23,15 @@ describe 'AuthorsView', ->
         []
       )
       mod.__set__ 'AuthorModal', @AuthorModal = sinon.stub()
+      mod.__set__ 'request', {
+        post: sinon.stub().returns({
+          set: sinon.stub().returns({
+            send: sinon.stub().returns({
+              end: @request = sinon.stub()
+            })
+          })
+        })
+      }
       props = authors: [fixtures().authors]
       @rendered = ReactDOMServer.renderToString(
         React.createElement(AuthorsView, props)
@@ -40,6 +49,20 @@ describe 'AuthorsView', ->
 
   it 'renders list of authors', ->
     @rendered.should.containEql 'Halley Johnson'
+
+  it 'renders more authors on infinite scroll', ->
+    authors = [{
+      name: 'Kana',
+      id: '123'
+    }]
+    @request.yields(null, body: data: authors: authors)
+    @component.fetchFeed()
+    @component.state.authors.length.should.equal 2
+
+  it 'returns early and does not add authors if there are no more to show', ->
+    @request.yields(new Error())
+    @component.fetchFeed()
+    @component.state.authors.length.should.equal 1
 
   it 'opens the modal with an empty author on Add Author', ->
     r.simulate.click r.find @component, 'authors-header__add-author'
@@ -65,7 +88,7 @@ describe 'AuthorsView', ->
     @component.state.authors.length.should.equal 2
     @component.state.authors[0].name.should.equal 'Kana Abe'
 
-  it ' displays a save error', ->
+  it 'displays a save error', ->
     @component.saveAuthor(id: '123456', name: 123)
     Backbone.sync.args[0][2].error()
     @component.state.errorMessage.should.equal 'There has been an error. Please contact support.'

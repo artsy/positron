@@ -20,12 +20,12 @@ export const Panel = (props) => {
                 limit={25} />
             </div>
             <div className='field-group'>
-            <label>CTA link</label>
-            <input
-              className='bordered-input'
-              placeholder='Find Out More'
-              defaultValue={campaign.canvas && campaign.panel.link ? campaign.panel.link.url : ''}
-              onChange={(e) => onChange('panel.link.url', e.target.value, index)} />
+              <label>CTA link</label>
+              <input
+                className='bordered-input'
+                placeholder='Find Out More'
+                defaultValue={campaign.canvas && campaign.panel.link ? campaign.panel.link.url : ''}
+                onChange={(e) => onChange('panel.link.url', e.target.value, index)} />
             </div>
             <div className='field-group'>
               <CharacterLimit
@@ -41,9 +41,10 @@ export const Panel = (props) => {
           <Col lg>
             <Row key={index}>
               <Col lg>
-                <label>Image</label>
+                <label>Image / Video</label>
                 <ImageUpload
                   name='panel.assets'
+                  hasVideo
                   src={campaign.panel.assets && campaign.panel.assets.length ? campaign.panel.assets[0].url : ''}
                   onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
               </Col>
