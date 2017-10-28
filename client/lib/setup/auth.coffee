@@ -29,7 +29,7 @@ setupPassport = ->
           error: (m, err) ->
             console.warn "Warning: unauthorized user #{user.get('id')} (#{user.get('email')})."
             done err
-          success: (channel) =>
+          success: (channel) ->
             user.set 'current_channel', channel.denormalized()
             done null, user
   passport.serializeUser (user, done) ->

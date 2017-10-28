@@ -22,7 +22,7 @@ videoSection = (->
     name: 'Video'
     isTypeOf: (data) -> data.type is 'video'
   ).keys
-    type: @string().valid('video')
+    type: @string().valid('video', 'basic')
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)

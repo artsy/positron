@@ -10,12 +10,13 @@ module.exports = React.createClass
 
   componentWillMount: ->
     @debouncedSave = _.debounce((->
-      @props.article.save() # TODO: Why is this not saving updates from #19?
+      @props.article.save()
       @onChange()
     ), 800)
+
+    # FIXME: Polling autosave for `last_updated`, not sure where though
     @props.article.on 'change', => @saveArticle()
     @props.article.sections.on 'change add remove reset', => @saveArticle()
-    @props.article.heroSection.on 'change remove', => @saveArticle()
     @props.article.heroSection.on 'change remove', => @saveArticle()
 
   saveArticle: ->

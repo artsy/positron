@@ -56,6 +56,7 @@ export class SectionVideo extends Component {
 
       return (
         <Controls
+          article={article}
           section={section}
           channel={channel}
           isHero={isHero}
@@ -80,14 +81,20 @@ export class SectionVideo extends Component {
   }
 
   renderVideoEmbed () {
-    const { section, article, editing } = this.props
-    const hasUrl = section.get('url')
+    const { section, article, editing, headerType } = this.props
+    const isBasicHeader = headerType === 'basic-embed'
+    const hasUrl = Boolean(section.get('url'))
+
+    if (isBasicHeader) {
+      return
+    }
 
     if (hasUrl) {
       return (
         <Video
           layout={article.get('layout')}
-          section={section.attributes}>
+          section={section.attributes}
+        >
           {editing && this.renderRemoveButton()}
           <Paragraph
             type='caption'

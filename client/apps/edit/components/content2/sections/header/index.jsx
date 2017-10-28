@@ -1,18 +1,14 @@
+import HeaderControls from './controls/index.jsx'
+import FileInput from '/client/components/file_input/index.jsx'
+import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
-import Controls from './controls.jsx'
-import FileInput from '/client/components/file_input/index.jsx'
 import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
-import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 
 export default class SectionHeader extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      progress: null
-    }
+  state = {
+    progress: null
   }
 
   onChange = (key, value) => {
@@ -135,11 +131,12 @@ export default class SectionHeader extends Component {
       return (
         <div className={'edit-header' + headerClass}>
           {isFeature &&
-            <Controls
+            <HeaderControls
               onChange={this.onChangeHero}
               article={article}
               hero={article.heroSection.attributes}
-            />}
+            />
+          }
 
           <Header article={article.attributes}>
             <span>Missing Vertical</span>

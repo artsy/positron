@@ -3,19 +3,23 @@
     AvantGarde('s13')
     text-transform uppercase
     padding 20px
+    margin-bottom 10px
 
   &--video
-    background rgba(255, 255, 255, .5)
     position absolute
     left 20px
-    z-index 2
+    z-index 3
     text-align left
     cursor pointer
     user-select none
 
     .edit-section-container
+      background black
       margin-top 239px
       width: 520px
+
+      &[data-editing=true]::after
+        display none
 
     .edit-controls
       padding-top 12px

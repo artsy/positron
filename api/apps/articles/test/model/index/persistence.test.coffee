@@ -739,9 +739,11 @@ describe 'Article Persistence', ->
           url: 'http://image.com'
           type: 'basic'
           deck: 'This year was incredible.'
+          cover_image_url: 'http://some-cover-image.png'
       }, 'foo', {}, (err, article) ->
         return done err if err
         article.hero_section.url.should.equal 'http://image.com'
         article.hero_section.type.should.equal 'basic'
         article.hero_section.deck.should.equal 'This year was incredible.'
+        article.hero_section.cover_image_url.should.equal 'http://some-cover-image.png'
         done()

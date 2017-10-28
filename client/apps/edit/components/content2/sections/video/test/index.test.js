@@ -4,17 +4,20 @@ import { mount, shallow } from 'enzyme'
 import { SectionVideo } from '../index.jsx'
 
 describe('Video', () => {
+  let props
 
-  const props = {
-    section: new Backbone.Model({
-      type: 'video',
-      url: '',
-      cover_image_url: 'http://image.jpg',
-      caption: 'A video caption.'
-    }),
-    article: new Backbone.Model({layout: 'standard'}),
-    channel: new Backbone.Model()
-  }
+  beforeEach(() => {
+    props = {
+      section: new Backbone.Model({
+        type: 'video',
+        url: 'http://some-url.com',
+        cover_image_url: 'http://image.jpg',
+        caption: 'A video caption.'
+      }),
+      article: new Backbone.Model({layout: 'standard'}),
+      channel: new Backbone.Model()
+    }
+  })
 
   beforeAll(() => {
     global.window.$ = jest.fn()
@@ -22,6 +25,7 @@ describe('Video', () => {
   })
 
   it('renders a placeholder', () => {
+    props.section.set('url', null)
     const component = shallow(
       <SectionVideo {...props} />
     )
@@ -60,7 +64,6 @@ describe('Video', () => {
     expect(component.find('a.layout').length).toEqual(3)
   })
 
-
   it('renders cover remove button if editing and has cover_image_url', () => {
     props.editing = true
     props.section.set('url', 'https://youtu.be/Bv_5Zv5c-Ts')
@@ -71,6 +74,7 @@ describe('Video', () => {
   })
 
   it('Can remove the cover_image_url', () => {
+    props.editing = true
     const component = mount(
       <SectionVideo {...props} />
     )
