@@ -1,6 +1,9 @@
 import Backbone from 'backbone'
 import React from 'react'
 import Controls from '../index.jsx'
+import LayoutControls from '../LayoutControls.jsx'
+import ModalCover from '../ModalCover.jsx'
+import VideoControls from '../VideoControls.jsx'
 import { SectionVideo } from '../../../video/index'
 import { mount } from 'enzyme'
 import {
@@ -34,6 +37,8 @@ describe('Feature Header Controls', () => {
       )
       component.find('.edit-header--controls-open').simulate('click')
       expect(component.state().isLayoutOpen).toBe(true)
+      expect(component.find(LayoutControls).exists()).toEqual(true)
+      expect(component.find(ModalCover).exists()).toEqual(true)
       expect(component.find(IconLayoutFullscreen).length).toBe(1)
       expect(component.find(IconLayoutSplit).length).toBe(1)
       expect(component.find(IconLayoutText).length).toBe(1)
@@ -91,7 +96,9 @@ describe('Feature Header Controls', () => {
       )
       component.find('.edit-header--video-open').simulate('click')
       expect(component.state().isVideoOpen).toBe(true)
+      expect(component.find(VideoControls).exists()).toEqual(true)
       expect(component.find(SectionVideo).exists()).toEqual(true)
+      expect(component.find(ModalCover).exists()).toEqual(true)
     })
 
     describe('entering video / image url', () => {

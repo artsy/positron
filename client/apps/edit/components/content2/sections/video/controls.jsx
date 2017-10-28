@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import FileInput from 'client/components/file_input/index.jsx'
 import SectionControls from '../../section_controls/index.jsx'
-import validUrl from 'valid-url'
+import { isWebUri } from 'valid-url'
 
 export class Controls extends Component {
   static propTypes = {
@@ -21,26 +21,16 @@ export class Controls extends Component {
   }
 
   onCoverImageChange = (url) => {
-    if (validUrl.isWebUri(url)) {
+    if (isWebUri(url)) {
       this.props.section.set('cover_image_url', url)
-    } else {
-      console.error(
-        '(video/controls.jsx) ',
-        'Error attaching cover image: url is invalid', url
-      )
     }
   }
 
   onUrlChange = () => {
     const url = this.refs.input.value
 
-    if (validUrl.isWebUri(url)) {
+    if (isWebUri(url)) {
       this.props.section.set({url})
-    } else {
-      console.error(
-        '(video/controls.jsx) ',
-        'Error embeddeding video: url is invalid', url
-      )
     }
   }
 
