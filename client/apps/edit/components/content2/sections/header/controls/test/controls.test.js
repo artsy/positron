@@ -100,42 +100,5 @@ describe('Feature Header Controls', () => {
       expect(component.find(SectionVideo).exists()).toEqual(true)
       expect(component.find(ModalCover).exists()).toEqual(true)
     })
-
-    describe('entering video / image url', () => {
-      let component
-      let input
-
-      beforeEach(() => {
-        component = mount(
-          <Controls {...props} />
-        )
-        component.find('.edit-header--video-open').simulate('click')
-        input = component.find('.bordered-input')
-      })
-
-      it('input should exist', () => {
-        expect(input.exists()).toEqual(true)
-      })
-
-      it('does not update video url if invalid', () => {
-        input.simulate('change', { target: { value: undefined } })
-        expect(props.article.heroSection.get('url', props.hero.url))
-        input.simulate('change', { target: { value: 'invalid url' } })
-        expect(props.article.heroSection.get('url', props.hero.url))
-      })
-
-      it('updates video url if valid', () => {
-        const validUrls = [
-          'http://hello.com',
-          'https://www.how.com',
-          'http://are.you'
-        ]
-        validUrls.forEach(value => {
-          input.node.value = value
-          input.simulate('change', { target: {value} })
-          expect(props.article.heroSection.get('url')).toEqual(value)
-        })
-      })
-    })
   })
 })

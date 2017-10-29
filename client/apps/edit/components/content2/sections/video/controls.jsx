@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import FileInput from 'client/components/file_input/index.jsx'
 import SectionControls from '../../section_controls/index.jsx'
+import { isEmpty } from 'underscore'
 import { isWebUri } from 'valid-url'
 
 export class Controls extends Component {
@@ -21,15 +22,22 @@ export class Controls extends Component {
   }
 
   onCoverImageChange = (url) => {
-    if (isWebUri(url)) {
+    const isValid = isEmpty(url) || isWebUri(url)
+
+    if (isValid) {
       this.props.section.set('cover_image_url', url)
     }
   }
 
-  onUrlChange = () => {
+  onVideoUrlChange = () => {
     const url = this.refs.input.value
 
-    if (isWebUri(url)) {
+    if (isEmpty(url)) {
+      this.props.section.set({
+        url: '',
+        cover_image_url: ''
+      })
+    } else if (isWebUri(url)) {
       this.props.section.set({url})
     }
   }
@@ -55,7 +63,7 @@ export class Controls extends Component {
         <h2>Video</h2>
         <input
           className='bordered-input bordered-input-dark'
-          onChange={this.onUrlChange}
+          onChange={this.onVideoUrlChange}
           defaultValue={section.get('url')}
           placeholder='Paste a youtube or vimeo url (e.g. http://youtube.com/watch?v=id)'
           ref='input'

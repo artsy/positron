@@ -31,18 +31,20 @@ export default class LayoutControls extends Component {
   }
 
   render () {
+    const { isOpen, onClick } = this.props
+
     return (
       <div className='edit-header--controls'>
         <div className='edit-header--controls__menu'>
           <div
-            onClick={this.props.onClick}
+            onClick={onClick}
             className='edit-header--controls-open'
             style={{color: this.getMenuColor()}}
           >
             Change Header
           </div>
 
-          {this.props.isOpen &&
+          {isOpen &&
             <div className='edit-header--controls__layout'>
               <a
                 onClick={() => this.onChangeLayout('text')}

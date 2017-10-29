@@ -6,17 +6,13 @@ export default class VideoControls extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    hero: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired
   }
 
   render () {
-    const { article, hero, isOpen, onClick } = this.props
-    const isBasicFeature = hero.type === 'basic'
+    const { article, isOpen, onClick } = this.props
 
     return (
-      isBasicFeature &&
-
       <div className='edit-header--video'>
         <div
           onClick={onClick}
@@ -34,7 +30,7 @@ export default class VideoControls extends Component {
               <SectionVideo editing
                 article={article}
                 section={article.heroSection}
-                channel={{ isArtsyChannel: () => false }}
+                channel={{ isArtsyChannel: () => false }} // TODO: is this needed?
                 headerType={'basic-embed'}
               />
             </div>

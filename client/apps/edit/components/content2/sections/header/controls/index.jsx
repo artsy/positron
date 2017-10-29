@@ -32,7 +32,7 @@ export default class HeaderControls extends Component {
           isLayoutOpen: false
         })
       }
-      case 'close-all': {
+      case 'close': {
         return this.setState({
           isVideoOpen: false,
           isLayoutOpen: false
@@ -43,21 +43,28 @@ export default class HeaderControls extends Component {
 
   render () {
     const { isLayoutOpen, isVideoOpen } = this.state
+    const { article, hero, onChange } = this.props
+    const isModalOpen = isLayoutOpen || isVideoOpen
+    const isBasicHero = hero.type === 'basic'
 
     return (
       <div className='edit-header__container'>
-        <ModalCover
-          isOpen={isLayoutOpen || isVideoOpen}
-          onClick={() => this.toggleControls('close-all')}
-        />
-
-        <VideoControls {...this.props}
-          isOpen={isVideoOpen}
-          onClick={() => this.toggleControls('video')}
-        />
-
-        <LayoutControls {...this.props}
+        {isModalOpen &&
+          <ModalCover
+            onClick={() => this.toggleControls('close')}
+          />
+        }
+        {isBasicHero &&
+          <VideoControls
+            article={article}
+            isOpen={isVideoOpen}
+            onClick={() => this.toggleControls('video')}
+          />
+        }
+        <LayoutControls
+          hero={hero}
           isOpen={isLayoutOpen}
+          onChange={onChange}
           onClick={() => this.toggleControls('layout')}
         />
       </div>
