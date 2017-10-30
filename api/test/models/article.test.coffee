@@ -12,7 +12,7 @@ describe "Article", ->
 
   beforeEach ->
     Article.__set__ 'FORCE_URL', 'https://artsy.net'
-    Article.__set__ 'Authors', where: @AuthorFetch = sinon.stub()
+    Article.__set__ 'Authors', mongoFetch: @AuthorFetch = sinon.stub()
     Article.__set__ 'EDITORIAL_CHANNEL', '12345'
     @article = new Article
 
@@ -75,8 +75,9 @@ describe "Article", ->
           authors[1].should.equal 'Kana'
           cb()
 
-      it 'has a fallback author', ->
+      it 'has a fallback author', (cb) ->
         @article.set 'channel_id', '12345'
+        @AuthorFetch.yields null, results: []
         @article.getAuthors (authors) ->
           authors[0].should.equal 'Artsy Editors'
           authors.length.should.equal 1
