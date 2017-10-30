@@ -16,22 +16,25 @@ export const display = (req, res, next) => {
     if (err) { return next(err) }
 
     const display = response.body.data.display
+
     if (!display) {
-      return res.sendStatus(404)
-    }
+      // Render email signup
+      res.render('fallback')
+    } else {
 
-    const DisplayPanelComponent = React.createFactory(DisplayPanel)
-    const sheet = new ServerStyleSheet()
-    const body = ReactDOM.renderToString(
-      sheet.collectStyles(
-        DisplayPanelComponent({
-          unit: display.panel,
-          campaign: display
-        })
+      const DisplayPanelComponent = React.createFactory(DisplayPanel)
+      const sheet = new ServerStyleSheet()
+      const body = ReactDOM.renderToString(
+        sheet.collectStyles(
+          DisplayPanelComponent({
+            unit: display.panel,
+            campaign: display
+          })
+        )
       )
-    )
-    const css = sheet.getStyleTags()
 
-    res.render('index', { css, body })
+      const css = sheet.getStyleTags()
+      res.render('index', { css, body })
+    }
   })
 }

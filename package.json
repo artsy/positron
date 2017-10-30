@@ -47,7 +47,7 @@
     "coffee-script": "^1.10.0",
     "cookie-parser": "^1.4.0",
     "cookie-session": "^1.2.0",
-    "cors": "^2.7.1",
+    "cors": "^2.8.4",
     "debug": "^2.2.0",
     "dotenv": "^4.0.0",
     "draft-convert": "^1.4.2",
