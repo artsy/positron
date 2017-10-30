@@ -27,27 +27,20 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
         time(class='op-published' dateTime=article.get('published_at'))= article.date('published_at').format('MMM Do, YYYY h:mm a')
         time(class='op-modified' dateTime=article.get('updated_at'))= article.date('updated_at').format('MMM Do, YYYY h:mm a')
 
-      if article.get('hero_section') && article.get('hero_section').type === 'video'
+      - var hero = article.get('hero_section')
+      if hero && (hero.type === 'video' || hero.type === 'basic')
         +video(article.get('hero_section'))
+
       each section in article.get('sections')
         case section.type
           when 'text'
             != section.body
-          when 'artworks'
-            +artworks(section)
-          when 'image'
-            +image(section)
           when 'image_collection'
             +imageCollection(section)
           when 'video'
             +video(section)
           when 'embed'
             +embed(section)
-          when 'callout'
-            if section.article.length > 0
-              //- TODO: Article Callout
-            else if section.text && section.text.length > 0
-              aside= section.text
           when 'image_set'
             +imageSet(section)
 
