@@ -125,8 +125,6 @@ removeStopWords = (title) ->
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
-    console.log('ok made it here..')
-    console.log(article)
     distributeArticle article, =>
       db.articles.save sanitize(article), callback
   else

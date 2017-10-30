@@ -1,8 +1,8 @@
 {
+  EDITORIAL_CHANNEL
   SAILTHRU_KEY
   SAILTHRU_SECRET
   FORCE_URL
-  EDITORIAL_CHANNEL
   FB_PAGE_ID
   INSTANT_ARTICLE_ACCESS_TOKEN
   GEMINI_CLOUDFRONT_URL
@@ -50,9 +50,8 @@ cleanArticlesInSailthru = (slugs = []) =>
 postFacebookAPI = (article, cb) ->
   article = new Article cloneDeep article
   return cb() unless article.isFeatured()
-  
+
   article.prepForInstant ->
-    console.log article.get('authors')
     jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
       {
         article: article
@@ -64,7 +63,7 @@ postFacebookAPI = (article, cb) ->
         particle: particle
       },
       (err, html) ->
-        console.log(html)
+        return cb() if err
         request
           .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
           .send
@@ -73,11 +72,7 @@ postFacebookAPI = (article, cb) ->
             published: NODE_ENV is 'production'
             html_source: html
           .end (err, response) ->
-            console.log(response)
-            console.log(html)
-            if err
-              debug err
-              return cb err
+            return cb err if err
             cb response
 
 postSailthruAPI = (article, cb) ->
@@ -134,7 +129,7 @@ postSailthruAPI = (article, cb) ->
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections?.length > 0 and article.channel_id?.toString() is ARTSY_EDITORIAL_ID
+      visible_to_public: article.published and sections?.length > 0 and article.channel_id?.toString() is EDITORIAL_CHANNEL
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: tags

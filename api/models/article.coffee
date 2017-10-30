@@ -1,7 +1,7 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 { stripTags } = require 'underscore.string'
-{ ARTSY_EDITORIAL_ID, POSITRON_URL, FORCE_URL } = process.env
+{ EDITORIAL_CHANNEL, POSITRON_URL, FORCE_URL } = process.env
 moment = require 'moment'
 cheerio = require 'cheerio'
 Authors = require '../apps/authors/model'
@@ -39,32 +39,32 @@ module.exports = class Article extends Backbone.Model
     @get('featured')
 
   isEditorial: ->
-    @get('channel_id') is ARTSY_EDITORIAL_ID
+    @get('channel_id')?.toString() is EDITORIAL_CHANNEL
 
   prepForInstant: (cb) ->
-    # @getAuthors (authors) =>
-    sections =  _.map @get('sections'), (section) =>
-      if section.type is 'text'
-        $ = cheerio.load(section.body)
-        $('br').remove()
-        $('*:empty').remove()
-        $('p').each ->
-          $(this).remove() if $(this).text().length is 0
-        section.body = $.html()
-        section.body = @replaceTagWith(section.body, 'h3', 'h2')
-        section
-      else if section.type in ['image_set', 'image_collection']
-        section.images = _.map section.images, (image) =>
-          if image.type is 'image'
-            image.caption = @replaceTagWith(image.caption, 'p', 'h1') if image.caption
-          image
-        section
-      else
-        section
-    @set
-      sections: sections
-      authors: authors
-    cb()
+    @getAuthors (authors) =>
+      sections =  _.map @get('sections'), (section) =>
+        if section.type is 'text'
+          $ = cheerio.load(section.body)
+          $('br').remove()
+          $('*:empty').remove()
+          $('p').each ->
+            $(this).remove() if $(this).text().length is 0
+          section.body = $.html()
+          section.body = @replaceTagWith(section.body, 'h3', 'h2')
+          section
+        else if section.type in ['image_set', 'image_collection']
+          section.images = _.map section.images, (image) =>
+            if image.type is 'image'
+              image.caption = @replaceTagWith(image.caption, 'p', 'h1') if image.caption
+            image
+          section
+        else
+          section
+      @set
+        sections: sections
+        authors: authors
+      cb()
 
   replaceTagWith: (htmlStr, findTag, replaceTag) ->
     $ = cheerio.load(htmlStr)
@@ -73,16 +73,13 @@ module.exports = class Article extends Backbone.Model
     $.html()
 
   getAuthors: (cb) ->
-    console.log('in the get authors thing')
     if @isEditorial()
-      return ['Artsy Editors'] unless @get('author_ids')
-      console.log('here')
-      Authors.where
+      return cb ['Artsy Editors'] unless @get('author_ids')?.length
+      Authors.mongoFetch
         ids: @get('author_ids')
       , (err, results) ->
-        console.log err
-        console.log results
-        return cb(_.pluck results.results, 'name')
+        return cb ['Artsy Editors'] if err
+        cb _.pluck results.results, 'name'
     else
       if @get('contributing_authors')?.length
         cb _.pluck(@get('contributing_authors'), 'name')

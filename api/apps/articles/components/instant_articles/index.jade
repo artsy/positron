@@ -1,6 +1,7 @@
 //- Markup for the individual Instant Article
 
 include mixins
+- var hero = article.get('hero_section')
 
 html(lang="en" prefix="op: http://media.facebook.com/op#")
   head
@@ -13,8 +14,8 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
   body
     article
       header
-        if article.get('hero_section')
-          +hero_section(article.get('hero_section'))
+        if hero
+          +hero_section(hero)
 
         h1= article.get('title')
 
@@ -27,9 +28,8 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
         time(class='op-published' dateTime=article.get('published_at'))= article.date('published_at').format('MMM Do, YYYY h:mm a')
         time(class='op-modified' dateTime=article.get('updated_at'))= article.date('updated_at').format('MMM Do, YYYY h:mm a')
 
-      - var hero = article.get('hero_section')
-      if hero && (hero.type === 'video' || hero.type === 'basic')
-        +video(article.get('hero_section'))
+      if hero && hero.type === 'basic'
+        +video(hero)
 
       each section in article.get('sections')
         case section.type

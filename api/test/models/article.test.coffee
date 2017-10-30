@@ -13,7 +13,7 @@ describe "Article", ->
   beforeEach ->
     Article.__set__ 'FORCE_URL', 'https://artsy.net'
     Article.__set__ 'Authors', where: @AuthorFetch = sinon.stub()
-    Article.__set__ 'ARTSY_EDITORIAL_ID', '12345'
+    Article.__set__ 'EDITORIAL_CHANNEL', '12345'
     @article = new Article
 
   describe '#prepForInstant', ->

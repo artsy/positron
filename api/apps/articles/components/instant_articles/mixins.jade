@@ -1,18 +1,16 @@
 mixin hero_section(hero)
-  figure
-    case hero.type
-      when 'image'
-        img(src=hero.url)/
-        figcaption= hero.caption
-      when 'fullscreen'
-      when 'text'
-      when 'split'
-        if hero.url && hero.url.indexOf('.mp4') > -1
-          figure
-            video(loop=true)
-              source(src=hero.url type='video/mp4')
-        else
-          img(src= hero.url)/
+  if hero.type !== 'basic'
+    figure
+      case hero.type
+        when 'fullscreen'
+        when 'text'
+        when 'split'
+          if hero.url && hero.url.indexOf('.mp4') > -1
+            figure
+              video(loop=true)
+                source(src=hero.url type='video/mp4')
+          else
+            img(src= hero.url)/
 
 mixin artworks(section)
   if section.artworks
