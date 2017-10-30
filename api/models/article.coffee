@@ -22,8 +22,8 @@ module.exports = class Article extends Backbone.Model
   date: (attr) ->
     moment(@get(attr)).local()
 
-  strip: (attr) ->
-    stripTags(@get attr)
+  strip: (str) ->
+    stripTags(str)
 
   # freshness boost as exponential decay on published_at date
   searchBoost: ->

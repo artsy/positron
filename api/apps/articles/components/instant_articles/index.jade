@@ -2,6 +2,7 @@
 
 include mixins
 - var hero = article.get('hero_section')
+- var leadParagraph = article.get('lead_paragraph')
 
 html(lang="en" prefix="op: http://media.facebook.com/op#")
   head
@@ -19,8 +20,10 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
 
         h1= article.get('title')
 
-        if article.strip('lead_paragraph')
-          h3= article.get('lead_paragraph')
+        if hero && article.strip(hero.deck)
+          h2= hero.deck
+        else if article.strip(leadParagraph)
+          h2= leadParagraph
 
         each author in article.get('authors')
           address= author
