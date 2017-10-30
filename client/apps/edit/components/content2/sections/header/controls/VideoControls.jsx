@@ -5,12 +5,13 @@ import { SectionVideo } from '../../video/index.jsx'
 export default class VideoControls extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
+    channel: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     onClick: PropTypes.func.isRequired
   }
 
   render () {
-    const { article, isOpen, onClick } = this.props
+    const { article, channel, isOpen, onClick } = this.props
 
     return (
       <div className='edit-header--video'>
@@ -27,11 +28,10 @@ export default class VideoControls extends Component {
               data-editing
               data-type='video'
             >
-              <SectionVideo editing
+              <SectionVideo editing hidePreview
                 article={article}
                 section={article.heroSection}
-                channel={{ isArtsyChannel: () => false }} // TODO: is this needed?
-                headerType={'basic-embed'}
+                channel={channel}
               />
             </div>
           }

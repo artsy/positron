@@ -61,6 +61,9 @@ describe('Feature Header Controls', () => {
     beforeEach(() => {
       props = {
         article: new Backbone.Model(Fixtures.StandardArticle),
+        channel: {
+          isArtsyChannel: () => false
+        },
         hero: {
           type: 'basic',
           url: 'foo',

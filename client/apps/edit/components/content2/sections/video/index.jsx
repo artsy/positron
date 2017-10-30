@@ -9,7 +9,7 @@ export class SectionVideo extends Component {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
-    headerType: PropTypes.string,
+    hidePreview: PropTypes.bool,
     isHero: PropTypes.bool,
     section: PropTypes.object.isRequired
   }
@@ -46,13 +46,13 @@ export class SectionVideo extends Component {
       article,
       channel,
       editing,
-      headerType,
+      hidePreview,
       isHero,
       section
     } = this.props
 
     if (editing) {
-      const showSectionLayouts = !isHero && headerType !== 'basic-embed'
+      const showSectionLayouts = !isHero && !hidePreview
 
       return (
         <Controls
@@ -81,11 +81,10 @@ export class SectionVideo extends Component {
   }
 
   renderVideoEmbed () {
-    const { section, article, editing, headerType } = this.props
-    const isBasicHeader = headerType === 'basic-embed'
+    const { section, article, editing, hidePreview } = this.props
     const hasUrl = Boolean(section.get('url'))
 
-    if (isBasicHeader) {
+    if (hidePreview) {
       return
     }
 

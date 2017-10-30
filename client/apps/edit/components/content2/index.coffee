@@ -46,7 +46,11 @@ module.exports = React.createClass
         )
       React.createElement(
         Header.default,
-        { article: @props.article, saveArticle: @saveArticle }
+        {
+          article: @props.article,
+          channel: @props.channel,
+          saveArticle: @saveArticle
+        }
       )
       SectionList {
         sections: @props.article.sections

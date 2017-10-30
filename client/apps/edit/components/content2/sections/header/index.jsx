@@ -7,6 +7,11 @@ import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publis
 import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 
 export default class SectionHeader extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object.isRequired,
+  }
+
   state = {
     progress: null
   }
@@ -104,12 +109,13 @@ export default class SectionHeader extends Component {
         type='lead_paragraph'
         linked={false}
         stripLinebreaks
-        layout={article.get('layout')} />
+        layout={article.get('layout')}
+      />
     )
   }
 
   render () {
-    const { article } = this.props
+    const { article, channel } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
     let headerClass = ''
@@ -134,6 +140,7 @@ export default class SectionHeader extends Component {
             <HeaderControls
               onChange={this.onChangeHero}
               article={article}
+              channel={channel}
               hero={article.heroSection.attributes}
             />
           }
@@ -151,5 +158,5 @@ export default class SectionHeader extends Component {
 }
 
 SectionHeader.propTypes = {
-  article: PropTypes.object.isRequired
+
 }

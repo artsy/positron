@@ -7,6 +7,7 @@ import VideoControls from './VideoControls.jsx'
 export default class HeaderControls extends Component {
   static propTypes = {
     article: PropTypes.object,
+    channel: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     hero: PropTypes.object
   }
@@ -43,7 +44,7 @@ export default class HeaderControls extends Component {
 
   render () {
     const { isLayoutOpen, isVideoOpen } = this.state
-    const { article, hero, onChange } = this.props
+    const { article, channel, hero, onChange } = this.props
     const isModalOpen = isLayoutOpen || isVideoOpen
     const isBasicHero = hero.type === 'basic'
 
@@ -57,6 +58,7 @@ export default class HeaderControls extends Component {
         {isBasicHero &&
           <VideoControls
             article={article}
+            channel={channel}
             isOpen={isVideoOpen}
             onClick={() => this.toggleControls('video')}
           />
