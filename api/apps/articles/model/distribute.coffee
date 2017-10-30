@@ -1,4 +1,5 @@
 {
+  APP_URL
   EDITORIAL_CHANNEL
   SAILTHRU_KEY
   SAILTHRU_SECRET
@@ -56,6 +57,7 @@ postFacebookAPI = (article, cb) ->
       {
         article: article
         forceUrl: FORCE_URL
+        displayUrl: APP_URL + '/display'
         segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
         toSentence: _s.toSentence
         _: _
