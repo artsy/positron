@@ -23,7 +23,7 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
         if hero && article.strip(hero.deck)
           h2= hero.deck
         else if article.strip(leadParagraph)
-          h2= leadParagraph
+          h2!= leadParagraph
 
         each author in article.get('authors')
           address= author
