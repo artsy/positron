@@ -3,6 +3,16 @@ import React, { Component } from 'react'
 import { Artwork, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class ImageCollectionArtwork extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    artwork: PropTypes.object.isRequired,
+    editing: PropTypes.bool,
+    imagesLoaded: PropTypes.bool,
+    removeItem: PropTypes.func,
+    section: PropTypes.object.isRequired,
+    width: PropTypes.any
+  }
+
   renderRemoveButton (artwork) {
     if (this.props.removeItem && this.props.editing) {
       return (
@@ -33,13 +43,4 @@ export default class ImageCollectionArtwork extends Component {
       </div>
     )
   }
-}
-ImageCollectionArtwork.propTypes = {
-  article: PropTypes.object.isRequired,
-  editing: PropTypes.bool,
-  artwork: PropTypes.object.isRequired,
-  imagesLoaded: PropTypes.bool,
-  removeItem: PropTypes.func,
-  section: PropTypes.object.isRequired,
-  width: PropTypes.any
 }

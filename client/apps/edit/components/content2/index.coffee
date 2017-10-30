@@ -13,6 +13,8 @@ module.exports = React.createClass
       @props.article.save()
       @onChange()
     ), 800)
+
+    # FIXME: Polling autosave for `last_updated`, not sure where though
     @props.article.on 'change', => @saveArticle()
     @props.article.sections.on 'change add remove reset', => @saveArticle()
     @props.article.heroSection.on 'change remove', => @saveArticle()
@@ -44,7 +46,11 @@ module.exports = React.createClass
         )
       React.createElement(
         Header.default,
-        { article: @props.article, saveArticle: @saveArticle }
+        {
+          article: @props.article,
+          channel: @props.channel,
+          saveArticle: @saveArticle
+        }
       )
       SectionList {
         sections: @props.article.sections

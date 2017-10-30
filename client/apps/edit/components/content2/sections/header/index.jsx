@@ -1,18 +1,19 @@
+import HeaderControls from './controls/index.jsx'
+import FileInput from '/client/components/file_input/index.jsx'
+import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
-import Controls from './controls.jsx'
-import FileInput from '/client/components/file_input/index.jsx'
 import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
-import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 
 export default class SectionHeader extends Component {
-  constructor (props) {
-    super(props)
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object.isRequired,
+  }
 
-    this.state = {
-      progress: null
-    }
+  state = {
+    progress: null
   }
 
   onChange = (key, value) => {
@@ -108,18 +109,21 @@ export default class SectionHeader extends Component {
         type='lead_paragraph'
         linked={false}
         stripLinebreaks
-        layout={article.get('layout')} />
+        layout={article.get('layout')}
+      />
     )
   }
 
   render () {
-    const { article } = this.props
+    const { article, channel } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
     let headerClass = ''
+
     if (isFeature) {
       headerClass = ' ' + article.heroSection.get('type') || 'text'
     }
+
     if (isClassic) {
       return (
         <div className='edit-header'>
@@ -132,7 +136,15 @@ export default class SectionHeader extends Component {
     } else {
       return (
         <div className={'edit-header' + headerClass}>
-          {isFeature && <Controls onChange={this.onChangeHero} hero={article.heroSection.attributes} />}
+          {isFeature &&
+            <HeaderControls
+              onChange={this.onChangeHero}
+              article={article}
+              channel={channel}
+              hero={article.heroSection.attributes}
+            />
+          }
+
           <Header article={article.attributes}>
             <span>Missing Vertical</span>
             {this.renderTitle(article)}
@@ -146,5 +158,5 @@ export default class SectionHeader extends Component {
 }
 
 SectionHeader.propTypes = {
-  article: PropTypes.object.isRequired
+
 }

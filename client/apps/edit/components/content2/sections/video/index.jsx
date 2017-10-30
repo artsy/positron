@@ -5,9 +5,17 @@ import { Controls } from './controls.jsx'
 import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export class SectionVideo extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { progress: null }
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object.isRequired,
+    editing: PropTypes.bool,
+    hidePreview: PropTypes.bool,
+    isHero: PropTypes.bool,
+    section: PropTypes.object.isRequired
+  }
+
+  state = {
+    progress: null
   }
 
   onClickOff = () => {
@@ -26,22 +34,36 @@ export class SectionVideo extends Component {
         <div className='upload-progress-container'>
           <div
             className='upload-progress'
-            style={{width: (this.state.progress * 100) + '%'}} />
+            style={{width: (this.state.progress * 100) + '%'}}
+          />
         </div>
       )
     }
   }
 
   renderSectionControls () {
-    if (this.props.editing) {
+    const {
+      article,
+      channel,
+      editing,
+      hidePreview,
+      isHero,
+      section
+    } = this.props
+
+    if (editing) {
+      const showSectionLayouts = !isHero && !hidePreview
+
       return (
         <Controls
-          section={this.props.section}
-          channel={this.props.channel}
-          isHero={this.props.isHero}
-          sectionLayouts={!this.props.isHero}
-          articleLayout={this.props.article.get('layout')}
-          onProgress={this.onProgress} />
+          article={article}
+          section={section}
+          channel={channel}
+          isHero={isHero}
+          sectionLayouts={showSectionLayouts}
+          articleLayout={article.get('layout')}
+          onProgress={this.onProgress}
+        />
       )
     }
   }
@@ -59,12 +81,19 @@ export class SectionVideo extends Component {
   }
 
   renderVideoEmbed () {
-    const { section, article, editing } = this.props
-    if (section.get('url') && section.get('url').length) {
+    const { section, article, editing, hidePreview } = this.props
+    const hasUrl = Boolean(section.get('url'))
+
+    if (hidePreview) {
+      return
+    }
+
+    if (hasUrl) {
       return (
         <Video
           layout={article.get('layout')}
-          section={section.attributes}>
+          section={section.attributes}
+        >
           {editing && this.renderRemoveButton()}
           <Paragraph
             type='caption'
@@ -72,16 +101,22 @@ export class SectionVideo extends Component {
             html={section.get('caption')}
             onChange={(html) => section.set('caption', html)}
             stripLinebreaks
-            layout={article.get('layout')} />
+            layout={article.get('layout')}
+          />
         </Video>
       )
     } else {
-      return <div className='edit-section__placeholder'>Add a video above</div>
+      return (
+        <div className='edit-section__placeholder'>
+          Add a video above
+        </div>
+      )
     }
   }
 
   render () {
     const isEditing = this.props.editing ? ' is-editing' : ''
+
     return (
       <section
         className={'edit-section--video' + isEditing} >
@@ -91,12 +126,4 @@ export class SectionVideo extends Component {
       </section>
     )
   }
-}
-
-SectionVideo.propTypes = {
-  article: PropTypes.object.isRequired,
-  channel: PropTypes.object.isRequired,
-  editing: PropTypes.bool,
-  isHero: PropTypes.bool,
-  section: PropTypes.object.isRequired
 }

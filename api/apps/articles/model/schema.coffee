@@ -22,7 +22,7 @@ videoSection = (->
     name: 'Video'
     isTypeOf: (data) -> data.type is 'video'
   ).keys
-    type: @string().valid('video')
+    type: @string().valid('video', 'basic')
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)
@@ -33,9 +33,9 @@ videoSection = (->
 featureSection = (->
   @object().meta(
     name: 'FeatureHeader'
-    isTypeOf: (data) -> data.type in ['fullscreen', 'split', 'text']
+    isTypeOf: (data) -> data.type in ['fullscreen', 'split', 'text', 'basic']
   ).keys
-    type: @string().valid('fullscreen', 'split', 'text').default('text')
+    type: @string().valid('fullscreen', 'split', 'text', 'basic').default('text')
     title: @string().allow('',null)
     intro: @string().allow('',null) # TODO - Remove after backfill
     deck: @string().allow('',null)

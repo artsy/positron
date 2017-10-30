@@ -61,7 +61,6 @@ describe('Display Routes', () => {
     })
     routes.display(req, res, next)
     expect(res.render.mock.calls[0][1].body).toMatch('Sponsored by Campaign 1')
-    expect(res.render.mock.calls[0][1].body).toMatch('href="http://artsy.net"')
   })
 
   it('extracts css from component and passes it to the template', () => {

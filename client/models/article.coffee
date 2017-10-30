@@ -29,7 +29,8 @@ module.exports = class Article extends Backbone.Model
       @featuredArtworks = new Artworks
       @mentionedArtworks = new Artworks
       @heroSection = new Backbone.Model @get 'hero_section'
-      @on 'change:hero_section', => @heroSection.set @get 'hero_section'
+      @on 'change:hero_section', =>
+        @heroSection.set @get 'hero_section'
       @heroSection.destroy = @heroSection.clear
 
   stateName: ->
