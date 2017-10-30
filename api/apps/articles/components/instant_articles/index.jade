@@ -43,6 +43,9 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
             +embed(section)
           when 'image_set'
             +imageSet(section)
+      
+      if article.get('postscript')
+        != article.get('postscript')
 
       +editorialSignup
 
