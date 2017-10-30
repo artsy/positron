@@ -85,6 +85,7 @@
     "raven-js": "^3.15.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-sizeme": "^2.3.6",
     "react-styled-flexboxgrid": "^2.0.3",
     "react-waypoint": "^7.3.1",
     "sailthru-client": "^2.0.3",

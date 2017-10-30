@@ -48,6 +48,12 @@
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@hypnosphi/fuse.js/-/fuse.js-3.0.9.tgz#ea99f6121b4a8f065b4c71f85595db2714498807"
 
+"@newrelic/native-metrics@^2.1.0":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@newrelic/native-metrics/-/native-metrics-2.1.2.tgz#9a595dc602654b717188a294507087a51e79fba3"
+  dependencies:
+    nan "^2.4.0"
+
 "@segment/loosely-validate-event@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@segment/loosely-validate-event/-/loosely-validate-event-1.1.2.tgz#d77840999e3f7e43e74b3b0d43391c1526f793b8"
@@ -385,9 +391,9 @@ ansi-styles@^3.0.0, ansi-styles@^3.1.0:
   dependencies:
     color-convert "^1.9.0"
 
-"antigravity@git://github.com/artsy/antigravity.git":
+antigravity@artsy/antigravity:
   version "0.1.3"
-  resolved "git://github.com/artsy/antigravity.git#e6a20591a6be418facca1b4670db24f11208cfdd"
+  resolved "https://codeload.github.com/artsy/antigravity/tar.gz/e6a20591a6be418facca1b4670db24f11208cfdd"
   dependencies:
     express "*"
 
@@ -486,9 +492,9 @@ arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-"artsy-backbone-mixins@git://github.com/artsy/artsy-backbone-mixins.git":
+artsy-backbone-mixins@artsy/artsy-backbone-mixins:
   version "1.0.0"
-  resolved "git://github.com/artsy/artsy-backbone-mixins.git#6309f2a4d4e1a1458105d934b1ec89af6bb87e98"
+  resolved "https://codeload.github.com/artsy/artsy-backbone-mixins/tar.gz/6309f2a4d4e1a1458105d934b1ec89af6bb87e98"
   dependencies:
     bluebird-q "^1.0.3"
     ics "^0.4.1"
@@ -497,23 +503,23 @@ arrify@^1.0.0, arrify@^1.0.1:
     qs "5.2.0"
     underscore "*"
 
-"artsy-ezel-components@git://github.com/artsy/artsy-ezel-components.git":
+artsy-ezel-components@artsy/artsy-ezel-components:
   version "0.0.6"
-  resolved "git://github.com/artsy/artsy-ezel-components.git#61983f3758ecc4a0a057aa9c830e3552abcaa50e"
+  resolved "https://codeload.github.com/artsy/artsy-ezel-components/tar.gz/61983f3758ecc4a0a057aa9c830e3552abcaa50e"
 
-"artsy-morgan@git://github.com/artsy/artsy-morgan.git":
+artsy-morgan@artsy/artsy-morgan:
   version "1.0.1"
-  resolved "git://github.com/artsy/artsy-morgan.git#be1c28aadbe18faac80f215f36ebd37aff4c77dc"
+  resolved "https://codeload.github.com/artsy/artsy-morgan/tar.gz/be1c28aadbe18faac80f215f36ebd37aff4c77dc"
   dependencies:
     chalk "^1.1.3"
     morgan "^1.8.1"
 
-"artsy-newrelic@git://github.com/artsy/artsy-newrelic.git":
-  version "1.2.0"
-  resolved "git://github.com/artsy/artsy-newrelic.git#3384ed8624072a5188b4eb977ef786b32a1fa4ad"
+artsy-newrelic@artsy/artsy-newrelic:
+  version "1.3.0"
+  resolved "https://codeload.github.com/artsy/artsy-newrelic/tar.gz/f5dd5c3dd30d13b5d7157b42b6757831a5706e9a"
   dependencies:
     connect-timeout "^1.8.0"
-    newrelic "^1.22.1"
+    newrelic "^2.2.1"
 
 artsy-passport@^2.0.3:
   version "2.0.3"
@@ -4435,9 +4441,9 @@ gauge@~2.7.1:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-"gemup@git://github.com/artsy/gemup.git":
-  version "0.0.1"
-  resolved "git://github.com/artsy/gemup.git#b858caa93ebac601065663c4d03a3287b45c483c"
+gemup@artsy/gemup:
+  version "0.0.2"
+  resolved "https://codeload.github.com/artsy/gemup/tar.gz/82fd78f1e9e8f72a41d6a78fbc1b21bd78474229"
 
 generate-function@^2.0.0:
   version "2.0.0"
@@ -6488,6 +6494,10 @@ nan@^2.3.0, nan@~2.3:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.3.5.tgz#822a0dc266290ce4cd3a12282ca3e7e364668a08"
 
+nan@^2.4.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
+
 native-promise-only@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/native-promise-only/-/native-promise-only-0.8.1.tgz#20a318c30cb45f71fe7adfbf7b21c99c1472ef11"
@@ -6520,15 +6530,18 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-newrelic@^1.22.1:
-  version "1.38.1"
-  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-1.38.1.tgz#c3d10f02c9b14f84365f5eb939ae313ff24ff618"
+newrelic@^2.2.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/newrelic/-/newrelic-2.3.1.tgz#4b72f908d8e0be373470e9c18097c35c3f9673bc"
   dependencies:
+    async "^2.1.4"
     concat-stream "^1.5.0"
     https-proxy-agent "^0.3.5"
     json-stringify-safe "^5.0.0"
-    readable-stream "^1.1.13"
+    readable-stream "^2.1.4"
     semver "^5.3.0"
+  optionalDependencies:
+    "@newrelic/native-metrics" "^2.1.0"
 
 nib@^1.1.0:
   version "1.1.2"
@@ -6714,7 +6727,11 @@ oauth-sign@~0.8.1, oauth-sign@~0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-oauth@0.9.x, "oauth@git://github.com/craigspaeth/node-oauth.git":
+oauth@0.9.x:
+  version "0.9.15"
+  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
+
+"oauth@git://github.com/craigspaeth/node-oauth.git":
   version "0.9.13"
   resolved "git://github.com/craigspaeth/node-oauth.git#9bea5033d38df983f7773d265ee4de2a5b0ff25f"
 
@@ -6976,9 +6993,9 @@ parseurl@~1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
 
-"particle@git://github.com/artsy/particle.git":
+particle@artsy/particle:
   version "1.0.0"
-  resolved "git://github.com/artsy/particle.git#cf011a2fc960bd7a5a3c41c4726a9ddc1a80633c"
+  resolved "https://codeload.github.com/artsy/particle/tar.gz/cf011a2fc960bd7a5a3c41c4726a9ddc1a80633c"
   dependencies:
     tape "^4.5.1"
 
@@ -7012,9 +7029,18 @@ passport-oauth1@1.x.x:
     passport-strategy "1.x.x"
     utils-merge "1.x.x"
 
-passport-oauth2@1.x.x, "passport-oauth2@git://github.com/craigspaeth/passport-oauth2.git":
+passport-oauth2@1.x.x:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.4.0.tgz#f62f81583cbe12609be7ce6f160b9395a27b86ad"
+  dependencies:
+    oauth "0.9.x"
+    passport-strategy "1.x.x"
+    uid2 "0.0.x"
+    utils-merge "1.x.x"
+
+passport-oauth2@craigspaeth/passport-oauth2:
   version "1.1.2"
-  resolved "git://github.com/craigspaeth/passport-oauth2.git#dd742296739f64dc8fce9f21939177a1cd4c09c2"
+  resolved "https://codeload.github.com/craigspaeth/passport-oauth2/tar.gz/dd742296739f64dc8fce9f21939177a1cd4c09c2"
   dependencies:
     oauth "git://github.com/craigspaeth/node-oauth.git"
     passport-strategy "1.x.x"
@@ -7873,6 +7899,14 @@ react-sizeme@^2.3.2:
     invariant "^2.2.2"
     lodash "^4.17.4"
 
+react-sizeme@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/react-sizeme/-/react-sizeme-2.3.6.tgz#d60ea2634acc3fd827a3c7738d41eea0992fa678"
+  dependencies:
+    element-resize-detector "^1.1.12"
+    invariant "^2.2.2"
+    lodash "^4.17.4"
+
 react-slick@^0.14.11:
   version "0.14.11"
   resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.14.11.tgz#c2cbdbe3728c66a2ff4929be96d457e3ea0d80f3"
@@ -8027,7 +8061,7 @@ readable-stream@1.0.27-1:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readable-stream@1.1, readable-stream@^1.1.13, readable-stream@~1.1.9:
+readable-stream@1.1, readable-stream@~1.1.9:
   version "1.1.13"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.13.tgz#f6eef764f514c89e2b9e23146a75ba106756d23e"
   dependencies:
@@ -8693,9 +8727,9 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-"simple-modal@git://github.com/craigspaeth/simple-modal.git":
+simple-modal@craigspaeth/simple-modal:
   version "1.0.1"
-  resolved "git://github.com/craigspaeth/simple-modal.git#e4e36ba8283e301adbc934ab73aa0270c54430f4"
+  resolved "https://codeload.github.com/craigspaeth/simple-modal/tar.gz/e4e36ba8283e301adbc934ab73aa0270c54430f4"
   dependencies:
     coffeeify "*"
     cssify "*"
@@ -9422,7 +9456,7 @@ ua-parser@^0.3.5:
   dependencies:
     yamlparser ">=0.0.2"
 
-uglify-js@2.x.x, uglify-js@^2.6, uglify-js@^2.6.2, uglify-js@^2.8.29:
+uglify-js@2.x.x, uglify-js@^2.4.19, uglify-js@^2.6, uglify-js@^2.6.2, uglify-js@^2.8.29:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
@@ -10035,9 +10069,9 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-"yoastseo@git+https://github.com/artsy/YoastSEO.js.git#develop":
+yoastseo@artsy/YoastSEO.js#develop:
   version "1.2.2"
-  resolved "git+https://github.com/artsy/YoastSEO.js.git#98ed2d2adf15bb9ef5ae95a01269bb7f21c24638"
+  resolved "https://codeload.github.com/artsy/YoastSEO.js/tar.gz/98ed2d2adf15bb9ef5ae95a01269bb7f21c24638"
   dependencies:
     jed "^1.1.0"
     lodash "^4.6.1"
