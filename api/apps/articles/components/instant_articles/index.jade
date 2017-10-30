@@ -21,7 +21,7 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
         if article.strip('lead_paragraph')
           h3= article.get('lead_paragraph')
 
-        each author in article.getAuthorArray()
+        each author in article.get('authors')
           address= author
 
         time(class='op-published' dateTime=article.get('published_at'))= article.date('published_at').format('MMM Do, YYYY h:mm a')

@@ -1,9 +1,10 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 { stripTags } = require 'underscore.string'
-{ POSITRON_URL, FORCE_URL } = process.env
+{ ARTSY_EDITORIAL_ID, POSITRON_URL, FORCE_URL } = process.env
 moment = require 'moment'
 cheerio = require 'cheerio'
+Authors = require '../apps/authors/model'
 
 module.exports = class Article extends Backbone.Model
 
@@ -24,12 +25,6 @@ module.exports = class Article extends Backbone.Model
   strip: (attr) ->
     stripTags(@get attr)
 
-  getAuthorArray: ->
-    creator = []
-    creator.push @get('author').name if @get('author')
-    creator = _.union(creator, _.pluck(@get('contributing_authors'), 'name')) if @get('contributing_authors')?.length
-    creator
-
   # freshness boost as exponential decay on published_at date
   searchBoost: ->
     if @get('published')
@@ -40,18 +35,15 @@ module.exports = class Article extends Backbone.Model
     else
       0
 
-  isEditorial: ->
+  isFeatured: ->
     @get('featured')
 
-  prepForInstant: ->
+  isEditorial: ->
+    @get('channel_id') is ARTSY_EDITORIAL_ID
 
-    replaceTagWith = (htmlStr, findTag, replaceTag ) ->
-      $ = cheerio.load(htmlStr)
-      $(findTag).each ->
-        $(this).replaceWith($('<' + replaceTag + '>' + $(this).html() + '</' + replaceTag + '>'))
-      $.html()
-
-    sections =  _.map @get('sections'), (section) ->
+  prepForInstant: (cb) ->
+    # @getAuthors (authors) =>
+    sections =  _.map @get('sections'), (section) =>
       if section.type is 'text'
         $ = cheerio.load(section.body)
         $('br').remove()
@@ -59,14 +51,42 @@ module.exports = class Article extends Backbone.Model
         $('p').each ->
           $(this).remove() if $(this).text().length is 0
         section.body = $.html()
-        section.body = replaceTagWith(section.body, 'h3', 'h2')
+        section.body = @replaceTagWith(section.body, 'h3', 'h2')
         section
       else if section.type in ['image_set', 'image_collection']
-        section.images = _.map section.images, (image) ->
+        section.images = _.map section.images, (image) =>
           if image.type is 'image'
-            image.caption = replaceTagWith(image.caption, 'p', 'h1') if image.caption
+            image.caption = @replaceTagWith(image.caption, 'p', 'h1') if image.caption
           image
         section
       else
         section
-    @set 'sections', sections
+    @set
+      sections: sections
+      authors: authors
+    cb()
+
+  replaceTagWith: (htmlStr, findTag, replaceTag) ->
+    $ = cheerio.load(htmlStr)
+    $(findTag).each ->
+      $(this).replaceWith($('<' + replaceTag + '>' + $(this).html() + '</' + replaceTag + '>'))
+    $.html()
+
+  getAuthors: (cb) ->
+    console.log('in the get authors thing')
+    if @isEditorial()
+      return ['Artsy Editors'] unless @get('author_ids')
+      console.log('here')
+      Authors.where
+        ids: @get('author_ids')
+      , (err, results) ->
+        console.log err
+        console.log results
+        return cb(_.pluck results.results, 'name')
+    else
+      if @get('contributing_authors')?.length
+        cb _.pluck(@get('contributing_authors'), 'name')
+      else if @get('author')?.name
+        cb [@get('author')?.name]
+      else
+        cb []
