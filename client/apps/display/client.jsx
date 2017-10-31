@@ -4,7 +4,13 @@ import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/D
 import track from 'react-tracking'
 const sd = require('sharify').data
 
-@track({ page: 'Instant Article Display Panel' })
+@track(
+  { page: 'Instant Article Display Panel' },
+  { dispatch: (data) => {
+    const { action, ...rest } = data
+    window.analytics.track(action, rest)
+  }}
+)
 class DisplayWrapper extends React.Component {
   render () {
     return (
