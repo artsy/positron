@@ -8,6 +8,7 @@
     "babel-plugin-rewire",
     "inline-react-svg",
     "transform-runtime",
+    "transform-decorators-legacy",
     ["module-resolver", {
       "root": ["./"]
     }],

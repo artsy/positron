@@ -5,7 +5,7 @@ import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/D
 import { ServerStyleSheet } from 'styled-components'
 import { DisplayQuery } from 'client/apps/display/query'
 
-const { API_URL } = process.env
+const { API_URL, NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 
 export const display = (req, res, next) => {
   request
@@ -37,7 +37,9 @@ export const display = (req, res, next) => {
     res.render('index', {
       css,
       body,
-      fallback: !display
+      fallback: !display,
+      nodeEnv: NODE_ENV,
+      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
     })
   })
 }
