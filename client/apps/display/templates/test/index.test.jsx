@@ -26,6 +26,6 @@ describe('display template', () => {
       fallback: true,
       sd: {}
     })
-    expect(html).toMatch('<iframe src="http://link.artsy.net/join/sign-up-editorial-facebook"')
+    expect(html).toMatch('<iframe src="https://link.artsy.net/join/sign-up-editorial-facebook"')
   })
 })

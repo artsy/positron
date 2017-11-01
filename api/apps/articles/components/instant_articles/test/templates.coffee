@@ -27,7 +27,7 @@ describe 'instant article template', ->
       toSentence: ->
     html.should.containEql 'fb:article_style'
     html.should.containEql 'analytics.track(\'time on page more than 15 seconds'
-    html.should.containEql '<iframe src="http://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
+    html.should.containEql '<iframe src="https://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
 
   it 'renders sections', ->
     html = render('index')
