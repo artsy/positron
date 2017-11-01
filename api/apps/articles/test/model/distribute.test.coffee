@@ -178,7 +178,7 @@ describe 'Save', ->
           @post.args[0][0].should.equal 'https://graph.facebook.com/v2.7/12345/instant_articles'
           @send.args[0][0].html_source.should.containEql '<p>This is a paragraph</p>'
           @send.args[0][0].html_source.should.containEql 'fb:article_style'
-          @send.args[0][0].html_source.should.containEql '<iframe src="http://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
+          @send.args[0][0].html_source.should.containEql '<iframe src="https://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
           done()
 
       it 'performs a deep copy so it doesnt affect the original article when prepping', (done) ->
