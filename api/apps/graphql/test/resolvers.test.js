@@ -131,13 +131,28 @@ describe('resolvers', () => {
 
   describe('relatedAuthors', () => {
     it('can find authors', async () => {
-      const args = {ids: [{ id: '123' }]}
-      const results = await resolvers.relatedAuthors({}, args, req, {})
+      const root = { author_ids: [{ id: '123' }] }
+      const results = await resolvers.relatedAuthors(root)
       results.length.should.equal(1)
       results[0].name.should.equal('Halley Johnson')
       results[0].bio.should.equal('Writer based in NYC')
       results[0].twitter_handle.should.equal('kanaabe')
       results[0].image_url.should.equal('https://artsy-media.net/halley.jpg')
+    })
+
+    it('returns null if there are no authors from fetch', async () => {
+      resolvers.__set__('Author', {
+        mongoFetch: sinon.stub().yields(null, { results: [] })
+      })
+      const root = { author_ids: [{ id: '123' }] }
+      const results = await resolvers.relatedAuthors(root)
+      _.isNull(results).should.be.true()
+    })
+
+    it('returns null if the article has no author_ids', async () => {
+      const root = { author_ids: null }
+      const results = await resolvers.relatedAuthors(root)
+      _.isNull(results).should.be.true()
     })
   })
 
