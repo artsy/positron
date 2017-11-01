@@ -1,11 +1,10 @@
 import { set } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-
-import { CanvasContainer } from './components/canvas_container.jsx'
-import { Campaign } from './components/campaign.jsx'
-import { Panel } from './components/panel.jsx'
 import DropDownItem from 'client/components/drop_down/index.jsx'
+import { Campaign } from './components/campaign.jsx'
+import { Canvas } from './components/canvas/index.jsx'
+import { Panel } from './components/panel/index.jsx'
 
 export default class DisplayAdmin extends React.Component {
   constructor (props) {
@@ -80,7 +79,7 @@ export default class DisplayAdmin extends React.Component {
                 <div className='display-admin__section-inner'>
                   <Campaign campaign={campaign} index={index} onChange={this.onChange} />
                   <Panel campaign={campaign} index={index} onChange={this.onChange} />
-                  <CanvasContainer campaign={campaign} index={index} onChange={this.onChange} />
+                  <Canvas campaign={campaign} index={index} onChange={this.onChange} />
                 </div>
               }
             </DropDownItem>
