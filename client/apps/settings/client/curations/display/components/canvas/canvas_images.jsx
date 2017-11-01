@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import ImageUpload from '../../../../../../edit/components/admin/components/image_upload.coffee'
 
 export class CanvasImages extends React.Component {
   updateImageUrls = (imgIndex, url) => {

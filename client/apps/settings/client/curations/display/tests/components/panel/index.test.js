@@ -1,5 +1,5 @@
 import React from 'react'
-import { Panel } from '../../components/panel.jsx'
+import { Panel } from '../../../components/panel/index.jsx'
 import { mount } from 'enzyme'
 
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
@@ -54,18 +54,6 @@ describe('Panel', () => {
     expect(component.find('.rich-text--paragraph').at(0).html()).toMatch('<a href="http://artsy.net/">')
   })
 
-  it('renders saved image data', () => {
-    const component = mount(
-      <Panel {...props} />
-    )
-    expect(component.find(ImageUpload).at(0).props().src).toMatch(props.campaign.panel.assets[0].url)
-    expect(component.find('.image-upload-form-preview').at(0).props().style.backgroundImage)
-      .toMatch('image.jpg')
-    expect(component.find(ImageUpload).at(1).props().src).toMatch(props.campaign.panel.logo)
-    expect(component.find('.image-upload-form-preview').at(1).props().style.backgroundImage)
-      .toMatch('logo.jpg')
-  })
-
   it('Calls props.onChange on headline change', () => {
     const component = mount(
       <Panel {...props} />
@@ -94,17 +82,5 @@ describe('Panel', () => {
     expect(props.onChange.mock.calls[2][0]).toMatch('panel.body')
     expect(props.onChange.mock.calls[2][1]).toMatch('new value')
     expect(props.onChange.mock.calls[2][2]).toBe(props.index)
-  })
-
-  it('Calls props.onChange on image change', () => {
-    const component = mount(
-      <Panel {...props} />
-    )
-    const input = component.find(ImageUpload).at(0).node
-
-    input.props.onChange(input.props.name, 'http://new-image.jpg')
-    expect(props.onChange.mock.calls[3][0]).toMatch('panel.assets')
-    expect(props.onChange.mock.calls[3][1][0].url).toMatch('http://new-image.jpg')
-    expect(props.onChange.mock.calls[3][2]).toBe(props.index)
   })
 })

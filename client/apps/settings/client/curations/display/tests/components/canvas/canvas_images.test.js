@@ -1,8 +1,7 @@
 import React from 'react'
-import { CanvasImages } from '../../components/canvas_images.jsx'
-import { mount } from 'enzyme'
-
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import { CanvasImages } from '../../../components/canvas/canvas_images.jsx'
+import { mount } from 'enzyme'
 
 describe('Canvas Images', () => {
   const props = {

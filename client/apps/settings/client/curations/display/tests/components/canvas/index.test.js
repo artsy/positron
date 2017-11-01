@@ -1,7 +1,9 @@
 import React from 'react'
-import { Canvas } from '../../components/canvas.jsx'
+import { Canvas } from '../../../components/canvas/index.jsx'
+import { CanvasControls } from '../../../components/canvas/canvas_controls.jsx'
+import { CanvasImages } from '../../../components/canvas/canvas_images.jsx'
+import { CanvasText } from '../../../components/canvas/canvas_text.jsx'
 import { CharacterLimit } from '/client/components/character_limit'
-import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 import { mount } from 'enzyme'
 import {
   UnitCanvasImage,
@@ -12,70 +14,38 @@ import {
 describe('Canvas', () => {
   const props = {
     campaign: {
-      canvas: {},
-      panel: {}
+      canvas: {assets: []},
+      panel: {assets: []}
     },
     index: 0,
     onChange: jest.fn()
   }
 
-  describe('Editing', () => {
-    it('Can save an edited headline', () => {
-      const component = mount(
-        <Canvas {...props} />
-      )
-      const input = component.find('input').at(0)
-      input.simulate('change', { target: { value: 'New Headline' } })
+  it('Renders layout controls and input components', () => {
+    const component = mount(
+      <Canvas {...props} />
+    )
+    expect(component.find(CanvasControls).length).toBe(1)
+    expect(component.find('.display-admin--canvas__layouts button').length).toBe(3)
+    expect(component.find(CanvasText).length).toBe(1)
+    expect(component.find(CanvasImages).length).toBe(1)
+  })
 
-      expect(props.onChange.mock.calls[0][0]).toMatch('canvas.headline')
-      expect(props.onChange.mock.calls[0][1]).toMatch('New Headline')
-      expect(props.onChange.mock.calls[0][2]).toBe(0)
-    })
+  it('Sets the canvas layout to overlay by default', () => {
+    const component = mount(
+      <Canvas {...props} />
+    )
+    expect(component.find('.display-admin--canvas__layouts button').at(0).props()['data-active']).toBe(true)
+  })
 
-    it('Can save an edited overlay body', () => {
-      props.campaign.canvas.layout = 'overlay'
-      const component = mount(
-        <Canvas {...props} />
-      )
-      component.find(PlainText).at(0).node.props.onChange('New Body')
-      expect(props.onChange.mock.calls[1][0]).toMatch('canvas.headline')
-      expect(props.onChange.mock.calls[1][1]).toMatch('New Body')
-      expect(props.onChange.mock.calls[1][2]).toBe(0)
-    })
-
-    it('Can save an edited CTA Text', () => {
-      const component = mount(
-        <Canvas {...props} />
-      )
-      const input = component.find('input').at(0)
-      input.simulate('change', { target: { value: 'Read More' } })
-
-      expect(props.onChange.mock.calls[2][0]).toMatch('canvas.link.text')
-      expect(props.onChange.mock.calls[2][1]).toMatch('Read More')
-      expect(props.onChange.mock.calls[2][2]).toBe(0)
-    })
-
-    it('Can save an edited CTA Link', () => {
-      const component = mount(
-        <Canvas {...props} />
-      )
-      const input = component.find('input').at(1)
-      input.simulate('change', { target: { value: 'http://artsy.net' } })
-
-      expect(props.onChange.mock.calls[3][0]).toMatch('canvas.link.url')
-      expect(props.onChange.mock.calls[3][1]).toMatch('http://artsy.net')
-      expect(props.onChange.mock.calls[3][2]).toBe(0)
-    })
-
-    it('Can save an edited Disclaimer', () => {
-      const component = mount(
-        <Canvas {...props} />
-      )
-      component.find(PlainText).at(1).node.props.onChange('New Disclaimer')
-      expect(props.onChange.mock.calls[4][0]).toMatch('canvas.disclaimer')
-      expect(props.onChange.mock.calls[4][1]).toMatch('New Disclaimer')
-      expect(props.onChange.mock.calls[4][2]).toBe(0)
-    })
+  it('Changes the canvas layout on button click', () => {
+    const component = mount(
+      <Canvas {...props} />
+    )
+    component.find('.display-admin--canvas__layouts button').at(2).simulate('click')
+    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.layout')
+    expect(props.onChange.mock.calls[0][1]).toMatch('slideshow')
+    expect(props.onChange.mock.calls[0][2]).toBe(props.index)
   })
 
   describe('Overlay', () => {

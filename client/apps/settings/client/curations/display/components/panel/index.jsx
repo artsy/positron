@@ -6,6 +6,7 @@ import { PanelImages } from './panel_images.jsx'
 
 export const Panel = (props) => {
   const { campaign, index, onChange } = props
+  const { panel } = campaign
   return (
     <div className='display-admin__section--panel'>
       <div className='display-admin__section-title'>Panel</div>
@@ -15,7 +16,7 @@ export const Panel = (props) => {
               <CharacterLimit
                 label='Headline'
                 placeholder='Headline'
-                defaultValue={campaign.panel ? campaign.panel.headline : ''}
+                defaultValue={panel.headline || ''}
                 onChange={(value) => onChange('panel.headline', value, index)}
                 limit={25}
               />
@@ -25,7 +26,7 @@ export const Panel = (props) => {
               <input
                 className='bordered-input'
                 placeholder='Find Out More'
-                defaultValue={campaign.canvas && campaign.panel.link ? campaign.panel.link.url : ''}
+                defaultValue={panel.link ? panel.link.url : ''}
                 onChange={(e) => onChange('panel.link.url', e.target.value, index)}
               />
             </div>
@@ -34,7 +35,7 @@ export const Panel = (props) => {
                 type='textarea'
                 label='Body'
                 placeholder='Body'
-                defaultValue={campaign.panel ? campaign.panel.body : ''}
+                defaultValue={panel.body || ''}
                 onChange={(value) => onChange('panel.body', value, index)}
                 html
                 limit={45}
@@ -58,5 +59,3 @@ Panel.propTypes = {
   index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired
 }
-
-export default Panel

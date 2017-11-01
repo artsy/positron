@@ -5,7 +5,7 @@ import ImageUpload from 'client/apps/edit/components/admin/components/image_uplo
 
 export const PanelImages = (props) => {
   const { campaign, index, onChange } = props
-  const { assets } = campaign.panel
+  const assets = campaign.panel.assets || []
   const imgUrl = assets.length ? assets[0].url : ''
   const isVideo = assets.length && assets[0].url.includes('mp4')
 
@@ -24,14 +24,14 @@ export const PanelImages = (props) => {
             <label>Cover Image</label>
             <ImageUpload
               name='panel.cover_img_url'
-              src={campaign.panel && campaign.panel.cover_img_url}
+              src={campaign.panel.cover_img_url || ''}
               onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
           </Col>
         : <Col lg className='img-logo'>
             <label>Logo</label>
             <ImageUpload
               name='panel.logo'
-              src={campaign.panel && campaign.panel.logo}
+              src={campaign.panel.logo || ''}
               onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
           </Col>
       }

@@ -4,12 +4,12 @@ import DisplayAdmin from '../index.jsx'
 import { mount } from 'enzyme'
 
 import DropDownItem from 'client/components/drop_down/index.jsx'
-import { CanvasContainer } from '../components/canvas_container.jsx'
+import { Canvas } from '../components/canvas/index.jsx'
 import { Campaign } from '../components/campaign.jsx'
-import { Panel } from '../components/panel.jsx'
+import { Panel } from '../components/panel/index.jsx'
 
 describe('Display Admin', () => {
-  global.confirm = jest.fn( () => true )
+  global.confirm = jest.fn(() => true)
 
   const curation = new Backbone.Model({
     name: 'Display Admin',
@@ -49,7 +49,7 @@ describe('Display Admin', () => {
     expect(component.find('.drop-down__title').at(1).props()['data-active']).toBe(true)
     expect(component.find(Campaign).length).toBe(1)
     expect(component.find(Panel).length).toBe(1)
-    expect(component.find(CanvasContainer).length).toBe(1)
+    expect(component.find(Canvas).length).toBe(1)
   })
 
   it('#onChange updates state.campaign and changes the save button text/color', () => {
