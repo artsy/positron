@@ -77,13 +77,10 @@ export const relatedAuthors = (root) => {
         }
         if (results.length) {
           resolve(results)
-        } else {
-          resolve(null)
         }
       })
-    } else {
-      resolve(null)
     }
+    resolve(null)
   })
 }
 
