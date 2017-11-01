@@ -1,13 +1,22 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 const gemup = require('gemup')
 const sd = require('sharify').data
 
 export default class FileInput extends Component {
-  constructor (props) {
-    super(props)
+  static propTypes = {
+    disabled: PropTypes.bool,
+    hasImage: PropTypes.string,
+    label: PropTypes.string,
+    onProgress: PropTypes.func,
+    onUpload: PropTypes.func,
+    prompt: PropTypes.string,
+    sizeLimit: PropTypes.number,
+    type: PropTypes.string,
+    video: PropTypes.bool
   }
 
-  getSizeLimit() {
+  getSizeLimit () {
     if (this.props.sizeLimit) {
       return this.props.sizeLimit * 1000000
     } else {
@@ -15,12 +24,14 @@ export default class FileInput extends Component {
     }
   }
 
-  getSizeError() {
+  getSizeError () {
     const size = this.props.sizeLimit ? this.props.sizeLimit.toString() : '30'
     return 'Error: Size limit is ' + size + 'MB, selected file is too large.'
   }
 
   uploadFile = (e) => {
+    const { onProgress, onUpload } = this.props
+
     if (e.target.files[0].size > this.getSizeLimit()) {
       return alert(this.getSizeError())
     }
@@ -28,10 +39,10 @@ export default class FileInput extends Component {
       app: sd.GEMINI_APP,
       key: sd.GEMINI_KEY,
       progress: percent => {
-        this.props.onProgress(percent)
+        onProgress(percent)
       },
       add: src => {
-        this.props.onProgress(0.1)
+        onProgress(0.1)
       },
       fail: err => {
         console.log(err)
@@ -40,14 +51,14 @@ export default class FileInput extends Component {
         const image = new Image()
         image.src = src
         image.onload = () => {
-          this.props.onUpload(src, image.width, image.height)
-          this.props.onProgress(null)
+          onUpload(src, image.width, image.height)
+          onProgress(null)
         }
       }
     })
   }
 
-  getAccepted() {
+  getAccepted () {
     const accept = ['.jpg', '.jpeg', '.png', '.gif']
     if (this.props.video) {
       accept.push('.mp4')
@@ -55,10 +66,12 @@ export default class FileInput extends Component {
     return accept.toString()
   }
 
-  renderUploadPrompt() {
-    if (this.props.prompt) {
+  renderUploadPrompt () {
+    const { hasImage, prompt } = this.props
+
+    if (prompt) {
       return (
-        <h1>{this.props.prompt}</h1>
+        <h1>{prompt}</h1>
       )
     } else {
       return (
@@ -67,13 +80,13 @@ export default class FileInput extends Component {
           <span className='file-input__upload-container-drop'>Drop</span>
           <span> or </span>
           <span className='file-input__upload-container-click'>Click</span>
-          <span> to {this.props.hasImage ? 'Replace' : 'Upload'}</span>
+          <span> to {hasImage ? 'Replace' : 'Upload'}</span>
         </h1>
       )
     }
   }
 
-  render() {
+  render () {
     const { label, hasImage, sizeLimit, type, disabled } = this.props
     const typeClass = type ? ' ' + type : ''
     const disabledClass = disabled ? ' disabled' : ''
@@ -86,7 +99,8 @@ export default class FileInput extends Component {
           <input
             type='file'
             onChange={this.uploadFile}
-            accept={this.getAccepted()} />
+            accept={this.getAccepted()}
+          />
         </div>
       </div>
     )

@@ -4,17 +4,20 @@ import { mount, shallow } from 'enzyme'
 import { SectionVideo } from '../index.jsx'
 
 describe('Video', () => {
+  let props
 
-  const props = {
-    section: new Backbone.Model({
-      type: 'video',
-      url: '',
-      cover_image_url: 'http://image.jpg',
-      caption: 'A video caption.'
-    }),
-    article: new Backbone.Model({layout: 'standard'}),
-    channel: new Backbone.Model()
-  }
+  beforeEach(() => {
+    props = {
+      section: new Backbone.Model({
+        type: 'video',
+        url: 'http://some-url.com',
+        cover_image_url: 'http://image.jpg',
+        caption: 'A video caption.'
+      }),
+      article: new Backbone.Model({layout: 'standard'}),
+      channel: new Backbone.Model()
+    }
+  })
 
   beforeAll(() => {
     global.window.$ = jest.fn()
@@ -22,6 +25,7 @@ describe('Video', () => {
   })
 
   it('renders a placeholder', () => {
+    props.section.set('url', null)
     const component = shallow(
       <SectionVideo {...props} />
     )
@@ -60,6 +64,35 @@ describe('Video', () => {
     expect(component.find('a.layout').length).toEqual(3)
   })
 
+  it('does not update video url if invalid', () => {
+    props.editing = true
+    const component = mount(
+      <SectionVideo {...props} />
+    )
+    const input = component.find('.bordered-input')
+    input.simulate('change', { target: { value: undefined } })
+    expect(props.section.get('url', props.section.get('url')))
+    input.simulate('change', { target: { value: 'invalid url' } })
+    expect(component.props().section.get('url')).toEqual(props.section.get('url'))
+  })
+
+  it('updates video url if valid', () => {
+    props.editing = true
+    const component = mount(
+      <SectionVideo {...props} />
+    )
+    const input = component.find('.bordered-input')
+    const validUrls = [
+      'http://hello.com',
+      'https://www.how.com',
+      'http://are.you'
+    ]
+    validUrls.forEach(value => {
+      input.node.value = value
+      input.simulate('change', { target: {value} })
+      expect(component.props().section.get('url')).toEqual(value)
+    })
+  })
 
   it('renders cover remove button if editing and has cover_image_url', () => {
     props.editing = true
@@ -70,11 +103,24 @@ describe('Video', () => {
     expect(component.children().nodes[1].props.children[0].props.className).toMatch('edit-section__remove')
   })
 
-  it('Can remove the cover_image_url', () => {
+  it('can remove the cover_image_url', () => {
+    props.editing = true
     const component = mount(
       <SectionVideo {...props} />
     )
     component.find('.edit-section__remove').simulate('click')
+    expect(component.props().section.get('cover_image_url')).toBeFalsy()
+  })
+
+  it('resets the cover url if video url is empty', () => {
+    props.editing = true
+    const component = mount(
+      <SectionVideo {...props} />
+    )
+    const input = component.find('.bordered-input')
+    input.node.value = ''
+    input.simulate('change', { target: { value: '' } })
+    expect(component.props().section.get('url')).toBeFalsy()
     expect(component.props().section.get('cover_image_url')).toBeFalsy()
   })
 

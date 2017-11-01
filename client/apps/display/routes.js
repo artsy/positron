@@ -5,7 +5,7 @@ import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/D
 import { ServerStyleSheet } from 'styled-components'
 import { DisplayQuery } from 'client/apps/display/query'
 
-const { API_URL } = process.env
+const { API_URL, NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 
 export const display = (req, res, next) => {
   request
@@ -16,22 +16,30 @@ export const display = (req, res, next) => {
     if (err) { return next(err) }
 
     const display = response.body.data.display
-    if (!display) {
-      return res.sendStatus(404)
+    let css = ''
+    let body = ''
+
+    if (display) {
+      const DisplayPanelComponent = React.createFactory(DisplayPanel)
+      const sheet = new ServerStyleSheet()
+      body = ReactDOM.renderToString(
+        sheet.collectStyles(
+          DisplayPanelComponent({
+            unit: display.panel,
+            campaign: display
+          })
+        )
+      )
+      css = sheet.getStyleTags()
     }
 
-    const DisplayPanelComponent = React.createFactory(DisplayPanel)
-    const sheet = new ServerStyleSheet()
-    const body = ReactDOM.renderToString(
-      sheet.collectStyles(
-        DisplayPanelComponent({
-          unit: display.panel,
-          campaign: display
-        })
-      )
-    )
-    const css = sheet.getStyleTags()
-
-    res.render('index', { css, body })
+    res.locals.sd.CAMPAIGN = display
+    res.render('index', {
+      css,
+      body,
+      fallback: !display,
+      nodeEnv: NODE_ENV,
+      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
+    })
   })
 }

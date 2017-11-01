@@ -1,4 +1,3 @@
-import sinon from 'sinon'
 import Backbone from 'backbone'
 import * as routes from 'client/apps/display/routes'
 import request from 'superagent'
@@ -23,7 +22,10 @@ describe('Display Routes', () => {
 
   beforeEach(() => {
     req = { user: new Backbone.Model() }
-    res = { render: jest.fn() }
+    res = {
+      render: jest.fn(),
+      locals: { sd: {} }
+    }
     next = jest.fn()
     response = {
       body: {
@@ -61,7 +63,6 @@ describe('Display Routes', () => {
     })
     routes.display(req, res, next)
     expect(res.render.mock.calls[0][1].body).toMatch('Sponsored by Campaign 1')
-    expect(res.render.mock.calls[0][1].body).toMatch('href="http://artsy.net"')
   })
 
   it('extracts css from component and passes it to the template', () => {
@@ -73,11 +74,19 @@ describe('Display Routes', () => {
     expect(res.render.mock.calls[0][1].css).toMatch('DisplayPanel')
   })
 
-  it('calls next if no ad is found', () => {
+  it('calls next if there is an error with the request', () => {
     request.end.mockImplementation((cb) => {
       cb('Error', {})
     })
     routes.display(req, res, next)
     expect(next).toBeCalled()
+  })
+
+  it('uses a fallback if there is no ad to show', () => {
+    request.end.mockImplementation((cb) => {
+      cb(null, { body: { data: { display: null } } })
+    })
+    routes.display(req, res, next)
+    expect(res.render.mock.calls[0][1].fallback).toBe(true)
   })
 })

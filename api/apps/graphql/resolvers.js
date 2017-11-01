@@ -70,12 +70,20 @@ export const relatedAuthors = (root) => {
     ids: root.author_ids
   }
   return new Promise(async (resolve, reject) => {
-    Author.mongoFetch(args, (err, results) => {
-      if (err) {
-        reject(new Error(err))
-      }
-      resolve(results.results)
-    })
+    if (args.ids && args.ids.length) {
+      Author.mongoFetch(args, (err, {results}) => {
+        if (err) {
+          reject(new Error(err))
+        }
+        if (results.length) {
+          resolve(results)
+        } else {
+          resolve(null)
+        }
+      })
+    } else {
+      resolve(null)
+    }
   })
 }
 
