@@ -1,11 +1,10 @@
 import { set } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-
-import { Canvas } from './components/canvas/index.jsx'
-import { Campaign } from './components/campaign.jsx'
-import { Panel } from './components/panel/index.jsx'
 import DropDownItem from 'client/components/drop_down/index.jsx'
+import { Campaign } from './components/campaign.jsx'
+import { Canvas } from './components/canvas/index.jsx'
+import { Panel } from './components/panel/index.jsx'
 
 export default class DisplayAdmin extends React.Component {
   constructor (props) {

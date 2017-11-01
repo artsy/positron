@@ -17,6 +17,7 @@ export const PanelImages = (props) => {
           name='panel.assets'
           hasVideo
           src={imgUrl}
+          size={30}
           onChange={(name, url) => onImageInputChange(name, url, index, onChange)} />
       </Col>
       {isVideo

@@ -52,7 +52,7 @@ export class CanvasImages extends React.Component {
     return (
       <Row className='slideshow-images'>
         {this.renderAssets()}
-        {assets.length && assets.length < 5 
+        {assets.length && assets.length < 5
           ? newImage
           : false
         }
@@ -83,6 +83,7 @@ export class CanvasImages extends React.Component {
         name='canvas.assets'
         hasVideo={hasVideo}
         hidePreview={hidePreview}
+        size={30}
         src={assets[imgIndex] ? assets[imgIndex].url : ''}
         onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
     )
