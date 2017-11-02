@@ -9,7 +9,7 @@ import { PlainText } from '/client/components/rich_text2/components/plain_text.j
 export default class SectionHeader extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
+    channel: PropTypes.object.isRequired
   }
 
   state = {
@@ -155,8 +155,4 @@ export default class SectionHeader extends Component {
       )
     }
   }
-}
-
-SectionHeader.propTypes = {
-
 }

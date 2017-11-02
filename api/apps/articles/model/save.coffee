@@ -169,7 +169,7 @@ sanitizeHtml = (html) ->
   xss $.html(),
     whiteList: _.extend xss.getDefaultWhiteList(),
       a: ['target', 'href', 'title', 'name', 'class', 'data-id']
-      span: ['style']
+      span: ['style', 'class']
 
 @getTextSections = (article) ->
   condensedHTML = article.lead_paragraph or ''
