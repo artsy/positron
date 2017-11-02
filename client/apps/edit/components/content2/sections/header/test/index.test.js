@@ -165,7 +165,7 @@ describe('Header', () => {
       expect(component.html()).toMatch('StandardHeader__Vertical')
       expect(component.html()).toMatch('Art Market')
       expect(component.html()).toMatch('StandardHeader__Title')
-      expect(component.html()).toMatch('Artsy Editorial')
+      expect(component.html()).toMatch('Artsy Editors')
     })
 
     it('renders a saved title', () => {
