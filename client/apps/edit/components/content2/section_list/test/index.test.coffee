@@ -48,7 +48,16 @@ describe 'SectionList', ->
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
           { body: 'Foo to the bar', type: 'text' }
-          { type: 'image', url: 'http://artsy.net/image.jpg', caption: '<p>An image caption</p>', layout: 'column_width'}
+          {
+            type: 'image_collection'
+            images: [
+              {
+                url: 'http://artsy.net/image.jpg'
+                caption: '<p>An image caption</p>'
+              }
+            ]
+            layout: 'column_width'
+          }
           {
             type: 'image_collection'
             images: [

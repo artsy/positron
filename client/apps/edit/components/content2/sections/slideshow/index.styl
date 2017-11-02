@@ -1,6 +1,5 @@
 @import '../../../stylus_lib'
 
-img-height = 500px
 li-height = 620px
 
 .edit-section-container[data-type=slideshow]
@@ -10,10 +9,10 @@ li-height = 620px
 .edit-section-container[data-type=slideshow]
 .edit-section-container[data-type=slideshow] .edit-section-hover-controls
 .edit-section-container[data-type=slideshow][data-editing=true]::after
-.edit-section-slideshow li
+.edit-section--slideshow li
   height li-height
 
-.edit-section-slideshow
+.edit-section--slideshow
   li
     display inline-block
     vertical-align top
@@ -21,15 +20,10 @@ li-height = 620px
     text-align left
     img
       max-height 100%
-      height img-height
+      height 500px
 
   .ess-container
-    margin-left (sidebar-width + controls-padding * 2)
-    width "calc(100% - %s)" % (sidebar-width + controls-padding * 2)
-    left 0
-    position absolute
     overflow scroll
-    text-align center
 
   .ess-list
     width 99999px
