@@ -11,13 +11,15 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
     link(rel='canonical' href=article.fullHref())
     meta(property='fb:article_style' content='default')
     meta(property='fb:admins' content='7961740')
-    meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=medium')
+    //- TODO: Enable Display
+    //- meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=medium')
 
   body
     article
       header
-        figure.op-ad
-          iframe(src="#{displayUrl}" height="300" width="300")
+        //- TODO: Enable Display
+        //- figure.op-ad
+        //-   iframe(src="#{displayUrl}" height="300" width="300")
 
         if hero
           +hero_section(hero)
@@ -53,8 +55,6 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
       
       if article.get('postscript')
         != article.get('postscript')
-
-      +editorialSignup
 
       figure.op-tracker
         iframe(hidden)
