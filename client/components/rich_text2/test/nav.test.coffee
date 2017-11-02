@@ -11,7 +11,7 @@ r =
   simulate: ReactTestUtils.Simulate
 
 { blockTypes,
-  inlineStyles } = require '../../../apps/edit/components/content2/sections/text/draft_config.coffee'
+  inlineStyles } = require '../../../apps/edit/components/content2/sections/text/draft_config.js'
 
 describe 'RichText: Nav', ->
 
