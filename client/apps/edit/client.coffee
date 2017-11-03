@@ -12,8 +12,7 @@ EditLayout = require './components/layout/index.coffee'
 EditHeader = require './components/header/index.coffee'
 EditDisplay = require './components/display/index.coffee'
 EditAdmin = React.createFactory require './components/admin/index.coffee'
-EditContent = React.createFactory require './components/content/index.coffee'
-EditContent2 = React.createFactory require './components/content2/index.coffee'
+EditContent = React.createFactory require './components/content2/index.coffee'
 
 async = require 'async'
 
@@ -28,13 +27,7 @@ async = require 'async'
     EditAdmin(article: @article, channel: channel)
     $('#edit-admin')[0]
   )
-  if sd.EDIT_2
-    ReactDOM.render(
-      EditContent2(article: @article, channel: channel)
-      $('#edit-content')[0]
-    )
-  else
-    ReactDOM.render(
-      EditContent(article: @article, channel: channel)
-      $('#edit-content')[0]
-    )
+  ReactDOM.render(
+    EditContent(article: @article, channel: channel)
+    $('#edit-content')[0]
+  )
