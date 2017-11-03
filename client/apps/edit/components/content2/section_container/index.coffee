@@ -8,9 +8,8 @@ React = require 'react'
 _ = require 'underscore'
 Text = React.createFactory require '../sections/text/index.coffee'
 { SectionVideo } = require '../sections/video/index.jsx'
-Slideshow = React.createFactory require '../../content/sections/slideshow/index.coffee'
+Slideshow = React.createFactory require '../sections/slideshow/index.coffee'
 Embed = React.createFactory require '../sections/embed/index.coffee'
-Fullscreen = React.createFactory require '../../content/sections/fullscreen/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
@@ -62,21 +61,20 @@ module.exports = React.createClass
       'data-type': @props.section.get('type')
       'data-layout': @props.section.get('layout') or 'column_width'
     },
-      unless @props.section.get('type') is 'fullscreen'
-        div {
-          className: 'edit-section__hover-controls'
-          onClick: @setEditing(on)
-        },
-          unless @props.isHero
-            button {
-              className: "edit-section__drag button-reset"
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
-            }
+      div {
+        className: 'edit-section__hover-controls'
+        onClick: @setEditing(on)
+      },
+        unless @props.isHero
           button {
-            className: "edit-section__remove button-reset"
-            onClick: @removeSection
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+            className: "edit-section__drag button-reset"
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
           }
+        button {
+          className: "edit-section__remove button-reset"
+          onClick: @removeSection
+          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+        }
       if @props.section.get('type') is 'video'
         React.createElement(
           SectionVideo, @sectionProps()
@@ -86,10 +84,8 @@ module.exports = React.createClass
           when 'text' then Text
           when 'slideshow' then Slideshow
           when 'embed' then Embed
-          when 'fullscreen' then Fullscreen
           when 'image_set' then ImageCollection
           when 'image_collection' then ImageCollection
-          when 'image' then ImageCollection
         )( @sectionProps() )
       div {
         className: 'edit-section__container-bg'

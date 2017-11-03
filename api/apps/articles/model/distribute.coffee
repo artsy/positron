@@ -1,8 +1,9 @@
 {
+  APP_URL
+  EDITORIAL_CHANNEL
   SAILTHRU_KEY
   SAILTHRU_SECRET
   FORCE_URL
-  EDITORIAL_CHANNEL
   FB_PAGE_ID
   INSTANT_ARTICLE_ACCESS_TOKEN
   GEMINI_CLOUDFRONT_URL
@@ -23,7 +24,7 @@ moment = require 'moment'
 particle = require 'particle'
 { cloneDeep } = require 'lodash'
 
-@distributeArticle = (article, cb) =>
+@distributeArticle = (article, cb) ->
   cleanArticlesInSailthru article.slugs
   async.parallel [
     (callback) ->
@@ -34,10 +35,10 @@ particle = require 'particle'
     debug err if err
     cb(article)
 
-@deleteArticleFromSailthru = (slug, cb) =>
+@deleteArticleFromSailthru = (slug, cb) ->
   sailthru.apiDelete 'content',
     url: "#{FORCE_URL}/article/#{slug}"
-  , (err, response) =>
+  , (err, response) ->
     debug err if err
     cb()
 
@@ -49,31 +50,31 @@ cleanArticlesInSailthru = (slugs = []) =>
 
 postFacebookAPI = (article, cb) ->
   article = new Article cloneDeep article
-  return cb() unless article.isEditorial()
-  article.prepForInstant()
-  jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
-    {
-      article: article
-      forceUrl: FORCE_URL
-      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
-      toSentence: _s.toSentence
-      _: _
-      moment: moment
-      particle: particle
-    },
-    (err, html) ->
-      request
-        .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
-        .send
-          access_token: INSTANT_ARTICLE_ACCESS_TOKEN
-          development_mode: NODE_ENV isnt 'production'
-          published: NODE_ENV is 'production'
-          html_source: html
-        .end (err, response) =>
-          if err
-            debug err
-            return cb err
-          cb response
+  return cb() unless article.isFeatured()
+
+  article.prepForInstant ->
+    jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
+      {
+        article: article
+        forceUrl: FORCE_URL
+        segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
+        toSentence: _s.toSentence
+        _: _
+        moment: moment
+        particle: particle
+      },
+      (err, html) ->
+        return cb() if err
+        request
+          .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
+          .send
+            access_token: INSTANT_ARTICLE_ACCESS_TOKEN
+            development_mode: NODE_ENV isnt 'production'
+            published: NODE_ENV is 'production'
+            html_source: html
+          .end (err, response) ->
+            return cb err if err
+            cb response
 
 postSailthruAPI = (article, cb) ->
   return cb() if article.scheduled_publish_at
@@ -103,7 +104,7 @@ postSailthruAPI = (article, cb) ->
     daily_email: article.daily_email
     weekly_email: article.weekly_email
     vertical: article.vertical?.name
-  , (err, response) =>
+  , (err, response) ->
     if err
       debug err
       return cb err
@@ -129,7 +130,7 @@ postSailthruAPI = (article, cb) ->
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections?.length > 0 and article.channel_id and article.channel_id.toString() is EDITORIAL_CHANNEL
+      visible_to_public: article.published and sections?.length > 0 and article.channel_id?.toString() is EDITORIAL_CHANNEL
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: tags
@@ -147,7 +148,7 @@ postSailthruAPI = (article, cb) ->
     type: 'article'
     id: id
   , (error, response) ->
-      console.log(error) if error
+    console.log(error) if error
   )
 
 stripHtmlTags = (str) ->
