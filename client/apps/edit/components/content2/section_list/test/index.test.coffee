@@ -18,6 +18,7 @@ describe 'SectionList', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       global.HTMLElement = () => {}
+      global.Image = () => {}
       window.matchMedia = sinon.stub().returns(
         {
           matches: false
