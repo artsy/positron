@@ -12,49 +12,93 @@ describe "Article", ->
 
   beforeEach ->
     Article.__set__ 'FORCE_URL', 'https://artsy.net'
+    Article.__set__ 'Authors', mongoFetch: @AuthorFetch = sinon.stub()
+    Article.__set__ 'EDITORIAL_CHANNEL', '12345'
     @article = new Article
 
   describe '#prepForInstant', ->
 
-    it 'returns the article with empty tags removed', ->
+    it 'returns the article with empty tags removed', (cb) ->
       @article.set 'sections', [
         { type: 'text', body: '<p>First Paragraph</p><p></p>' },
         { type: 'text', body: '<p>Second Paragraph</p><br>'}
       ]
-      @article.prepForInstant()
-      @article.get('sections')[0].body.should.equal '<p>First Paragraph</p>'
-      @article.get('sections')[1].body.should.equal '<p>Second Paragraph</p>'
+      @article.prepForInstant =>
+        @article.get('sections')[0].body.should.equal '<p>First Paragraph</p>'
+        @article.get('sections')[1].body.should.equal '<p>Second Paragraph</p>'
+        cb()
 
-    it 'returns the article with captions p tags replaced by h1', ->
+    it 'returns the article with captions p tags replaced by h1', (cb) ->
       @article.set 'sections', [
         { type: 'image_set', images: [
           { type: 'image', caption: '<p>A place for credit</p>' }
         ]}
       ]
-      @article.prepForInstant()
-      @article.get('sections')[0].images[0].caption.should.equal '<h1>A place for credit</h1>'
+      @article.prepForInstant =>
+        @article.get('sections')[0].images[0].caption.should.equal '<h1>A place for credit</h1>'
+        cb()
+
+  describe '#isFeature', ->
+
+    it 'returns true for featured articles', ->
+      @article.set 'featured', true
+      @article.isFeatured().should.be.true()
+
+    it 'returns false for non-featured articles', ->
+      @article.set 'featured', false
+      @article.isFeatured().should.be.false()
 
   describe '#isEditorial', ->
 
     it 'returns true for featured articles', ->
-      @article.set 'featured', true
+      @article.set 'channel_id', '12345'
       @article.isEditorial().should.be.true()
 
     it 'returns false for non-featured articles', ->
-      @article.set 'featured', false
+      @article.set 'partner_channel_id', '13579'
       @article.isEditorial().should.be.false()
 
-  describe '#getAuthorArray', ->
+  describe '#getAuthors', ->
 
-    it 'returns a list of authors', ->
-      @article.set 'author', name: 'Artsy Editorial'
-      @article.set 'contributing_authors', [
-        { name: 'Molly' }
-        { name: 'Kana' }
-      ]
-      @article.getAuthorArray()[0].should.equal 'Artsy Editorial'
-      @article.getAuthorArray()[1].should.equal 'Molly'
-      @article.getAuthorArray()[2].should.equal 'Kana'
+    describe 'Editorial', ->
+      it 'returns a list of authors', (cb) ->
+        @article.set
+          author_ids: ['123', '456']
+          channel_id: '12345'
+        authors = [
+          { name: 'Molly' }
+          { name: 'Kana' }
+        ]
+        @AuthorFetch.yields null, results: authors
+        @article.getAuthors (authors) ->
+          authors[0].should.equal 'Molly'
+          authors[1].should.equal 'Kana'
+          cb()
+
+      it 'has a fallback author', (cb) ->
+        @article.set 'channel_id', '12345'
+        @AuthorFetch.yields null, results: []
+        @article.getAuthors (authors) ->
+          authors[0].should.equal 'Artsy Editors'
+          authors.length.should.equal 1
+          cb()
+
+    describe 'Non-Editorial', ->
+      it 'returns contributing authors', (cb) ->
+        @article.set 'contributing_authors', [
+          { name: 'Molly' }
+          { name: 'Kana' }
+        ]
+        @article.getAuthors (authors) ->
+          authors[0].should.equal 'Molly'
+          authors[1].should.equal 'Kana'
+          cb()
+
+      it 'returns an author', (cb) ->
+        @article.set 'author', name: 'Kana'
+        @article.getAuthors (authors) ->
+          authors[0].should.equal 'Kana'
+          cb()
 
   describe '#searchBoost', ->
     it 'creates a freshness score for search with a maximum cap', ->

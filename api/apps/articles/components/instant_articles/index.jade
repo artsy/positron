@@ -1,6 +1,8 @@
 //- Markup for the individual Instant Article
 
 include mixins
+- var hero = article.get('hero_section')
+- var leadParagraph = article.get('lead_paragraph')
 
 html(lang="en" prefix="op: http://media.facebook.com/op#")
   head
@@ -9,49 +11,50 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
     link(rel='canonical' href=article.fullHref())
     meta(property='fb:article_style' content='default')
     meta(property='fb:admins' content='7961740')
+    //- TODO: Enable Display
+    //- meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=medium')
 
   body
     article
       header
-        if article.get('hero_section')
-          +hero_section(article.get('hero_section'))
+        //- TODO: Enable Display
+        //- figure.op-ad
+        //-   iframe(src="#{displayUrl}" height="300" width="300")
+
+        if hero
+          +hero_section(hero)
 
         h1= article.get('title')
 
-        if article.strip('lead_paragraph')
-          h3= article.get('lead_paragraph')
+        if hero && article.strip(hero.deck)
+          h2= hero.deck
+        else if article.strip(leadParagraph)
+          h2!= leadParagraph
 
-        each author in article.getAuthorArray()
+        each author in article.get('authors')
           address= author
 
         time(class='op-published' dateTime=article.get('published_at'))= article.date('published_at').format('MMM Do, YYYY h:mm a')
         time(class='op-modified' dateTime=article.get('updated_at'))= article.date('updated_at').format('MMM Do, YYYY h:mm a')
 
-      if article.get('hero_section') && article.get('hero_section').type === 'video'
-        +video(article.get('hero_section'))
+      if hero && hero.type === 'basic'
+        +video(hero)
+
       each section in article.get('sections')
         case section.type
           when 'text'
             != section.body
-          when 'artworks'
-            +artworks(section)
-          when 'image'
-            +image(section)
           when 'image_collection'
             +imageCollection(section)
           when 'video'
             +video(section)
           when 'embed'
             +embed(section)
-          when 'callout'
-            if section.article.length > 0
-              //- TODO: Article Callout
-            else if section.text && section.text.length > 0
-              aside= section.text
           when 'image_set'
             +imageSet(section)
-
-      +editorialSignup
+      
+      if article.get('postscript')
+        != article.get('postscript')
 
       figure.op-tracker
         iframe(hidden)
