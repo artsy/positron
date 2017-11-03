@@ -184,9 +184,12 @@ export const relatedArticlesPanel = (root) => {
     if (root.related_article_ids && root.related_article_ids.length) {
       const relatedArticleResults = await promisedMongoFetch(relatedArticleArgs)
       .catch((e) => reject(e))
-      relatedArticles = _.first(relatedArticleResults.results.concat(articleResults.results), 3)
+      relatedArticles = _.first(
+        relatedArticleResults.results.concat(presentCollection(articleResults).results),
+        3
+      )
     } else {
-      relatedArticles = articleResults.results
+      relatedArticles = presentCollection(articleResults).results
     }
 
     if (relatedArticles.length) {
@@ -210,11 +213,10 @@ export const relatedArticlesCanvas = (root) => {
   }
 
   return new Promise(async (resolve, reject) => {
-    const { results } = await promisedMongoFetch(_.pick(args, _.identity))
+    const relatedArticles = await promisedMongoFetch(_.pick(args, _.identity))
     .catch((e) => reject(e))
-
-    if (results.length) {
-      resolve(results)
+    if (relatedArticles.results.length) {
+      resolve(presentCollection(relatedArticles).results)
     } else {
       resolve(null)
     }
