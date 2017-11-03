@@ -12,6 +12,7 @@ class Router extends Backbone.Router
   routes:
     'articles/new': 'articleEdit'
     'articles/:id/edit': 'articleEdit'
+    'articles/:id/edit2': 'articleEdit'
     'settings/curations/:id/edit': 'curationsEdit'
     'settings/channels/:id/edit': 'channelsEdit'
     'queue': 'queueEdit'

@@ -57,9 +57,14 @@ describe 'ArticleList', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Game of Thrones'
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
 
-  it 'renders a link to /edit', ->
+  it 'renders a link to /edit if not props.isArtsyChannel', ->
     rendered = ReactDOMServer.renderToString React.createElement(@ArticleList, @props)
     $(rendered).html().should.containEql 'href="/articles/125/edit"'
+
+  it 'renders a link to /edit2 if props.isArtsyChannel', ->
+    @props.isArtsyChannel = true
+    rendered = ReactDOMServer.renderToString React.createElement(@ArticleList, @props)
+    $(rendered).html().should.containEql 'href="/articles/125/edit2"'
 
   it 'selects the article when clicking the check button', ->
     r.simulate.click @component.refs['123']
