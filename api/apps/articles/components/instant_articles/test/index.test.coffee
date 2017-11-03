@@ -34,7 +34,6 @@ describe 'instant article template', ->
     html.should.containEql '<address>Artsy Editors</address>'
     html.should.containEql 'fb:article_style'
     html.should.containEql 'analytics.track(\'time on page more than 15 seconds'
-    html.should.containEql '<iframe src="http://link.artsy.net/join/sign-up-editorial-facebook" height="250" class="no-margin">'
 
   it 'renders sections', ->
     html = render('index')
