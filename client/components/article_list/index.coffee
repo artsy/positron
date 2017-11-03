@@ -56,8 +56,8 @@ module.exports = React.createClass
             }
           a {
             className: 'article-list__article'
-            href: "/articles/#{result.id}/edit"
-          },
+            href: "/articles/#{result.id}/#{if @props.isArtsyChannel then 'edit2' else 'edit'}"
+          },   # TODO - ONLY EDIT POST ARTICLE2
             div {
               className: 'article-list__image paginated-list-img'
               style: if attrs.image then backgroundImage: "url(#{attrs.image})" else {}

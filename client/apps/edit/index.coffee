@@ -11,3 +11,4 @@ app.set 'view engine', 'jade'
 
 app.get '/articles/new', routes.create
 app.get '/articles/:id/edit', routes.edit
+app.get '/articles/:id/edit2', routes.edit
