@@ -24,7 +24,8 @@ describe('Display Routes', () => {
     req = { user: new Backbone.Model() }
     res = {
       render: jest.fn(),
-      locals: { sd: {} }
+      locals: { sd: {} },
+      setHeader: jest.fn()
     }
     next = jest.fn()
     response = {
@@ -88,5 +89,14 @@ describe('Display Routes', () => {
     })
     routes.display(req, res, next)
     expect(res.render.mock.calls[0][1].fallback).toBe(true)
+  })
+
+  it('sets the X-Frame-Options', () => {
+    request.end.mockImplementation((cb) => {
+      cb(null, response)
+    })
+    routes.display(req, res, next)
+    expect(res.setHeader.mock.calls[0][0]).toBe('X-Frame-Options')
+    expect(res.setHeader.mock.calls[0][1]).toBe('*')
   })
 })

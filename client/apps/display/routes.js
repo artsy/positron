@@ -8,6 +8,7 @@ import { DisplayQuery } from 'client/apps/display/query'
 const { API_URL, NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
 
 export const display = (req, res, next) => {
+  res.setHeader('X-Frame-Options', '*')
   request
   .post(API_URL + '/graphql')
   .set('Accept', 'application/json')
