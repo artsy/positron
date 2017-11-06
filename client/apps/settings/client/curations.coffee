@@ -7,6 +7,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 VeniceAdmin = React.createFactory require './curations/venice_admin.coffee'
 DisplayAdmin = require './curations/display/index.jsx'
+{ GucciAdmin } = require './curations/gucci/index.jsx'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
 
@@ -18,7 +19,12 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
     if @curation.get('id') is sd.EF_VENICE
       ReactDOM.render(
         VeniceAdmin(curation: @curation)
-        $('#venice-root')[0]
+        $('#react-root')[0]
+      )
+    else if @curation.get('id') is sd.EF_GUCCI
+      ReactDOM.render(
+        React.createElement(GucciAdmin, { curation: @curation })
+        $('#react-root')[0]
       )
     else if @curation.get('type') is 'display-admin'
       ReactDOM.render(

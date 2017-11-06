@@ -1,0 +1,61 @@
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Col, Row } from 'react-styled-flexboxgrid'
+import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+
+export class SeriesAdmin extends React.Component {
+  render () {
+    const { curation, onChange } = this.props
+
+    return (
+      <div className='admin-form-container series'>
+        <Row>
+          <Col lg={8}>
+            <div className='field-group'>
+              <label>About the Series</label>
+              <div className='bordered-input'>
+                <Paragraph
+                  linked
+                  onChange={onChange} />
+              </div>
+            </div>
+          </Col>
+
+          <Col lg={4}>
+            <div className='field-group'>
+              <label>Partner Logo: Header</label>
+              <ImageUpload
+                name='partner_logo_primary'
+                src={curation.partner_logo_primary || ''}
+                onChange={(key, value) => onChange(key, value)} />
+            </div>
+
+            <div className='field-group'>
+              <label>Partner Logo: Footer</label>
+              <ImageUpload
+                name='partner_logo_secondary'
+                src={curation.partner_logo_secondary || ''}
+                onChange={(key, value) => onChange(key, value)} />
+            </div>
+
+            <div className='field-group'>
+              <label>Partner Link Url</label>
+              <input
+                className='bordered-input'
+                placeholder='http://example.com'
+                defaultValue={curation.partner_link_url || ''}
+                onChange={(e) => onChange('partner_link_url', e.target.value)}
+              />
+            </div>
+          </Col>
+        </Row>
+      </div>
+    )
+  }
+}
+
+SeriesAdmin.propTypes = {
+  curation: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired
+}

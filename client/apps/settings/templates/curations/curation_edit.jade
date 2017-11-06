@@ -34,10 +34,10 @@ block content
           ) Save Changes
 
     when 'editorial-feature'
-      if curation.get('id') != sd.EF_VENICE
+      if curation.get('id') === sd.EF_VENICE || sd.EF_GUCCI
+        #react-root.max-width-container
+      else
         .max-width-container.settings-edit-feature
           include ./editorial_feature_edit.jade
-      else
-        #venice-root.max-width-container
     when 'display-admin'
       #react-root.max-width-container

@@ -71,16 +71,17 @@ form.admin-form-container(
         span Accepts Mp4
       .admin-image-placeholder(
         data-name="header_video" data-type="video")
-  .admin-form-container
-    .admin-form-right-col
-      label Carousel
-      for item, i in curation.get('carousel')
-        label= "Image " + (i + 1)
-        input.bordered-input( value=item.image name="carousel[#{i}][image]")
-        label= "Caption " + (i + 1)
-        input.bordered-input( value=item.caption name="carousel[#{i}][caption]")
-      label Placeholder Image
-      input.bordered-input( value=curation.get('placeholder') name='placeholder')
+  if curation.get('carousel')
+    .admin-form-container
+      .admin-form-right-col
+        label Carousel
+        for item, i in curation.get('carousel')
+          label= "Image " + (i + 1)
+          input.bordered-input( value=item.image name="carousel[#{i}][image]")
+          label= "Caption " + (i + 1)
+          input.bordered-input( value=item.caption name="carousel[#{i}][caption]")
+        label Placeholder Image
+        input.bordered-input( value=curation.get('placeholder') name='placeholder')
 
   input( value=curation.get('name') name='name' hidden)
   input( value=curation.get('type') name='type' hidden)
