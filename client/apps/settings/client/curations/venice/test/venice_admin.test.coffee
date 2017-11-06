@@ -5,7 +5,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 moment = require 'moment'
-Curation = require '../../../../../models/curation.coffee'
+Curation = require '../../../../../../../client/models/curation.coffee'
 Backbone = require 'backbone'
 
 r =
@@ -27,10 +27,13 @@ describe 'VeniceAdmin', ->
       sinon.stub Backbone, 'sync'
       $.fn.typeahead = sinon.stub()
       window.jQuery = $
-      VeniceAdmin = benv.require resolve __dirname, '../../../client/curations/venice_admin.coffee'
-      Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
+      VeniceAdmin = benv.require resolve __dirname, '../venice_admin.coffee'
+      Autocomplete = benv.require resolve __dirname, '../../../../../../components/autocomplete_list/index.coffee'
       dropdownHeader = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../edit/components/admin/components/dropdown_header.coffee'), ['icons']
+        resolve(__dirname, '../../../../../edit/components/admin/components/dropdown_header.coffee'), ['icons']
       )
       VeniceAdmin.__set__ 'dropdownHeader', React.createFactory dropdownHeader
       VeniceAdmin.__set__ 'sd', {
