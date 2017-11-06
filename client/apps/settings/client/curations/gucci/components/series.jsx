@@ -16,8 +16,9 @@ export class SeriesAdmin extends React.Component {
               <label>About the Series</label>
               <div className='bordered-input'>
                 <Paragraph
+                  html={curation.get('about') || ''}
                   linked
-                  onChange={onChange} />
+                  onChange={(html) => onChange('about', html)} />
               </div>
             </div>
           </Col>
@@ -27,7 +28,7 @@ export class SeriesAdmin extends React.Component {
               <label>Partner Logo: Header</label>
               <ImageUpload
                 name='partner_logo_primary'
-                src={curation.partner_logo_primary || ''}
+                src={curation.get('partner_logo_primary') || ''}
                 onChange={(key, value) => onChange(key, value)} />
             </div>
 
@@ -35,7 +36,7 @@ export class SeriesAdmin extends React.Component {
               <label>Partner Logo: Footer</label>
               <ImageUpload
                 name='partner_logo_secondary'
-                src={curation.partner_logo_secondary || ''}
+                src={curation.get('partner_logo_secondary') || ''}
                 onChange={(key, value) => onChange(key, value)} />
             </div>
 
@@ -44,7 +45,7 @@ export class SeriesAdmin extends React.Component {
               <input
                 className='bordered-input'
                 placeholder='http://example.com'
-                defaultValue={curation.partner_link_url || ''}
+                defaultValue={curation.get('partner_link_url') || ''}
                 onChange={(e) => onChange('partner_link_url', e.target.value)}
               />
             </div>
