@@ -52,7 +52,7 @@ export class GucciAdmin extends React.Component {
           <div
             className='gucci-admin__section'
             data-active={activeSection === index}
-            key={`display-admin-${index}`}>
+            key={`gucci-admin-${index}`}>
             <DropDownItem
               active={index === this.state.activeSection}
               index={index}
@@ -61,7 +61,6 @@ export class GucciAdmin extends React.Component {
               {activeSection === index &&
                 <div className='gucci-admin__section-inner'>
                   <SectionAdmin
-                    key={index}
                     section={section}
                     onChange={(key, value) => this.onChangeSection(key, value, index)} />
                 </div>

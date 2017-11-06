@@ -1,3 +1,4 @@
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
@@ -18,7 +19,7 @@ export class SectionAdmin extends React.Component {
                 className='bordered-input'
                 placeholder='Start typing...'
                 defaultValue={section.featuring || ''}
-                onChange={(e) => onChange('video_url', e.target.value)}
+                onChange={(e) => onChange('featuring', e.target.value)}
               />
             </div>
 
@@ -27,6 +28,7 @@ export class SectionAdmin extends React.Component {
               <div className='bordered-input'>
                 <Paragraph
                   linked
+                  html={section.about || ''}
                   onChange={(html) => onChange('about', html)} />
               </div>
             </div>
@@ -36,8 +38,8 @@ export class SectionAdmin extends React.Component {
               <input
                 className='bordered-input'
                 type='date'
-                defaultValue={section.release_date || null}
-                onChange={(e) => onChange('release_date', e.target.value)}
+                defaultValue={section.release_date && moment(section.release_date).format('YYYY-MM-DD')}
+                onChange={(e) => onChange('release_date', moment(e.target.value).toISOString())}
               />
             </div>
           </Col>
@@ -57,7 +59,7 @@ export class SectionAdmin extends React.Component {
               <ImageUpload
                 name='cover_image_url'
                 src={section.cover_image_url || ''}
-                onChange={(key, value) => this.onChange(key, value)} />
+                onChange={(key, value) => onChange(key, value)} />
             </div>
           </Col>
 

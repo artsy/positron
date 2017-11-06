@@ -57,6 +57,17 @@ describe('Gucci Admin', () => {
     expect(component.find('button').at(0).text()).toMatch('Save')
   })
 
+  it('#onChangeSection updates state.campaign', () => {
+    const component = mount(
+      <GucciAdmin {...props} />
+    )
+    component.instance().onChangeSection('featuring', 'Many feminist artists', 0)
+    expect(component.state().curation.get('sections')[0].featuring).toMatch('Many feminist artists')
+    expect(component.state().isSaved).toBe(false)
+    expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
+    expect(component.find('button').at(0).text()).toMatch('Save')
+  })
+
   it('Save button saves the curation', () => {
     const component = mount(
       <GucciAdmin {...props} />
