@@ -32,7 +32,8 @@ export const display = (req, res, next) => {
         sheet.collectStyles(
           DisplayPanelComponent({
             unit: display.panel,
-            campaign: display
+            campaign: display,
+            isMobile: true
           })
         )
       )
