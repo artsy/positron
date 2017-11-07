@@ -11,6 +11,7 @@ const unitSchema = Joi.object().meta({
     })
   ),
   body: Joi.string(),
+  cover_img_url: Joi.string(),
   disclaimer: Joi.string(),
   headline: Joi.string(),
   layout: Joi.string(),

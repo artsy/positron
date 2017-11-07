@@ -5,7 +5,7 @@ sd = require('sharify').data
 _ = require('underscore')
 React = require 'react'
 ReactDOM = require 'react-dom'
-VeniceAdmin = React.createFactory require './curations/venice_admin.coffee'
+VeniceAdmin = React.createFactory require './curations/venice/venice_admin.coffee'
 DisplayAdmin = require './curations/display/index.jsx'
 { GucciAdmin } = require './curations/gucci/index.jsx'
 

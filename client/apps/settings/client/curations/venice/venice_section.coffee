@@ -3,8 +3,8 @@ ReactDOM = require 'react-dom'
 moment = require 'moment'
 _s = require 'underscore.string'
 { div, input, label, span, textarea } = React.DOM
-AutocompleteList = React.createFactory require '../../../../components/autocomplete_list/index.coffee'
-imageUpload = React.createFactory require '../../../edit/components/admin/components/image_upload.coffee'
+AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
+imageUpload = React.createFactory require '../../../../edit/components/admin/components/image_upload.coffee'
 
 module.exports = VeniceSection = React.createClass
   displayName: 'VeniceSection'

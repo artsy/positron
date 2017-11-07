@@ -1,5 +1,6 @@
 import _ from 'underscore'
 import moment from 'moment'
+import { get } from 'lodash'
 const Author = require('api/apps/authors/model.coffee')
 const Channel = require('api/apps/channels/model.coffee')
 const Curation = require('api/apps/curations/model.coffee')
@@ -114,10 +115,17 @@ export const display = (root, args, req, ast) => {
     Curation.mongoFetch({
       '_id': ObjectId(DISPLAY_ID)
     }, (err, { results }) => {
-      if (err) { reject(new Error(err)) }
+      if (err) {
+        reject(new Error(err))
+      }
+      if (!results.length) {
+        resolve(null)
+      }
 
+      const firstResultCampaigns = get(results, '0.campaigns', [])
       const outcomes = []
-      results[0].campaigns.map((campaign, i) => {
+
+      firstResultCampaigns.map((campaign, i) => {
         const weightedCampaignArray = _.times((campaign.sov * 100), () => campaign.name)
         outcomes.push(...weightedCampaignArray)
       })
