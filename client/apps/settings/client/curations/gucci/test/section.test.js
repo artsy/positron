@@ -12,7 +12,8 @@ describe('Section Admin', () => {
     release_date: '2017-11-11T05:00:00.000Z',
     about: '<p>About this film...</p>',
     video_url: 'http://youtube.com/movie',
-    cover_image_url: 'http://cover-image.jpg'
+    cover_image_url: 'http://cover-image.jpg',
+    published: true
   }
   const props = {
     section,
@@ -25,7 +26,7 @@ describe('Section Admin', () => {
     )
     expect(component.find(ImageUpload).length).toBe(1)
     expect(component.find(Paragraph).length).toBe(1)
-    expect(component.find('input').length).toBe(4)
+    expect(component.find('input').length).toBe(5)
     expect(component.find('input[type="date"]').length).toBe(1)
   })
 
@@ -36,7 +37,8 @@ describe('Section Admin', () => {
     expect(component.find('input').first().props().defaultValue).toMatch('Rachel Uffner, Petra Collins, Narcissiter, Genevieve Gaignard')
     expect(component.text()).toMatch('About this film')
     expect(component.html()).toMatch('cover-image.jpg')
-    expect(component.find('input').at(2).props().defaultValue).toMatch('http://youtube.com/movie')
+    expect(component.find('input').at(2).props().checked).toBe(true)
+    expect(component.find('input').at(3).props().defaultValue).toMatch('http://youtube.com/movie')
     expect(component.find('input[type="date"]').first().props().defaultValue).toMatch('2017-11-11')
   })
 
@@ -76,7 +78,7 @@ describe('Section Admin', () => {
     const component = mount(
       <SectionAdmin {...props} />
     )
-    const input = component.find('input').at(2)
+    const input = component.find('input').at(3)
     input.simulate('change', { target: { value: 'http://vimeo.com/video' } })
 
     expect(props.onChange.mock.calls[3][0]).toMatch('video_url')
@@ -92,5 +94,14 @@ describe('Section Admin', () => {
 
     expect(props.onChange.mock.calls[4][0]).toMatch('cover_image_url')
     expect(props.onChange.mock.calls[4][1]).toMatch('http://cover-image.jpg')
+  })
+
+  it('Updates published on checkbox click', () => {
+    const component = mount(
+      <SectionAdmin {...props} />
+    )
+    component.find('.flat-checkbox').first().simulate('click')
+    expect(props.onChange.mock.calls[5][0]).toMatch('published')
+    expect(props.onChange.mock.calls[5][1]).toBe(false)
   })
 })

@@ -5,36 +5,37 @@ import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
 
-export class SectionAdmin extends React.Component {
-  render () {
-    const { section, onChange } = this.props
+export const SectionAdmin = (props) => {
+  const { section, onChange } = props
 
-    return (
-      <div className='admin-form-container section'>
-        <Row>
-          <Col lg={8}>
-            <div className='field-group'>
-              <label>Featuring</label>
-              <input
-                className='bordered-input'
-                placeholder='Start typing...'
-                defaultValue={section.featuring || ''}
-                onChange={(e) => onChange('featuring', e.target.value)}
-              />
+  return (
+    <div className='admin-form-container section'>
+      <Row>
+        <Col lg={8}>
+          <div className='field-group'>
+            <label>Featuring</label>
+            <input
+              className='bordered-input'
+              placeholder='Start typing...'
+              defaultValue={section.featuring || ''}
+              onChange={(e) => onChange('featuring', e.target.value)}
+            />
+          </div>
+
+          <div className='field-group'>
+            <label>About the Film</label>
+            <div className='bordered-input'>
+              <Paragraph
+                linked
+                layout='classic'
+                html={section.about || ''}
+                onChange={(html) => onChange('about', html)} />
             </div>
+          </div>
 
+          <label>Release Date</label>
+          <div className='field-group--inline'>
             <div className='field-group'>
-              <label>About the Film</label>
-              <div className='bordered-input'>
-                <Paragraph
-                  linked
-                  html={section.about || ''}
-                  onChange={(html) => onChange('about', html)} />
-              </div>
-            </div>
-
-            <div className='field-group'>
-              <label>Release Date</label>
               <input
                 className='bordered-input'
                 type='date'
@@ -42,31 +43,42 @@ export class SectionAdmin extends React.Component {
                 onChange={(e) => onChange('release_date', moment(e.target.value).toISOString())}
               />
             </div>
-          </Col>
 
-          <Col lg={4}>
-            <div className='field-group'>
-              <label>Video Embed Url</label>
+            <div
+              className='field-group flat-checkbox'
+              onClick={() => onChange('published', !section.published)}>
               <input
-                className='bordered-input'
-                placeholder='http://youtube.com/xxx'
-                defaultValue={section.video_url || ''}
-                onChange={(e) => onChange('video_url', e.target.value)}
+                readOnly
+                type='checkbox'
+                checked={section.published}
               />
+              <label>Published</label>
             </div>
-            <div className='field-group'>
-              <label>Video Cover Image</label>
-              <ImageUpload
-                name='cover_image_url'
-                src={section.cover_image_url || ''}
-                onChange={(key, value) => onChange(key, value)} />
-            </div>
-          </Col>
+          </div>
+        </Col>
 
-        </Row>
-      </div>
-    )
-  }
+        <Col lg={4}>
+          <div className='field-group'>
+            <label>Video Embed Url</label>
+            <input
+              className='bordered-input'
+              placeholder='http://youtube.com/xxx'
+              defaultValue={section.video_url || ''}
+              onChange={(e) => onChange('video_url', e.target.value)}
+            />
+          </div>
+          <div className='field-group'>
+            <label>Video Cover Image</label>
+            <ImageUpload
+              name='cover_image_url'
+              src={section.cover_image_url || ''}
+              onChange={(key, value) => onChange(key, value)} />
+          </div>
+        </Col>
+
+      </Row>
+    </div>
+  )
 }
 
 SectionAdmin.propTypes = {
