@@ -27,7 +27,6 @@ export const SectionAdmin = (props) => {
             <div className='bordered-input'>
               <Paragraph
                 linked
-                layout='classic'
                 html={section.about || ''}
                 onChange={(html) => onChange('about', html)} />
             </div>

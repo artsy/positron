@@ -17,7 +17,6 @@ export const SeriesAdmin = (props) => {
               <Paragraph
                 html={curation.get('about') || ''}
                 linked
-                layout='classic'
                 onChange={(html) => onChange('about', html)} />
             </div>
           </div>
