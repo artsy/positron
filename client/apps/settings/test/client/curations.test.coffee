@@ -15,6 +15,9 @@ describe 'EditCuration', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       Backbone.$ = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       @curation = new Curation
         name: 'Artsy Editorial Feature'
         id: '1234'
@@ -31,7 +34,8 @@ describe 'EditCuration', ->
           resolve(__dirname, '../../client/curations'), []
         )
         mod.__set__ 'sd', {
-          EF_VENICE: '4321'
+          EF_VENICE: '4321',
+          EF_GUCCI: '4322'
         }
         mod.__set__ 'AdminEditView', sinon.stub()
         @view = new @CurationEditView el: $('body'), curation: @curation

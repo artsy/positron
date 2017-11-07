@@ -1,0 +1,86 @@
+import Backbone from 'backbone'
+import React from 'react'
+import { SeriesAdmin } from '../components/series.jsx'
+import { mount } from 'enzyme'
+
+import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+
+describe('Series Admin', () => {
+  const curation = new Backbone.Model({
+    name: 'Gucci admin',
+    type: 'editorial-feature',
+    sections: []
+  })
+  const props = {
+    curation,
+    onChange: jest.fn()
+  }
+
+  it('renders all fields', () => {
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    expect(component.find(ImageUpload).length).toBe(2)
+    expect(component.find(Paragraph).length).toBe(1)
+    expect(component.find('input').last().props().placeholder).toMatch('http://example.com')
+  })
+
+  it('renders saved data', () => {
+    curation.set({
+      about: '<p>Sample about text</p>',
+      partner_link_url: 'http://gucci.com',
+      partner_logo_primary: 'http://gucci-logo-header.jpg',
+      partner_logo_secondary: 'http://gucci-logo-footer.jpg'
+    })
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    expect(component.text()).toMatch('Sample about text')
+    expect(component.html()).toMatch('gucci-logo-header.jpg')
+    expect(component.html()).toMatch('gucci-logo-footer.jpg')
+    expect(component.find('input').last().props().defaultValue).toMatch('http://gucci.com')
+  })
+
+  it('Updates about section on input', () => {
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    component.find(Paragraph).at(0).node.props.onChange('About this series')
+    expect(props.onChange.mock.calls[0][0]).toMatch('about')
+    expect(props.onChange.mock.calls[0][1]).toMatch('About this series')
+  })
+
+  it('Updates partner link on input', () => {
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    const input = component.find('input').last()
+    input.simulate('change', { target: { value: 'http://link.com' } })
+
+    expect(props.onChange.mock.calls[1][0]).toMatch('partner_link_url')
+    expect(props.onChange.mock.calls[1][1]).toMatch('http://link.com')
+  })
+
+  it('Updates primary logo on upload', () => {
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    const input = component.find(ImageUpload).at(0).node
+    input.props.onChange(input.props.name, 'http://new-logo.jpg')
+
+    expect(props.onChange.mock.calls[2][0]).toMatch('partner_logo_primary')
+    expect(props.onChange.mock.calls[2][1]).toMatch('http://new-logo.jpg')
+  })
+
+  it('Updates secondary logo on upload', () => {
+    const component = mount(
+      <SeriesAdmin {...props} />
+    )
+    const input = component.find(ImageUpload).at(1).node
+    input.props.onChange(input.props.name, 'http://new-logo.jpg')
+
+    expect(props.onChange.mock.calls[3][0]).toMatch('partner_logo_secondary')
+    expect(props.onChange.mock.calls[3][1]).toMatch('http://new-logo.jpg')
+  })
+})

@@ -1,9 +1,10 @@
 @import '../../../components/stylus_lib'
 @import '../client/curations/display'
+@import '../client/curations/gucci'
+@import '../client/curations/venice'
 @import '/authors'
 @import '/editorial_features'
 @import '/tags'
-@import '/venice_admin'
 
 #channel-edit__users
   input
@@ -33,3 +34,12 @@
     color gray-darker-color
   &:last-of-type
     border-bottom none
+
+.curation--admin-container
+  margin-top 80px
+
+  button.save-curation
+    position fixed
+    top 10px
+    right calc(50vw + 55px - (1120px / 2)) // align button to right container edge
+    z-index 110
