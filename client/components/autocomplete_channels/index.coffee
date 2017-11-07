@@ -1,5 +1,6 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
+# TODO: Verify that this still works
 Modal = -> require('simple-modal') arguments...
 sd = require('sharify').data
 async = require 'async'
