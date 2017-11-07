@@ -43,12 +43,6 @@ logoutOldSchema = (req, res, next) ->
   else
     next()
 
-requireLogin = (req, res, next) ->
-  if req.user? then next() else res.redirect '/login'
-
-requireChannel = (req, res, next) ->
-  if req.user?.get('current_channel') then next() else res.redirect '/logout'
-
 logout = (req, res) ->
   req.logout()
   res.redirect sd.ARTSY_URL + '/users/sign_out'
@@ -67,5 +61,3 @@ module.exports = (app) ->
   app.get '/logout', logout
   app.get '/unauthorized', unauthorized
   app.use logoutOldSchema
-  app.use requireLogin
-  app.use requireChannel
