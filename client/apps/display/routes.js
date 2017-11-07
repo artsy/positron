@@ -5,7 +5,12 @@ import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/D
 import { ServerStyleSheet } from 'styled-components'
 import { DisplayQuery } from 'client/apps/display/query'
 
-const { API_URL, NODE_ENV, SEGMENT_WRITE_KEY_MICROGRAVITY } = process.env
+const {
+  API_URL,
+  NODE_ENV,
+  SEGMENT_WRITE_KEY_FORCE,
+  WEBFONT_URL
+} = process.env
 
 export const display = (req, res, next) => {
   res.setHeader('X-Frame-Options', '*')
@@ -27,7 +32,8 @@ export const display = (req, res, next) => {
         sheet.collectStyles(
           DisplayPanelComponent({
             unit: display.panel,
-            campaign: display
+            campaign: display,
+            isMobile: true
           })
         )
       )
@@ -40,7 +46,8 @@ export const display = (req, res, next) => {
       body,
       fallback: !display,
       nodeEnv: NODE_ENV,
-      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
+      segmentWriteKey: SEGMENT_WRITE_KEY_FORCE,
+      webfontUrl: WEBFONT_URL
     })
   })
 }

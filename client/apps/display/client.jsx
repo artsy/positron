@@ -17,6 +17,7 @@ class DisplayWrapper extends React.Component {
       <DisplayPanel
         unit={sd.CAMPAIGN.panel}
         campaign={sd.CAMPAIGN}
+        isMobile
       />
     )
   }

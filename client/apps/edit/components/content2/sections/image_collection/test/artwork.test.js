@@ -25,7 +25,7 @@ describe('Artwork', () => {
       'class="image-collection__img-container" style="width: 200px; opacity: 1;"'
     )
     expect(component.html()).toMatch(
-      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=95'
+      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=80'
     )
     expect(component.html()).toMatch('<span class="name">Matt Devine</span>')
     expect(component.html()).toMatch('Brass Tax')
