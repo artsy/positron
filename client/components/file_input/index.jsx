@@ -6,7 +6,7 @@ const sd = require('sharify').data
 export default class FileInput extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
-    hasImage: PropTypes.string,
+    hasImage: PropTypes.bool,
     label: PropTypes.string,
     onProgress: PropTypes.func,
     onUpload: PropTypes.func,

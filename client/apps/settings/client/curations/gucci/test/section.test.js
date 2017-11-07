@@ -71,7 +71,7 @@ describe('Section Admin', () => {
     input.simulate('change', { target: { value: '2017-11-15' } })
 
     expect(props.onChange.mock.calls[2][0]).toMatch('release_date')
-    expect(props.onChange.mock.calls[2][1]).toMatch('2017-11-15T05:00:00.000Z')
+    expect(props.onChange.mock.calls[2][1]).toMatch('2017-11-15T')
   })
 
   it('Updates video url on input', () => {

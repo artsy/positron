@@ -86,7 +86,7 @@ module.exports = VeniceAdmin = React.createClass
     { className: className, text: text }
 
   render: ->
-    div { className: 'venice-admin'},
+    div { className: 'venice-admin curation--admin-container'},
       div { className: 'save' },
         button {
           className: 'avant-garde-button' + @getSaveStatus().className
