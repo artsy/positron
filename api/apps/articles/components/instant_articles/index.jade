@@ -11,13 +11,13 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
     link(rel='canonical' href=article.fullHref())
     meta(property='fb:article_style' content='default')
     meta(property='fb:admins' content='7961740')
-    meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=medium')
+    meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=low')
 
   body
     article
       header
         figure.op-ad
-          iframe(src="#{displayUrl}" height="300" width="320")
+          iframe(src="#{displayUrl}" height="320" width="350")
 
         if hero
           +hero_section(hero)
