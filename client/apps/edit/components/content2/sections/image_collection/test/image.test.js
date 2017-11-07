@@ -25,7 +25,7 @@ describe('Image', () => {
       'class="image-collection__img-container" style="width: 200px; opacity: 1;"'
     )
     expect(component.html()).toMatch(
-      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=95'
+      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=80'
     )
     expect(component.html()).toMatch(
       'alt="John Elisle, The Star, from the reimagined female Tarot cards. Courtesy of the artist.'
