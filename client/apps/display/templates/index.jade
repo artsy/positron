@@ -2,6 +2,9 @@ doctype html
 html( lang="en" )
   head
     != css
+
+    link( rel='stylesheet' type='text/css', href=(webfontUrl + 'positron-webfonts.css'))
+
   body
     if fallback
       iframe(src="https://link.artsy.net/join/sign-up-editorial-facebook" frameBorder="0" width="350" height="320")
