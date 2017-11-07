@@ -8,7 +8,7 @@ import { DisplayQuery } from 'client/apps/display/query'
 const {
   API_URL,
   NODE_ENV,
-  SEGMENT_WRITE_KEY_MICROGRAVITY,
+  SEGMENT_WRITE_KEY_FORCE,
   WEBFONT_URL
 } = process.env
 
@@ -45,7 +45,7 @@ export const display = (req, res, next) => {
       body,
       fallback: !display,
       nodeEnv: NODE_ENV,
-      segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY,
+      segmentWriteKey: SEGMENT_WRITE_KEY_FORCE,
       webfontUrl: WEBFONT_URL
     })
   })
