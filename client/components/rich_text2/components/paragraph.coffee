@@ -257,7 +257,7 @@ module.exports = React.createClass
       @renderEditor()
     else
       Text {
-        layout: @props.layout
+        layout: @props.layout || 'classic'
         postscript: @props.type is 'postscript'
       },
         @renderEditor()
