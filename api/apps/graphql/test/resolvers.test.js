@@ -216,6 +216,17 @@ describe('resolvers', () => {
       })
     })
 
+    it('resolves null if there are no results', async () => {
+      const display = {
+        total: 20,
+        count: 1,
+        results: []
+      }
+      resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
+      const result = await resolvers.display({}, {}, req, {})
+      _.isNull(result).should.be.true()
+    })
+
     it('resolves null if there are no campaigns', async () => {
       const display = {
         total: 20,

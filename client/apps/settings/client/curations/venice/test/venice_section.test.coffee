@@ -25,13 +25,13 @@ describe 'VeniceSection', ->
       window.matchMedia = sinon.stub().returns({
         matches: sinon.stub()
       })
-      VeniceSection = benv.require resolve __dirname, '../../../client/curations/venice_section.coffee'
+      VeniceSection = benv.require resolve __dirname, '../venice_section.coffee'
       VeniceSection.__set__ 'sd', {
         ARTSY_URL: 'http://localhost:3005'
         USER: access_token: ''
       }
-      DragContainer = benv.require resolve __dirname, '../../../../../components/drag_drop/index.coffee'
-      Autocomplete = benv.require resolve __dirname, '../../../../../components/autocomplete_list/index.coffee'
+      DragContainer = benv.require resolve __dirname, '../../../../../../components/drag_drop/index.coffee'
+      Autocomplete = benv.require resolve __dirname, '../../../../../../components/autocomplete_list/index.coffee'
       DragContainer.__set__ 'DragTarget', sinon.stub()
       DragContainer.__set__ 'DragSource', sinon.stub()
       Autocomplete.__set__ 'request', get: sinon.stub().returns
