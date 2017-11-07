@@ -111,7 +111,7 @@ describe 'instant article template', ->
       toSentence: _s.toSentence
     html.should.containEql '<figure class="op-interactive"><iframe src="http://www.youtube.com/embed/vq9pQi-SD1k?title=0&portrait=0&badge=0&byline=0&showinfo=0&rel=0&controls=2&modestbranding=1&iv_load_policy=3&color=E5E5E5" frameborder="0" allowfullscreen class="no-margin column-width"></iframe></figure>'
 
-  xit 'renders a display unit', ->
+  it 'renders a display unit', ->
     @article.set 'hero_section',
       type: 'basic'
       url: 'https://www.youtube.com/watch?v=vq9pQi-SD1k'
@@ -123,4 +123,4 @@ describe 'instant article template', ->
       moment: moment
       particle: particle
       toSentence: _s.toSentence
-    html.should.containEql '<figure class="op-ad"><iframe src="writer.artsy.net/display" height="300" width="300"></iframe></figure>'
+    html.should.containEql '<figure class="op-ad"><iframe src="writer.artsy.net/display" height="320" width="350"></iframe></figure>'

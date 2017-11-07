@@ -11,14 +11,10 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
     link(rel='canonical' href=article.fullHref())
     meta(property='fb:article_style' content='default')
     meta(property='fb:admins' content='7961740')
-    meta(property='fb:use_automatic_ad_placement' content='enable=true ad_density=low')
 
   body
     article
       header
-        figure.op-ad
-          iframe(src="#{displayUrl}" height="320" width="350")
-
         if hero
           +hero_section(hero)
 
@@ -38,7 +34,7 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
       if hero && hero.type === 'basic'
         +video(hero)
 
-      each section in article.get('sections')
+      each section, i in article.get('sections')
         case section.type
           when 'text'
             != section.body
@@ -50,7 +46,10 @@ html(lang="en" prefix="op: http://media.facebook.com/op#")
             +embed(section)
           when 'image_set'
             +imageSet(section)
-      
+        if i === 3
+          figure.op-ad
+            iframe(src="#{displayUrl}" height="320" width="350")
+
       if article.get('postscript')
         != article.get('postscript')
 
