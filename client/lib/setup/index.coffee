@@ -22,6 +22,7 @@ setupAuth = require './auth'
 logger = require 'artsy-morgan'
 RavenServer = require 'raven'
 { locals, helpers, ua, sameOrigin } = require '../middleware'
+{ requireChannel, requireLogin } = require './authorization'
 { parse } = require 'url'
 { NODE_ENV, SESSION_SECRET, SENTRY_PRIVATE_DSN } = process.env
 
@@ -58,13 +59,16 @@ module.exports = (app) ->
   app.use ua
   app.use sameOrigin
 
-  # Mount apps
+  # Mount display
+  app.use require '../../apps/display'
+  # Mount and authorize apps
+  app.use requireLogin
+  app.use requireChannel
   app.use require '../../apps/edit'
   app.use require '../../apps/settings'
   app.use require '../../apps/switch_channel'
   app.use require '../../apps/queue'
   app.use require '../../apps/articles_list'
-  app.use require '../../apps/display'
 
   # Mount static middleware for sub apps, components, and project-wide
   fs.readdirSync(path.resolve __dirname, '../../apps').forEach (fld) ->
