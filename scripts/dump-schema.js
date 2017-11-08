@@ -3,7 +3,7 @@
 const env = require('node-env-file')
 env('.env')
 
-require('coffee-script/register')
+require('coffeescript/register')
 
 const fs = require('fs')
 const path = require('path')
