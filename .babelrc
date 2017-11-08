@@ -8,11 +8,12 @@
     "babel-plugin-rewire",
     "inline-react-svg",
     "transform-runtime",
+    "transform-class-properties",
     "transform-decorators-legacy",
+    "transform-object-rest-spread",
     ["module-resolver", {
       "root": ["./"]
-    }],
-    "transform-class-properties"
+    }]
   ],
   "env": {
     "development": {

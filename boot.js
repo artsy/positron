@@ -9,28 +9,38 @@ import path from 'path'
 import { IpFilter } from 'express-ipfilter'
 import { createReloadable, isDevelopment } from '@artsy/express-reloadable'
 
-const debug = require('debug')('app')
 const app = module.exports = express()
+const debug = require('debug')('app')
+
+const {
+  ARTSY_URL,
+  ARTSY_ID,
+  ARTSY_SECRET,
+  IP_BLACKLIST = '',
+  PORT
+} = process.env
 
 // Blacklist ips
 app.use(
-  IpFilter([process.env.IP_BLACKLIST.split(',')], { log: false, mode: 'deny' })
+  IpFilter([IP_BLACKLIST.split(',')], { log: false, mode: 'deny' })
 )
 
 // Get an xapp token
 const xappConfig = {
-  url: process.env.ARTSY_URL,
-  id: process.env.ARTSY_ID,
-  secret: process.env.ARTSY_SECRET
+  url: ARTSY_URL,
+  id: ARTSY_ID,
+  secret: ARTSY_SECRET
 }
 
 artsyXapp.init(xappConfig, () => {
   app.use(newrelic)
 
   if (isDevelopment) {
-    const reloadAndMount = createReloadable(app, require)
+    app.use(require('./client/lib/webpack-dev-server'))
 
     // Enable server-side code hot-swapping on change
+    const reloadAndMount = createReloadable(app, require)
+
     app.use('/api', reloadAndMount(path.resolve(__dirname, 'api'), {
       mountPoint: '/api'
     }))
@@ -47,8 +57,8 @@ artsyXapp.init(xappConfig, () => {
 
   // Start the server and send a message to IPC for the integration test
   // helper to hook into.
-  app.listen(process.env.PORT, () => {
-    debug(`Listening on port ${process.env.PORT}`)
+  app.listen(PORT, () => {
+    debug(`Listening on port ${PORT}`)
 
     if (typeof process.send === 'function') {
       process.send('listening')
