@@ -24,7 +24,6 @@ describe('Section Admin', () => {
     thumbnail_image: 'http://thumbnail.jpg',
     email_image: 'http://emailimage.jpg',
     social_image: 'http://socialimage.jpg'
-
   }
 
   beforeEach(() => {
