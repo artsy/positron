@@ -4,7 +4,11 @@
 # -x: log commands
 set -e -x
 
-NODE_ENV=production
 rm -rf client/public/assets
 mkdir client/public/assets
-ezel-assets client/assets/ client/public/assets/
+
+NODE_ENV=production webpack
+stylus \
+  $(find client/assets -name '*.styl') \
+  --compress \
+  -o client/public/assets

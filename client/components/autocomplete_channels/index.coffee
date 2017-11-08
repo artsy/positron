@@ -1,7 +1,6 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-# TODO: Verify that this still works
-Modal = -> require('simple-modal') arguments...
+Modal = -> require('../../components/simple-modal') arguments...
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'

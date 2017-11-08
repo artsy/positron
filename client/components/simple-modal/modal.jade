@@ -1,0 +1,9 @@
+.simple-modal-overlay
+.simple-modal-body
+  if( title )
+    h1.simple-modal-title #{title}
+  .simple-modal-content
+  if( buttons.length )
+    .simple-modal-controls
+      each button in buttons
+        button.btn.simple-modal-btn(class=button.className) #{button.text}

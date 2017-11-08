@@ -21,15 +21,11 @@ const config = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'public/assets'),
+    path: path.resolve(__dirname, 'client/public/assets'),
     publicPath: '/assets',
     sourceMapFilename: '[file].map?[contenthash]'
   },
-
   module: {
-    noParse: [
-      /simple-modal/
-    ],
     rules: [
       {
         test: /\.coffee$/,
@@ -79,6 +75,10 @@ const config = {
           { loader: 'style-loader' },
           { loader: 'css-loader' }
         ]
+      },
+      {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader'
       }
     ]
   },
@@ -103,7 +103,7 @@ const config = {
     })
   ],
   resolve: {
-    extensions: ['.coffee', '.js', '.jsx', '.json'],
+    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl'],
     modules: [
       'node_modules'
     ]
@@ -116,7 +116,7 @@ if (isDevelopment) {
 
   // Staging
 } else if (isDeploy) {
-  config.devtool = '#source-map'
+  config.devtool = 'source-map'
 
   // Prod
   if (isProduction) {
