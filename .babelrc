@@ -1,8 +1,12 @@
 {
   "presets": [
-    "es2015",
     "react",
-    "stage-3"
+    "stage-3",
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions"]
+      }
+    }]
   ],
   "plugins": [
     "babel-plugin-rewire",
