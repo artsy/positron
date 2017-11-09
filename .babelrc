@@ -1,18 +1,23 @@
 {
   "presets": [
-    "es2015",
     "react",
-    "stage-3"
+    "stage-3",
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions"]
+      }
+    }]
   ],
   "plugins": [
     "babel-plugin-rewire",
     "inline-react-svg",
     "transform-runtime",
+    "transform-class-properties",
     "transform-decorators-legacy",
+    "transform-object-rest-spread",
     ["module-resolver", {
       "root": ["./"]
-    }],
-    "transform-class-properties"
+    }]
   ],
   "env": {
     "development": {

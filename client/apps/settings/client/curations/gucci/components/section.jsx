@@ -4,6 +4,7 @@ import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata.jsx'
 
 export const SectionAdmin = (props) => {
   const { section, onChange } = props
@@ -74,8 +75,11 @@ export const SectionAdmin = (props) => {
               onChange={(key, value) => onChange(key, value)} />
           </div>
         </Col>
-
       </Row>
+      <Metadata
+        section={section}
+        onChange={(key, value) => onChange(key, value)}
+      />
     </div>
   )
 }
