@@ -40,7 +40,7 @@ describe('Section Admin', () => {
     expect(component.find(ImageUpload).length).toBe(4)
     expect(component.find(Paragraph).length).toBe(1)
     expect(component.find('input').length).toBe(13)
-    expect(component.find('textarea').length).toBe(1)
+    expect(component.find('textarea').length).toBe(2)
     expect(component.find('input[type="date"]').length).toBe(1)
   })
 
@@ -58,12 +58,6 @@ describe('Section Admin', () => {
     expect(component.find('input').at(2).props().checked).toBe(true)
     expect(component.find('input').at(3).props().defaultValue).toMatch('http://youtube.com/movie')
     expect(component.find('input[type="date"]').first().props().defaultValue).toMatch('2017-11-11')
-    expect(component.find('input').at(5).props().defaultValue).toBe('What Happened in the Past?')
-    expect(component.find('textarea').at(0).props().defaultValue).toBe('A series of films optimized for social media')
-    expect(component.find('input').at(6).props().defaultValue).toBe('Good Morning, What Happened?')
-    expect(component.find('input').at(7).props().defaultValue).toBe('Artsy Editors')
-    expect(component.find('input').at(8).props().defaultValue).toBe('magazine,article,gucci')
-    expect(component.find('input').at(9).props().defaultValue).toBe('women,gender,equality')
   })
 
   it('Updates featuring section on input', () => {
@@ -127,51 +121,5 @@ describe('Section Admin', () => {
     component.find('.flat-checkbox').first().simulate('click')
     expect(props.onChange.mock.calls[0][0]).toMatch('published')
     expect(props.onChange.mock.calls[0][1]).toBe(false)
-  })
-
-  it('Updates section metadata inputs', () => {
-    const component = mount(
-      <SectionAdmin {...props} />
-    )
-    const inputs = component.find('input')
-    const textarea = component.find('textarea')
-    inputs.at(5).simulate('change', { target: { value: 'Social Title' } })
-    inputs.at(6).simulate('change', { target: { value: 'Email Title' } })
-    inputs.at(7).simulate('change', { target: { value: 'Email Author' } })
-    inputs.at(8).simulate('change', { target: { value: 'Email Tags' } })
-    inputs.at(9).simulate('change', { target: { value: 'Keywords' } })
-    textarea.at(0).simulate('change', { target: { value: 'Social Description' } })
-
-    expect(props.onChange.mock.calls[0][0]).toMatch('social_title')
-    expect(props.onChange.mock.calls[0][1]).toMatch('Social Title')
-    expect(props.onChange.mock.calls[1][0]).toMatch('email_title')
-    expect(props.onChange.mock.calls[1][1]).toMatch('Email Title')
-    expect(props.onChange.mock.calls[2][0]).toMatch('email_author')
-    expect(props.onChange.mock.calls[2][1]).toMatch('Email Author')
-    expect(props.onChange.mock.calls[3][0]).toMatch('email_tags')
-    expect(props.onChange.mock.calls[3][1]).toMatch('Email Tags')
-    expect(props.onChange.mock.calls[4][0]).toMatch('keywords')
-    expect(props.onChange.mock.calls[4][1]).toMatch('Keywords')
-    expect(props.onChange.mock.calls[5][0]).toMatch('social_description')
-    expect(props.onChange.mock.calls[5][1]).toMatch('Social Description')
-  })
-
-  it('Updates section metadata images', () => {
-    const component = mount(
-      <SectionAdmin {...props} />
-    )
-    const thumbnailInput = component.find(ImageUpload).at(1).node
-    thumbnailInput.props.onChange(thumbnailInput.props.name, 'thumbnailImage.jpg')
-    const socialInput = component.find(ImageUpload).at(2).node
-    socialInput.props.onChange(socialInput.props.name, 'socialImage.jpg')
-    const emailInput = component.find(ImageUpload).at(3).node
-    emailInput.props.onChange(emailInput.props.name, 'emailImage.jpg')
-
-    expect(props.onChange.mock.calls[0][0]).toMatch('thumbnail_image')
-    expect(props.onChange.mock.calls[0][1]).toMatch('thumbnailImage.jpg')
-    expect(props.onChange.mock.calls[1][0]).toMatch('social_image')
-    expect(props.onChange.mock.calls[1][1]).toMatch('socialImage.jpg')
-    expect(props.onChange.mock.calls[2][0]).toMatch('email_image')
-    expect(props.onChange.mock.calls[2][1]).toMatch('emailImage.jpg')
   })
 })
