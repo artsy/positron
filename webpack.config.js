@@ -106,7 +106,8 @@ const config = {
     extensions: ['.coffee', '.js', '.jsx', '.json', '.styl'],
     modules: [
       'node_modules'
-    ]
+    ],
+    symlinks: false
   }
 }
 

@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@artsy/express-reloadable@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@artsy/express-reloadable/-/express-reloadable-1.0.2.tgz#c63adeb7682334cfa5bf66c92fb9aaea062bda47"
+"@artsy/express-reloadable@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/express-reloadable/-/express-reloadable-1.1.0.tgz#012a76625df0c069cd05518fe6315baf94f94fcf"
   dependencies:
     chokidar "^1.7.0"
 
-"@artsy/reaction-force@^0.11.13":
-  version "0.11.13"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.11.13.tgz#321096db452c37d4f9ab5e7887c1479052d08f53"
+"@artsy/reaction-force@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.12.0.tgz#8ac2bed6e3b1095357c942de1195c9f8a4321cf5"
   dependencies:
     "@storybook/addon-options" "^3.2.1"
     "@storybook/react" "^3.2.12"
@@ -1041,6 +1041,12 @@ babel-plugin-react-docgen@^1.8.0:
 babel-plugin-react-transform@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-transform/-/babel-plugin-react-transform-2.0.2.tgz#515bbfa996893981142d90b1f9b1635de2995109"
+  dependencies:
+    lodash "^4.6.1"
+
+babel-plugin-react-transform@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-transform/-/babel-plugin-react-transform-3.0.0.tgz#402f25137b7bb66e9b54ead75557dfbc7ecaaa74"
   dependencies:
     lodash "^4.6.1"
 

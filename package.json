@@ -15,8 +15,8 @@
     "mocha": "sh scripts/mocha.sh"
   },
   "dependencies": {
-    "@artsy/express-reloadable": "^1.0.2",
-    "@artsy/reaction-force": "^0.11.13",
+    "@artsy/express-reloadable": "^1.1.0",
+    "@artsy/reaction-force": "^0.12.0",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
