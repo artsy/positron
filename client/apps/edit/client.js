@@ -1,3 +1,4 @@
+import * as appActions from 'client/actions/appActions'
 import _ from 'underscore'
 import $ from 'jquery'
 import React from 'react'
@@ -9,10 +10,12 @@ import EditHeader from './components/header'
 import EditDisplay from './components/display'
 import EditAdmin from './components/admin'
 import EditContent from './components/content2'
+import { Provider } from 'react-redux'
+import { reducers, initialState } from 'client/reducers'
+import { createReduxStore } from 'client/lib/createReduxStore'
 import { data as sd } from 'sharify'
 
 export function init () {
-  console.log('is this working!!!??')
   const article = new Article(sd.ARTICLE)
   const channel = new Channel(sd.CURRENT_CHANNEL)
   const author = _.pick(article.get('author'), 'id', 'name')
@@ -25,19 +28,33 @@ export function init () {
   new EditHeader({ el: $('#edit-header'), article })
   new EditDisplay({ el: $('#edit-display'), article })
 
+  const store = createReduxStore(reducers, initialState)
+
   ReactDOM.render(
-    <EditAdmin
-      article={article}
-      channel={channel}
-    />,
+    <Provider store={store}>
+      <EditAdmin
+        article={article}
+        channel={channel}
+      />
+    </Provider>,
     $('#edit-admin')[0]
   )
 
   ReactDOM.render(
-    <EditContent
-      article={article}
-      channel={channel}
-    />,
+    <Provider store={store}>
+      <EditContent
+        article={article}
+        channel={channel}
+      />
+    </Provider>,
     $('#edit-content')[0]
   )
+
+  // Example dispatch
+  store.dispatch(appActions.helloWorld({
+    status: 'hello how are you?'
+  }))
+
+  // Example of how to get state directly from store
+  // console.log(store.getState())
 }

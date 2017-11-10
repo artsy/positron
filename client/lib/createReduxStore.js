@@ -1,11 +1,11 @@
-import createLogger from 'redux-logger'
 import get from 'lodash.get'
 import thunkMiddleware from 'redux-thunk'
+import { createLogger } from 'redux-logger'
 import { compose, createStore, applyMiddleware } from 'redux'
 import { contains } from 'underscore'
 import { data as sd } from 'sharify'
 
-export function configureReduxStore (rootReducer, initialState = {}) {
+export function createReduxStore (rootReducer, initialState = {}) {
   const isDevelopment = contains(['development', 'staging'], sd.NODE_ENV)
   let composeEnhancers = compose
 
@@ -15,8 +15,9 @@ export function configureReduxStore (rootReducer, initialState = {}) {
 
   if (isDevelopment) {
     middleware.push(
+      // Must come last in middleware chain
       createLogger({
-        collapsed: true // Must come last in middleware chain
+        collapsed: true
       })
     )
 

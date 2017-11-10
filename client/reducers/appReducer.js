@@ -1,8 +1,18 @@
 import u from 'updeep'
 import { actions } from 'client/actions/appActions'
 
-export default function editReducer (action, state) {
+export const initialState = {
+  isLoggedIn: false,
+  status: ''
+}
+
+export function appReducer (state = initialState, action) {
   switch (action.type) {
+    case actions.HELLO_WORLD: {
+      return u({
+        status: action.payload.status
+      }, state)
+    }
     case actions.LOGIN: {
       return u({
         isLoggedIn: true
@@ -14,4 +24,6 @@ export default function editReducer (action, state) {
       }, state)
     }
   }
+
+  return state
 }
