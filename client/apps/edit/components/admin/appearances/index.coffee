@@ -1,3 +1,4 @@
+_ = require 'underscore'
 React = require 'react'
 ReactDOM = require 'react-dom'
 { div, label } = React.DOM
