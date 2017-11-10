@@ -4,9 +4,9 @@ export const actions = keyMirror(
   'EDIT'
 )
 
-export const edit = (id) => ({
+export const edit = (isEditing) => ({
   type: actions.EDIT,
   payload: {
-    id
+    isEditing
   }
 })

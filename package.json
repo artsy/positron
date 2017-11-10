@@ -96,7 +96,6 @@
     "react-tracking": "^5.1.0",
     "react-waypoint": "^7.3.1",
     "redux": "^3.7.2",
-    "redux-history-transitions": "^2.2.0",
     "redux-logger": "^3.0.6",
     "redux-register-module": "^0.0.1",
     "redux-thunk": "^2.2.0",
