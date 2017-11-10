@@ -3002,10 +3002,6 @@ csurf@^1.8.3:
     csrf "~3.0.3"
     http-errors "~1.5.0"
 
-curry@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/curry/-/curry-1.2.0.tgz#9e6dd289548dba7e653d5ae3fe903fe7dfb33af2"
-
 cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
@@ -7930,12 +7926,6 @@ redux-logger@^3.0.6:
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-3.0.6.tgz#f7555966f3098f3c88604c449cf0baf5778274bf"
   dependencies:
     deep-diff "^0.3.5"
-
-redux-register-module@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/redux-register-module/-/redux-register-module-0.0.1.tgz#af628e5e13926a123015e8219c27cb5b4713e33c"
-  dependencies:
-    curry "^1.2.0"
 
 redux-thunk@^2.2.0:
   version "2.2.0"

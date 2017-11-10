@@ -97,7 +97,6 @@
     "react-waypoint": "^7.3.1",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-register-module": "^0.0.1",
     "redux-thunk": "^2.2.0",
     "sailthru-client": "^2.0.3",
     "sharify": "^0.1.6",

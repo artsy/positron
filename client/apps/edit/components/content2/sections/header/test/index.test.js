@@ -11,7 +11,7 @@ const StandardArticle = Fixtures.StandardArticle
 
 jest.mock('react-sizeme', () => jest.fn(c => d => d))
 
-describe('Header', () => {
+describe.skip('Header', () => {
   describe('Classic', () => {
     const props = {
       article: new Article(ClassicArticle)
