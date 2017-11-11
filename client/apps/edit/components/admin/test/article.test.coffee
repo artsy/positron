@@ -188,7 +188,6 @@ describe 'AdminArticle', ->
       @component.onChange.args[0][0].should.eql 'published_at'
       @component.onChange.args[0][1].should.containEql moment().local().subtract(1, 'years').format('YYYY-MM-DD')
 
-
   describe 'onChange', ->
 
     it '#onChange sends values to parent and forces re-render', ->
