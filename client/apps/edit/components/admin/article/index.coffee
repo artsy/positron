@@ -28,7 +28,7 @@ module.exports = AdminArticle = React.createClass
     return 'classic' unless @props.channel?.isEditorial()
     return @props.article?.get('layout') or 'standard'
 
-  onChange: (key, value)->
+  onChange: (key, value) ->
     @props.onChange key, value
     @forceUpdate()
 
