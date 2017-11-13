@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import DropDownItem from 'client/components/drop_down/index.jsx'
+import { DropDownList } from 'client/components/drop_down/drop_down_list.jsx'
 import { SaveButton } from '../components/save_button.jsx'
 import { SectionAdmin } from './components/section.jsx'
 import { SeriesAdmin } from './components/series.jsx'
@@ -10,14 +10,8 @@ export class GucciAdmin extends React.Component {
     super(props)
     this.state = {
       curation: props.curation,
-      isSaved: true,
-      activeSection: null
+      isSaved: true
     }
-  }
-
-  setActiveSection = (i) => {
-    i = i === this.state.activeSection ? null : i
-    this.setState({activeSection: i})
   }
 
   save = () => {
@@ -44,30 +38,22 @@ export class GucciAdmin extends React.Component {
   }
 
   render () {
-    const { activeSection, curation, isSaved } = this.state
+    const { curation, isSaved } = this.state
 
     return (
       <div className='gucci-admin curation--admin-container'>
-        {curation.get('sections').map((section, index) =>
-          <div
-            className='gucci-admin__section'
-            data-active={activeSection === index}
-            key={`gucci-admin-${index}`}>
-            <DropDownItem
-              active={index === this.state.activeSection}
-              index={index}
-              onClick={() => this.setActiveSection(index)}
-              title={section.title}>
-              {activeSection === index &&
-                <div className='gucci-admin__section-inner'>
-                  <SectionAdmin
-                    section={section}
-                    onChange={(key, value) => this.onChangeSection(key, value, index)} />
-                </div>
-              }
-            </DropDownItem>
-          </div>
-        )}
+        <DropDownList sections={curation.get('sections')}>
+          {curation.get('sections').map((section, index) =>
+              <div
+                key={index}
+                className='gucci-admin__section-inner'>
+                <SectionAdmin
+                  section={section}
+                  onChange={(key, value) => this.onChangeSection(key, value, index)} />
+              </div>
+          )}
+        </DropDownList>
+
         <div className='gucci-admin__series'>
           <SeriesAdmin
             curation={curation}
