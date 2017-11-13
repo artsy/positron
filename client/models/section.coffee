@@ -18,7 +18,7 @@ module.exports = class Section extends Backbone.Model
       href = $(this).attr('href')
       if href?.match('google')
         href = decodeURIComponent( href.replace('https://www.google.com/url?q=','') )
-        href = _.first(href.split('&'))
+        href = href.split('&')[0]
       if href?.match('artsy.net/' + resource)
         _.last url.parse(href).pathname?.split('/')
       else
