@@ -376,6 +376,29 @@ describe('resolvers', () => {
       })
       Object.keys(promisedMongoFetch.args[0][0]).should.not.containEql('tags')
     })
+
+    it('presents related_article_ids and feed articles', async () => {
+      const relatedArticles = {
+        results: [
+          _.extend({}, fixtures.article, {
+            title: 'Related Article',
+            slugs: ['artsy-editorial-slug'],
+            updated_at: '2017-01-01'
+          })
+        ]
+      }
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      promisedMongoFetch.onSecondCall().resolves(relatedArticles)
+      const results = await resolvers.relatedArticlesPanel({
+        id: '54276766fd4f50996aeca2b8',
+        tags: ['dog', 'cat'],
+        related_article_ids: ['54276766fd4f50996aeca2b1']
+      })
+      results.length.should.equal(2)
+      results[0].slug.should.equal('artsy-editorial-slug')
+      results[1].slug.should.equal('slug-1')
+      results[0].updated_at.should.containEql('2017-01-01')
+    })
   })
 
   describe('tags', () => {

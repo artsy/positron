@@ -186,22 +186,24 @@ export const relatedArticlesPanel = (root) => {
   return new Promise(async (resolve, reject) => {
     let relatedArticles = []
 
-    const articleResults = await promisedMongoFetch(_.pick(args, _.identity))
+    const articleFeed = await promisedMongoFetch(_.pick(args, _.identity))
     .catch((e) => reject(e))
 
     if (root.related_article_ids && root.related_article_ids.length) {
       const relatedArticleResults = await promisedMongoFetch(relatedArticleArgs)
       .catch((e) => reject(e))
-      relatedArticles = _.first(
-        relatedArticleResults.results.concat(presentCollection(articleResults).results),
-        3
-      )
+
+      const mergedArticles = {
+        results: relatedArticleResults.results.concat(articleFeed.results)
+      }
+
+      relatedArticles = presentCollection(mergedArticles).results
     } else {
-      relatedArticles = presentCollection(articleResults).results
+      relatedArticles = presentCollection(articleFeed).results
     }
 
     if (relatedArticles.length) {
-      resolve(relatedArticles)
+      resolve(_.first(relatedArticles, 3))
     } else {
       resolve(null)
     }
