@@ -1,11 +1,11 @@
-React = require 'react'
 _ = require 'underscore'
-Hero = require './sections/hero/index.jsx'
 Header = require './sections/header/index.jsx'
+Hero = require './sections/hero/index.jsx'
+React = require 'react'
 SectionList = React.createFactory require './section_list/index.coffee'
-{ div } = React.DOM
+{ div, h1 } = React.DOM
 
-module.exports = React.createClass
+EditContent = React.createClass
   displayName: 'EditContent'
 
   componentWillMount: ->
@@ -58,3 +58,5 @@ module.exports = React.createClass
         article: @props.article
         channel: @props.channel
       }
+
+module.exports = EditContent

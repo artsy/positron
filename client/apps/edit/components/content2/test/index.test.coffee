@@ -8,6 +8,8 @@ Article = require '../../../../../models/article.coffee'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
+{ reducers, initialState } = require '../../../../../reducers'
+{ createReduxStore } = require '../../../../../lib/createReduxStore'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
@@ -25,6 +27,7 @@ describe 'EditContent', ->
           removeListener: sinon.stub()
         }
       )
+      @store = createReduxStore(reducers, initialState)
       @EditContent = benv.require resolve(__dirname, '../index.coffee')
       HeroSection = benv.require resolve(__dirname, '../sections/hero/index.jsx')
       SectionList = @SectionList = sinon.stub()
@@ -42,6 +45,7 @@ describe 'EditContent', ->
       @props = {
         article: @article
         channel: {hasFeature: @hasFeature = sinon.stub().returns(true)}
+        store: @store
       }
       @component = ReactDOM.render React.createElement(@EditContent, @props), (@$el = $ "<div></div>")[0], =>
       @component.debouncedSave = sinon.stub()
