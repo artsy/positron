@@ -2,7 +2,6 @@ _ = require 'underscore'
 Header = require './sections/header/index.jsx'
 Hero = require './sections/hero/index.jsx'
 React = require 'react'
-{ connect } = require 'react-redux'
 SectionList = React.createFactory require './section_list/index.coffee'
 { div, h1 } = React.DOM
 
@@ -34,9 +33,6 @@ EditContent = React.createClass
 
   render: ->
     div {className: 'edit-section-layout ' + @props.article.get('layout')},
-      h1 {},
-        "Status: #{@props.status}"
-
       if @props.article.get('layout') is 'classic' and
        (@props.article.get('hero_section') != null or @props.channel.hasFeature('hero'))
         React.createElement(
@@ -63,7 +59,4 @@ EditContent = React.createClass
         channel: @props.channel
       }
 
-mapStateToProps = (state) ->
-  status: state.app.status
-
-module.exports = connect(mapStateToProps)(EditContent)
+module.exports = EditContent

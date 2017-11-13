@@ -13,7 +13,7 @@ import {
   IconLayoutText
 } from '@artsy/reaction-force/dist/Components/Publishing'
 
-describe.skip('Feature Header Controls', () => {
+describe('Feature Header Controls', () => {
   describe('LayoutControls', () => {
     const props = {
       article: {},

@@ -14,7 +14,7 @@ r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
   simulate: ReactTestUtils.Simulate
 
-xdescribe 'EditContent', ->
+describe 'EditContent', ->
 
   beforeEach (done) ->
     benv.setup =>

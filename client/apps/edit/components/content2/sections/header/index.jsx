@@ -1,20 +1,11 @@
-import * as actions from 'client/actions/appActions'
 import HeaderControls from './controls/index.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
 
-// When adding decorators for the first time need to refresh page for HMR but
-// after they work as expected
-@connect(state => ({
-  status: state.app.status
-}), {
-  helloWorldAction: actions.helloWorld
-})
 export default class SectionHeader extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
@@ -145,14 +136,6 @@ export default class SectionHeader extends Component {
     } else {
       return (
         <div className={'edit-header' + headerClass}>
-          <div>
-            <div className='status'>
-              Status: {this.props.status}
-            </div>
-            <button onClick={() => this.props.helloWorldAction({ status: 'Hi! ' + Math.random() })}>
-              Click me to update status!
-            </button>
-          </div>
           {isFeature &&
             <HeaderControls
               onChange={this.onChangeHero}
