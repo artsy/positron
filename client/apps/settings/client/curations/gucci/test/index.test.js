@@ -3,7 +3,7 @@ import React from 'react'
 import { GucciAdmin } from '../index.jsx'
 import { mount } from 'enzyme'
 
-import DropDownItem from 'client/components/drop_down/index.jsx'
+import { DropDownItem } from 'client/components/drop_down/drop_down_item.jsx'
 import { SectionAdmin } from '../components/section.jsx'
 import { SeriesAdmin } from '../components/series.jsx'
 
@@ -40,9 +40,8 @@ describe('Gucci Admin', () => {
     const component = mount(
       <GucciAdmin {...props} />
     )
-    component.find('.drop-down__title').at(1).simulate('click')
-    expect(component.state().activeSection).toBe(1)
-    expect(component.find('.drop-down__title').at(1).props()['data-active']).toBe(true)
+    component.find('.DropDownItem__title').at(1).simulate('click')
+    expect(component.find('.DropDownItem__title').at(1).props()['data-active']).toBe(true)
     expect(component.find(SectionAdmin).length).toBe(1)
   })
 
