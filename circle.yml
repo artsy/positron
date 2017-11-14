@@ -47,4 +47,4 @@ dependencies:
 test:
   override:
     - yarn test:
-        parallel: true
+        parallel: false
