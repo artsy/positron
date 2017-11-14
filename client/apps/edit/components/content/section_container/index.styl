@@ -8,12 +8,36 @@
     opacity 1
   }
 
-.edit-section-container
+.edit-section__container
   animation fadein 0.15s
   z-index 1
   transition transform .15s
+  width 100%
+  position relative
+  padding 20px
+  &:hover
+    .edit-section__hover-controls
+      opacity 1
+  &[data-editing=true]
+    .edit-section__hover-controls
+      opacity 1
+      border 1px solid rgba(100,100,100,1)
+      button
+        display none
+    .edit-section__container-bg
+      display block
+      z-index -1
+    &[data-type=text]
+      .edit-section__hover-controls
+        border 1px solid rgba(100,100,100,0)
 
-.edit-section-container-bg
+.edit-section__placeholder
+  min-height 150px
+  display flex
+  justify-content center
+  align-items center
+
+.edit-section__container-bg
   width 100%
   height 100%
   position fixed
@@ -22,7 +46,7 @@
   z-index 1
   display none
 
-.edit-section-hover-controls
+.edit-section__hover-controls
   position absolute
   width 100%
   height 100%
@@ -30,55 +54,81 @@
   top 0
   left 0
   opacity 0
-
-.edit-section-hover-controls
-  .edit-section-tool
+  button
     position absolute
-    left -controls-padding
-    &:first-of-type
-      top -1px
-    &:last-of-type
-      bottom -4px
+    right -15px
+    color gray-color
+    z-index 2
+    cursor pointer
+    svg
+      width 30px
+    &.edit-section__remove
+      top -15px
+      svg circle
+        fill gray-color
+        transition all 0.3s ease-out
+      &:hover
+        svg circle
+          fill red-color
+    &.edit-section__drag
+      top 40px
+      background-color gray-color
+      width 30px
+      height 30px
+      border-radius 50%
 
-.edit-section-container[data-editing=true]
-  z-index 5
-  .edit-section-container-bg
-    display block
-  .edit-section-hover-controls
-    opacity 0
+#edit-content
+  div[class*="caption__CaptionContainer-"]
+    > div
+      min-width 100%
+    .rich-text--paragraph
+      position relative
+    .public-DraftEditorPlaceholder-root
+      position absolute
+    a
+      background-size 1px 1px
 
-.edit-section-container[data-editing=true][data-type=text]::after
-  border-color rgba(255,255,255,0)
-.edit-section-container[data-type=image]
-.edit-section-container[data-type=artworks][data-layout=overflow_fillwidth]
-.edit-section-container[data-type=image_set]
-.edit-section-container[data-type=image_collection][data-layout=overflow_fillwidth]
-  width overflow-width
-  margin-left -((overflow-width - body-width) / 2 - controls-padding)
+[data-layout='fillwidth']
+  &[data-editing='false']
+     .edit-section__hover-controls
+        z-index 100
+  .edit-section__hover-controls
+    button
+      right 18px
+      &.edit-section__remove
+        top 20px
+      &.edit-section__drag
+        top 60px
 
-.edit-section-container[data-type=slideshow] .edit-section-hover-controls
-.edit-section-container[data-type=slideshow][data-editing=true]::after
-  top inherit
-  margin-top -(controls-padding)
-  left (sidebar-width + controls-padding)
-  width "calc(100% - %s)" % (sidebar-width + controls-padding * 2)
+.classic
+  [data-layout='column_width'], [data-layout='blockquote']
+    max-width classic-body-w-margin
+    margin 0 auto
+  [data-layout='overflow_fillwidth']
+    max-width classic-overflow-w-margin
+    margin 0 auto
+  .edit-section--hero
+    margin 130px auto 20px auto
+    [data-layout='column_width'], [data-layout='overflow_fillwidth']
+      max-width 1140px
 
-.edit-section-remove.is-hidden
-  display none
+.standard
+  [data-layout='column_width'], [data-type=image_set]
+    max-width standard-body-w-margin
+    margin 0 auto
+  [data-layout='overflow_fillwidth'], [data-layout='blockquote']
+    max-width standard-overflow-w-margin
 
-.edit-section-container[data-layout=column_width]
-  width 620px
-  margin auto
-
-.edit-section-container[data-dragging=true]
-  background-color gray-lightest-color
-  user-select none
-  transform scale(.925)
-
-.edit-section-drag-placeholder
-  width calc(100% \- 40px)
-  min-height 2em
-  background-color white
-  margin 20px
-  border 2px dashed gray-lighter-color
-  max-height 30vh
+.feature
+  [data-layout='column_width'], [data-type=image_set]
+    max-width feature-body-w-margin
+    margin 0 auto
+  [data-layout='overflow_fillwidth']
+    max-width feature-overflow-w-margin
+    margin 0 auto
+  [data-layout='blockquote']
+    max-width feature-blockquote-width
+    margin 0 auto
+  [data-layout='fillwidth']
+    max-width 100%
+    padding 0 0 20px 0

@@ -19,7 +19,7 @@ describe('SectionTool', () => {
     isHero: false,
     section: null,
     index: FeatureArticle.sections.length - 1,
-    sections: new Backbone.Collection(FeatureArticle.sections),
+    sections: new Backbone.Collection(FeatureArticle.sections)
   }
 
   it('opens on click', () => {
@@ -29,6 +29,7 @@ describe('SectionTool', () => {
     component.find('.edit-tool__icon').simulate('click')
     expect(component.state().open).toBe(true)
   })
+
   it('renders the section icons when open', () => {
     const component = mount(
       <SectionTool {...props} />
@@ -39,6 +40,7 @@ describe('SectionTool', () => {
     expect(component.find(IconEditVideo).length).toBe(1)
     expect(component.find(IconEditEmbed).length).toBe(1)
   })
+
   it('adds a new section of the correct type on click', () => {
     const originalSections = props.sections.length
     const component = mount(
@@ -49,10 +51,25 @@ describe('SectionTool', () => {
     expect(component.props().sections.length).toBe(originalSections + 1)
     expect(component.props().sections.pop().get('type')).toMatch('text')
   })
+
+  it('Adds a data-visible prop to the last section tool', () => {
+    const component = mount(
+      <SectionTool {...props} />
+    )
+    expect(component.html()).toMatch('data-visible="true"')
+  })
+
+  it('Adds a data-visible prop to the first section tool if no sections', () => {
+    props.firstSection = true
+    props.sections = new Backbone.Collection()
+    const component = mount(
+      <SectionTool {...props} />
+    )
+    expect(component.html()).toMatch('data-visible="true"')
+  })
 })
 
 describe('SectionTool: Hero', () => {
-
   const props = {
     isEditing: false,
     isHero: true,

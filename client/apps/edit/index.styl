@@ -2,60 +2,16 @@
 @import './components/layout'
 @import './components/header'
 @import './components/display'
+@import './components/admin'
+@import './components/mobile'
+
 @import './components/content/section_container'
 @import './components/content/section_controls'
 @import './components/content/section_list'
 @import './components/content/section_tool'
 @import './components/content/sections/embed'
-@import './components/content/sections/text'
-@import './components/content/sections/image'
-@import './components/content/sections/video'
-@import './components/content/sections/slideshow'
-@import './components/content/sections/fullscreen'
-@import './components/content/sections/callout'
-@import './components/content/sections/hero'
+@import './components/content/sections/header'
 @import './components/content/sections/image_collection'
-@import './components/admin'
-@import './components/mobile'
-
-@import './components/content2/section_container'
-@import './components/content2/section_controls'
-@import './components/content2/section_list'
-@import './components/content2/section_tool'
-@import './components/content2/sections/embed'
-@import './components/content2/sections/header'
-@import './components/content2/sections/image_collection'
-@import './components/content2/sections/slideshow'
-@import './components/content2/sections/text'
-@import './components/content2/sections/video'
-
-// TODO - Below is replicated in components/file_input,
-// can be removed when articles switch
-.edit-section-controls .dashed-file-upload-container
-  border-color gray-darker-color
-  transition border-color 0.3s, color 0.3s
-  padding controls-padding
-  avant-garde()
-  background black
-  color white
-  text-align center
-  &:hover, &.is-dragover
-    border-color white
-    span
-      color gray-darker-color
-  &.is-dragover
-    .dashed-file-upload-container-drop
-      color white
-  &:hover
-    border-color gray-darker-color
-    .dashed-file-upload-container-click
-      color white
-  span
-    transition color 0.3s
-  h1
-    font-size default-avant-garde-font-size - 1
-  h2
-    font-size small-avant-garde-font-size
-    color gray-darker-color
-    margin-top 10px
-
+@import './components/content/sections/slideshow'
+@import './components/content/sections/text'
+@import './components/content/sections/video'

@@ -14,10 +14,10 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @props.section.fetchSlideshowArtworks success: => @forceUpdate()
-    @lockWidths()
+    # @lockWidths()
 
   componentDidUpdate: ->
-    @lockWidths()
+    # @lockWidths()
 
   lockWidths: ->
     imagesLoaded @refs.list, =>
@@ -28,7 +28,7 @@ module.exports = React.createClass
       $(@refs.list).width width
 
   render: ->
-    section { className: 'edit-section-slideshow' },
+    section { className: 'edit-section--slideshow' },
       div { className: 'ess-container', onClick: @props.setEditing(on) },
         ul { className: 'ess-list', ref: 'list' },
           (for item in @props.section.get('items')
