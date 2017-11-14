@@ -1,33 +1,35 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { without } from 'lodash'
-import DropDownItem from './index.jsx'
+import { DropDownItem } from './drop_down_item.jsx'
 
 export class DropDownList extends React.Component {
   constructor (props) {
     super(props)
 
+    const { activeSection, activeSections, openMany } = props
+
     this.state = {
-      activeSections: [],
-      activeSection: null
+      activeSections: openMany && activeSections ? activeSections : [],
+      activeSection: activeSection || null
     }
   }
 
   setActiveSections = (index) => {
-    const { activeSections } = this.state
-    let sections = activeSections
+    let activeSections
+    const sections = this.state.activeSections
 
-    if (activeSections.includes(index)) {
-      sections = without(activeSections, index)
+    if (sections.includes(index)) {
+      activeSections = without(sections, index)
     } else {
-      sections.push(index)
+      activeSections.push(index)
     }
-    this.setState({ activeSections: sections })
+    this.setState({ activeSections })
   }
 
   setActiveSection = (index) => {
-    index = index === this.state.activeSection ? null : index
-    this.setState({ activeSection: index })
+    const activeSection = index === this.state.activeSection ? null : index
+    this.setState({ activeSection })
   }
 
   isActive = (index) => {
@@ -49,6 +51,7 @@ export class DropDownList extends React.Component {
       <div className='DropDownList'>
         {children.map((child, i) =>
           <DropDownItem
+            key={i}
             title={sections[i].title || sections[i].name}
             active={this.isActive(i)}
             index={i}
@@ -63,7 +66,9 @@ export class DropDownList extends React.Component {
 }
 
 DropDownList.propTypes = {
-  children: PropTypes.any,
+  activeSection: PropTypes.number,
+  activeSections: PropTypes.array,
+  children: PropTypes.any.isRequired,
   openMany: PropTypes.bool,
-  sections: PropTypes.array
+  sections: PropTypes.array.isRequired
 }
