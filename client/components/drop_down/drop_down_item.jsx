@@ -1,4 +1,3 @@
-import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
@@ -41,27 +40,11 @@ export class DropDownItem extends Component {
           <div className='icon' />
         </div>
         {active &&
-          <DropDownItemContent className='DropDownItem__content'>
+          <div className='DropDownItem__content'>
             {children}
-          </DropDownItemContent>
+          </div>
         }
       </div>
     )
   }
 }
-
-const navKeyframes = keyframes`
-  from {
-    max-height: 0px;
-    opacity: 0;
-  }
-  to {
-    max-height: 100%;
-    opacity: 1;
-  }
-`
-const DropDownItemContent = styled.div`
-  animation-name: ${navKeyframes};
-  animation-duration: 1s;
-  animation-timing-function: ease;
-`
