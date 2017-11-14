@@ -29,6 +29,7 @@ describe('SectionTool', () => {
     component.find('.edit-tool__icon').simulate('click')
     expect(component.state().open).toBe(true)
   })
+
   it('renders the section icons when open', () => {
     const component = mount(
       <SectionTool {...props} />
@@ -39,6 +40,7 @@ describe('SectionTool', () => {
     expect(component.find(IconEditVideo).length).toBe(1)
     expect(component.find(IconEditEmbed).length).toBe(1)
   })
+
   it('adds a new section of the correct type on click', () => {
     const originalSections = props.sections.length
     const component = mount(
@@ -52,7 +54,6 @@ describe('SectionTool', () => {
 })
 
 describe('SectionTool: Hero', () => {
-
   const props = {
     isEditing: false,
     isHero: true,
