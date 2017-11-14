@@ -73,8 +73,9 @@ module.exports = React.createClass
     @onChange()
 
   isImageSetWrapping: ->
-    return true if @props.section.get('type') is 'image_set' &&
+    if @props.section.get('type') is 'image_set' &&
      @props.section.get('images').length > 3
+      return true
 
   getImageWidth: (i) ->
     unless @state.dimensions[i]?.width

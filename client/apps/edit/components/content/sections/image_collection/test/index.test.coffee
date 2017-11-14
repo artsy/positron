@@ -28,6 +28,7 @@ describe 'ImageCollection', ->
       $.fn.typeahead = sinon.stub()
       $.fn.fillwidthLite = sinon.stub()
       global.HTMLElement = () => {}
+      global.Image = () => {}
       window.innerHeight = 800
       window.matchMedia = sinon.stub().returns(
         {
