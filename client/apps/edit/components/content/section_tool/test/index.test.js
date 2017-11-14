@@ -19,7 +19,7 @@ describe('SectionTool', () => {
     isHero: false,
     section: null,
     index: FeatureArticle.sections.length - 1,
-    sections: new Backbone.Collection(FeatureArticle.sections),
+    sections: new Backbone.Collection(FeatureArticle.sections)
   }
 
   it('opens on click', () => {
@@ -50,6 +50,22 @@ describe('SectionTool', () => {
     component.find(IconEditText).simulate('click')
     expect(component.props().sections.length).toBe(originalSections + 1)
     expect(component.props().sections.pop().get('type')).toMatch('text')
+  })
+
+  it('Adds a data-visible prop to the last section tool', () => {
+    const component = mount(
+      <SectionTool {...props} />
+    )
+    expect(component.html()).toMatch('data-visible="true"')
+  })
+
+  it('Adds a data-visible prop to the first section tool if no sections', () => {
+    props.firstSection = true
+    props.sections = new Backbone.Collection()
+    const component = mount(
+      <SectionTool {...props} />
+    )
+    expect(component.html()).toMatch('data-visible="true"')
   })
 })
 
