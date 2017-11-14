@@ -1,6 +1,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 gemup = require 'gemup'
+request = require 'superagent'
 sd = require('sharify').data
 { crop } = require '../../../../../components/resizer/index.coffee'
 { section, h1, h2, span, input, div, video } = React.DOM
@@ -22,22 +23,41 @@ module.exports = React.createClass
 
   upload: (e) ->
     @onDragLeave()
-    if e.target.files[0]?.size > (@state.size * 1000000)
+    file = e.target.files[0]
+    if file?.size > (@state.size * 1000000)
       @setState error: true, errorType: 'size'
       return
-    if e.target.files[0]?.type not in @getAcceptedTypes()
+    if file?.type not in @getAcceptedTypes()
       @setState error: true, errorType: 'type'
       return
-    gemup e.target.files[0],
-      app: sd.GEMINI_APP
-      key: sd.GEMINI_KEY
-      progress: (percent) =>
-        @setState progress: percent
-      add: (src) =>
-        @setState progress: 0.1, isDragover: false
-      done: (src) =>
-        @props.onChange(@props.name, src) if @props.onChange
-        @setState progress: 0, error: false, errorType: null
+    if @props.isDisplay
+      request
+        .post("#{sd.APP_URL}/display/upload")
+        .send({
+          name: file.name
+          type: file.type
+        })
+        .end((err, result) =>
+          request
+            .put(result.body.signedRequest)
+            .send(file)
+            .set('Content-Type', file.type)
+            .end((err, res) =>
+              @props.onChange(@props.name, result.body.url) if @props.onChange
+              @setState progress: 0, error: false, errorType: null
+            )
+        )
+    else
+      gemup e.target.files[0],
+        app: sd.GEMINI_APP
+        key: sd.GEMINI_KEY
+        progress: (percent) =>
+          @setState progress: percent
+        add: (src) =>
+          @setState progress: 0.1, isDragover: false
+        done: (src) =>
+          @props.onChange(@props.name, src) if @props.onChange
+          @setState progress: 0, error: false, errorType: null
 
   onClick: ->
     @setState error: false, errorType: null

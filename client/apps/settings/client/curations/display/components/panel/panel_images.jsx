@@ -14,6 +14,7 @@ export const PanelImages = (props) => {
       <Col lg>
         <label>Image / Video</label>
         <ImageUpload
+          isDisplay
           name='panel.assets'
           hasVideo
           src={imgUrl}
