@@ -42,7 +42,7 @@ describe 'DragDropContainer Default', ->
       article = new Article layout: 'standard'
       section = new Section StandardArticle.sections[4]
       ImageDisplay = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/components/image.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
       )
       @children = [
         React.createElement(
@@ -151,14 +151,14 @@ describe 'DragDropContainer Vertical', ->
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
       SectionTool = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content2/section_tool/index.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
       SectionContainer = benv.requireWithJadeify(
-        resolve __dirname, '../../../apps/edit/components/content2/section_container/index.coffee'
+        resolve __dirname, '../../../apps/edit/components/content/section_container/index.coffee'
         ['icons']
       )
       ImageCollection = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content2/sections/image_collection/index.coffee'
+        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/index.coffee'
       )
       ImageCollection.__set__ 'Controls', sinon.stub()
       ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns(true)
