@@ -102,23 +102,23 @@ section-btn-height = 130px
       opacity 0
       &:hover
         opacity 1
-    &[data-first=true]
-      padding-bottom 40px
-      .edit-tool__icon
-        opacity 1
-      &::after
-        content 'Add a section'
-        width 150px
-        display block
-        float left
-        position absolute
-        top -6px
-        left 35px
-        avant-garde()
-        font-size default-avant-garde-font-size - 1
-      &:hover::after,
-      &[data-state-open="true"]::after
-        display none
+  .edit-tool[data-visible=true]
+    padding-bottom 40px
+    .edit-tool__icon
+      opacity 1
+    &::after
+      content 'Add a section'
+      width 150px
+      display block
+      float left
+      position absolute
+      top -6px
+      left 35px
+      avant-garde()
+      font-size default-avant-garde-font-size - 1
+    &:hover::after,
+    &[data-state-open="true"]::after
+      display none
 
 .classic .edit-tool
   max-width classic-body-w-margin
