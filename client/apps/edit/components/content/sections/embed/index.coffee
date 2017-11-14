@@ -32,11 +32,9 @@ module.exports = React.createClass
       if !@props.section.get('url')?.length
         div { className: 'edit-section--embed__placeholder' }, 'Add URL above'
       else
+        jsonSection = @props.section.toJSON()
+
         div { className: 'edit-section--embed__content' },
           Embed {
-            section:
-              url: @props.section.get 'url'
-              height: @props.section.get 'height'
-              mobile_height: @props.section.get 'mobile_height'
-              layout: @props.section.get 'layout'
+            section: jsonSection
           }
