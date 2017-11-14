@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { DropDownList } from 'client/components/drop_down/drop_down_list.jsx'
-import { SaveButton } from '../components/save_button.jsx'
-import { SectionAdmin } from './components/section.jsx'
-import { SeriesAdmin } from './components/series.jsx'
+import { DropDownList } from 'client/components/drop_down/drop_down_list'
+import { SaveButton } from '../components/save_button'
+import { SectionAdmin } from './components/section'
+import { SeriesAdmin } from './components/series'
 
 export class GucciAdmin extends React.Component {
   constructor (props) {

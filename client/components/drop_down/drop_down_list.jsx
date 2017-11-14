@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { without } from 'lodash'
-import { DropDownItem } from './drop_down_item.jsx'
+import { DropDownItem } from './drop_down_item'
 
 export class DropDownList extends React.Component {
   static propTypes = {
