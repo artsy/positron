@@ -1,7 +1,16 @@
+import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { Component } from 'react'
 
-export class DropDownItem extends React.Component {
+export class DropDownItem extends Component {
+  static propTypes = {
+    active: PropTypes.bool,
+    index: PropTypes.number.isRequired,
+    onClick: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    children: PropTypes.any
+  }
+
   constructor (props) {
     super(props)
 
@@ -32,19 +41,27 @@ export class DropDownItem extends React.Component {
           <div className='icon' />
         </div>
         {active &&
-          <div className='DropDownItem__item'>
+          <DropDownItemContent className='DropDownItem__content'>
             {children}
-          </div>
+          </DropDownItemContent>
         }
       </div>
     )
   }
 }
 
-DropDownItem.propTypes = {
-  active: PropTypes.bool,
-  index: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
-  title: PropTypes.string,
-  children: PropTypes.any
-}
+const navKeyframes = keyframes`
+  from {
+    max-height: 0px;
+    opacity: 0;
+  }
+  to {
+    max-height: 100%;
+    opacity: 1;
+  }
+`
+const DropDownItemContent = styled.div`
+  animation-name: ${navKeyframes};
+  animation-duration: 1s;
+  animation-timing-function: ease;
+`

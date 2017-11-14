@@ -4,9 +4,16 @@ import { without } from 'lodash'
 import { DropDownItem } from './drop_down_item.jsx'
 
 export class DropDownList extends React.Component {
+  static propTypes = {
+    activeSection: PropTypes.number, // open 1 by default
+    activeSections: PropTypes.array, // open many by default
+    children: PropTypes.any.isRequired,
+    openMany: PropTypes.bool, // open more than one panel simultaneously
+    sections: PropTypes.array.isRequired // array of objects with title or name
+  }
+
   constructor (props) {
     super(props)
-
     const { activeSection, activeSections, openMany } = props
 
     this.state = {
@@ -63,12 +70,4 @@ export class DropDownList extends React.Component {
       </div>
     )
   }
-}
-
-DropDownList.propTypes = {
-  activeSection: PropTypes.number,
-  activeSections: PropTypes.array,
-  children: PropTypes.any.isRequired,
-  openMany: PropTypes.bool,
-  sections: PropTypes.array.isRequired
 }
