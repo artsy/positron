@@ -2,7 +2,7 @@ React = require 'react'
 _ = require 'underscore'
 DragTarget = React.createFactory require './drag_target.coffee'
 DragSource = React.createFactory require './drag_source.coffee'
-SectionTool = require '../../apps/edit/components/content2/section_tool/index.jsx'
+SectionTool = require '../../apps/edit/components/content/section_tool/index.jsx'
 { div } = React.DOM
 
 module.exports = React.createClass

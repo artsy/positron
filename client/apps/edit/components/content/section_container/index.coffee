@@ -5,14 +5,12 @@
 #
 
 React = require 'react'
-SectionText = React.createFactory require '../sections/text/index.coffee'
-SectionVideo = React.createFactory require '../sections/video/index.coffee'
-SectionSlideshow = React.createFactory require '../sections/slideshow/index.coffee'
-SectionEmbed = React.createFactory require '../sections/embed/index.coffee'
-SectionFullscreen = React.createFactory require '../sections/fullscreen/index.coffee'
-SectionCallout = React.createFactory require '../sections/callout/index.coffee'
-SectionImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
-SectionImage = React.createFactory require '../sections/image/index.coffee'
+_ = require 'underscore'
+Text = React.createFactory require '../sections/text/index.coffee'
+{ SectionVideo } = require '../sections/video/index.jsx'
+Slideshow = React.createFactory require '../sections/slideshow/index.coffee'
+Embed = React.createFactory require '../sections/embed/index.coffee'
+ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 { div, nav, button } = React.DOM
 icons = -> require('../../icons.jade') arguments...
 
@@ -34,55 +32,62 @@ module.exports = React.createClass
     e.stopPropagation()
     @props.section.destroy()
 
+  getContentStartEnd: ->
+    types = @props.sections.map (section, i) => return {type: section.get 'type', index: i}
+    start = _.findIndex(types, { type: 'text'})
+    end = _.findLastIndex(types, { type: 'text'})
+    return {start: start, end: end}
+
+  sectionProps: ->
+    return {
+      section: @props.section
+      sections: @props.sections
+      editing: @props.editing
+      article: @props.article
+      index: @props.index
+      ref: 'section'
+      setEditing: @setEditing
+      channel: @props.channel
+      isHero: @props.isHero
+      onSetEditing: @props.onSetEditing
+      isStartText: @getContentStartEnd().start is @props.index
+      isEndText: @getContentStartEnd().end is @props.index
+    }
+
   render: ->
     div {
-      className: 'edit-section-container'
+      className: 'edit-section__container'
       'data-editing': @props.editing
       'data-type': @props.section.get('type')
-      'data-layout': @props.section.get('layout')
+      'data-layout': @props.section.get('layout') or 'column_width'
     },
-      unless @props.section.get('type') is 'fullscreen'
-        div {
-          className: 'edit-section-hover-controls'
-          onClick: @setEditing(on)
-        },
-          unless @props.isHero
-            button {
-              className: "edit-section-drag button-reset"
-              dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
-            }
-          button {
-            className: "edit-section-remove button-reset"
-            onClick: @removeSection
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-          }
-      (switch @props.section.get('type')
-        when 'text' then SectionText
-        when 'video' then SectionVideo
-        when 'slideshow' then SectionSlideshow
-        when 'embed' then SectionEmbed
-        when 'fullscreen' then SectionFullscreen
-        when 'callout' then SectionCallout
-        when 'image_set' then SectionImageCollection
-        when 'image_collection' then SectionImageCollection
-        when 'image' then SectionImage
-      )(
-        section: @props.section
-        sections: @props.sections
-        editing: @props.editing
-        index: @props.index
-        ref: 'section'
-        onClick: @setEditing(on)
-        setEditing: @setEditing
-        channel: @props.channel
-        isHero: @props.isHero
-        onSetEditing: @props.onSetEditing
-      )
       div {
-        className: 'edit-section-container-bg'
+        className: 'edit-section__hover-controls'
+        onClick: @setEditing(on)
+      },
+        unless @props.isHero
+          button {
+            className: "edit-section__drag button-reset"
+            dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
+          }
+        button {
+          className: "edit-section__remove button-reset"
+          onClick: @removeSection
+          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
+        }
+      if @props.section.get('type') is 'video'
+        React.createElement(
+          SectionVideo, @sectionProps()
+        )
+      else
+        (switch @props.section.get('type')
+          when 'text' then Text
+          when 'slideshow' then Slideshow
+          when 'embed' then Embed
+          when 'image_set' then ImageCollection
+          when 'image_collection' then ImageCollection
+        )( @sectionProps() )
+      div {
+        className: 'edit-section__container-bg'
         onClick: @onClickOff
       }
-      (
-        if @props.section.get('type') is 'fullscreen'
-          div { className: 'edit-section-container-block' }
-      )

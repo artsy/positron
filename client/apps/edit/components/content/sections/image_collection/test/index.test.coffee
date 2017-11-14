@@ -8,37 +8,43 @@ ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
-  find: ReactTestUtils.findRenderedDOMComponentWithClass
+  find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 
 describe 'ImageCollection', ->
 
   beforeEach (done) ->
     benv.setup =>
-      benv.expose $: benv.require 'jquery'
+      benv.expose
+        $: benv.require 'jquery'
+        Bloodhound: (Bloodhound = sinon.stub()).returns(
+          initialize: ->
+          ttAdapter: ->
+        )
+      window.jQuery = $
+      require 'typeahead.js'
+      Backbone.$ = $
+      Bloodhound.tokenizers = { obj: { whitespace: sinon.stub() } }
+      $.fn.typeahead = sinon.stub()
       $.fn.fillwidthLite = sinon.stub()
       global.HTMLElement = () => {}
-      window = {innerHeight: 800}
+      global.Image = () => {}
+      window.innerHeight = 800
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @ImageCollection = benv.require resolve(__dirname, '../index')
-      Artwork = benv.requireWithJadeify(
-        resolve(__dirname, '../components/artwork')
-        ['icons']
-      )
-      Image = benv.requireWithJadeify(
-        resolve(__dirname, '../components/image')
-        ['icons']
-      )
-      RichTextCaption = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text_caption/index')
-        ['icons']
-      )
-      Image.__set__ 'RichTextCaption', React.createFactory RichTextCaption
+      Artwork = benv.require resolve(__dirname, '../components/artwork')
+      Image = benv.require resolve(__dirname, '../components/image')
       Controls = benv.require resolve(__dirname, '../components/controls')
-      Controls.__set__ 'Autocomplete', sinon.stub()
-      Controls.__set__ 'UrlArtworkInput', sinon.stub()
-      @ImageCollection.__set__ 'Artwork', React.createFactory Artwork
-      @ImageCollection.__set__ 'Image', React.createFactory Image
-      @ImageCollection.__set__ 'Controls', React.createFactory Controls
+
+      @ImageCollection.__set__ 'Artwork', Artwork
+      @ImageCollection.__set__ 'Image', Image
+      @ImageCollection.__set__ 'Controls', Controls
       @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
       @props = {
         section: new Backbone.Model
@@ -62,7 +68,9 @@ describe 'ImageCollection', ->
           ]
         editing: false
         setEditing: @setEditing = sinon.stub()
-        channel: { hasFeature: hasFeature = sinon.stub().returns(true), isEditorial: sinon.stub().returns(true) }
+        article: new Backbone.Model
+          layout: 'classic'
+        channel: { hasFeature: hasFeature = sinon.stub().returns(true), isArtsyChannel: sinon.stub().returns(true) }
       }
       @component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0], =>
       @component.onImagesLoaded = sinon.stub()
@@ -75,8 +83,8 @@ describe 'ImageCollection', ->
 
     it 'renders an image collection component with preview', ->
       $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '>Here is a caption'
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '>The Four Hedgehogs'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
     it 'renders a placeholder if no images', ->
       @component.props.section.set 'images', []
@@ -88,7 +96,7 @@ describe 'ImageCollection', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
 
     it 'sets editing mode on click', ->
-      r.simulate.click r.find @component, 'edit-section-image-container'
+      r.simulate.click(r.find(@component, 'image-collection__img-container')[0])
       @setEditing.called.should.eql true
       @setEditing.args[0][0].should.eql true
 
@@ -111,8 +119,8 @@ describe 'ImageCollection', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'imageset-preview'
       $(ReactDOM.findDOMNode(@component)).find('img').length.should.eql 2
       $(ReactDOM.findDOMNode(@component)).find('svg').length.should.eql 1
-      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'Here is a caption'
-      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql 'The Four Hedgehogs'
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql '>Here is a caption'
+      $(ReactDOM.findDOMNode(@component)).html().should.not.containEql '>The Four Hedgehogs'
 
     it 'renders an image set edit view', ->
       @props.editing = true
@@ -148,26 +156,52 @@ describe 'ImageCollection', ->
         images: images
         type: 'image_set'
       component = ReactDOM.render React.createElement(@ImageCollection, @props), (@$el = $ "<div></div>")[0]
-      $(ReactDOM.findDOMNode(component)).attr('class').should.containEql 'imageset-block'
+      $(ReactDOM.findDOMNode(component)).attr('data-overflow').should.eql 'true'
 
 
   describe '#getFillWidthSizes', ->
 
-    it 'returns expected container and target for overflow_fillwidth', ->
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 630
+    describe 'Classic layout', ->
 
-    it 'returns expected container and target for column_width', ->
-      @component.props.section.set 'layout', 'column_width'
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 580
-      sizes.targetHeight.should.eql 630
+      it 'returns expected container and target for overflow_fillwidth', ->
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 900
+        # sizes.targetHeight.should.eql 630
 
-    it 'returns expected container and target for image_set with many images', ->
-      @component.props.section.unset 'layout'
-      @component.props.section.set 'type', 'image_set'
-      @component.props.section.set 'images', ['img', 'img', 'img', 'img']
-      sizes = @component.getFillWidthSizes()
-      sizes.containerSize.should.eql 860
-      sizes.targetHeight.should.eql 400
+      it 'returns expected container and target for column_width', ->
+        @component.props.section.set 'layout', 'column_width'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 580
+        # sizes.targetHeight.should.eql 630
+
+      it 'returns expected container and target for image_set with many images', ->
+        @component.props.section.unset 'layout'
+        @component.props.section.set 'type', 'image_set'
+        @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 900
+        sizes.targetHeight.should.eql 400
+
+    describe 'Standard layout', ->
+
+      it 'returns expected container and target for overflow_fillwidth', ->
+        @component.props.article.set 'layout', 'standard'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 780
+        # sizes.targetHeight.should.eql 537.5999999999999
+
+      it 'returns expected container and target for column_width', ->
+        @component.props.article.set 'layout', 'standard'
+        @component.props.section.set 'layout', 'column_width'
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 680
+        # sizes.targetHeight.should.eql 537.5999999999999
+
+      it 'returns expected container and target for image_set with many images', ->
+        @component.props.article.set 'layout', 'standard'
+        @component.props.section.unset 'layout'
+        @component.props.section.set 'type', 'image_set'
+        @component.props.section.set 'images', ['img', 'img', 'img', 'img']
+        sizes = @component.getFillWidthSizes()
+        sizes.containerSize.should.eql 780
+        sizes.targetHeight.should.eql 400

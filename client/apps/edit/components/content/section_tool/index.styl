@@ -2,46 +2,31 @@
 
 section-btn-height = 130px
 
-.edit-section-tool
-  width section-tool-size - 11px
-  opacity 0
-  z-index 2
+.edit-tool
+  z-index 1
   max-height 0
   position relative
-  &:only-child
-    &::after
-      opacity 1
-      color black
-    svg
-      fill-color black
+  margin-left auto
+  margin-right auto
+  width 100%
+  &[data-editing=true]
+    z-index -1
   &:last-child
     opacity 1
     margin-top 15px
+  &__container
+    width section-tool-size - 11px
   &:hover
-    opacity 1
-    width 100%
-    position relative
-    &::after
-      opacity 0
-    .edit-section-tool-icon svg
-      fill-color black
-    .edit-section-tool-icon::before
-      opacity 1
-      max-width 800px
-  &::after
-    content 'Add a section'
-    width 150px
-    display block
-    float left
-    position absolute
-    top -6px
-    left 35px
-    avant-garde()
-    color gray-dark-color
-    font-size default-avant-garde-font-size - 1
-    opacity 0
+    .edit-tool__container
+      width 100%
+    .edit-tool__icon
+      svg path
+        fill black
+      &::before
+        opacity 1
+        max-width 800px
 
-.edit-section-tool-icon
+.edit-tool__icon
   position relative
   cursor pointer
   top -6px
@@ -60,95 +45,88 @@ section-btn-height = 130px
     z-index 2
   svg
     z-index 1
-    fill-color gray-color
     transition fill 0.1s
     width section-tool-size + 10px
     height section-tool-size + 10px
     position absolute
     left -18px
     top -13px
-    rect
-      fill white !important
 
-.edit-section-tool-menu
-  display none
+.edit-tool__menu
+  display flex
   border 2px solid black
   position relative
   left 0
   width 100%
   overflow hidden
-  opacity 0
   border-top-color transparent
   background gray-lightest-color
   li
-    width 33.33%
+    flex 1
     avant-garde()
     background white
     height 89px
     border-right 1px solid gray-color
     border-bottom 1px solid gray-color
     vertical-align top
-    line-height 124px
     font-size small-avant-garde-font-size
-    display inline-block
-    text-align center
+    display flex
+    flex-direction column
+    align-items center
+    justify-content center
     cursor pointer
     position relative
     &:last-child
       border-right none
     svg
       max-width 40px
-      max-height 40px
-      position absolute
-      top 30px
-      left calc(50% - 17px)
-    .edit-menu-icon-text svg
-      margin-top -3px
-      width 35px
-      height 17px
-      left calc(50% - 17px)
-    .edit-menu-icon-video svg
-      margin-top -11px
-      height 34px
-      left calc(50% - 18px)
-    .edit-menu-icon-hero-image svg, .edit-menu-icon-hero-video svg, .edit-menu-icon-hero-fullscreen svg
-      width 50px
-      left calc(50% - 21px)
-      top 20px
-    .edit-menu-icon-hero-fullscreen svg
-      top 11px
-    .edit-menu-icon-embed svg
-      top 23px
-      width 31px
-      height 22px
-      left calc(50% - 17px)
-    .edit-menu-icon-callout svg
-      top 23px
-      width 40px
-      height 23px
-      left calc(50% - 20px)
-    .edit-menu-icon-image-set svg
-      top 15px
-      left calc(50% - 18px)
+      max-height 35px
+      height 35px
+      margin-bottom 5px
 
-.edit-section-tool[data-state-open="true"]
+.edit-tool[data-state-open="true"]
   max-height (section-btn-height * 4)
   width 100%
-  opacity 1
-  position relative
   transition max-height 0.15s linear, opacity 0.15s linear
-  .edit-section-tool-icon::before
+  .edit-tool__icon::before
     opacity 1
     max-width 800px
-  &::after
-    opacity 0
-  .edit-section-tool-icon
-    &::after
-      display block
-    svg
-      fill-color black
-  .edit-section-tool-menu
-    opacity 1
-    max-height (section-btn-height * 2)
-    transition max-height 0.15s linear, opacity 0.15s linear
-    display flex
+
+.edit-sections__list
+  .edit-tool[data-state-open="true"]
+    .edit-tool__icon
+      &::after
+        display block
+  .edit-tool[data-state-open="false"]
+    .edit-tool__icon
+      opacity 0
+      &:hover
+        opacity 1
+    &[data-first=true]
+      padding-bottom 40px
+      .edit-tool__icon
+        opacity 1
+      &::after
+        content 'Add a section'
+        width 150px
+        display block
+        float left
+        position absolute
+        top -6px
+        left 35px
+        avant-garde()
+        font-size default-avant-garde-font-size - 1
+      &:hover::after,
+      &[data-state-open="true"]::after
+        display none
+
+.classic .edit-tool
+  max-width classic-body-w-margin
+  &[data-hero=true]
+    max-width 640px
+
+.standard .edit-tool
+  max-width standard-body-w-margin
+
+.feature .edit-tool
+  max-width feature-body-w-margin
