@@ -5,7 +5,7 @@ Backbone = require 'backbone'
 rewire = require 'rewire'
 fixtures = require '../../../../test/helpers/fixtures'
 
-describe 'init', ->
+xdescribe 'init', ->
 
   beforeEach (done) ->
     @article = fixtures().articles

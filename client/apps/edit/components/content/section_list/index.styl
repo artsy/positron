@@ -1,35 +1,23 @@
 @import '../../stylus_lib'
 
-//
-// The list container
-//
-#edit-sections
-  padding 5px 0 100px 0
-  margin-bottom 100px
-  width body-width + (controls-padding * 2)
+.edit-sections__list
+  width 100%
 
-//
-// Generically applied to all sections
-//
-.edit-section-container
-  position relative
-  padding controls-padding
-  margin-bottom -1px
-  &:last-child .edit-section-hover-controls .edit-section-tool:last-of-type
-    display none
+.edit-sections__postscript
+  max-width standard-body-w-margin
+  margin 0 auto
+  padding 20px
+  .public-DraftEditorPlaceholder-root
+    position absolute
+    color gray-dark-color
+    top 0
+    Garamond s23
+    font-style italic
 
-.edit-section-container:hover .edit-section-hover-controls
-.edit-section-tool.is-active
-  opacity 1
-
-.edit-section-container[data-editing=true]
-  &::after
-    content '.'
-    fill-container()
-    border 1px solid black
-    color transparent
-    width calc(100% \- 2px)
-    height @width
-  & + .edit-section-tool, .edit-section-hover-controls
-    opacity 0
-    z-index -1
+.standard
+  max-width standard-max-width
+  margin 0 auto
+  .edit-sections__list
+    max-width standard-overflow-w-margin
+  @media (max-width: 1380px)
+    margin 0 40px

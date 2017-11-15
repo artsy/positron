@@ -1,108 +1,20 @@
-@import '../../../stylus_lib'
-
-play-button-size = 30px
-short-input-width = 290px
-wide-input-width = 640px
-
-.edit-section-video
-  .esv-controls-container
-    fill-container()
-    display none
-    z-index 3
-    height 300px
-    top -(@height)
-    background black
-  iframe
-    width 100%
-
-.esv-inputs
-  padding controls-padding
-  color white
-  background black
-  border-top 1px solid gray-darkest-color
-  > h2
-    avant-garde()
-    font-size 11px
-    margin-bottom 10px
-  input
-    width 100%
-    margin 0 0 controls-padding 0
-  button
-    border 0
-    position relative
-    top 1px
-
-[data-useragent*=Firefox] .edit-section-video .edit-section-controls input
-  width 397px
-
-.esv-placeholder
-  height 150px
-  line-height @height
-  text-align center
-  color gray-dark-color
-  &.error
-    color red-color
-
-.edit-section-container[data-editing=true]
-  .esv-controls-container
-    display block
-  .rich-text--caption__input
-    z-index 3
-  .edit-section-video iframe
-    position relative
-    z-index 2
-
-.esv-cover-image-container
-  position absolute
-  top 0
-  left 0
-  right 0
-  z-index 3
-  background-size cover
-  background-position 50%
-
-.esv-video-container
-  position relative
-  .edit-section-remove svg *
-    fill black
+.edit-section--video
+  .edit-section__remove
+    width 30px
+    height 30px
+    position absolute
+    top -12px
+    right -12px
+    circle
+      transition all .3s
     &:hover
-      fill red-color
-
-.esv-cover-image-play-container
-  background white
-  width play-button-size + 40px
-  height @width
-  position absolute
-  top "calc(50% - %s)" % (@width / 2)
-  left "calc(50% - %s)" % (@width / 2)
-
-.esv-cover-image-play
-  width 0
-  height 0
-  top 14px
-  left 22px
-  position absolute
-  border-top (play-button-size - 10) solid transparent
-  border-bottom (play-button-size - 10) solid transparent
-  border-left play-button-size solid black
-
-//
-// Varying layouts
-//
-#edit-content .edit-section-container[data-layout=column_width]
-  .edit-section-controls
-    width 620px
-  nav a.esv-column-width
-    opacity 1
-  iframe
-    width 100%
-
-#edit-content .edit-section-container[data-layout=overflow_fillwidth][data-type=video]
-  width 900px
-  left -140px
-  min-height 400px
-  nav a.esv-overflow-fillwidth
-    opacity 1
-  .esv-inputs
-    .bordered-input
-      width 100%
+      circle
+        fill red-color
+  .public-DraftEditorPlaceholder-inner
+    position absolute
+  div[class*="video__VideoContainer-"]
+    z-index -1
+  &.is-editing
+    z-index 100
+    div[class*="video__VideoContainer-"]
+      z-index 1
