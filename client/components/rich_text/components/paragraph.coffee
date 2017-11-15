@@ -16,7 +16,7 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
-Config = require '../utils/config.coffee'
+Config = require '../utils/config.js'
 Utils = require '../utils/index.coffee'
 { ContentState,
   CompositeDecorator,

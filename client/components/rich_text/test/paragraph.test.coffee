@@ -48,7 +48,7 @@ describe 'Rich Text: Paragraph', ->
       @Paragraph.__set__ 'EditorState', EditorState
       @Utils = benv.require resolve __dirname, '../utils'
       @Paragraph.__set__ 'Utils', @Utils
-      Config = require '../utils/config.coffee'
+      Config = require '../utils/config.js'
       @Paragraph.__set__ 'Config', Config
       Nav = benv.requireWithJadeify(
         resolve(__dirname, '../components/nav'), ['icons']
