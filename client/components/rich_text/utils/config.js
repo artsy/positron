@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-import Decorators from './decorators.coffee'
+import Decorators from './decorators.js'
 
 export const blockRenderMap = () => {
   return Immutable.Map({
