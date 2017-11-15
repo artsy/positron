@@ -79,11 +79,14 @@ module.exports = React.createClass
         React.createElement(
           SectionVideo, @sectionProps()
         )
+      else if @props.section.get('type') is 'callout'
+        div {}
       else
         (switch @props.section.get('type')
           when 'text' then Text
           when 'slideshow' then Slideshow
           when 'embed' then Embed
+          when 'image' then ImageCollection
           when 'image_set' then ImageCollection
           when 'image_collection' then ImageCollection
         )( @sectionProps() )
