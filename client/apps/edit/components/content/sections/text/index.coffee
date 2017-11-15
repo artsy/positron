@@ -8,6 +8,8 @@ Nav = React.createFactory require '../../../../../../components/rich_text/compon
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
 Utils = require '../../../../../../components/rich_text/utils/index.coffee'
+{ keyBindingFnFull } = require '../../../../../../components/rich_text/utils/keybindings.js'
+{ stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.js'
 { CompositeDecorator,
   ContentState,
   Editor,
@@ -145,7 +147,7 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = Utils.stripGoogleStyles(html)
+    html = stripGoogleStyles(html)
     blocksFromHTML = Utils.convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = Utils.stripCharacterStyles contentBlock, true
@@ -309,7 +311,7 @@ module.exports = React.createClass
             onChange: @onChange
             decorators: Config.decorators
             handleKeyCommand: @handleKeyCommand
-            keyBindingFn: Utils.keyBindingFnFull
+            keyBindingFn: keyBindingFnFull
             handlePastedText: @onPaste
             blockRenderMap: Config.blockRenderMap @props.article.get('layout'), @state.hasFeatures
             handleReturn: @handleReturn

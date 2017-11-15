@@ -18,6 +18,7 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 Config = require '../utils/config.js'
 Utils = require '../utils/index.coffee'
+{ keyBindingFnCaption } = require '../utils/keybindings.js'
 { ContentState,
   CompositeDecorator,
   Editor,
@@ -247,7 +248,7 @@ module.exports = React.createClass
           onChange: @onChange
           blockRenderMap: Config.blockRenderMap()
           handleKeyCommand: @handleKeyCommand
-          keyBindingFn: Utils.keyBindingFnCaption
+          keyBindingFn: keyBindingFnCaption
           handlePastedText: @onPaste
         }
       @printUrlInput()

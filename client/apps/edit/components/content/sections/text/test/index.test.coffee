@@ -624,3 +624,8 @@ describe 'Section Text', ->
       @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
       @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
       @component.state.html.should.containEql '<p>yep.01 &nbsp;<a href="artsy.net">here is a link.</a></p><p>In 2016, K mounted a <a'
+
+    it 'strips google inserted styles', ->
+      @component.setState = sinon.stub()
+      @component.onPaste('<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>')
+      @component.setState.args[0][0].html.should.containEql '<h2>Available at: Espacio Valverde • Galleries Sector, Booth 9F0101 &nbsp;'
