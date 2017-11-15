@@ -5,7 +5,7 @@ import {
   findContentStartEntities,
   findLinkEntities,
   Link
-} from 'client/components/rich_text2/utils/decorators.coffee'
+} from 'client/components/rich_text/utils/decorators.coffee'
 
 export const inlineStyles = (layout, hasFeatures) => {
   // for menu display only

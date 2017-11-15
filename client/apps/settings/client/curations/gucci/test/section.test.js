@@ -3,7 +3,7 @@ import { SectionAdmin } from '../components/section.jsx'
 import { mount } from 'enzyme'
 
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 
 describe('Section Admin', () => {
   let props

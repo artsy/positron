@@ -7,7 +7,7 @@ React = require 'react'
 SectionContainer = React.createFactory require '../section_container/index.coffee'
 SectionTool = require '../section_tool/index.jsx'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
-Paragraph = React.createFactory require '../../../../../components/rich_text2/components/paragraph.coffee'
+Paragraph = React.createFactory require '../../../../../components/rich_text/components/paragraph.coffee'
 { div } = React.DOM
 
 module.exports = React.createClass

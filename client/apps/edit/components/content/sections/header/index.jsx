@@ -1,10 +1,10 @@
 import HeaderControls from './controls/index.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text2/components/paragraph.coffee'
+import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
-import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
+import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
 
 export default class SectionHeader extends Component {
   static propTypes = {

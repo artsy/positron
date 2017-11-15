@@ -2,8 +2,8 @@ import { mount } from 'enzyme'
 import React from 'react'
 
 import { CharacterLimit } from 'client/components/character_limit'
-import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
-import { PlainText } from 'client/components/rich_text2/components/plain_text.jsx'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { PlainText } from 'client/components/rich_text/components/plain_text.jsx'
 
 describe('Character Limit', () => {
   const props = {

@@ -4,10 +4,10 @@ _s = require 'underscore.string'
 sd = require('sharify').data
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Config = require './draft_config.js'
-Nav = React.createFactory require '../../../../../../components/rich_text2/components/nav.coffee'
-InputUrl = React.createFactory require '../../../../../../components/rich_text2/components/input_url.coffee'
+Nav = React.createFactory require '../../../../../../components/rich_text/components/nav.coffee'
+InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
-Utils = require '../../../../../../components/rich_text2/utils/index.coffee'
+Utils = require '../../../../../../components/rich_text/utils/index.coffee'
 { CompositeDecorator,
   ContentState,
   Editor,
