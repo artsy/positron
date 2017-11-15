@@ -1,6 +1,6 @@
 import Backbone from 'backbone'
 import React from 'react'
-import { mount, shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import { SectionVideo } from '../index.jsx'
 
 describe('Video', () => {
@@ -26,7 +26,7 @@ describe('Video', () => {
 
   it('renders a placeholder', () => {
     props.section.set('url', null)
-    const component = shallow(
+    const component = mount(
       <SectionVideo {...props} />
     )
     expect(component.html()).toMatch('edit-section__placeholder')

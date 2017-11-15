@@ -10,6 +10,7 @@ ReactDOM = require 'react-dom'
 
 # CUSTOM KEY BINDINGS
 exports.stripGoogleStyles = (html) ->
+  # applied on paste
   # remove non-breaking spaces between paragraphs
   html = html.replace(/<\/\p><br>/g, '</p>').replace('<br class="Apple-interchange-newline">', '')
   doc = document.createElement('div')
@@ -34,6 +35,8 @@ exports.stripGoogleStyles = (html) ->
 
 exports.keyBindingFnFull = (e) ->
   if KeyBindingUtil.hasCommandModifier(e)
+    if e.keyCode is 49   # command + 1
+      return 'header-one'
     if e.keyCode is 50   # command + 2
       return 'header-two'
     if e.keyCode is 51   # command + 3
@@ -44,8 +47,12 @@ exports.keyBindingFnFull = (e) ->
       return 'ordered-list-item'
     if e.keyCode is 56   # command + 8
       return 'unordered-list-item'
-    if e.keyCode is 75   # command + K
+    if e.keyCode is 75   # command + k
       return 'link-prompt'
+    if e.keyCode is 219   # command + [
+      return 'blockquote'
+    if e.keyCode is 88 and e.shiftKey # command + shift + X
+      return 'strikethrough'
   if e.keyCode is 37 or e.keyCode is 39 # l/r arrows: no fallback so pass full e
     return e
   return getDefaultKeyBinding(e)
@@ -55,7 +62,6 @@ exports.keyBindingFnCaption = (e) ->
     if e.keyCode is 75   # command + K
       return 'link-prompt'
   return getDefaultKeyBinding(e)
-
 
 # SELECTION STATE UTILS
 exports.getSelectionDetails = (editorState) ->
@@ -83,7 +89,7 @@ exports.getSelectionDetails = (editorState) ->
     anchorOffset: anchorOffset
   }
 
-exports.moveSelection = (editorState, selection, direction) ->
+exports.moveSelection = (editorState, selection, direction, shift) ->
   # draft has no fallback for interrupted r/l arrow keys
   # here cursor is manually forced r/l within a block,
   # or to the beginning or end of an adjacent block
@@ -92,14 +98,19 @@ exports.moveSelection = (editorState, selection, direction) ->
   if selection.isFirstCharacter and direction is -1
     anchorKey = selection.beforeKey
     offset = editorState.getCurrentContent().getBlockForKey(anchorKey).getLength()
-  if selection.isLastCharacter and direction is 1
+  else if selection.isLastCharacter and direction is 1
     anchorKey = selection.afterKey
     offset = 0
+  else if shift
+    # manually highlight text if shift key is down
+    offset = selection.anchorOffset
+    focusOffset = selection.state.getEndOffset() + direction
   newSelection = new SelectionState {
     anchorKey: anchorKey
     anchorOffset: offset
     focusKey: anchorKey
-    focusOffset: offset
+    focusOffset: focusOffset or offset
+    hasFocus: true
   }
   return EditorState.forceSelection editorState, newSelection
 
@@ -127,31 +138,45 @@ exports.setSelectionToStart = (editorState) ->
   }
   return EditorState.forceSelection editorState, newSelection
 
+exports.getExistingLinkData = (editorState) ->
+  # return data of a selected link element
+  url = ''
+  anchorKey = editorState.getSelection().getStartKey()
+  anchorBlock = editorState.getCurrentContent().getBlockForKey(anchorKey)
+  linkKey = anchorBlock?.getEntityAt(editorState.getSelection().getStartOffset())
+  if linkKey
+    linkInstance = editorState.getCurrentContent().getEntity(linkKey)
+    url = linkInstance.getData().url
+    className = linkInstance.getData().className or ''
+  return { url: url, key: linkKey, className: className }
+
+exports.stickyControlsBox = (location, fromTop, fromLeft) ->
+  # use exported selection here instead of passing location
+  top = location.target.top - location.parent.top + fromTop
+  left = location.target.left - location.parent.left + (location.target.width / 2) - fromLeft
+  return {top: top, left: left}
+
 # IMPORT / EXPORT HTML
-exports.convertToRichHtml = (editorState) ->
+exports.convertToRichHtml = (editorState, layout) ->
   html = convertToHTML({
     entityToHTML: (entity, originalText) ->
       if entity.type is 'LINK'
-        sanitizeName = originalText.split(' ')[0].replace(/[.,\/#!$%\^&\*;:{}=\_`’'~()]/g,"")
-        name = if entity.data.name then ' name="' + sanitizeName + '"' else ''
         if entity.data.className?.includes('is-follow-link')
           artist = entity.data.url.split('/artist/')[1]
-          return '<a href="' + entity.data.url + '" class="' + entity.data.className + '"' + name + '>' + originalText +
+          return '<a href="' + entity.data.url + '" class="' + entity.data.className + '">' + originalText +
            '</a><a data-id="'+ artist + '" class="entity-follow artist-follow"></a>'
-        else if entity.data.className is 'is-jump-link'
-          return a { name: sanitizeName, className: entity.data.className}
         else
           return a { href: entity.data.url}
+      if entity.type is 'CONTENT-START' or entity.type is 'CONTENT-END'
+        return '<span class="' + entity.data.className + '">' + originalText + '</span>'
       return originalText
-    blockToHTML: (block) ->
-      if block.type is 'header-three'
-        return h3 {}, block.text
     styleToHTML: (style) ->
       if style is 'STRIKETHROUGH'
         return span { style: {textDecoration: 'line-through'}}
   })(editorState.getCurrentContent())
   # put the line breaks back for correct client rendering
   html = exports.standardizeSpacing html
+  html = exports.stripH3Tags(html) if layout is 'classic'
   html = if html is '<p><br></p>' then '' else html
   return html
 
@@ -164,7 +189,7 @@ exports.convertFromRichHtml = (html) ->
         return currentStyle
     htmlToEntity: (nodeName, node) ->
       if nodeName is 'a'
-        data = {url: node.href, name: node.name, className: node.classList.toString()}
+        data = {url: node.href, className: node.classList.toString()}
         return Entity.create(
             'LINK',
             'MUTABLE',
@@ -172,16 +197,80 @@ exports.convertFromRichHtml = (html) ->
         )
       if nodeName is 'p' and node.innerHTML is '<br>'
         node.innerHTML = '' # remove <br>, it renders extra breaks in editor
+      if nodeName is 'span' and node.classList.length
+        data = {className: node.classList.toString()}
+        spanType = if data.className is 'content-start' then 'CONTENT-START' else 'CONTENT-END'
+        return Entity.create(
+            spanType,
+            'MUTABLE',
+            data
+        )
     })(html)
   return blocksFromHTML
 
+exports.stripCharacterStyles = (contentBlock, keepAllowed) ->
+  characterList = contentBlock.getCharacterList().map (character) ->
+    if keepAllowed
+      unless character.hasStyle 'UNDERLINE'
+        return character if character.hasStyle('BOLD') or character.hasStyle('ITALIC') or character.hasStyle('STRIKETHROUGH')
+    character.set 'style', character.get('style').clear()
+  unstyled = contentBlock.set 'characterList', characterList
+  return unstyled
+
+exports.stripH3Tags = (html) ->
+  # replace style tags insize h3 for classic layouts
+  doc = document.createElement('div')
+  doc.innerHTML = html
+  h3s = doc.getElementsByTagName('h3')
+  for h3, i in h3s
+    innerH3 = doc.getElementsByTagName('h3')[i].innerHTML
+      .replace(/<em>/g, '')
+      .replace(/<\/\em>/g, '')
+      .replace(/<strong>/g, '')
+      .replace(/<\/\strong>/g, '')
+    newH3 = '<h3>' + innerH3 + '</h3>'
+    $(doc.getElementsByTagName('h3')[i]).replaceWith(newH3)
+  return doc.innerHTML
+
 exports.standardizeSpacing = (html) ->
   html = html
-    .replace(/<h2><\/\h2>/g, '<p><br></p>')
-    .replace(/<h3><\/\h3>/g, '<p><br></p>')
-    .replace(/<p><\/\p><p><\/\p>/g, '<p><br></p>')
-    .replace(/<p><\/\p>/g, '<p><br></p>')
-    .replace(/<p> <\/\p>/g, '<p><br></p>')
-    .replace(/<p><br><\/\p><p><br><\/\p>/g, '<p><br></p>')
+    .replace(/<br>/g, '')
+    .replace(/<span><\/span>/g, '')
+    .replace(/<h2><\/h2>/g, '<p><br></p>')
+    .replace(/<h3><\/h3>/g, '<p><br></p>')
+    .replace(/<p><\/p><p><\/p>/g, '<p><br></p>')
+    .replace(/<p><\/p>/g, '<p><br></p>')
+    .replace(/<p> <\/p>/g, '<p><br></p>')
+    .replace(/<p><br><\/p><p><br><\/p>/g, '<p><br></p>')
     .replace(/  /g, ' &nbsp;')
   return html
+
+# EDITORIAL CUSTOM TEXT ENTITIES
+exports.setContentStartEnd = (html, layout, isStartText, isEndText) ->
+  doc = document.createElement('div')
+  doc.innerHTML = html
+  doc = exports.setDropCap(doc, isStartText) if layout is 'feature'
+  doc = exports.setContentEndMarker doc, isEndText
+  return doc.innerHTML
+
+exports.setDropCap = (doc, isStartText) ->
+  innerSpan = doc.getElementsByClassName('content-start')[0]?.innerHTML
+  newSpan = innerSpan
+  $(doc.getElementsByClassName('content-start')[0]).replaceWith(newSpan) if newSpan
+  if isStartText
+    oldHtml = $(doc).find("p:first").html()
+    if oldHtml
+      firstLetter = '<span class="content-start">' + oldHtml.substring(0, 1) + '</span>'
+      afterFirst = oldHtml.substring(1, oldHtml.length)
+      newHtml = firstLetter + afterFirst
+      $(doc).find("p:first").html(newHtml)
+  return doc
+
+exports.setContentEndMarker = (doc, isEndText) ->
+  innerSpan = doc.getElementsByClassName('content-end')[0]?.innerHTML
+  $(doc.getElementsByClassName('content-end')[0]).replaceWith('')
+  if isEndText
+    oldHtml = $(doc).children().last().html()
+    newHtml = oldHtml + '<span class="content-end"> </span>'
+    $(doc).children().last().html(newHtml)
+  return doc
