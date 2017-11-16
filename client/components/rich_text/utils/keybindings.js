@@ -36,9 +36,6 @@ export const keyBindingFnFull = (e) => {
           return 'strikethrough'
         }
     }
-  // L / R arrow keys
-  } else if (e.keyCode === 37 || e.keyCode === 38) {
-    return e
   } else {
     return getDefaultKeyBinding(e)
   }

@@ -1,5 +1,8 @@
 import Immutable from 'immutable'
-import Decorators from './decorators.js'
+import {
+  findLinkEntities,
+  Link
+} from './decorators.js'
 
 export const blockRenderMap = () => {
   return Immutable.Map({
@@ -23,8 +26,8 @@ export const decorators = (linked) => {
   let decorators = []
   if (linked) {
     decorators.push({
-      strategy: Decorators.findLinkEntities,
-      component: Decorators.Link
+      strategy: findLinkEntities,
+      component: Link
     })
   }
   return decorators

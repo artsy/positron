@@ -3,7 +3,7 @@ import React from 'react'
 
 // STRATEGIES
 
-const findEntities = (type, contentBlock, callback, contentState) => {
+export const findEntities = (type, contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity()
@@ -17,15 +17,15 @@ const findEntities = (type, contentBlock, callback, contentState) => {
 }
 
 export const findLinkEntities = (contentBlock, callback, contentState) => {
-  findEntities('LINK', contentBlock, callback, contentState)
+  exports.findEntities('LINK', contentBlock, callback, contentState)
 }
 
 export const findContentStartEntities = (contentBlock, callback, contentState) => {
-  findEntities('CONTENT-END', contentBlock, callback, contentState)
+  exports.findEntities('CONTENT-START', contentBlock, callback, contentState)
 }
 
 export const findContentEndEntities = (contentBlock, callback, contentState) => {
-  findEntities('CONTENT-START', contentBlock, callback, contentState)
+  exports.findEntities('CONTENT-END', contentBlock, callback, contentState)
 }
 
 // COMPONENTS
@@ -53,26 +53,19 @@ export const Link = (props) => {
   }
 }
 
-export const ContentStartEnd = (props) => {
-  const { children, contentState, entityKey } = props
-  const type = contentState.getEntity(entityKey).getType()
-
-  if (type === 'CONTENT-START') {
-    return (
-      <span className={type.toLowerCase()}>
-        {children}
-      </span>
-    )
-  } else {
-    return <span className={type.toLowerCase()} />
-  }
+export const ContentEnd = (props) => {
+  const { contentState, entityKey } = props
+  const type = contentState.getEntity(entityKey).getType()  
+  return <span className={type.toLowerCase()} />
 }
 
-const entityProps = {
+Link.propTypes = {
   children: PropTypes.any,
   contentState: PropTypes.object,
   entityKey: PropTypes.string
 }
 
-ContentStartEnd.propTypes = entityProps
-Link.propTypes = entityProps
+ContentEnd.propTypes = {
+  contentState: PropTypes.object,
+  entityKey: PropTypes.string
+}

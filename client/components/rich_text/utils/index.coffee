@@ -249,22 +249,8 @@ exports.standardizeSpacing = (html) ->
 exports.setContentStartEnd = (html, layout, isStartText, isEndText) ->
   doc = document.createElement('div')
   doc.innerHTML = html
-  doc = exports.setDropCap(doc, isStartText) if layout is 'feature'
   doc = exports.setContentEndMarker doc, isEndText
   return doc.innerHTML
-
-exports.setDropCap = (doc, isStartText) ->
-  innerSpan = doc.getElementsByClassName('content-start')[0]?.innerHTML
-  newSpan = innerSpan
-  $(doc.getElementsByClassName('content-start')[0]).replaceWith(newSpan) if newSpan
-  if isStartText
-    oldHtml = $(doc).find("p:first").html()
-    if oldHtml
-      firstLetter = '<span class="content-start">' + oldHtml.substring(0, 1) + '</span>'
-      afterFirst = oldHtml.substring(1, oldHtml.length)
-      newHtml = firstLetter + afterFirst
-      $(doc).find("p:first").html(newHtml)
-  return doc
 
 exports.setContentEndMarker = (doc, isEndText) ->
   innerSpan = doc.getElementsByClassName('content-end')[0]?.innerHTML

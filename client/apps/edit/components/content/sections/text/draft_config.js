@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import {
-  ContentStartEnd,
+  ContentEnd,
   findContentEndEntities,
   findContentStartEntities,
   findLinkEntities,
@@ -80,19 +80,10 @@ export const decorators = (layout) => {
       component: Link
     }
   ]
-  if (layout === 'feature') {
-    decorators.push({
-      strategy: findContentStartEntities,
-      component: ContentStartEnd
-    })
+  if (layout === 'feature' || layout === 'standard') {
     decorators.push({
       strategy: findContentEndEntities,
-      component: ContentStartEnd
-    })
-  } else if (layout === 'standard') {
-    decorators.push({
-      strategy: findContentEndEntities,
-      component: ContentStartEnd
+      component: ContentEnd
     })
   }
   return decorators

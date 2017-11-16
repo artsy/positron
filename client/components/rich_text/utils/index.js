@@ -1,26 +1,32 @@
 export const stripGoogleStyles = (html) => {
-  // Applied on paste
+  // Applied on paste, removes dummy styles inserted by google docs
+
   // 1. Remove non-breaking spaces between paragraphs
   const strippedHtml = html
     .replace(/<\/p><br>/g, '</p>')
     .replace('<br class="Apple-interchange-newline">', '')
+
   // Setup HTML inside queryable container
   const doc = document.createElement('div')
-  doc.innerHTML = strippedHtml
+  doc.innerHTML = strippedHtml || ''
+
   // 2. Remove dummy <b> tags google docs wraps document in
   const boldBlocks = doc.getElementsByTagName('B')
   for (let i in boldBlocks) {
     let block = boldBlocks[i]
-    if (block.style.fontWeight === 'normal') {
+    const { style } = block
+    if (style && style.fontWeight === 'normal') {
       $(doc.getElementsByTagName('B')[i]).replaceWith(block.innerHTML)
     }
   }
+
   // 3. Replace bold/italic spans with actual strong/em tags
   const spanBlocks = doc.getElementsByTagName('SPAN')
   for (let i in spanBlocks) {
     let block = spanBlocks[i]
-    const isItalic = block.style.fontStyle === 'italic'
-    const isBold = block.style.fontWeight === '700'
+    const { style } = block
+    const isItalic = style && style.fontStyle === 'italic'
+    const isBold = style && style.fontWeight === '700'
 
     if (isItalic && isBold) {
       block = '<span><strong><em>' + block.innerHTML + '</em></strong></span>'
@@ -31,6 +37,7 @@ export const stripGoogleStyles = (html) => {
     }
     $(doc.getElementsByTagName('SPAN')[i]).replaceWith(block)
   }
+  debugger
   return doc.innerHTML
 }
 

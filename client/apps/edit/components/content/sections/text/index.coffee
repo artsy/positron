@@ -23,7 +23,11 @@ module.exports = React.createClass
   displayName: 'SectionText'
 
   getInitialState: ->
-    editorState: EditorState.createEmpty(new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
+    editorState: EditorState.createEmpty(
+      new CompositeDecorator(
+        Config.decorators(@props.article.get('layout'))
+      )
+    )
     focus: false
     html: null
     selectionTarget: null
@@ -43,7 +47,7 @@ module.exports = React.createClass
   editorStateFromProps: ->
     html = Utils.standardizeSpacing @props.section.get('body')
     unless @props.article.get('layout') is 'classic'
-      html = Utils.setContentStartEnd(html, @props.article.get('layout'), @props.isStartText, @props.isEndText)
+      html = Utils.setContentStartEnd(html, @props.article.get('layout'), false, @props.isEndText)
     blocksFromHTML = Utils.convertFromRichHtml html
     editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
     editorState = Utils.setSelectionToStart(editorState) if @props.editing
@@ -118,11 +122,6 @@ module.exports = React.createClass
     if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
     selection.isFirstBlock and selection.isFirstCharacter and direction is -1
       @props.onSetEditing @props.index + direction
-    else if e.key in ['ArrowLeft', 'ArrowRight']
-      # manually move cursor to make up for draft's missing l/r arrow fallbacks
-      shift = if e.shiftKey then true else false
-      newEditorState = Utils.moveSelection @state.editorState, selection, direction, shift
-      @onChange(newEditorState)
     else
       return true
 
@@ -176,9 +175,7 @@ module.exports = React.createClass
     return Array.from(available)
 
   handleKeyCommand: (e) ->
-    if e.key
-      @handleChangeSection e
-    else if e in @availableBlocks()
+    if e in @availableBlocks()
       @toggleBlockType e
     else if e is 'custom-clear'
       @makePlainText()
@@ -285,6 +282,7 @@ module.exports = React.createClass
 
     div {
       className: 'edit-section--text' + isEditing
+      'data-first-text': @props.isStartText
       onClick: @focus
     },
       Text { layout: @props.article.get 'layout' },
@@ -316,7 +314,9 @@ module.exports = React.createClass
             blockRenderMap: Config.blockRenderMap @props.article.get('layout'), @state.hasFeatures
             handleReturn: @handleReturn
             onTab: @handleTab
+            onLeftArrow: @handleChangeSection
             onUpArrow: @handleChangeSection
+            onRightArrow: @handleChangeSection
             onDownArrow: @handleChangeSection
           }
           if @props.editing and @state.showUrlInput
