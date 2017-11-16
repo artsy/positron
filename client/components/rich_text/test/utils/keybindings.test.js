@@ -1,12 +1,12 @@
 import {
   keyBindingFnCaption,
   keyBindingFnFull
-} from '../utils/keybindings.js'
+} from '../../utils/keybindings.js'
 
 jest.unmock('draft-js')
 const Draft = require.requireActual('draft-js')
 
-describe('Keybindings', () => {
+describe('Draft Utils: Keybindings', () => {
   describe('#keyBindingFnCaption', () => {
     let e
     Draft.getDefaultKeyBinding = jest.fn()
@@ -36,11 +36,12 @@ describe('Keybindings', () => {
 
   describe('#keyBindingFnFull', () => {
     let e
-    Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValue(true)
+    beforeEach(() => {
+      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValue(true)
+      Draft.getDefaultKeyBinding = jest.fn()
+    })
 
     it('Returns the name of a recognized key binding', () => {
-      Draft.getDefaultKeyBinding = jest.fn()
-
       e = { keyCode: 49 }
       expect(keyBindingFnFull(e)).toBe('header-one')
 
@@ -71,25 +72,14 @@ describe('Keybindings', () => {
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(0)
     })
 
-    it('Returns the keyboard event of left or right arrow keys', () => {
-      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValue(false)
-
-      e = { keyCode: 37 }
-      expect(keyBindingFnFull(e).keyCode).toBe(37)
-
-      e.keyCode = 38
-      expect(keyBindingFnFull(e).keyCode).toBe(38)
-      expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(0)
-    })
-
     it('Returns the default key binding if no command modifier', () => {
+      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValue(false)
       e = { keyCode: 75 }
       keyBindingFnFull(e)
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(1)
     })
 
     it('Returns the default binding if no setting specified', () => {
-      Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(true)
       e = { keyCode: 45 }
       keyBindingFnFull(e)
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(1)

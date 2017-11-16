@@ -1,8 +1,49 @@
 import {
-  stripGoogleStyles
-} from '../utils/index.js'
+  standardizeSpacing,
+  stripGoogleStyles,
+  stripH3Tags
+} from '../../utils/text_stripping.js'
 
-describe('Utils', () => {
+describe('Draft Utils: Text Stripping', () => {
+  describe('#standardizeSpacing', () => {
+    it('Removes freestanding linebreaks', () => {
+      const html = standardizeSpacing('<br><p><br></p><p></p><br>')
+      expect(html).toBe('<p><br></p>')
+    })
+
+    it('Removes empty spans', () => {
+      const html = standardizeSpacing('<span></span>')
+      expect(html).toBe('')
+    })
+
+    it('Replaces consecutive empty paragraphs with one', () => {
+      const html = standardizeSpacing('<p></p><p></p>')
+      expect(html).toBe('<p><br></p>')
+    })
+
+    it('Converts empty headers into empty paragraphs', () => {
+      const h2 = standardizeSpacing('<h2></h2>')
+      const h3 = standardizeSpacing('<h3></h3>')
+      const html = standardizeSpacing('<h2></h2><h3></h3>')
+
+      expect(h2).toBe('<p><br></p>')
+      expect(h3).toBe('<p><br></p>')
+      expect(html).toBe('<p><br></p>')
+    })
+
+    it('Converts consecutive spaces into nbsp', () => {
+      const html = standardizeSpacing('<p>   </p>')
+      expect(html).toBe('<p> &nbsp; </p>')
+    })
+  })
+
+  describe('#stripH3Tags', () => {
+    it('Removes nested html inside h3 blocks', () => {
+      const html = stripH3Tags('<h3>A <em>short</em> piece of <strong>text</strong></h3>')
+      expect(html).toBe('<h3>A short piece of text</h3>')
+    })
+  })
+
   describe('#stripGoogleStyles', () => {
     let googleHtmlShort
     let googleHtmlLong

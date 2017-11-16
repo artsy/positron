@@ -18,9 +18,9 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 Config = require '../utils/config.js'
 Utils = require '../utils/index.coffee'
-{ stripGoogleStyles } = require '../utils/index.js'
 { keyBindingFnCaption } = require '../utils/keybindings.js'
-{ standardizeSpacing, stripCharacterStyles } = require '../utils/text_stripping.js'
+{ stickyControlsBox } = require '../utils/text_selection.js'
+{ standardizeSpacing, stripCharacterStyles, stripGoogleStyles } = require '../utils/text_stripping.js'
 { ContentState,
   CompositeDecorator,
   Editor,
@@ -160,8 +160,8 @@ module.exports = React.createClass
     selectionTarget = {top: 0, left: 0}
     url = ''
     if !selection.isCollapsed()
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTarget = Utils.stickyControlsBox(location, 25, 200)
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTarget = stickyControlsBox(editorPosition, 25, 200)
       contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
@@ -220,10 +220,10 @@ module.exports = React.createClass
 
   checkSelection: ->
     if !window.getSelection().isCollapsed
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
       selectionTargetL = Config.inlineStyles(@props.type).length * 25
       selectionTargetL = selectionTargetL + 25 if @hasLinks()
-      @setState showNav: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
+      @setState showNav: true, selectionTarget: stickyControlsBox(editorPosition, -43, selectionTargetL)
     else
       @setState showNav: false
 

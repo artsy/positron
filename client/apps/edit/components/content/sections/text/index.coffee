@@ -8,9 +8,9 @@ Nav = React.createFactory require '../../../../../../components/rich_text/compon
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
 Utils = require '../../../../../../components/rich_text/utils/index.coffee'
-{ standardizeSpacing, stripCharacterStyles } = require '../../../../../../components/rich_text/utils/text_stripping.js'
+{ stickyControlsBox } = require '../../../../../../components/rich_text/utils/text_selection.js'
+{ standardizeSpacing, stripCharacterStyles, stripGoogleStyles } = require '../../../../../../components/rich_text/utils/text_stripping.js'
 { keyBindingFnFull } = require '../../../../../../components/rich_text/utils/keybindings.js'
-{ stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.js'
 { CompositeDecorator,
   ContentState,
   Editor,
@@ -232,8 +232,8 @@ module.exports = React.createClass
   promptForLink: (pluginType) ->
     selectionTarget = null
     unless window.getSelection().isCollapsed
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTarget = Utils.stickyControlsBox(location, 25, 200)
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTarget = stickyControlsBox(editorPosition, 25, 200)
       url = Utils.getExistingLinkData(@state.editorState).url
       @setState
         showUrlInput: true
@@ -272,9 +272,9 @@ module.exports = React.createClass
 
   checkSelection: ->
     if !window.getSelection().isCollapsed
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
       selectionTargetL = if @state.hasFeatures then 125 else 100
-      @setState showMenu: true, selectionTarget: Utils.stickyControlsBox(location, -93, selectionTargetL)
+      @setState showMenu: true, selectionTarget: stickyControlsBox(editorPosition, -93, selectionTargetL)
     else
       @setState showMenu: false
 

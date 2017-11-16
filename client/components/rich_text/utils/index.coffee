@@ -35,19 +35,6 @@ exports.getSelectionDetails = (editorState) ->
     anchorOffset: anchorOffset
   }
 
-exports.getSelectionLocation = ($parent) ->
-  # get x/y location of currently selected text
-  selection = window.getSelection().getRangeAt(0).getClientRects()
-  if selection[0].width is 0
-    target = selection[1]
-  else
-    target = selection[0]
-  parent = {
-    top: $parent.top - window.pageYOffset
-    left: $parent.left
-  }
-  return { target: target, parent: parent }
-
 exports.setSelectionToStart = (editorState) ->
   # reset the cursor to the first character of the first block
   firstKey = editorState.getCurrentContent().getFirstBlock().getKey()

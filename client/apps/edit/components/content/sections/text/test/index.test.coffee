@@ -51,8 +51,7 @@ describe 'Section Text', ->
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
       @SectionText.__set__ 'Nav', React.createFactory Nav
-      @SectionText.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
-      @SectionText.__set__ 'Utils.getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
+      @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @sections = new Backbone.Collection [
         {
           body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
@@ -192,18 +191,6 @@ describe 'Section Text', ->
       ]
 
   describe 'Editorial Features', ->
-
-    it 'Adds drop-caps to first paragraph in feature article', ->
-      @altProps.article.set 'layout', 'feature'
-      @altProps.section.set 'body', '<h2>A short title</h2><p>A short piece of text</p>'
-      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
-      component.state.html.should.containEql '<span class="content-start">A</span>'
-
-    it 'Doesnt add drop-caps if no paragraph', ->
-      @altProps.article.set 'layout', 'feature'
-      @altProps.section.set 'body', '<h2>A short title</h2>'
-      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
-      component.state.html.should.not.containEql '<span class="content-start">A</span>'
 
     it 'Adds end-marker to a feature article', ->
       @altProps.article.set 'layout', 'feature'
@@ -365,16 +352,6 @@ describe 'Section Text', ->
       @shortComponent.handleKeyCommand('link-prompt')
       @shortComponent.setState.args[0][0].showUrlInput.should.eql true
 
-    it 'Can pass left arrow events to #handleChangeSection', ->
-      @shortComponent.handleChangeSection = sinon.stub()
-      @shortComponent.handleKeyCommand({key: 'ArrowLeft'})
-      @shortComponent.handleChangeSection.called.should.eql true
-
-    it 'Can pass right arrow events to #handleChangeSection', ->
-      @shortComponent.handleChangeSection = sinon.stub()
-      @shortComponent.handleKeyCommand({key: 'ArrowRight'})
-      @shortComponent.handleChangeSection.called.should.eql true
-
 
   describe 'Links', ->
 
@@ -441,7 +418,7 @@ describe 'Section Text', ->
       @component.props.sections.models[@component.props.index + 1].get('body').should.eql '<p>A text after.</p>'
 
 
-  describe '#handleChangeSection', ->
+  xdescribe '#handleChangeSection', ->
 
     it 'R-> Moves the cursor over one if not at end of block', ->
       @shortComponent.onChange = sinon.stub()

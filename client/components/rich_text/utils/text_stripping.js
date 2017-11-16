@@ -47,3 +47,58 @@ export const stripH3Tags = (html) => {
   }
   return doc.innerHTML
 }
+
+const replaceGoogleFalseTags = (html) => {
+  let doc = document.createElement('div')
+  doc.innerHTML = html
+
+  var spanBlocks = Array.from(doc.getElementsByTagName('SPAN'))
+
+  spanBlocks.map((block, i) => {
+    const { style } = block
+    const isItalic = style && style.fontStyle === 'italic'
+    const isBold = style && style.fontWeight === '700'
+
+    if (isItalic && isBold) {
+      block = '<span><strong><em>' + block.innerHTML + '</em></strong></span>'
+    } else if (isItalic) {
+      block = '<span><em>' + block.innerHTML + '</em></span>'
+    } else if (isBold) {
+      block = '<span><strong>' + block.innerHTML + '</strong></span>'
+    }
+    $(doc.getElementsByTagName('SPAN')[i]).replaceWith(block)
+  })
+  return doc.innerHTML
+}
+
+const removeGoogleFalseBoldTags = (html) => {
+  let doc = document.createElement('div')
+  doc.innerHTML = html
+
+  var boldBlocks = Array.from(doc.getElementsByTagName('B'))
+
+  boldBlocks.map((block, i) => {
+    const { style } = block
+
+    if (style && style.fontWeight === 'normal') {
+      $(doc.getElementsByTagName('B')[i]).replaceWith(block.innerHTML)
+    }
+  })
+  return doc.innerHTML
+}
+
+export const stripGoogleStyles = (html) => {
+  // Applied on paste
+  // Remove non-breaking spaces between paragraphs
+  let strippedHtml = html
+    .replace(/<\/p><br>/g, '</p>')
+    .replace('<br class="Apple-interchange-newline">', '')
+
+  // Remove dummy <b> tags google docs wraps document in
+  strippedHtml = removeGoogleFalseBoldTags(strippedHtml)
+
+  // Replace bold/italic spans with actual strong/em tags
+  strippedHtml = replaceGoogleFalseTags(strippedHtml)
+
+  return strippedHtml
+}

@@ -59,8 +59,7 @@ describe 'Rich Text: Paragraph', ->
       )
       @Paragraph.__set__ 'InputUrl', React.createFactory InputUrl
       @Paragraph.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
-      @Paragraph.__set__ 'Utils.getSelectionLocation', sinon.stub().returns({top: 40, left: 20})
-      @Paragraph.__set__ 'Utils.stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
+      @Paragraph.__set__ 'stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
       @leadParagraph = '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'
       @postscript = '<p>Illustration by <a href="http://artsy.net">Tomi Um</a>.</p>'
       @props = {
