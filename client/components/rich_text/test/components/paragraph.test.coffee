@@ -43,22 +43,22 @@ describe 'Rich Text: Paragraph', ->
           removeListener: sinon.stub()
         }
       )
-      @Paragraph = benv.require resolve __dirname, '../components/paragraph'
+      @Paragraph = benv.require resolve __dirname, '../../components/paragraph'
       @Paragraph.__set__ 'Modifier', Modifier
       @Paragraph.__set__ 'EditorState', EditorState
-      @Utils = benv.require resolve __dirname, '../utils'
+      @Utils = benv.require resolve __dirname, '../../utils'
       @Paragraph.__set__ 'Utils', @Utils
-      Config = require '../utils/config.js'
+      Config = require '../../utils/config.js'
       @Paragraph.__set__ 'Config', Config
       Nav = benv.requireWithJadeify(
-        resolve(__dirname, '../components/nav'), ['icons']
+        resolve(__dirname, '../../components/nav'), ['icons']
       )
       @Paragraph.__set__ 'Nav', React.createFactory Nav
       InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../components/input_url'), ['icons']
+        resolve(__dirname, '../../components/input_url'), ['icons']
       )
       @Paragraph.__set__ 'InputUrl', React.createFactory InputUrl
-      @Paragraph.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
+      @Paragraph.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @Paragraph.__set__ 'stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
       @leadParagraph = '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'
       @postscript = '<p>Illustration by <a href="http://artsy.net">Tomi Um</a>.</p>'
@@ -215,8 +215,7 @@ describe 'Rich Text: Paragraph', ->
       @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
       @stripGoogleStyles.called.should.eql true
 
-    it 'calls standardizeSpacing', ->
-      @Utils.standardizeSpacing = sinon.stub()
+    xit 'calls standardizeSpacing', ->
       @component.onChange = sinon.stub()
       @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
-      @Utils.standardizeSpacing.called.should.eql true
+      @component.standardizeSpacing.called.should.eql true

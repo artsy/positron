@@ -8,8 +8,17 @@ Nav = React.createFactory require '../../../../../../components/rich_text/compon
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
 Utils = require '../../../../../../components/rich_text/utils/index.coffee'
-{ stickyControlsBox } = require '../../../../../../components/rich_text/utils/text_selection.js'
-{ standardizeSpacing, stripCharacterStyles, stripGoogleStyles } = require '../../../../../../components/rich_text/utils/text_stripping.js'
+{
+  setSelectionToStart,
+  stickyControlsBox,
+  getSelectedLinkData,
+  getSelectionDetails
+} = require '../../../../../../components/rich_text/utils/text_selection.js'
+{
+  standardizeSpacing,
+  stripCharacterStyles,
+  stripGoogleStyles
+} = require '../../../../../../components/rich_text/utils/text_stripping.js'
 { keyBindingFnFull } = require '../../../../../../components/rich_text/utils/keybindings.js'
 { CompositeDecorator,
   ContentState,
@@ -51,7 +60,7 @@ module.exports = React.createClass
       html = Utils.setContentStartEnd(html, @props.article.get('layout'), false, @props.isEndText)
     blocksFromHTML = Utils.convertFromRichHtml html
     editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
-    editorState = Utils.setSelectionToStart(editorState) if @props.editing
+    editorState = setSelectionToStart(editorState) if @props.editing
     @setState
       html: html
       editorState: editorState
@@ -81,7 +90,7 @@ module.exports = React.createClass
     @refs.editor.focus()
 
   handleReturn: (e) ->
-    selection = Utils.getSelectionDetails(@state.editorState)
+    selection = getSelectionDetails(@state.editorState)
     # dont split from the first block, to avoid creating empty blocks
     # dont split from the middle of a paragraph
     if selection.isFirstBlock or selection.anchorOffset
@@ -99,7 +108,7 @@ module.exports = React.createClass
     @props.onSetEditing index
 
   handleBackspace: (e) ->
-    selection = Utils.getSelectionDetails(@state.editorState)
+    selection = getSelectionDetails(@state.editorState)
     # only merge a section if cursor is in first character of first block
     if selection.isFirstBlock and selection.anchorOffset is 0 and
     @props.sections.models[@props.index - 1]?.get('type') is 'text'
@@ -108,7 +117,7 @@ module.exports = React.createClass
       newHTML = mergeIntoHTML + @state.html
       blocksFromHTML = Utils.convertFromRichHtml newHTML
       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
-      newSectionState = Utils.setSelectionToStart newSectionState
+      newSectionState = setSelectionToStart newSectionState
       @onChange newSectionState
       @props.onSetEditing @props.index - 1
 
@@ -116,7 +125,7 @@ module.exports = React.createClass
     direction = 0
     direction =  -1 if e.key in ['ArrowUp', 'ArrowLeft']
     direction =  1 if e.key in ['ArrowDown', 'ArrowRight']
-    selection = Utils.getSelectionDetails @state.editorState
+    selection = getSelectionDetails @state.editorState
     # if cursor is arrowing forward from last charachter of last block,
     # or cursor is arrowing back from first character of first block,
     # jump to adjacent section
@@ -184,14 +193,14 @@ module.exports = React.createClass
       @handleBackspace e
     else if e in ['italic', 'bold']
       if @props.article.get('layout') is 'classic' and
-      Utils.getSelectionDetails(@state.editorState).anchorType is 'header-three'
+      getSelectionDetails(@state.editorState).anchorType is 'header-three'
         return 'handled'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
     else if e is 'strikethrough'
       @toggleInlineStyle 'STRIKETHROUGH'
     else if e is 'link-prompt'
-      className = Utils.getExistingLinkData(@state.editorState).className
+      className = getSelectedLinkData(@state.editorState).className
       return @promptForLink() unless className?.includes 'is-follow-link'
       @promptForLink 'artist'
 
@@ -222,7 +231,7 @@ module.exports = React.createClass
     return 'handled'
 
   toggleInlineStyle: (inlineStyle) ->
-    selection = Utils.getSelectionDetails(@state.editorState)
+    selection = getSelectionDetails(@state.editorState)
     if selection.anchorType is 'header-three' and @props.article.get('layout') is 'classic'
       block = @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
       stripCharacterStyles block
@@ -234,7 +243,7 @@ module.exports = React.createClass
     unless window.getSelection().isCollapsed
       editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
       selectionTarget = stickyControlsBox(editorPosition, 25, 200)
-      url = Utils.getExistingLinkData(@state.editorState).url
+      url = getSelectedLinkData(@state.editorState).url
       @setState
         showUrlInput: true
         showMenu: false

@@ -1,5 +1,5 @@
 import {
-  keyBindingFnCaption,
+  keyBindingFnParagraph,
   keyBindingFnFull
 } from '../../utils/keybindings.js'
 
@@ -7,7 +7,7 @@ jest.unmock('draft-js')
 const Draft = require.requireActual('draft-js')
 
 describe('Draft Utils: Keybindings', () => {
-  describe('#keyBindingFnCaption', () => {
+  describe('#keyBindingFnParagraph', () => {
     let e
     Draft.getDefaultKeyBinding = jest.fn()
     Draft.KeyBindingUtil.hasCommandModifier = jest.fn()
@@ -15,21 +15,21 @@ describe('Draft Utils: Keybindings', () => {
     it('Returns the name of a recognized key binding if command modifier', () => {
       Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(true)
       e = { keyCode: 75 }
-      expect(keyBindingFnCaption(e)).toBe('link-prompt')
+      expect(keyBindingFnParagraph(e)).toBe('link-prompt')
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(0)
     })
 
     it('Returns the default key binding if no command modifier', () => {
       Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(false)
       e = { keyCode: 75 }
-      keyBindingFnCaption(e)
+      keyBindingFnParagraph(e)
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(1)
     })
 
     it('Returns the default binding if no setting specified', () => {
       Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(true)
       e = { keyCode: 45 }
-      keyBindingFnCaption(e)
+      keyBindingFnParagraph(e)
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(1)
     })
   })

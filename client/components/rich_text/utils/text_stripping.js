@@ -89,15 +89,15 @@ const removeGoogleFalseBoldTags = (html) => {
 
 export const stripGoogleStyles = (html) => {
   // Applied on paste
-  // Remove non-breaking spaces between paragraphs
+  // 1. Remove non-breaking spaces between paragraphs
   let strippedHtml = html
     .replace(/<\/p><br>/g, '</p>')
     .replace('<br class="Apple-interchange-newline">', '')
 
-  // Remove dummy <b> tags google docs wraps document in
+  // 2. Remove dummy <b> tags google docs wraps document in
   strippedHtml = removeGoogleFalseBoldTags(strippedHtml)
 
-  // Replace bold/italic spans with actual strong/em tags
+  // 3. Replace bold/italic spans with actual strong/em tags
   strippedHtml = replaceGoogleFalseTags(strippedHtml)
 
   return strippedHtml

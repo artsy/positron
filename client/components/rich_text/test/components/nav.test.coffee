@@ -10,8 +10,10 @@ r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
 
-{ blockTypes,
-  inlineStyles } = require '../../../apps/edit/components/content/sections/text/draft_config.js'
+{
+  blockTypes,
+  inlineStyles
+} = require '../../../../apps/edit/components/content/sections/text/draft_config.js'
 
 describe 'RichText: Nav', ->
 
@@ -20,7 +22,7 @@ describe 'RichText: Nav', ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
         @Nav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/nav'), ['icons']
+          resolve(__dirname, '../../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: false
@@ -82,7 +84,7 @@ describe 'RichText: Nav', ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
         @Nav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/nav'), ['icons']
+          resolve(__dirname, '../../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true
@@ -129,7 +131,7 @@ describe 'RichText: Nav', ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
         @Nav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/nav'), ['icons']
+          resolve(__dirname, '../../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true
@@ -177,7 +179,7 @@ describe 'RichText: Nav', ->
       benv.setup =>
         benv.expose $: benv.require 'jquery'
         @Nav = benv.requireWithJadeify(
-          resolve(__dirname, '../components/nav'), ['icons']
+          resolve(__dirname, '../../components/nav'), ['icons']
         )
         @props = {
           hasFeatures: true

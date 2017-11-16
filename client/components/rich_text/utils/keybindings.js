@@ -4,6 +4,7 @@ import {
 } from 'draft-js'
 
 export const keyBindingFnFull = (e) => {
+  // Custom key commands for full editor
   if (KeyBindingUtil.hasCommandModifier(e)) {
     switch (e.keyCode) {
       case 49:
@@ -40,7 +41,8 @@ export const keyBindingFnFull = (e) => {
   return getDefaultKeyBinding(e)
 }
 
-export const keyBindingFnCaption = (e) => {
+export const keyBindingFnParagraph = (e) => {
+  // Custom key commands for paragraph editor
   if (KeyBindingUtil.hasCommandModifier(e)) {
     if (e.keyCode === 75) {
       return 'link-prompt'

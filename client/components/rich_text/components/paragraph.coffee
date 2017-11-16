@@ -18,7 +18,7 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 Config = require '../utils/config.js'
 Utils = require '../utils/index.coffee'
-{ keyBindingFnCaption } = require '../utils/keybindings.js'
+{ keyBindingFnParagraph } = require '../utils/keybindings.js'
 { stickyControlsBox } = require '../utils/text_selection.js'
 { standardizeSpacing, stripCharacterStyles, stripGoogleStyles } = require '../utils/text_stripping.js'
 { ContentState,
@@ -121,7 +121,6 @@ module.exports = React.createClass
     return 'not-handled'
 
   toggleInlineStyle: (inlineStyle) ->
-    selection = Utils.getSelectionDetails(@state.editorState)
     @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
 
@@ -250,7 +249,7 @@ module.exports = React.createClass
           onChange: @onChange
           blockRenderMap: Config.blockRenderMap()
           handleKeyCommand: @handleKeyCommand
-          keyBindingFn: keyBindingFnCaption
+          keyBindingFn: keyBindingFnParagraph
           handlePastedText: @onPaste
         }
       @printUrlInput()

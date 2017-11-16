@@ -41,63 +41,6 @@ describe 'Utils', ->
   afterEach ->
     benv.teardown()
 
-  describe 'Selection State', ->
-
-    describe '#getSelectionDetails', ->
-
-      it 'Knows if selection focus is in first block', ->
-        selection = @utils.getSelectionDetails(@editorState)
-        selection.isFirstBlock.should.eql true
-        selection.isLastBlock.should.eql false
-        (typeof selection.beforeKey).should.be.undefined
-
-      it 'Knows if selection focus is in first character of block', ->
-        selection = @utils.getSelectionDetails(@editorState)
-        selection.isFirstCharacter.should.eql true
-        selection.isLastCharacter.should.eql false
-        selection.anchorOffset.should.eql 0
-
-      it 'Knows if selection focus is in last block', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getLastBlock().key
-          anchorOffset: @editorState.getCurrentContent().getLastBlock().getLength()
-          focusKey: @editorState.getCurrentContent().getLastBlock().key
-          focusOffset: @editorState.getCurrentContent().getLastBlock().getLength()
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        selection = @utils.getSelectionDetails(editorState)
-        selection.isLastBlock.should.eql true
-        selection.isFirstBlock.should.eql false
-        (typeof selection.afterKey).should.be.undefined
-
-      it 'Knows if selection focus is in last character of block', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getFirstBlock().key
-          anchorOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-          focusKey: @editorState.getCurrentContent().getFirstBlock().key
-          focusOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        selection = @utils.getSelectionDetails(editorState)
-        selection.isLastCharacter.should.eql true
-        selection.isLastBlock.should.eql false
-        selection.isFirstCharacter.should.eql false
-        selection.anchorOffset.should.eql 116
-
-    describe '#setSelectionToStart', ->
-
-      it 'resets the cursor to the first character of first block', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getFirstBlock().key
-          anchorOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-          focusKey: @editorState.getCurrentContent().getFirstBlock().key
-          focusOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        editorState.getSelection().anchorOffset.should.eql 116
-        newState = @utils.setSelectionToStart editorState
-        newState.getSelection().anchorOffset.should.eql 0
-
   describe 'Custom text entities', ->
 
     describe '#setContentStartEnd', ->
