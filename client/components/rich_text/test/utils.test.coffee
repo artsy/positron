@@ -176,53 +176,6 @@ describe 'Utils', ->
         selection.isFirstCharacter.should.eql false
         selection.anchorOffset.should.eql 116
 
-    describe '#moveSelection', ->
-
-      it 'Can move the selection one step ahead', ->
-        newState = @utils.moveSelection @editorState, @editorState.getSelection(), 1
-        newState.getSelection().anchorOffset.should.eql 1
-
-      it 'Can move the selection one step back', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getFirstBlock().key
-          anchorOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-          focusKey: @editorState.getCurrentContent().getFirstBlock().key
-          focusOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        editorState.getSelection().anchorOffset.should.eql 116
-        newState = @utils.moveSelection editorState, editorState.getSelection(), -1
-        newState.getSelection().anchorOffset.should.eql 115
-
-      it 'Can highlight text with the shift key', ->
-        newState = @utils.moveSelection @editorState, @utils.getSelectionDetails(@editorState), 1, true
-        newState.getSelection().focusOffset.should.eql(newState.getSelection().anchorOffset + 1)
-
-      it 'Can jump to the start of the next block', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getFirstBlock().key
-          anchorOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-          focusKey: @editorState.getCurrentContent().getFirstBlock().key
-          focusOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        editorState.getSelection().anchorOffset.should.eql 116
-        newState = @utils.moveSelection editorState, @utils.getSelectionDetails(editorState), 1
-        newState.getSelection().anchorOffset.should.eql 0
-        newState.getSelection().anchorKey.should.not.eql editorState.getSelection().anchorKey
-
-      it 'Can jump to the end of a previous block', ->
-        setSelection = @editorState.getSelection().merge({
-          anchorKey: @editorState.getCurrentContent().getLastBlock().key
-          anchorOffset: 0
-          focusKey: @editorState.getCurrentContent().getLastBlock().key
-          focusOffset: 0
-        })
-        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
-        newState = @utils.moveSelection editorState, @utils.getSelectionDetails(editorState), -1
-        newState.getSelection().anchorOffset.should.eql 116
-        newState.getSelection().anchorKey.should.not.eql editorState.getSelection().anchorKey
-
     describe '#setSelectionToStart', ->
 
       it 'resets the cursor to the first character of first block', ->

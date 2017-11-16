@@ -18,7 +18,9 @@ ReactDOM = require 'react-dom'
 sd = require('sharify').data
 Config = require '../utils/config.js'
 Utils = require '../utils/index.coffee'
+{ stripGoogleStyles } = require '../utils/index.js'
 { keyBindingFnCaption } = require '../utils/keybindings.js'
+{ standardizeSpacing, stripCharacterStyles } = require '../utils/text_stripping.js'
 { ContentState,
   CompositeDecorator,
   Editor,
@@ -49,7 +51,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if $(@props.html)?.text().length
-      html = Utils.standardizeSpacing @props.html
+      html = standardizeSpacing @props.html
       html = @stripLinebreaks(html) if @props.stripLinebreaks
       blocksFromHTML = @convertFromHTML(html)
       @setState
@@ -97,7 +99,7 @@ module.exports = React.createClass
           return a { href: entity.data.url}
         return originalText
     })(editorState.getCurrentContent())
-    html = Utils.standardizeSpacing html
+    html = standardizeSpacing html
     html = if html in ['<p></p>', '<p><br></p>'] then '' else html
     return html
 
@@ -131,13 +133,13 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = Utils.standardizeSpacing html
-    html = Utils.stripGoogleStyles html
+    html = standardizeSpacing html
+    html = stripGoogleStyles html
     html = @stripLinebreaks(html) if @props.stripLinebreaks
     html = html.replace(/<\/p><p>/g, '')
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-      unstyled = Utils.stripCharacterStyles contentBlock, true
+      unstyled = stripCharacterStyles contentBlock, true
       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled

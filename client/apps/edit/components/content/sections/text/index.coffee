@@ -8,6 +8,7 @@ Nav = React.createFactory require '../../../../../../components/rich_text/compon
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
 Utils = require '../../../../../../components/rich_text/utils/index.coffee'
+{ standardizeSpacing, stripCharacterStyles } = require '../../../../../../components/rich_text/utils/text_stripping.js'
 { keyBindingFnFull } = require '../../../../../../components/rich_text/utils/keybindings.js'
 { stripGoogleStyles } = require '../../../../../../components/rich_text/utils/index.js'
 { CompositeDecorator,
@@ -45,7 +46,7 @@ module.exports = React.createClass
       @focus()
 
   editorStateFromProps: ->
-    html = Utils.standardizeSpacing @props.section.get('body')
+    html = standardizeSpacing @props.section.get('body')
     unless @props.article.get('layout') is 'classic'
       html = Utils.setContentStartEnd(html, @props.article.get('layout'), false, @props.isEndText)
     blocksFromHTML = Utils.convertFromRichHtml html
@@ -149,14 +150,14 @@ module.exports = React.createClass
     html = stripGoogleStyles(html)
     blocksFromHTML = Utils.convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-      unstyled = Utils.stripCharacterStyles contentBlock, true
+      unstyled = stripCharacterStyles contentBlock, true
       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
     blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray()).blockMap
     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
     @onChange EditorState.push(editorState, newState, 'insert-fragment')
-    return true
+    return 'handled'
 
   makePlainText: () ->
     { editorState } = @state
@@ -164,7 +165,7 @@ module.exports = React.createClass
     noLinks = RichUtils.toggleLink editorState, selection, null
     noBlocks = RichUtils.toggleBlockType noLinks, 'unstyled'
     noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) ->
-      Utils.stripCharacterStyles contentBlock
+      stripCharacterStyles contentBlock
     newState = ContentState.createFromBlockArray noStyles
     if !selection.isCollapsed()
       @onChange EditorState.push(editorState, newState, null)
@@ -224,7 +225,7 @@ module.exports = React.createClass
     selection = Utils.getSelectionDetails(@state.editorState)
     if selection.anchorType is 'header-three' and @props.article.get('layout') is 'classic'
       block = @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
-      Utils.stripCharacterStyles block
+      stripCharacterStyles block
     else
       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 

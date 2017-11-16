@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
+//
 // STRATEGIES
-
+//
 export const findEntities = (type, contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(
     (character) => {
@@ -20,16 +21,13 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
   exports.findEntities('LINK', contentBlock, callback, contentState)
 }
 
-export const findContentStartEntities = (contentBlock, callback, contentState) => {
-  exports.findEntities('CONTENT-START', contentBlock, callback, contentState)
-}
-
 export const findContentEndEntities = (contentBlock, callback, contentState) => {
   exports.findEntities('CONTENT-END', contentBlock, callback, contentState)
 }
 
+//
 // COMPONENTS
-
+//
 export const Link = (props) => {
   const { children, contentState, entityKey } = props
   const { url, className } = contentState.getEntity(entityKey).getData()

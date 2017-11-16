@@ -1,29 +1,28 @@
 export const stripGoogleStyles = (html) => {
   // Applied on paste, removes dummy styles inserted by google docs
 
-  // 1. Remove non-breaking spaces between paragraphs
+  // Remove non-breaking spaces between paragraphs
   const strippedHtml = html
     .replace(/<\/p><br>/g, '</p>')
     .replace('<br class="Apple-interchange-newline">', '')
 
   // Setup HTML inside queryable container
-  const doc = document.createElement('div')
-  doc.innerHTML = strippedHtml || ''
+  let doc = document.createElement('div')
+  doc.innerHTML = strippedHtml
 
-  // 2. Remove dummy <b> tags google docs wraps document in
-  const boldBlocks = doc.getElementsByTagName('B')
-  for (let i in boldBlocks) {
-    let block = boldBlocks[i]
-    const { style } = block
-    if (style && style.fontWeight === 'normal') {
-      $(doc.getElementsByTagName('B')[i]).replaceWith(block.innerHTML)
-    }
-  }
+  // Remove dummy <b> tags google docs wraps document in
+  doc = exports.removeFalseBoldTags(doc)
 
-  // 3. Replace bold/italic spans with actual strong/em tags
-  const spanBlocks = doc.getElementsByTagName('SPAN')
-  for (let i in spanBlocks) {
-    let block = spanBlocks[i]
+  // Replace bold/italic spans with actual strong/em tags
+  doc = exports.replaceFalseTags(doc)
+
+  return doc.innerHTML
+}
+
+export const replaceFalseTags = (doc) => {
+  var spanBlocks = Array.from(doc.getElementsByTagName('SPAN'))
+
+  spanBlocks.map((block, i) => {
     const { style } = block
     const isItalic = style && style.fontStyle === 'italic'
     const isBold = style && style.fontWeight === '700'
@@ -36,9 +35,21 @@ export const stripGoogleStyles = (html) => {
       block = '<span><strong>' + block.innerHTML + '</strong></span>'
     }
     $(doc.getElementsByTagName('SPAN')[i]).replaceWith(block)
-  }
-  debugger
-  return doc.innerHTML
+  })
+  return doc
+}
+
+export const removeFalseBoldTags = (doc) => {
+  var boldBlocks = Array.from(doc.getElementsByTagName('SPAN'))
+
+  boldBlocks.map((block, i) => {
+    const { style } = block
+
+    if (style && style.fontWeight === 'normal') {
+      $(doc.getElementsByTagName('B')[i]).replaceWith(block.innerHTML)
+    }
+  })
+  return doc
 }
 
 // React = require 'react'
@@ -76,31 +87,6 @@ export const stripGoogleStyles = (html) => {
 //     isLastCharacter: isLastCharacter
 //     anchorOffset: anchorOffset
 //   }
-
-// exports.moveSelection = (editorState, selection, direction, shift) ->
-//   # draft has no fallback for interrupted r/l arrow keys
-//   # here cursor is manually forced r/l within a block,
-//   # or to the beginning or end of an adjacent block
-//   anchorKey = selection.anchorKey
-//   offset = selection.anchorOffset + direction
-//   if selection.isFirstCharacter and direction is -1
-//     anchorKey = selection.beforeKey
-//     offset = editorState.getCurrentContent().getBlockForKey(anchorKey).getLength()
-//   else if selection.isLastCharacter and direction is 1
-//     anchorKey = selection.afterKey
-//     offset = 0
-//   else if shift
-//     # manually highlight text if shift key is down
-//     offset = selection.anchorOffset
-//     focusOffset = selection.state.getEndOffset() + direction
-//   newSelection = new SelectionState {
-//     anchorKey: anchorKey
-//     anchorOffset: offset
-//     focusKey: anchorKey
-//     focusOffset: focusOffset or offset
-//     hasFocus: true
-//   }
-//   return EditorState.forceSelection editorState, newSelection
 
 // exports.getSelectionLocation = ($parent) ->
 //   # get x/y location of currently selected text

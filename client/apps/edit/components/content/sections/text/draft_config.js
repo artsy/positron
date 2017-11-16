@@ -2,7 +2,6 @@ import Immutable from 'immutable'
 import {
   ContentEnd,
   findContentEndEntities,
-  findContentStartEntities,
   findLinkEntities,
   Link
 } from 'client/components/rich_text/utils/decorators.js'
@@ -39,7 +38,7 @@ export const blockTypes = (layout, hasFeatures) => {
 }
 
 export const blockRenderMap = (layout, hasFeatures) => {
-  // declares blocks available to the editor
+  // declare HTML elements available to the editor
   if (!hasFeatures) {
   // classic, partners
     return Immutable.Map({
@@ -80,7 +79,7 @@ export const decorators = (layout) => {
       component: Link
     }
   ]
-  if (layout === 'feature' || layout === 'standard') {
+  if (layout !== 'classic') {
     decorators.push({
       strategy: findContentEndEntities,
       component: ContentEnd
