@@ -7,18 +7,19 @@ Config = require './draft_config.js'
 Nav = React.createFactory require '../../../../../../components/rich_text/components/nav.coffee'
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
-Utils = require '../../../../../../components/rich_text/utils/index.coffee'
 {
   setSelectionToStart,
   stickyControlsBox,
   getSelectedLinkData,
   getSelectionDetails
 } = require '../../../../../../components/rich_text/utils/text_selection.js'
+{ setContentEnd } = require '../../../../../../components/rich_text/utils/decorators.js'
 {
   standardizeSpacing,
   stripCharacterStyles,
   stripGoogleStyles
 } = require '../../../../../../components/rich_text/utils/text_stripping.js'
+{ convertFromRichHtml, convertToRichHtml } = require '../../../../../../components/rich_text/utils/convert_html.js'
 { keyBindingFnFull } = require '../../../../../../components/rich_text/utils/keybindings.js'
 { CompositeDecorator,
   ContentState,
@@ -57,8 +58,8 @@ module.exports = React.createClass
   editorStateFromProps: ->
     html = standardizeSpacing @props.section.get('body')
     unless @props.article.get('layout') is 'classic'
-      html = Utils.setContentStartEnd(html, @props.article.get('layout'), false, @props.isEndText)
-    blocksFromHTML = Utils.convertFromRichHtml html
+      html = setContentEnd(html, @props.isEndText)
+    blocksFromHTML = convertFromRichHtml html
     editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
     editorState = setSelectionToStart(editorState) if @props.editing
     @setState
@@ -68,7 +69,7 @@ module.exports = React.createClass
   componentDidUpdate: (prevProps) ->
     if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
       unless @props.article.get('layout') is 'classic'
-        html = Utils.setContentStartEnd(@props.section.get('body'), @props.article.get('layout'), @props.isStartText, @props.isEndText)
+        html = setContentEnd(@props.section.get('body'), @props.isEndText)
       @props.section.set('body', html)
     if @props.editing and @props.editing isnt prevProps.editing
       @focus()
@@ -76,7 +77,7 @@ module.exports = React.createClass
       @refs.editor.blur()
 
   onChange: (editorState) ->
-    html = Utils.convertToRichHtml editorState, @props.article.get('layout')
+    html = convertToRichHtml editorState, @props.article.get('layout')
     @setState editorState: editorState, html: html
     @props.section.set('body', html)
 
@@ -115,7 +116,7 @@ module.exports = React.createClass
       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
       @props.sections.models[@props.index - 1].destroy()
       newHTML = mergeIntoHTML + @state.html
-      blocksFromHTML = Utils.convertFromRichHtml newHTML
+      blocksFromHTML = convertFromRichHtml newHTML
       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
       newSectionState = setSelectionToStart newSectionState
       @onChange newSectionState
@@ -147,7 +148,7 @@ module.exports = React.createClass
       currentState = EditorState.push(editorState, currentContent, 'remove-range')
       newSectionContent = ContentState.createFromBlockArray newBlockArray
       newSectionState = EditorState.push(editorState, newSectionContent, null)
-      newSectionHtml = Utils.convertToRichHtml(newSectionState)
+      newSectionHtml = convertToRichHtml(newSectionState)
       @onChange currentState
       @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
       return 'handled'
@@ -157,7 +158,7 @@ module.exports = React.createClass
     unless html
       html = '<div>' + text + '</div>'
     html = stripGoogleStyles(html)
-    blocksFromHTML = Utils.convertFromRichHtml html
+    blocksFromHTML = convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
       unstyled = stripCharacterStyles contentBlock, true
       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'

@@ -53,7 +53,7 @@ export const Link = (props) => {
 
 export const ContentEnd = (props) => {
   const { contentState, entityKey } = props
-  const type = contentState.getEntity(entityKey).getType()  
+  const type = contentState.getEntity(entityKey).getType()
   return <span className={type.toLowerCase()} />
 }
 
@@ -66,4 +66,22 @@ Link.propTypes = {
 ContentEnd.propTypes = {
   contentState: PropTypes.object,
   entityKey: PropTypes.string
+}
+
+//
+// Auto-set custom editorial entities
+//
+
+export const setContentEnd = (html, isEndText) => {
+  const doc = document.createElement('div')
+  doc.innerHTML = html
+  // Remove existing end spans
+  $(doc.getElementsByClassName('content-end')).replaceWith('')
+  // Insert content-end span if end text
+  if (isEndText) {
+    let oldHtml = $(doc).children().last().html()
+    let newHtml = oldHtml + '<span class="content-end"> </span>'
+    $(doc).children().last().html(newHtml)
+  }
+  return doc.innerHTML
 }

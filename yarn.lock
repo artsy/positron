@@ -3244,9 +3244,9 @@ dotenv@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
-draft-convert@^1.4.2:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/draft-convert/-/draft-convert-1.4.3.tgz#4836eec176b3b9d73a94ef6b03532aa7370693cc"
+draft-convert@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/draft-convert/-/draft-convert-2.0.0.tgz#e7afbc8054bfb2f53464e6dd47e50125403879d8"
   dependencies:
     immutable "~3.7.4"
     invariant "^2.2.1"

@@ -4,14 +4,8 @@ import {
   setSelectionToStart,
   stickyControlsBox
 } from '../../utils/text_selection.js'
-
-import {
-  convertFromRichHtml
-} from '../../utils/index.coffee'
-
-import {
-  Fixtures
-} from '@artsy/reaction-force/dist/Components/Publishing'
+import { convertFromRichHtml } from '../../utils/convert_html.js'
+import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 
 jest.unmock('draft-js')
 const Draft = require.requireActual('draft-js')

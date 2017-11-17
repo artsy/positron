@@ -6,7 +6,7 @@ import {
 
 export const getSelectedLinkData = (editorState) => {
   // Return attrs of selected link element
-  let className = ''
+  let className
   let key
   let url = ''
 
