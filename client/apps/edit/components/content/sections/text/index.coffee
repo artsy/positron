@@ -67,7 +67,7 @@ module.exports = React.createClass
       editorState: editorState
 
   componentDidUpdate: (prevProps) ->
-    if @props.isContentEnd isnt prevProps.isContentEnd or @props.isContentStart isnt prevProps.isContentStart
+    if @props.isContentEnd isnt prevProps.isContentEnd
       unless @props.article.get('layout') is 'classic'
         html = setContentEnd(@props.section.get('body'), @props.isContentEnd)
       @props.section.set('body', html)
