@@ -1,10 +1,10 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
-import DropDown from 'client/components/drop_down'
+import { DropDownItem } from '../drop_down_item.jsx'
 
-describe('DropDown', () => {
-  const child = <div>Hello</div>
+describe('DropDownItem', () => {
+  const child = <div key='3'>Hello</div>
 
   const props = {
     index: 3,
@@ -15,7 +15,7 @@ describe('DropDown', () => {
 
   it('renders a closed title', () => {
     const component = mount(
-      <DropDown {...props} />
+      <DropDownItem {...props} />
     )
     expect(component.text()).toMatch('Sample Title')
     expect(component.text()).not.toMatch('Hello')
@@ -25,7 +25,7 @@ describe('DropDown', () => {
   it('renders an open title if props.active is true', () => {
     props.active = true
     const component = mount(
-      <DropDown {...props} />
+      <DropDownItem {...props} />
     )
     expect(component.text()).toMatch('Sample Title')
     expect(component.text()).toMatch('Hello')
@@ -35,9 +35,9 @@ describe('DropDown', () => {
   it('calls props.onClick when clicking the title', () => {
     props.active = false
     const component = mount(
-      <DropDown {...props} />
+      <DropDownItem {...props} />
     )
-    const title = component.find('.drop-down__title').at(0)
+    const title = component.find('.DropDownItem__title').at(0)
     title.simulate('click')
     expect(props.onClick.mock.calls[0][0]).toBe(3)
   })
