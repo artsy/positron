@@ -17,7 +17,7 @@ describe('Draft Utils: Decorators', () => {
     it('Adds content-end to a section if isEndText is true', () => {
       const html = '<p>Here is start text.</p><p>Here is end text.<span class="content-end"></span></p>'
       expect(setContentEnd(html, true)).toBe(
-        '<p>Here is start text.</p><p>Here is end text.<span class="content-end"></span></p>'
+        '<p>Here is start text.</p><p>Here is end text.<span class="content-end"> </span></p>'
       )
     })
   })

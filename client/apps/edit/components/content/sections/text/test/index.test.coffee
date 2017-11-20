@@ -85,8 +85,8 @@ describe 'Section Text', ->
         onSetEditing: sinon.stub()
         channel: channel
         article: article
-        isStartText: true
-        isEndText: true
+        isContentStart: true
+        isContentEnd: true
       }
       @artistProps = {
         editing: true

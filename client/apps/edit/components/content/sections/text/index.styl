@@ -3,7 +3,7 @@
 .edit-section--text
   position relative
   z-index -1
-  &.is-editing
+  &[data-editing=true]
     z-index 100
   ol li, ul li, li
     list-style none
@@ -28,12 +28,3 @@
       background-image none !important
       &:before
         content url(/icons/circle_plus.svg) !important
-
-.feature
-  [data-editing=false] [data-first-text=true] p:first-child:first-letter
-    Unica s67
-    float left
-    line-height .5em
-    margin-right 10px
-    margin-top .298em
-    text-transform uppercase

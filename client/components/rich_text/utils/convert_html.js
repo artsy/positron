@@ -31,7 +31,7 @@ export const convertToRichHtml = (editorState, layout) => {
     },
     styleToHTML: (style) => {
       if (style === 'STRIKETHROUGH') {
-        return <span style={{textDecoration: 'line-through'}} />
+        return <span style={{ textDecoration: 'line-through' }} />
       }
     }
   })(editorState.getCurrentContent())
@@ -57,11 +57,14 @@ export const convertFromRichHtml = (html) => {
     htmlToEntity: (nodeName, node) => {
       let data
       if (nodeName === 'a') {
-        data = {url: node.href, className: node.classList.toString()};
+        data = {
+          url: node.href,
+          className: node.classList.toString()
+        }
         return Entity.create(
-            'LINK',
-            'MUTABLE',
-            data
+          'LINK',
+          'MUTABLE',
+          data
         )
       }
       if ((nodeName === 'p') && (node.innerHTML === '<br>')) {
@@ -69,12 +72,14 @@ export const convertFromRichHtml = (html) => {
       }
       if ((nodeName === 'span') && node.classList.length) {
         let spanType
-        data = {className: node.classList.toString()}
-        if (data.className === 'content-end') { spanType = 'CONTENT-END' }
+        data = { className: node.classList.toString() }
+        if (data.className === 'content-end') {
+          spanType = 'CONTENT-END'
+        }
         return Entity.create(
-            spanType,
-            'MUTABLE',
-            data
+          spanType,
+          'MUTABLE',
+          data
         )
       }
     }

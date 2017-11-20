@@ -50,8 +50,8 @@ module.exports = React.createClass
       channel: @props.channel
       isHero: @props.isHero
       onSetEditing: @props.onSetEditing
-      isStartText: @getContentStartEnd().start is @props.index
-      isEndText: @getContentStartEnd().end is @props.index
+      isContentStart: @getContentStartEnd().start is @props.index
+      isContentEnd: @getContentStartEnd().end is @props.index
     }
 
   render: ->

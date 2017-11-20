@@ -58,7 +58,7 @@ module.exports = React.createClass
   editorStateFromProps: ->
     html = standardizeSpacing @props.section.get('body')
     unless @props.article.get('layout') is 'classic'
-      html = setContentEnd(html, @props.isEndText)
+      html = setContentEnd(html, @props.isContentEnd)
     blocksFromHTML = convertFromRichHtml html
     editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.get('layout'))))
     editorState = setSelectionToStart(editorState) if @props.editing
@@ -67,9 +67,9 @@ module.exports = React.createClass
       editorState: editorState
 
   componentDidUpdate: (prevProps) ->
-    if @props.isEndText isnt prevProps.isEndText or @props.isStartText isnt prevProps.isStartText
+    if @props.isContentEnd isnt prevProps.isContentEnd or @props.isContentStart isnt prevProps.isContentStart
       unless @props.article.get('layout') is 'classic'
-        html = setContentEnd(@props.section.get('body'), @props.isEndText)
+        html = setContentEnd(@props.section.get('body'), @props.isContentEnd)
       @props.section.set('body', html)
     if @props.editing and @props.editing isnt prevProps.editing
       @focus()
@@ -289,14 +289,17 @@ module.exports = React.createClass
       @setState showMenu: false
 
   render: ->
-    isEditing = if @props.editing then ' is-editing' else ''
+    showDropCaps = if @props.editing then false else @props.isContentStart
 
     div {
-      className: 'edit-section--text' + isEditing
-      'data-first-text': @props.isStartText
+      className: 'edit-section--text'
       onClick: @focus
+      'data-editing': @props.editing
     },
-      Text { layout: @props.article.get 'layout' },
+      Text {
+        layout: @props.article.get 'layout'
+        isContentStart: showDropCaps
+      },
         if @state.showMenu
           Nav {
             hasFeatures: @state.hasFeatures

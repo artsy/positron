@@ -1,8 +1,5 @@
 import Immutable from 'immutable'
-import {
-  findLinkEntities,
-  Link
-} from './decorators.js'
+import { findLinkEntities, Link } from './decorators.js'
 
 export const blockRenderMap = () => {
   return Immutable.Map({
