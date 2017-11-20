@@ -23,8 +23,10 @@ describe 'Utils', ->
           }])
         )
       )
-      global.HTMLElement = () => {}
-      global.HTMLAnchorElement = () => {}
+      global.Node = window.Node
+      global.Element = window.Element
+      global.HTMLElement = window.HTMLElement
+      global.document = window.document
       @d =
         EditorState: Draft.EditorState
       copy = '<p>While auction houses will vouch for a piece’s authenticity, issues of title are the responsibility of the consignor.</p><p>Meaning there aren’t other people or organizations with a financial interest in the piece.</p>'
@@ -74,6 +76,8 @@ describe 'Utils', ->
     describe '#keyBindingFnFull', ->
 
       it 'returns the name of a recognized key binding', ->
+        e = { keyCode: 49 }
+        @utils.keyBindingFnFull(e).should.eql 'header-one'
         e = { keyCode: 50 }
         @utils.keyBindingFnFull(e).should.eql 'header-two'
         e = { keyCode: 51 }
@@ -86,6 +90,10 @@ describe 'Utils', ->
         @utils.keyBindingFnFull(e).should.eql 'unordered-list-item'
         e = { keyCode: 75 }
         @utils.keyBindingFnFull(e).should.eql 'link-prompt'
+        e = { keyCode: 219 }
+        @utils.keyBindingFnFull(e).should.eql 'blockquote'
+        e = { keyCode: 88 , shiftKey: true}
+        @utils.keyBindingFnFull(e).should.eql 'strikethrough'
         @getDefaultKeyBinding.callCount.should.eql 0
 
       it 'returns the keyboard event of left or right arrow keys', ->
@@ -186,6 +194,10 @@ describe 'Utils', ->
         newState = @utils.moveSelection editorState, editorState.getSelection(), -1
         newState.getSelection().anchorOffset.should.eql 115
 
+      it 'Can highlight text with the shift key', ->
+        newState = @utils.moveSelection @editorState, @utils.getSelectionDetails(@editorState), 1, true
+        newState.getSelection().focusOffset.should.eql(newState.getSelection().anchorOffset + 1)
+
       it 'Can jump to the start of the next block', ->
         setSelection = @editorState.getSelection().merge({
           anchorKey: @editorState.getCurrentContent().getFirstBlock().key
@@ -211,9 +223,23 @@ describe 'Utils', ->
         newState.getSelection().anchorOffset.should.eql 116
         newState.getSelection().anchorKey.should.not.eql editorState.getSelection().anchorKey
 
-    describe '#getSelectionLocation', ->
+    describe '#setSelectionToStart', ->
 
-      it 'returns coordinates of the selection and its parent', ->
+      it 'resets the cursor to the first character of first block', ->
+        setSelection = @editorState.getSelection().merge({
+          anchorKey: @editorState.getCurrentContent().getFirstBlock().key
+          anchorOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
+          focusKey: @editorState.getCurrentContent().getFirstBlock().key
+          focusOffset: @editorState.getCurrentContent().getFirstBlock().getLength()
+        })
+        editorState = @d.EditorState.acceptSelection(@editorState, setSelection)
+        editorState.getSelection().anchorOffset.should.eql 116
+        newState = @utils.setSelectionToStart editorState
+        newState.getSelection().anchorOffset.should.eql 0
+
+    describe 'Sticky controls', ->
+
+      it '#getSelectionLocation returns coordinates of the selection and its parent', ->
         location = @utils.getSelectionLocation({top: 520, left: 50})
         location.target.should.eql = [{
           bottom: 170
@@ -225,19 +251,92 @@ describe 'Utils', ->
         }]
         location.parent.should.eql { top: 20, left: 50 }
 
-  describe '#standardizeSpacing', ->
-    it 'replaces consecutive empty paragraphs with one', ->
-      html = @utils.standardizeSpacing '<p></p><p></p>'
-      html.should.eql '<p><br></p>'
+      it '#stickyControlsBox returns coordinates of the sticky item', ->
+        controls = @utils.stickyControlsBox @utils.getSelectionLocation({top: 520, left: 50}), 50, 100
+        controls.should.eql { top: 175, left: 322.5 }
 
-    it 'replaces empty headers with empty paragraphs', ->
-      h2 = @utils.standardizeSpacing '<h2></h2>'
-      h3 = @utils.standardizeSpacing '<h3></h3>'
-      html = @utils.standardizeSpacing '<h2></h2><h3></h3>'
-      h2.should.eql '<p><br></p>'
-      h3.should.eql '<p><br></p>'
-      html.should.eql '<p><br></p>'
+  describe 'HTML formatting', ->
 
-    it 'converts consecutive spaces into nbsp', ->
-      html = @utils.standardizeSpacing '<p>   </p>'
-      html.should.eql '<p> &nbsp; </p>'
+    describe '#standardizeSpacing', ->
+
+      it 'removes freestanding linebreaks', ->
+        html = @utils.standardizeSpacing '<br><p><br></p><p></p><br>'
+        html.should.eql '<p><br></p>'
+
+      it 'removes empty spans', ->
+        html = @utils.standardizeSpacing '<span></span>'
+        html.should.eql ''
+
+      it 'replaces consecutive empty paragraphs with one', ->
+        html = @utils.standardizeSpacing '<p></p><p></p>'
+        html.should.eql '<p><br></p>'
+
+      it 'replaces empty headers with empty paragraphs', ->
+        h2 = @utils.standardizeSpacing '<h2></h2>'
+        h3 = @utils.standardizeSpacing '<h3></h3>'
+        html = @utils.standardizeSpacing '<h2></h2><h3></h3>'
+        h2.should.eql '<p><br></p>'
+        h3.should.eql '<p><br></p>'
+        html.should.eql '<p><br></p>'
+
+      it 'converts consecutive spaces into nbsp', ->
+        html = @utils.standardizeSpacing '<p>   </p>'
+        html.should.eql '<p> &nbsp; </p>'
+
+    describe '#stripH3Tags', ->
+
+      it 'removes nested html inside h3 blocks', ->
+        html = @utils.stripH3Tags '<h3>A <em>short</em> piece of <strong>text</strong></h3>'
+        html.should.eql '<h3>A short piece of text</h3>'
+
+  describe 'Custom text entities', ->
+
+    describe '#setContentStartEnd', ->
+
+      it 'Formats HTML via #setDropCap and #setContentEndMarker when feature', ->
+        html = '<p>Here is text.</p>'
+        @utils.setDropCap = sinon.stub().returns(html)
+        @utils.setContentEndMarker = sinon.stub().returns(html)
+        @utils.setContentStartEnd(html, 'feature', true, false)
+        @utils.setDropCap.called.should.be.ok
+        @utils.setContentEndMarker.called.should.be.ok
+
+      it 'Formats HTML via #setContentEndMarker when standard', ->
+        html = '<p>Here is text.</p>'
+        @utils.setDropCap = sinon.stub().returns(html)
+        @utils.setContentEndMarker = sinon.stub().returns(html)
+        @utils.setContentStartEnd(html, 'standard', true, false)
+        @utils.setDropCap.called.should.be.ok
+        @utils.setContentEndMarker.called.should.not.be.ok
+
+    describe '#setDropCap', ->
+
+      it 'Adds a drop-cap if block isStartText', ->
+        html = '<p>Here is text.</p>'
+        doc = document.createElement('div')
+        doc.innerHTML = html
+        newHtml = @utils.setDropCap doc, true
+        newHtml.innerHTML.should.containEql '<span class="content-start">H</span>'
+
+      it 'Removes drop-cap if block not isStartText', ->
+        html = '<p><span class="content-start">H</span>ere is text.</p>'
+        doc = document.createElement('div')
+        doc.innerHTML = html
+        newHtml = @utils.setDropCap doc, false
+        newHtml.innerHTML.should.eql '<p>Here is text.</p>'
+
+    describe '#setContentEndMarker', ->
+
+      it 'Adds an end-marker if block isEndText', ->
+        html = '<p>Here is text.</p>'
+        doc = document.createElement('div')
+        doc.innerHTML = html
+        newHtml = @utils.setContentEndMarker doc, true
+        newHtml.innerHTML.should.containEql '<span class="content-end"> </span>'
+
+      it 'Removes end-marker if block not isEndText', ->
+        html = '<p>Here is text.<span class="content-end"> </span></p>'
+        doc = document.createElement('div')
+        doc.innerHTML = html
+        newHtml = @utils.setContentEndMarker doc, false
+        newHtml.innerHTML.should.eql '<p>Here is text.</p>'

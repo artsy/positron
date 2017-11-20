@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Paragraph from '../../../../../../../components/rich_text2/components/paragraph.coffee'
+import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
 import { IconRemove, Image } from '@artsy/reaction-force/dist/Components/Publishing'
 
 export default class ImageCollectionImage extends Component {

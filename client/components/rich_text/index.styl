@@ -1,4 +1,5 @@
-@import '../stylus_lib'
+.rich-text--paragraph
+  position relative
 
 .rich-text--url-input
   position absolute
@@ -81,6 +82,8 @@
     border none
     border-right 1px solid gray-darkest-color
     transition color .15s
+    &:last-child
+      border-right none
     &:hover
       color gray-color
     &[name='ITALIC'],
@@ -88,6 +91,9 @@
     &[name='header-two'],
     &[name='header-three']
       garamond l-body
+    &[name='header-one']
+      Unica s19
+      font-size 18px
     &[name='BOLD']
       font-weight 600
       avant-garde l-headline

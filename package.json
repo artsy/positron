@@ -9,7 +9,7 @@
     "start": "sh scripts/start.sh",
     "dev": "sh scripts/dev.sh",
     "test": "sh scripts/test.sh",
-    "test:watch": "yarn jest -- --watch",
+    "test:watch": "yarn jest -- --watch --runInBand",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh",
     "mocha": "sh scripts/mocha.sh"

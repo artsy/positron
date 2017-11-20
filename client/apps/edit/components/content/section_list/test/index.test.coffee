@@ -30,7 +30,7 @@ describe 'SectionList', ->
       @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
       Paragraph = benv.require resolve(
-        __dirname, '../../../../../../components/rich_text2/components/paragraph.coffee'
+        __dirname, '../../../../../../components/rich_text/components/paragraph.coffee'
       )
       @SectionList.__set__ 'SectionTool', @SectionTool
       @SectionContainer = benv.requireWithJadeify(

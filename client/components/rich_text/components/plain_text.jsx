@@ -3,6 +3,13 @@ import React from 'react'
 import { ContentState, Editor, EditorState } from 'draft-js'
 
 export class PlainText extends React.Component {
+  static propTypes = {
+    content: PropTypes.string,
+    name: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string
+  }
+
   constructor (props) {
     super(props)
 
@@ -46,22 +53,17 @@ export class PlainText extends React.Component {
       <div
         className='plain-text'
         name={this.props.name}
-        onClick={this.focus}>
+        onClick={this.focus}
+      >
         <Editor
           ref='editor'
           editorState={this.state.editorState}
           placeholder={this.props.placeholder || 'Start Typing...'}
           handleReturn={this.handleReturn}
           onChange={this.onChange}
-          spellcheck />
+          spellcheck
+        />
       </div>
     )
   }
-}
-
-PlainText.propTypes = {
-  content: PropTypes.string,
-  name: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string
 }
