@@ -3,12 +3,10 @@ import {
   getSelectionLocation,
   setSelectionToStart,
   stickyControlsBox
-} from '../../utils/text_selection.js'
-import { convertFromRichHtml } from '../../utils/convert_html.js'
+} from '../../utils/text_selection'
+import { convertFromRichHtml } from '../../utils/convert_html'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-
-jest.unmock('draft-js')
-const Draft = require.requireActual('draft-js')
+const Draft = require('draft-js')
 
 describe('Draft Utils: Text Selection', () => {
   window.pageYOffset = 500

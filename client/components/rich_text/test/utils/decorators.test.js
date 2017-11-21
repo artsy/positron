@@ -1,6 +1,4 @@
-import {
-  setContentEnd
-} from '../../utils/decorators.js'
+import { setContentEnd } from '../../utils/decorators'
 
 describe('Draft Utils: Decorators', () => {
   describe('#setContentEnd', () => {

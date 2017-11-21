@@ -1,7 +1,6 @@
 import React from 'react'
 import { convertFromHTML, convertToHTML } from 'draft-convert'
-import { Entity } from 'draft-js'
-import { standardizeSpacing, stripH3Tags } from './text_stripping.js'
+import { standardizeSpacing, stripH3Tags } from './text_stripping'
 
 export const convertToRichHtml = (editorState, layout) => {
   let html = convertToHTML({

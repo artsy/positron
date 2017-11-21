@@ -4,7 +4,7 @@ import {
   findContentEndEntities,
   findLinkEntities,
   Link
-} from 'client/components/rich_text/utils/decorators.js'
+} from 'client/components/rich_text/utils/decorators'
 
 export const inlineStyles = (layout, hasFeatures) => {
   // for menu display only

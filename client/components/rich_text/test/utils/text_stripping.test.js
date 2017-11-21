@@ -2,7 +2,7 @@ import {
   standardizeSpacing,
   stripGoogleStyles,
   stripH3Tags
-} from '../../utils/text_stripping.js'
+} from '../../utils/text_stripping'
 
 describe('Draft Utils: Text Stripping', () => {
   describe('#standardizeSpacing', () => {

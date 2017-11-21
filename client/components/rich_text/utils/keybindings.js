@@ -1,7 +1,4 @@
-import {
-  getDefaultKeyBinding,
-  KeyBindingUtil
-} from 'draft-js'
+import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js'
 
 export const keyBindingFnFull = (e) => {
   // Custom key commands for full editor

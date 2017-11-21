@@ -1,10 +1,5 @@
-import {
-  keyBindingFnParagraph,
-  keyBindingFnFull
-} from '../../utils/keybindings.js'
-
-jest.unmock('draft-js')
-const Draft = require.requireActual('draft-js')
+import { keyBindingFnParagraph, keyBindingFnFull } from '../../utils/keybindings'
+const Draft = require('draft-js')
 
 describe('Draft Utils: Keybindings', () => {
   describe('#keyBindingFnParagraph', () => {
