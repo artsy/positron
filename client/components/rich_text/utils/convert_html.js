@@ -54,14 +54,14 @@ export const convertFromRichHtml = (html) => {
         return currentStyle
       }
     },
-    htmlToEntity: (nodeName, node) => {
+    htmlToEntity: (nodeName, node, createEntity) => {
       let data
       if (nodeName === 'a') {
         data = {
           url: node.href,
           className: node.classList.toString()
         }
-        return Entity.create(
+        return createEntity(
           'LINK',
           'MUTABLE',
           data
@@ -76,7 +76,7 @@ export const convertFromRichHtml = (html) => {
         if (data.className === 'content-end') {
           spanType = 'CONTENT-END'
         }
-        return Entity.create(
+        return createEntity(
           spanType,
           'MUTABLE',
           data

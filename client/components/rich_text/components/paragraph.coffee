@@ -80,10 +80,10 @@ module.exports = React.createClass
   convertFromHTML: (html) ->
     html = @stripLinebreaks(html) if @props.stripLinebreaks
     blocksFromHTML = convertFromHTML({
-      htmlToEntity: (nodeName, node) ->
+      htmlToEntity: (nodeName, node, createEntity) ->
         if nodeName is 'a'
           data = {url: node.href}
-          return Entity.create(
+          return createEntity(
             'LINK',
             'MUTABLE',
             data
