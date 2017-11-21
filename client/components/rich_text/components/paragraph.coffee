@@ -16,8 +16,10 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
 sd = require('sharify').data
-Config = require '../utils/config.coffee'
-Utils = require '../utils/index.coffee'
+Config = require '../utils/config.js'
+{ keyBindingFnParagraph } = require '../utils/keybindings.js'
+{ stickyControlsBox } = require '../utils/text_selection.js'
+{ standardizeSpacing, stripCharacterStyles, stripGoogleStyles } = require '../utils/text_stripping.js'
 { ContentState,
   CompositeDecorator,
   Editor,
@@ -48,7 +50,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     if $(@props.html)?.text().length
-      html = Utils.standardizeSpacing @props.html
+      html = standardizeSpacing @props.html
       html = @stripLinebreaks(html) if @props.stripLinebreaks
       blocksFromHTML = @convertFromHTML(html)
       @setState
@@ -78,10 +80,10 @@ module.exports = React.createClass
   convertFromHTML: (html) ->
     html = @stripLinebreaks(html) if @props.stripLinebreaks
     blocksFromHTML = convertFromHTML({
-      htmlToEntity: (nodeName, node) ->
+      htmlToEntity: (nodeName, node, createEntity) ->
         if nodeName is 'a'
           data = {url: node.href}
-          return Entity.create(
+          return createEntity(
             'LINK',
             'MUTABLE',
             data
@@ -96,7 +98,7 @@ module.exports = React.createClass
           return a { href: entity.data.url}
         return originalText
     })(editorState.getCurrentContent())
-    html = Utils.standardizeSpacing html
+    html = standardizeSpacing html
     html = if html in ['<p></p>', '<p><br></p>'] then '' else html
     return html
 
@@ -118,7 +120,6 @@ module.exports = React.createClass
     return 'not-handled'
 
   toggleInlineStyle: (inlineStyle) ->
-    selection = Utils.getSelectionDetails(@state.editorState)
     @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
 
 
@@ -130,13 +131,13 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = Utils.standardizeSpacing html
-    html = Utils.stripGoogleStyles html
+    html = standardizeSpacing html
+    html = stripGoogleStyles html
     html = @stripLinebreaks(html) if @props.stripLinebreaks
     html = html.replace(/<\/p><p>/g, '')
     blocksFromHTML = @convertFromHTML html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-      unstyled = Utils.stripCharacterStyles contentBlock, true
+      unstyled = stripCharacterStyles contentBlock, true
       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
         unstyled = unstyled.set 'type', 'unstyled'
       return unstyled
@@ -157,8 +158,8 @@ module.exports = React.createClass
     selectionTarget = {top: 0, left: 0}
     url = ''
     if !selection.isCollapsed()
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTarget = Utils.stickyControlsBox(location, 25, 200)
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      selectionTarget = stickyControlsBox(editorPosition, 25, 200)
       contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
       startOffset = selection.getStartOffset()
@@ -217,10 +218,10 @@ module.exports = React.createClass
 
   checkSelection: ->
     if !window.getSelection().isCollapsed
-      location = Utils.getSelectionLocation $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
       selectionTargetL = Config.inlineStyles(@props.type).length * 25
       selectionTargetL = selectionTargetL + 25 if @hasLinks()
-      @setState showNav: true, selectionTarget: Utils.stickyControlsBox(location, -43, selectionTargetL)
+      @setState showNav: true, selectionTarget: stickyControlsBox(editorPosition, -43, selectionTargetL)
     else
       @setState showNav: false
 
@@ -247,7 +248,7 @@ module.exports = React.createClass
           onChange: @onChange
           blockRenderMap: Config.blockRenderMap()
           handleKeyCommand: @handleKeyCommand
-          keyBindingFn: Utils.keyBindingFnCaption
+          keyBindingFn: keyBindingFnParagraph
           handlePastedText: @onPaste
         }
       @printUrlInput()

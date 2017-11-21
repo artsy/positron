@@ -51,11 +51,10 @@ describe 'Section Text', ->
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
       @SectionText.__set__ 'Nav', React.createFactory Nav
-      @SectionText.__set__ 'Utils.stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
-      @SectionText.__set__ 'Utils.getSelectionLocation', sinon.stub().returns({top: 20, left: 40})
+      @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @sections = new Backbone.Collection [
         {
-          body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
+          body: '<h2>01  <a href="artsy.net">here is a link.</a></h2><p class="stuff">In 2016, K mounted a <span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link" target="_blank">solo show</a><a class="entity-follow artist-follow"></a></span> at prescient Berlin gallery <a href="https://www.artsy.net/kow" target="_blank">KOW</a>, restaging his installation <i>It’s Spring and the Weather is Great so let’s close all object matters</i> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk" target="_blank">Serpentine Galleries</a>.</p><p><br></p><br>'
           type: 'text'
         },
         {
@@ -86,8 +85,8 @@ describe 'Section Text', ->
         onSetEditing: sinon.stub()
         channel: channel
         article: article
-        isStartText: true
-        isEndText: true
+        isContentStart: true
+        isContentEnd: true
       }
       @artistProps = {
         editing: true
@@ -139,7 +138,7 @@ describe 'Section Text', ->
 
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
-      @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
+      @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
 
 
   describe '#availableBlocks', ->
@@ -192,18 +191,6 @@ describe 'Section Text', ->
       ]
 
   describe 'Editorial Features', ->
-
-    it 'Adds drop-caps to first paragraph in feature article', ->
-      @altProps.article.set 'layout', 'feature'
-      @altProps.section.set 'body', '<h2>A short title</h2><p>A short piece of text</p>'
-      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
-      component.state.html.should.containEql '<span class="content-start">A</span>'
-
-    it 'Doesnt add drop-caps if no paragraph', ->
-      @altProps.article.set 'layout', 'feature'
-      @altProps.section.set 'body', '<h2>A short title</h2>'
-      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
-      component.state.html.should.not.containEql '<span class="content-start">A</span>'
 
     it 'Adds end-marker to a feature article', ->
       @altProps.article.set 'layout', 'feature'
@@ -365,16 +352,6 @@ describe 'Section Text', ->
       @shortComponent.handleKeyCommand('link-prompt')
       @shortComponent.setState.args[0][0].showUrlInput.should.eql true
 
-    it 'Can pass left arrow events to #handleChangeSection', ->
-      @shortComponent.handleChangeSection = sinon.stub()
-      @shortComponent.handleKeyCommand({key: 'ArrowLeft'})
-      @shortComponent.handleChangeSection.called.should.eql true
-
-    it 'Can pass right arrow events to #handleChangeSection', ->
-      @shortComponent.handleChangeSection = sinon.stub()
-      @shortComponent.handleKeyCommand({key: 'ArrowRight'})
-      @shortComponent.handleChangeSection.called.should.eql true
-
 
   describe 'Links', ->
 
@@ -410,7 +387,7 @@ describe 'Section Text', ->
     it 'Adds data-id to artist links', ->
       component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
       component.onChange(component.state.editorState)
-      component.state.html.should.eql '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></h2>'
+      component.state.html.should.eql '<h2><span><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></span></h2>'
 
   describe '#toggleBlockQuote', ->
 
@@ -441,15 +418,7 @@ describe 'Section Text', ->
       @component.props.sections.models[@component.props.index + 1].get('body').should.eql '<p>A text after.</p>'
 
 
-  describe '#handleChangeSection', ->
-
-    it 'R-> Moves the cursor over one if not at end of block', ->
-      @shortComponent.onChange = sinon.stub()
-      @shortComponent.handleKeyCommand({key: 'ArrowRight'})
-      prevSelection = @shortComponent.state.editorState.getSelection()
-      newSelection = @shortComponent.onChange.args[0][0].getSelection()
-      newSelection.anchorOffset.should.eql 1
-      newSelection.anchorOffset.should.not.eql prevSelection.achorOffset
+  xdescribe '#handleChangeSection', ->
 
     it 'R-> Moves the cursor to next block if at end of block', ->
       setSelection = @component.state.editorState.getSelection().merge({
@@ -467,22 +436,6 @@ describe 'Section Text', ->
       newSelection.anchorOffset.should.eql 0
       newSelection.anchorOffset.should.not.eql prevSelection.achorOffset
       newSelection.anchorKey.should.not.eql prevSelection.anchorKey
-
-    it 'L-> Moves the cursor over one if not at start of block', ->
-      setSelection = @component.state.editorState.getSelection().merge({
-        anchorKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-        anchorOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
-        focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-        focusOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
-      })
-      newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
-      @component.onChange newEditorState
-      @component.onChange = sinon.stub()
-      @component.handleKeyCommand({key: 'ArrowLeft'})
-      prevSelection = @component.state.editorState.getSelection()
-      newSelection = @component.onChange.args[0][0].getSelection()
-      newSelection.anchorOffset.should.eql 18
-      newSelection.anchorOffset.should.not.eql prevSelection.achorOffset
 
     it 'L-> Moves the cursor to previous block if at start of block', ->
       firstBlock = @component.state.editorState.getCurrentContent().getFirstBlock().key
@@ -623,4 +576,9 @@ describe 'Section Text', ->
     it 'does not overwrite existing content', ->
       @component.onPaste('Here is a caption about an image yep.', '<meta><script>bad.stuff()</script><h1 class="stuff">Here is a</h1><ul><li><b>caption</b></li><li>about an <pre>image</pre></li></ul><p>yep.</p><br>')
       @component.state.html.should.startWith '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul>'
-      @component.state.html.should.containEql '<p>yep.01 &nbsp;<a href="artsy.net">here is a link.</a></p><p>In 2016, K mounted a <a'
+      @component.state.html.should.containEql '<p>yep.01 &nbsp;<a href="artsy.net">here is a link.</a></p><p>In 2016, K mounted a <span><a'
+
+    it 'strips google inserted styles', ->
+      @component.setState = sinon.stub()
+      @component.onPaste('<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>')
+      @component.setState.args[0][0].html.should.containEql '<h2>Available at: Espacio Valverde • Galleries Sector, Booth 9F0101 &nbsp;'

@@ -1,4 +1,4 @@
-import { PlainText } from '../components/plain_text.jsx'
+import { PlainText } from '../../components/plain_text.jsx'
 import React from 'react'
 import { mount } from 'enzyme'
 
