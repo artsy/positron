@@ -52,7 +52,7 @@
     top -7px
     left 50%
 
-.rich-text--nav
+.rich-text--nav, .TextNav
   position absolute
   top -40px
   left 0
@@ -86,19 +86,21 @@
       border-right none
     &:hover
       color gray-color
-    &[name='ITALIC'],
-    &[name='STRIKETHROUGH'],
-    &[name='header-two'],
-    &[name='header-three']
+    &[name='ITALIC'], &.italic,
+    &[name='STRIKETHROUGH'], &.strikethrough,
+    &[name='header-two'], &.header-two,
+    &[name='header-three'], &.header-three
       garamond l-body
-    &[name='header-one']
+    &[name='header-one'], &.header-one
       Unica s19
       font-size 18px
-    &[name='BOLD']
+    &[name='BOLD'], &.bold
       font-weight 600
       avant-garde l-headline
-    &[name='STRIKETHROUGH']
+    &[name='STRIKETHROUGH'], &.strikethrough
       text-decoration line-through
+    &[name='ITALIC'], &.italic
+      font-style italic
     svg
       width 18px
       height 18px

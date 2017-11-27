@@ -4,7 +4,8 @@ _s = require 'underscore.string'
 sd = require('sharify').data
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Config = require './draft_config.js'
-Nav = React.createFactory require '../../../../../../components/rich_text/components/nav.coffee'
+# Nav = React.createFactory require '../../../../../../components/rich_text/components/nav.coffee'
+{ TextNav } = require '../../../../../../components/rich_text/components/text_nav.jsx'
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text
 {
@@ -301,16 +302,18 @@ module.exports = React.createClass
         isContentStart: showDropCaps
       },
         if @state.showMenu
-          Nav {
-            hasFeatures: @state.hasFeatures
-            blocks: Config.blockTypes @props.article.get('layout'), @state.hasFeatures
-            toggleBlock: @toggleBlockType
-            styles: Config.inlineStyles @props.article.get('layout'), @state.hasFeatures
-            toggleStyle: @toggleInlineStyle
-            promptForLink: @promptForLink
-            makePlainText: @makePlainText
-            position: @state.selectionTarget
-          }
+          React.createElement(
+            TextNav, {
+              hasFeatures: @state.hasFeatures
+              blocks: Config.blockTypes @props.article.get('layout'), @state.hasFeatures
+              toggleBlock: @toggleBlockType
+              styles: Config.inlineStyles @props.article.get('layout'), @state.hasFeatures
+              toggleStyle: @toggleInlineStyle
+              promptForLink: @promptForLink
+              makePlainText: @makePlainText
+              position: @state.selectionTarget
+            }
+          )
         div {
           className: 'edit-section--text__input'
           onMouseUp: @checkSelection
