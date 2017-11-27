@@ -1,24 +1,18 @@
 import { set } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-import DropDownItem from 'client/components/drop_down/index.jsx'
-import { Campaign } from './components/campaign.jsx'
-import { Canvas } from './components/canvas/index.jsx'
-import { Panel } from './components/panel/index.jsx'
+import { DropDownList } from 'client/components/drop_down/drop_down_list'
+import { Campaign } from './components/campaign'
+import { Canvas } from './components/canvas'
+import { Panel } from './components/panel'
 
 export default class DisplayAdmin extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       curation: props.curation,
-      saveStatus: 'Saved',
-      activeSection: null
+      saveStatus: 'Saved'
     }
-  }
-
-  setActiveSection = (i) => {
-    i = i === this.state.activeSection ? null : i
-    this.setState({activeSection: i})
   }
 
   onChange = (key, value, index) => {
@@ -62,38 +56,59 @@ export default class DisplayAdmin extends React.Component {
   }
 
   render () {
-    const saveColor = this.state.saveStatus !== 'Saved' ? 'rgb(247, 98, 90)' : 'black'
+    const { curation, saveStatus } = this.state
+    const saveColor = saveStatus !== 'Saved' ? 'rgb(247, 98, 90)' : 'black'
+
     return (
       <div className='display-admin'>
-        {this.state.curation.get('campaigns').map((campaign, index) =>
-          <div className='admin-form-container' key={`display-admin-${index}`}>
-            <div className='display-admin__section--actions'>
-              <button className='avant-garde-button' onClick={() => this.deleteCampaign(index)}>Delete</button>
+        <DropDownList sections={curation.get('campaigns')}>
+          {curation.get('campaigns').map((campaign, index) =>
+            <div
+              className='admin-form-container'
+              key={`display-admin-${index}`}
+            >
+
+              <div className='display-admin__section--actions'>
+                <button
+                  className='avant-garde-button'
+                  onClick={() => this.deleteCampaign(index)}
+                >
+                  Delete
+                </button>
+              </div>
+
+              <div className='display-admin__section-inner'>
+                <Campaign
+                  campaign={campaign}
+                  index={index}
+                  onChange={this.onChange}
+                />
+                <Panel
+                  campaign={campaign}
+                  index={index}
+                  onChange={this.onChange}
+                />
+                <Canvas
+                  campaign={campaign}
+                  index={index}
+                  onChange={this.onChange}
+                />
+              </div>
             </div>
-            <DropDownItem
-              active={index === this.state.activeSection}
-              index={index}
-              onClick={() => this.setActiveSection(index)}
-              title={campaign.name}>
-              {this.state.activeSection === index &&
-                <div className='display-admin__section-inner'>
-                  <Campaign campaign={campaign} index={index} onChange={this.onChange} />
-                  <Panel campaign={campaign} index={index} onChange={this.onChange} />
-                  <Canvas campaign={campaign} index={index} onChange={this.onChange} />
-                </div>
-              }
-            </DropDownItem>
-          </div>
-        )}
+          )}
+        </DropDownList>
+
         <button
           className='save-campaign avant-garde-button'
           onClick={this.save}
-          style={{color: saveColor}}>
+          style={{color: saveColor}}
+        >
           {this.state.saveStatus}
         </button>
         <button
           className='new-campaign avant-garde-button avant-garde-button-dark'
-          onClick={this.newCampaign}>
+          onClick={this.newCampaign}
+        >
           Add New Campaign
         </button>
       </div>

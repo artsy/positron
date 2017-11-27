@@ -3,7 +3,7 @@
 .edit-section--text
   position relative
   z-index -1
-  &.is-editing
+  &[data-editing=true]
     z-index 100
   ol li, ul li, li
     list-style none
@@ -28,5 +28,3 @@
       background-image none !important
       &:before
         content url(/icons/circle_plus.svg) !important
-
-

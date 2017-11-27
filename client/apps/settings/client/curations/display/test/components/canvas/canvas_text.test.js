@@ -1,6 +1,6 @@
 import React from 'react'
 import { CanvasText } from '../../../components/canvas/canvas_text.jsx'
-import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
+import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
 import { mount } from 'enzyme'
 
 describe('Canvas Text', () => {

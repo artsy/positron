@@ -1,11 +1,10 @@
 import Immutable from 'immutable'
 import {
-  ContentStartEnd,
+  ContentEnd,
   findContentEndEntities,
-  findContentStartEntities,
   findLinkEntities,
   Link
-} from 'client/components/rich_text2/utils/decorators.coffee'
+} from 'client/components/rich_text/utils/decorators'
 
 export const inlineStyles = (layout, hasFeatures) => {
   // for menu display only
@@ -39,7 +38,7 @@ export const blockTypes = (layout, hasFeatures) => {
 }
 
 export const blockRenderMap = (layout, hasFeatures) => {
-  // declares blocks available to the editor
+  // declare HTML elements available to the editor
   if (!hasFeatures) {
   // classic, partners
     return Immutable.Map({
@@ -80,19 +79,10 @@ export const decorators = (layout) => {
       component: Link
     }
   ]
-  if (layout === 'feature') {
-    decorators.push({
-      strategy: findContentStartEntities,
-      component: ContentStartEnd
-    })
+  if (layout !== 'classic') {
     decorators.push({
       strategy: findContentEndEntities,
-      component: ContentStartEnd
-    })
-  } else if (layout === 'standard') {
-    decorators.push({
-      strategy: findContentEndEntities,
-      component: ContentStartEnd
+      component: ContentEnd
     })
   }
   return decorators

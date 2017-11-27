@@ -8,9 +8,9 @@
   dependencies:
     chokidar "^1.7.0"
 
-"@artsy/reaction-force@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.12.0.tgz#8ac2bed6e3b1095357c942de1195c9f8a4321cf5"
+"@artsy/reaction-force@^0.12.8":
+  version "0.12.8"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.12.8.tgz#90a7dc8fa5ced0c4aa29d4c9310a5dea159037f2"
   dependencies:
     "@storybook/addon-options" "^3.2.1"
     "@storybook/react" "^3.2.12"
@@ -3244,18 +3244,17 @@ dotenv@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
-draft-convert@^1.4.2:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/draft-convert/-/draft-convert-1.4.3.tgz#4836eec176b3b9d73a94ef6b03532aa7370693cc"
+draft-convert@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/draft-convert/-/draft-convert-2.0.0.tgz#e7afbc8054bfb2f53464e6dd47e50125403879d8"
   dependencies:
     immutable "~3.7.4"
     invariant "^2.2.1"
 
-draft-js@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.3.tgz#5f3c3025af9f494c62f00a9066006ccdc1b3c943"
+draft-js@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.10.4.tgz#147741642097c8120d8edc232e9503e8b7fb8d35"
   dependencies:
-    enzyme "^2.9.1"
     fbjs "^0.8.15"
     immutable "~3.7.4"
     object-assign "^4.1.0"

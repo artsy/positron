@@ -1,6 +1,6 @@
 import React from 'react'
 import Article from '/client/models/article.coffee'
-import { PlainText } from '/client/components/rich_text2/components/plain_text.jsx'
+import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
 import SectionHeader from '../index.jsx'
 import { mount } from 'enzyme'
 

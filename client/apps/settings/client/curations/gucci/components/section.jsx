@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import Paragraph from 'client/components/rich_text2/components/paragraph.coffee'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata.jsx'
 
 export const SectionAdmin = (props) => {
