@@ -20,7 +20,6 @@ module.exports = React.createClass
   componentWillMount: ->
     @props.article.fetchFeatured()
     @props.article.fetchMentioned()
-    @debouncedSave = _.debounce((-> @props.article.save()), 800)
 
   setActiveSection: (section) ->
     sections = @state.activeSections || []
@@ -42,9 +41,9 @@ module.exports = React.createClass
   onChange: (key, value) ->
     @props.article.set(key, value)
     unless @props.article.get('published')
-      @debouncedSave()
+      @props.save(@props.article)
     else
-      $('#edit-save').removeClass('is-saving').addClass 'attention'
+      @props.savedStatus(false)
 
   render: ->
     div { className: 'edit-admin' },

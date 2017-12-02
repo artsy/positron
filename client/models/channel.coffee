@@ -33,7 +33,7 @@ module.exports = class Channel extends Backbone.Model
         'callout'
         'follow'
         'layout'
-        'hero'
+        'postscript'
       ], feature
     else if type is 'team'
       _.contains [

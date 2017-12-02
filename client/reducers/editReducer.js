@@ -2,15 +2,27 @@ import u from 'updeep'
 import { actions } from 'client/actions/editActions'
 
 export const initialState = {
-  isEditing: false
+  activeSection: 'content',
+  isSaving: false,
+  isSaved: true
 }
 
 export function editReducer (state = initialState, action) {
   switch (action.type) {
-    case actions.EDIT: {
-      console.log('edit!')
+    case actions.CHANGE_SAVED_STATUS: {
       return u({
-        isEditing: action.payload.isEditing
+        isSaving: false,
+        isSaved: action.payload.isSaved
+      }, state)
+    }
+    case actions.CHANGE_SECTION: {
+      return u({
+        activeSection: action.payload.activeSection
+      }, state)
+    }
+    case actions.SAVE: {
+      return u({
+        isSaving: true
       }, state)
     }
   }
