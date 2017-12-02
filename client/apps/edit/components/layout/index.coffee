@@ -104,7 +104,7 @@ module.exports = class EditLayout extends Backbone.View
     'dragleave .dashed-file-upload-container': 'toggleDragover'
     'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
     'blur #edit-title': 'prefillThumbnailTitle'
-    'click #autolink-button' : 'autolinkText'
+    'click button.autolink' : 'autolinkText'
 
   toggleTabs: (e) ->
     @openTab $(e.target).index()

@@ -41,12 +41,12 @@ module.exports = React.createClass
   onChange: (key, value) ->
     @props.article.set(key, value)
     unless @props.article.get('published')
-      @props.save(@props.article)
+      @props.saveArticle(@props.article)
     else
       @props.savedStatus(false)
 
   render: ->
-    div { className: 'edit-admin' },
+    div { className: 'edit-admin admin-form-container max-width-container' },
       section {
         className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags'
       },

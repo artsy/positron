@@ -7,17 +7,17 @@ export class EditContent extends Component {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
     savedStatus: PropTypes.func,
-    save: PropTypes.func
+    saveArticle: PropTypes.func
   }
 
   onChange = (key, value) => {
-    const { article, savedStatus, save } = this.props
+    const { article, savedStatus, saveArticle } = this.props
     article.set(key, value)
 
     if (article.get('published')) {
       savedStatus(false)
     } else {
-      save(article)
+      saveArticle(article)
     }
   }
 

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import * as Actions from 'client/actions/editActions'
 
 import { EditContent } from './content/index.jsx'
+import { EditHeader } from './header/index.jsx'
 import EditAdmin from './admin/index'
 
 class EditContainer extends Component {
@@ -12,7 +13,8 @@ class EditContainer extends Component {
     article: PropTypes.object,
     actions: PropTypes.object,
     channel: PropTypes.object,
-    edit: PropTypes.object
+    edit: PropTypes.object,
+    user: PropTypes.object
   }
 
   getActiveSection = () => {
@@ -22,7 +24,7 @@ class EditContainer extends Component {
     const props = {
       article,
       channel,
-      save: (article) => actions.save(article),
+      saveArticle: (article) => actions.saveArticle(article),
       savedStatus: (status) => actions.savedStatus(status)
     }
 
@@ -35,11 +37,17 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { edit } = this.props
-    const { isSaving } = edit
+    const { actions, article, channel, edit, user } = this.props
 
     return (
-      <div style={{background: isSaving ? 'limegreen' : 'white'}}>
+      <div className='EditContainer'>
+        <EditHeader
+          actions={actions}
+          article={article}
+          channel={channel}
+          edit={edit}
+          user={user}
+        />
         {this.getActiveSection()}
       </div>
     )
