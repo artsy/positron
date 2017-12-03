@@ -17,15 +17,41 @@ class EditContainer extends Component {
     user: PropTypes.object
   }
 
+  constructor (props) {
+    super(props)
+
+    props.article.sections.on(
+      'change add remove reset',
+      () => this.maybeSaveArticle()
+    )
+  }
+
+  onChange = (key, value) => {
+    const { article } = this.props
+
+    article.set(key, value)
+    this.maybeSaveArticle()
+  }
+
+  maybeSaveArticle = () => {
+    const { article, actions } = this.props
+    const { savedStatus, saveArticle } = actions
+
+    if (article.get('published')) {
+      savedStatus(false)
+    } else {
+      saveArticle(article)
+    }
+  }
+
   getActiveSection = () => {
-    const { actions, article, channel, edit } = this.props
+    const { article, channel, edit } = this.props
     const { activeSection } = edit
 
     const props = {
       article,
       channel,
-      saveArticle: (article) => actions.saveArticle(article),
-      savedStatus: (status) => actions.savedStatus(status)
+      onChange: this.onChange
     }
 
     switch (activeSection) {
@@ -37,18 +63,13 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { actions, article, channel, edit, user } = this.props
-
     return (
       <div className='EditContainer'>
-        <EditHeader
-          actions={actions}
-          article={article}
-          channel={channel}
-          edit={edit}
-          user={user}
-        />
+
+        <EditHeader {...this.props} />
+
         {this.getActiveSection()}
+
       </div>
     )
   }
