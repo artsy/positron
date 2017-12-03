@@ -3,10 +3,16 @@ import React, { Component } from 'react'
 import SectionContainer from '../../section_container/index.coffee'
 import SectionTool from '../../section_tool/index.jsx'
 
-export default class SectionHero extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { editing: false }
+export class SectionHero extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object,
+    section: PropTypes.object.isRequired,
+    sections: PropTypes.object.isRequired
+  }
+
+  state = {
+    editing: false
   }
 
   onSetEditing = (isEditing) => {
@@ -22,7 +28,7 @@ export default class SectionHero extends Component {
     const { editing } = this.state
     return (
       <div className='edit-section--hero'>
-        { section.keys().length
+        {section.keys().length
           ? <SectionContainer
               article={article}
               section={section}
@@ -31,23 +37,19 @@ export default class SectionHero extends Component {
               isHero
               index={-1}
               editing={editing}
-              channel={channel} />
+              channel={channel}
+            />
+
           : <SectionTool
               section={section}
               sections={sections}
               onSetEditing={this.onSetEditing}
               isHero
               index={-1}
-              editing={editing} />
+              editing={editing}
+            />
         }
       </div>
     )
   }
-}
-
-SectionHero.propTypes = {
-  article: PropTypes.object.isRequired,
-  channel: PropTypes.object,
-  section: PropTypes.object.isRequired,
-  sections: PropTypes.object.isRequired
 }

@@ -28,6 +28,10 @@ module.exports = class Article extends Backbone.Model
       @mentionedArtists = new Artists
       @featuredArtworks = new Artworks
       @mentionedArtworks = new Artworks
+      @heroSection = new Backbone.Model @get 'hero_section'
+      @on 'change:hero_section', =>
+        @heroSection.set @get 'hero_section'
+      @heroSection.destroy = @heroSection.clear
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -110,6 +114,10 @@ module.exports = class Article extends Backbone.Model
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections?.length
+    if @heroSection?.keys().length
+      extended.hero_section = @heroSection.toJSON()
+    else if @heroSection
+      extended.hero_section = null
     _.extend super, extended
 
   replaceLink: (taggedText, link) ->

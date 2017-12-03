@@ -27,7 +27,7 @@ export function init () {
 
   const store = createReduxStore(reducers, initialState)
 
-  article.on('sync', () => store.dispatch(editActions.savedStatus(true)))
+  article.on('sync', () => store.dispatch(editActions.changeSavedStatus(true)))
 
   ReactDOM.render(
     <Provider store={store}>

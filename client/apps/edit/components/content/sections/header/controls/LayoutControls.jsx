@@ -18,8 +18,9 @@ export default class LayoutControls extends Component {
 
   getMenuColor = () => {
     const { hero } = this.props
+    const { type, url } = hero.attributes
 
-    if (hero && hero.type === 'fullscreen' && hero.url && hero.url.length) {
+    if (hero && type === 'fullscreen' && url && url.length) {
       return 'white'
     } else {
       return 'black'
@@ -33,7 +34,6 @@ export default class LayoutControls extends Component {
   render () {
     const { isOpen, onClick } = this.props
 
-    // Toggle change header to see login action dispatched after 500ms
     return (
       <div className='edit-header--controls'>
         <div className='edit-header--controls__menu'>

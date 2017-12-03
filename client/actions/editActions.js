@@ -8,6 +8,13 @@ export const actions = keyMirror(
   'SAVE_ARTICLE'
 )
 
+export const changeSavedStatus = (isSaved) => ({
+  type: actions.CHANGE_SAVED_STATUS,
+  payload: {
+    isSaved
+  }
+})
+
 export const changeSection = (activeSection) => ({
   type: actions.CHANGE_SECTION,
   payload: {
@@ -49,14 +56,7 @@ export const saveArticle = (article) => {
   return {
     type: actions.SAVE_ARTICLE,
     payload: {
-      saving: true
+      isSaving: true
     }
   }
 }
-
-export const savedStatus = (isSaved) => ({
-  type: actions.CHANGE_SAVED_STATUS,
-  payload: {
-    isSaved
-  }
-})

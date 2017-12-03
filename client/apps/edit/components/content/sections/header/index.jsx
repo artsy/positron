@@ -1,9 +1,9 @@
-import HeaderControls from './controls/index.jsx'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Header, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { HeaderControls } from './controls/index.jsx'
 import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
 
 export class SectionHeader extends Component {
@@ -18,10 +18,9 @@ export class SectionHeader extends Component {
   }
 
   onChangeHero = (key, value) => {
-    const heroSection = this.props.article.get('hero_section') || {}
-
-    heroSection[key] = value
-    this.props.onChange('hero_section', heroSection)
+    const { article, onChange } = this.props
+    article.heroSection.set(key, value)
+    onChange('hero_section', article.heroSection.attributes)
   }
 
   onProgress = (progress) => {
@@ -32,8 +31,9 @@ export class SectionHeader extends Component {
     return (
       <PlainText
         content={article.attributes.title}
-        onChange={(text) => this.props.onChange('title', text)}
+        onChange={(key, value) => this.props.onChange('title', value)}
         placeholder='Title'
+        name='title'
       />
     )
   }
@@ -51,7 +51,7 @@ export class SectionHeader extends Component {
   }
 
   renderImage (heroSection) {
-    const { type, url } = heroSection
+    const { type, url } = heroSection.attributes
     const isFullscreen = type && type === 'fullscreen'
     const hasUrl = url && url.length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
@@ -114,17 +114,19 @@ export class SectionHeader extends Component {
         </div>
       )
     } else {
-      const heroSection = article.get('hero_section') || { type: 'text' }
-      const headerClass = ' ' + heroSection.type
+      const headerClass = isFeature ? (article.heroSection.get('type')) || 'text' : ''
 
       return (
-        <div className={'edit-header ' + headerClass}>
+        <div
+          className={'edit-header ' + headerClass}
+          data-type={isFeature && (article.heroSection.get('type') || 'text')}
+        >
           {isFeature &&
             <HeaderControls
               onChange={this.onChangeHero}
               article={article}
               channel={channel}
-              hero={heroSection}
+              hero={article.heroSection}
             />
           }
 
@@ -133,12 +135,12 @@ export class SectionHeader extends Component {
             {this.renderTitle(article)}
             {isFeature &&
               <PlainText
-                content={heroSection.deck}
+                content={article.heroSection.get('deck')}
                 onChange={(content) => this.onChangeHero('deck', content)}
                 placeholder='Deck (optional)'
               />
             }
-            {isFeature && this.renderImage(heroSection)}
+            {isFeature && this.renderImage(article.heroSection)}
           </Header>
         </div>
       )

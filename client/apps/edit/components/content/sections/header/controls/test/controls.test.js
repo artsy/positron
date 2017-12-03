@@ -1,9 +1,10 @@
 import Backbone from 'backbone'
 import React from 'react'
-import Controls from '../index.jsx'
+import Article from '../../../../../../../../models/article'
 import LayoutControls from '../LayoutControls.jsx'
 import ModalCover from '../ModalCover.jsx'
 import VideoControls from '../VideoControls.jsx'
+import { HeaderControls } from '../index.jsx'
 import { SectionVideo } from '../../../video/index'
 import { mount } from 'enzyme'
 import {
@@ -16,15 +17,15 @@ import {
 describe('Feature Header Controls', () => {
   describe('LayoutControls', () => {
     const props = {
-      article: {},
-      hero: {},
+      article: new Article(),
+      hero: new Backbone.Model(),
       onChange: jest.fn(),
       onClick: jest.fn()
     }
 
     it('renders change header controls', () => {
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       expect(component.html()).toMatch('class="edit-header--controls-open"')
       expect(component.html()).toMatch('Change Header')
@@ -33,7 +34,7 @@ describe('Feature Header Controls', () => {
 
     it('opens the menu on click', () => {
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       component.find('.edit-header--controls-open').simulate('click')
       expect(component.state().isLayoutOpen).toBe(true)
@@ -46,7 +47,7 @@ describe('Feature Header Controls', () => {
 
     it('changes the layout click', () => {
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       component.find('.edit-header--controls-open').simulate('click')
       component.find('a').first().simulate('click')
@@ -57,36 +58,35 @@ describe('Feature Header Controls', () => {
 
   describe('VideoControls', () => {
     let props
+    // let article = new Article(Fixtures.StandardArticle)
 
     beforeEach(() => {
       props = {
-        article: new Backbone.Model(Fixtures.StandardArticle),
+        article: new Article(Fixtures.StandardArticle),
         channel: {
           isArtsyChannel: () => false
         },
-        hero: {
+        hero: new Backbone.Model({
           type: 'basic',
           url: 'foo',
           cover_image_url: 'bar'
-        },
+        }),
         onChange: jest.fn(),
         onClick: jest.fn()
       }
-
-      props.article.heroSection = new Backbone.Model(props.hero)
     })
 
     it('does not render controls if not a BasicHeader type', () => {
-      props.hero.type = 'video'
+      props.hero.set('type', 'video')
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       expect(component.html()).not.toMatch('class="edit-header--video')
     })
 
     it('renders embed video controls', () => {
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       expect(component.html()).toMatch('class="edit-header--video')
       expect(component.html()).toMatch('Embed Video')
@@ -95,7 +95,7 @@ describe('Feature Header Controls', () => {
 
     it('opens the embed menu on click', () => {
       const component = mount(
-        <Controls {...props} />
+        <HeaderControls {...props} />
       )
       component.find('.edit-header--video-open').simulate('click')
       expect(component.state().isVideoOpen).toBe(true)

@@ -7,6 +7,7 @@ import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import SectionList from '../section_list/index'
 import { SectionFooter } from '../sections/footer/index'
 import { SectionHeader } from '../sections/header/index'
+import { SectionHero } from '../sections/hero/index'
 
 describe('EditContent', () => {
   let props
@@ -14,9 +15,26 @@ describe('EditContent', () => {
   beforeEach(() => {
     props = {
       article: new Article(Fixtures.StandardArticle),
-      channel: new Backbone.Model(),
+      channel: {
+        hasFeature: jest.fn().mockReturnValueOnce(false)
+      },
       onChange: jest.fn()
     }
+  })
+
+  it('Does not SectionHero if channel does not have feature', () => {
+    const component = mount(
+      <EditContent {...props} />
+    )
+    expect(component.find(SectionHero).length).toBe(0)
+  })
+
+  it('Renders SectionHero if channel has feature', () => {
+    props.channel.hasFeature = jest.fn().mockReturnValueOnce(true)
+    const component = mount(
+      <EditContent {...props} />
+    )
+    expect(component.find(SectionHero).length).toBe(1)
   })
 
   it('Renders SectionHeader', () => {

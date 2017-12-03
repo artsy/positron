@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import SectionList from './section_list/index.coffee'
 import { SectionFooter } from './sections/footer/index'
 import { SectionHeader } from './sections/header/index'
+import { SectionHero } from './sections/hero/index'
 
 export class EditContent extends Component {
   static propTypes = {
@@ -19,6 +20,15 @@ export class EditContent extends Component {
         className={'EditContent ' + article.get('layout')}
         data-layout={article.get('layout')}
       >
+
+        {channel.hasFeature('hero') &&
+          <SectionHero
+            article={article}
+            channel={channel}
+            section={article.heroSection}
+            sections={article.sections}
+          />
+        }
 
         <SectionHeader
           article={article}

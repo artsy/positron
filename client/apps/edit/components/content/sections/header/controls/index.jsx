@@ -4,7 +4,7 @@ import ModalCover from './ModalCover.jsx'
 import LayoutControls from './LayoutControls.jsx'
 import VideoControls from './VideoControls.jsx'
 
-export default class HeaderControls extends Component {
+export class HeaderControls extends Component {
   static propTypes = {
     article: PropTypes.object,
     channel: PropTypes.object,
@@ -46,7 +46,7 @@ export default class HeaderControls extends Component {
     const { isLayoutOpen, isVideoOpen } = this.state
     const { article, channel, hero, onChange } = this.props
     const isModalOpen = isLayoutOpen || isVideoOpen
-    const isBasicHero = hero.type === 'basic'
+    const isBasicHero = hero.get('type') === 'basic'
 
     return (
       <div className='edit-header__container'>
@@ -64,7 +64,7 @@ export default class HeaderControls extends Component {
           />
         }
         <LayoutControls
-          hero={hero}
+          hero={article.heroSection}
           isOpen={isLayoutOpen}
           onChange={onChange}
           onClick={() => this.toggleControls('layout')}

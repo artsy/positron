@@ -28,7 +28,11 @@ export default class VideoControls extends Component {
               data-editing
               data-type='video'
             >
-              Section Video
+              <SectionVideo editing hidePreview
+                article={article}
+                section={article.heroSection}
+                channel={channel}
+              />
             </div>
           }
         </div>
@@ -36,9 +40,3 @@ export default class VideoControls extends Component {
     )
   }
 }
-
-{/* <SectionVideo editing hidePreview
-article={article}
-section={article.get('hero_section')}
-channel={channel}
-/> */}

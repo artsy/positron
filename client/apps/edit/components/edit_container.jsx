@@ -24,6 +24,10 @@ class EditContainer extends Component {
       'change add remove reset',
       () => this.maybeSaveArticle()
     )
+    props.article.heroSection.on(
+      'change remove',
+      () => this.maybeSaveArticle()
+    )
   }
 
   onChange = (key, value) => {
@@ -35,10 +39,10 @@ class EditContainer extends Component {
 
   maybeSaveArticle = () => {
     const { article, actions } = this.props
-    const { savedStatus, saveArticle } = actions
+    const { changeSavedStatus, saveArticle } = actions
 
     if (article.get('published')) {
-      savedStatus(false)
+      changeSavedStatus(false)
     } else {
       saveArticle(article)
     }

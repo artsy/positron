@@ -19,13 +19,8 @@
   .upload-progress
     min-width 0
 
-  div[class^='FeatureHeader__Deck']
-    min-width 30%
-    max-width 50%
-
-  div[class^='FeatureHeader__TextAsset']
-    position relative
-    min-height 440px
+  div[class*='Header__Vertical'] span
+    color gray-dark-color
 
   &__image-container
     position absolute
@@ -68,7 +63,7 @@
 #edit-content .edit-header a
   background-image none
 
-.classic .edit-header
+[data-layout='classic'] .edit-header
   padding-top 10px
 
   .plain-text .public-DraftEditorPlaceholder-inner
@@ -83,17 +78,19 @@
     max-width 580px
     margin 10px auto 30px auto
 
-.standard .edit-header
+[data-layout='standard'] .edit-header
   padding-top 10px
 
-  div[class^='StandardHeader__Vertical'] span
-    color gray-dark-color
-
-.feature .edit-header
+[data-layout='feature'] .edit-header
   margin-bottom 30px
 
-  div[class^='FeatureHeader__Vertical'] span
-    color gray-dark-color
+  div[class^='FeatureHeader__Deck']
+    min-width 30%
+    max-width 50%
+
+  div[class^='FeatureHeader__TextAsset']
+    position relative
+    min-height 440px
 
   [data-type=split]
     max-height calc(100vh \- 115px)
@@ -112,10 +109,17 @@
     div[class^='FeatureHeader__Deck']
       max-width 100%
 
-  &.split
+  [data-type=split]
     .edit-header__remove
       right -8px
       top -8px
+
+  &[data-type=basic]
+    div[class^="Grid__Grid-"]
+      padding-top 40px
+    .public-DraftEditorPlaceholder-inner
+      text-align center
+      width 100%
 
   [data-type=fullscreen]
     height calc(100vh \- 95px)
