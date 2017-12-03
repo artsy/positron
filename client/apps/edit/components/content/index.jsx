@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { SectionFooter } from './sections/footer/index.jsx'
 import { SectionHeader } from './sections/header/index.jsx'
 
 export class EditContent extends Component {
@@ -26,11 +27,17 @@ export class EditContent extends Component {
 
     return (
       <div
-        className={'EditContent edit-section-layout ' + article.get('layout')}
+        className={'EditContent ' + article.get('layout')}
         data-layout={article.get('layout')}
       >
 
         <SectionHeader
+          article={article}
+          channel={channel}
+          onChange={this.onChange}
+        />
+
+        <SectionFooter
           article={article}
           channel={channel}
           onChange={this.onChange}

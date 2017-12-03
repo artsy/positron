@@ -38,11 +38,6 @@ module.exports = React.createClass
   isDraggable: ->
     if @state.editingIndex or @state.editingIndex is 0 then false else true
 
-  setPostscript: (html) ->
-    html = null unless html.length
-    @props.article.set('postscript', html)
-    @props.saveArticle()
-
   render: ->
     div {
       className: 'edit-sections__list'
@@ -92,17 +87,3 @@ module.exports = React.createClass
                   }
                 )
               ]
-      if @props.channel.isEditorial()
-        div {
-          className: 'edit-sections__postscript'
-          'data-layout': 'column_width'
-        },
-          Paragraph {
-            html: @props.article.get('postscript') or ''
-            onChange: @setPostscript
-            placeholder: 'Postscript (optional)'
-            type: 'postscript'
-            linked: true
-            layout: @props.article.get('layout')
-          }
-      # TODO - Author Preview
