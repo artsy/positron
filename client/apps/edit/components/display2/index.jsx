@@ -22,25 +22,32 @@ export class EditDisplay extends Component {
       {title: 'Email'}
     ]
 
-    return (
-      <DropDownList sections={sections} className='EditDisplay admin-form-container'>
-        <DisplayMagazine
-          article={article}
-          onChange={onChange}
-        />
-        <DisplaySocial
-          article={article}
-          onChange={onChange}
-        />
-        <DisplaySearch
-          article={article}
-          onChange={onChange}
-        />
-        <DisplayEmail
-          article={article}
-          onChange={onChange}
-        />
-      </DropDownList>
-    )
+    if (channel.isEditorial()) {
+      return (
+        <DropDownList sections={sections} className='EditDisplay admin-form-container'>
+          <DisplayMagazine
+            article={article}
+            onChange={onChange}
+          />
+          <DisplaySocial
+            article={article}
+            onChange={onChange}
+          />
+          <DisplaySearch
+            article={article}
+            onChange={onChange}
+          />
+          <DisplayEmail
+            article={article}
+            onChange={onChange}
+          />
+        </DropDownList>
+      )
+
+    } else {
+      return (
+        <div>Hello</div>
+      )
+    }
   }
 }
