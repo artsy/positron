@@ -48,11 +48,16 @@ export default class FileInput extends Component {
         console.log(err)
       },
       done: src => {
-        const image = new Image()
-        image.src = src
-        image.onload = () => {
-          onUpload(src, image.width, image.height)
+        if (src.match('.mp4')) {
+          onUpload(src)
           onProgress(null)
+        } else {
+          const image = new Image()
+          image.src = src
+          image.onload = () => {
+            onUpload(src, image.width, image.height)
+            onProgress(null)
+          }
         }
       }
     })
