@@ -28,7 +28,9 @@ export default class VideoControls extends Component {
               data-editing
               data-type='video'
             >
-              <SectionVideo editing hidePreview
+              <SectionVideo
+                editing
+                hidePreview
                 article={article}
                 section={article.heroSection}
                 channel={channel}

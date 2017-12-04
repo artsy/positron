@@ -3,14 +3,14 @@ import gemup from 'gemup'
 import React from 'react'
 import { mount } from 'enzyme'
 
-jest.mock('gemup', () => {
-  return jest.fn()
-})
+jest.mock('gemup')
 
 describe('FileInput', () => {
   beforeAll(() => {
     global.window.$.ajax = jest.fn()
     global.alert = jest.fn()
+    const Image = jest.fn()
+    global.Image = Image
   })
 
   it('renders drag-drop container', () => {
@@ -70,8 +70,44 @@ describe('FileInput', () => {
     const component = mount(
       <FileInput />
     )
-    const file = new Blob([], {type: 'img/jpg'})
-    component.find('input').simulate('change', {target: {files: [file]}})
+    const file = new Blob([], { type: 'img/jpg' })
+    component.find('input').simulate('change', {
+      target: { files: [file] }
+    })
     expect(gemup).toHaveBeenCalled()
+  })
+
+  it('executes the done callback for images', () => {
+    const onUpload = jest.fn()
+    const component = mount(
+      <FileInput
+        onUpload={onUpload}
+        onProgress={jest.fn()}
+      />
+    )
+    const file = new Blob([], { type: 'img/jpg' })
+    component.find('input').simulate('change', {
+      target: { files: [file] }
+    })
+    gemup.mock.calls[1][1].done('https://image.jpg')
+    Image.mock.instances[0].onload()
+    expect(onUpload.mock.calls[0][0]).toBe('https://image.jpg')
+  })
+
+  it('executes the done callback for video', () => {
+    const onUpload = jest.fn()
+    const component = mount(
+      <FileInput
+        video
+        onUpload={onUpload}
+        onProgress={jest.fn()}
+      />
+    )
+    const file = new Blob([], { type: 'video/mp4' })
+    component.find('input').simulate('change', {
+      target: { files: [file] }
+    })
+    gemup.mock.calls[2][1].done('https://image.mp4')
+    expect(onUpload.mock.calls[0][0]).toBe('https://image.mp4')
   })
 })
