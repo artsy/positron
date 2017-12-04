@@ -30,9 +30,7 @@ describe 'SectionList', ->
       @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
       @SectionList.__set__ 'SectionTool', @SectionTool
-      @SectionContainer = benv.requireWithJadeify(
-        resolve(__dirname, '../../section_container/index'), ['icons']
-      )
+      @SectionContainer = benv.require resolve(__dirname, '../../section_container/index')
       @ImageCollection = benv.require(
         resolve(__dirname, '../../sections/image_collection/index')
       )

@@ -79,6 +79,7 @@ describe('Edit Header Controls', () => {
     })
 
     it('Display indicates non-completion', () => {
+      delete props.article.attributes.thumbnail_image
       const component = mount(
         <EditHeader {...props} />
       )

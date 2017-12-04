@@ -29,9 +29,7 @@ describe 'SectionContainer', ->
           removeListener: sinon.stub()
         }
       )
-      @SectionContainer = benv.requireWithJadeify(
-        resolve(__dirname, '../index'), ['icons']
-      )
+      @SectionContainer = benv.require resolve(__dirname, '../index')
       section1 = new Section { body: 'Foo to the bar', type: 'text' }
       section2 = new Section { body: 'Bar to the foo', type: 'text' }
       section3 = new Section { type: 'image_collection' }
