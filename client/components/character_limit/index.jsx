@@ -17,53 +17,60 @@ export class CharacterLimit extends React.Component {
   }
 
   onChange = (e) => {
-    const input = this.props.type === 'textarea' ? e : e.target.value
-    const remainingChars = this.props.limit - this.getTextLength(input, this.props.html)
+    const { html, limit, onChange, type } = this.props
+    const input = type === 'textarea' ? e : e.target.value
+    const remainingChars = limit - this.getTextLength(input, html)
+
     this.setState({ remainingChars })
-    this.props.onChange(input)
+    onChange(input)
   }
 
   renderTextArea = (propsForInput) => {
-    if (this.props.html) {
+    const { defaultValue, html, placeholder } = this.props
+
+    if (html) {
       return (
         <div className='bordered-input'>
           <Paragraph
             onChange={this.onChange}
-            html={this.props.defaultValue || ''}
+            html={defaultValue || ''}
             linked
             stripLinebreaks
-            placeholder={this.props.placeholder} />
+            placeholder={placeholder} />
         </div>
       )
     } else {
       return (
         <div className='bordered-input'>
           <PlainText
-            content={this.props.defaultValue || ''}
+            content={defaultValue || ''}
             onChange={this.onChange}
-            placeholder={this.props.placeholder} />
+            placeholder={placeholder} />
         </div>
       )
     }
   }
 
   render () {
+    const { defaultValue, label, limit, placeholder, type } = this.props
+    const { remainingChars } = this.state
+
     const propsForInput = {
       className: 'bordered-input',
-      placeholder: this.props.placeholder,
-      defaultValue: this.props.defaultValue || '',
+      placeholder: placeholder,
+      defaultValue: defaultValue || '',
       onChange: this.onChange,
-      maxLength: this.props.limit
+      maxLength: limit
     }
-    const remainingColor = this.state.remainingChars >= 0 ? '#666' : '#f7625a'
+    const remainingColor = remainingChars >= 0 ? '#999' : '#f7625a'
 
     return (
-      <div className='character-limit'>
+      <div className='CharacterLimit' data-type={type}>
         <label>
-          {this.props.label}
-          <span style={{color: remainingColor}}>{this.state.remainingChars} Characters</span>
+          {label}
+          <span style={{color: remainingColor}}>{remainingChars} Characters</span>
         </label>
-        {this.props.type === 'textarea'
+        {type === 'textarea'
           ? this.renderTextArea(propsForInput)
           : <input {...propsForInput} />
         }
