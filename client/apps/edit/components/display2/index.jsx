@@ -27,7 +27,16 @@ export class EditDisplay extends Component {
       {title: 'Email'}
     ]
 
-    if (channel.get('type') !== 'partner') {
+    if (channel.get('type') === 'partner') {
+      return (
+        <div className='EditDisplay'>
+          <DisplayPartner
+            article={article}
+            onChange={this.onChange}
+          />
+        </div>
+      )
+    } else {
       return (
         <DropDownList
           className='EditDisplay admin-form-container'
@@ -52,13 +61,6 @@ export class EditDisplay extends Component {
             onChange={this.onChange}
           />
         </DropDownList>
-      )
-    } else {
-      return (
-        <DisplayPartner
-          article={article}
-          onChange={this.onChange}
-        />
       )
     }
   }

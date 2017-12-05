@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { EmailPreview } from './email_preview'
+import { EmailPreview } from './preview/email_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 

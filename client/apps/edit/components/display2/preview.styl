@@ -23,7 +23,10 @@
   &--headline
     margin 8px 0
   &--social
-    width 50px
+    width auto
+    svg
+      width 10px
+      margin-right: 10px
 
   &--right
     margin-right 20px
@@ -106,10 +109,22 @@
   font-size 9.5px
   line-height 12px
   color black
-  &--result, svg
-    margin-bottom 15px
-  svg:last-child
-    margin-bottom 0
+  &--result-headline
+    height 1.5em
+    width 60%
+    background-color gray-lighter-color
+    margin-bottom 3px
+  &--result-line
+    height 1em
+    background-color gray-lighter-color
+    margin-bottom 3px
+    &:nth-child(1)
+      width 70%
+    &:nth-child(2)
+      width 80%
+    &:last-child
+      width 95%
+      margin-bottom 15px
   &--headline
     font-size 12px
     line-height 15px

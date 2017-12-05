@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { crop } from 'client/components/resizer/index.coffee'
+import { crop } from '../../../../../../components/resizer/index.coffee'
 
 export const EmailPreview = (props) => {
   const { article } = props

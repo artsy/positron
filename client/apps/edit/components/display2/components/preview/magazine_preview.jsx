@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { crop } from 'client/components/resizer/index.coffee'
+import { crop } from '../../../../../../components/resizer/index.coffee'
+import { IconSocialEmail } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialEmail'
+import { IconSocialFacebook } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialFacebook'
+import { IconSocialTwitter } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialTwitter'
 
 export const MagazinePreview = (props) => {
   const { article } = props
@@ -17,7 +20,11 @@ export const MagazinePreview = (props) => {
         <div className='edit-display__prev-mag--byline'>
           {`By ${article.getByline()}`}
         </div>
-        <div className='edit-display__prev-mag--social' />
+        <div className='edit-display__prev-mag--social'>
+          <IconSocialEmail />
+          <IconSocialFacebook />
+          <IconSocialTwitter />
+        </div>
       </div>
 
       <div className='edit-display__prev-mag--right'>

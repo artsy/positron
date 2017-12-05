@@ -1,7 +1,5 @@
 .EditDisplay
   padding-top 40px
-  &.DisplayPartner
-    padding-top 0
   .DropDownItem__content
     margin-top 40px
   .field-group.flat-checkbox
@@ -17,20 +15,20 @@
     margin-top 5px
     cursor pointer
 
-  .DisplayEmail
-    .col--right
-      display flex
-      flex-direction column
-      justify-content space-between
+.DisplayEmail
+  .col--right
+    display flex
+    flex-direction column
+    justify-content space-between
 
-    .field-group--inline
-      margin-left 20px
-      .field-group
-        width 100%
-        &:first-child
-          margin-right 15px
-        &:last-child
-          margin-left 15px
+  .field-group--inline
+    margin-left 20px
+    .field-group
+      width 100%
+      &:first-child
+        margin-right 15px
+      &:last-child
+        margin-left 15px
 
 .DisplayPartner
   &__preview
@@ -51,3 +49,5 @@
 
 #edit-display.edit-display--partner
   margin-top 55px
+  .EditDisplay
+    padding-top 0px

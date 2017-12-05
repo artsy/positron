@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { crop } from '../../../../../../components/resizer/index.coffee'
+import Icon from '@artsy/reaction-force/dist/Components/Icon'
 
 export const SocialPreview = (props) => {
   const { article } = props
@@ -10,6 +12,7 @@ export const SocialPreview = (props) => {
 
       <div className='edit-display__prev-social--post'>
         <div className='edit-display__prev-social--identity'>
+          <Icon name='logo-unscaled' color='#e5d5d5' />
           <div className='edit-display__prev-social--icontainer'>
             <div className='edit-display__prev-social--name'>
               Artsy
