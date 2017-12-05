@@ -127,7 +127,7 @@ export default class SectionHeader extends Component {
     if (isClassic) {
       return (
         <div className='edit-header'>
-          <Header article={article.attributes}>
+          <Header article={article.attributes} date={article.getPublishDate()}>
             {this.renderTitle(article)}
             {this.renderLeadParagraph(article)}
           </Header>
@@ -145,7 +145,7 @@ export default class SectionHeader extends Component {
             />
           }
 
-          <Header article={article.attributes}>
+          <Header article={article.attributes} date={article.getPublishDate()}>
             <span>Missing Vertical</span>
             {this.renderTitle(article)}
             {isFeature && this.renderFeatureDeck(article)}

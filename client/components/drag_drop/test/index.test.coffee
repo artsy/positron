@@ -22,6 +22,7 @@ describe 'DragDropContainer Default', ->
       benv.expose
         $: benv.require 'jquery'
       global.HTMLElement = () -> {}
+      global.Image = () => {}
       window.matchMedia = sinon.stub().returns(
         {
           matches: false
@@ -145,6 +146,7 @@ describe 'DragDropContainer Vertical', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
+      global.Image = () => {}
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require resolve __dirname, '../drag_source.coffee'
@@ -153,9 +155,8 @@ describe 'DragDropContainer Vertical', ->
       SectionTool = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
-      SectionContainer = benv.requireWithJadeify(
+      SectionContainer = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_container/index.coffee'
-        ['icons']
       )
       ImageCollection = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/index.coffee'
