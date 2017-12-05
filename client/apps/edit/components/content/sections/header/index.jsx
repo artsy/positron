@@ -42,7 +42,7 @@ export class SectionHeader extends Component {
     return (
       <FileInput
         type='simple'
-        onUpload={(image) => this.onChangeHero('url', image)}
+        onUpload={(src) => this.onChangeHero('url', src)}
         prompt={prompt}
         video
         onProgress={this.onProgress}
