@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { MagazinePreview } from './magazine_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
@@ -15,7 +16,7 @@ export class DisplayMagazine extends Component {
     return (
       <Row className='DisplayMagazine'>
 
-        <Col lg={4}>
+        <Col xs={4}>
           <div className='field-group'>
             <label>Magazine Image</label>
             <ImageUpload
@@ -52,8 +53,8 @@ export class DisplayMagazine extends Component {
           </div>
         </Col>
 
-        <Col lg={8}>
-          preview goes here
+        <Col xs={8}>
+          <MagazinePreview article={article} />
         </Col>
       </Row>
     )

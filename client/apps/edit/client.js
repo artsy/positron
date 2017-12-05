@@ -16,10 +16,6 @@ import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
 import { data as sd } from 'sharify'
 
-const onChange = (key, value) => {
-  debugger
-}
-
 export function init () {
   const article = new Article(sd.ARTICLE)
   const channel = new Channel(sd.CURRENT_CHANNEL)
@@ -40,7 +36,6 @@ export function init () {
       <EditDisplay
         article={article}
         channel={channel}
-        onChange={onChange}
       />
     </Provider>,
     $('#edit-display')[0]

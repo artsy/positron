@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { SocialPreview } from './social_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
@@ -42,8 +43,9 @@ export class DisplaySocial extends Component {
             />
           </div>
         </Col>
+
         <Col lg={8}>
-          preview goes here
+          <SocialPreview article={article} />
         </Col>
       </Row>
     )

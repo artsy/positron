@@ -8,7 +8,7 @@ export const EmailPreview = (props) => {
   const image = image_url || article.get('thumbnail_image')
 
   return (
-    <div className='edit-display__prev-email'>
+    <div className='edit-display__preview edit-display__prev-email'>
       <div className='edit-display__prev-email--placeholder'>
         {image
           ? <img src={crop(image, { width: 320, height: 188 })} />

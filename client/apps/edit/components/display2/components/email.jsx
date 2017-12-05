@@ -76,10 +76,9 @@ export class DisplayEmail extends Component {
 
         </Col>
 
-        <Col xs={8}>
-          <div className='edit-display__preview'>
-            <EmailPreview article={article} />
-          </div>
+        <Col xs={8} className='col--right'>
+          <EmailPreview article={article} />
+
           <div className='field-group--inline'>
             <div className='field-group'>
               <label>Credit Line</label>

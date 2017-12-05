@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { SearchPreview } from './search_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 
 export class DisplaySearch extends Component {
@@ -13,7 +14,7 @@ export class DisplaySearch extends Component {
     const { article, onChange } = this.props
     return (
       <Row className='DisplaySearch'>
-        <Col lg={4}>
+        <Col xs={4}>
           <div className='field-group'>
             <CharacterLimit
               label='Search Headline'
@@ -33,8 +34,9 @@ export class DisplaySearch extends Component {
             />
           </div>
         </Col>
-        <Col lg={8}>
-          preview goes here
+
+        <Col xs={8}>
+          <SearchPreview article={article} />
         </Col>
       </Row>
     )
