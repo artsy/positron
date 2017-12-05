@@ -24,11 +24,10 @@ export class DropDownList extends React.Component {
   }
 
   setActiveSections = (index) => {
-    let activeSections
-    const sections = this.state.activeSections
+    let { activeSections } = this.state
 
-    if (sections.includes(index)) {
-      activeSections = without(sections, index)
+    if (activeSections.includes(index)) {
+      activeSections = without(activeSections, index)
     } else {
       activeSections.push(index)
     }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { EmailPreview } from './email_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
@@ -76,8 +77,9 @@ export class DisplayEmail extends Component {
         </Col>
 
         <Col xs={8}>
-          <div>preview goes here</div>
-
+          <div className='edit-display__preview'>
+            <EmailPreview article={article} />
+          </div>
           <div className='field-group--inline'>
             <div className='field-group'>
               <label>Credit Line</label>

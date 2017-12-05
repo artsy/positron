@@ -24,7 +24,12 @@ export class EditDisplay extends Component {
 
     if (channel.isEditorial()) {
       return (
-        <DropDownList sections={sections} className='EditDisplay admin-form-container'>
+        <DropDownList
+          className='EditDisplay admin-form-container'
+          activeSections={[0]}
+          openMany
+          sections={sections}
+        >
           <DisplayMagazine
             article={article}
             onChange={onChange}
@@ -43,7 +48,6 @@ export class EditDisplay extends Component {
           />
         </DropDownList>
       )
-
     } else {
       return (
         <div>Hello</div>
