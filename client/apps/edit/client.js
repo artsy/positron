@@ -7,10 +7,9 @@ import Article from '../../models/article'
 import Channel from '../../models/channel'
 import EditLayout from './components/layout'
 import EditHeader from './components/header'
-// import EditDisplay from './components/display'
+import EditDisplay from './components/display'
 import EditAdmin from './components/admin'
 import EditContent from './components/content'
-import { EditDisplay } from './components/display2'
 import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
@@ -27,19 +26,9 @@ export function init () {
 
   new EditLayout({ el: $('#layout-content'), article, channel })
   new EditHeader({ el: $('#edit-header'), article })
-  // new EditDisplay({ el: $('#edit-display'), article })
+  new EditDisplay({ el: $('#edit-display'), article })
 
   const store = createReduxStore(reducers, initialState)
-
-  ReactDOM.render(
-    <Provider store={store}>
-      <EditDisplay
-        article={article}
-        channel={channel}
-      />
-    </Provider>,
-    $('#edit-display')[0]
-  )
 
   ReactDOM.render(
     <Provider store={store}>
