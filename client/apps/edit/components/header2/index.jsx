@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
-import { data as sd } from 'sharify'
+import {
+  greenRegular,
+  grayMedium,
+  redMedium
+} from '@artsy/reaction-force/dist/Assets/Colors'
 
 export class EditHeader extends Component {
   static propTypes = {
@@ -18,7 +22,8 @@ export class EditHeader extends Component {
   }
 
   isPublishable = () => {
-    return this.contentIsComplete() && this.displayIsComplete()
+    const { article } = this.props
+    return article.finishedContent() && article.finishedThumbnail()
   }
 
   onPublish = () => {
@@ -44,11 +49,11 @@ export class EditHeader extends Component {
     const { isSaving, isSaved } = this.props.edit
 
     if (isSaving) {
-      return 'limegreen'
+      return greenRegular
     } else if (isSaved) {
       return 'black'
     } else {
-      return '#f7625a'
+      return redMedium
     }
   }
 
@@ -81,16 +86,6 @@ export class EditHeader extends Component {
     }
   }
 
-  contentIsComplete = () => {
-    const { article } = this.props
-    return article.get('title') && article.get('title').length
-  }
-
-  displayIsComplete = () => {
-    const { article } = this.props
-    return article.get('thumbnail_title') && article.get('thumbnail_image')
-  }
-
   render () {
     const { article, actions, channel, user } = this.props
     const { activeSection, isDeleting } = this.props.edit
@@ -109,7 +104,7 @@ export class EditHeader extends Component {
               <Icon
                 className='icon'
                 name='check'
-                color={this.contentIsComplete() ? 'limegreen' : '#ccc'}
+                color={article.finishedContent() ? greenRegular : grayMedium}
               />
             </button>
 
@@ -122,7 +117,7 @@ export class EditHeader extends Component {
               <Icon
                 className='icon'
                 name='check'
-                color={this.displayIsComplete() ? 'limegreen' : '#ccc'}
+                color={article.finishedThumbnail() ? greenRegular : grayMedium}
               />
             </button>
 
@@ -158,8 +153,7 @@ export class EditHeader extends Component {
 
         <div className='EditHeader__right'>
           <button
-            className='avant-garde-button'
-            style={{border: 'none'}}
+            className='avant-garde-button delete'
             onClick={this.onDelete}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
@@ -175,7 +169,7 @@ export class EditHeader extends Component {
             {this.getSaveText()}
           </button>
 
-          <a href={`${sd.FORCE_URL}/article/${article.get('slug')}`} target='_blank'>
+          <a href={article.getFullSlug()} target='_blank'>
             <button className='avant-garde-button'>
               {article.get('published') ? 'View' : 'Preview'}
             </button>
