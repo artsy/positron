@@ -56,12 +56,12 @@ module.exports = (app) ->
   setupAuth app
   app.use locals
   app.use helpers
-  app.use ua
   app.use sameOrigin
 
   # Mount display
   app.use require '../../apps/display'
   # Mount and authorize apps
+  app.use ua
   app.use requireLogin
   app.use requireChannel
   app.use require '../../apps/edit'
