@@ -76,6 +76,7 @@ module.exports = React.createClass
           onClick: @removeSection
         },
           React.createElement(IconRemove, {background: '#ccc'})
+
       if @props.section.get('type') is 'video'
         React.createElement(
           SectionVideo, @sectionProps()

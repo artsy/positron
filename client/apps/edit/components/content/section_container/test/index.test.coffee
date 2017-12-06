@@ -44,7 +44,8 @@ describe 'SectionContainer', ->
         article: new Article
       }
       @SectionContainer.__set__ 'Text', ->
-      @component = ReactDOM.render React.createElement(@SectionContainer, @props
+      @component = ReactDOM.render React.createElement(
+        @SectionContainer, @props
       ), $("<div></div>")[0], => setTimeout =>
         @component.setState = sinon.stub()
         done()
