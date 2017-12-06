@@ -33,9 +33,7 @@ describe 'SectionList', ->
         __dirname, '../../../../../../components/rich_text/components/paragraph.coffee'
       )
       @SectionList.__set__ 'SectionTool', @SectionTool
-      @SectionContainer = benv.requireWithJadeify(
-        resolve(__dirname, '../../section_container/index'), ['icons']
-      )
+      @SectionContainer = benv.require resolve(__dirname, '../../section_container/index')
       @ImageCollection = benv.require(
         resolve(__dirname, '../../sections/image_collection/index')
       )

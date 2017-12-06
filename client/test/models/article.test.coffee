@@ -95,20 +95,20 @@ describe "Article", ->
 
     it 'returns the current date if unpublished and no scheduled_publish_at', ->
       @article.set published: false
-      now = moment().format('MMM D, YYYY')
+      now = moment().toISOString()
       @article.getPublishDate().should.containEql now
 
     it 'returns scheduled_publish_at if unpublished and scheduled', ->
       @article.set published: false
       scheduled = moment().add(1, 'years')
       @article.set('scheduled_publish_at', scheduled.toISOString())
-      @article.getPublishDate().should.containEql scheduled.format('MMM D, YYYY')
+      @article.getPublishDate().should.containEql scheduled.toISOString()
 
     it 'returns published_at if published', ->
       @article.set published: true
       published = moment().subtract(1, 'years')
       @article.set published_at: published.toISOString()
-      @article.getPublishDate().should.containEql published.format('MMM D, YYYY')
+      @article.getPublishDate().should.containEql published.toISOString()
 
   describe '#getObjectAttribute', ->
 
