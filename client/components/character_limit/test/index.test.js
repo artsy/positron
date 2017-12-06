@@ -30,7 +30,7 @@ describe('Character Limit', () => {
         <CharacterLimit {...props} />
       )
       expect(component.text()).toMatch('26 Characters')
-      expect(component.html()).toMatch('style="color: rgb(102, 102, 102);"')
+      expect(component.html()).toMatch('style="color: rgb(153, 153, 153);"')
       expect(component.html()).toMatch('value="Sample copy lorem ipsum."')
     })
 
