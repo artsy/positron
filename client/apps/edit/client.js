@@ -7,7 +7,6 @@ import Article from '../../models/article'
 import Channel from '../../models/channel'
 import EditContainer from './components/edit_container'
 import EditLayout from './components/layout'
-import EditDisplay from './components/display'
 import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
@@ -23,7 +22,6 @@ export function init () {
   })
 
   new EditLayout({ el: $('#layout-content'), article, channel })
-  new EditDisplay({ el: $('#edit-display'), article })
 
   const store = createReduxStore(reducers, initialState)
 

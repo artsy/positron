@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import * as Actions from 'client/actions/editActions'
 
 import { EditContent } from './content/index.jsx'
+import { EditDisplay } from './display2/index.jsx'
 import { EditHeader } from './header/index.jsx'
 import EditAdmin from './admin/index'
 
@@ -59,10 +60,12 @@ class EditContainer extends Component {
     }
 
     switch (activeSection) {
-      case 'content':
-        return <EditContent {...props} />
       case 'admin':
         return <EditAdmin {...props} />
+      case 'content':
+        return <EditContent {...props} />
+      case 'display':
+        return <EditDisplay {...props} />
     }
   }
 
