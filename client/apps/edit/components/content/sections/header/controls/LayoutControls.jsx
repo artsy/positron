@@ -18,7 +18,7 @@ export default class LayoutControls extends Component {
 
   getMenuColor = () => {
     const { hero } = this.props
-    const { type, url } = hero.attributes
+    const { type, url } = hero
 
     if (hero && type === 'fullscreen' && url && url.length) {
       return 'white'

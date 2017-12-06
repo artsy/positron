@@ -64,7 +64,7 @@ export class HeaderControls extends Component {
           />
         }
         <LayoutControls
-          hero={article.heroSection}
+          hero={article.heroSection.attributes}
           isOpen={isLayoutOpen}
           onChange={onChange}
           onClick={() => this.toggleControls('layout')}

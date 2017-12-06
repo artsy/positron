@@ -1,124 +1,53 @@
-@import '../stylus_lib'
-@import './preview'
-
-inputs-margin = 15px
-
-error-placeholder()
-  color red-color
-
-#edit-display
-  margin-top header-size
-
-.edit-display
-  padding-top 70px
-  &__section-title
+.EditDisplay
+  padding-top 40px
+  .DropDownItem__content
+    margin-top 40px
+  .field-group.flat-checkbox
     display flex
     align-items center
-    padding 15px 0
+  .edit-display__preview
+    margin-left 20px
+  .title-fill
+    color gray-dark-color
+    garamond l-caption
+    text-align right
+    width 100%
+    margin-top 5px
+    cursor pointer
+
+.DisplayEmail
+  .col--right
+    display flex
+    flex-direction column
+    justify-content space-between
+
+  .field-group--inline
+    margin-left 20px
+    .field-group
+      width 100%
+      &:first-child
+        margin-right 15px
+      &:last-child
+        margin-left 15px
+
+.DisplayPartner
+  &__preview
+    background-color gray-lightest-color
+    text-align center
+    .header
+      padding 40px
+    img
+      width 100%
     h1
       garamond headline
-    svg
-      margin-left 15px
-      transform rotate(270deg)
-    &.active svg
-      transform rotate(0deg)
-  &__inputs
-    padding 40px 0 120px 0
-    display none
-    textarea
-      resize none
-  &__image-upload
-    margin-bottom 30px
-  .label
+  &__edit
     display flex
-    justify-content space-between
-    .edit-char-count
-      color gray-dark-color
-      garamond m-caption
-      text-transform capitalize
-    .edit-char-count-limit
-      color red-color
-  &__email-credits div[class*="admin-form-"]
-    width 50%
-  &__use-article-title
-    cursor pointer
-    garamond('m-caption')
-    text-transform none
-    margin-top 5px
-    text-align right
-  &--partner
-    header
-      text-align center
-      width 100%
-      overflow hidden
-      background gray-lightest-color
-      h1
-        garamond headline
-        padding-top 30px
-      h2
-        garamond l-body
-        padding 5px 0 33px 0
-      img
-        width 860px
-        display block
-        margin auto
-    &-inputs
-      padding-top 0px
-      width 860px
-      margin 30px auto
-      label
-        avant-garde s-headline
-        > span
-          padding-bottom inputs-margin - 5
-          display inline-block
-    &-inputs.eti-error
-      textarea, .edit-display__image-upload
-        border-color red-color
-        color red-color
-        placeholder(error-placeholder)
-        *
-          transition-delay 0
-    &-left, &-right
-      display inline-block
-      vertical-align top
-    .image-upload-form
-      height 180px
-      width 270px
-      h1
-        margin-top 60px
-    &-right
-      width 590px
-      padding-left inputs-margin
-      position relative
-      textarea
-        width 100%
-        display block
-        height 180px
-        garamond headline
-      .edit-display__use-article-title
-        position absolute
-        display inline-block
-        margin-left 440px
-        avant-garde s-headline
-        text-decoration none
-        top 0
-        right 0
-        &:hover
-          border-bottom 2px solid
-      .edit-char-count
-        avant-garde s-headline
-        display inline-block
-        margin-left 5px
-      .edit-char-count-message
-        float right
-        padding-top 10px
-    .edit-char-count-limit
-      color red-color
-    .edit-title-textarea
-      padding 15px 20px
-  .admin-send-body-to-sailthru
-    display flex
-    margin-top 10px
-    align-items center
-    .flat-checkbox
-      width 30px
+    margin-top 40px
+  .CharacterLimit[data-type=textarea] .DraftEditor-root
+    min-height 166px
+    garamond headline
+
+#edit-display.edit-display--partner
+  margin-top 55px
+  .EditDisplay
+    padding-top 0px
