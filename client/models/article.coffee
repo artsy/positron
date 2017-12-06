@@ -40,7 +40,8 @@ module.exports = class Article extends Backbone.Model
     @get('title')?.length > 0
 
   getSlug: ->
-    ((@get('author')?.name + '-' + @get('thumbnail_title')?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,'')).toLowerCase()).replace(/\ /g,'-')
+    slug = if @get('slug') then @get('slug') else @get('thumbnail_title')
+    _s.slugify(@get('author')?.name + '-' + slug)
 
   getFullSlug: ->
     "https://artsy.net/article/" + @getSlug()
