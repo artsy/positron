@@ -1,4 +1,3 @@
-import Backbone from 'backbone'
 import React from 'react'
 import Article from '../../../../../../../../models/article'
 import LayoutControls from '../LayoutControls.jsx'
@@ -18,7 +17,7 @@ describe('Feature Header Controls', () => {
   describe('LayoutControls', () => {
     const props = {
       article: new Article(),
-      hero: new Backbone.Model(),
+      hero: {},
       onChange: jest.fn(),
       onClick: jest.fn()
     }
@@ -58,7 +57,6 @@ describe('Feature Header Controls', () => {
 
   describe('VideoControls', () => {
     let props
-    // let article = new Article(Fixtures.StandardArticle)
 
     beforeEach(() => {
       props = {
@@ -66,18 +64,18 @@ describe('Feature Header Controls', () => {
         channel: {
           isArtsyChannel: () => false
         },
-        hero: new Backbone.Model({
+        hero: {
           type: 'basic',
           url: 'foo',
           cover_image_url: 'bar'
-        }),
+        },
         onChange: jest.fn(),
         onClick: jest.fn()
       }
     })
 
     it('does not render controls if not a BasicHeader type', () => {
-      props.hero.set('type', 'video')
+      props.hero.type = 'video'
       const component = mount(
         <HeaderControls {...props} />
       )

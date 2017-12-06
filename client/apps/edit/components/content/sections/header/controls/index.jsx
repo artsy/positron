@@ -46,7 +46,7 @@ export class HeaderControls extends Component {
     const { isLayoutOpen, isVideoOpen } = this.state
     const { article, channel, hero, onChange } = this.props
     const isModalOpen = isLayoutOpen || isVideoOpen
-    const isBasicHero = hero.get('type') === 'basic'
+    const isBasicHero = hero.type === 'basic'
 
     return (
       <div className='edit-header__container'>
@@ -64,7 +64,7 @@ export class HeaderControls extends Component {
           />
         }
         <LayoutControls
-          hero={article.heroSection.attributes}
+          hero={hero}
           isOpen={isLayoutOpen}
           onChange={onChange}
           onClick={() => this.toggleControls('layout')}

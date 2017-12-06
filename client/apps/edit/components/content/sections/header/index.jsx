@@ -19,21 +19,35 @@ export class SectionHeader extends Component {
 
   onChangeHero = (key, value) => {
     const { article, onChange } = this.props
-    article.heroSection.set(key, value)
-    onChange('hero_section', article.heroSection.attributes)
+    const hero = article.get('hero_section')
+    hero[key] = value
+    onChange('hero_section', hero)
+    this.forceUpdate() // TODO - Dont force update
   }
 
   onProgress = (progress) => {
     this.setState({ progress })
   }
 
-  renderTitle (article) {
+  renderTitle = () => {
+    const { article, onChange } = this.props
+
     return (
       <PlainText
-        content={article.attributes.title}
-        onChange={(key, value) => this.props.onChange('title', value)}
+        content={article.get('title')}
+        onChange={(key, value) => onChange('title', value)}
         placeholder='Title'
         name='title'
+      />
+    )
+  }
+
+  renderFeatureDeck = (hero) => {
+    return (
+      <PlainText
+        content={hero.deck}
+        onChange={(content) => this.onChangeHero('deck', content)}
+        placeholder='Deck (optional)'
       />
     )
   }
@@ -50,8 +64,8 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderImage (heroSection) {
-    const { type, url } = heroSection.attributes
+  renderImage (hero) {
+    const { type, url } = hero
     const isFullscreen = type && type === 'fullscreen'
     const hasUrl = url && url.length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
@@ -80,7 +94,7 @@ export class SectionHeader extends Component {
     }
   }
 
-  renderProgress () {
+  renderProgress = () => {
     return (
       <div className='upload-progress-container'>
         <div
@@ -90,57 +104,59 @@ export class SectionHeader extends Component {
     )
   }
 
+  renderLeadParagraph = () => {
+    const { article, onChange } = this.props
+
+    return (
+      <Paragraph
+        html={article.get('lead_paragraph')}
+        onChange={(input) => onChange('lead_paragraph', input)}
+        placeholder='Lead Paragraph (optional)'
+        type='lead_paragraph'
+        linked={false}
+        stripLinebreaks
+        layout={article.get('layout')}
+      />
+    )
+  }
+
   render () {
     const { article, channel } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
+    const hero = article.get('hero_section')
 
     if (isClassic) {
       return (
         <div className='edit-header'>
           <Header article={article.attributes} date={article.getPublishDate()}>
-            {this.renderTitle(article)}
-
-            <Paragraph
-              html={article.get('lead_paragraph')}
-              onChange={(input) => this.props.onChange('lead_paragraph', input)}
-              placeholder='Lead Paragraph (optional)'
-              type='lead_paragraph'
-              linked={false}
-              stripLinebreaks
-              layout={article.get('layout')}
-            />
+            {this.renderTitle()}
+            {this.renderLeadParagraph()}
           </Header>
         </div>
       )
     } else {
-      const headerClass = isFeature ? (article.heroSection.get('type')) || 'text' : ''
+      const headerType = isFeature ? (hero.type) || 'text' : ''
 
       return (
         <div
-          className={'edit-header ' + headerClass}
-          data-type={isFeature && (article.heroSection.get('type') || 'text')}
+          className={'edit-header ' + headerType}
+          data-type={headerType}
         >
           {isFeature &&
             <HeaderControls
               onChange={this.onChangeHero}
               article={article}
               channel={channel}
-              hero={article.heroSection}
+              hero={hero}
             />
           }
 
           <Header article={article.attributes} date={article.getPublishDate()}>
             <span>Missing Vertical</span>
-            {this.renderTitle(article)}
-            {isFeature &&
-              <PlainText
-                content={article.heroSection.get('deck')}
-                onChange={(content) => this.onChangeHero('deck', content)}
-                placeholder='Deck (optional)'
-              />
-            }
-            {isFeature && this.renderImage(article.heroSection)}
+            {this.renderTitle()}
+            {isFeature && this.renderFeatureDeck(hero)}
+            {isFeature && this.renderImage(hero)}
           </Header>
         </div>
       )
