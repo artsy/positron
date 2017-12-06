@@ -1,4 +1,5 @@
 _ = require 'underscore'
+{ SectionFooter } = require './sections/footer/index.jsx'
 Header = require './sections/header/index.jsx'
 Hero = require './sections/hero/index.jsx'
 React = require 'react'
@@ -32,7 +33,10 @@ EditContent = React.createClass
     @setState lastUpdate: Date.now()
 
   render: ->
-    div {className: 'edit-section-layout ' + @props.article.get('layout')},
+    div {
+      className: 'edit-section-layout ' + @props.article.get('layout')
+      'data-layout': @props.article.get('layout')
+    },
       if @props.article.get('layout') is 'classic' and
        (@props.article.get('hero_section') != null or @props.channel.hasFeature('hero'))
         React.createElement(
@@ -54,9 +58,15 @@ EditContent = React.createClass
       )
       SectionList {
         sections: @props.article.sections
-        saveArticle: @saveArticle
         article: @props.article
         channel: @props.channel
       }
+      React.createElement(
+        SectionFooter, {
+          article: @props.article
+          channel: @props.channel
+          onChange: @saveArticle
+        }
+      )
 
 module.exports = EditContent
