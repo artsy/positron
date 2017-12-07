@@ -32,6 +32,8 @@ describe 'EditContent', ->
       HeroSection = benv.require resolve(__dirname, '../sections/hero/index.jsx')
       SectionList = @SectionList = sinon.stub()
       Header = benv.require resolve(__dirname, '../sections/header')
+      Footer = benv.require resolve(__dirname, '../sections/footer')
+      @EditContent.__set__ 'Footer', Footer
       @EditContent.__set__ 'HeroSection', HeroSection
       @EditContent.__set__ 'Header', Header
       @EditContent.__set__ 'SectionList', SectionList
@@ -75,6 +77,10 @@ describe 'EditContent', ->
 
     it 'renders the section list', ->
       @SectionList.called.should.eql true
+
+    it 'renders the footer section', ->
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<div class="SectionFooter">'
+
 
   describe '#saveArticle', ->
 

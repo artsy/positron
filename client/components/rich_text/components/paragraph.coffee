@@ -113,8 +113,8 @@ module.exports = React.createClass
       @promptForLink() if @hasLinks()
       return 'handled'
     if e in ['bold', 'italic']
-      return 'handled' if @props.postscript and e is 'italic'
-      return 'handled' if @props.caption and e is 'bold'
+      return 'handled' if @props.type is 'postscript' and e is 'italic'
+      return 'handled' if @props.type is 'caption' and e is 'bold'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
     return 'not-handled'

@@ -11,8 +11,9 @@ Text = React.createFactory require '../sections/text/index.coffee'
 Slideshow = React.createFactory require '../sections/slideshow/index.coffee'
 Embed = React.createFactory require '../sections/embed/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
+IconDrag = require('@artsy/reaction-force/dist/Components/Publishing').IconDrag
+IconRemove = require('@artsy/reaction-force/dist/Components/Publishing').IconRemove
 { div, nav, button } = React.DOM
-icons = -> require('../../icons.jade') arguments...
 
 module.exports = React.createClass
   displayName: 'SectionContainer'
@@ -68,13 +69,14 @@ module.exports = React.createClass
         unless @props.isHero
           button {
             className: "edit-section__drag button-reset"
-            dangerouslySetInnerHTML: __html: $(icons()).filter('.draggable').html()
-          }
+          },
+            React.createElement(IconDrag, {background: '#ccc'})
         button {
           className: "edit-section__remove button-reset"
           onClick: @removeSection
-          dangerouslySetInnerHTML: __html: $(icons()).filter('.remove').html()
-        }
+        },
+          React.createElement(IconRemove, {background: '#ccc'})
+
       if @props.section.get('type') is 'video'
         React.createElement(
           SectionVideo, @sectionProps()

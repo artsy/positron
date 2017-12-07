@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.1.0",
-    "@artsy/reaction-force": "^0.12.11",
+    "@artsy/reaction-force": "^0.13.1",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",

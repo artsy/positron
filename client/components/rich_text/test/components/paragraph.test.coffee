@@ -102,10 +102,26 @@ describe 'Rich Text: Paragraph', ->
       @component.handleKeyCommand('bold')
       @component.setState.args[0][0].html.should.containEql '<strong>Illustration</strong>'
 
+    it 'Does not toggle bold if type is caption', ->
+      @props.linked = null
+      @props.type = 'caption'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      component.setState = sinon.stub()
+      component.handleKeyCommand('bold')
+      component.setState.called.should.eql false
+      
     it 'Can toggle italic styles', ->
       @component.setState = sinon.stub()
       @component.handleKeyCommand('italic')
       @component.setState.args[0][0].html.should.containEql '<em>Illustration</em>'
+
+    it 'Does not toggle italic if type is postscript', ->
+      @props.linked = null
+      @props.type = 'postscript'
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
+      component.setState = sinon.stub()
+      component.handleKeyCommand('italic')
+      component.setState.called.should.eql false
 
     it 'Can toggle a link prompt', ->
       @component.setState = sinon.stub()

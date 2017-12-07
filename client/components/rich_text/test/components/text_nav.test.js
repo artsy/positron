@@ -72,11 +72,12 @@ describe('TextNav', () => {
     })
 
     it('renders bold button if props.styles includes it', () => {
-      props.styles = [{name: 'bold'}]
+      props.styles = [{name: 'bold', label: 'B'}]
       const component = mount(
         <TextNav {...props} />
       )
       expect(component.html()).toMatch('class="bold"')
+      expect(component.find('button').text()).toBe('B')
       expect(component.find('button').length).toBe(1)
     })
 
@@ -91,20 +92,22 @@ describe('TextNav', () => {
     })
 
     it('renders h2 button if props.blocks includes it', () => {
-      props.blocks = [{name: 'header-two'}]
+      props.blocks = [{name: 'header-two', label: 'H2'}]
       const component = mount(
         <TextNav {...props} />
       )
       expect(component.html()).toMatch('class="header-two"')
+      expect(component.find('button').text()).toBe('H2')
       expect(component.find('button').length).toBe(1)
     })
 
     it('renders h3 button if props.blocks includes it', () => {
-      props.blocks = [{name: 'header-three'}]
+      props.blocks = [{name: 'header-three', label: 'H3'}]
       const component = mount(
         <TextNav {...props} />
       )
       expect(component.html()).toMatch('class="header-three"')
+      expect(component.find('button').text()).toBe('H3')
       expect(component.find('button').length).toBe(1)
     })
 

@@ -8,6 +8,7 @@ export class DropDownList extends React.Component {
     activeSection: PropTypes.number, // open 1 by default
     activeSections: PropTypes.array, // open many by default
     children: PropTypes.any.isRequired,
+    className: PropTypes.string,
     openMany: PropTypes.bool, // open more than one panel simultaneously
     sections: PropTypes.array.isRequired // array of objects with title or name
   }
@@ -23,11 +24,10 @@ export class DropDownList extends React.Component {
   }
 
   setActiveSections = (index) => {
-    let activeSections
-    const sections = this.state.activeSections
+    let { activeSections } = this.state
 
-    if (sections.includes(index)) {
-      activeSections = without(sections, index)
+    if (activeSections.includes(index)) {
+      activeSections = without(activeSections, index)
     } else {
       activeSections.push(index)
     }
@@ -51,11 +51,11 @@ export class DropDownList extends React.Component {
   }
 
   render () {
-    const { children, openMany, sections } = this.props
+    const { children, className, openMany, sections } = this.props
     const onOpen = openMany ? this.setActiveSections : this.setActiveSection
 
     return (
-      <div className='DropDownList'>
+      <div className={`DropDownList ${className}`}>
         {children.map((child, i) =>
           <DropDownItem
             key={i}

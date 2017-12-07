@@ -33,7 +33,6 @@ export default class LayoutControls extends Component {
   render () {
     const { isOpen, onClick } = this.props
 
-    // Toggle change header to see login action dispatched after 500ms
     return (
       <div className='edit-header--controls'>
         <div className='edit-header--controls__menu'>

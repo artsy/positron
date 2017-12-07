@@ -44,6 +44,7 @@ export const keyBindingFnParagraph = (e) => {
     if (e.keyCode === 75) {
       return 'link-prompt'
     }
+  } else {
+    return getDefaultKeyBinding(e)
   }
-  return getDefaultKeyBinding(e)
 }
