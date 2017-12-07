@@ -5,11 +5,7 @@ import { EditHeader } from '../index'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
-import {
-  greenRegular,
-  grayMedium,
-  redMedium
-} from '@artsy/reaction-force/dist/Assets/Colors'
+import colors from '@artsy/reaction-force/dist/Assets/Colors'
 
 describe('Edit Header Controls', () => {
   let props
@@ -65,7 +61,7 @@ describe('Edit Header Controls', () => {
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find(Icon).first().props().color).toBe(greenRegular)
+      expect(component.find(Icon).first().props().color).toBe(colors.greenRegular)
     })
 
     it('Content indicates non-completion', () => {
@@ -73,7 +69,7 @@ describe('Edit Header Controls', () => {
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find(Icon).first().props().color).toBe(grayMedium)
+      expect(component.find(Icon).first().props().color).toBe(colors.grayMedium)
     })
 
     it('Display indicates completion if complete', () => {
@@ -81,14 +77,15 @@ describe('Edit Header Controls', () => {
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find(Icon).last().props().color).toBe(greenRegular)
+      expect(component.find(Icon).last().props().color).toBe(colors.greenRegular)
     })
 
     it('Display indicates non-completion', () => {
+      delete props.article.attributes.thumbnail_image
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find(Icon).last().props().color).toBe(grayMedium)
+      expect(component.find(Icon).last().props().color).toBe(colors.grayMedium)
     })
   })
 
@@ -248,7 +245,7 @@ describe('Edit Header Controls', () => {
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find('button').at(4).props().style.color).toBe(redMedium)
+      expect(component.find('button').at(4).props().style.color).toBe(colors.redMedium)
     })
 
     it('Color is green if isSaving', () => {
@@ -256,7 +253,7 @@ describe('Edit Header Controls', () => {
       const component = mount(
         <EditHeader {...props} />
       )
-      expect(component.find('button').at(4).props().style.color).toBe(greenRegular)
+      expect(component.find('button').at(4).props().style.color).toBe(colors.greenRegular)
     })
 
     it('Color is black if isSaved', () => {

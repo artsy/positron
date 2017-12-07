@@ -12,6 +12,7 @@ export class Controls extends Component {
     isHero: PropTypes.bool,
     section: PropTypes.object,
     sectionLayouts: PropTypes.bool,
+    onChange: PropTypes.func,
     onProgress: PropTypes.func
   }
 
@@ -22,24 +23,28 @@ export class Controls extends Component {
   }
 
   onCoverImageChange = (url) => {
+    const { onChange, section } = this.props
     const isValid = isEmpty(url) || isWebUri(url)
 
     if (isValid) {
-      this.props.section.set('cover_image_url', url)
+      section.set('cover_image_url', url)
+      onChange && onChange('cover_image_url', url)
     }
   }
 
   onVideoUrlChange = () => {
+    const { onChange, section } = this.props
     const url = this.refs.input.value
 
     if (isEmpty(url)) {
-      this.props.section.set({
+      section.set({
         url: '',
         cover_image_url: ''
       })
     } else if (isWebUri(url)) {
-      this.props.section.set({url})
+      section.set({url})
     }
+    onChange && onChange('url', url)
   }
 
   render () {

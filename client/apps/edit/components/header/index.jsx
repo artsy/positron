@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
-import {
-  greenRegular,
-  grayMedium,
-  redMedium
-} from '@artsy/reaction-force/dist/Assets/Colors'
+import colors from '@artsy/reaction-force/dist/Assets/Colors'
 
 export class EditHeader extends Component {
   static propTypes = {
@@ -49,11 +45,11 @@ export class EditHeader extends Component {
     const { isSaving, isSaved } = this.props.edit
 
     if (isSaving) {
-      return greenRegular
+      return colors.greenRegular
     } else if (isSaved) {
       return 'black'
     } else {
-      return redMedium
+      return colors.redMedium
     }
   }
 
@@ -89,6 +85,7 @@ export class EditHeader extends Component {
   render () {
     const { article, actions, channel, user } = this.props
     const { activeSection, isDeleting } = this.props.edit
+    const { grayMedium, greenRegular } = colors
 
     return (
       <div className='EditHeader'>

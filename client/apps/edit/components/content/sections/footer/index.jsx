@@ -3,7 +3,7 @@ import React from 'react'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
 
 export const SectionFooter = (props) => {
-  const { article, channel } = props
+  const { article, channel, onChange } = props
 
   return (
     <div className='SectionFooter'>
@@ -17,7 +17,7 @@ export const SectionFooter = (props) => {
             html={article.get('postscript') || ''}
             layout={article.get('layout')}
             linked
-            onChange={(html) => article.set('postscript', html)}
+            onChange={(html) => onChange('postscript', html)}
             placeholder='Postscript (optional)'
             type='postscript'
           />
@@ -31,5 +31,5 @@ export const SectionFooter = (props) => {
 SectionFooter.propTypes = {
   article: PropTypes.object.isRequired,
   channel: PropTypes.object.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func.isRequired
 }

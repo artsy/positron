@@ -1,53 +1,75 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import Section from '../../../../../../models/section'
 import SectionContainer from '../../section_container/index.coffee'
 import SectionTool from '../../section_tool/index.jsx'
 
-export default class SectionHero extends Component {
+export class SectionHero extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object,
+    onChange: PropTypes.func.isRequired
+  }
+
   constructor (props) {
     super(props)
-    this.state = { editing: false }
+
+    const hero = new Section(props.article.get('hero_section'))
+
+    hero.on('change', (hero) => {
+      props.onChange('hero_section', hero.attributes)
+    })
+
+    this.state = {
+      editing: false,
+      hero
+    }
+  }
+
+  onRemoveHero = () => {
+    this.state.hero.clear()
+    this.props.onChange('hero_section', null)
   }
 
   onSetEditing = (isEditing) => {
+    const hasHero = this.props.article.finishedHero()
+
     if (isEditing) {
       this.setState({ editing: true })
     } else {
+      if (!hasHero) {
+        this.onRemoveHero()
+      }
       this.setState({ editing: false })
     }
   }
 
   render () {
-    const { article, channel, section, sections } = this.props
-    const { editing } = this.state
+    const { article, channel } = this.props
+    const { editing, hero } = this.state
     return (
       <div className='edit-section--hero'>
-        { section.keys().length
+        {hero && hero.keys().length
           ? <SectionContainer
               article={article}
-              section={section}
-              sections={sections}
+              section={hero}
               onSetEditing={this.onSetEditing}
               isHero
               index={-1}
               editing={editing}
-              channel={channel} />
+              channel={channel}
+              onRemoveHero={this.onRemoveHero}
+            />
+
           : <SectionTool
-              section={section}
-              sections={sections}
+              section={hero}
               onSetEditing={this.onSetEditing}
               isHero
               index={-1}
-              editing={editing} />
+              editing={editing}
+            />
         }
       </div>
     )
   }
-}
-
-SectionHero.propTypes = {
-  article: PropTypes.object.isRequired,
-  channel: PropTypes.object,
-  section: PropTypes.object.isRequired,
-  sections: PropTypes.object.isRequired
 }

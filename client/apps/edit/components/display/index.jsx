@@ -10,16 +10,12 @@ import { DropDownList } from 'client/components/drop_down/drop_down_list'
 export class EditDisplay extends Component {
   static propTypes = {
     article: PropTypes.object,
-    channel: PropTypes.object
-  }
-
-  onChange = (key, value) => {
-    this.props.article.set(key, value)
-    // TODO: save with redux actions
+    channel: PropTypes.object,
+    onChange: PropTypes.func
   }
 
   render () {
-    const { article, channel } = this.props
+    const { article, channel, onChange } = this.props
     const sections = [
       {title: 'Magazine'},
       {title: 'Social'},
@@ -32,33 +28,33 @@ export class EditDisplay extends Component {
         <div className='EditDisplay'>
           <DisplayPartner
             article={article}
-            onChange={this.onChange}
+            onChange={onChange}
           />
         </div>
       )
     } else {
       return (
         <DropDownList
-          className='EditDisplay admin-form-container'
+          className='EditDisplay admin-form-container max-width-container'
           activeSections={[0]}
           openMany
           sections={sections}
         >
           <DisplayMagazine
             article={article}
-            onChange={this.onChange}
+            onChange={onChange}
           />
           <DisplaySocial
             article={article}
-            onChange={this.onChange}
+            onChange={onChange}
           />
           <DisplaySearch
             article={article}
-            onChange={this.onChange}
+            onChange={onChange}
           />
           <DisplayEmail
             article={article}
-            onChange={this.onChange}
+            onChange={onChange}
           />
         </DropDownList>
       )

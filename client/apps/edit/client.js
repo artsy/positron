@@ -1,15 +1,12 @@
-import * as appActions from 'client/actions/appActions'
+import * as editActions from 'client/actions/editActions'
 import _ from 'underscore'
 import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Article from '../../models/article'
 import Channel from '../../models/channel'
+import EditContainer from './components/edit_container'
 import EditLayout from './components/layout'
-import EditHeader from './components/header'
-import EditDisplay from './components/display'
-import EditAdmin from './components/admin'
-import EditContent from './components/content'
 import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
@@ -25,36 +22,19 @@ export function init () {
   })
 
   new EditLayout({ el: $('#layout-content'), article, channel })
-  new EditHeader({ el: $('#edit-header'), article })
-  new EditDisplay({ el: $('#edit-display'), article })
 
   const store = createReduxStore(reducers, initialState)
 
-  ReactDOM.render(
-    <Provider store={store}>
-      <EditAdmin
-        article={article}
-        channel={channel}
-      />
-    </Provider>,
-    $('#edit-admin')[0]
-  )
+  article.on('sync', () => store.dispatch(editActions.changeSavedStatus(true)))
 
   ReactDOM.render(
     <Provider store={store}>
-      <EditContent
+      <EditContainer
         article={article}
         channel={channel}
+        user={sd.USER}
       />
     </Provider>,
     $('#edit-content')[0]
   )
-
-  // Example dispatch
-  store.dispatch(appActions.helloWorld({
-    status: 'hello how are you?'
-  }))
-
-  // Example of how to get state directly from store
-  // console.log(store.getState())
 }

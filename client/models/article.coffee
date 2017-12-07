@@ -28,10 +28,6 @@ module.exports = class Article extends Backbone.Model
       @mentionedArtists = new Artists
       @featuredArtworks = new Artworks
       @mentionedArtworks = new Artworks
-      @heroSection = new Backbone.Model @get 'hero_section'
-      @on 'change:hero_section', =>
-        @heroSection.set @get 'hero_section'
-      @heroSection.destroy = @heroSection.clear
 
   stateName: ->
     if @get('published') then 'Article' else 'Draft'
@@ -81,6 +77,12 @@ module.exports = class Article extends Backbone.Model
     @get('thumbnail_title')?.length > 0 and
     @get('thumbnail_image')?.length > 0
 
+  finishedHero: ->
+    hero = @get('hero_section')
+    hasImages = hero.images && hero.images.length
+    hasVideo = hero.url && hero.url.length
+    return hasImages || hasVideo
+
   fetchFeatured: (options = {}) ->
     options.success = _.after 3, options.success if options.success?
     @featuredPrimaryArtists.getOrFetchIds(
@@ -115,10 +117,6 @@ module.exports = class Article extends Backbone.Model
   toJSON: ->
     extended = {}
     extended.sections = @sections.toJSON() if @sections?.length
-    if @heroSection?.keys().length
-      extended.hero_section = @heroSection.toJSON()
-    else if @heroSection
-      extended.hero_section = null
     _.extend super, extended
 
   replaceLink: (taggedText, link) ->

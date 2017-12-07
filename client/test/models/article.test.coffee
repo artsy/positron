@@ -31,16 +31,6 @@ describe "Article", ->
       @article.sections.reset []
       @article.toJSON().sections[0].body.should.equal 'Foobar'
 
-    it 'serializes the hero section if there is data', ->
-      @article.set hero_section: {}
-      @article.heroSection.set type: 'video', url: 'foo'
-      @article.toJSON().hero_section.type.should.equal 'video'
-      @article.toJSON().hero_section.url.should.equal 'foo'
-
-    it 'sets the hero section to null if there is no data', ->
-      @article.set hero_section: {}
-      JSON.stringify(@article.toJSON()).should.containEql '"hero_section":null'
-
     it 'serializes the lead paragraph if there is data', ->
       @article.set('lead_paragraph', '<p>hello</p>')
       @article.toJSON().lead_paragraph.should.eql '<p>hello</p>'
@@ -63,6 +53,20 @@ describe "Article", ->
         tags: ['foo']
       @article.finishedThumbnail().should.be.ok
 
+  describe '#finishedHero', ->
+
+    it 'returns true if hero has an image', ->
+      @article.set
+        hero_section:
+          images: [{url: 'image.com'}]
+      @article.finishedHero().should.be.ok
+
+    it 'returns true if hero has a video url', ->
+      @article.set
+        hero_section:
+          url: 'youtube.com'
+      @article.finishedHero().should.be.ok
+
   describe '#featuredList', ->
 
     it 'returns a mapped list of featured/mentioned artists ordered by name', ->
@@ -79,17 +83,6 @@ describe "Article", ->
         .should.equal 'andybobcharles'
       _.map(@article.featuredList('Artists'), (i) -> String i.featured).join('')
         .should.equal 'falsetruefalse'
-
-  describe 'heroSection', ->
-
-    it 'comes with a hero section that clears on destroy to manage state better', ->
-      @article.heroSection.destroy.toString()
-        .should.equal @article.heroSection.clear.toString()
-
-    it 'updates on sync bc we may use an empty model and then fetch later', ->
-      @article.set hero_section: { type: 'foo' }
-      @article.trigger 'sync'
-      @article.heroSection.get('type').should.equal 'foo'
 
   describe '#getPublishDate', ->
 

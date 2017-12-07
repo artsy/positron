@@ -78,7 +78,6 @@ describe 'SectionList', ->
           layout: 'feature'
           sections: @sections
         }
-        saveArticle: @saveArticle = sinon.stub()
         channel: new Channel
           type: 'editorial'
       }

@@ -4,11 +4,12 @@ import ModalCover from './ModalCover.jsx'
 import LayoutControls from './LayoutControls.jsx'
 import VideoControls from './VideoControls.jsx'
 
-export default class HeaderControls extends Component {
+export class HeaderControls extends Component {
   static propTypes = {
     article: PropTypes.object,
     channel: PropTypes.object,
     onChange: PropTypes.func.isRequired,
+    onProgress: PropTypes.func.isRequired,
     hero: PropTypes.object
   }
 
@@ -44,7 +45,7 @@ export default class HeaderControls extends Component {
 
   render () {
     const { isLayoutOpen, isVideoOpen } = this.state
-    const { article, channel, hero, onChange } = this.props
+    const { article, channel, hero, onChange, onProgress } = this.props
     const isModalOpen = isLayoutOpen || isVideoOpen
     const isBasicHero = hero.type === 'basic'
 
@@ -60,6 +61,8 @@ export default class HeaderControls extends Component {
             article={article}
             channel={channel}
             isOpen={isVideoOpen}
+            onChange={onChange}
+            onProgress={onProgress}
             onClick={() => this.toggleControls('video')}
           />
         }
