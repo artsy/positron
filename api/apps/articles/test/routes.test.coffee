@@ -104,7 +104,7 @@ describe 'routes', ->
       )
       @req.article = fixtures().articles
       routes.create @req, @res
-      @Article.save.args[0][0].author_id.should.equal @req.user._id
+      @Article.save.args[0][0].author_id.should.equal @req.user._id.toString()
 
   describe '#delete', ->
 

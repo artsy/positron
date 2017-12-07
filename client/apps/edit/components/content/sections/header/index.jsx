@@ -10,19 +10,12 @@ export class SectionHeader extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onChangeHero: PropTypes.func
   }
 
   state = {
     progress: null
-  }
-
-  onChangeHero = (key, value) => {
-    const { article, onChange } = this.props
-    const hero = article.get('hero_section')
-    hero[key] = value
-    onChange('hero_section', hero)
-    this.forceUpdate() // TODO - Dont force update
   }
 
   onProgress = (progress) => {
@@ -43,20 +36,24 @@ export class SectionHeader extends Component {
   }
 
   renderFeatureDeck = (hero) => {
+    const { onChangeHero } = this.props
+
     return (
       <PlainText
         content={hero.deck}
-        onChange={(content) => this.onChangeHero('deck', content)}
+        onChange={(content) => onChangeHero('deck', content)}
         placeholder='Deck (optional)'
       />
     )
   }
 
   renderFileUpload (prompt) {
+    const { onChangeHero } = this.props
+
     return (
       <FileInput
         type='simple'
-        onUpload={(src) => this.onChangeHero('url', src)}
+        onUpload={(src) => onChangeHero('url', src)}
         prompt={prompt}
         video
         onProgress={this.onProgress}
@@ -66,6 +63,7 @@ export class SectionHeader extends Component {
 
   renderImage (hero) {
     const { type, url } = hero
+    const { onChangeHero } = this.props
     const isFullscreen = type && type === 'fullscreen'
     const hasUrl = url && url.length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
@@ -80,7 +78,7 @@ export class SectionHeader extends Component {
       return (
         <div
           className='edit-header__remove'
-          onClick={() => this.onChangeHero('url', '')}>
+          onClick={() => onChangeHero('url', '')}>
           <IconRemove />
         </div>
       )
@@ -121,10 +119,10 @@ export class SectionHeader extends Component {
   }
 
   render () {
-    const { article, channel } = this.props
+    const { article, channel, onChangeHero } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
-    const hero = article.get('hero_section')
+    const hero = article.get('hero_section') || {}
 
     if (isClassic) {
       return (
@@ -136,7 +134,7 @@ export class SectionHeader extends Component {
         </div>
       )
     } else {
-      const headerType = isFeature ? (hero.type) || 'text' : ''
+      const headerType = isFeature ? (hero.type || 'text') : ''
 
       return (
         <div
@@ -145,7 +143,8 @@ export class SectionHeader extends Component {
         >
           {isFeature &&
             <HeaderControls
-              onChange={this.onChangeHero}
+              onChange={onChangeHero}
+              onProgress={this.onProgress}
               article={article}
               channel={channel}
               hero={hero}

@@ -32,9 +32,11 @@ module.exports = React.createClass
   removeSection: (e) ->
     e.stopPropagation()
     @props.section.destroy()
+    if @props.isHero
+      @props.onRemoveHero()
 
   getContentStartEnd: ->
-    types = @props.sections.map (section, i) => return {type: section.get 'type', index: i}
+    types = @props.sections?.map (section, i) => return {type: section.get 'type', index: i}
     start = _.findIndex(types, { type: 'text'})
     end = _.findLastIndex(types, { type: 'text'})
     return {start: start, end: end}

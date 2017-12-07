@@ -4,7 +4,7 @@ import LayoutControls from '../LayoutControls.jsx'
 import ModalCover from '../ModalCover.jsx'
 import VideoControls from '../VideoControls.jsx'
 import { HeaderControls } from '../index.jsx'
-import { SectionVideo } from '../../../video/index'
+import { Controls } from '../../../video/controls.jsx'
 import { mount } from 'enzyme'
 import {
   Fixtures,
@@ -19,7 +19,8 @@ describe('Feature Header Controls', () => {
       article: new Article(),
       hero: {},
       onChange: jest.fn(),
-      onClick: jest.fn()
+      onClick: jest.fn(),
+      onProgress: jest.fn()
     }
 
     it('renders change header controls', () => {
@@ -70,7 +71,8 @@ describe('Feature Header Controls', () => {
           cover_image_url: 'bar'
         },
         onChange: jest.fn(),
-        onClick: jest.fn()
+        onClick: jest.fn(),
+        onProgress: jest.fn()
       }
     })
 
@@ -98,7 +100,7 @@ describe('Feature Header Controls', () => {
       component.find('.edit-header--video-open').simulate('click')
       expect(component.state().isVideoOpen).toBe(true)
       expect(component.find(VideoControls).exists()).toEqual(true)
-      expect(component.find(SectionVideo).exists()).toEqual(true)
+      expect(component.find(Controls).exists()).toEqual(true)
       expect(component.find(ModalCover).exists()).toEqual(true)
     })
   })

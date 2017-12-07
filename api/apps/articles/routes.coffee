@@ -33,7 +33,7 @@ User = require '../users/model.coffee'
   unless User.hasChannelAccess req.user, (req.body.channel_id or req.body.partner_channel_id)
     return res.err(401, 'Unauthorized')
 
-  data = _.extend { author_id: req.user._id }, req.body
+  data = _.extend { author_id: req.user._id.toString() }, req.body
   Article.save data, req.user?.access_token, {}, (err, article) ->
     return next err if err
     res.send present article

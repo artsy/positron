@@ -9,11 +9,12 @@ export class EditContent extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onChangeHero: PropTypes.func.isRequired
   }
 
   render () {
-    const { article, channel, onChange } = this.props
+    const { article, channel, onChange, onChangeHero } = this.props
 
     return (
       <div
@@ -25,8 +26,7 @@ export class EditContent extends Component {
           <SectionHero
             article={article}
             channel={channel}
-            section={article.heroSection}
-            sections={article.sections}
+            onChange={onChange}
           />
         }
 
@@ -34,6 +34,7 @@ export class EditContent extends Component {
           article={article}
           channel={channel}
           onChange={onChange}
+          onChangeHero={onChangeHero}
         />
 
         <SectionList

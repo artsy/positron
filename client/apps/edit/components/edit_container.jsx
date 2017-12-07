@@ -21,12 +21,12 @@ class EditContainer extends Component {
   constructor (props) {
     super(props)
 
+    this.state = {
+      lastUpdated: null
+    }
+
     props.article.sections.on(
       'change add remove reset',
-      () => this.maybeSaveArticle()
-    )
-    props.article.heroSection.on(
-      'change remove',
       () => this.maybeSaveArticle()
     )
   }
@@ -38,6 +38,13 @@ class EditContainer extends Component {
     this.maybeSaveArticle()
   }
 
+  onChangeHero = (key, value) => {
+    const { article } = this.props
+    const hero = article.get('hero_section')
+    hero[key] = value
+    this.onChange('hero_section', hero)
+  }
+
   maybeSaveArticle = () => {
     const { article, actions } = this.props
     const { changeSavedStatus, saveArticle } = actions
@@ -47,6 +54,7 @@ class EditContainer extends Component {
     } else {
       saveArticle(article)
     }
+    this.setState({ lastUpdated: new Date() })
   }
 
   getActiveSection = () => {
@@ -56,7 +64,8 @@ class EditContainer extends Component {
     const props = {
       article,
       channel,
-      onChange: this.onChange
+      onChange: this.onChange,
+      onChangeHero: this.onChangeHero
     }
 
     switch (activeSection) {

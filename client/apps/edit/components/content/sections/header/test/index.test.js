@@ -14,7 +14,9 @@ jest.mock('react-sizeme', () => jest.fn(c => d => d))
 describe('Header', () => {
   describe('Classic', () => {
     const props = {
-      article: new Article(ClassicArticle)
+      article: new Article(ClassicArticle),
+      channel: {},
+      onChange: jest.fn()
     }
 
     it('renders the classic header', () => {
@@ -59,12 +61,23 @@ describe('Header', () => {
   })
 
   describe('Feature', () => {
-    const props = {
-      article: new Article(FeatureArticle)
-    }
-    props.article.heroSection.set('type', 'split')
+    let props = {}
+    let hero_section
+
+    beforeEach(() => {
+      props = {
+        article: new Article(FeatureArticle),
+        channel: {},
+        onChange: jest.fn(),
+        onChangeHero: jest.fn()
+      }
+      hero_section = FeatureArticle.hero_section
+    })
 
     it('renders the feature header', () => {
+      hero_section.type = 'split'
+      props.article.set({ hero_section })
+
       const component = mount(
         <SectionHeader {...props} />
       )
@@ -112,7 +125,9 @@ describe('Header', () => {
     })
 
     it('renders a file input if no file', () => {
-      props.article.heroSection.set('url', '')
+      delete hero_section.url
+      props.article.set({ hero_section })
+
       const component = mount(
         <SectionHeader {...props} />
       )
@@ -123,10 +138,10 @@ describe('Header', () => {
 
     describe('Layout: Fullscreen', () => {
       it('renders a file input when has file', () => {
-        props.article.heroSection.set({
-          type: 'fullscreen',
-          url: 'https://artsy-media-uploads.s3.amazonaws.com/z9w_n6UxxoZ_u1lzt4vwrw%2FHero+Loop+02.mp4'
-        })
+        hero_section.type = 'fullscreen'
+        hero_section.url = 'https://artsy-media-uploads.s3.amazonaws.com/z9w_n6UxxoZ_u1lzt4vwrw%2FHero+Loop+02.mp4'
+        props.article.set({ hero_section })
+
         const component = mount(
           <SectionHeader {...props} />
         )
@@ -135,6 +150,8 @@ describe('Header', () => {
       })
 
       it('renders change background prompt if has file', () => {
+        hero_section.url = 'https://artsy-media-uploads.s3.amazonaws.com/z9w_n6UxxoZ_u1lzt4vwrw%2FHero+Loop+02.mp4'
+        props.article.set({ hero_section })
         const component = mount(
           <SectionHeader {...props} />
         )
@@ -142,7 +159,9 @@ describe('Header', () => {
       })
 
       it('renders add background prompt if no file', () => {
-        props.article.heroSection.set({url: '', type: 'fullscreen'})
+        delete hero_section.url
+        hero_section.type = 'fullscreen'
+        props.article.set({ hero_section })
         const component = mount(
           <SectionHeader {...props} />
         )
@@ -153,7 +172,9 @@ describe('Header', () => {
 
   describe('Standard', () => {
     const props = {
-      article: new Article(StandardArticle)
+      article: new Article(StandardArticle),
+      channel: {},
+      onChange: jest.fn()
     }
 
     it('renders the standard header', () => {
