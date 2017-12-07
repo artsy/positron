@@ -31,7 +31,7 @@ Config = require '../utils/config.js'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
-Nav = React.createFactory require './nav.coffee'
+{ TextNav } = require './text_nav.jsx'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory Text
 
@@ -228,13 +228,16 @@ module.exports = React.createClass
   renderEditor: ->
     div { className: 'rich-text--paragraph' },
       if @state.showNav
-        Nav {
-          styles: Config.inlineStyles(@props.type)
-          toggleStyle: @toggleInlineStyle
-          promptForLink: @promptForLink if @hasLinks()
-          position: @state.selectionTarget
-        }
+        React.createElement(
+          TextNav, {
+            styles: Config.inlineStyles(@props.type)
+            toggleStyle: @toggleInlineStyle
+            promptForLink: @promptForLink if @hasLinks()
+            position: @state.selectionTarget
+          }
+        )
       div {
+        className: 'rich-text--paragraph__input'
         onClick: @focus
         onBlur: @onBlur
         onMouseUp: @checkSelection

@@ -48,10 +48,10 @@ describe 'Rich Text: Paragraph', ->
       @Paragraph.__set__ 'EditorState', EditorState
       Config = require '../../utils/config.js'
       @Paragraph.__set__ 'Config', Config
-      Nav = benv.requireWithJadeify(
-        resolve(__dirname, '../../components/nav'), ['icons']
+      { TextNav } = benv.require(
+        resolve(__dirname, '../../components/text_nav')
       )
-      @Paragraph.__set__ 'Nav', React.createFactory Nav
+      @Paragraph.__set__ 'TextNav', TextNav
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../components/input_url'), ['icons']
       )
@@ -118,44 +118,48 @@ describe 'Rich Text: Paragraph', ->
     it 'Prints Italic and Bold buttons by default', ->
       @props.linked = null
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      component.setState showNav: true
-      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="BOLD" class="BOLD">B</button>'
-      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="link" class="link">'
+      r.simulate.mouseUp r.find component, 'rich-text--paragraph__input'
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button class="italic">I</button><button class="bold">B</button>'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button class="link">'
 
     it 'Shows correct buttons if type unspecified and linked is true', ->
-      @component.setState showNav: true
-      $(ReactDOM.findDOMNode(@component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="BOLD" class="BOLD">B</button><button name="link" class="link">'
+      r.simulate.mouseUp r.find @component, 'rich-text--paragraph__input'
+      $(ReactDOM.findDOMNode(@component)).html().should.containEql(
+        '<button class="italic">I</button><button class="bold">B</button><button class="link">'
+      )
 
     it 'Does not show italic if type is postscript', ->
       @props.linked = null
       @props.type = 'postscript'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      component.setState showNav: true
-      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="BOLD" class="BOLD">B</button><button name="link" class="link">'
-      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="ITALIC" class="ITALIC">I</button>'
+      r.simulate.mouseUp r.find component, 'rich-text--paragraph__input'
+      component.setState = sinon.stub()
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button class="bold">B</button><button class="link">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button class="italic">I</button>'
 
     it 'Does not show bold if type is caption', ->
       @props.linked = null
       @props.type = 'caption'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      component.setState showNav: true
-      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button name="ITALIC" class="ITALIC">I</button><button name="link" class="link">'
-      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button name="BOLD" class="BOLD">B</button>'
+      r.simulate.mouseUp r.find component, 'rich-text--paragraph__input'
+      component.setState = sinon.stub()
+      $(ReactDOM.findDOMNode(component)).html().should.containEql '<button class="italic">I</button><button class="link">'
+      $(ReactDOM.findDOMNode(component)).html().should.not.containEql '<button class="bold">B</button>'
 
     it 'Can toggle bold styles', ->
-      @component.setState showNav: true
+      r.simulate.mouseUp r.find @component, 'rich-text--paragraph__input'
       @component.setState = sinon.stub()
-      r.simulate.mouseDown r.find @component, 'BOLD'
+      r.simulate.mouseDown r.find @component, 'bold'
       @component.setState.args[0][0].html.should.containEql '<strong>Illustration</strong>'
 
     it 'Can toggle italic styles', ->
-      @component.setState showNav: true
+      r.simulate.mouseUp r.find @component, 'rich-text--paragraph__input'
       @component.setState = sinon.stub()
-      r.simulate.mouseDown r.find @component, 'ITALIC'
+      r.simulate.mouseDown r.find @component, 'italic'
       @component.setState.args[0][0].html.should.containEql '<em>Illustration</em>'
 
     it 'Can toggle a link prompt', ->
-      @component.setState showNav: true
+      r.simulate.mouseUp r.find @component, 'rich-text--paragraph__input'
       @component.setState = sinon.stub()
       r.simulate.mouseDown r.find @component, 'link'
       @component.setState.args[0][0].selectionTarget.should.eql { top: 20, left: 40 }

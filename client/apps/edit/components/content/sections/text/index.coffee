@@ -4,7 +4,6 @@ _s = require 'underscore.string'
 sd = require('sharify').data
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Config = require './draft_config.js'
-# Nav = React.createFactory require '../../../../../../components/rich_text/components/nav.coffee'
 { TextNav } = require '../../../../../../components/rich_text/components/text_nav.jsx'
 InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
 Text = React.createFactory Text

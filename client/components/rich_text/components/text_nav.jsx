@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { flatten, map } from 'lodash'
+import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import {
   IconArtist,
   IconBlockquote,
@@ -37,7 +38,7 @@ export class TextNav extends React.Component {
       case 'link': {
         return promptForLink()
       }
-      case 'remove-formatting': {
+      case 'clear-formatting': {
         return makePlainText()
       }
     }
@@ -62,18 +63,18 @@ export class TextNav extends React.Component {
     if (promptForLink) {
       buttons.push({ name: 'link' })
     }
-    if (hasFeatures) {
+    if (hasFeatures && promptForLink) {
       buttons.push({ name: 'artist' })
     }
     if (makePlainText) {
-      buttons.push({ name: 'remove-formatting' })
+      buttons.push({ name: 'clear-formatting' })
     }
 
     return flatten(buttons)
   }
 
   getIcon (type) {
-    const props = { color: '#999' }
+    const props = { color: colors.grayDark }
 
     switch (type) {
       case 'artist': {
@@ -88,12 +89,23 @@ export class TextNav extends React.Component {
       case 'ordered-list-item': {
         return <IconOrderedList {...props} />
       }
-      case 'remove-formatting': {
+      case 'clear-formatting': {
         return <IconClearFormatting {...props} />
       }
       case 'unordered-list-item': {
         return <IconUnorderedList {...props} />
       }
+    }
+  }
+
+  getNavWidth = () => {
+    const buttons = this.getButtonArray()
+    if (buttons.length === 8) {
+      return '200px'
+    } else if (buttons.length > 8) {
+      return '250px'
+    } else {
+      return (buttons.length * 50) + 'px'
     }
   }
 
@@ -107,7 +119,7 @@ export class TextNav extends React.Component {
         style={{
           top: top,
           marginLeft: left,
-          width: buttons.length > 8 ? '250px' : '200px'
+          width: this.getNavWidth()
         }}
       >
         {buttons.map((button, i) =>
@@ -131,7 +143,7 @@ TextNav.propTypes = {
   blocks: PropTypes.array,
   hasFeatures: PropTypes.bool,
   makePlainText: PropTypes.func,
-  position: PropTypes.object.isRequired,
+  position: PropTypes.object,
   promptForLink: PropTypes.func,
   styles: PropTypes.array,
   toggleBlock: PropTypes.func,
