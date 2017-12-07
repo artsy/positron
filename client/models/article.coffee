@@ -40,7 +40,8 @@ module.exports = class Article extends Backbone.Model
     @get('title')?.length > 0
 
   getSlug: ->
-    ((@get('author')?.name + '-' + @get('thumbnail_title')?.replace(/[.,\/#!$%\^&\?*;:{}=\-_`~()]/g,'')).toLowerCase()).replace(/\ /g,'-')
+    slug = if @get('slug') then @get('slug') else @get('thumbnail_title')
+    _s.slugify(@get('author')?.name + '-' + slug)
 
   getFullSlug: ->
     "https://artsy.net/article/" + @getSlug()
@@ -56,7 +57,7 @@ module.exports = class Article extends Backbone.Model
       date = @get('published_at')
     else if @get('scheduled_publish_at')
       date = @get('scheduled_publish_at')
-    return moment(date).local().format('MMM D, YYYY h:mm a')
+    return moment(date).local().toISOString()
 
   date: (attr) ->
     if @get(attr)

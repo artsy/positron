@@ -29,13 +29,8 @@ describe 'SectionList', ->
       @SectionList = benv.require resolve(__dirname, '../index')
       @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
-      Paragraph = benv.require resolve(
-        __dirname, '../../../../../../components/rich_text/components/paragraph.coffee'
-      )
       @SectionList.__set__ 'SectionTool', @SectionTool
-      @SectionContainer = benv.requireWithJadeify(
-        resolve(__dirname, '../../section_container/index'), ['icons']
-      )
+      @SectionContainer = benv.require resolve(__dirname, '../../section_container/index')
       @ImageCollection = benv.require(
         resolve(__dirname, '../../sections/image_collection/index')
       )
@@ -44,7 +39,6 @@ describe 'SectionList', ->
       @SectionContainer.__set__ 'ImageCollection', React.createFactory @ImageCollection
       @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
-      @SectionList.__set__ 'Paragraph', React.createFactory Paragraph
       @props = {
         sections: @sections = new Sections [
           { body: 'Foo to the bar', type: 'text' }
@@ -98,16 +92,6 @@ describe 'SectionList', ->
     @component.render()
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'The Four Hedgehogs'
 
-  it 'renders the postscript on editorial channels', ->
-    @component.render()
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Postscript (optional)'
-
-  it 'does not render the postscript on non-editorial channels', ->
-    @props.channel.set 'type', 'partner'
-    component = ReactDOM.render React.createElement(@SectionList, @props), ($el = $ "<div></div>")[0], =>
-    component.render()
-    $(ReactDOM.findDOMNode(component)).html().should.not.containEql 'Postscript (optional)'
-
   it 'opens editing mode in the last added section', ->
     @component.setState = sinon.stub()
     @component.onNewSection @component.props.sections.last()
@@ -138,13 +122,3 @@ describe 'SectionList', ->
     component.render()
     r.simulate.click r.find(component, 'edit-section__remove')[0]
     @props.article.get('sections').length.should.eql 0
-
-  it '#setPostscript sets the postscript and saves article', ->
-    @component.setPostscript '<p>Here is a new postscript.</p>'
-    @component.props.article.get('postscript').should.eql '<p>Here is a new postscript.</p>'
-    @saveArticle.called.should.eql true
-
-  it '#setPostscript does not save empty html', ->
-    @component.setPostscript '<p></p>'
-    @saveArticle.called.should.eql true
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Postscript (optional)'
