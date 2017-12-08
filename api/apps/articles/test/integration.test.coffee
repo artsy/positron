@@ -8,6 +8,7 @@ describe 'articles endpoints', ->
 
   beforeEach (done) ->
     empty =>
+      @token = fixtures().users.access_token
       fabricate 'users', {}, (err, @user) =>
         @server = app.listen 5000, ->
           done()
@@ -73,7 +74,7 @@ describe 'articles endpoints', ->
     it 'creates articles', (done) ->
       request
         .post("http://localhost:5000/articles")
-        .set('X-Access-Token': @user.access_token)
+        .set('X-Access-Token': @token)
         .send(
           title: 'Hi'
           partner_channel_id: '5086df098523e60002000012'
@@ -91,7 +92,7 @@ describe 'articles endpoints', ->
       ], (err, articles) =>
         request
           .get("http://localhost:5000/articles?author_id=#{@user._id}&published=true&count=true")
-          .set('X-Access-Token': @user.access_token)
+          .set('X-Access-Token': @token)
           .end (err, res) ->
             res.body.total.should.equal 3
             res.body.count.should.equal 2
@@ -108,7 +109,7 @@ describe 'articles endpoints', ->
       ], (err, articles) =>
         request
         .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true")
-        .set('X-Access-Token': @user.access_token)
+        .set('X-Access-Token': @token)
         .end (err, res) ->
           res.body.total.should.equal 1
           res.body.count.should.equal 1
@@ -137,7 +138,7 @@ describe 'articles endpoints', ->
       ], (err, articles) =>
         request
           .get("http://localhost:5000/articles/5086df098523e60002000012")
-          .set('X-Access-Token': @user.access_token)
+          .set('X-Access-Token': @token)
           .end (err, res) ->
             res.body.title.should.equal 'Cows on the prarie'
             done()
@@ -153,7 +154,7 @@ describe 'articles endpoints', ->
       ], (err, articles) =>
         request
           .get("http://localhost:5000/articles/5086df098523e60002000012")
-          .set('X-Access-Token': @user.access_token)
+          .set('X-Access-Token': @token)
           .end (err, res) ->
             res.body.title.should.equal 'Cows on the prarie'
             done()
@@ -173,7 +174,7 @@ describe 'articles endpoints', ->
             title: 'Hellow Wrld'
             author_id: '5086df098523e60002000012'
             channel_id: '5086df098523e60002000013'
-          }).set('X-Access-Token': @user.access_token)
+          }).set('X-Access-Token': @token)
           .end (err, res) ->
             res.body.title.should.equal 'Hellow Wrld'
             done()
@@ -189,7 +190,7 @@ describe 'articles endpoints', ->
       ], (err, articles) =>
         request
           .del("http://localhost:5000/articles/5086df098523e60002000012")
-          .set('X-Access-Token': @user.access_token)
+          .set('X-Access-Token': @token)
           .end (err, res) ->
             db.articles.count (err, count) ->
               count.should.equal 1

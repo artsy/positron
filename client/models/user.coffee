@@ -3,6 +3,7 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
+jwtDecode = require 'jwt-decode'
 
 module.exports = class User extends Backbone.Model
 
@@ -37,22 +38,15 @@ module.exports = class User extends Backbone.Model
           .end (err, result) ->
             cb null, result?.body
       (user, cb) =>
-        return cb(null, user, []) unless user.has_partner_access
-        request.get("#{sd.ARTSY_URL}/api/v1/me/partners")
-          .set('X-Access-Token': @get('access_token'))
-          .end (err, results) ->
-            cb null, user, results?.body
-      (user, partners, cb) =>
         request.get("#{sd.API_URL}/channels?user_id=#{@get('id')}&limit=50")
           .set('X-Access-Token': @get('access_token'))
           .end (err, results) ->
-            cb null, [ user, partners, results?.body?.results ]
+            cb null, [ user, results?.body?.results ]
     ], (err, results) =>
       return callback true if err
       user = results[0]
-      user.partner_ids = _.map (results[1] or []), (partner) ->
-        partner._id
-      user.channel_ids = _.pluck results[2], 'id'
+      user.partner_ids = jwtDecode(@get('access_token')).partner_ids
+      user.channel_ids = _.pluck results[1], 'id'
 
       for attr in ['id', 'type', 'name', 'email']
         return callback true unless _.isEqual user[attr], @get(attr)

@@ -13,6 +13,9 @@ describe "User", ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
+    User.__set__ 'jwtDecode', sinon.stub().returns({
+      partner_ids: ['4d8cd73191a5c50ce2000021']
+    })
 
   afterEach ->
     Backbone.sync.restore()
@@ -83,15 +86,15 @@ describe "User", ->
     it 'returns true if the name has changed', ->
       User.__set__ 'async',
         waterfall: sinon.stub().yields(null, [
-          _.extend fixtures().users,
-              name: 'A Girl'
-          [ { _id: '4d8cd73191a5c50ce2000022' } ]
+          _.extend(fixtures().users,
+            name: 'A Girl'
+          ),
           [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Arya Stark'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000021' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
@@ -102,14 +105,13 @@ describe "User", ->
           _.extend fixtures().users,
             name: 'Jon Snow'
             type: 'King in the North'
-          [ { _id: '4d8cd73191a5c50ce2000022' } ]
           [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Jon Snow'
         type: 'Lord Commander of the Night\'s Watch'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000021' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
@@ -120,14 +122,13 @@ describe "User", ->
           _.extend fixtures().users,
             name: 'Cersi Lannister'
             email: 'madkween@got'
-          [ { _id: '4d8cd73191a5c50ce2000022' } ]
           [ { id: '4d8cd73191a5c50ce200002b' } ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
         email: 'seekingrevenge@got'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000021' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
@@ -143,7 +144,7 @@ describe "User", ->
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000021' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
@@ -153,13 +154,12 @@ describe "User", ->
         waterfall: sinon.stub().yields(null, [
           _.extend fixtures().users,
             name: 'Cersi Lannister'
-          []
-          [ { id: '4d8cd73191a5c50ce200002b' }]
+          [{ id: '4d8cd73191a5c50ce200002b' }]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '456' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.true()
@@ -170,14 +170,13 @@ describe "User", ->
           _.extend fixtures().users,
             name: 'Cersi Lannister'
             channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-            partner_ids: [ '4d8cd73191a5c50ce2000022' ]
-          [ _id: '4d8cd73191a5c50ce2000022' ]
+            partner_ids: [ '4d8cd73191a5c50ce2000021' ]
           [ id: '4d8cd73191a5c50ce200002b' ]
         ])
       @user = new User _.extend fixtures().users, {
         name: 'Cersi Lannister'
         channel_ids: [ '4d8cd73191a5c50ce200002b' ]
-        partner_ids: [ '4d8cd73191a5c50ce2000022' ]
+        partner_ids: [ '4d8cd73191a5c50ce2000021' ]
       }
       @user.isOutdated (outdated) ->
         outdated.should.be.false()
