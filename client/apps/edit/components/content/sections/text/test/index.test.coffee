@@ -46,11 +46,11 @@ describe 'Section Text', ->
       InputUrl = benv.requireWithJadeify(
         resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
       )
-      Nav = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text/components/nav'), ['icons']
+      { TextNav } = benv.require(
+        resolve(__dirname, '../../../../../../../components/rich_text/components/text_nav')
       )
       @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
-      @SectionText.__set__ 'Nav', React.createFactory Nav
+      @SectionText.__set__ 'TextNav', TextNav
       @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @sections = new Backbone.Collection [
         {
@@ -129,12 +129,12 @@ describe 'Section Text', ->
 
     it 'Hides the menu when no text selected', ->
       @component.state.showMenu.should.eql false
-      $(ReactDOM.findDOMNode(@component)).find('.rich-text--edit-nav').length.should.eql 0
+      $(ReactDOM.findDOMNode(@component)).find('.TextNav').length.should.eql 0
 
     it 'Shows the menu when text is selected', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.state.showMenu.should.eql true
-      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--nav').length.should.eql 1
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.TextNav').length.should.eql 1
 
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
@@ -207,13 +207,13 @@ describe 'Section Text', ->
     it 'Can create italic entities', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      r.simulate.mouseDown r.find @shortComponent, 'ITALIC'
+      r.simulate.mouseDown r.find @shortComponent, 'italic'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><em>A short piece of <strong>text</strong></em></h2>'
 
     it 'Can create bold entities', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      r.simulate.mouseDown r.find @shortComponent, 'BOLD'
+      r.simulate.mouseDown r.find @shortComponent, 'bold'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
     it 'Can create strikethrough entities', ->
@@ -221,7 +221,7 @@ describe 'Section Text', ->
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
-      r.simulate.mouseDown r.find @shortComponent, 'STRIKETHROUGH'
+      r.simulate.mouseDown r.find @shortComponent, 'strikethrough'
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle h1 block changes (feature)', ->

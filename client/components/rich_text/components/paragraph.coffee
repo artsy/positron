@@ -31,7 +31,7 @@ Config = require '../utils/config.js'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
-Nav = React.createFactory require './nav.coffee'
+{ TextNav } = require './text_nav.jsx'
 InputUrl = React.createFactory require './input_url.coffee'
 Text = React.createFactory Text
 
@@ -66,8 +66,7 @@ module.exports = React.createClass
   onChange: (editorState) ->
     html = @convertToHtml editorState
     @setState editorState: editorState, html: html
-    if html != @props.html
-      @props.onChange(html)
+    @props.onChange(html)
 
   focus: ->
     @setState focus: true
@@ -114,8 +113,8 @@ module.exports = React.createClass
       @promptForLink() if @hasLinks()
       return 'handled'
     if e in ['bold', 'italic']
-      return 'handled' if @props.postscript and e is 'italic'
-      return 'handled' if @props.caption and e is 'bold'
+      return 'handled' if @props.type is 'postscript' and e is 'italic'
+      return 'handled' if @props.type is 'caption' and e is 'bold'
       newState = RichUtils.handleKeyCommand @state.editorState, e
       @onChange newState if newState
     return 'not-handled'
@@ -229,13 +228,16 @@ module.exports = React.createClass
   renderEditor: ->
     div { className: 'rich-text--paragraph' },
       if @state.showNav
-        Nav {
-          styles: Config.inlineStyles(@props.type)
-          toggleStyle: @toggleInlineStyle
-          promptForLink: @promptForLink if @hasLinks()
-          position: @state.selectionTarget
-        }
+        React.createElement(
+          TextNav, {
+            styles: Config.inlineStyles(@props.type)
+            toggleStyle: @toggleInlineStyle
+            promptForLink: @promptForLink if @hasLinks()
+            position: @state.selectionTarget
+          }
+        )
       div {
+        className: 'rich-text--paragraph__input'
         onClick: @focus
         onBlur: @onBlur
         onMouseUp: @checkSelection

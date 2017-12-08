@@ -6,7 +6,7 @@ import {
   Link
 } from 'client/components/rich_text/utils/decorators'
 
-export const inlineStyles = (layout, hasFeatures) => {
+export const inlineStyles = (layout) => {
   // for menu display only
   const styles = [
     {label: 'B', name: 'BOLD'},
