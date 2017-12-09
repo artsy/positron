@@ -55,9 +55,7 @@ save = (user, accessToken, callback) ->
   ], (err, results) ->
     return callback err if err
     partner_ids = jwtDecode(accessToken)?.partner_ids or []
-    user.partner_ids = _.map partner_ids, (id) ->
-      ObjectId id
-
+    user.partner_ids = _.map partner_ids, ObjectId
     user.channel_ids = _.pluck results[0], '_id'
     encryptedAccessToken = results[1]
     db.users.save {
