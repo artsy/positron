@@ -9,7 +9,6 @@ passport = require 'passport'
 OAuth2Strategy = require 'passport-oauth2'
 User = require '../../models/user'
 Channel = require '../../models/channel'
-jwtDecode = require 'jwt-decode'
 
 setupPassport = ->
   passport.use 'artsy', new OAuth2Strategy
@@ -23,8 +22,7 @@ setupPassport = ->
       headers: 'X-Access-Token': accessToken
       error: (m, err) -> done err
       success: (user) ->
-        partner_ids = jwtDecode(accessToken).partner_ids
-        id = user.get('channel_ids').concat(partner_ids)[0]
+        id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
         id = process.env.DEFAULT_PARTNER_ID if not id and user.get('type') is 'Admin'
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
