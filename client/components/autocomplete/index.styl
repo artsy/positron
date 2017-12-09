@@ -105,3 +105,44 @@
   line-height 1em
   padding 2px 20px 1px 4px
   text-transform capitalize
+
+
+.Autocomplete
+  input
+    padding-left 36px
+    background url("/icons/search.svg") 9px 9px no-repeat
+    background-size 18px
+    width 100%
+    &[disabled]
+      background-color gray-lightest-color !important
+  &__results-bg
+      position fixed
+      left 0
+      right 0
+      top 0
+      bottom 0
+      opacity 0
+      z-index -1
+  &__item
+    padding 10px
+    background white
+    display flex
+    align-items center
+    garamond l-body
+    border-bottom 1px solid gray-lighter-color
+    z-index 3
+    &:hover
+      background gray-lightest-color
+      cursor pointer
+    &---empty
+      background gray-lighter-color
+      color gray-darker-color
+  &__item-img
+    width 30px
+    height 30px
+    margin-right 15px
+    background gray-lighter-color
+    img
+      height 100%
+      width 100%
+      object-fit cover

@@ -4,6 +4,7 @@ import { SeriesAbout } from '@artsy/reaction-force/dist/Components/Publishing/Se
 import { SeriesTitle } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesTitle'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
+import { RelatedArticles } from '../sections/related_articles/index'
 
 export class EditSeries extends Component {
   static propTypes = {
@@ -38,7 +39,7 @@ export class EditSeries extends Component {
   }
 
   render () {
-    const { article } = this.props
+    const { article, onChange } = this.props
 
     return (
       <div className='EditSeries'>
@@ -46,6 +47,11 @@ export class EditSeries extends Component {
         <SeriesTitle
           article={article}
           editTitle={this.editTitle()}
+        />
+
+        <RelatedArticles
+          article={article}
+          onChange={onChange}
         />
 
         <SeriesAbout
