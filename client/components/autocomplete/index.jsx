@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { uniq } from 'lodash'
 
 export class Autocomplete extends Component {
   static propTypes = {
@@ -7,7 +8,7 @@ export class Autocomplete extends Component {
     filter: PropTypes.func,
     formatResult: PropTypes.func,
     items: PropTypes.array,
-    onChange: PropTypes.func,
+    onSelect: PropTypes.func,
     placeholder: PropTypes.string,
     url: PropTypes.string
   }
@@ -65,9 +66,9 @@ export class Autocomplete extends Component {
   }
 
   onSelect = (item) => {
-    const { onChange, items } = this.props
+    const { onSelect, items } = this.props
     items.push(item._id)
-    onChange(items)
+    onSelect(uniq(items))
     this.onBlur()
   }
 
@@ -118,7 +119,7 @@ export class Autocomplete extends Component {
         </div>
       )
     } else if (loading) {
-      renderedResults = <div className='Autocomplete__item-loading'>Loading</div>
+      renderedResults = <div className='Autocomplete__item-loading'><div className='loading-spinner' /></div>
     } else {
       renderedResults = <div className='Autocomplete__item--empty'>No results</div>
     }
