@@ -8,7 +8,7 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { EditSeries } from '../series'
 
-describe('EditArticle', () => {
+describe('EditSeries', () => {
   let props
 
   beforeEach(() => {

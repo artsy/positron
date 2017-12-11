@@ -15,6 +15,13 @@ export class EditArticleCard extends Component {
 
     return (
       <div className='EditArticleCard'>
+          <a
+            className='EditArticleCard__edit'
+            href={`/articles/${article._id}/edit`}
+            target='_blank'
+          >
+            Edit Article
+          </a>
 
         <div
           className='EditArticleCard__remove'

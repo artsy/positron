@@ -2,11 +2,12 @@ import async from 'async'
 import request from 'superagent'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { compact, without } from 'lodash'
+import { compact, pluck, without } from 'underscore'
 import { data as sd } from 'sharify'
 import { EditArticleCard } from './components/edit_article_card'
 import { RelatedArticlesInput } from './components/related_articles_input'
 import { ArticleCard } from '@artsy/reaction-force/dist/Components/Publishing/Series/ArticleCard'
+import DraggableList from '../../../../../../components/drag_drop/index.coffee'
 
 export class RelatedArticles extends Component {
   static propTypes = {
@@ -25,10 +26,9 @@ export class RelatedArticles extends Component {
 
   fetchArticles = () => {
     const { related_article_ids } = this.props.article.attributes
+    let relatedArticles = []
 
     if (related_article_ids && related_article_ids.length) {
-      let relatedArticles = []
-
       return async.each(related_article_ids, (id, cb) => {
         return request
           .get(`${sd.API_URL}/articles/${id}`)
@@ -50,7 +50,7 @@ export class RelatedArticles extends Component {
     } else {
       this.setState({
         loading: false,
-        relatedArticles: []
+        relatedArticles
       })
     }
   }
@@ -71,12 +71,26 @@ export class RelatedArticles extends Component {
     this.fetchArticles()
   }
 
+  onDragEnd = (relatedArticles) => {
+    const { onChange } = this.props
+    const newRelated = pluck(relatedArticles, '_id')
+
+    this.setState({ relatedArticles })
+    onChange('related_article_ids', newRelated)
+  }
+
   renderRelatedArticles = () => {
     const { article } = this.props
     const { relatedArticles } = this.state
 
     return (
       <div>
+        <DraggableList
+          items={relatedArticles}
+          onDragEnd={this.onDragEnd}
+          layout='vertical'
+          isDraggable
+        >
         {relatedArticles.map((relatedArticle, i) =>
           <EditArticleCard
             key={i}
@@ -85,6 +99,7 @@ export class RelatedArticles extends Component {
             onRemoveArticle={this.onRemoveArticle}
           />
         )}
+        </DraggableList>
       </div>
     )
   }

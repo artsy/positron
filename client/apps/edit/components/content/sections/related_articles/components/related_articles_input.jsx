@@ -20,7 +20,7 @@ export class RelatedArticlesInput extends Component {
 
         <Autocomplete
           items={related}
-          onSelect={(related_article_ids) => onChange(related_article_ids)}
+          onSelect={onChange}
           placeholder='Search by title...'
           url={`${sd.API_URL}/articles?published=true&q=%QUERY`}
         />
