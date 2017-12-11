@@ -4,7 +4,8 @@ import { crop } from '../../../../../../components/resizer/index.coffee'
 
 export const EmailPreview = (props) => {
   const { article } = props
-  const { author, headline, image_url } = article.get('email_metadata')
+  const email_metadata = article.get('email_metadata') || {}
+  const { author, headline, image_url } = email_metadata
   const image = image_url || article.get('thumbnail_image')
 
   return (
