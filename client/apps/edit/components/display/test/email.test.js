@@ -10,8 +10,6 @@ describe('DisplayEmail', () => {
   let props
   let email_metadata = {
     author: 'Molly Gottschalk',
-    credit_line: 'A credit line',
-    credit_url: 'http://credit-url.com',
     custom_text: 'To create a total experience that will create a feeling that is qualitatively new: That is ultimately the most radical thing.',
     headline: 'Virtual Reality Is the Most Powerful Artistic Medium of Our Time',
     image_url: 'https://artsy-media-uploads.s3.amazonaws.com/-El3gm6oiFkOUKhUv79lGQ%2Fd7hftxdivxxvm.cloudfront-6.jpg'
@@ -30,7 +28,7 @@ describe('DisplayEmail', () => {
       <DisplayEmail {...props} />
     )
     expect(component.find(CharacterLimit).length).toBe(2)
-    expect(component.find('input').length).toBe(5)
+    expect(component.find('input').length).toBe(3)
     expect(component.find(ImageUpload).length).toBe(1)
     expect(component.find('input[type="checkbox"]').length).toBe(1)
   })
@@ -40,8 +38,6 @@ describe('DisplayEmail', () => {
       <DisplayEmail {...props} />
     )
     expect(component.html()).toMatch(props.article.get('email_metadata').author)
-    expect(component.html()).toMatch(props.article.get('email_metadata').credit_line)
-    expect(component.html()).toMatch(props.article.get('email_metadata').credit_url)
     expect(component.html()).toMatch(props.article.get('email_metadata').custom_text)
     expect(component.html()).toMatch(props.article.get('email_metadata').headline)
     expect(component.html()).toMatch('El3gm6oiFkOUKhUv79lGQ%252Fd7hftxdivxxvm.cloudfront-6.jpg')
@@ -89,28 +85,6 @@ describe('DisplayEmail', () => {
 
     expect(props.onChange.mock.calls[0][0]).toBe('email_metadata')
     expect(props.onChange.mock.calls[0][1].author).toBe('New Author')
-  })
-
-  it('Can change the credit line', () => {
-    const component = mount(
-      <DisplayEmail {...props} />
-    )
-    const input = component.find('input[name="credit_line"]').at(0)
-    input.simulate('change', { target: { name: 'credit_line', value: 'New Credit Line' } })
-
-    expect(props.onChange.mock.calls[0][0]).toBe('email_metadata')
-    expect(props.onChange.mock.calls[0][1].credit_line).toBe('New Credit Line')
-  })
-
-  it('Can change the credit url', () => {
-    const component = mount(
-      <DisplayEmail {...props} />
-    )
-    const input = component.find('input[name="credit_url"]').at(0)
-    input.simulate('change', { target: { name: 'credit_url', value: 'http://new-url.com' } })
-
-    expect(props.onChange.mock.calls[0][0]).toBe('email_metadata')
-    expect(props.onChange.mock.calls[0][1].credit_url).toBe('http://new-url.com')
   })
 
   it('Can change the send to sailthru checkbox', () => {

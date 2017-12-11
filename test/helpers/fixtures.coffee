@@ -110,8 +110,6 @@ module.exports = ->
     email_metadata:
       image_url: 'http://img.png'
       headline: 'Foo'
-      credit_line: 'Credit Where Credit Needed'
-      credit_url: 'http://credit'
       author: 'Craig Spaeth'
     super_article:
       partner_link: 'http://partnerlink.com'
