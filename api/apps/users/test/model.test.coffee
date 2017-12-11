@@ -19,6 +19,9 @@ describe 'User', ->
   beforeEach (done) ->
     empty =>
       User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
+      User.__set__ 'jwtDecode', @jwtDecode = sinon.stub().returns({
+        partner_ids: ['5086df098523e60002000012']
+      })
       fabricate 'channels', { id: '5086df098523e60002000018' }, (err, @channel) =>
         @server = app.listen 5000, =>
           done()
@@ -34,9 +37,9 @@ describe 'User', ->
         done()
 
     it 'gets partner_ids', (done) ->
-        User.fromAccessToken 'foobar', (err, user) ->
-          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
-          done()
+      User.fromAccessToken 'foobar', (err, user) ->
+        user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
+        done()
 
     it 'inserts a non-existing user', (done) ->
       User.fromAccessToken 'foobar', (err, user) ->
