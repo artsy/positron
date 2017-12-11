@@ -1,86 +1,46 @@
 @import '../stylus_lib'
 
-#edit-header
-  padding margin-size
+.EditHeader
+  display flex
+  justify-content space-between
+  padding 10px
   position fixed
   top 0
-  left 0
-  padding-left sidebar-width + margin-size
-  border-bottom 1px solid gray-lighter-color
-  width 100%
-  min-width 1100px
-  z-index 7
+  left 110px
+  right 0
   background white
+  z-index 100
 
-#edit-tabs
-  a
-    border-right 0
-  a:nth-last-child(3)
-    border-right 1px solid gray-lighter-color
-    margin-left 0
-  a:not(#edit-publish)
-    position relative
-    color gray-color
-    &.edit-check
-      padding-right 45px
-    &:hover
+  button
+    border-radius 0
+    padding 11px 18px
+    &[data-disabled=true]
+      background gray-lighter-color
+      color gray-dark-color
+    &[data-disabled=false],
+    &[data-active=true]
       color black
-    &.is-active
-      color black
-    &[data-complete=true] svg
-      fill-color green-color
-    svg
-      fill-color gray-lighter-color
-      position absolute
-      right 15px
-      top 8px
-      height 15px
-  #autolink-button
-    color black
-    margin-left 10px
+    &.delete
+      border none
 
-#edit-tabs a, #edit-header-right a
-  padding 10px 18px
+  &__left
+    display flex
+    button
+      margin-right 10px
+      color gray-color
+      &:hover
+        color black
+      &.check
+        margin 0
+        border-right 0
+        .icon
+          font-size 10px
+          margin-right 0
+          margin-left 10px
 
-#edit-save
-  position relative
-  transition none
-  &.is-saving
-    color transparent
-  &.is-saving::after
-    content 'Saving...'
-    color green-color
-    position absolute
-    top 0
-    left 0
-    width 100%
-    height 100%
-    padding 10px 0
-    text-align center
-  &.attention
-    color red-color
+  &__right
+    button
+      margin-left 10px
 
-#edit-publish, #edit-admin-button, #autolink-button
-  margin-left margin-size
-  border-right 1px solid gray-lighter-color !important
-
-#edit-header-right
-  position absolute
-  right margin-size
-  top margin-size
-  span
-    top 0
-    left 0
-    width 100%
-    height 100%
-    padding 10px 0
-    text-align center
-    &.attention
-      color red-color
-  a
-    margin-right margin-size
-    &:last-child
-      margin-right 0
-
-#edit-delete
-  border 0
+#edit-content .EditHeader a
+  background-image none

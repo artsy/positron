@@ -45,37 +45,7 @@ describe 'EditLayout', ->
     Backbone.history.navigate.restore()
     _.debounce.restore()
 
-  describe '#autosave', ->
-
-    it 'autosaves on from the content section on debounce keyup', ->
-      $('#edit-title textarea').trigger 'keyup'
-      Backbone.sync.called.should.be.ok
-
-    it 'autosaves on from the display section on debounce keyup', ->
-      $('.edit-display__textarea').trigger 'keyup'
-      Backbone.sync.called.should.be.ok
-
-    it 'autosaves on section changes', ->
-      @view.article.sections.trigger 'change'
-      Backbone.sync.called.should.be.ok
-
-  describe 'no #autosave on published article', ->
-
-    it 'does not autosave on debounce keyup when editing a published article', ->
-      @view.article.set { published: true }
-      $('input[name="credit_line"]').trigger 'keyup'
-      @view.changedSection.should.equal true
-
-    it 'does not autosave on section changes when editing a published article', ->
-      @view.article.set { published: true }
-      @view.article.sections.trigger 'add'
-      @view.changedSection.should.equal true
-
   describe '#serialize', ->
-
-    it 'turns form elements into data', ->
-      @view.$('.edit-title-textarea').val('foobar')
-      @view.serialize().thumbnail_title.should.equal 'foobar'
 
     it 'adds the current user as the author_id', ->
       @view.user.set id: 'foo'

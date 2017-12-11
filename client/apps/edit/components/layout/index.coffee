@@ -16,7 +16,6 @@ module.exports = class EditLayout extends Backbone.View
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500
     @article.sections.on 'add remove reset', @addRemoveReset
-    @article.on 'missing', @highlightMissingFields
     @article.on 'finished', @onFinished
     @article.on 'loading', @showSpinner
     @article.once 'sync', @onFirstSave if @article.isNew()
@@ -25,7 +24,6 @@ module.exports = class EditLayout extends Backbone.View
       @setupYoast()
       @article.on 'change', @onYoastKeyup
     @setupOnBeforeUnload()
-    @toggleAstericks()
     @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
@@ -43,38 +41,11 @@ module.exports = class EditLayout extends Backbone.View
   serialize: ->
     {
       author_id: @user.get('id')
-      title: @article.get 'title'
-      thumbnail_title: @$('.edit-title-textarea').val()
-      description: @$('.edit-display--magazine .edit-display__description textarea').val()
-      social_title: @$('.edit-display--social .edit-display__headline textarea').val()
-      social_description: @$('.edit-display--social .edit-display__description textarea').val()
-      search_title: @$('.edit-display--search .edit-display__headline textarea').val()
-      search_description: @$('.edit-display--search .edit-display__description textarea').val()
-      email_metadata:
-        headline: @$(".edit-display--email textarea[name='headline']").val()
-        author: @$(".edit-display--email input[name='author']").val()
-        credit_line: @$(".edit-display--email input[name='credit_line']").val()
-        credit_url: @$(".edit-display--email input[name='credit_url']").val()
-        image_url: @article.getObjectAttribute('email_metadata','image_url')
-        custom_text: @$(".edit-display--email input[name='custom_text']").val()
-      send_body: @$('[name=send_body]').is(':checked')
       seo_keyword: @$('input#edit-seo__focus-keyword').val()
     }
 
-  toggleAstericks: =>
-    @$('.edit-required ~ :input').each (i, el) =>
-      $(el).prevAll('.edit-required').attr 'data-hidden', !!$(el).val()
-
   redirectToList: =>
     location.assign '/articles?published=' + @article.get('published')
-
-  openTab: (idx) ->
-    @$('#edit-tabs a').removeClass('is-active')
-    @$("#edit-tabs a:eq(#{idx})").addClass 'is-active'
-    @$("#edit-tab-pages > section").hide()
-    @$("#edit-tab-pages > section:eq(#{idx})").show()
-    @article.trigger "open:tab#{idx}"
-    if idx is 2 then @$('#edit-seo').hide() else $('#edit-seo').show()
 
   showSpinner: =>
     @$('#edit-sections-spinner').show()
@@ -86,28 +57,14 @@ module.exports = class EditLayout extends Backbone.View
 
   savePublished: =>
     @article.save @serialize()
+    @onFinished()
 
   addRemoveReset: =>
     @changedSection = true
 
-  highlightMissingFields: =>
-    @openTab 1
-    @$window.scrollTop @$window.height()
-    @$('#edit-thumbnail-inputs').addClass 'eti-error'
-    setTimeout (=> @$('#edit-thumbnail-inputs').removeClass 'eti-error'), 1000
-
   events:
-    'click #edit-tabs > a:not(#edit-publish):not(#autolink-button)': 'toggleTabs'
-    'keyup :input:not(.tt-input,.invisible-input, .edit-admin__fields .bordered-input,#edit-seo__focus-keyword), [contenteditable]:not(.tt-input)': 'onKeyup'
-    'keyup .edit-display__textarea, #edit-seo__focus-keyword, [contenteditable]:not(.tt-input)': 'onYoastKeyup'
-    'dragenter .dashed-file-upload-container': 'toggleDragover'
-    'dragleave .dashed-file-upload-container': 'toggleDragover'
-    'change .dashed-file-upload-container input[type=file]': 'toggleDragover'
-    'blur #edit-title': 'prefillThumbnailTitle'
-    'click #autolink-button' : 'autolinkText'
-
-  toggleTabs: (e) ->
-    @openTab $(e.target).index()
+    'keyup #edit-seo__focus-keyword': 'onYoastKeyup'
+    'click button.autolink' : 'autolinkText'
 
   setupYoast: ->
     @yoastView = new YoastView
@@ -126,18 +83,6 @@ module.exports = class EditLayout extends Backbone.View
     for section in @article.sections.models when section.get('type') is 'text'
       @fullText.push section.get('body')
     @fullText = @fullText.join()
-
-  onKeyup: =>
-    if @article.get('published')
-      @changedSection = true
-      $('#edit-save').addClass 'attention'
-    else
-      @article.save @serialize()
-    @toggleAstericks()
-
-  toggleDragover: (e) ->
-    $(e.currentTarget).closest('.dashed-file-upload-container')
-      .toggleClass 'is-dragover'
 
   getLinkableText: ->
     fullText = @getBodyText()

@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { SectionVideo } from '../../video/index.jsx'
+import { Controls } from '../../video/controls.jsx'
+import Section from '../../../../../../../models/section'
 
 export default class VideoControls extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onProgress: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired
   }
 
   render () {
-    const { article, channel, isOpen, onClick } = this.props
+    const { article, channel, isOpen, onChange, onClick, onProgress } = this.props
 
     return (
       <div className='edit-header--video'>
@@ -28,12 +31,12 @@ export default class VideoControls extends Component {
               data-editing
               data-type='video'
             >
-              <SectionVideo
-                editing
-                hidePreview
-                article={article}
-                section={article.heroSection}
+              <Controls
+                section={new Section(article.get('hero_section'))}
                 channel={channel}
+                onChange={onChange}
+                onProgress={onProgress}
+                isHero
               />
             </div>
           }

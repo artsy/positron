@@ -44,6 +44,7 @@ describe 'AdminSections', ->
       @props = {
         article: @article
         channel: @channel
+        onChange: sinon.stub()
         }
       @component = ReactDOM.render React.createElement(@AdminSections, @props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
@@ -90,17 +91,3 @@ describe 'AdminSections', ->
   it '#isActiveSection returns true if section is active', ->
     @component.isActiveSection('article').should.eql true
     @component.isActiveSection('featuring').should.eql false
-
-  it '#onChange updates the article attributes', ->
-    @component.onChange('tier', 2)
-    @component.props.article.get('tier').should.eql 2
-
-  it 'If unpublished, #onChange does not save', ->
-    @component.onChange('tier', 2)
-    @component.props.article.save.callCount.should.eql 0
-
-  it '#onChange saves the article if unpublished', ->
-    @component.debouncedSave = @component.props.article.save
-    @component.props.article.set('published', false)
-    @component.onChange('tier', 2)
-    @component.props.article.save.callCount.should.eql 1

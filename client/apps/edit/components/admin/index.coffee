@@ -20,7 +20,6 @@ module.exports = React.createClass
   componentWillMount: ->
     @props.article.fetchFeatured()
     @props.article.fetchMentioned()
-    @debouncedSave = _.debounce((-> @props.article.save()), 800)
 
   setActiveSection: (section) ->
     sections = @state.activeSections || []
@@ -39,15 +38,8 @@ module.exports = React.createClass
     active = if section in @state.activeSections then true else false
     return active
 
-  onChange: (key, value) ->
-    @props.article.set(key, value)
-    unless @props.article.get('published')
-      @debouncedSave()
-    else
-      $('#edit-save').removeClass('is-saving').addClass 'attention'
-
   render: ->
-    div { className: 'edit-admin' },
+    div { className: 'edit-admin admin-form-container max-width-container' },
       section {
         className: 'edit-admin--verticals-tags' + @getActiveSection 'verticals-tags'
       },
@@ -59,12 +51,12 @@ module.exports = React.createClass
         if @props.channel.isEditorial() and @isActiveSection 'verticals-tags'
           VerticalsTags {
             article: @props.article
-            onChange: @onChange
+            onChange: @props.onChange
           }
         else if @isActiveSection 'verticals-tags'
           Tags {
             article: @props.article
-            onChange: @onChange
+            onChange: @props.onChange
           }
 
       section {
@@ -79,7 +71,7 @@ module.exports = React.createClass
           Article {
             article: @props.article
             channel: @props.channel
-            onChange: @onChange
+            onChange: @props.onChange
           }
       section {
         className: 'edit-admin--featuring' + @getActiveSection 'featuring'
@@ -93,7 +85,7 @@ module.exports = React.createClass
           Featuring {
             article: @props.article
             channel: @props.channel
-            onChange: @onChange
+            onChange: @props.onChange
           }
 
       if @props.channel.hasFeature 'superArticle'
@@ -109,7 +101,7 @@ module.exports = React.createClass
             SuperArticle {
               article: @props.article
               channel: @props.channel
-              onChange: @onChange
+              onChange: @props.onChange
             }
 
       section {
@@ -124,5 +116,5 @@ module.exports = React.createClass
           Appearances {
             article: @props.article
             channel: @props.channel
-            onChange: @onChange
+            onChange: @props.onChange
           }

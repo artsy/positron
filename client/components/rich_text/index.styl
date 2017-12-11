@@ -52,7 +52,7 @@
     top -7px
     left 50%
 
-.rich-text--nav
+.TextNav
   position absolute
   top -40px
   left 0
@@ -81,32 +81,35 @@
     background none
     border none
     border-right 1px solid gray-darkest-color
+    border-radius 0
     transition color .15s
     &:last-child
       border-right none
     &:hover
       color gray-color
-    &[name='ITALIC'],
-    &[name='STRIKETHROUGH'],
-    &[name='header-two'],
-    &[name='header-three']
+    &.italic,
+    &.strikethrough,
+    &.header-two,
+    &.header-three
       garamond l-body
-    &[name='header-one']
+    &.header-one
       Unica s19
       font-size 18px
-    &[name='BOLD']
+    &.bold
       font-weight 600
       avant-garde l-headline
-    &[name='STRIKETHROUGH']
+    &.strikethrough
       text-decoration line-through
+    &.italic
+      font-style italic
     svg
       width 18px
       height 18px
-    .st0, circle, g, path
+    circle, g, path
       fill gray-dark-color
-      transition color .15s
+      transition all .15s
     &:hover
-      .st0, circle, g, path
+      circle, g, path
         fill gray-color
       &:hover g
         stroke gray-color

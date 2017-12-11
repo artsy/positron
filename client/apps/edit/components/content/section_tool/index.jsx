@@ -120,9 +120,9 @@ export default class SectionTool extends Component {
   }
 
   render () {
-    const { isEditing, isHero, sections } = this.props
-    const isFirstSection = this.props.firstSection && sections.length === 0
-    const isLastSection = this.props.index === sections.length - 1
+    const { firstSection, index, isEditing, isHero, sections } = this.props
+    const isFirstSection = sections && firstSection && sections.length === 0
+    const isLastSection = sections && index === sections.length - 1
     return (
       <div
         className={'edit-tool'}
@@ -150,9 +150,8 @@ SectionTool.propTypes = {
   firstSection: PropTypes.bool,
   index: PropTypes.number,
   isEditing: PropTypes.bool,
-  isDraggable: PropTypes.bool,
   isHero: PropTypes.bool,
   onSetEditing: PropTypes.func,
   section: PropTypes.object,
-  sections: PropTypes.object.isRequired
+  sections: PropTypes.object
 }
