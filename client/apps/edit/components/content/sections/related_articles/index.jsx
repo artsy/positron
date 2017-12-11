@@ -104,6 +104,23 @@ export class RelatedArticles extends Component {
     )
   }
 
+  renderRelatedPreview = () => {
+    const { article } = this.props
+
+    return (
+      <div className='RelatedArticles__preview'>
+        <ArticleCard
+          editTitle='Title'
+          editDescription='Article of video description...'
+          editImage={() => <div>Img</div>}
+          editDate='Publish Date'
+          article={{}}
+          series={article.attributes}
+        />
+      </div>
+    )
+  }
+
   render () {
     const { article } = this.props
     const { relatedArticles, loading } = this.state
@@ -117,14 +134,7 @@ export class RelatedArticles extends Component {
 
             : relatedArticles.length
               ? this.renderRelatedArticles()
-
-              : <ArticleCard
-                  editTitle='Title'
-                  editDescription='Article of video description...'
-                  editImage={() => <div>Img</div>}
-                  article={{}}
-                  series={article.attributes}
-                />
+              : this.renderRelatedPreview()
           }
         </div>
 

@@ -6,7 +6,9 @@ import { SeriesAbout } from '@artsy/reaction-force/dist/Components/Publishing/Se
 import { SeriesTitle } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesTitle'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
+import { RelatedArticles } from '/client/apps/edit/components/content/sections/related_articles'
 import { EditSeries } from '../series'
+require('typeahead.js')
 
 describe('EditSeries', () => {
   let props
@@ -29,10 +31,11 @@ describe('EditSeries', () => {
     expect(component.find(PlainText).length).toBe(1)
   })
 
-  xit('Can edit SeriesTitle', () => {
+  it('Renders RelatedArticles list', () => {
     const component = mount(
       <EditSeries {...props} />
     )
+    expect(component.find(RelatedArticles).length).toBe(1)
   })
 
   it('Renders SeriesAbout', () => {
@@ -41,11 +44,5 @@ describe('EditSeries', () => {
     )
     expect(component.find(SeriesAbout).length).toBe(1)
     expect(component.find(Paragraph).length).toBe(1)
-  })
-
-  xit('Can edit SeriesAbout', () => {
-    const component = mount(
-      <EditSeries {...props} />
-    )
   })
 })

@@ -72,14 +72,12 @@ export class Autocomplete extends Component {
     this.onBlur()
   }
 
-  focus = () => {
-    this.textInput.focus()
-  }
-
   onBlur = () => {
-    this.textInput.blur()
-    this.textInput.value = ''
-    this.setState({ results: [] })
+    if (this.textInput) {
+      this.textInput.blur()
+      this.textInput.value = ''
+      this.setState({ results: [] })
+    }
   }
 
   formatResult (item) {
@@ -125,7 +123,7 @@ export class Autocomplete extends Component {
     }
 
     if (this.textInput === document.activeElement) {
-      // input is focused
+      // display if input is focused
       return (
         <div className='Autocomplete__results'>
           <div className='Autocomplete__results-list'>
