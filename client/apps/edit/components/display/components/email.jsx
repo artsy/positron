@@ -24,8 +24,6 @@ export class DisplayEmail extends Component {
     const emailMetadata = article.get('email_metadata') || {}
     const {
       author,
-      credit_line,
-      credit_url,
       custom_text,
       headline,
       image_url
