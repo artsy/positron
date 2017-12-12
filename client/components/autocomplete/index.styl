@@ -108,16 +108,22 @@
 
 
 .Autocomplete
+  position relative
+  z-index 10
   input
     padding-left 36px
-    background url("/icons/search.svg") 9px 9px no-repeat
-    background-size 18px
     width 100%
     &[disabled]
       background-color gray-lightest-color !important
+  &__icon
+    position absolute
+    top 7px
+    left 3px
   &__results
     border-left 1px solid gray-lighter-color
     border-right 1px solid gray-lighter-color
+    position absolute
+    z-index 10
   &__results-bg
       position fixed
       left 0
@@ -129,6 +135,7 @@
   &__item
     padding 10px
     background white
+    color black
     display flex
     align-items center
     garamond l-body

@@ -2,8 +2,9 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { SeriesAbout } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesTitle'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
+import { SeriesContent } from '@artsy/reaction-force/dist/Components/Publishing/Series/Series'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
+import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { RelatedArticles } from '../sections/related_articles/index'
 
 export class EditSeries extends Component {
@@ -42,24 +43,27 @@ export class EditSeries extends Component {
     const { article, onChange } = this.props
 
     return (
-      <div className='EditSeries'>
+      <SeriesContent className='EditSeries'>
 
         <SeriesTitle
           article={article}
           editTitle={this.editTitle()}
+          color='white'
         />
 
         <RelatedArticles
           article={article}
           onChange={onChange}
+          color='white'
         />
 
         <SeriesAbout
           article={article}
           editDescription={this.editDescription()}
+          color='white'
         />
 
-      </div>
+      </SeriesContent>
     )
   }
 }

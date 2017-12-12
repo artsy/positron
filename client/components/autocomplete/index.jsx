@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { uniq } from 'lodash'
+import Icon from '@artsy/reaction-force/dist/Components/Icon'
 
 export class Autocomplete extends Component {
   static propTypes = {
@@ -76,8 +77,8 @@ export class Autocomplete extends Component {
     if (this.textInput) {
       this.textInput.blur()
       this.textInput.value = ''
-      this.setState({ results: [] })
     }
+    this.setState({ results: [] })
   }
 
   formatResult (item) {
@@ -143,8 +144,13 @@ export class Autocomplete extends Component {
 
     return (
       <div className='Autocomplete'>
+        <Icon
+          name='search'
+          color='black'
+          className='Autocomplete__icon'
+        />
         <input
-          className='bordered-input search-input'
+          className='Autocomplete__input bordered-input'
           disabled={disabled}
           onChange={(e) => this.search(e.target.value)}
           placeholder={placeholder}

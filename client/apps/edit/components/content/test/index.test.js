@@ -5,6 +5,7 @@ import Article from '../../../../../models/article'
 import { EditArticle } from '../article_layouts/article'
 import { EditSeries } from '../article_layouts/series'
 import { EditContent } from '../index'
+require('typeahead.js')
 
 describe('EditContent', () => {
   let props

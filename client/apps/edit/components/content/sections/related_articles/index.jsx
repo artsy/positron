@@ -12,6 +12,7 @@ import DraggableList from '../../../../../../components/drag_drop/index.coffee'
 export class RelatedArticles extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
+    color: PropTypes.string,
     onChange: PropTypes.func
   }
 
@@ -80,7 +81,7 @@ export class RelatedArticles extends Component {
   }
 
   renderRelatedArticles = () => {
-    const { article } = this.props
+    const { article, color } = this.props
     const { relatedArticles } = this.state
 
     return (
@@ -97,6 +98,7 @@ export class RelatedArticles extends Component {
             article={relatedArticle}
             series={article.attributes}
             onRemoveArticle={this.onRemoveArticle}
+            color={color}
           />
         )}
         </DraggableList>
@@ -105,7 +107,7 @@ export class RelatedArticles extends Component {
   }
 
   renderRelatedPreview = () => {
-    const { article } = this.props
+    const { article, color } = this.props
 
     return (
       <div className='RelatedArticles__preview'>
@@ -116,14 +118,15 @@ export class RelatedArticles extends Component {
           editDate='Publish Date'
           article={{}}
           series={article.attributes}
+          color={color}
         />
       </div>
     )
   }
 
   render () {
-    const { article } = this.props
     const { relatedArticles, loading } = this.state
+    const { article, color } = this.props
 
     return (
       <div className='RelatedArticles'>
@@ -140,6 +143,7 @@ export class RelatedArticles extends Component {
 
         <RelatedArticlesInput
           article={article}
+          color={color}
           onChange={this.onAddArticle}
         />
 

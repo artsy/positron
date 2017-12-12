@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { data as sd } from 'sharify'
@@ -6,15 +7,19 @@ import { Autocomplete } from '/client/components/autocomplete/index.jsx'
 export class RelatedArticlesInput extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
+    color: PropTypes.string,
     onChange: PropTypes.func
   }
 
   render () {
-    const { article, onChange } = this.props
+    const { article, color, onChange } = this.props
     const related = article.get('related_article_ids') || []
 
     return (
-      <div className='RelatedArticlesInput'>
+      <RelatedArticlesInputContainer
+        className='RelatedArticlesInput'
+        color={color}
+      >
 
         <label>Add an article</label>
 
@@ -25,7 +30,15 @@ export class RelatedArticlesInput extends Component {
           url={`${sd.API_URL}/articles?published=true&q=%QUERY`}
         />
 
-      </div>
+      </RelatedArticlesInputContainer>
     )
   }
 }
+
+const RelatedArticlesInputContainer = styled.div`
+  color: ${props => props.color || 'black'};
+  input,
+  .Autocomplete__icon {
+    color: ${props => props.color || 'black'};
+  }
+`
