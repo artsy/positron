@@ -235,8 +235,6 @@ describe 'Save', ->
           article.email_metadata.image_url.should.containEql 'bar.png'
           article.email_metadata.author.should.containEql 'Artsy Editorial'
           article.email_metadata.headline.should.containEql 'Custom Headline'
-          article.email_metadata.credit_url.should.containEql 'https://guggenheim.org'
-          article.email_metadata.credit_line.should.containEql 'Guggenheim'
           done()
       )(null, {
         _id: ObjectId '5086df098523e60002000011'
@@ -246,8 +244,6 @@ describe 'Save', ->
           image_url: 'bar.png'
           author: 'Artsy Editorial'
           headline: 'Custom Headline'
-          credit_line: 'Guggenheim'
-          credit_url: 'https://guggenheim.org'
         scheduled_publish_at: '123'
       })
 
