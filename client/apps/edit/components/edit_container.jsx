@@ -40,7 +40,7 @@ class EditContainer extends Component {
 
   onChangeHero = (key, value) => {
     const { article } = this.props
-    const hero = article.get('hero_section')
+    const hero = article.get('hero_section') || {}
     hero[key] = value
     this.onChange('hero_section', hero)
   }
