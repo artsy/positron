@@ -24,8 +24,6 @@ export class DisplayEmail extends Component {
     const emailMetadata = article.get('email_metadata') || {}
     const {
       author,
-      credit_line,
-      credit_url,
       custom_text,
       headline,
       image_url
@@ -68,7 +66,7 @@ export class DisplayEmail extends Component {
             <label>Author</label>
             <input
               onChange={(e) => this.onChange(e.target.name, e.target.value)}
-              defaultValue={author}
+              defaultValue={author || ''}
               className='bordered-input'
               name='author'
             />
@@ -78,28 +76,6 @@ export class DisplayEmail extends Component {
 
         <Col xs={8} className='col--right'>
           <EmailPreview article={article} />
-
-          <div className='field-group--inline'>
-            <div className='field-group'>
-              <label>Credit Line</label>
-              <input
-                onChange={(e) => this.onChange('credit_line', e.target.value)}
-                defaultValue={credit_line}
-                name='credit_line'
-                className='bordered-input'
-              />
-            </div>
-
-            <div className='field-group'>
-              <label>Credit Url</label>
-              <input
-                onChange={(e) => this.onChange('credit_url', e.target.value)}
-                defaultValue={credit_url}
-                name='credit_url'
-                className='bordered-input'
-              />
-            </div>
-          </div>
         </Col>
 
         <Col xs={12}>

@@ -110,8 +110,6 @@ module.exports = ->
     email_metadata:
       image_url: 'http://img.png'
       headline: 'Foo'
-      credit_line: 'Credit Where Credit Needed'
-      credit_url: 'http://credit'
       author: 'Craig Spaeth'
     super_article:
       partner_link: 'http://partnerlink.com'
@@ -136,7 +134,7 @@ module.exports = ->
     name: 'Craig Spaeth'
     type: 'Admin'
     profile_icon_url: 'https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png'
-    access_token: '$2a$10$PJrPMBadu1NPdmnshBgFbeZrE3WtYoIoLoeII0mZDqOnatcOdamke'
+    access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsInBhcnRuZXJfaWRzIjpbXX0.-A-T4cwj1PFzuMhiHn9FYk8IBA0lIukzXKUNa43jjlQ'
     current_channel:
       name: 'Editorial'
       type: 'editorial'

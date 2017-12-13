@@ -11,6 +11,7 @@ async = require 'async'
 bcrypt = require 'bcryptjs'
 { ObjectId } = require 'mongojs'
 { ARTSY_URL, SALT, API_URL } = process.env
+jwtDecode = require 'jwt-decode'
 
 #
 # Retrieval
@@ -38,7 +39,6 @@ bcrypt = require 'bcryptjs'
 #
 # Persistance
 #
-
 @refresh = (accessToken, callback) ->
   request.get("#{ARTSY_URL}/api/v1/me")
     .set('X-Access-Token': accessToken)
@@ -49,19 +49,15 @@ bcrypt = require 'bcryptjs'
 save = (user, accessToken, callback) ->
   async.parallel [
     (cb) ->
-      return cb() unless user.has_partner_access
-      request.get("#{ARTSY_URL}/api/v1/me/partners")
-        .set('X-Access-Token': accessToken).end cb
-    (cb) ->
       db.channels.find {user_ids: ObjectId(user.id)}, cb
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
   ], (err, results) ->
     return callback err if err
-    user.partner_ids = _.map (results[0]?.body or []), (partner) ->
-      ObjectId partner._id
-    user.channel_ids = _.pluck results[1], '_id'
-    encryptedAccessToken = results[2]
+    partner_ids = jwtDecode(accessToken)?.partner_ids or []
+    user.partner_ids = _.map partner_ids, ObjectId
+    user.channel_ids = _.pluck results[0], '_id'
+    encryptedAccessToken = results[1]
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
