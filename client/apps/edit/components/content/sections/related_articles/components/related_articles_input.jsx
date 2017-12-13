@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { data as sd } from 'sharify'
-import { Autocomplete } from '/client/components/autocomplete/index.jsx'
+import { Autocomplete } from '/client/components/autocomplete2/index'
 
 export class RelatedArticlesInput extends Component {
   static propTypes = {

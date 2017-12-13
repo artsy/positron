@@ -66,15 +66,5 @@ describe('Autocomplete', () => {
 
   xit('Uses a custom filter on results if provided', () => { })
   xit('Uses a custom format for results if provided', () => { })
-
-  it('Displays a list of results if present', () => {
-    // const component = mount(
-    //   <Autocomplete {...props} />
-    // )
-    // component.instance().engine.get = jest.fn().mockReturnValue(() => component.instance().setState({ results }))
-    // const input = component.find('input').at(0)
-    // input.simulate('change', {target: {value: 'a title'}})
-    // console.log(component.instance().engine.get.mock)
-    // console.log(component.instance().state)
-  })
+  xit('Displays a list of results if present', () => { })
 })
