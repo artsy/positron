@@ -35,12 +35,8 @@ module.exports = class Article extends Backbone.Model
   finishedContent: ->
     @get('title')?.length > 0
 
-  getSlug: ->
-    slug = if @get('slug') then @get('slug') else @get('thumbnail_title')
-    _s.slugify(@get('author')?.name + '-' + slug)
-
   getFullSlug: ->
-    "https://artsy.net/article/" + @getSlug()
+    "#{sd.FORCE_URL}/article/#{@get('slug')}"
 
   getByline: ->
     return _s.toSentence(_.pluck(@get('contributing_authors'), 'name')) if @hasContributingAuthors()
