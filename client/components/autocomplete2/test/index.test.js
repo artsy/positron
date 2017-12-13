@@ -64,7 +64,55 @@ describe('Autocomplete', () => {
     expect(input.props().disabled).toBe(true)
   })
 
-  xit('Uses a custom filter on results if provided', () => { })
-  xit('Uses a custom format for results if provided', () => { })
-  xit('Displays a list of results if present', () => { })
+  it('Uses a custom filter on results if provided', () => {
+    const filter = (items) => {
+      return items.results.map((item) => {
+        return {
+          _id: item.id,
+          title: item.title,
+          slug: item.slug
+        }
+      })
+    }
+
+    props.filter = filter
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    expect(component.instance().engine.remote.filter).toBe(props.filter)
+    expect(component.instance().engine.remote.filter({ results })[0].slug).toBe(results[0].slug)
+  })
+
+  it('Displays a list of results if present', () => {
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.setState({ results })
+    expect(component.find('.Autocomplete__item').length).toBe(results.length)
+    expect(component.html()).toMatch(results[0].title)
+  })
+
+  it('Displays "No Results" if focused and no results', () => {
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.setState({results: []})
+    expect(component.find('.Autocomplete__item').length).toBe(1)
+    expect(component.html()).toMatch('No results')
+  })
+
+  it('Uses a custom format for results if provided', () => {
+    const formatResult = (item) => {
+      return <div>Child: {item.title}</div>
+    }
+    props.formatResult = formatResult
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.setState({ results })
+    expect(component.text()).toMatch(`Child: ${results[0].title}`)
+  })
 })

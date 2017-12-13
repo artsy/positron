@@ -81,6 +81,10 @@ export class Autocomplete extends Component {
     this.setState({ results: [] })
   }
 
+  isFocused = () => {
+    return this.textInput === document.activeElement
+  }
+
   formatResult (item) {
     return (
       <div className='Autocomplete__item'>
@@ -96,13 +100,12 @@ export class Autocomplete extends Component {
     )
   }
 
-  renderResults = () => {
+  formatResults = () => {
     const { formatResult } = this.props
     const { loading, results } = this.state
-    let renderedResults
 
     if (results.length) {
-      renderedResults = results.map((item, i) =>
+      return results.map((item, i) =>
         <div
           key={i}
           className='Autocomplete__result'
@@ -118,17 +121,23 @@ export class Autocomplete extends Component {
         </div>
       )
     } else if (loading) {
-      renderedResults = <div className='Autocomplete__item-loading'><div className='loading-spinner' /></div>
+      return (
+        <div className='Autocomplete__item Autocomplete__item--loading'>
+          <div className='loading-spinner' />
+        </div>
+      )
     } else {
-      renderedResults = <div className='Autocomplete__item--empty'>No results</div>
+      return <div className='Autocomplete__item Autocomplete__item--empty'>No results</div>
     }
+  }
 
-    if (this.textInput === document.activeElement) {
+  renderResults = () => {
+    if (this.isFocused()) {
       // display if input is focused
       return (
         <div className='Autocomplete__results'>
           <div className='Autocomplete__results-list'>
-            {renderedResults}
+            {this.formatResults()}
           </div>
           <div
             className='Autocomplete__results-bg'
