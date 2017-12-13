@@ -21,7 +21,7 @@ describe('EditArticle', () => {
     }
   })
 
-  it('Does not SectionHero if channel does not have feature', () => {
+  it('Does not render SectionHero if channel does not have feature', () => {
     const component = mount(
       <EditArticle {...props} />
     )

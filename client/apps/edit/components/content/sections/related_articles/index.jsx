@@ -85,24 +85,22 @@ export class RelatedArticles extends Component {
     const { relatedArticles } = this.state
 
     return (
-      <div>
-        <DraggableList
-          items={relatedArticles}
-          onDragEnd={this.onDragEnd}
-          layout='vertical'
-          isDraggable
-        >
-        {relatedArticles.map((relatedArticle, i) =>
-          <EditArticleCard
-            key={i}
-            article={relatedArticle}
-            series={article.attributes}
-            onRemoveArticle={this.onRemoveArticle}
-            color={color}
-          />
-        )}
-        </DraggableList>
-      </div>
+      <DraggableList
+        items={relatedArticles}
+        onDragEnd={this.onDragEnd}
+        layout='vertical'
+        isDraggable
+      >
+      {relatedArticles.map((relatedArticle, i) =>
+        <EditArticleCard
+          key={i}
+          article={relatedArticle}
+          series={article.attributes}
+          onRemoveArticle={this.onRemoveArticle}
+          color={color}
+        />
+      )}
+      </DraggableList>
     )
   }
 
@@ -114,7 +112,7 @@ export class RelatedArticles extends Component {
         <ArticleCard
           editTitle='Title'
           editDescription='Article of video description...'
-          editImage={() => <div>Img</div>}
+          editImage={() => <div />}
           editDate='Publish Date'
           article={{}}
           series={article.attributes}
