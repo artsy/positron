@@ -13,7 +13,7 @@ export class DisplayEmail extends Component {
 
   onChange = (key, value) => {
     const { article, onChange } = this.props
-    const emailMetadata = article.get('email_metadata')
+    const emailMetadata = article.get('email_metadata') || {}
 
     emailMetadata[key] = value
     onChange('email_metadata', emailMetadata)
