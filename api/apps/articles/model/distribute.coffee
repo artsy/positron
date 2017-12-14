@@ -8,7 +8,7 @@
   INSTANT_ARTICLE_ACCESS_TOKEN
   GEMINI_CLOUDFRONT_URL
   NODE_ENV
-  SEGMENT_WRITE_KEY_MICROGRAVITY
+  SEGMENT_WRITE_KEY_FORCE
 } = process.env
 _ = require 'underscore'
 _s = require 'underscore.string'
@@ -58,7 +58,7 @@ postFacebookAPI = (article, cb) ->
         article: article
         forceUrl: FORCE_URL
         displayUrl: APP_URL + '/display'
-        segmentWriteKey: SEGMENT_WRITE_KEY_MICROGRAVITY
+        segmentWriteKey: SEGMENT_WRITE_KEY_FORCE
         toSentence: _s.toSentence
         _: _
         moment: moment

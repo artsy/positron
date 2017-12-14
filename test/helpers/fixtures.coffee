@@ -111,6 +111,7 @@ module.exports = ->
       image_url: 'http://img.png'
       headline: 'Foo'
       author: 'Craig Spaeth'
+    slug: 'artsy-editorial-top-ten-booths-at-miart-2014'
     super_article:
       partner_link: 'http://partnerlink.com'
       partner_logo: 'http://partnerlink.com/logo.jpg'
