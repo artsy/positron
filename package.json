@@ -24,6 +24,7 @@
     "artsy-newrelic": "artsy/artsy-newrelic",
     "artsy-xapp": "^1.0.4",
     "async": "^1.4.2",
+    "aws-sdk": "^2.149.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.2",
