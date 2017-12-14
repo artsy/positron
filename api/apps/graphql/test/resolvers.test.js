@@ -296,6 +296,25 @@ describe('resolvers', () => {
     })
   })
 
+  describe('relatedArticles', () => {
+    it('can find related articles for the series', async () => {
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      const results = await resolvers.relatedArticles({
+        id: '54276766fd4f50996aeca2b8',
+        related_article_ids: ['54276766fd4f50996aeca2b9']
+      })
+      results.length.should.equal(1)
+    })
+
+    it('resolves null if it does not have related articles', async () => {
+      promisedMongoFetch.onFirstCall().resolves({ results: [] })
+      const results = await resolvers.relatedArticles({
+        id: '54276766fd4f50996aeca2b8'
+      })
+      _.isNull(results).should.be.true()
+    })
+  })
+
   describe('relatedArticlesCanvas', () => {
     it('can find related articles for the canvas', async () => {
       promisedMongoFetch.onFirstCall().resolves(articles)

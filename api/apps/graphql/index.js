@@ -26,6 +26,10 @@ const metaFields = {
     name: 'RelatedArticlesPanel',
     resolve: resolvers.relatedArticlesPanel
   }),
+  relatedArticles: array().items(object(Article.inputSchema)).meta({
+    name: 'RelatedArticles',
+    resolve: resolvers.relatedArticles
+  }),
   display: Display.schema.meta({
     args: Display.querySchema,
     resolve: resolvers.display
