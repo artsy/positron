@@ -160,6 +160,30 @@ export const display = (root, args, req, ast) => {
   })
 }
 
+export const relatedArticles = (root) => {
+  const { related_article_ids } = root
+
+  return new Promise(async (resolve, reject) => {
+    let relatedArticles = []
+
+    if (related_article_ids && related_article_ids.length) {
+      const relatedArticleResults = await promisedMongoFetch({
+        ids: root.related_article_ids,
+        published: true
+      })
+      .catch((e) => reject(e))
+
+      relatedArticles = presentCollection(relatedArticleResults).results
+    }
+
+    if (relatedArticles.length) {
+      resolve(relatedArticles)
+    } else {
+      resolve(null)
+    }
+  })
+}
+
 export const relatedArticlesPanel = (root) => {
   const omittedIds = [ObjectId(root.id)]
   if (root.related_articles_ids) {

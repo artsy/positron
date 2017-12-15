@@ -1,6 +1,8 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-Article = require '../../models/article.coffee'
+fixtures = require '../../../test/helpers/fixtures'
+rewire = require 'rewire'
+Article = rewire '../../models/article.coffee'
 sinon = require 'sinon'
 { fabricate } = require 'antigravity'
 fixtures = require '../../../test/helpers/fixtures'
@@ -10,6 +12,7 @@ describe "Article", ->
 
   beforeEach ->
     sinon.stub Backbone, 'sync'
+    Article.__set__ 'sd', {FORCE_URL: 'https://artsy.net'}
     @article = new Article fixtures().articles
 
   afterEach ->
@@ -112,7 +115,7 @@ describe "Article", ->
   describe '#getFullSlug', ->
 
     it 'returns a slug with the artsy url', ->
-      @article.getFullSlug().should.equal 'https://artsy.net/article/undefined-top-ten-booths-at-miart-2014'
+      @article.getFullSlug().should.equal 'https://artsy.net/article/artsy-editorial-top-ten-booths-at-miart-2014'
 
   describe '#getByline', ->
 

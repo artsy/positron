@@ -608,6 +608,15 @@ describe 'Article Persistence', ->
         article.postscript.should.eql '<p>Here is some text that follows an article.</p>'
         done()
 
+    it 'saves a media object', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        media: {duration: 1000}
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.media.duration.should.equal 1000
+        done()
+
     it 'saves a series_description', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'

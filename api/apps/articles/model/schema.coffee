@@ -181,11 +181,11 @@ ImageCollectionSection = (->
   ]).default([])
   media: @object().default({}).keys
     duration: @number().allow(null)
-  email_metadata: @object().keys
-    image_url: @string().allow('',null)
-    headline: @string().allow('',null)
-    author: @string().allow('',null)
-    custom_text: @string().allow('',null)
+  email_metadata: @object().default({}).keys
+    image_url: @string().allow('')
+    headline: @string().allow('')
+    author: @string().allow('')
+    custom_text: @string().allow('')
   is_super_article: @boolean().default(false)
   super_article: @object().keys
     partner_link: @string().allow('',null)

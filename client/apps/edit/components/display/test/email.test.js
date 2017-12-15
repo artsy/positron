@@ -24,6 +24,7 @@ describe('DisplayEmail', () => {
   })
 
   it('Renders all form fields', () => {
+    props.article.unset('email_metadata')
     const component = mount(
       <DisplayEmail {...props} />
     )
@@ -41,6 +42,16 @@ describe('DisplayEmail', () => {
     expect(component.html()).toMatch(props.article.get('email_metadata').custom_text)
     expect(component.html()).toMatch(props.article.get('email_metadata').headline)
     expect(component.html()).toMatch('El3gm6oiFkOUKhUv79lGQ%252Fd7hftxdivxxvm.cloudfront-6.jpg')
+  })
+
+  it('Can save with empty email_metadata', () => {
+    props.article.unset('email_metadata')
+    const component = mount(
+      <DisplayEmail {...props} />
+    )
+    const input = component.find(CharacterLimit).at(0).node
+    input.props.onChange('data')
+    expect(props.onChange.mock.calls[0][0]).toBe('email_metadata')
   })
 
   it('Can change the email image', () => {
