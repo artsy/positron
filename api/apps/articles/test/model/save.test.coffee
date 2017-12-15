@@ -286,3 +286,26 @@ describe 'Save', ->
         ]
         title: 'A new title \n'
       })
+
+    it 'saves media', (done) ->
+      Save.sanitizeAndSave( ->
+        Article.find '5086df098523e60002000011', (err, article) ->
+          article.media.url.should.equal 'https://media.artsy.net/video.mp4'
+          article.media.cover_image_url.should.equal 'https://media.artsy.net/images.jpg'
+          article.media.duration.should.equal 1000
+          article.media.release_date.should.equal '2017-01-01'
+          article.media.published.should.equal false
+          article.media.description.should.equal '<p>This video is about kittens.</p>'
+          article.media.credits.should.equal '<p><b>Director</b><br>Marina Cashdan</p>'
+          done()
+      )(null, {
+        _id: ObjectId '5086df098523e60002000011'
+        media:
+          url: 'https://media.artsy.net/video.mp4'
+          cover_image_url: 'https://media.artsy.net/images.jpg'
+          duration: 1000
+          release_date: '2017-01-01'
+          published: false
+          description: '<p>This video is about kittens.</p>'
+          credits: '<p><b>Director</b><br>Marina Cashdan</p>'
+      })
