@@ -1,7 +1,7 @@
 import request from 'superagent'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { pluck, without } from 'underscore'
+import { difference, flatten, pluck, uniq, without } from 'underscore'
 import { data as sd } from 'sharify'
 import { ArticleCard } from '@artsy/reaction-force/dist/Components/Publishing/Series/ArticleCard'
 import { RelatedArticleQuery } from 'client/queries/related_articles'
@@ -27,28 +27,32 @@ export class RelatedArticles extends Component {
 
   fetchArticles = () => {
     const { related_article_ids } = this.props.article.attributes
+    const { relatedArticles } = this.state
+    const alreadyFetched = pluck(relatedArticles, 'id')
+    const idsToFetch = difference(related_article_ids, alreadyFetched)
 
-    if (related_article_ids && related_article_ids.length) {
+    if (idsToFetch.length) {
       request
         .get(`${sd.API_URL}/graphql`)
         .set({
           'Accept': 'application/json',
           'X-Access-Token': (sd.USER && sd.USER.access_token)
         })
-        .query({ query: RelatedArticleQuery(related_article_ids) })
+        .query({ query: RelatedArticleQuery(idsToFetch) })
         .end((err, res) => {
           if (err) {
             console.error(err)
           }
+          relatedArticles.push(res.body.data.articles)
           this.setState({
             loading: false,
-            relatedArticles: res.body.data.articles
+            relatedArticles: uniq(flatten(relatedArticles))
           })
         })
     } else {
       this.setState({
         loading: false,
-        relatedArticles: []
+        relatedArticles
       })
     }
   }
@@ -73,7 +77,7 @@ export class RelatedArticles extends Component {
 
   onDragEnd = (relatedArticles) => {
     const { onChange } = this.props
-    const newRelatedIds = pluck(relatedArticles, '_id')
+    const newRelatedIds = pluck(relatedArticles, 'id')
 
     this.setState({ relatedArticles })
     onChange('related_article_ids', newRelatedIds)

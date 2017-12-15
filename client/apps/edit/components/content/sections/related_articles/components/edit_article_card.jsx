@@ -28,7 +28,7 @@ export class EditArticleCard extends Component {
 
         <div
           className='EditArticleCard__remove'
-          onClick={() => onRemoveArticle(article._id)}
+          onClick={() => onRemoveArticle(article.id)}
         >
           <IconRemove
             background={color && color}

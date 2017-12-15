@@ -13,7 +13,7 @@ describe('EditArticleCard', () => {
       series: Fixtures.SeriesArticle,
       onRemoveArticle: jest.fn()
     }
-    props.article._id = '123'
+    props.article.id = '123'
   })
 
   it('Renders an article card with remove button and edit link', () => {
@@ -31,6 +31,6 @@ describe('EditArticleCard', () => {
       <EditArticleCard {...props} />
     )
     component.find('.EditArticleCard__remove').at(0).simulate('click')
-    expect(props.onRemoveArticle.mock.calls[0][0]).toBe(props.article._id)
+    expect(props.onRemoveArticle.mock.calls[0][0]).toBe(props.article.id)
   })
 })

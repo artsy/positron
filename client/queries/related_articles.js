@@ -5,6 +5,7 @@ export function RelatedArticleQuery (ids) {
     {
       articles(ids: ${stringifyJSONForWeb(ids)}) {
         description
+        id
         media {
           duration
         }
