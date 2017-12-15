@@ -608,6 +608,15 @@ describe 'Article Persistence', ->
         article.postscript.should.eql '<p>Here is some text that follows an article.</p>'
         done()
 
+    it 'saves a series_description', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        series_description: '<p>Here is some text describing a series.</p>'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.series_description.should.equal '<p>Here is some text describing a series.</p>'
+        done()
+
     it 'saves verticals', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'

@@ -7,6 +7,7 @@ import { SeriesContent } from '@artsy/reaction-force/dist/Components/Publishing/
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
+import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { RelatedArticles } from '../sections/related_articles/index'
 
 export class EditSeries extends Component {
@@ -14,6 +15,10 @@ export class EditSeries extends Component {
     article: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     onChangeHero: PropTypes.func.isRequired
+  }
+
+  state = {
+    uploadProgress: null
   }
 
   editTitle = () => {
@@ -44,6 +49,7 @@ export class EditSeries extends Component {
 
   render () {
     const { article, onChange, onChangeHero } = this.props
+    const { uploadProgress } = this.state
     const { url } = article.attributes.hero_section || {}
 
     return (
@@ -51,13 +57,15 @@ export class EditSeries extends Component {
         className='EditSeries'
         url={url}
       >
-
+        {uploadProgress &&
+          <ProgressBar progress={uploadProgress} />
+        }
         <div className='EditSeries__bg-input'>
           <FileInput
             type='simple'
             onUpload={(src) => onChangeHero('url', src)}
             prompt={`+ ${url ? 'Change' : 'Add'} Background`}
-            onProgress={() => console.log('uploaded')}
+            onProgress={(uploadProgress) => this.setState({ uploadProgress })}
           />
         </div>
 

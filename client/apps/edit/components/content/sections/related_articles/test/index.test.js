@@ -13,6 +13,7 @@ jest.mock('superagent', () => {
   return {
     get: jest.genMockFunction().mockReturnThis(),
     set: jest.genMockFunction().mockReturnThis(),
+    query: jest.genMockFunction().mockReturnThis(),
     end: jest.fn()
   }
 })
@@ -22,7 +23,16 @@ describe('RelatedArticles', () => {
 
   beforeEach(() => {
     request.end.mockImplementation((cb) => {
-      cb(null, { body: Fixtures.FeatureArticle })
+      cb(null, {
+        body: {
+          data: {
+            articles: [
+              Fixtures.FeatureArticle,
+              Fixtures.StandardArticle
+            ]
+          }
+        }
+      })
     })
 
     props = {
@@ -44,12 +54,12 @@ describe('RelatedArticles', () => {
   })
 
   it('Fetches related and renders EditArticleCard if related_article_ids length', () => {
-    props.article.set('related_article_ids', ['123'])
+    props.article.set('related_article_ids', ['123', '456'])
     const component = mount(
       <RelatedArticles {...props} />
     )
-    expect(component.find(EditArticleCard).length).toBe(1)
-    expect(component.state().relatedArticles.length).toBe(1)
+    expect(component.find(EditArticleCard).length).toBe(2)
+    expect(component.state().relatedArticles.length).toBe(2)
     expect(component.text()).toMatch(Fixtures.FeatureArticle.title)
   })
 
@@ -63,16 +73,16 @@ describe('RelatedArticles', () => {
     expect(request.end).toBeCalled()
   })
 
-  it('onRemoveArticle calls onChange and fetches articles', () => {
+  it('onRemoveArticle calls onChange and resets state.relatedArticles', () => {
     props.article.set('related_article_ids', ['123', '678'])
     const component = mount(
       <RelatedArticles {...props} />
     )
-    component.instance().onRemoveArticle('678')
+    component.instance().onRemoveArticle('678', 1)
     expect(props.onChange.mock.calls[0][0]).toBe('related_article_ids')
     expect(props.onChange.mock.calls[0][1].length).toBe(1)
     expect(props.onChange.mock.calls[0][1][0]).toBe('123')
-    expect(request.end).toBeCalled()
+    expect(component.state().relatedArticles.length).toBe(1)
   })
 
   it('onDragEnd calls onChange and resets state', () => {

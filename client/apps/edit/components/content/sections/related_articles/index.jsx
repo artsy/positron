@@ -1,12 +1,12 @@
-import async from 'async'
 import request from 'superagent'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { compact, pluck, without } from 'underscore'
+import { pluck, without } from 'underscore'
 import { data as sd } from 'sharify'
+import { ArticleCard } from '@artsy/reaction-force/dist/Components/Publishing/Series/ArticleCard'
+import { RelatedArticleQuery } from 'client/queries/related_articles'
 import { EditArticleCard } from './components/edit_article_card'
 import { RelatedArticlesInput } from './components/related_articles_input'
-import { ArticleCard } from '@artsy/reaction-force/dist/Components/Publishing/Series/ArticleCard'
 import DraggableList from '../../../../../../components/drag_drop/index.coffee'
 
 export class RelatedArticles extends Component {
@@ -27,31 +27,28 @@ export class RelatedArticles extends Component {
 
   fetchArticles = () => {
     const { related_article_ids } = this.props.article.attributes
-    let relatedArticles = []
 
     if (related_article_ids && related_article_ids.length) {
-      return async.each(related_article_ids, (id, cb) => {
-        return request
-          .get(`${sd.API_URL}/articles/${id}`)
-          .set({'X-Access-Token': (sd.USER != null ? sd.USER.access_token : undefined)})
-          .end((err, res) => {
-            if (err) {
-              console.log(err)
-            }
-            relatedArticles.push(res.body)
-            cb()
-          })
-      }
-      , () => {
-        this.setState({
-          loading: false,
-          relatedArticles: compact(relatedArticles)
+      request
+        .get(`${sd.API_URL}/graphql`)
+        .set({
+          'Accept': 'application/json',
+          'X-Access-Token': (sd.USER && sd.USER.access_token)
         })
-      })
+        .query({ query: RelatedArticleQuery(related_article_ids) })
+        .end((err, res) => {
+          if (err) {
+            console.error(err)
+          }
+          this.setState({
+            loading: false,
+            relatedArticles: res.body.data.articles
+          })
+        })
     } else {
       this.setState({
         loading: false,
-        relatedArticles
+        relatedArticles: []
       })
     }
   }
@@ -63,21 +60,23 @@ export class RelatedArticles extends Component {
     this.fetchArticles()
   }
 
-  onRemoveArticle = (id) => {
+  onRemoveArticle = (id, index) => {
     const { article, onChange } = this.props
+    const { relatedArticles } = this.state
     const { related_article_ids } = article.attributes
-    const newRelated = without(related_article_ids, id)
+    const newRelatedIds = without(related_article_ids, id)
 
-    onChange('related_article_ids', newRelated)
-    this.fetchArticles()
+    relatedArticles.splice(index, 1)
+    onChange('related_article_ids', newRelatedIds)
+    this.setState({ relatedArticles })
   }
 
   onDragEnd = (relatedArticles) => {
     const { onChange } = this.props
-    const newRelated = pluck(relatedArticles, '_id')
+    const newRelatedIds = pluck(relatedArticles, '_id')
 
     this.setState({ relatedArticles })
-    onChange('related_article_ids', newRelated)
+    onChange('related_article_ids', newRelatedIds)
   }
 
   renderRelatedArticles = () => {
@@ -96,7 +95,7 @@ export class RelatedArticles extends Component {
           key={i}
           article={relatedArticle}
           series={article.attributes}
-          onRemoveArticle={this.onRemoveArticle}
+          onRemoveArticle={(id) => this.onRemoveArticle(id, i)}
           color={color}
         />
       )}

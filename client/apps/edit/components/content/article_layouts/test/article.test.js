@@ -17,7 +17,8 @@ describe('EditArticle', () => {
       channel: {
         hasFeature: jest.fn().mockReturnValueOnce(false)
       },
-      onChange: jest.fn()
+      onChange: jest.fn(),
+      onChangeHero: jest.fn()
     }
   })
 
