@@ -47,7 +47,7 @@
     background-image url(/icons/edit_image_set_slideshow.svg)
     background-size 22px
 
-.standard .edit-section__container
+[data-layout='standard'] .edit-section__container
   &[data-layout=column_width] .edit-controls
     max-width standard-body-w-margin
   &[data-layout=overflow_fillwidth],
@@ -55,7 +55,7 @@
     .edit-controls
       max-width standard-overflow-w-margin
 
-.classic
+[data-layout='classic']
   .edit-section__container
     &[data-layout=column_width] .edit-controls
       max-width classic-body-w-margin
@@ -73,7 +73,7 @@
           margin-bottom 30px
           padding-top 20px
 
-.feature .edit-section__container
+[data-layout='feature'] .edit-section__container
   &[data-layout=column_width] .edit-controls
     max-width feature-body-w-margin
   &[data-layout=fillwidth] .edit-controls

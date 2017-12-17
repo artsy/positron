@@ -98,7 +98,7 @@ ImageCollectionSection = (->
     id: @string().objectid()
   ).allow(null)
   title: @string().allow('', null)
-  layout: @string().allow('classic', 'standard', 'longform', 'feature').default('classic')
+  layout: @string().allow('classic', 'standard', 'series', 'feature').default('classic')
   updated_at: @date()
   published: @boolean().default(false)
   published_at: @date().allow(null)
@@ -106,6 +106,7 @@ ImageCollectionSection = (->
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
   hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection).allow(null).default(null)
+  series_description: @string().allow(null)
   sections: @array().items([
     ImageCollectionSection
     videoSection
@@ -187,6 +188,8 @@ ImageCollectionSection = (->
       id: @string().objectid().allow(null)
       name: @string().allow('', null)
   ]).default([])
+  media: @object().default({}).keys
+    duration: @number().allow(null)
   email_metadata: @object().default({}).keys
     image_url: @string().allow('')
     headline: @string().allow('')
