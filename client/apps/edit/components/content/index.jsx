@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { EditArticle } from './article_layouts/article.jsx'
 import { EditSeries } from './article_layouts/series.jsx'
+import { EditVideo } from './article_layouts/video.jsx'
 
 export class EditContent extends Component {
   static propTypes = {
@@ -17,6 +18,9 @@ export class EditContent extends Component {
     switch (article.get('layout')) {
       case 'series': {
         return <EditSeries {...this.props} />
+      }
+      case 'video': {
+        return <EditVideo {...this.props} />
       }
       default: {
         return <EditArticle {...this.props} />
