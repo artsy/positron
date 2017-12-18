@@ -38,6 +38,9 @@ module.exports = class Article extends Backbone.Model
   isFeatured: ->
     @get('featured')
 
+  hasInstantArticle: ->
+    @get('featured') and @get('layout') in ['standard', 'feature']
+
   isEditorial: ->
     @get('channel_id')?.toString() is EDITORIAL_CHANNEL
 
