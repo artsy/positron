@@ -48,6 +48,7 @@ describe('EditSeries', () => {
   })
 
   it('Renders a file input for background image ', () => {
+    props.article.set('hero_section', { url: null })
     const component = mount(
       <EditSeries {...props} />
     )

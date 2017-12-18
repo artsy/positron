@@ -154,6 +154,10 @@ sanitize = (article) ->
     sections: sections
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
+  if article.media
+    media = article.media
+    sanitized.media.description = sanitizeHtml media.description if media.description
+    sanitized.media.credits = sanitizeHtml media.credits if media.credits
   sanitized
 
 sanitizeLink = (urlString) ->

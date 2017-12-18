@@ -8,9 +8,9 @@
   dependencies:
     chokidar "^1.7.0"
 
-"@artsy/reaction-force@^0.13.3":
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.13.3.tgz#6cea622b7edb1e3dbf0e0842326fc2a5eccee346"
+"@artsy/reaction-force@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction-force/-/reaction-force-0.15.2.tgz#6141bfa09ed5864dac40917d6731a9207602de8a"
   dependencies:
     "@storybook/addon-options" "^3.2.1"
     "@storybook/react" "^3.2.12"
@@ -40,6 +40,7 @@
     react-styled-flexboxgrid "^2.0.0"
     react-tracking "^4.2.1"
     react-url-query "^1.1.4"
+    react-waypoint "^7.3.3"
     sharify "^0.1.6"
     superagent "^3.6.3"
     uuid "^3.0.1"
@@ -7756,6 +7757,13 @@ react-url-query@^1.1.4:
 react-waypoint@^7.3.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/react-waypoint/-/react-waypoint-7.3.1.tgz#abb165d9b6c9590f8d82ceafbe61c2c887262a37"
+  dependencies:
+    consolidated-events "^1.1.0"
+    prop-types "^15.0.0"
+
+react-waypoint@^7.3.3:
+  version "7.3.3"
+  resolved "https://registry.yarnpkg.com/react-waypoint/-/react-waypoint-7.3.3.tgz#49ad8e69cca4ae80f2f19608e5d6cf05d75c607e"
   dependencies:
     consolidated-events "^1.1.0"
     prop-types "^15.0.0"
