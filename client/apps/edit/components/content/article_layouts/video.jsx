@@ -33,14 +33,6 @@ export class EditVideo extends Component {
     onChange('media', media)
   }
 
-  setDuration = (e) => {
-    this.onMediaChange('duration', e.target.duration)
-  }
-
-  toggleVideoPreview = (showVideo) => {
-    this.setState({ showVideo })
-  }
-
   editDescription = () => {
     const { article, onChange } = this.props
 
@@ -109,9 +101,9 @@ export class EditVideo extends Component {
         <VideoPreview visible={this.state.showVideo}>
           <VideoPlayer
             url={media.url}
-            onLoadedMetadata={this.setDuration}
+            onLoadedMetadata={(e) => this.onMediaChange('duration', e.target.duration)}
           />
-          <div onClick={() => this.toggleVideoPreview(false)}>
+          <div onClick={() => this.setState({ showVideo: false })}>
             <IconRemove />
           </div>
         </VideoPreview>
@@ -121,7 +113,7 @@ export class EditVideo extends Component {
           editTitle={this.editTitle()}
           editDescription={this.editDescription()}
           media={media}
-          playVideo={() => this.toggleVideoPreview(true)}
+          playVideo={() => this.setState({ showVideo: true })}
           hideCover={this.state.showVideo}
         />
 
