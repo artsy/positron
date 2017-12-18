@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { VideoAbout, VideoAboutContainer } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover, VideoCoverContainer } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoCover'
-import { VideoPlayer, VideoPlayerContainer } from '@artsy/reaction-force/dist/Components/Publishing/Video/Player/VideoPlayer'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
@@ -25,11 +24,7 @@ export class EditVideo extends Component {
     const { article, onChange } = this.props
     const media = article.get('media') || {}
 
-    if (key !== 'duration' && key !== 'published') {
-      media[key] = value.length ? value : null
-    } else {
-      media[key] = value
-    }
+    media[key] = value
     onChange('media', media)
   }
 
@@ -99,8 +94,9 @@ export class EditVideo extends Component {
         }
 
         <VideoPreview visible={this.state.showVideo}>
-          <VideoPlayer
-            url={media.url}
+          <video
+            controls
+            src={media.url}
             onLoadedMetadata={(e) => this.onMediaChange('duration', e.target.duration)}
           />
           <div onClick={() => this.setState({ showVideo: false })}>
@@ -173,7 +169,6 @@ export const EditVideoContainer = styled.div`
 
   ${VideoCoverContainer}, ${VideoAboutContainer} {
     .public-DraftEditorPlaceholder-root {
-      position: absolute;
       left: 0;
       right: 0;
       color: gray;
@@ -216,6 +211,10 @@ const VideoPreview = styled.div`
   height: 100vh;
   top: 0;
   left: 0;
+
+  video {
+    width: 100%;
+  }
 
   svg.remove {
     width: 50px;
