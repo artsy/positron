@@ -133,6 +133,19 @@ export class EditVideo extends Component {
           />
         </EditVideoInput>
 
+        <EditVideoPublished
+          className='field-group--inline flat-checkbox'
+          onClick={(e) => this.onMediaChange('published', !media.published)}
+          name='media.published'
+        >
+          <input
+            type='checkbox'
+            checked={media.published}
+            readOnly
+          />
+          <label>Video Published</label>
+        </EditVideoPublished>
+
         <MaxWidthContainer>
           <VideoAbout
             article={article}
@@ -151,8 +164,15 @@ const MaxWidthContainer = styled.div`
   max-width: 1200px;
   margin: auto;
 `
-const EditVideoInput = styled.div``
-const EditCoverInput = styled.div``
+const EditVideoInput = styled.div`
+  top: 20px;
+`
+const EditCoverInput = styled.div`
+  top: 50px;
+`
+const EditVideoPublished = styled.div`
+  top: 80px;
+`
 
 export const EditVideoContainer = styled.div`
   position: relative;
@@ -178,10 +198,9 @@ export const EditVideoContainer = styled.div`
     width: 100%;
     margin-bottom: 40px;
   }
-  ${EditVideoInput}, ${EditCoverInput} {
+  ${EditVideoInput}, ${EditCoverInput}, ${EditVideoPublished} {
     z-index: 10;
     position: absolute;
-    top: 20px;
     right: 20px;
 
     .file-input.simple .file-input__upload-container {
@@ -199,9 +218,6 @@ export const EditVideoContainer = styled.div`
         display: none;
       }
     }
-  }
-  ${EditCoverInput} {
-    top: 50px;
   }
 `
 
