@@ -7,7 +7,7 @@ import { VideoCover } from '@artsy/reaction-force/dist/Components/Publishing/Vid
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
-import { EditVideo } from '../video'
+import { EditVideo, EditVideoPublished } from '../video'
 require('typeahead.js')
 
 describe('EditVideo', () => {
@@ -60,5 +60,13 @@ describe('EditVideo', () => {
     expect(props.onChange.mock.calls[0][1].duration).toBe(100)
     component.instance().onMediaChange('published', false)
     expect(props.onChange.mock.calls[0][1].published).toBe(false)
+  })
+
+  it('toggles published state on media', () => {
+    const component = mount(
+      <EditVideo {...props} />
+    )
+    component.find(EditVideoPublished).simulate('click')
+    expect(props.onChange.mock.calls[0][1].published).toBe(true)
   })
 })

@@ -170,7 +170,7 @@ const EditVideoInput = styled.div`
 const EditCoverInput = styled.div`
   top: 50px;
 `
-const EditVideoPublished = styled.div`
+export const EditVideoPublished = styled.div`
   top: 80px;
 `
 
