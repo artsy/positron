@@ -147,6 +147,10 @@ sanitize = (article) ->
       section
   else
     sections = []
+  if article.media
+    media = article.media
+    article.media.description = sanitizeHtml media.description if media.description
+    article.media.credits = sanitizeHtml media.credits if media.credits
   sanitized = _.extend article,
     title: sanitizeHtml article.title?.replace /\n/g, ''
     thumbnail_title: sanitizeHtml article.thumbnail_title
