@@ -56,5 +56,17 @@ describe('EditVideo', () => {
     expect(props.onChange.mock.calls[0][1].description).toBeNull()
     component.instance().onMediaChange('description', 'Sample Description')
     expect(props.onChange.mock.calls[0][1].description).toBe('Sample Description')
+    component.instance().onMediaChange('duration', 100)
+    expect(props.onChange.mock.calls[0][1].duration).toBe(100)
+    component.instance().onMediaChange('published', false)
+    expect(props.onChange.mock.calls[0][1].published).toBe(false)
+  })
+
+  it('#setDuration sets duration on media', () => {
+    const component = mount(
+      <EditVideo {...props} />
+    )
+    component.instance().setDuration({ target: { duration: 10000 } })
+    expect(props.onChange.mock.calls[0][1].duration).toBe(10000)
   })
 })

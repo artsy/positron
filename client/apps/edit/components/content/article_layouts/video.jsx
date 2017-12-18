@@ -25,12 +25,12 @@ export class EditVideo extends Component {
     const { article, onChange } = this.props
     const media = article.get('media') || {}
 
-    media[key] = value.length ? value : null
+    if (key !== 'duration' && key !== 'published') {
+      media[key] = value.length ? value : null
+    } else {
+      media[key] = value
+    }
     onChange('media', media)
-  }
-
-  onVideoUpload = (src) => {
-    this.onMediaChange('url', src)
   }
 
   setDuration = (e) => {
@@ -38,10 +38,9 @@ export class EditVideo extends Component {
   }
 
   toggleVideoPreview = (showVideo) => {
-    this.setState({
-      showVideo
-    })
+    this.setState({ showVideo })
   }
+
   editDescription = () => {
     const { article, onChange } = this.props
 
