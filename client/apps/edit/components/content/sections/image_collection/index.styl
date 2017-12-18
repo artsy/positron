@@ -141,11 +141,11 @@
   .image-collection__list .drag-container
     flex-direction column
 
-.standard
+[data-layout='standard']
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width standard-overflow-w-margin
 
-.feature
+[data-layout='feature']
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width feature-overflow-w-margin
     margin 0 auto
@@ -165,6 +165,6 @@
       &:hover circle
         fill red-color
 
-.classic
+[data-layout='classic']
   .edit-section__container[data-type=image_set][data-editing=true]
     max-width classic-overflow-w-margin

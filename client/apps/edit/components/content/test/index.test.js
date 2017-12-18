@@ -1,13 +1,11 @@
-import Backbone from 'backbone'
 import React from 'react'
-import Article from '../../../../../models/article'
-import { EditContent } from '../index'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import SectionList from '../section_list/index'
-import { SectionFooter } from '../sections/footer/index'
-import { SectionHeader } from '../sections/header/index'
-import { SectionHero } from '../sections/hero/index'
+import Article from '../../../../../models/article'
+import { EditArticle } from '../article_layouts/article'
+import { EditSeries } from '../article_layouts/series'
+import { EditContent } from '../index'
+require('typeahead.js')
 
 describe('EditContent', () => {
   let props
@@ -18,43 +16,25 @@ describe('EditContent', () => {
       channel: {
         hasFeature: jest.fn().mockReturnValueOnce(false)
       },
-      onChange: jest.fn()
+      onChange: jest.fn(),
+      onChangeHero: jest.fn()
     }
   })
 
-  it('Does not SectionHero if channel does not have feature', () => {
+  it('Renders EditArticle if article layout is not series', () => {
     const component = mount(
       <EditContent {...props} />
     )
-    expect(component.find(SectionHero).length).toBe(0)
+    expect(component.find(EditArticle).length).toBe(1)
+    expect(component.find(EditSeries).length).toBe(0)
   })
 
-  it('Renders SectionHero if channel has feature', () => {
-    props.channel.hasFeature = jest.fn().mockReturnValueOnce(true)
+  it('Renders EditSeries if article layout is series', () => {
+    props.article.set('layout', 'series')
     const component = mount(
       <EditContent {...props} />
     )
-    expect(component.find(SectionHero).length).toBe(1)
-  })
-
-  it('Renders SectionHeader', () => {
-    const component = mount(
-      <EditContent {...props} />
-    )
-    expect(component.find(SectionHeader).length).toBe(1)
-  })
-
-  it('Renders SectionList', () => {
-    const component = mount(
-      <EditContent {...props} />
-    )
-    expect(component.find(SectionList).length).toBe(1)
-  })
-
-  it('Renders SectionFooter', () => {
-    const component = mount(
-      <EditContent {...props} />
-    )
-    expect(component.find(SectionFooter).length).toBe(1)
+    expect(component.find(EditSeries).length).toBe(1)
+    expect(component.find(EditArticle).length).toBe(0)
   })
 })

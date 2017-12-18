@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import SectionList from './section_list/index.coffee'
-import { SectionFooter } from './sections/footer/index'
-import { SectionHeader } from './sections/header/index'
-import { SectionHero } from './sections/hero/index'
+import { EditArticle } from './article_layouts/article.jsx'
+import { EditSeries } from './article_layouts/series.jsx'
 
 export class EditContent extends Component {
   static propTypes = {
@@ -13,42 +11,28 @@ export class EditContent extends Component {
     onChangeHero: PropTypes.func.isRequired
   }
 
+  getArticleLayout = () => {
+    const { article } = this.props
+
+    switch (article.get('layout')) {
+      case 'series': {
+        return <EditSeries {...this.props} />
+      }
+      default: {
+        return <EditArticle {...this.props} />
+      }
+    }
+  }
+
   render () {
-    const { article, channel, onChange, onChangeHero } = this.props
+    const { article } = this.props
 
     return (
       <div
-        className={'EditContent ' + article.get('layout')}
+        className={'EditContent'}
         data-layout={article.get('layout')}
       >
-
-        {channel.hasFeature('hero') &&
-          <SectionHero
-            article={article}
-            channel={channel}
-            onChange={onChange}
-          />
-        }
-
-        <SectionHeader
-          article={article}
-          channel={channel}
-          onChange={onChange}
-          onChangeHero={onChangeHero}
-        />
-
-        <SectionList
-          article={article}
-          channel={channel}
-          sections={article.sections}
-        />
-
-        <SectionFooter
-          article={article}
-          channel={channel}
-          onChange={onChange}
-        />
-
+        {this.getArticleLayout()}
       </div>
     )
   }
