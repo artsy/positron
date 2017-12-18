@@ -163,6 +163,7 @@ describe 'Save', ->
           author_id: '5086df098523e60002000018'
           published: true
           featured: true
+          layout: 'standard'
           slugs: ['artsy-editorial-test']
           sections: [
             {
@@ -181,6 +182,7 @@ describe 'Save', ->
           author_id: '5086df098523e60002000018'
           published: true
           featured: true
+          layout: 'standard'
           slugs: ['artsy-editorial-test']
           sections: [
             {

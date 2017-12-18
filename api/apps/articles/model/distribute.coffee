@@ -50,7 +50,7 @@ cleanArticlesInSailthru = (slugs = []) =>
 
 postFacebookAPI = (article, cb) ->
   article = new Article cloneDeep article
-  return cb() unless article.isFeatured()
+  return cb() unless article.hasInstantArticle()
 
   article.prepForInstant ->
     jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',

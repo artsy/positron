@@ -98,7 +98,7 @@ ImageCollectionSection = (->
     id: @string().objectid()
   ).allow(null)
   title: @string().allow('', null)
-  layout: @string().allow('classic', 'standard', 'series', 'feature').default('classic')
+  layout: @string().allow('classic', 'standard', 'series', 'feature', 'video').default('classic')
   updated_at: @date()
   published: @boolean().default(false)
   published_at: @date().allow(null)
@@ -157,6 +157,15 @@ ImageCollectionSection = (->
       layout: @string().allow('full', 'mini', null)
       images: @array().items([denormalizedArtwork, imageSection])
   ]).allow(null)
+  media: @object().default({}).keys(
+    url: @string().allow('')
+    cover_image_url: @string().allow('')
+    duration: @number().default(0)
+    release_date: @date()
+    published: @boolean().default(false)
+    description: @string().allow('')
+    credits: @string().allow('')
+  )
   postscript: @string().allow('', null)
   related_article_ids: @array().items(@string().objectid()).default([])
   primary_featured_artist_ids: @array().items(@string().objectid()).allow(null)
@@ -179,8 +188,6 @@ ImageCollectionSection = (->
       id: @string().objectid().allow(null)
       name: @string().allow('', null)
   ]).default([])
-  media: @object().default({}).keys
-    duration: @number().allow(null)
   email_metadata: @object().default({}).keys
     image_url: @string().allow('')
     headline: @string().allow('')

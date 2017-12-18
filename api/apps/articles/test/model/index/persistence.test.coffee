@@ -765,3 +765,24 @@ describe 'Article Persistence', ->
         article.hero_section.type.should.equal 'basic'
         article.hero_section.cover_image_url.should.equal 'http://some-cover-image.png'
         done()
+
+    it 'saves media', (done) ->
+      Article.save {
+        media:
+          url: 'https://media.artsy.net/video.mp4'
+          cover_image_url: 'https://media.artsy.net/images.jpg'
+          duration: 1000
+          release_date: '2017-05-07 20:00:00.000'
+          published: false
+          description: '<p>This video is about kittens.</p>'
+          credits: '<p><b>Director</b><br>Marina Cashdan</p>'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.media.url.should.equal 'https://media.artsy.net/video.mp4'
+        article.media.cover_image_url.should.equal 'https://media.artsy.net/images.jpg'
+        article.media.duration.should.equal 1000
+        article.media.release_date.toString().should.containEql 'Sun May 07 2017'
+        article.media.published.should.equal false
+        article.media.description.should.equal '<p>This video is about kittens.</p>'
+        article.media.credits.should.equal '<p><b>Director</b><br>Marina Cashdan</p>'
+        done()
