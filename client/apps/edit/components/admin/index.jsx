@@ -8,6 +8,7 @@ import AdminTags from './verticals_tags/index.coffee'
 import AdminSuperArticle from './super_article/index.coffee'
 import AdminVerticalsTags from './verticals_tags/editorial.coffee'
 import AdminAppearances from './appearances/index.coffee'
+import { AdminSponsor } from './components/sponsor'
 
 export class EditAdmin extends Component {
   static propTypes = {
@@ -71,7 +72,7 @@ export class EditAdmin extends Component {
             <AdminSuperArticle {...this.props} />
           }
           {channel.hasFeature('sponsor') &&
-            <div>Sponsor</div>
+            <AdminSponsor {...this.props} />
           }
         </DropDownList>
       </div>
