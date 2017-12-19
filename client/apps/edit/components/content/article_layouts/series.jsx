@@ -13,12 +13,21 @@ import { RelatedArticles } from '../sections/related_articles/index'
 export class EditSeries extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onChangeHero: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   }
 
   state = {
     uploadProgress: null
+  }
+
+  onChangeHero = (url) => {
+    const { onChange } = this.props
+    const hero_section = {
+      url,
+      type: 'series'
+    }
+
+    onChange('hero_section', hero_section)
   }
 
   editTitle = () => {
@@ -48,7 +57,7 @@ export class EditSeries extends Component {
   }
 
   render () {
-    const { article, onChange, onChangeHero } = this.props
+    const { article, onChange } = this.props
     const { uploadProgress } = this.state
     const { url } = article.attributes.hero_section || {}
 
@@ -63,7 +72,7 @@ export class EditSeries extends Component {
         <div className='EditSeries__bg-input'>
           <FileInput
             type='simple'
-            onUpload={(src) => onChangeHero('url', src)}
+            onUpload={(src) => this.onChangeHero(src)}
             prompt={`+ ${url ? 'Change' : 'Add'} Background`}
             onProgress={(uploadProgress) => this.setState({ uploadProgress })}
           />

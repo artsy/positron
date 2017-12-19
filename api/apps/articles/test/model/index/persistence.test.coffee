@@ -766,6 +766,18 @@ describe 'Article Persistence', ->
         article.hero_section.cover_image_url.should.equal 'http://some-cover-image.png'
         done()
 
+    it 'saves a series hero_section', (done) ->
+      Article.save {
+        hero_section:
+          url: 'http://image.com'
+          type: 'series'
+      }, 'foo', {}, (err, article) ->
+
+        return done err if err
+        article.hero_section.url.should.equal 'http://image.com'
+        article.hero_section.type.should.equal 'series'
+        done()
+
     it 'saves media', (done) ->
       Article.save {
         media:
