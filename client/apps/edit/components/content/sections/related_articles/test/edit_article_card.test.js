@@ -23,7 +23,7 @@ describe('EditArticleCard', () => {
     expect(component.find(ArticleCard).length).toBe(1)
     expect(component.find(IconRemove).length).toBe(1)
     expect(component.text()).toMatch('Edit Article')
-    expect(component.html()).toMatch(`/articles/${props.article._id}/edit`)
+    expect(component.html()).toMatch(`/articles/${props.article.id}/edit`)
   })
 
   it('Can remove an article on click', () => {
