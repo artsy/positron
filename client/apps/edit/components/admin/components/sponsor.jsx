@@ -11,7 +11,8 @@ export class AdminSponsor extends Component {
 
   onChange = (key, value) => {
     const { article, onChange } = this.props
-    const sponsor = article.sponsor || {}
+    const sponsor = article.get('sponsor') || {}
+
     sponsor[key] = value
     onChange('sponsor', sponsor)
   }
@@ -46,7 +47,7 @@ export class AdminSponsor extends Component {
           <ImageUpload
             onChange={this.onChange}
             src={sponsor.partner_condensed_logo}
-            name='partner_dark_logo'
+            name='partner_condensed_logo'
           />
         </Col>
 

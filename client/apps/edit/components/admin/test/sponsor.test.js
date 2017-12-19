@@ -42,7 +42,7 @@ describe('EditAdmin', () => {
       expect(component.html()).toMatch('partner_condensed_logo.jpg')
     })
 
-    it('Calls props.onChange when fileInput changes', () => {
+    it('Can add a light logo', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
@@ -51,6 +51,28 @@ describe('EditAdmin', () => {
 
       expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
       expect(props.onChange.mock.calls[0][1].partner_light_logo).toBe('http://new-image.jpg')
+    })
+
+    it('Can add a dark logo', () => {
+      const component = mount(
+        <AdminSponsor {...props} />
+      )
+      const input = component.find(ImageUpload).at(1).node
+      input.props.onChange(input.props.name, 'http://new-image.jpg')
+
+      expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
+      expect(props.onChange.mock.calls[0][1].partner_dark_logo).toBe('http://new-image.jpg')
+    })
+
+    it('Can add a condensed logo', () => {
+      const component = mount(
+        <AdminSponsor {...props} />
+      )
+      const input = component.find(ImageUpload).last().node
+      input.props.onChange(input.props.name, 'http://new-image.jpg')
+
+      expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
+      expect(props.onChange.mock.calls[0][1].partner_condensed_logo).toBe('http://new-image.jpg')
     })
   })
 
