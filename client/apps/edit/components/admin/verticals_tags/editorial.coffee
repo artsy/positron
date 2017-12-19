@@ -4,6 +4,7 @@ ReactDOM = require 'react-dom'
 Verticals = require '../../../../../collections/verticals.coffee'
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 { div, section, label, button, input } = React.DOM
+sd = require('sharify').data
 
 module.exports = React.createClass
   displayName: 'AdminVerticalsTags'

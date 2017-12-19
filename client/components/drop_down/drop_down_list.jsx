@@ -57,15 +57,16 @@ export class DropDownList extends React.Component {
     return (
       <div className={`DropDownList ${className}`}>
         {children.map((child, i) =>
-          <DropDownItem
-            key={i}
-            title={sections[i].title || sections[i].name}
-            active={this.isActive(i)}
-            index={i}
-            onClick={() => onOpen(i)}
-          >
-            {child}
-          </DropDownItem>
+          sections[i] &&
+            <DropDownItem
+              key={i}
+              title={sections[i].title || sections[i].name}
+              active={this.isActive(i)}
+              index={i}
+              onClick={() => onOpen(i)}
+            >
+              {child}
+            </DropDownItem>
         )}
       </div>
     )

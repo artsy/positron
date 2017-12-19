@@ -5,6 +5,7 @@ import sinon from 'sinon'
 const app = require('api/index.coffee')
 const { fixtures, fabricate, empty } = require('api/test/helpers/db.coffee')
 const resolvers = rewire('../resolvers.js')
+const { ObjectId } = require('mongojs')
 
 describe('resolvers', () => {
   let article, articles, server, promisedMongoFetch
@@ -417,6 +418,40 @@ describe('resolvers', () => {
       results[0].slug.should.equal('artsy-editorial-slug')
       results[1].slug.should.equal('slug-1')
       results[0].updated_at.should.containEql('2017-01-01')
+    })
+  })
+
+  describe('seriesArticle', () => {
+    it('can find a series article', async () => {
+      const seriesArticle = {
+        results: [
+          _.extend({}, fixtures.article, {
+            title: 'Series Article',
+            related_article_ids: [ObjectId('54276766fd4f50996aeca2b8')]
+          })
+        ]
+      }
+      promisedMongoFetch.onFirstCall().resolves(seriesArticle)
+      const results = await resolvers.seriesArticle({
+        id: '54276766fd4f50996aeca2b8'
+      })
+      results.title.should.equal('Series Article')
+    })
+
+    it('returns null if no series article is found', async () => {
+      const seriesArticle = {
+        results: [
+          _.extend({}, fixtures.article, {
+            title: 'Series Article',
+            related_article_ids: []
+          })
+        ]
+      }
+      promisedMongoFetch.onFirstCall().resolves(seriesArticle)
+      const results = await resolvers.seriesArticle({
+        id: '54276766fd4f50996aeca2b8'
+      })
+      _.isNull(results).should.be.true()
     })
   })
 

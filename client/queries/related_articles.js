@@ -8,6 +8,7 @@ export function RelatedArticleQuery (ids) {
         id
         media {
           duration
+          published
         }
         thumbnail_title
         thumbnail_image

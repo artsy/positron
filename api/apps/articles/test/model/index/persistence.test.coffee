@@ -786,3 +786,19 @@ describe 'Article Persistence', ->
         article.media.description.should.equal '<p>This video is about kittens.</p>'
         article.media.credits.should.equal '<p><b>Director</b><br>Marina Cashdan</p>'
         done()
+
+    it 'saves a sponsor', (done) ->
+      Article.save {
+        sponsor:
+          partner_dark_logo: 'https://media.artsy.net/partner_dark_logo.jpg'
+          partner_light_logo: 'https://media.artsy.net/partner_light_logo.jpg'
+          partner_condensed_logo: 'https://media.artsy.net/partner_condensed_logo.jpg'
+          partner_logo_link: 'https://partner.com'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.sponsor.partner_dark_logo.should.equal 'https://media.artsy.net/partner_dark_logo.jpg'
+        article.sponsor.partner_light_logo.should.equal 'https://media.artsy.net/partner_light_logo.jpg'
+        article.sponsor.partner_condensed_logo.should.equal 'https://media.artsy.net/partner_condensed_logo.jpg'
+        article.sponsor.partner_logo_link.should.equal 'https://partner.com'
+        done()
+

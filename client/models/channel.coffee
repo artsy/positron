@@ -34,6 +34,7 @@ module.exports = class Channel extends Backbone.Model
         'follow'
         'layout'
         'postscript'
+        'sponsor'
       ], feature
     else if type is 'team'
       _.contains [

@@ -69,4 +69,13 @@ describe('EditVideo', () => {
     component.find(EditVideoPublished).simulate('click')
     expect(props.onChange.mock.calls[0][1].published).toBe(true)
   })
+
+  it('sets release_date on media', () => {
+    const component = mount(
+      <EditVideo {...props} />
+    )
+    const input = component.find('input[type="date"]')
+    input.simulate('change', { target: { value: '2017-02-07' } })
+    expect(props.onChange.mock.calls[0][1].release_date).toMatch('2017-02-07')
+  })
 })
