@@ -186,7 +186,7 @@ export const relatedArticles = (root) => {
 
 export const relatedArticlesPanel = (root) => {
   const omittedIds = [ObjectId(root.id)]
-  if (root.related_articles_ids) {
+  if (root.related_article_ids) {
     omittedIds.concat(root.related_article_ids)
   }
   const tags = (root.tags && root.tags.length > 0) ? root.tags : null
@@ -254,6 +254,25 @@ export const relatedArticlesCanvas = (root) => {
     } else {
       resolve(null)
     }
+  })
+}
+
+export const seriesArticle = (root) => {
+  return new Promise(async (resolve, reject) => {
+    const seriesArticles = await promisedMongoFetch({
+      layout: 'series',
+      published: true
+    }).catch((e) => reject(e))
+
+    seriesArticles.results.map((article) => {
+      const stringifiedArticleIds = article.related_article_ids.map((id) => {
+        return id.toString()
+      })
+      if (_.contains(stringifiedArticleIds, root.id)) {
+        resolve(present(article))
+      }
+    })
+    resolve(null)
   })
 }
 
