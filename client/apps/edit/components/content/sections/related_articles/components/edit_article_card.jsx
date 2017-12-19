@@ -19,7 +19,7 @@ export class EditArticleCard extends Component {
       <div className='EditArticleCard'>
           <EditLink
             className='EditArticleCard__edit'
-            href={`/articles/${article._id}/edit`}
+            href={`/articles/${article.id}/edit`}
             target='_blank'
             color={color}
           >
