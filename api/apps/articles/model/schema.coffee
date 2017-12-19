@@ -42,6 +42,15 @@ featureSection = (->
     url: @string().allow('',null)
 ).call Joi
 
+seriesSection = (->
+  @object().meta(
+    name: 'SeriesHeader'
+    isTypeOf: (data) -> data.type in ['series']
+  ).keys
+    type: @string().valid('series').default('series')
+    url: @string().allow('')
+).call Joi
+
 denormalizedArtwork = (->
   @object().meta(
     name: 'Artwork'
@@ -105,7 +114,7 @@ ImageCollectionSection = (->
   scheduled_publish_at: @date().allow(null)
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
-  hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection).allow(null).default(null)
+  hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection, seriesSection).allow(null).default(null)
   series_description: @string().allow(null)
   sections: @array().items([
     ImageCollectionSection

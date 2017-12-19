@@ -56,6 +56,18 @@ describe('EditSeries', () => {
     expect(component.text()).toMatch('+ Add Background')
   })
 
+  it('Can save a hero_section with type', () => {
+    props.article.unset('hero_section')
+    const component = mount(
+      <EditSeries {...props} />
+    )
+    const input = component.find(FileInput).first().node
+    input.props.onUpload('http://new-image.jpg')
+    expect(props.onChange.mock.calls[0][0]).toBe('hero_section')
+    expect(props.onChange.mock.calls[0][1].url).toBe('http://new-image.jpg')
+    expect(props.onChange.mock.calls[0][1].type).toBe('series')
+  })
+
   it('Renders a background image if url', () => {
     props.article.set('hero_section', {url: 'http://image.jpg'})
     const component = mount(
