@@ -2,6 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../../../models/article'
+import { FixedBackground } from '@artsy/reaction-force/dist/Components/Publishing/Series/FixedBackground'
 import { SeriesAbout } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesTitle'
 import FileInput from '/client/components/file_input/index.jsx'
@@ -73,7 +74,8 @@ describe('EditSeries', () => {
     const component = mount(
       <EditSeries {...props} />
     )
-    expect(component.find(EditSeriesContainer).node.props.url).toMatch('http://image.jpg')
+    expect(component.find(FixedBackground).length).toBe(1)
+    expect(component.find(FixedBackground).props().backgroundUrl).toBe('http://image.jpg')
     expect(component.text()).toMatch('+ Change Background')
   })
 })
