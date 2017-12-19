@@ -36,6 +36,10 @@ const metaFields = {
   }),
   authors: array().items(object(Author.schema)).meta({
     resolve: resolvers.relatedAuthors
+  }),
+  seriesArticle: object(Article.inputSchema).meta({
+    name: 'SeriesArticle',
+    resolve: resolvers.seriesArticle
   })
 }
 
