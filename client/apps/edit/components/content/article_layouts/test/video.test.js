@@ -74,8 +74,8 @@ describe('EditVideo', () => {
     const component = mount(
       <EditVideo {...props} />
     )
-    const input = component.find('input').at(3)
+    const input = component.find('input[type="date"]')
     input.simulate('change', { target: { value: '2017-02-07' } })
-    expect(props.onChange.mock.calls[0][1].release_date).toBe('2017-02-07')
+    expect(props.onChange.mock.calls[0][1].release_date).toMatch('2017-02-07')
   })
 })
