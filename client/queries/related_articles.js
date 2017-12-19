@@ -9,6 +9,7 @@ export function RelatedArticleQuery (ids) {
         media {
           duration
           published
+          release_date
         }
         thumbnail_title
         thumbnail_image
