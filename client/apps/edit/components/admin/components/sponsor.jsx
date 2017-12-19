@@ -6,9 +6,9 @@ import { Col, Row } from 'react-styled-flexboxgrid'
 export class AdminSponsor extends Component {
   static propTypes = {
     article: PropTypes.object,
-    channel: PropTypes.object,
     onChange: PropTypes.func
   }
+
   onChange = (key, value) => {
     const { article, onChange } = this.props
     const sponsor = article.sponsor || {}
@@ -22,7 +22,8 @@ export class AdminSponsor extends Component {
 
     return (
       <Row className='AdminSponsor'>
-        <Col sm={6}>
+
+        <Col xs={4} className='field-group'>
           <label>Partner Logo Light</label>
           <ImageUpload
             onChange={this.onChange}
@@ -30,7 +31,8 @@ export class AdminSponsor extends Component {
             name='partner_light_logo'
           />
         </Col>
-        <Col sm={6}>
+
+        <Col xs={4} className='field-group'>
           <label>Partner Logo Dark</label>
           <ImageUpload
             onChange={this.onChange}
@@ -38,10 +40,21 @@ export class AdminSponsor extends Component {
             name='partner_dark_logo'
           />
         </Col>
-        <Col sm={6}>
+
+        <Col xs={4} className='field-group'>
+          <label>Partner Logo Condensed</label>
+          <ImageUpload
+            onChange={this.onChange}
+            src={sponsor.partner_condensed_logo}
+            name='partner_dark_logo'
+          />
+        </Col>
+
+        <Col xs={6} className='field-group'>
           <label>Partner Link</label>
           <input
             className='bordered-input'
+            defaultValue={sponsor.partner_logo_link}
             onChange={(e) => this.onChange('partner_logo_link', e.target.value)}
             placeholder='http://example.com...'
           />
