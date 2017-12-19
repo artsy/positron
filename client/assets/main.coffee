@@ -7,6 +7,14 @@ Backbone = require 'backbone'
 window.jQuery = window.$ = $ = require 'jquery'
 window.global = window
 
+React = require 'react'
+DOM = require 'react-dom-factories'
+createClass = require('create-react-class')
+
+# Patch React 16 with deprecated helpers
+React.DOM = DOM
+React.createClass = createClass
+
 class Router extends Backbone.Router
 
   routes:
