@@ -133,7 +133,7 @@ export class EditVideo extends Component {
           <FileInput
             video
             type='simple'
-            sizeLimit={50}
+            sizeLimit={100}
             onUpload={(src) => this.onMediaChange('url', src)}
             prompt={`+ ${media.url ? 'Change' : 'Add'} Video`}
             onProgress={(uploadProgress) => this.setState({ uploadProgress })}
