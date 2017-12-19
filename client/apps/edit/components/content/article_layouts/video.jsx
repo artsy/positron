@@ -1,3 +1,4 @@
+import moment from 'moment'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
@@ -8,6 +9,7 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { IconRemove } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconRemove'
+import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
 
 export class EditVideo extends Component {
   static propTypes = {
@@ -26,6 +28,11 @@ export class EditVideo extends Component {
 
     media[key] = value
     onChange('media', media)
+  }
+
+  onDateChange = (e) => {
+    const date = moment(e.target.value).toISOString()
+    this.onMediaChange('release_date', date)
   }
 
   editDescription = () => {
@@ -126,7 +133,7 @@ export class EditVideo extends Component {
           <FileInput
             video
             type='simple'
-            sizeLimit={50}
+            sizeLimit={100}
             onUpload={(src) => this.onMediaChange('url', src)}
             prompt={`+ ${media.url ? 'Change' : 'Add'} Video`}
             onProgress={(uploadProgress) => this.setState({ uploadProgress })}
@@ -145,6 +152,16 @@ export class EditVideo extends Component {
           />
           <label>Video Published</label>
         </EditVideoPublished>
+
+        <EditVideoReleaseDate>
+          <label>Release Date</label>
+          <input
+            type='date'
+            className='bordered-input bordered-input-dark'
+            defaultValue={moment(media.release_date).format('YYYY-MM-DD')}
+            onChange={this.onDateChange}
+            />
+        </EditVideoReleaseDate>
 
         <MaxWidthContainer>
           <VideoAbout
@@ -173,6 +190,14 @@ const EditCoverInput = styled.div`
 export const EditVideoPublished = styled.div`
   top: 80px;
 `
+const EditVideoReleaseDate = styled.div`
+  top: 120px;
+  label {
+    display: block;
+    text-align: right;
+    ${Fonts.avantgarde('s13')}
+  }
+`
 
 export const EditVideoContainer = styled.div`
   position: relative;
@@ -198,7 +223,10 @@ export const EditVideoContainer = styled.div`
     width: 100%;
     margin-bottom: 40px;
   }
-  ${EditVideoInput}, ${EditCoverInput}, ${EditVideoPublished} {
+  ${EditVideoInput},
+  ${EditCoverInput},
+  ${EditVideoPublished},
+  ${EditVideoReleaseDate} {
     z-index: 10;
     position: absolute;
     right: 20px;
