@@ -7,7 +7,7 @@ import * as Actions from 'client/actions/editActions'
 import { EditContent } from './content/index.jsx'
 import { EditDisplay } from './display/index.jsx'
 import { EditHeader } from './header/index.jsx'
-import EditAdmin from './admin/index'
+import { EditAdmin } from './admin/index.jsx'
 
 class EditContainer extends Component {
   static propTypes = {

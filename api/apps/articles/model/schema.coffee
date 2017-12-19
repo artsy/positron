@@ -188,6 +188,12 @@ ImageCollectionSection = (->
       id: @string().objectid().allow(null)
       name: @string().allow('', null)
   ]).default([])
+  sponsor: @object().default({}).keys(
+    partner_dark_logo: @string().allow('')
+    partner_light_logo: @string().allow('')
+    partner_condensed_logo: @string().allow('')
+    partner_logo_link: @string().allow('')
+  )
   email_metadata: @object().default({}).keys
     image_url: @string().allow('')
     headline: @string().allow('')
