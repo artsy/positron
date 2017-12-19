@@ -30,6 +30,11 @@ export class EditVideo extends Component {
     onChange('media', media)
   }
 
+  onDateChange = (e) => {
+    const date = moment(e.target.value).toISOString()
+    this.onMediaChange('release_date', date)
+  }
+
   editDescription = () => {
     const { article, onChange } = this.props
 
@@ -153,8 +158,8 @@ export class EditVideo extends Component {
           <input
             type='date'
             className='bordered-input bordered-input-dark'
-            value={moment(media.release_date).local().format('YYYY-MM-DD')}
-            onChange={(e) => this.onMediaChange('release_date', e.target.value)}
+            defaultValue={moment(media.release_date).format('YYYY-MM-DD')}
+            onChange={this.onDateChange}
             />
         </EditVideoReleaseDate>
 
