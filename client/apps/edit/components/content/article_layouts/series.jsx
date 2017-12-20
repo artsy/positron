@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { FixedBackground } from '@artsy/reaction-force/dist/Components/Publishing/Series/FixedBackground'
 import { SeriesAbout } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction-force/dist/Components/Publishing/Series/SeriesTitle'
 import { SeriesContent } from '@artsy/reaction-force/dist/Components/Publishing/Layouts/SeriesLayout'
@@ -62,13 +63,15 @@ export class EditSeries extends Component {
     const { url } = article.attributes.hero_section || {}
 
     return (
-      <EditSeriesContainer
-        className='EditSeries'
-        url={url}
-      >
+      <div className='EditSeries'>
         {uploadProgress &&
           <ProgressBar progress={uploadProgress} />
         }
+        <FixedBackground
+          backgroundColor='black'
+          backgroundUrl={url}
+        />
+
         <div className='EditSeries__bg-input'>
           <FileInput
             type='simple'
@@ -98,15 +101,7 @@ export class EditSeries extends Component {
           />
         </SeriesContent>
 
-      </EditSeriesContainer>
+      </div>
     )
   }
 }
-
-export const EditSeriesContainer = styled.div`
-  ${props => props.url && `
-    background-image: url(${props.url});
-    background-size: cover;
-    background-position: 50%;
-  `}
-`
