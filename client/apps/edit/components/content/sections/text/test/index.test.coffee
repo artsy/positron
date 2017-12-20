@@ -62,7 +62,7 @@ describe 'Section Text', ->
           type: 'text'
         },
         {
-          body: '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a></h2>'
+          body: '<h2><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin & Shirreff</a></h2>'
           type: 'text'
         }
       ]
@@ -139,7 +139,6 @@ describe 'Section Text', ->
     it 'Converts html on change with only plugin supported classes', ->
       @component.onChange(@component.state.editorState)
       @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
-
 
   describe '#availableBlocks', ->
 
@@ -365,6 +364,12 @@ describe 'Section Text', ->
       @shortComponent.confirmLink 'link.com'
       @shortComponent.state.html.should.containEql '<a href="link.com">'
 
+    it 'Can handle special characters inside links correctly', ->
+      @props.section = @sections.models[2]
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      $(ReactDOM.findDOMNode(component)).find('.edit-section--text__input').text().should.containEql 'Erin & Shirreff'
+      $(ReactDOM.findDOMNode(component)).find('.edit-section--text__input').html().should.containEql 'Erin &amp; Shirreff'
+      component.state.html.should.containEql 'Erin & Shirreff'
 
   describe 'Artist plugin', ->
 
@@ -387,7 +392,7 @@ describe 'Section Text', ->
     it 'Adds data-id to artist links', ->
       component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
       component.onChange(component.state.editorState)
-      component.state.html.should.eql '<h2><span><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></span></h2>'
+      component.state.html.should.eql '<h2><span><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin &amp; Shirreff</a><a data-id="erin-shirreff" class="entity-follow artist-follow"></a></span></h2>'
 
   describe '#toggleBlockQuote', ->
 
