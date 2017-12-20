@@ -1,36 +1,43 @@
 import React from 'react'
 import { convertFromHTML, convertToHTML } from 'draft-convert'
 import { standardizeSpacing, stripH3Tags } from './text_stripping'
+import { unescapeHTML } from 'underscore.string'
 
 export const convertToRichHtml = (editorState, layout) => {
   let html = convertToHTML({
     entityToHTML: (entity, originalText) => {
+      const { className, url } = entity.data
+
       if (entity.type === 'LINK') {
-        if (entity.data.className != null
-          ? entity.data.className.includes('is-follow-link')
-          : undefined
-        ) {
-          const artist = entity.data.url.split('/artist/')[1]
+        const innerText = unescapeHTML(originalText)
+
+        if (className && className.includes('is-follow-link')) {
+          const artist = url.split('/artist/')[1]
+
           return (
             <span>
-              <a href={entity.data.url} className={entity.data.className}>
-                {originalText}
+              <a href={url} className={className}>
+                {innerText}
               </a>
               <a data-id={artist} className='entity-follow artist-follow' />
             </span>
           )
         } else {
-          return <a href={entity.data.url}>{originalText}</a>
+          return <a href={url}>{innerText}</a>
         }
       }
+
       if (entity.type === 'CONTENT-END') {
-        return <span className={entity.data.className}>{originalText}</span>
+        return <span className={className}>{originalText}</span>
       }
+
       return originalText
     },
     styleToHTML: (style) => {
       if (style === 'STRIKETHROUGH') {
-        return <span style={{ textDecoration: 'line-through' }} />
+        return (
+          <span style={{ textDecoration: 'line-through' }} />
+        )
       }
     }
   })(editorState.getCurrentContent())
@@ -41,6 +48,7 @@ export const convertToRichHtml = (editorState, layout) => {
   }
   // dont save empty sections
   html = html === '<p><br></p>' ? '' : html
+
   return html
 }
 
@@ -55,6 +63,7 @@ export const convertFromRichHtml = (html) => {
     },
     htmlToEntity: (nodeName, node, createEntity) => {
       let data
+
       if (nodeName === 'a') {
         data = {
           url: node.href,
