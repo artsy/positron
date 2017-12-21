@@ -5,7 +5,7 @@ Backbone = require 'backbone'
 fixtures = require '../../../../../../../../test/helpers/fixtures'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 { EditorState } = require 'draft-js'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass
@@ -222,7 +222,7 @@ describe 'Section Text', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
       r.simulate.mouseDown r.find @shortComponent, 'strikethrough'
-      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle h1 block changes (feature)', ->
       @shortComponent.props.article.set 'layout', 'feature'
@@ -294,7 +294,7 @@ describe 'Section Text', ->
     it 'Can toggle strikethrough entities', ->
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('strikethrough')
-      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through;">A <em>short</em> piece of <strong>text</strong></span></h2>'
+      @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle H1 entities (feature)', ->
       @shortComponent.props.article.set 'layout', 'feature'

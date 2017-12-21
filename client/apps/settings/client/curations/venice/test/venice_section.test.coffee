@@ -3,7 +3,7 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 moment = require 'moment'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass

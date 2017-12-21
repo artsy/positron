@@ -6,7 +6,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 Backbone = require 'backbone'
 ReactDOMServer = require 'react-dom/server'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
