@@ -4,7 +4,7 @@ sinon = require 'sinon'
 fixtures = require '../../../../test/helpers/fixtures'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
   findAll: ReactTestUtils.scryRenderedDOMComponentsWithClass
