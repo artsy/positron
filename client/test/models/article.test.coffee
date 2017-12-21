@@ -91,7 +91,7 @@ describe "Article", ->
 
     it 'returns the current date if unpublished and no scheduled_publish_at', ->
       @article.set published: false
-      now = moment().toISOString()
+      now = moment().format('YYYY-MM-DD')
       @article.getPublishDate().should.containEql now
 
     it 'returns scheduled_publish_at if unpublished and scheduled', ->
