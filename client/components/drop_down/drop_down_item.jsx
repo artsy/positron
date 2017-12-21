@@ -34,7 +34,7 @@ export class DropDownItem extends Component {
           onClick={() => onClick(index)}
           data-active={active}
         >
-          <h1 className={!title && 'placeholder'}>
+          <h1 className={!title ? 'placeholder' : undefined}>
             {title || 'Missing Title'}
           </h1>
           <div className='icon' />
