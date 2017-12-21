@@ -38,10 +38,12 @@ describe('PlainText', () => {
     const wrapper = mount(
       <PlainText {...props} />
     )
-    wrapper.instance().focus = jest.fn()
+    const spy = jest.spyOn(wrapper.instance(), 'focus')
     wrapper.update()
+    // FIXME TEST: Not sure why this has to be called twice
     wrapper.simulate('click')
-    expect(wrapper.instance().focus).toHaveBeenCalled()
+    wrapper.simulate('click')
+    expect(spy).toHaveBeenCalled()
   })
 
   it('does not allow linebreaks', () => {

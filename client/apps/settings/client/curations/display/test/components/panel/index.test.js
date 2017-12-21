@@ -47,8 +47,8 @@ describe('Panel', () => {
       <Panel {...props} />
     )
     expect(component.find('label').at(0).text()).toMatch('10 Characters')
-    expect(component.find('input').at(0).node.value).toMatch(props.campaign.panel.headline)
-    expect(component.find('input').at(1).node.value).toMatch(props.campaign.panel.link.url)
+    expect(component.find('input').at(0).instance().value).toMatch(props.campaign.panel.headline)
+    expect(component.find('input').at(1).instance().value).toMatch(props.campaign.panel.link.url)
     expect(component.find('.rich-text--paragraph').at(0).text()).toMatch('Sample body text.')
     expect(component.find('.rich-text--paragraph').at(0).text()).toMatch('Example link')
     expect(component.find('.rich-text--paragraph').at(0).html()).toMatch('<a href="http://artsy.net/">')
@@ -78,7 +78,7 @@ describe('Panel', () => {
     const component = mount(
       <Panel {...props} />
     )
-    component.find(CharacterLimit).at(1).node.onChange('new value')
+    component.find(CharacterLimit).at(1).instance().onChange('new value')
     expect(props.onChange.mock.calls[2][0]).toMatch('panel.body')
     expect(props.onChange.mock.calls[2][1]).toMatch('new value')
     expect(props.onChange.mock.calls[2][2]).toBe(props.index)
