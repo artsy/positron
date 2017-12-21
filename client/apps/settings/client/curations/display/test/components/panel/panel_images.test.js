@@ -64,7 +64,7 @@ describe('PanelImages', () => {
     const component = mount(
       <PanelImages {...props} />
     )
-    const input = component.find(ImageUpload).at(0).node
+    const input = component.find(ImageUpload).at(0).getElement()
 
     input.props.onChange(input.props.name, 'http://new-image.jpg')
     expect(props.onChange.mock.calls[0][0]).toMatch('panel.assets')
