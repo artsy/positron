@@ -133,6 +133,10 @@ describe 'articles endpoints', ->
         {
           title: 'Cows on the prarie'
           _id: ObjectId '5086df098523e60002000012'
+          sections: [{
+            type: "text",
+            body: "Cows on the lawn"
+          }]
           published: true
         }
       ], (err, articles) =>
@@ -140,6 +144,8 @@ describe 'articles endpoints', ->
           .get("http://localhost:5000/articles/5086df098523e60002000012")
           .set('X-Access-Token': @token)
           .end (err, res) ->
+            res.body.sections[0].type.should.equal 'text'
+            res.body.sections[0].body.should.equal 'Cows on the lawn'
             res.body.title.should.equal 'Cows on the prarie'
             done()
 
