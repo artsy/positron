@@ -1,6 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import Backbone from 'backbone'
 import Article from 'client/models/article.coffee'
 import { Autocomplete } from '../index.jsx'
 require('typeahead.js')
@@ -56,9 +57,14 @@ describe('Autocomplete', () => {
     expect(props.onSelect.mock.calls[0][0][0]).toBe(searchResults[0].id)
   })
 
-  it('Returns a custom resObject on select if provided', async () => {
-    const formatSelected = (item) => {
-      return new Article(item)
+  it('Returns a custom formatted selection on select if provided', async () => {
+    Backbone.sync = jest.fn(() => {
+      return new Backbone.Model(searchResults[0])
+    })
+
+    const formatSelected = async (item) => {
+      const article = new Backbone.Model(item)
+      return article.fetch()
     }
 
     props.formatSelected = formatSelected
@@ -67,6 +73,25 @@ describe('Autocomplete', () => {
     )
     await component.instance().onSelect(searchResults[0])
     expect(props.onSelect.mock.calls[0][0][0].get('id')).toBe(searchResults[0].id)
+  })
+
+  it('Returns an error if formatSelected errors', async () => {
+    Backbone.sync = jest.fn(() => {
+      const err = { message: 'an error' }
+      return err
+    })
+
+    const formatSelected = (item) => {
+      const article = new Backbone.Model(item)
+      return article.fetch()
+    }
+
+    props.formatSelected = formatSelected
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    await component.instance().onSelect(searchResults[0])
+    expect(props.onSelect.mock.calls[0][0][0].message).toBe('an error')
   })
 
   it('Disables input if props.disabled', () => {
