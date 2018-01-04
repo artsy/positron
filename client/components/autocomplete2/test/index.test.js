@@ -1,6 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import Article from 'client/models/article.coffee'
 import { Autocomplete } from '../index.jsx'
 require('typeahead.js')
 
@@ -47,12 +48,25 @@ describe('Autocomplete', () => {
     expect(component.instance().engine.get.mock.calls[0][0]).toBe('a title')
   })
 
-  it('OnSelect calls props.onSelect with selected id', () => {
+  it('OnSelect calls props.onSelect with selected id', async () => {
     const component = mount(
       <Autocomplete {...props} />
     )
-    component.instance().onSelect(results[0])
-    expect(props.onSelect.mock.calls[0][0][0]).toBe(results[0]._id)
+    await component.instance().onSelect(results[0])
+    expect(props.onSelect.mock.calls[0][0][0]).toBe(results[0].id)
+  })
+
+  it('Returns a custom resObject on select if provided', async () => {
+    const resObject = (item) => {
+      return new Article(item)
+    }
+
+    props.resObject = resObject
+    const component = mount(
+      <Autocomplete {...props} />
+    )
+    await component.instance().onSelect(results[0])
+    expect(props.onSelect.mock.calls[0][0][0].get('id')).toBe(results[0].id)
   })
 
   it('Disables input if props.disabled', () => {
