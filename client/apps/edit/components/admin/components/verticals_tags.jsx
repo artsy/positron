@@ -46,8 +46,9 @@ export class AdminVerticalsTags extends Component {
         <button
           key={index}
           className={`avant-garde-button ${activeClass}`}
+          data-active={isActive}
           onClick={() => {
-            const vertical = isActive ? {} : item.attributes
+            const vertical = isActive ? null : item.attributes
             onChange('vertical', vertical)
           }}
         >
