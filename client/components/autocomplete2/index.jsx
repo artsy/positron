@@ -63,8 +63,8 @@ export class Autocomplete extends Component {
     if (this.engine.remote.url !== this.props.url) {
       this.engine.remote.url = this.props.url
     }
-    this.engine.get(value, (results) => {
-      this.setState({ results })
+    this.engine.get(value, (searchResults) => {
+      this.setState({ searchResults })
     })
   }
 
@@ -117,7 +117,7 @@ export class Autocomplete extends Component {
           }
         </div>
         <div className='Autocomplete__item-title'>
-          {item.title}
+          {item.title || item.name}
         </div>
       </div>
     )

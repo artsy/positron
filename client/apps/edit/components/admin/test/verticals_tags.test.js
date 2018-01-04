@@ -4,6 +4,7 @@ import React from 'react'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../../models/article'
 import { AdminVerticalsTags } from '../components/verticals_tags.jsx'
+require('typeahead.js')
 
 describe('AdminVerticalsTags', () => {
   let props

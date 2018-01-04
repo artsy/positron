@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { data as sd } from 'sharify'
 import Verticals from '../../../../../collections/verticals.coffee'
+import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
 
 export class AdminVerticalsTags extends Component {
   static propTypes = {
@@ -28,7 +30,7 @@ export class AdminVerticalsTags extends Component {
       cache: true,
       success: (verticals) => {
         let sortedVerticals = verticals.sortBy('name')
-        this.setState({verticals: sortedVerticals})
+        this.setState({ verticals: sortedVerticals })
       }
     })
   }
@@ -59,6 +61,8 @@ export class AdminVerticalsTags extends Component {
   }
 
   render () {
+    const { article, onChange } = this.props
+
     return (
       <Row className='AdminVerticalsTags edit-admin--verticals-tags'>
 
@@ -68,7 +72,38 @@ export class AdminVerticalsTags extends Component {
         </Col>
 
         <Col xs={6} className='field-group'>
-          <label>AdminVerticalsTags</label>
+
+          <div className='field-group'>
+            <label>Topic Tags</label>
+            <AutocompleteInlineList
+              items={article.get('tags')}
+              filter={(tags) => {
+                return tags.results.map((tag) => {
+                  return { id: tag.id, name: tag.name }
+                })
+              }}
+              formatSelected={(tag) => tag.name}
+              onSelect={(tags) => onChange('tags', tags)}
+              placeholder='Start typing a topic tag...'
+              url={`${sd.API_URL}/tags?public=true&q=%QUERY`}
+            />
+          </div>
+
+          <div className='field-group'>
+            <label>Tracking Tags</label>
+            <AutocompleteInlineList
+              items={article.get('tracking_tags')}
+              filter={(tags) => {
+                return tags.results.map((tag) => {
+                  return { id: tag.id, name: tag.name }
+                })
+              }}
+              formatSelected={(tag) => tag.name}
+              onSelect={(tags) => onChange('tracking_tags', tags)}
+              placeholder='Start typing a tracking tag...'
+              url={`${sd.API_URL}/tags?public=true&q=%QUERY`}
+            />
+          </div>
         </Col>
 
       </Row>
