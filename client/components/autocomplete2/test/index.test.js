@@ -7,7 +7,7 @@ require('typeahead.js')
 
 describe('Autocomplete', () => {
   let props
-  let results
+  let searchResults
 
   beforeEach(() => {
     props = {
@@ -17,7 +17,7 @@ describe('Autocomplete', () => {
       url: 'artsy.net'
     }
 
-    results = [
+    searchResults = [
       Fixtures.FeatureArticle,
       Fixtures.StandardArticle
     ]
@@ -52,21 +52,21 @@ describe('Autocomplete', () => {
     const component = mount(
       <Autocomplete {...props} />
     )
-    await component.instance().onSelect(results[0])
-    expect(props.onSelect.mock.calls[0][0][0]).toBe(results[0].id)
+    await component.instance().onSelect(searchResults[0])
+    expect(props.onSelect.mock.calls[0][0][0]).toBe(searchResults[0].id)
   })
 
   it('Returns a custom resObject on select if provided', async () => {
-    const resObject = (item) => {
+    const formatSelected = (item) => {
       return new Article(item)
     }
 
-    props.resObject = resObject
+    props.formatSelected = formatSelected
     const component = mount(
       <Autocomplete {...props} />
     )
-    await component.instance().onSelect(results[0])
-    expect(props.onSelect.mock.calls[0][0][0].get('id')).toBe(results[0].id)
+    await component.instance().onSelect(searchResults[0])
+    expect(props.onSelect.mock.calls[0][0][0].get('id')).toBe(searchResults[0].id)
   })
 
   it('Disables input if props.disabled', () => {
@@ -94,7 +94,9 @@ describe('Autocomplete', () => {
       <Autocomplete {...props} />
     )
     expect(component.instance().engine.remote.filter).toBe(props.filter)
-    expect(component.instance().engine.remote.filter({ results })[0].slug).toBe(results[0].slug)
+    expect(
+      component.instance().engine.remote.filter({ results: searchResults })[0].slug
+    ).toBe(searchResults[0].slug)
   })
 
   it('Displays a list of results if present', () => {
@@ -102,9 +104,9 @@ describe('Autocomplete', () => {
       <Autocomplete {...props} />
     )
     component.instance().isFocused = jest.fn().mockReturnValue(true)
-    component.setState({ results })
-    expect(component.find('.Autocomplete__item').length).toBe(results.length)
-    expect(component.html()).toMatch(results[0].title)
+    component.setState({ searchResults })
+    expect(component.find('.Autocomplete__item').length).toBe(searchResults.length)
+    expect(component.html()).toMatch(searchResults[0].title)
   })
 
   it('Displays "No Results" if focused and no results', () => {
@@ -112,21 +114,21 @@ describe('Autocomplete', () => {
       <Autocomplete {...props} />
     )
     component.instance().isFocused = jest.fn().mockReturnValue(true)
-    component.setState({results: []})
+    component.setState({searchResults: []})
     expect(component.find('.Autocomplete__item').length).toBe(1)
     expect(component.html()).toMatch('No results')
   })
 
   it('Uses a custom format for results if provided', () => {
-    const formatResult = (item) => {
+    const formatSearchResult = (item) => {
       return <div>Child: {item.title}</div>
     }
-    props.formatResult = formatResult
+    props.formatSearchResult = formatSearchResult
     const component = mount(
       <Autocomplete {...props} />
     )
     component.instance().isFocused = jest.fn().mockReturnValue(true)
-    component.setState({ results })
-    expect(component.text()).toMatch(`Child: ${results[0].title}`)
+    component.setState({ searchResults })
+    expect(component.text()).toMatch(`Child: ${searchResults[0].title}`)
   })
 })

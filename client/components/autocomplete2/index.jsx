@@ -8,16 +8,16 @@ export class Autocomplete extends Component {
     className: PropTypes.string,
     disabled: PropTypes.bool,
     filter: PropTypes.func,
-    formatResult: PropTypes.func,
+    formatSelected: PropTypes.func,
+    formatSearchResult: PropTypes.func,
     items: PropTypes.array,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
-    resObject: PropTypes.func,
     url: PropTypes.string
   }
 
   state = {
-    results: [],
+    searchResults: [],
     loading: false
   }
 
@@ -68,14 +68,14 @@ export class Autocomplete extends Component {
     })
   }
 
-  getResItem = async (selected) => {
-    const { resObject } = this.props
+  formatSelected = async (selected) => {
+    const { formatSelected } = this.props
 
     try {
-      if (!resObject) {
+      if (!formatSelected) {
         return selected.id || selected._id
       } else {
-        return await resObject(selected)
+        return await formatSelected(selected)
       }
     } catch (error) {
       console.error(error)
@@ -86,7 +86,7 @@ export class Autocomplete extends Component {
     const { items, onSelect } = this.props
 
     try {
-      const item = await this.getResItem(selected)
+      const item = await this.formatSelected(selected)
 
       items.push(item)
       onSelect(uniq(items))
@@ -101,7 +101,7 @@ export class Autocomplete extends Component {
       this.textInput.blur()
       this.textInput.value = ''
     }
-    this.setState({ results: [] })
+    this.setState({ searchResults: [] })
   }
 
   isFocused = () => {
@@ -123,22 +123,22 @@ export class Autocomplete extends Component {
     )
   }
 
-  formatResults = () => {
-    const { formatResult } = this.props
+  formatSearchResults = () => {
+    const { formatSearchResult } = this.props
     const { loading } = this.state
-    const results = compact(this.state.results)
+    const searchResults = compact(this.state.searchResults)
 
-    if (results.length) {
-      return results.map((item, i) => {
+    if (searchResults.length) {
+      return searchResults.map((item, i) => {
         return (
           <div
             key={i}
             className='Autocomplete__result'
             onClick={() => this.onSelect(item)}
           >
-            {formatResult
+            {formatSearchResult
               ? <div className='Autocomplete__item'>
-                  {formatResult(item)}
+                  {formatSearchResult(item)}
                 </div>
 
               : this.formatResult(item)
@@ -157,13 +157,13 @@ export class Autocomplete extends Component {
     }
   }
 
-  renderResults = () => {
+  renderSearchResults = () => {
     if (this.isFocused()) {
       // display if input is focused
       return (
         <div className='Autocomplete__results'>
           <div className='Autocomplete__results-list'>
-            {this.formatResults()}
+            {this.formatSearchResults()}
           </div>
           <div
             className='Autocomplete__results-bg'
@@ -193,7 +193,7 @@ export class Autocomplete extends Component {
             this.textInput = input
           }}
         />
-        {this.renderResults()}
+        {this.renderSearchResults()}
       </div>
     )
   }
