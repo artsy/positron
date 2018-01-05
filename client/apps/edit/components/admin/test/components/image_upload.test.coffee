@@ -14,7 +14,7 @@ describe 'ImageUpload', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
-      @ImageUpload = benv.require resolve __dirname, '../components/image_upload.coffee'
+      @ImageUpload = benv.require resolve __dirname, '../../components/image_upload.coffee'
       @ImageUpload.__set__ 'gemup', @gemup = sinon.stub()
       @props = {
         size: 10

@@ -1,9 +1,9 @@
 import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '../../../../../models/article'
-import ImageUpload from '../components/image_upload.coffee'
-import { AdminSponsor } from '../components/sponsor.jsx'
+import Article from '../../../../../../models/article'
+import ImageUpload from '../../components/image_upload.coffee'
+import { AdminSponsor } from '../../components/sponsor.jsx'
 
 describe('EditAdmin', () => {
   let props

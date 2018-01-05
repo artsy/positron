@@ -66,14 +66,14 @@ export class AdminVerticalsTags extends Component {
     return (
       <Row className='AdminVerticalsTags edit-admin--verticals-tags'>
 
-        <Col xs={6} className='field-group'>
+        <Col xs={6} className='field-group verticals'>
           <label>Editorial Vertical</label>
           {this.renderVerticalsList()}
         </Col>
 
         <Col xs={6} className='field-group'>
 
-          <div className='field-group'>
+          <div className='field-group tags'>
             <label>Topic Tags</label>
             <AutocompleteInlineList
               items={article.get('tags') || []}
@@ -89,7 +89,7 @@ export class AdminVerticalsTags extends Component {
             />
           </div>
 
-          <div className='field-group'>
+          <div className='field-group tracking-tags'>
             <label>Tracking Tags</label>
             <AutocompleteInlineList
               items={article.get('tracking_tags') || []}
