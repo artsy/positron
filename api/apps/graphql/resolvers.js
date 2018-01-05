@@ -10,6 +10,8 @@ const { promisedMongoFetch, mongoFetch, present, presentCollection, find } = req
 const { ObjectId } = require('mongojs')
 const { DISPLAY_ID } = process.env
 
+let DISPLAY_COUNTER = 0
+
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
   if (unpublished && !args.channel_id) {
@@ -123,38 +125,32 @@ export const display = (root, args, req, ast) => {
       }
 
       const firstResultCampaigns = get(results, '0.campaigns', [])
-      const outcomes = []
 
-      firstResultCampaigns.map((campaign, i) => {
-        const weightedCampaignArray = _.times((campaign.sov * 100), () => campaign.name)
-        outcomes.push(...weightedCampaignArray)
-      })
-
-      if (outcomes.length > 100) {
-        reject(new Error('Share of voice sum cannot be greater than 100'))
-      } else if (outcomes.length < 100) {
-        const weightedEmptyArray = _.times((100 - outcomes.length), () => 0)
-        outcomes.push(...weightedEmptyArray)
-      }
-
-      const result = _.sample(outcomes)
-
-      if (result === 0) {
-        resolve(null)
-      } else {
-        const campaign = _.findWhere(results[0].campaigns, { name: result })
+      // Filter for campaigns that are available based on date
+      const now = moment(new Date())
+      const liveCampaigns = _.filter(firstResultCampaigns, (campaign) => {
         const { start_date, end_date } = campaign
 
-        // Only return results that start or end after now
-        const now = moment(new Date())
         const startsAfterNow = moment(start_date).isAfter(now)
         const endsBeforeNow = moment(end_date).isBefore(now)
+        return !(startsAfterNow || endsBeforeNow)
+      })
 
-        if (startsAfterNow || endsBeforeNow) {
-          resolve(null)
+      if (liveCampaigns.length > 5) {
+        reject(new Error('Share of voice sum cannot be greater than 100'))
+      } else {
+        const emptyCampaigns = _.times(5 - liveCampaigns.length, () => null)
+        liveCampaigns.push(...emptyCampaigns)
+
+        const result = liveCampaigns[DISPLAY_COUNTER]
+
+        if (DISPLAY_COUNTER === 4) {
+          DISPLAY_COUNTER = 0
         } else {
-          resolve(campaign)
+          DISPLAY_COUNTER = DISPLAY_COUNTER + 1
         }
+
+        resolve(result)
       }
     })
   })

@@ -196,6 +196,27 @@ describe('resolvers', () => {
       result.panel.headline.should.containEql('Euismod Inceptos Quam')
     })
 
+    it('selects a campaign based on a counter', async () => {
+      const display = {
+        total: 20,
+        count: 4,
+        results: [{
+          campaigns: [
+            { ...fixtures().display, name: 0 },
+            { ...fixtures().display, name: 1 },
+            { ...fixtures().display, name: 2 },
+            { ...fixtures().display, name: 3 },
+            { ...fixtures().display, name: 4 }
+          ]
+        }]
+      }
+      resolvers.__set__('Curation', { mongoFetch: (sinon.stub().yields(null, display)) })
+
+      const result = await resolvers.display({}, {}, req, {})
+      const nextResult = await resolvers.display({}, {}, req, {})
+      nextResult.name.should.equal(result.name + 1)
+    })
+
     it('rejects if SOV is over 100%', async () => {
       const display = {
         total: 20,
@@ -255,6 +276,7 @@ describe('resolvers', () => {
           count: 4,
           results: [{
             campaigns: [
+              campaign,
               campaign,
               campaign,
               campaign,
