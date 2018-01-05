@@ -38,10 +38,10 @@ export class AdminVerticalsTags extends Component {
   renderVerticalsList = () => {
     const { verticals } = this.state
     const { article, onChange } = this.props
-    const { name } = article.get('vertical')
+    const name = article.get('vertical') && article.get('vertical').name
 
     return verticals.map((item, index) => {
-      const isActive = item.get('name') === name
+      const isActive = name && item.get('name') === name
       const activeClass = isActive ? 'avant-garde-button-black' : ''
 
       return (
@@ -64,7 +64,7 @@ export class AdminVerticalsTags extends Component {
     const { article, onChange } = this.props
 
     return (
-      <Row className='AdminVerticalsTags edit-admin--verticals-tags'>
+      <Row className='AdminVerticalsTags'>
 
         <Col xs={6} className='field-group verticals'>
           <label>Editorial Vertical</label>

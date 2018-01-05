@@ -50,6 +50,7 @@ describe('AdminVerticalsTags', () => {
       )
       const button = component.find('.verticals button').last()
       button.simulate('click')
+
       expect(props.onChange.mock.calls[0][0]).toBe('vertical')
       expect(props.onChange.mock.calls[0][1].name).toBe('News')
     })
@@ -60,6 +61,7 @@ describe('AdminVerticalsTags', () => {
       )
       const button = component.find('button[data-active=true]').at(0)
       button.simulate('click')
+
       expect(props.onChange.mock.calls[0][0]).toBe('vertical')
       expect(props.onChange.mock.calls[0][1]).toBe(null)
     })

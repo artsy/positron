@@ -22,6 +22,7 @@ describe('AutocompleteInlineList', () => {
     )
     expect(component.find(Autocomplete).length).toBe(1)
     expect(component.find(Autocomplete).props().placeholder).toMatch(props.placeholder)
+    expect(component.find(Autocomplete).props().url).toMatch(props.url)
   })
 
   it('Renders list items', () => {
