@@ -1,70 +1,50 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-// import { Col, Row } from 'react-styled-flexboxgrid'
-import { data as sd } from 'sharify'
-// import Verticals from '../../../../../collections/verticals.coffee'
 import { Autocomplete } from '/client/components/autocomplete2/index'
-import { ArticleTagQuery } from 'client/queries/article_tags'
-
-import request from 'superagent'
 
 export class AutocompleteInlineList extends Component {
   static propTypes = {
-    // article: PropTypes.object,
-    // onChange: PropTypes.func
+    className: PropTypes.string,
+    disabled: PropTypes.bool,
+    filter: PropTypes.func,
+    formatSelected: PropTypes.func,
+    formatSearchResult: PropTypes.func,
+    items: PropTypes.array,
+    onSelect: PropTypes.func,
+    placeholder: PropTypes.string,
+    url: PropTypes.string
   }
 
-  // fetchVerticals = async () => {
-    // new Verticals().fetch({
-    //   cache: true,
-    //   success: (verticals) => {
-    //     let sortedVerticals = verticals.sortBy('name')
-    //     this.setState({verticals: sortedVerticals})
-    //   }
-    // })
-  // }
+  onRemoveItem = (item) => {
+    const { items, onSelect } = this.props
+    const newItems = items
 
-  fetchTags = (article) => {
-    // const { related_article_ids } = this.props.article.attributes
-    // const { relatedArticles } = this.state
-    // const alreadyFetched = pluck(relatedArticles, 'id')
-    // const idsToFetch = difference(related_article_ids, alreadyFetched)
-    const tagsToFetch = article.topic_tags
-    debugger
-    if (tagsToFetch.length) {
-      tagsToFetch.map((tag) => {
-        request
-          .get(`${sd.API_URL}/graphql`)
-          .set({
-            'Accept': 'application/json',
-            'X-Access-Token': (sd.USER && sd.USER.access_token)
-          })
-          .query({ query: ArticleTagQuery(tag.name) })
-          .end((err, res) => {
-            if (err) {
-              console.error(err)
-            }
-            debugger
-            // relatedArticles.push(res.body.data.articles)
-      //       this.setState({
-      //         loading: false,
-      //         relatedArticles: uniq(flatten(relatedArticles))
-      //       })
-          })
-      })
-    } else {
-      debugger
-    //   this.setState({
-    //     loading: false,
-    //     relatedArticles
-    //   })
-    }
+    newItems.splice(item, 1)
+    onSelect(newItems)
   }
 
   render () {
+    const { items, className } = this.props
+
     return (
-      <div className='AutocompleteInlineList'>
+      <div className={`Autocomplete--inline ${className ? className : ''}`}>
+
+        <div className='Autocomplete__list'>
+          {items.map((item, i) => {
+            return (
+              <div
+                className='Autocomplete__list-item'
+                key={i}
+              >
+                {item}
+                <button onClick={() => this.onRemoveItem(i)} />
+              </div>
+            )
+          })}
+        </div>
+
         <Autocomplete {...this.props} />
+
       </div>
     )
   }

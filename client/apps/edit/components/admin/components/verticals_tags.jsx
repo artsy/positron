@@ -25,7 +25,7 @@ export class AdminVerticalsTags extends Component {
     this.fetchVerticals()
   }
 
-  fetchVerticals = async () => {
+  fetchVerticals = () => {
     new Verticals().fetch({
       cache: true,
       success: (verticals) => {
@@ -76,7 +76,7 @@ export class AdminVerticalsTags extends Component {
           <div className='field-group'>
             <label>Topic Tags</label>
             <AutocompleteInlineList
-              items={article.get('tags')}
+              items={article.get('tags') || []}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }
@@ -92,7 +92,7 @@ export class AdminVerticalsTags extends Component {
           <div className='field-group'>
             <label>Tracking Tags</label>
             <AutocompleteInlineList
-              items={article.get('tracking_tags')}
+              items={article.get('tracking_tags') || []}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }
@@ -101,7 +101,7 @@ export class AdminVerticalsTags extends Component {
               formatSelected={(tag) => tag.name}
               onSelect={(tags) => onChange('tracking_tags', tags)}
               placeholder='Start typing a tracking tag...'
-              url={`${sd.API_URL}/tags?public=true&q=%QUERY`}
+              url={`${sd.API_URL}/tags?public=false&q=%QUERY`}
             />
           </div>
         </Col>
