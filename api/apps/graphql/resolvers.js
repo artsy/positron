@@ -141,6 +141,7 @@ export const display = (root, args, req, ast) => {
       } else {
         const emptyCampaigns = _.times(5 - liveCampaigns.length, () => null)
         liveCampaigns.push(...emptyCampaigns)
+
         const result = liveCampaigns[DISPLAY_COUNTER]
 
         if (DISPLAY_COUNTER === 4) {
