@@ -63,8 +63,8 @@ export class Autocomplete extends Component {
     if (this.engine.remote.url !== this.props.url) {
       this.engine.remote.url = this.props.url
     }
-    this.engine.get(value, (results) => {
-      this.setState({ results })
+    this.engine.get(value, (searchResults) => {
+      this.setState({ searchResults })
     })
   }
 
@@ -91,6 +91,10 @@ export class Autocomplete extends Component {
       items.push(item)
       onSelect(uniq(items))
       this.onBlur()
+
+      if (this.textInput) {
+        this.textInput.focus()
+      }
     } catch (err) {
       console.error(err)
     }
@@ -117,7 +121,7 @@ export class Autocomplete extends Component {
           }
         </div>
         <div className='Autocomplete__item-title'>
-          {item.title}
+          {item.title || item.name}
         </div>
       </div>
     )
@@ -178,7 +182,7 @@ export class Autocomplete extends Component {
     const { className, disabled, placeholder } = this.props
 
     return (
-      <div className={`Autocomplete ${className}`}>
+      <div className={`Autocomplete ${className ? className : ''}`}>
         <Icon
           name='search'
           color='black'

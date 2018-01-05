@@ -1,6 +1,5 @@
 @import '../stylus_lib'
 @import './article'
-@import './verticals_tags'
 @import './featuring'
 @import './super_article'
 
@@ -34,3 +33,24 @@
 
 .EditAdmin
   margin 95px auto
+
+.AdminVerticalsTags
+  .Autocomplete
+    z-index inherit
+  button.avant-garde-button
+    margin 5px 8px 8px 0px
+    border-radius 1px
+    padding 13px 15px
+    &.disabled
+      background-color gray-lightest-color
+      &:hover
+        color black
+
+  .fields-left
+    .avant-garde-button.avant-garde-button-black:hover,
+    .avant-garde-button.avant-garde-button-black:focus,
+    button:active
+      background black
+      border-color black
+    .field-group:first-child
+      margin-bottom 30px
