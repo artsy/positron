@@ -11,14 +11,9 @@ export class AdminVerticalsTags extends Component {
     onChange: PropTypes.func
   }
 
-  constructor (props) {
-    super(props)
-    const { article } = props
-
-    this.state = {
-      vertical: article.get('vertical') || null,
-      verticals: []
-    }
+  state = {
+    vertical: this.props.article.get('vertical') || null,
+    verticals: []
   }
 
   componentWillMount = () => {
@@ -29,7 +24,7 @@ export class AdminVerticalsTags extends Component {
     new Verticals().fetch({
       cache: true,
       success: (verticals) => {
-        let sortedVerticals = verticals.sortBy('name')
+        const sortedVerticals = verticals.sortBy('name')
         this.setState({ verticals: sortedVerticals })
       }
     })
