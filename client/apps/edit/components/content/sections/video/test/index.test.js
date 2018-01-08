@@ -38,8 +38,8 @@ describe('Video', () => {
     const component = mount(
       <SectionVideo {...props} />
     )
-    expect(component.props().section.toJSON().url).toMatch('https://youtu.be/Bv_5Zv5c-Ts')
-    expect(component.props().section.toJSON().cover_image_url).toMatch('http://image.jpg')
+    expect(component.children().nodes[0].props.section.url).toMatch('https://youtu.be/Bv_5Zv5c-Ts')
+    expect(component.children().nodes[0].props.section.cover_image_url).toMatch('http://image.jpg')
     expect(component.html()).not.toMatch('edit-section__placeholder')
     expect(component.text()).not.toMatch('Add a video above')
   })
@@ -88,7 +88,7 @@ describe('Video', () => {
       'http://are.you'
     ]
     validUrls.forEach(value => {
-      input.instance().value = value
+      input.node.value = value
       input.simulate('change', { target: {value} })
       expect(component.props().section.get('url')).toEqual(value)
     })
@@ -100,7 +100,7 @@ describe('Video', () => {
     const component = mount(
       <SectionVideo {...props} />
     )
-    expect(component.find('.edit-section__remove').length).toEqual(1)
+    expect(component.children().nodes[1].props.children[0].props.className).toMatch('edit-section__remove')
   })
 
   it('can remove the cover_image_url', () => {
@@ -118,7 +118,7 @@ describe('Video', () => {
       <SectionVideo {...props} />
     )
     const input = component.find('.bordered-input')
-    input.instance().value = ''
+    input.node.value = ''
     input.simulate('change', { target: { value: '' } })
     expect(component.props().section.get('url')).toBeFalsy()
     expect(component.props().section.get('cover_image_url')).toBeFalsy()

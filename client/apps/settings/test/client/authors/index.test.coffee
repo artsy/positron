@@ -6,7 +6,7 @@ Backbone = require 'backbone'
 fixtures = require '../../../../../../test/helpers/fixtures'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-dom/test-utils'
+ReactTestUtils = require 'react-addons-test-utils'
 ReactDOMServer = require 'react-dom/server'
 r =
   find: ReactTestUtils.findRenderedDOMComponentWithClass

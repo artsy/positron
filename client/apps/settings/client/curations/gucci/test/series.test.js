@@ -59,7 +59,7 @@ describe('Series Admin', () => {
     const component = mount(
       <SeriesAdmin {...props} />
     )
-    component.find(Paragraph).getElement().props.onChange('About this series')
+    component.find(Paragraph).at(0).node.props.onChange('About this series')
     expect(props.onChange.mock.calls[0][0]).toMatch('about')
     expect(props.onChange.mock.calls[0][1]).toMatch('About this series')
   })
@@ -79,7 +79,7 @@ describe('Series Admin', () => {
     const component = mount(
       <SeriesAdmin {...props} />
     )
-    const input = component.find(ImageUpload).at(0).getElement()
+    const input = component.find(ImageUpload).at(0).node
     input.props.onChange(input.props.name, 'http://new-logo.jpg')
 
     expect(props.onChange.mock.calls[0][0]).toMatch('partner_logo_primary')
@@ -90,7 +90,7 @@ describe('Series Admin', () => {
     const component = mount(
       <SeriesAdmin {...props} />
     )
-    const input = component.find(ImageUpload).at(1).getElement()
+    const input = component.find(ImageUpload).at(1).node
     input.props.onChange(input.props.name, 'http://new-logo.jpg')
 
     expect(props.onChange.mock.calls[0][0]).toMatch('partner_logo_secondary')
