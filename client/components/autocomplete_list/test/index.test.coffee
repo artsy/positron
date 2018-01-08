@@ -20,6 +20,9 @@ describe 'AutocompleteList', ->
           ttAdapter: ->
         )
       $.fn.typeahead = sinon.stub()
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       @AutocompleteList = benv.require resolve __dirname, '../index'
       @AutocompleteList.__set__ 'request', get: sinon.stub().returns
         set: set = sinon.stub()
@@ -29,7 +32,9 @@ describe 'AutocompleteList', ->
         end: sinon.stub().yields(null, { id: '456', value: 'Mary Heilmann'})
       DragContainer = benv.require resolve __dirname, '../../drag_drop/index'
       DragTarget = benv.require resolve __dirname, '../../drag_drop/drag_target'
+      DragSource = benv.require(resolve(__dirname, '../../drag_drop/drag_source.jsx')).DragSource
       DragContainer.__set__ 'DragTarget', React.createFactory DragTarget
+      DragContainer.__set__ 'DragSource', DragSource
       @AutocompleteList.__set__ 'DragContainer', React.createFactory DragContainer
       @props =
         url: 'https://api.artsy.net/search?term=%QUERY'
@@ -82,9 +87,9 @@ describe 'AutocompleteList', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'draggable="true"'
 
   it 'Resets the item order onDragEnd', (done) ->
-    r.simulate.dragStart r.find(@component, 'drag-source')[1]
+    r.simulate.dragStart r.find(@component, 'DragSource')[1]
     r.simulate.dragOver r.find(@component, 'drag-target')[0]
-    r.simulate.dragEnd r.find(@component, 'drag-source')[1]
+    r.simulate.dragEnd r.find(@component, 'DragSource')[1]
     @selected.args[0][2][0].value.should.eql 'Mary Heilmann'
     done()
 
