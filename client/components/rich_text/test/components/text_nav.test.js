@@ -151,8 +151,8 @@ describe('TextNav', () => {
         const component = mount(
           <TextNav {...props} />
         )
-        const nav = component.find('.TextNav').first().getElement()
-        expect(nav.props.style.width).toBe('250px')
+        const nav = component.find('.TextNav').first().node
+        expect(nav.style._values.width).toBe('250px')
       })
 
       it('Sets the width to 200px if 8 buttons (partner)', () => {
@@ -166,8 +166,8 @@ describe('TextNav', () => {
         const component = mount(
           <TextNav {...props} />
         )
-        const nav = component.find('.TextNav').first().getElement()
-        expect(nav.props.style.width).toBe('200px')
+        const nav = component.find('.TextNav').first().node
+        expect(nav.style._values.width).toBe('200px')
       })
 
       it('Sets the width to 50px per button if less than 8 (captions)', () => {
@@ -178,8 +178,8 @@ describe('TextNav', () => {
         const component = mount(
           <TextNav {...props} />
         )
-        const nav = component.find('.TextNav').first().getElement()
-        expect(nav.props.style.width).toBe('150px')
+        const nav = component.find('.TextNav').first().node
+        expect(nav.style._values.width).toBe('150px')
       })
 
       it('Sets the nav position based on props', () => {
@@ -193,9 +193,9 @@ describe('TextNav', () => {
         const component = mount(
           <TextNav {...props} />
         )
-        const nav = component.find('.TextNav').first().getElement()
-        expect(nav.props.style.top).toBe(120)
-        expect(nav.props.style.marginLeft).toBe(200)
+        const nav = component.find('.TextNav').first().node
+        expect(nav.style._values.top).toBe('120px')
+        expect(nav.style._values['margin-left']).toBe('200px')
       })
     })
   })

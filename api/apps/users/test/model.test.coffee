@@ -112,6 +112,11 @@ describe 'User', ->
       User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
       done()
 
+    it 'returns true for a non-partner or non-channel member but admin when no channel_id', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [], type: 'Admin' }
+      User.hasChannelAccess(user).should.be.true()
+      done()
+
     it 'returns false for a non-partner or non-channel member', (done) ->
       user = _.extend fixtures().users, { channel_ids: [], partner_ids: [], type: 'User' }
       User.hasChannelAccess(user, '5086df098523e60002000012').should.be.false()

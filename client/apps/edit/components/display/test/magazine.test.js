@@ -42,7 +42,7 @@ describe('DisplayMagazine', () => {
     const component = mount(
       <DisplayMagazine {...props} />
     )
-    const input = component.find(ImageUpload).at(0).getElement()
+    const input = component.find(ImageUpload).at(0).node
     input.props.onChange(input.props.name, 'http://new-image.jpg')
 
     expect(props.onChange.mock.calls[0][0]).toBe('thumbnail_image')
@@ -53,7 +53,7 @@ describe('DisplayMagazine', () => {
     const component = mount(
       <DisplayMagazine {...props} />
     )
-    const input = component.find(CharacterLimit).at(0).getElement()
+    const input = component.find(CharacterLimit).at(0).node
     input.props.onChange('New title')
 
     expect(props.onChange.mock.calls[0][0]).toBe('thumbnail_title')
@@ -64,7 +64,7 @@ describe('DisplayMagazine', () => {
     const component = mount(
       <DisplayMagazine {...props} />
     )
-    const input = component.find(CharacterLimit).at(1).getElement()
+    const input = component.find(CharacterLimit).at(1).node
     input.props.onChange('New description')
 
     expect(props.onChange.mock.calls[0][0]).toBe('description')

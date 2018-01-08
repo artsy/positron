@@ -123,7 +123,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        const input = component.find(ImageUpload).at(0).getElement()
+        const input = component.find(ImageUpload).at(0).node
         input.props.onChange(input.props.name, 'http://new-logo.jpg')
         const onChangeArgs = props.onChange.mock.calls[0]
 
@@ -149,7 +149,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        const input = component.find(ImageUpload).at(1).getElement()
+        const input = component.find(ImageUpload).at(1).node
         input.props.onChange(input.props.name, 'http://new-image.jpg')
         const onChangeArgs = props.onChange.mock.calls[2]
 
@@ -163,7 +163,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        const input = component.find(ImageUpload).at(1).getElement()
+        const input = component.find(ImageUpload).at(1).node
         input.props.onChange(input.props.name, 'http://new-image.jpg')
         const onChangeArgs = props.onChange.mock.calls[3]
 
@@ -190,7 +190,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        const input = component.find(ImageUpload).at(2).getElement()
+        const input = component.find(ImageUpload).at(2).node
         input.props.onChange(input.props.name, 'http://image2.jpg')
         const onChangeArgs = props.onChange.mock.calls[5]
 

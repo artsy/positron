@@ -3,7 +3,7 @@ sinon = require 'sinon'
 { resolve } = require 'path'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-dom/test-utils'
+ReactTestUtils = require 'react-addons-test-utils'
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -14,7 +14,7 @@ describe 'ImageUpload', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
-      @ImageUpload = benv.require resolve __dirname, '../components/image_upload.coffee'
+      @ImageUpload = benv.require resolve __dirname, '../../components/image_upload.coffee'
       @ImageUpload.__set__ 'gemup', @gemup = sinon.stub()
       @props = {
         size: 10

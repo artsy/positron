@@ -4,20 +4,14 @@ import { PlainText } from '/client/components/rich_text/components/plain_text.js
 import { mount } from 'enzyme'
 
 describe('Canvas Text', () => {
-  let props
-
-  const getProps = () => {
-    props = {
-      campaign: {
-        canvas: {assets: []},
-        panel: {assets: []}
-      },
-      index: 0,
-      onChange: jest.fn()
-    }
+  const props = {
+    campaign: {
+      canvas: {assets: []},
+      panel: {assets: []}
+    },
+    index: 0,
+    onChange: jest.fn()
   }
-
-  beforeEach(getProps)
 
   it('Can save an edited headline', () => {
     const component = mount(
@@ -36,10 +30,10 @@ describe('Canvas Text', () => {
     const component = mount(
       <CanvasText {...props} />
     )
-    component.find(PlainText).at(0).getElement().props.onChange('New Body')
-    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.headline')
-    expect(props.onChange.mock.calls[0][1]).toMatch('New Body')
-    expect(props.onChange.mock.calls[0][2]).toBe(0)
+    component.find(PlainText).at(0).node.props.onChange('New Body')
+    expect(props.onChange.mock.calls[1][0]).toMatch('canvas.headline')
+    expect(props.onChange.mock.calls[1][1]).toMatch('New Body')
+    expect(props.onChange.mock.calls[1][2]).toBe(0)
   })
 
   it('Can save an edited CTA Text', () => {
@@ -49,10 +43,9 @@ describe('Canvas Text', () => {
     const input = component.find('input').at(0)
     input.simulate('change', { target: { value: 'Read More' } })
 
-    // FIXME TEST: Not sure...
-    // expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.text')
-    expect(props.onChange.mock.calls[0][1]).toMatch('Read More')
-    expect(props.onChange.mock.calls[0][2]).toBe(0)
+    expect(props.onChange.mock.calls[2][0]).toMatch('canvas.link.text')
+    expect(props.onChange.mock.calls[2][1]).toMatch('Read More')
+    expect(props.onChange.mock.calls[2][2]).toBe(0)
   })
 
   it('Can save an edited CTA Link', () => {
@@ -62,19 +55,18 @@ describe('Canvas Text', () => {
     const input = component.find('input').at(1)
     input.simulate('change', { target: { value: 'http://artsy.net' } })
 
-    // FIXME TEST: Not sure...
-    // expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.url')
-    expect(props.onChange.mock.calls[0][1]).toMatch('http://artsy.net')
-    expect(props.onChange.mock.calls[0][2]).toBe(0)
+    expect(props.onChange.mock.calls[3][0]).toMatch('canvas.link.url')
+    expect(props.onChange.mock.calls[3][1]).toMatch('http://artsy.net')
+    expect(props.onChange.mock.calls[3][2]).toBe(0)
   })
 
   it('Can save an edited Disclaimer', () => {
     const component = mount(
       <CanvasText {...props} />
     )
-    component.find(PlainText).instance().props.onChange('New Disclaimer')
-    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.disclaimer')
-    expect(props.onChange.mock.calls[0][1]).toMatch('New Disclaimer')
-    expect(props.onChange.mock.calls[0][2]).toBe(0)
+    component.find(PlainText).at(1).node.props.onChange('New Disclaimer')
+    expect(props.onChange.mock.calls[4][0]).toMatch('canvas.disclaimer')
+    expect(props.onChange.mock.calls[4][1]).toMatch('New Disclaimer')
+    expect(props.onChange.mock.calls[4][2]).toBe(0)
   })
 })

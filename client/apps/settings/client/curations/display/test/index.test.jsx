@@ -58,8 +58,7 @@ describe('Display Admin', () => {
     component.instance().onChange('canvas.name', 'New Title', 0)
     expect(component.state().curation.get('campaigns')[0].canvas.name).toMatch('New Title')
     expect(component.state().saveStatus).toMatch('Save')
-    // FIXME TEST: Not sure...
-    // expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
+    expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
   })
 
   it('Save button saves the curation', () => {

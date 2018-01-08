@@ -85,7 +85,7 @@ describe 'instant article template', ->
       moment: moment
       particle: particle
       toSentence: _s.toSentence
-    html.should.containEql '<h2><p>Just before the lines start forming...</p></h2>'
+    html.should.containEql '<h2><i>Just before the lines start forming...</i></h2>'
 
   it 'renders a postscript', ->
     @article.set 'postscript', '<i>A postscript is here to provide more information</i>'

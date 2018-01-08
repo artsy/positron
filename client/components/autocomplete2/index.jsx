@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { uniq } from 'lodash'
+import { uniq, compact } from 'lodash'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 
 export class Autocomplete extends Component {
   static propTypes = {
+    className: PropTypes.string,
     disabled: PropTypes.bool,
     filter: PropTypes.func,
-    formatResult: PropTypes.func,
+    formatSelected: PropTypes.func,
+    formatSearchResult: PropTypes.func,
     items: PropTypes.array,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
@@ -15,7 +17,7 @@ export class Autocomplete extends Component {
   }
 
   state = {
-    results: [],
+    searchResults: [],
     loading: false
   }
 
@@ -61,16 +63,41 @@ export class Autocomplete extends Component {
     if (this.engine.remote.url !== this.props.url) {
       this.engine.remote.url = this.props.url
     }
-    this.engine.get(value, (results) => {
-      this.setState({ results })
+    this.engine.get(value, (searchResults) => {
+      this.setState({ searchResults })
     })
   }
 
-  onSelect = (item) => {
-    const { onSelect, items } = this.props
-    items.push(item._id)
-    onSelect(uniq(items))
-    this.onBlur()
+  formatSelected = async (selected) => {
+    const { formatSelected } = this.props
+
+    try {
+      if (!formatSelected) {
+        return selected.id || selected._id
+      } else {
+        return await formatSelected(selected)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  onSelect = async (selected) => {
+    const { items, onSelect } = this.props
+
+    try {
+      const item = await this.formatSelected(selected)
+
+      items.push(item)
+      onSelect(uniq(items))
+      this.onBlur()
+
+      if (this.textInput) {
+        this.textInput.focus()
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   onBlur = () => {
@@ -78,7 +105,7 @@ export class Autocomplete extends Component {
       this.textInput.blur()
       this.textInput.value = ''
     }
-    this.setState({ results: [] })
+    this.setState({ searchResults: [] })
   }
 
   isFocused = () => {
@@ -94,32 +121,35 @@ export class Autocomplete extends Component {
           }
         </div>
         <div className='Autocomplete__item-title'>
-          {item.title}
+          {item.title || item.name}
         </div>
       </div>
     )
   }
 
-  formatResults = () => {
-    const { formatResult } = this.props
-    const { loading, results } = this.state
+  formatSearchResults = () => {
+    const { formatSearchResult } = this.props
+    const { loading } = this.state
+    const searchResults = compact(this.state.searchResults)
 
-    if (results.length) {
-      return results.map((item, i) =>
-        <div
-          key={i}
-          className='Autocomplete__result'
-          onClick={() => this.onSelect(item)}
-        >
-          {formatResult
-            ? <div className='Autocomplete__item'>
-                {formatResult(item)}
-              </div>
+    if (searchResults.length) {
+      return searchResults.map((item, i) => {
+        return (
+          <div
+            key={i}
+            className='Autocomplete__result'
+            onClick={() => this.onSelect(item)}
+          >
+            {formatSearchResult
+              ? <div className='Autocomplete__item'>
+                  {formatSearchResult(item)}
+                </div>
 
-            : this.formatResult(item)
-          }
-        </div>
-      )
+              : this.formatResult(item)
+            }
+          </div>
+        )
+      })
     } else if (loading) {
       return (
         <div className='Autocomplete__item Autocomplete__item--loading'>
@@ -131,13 +161,13 @@ export class Autocomplete extends Component {
     }
   }
 
-  renderResults = () => {
+  renderSearchResults = () => {
     if (this.isFocused()) {
       // display if input is focused
       return (
         <div className='Autocomplete__results'>
           <div className='Autocomplete__results-list'>
-            {this.formatResults()}
+            {this.formatSearchResults()}
           </div>
           <div
             className='Autocomplete__results-bg'
@@ -149,10 +179,10 @@ export class Autocomplete extends Component {
   }
 
   render () {
-    const { disabled, placeholder } = this.props
+    const { className, disabled, placeholder } = this.props
 
     return (
-      <div className='Autocomplete'>
+      <div className={`Autocomplete ${className ? className : ''}`}>
         <Icon
           name='search'
           color='black'
@@ -167,7 +197,7 @@ export class Autocomplete extends Component {
             this.textInput = input
           }}
         />
-        {this.renderResults()}
+        {this.renderSearchResults()}
       </div>
     )
   }

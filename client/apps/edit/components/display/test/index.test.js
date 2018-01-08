@@ -36,7 +36,7 @@ describe('EditDisplay', () => {
       <EditDisplay {...props} />
     )
     component.find('.DropDownItem__title').at(1).simulate('click')
-    expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(1)
+    expect(component.find(DropDownList).at(0).nodes[0].state.activeSections[1]).toBe(1)
     expect(component.find(DisplaySocial).length).toBe(1)
   })
 
@@ -45,7 +45,7 @@ describe('EditDisplay', () => {
       <EditDisplay {...props} />
     )
     component.find('.DropDownItem__title').at(2).simulate('click')
-    expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(2)
+    expect(component.find(DropDownList).at(0).nodes[0].state.activeSections[1]).toBe(2)
     expect(component.find(DisplaySearch).length).toBe(1)
   })
 
@@ -54,7 +54,7 @@ describe('EditDisplay', () => {
       <EditDisplay {...props} />
     )
     component.find('.DropDownItem__title').at(3).simulate('click')
-    expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(3)
+    expect(component.find(DropDownList).at(0).nodes[0].state.activeSections[1]).toBe(3)
     expect(component.find(DisplayEmail).length).toBe(1)
   })
 

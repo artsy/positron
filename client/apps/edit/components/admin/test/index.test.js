@@ -2,9 +2,9 @@ import { shallow } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../../models/article'
-import AdminTags from '../verticals_tags/index.coffee'
-import AdminVerticalsTags from '../verticals_tags/editorial.coffee'
 import { DropDownList } from 'client/components/drop_down/drop_down_list'
+import { AdminTags } from '../components/tags'
+import { AdminVerticalsTags } from '../components/verticals_tags'
 import { EditAdmin } from '../index.jsx'
 require('typeahead.js')
 
