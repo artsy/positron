@@ -144,8 +144,7 @@ describe "Article", ->
 
     it 'returns published_at date if attribute is passed', ->
       @article.set 'published_at', 1360013296
-      # FIXME TEST: Fragile date
-      # @article.date('published_at').format('LL').should.equal 'January 16, 1970'
+      @article.date('published_at').format('LL').should.equal 'January 16, 1970'
 
   describe '#hasContributingAuthors', ->
 
