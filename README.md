@@ -107,6 +107,12 @@ This will start the server on port `3005` with `inspect` option.
 
 Now anywhere in your server side code you can put `debugger` and you should be able to debug.
 
+Running tasks
+---
+Use the `task` command to run scripts written in ES6 or Coffeescript. This is helpful for running backfills.
+```
+yarn task scripts/backfill.js
+```
 
 Additional docs
 ---

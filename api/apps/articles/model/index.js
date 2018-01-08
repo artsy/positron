@@ -258,3 +258,40 @@ export const getSuperArticleCount = (id) => {
     })
   })
 }
+
+export const backfill = (callback) => {
+  // Modify the query to match the articles that need backfilling
+  const query = {
+    published: true
+  }
+
+  db.articles
+  .find(query)
+  .toArray((err, articles) => {
+    if (err) {
+      return callback(err)
+    }
+    if (articles.length === 0) { return callback(null, []) }
+
+    console.log(`There are ${articles.length} articles to backfill...`)
+
+    // Loop through found articles and do something with them
+    async.mapSeries(articles, (article, cb) => {
+      console.log('---------------------')
+      console.log('---------------------')
+      console.log('---------------------')
+      console.log('---------------------')
+      console.log('---------------------')
+      console.log('---------------------')
+      console.log(`Backfilling article: ${article.slugs[article.slugs.length - 1]}`)
+
+      /*
+        Write backfill logic here. Make sure to callback with cb()
+        eg: distributeArticle(article,cb)
+      */
+    }, (err, results) => {
+      console.log(err)
+      callback()
+    })
+  })
+}
