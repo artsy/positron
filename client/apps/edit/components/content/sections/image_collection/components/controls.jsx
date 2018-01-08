@@ -57,9 +57,9 @@ export default class Controls extends Component {
 
   onSelectArtwork = (e, selected) => {
     new Artwork({id: selected.id}).fetch({
-      success: artwork => {
-        const newImages = clone(this.props.images)
-        newImages.concat([artwork.denormalized()])
+      success: (artwork) => {
+        let newImages = clone(this.props.images)
+        newImages = newImages.concat([artwork.denormalized()])
         this.props.section.set('images', newImages)
         $(this.refs.autocomplete).val('').focus()
         this.props.onChange()
@@ -68,8 +68,8 @@ export default class Controls extends Component {
   }
 
   onUpload = (image, width, height) => {
-    const newImages = clone(this.props.images)
-    newImages.images.concat({
+    let newImages = clone(this.props.images)
+    newImages = newImages.concat({
       url: image,
       type: 'image',
       width: width,
@@ -109,7 +109,7 @@ export default class Controls extends Component {
           isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
-          <div onClick={inputsAreDisabled && this.fillwidthAlert}>
+          <div onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
             <FileInput
               disabled={inputsAreDisabled}
               onProgress={setProgress}
@@ -118,7 +118,7 @@ export default class Controls extends Component {
           { !isHero &&
             <section
               className='edit-controls__artwork-inputs'
-              onClick={inputsAreDisabled && this.fillwidthAlert}>
+              onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
               <div className='edit-controls__autocomplete-input'>
                 <input
                   ref='autocomplete'

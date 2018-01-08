@@ -4,7 +4,6 @@ import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Controls from '../components/controls.jsx'
 import SectionControls from '../../../section_controls/index.jsx'
 import sinon from 'sinon'
-import { extend } from 'lodash'
 import { mount, shallow } from 'enzyme'
 const { StandardArticle } = Fixtures
 require('typeahead.js')
@@ -23,8 +22,12 @@ describe('ImageCollectionControls', () => {
     setProgress: jest.fn()
   }
 
+  const artwork = StandardArticle.sections[4].images[2]
+
   beforeAll(() => {
-    Backbone.sync = jest.fn()
+    Backbone.sync = jest.fn(() => {
+      return artwork
+    })
     SectionControls.prototype.isScrollingOver = sinon.stub().returns(true)
     SectionControls.prototype.isScrolledPast = sinon.stub().returns(false)
     Controls.prototype.fillwidthAlert = sinon.stub()
@@ -69,13 +72,6 @@ describe('ImageCollectionControls', () => {
     })
 
     it('saves an artwork by url', () => {
-      const artwork = StandardArticle.sections[4].images[2]
-      const newArtwork = extend(artwork, {images: [{
-        image_url: "/local/additional_images/4e7cb83e1c80dd00010038e2/1/:version.jpg",
-        image_versions: ['small', 'square', 'medium', 'large', 'larger', 'best', 'normalized'],
-        original_height: 585,
-        original_width: 1000 }]
-      })
       props.section.set('images', [])
       props.images = []
       const component = mount(
@@ -85,11 +81,9 @@ describe('ImageCollectionControls', () => {
 
       input.simulate('change', { target: { value: 'http://artsy.net' } })
       component.find('.avant-garde-button').at(0).simulate('click')
-      Backbone.sync.mock.calls[0][2].success(newArtwork)
-      expect(props.section.get('images')[0].type).toMatch('artwork')
-      expect(props.section.get('images')[0].image).toMatch(
-        '/local/additional_images/4e7cb83e1c80dd00010038e2/1/larger.jpg'
-      )
+      Backbone.sync.mock.calls[0][1].denormalized = jest.fn().mockReturnThis()
+      Backbone.sync.mock.calls[0][2].success(artwork)
+      expect(props.section.get('images')[0].get('type')).toMatch('artwork')
     })
 
     it('#addArtworkFromUrl updates the section images', () => {

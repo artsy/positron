@@ -32,7 +32,7 @@ module.exports = React.createClass
           , 3000)
       success: (artwork) =>
         newImages = _.clone(@props.images)
-        newImages.concat [artwork.denormalized()]
+        newImages = newImages.concat [artwork.denormalized()]
         @props.addArtworkFromUrl(newImages)
         @setState isLoading: !@state.isLoading
 
