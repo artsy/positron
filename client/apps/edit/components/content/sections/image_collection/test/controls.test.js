@@ -154,7 +154,7 @@ describe('ImageCollectionControls', () => {
       const component = mount(
         <Controls {...props} />
       )
-      const input = component.find('.edit-controls__image-set-inputs').find('input')
+      const input = component.ref('title')
       input.simulate('change', { target: { value: 'A title for the Image Set' } })
       expect(props.section.get('title')).toMatch('A title for the Image Set')
     })

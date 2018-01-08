@@ -71,8 +71,6 @@ describe('DropDownList', () => {
     component.update()
     const title = component.find('.DropDownItem__title').at(2)
 
-    // FIXME TEST: Not sure why this has to be called twice
-    title.simulate('click')
     title.simulate('click')
     expect(component.instance().setActiveSection.mock.calls[0][0]).toBe(2)
   })
@@ -86,8 +84,6 @@ describe('DropDownList', () => {
     component.update()
     const title = component.find('.DropDownItem__title').at(2)
 
-    // FIXME TEST: Not sure why this has to be called twice
-    title.simulate('click')
     title.simulate('click')
     expect(component.instance().setActiveSections.mock.calls[0][0]).toBe(2)
   })

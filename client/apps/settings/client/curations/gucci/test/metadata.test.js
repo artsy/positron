@@ -86,11 +86,11 @@ describe('Metadata', () => {
     const component = mount(
       <Metadata {...props} />
     )
-    const thumbnailInput = component.find(ImageUpload).at(0).getElement()
+    const thumbnailInput = component.find(ImageUpload).at(0).node
     thumbnailInput.props.onChange(thumbnailInput.props.name, 'thumbnailImage.jpg')
-    const socialInput = component.find(ImageUpload).at(1).getElement()
+    const socialInput = component.find(ImageUpload).at(1).node
     socialInput.props.onChange(socialInput.props.name, 'socialImage.jpg')
-    const emailInput = component.find(ImageUpload).at(2).getElement()
+    const emailInput = component.find(ImageUpload).at(2).node
     emailInput.props.onChange(emailInput.props.name, 'emailImage.jpg')
 
     expect(props.onChange.mock.calls[0][0]).toMatch('thumbnail_image')

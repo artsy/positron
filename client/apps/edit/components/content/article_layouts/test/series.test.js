@@ -62,7 +62,7 @@ describe('EditSeries', () => {
     const component = mount(
       <EditSeries {...props} />
     )
-    const input = component.find(FileInput).first().getElement()
+    const input = component.find(FileInput).first().node
     input.props.onUpload('http://new-image.jpg')
     expect(props.onChange.mock.calls[0][0]).toBe('hero_section')
     expect(props.onChange.mock.calls[0][1].url).toBe('http://new-image.jpg')

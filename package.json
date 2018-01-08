@@ -117,11 +117,6 @@
     "yoastseo": "artsy/YoastSEO.js#develop"
   },
   "devDependencies": {
-    "@types/enzyme": "^3.1.6",
-    "@types/express": "^4.11.0",
-    "@types/jest": "^21.1.9",
-    "@types/node": "^8.5.2",
-    "@types/react": "^16.0.31",
     "antigravity": "artsy/antigravity",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",

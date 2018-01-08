@@ -49,7 +49,7 @@ describe('DisplaySocial', () => {
     const component = mount(
       <DisplaySocial {...props} />
     )
-    const input = component.find(ImageUpload).at(0).getElement()
+    const input = component.find(ImageUpload).at(0).node
     input.props.onChange(input.props.name, 'http://new-image.jpg')
 
     expect(props.onChange.mock.calls[0][0]).toBe('social_image')
@@ -60,7 +60,7 @@ describe('DisplaySocial', () => {
     const component = mount(
       <DisplaySocial {...props} />
     )
-    const input = component.find(CharacterLimit).at(0).getElement()
+    const input = component.find(CharacterLimit).at(0).node
     input.props.onChange('New title')
 
     expect(props.onChange.mock.calls[0][0]).toBe('social_title')
@@ -71,7 +71,7 @@ describe('DisplaySocial', () => {
     const component = mount(
       <DisplaySocial {...props} />
     )
-    const input = component.find(CharacterLimit).at(1).getElement()
+    const input = component.find(CharacterLimit).at(1).node
     input.props.onChange('New description')
 
     expect(props.onChange.mock.calls[0][0]).toBe('social_description')
