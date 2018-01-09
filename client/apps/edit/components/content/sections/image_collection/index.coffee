@@ -127,7 +127,6 @@ module.exports = React.createClass
 
     section {
       className: 'edit-section--image-collection'
-      onClick: @props.setEditing(true)
       'data-overflow': @isImageSetWrapping()
     },
       if @props.editing

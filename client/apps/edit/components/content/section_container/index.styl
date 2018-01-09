@@ -8,28 +8,60 @@
     opacity 1
   }
 
-.edit-section__container
+.SectionContainer
   animation fadein 0.15s
   z-index 1
   transition transform .15s
   width 100%
   position relative
   padding 20px
-  &:hover
-    .edit-section__hover-controls
-      opacity 1
-  &[data-editing=true]
-    .edit-section__hover-controls
-      opacity 1
-      border 1px solid rgba(100,100,100,1)
-      button
-        display none
-    .edit-section__container-bg
-      display block
-      z-index -1
-    &[data-type=text]
-      .edit-section__hover-controls
-        border 1px solid rgba(100,100,100,0)
+
+.SectionContainer__hover-controls
+  position absolute
+  width 100%
+  height 100%
+  border 1px solid rgba(100,100,100,0.33)
+  top 0
+  left 0
+  opacity 0
+
+  .button-drag,
+  .button-remove
+    position absolute
+    right -15px
+    width 30px
+  .button-remove
+    top -15px
+    &:hover circle
+      fill red-color
+  .button-drag
+    top 25px
+
+.SectionContainer__container-bg
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  z-index 1
+  display none
+
+.SectionContainer:hover
+  .SectionContainer__hover-controls
+    opacity 1
+.SectionContainer[data-editing=true]
+  .SectionContainer__hover-controls
+    opacity 1
+    border 1px solid rgba(100,100,100,1)
+    .button-drag,
+    .button-remove
+      opacity 0
+  .SectionContainer__container-bg
+    display block
+    z-index -1
+
+
+
 
 .edit-section__placeholder
   min-height 150px
@@ -46,36 +78,6 @@
   z-index 1
   display none
 
-.edit-section__hover-controls
-  position absolute
-  width 100%
-  height 100%
-  border 1px solid rgba(100,100,100,0.33)
-  top 0
-  left 0
-  opacity 0
-  button
-    position absolute
-    right -15px
-    color gray-color
-    z-index 2
-    cursor pointer
-    svg
-      width 30px
-    &.edit-section__remove
-      top -15px
-      svg circle
-        fill gray-color
-        transition all 0.3s ease-out
-      &:hover
-        svg circle
-          fill red-color
-    &.edit-section__drag
-      top 40px
-      background-color gray-color
-      width 30px
-      height 30px
-      border-radius 50%
 
 #edit-content
   div[class*="caption__CaptionContainer-"]

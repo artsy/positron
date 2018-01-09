@@ -4,7 +4,7 @@
 #
 
 React = require 'react'
-SectionContainer = React.createFactory require '../section_container/index.coffee'
+{ SectionContainer } = require '../section_container/index.jsx'
 SectionTool = require '../section_tool/index.jsx'
 DragContainer = React.createFactory require '../../../../../components/drag_drop/index.coffee'
 Paragraph = React.createFactory require '../../../../../components/rich_text/components/paragraph.coffee'
@@ -65,17 +65,19 @@ module.exports = React.createClass
           @props.sections.map (section, i) =>
              unless section.get('type') is 'callout'
               [
-                SectionContainer {
-                  sections: @props.sections
-                  section: section
-                  index: i
-                  editing: @state.editingIndex is i
-                  ref: 'section-' + i
-                  key: section.cid
-                  channel: @props.channel
-                  onSetEditing: @onSetEditing
-                  article: @props.article
-                }
+                React.createElement(
+                  SectionContainer, {
+                    sections: @props.sections
+                    section: section
+                    index: i
+                    editing: @state.editingIndex is i
+                    ref: 'section-' + i
+                    key: section.cid
+                    channel: @props.channel
+                    onSetEditing: @onSetEditing
+                    article: @props.article
+                  }
+                )
                 React.createElement(
                   SectionTool.default,
                   {
