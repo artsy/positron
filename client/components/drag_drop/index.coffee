@@ -1,7 +1,7 @@
 React = require 'react'
-_ = require 'underscore'
+_ = require 'lodash'
 DragTarget = React.createFactory require './drag_target.coffee'
-DragSource = React.createFactory require './drag_source.coffee'
+DragSource = require('./drag_source.jsx').DragSource
 SectionTool = require '../../apps/edit/components/content/section_tool/index.jsx'
 { div } = React.DOM
 
@@ -43,9 +43,10 @@ module.exports = React.createClass
     dropZonePosition
 
   onDragEnd: ->
-    newItems = @props.items
+    newItems = _.clone(@props.items)
     moved = newItems.splice @state.dragSource, 1
     newItems.splice @state.dragTarget, 0, moved[0]
+
     if @state.dragSource != @state.dragTarget
       @props.onDragEnd(newItems)
     @setState
@@ -91,13 +92,15 @@ module.exports = React.createClass
             type: type
             layout: layout or null
           },
-            DragSource {
-              i: i
-              key: uniqueKey + '-source'
-              setDragSource: @setDragSource
-              activeSource: @state.dragSource is i
-              activeTarget: @state.dragTarget is i
-              onDragEnd: @onDragEnd
-              isDraggable: @props.isDraggable
-            },
-              child
+            React.createElement(
+              DragSource, {
+                index: i
+                key: uniqueKey + '-source'
+                setDragSource: @setDragSource
+                activeSource: @state.dragSource is i
+                activeTarget: @state.dragTarget is i
+                onDragEnd: @onDragEnd
+                isDraggable: @props.isDraggable
+              },
+                child
+            )

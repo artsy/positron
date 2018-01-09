@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 const gemup = require('gemup')
 const sd = require('sharify').data
-import { defer } from 'lodash'
+import { clone, defer } from 'lodash'
 import Artwork from '/client/models/artwork.coffee'
 import Autocomplete from '/client/components/autocomplete/index.coffee'
 import FileInput from '/client/components/file_input/index.jsx'
@@ -57,8 +57,9 @@ export default class Controls extends Component {
 
   onSelectArtwork = (e, selected) => {
     new Artwork({id: selected.id}).fetch({
-      success: artwork => {
-        const newImages = this.props.images.concat([artwork.denormalized()])
+      success: (artwork) => {
+        let newImages = clone(this.props.images)
+        newImages = newImages.concat([artwork.denormalized()])
         this.props.section.set('images', newImages)
         $(this.refs.autocomplete).val('').focus()
         this.props.onChange()
@@ -67,7 +68,8 @@ export default class Controls extends Component {
   }
 
   onUpload = (image, width, height) => {
-    const newImages = this.props.images.concat({
+    let newImages = clone(this.props.images)
+    newImages = newImages.concat({
       url: image,
       type: 'image',
       width: width,
@@ -107,7 +109,7 @@ export default class Controls extends Component {
           isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
-          <div onClick={inputsAreDisabled && this.fillwidthAlert}>
+          <div onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
             <FileInput
               disabled={inputsAreDisabled}
               onProgress={setProgress}
@@ -116,7 +118,7 @@ export default class Controls extends Component {
           { !isHero &&
             <section
               className='edit-controls__artwork-inputs'
-              onClick={inputsAreDisabled && this.fillwidthAlert}>
+              onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
               <div className='edit-controls__autocomplete-input'>
                 <input
                   ref='autocomplete'
