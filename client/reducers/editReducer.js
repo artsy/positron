@@ -3,6 +3,7 @@ import { actions } from 'client/actions/editActions'
 
 export const initialState = {
   activeSection: 'content',
+  error: null,
   isDeleting: false,
   isPublishing: false,
   isSaving: false,
@@ -25,6 +26,11 @@ export function editReducer (state = initialState, action) {
     case actions.DELETE_ARTICLE: {
       return u({
         isDeleting: action.payload.isDeleting
+      }, state)
+    }
+    case actions.ERROR: {
+      return u({
+        error: action.payload.error
       }, state)
     }
     case actions.PUBLISH_ARTICLE: {

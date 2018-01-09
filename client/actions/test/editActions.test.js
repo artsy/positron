@@ -49,4 +49,22 @@ describe('editActions', () => {
     expect(saveArticle.payload.isSaving).toBe(true)
     expect(article.save.mock.calls.length).toBe(1)
   })
+
+  describe('Editing errors', () => {
+    it('#logError sets error to arg', () => {
+      const message = 'Error message'
+      const logError = editActions.logError({ message })
+
+      expect(logError.type).toBe('ERROR')
+      expect(logError.payload.error.message).toBe(message)
+    })
+
+    it('#resetError sets error to null', () => {
+      const message = 'Error message'
+      const resetError = editActions.resetError({ message })
+
+      expect(resetError.type).toBe('ERROR')
+      expect(resetError.payload.error).toBe(null)
+    })
+  })
 })
