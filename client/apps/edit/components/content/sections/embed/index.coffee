@@ -3,7 +3,7 @@
 #
 
 React = require 'react'
-Controls = React.createFactory require './controls.coffee'
+{ EmbedControls } = require './controls.jsx'
 { Embed } = require('@artsy/reaction-force/dist/Components/Publishing')
 Embed = React.createFactory Embed
 { div, section } = React.DOM
@@ -24,17 +24,21 @@ module.exports = React.createClass
       onClick: @props.setEditing(on)
     },
       if @props.editing
-        Controls {
-          section: @props.section
-          channel: @props.channel
-          article: @props.article
-        }
+        React.createElement(
+          EmbedControls, {
+            section: @props.section
+            channel: @props.channel
+            articleLayout: @props.article.get('layout')
+          }
+        )
       if !@props.section.get('url')?.length
         div { className: 'edit-section--embed__placeholder' }, 'Add URL above'
       else
         jsonSection = @props.section.toJSON()
 
         div { className: 'edit-section--embed__content' },
-          Embed {
-            section: jsonSection
-          }
+          React.createElement(
+            Embed, {
+              section: jsonSection
+            }
+          )
