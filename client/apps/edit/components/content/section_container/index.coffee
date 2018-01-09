@@ -7,9 +7,9 @@
 React = require 'react'
 _ = require 'underscore'
 Text = React.createFactory require '../sections/text/index.coffee'
+{ SectionEmbed } = require '../sections/embed/index.jsx'
 { SectionVideo } = require '../sections/video/index.jsx'
 Slideshow = React.createFactory require '../sections/slideshow/index.coffee'
-Embed = React.createFactory require '../sections/embed/index.coffee'
 ImageCollection = React.createFactory require '../sections/image_collection/index.coffee'
 IconDrag = require('@artsy/reaction-force/dist/Components/Publishing').IconDrag
 IconRemove = require('@artsy/reaction-force/dist/Components/Publishing').IconRemove
@@ -83,13 +83,16 @@ module.exports = React.createClass
         React.createElement(
           SectionVideo, @sectionProps()
         )
+      else if @props.section.get('type') is 'embed'
+        React.createElement(
+          SectionEmbed, @sectionProps()
+        )
       else if @props.section.get('type') is 'callout'
         div {}
       else
         (switch @props.section.get('type')
           when 'text' then Text
           when 'slideshow' then Slideshow
-          when 'embed' then Embed
           when 'image' then ImageCollection
           when 'image_set' then ImageCollection
           when 'image_collection' then ImageCollection
