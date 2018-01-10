@@ -10,7 +10,7 @@ import {
   IconHeroImage,
   IconHeroVideo
 } from '@artsy/reaction-force/dist/Components/Publishing'
-import SectionTool from '../index.jsx'
+import { SectionTool } from '../index'
 const { FeatureArticle } = Fixtures
 
 describe('SectionTool', () => {
