@@ -30,7 +30,6 @@ describe('Campaign Admin', () => {
     const component = mount(
       <Campaign {...props} />
     )
-    // console.log(component.find('input').at(0).instance().value)
     expect(component.find('input').at(0).instance().value).toMatch(props.campaign.name)
     expect(component.find('input[type="date"]').at(0).instance().value).toMatch(
       moment(start_date).format('YYYY-MM-DD')
