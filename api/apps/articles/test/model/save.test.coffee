@@ -99,6 +99,16 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
+    it 'does not append author if it is series layout', (done) ->
+      Save.generateSlugs {
+        thumbnail_title: 'Clockwork'
+        published: true
+        author: name: 'Molly'
+        layout: 'series'
+      }, (err, article) =>
+        article.slugs[0].should.equal 'clockwork'
+        done()
+
   describe '#onUnpublish', ->
 
     it 'generates slugs and deletes article from sailthru', (done) ->

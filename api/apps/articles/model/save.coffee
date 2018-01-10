@@ -53,7 +53,10 @@ removeStopWords = (title) ->
   stoppedTitle = ''
   if article.thumbnail_title
     stoppedTitle = removeStopWords article.thumbnail_title
-  slug = _s.slugify article.author?.name + ' ' + stoppedTitle
+  if article.layout is 'series'
+    slug = _s.slugify stoppedTitle
+  else
+    slug = _s.slugify article.author?.name + ' ' + stoppedTitle
   return cb null, article if slug is _.last(article.slugs)
 
   # Append published_at to slug if that slug already exists
