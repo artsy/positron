@@ -10,13 +10,19 @@ import {
   IconHeroVideo
 } from '@artsy/reaction-force/dist/Components/Publishing'
 
-export default class SectionTool extends Component {
-  constructor (props) {
-    super(props)
+export class SectionTool extends Component {
+  static propTypes = {
+    firstSection: PropTypes.bool,
+    index: PropTypes.number,
+    isEditing: PropTypes.bool,
+    isHero: PropTypes.bool,
+    onSetEditing: PropTypes.func,
+    section: PropTypes.object,
+    sections: PropTypes.object
+  }
 
-    this.state = {
-      open: false
-    }
+  state = {
+    open: false
   }
 
   toggleOpen = () => {
@@ -144,14 +150,4 @@ export default class SectionTool extends Component {
       </div>
     )
   }
-}
-
-SectionTool.propTypes = {
-  firstSection: PropTypes.bool,
-  index: PropTypes.number,
-  isEditing: PropTypes.bool,
-  isHero: PropTypes.bool,
-  onSetEditing: PropTypes.func,
-  section: PropTypes.object,
-  sections: PropTypes.object
 }
