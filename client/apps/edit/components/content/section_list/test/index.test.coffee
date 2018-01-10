@@ -27,9 +27,9 @@ describe 'SectionList', ->
         }
       )
       @SectionList = benv.require resolve(__dirname, '../index')
-      @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
+      SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
-      @SectionList.__set__ 'SectionTool', @SectionTool
+      @SectionList.__set__ 'SectionTool', SectionTool.SectionTool
       @SectionContainer = benv.require resolve(__dirname, '../../section_container/index')
       @ImageCollection = benv.require(
         resolve(__dirname, '../../sections/image_collection/index')

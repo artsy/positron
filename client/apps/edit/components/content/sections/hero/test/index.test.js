@@ -2,7 +2,7 @@ import React from 'react'
 import Backbone from 'backbone'
 import { mount } from 'enzyme'
 import SectionContainer from '../../../section_container/index.coffee'
-import SectionTool from '../../../section_tool/index.jsx'
+import { SectionTool } from '../../../section_tool/index.jsx'
 import { SectionHero } from '../index.jsx'
 
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
