@@ -6,7 +6,7 @@
 
 React = require 'react'
 Artwork = require '../../../../../../../models/artwork.coffee'
-_ = require 'underscore'
+_ = require 'lodash'
 { div, input, button } = React.DOM
 
 module.exports = React.createClass
@@ -31,7 +31,8 @@ module.exports = React.createClass
               error: !@state.error
           , 3000)
       success: (artwork) =>
-        newImages = @props.images.concat [artwork.denormalized()]
+        newImages = _.clone(@props.images)
+        newImages = newImages.concat [artwork.denormalized()]
         @props.addArtworkFromUrl(newImages)
         @setState isLoading: !@state.isLoading
 

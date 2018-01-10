@@ -32,9 +32,9 @@ describe 'DragDropContainer Default', ->
       )
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
-      DragSource = benv.require resolve __dirname, '../drag_source.coffee'
+      DragSource = benv.require(resolve(__dirname, '../drag_source.jsx')).DragSource
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
-      @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
+      @DragDropContainer.__set__ 'DragSource', DragSource
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
@@ -55,7 +55,8 @@ describe 'DragDropContainer Default', ->
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[0],
-            removeItem: sinon.stub()
+            removeItem: sinon.stub(),
+            onChange: sinon.stub()
           }
         )
         React.createElement(
@@ -67,7 +68,8 @@ describe 'DragDropContainer Default', ->
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[1],
-            removeItem: sinon.stub()
+            removeItem: sinon.stub(),
+            onChange: sinon.stub()
           }
         )
       ]
@@ -80,21 +82,21 @@ describe 'DragDropContainer Default', ->
 
   it 'renders a drag container with children', ->
     @$el.find('.drag-target').length.should.eql 2
-    @$el.find('.drag-source').length.should.eql 2
+    @$el.find('.DragSource').length.should.eql 2
     @$el.find('img').length.should.eql 2
 
   it 'sets draggable to true if props.isDraggable', ->
-    @$el.find('.drag-source[draggable=true]').length.should.eql 2
+    @$el.find('.DragSource[draggable=true]').length.should.eql 2
 
   it 'sets draggable to false if not props.isDraggable', ->
     @props.isDraggable = false
     rendered = ReactDOMServer.renderToString React.createElement(@DragDropContainer, @props, @children)
-    $(rendered).find('.drag-source').length.should.eql 0
+    $(rendered).find('.DragSource').length.should.eql 0
     $(rendered).find('[draggable=true]').length.should.eql 0
 
   it 'sets state.dragSource on DragStart', ->
     @component.setState = sinon.stub()
-    r.simulate.dragStart r.find(@component, 'drag-source')[1]
+    r.simulate.dragStart r.find(@component, 'DragSource')[1]
     @component.setState.args[0][0].dragSource.should.eql 1
 
   xit 'sets state.dragTarget on DragEnd', (done) ->
@@ -116,21 +118,21 @@ describe 'DragDropContainer Default', ->
   describe '#DragEnd', ->
 
     it 'does not call onDragEnd if target is same as source', ->
-      r.simulate.dragStart r.find(@component, 'drag-source')[0]
+      r.simulate.dragStart r.find(@component, 'DragSource')[0]
       r.simulate.dragOver r.find(@component, 'drag-target')[0]
       @onDragEnd.called.should.not.be.ok
 
     it 'Returns an array of new items to the parent component on DragEnd', ->
-      r.simulate.dragStart r.find(@component, 'drag-source')[1]
+      r.simulate.dragStart r.find(@component, 'DragSource')[1]
       r.simulate.dragOver r.find(@component, 'drag-target')[0]
-      r.simulate.dragEnd r.find(@component, 'drag-source')[1]
-      @onDragEnd.args[0][0][0].url.should.eql StandardArticle.sections[4].images[0].url
-      @onDragEnd.args[0][0][1].url.should.eql StandardArticle.sections[4].images[1].url
+      r.simulate.dragEnd r.find(@component, 'DragSource')[1]
+      @onDragEnd.args[0][0][0].url.should.eql StandardArticle.sections[4].images[1].url
+      @onDragEnd.args[0][0][1].url.should.eql StandardArticle.sections[4].images[0].url
 
     it 'Resets the state on DragEnd', ->
-      r.simulate.dragStart r.find(@component, 'drag-source')[1]
+      r.simulate.dragStart r.find(@component, 'DragSource')[1]
       r.simulate.dragOver r.find(@component, 'drag-target')[0]
-      r.simulate.dragEnd r.find(@component, 'drag-source')[1]
+      r.simulate.dragEnd r.find(@component, 'DragSource')[1]
       @component.state.should.eql {
         dragSource: null
         dragStartY: null
@@ -149,9 +151,9 @@ describe 'DragDropContainer Vertical', ->
       global.Image = () => {}
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
-      DragSource = benv.require resolve __dirname, '../drag_source.coffee'
+      DragSource = benv.require(resolve(__dirname, '../drag_source.jsx')).DragSource
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
-      @DragDropContainer.__set__ 'DragSource', React.createFactory DragSource
+      @DragDropContainer.__set__ 'DragSource', DragSource
       SectionTool = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
@@ -231,11 +233,11 @@ describe 'DragDropContainer Vertical', ->
 
   it 'renders a drag container with children', ->
     @$el.find('.drag-target').length.should.eql 4
-    @$el.find('.drag-source').length.should.eql 4
+    @$el.find('.DragSource').length.should.eql 4
     @$el.find('img').length.should.eql 3
 
   it 'does not add draggable properties to sectionTool', ->
-    @$el.find('.edit-tool').parent().hasClass('.drag-source').should.not.be.ok
+    @$el.find('.edit-tool').parent().hasClass('.DragSource').should.not.be.ok
     @$el.find('.edit-tool').parent().hasClass('.drag-container').should.be.ok
 
   it 'adds a vertical class to active drag-targets', ->
