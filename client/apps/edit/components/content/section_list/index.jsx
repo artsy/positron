@@ -72,7 +72,7 @@ export class SectionList extends Component {
           ? <DragContainer
               items={sections.models}
               onDragEnd={(newSections) => sections.reset(newSections)}
-              isDraggable
+              isDraggable={!editingIndex}
               layout='vertical'
               article={article}
             >

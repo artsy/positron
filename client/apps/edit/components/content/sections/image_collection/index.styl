@@ -31,7 +31,7 @@
     height auto
   &__list
     position relative
-    z-index 2 !important
+    z-index -1
     opacity 0
     transition opacity 500ms ease-in
     display flex
@@ -136,6 +136,10 @@
 
 .SectionContainer[data-type=image_collection]
   padding-bottom 0
+  &[data-editing=true]
+    // override section drag list to allow image dragging
+    .image-collection__list
+      z-index 2 !important
 
 .SectionContainer[data-layout=column_width]
   .image-collection__list .drag-container
