@@ -157,7 +157,7 @@ describe 'DragDropContainer Vertical', ->
       SectionTool = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
-      SectionContainer = benv.require(
+      { SectionContainer } = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_container/index.jsx'
       )
       ImageCollection = benv.require(
@@ -194,7 +194,7 @@ describe 'DragDropContainer Vertical', ->
           }
         )
         React.createElement(
-          SectionTool.default
+          SectionTool.SectionTool
           {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}, editing: false}
         )
         React.createElement(

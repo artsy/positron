@@ -2,7 +2,8 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
-import { IconDrag, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
+import { RemoveButton } from 'client/components/remove_button/index'
 
 import SectionImageCollection from '../sections/image_collection/index.coffee'
 import SectionSlideshow from '../sections/slideshow/index.coffee'
@@ -20,7 +21,7 @@ export class SectionContainer extends Component {
     onRemoveHero: PropTypes.func,
     onSetEditing: PropTypes.func.isRequired,
     section: PropTypes.object.isRequired,
-    sections: PropTypes.object.isRequired
+    sections: PropTypes.object
   }
 
   onSetEditing = () => {
@@ -110,8 +111,8 @@ export class SectionContainer extends Component {
       section,
       sections,
       setEditing: this.setEditing,
-      isContentStart: start === index,
-      isContentEnd: end === index
+      isContentStart: !isHero && start === index,
+      isContentEnd: !isHero && end === index
     }
   }
 
@@ -137,11 +138,10 @@ export class SectionContainer extends Component {
               <IconDrag background={colors.grayMedium} />
             </div>
           }
-          <div className='button-remove'
+          <RemoveButton
             onClick={this.onRemoveSection}
-          >
-            <IconRemove background={colors.grayMedium} />
-          </div>
+            background={colors.grayMedium}
+          />
         </div>
 
         {this.getSectionComponent()}

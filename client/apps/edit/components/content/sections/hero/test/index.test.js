@@ -1,10 +1,10 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { mount } from 'enzyme'
-import SectionTool from '../../../section_tool/index.jsx'
+import { RemoveButton } from 'client/components/remove_button/index'
 import { SectionContainer } from '../../../section_container/index'
-import { SectionHero } from '../index.jsx'
-
+import { SectionTool } from '../../../section_tool/index'
+import { SectionHero } from '../index'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 const { ClassicArticle } = Fixtures
 
@@ -51,7 +51,7 @@ describe('SectionHero', () => {
     const component = mount(
       <SectionHero {...props} />
     )
-    component.find('.edit-section__remove').simulate('click')
+    component.find(RemoveButton).simulate('click')
     expect(props.onChange.mock.calls[1][0]).toBe('hero_section')
     expect(props.onChange.mock.calls[1][1]).toBe(null)
   })

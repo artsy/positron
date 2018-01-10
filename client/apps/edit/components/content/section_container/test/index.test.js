@@ -4,6 +4,7 @@ import { Fixtures, IconDrag, IconRemove } from '@artsy/reaction-force/dist/Compo
 import Article from '/client/models/article.coffee'
 import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
+import { RemoveButton } from 'client/components/remove_button/index.jsx'
 import SectionImageCollection from '../../sections/image_collection/index.coffee'
 import SectionSlideshow from '../../sections/slideshow/index.coffee'
 import SectionText from '../../sections/text/index.coffee'
@@ -62,7 +63,7 @@ describe('SectionContainer', () => {
     const component = mount(
       <SectionContainer {...props} />
     )
-    component.find('.button-remove').at(0).simulate('click')
+    component.find(RemoveButton).at(0).simulate('click')
     expect(spy).toHaveBeenCalled()
   })
 
@@ -167,7 +168,7 @@ describe('SectionContainer', () => {
       const component = mount(
         <SectionContainer {...props} />
       )
-      component.find('.button-remove').at(0).simulate('click')
+      component.find(RemoveButton).at(0).simulate('click')
       expect(spy).toHaveBeenCalled()
     })
   })

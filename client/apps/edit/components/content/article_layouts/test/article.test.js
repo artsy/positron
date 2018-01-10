@@ -2,10 +2,10 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../../../models/article'
-import SectionList from '../../section_list/index'
 import { SectionFooter } from '../../sections/footer/index'
 import { SectionHeader } from '../../sections/header/index'
 import { SectionHero } from '../../sections/hero/index'
+import { SectionList } from '../../section_list/index'
 import { EditArticle } from '../article'
 
 describe('EditArticle', () => {

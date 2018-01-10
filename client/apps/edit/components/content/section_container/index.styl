@@ -24,13 +24,12 @@
   top 0
   left 0
   opacity 0
-
   .button-drag,
-  .button-remove
+  .RemoveButton
     position absolute
     right -15px
     width 30px
-  .button-remove
+  .RemoveButton
     top -15px
     &:hover circle
       fill red-color
@@ -54,30 +53,17 @@
     opacity 1
     border 1px solid rgba(100,100,100,1)
     .button-drag,
-    .button-remove
+    .RemoveButton
       opacity 0
   .SectionContainer__container-bg
     display block
     z-index -1
-
-
-
 
 .edit-section__placeholder
   min-height 150px
   display flex
   justify-content center
   align-items center
-
-.edit-section__container-bg
-  width 100%
-  height 100%
-  position fixed
-  top 0
-  left 0
-  z-index 1
-  display none
-
 
 #edit-content
   div[class*="caption__CaptionContainer-"]
@@ -92,15 +78,15 @@
 
 [data-layout='fillwidth']
   &[data-editing='false']
-     .edit-section__hover-controls
+     .SectionContainer__hover-controls
         z-index 100
-  .edit-section__hover-controls
-    button
+  .SectionContainer__hover-controls
+    .RemoveButton
       right 18px
-      &.edit-section__remove
-        top 20px
-      &.edit-section__drag
-        top 60px
+      top 20px
+    .button-drag
+      right 18px
+      top 60px
 
 [data-layout='classic']
   [data-layout='column_width'], [data-layout='blockquote']

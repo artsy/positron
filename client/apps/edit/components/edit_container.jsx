@@ -4,10 +4,11 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from 'client/actions/editActions'
 
+import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
 import { EditDisplay } from './display/index.jsx'
 import { EditHeader } from './header/index.jsx'
-import { EditAdmin } from './admin/index.jsx'
+import EditError from './error/index.jsx'
 
 class EditContainer extends Component {
   static propTypes = {
@@ -15,6 +16,7 @@ class EditContainer extends Component {
     actions: PropTypes.object,
     channel: PropTypes.object,
     edit: PropTypes.object,
+    error: PropTypes.object,
     user: PropTypes.object
   }
 
@@ -79,10 +81,14 @@ class EditContainer extends Component {
   }
 
   render () {
+    const { error } = this.props
+
     return (
       <div className='EditContainer'>
 
         <EditHeader {...this.props} />
+
+        {error && <EditError />}
 
         {this.getActiveSection()}
 

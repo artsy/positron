@@ -4,6 +4,7 @@ export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_SECTION',
   'DELETE_ARTICLE',
+  'ERROR',
   'PUBLISH_ARTICLE',
   'SAVE_ARTICLE'
 )
@@ -60,3 +61,18 @@ export const saveArticle = (article) => {
     }
   }
 }
+
+// EDITING ERRORS
+export const logError = (error) => ({
+  type: actions.ERROR,
+  payload: {
+    error
+  }
+})
+
+export const resetError = () => ({
+  type: actions.ERROR,
+  payload: {
+    error: null
+  }
+})
