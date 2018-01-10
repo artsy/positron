@@ -63,56 +63,41 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { section } = this.props
-    const sectionProps = this.getSectionProps()
+    const { index, section } = this.props
 
     switch (section.get('type')) {
       case 'embed': {
-        return <SectionEmbed {...sectionProps} />
+        return <SectionEmbed {...this.props} />
       }
+
       case 'image':
       case 'image_set':
       case 'image_collection': {
-        return <SectionImageCollection {...sectionProps} />
+        return <SectionImageCollection {...this.props} />
       }
+
       case 'text': {
-        return <SectionText {...sectionProps} />
+        const { end, start } = this.getContentStartEnd()
+        return (
+          <SectionText
+            {...this.props}
+            isContentStart={start === index}
+            isContentEnd={end === index}
+          />
+        )
       }
+
       case 'video': {
-        return <SectionVideo {...sectionProps} />
+        return (
+          <SectionVideo {...this.props} />
+        )
       }
+
       case 'slideshow': {
-        return <SectionSlideshow {...sectionProps} />
+        return (
+          <SectionSlideshow {...this.props} />
+        )
       }
-    }
-  }
-
-  getSectionProps = () => {
-    const {
-      article,
-      channel,
-      editing,
-      index,
-      isHero,
-      onSetEditing,
-      section,
-      sections
-    } = this.props
-
-    const { end, start } = this.getContentStartEnd()
-
-    return {
-      article,
-      channel,
-      editing,
-      index,
-      isHero,
-      onSetEditing,
-      section,
-      sections,
-      setEditing: this.setEditing,
-      isContentStart: !isHero && start === index,
-      isContentEnd: !isHero && end === index
     }
   }
 
