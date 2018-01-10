@@ -3,13 +3,13 @@ import React, { Component } from 'react'
 import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
-import { RemoveButton } from 'client/components/remove_button/index'
+import { RemoveButton } from 'client/components/remove_button'
 
-import SectionImageCollection from '../sections/image_collection/index.coffee'
-import SectionSlideshow from '../sections/slideshow/index.coffee'
-import SectionText from '../sections/text/index.coffee'
-import { SectionEmbed } from '../sections/embed/index'
-import { SectionVideo } from '../sections/video/index'
+import SectionImageCollection from '../sections/image_collection'
+import SectionSlideshow from '../sections/slideshow'
+import SectionText from '../sections/text'
+import { SectionEmbed } from '../sections/embed'
+import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
   static propTypes = {

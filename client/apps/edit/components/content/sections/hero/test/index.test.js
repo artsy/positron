@@ -1,9 +1,9 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { mount } from 'enzyme'
-import { RemoveButton } from 'client/components/remove_button/index'
-import { SectionContainer } from '../../../section_container/index'
-import { SectionTool } from '../../../section_tool/index'
+import { RemoveButton } from 'client/components/remove_button'
+import { SectionContainer } from '../../../section_container'
+import { SectionTool } from '../../../section_tool'
 import { SectionHero } from '../index'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 const { ClassicArticle } = Fixtures

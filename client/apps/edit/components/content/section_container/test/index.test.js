@@ -4,12 +4,12 @@ import { Fixtures, IconDrag, IconRemove } from '@artsy/reaction-force/dist/Compo
 import Article from '/client/models/article.coffee'
 import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
-import { RemoveButton } from 'client/components/remove_button/index.jsx'
-import SectionImageCollection from '../../sections/image_collection/index.coffee'
-import SectionSlideshow from '../../sections/slideshow/index.coffee'
-import SectionText from '../../sections/text/index.coffee'
-import { SectionEmbed } from '../../sections/embed/index'
-import { SectionVideo } from '../../sections/video/index'
+import { RemoveButton } from 'client/components/remove_button'
+import SectionImageCollection from '../../sections/image_collection'
+import SectionSlideshow from '../../sections/slideshow'
+import SectionText from '../../sections/text'
+import { SectionEmbed } from '../../sections/embed'
+import { SectionVideo } from '../../sections/video'
 import { SectionContainer } from '../index'
 const { StandardArticle } = Fixtures
 
