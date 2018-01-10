@@ -95,11 +95,6 @@ describe 'ImageCollection', ->
       @component.setState progress: .5
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '"upload-progress" style="width: 50%;"'
 
-    it 'sets editing mode on click', ->
-      r.simulate.click(r.find(@component, 'image-collection__img-container')[0])
-      @setEditing.called.should.eql true
-      @setEditing.args[0][0].should.eql true
-
     it '#removeItem updates the images array', ->
       @component.removeItem(@props.section.get('images')[0])()
       @props.section.get('images').length.should.eql 1

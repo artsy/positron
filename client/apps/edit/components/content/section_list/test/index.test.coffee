@@ -26,18 +26,19 @@ describe 'SectionList', ->
           removeListener: sinon.stub()
         }
       )
+      # imagesLoaded = require 'imagesloaded'
       @SectionList = benv.require resolve(__dirname, '../index')
       @SectionTool = benv.require resolve(__dirname, '../../section_tool/index.jsx')
       DragContainer = benv.require resolve(__dirname, '../../../../../../components/drag_drop/index')
       @SectionList.__set__ 'SectionTool', @SectionTool
-      @SectionContainer = benv.require resolve(__dirname, '../../section_container/index')
-      @ImageCollection = benv.require(
-        resolve(__dirname, '../../sections/image_collection/index')
-      )
-      @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
-      @SectionContainer.__set__ 'Text', text = sinon.stub()
-      @SectionContainer.__set__ 'ImageCollection', React.createFactory @ImageCollection
-      @SectionList.__set__ 'SectionContainer', React.createFactory @SectionContainer
+      { SectionContainer } = benv.require resolve(__dirname, '../../section_container/index.jsx')
+      # @ImageCollection = benv.require(
+      #   resolve(__dirname, '../../sections/image_collection/index')
+      # )
+      # @ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns()
+      # @SectionContainer.__set__ 'Text', sinon.stub()
+      # @SectionContainer.__set__ 'ImageCollection', React.createFactory @ImageCollection
+      @SectionList.__set__ 'SectionContainer', SectionContainer
       @SectionList.__set__ 'DragContainer', React.createFactory DragContainer
       @props = {
         sections: @sections = new Sections [
