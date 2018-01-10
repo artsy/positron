@@ -4,7 +4,7 @@ import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
 import Channel from 'client/models/channel.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
-import SectionContainer from '../../section_container/index'
+import { SectionContainer } from '../../section_container/index'
 import { SectionTool } from '../../section_tool/index'
 import { SectionList } from '../index'
 

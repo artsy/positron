@@ -28,10 +28,12 @@ module.exports = React.createClass
       $(@refs.list).width width
 
   render: ->
+    items = @props.section.get('items') || []
+
     section { className: 'edit-section--slideshow' },
-      div { className: 'ess-container', onClick: @props.setEditing(on) },
+      div { className: 'ess-container', onClick: @props.onSetEditing(on) },
         ul { className: 'ess-list', ref: 'list' },
-          (for item in @props.section.get('items')
+          (for item in items
             li {},
               (switch item.type
                 when 'artwork'

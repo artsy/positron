@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import DragContainer from 'client/components/drag_drop/index.coffee'
-import SectionContainer from '../section_container/index.coffee'
+import { SectionContainer } from '../section_container/index'
 import { SectionTool } from '../section_tool/index'
 
 export class SectionList extends Component {
@@ -72,7 +72,7 @@ export class SectionList extends Component {
           ? <DragContainer
               items={sections.models}
               onDragEnd={(newSections) => sections.reset(newSections)}
-              isDraggable
+              isDraggable={!editingIndex}
               layout='vertical'
               article={article}
             >
