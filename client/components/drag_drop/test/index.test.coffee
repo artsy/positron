@@ -157,7 +157,7 @@ describe 'DragDropContainer Vertical', ->
       SectionTool = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
-      { SectionContainer } = benv.require(
+      SectionContainer = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/section_container/index.jsx'
       )
       ImageCollection = benv.require(
@@ -165,7 +165,7 @@ describe 'DragDropContainer Vertical', ->
       )
       ImageCollection.__set__ 'Controls', sinon.stub()
       ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns(true)
-      SectionContainer.__set__ 'ImageCollection', React.createFactory ImageCollection
+      SectionContainer.__set__ 'SectionImageCollection', React.createFactory ImageCollection
       hasFeature = sinon.stub().returns(true)
       section2 = new Section StandardArticle.sections[16]
       section3 = new Section StandardArticle.sections[8]
@@ -182,7 +182,7 @@ describe 'DragDropContainer Vertical', ->
       }
       @children = [
         React.createElement(
-          SectionContainer
+          SectionContainer.SectionContainer
           {
             key:'child-1'
             i: 0
@@ -198,7 +198,7 @@ describe 'DragDropContainer Vertical', ->
           {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}, editing: false}
         )
         React.createElement(
-          SectionContainer
+          SectionContainer.SectionContainer
           {
             key:'child-3'
             i: 2
