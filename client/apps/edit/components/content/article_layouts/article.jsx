@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import SectionList from '../section_list/index.coffee'
+import { SectionList } from '../section_list/index.jsx'
 import { SectionFooter } from '../sections/footer/index'
 import { SectionHeader } from '../sections/header/index'
 import { SectionHero } from '../sections/hero/index'
