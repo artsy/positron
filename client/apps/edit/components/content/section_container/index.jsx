@@ -5,6 +5,7 @@ import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
 
 import SectionImageCollection from '../sections/image_collection/index.coffee'
+import SectionSlideshow from '../sections/slideshow/index.coffee'
 import SectionText from '../sections/text/index.coffee'
 import { SectionEmbed } from '../sections/embed/index'
 import { SectionVideo } from '../sections/video/index'
@@ -19,7 +20,7 @@ export class SectionContainer extends Component {
     onRemoveHero: PropTypes.func,
     onSetEditing: PropTypes.func.isRequired,
     section: PropTypes.object.isRequired,
-    sections: PropTypes.array.isRequired
+    sections: PropTypes.object.isRequired
   }
 
   onSetEditing = () => {
@@ -49,6 +50,7 @@ export class SectionContainer extends Component {
   }
 
   getContentStartEnd = () => {
+    // TODO: move into text section
     const { sections } = this.props
     const types = sections && sections.map((section, i) => {
       return { type: section.get('type'), index: i }
@@ -78,8 +80,8 @@ export class SectionContainer extends Component {
       case 'video': {
         return <SectionVideo {...sectionProps} />
       }
-      default: {
-        return <div>This has been deprecated :(</div>
+      case 'slideshow': {
+        return <SectionSlideshow {...sectionProps} />
       }
     }
   }

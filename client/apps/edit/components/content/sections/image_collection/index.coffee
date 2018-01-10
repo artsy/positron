@@ -49,7 +49,7 @@ module.exports = React.createClass
     else if articleLayout in ['standard', 'feature']
       containerSize = if sectionLayout is 'column_width' then 680 else 780
     targetHeight = window.innerHeight * .7
-    if @props.section.get('type') is 'image_set' and @props.section.get('images').length > 3
+    if @props.section.get('type') is 'image_set' and @props.section.get('images')?.length > 3
       targetHeight = 400
     return {containerSize: containerSize, targetHeight: targetHeight}
 
@@ -74,7 +74,7 @@ module.exports = React.createClass
 
   isImageSetWrapping: ->
     if @props.section.get('type') is 'image_set' &&
-     @props.section.get('images').length > 3
+     @props.section.get('images')?.length > 3
       return true
 
   getImageWidth: (i) ->

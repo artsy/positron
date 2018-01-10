@@ -158,7 +158,7 @@ describe 'DragDropContainer Vertical', ->
         resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
       )
       SectionContainer = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/section_container/index.coffee'
+        resolve __dirname, '../../../apps/edit/components/content/section_container/index.js'
       )
       ImageCollection = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/index.coffee'

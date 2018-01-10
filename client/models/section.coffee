@@ -27,7 +27,8 @@ module.exports = class Section extends Backbone.Model
 
   fetchSlideshowArtworks: (options) ->
     return throw Error 'Not a slideshow' unless @get('type') is 'slideshow'
-    ids = (item.id for item in @get('items') when item.type is 'artwork')
+    items = @get('items') or []
+    ids = (item.id for item in items when item.type is 'artwork')
     @artworks.getOrFetchIds ids,
       error: options.error
       success: => options.success arguments...
