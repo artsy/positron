@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from 'client/actions/editActions'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 
@@ -10,11 +13,6 @@ export class EditHeader extends Component {
     channel: PropTypes.object,
     edit: PropTypes.object,
     user: PropTypes.object
-  }
-
-  toggleSection = (activeSection) => {
-    // TODO - connect component to use redux actions directly
-    this.props.actions.changeSection(activeSection)
   }
 
   isPublishable = () => {
@@ -83,8 +81,9 @@ export class EditHeader extends Component {
   }
 
   render () {
-    const { article, actions, channel, user } = this.props
-    const { activeSection, isDeleting } = this.props.edit
+    const { article, actions, channel, edit, user } = this.props
+    const { changeView } = actions
+    const { activeView, isDeleting } = edit
     const { grayMedium, greenRegular } = colors
 
     return (
@@ -94,8 +93,8 @@ export class EditHeader extends Component {
           <div className='EditHeader__tabs'>
             <button
               className='avant-garde-button check'
-              onClick={() => this.toggleSection('content')}
-              data-active={activeSection === 'content'}
+              onClick={() => changeView('content')}
+              data-active={activeView === 'content'}
             >
               <span>Content</span>
               <Icon
@@ -107,8 +106,8 @@ export class EditHeader extends Component {
 
             <button
               className='avant-garde-button check'
-              onClick={() => this.toggleSection('display')}
-              data-active={activeSection === 'display'}
+              onClick={() => changeView('display')}
+              data-active={activeView === 'display'}
             >
               <span>Display</span>
               <Icon
@@ -121,8 +120,8 @@ export class EditHeader extends Component {
             {user.type === 'Admin' &&
               <button
                 className='avant-garde-button'
-                onClick={() => this.toggleSection('admin')}
-                data-active={activeSection === 'admin'}
+                onClick={() => changeView('admin')}
+                data-active={activeView === 'admin'}
               >
                 Admin
               </button>
@@ -177,3 +176,16 @@ export class EditHeader extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  edit: state.edit
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(Actions, dispatch)
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditHeader)

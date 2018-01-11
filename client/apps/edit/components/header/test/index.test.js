@@ -14,7 +14,7 @@ describe('Edit Header Controls', () => {
   beforeEach(() => {
     props = {
       actions: {
-        changeSection: jest.fn(),
+        changeView: jest.fn(),
         deleteArticle: jest.fn(),
         publishArticle: jest.fn(),
         saveArticle: jest.fn()
@@ -97,7 +97,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(1)
       button.simulate('click')
 
-      expect(props.actions.changeSection.mock.calls[0][0]).toBe('display')
+      expect(props.actions.changeView.mock.calls[0][0]).toBe('display')
     })
 
     it('Publishes an article on button click', () => {

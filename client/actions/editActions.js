@@ -3,6 +3,7 @@ import keyMirror from 'client/lib/keyMirror'
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_SECTION',
+  'CHANGE_VIEW',
   'DELETE_ARTICLE',
   'ERROR',
   'PUBLISH_ARTICLE',
@@ -17,9 +18,18 @@ export const changeSavedStatus = (isSaved) => ({
 })
 
 export const changeSection = (activeSection) => ({
+  // Index of active article section
   type: actions.CHANGE_SECTION,
   payload: {
     activeSection
+  }
+})
+
+export const changeView = (activeView) => ({
+  // Content, Admin, Display
+  type: actions.CHANGE_VIEW,
+  payload: {
+    activeView
   }
 })
 
