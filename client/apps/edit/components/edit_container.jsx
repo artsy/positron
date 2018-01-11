@@ -59,7 +59,7 @@ class EditContainer extends Component {
     this.setState({ lastUpdated: new Date() })
   }
 
-  getActiveSection = () => {
+  getActiveView = () => {
     const { article, channel, edit } = this.props
     const { activeView } = edit
 
@@ -90,7 +90,7 @@ class EditContainer extends Component {
 
         {error && <EditError />}
 
-        {this.getActiveSection()}
+        {this.getActiveView()}
 
       </div>
     )

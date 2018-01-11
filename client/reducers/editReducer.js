@@ -2,6 +2,7 @@ import u from 'updeep'
 import { actions } from 'client/actions/editActions'
 
 export const initialState = {
+  activeSection: null,
   activeView: 'content',
   error: null,
   isDeleting: false,
@@ -16,6 +17,11 @@ export function editReducer (state = initialState, action) {
       return u({
         isSaving: false,
         isSaved: action.payload.isSaved
+      }, state)
+    }
+    case actions.CHANGE_SECTION: {
+      return u({
+        activeSection: action.payload.activeSection
       }, state)
     }
     case actions.CHANGE_VIEW: {

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { SectionFooter } from '../sections/footer/index'
 import { SectionHeader } from '../sections/header/index'
 import { SectionHero } from '../sections/hero/index'
-import { SectionList } from '../section_list/index'
+import SectionList from '../section_list/index'
 
 export class EditArticle extends Component {
   static propTypes = {
