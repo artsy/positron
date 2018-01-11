@@ -12,9 +12,9 @@ export class EditHeader extends Component {
     user: PropTypes.object
   }
 
-  toggleSection = (activeSection) => {
+  toggleSection = (activeView) => {
     // TODO - connect component to use redux actions directly
-    this.props.actions.changeSection(activeSection)
+    this.props.actions.changeView(activeView)
   }
 
   isPublishable = () => {

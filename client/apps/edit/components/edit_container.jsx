@@ -61,7 +61,7 @@ class EditContainer extends Component {
 
   getActiveSection = () => {
     const { article, channel, edit } = this.props
-    const { activeSection } = edit
+    const { activeView } = edit
 
     const props = {
       article,
@@ -70,7 +70,7 @@ class EditContainer extends Component {
       onChangeHero: this.onChangeHero
     }
 
-    switch (activeSection) {
+    switch (activeView) {
       case 'admin':
         return <EditAdmin {...props} />
       case 'content':
