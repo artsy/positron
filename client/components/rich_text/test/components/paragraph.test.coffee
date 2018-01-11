@@ -3,7 +3,7 @@ benv = require 'benv'
 sinon = require 'sinon'
 React = require 'react'
 ReactDOM = require 'react-dom'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 ReactDOMServer = require 'react-dom/server'
 Draft = require 'draft-js'
 { EditorState, Modifier } = require 'draft-js'
@@ -109,7 +109,7 @@ describe 'Rich Text: Paragraph', ->
       component.setState = sinon.stub()
       component.handleKeyCommand('bold')
       component.setState.called.should.eql false
-      
+
     it 'Can toggle italic styles', ->
       @component.setState = sinon.stub()
       @component.handleKeyCommand('italic')

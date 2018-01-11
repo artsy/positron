@@ -46,7 +46,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      const input = component.find(ImageUpload).first().node
+      const input = component.find(ImageUpload).first().getElement()
       input.props.onChange(input.props.name, 'http://new-image.jpg')
 
       expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
@@ -57,7 +57,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      const input = component.find(ImageUpload).at(1).node
+      const input = component.find(ImageUpload).at(1).getElement()
       input.props.onChange(input.props.name, 'http://new-image.jpg')
 
       expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
@@ -68,7 +68,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      const input = component.find(ImageUpload).last().node
+      const input = component.find(ImageUpload).last().getElement()
       input.props.onChange(input.props.name, 'http://new-image.jpg')
 
       expect(props.onChange.mock.calls[0][0]).toBe('sponsor')
@@ -81,7 +81,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      expect(component.find('input').last().node.placeholder).toMatch('http://example.com')
+      expect(component.find('input').last().instance().placeholder).toMatch('http://example.com')
     })
 
     it('Can render saved data', () => {
@@ -91,7 +91,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      expect(component.find('input').last().node.value).toMatch('http://partner.com')
+      expect(component.find('input').last().instance().value).toMatch('http://partner.com')
     })
 
     it('Calls props.onChange when input changes', () => {
