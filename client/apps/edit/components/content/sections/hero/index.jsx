@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Section from '../../../../../../models/section'
-import SectionContainer from '../../section_container/index.coffee'
-import SectionTool from '../../section_tool/index.jsx'
+import Section from '../../../../../../models/section.coffee'
+import { SectionContainer } from '../../section_container'
+import { SectionTool } from '../../section_tool'
 
 export class SectionHero extends Component {
   static propTypes = {

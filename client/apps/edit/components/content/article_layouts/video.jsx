@@ -214,8 +214,6 @@ export const EditVideoContainer = styled.div`
 
   ${VideoCoverContainer}, ${VideoAboutContainer} {
     .public-DraftEditorPlaceholder-root {
-      left: 0;
-      right: 0;
       color: gray;
     }
   }

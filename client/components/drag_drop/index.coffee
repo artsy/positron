@@ -2,7 +2,6 @@ React = require 'react'
 _ = require 'lodash'
 DragTarget = React.createFactory require './drag_target.coffee'
 DragSource = require('./drag_source.jsx').DragSource
-SectionTool = require '../../apps/edit/components/content/section_tool/index.jsx'
 { div } = React.DOM
 
 module.exports = React.createClass
@@ -68,8 +67,7 @@ module.exports = React.createClass
       children.map (child, i) =>
         uniqueKey = if child.props.section then child.props.section.cid + i else i
 
-        if child.type.displayName is 'SectionTool' or #TODO - REMOVE DISPLAYNAME CHECK POST ARTICLE2
-         child.props.isDraggable is false or !@props.isDraggable
+        if child.props.isDraggable is false or !@props.isDraggable
           child
         else
           i = child.props.index or i

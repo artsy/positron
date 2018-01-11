@@ -5,7 +5,7 @@ Backbone = require 'backbone'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactDOMServer = require 'react-dom/server'
-ReactTestUtils = require 'react-addons-test-utils'
+ReactTestUtils = require 'react-dom/test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
 Article = require '../../../models/article.coffee'
@@ -148,97 +148,70 @@ describe 'DragDropContainer Vertical', ->
     benv.setup =>
       benv.expose
         $: benv.require 'jquery'
+      global.HTMLElement = () -> {}
       global.Image = () => {}
+      window.matchMedia = sinon.stub().returns(
+        {
+          matches: false
+          addListener: sinon.stub()
+          removeListener: sinon.stub()
+        }
+      )
       @DragDropContainer = benv.require resolve(__dirname, '../index.coffee')
       DragTarget = benv.require resolve __dirname, '../drag_target.coffee'
       DragSource = benv.require(resolve(__dirname, '../drag_source.jsx')).DragSource
       @DragDropContainer.__set__ 'DragTarget', React.createFactory DragTarget
       @DragDropContainer.__set__ 'DragSource', DragSource
-      SectionTool = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/section_tool/index.jsx'
-      )
-      SectionContainer = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/section_container/index.coffee'
-      )
-      ImageCollection = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/index.coffee'
-      )
-      ImageCollection.__set__ 'Controls', sinon.stub()
-      ImageCollection.__set__ 'imagesLoaded', sinon.stub().returns(true)
-      SectionContainer.__set__ 'ImageCollection', React.createFactory ImageCollection
-      hasFeature = sinon.stub().returns(true)
-      section2 = new Section StandardArticle.sections[16]
-      section3 = new Section StandardArticle.sections[8]
       @props = {
         isDraggable: true
         onDragEnd: @onDragEnd = sinon.stub()
-        items: @sections = new Sections([
-            StandardArticle.sections[8]
-            StandardArticle.sections[8]
-            StandardArticle.sections[16]
-          ])
+        items: StandardArticle.sections[4].images
         layout: 'vertical'
-        article: @article = new Article layout: 'standard'
       }
+      article = new Article layout: 'standard'
+      section = new Section StandardArticle.sections[4]
+      ImageDisplay = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
+      )
       @children = [
         React.createElement(
-          SectionContainer
+          ImageDisplay.default,
           {
-            key:'child-1'
-            i: 0
-            article: @article
-            section: @sections.models[0]
-            sections: @sections
-            editing: false
-            channel: {hasFeature: hasFeature}
+            key:'child-1',
+            i: 0,
+            article: article,
+            section: section,
+            width: null,
+            image: StandardArticle.sections[4].images[0],
+            removeItem: sinon.stub(),
+            onChange: sinon.stub()
           }
         )
         React.createElement(
-          SectionTool.default
-          {key:'child-2', i: 1, sections: @sections, channel: {hasFeature: hasFeature}, editing: false}
-        )
-        React.createElement(
-          SectionContainer
+          ImageDisplay.default,
           {
-            key:'child-3'
-            i: 2
-            article: @article
-            section: @sections.models[1]
-            sections: @sections
-            editing: false
-            channel: {hasFeature: hasFeature}
-          }
-        )
-        React.createElement(
-          SectionContainer
-          {
-            key:'child-4'
-            i: 3
-            article: @article
-            section: @sections.models[2]
-            sections: @sections
-            editing: false
-            channel: {hasFeature: hasFeature}
+            key:'child-2',
+            i: 1,
+            article: article,
+            section: section,
+            width: null,
+            image: StandardArticle.sections[4].images[1],
+            removeItem: sinon.stub(),
+            onChange: sinon.stub()
           }
         )
       ]
-      @component = ReactDOM.render(
-        React.createElement(@DragDropContainer, @props, @children)
-        (@$el = $ "<div></div>")[0], ->
-      )
+      @component = ReactDOM.render React.createElement(@DragDropContainer, @props, @children), (@$el = $ "<div></div>")[0], ->
       done()
 
-  afterEach ->
+  afterEach (done) ->
     benv.teardown()
-
+    done()
+ 
   it 'renders a drag container with children', ->
-    @$el.find('.drag-target').length.should.eql 4
-    @$el.find('.DragSource').length.should.eql 4
-    @$el.find('img').length.should.eql 3
-
-  it 'does not add draggable properties to sectionTool', ->
-    @$el.find('.edit-tool').parent().hasClass('.DragSource').should.not.be.ok
-    @$el.find('.edit-tool').parent().hasClass('.drag-container').should.be.ok
+    @$el.find('.drag-target').length.should.eql 2
+    @$el.find('.DragSource').length.should.eql 2
+    @$el.find('img').length.should.eql 2
 
   it 'adds a vertical class to active drag-targets', ->
     @component.setState

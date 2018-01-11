@@ -123,9 +123,6 @@
   width body-width
   font-size 20px
   line-height 26px
-  .public-DraftEditorPlaceholder-root
-    color gray-dark-color
-    position absolute
   .public-DraftEditor-content
     div[data-blocK]
       margin-bottom 1em
@@ -146,5 +143,12 @@
   width 100%
   height 100px
 
+// Draft placeholder sit inline with content
+.DraftEditor-root
+  position relative
 .public-DraftEditorPlaceholder-root
   position absolute
+  top 0
+  left 0
+  right 0
+  color gray-dark-color

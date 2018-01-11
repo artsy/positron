@@ -30,14 +30,14 @@ describe('Campaign Admin', () => {
     const component = mount(
       <Campaign {...props} />
     )
-    expect(component.find('input').at(0).node.value).toMatch(props.campaign.name)
-    expect(component.find('input[type="date"]').at(0).node.value).toMatch(
+    expect(component.find('input').at(0).instance().value).toMatch(props.campaign.name)
+    expect(component.find('input[type="date"]').at(0).instance().value).toMatch(
       moment(start_date).format('YYYY-MM-DD')
     )
-    expect(component.find('input[type="date"]').at(1).node.value).toMatch(
+    expect(component.find('input[type="date"]').at(1).instance().value).toMatch(
       moment(end_date).format('YYYY-MM-DD')
     )
-    expect(component.find('select').at(0).node.value).toBe(props.campaign.sov.toString())
+    expect(component.find('select').at(0).instance().value).toBe(props.campaign.sov.toString())
   })
 
   it('Changes the campaign name on input', () => {

@@ -39,7 +39,7 @@ describe('DisplaySearch', () => {
     const component = mount(
       <DisplaySearch {...props} />
     )
-    const input = component.find(CharacterLimit).at(0).node
+    const input = component.find(CharacterLimit).at(0).getElement()
     input.props.onChange('New title')
 
     expect(props.onChange.mock.calls[0][0]).toBe('search_title')
@@ -50,7 +50,7 @@ describe('DisplaySearch', () => {
     const component = mount(
       <DisplaySearch {...props} />
     )
-    const input = component.find(CharacterLimit).at(1).node
+    const input = component.find(CharacterLimit).at(1).getElement()
     input.props.onChange('New description')
 
     expect(props.onChange.mock.calls[0][0]).toBe('search_description')
