@@ -1,28 +1,45 @@
+import { clone } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
-import { IconRemove, Image } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Artwork, Image } from '@artsy/reaction-force/dist/Components/Publishing'
+import { RemoveButton } from 'client/components/remove_button/index.jsx'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 
-export default class ImageCollectionImage extends Component {
+export class ImageCollectionImage extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    editing: PropTypes.bool,
+    image: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired,
+    imagesLoaded: PropTypes.bool,
+    onChange: PropTypes.func.isRequired,
+    removeItem: PropTypes.func,
+    progress: PropTypes.number,
+    section: PropTypes.object.isRequired,
+    width: PropTypes.any
+  }
+
   onCaptionChange = (html) => {
-    this.props.image.caption = html
-    this.props.onChange()
+    const {
+      image,
+      index,
+      section,
+      onChange
+    } = this.props
+
+    const newImages = clone(section.get('images'))
+    let newImage = Object.assign({}, image)
+
+    newImage.caption = html
+    newImages[index] = newImage
+    section.set('images', newImages)
+    onChange()
   }
 
-  renderRemoveButton (image) {
-    if (this.props.removeItem && this.props.editing) {
-      return (
-        <div
-          className='edit-section__remove'
-          onClick={this.props.removeItem(image)}>
-          <IconRemove />
-        </div>
-      )
-    }
-  }
+  editCaption = () => {
+    const { article, image, progress } = this.props
 
-  renderCaption (image) {
-    if (!this.props.progress) {
+    if (!progress) {
       return (
         <Paragraph
           type='caption'
@@ -30,37 +47,57 @@ export default class ImageCollectionImage extends Component {
           html={image.caption || ''}
           onChange={this.onCaptionChange}
           stripLinebreaks
-          layout={this.props.article.get('layout')} />
+          layout={article.get('layout')}
+        />
       )
     }
   }
 
   render () {
-    const { image, imagesLoaded, section, width } = this.props
+    const {
+      article,
+      editing,
+      image,
+      imagesLoaded,
+      removeItem,
+      section,
+      width
+    } = this.props
+
+    const isArtwork = image.type === 'artwork'
+
     return (
       <div
         className='image-collection__img-container'
         style={{
           width: width,
           opacity: imagesLoaded ? 1 : 0
-        }} >
-        <Image image={image} sectionLayout={section.get('layout')}>
-          {this.renderCaption(image)}
-        </Image>
-        {this.renderRemoveButton(image)}
+        }}
+      >
+
+        {isArtwork
+          ? <Artwork
+              artwork={image}
+              layout={article.get('layout')}
+              linked={false}
+              sectionLayout={section.get('layout')}
+            />
+
+            : <Image
+                editCaption={this.editCaption}
+                image={image}
+                linked={false}
+                sectionLayout={section.get('layout')}
+              />
+        }
+
+        {editing && removeItem &&
+          <RemoveButton
+            className='edit-section__remove'
+            onClick={() => removeItem(image)}
+          />
+        }
       </div>
     )
   }
-}
-
-ImageCollectionImage.propTypes = {
-  article: PropTypes.object.isRequired,
-  editing: PropTypes.bool,
-  image: PropTypes.object.isRequired,
-  imagesLoaded: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-  removeItem: PropTypes.func,
-  progress: PropTypes.number,
-  section: PropTypes.object.isRequired,
-  width: PropTypes.any
 }

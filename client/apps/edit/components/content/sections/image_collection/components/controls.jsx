@@ -1,170 +1,183 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-const gemup = require('gemup')
-const sd = require('sharify').data
-import { clone, defer } from 'lodash'
+import { clone } from 'lodash'
+import { data as sd } from 'sharify'
+import { Row, Col } from 'react-styled-flexboxgrid'
 import Artwork from '/client/models/artwork.coffee'
-import Autocomplete from '/client/components/autocomplete/index.coffee'
+import { Autocomplete } from '/client/components/autocomplete2/index'
 import FileInput from '/client/components/file_input/index.jsx'
 import SectionControls from '../../../section_controls/index.jsx'
-import UrlArtworkInput from './url_artwork_input.coffee'
+import { InputArtworkUrl } from './input_artwork_url.jsx'
 
-export default class Controls extends Component {
-  constructor (props) {
-    super(props)
+export class ImageCollectionControls extends Component {
+  static propTypes = {
+    articleLayout: PropTypes.string.isRequired,
+    channel: PropTypes.object.isRequired,
+    images: PropTypes.array.isRequired,
+    isHero: PropTypes.bool,
+    section: PropTypes.object.isRequired,
+    setProgress: PropTypes.func,
+    onChange: PropTypes.func.isRequired
   }
 
-  componentDidMount() {
-    this.setupAutocomplete()
-  }
+  filterAutocomplete = (items) => {
+    return items._embedded.results.map((item) => {
+      const { type } = item
 
-  componentWillUnmount() {
-    this.autocomplete.remove()
-  }
+      if (type === 'artwork') {
+        const { title, _links } = item
+        const { thumbnail, self } = _links
+        const _id = self.href.substr(self.href.lastIndexOf('/') + 1)
+        const thumbnail_image = thumbnail && thumbnail.href
 
-  addArtworkFromUrl = (images) => {
-    this.props.section.set('images', images)
-    this.props.onChange()
-  }
-
-  setupAutocomplete() {
-    const $el = $(this.refs.autocomplete)
-    this.autocomplete = new Autocomplete({
-      url: `${sd.ARTSY_URL}/api/search?q=%QUERY`,
-      el: $el,
-      filter(res) {
-        const vals = []
-        for (let r of Array.from(res._embedded.results)) {
-          if ((r.type != null ? r.type.toLowerCase() : undefined) === 'artwork') {
-            const id = r._links.self.href.substr(r._links.self.href.lastIndexOf('/') + 1)
-            vals.push({
-              id,
-              value: r.title,
-              thumbnail: (r._links.thumbnail != null ? r._links.thumbnail.href : null)
-            })
-          }
+        return {
+          _id,
+          title,
+          thumbnail_image,
+          type
         }
-        return vals
-      },
-      templates: {
-        suggestion(data) {
-          return `<div class='autocomplete-suggestion' style='background-image: url(${data.thumbnail})'></div>${data.value}`
-        }
-      },
-      selected: this.onSelectArtwork
-    })
-    return defer(() => $el.focus())
-  }
-
-  onSelectArtwork = (e, selected) => {
-    new Artwork({id: selected.id}).fetch({
-      success: (artwork) => {
-        let newImages = clone(this.props.images)
-        newImages = newImages.concat([artwork.denormalized()])
-        this.props.section.set('images', newImages)
-        $(this.refs.autocomplete).val('').focus()
-        this.props.onChange()
+      } else {
+        return false
       }
     })
   }
 
+  fetchDenormalizedArtwork = async (id) => {
+    try {
+      const artwork = await new Artwork({ id }).fetch()
+      return new Artwork(artwork).denormalized()
+    } catch (err) {
+      // TODO: REDUX ERROR
+      // const message = 'Artwork not found.'
+      // this.props.actions.logError({
+      //   error: { message }
+      // })
+      return err
+    }
+  }
+
+  onNewImage = (image) => {
+    const { images, section } = this.props
+    const newImages = clone(images).concat(image)
+
+    section.set('images', newImages)
+  }
+
   onUpload = (image, width, height) => {
-    let newImages = clone(this.props.images)
-    newImages = newImages.concat({
+    this.onNewImage({
       url: image,
       type: 'image',
       width: width,
       height: height,
       caption: ''
     })
-    this.props.section.set('images', newImages)
   }
 
-  onChangeImageSetTitle = (e) => {
-    this.props.section.set('title', e.target.value)
-  }
-
-  toggleImagesetLayout = (layout) => {
-    this.props.section.set('layout', layout)
-  }
-
-  inputsAreDisabled(section) {
+  inputsAreDisabled = () => {
+    const { section } = this.props
     return section.get('layout') === 'fillwidth' && section.get('images').length > 0
   }
 
-  fillwidthAlert() {
-    alert('Fullscreen layouts accept one asset, please remove extra images.')
+  fillwidthAlert = () => {
+    // TODO: REDUX ERROR
+    // const message = 'Fullscreen layouts accept one asset, please remove extra images.'
+    // this.props.actions.logError({
+    //   error: { message }
+    // })
+    debugger
   }
 
-  render() {
-    const { article, channel, images, isHero, section, setProgress, onChange } = this.props
-    const inputsAreDisabled = this.inputsAreDisabled(section)
+  render () {
+    const {
+      articleLayout,
+      channel,
+      isHero,
+      section,
+      setProgress,
+      onChange
+    } = this.props
+
+    const inputsAreDisabled = this.inputsAreDisabled()
 
     return (
         <SectionControls
           section={section}
           channel={channel}
-          articleLayout={article.get('layout')}
+          articleLayout={articleLayout}
           onChange={onChange}
-          sectionLayouts={isHero ? false : true}
+          sectionLayouts={!isHero}
           isHero={isHero}
-          disabledAlert={this.fillwidthAlert}>
-
+          disabledAlert={this.fillwidthAlert}
+        >
           <div onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
             <FileInput
               disabled={inputsAreDisabled}
               onProgress={setProgress}
-              onUpload={this.onUpload} />
+              onUpload={this.onUpload}
+              video={section.get('layout') === 'fillwidth'}
+            />
           </div>
+
           { !isHero &&
-            <section
+            <Row
               className='edit-controls__artwork-inputs'
-              onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}>
-              <div className='edit-controls__autocomplete-input'>
-                <input
-                  ref='autocomplete'
-                  className='bordered-input bordered-input-dark'
-                  placeholder='Search for artwork by title'
-                  disabled={inputsAreDisabled} />
-              </div>
-              <UrlArtworkInput
-                images={images}
-                addArtworkFromUrl={this.addArtworkFromUrl}
-                disabled={inputsAreDisabled} />
-            </section>
+              onClick={inputsAreDisabled ? this.fillwidthAlert : undefined}
+            >
+              <Col xs={6}>
+                <Autocomplete
+                  className='edit-controls__autocomplete-input'
+                  disabled={inputsAreDisabled}
+                  filter={this.filterAutocomplete}
+                  items={section.get('images')}
+                  onSelect={(images) => section.set('images', images)}
+                  placeholder='Search artworks by title...'
+                  resObject={(item) => this.fetchDenormalizedArtwork(item._id)}
+                  url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
+                />
+              </Col>
+              <Col xs={6}>
+                <InputArtworkUrl
+                  className='edit-controls__byurl-input'
+                  addArtwork={this.onNewImage}
+                  fetchArtwork={this.fetchDenormalizedArtwork}
+                />
+              </Col>
+            </Row>
           }
 
         { section.get('type') === 'image_set' &&
-          <section
-            className='edit-controls__image-set-inputs'>
-            <input
-              ref='title'
-              className='bordered-input bordered-input-dark'
-              defaultValue={this.props.section.get('title')}
-              onChange={this.onChangeImageSetTitle}
-              placeholder='Image Set Title (optional)' />
-
-            <div className='inputs'>
+          <Row className='edit-controls__image-set-inputs'>
+            <Col xs={6}>
+              <input
+                ref='title'
+                className='bordered-input bordered-input-dark'
+                defaultValue={section.get('title')}
+                onChange={(e) => section.set('title', e.target.value)}
+                placeholder='Image Set Title (optional)'
+              />
+            </Col>
+            <Col xs={6} className='inputs'>
               <label>Entry Point:</label>
               <div className='layout-inputs'>
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => this.toggleImagesetLayout('mini')}
-                    data-active={section.get('layout') !== 'full'} >
-                  </div>
+                    onClick={() => section.set('layout', 'mini')}
+                    data-active={section.get('layout') !== 'full'}
+                  />
                   Mini
                 </div>
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => this.toggleImagesetLayout('full')}
-                    data-active={section.get('layout') === 'full'} >
-                  </div>
+                    onClick={() => section.set('layout', 'full')}
+                    data-active={section.get('layout') === 'full'}
+                  />
                   Full
                 </div>
               </div>
-            </div>
-          </section>
+            </Col>
+          </Row>
         }
       </SectionControls>
     )

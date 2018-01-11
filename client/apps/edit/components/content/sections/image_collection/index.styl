@@ -52,16 +52,9 @@
     &__artwork-inputs
       padding-top controls-padding
       input
-        display inline-block
-        vertical-align top
-        width 100%
-        max-width 100%
-        margin 0
+        background white
+        border-color white
     &__byurl-input
-      position relative
-      display inline-block
-      width 50%
-      padding-left 10px
       button
         position relative
         display inline-block
@@ -71,34 +64,13 @@
         background-color gray-lighter-color
       input
         width calc(100% - 75px)
-    &__autocomplete-input
-      display inline-block
-      width 50%
-      padding-right 10px
-      input
-        padding-left 12px
-      .tt-suggestion
-        clearfix()
-        line-height 1.2em
-        color black
-        z-index 10
-        .autocomplete-suggestion
-          width 50px
-          height @width
-          background center center gray-lighter-color
-          background-size cover
-          margin-right 10px
-          float left
     &__image-set-inputs
       color white
       avant-garde()
       font-size 13px
-      display flex
-      justify-content space-between
       align-items center
-      margin-top 20px
+
       input
-        width calc(50% - 15px)
         margin-bottom 0
       .inputs
         display flex

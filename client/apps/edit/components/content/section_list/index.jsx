@@ -19,6 +19,7 @@ export class SectionList extends Component {
     const { sections } = this.props
 
     sections.on('add', this.onNewSection)
+    sections.on('change', this.forceReRender)
     sections.on('reset', this.forceReRender)
     sections.on('destroy', this.forceReRender)
   }

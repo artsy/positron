@@ -6,10 +6,9 @@ React = require 'react'
 { ImageSetPreview, ImageSetPreviewClassic } = require('@artsy/reaction-force/dist/Components/Publishing')
 FillWidth = require('@artsy/reaction-force/dist/Utils/fillwidth').default
 imagesLoaded = require 'imagesloaded'
-Artwork = require './components/artwork.jsx'
-Controls = require './components/controls.jsx'
+{ ImageCollectionControls } = require './components/controls.jsx'
 DragContainer = React.createFactory require '../../../../../../components/drag_drop/index.coffee'
-Image = require './components/image.jsx'
+{ ImageCollectionImage } = require './components/image.jsx'
 ImageSetPreview = React.createFactory ImageSetPreview
 ImageSetPreviewClassic = React.createFactory ImageSetPreviewClassic
 { div, section, ul, li } = React.DOM
@@ -24,6 +23,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     @$list = $(@refs.images)
+    @props.section.on('change:images', @onChange)
     @onChange()
 
   onChange: ->
@@ -89,35 +89,20 @@ module.exports = React.createClass
     images.map (item, i) =>
       width = this.getImageWidth()
 
-      if item.type is 'artwork'
-        React.createElement(
-          Artwork.default, {
-            key: i
-            index: i
-            artwork: item
-            removeItem: @removeItem
-            editing:  @props.editing
-            imagesLoaded: @state.imagesLoaded
-            article: @props.article
-            section: @props.section
-            width: @getImageWidth(i)
-          }
-        )
-      else
-        React.createElement(
-          Image.default, {
-            index: i
-            key: i
-            image: item
-            removeItem: @removeItem
-            editing:  @props.editing
-            imagesLoaded: @state.imagesLoaded
-            article: @props.article
-            section: @props.section
-            onChange: @onChange
-            width: @getImageWidth(i)
-          }
-        )
+      React.createElement(
+        ImageCollectionImage, {
+          index: i
+          key: i
+          image: item
+          removeItem: @removeItem
+          editing:  @props.editing
+          imagesLoaded: @state.imagesLoaded
+          article: @props.article
+          section: @props.section
+          onChange: @onChange
+          width: @getImageWidth(i)
+        }
+      )
 
   render: ->
     images = @props.section.get('images') or []
@@ -131,7 +116,7 @@ module.exports = React.createClass
     },
       if @props.editing
         React.createElement(
-          Controls.default, {
+          ImageCollectionControls, {
             section: @props.section
             images: images
             isHero: @props.isHero
@@ -139,7 +124,7 @@ module.exports = React.createClass
             onChange: @onChange
             channel: @props.channel
             editing: @props.editing
-            article: @props.article
+            articleLayout: @props.article.get('layout')
           }
         )
       if @state.progress
