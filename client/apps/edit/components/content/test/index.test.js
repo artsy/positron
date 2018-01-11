@@ -1,5 +1,5 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import { shallow } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../../models/article'
 import { EditArticle } from '../article_layouts/article'
@@ -9,6 +9,12 @@ require('typeahead.js')
 
 describe('EditContent', () => {
   let props
+
+  const getWrapper = (props) => {
+    return shallow(
+      <EditContent {...props} />
+    )
+  }
 
   beforeEach(() => {
     props = {
@@ -22,18 +28,14 @@ describe('EditContent', () => {
   })
 
   it('Renders EditArticle if article layout is not series', () => {
-    const component = mount(
-      <EditContent {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(EditArticle).length).toBe(1)
     expect(component.find(EditSeries).length).toBe(0)
   })
 
   it('Renders EditSeries if article layout is series', () => {
     props.article.set('layout', 'series')
-    const component = mount(
-      <EditContent {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(EditSeries).length).toBe(1)
     expect(component.find(EditArticle).length).toBe(0)
   })
