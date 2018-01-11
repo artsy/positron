@@ -16,14 +16,10 @@ describe('SectionList', () => {
     article = new Article(Fixtures.StandardArticle)
 
     props = {
-      actions: {
-        changeSection: jest.fn()
-      },
+      activeSection: null,
       article,
+      changeSectionAction: jest.fn(),
       channel: new Channel(),
-      edit: {
-        activeSection: null
-      },
       sections: article.sections
     }
   })
@@ -75,6 +71,6 @@ describe('SectionList', () => {
       {type: 'embed'},
       {at: 3}
     )
-    expect(component.props().actions.changeSection.mock.calls[1][0]).toBe(3)
+    expect(component.props().changeSectionAction.mock.calls[1][0]).toBe(3)
   })
 })

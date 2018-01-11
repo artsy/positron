@@ -178,7 +178,7 @@ export class EditHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ...state
+  edit: state.edit
 })
 
 const mapDispatchToProps = (dispatch) => ({
