@@ -81,7 +81,7 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { error } = this.props
+    const { error } = this.props.edit
 
     return (
       <div className='EditContainer'>

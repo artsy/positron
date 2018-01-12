@@ -1,19 +1,22 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { clone } from 'lodash'
+import { connect } from 'react-redux'
 import { data as sd } from 'sharify'
 import { Row, Col } from 'react-styled-flexboxgrid'
 import Artwork from '/client/models/artwork.coffee'
-import { Autocomplete } from '/client/components/autocomplete2/index'
-import FileInput from '/client/components/file_input/index.jsx'
-import SectionControls from '../../../section_controls/index.jsx'
-import { InputArtworkUrl } from './input_artwork_url.jsx'
+import FileInput from '/client/components/file_input'
+import SectionControls from '../../../section_controls'
+import { logError } from 'client/actions/editActions'
+import { Autocomplete } from '/client/components/autocomplete2'
+import { InputArtworkUrl } from './input_artwork_url'
 
 export class ImageCollectionControls extends Component {
   static propTypes = {
     articleLayout: PropTypes.string.isRequired,
     channel: PropTypes.object.isRequired,
     isHero: PropTypes.bool,
+    logErrorAction: PropTypes.func,
     section: PropTypes.object.isRequired,
     setProgress: PropTypes.func
   }
@@ -41,15 +44,13 @@ export class ImageCollectionControls extends Component {
   }
 
   fetchDenormalizedArtwork = async (id) => {
+    const { logErrorAction } = this.props
+
     try {
       const artwork = await new Artwork({ id }).fetch()
       return new Artwork(artwork).denormalized()
     } catch (err) {
-      // TODO: REDUX ERROR
-      // const message = 'Artwork not found.'
-      // this.props.actions.logError({
-      //   error: { message }
-      // })
+      logErrorAction({message: 'Artwork not found.'})
       return err
     }
   }
@@ -77,11 +78,10 @@ export class ImageCollectionControls extends Component {
   }
 
   fillwidthAlert = () => {
-    // TODO: REDUX ERROR
-    // const message = 'Fullscreen layouts accept one asset, please remove extra images.'
-    // this.props.actions.logError({
-    //   error: { message }
-    // })
+    const { logErrorAction } = this.props
+    const message = 'Fullscreen layouts accept one asset, please remove extra images.'
+
+    logErrorAction({ message })
   }
 
   render () {
@@ -176,3 +176,14 @@ export class ImageCollectionControls extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => state
+
+const mapDispatchToProps = {
+  logErrorAction: logError
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ImageCollectionControls)
