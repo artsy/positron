@@ -5,7 +5,7 @@ import track from 'react-tracking'
 const sd = require('sharify').data
 
 @track(
-  { page: 'Instant Article Display Panel' },
+  { is_instant_article: true },
   { dispatch: (data) => {
     const { action, ...rest } = data
     window.analytics.track(action, rest)
