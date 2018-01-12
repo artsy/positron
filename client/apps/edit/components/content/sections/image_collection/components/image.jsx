@@ -7,14 +7,12 @@ import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 
 export class ImageCollectionImage extends Component {
   static propTypes = {
-    article: PropTypes.object.isRequired,
+    articleLayout: PropTypes.string.isRequired,
     editing: PropTypes.bool,
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    imagesLoaded: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
-    removeItem: PropTypes.func,
     progress: PropTypes.number,
+    removeImage: PropTypes.func,
     section: PropTypes.object.isRequired,
     width: PropTypes.any
   }
@@ -23,8 +21,7 @@ export class ImageCollectionImage extends Component {
     const {
       image,
       index,
-      section,
-      onChange
+      section
     } = this.props
 
     const newImages = clone(section.get('images'))
@@ -33,11 +30,10 @@ export class ImageCollectionImage extends Component {
     newImage.caption = html
     newImages[index] = newImage
     section.set('images', newImages)
-    onChange()
   }
 
   editCaption = () => {
-    const { article, image, progress } = this.props
+    const { articleLayout, image, progress } = this.props
 
     if (!progress) {
       return (
@@ -47,7 +43,7 @@ export class ImageCollectionImage extends Component {
           html={image.caption || ''}
           onChange={this.onCaptionChange}
           stripLinebreaks
-          layout={article.get('layout')}
+          layout={articleLayout}
         />
       )
     }
@@ -55,11 +51,10 @@ export class ImageCollectionImage extends Component {
 
   render () {
     const {
-      article,
+      articleLayout,
       editing,
       image,
-      imagesLoaded,
-      removeItem,
+      removeImage,
       section,
       width
     } = this.props
@@ -69,16 +64,13 @@ export class ImageCollectionImage extends Component {
     return (
       <div
         className='image-collection__img-container'
-        style={{
-          width: width,
-          opacity: imagesLoaded ? 1 : 0
-        }}
+        style={{ width }}
       >
 
         {isArtwork
           ? <Artwork
               artwork={image}
-              layout={article.get('layout')}
+              layout={articleLayout}
               linked={false}
               sectionLayout={section.get('layout')}
             />
@@ -91,10 +83,10 @@ export class ImageCollectionImage extends Component {
               />
         }
 
-        {editing && removeItem &&
+        {editing && removeImage &&
           <RemoveButton
             className='edit-section__remove'
-            onClick={() => removeItem(image)}
+            onClick={() => removeImage(image)}
           />
         }
       </div>

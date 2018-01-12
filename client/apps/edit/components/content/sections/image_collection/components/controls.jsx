@@ -13,11 +13,9 @@ export class ImageCollectionControls extends Component {
   static propTypes = {
     articleLayout: PropTypes.string.isRequired,
     channel: PropTypes.object.isRequired,
-    images: PropTypes.array.isRequired,
     isHero: PropTypes.bool,
     section: PropTypes.object.isRequired,
-    setProgress: PropTypes.func,
-    onChange: PropTypes.func.isRequired
+    setProgress: PropTypes.func
   }
 
   filterAutocomplete = (items) => {
@@ -57,8 +55,8 @@ export class ImageCollectionControls extends Component {
   }
 
   onNewImage = (image) => {
-    const { images, section } = this.props
-    const newImages = clone(images).concat(image)
+    const { section } = this.props
+    const newImages = clone(section.get('images')).concat(image)
 
     section.set('images', newImages)
   }
@@ -84,7 +82,6 @@ export class ImageCollectionControls extends Component {
     // this.props.actions.logError({
     //   error: { message }
     // })
-    debugger
   }
 
   render () {
@@ -93,8 +90,7 @@ export class ImageCollectionControls extends Component {
       channel,
       isHero,
       section,
-      setProgress,
-      onChange
+      setProgress
     } = this.props
 
     const inputsAreDisabled = this.inputsAreDisabled()
@@ -104,7 +100,6 @@ export class ImageCollectionControls extends Component {
           section={section}
           channel={channel}
           articleLayout={articleLayout}
-          onChange={onChange}
           sectionLayouts={!isHero}
           isHero={isHero}
           disabledAlert={this.fillwidthAlert}
@@ -114,7 +109,6 @@ export class ImageCollectionControls extends Component {
               disabled={inputsAreDisabled}
               onProgress={setProgress}
               onUpload={this.onUpload}
-              video={section.get('layout') === 'fillwidth'}
             />
           </div>
 
@@ -125,19 +119,18 @@ export class ImageCollectionControls extends Component {
             >
               <Col xs={6}>
                 <Autocomplete
-                  className='edit-controls__autocomplete-input'
+                  autoFocus
                   disabled={inputsAreDisabled}
                   filter={this.filterAutocomplete}
-                  items={section.get('images')}
+                  formatSelected={(item) => this.fetchDenormalizedArtwork(item._id)}
+                  items={section.get('images') || []}
                   onSelect={(images) => section.set('images', images)}
                   placeholder='Search artworks by title...'
-                  resObject={(item) => this.fetchDenormalizedArtwork(item._id)}
                   url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
                 />
               </Col>
               <Col xs={6}>
                 <InputArtworkUrl
-                  className='edit-controls__byurl-input'
                   addArtwork={this.onNewImage}
                   fetchArtwork={this.fetchDenormalizedArtwork}
                 />

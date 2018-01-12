@@ -5,7 +5,6 @@ import { last } from 'lodash'
 export class InputArtworkUrl extends Component {
   static propTypes = {
     addArtwork: PropTypes.func.isRequired,
-    className: PropTypes.string,
     disabled: PropTypes.bool,
     fetchArtwork: PropTypes.func.isRequired
   }
@@ -38,11 +37,11 @@ export class InputArtworkUrl extends Component {
   }
 
   render () {
-    const { className, disabled } = this.props
+    const { disabled } = this.props
     const { loading, url } = this.state
 
     return (
-      <div className={`InputArtworkUrl ${className}`}>
+      <div className='InputArtworkUrl'>
         <input
           className='bordered-input bordered-input-dark'
           disabled={disabled}
@@ -54,7 +53,6 @@ export class InputArtworkUrl extends Component {
               this.getIdFromSlug(url)
             }
           }}
-          // onPaste={(e) => this.getIdFromSlug(e.clipboardData.getData('Text'))}
         />
         <button
           className={`avant-garde-button ${loading && 'is-loading'}`}

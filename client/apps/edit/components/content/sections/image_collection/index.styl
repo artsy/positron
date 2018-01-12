@@ -54,7 +54,7 @@
       input
         background white
         border-color white
-    &__byurl-input
+    .InputArtworkUrl
       button
         position relative
         display inline-block
@@ -116,6 +116,8 @@
 .SectionContainer[data-layout=column_width]
   .image-collection__list .drag-container
     flex-direction column
+  .image-collection__img-container
+    width 100%
 
 [data-layout='standard']
   .SectionContainer[data-type=image_set][data-editing=true]
