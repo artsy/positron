@@ -19,8 +19,6 @@ describe('ImageCollectionImageSet', () => {
     )
   }
 
-  beforeEach(() => {})
-
   it('renders an image set for standard/feature articles', () => {
     props.articleLayout = 'standard'
     const component = getWrapper(props)

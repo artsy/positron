@@ -21,6 +21,14 @@ export class ImageCollectionControls extends Component {
     setProgress: PropTypes.func
   }
 
+  componentWillUnmount = () => {
+    const { section } = this.props
+
+    if (!section.get('images').length) {
+      section.destroy()
+    }
+  }
+
   filterAutocomplete = (items) => {
     return items._embedded.results.map((item) => {
       const { type } = item
