@@ -94,7 +94,7 @@ export class SectionImageCollection extends Component {
     const { section } = this.props
     const { type, images } = section.attributes
 
-    return type === 'image_set' && images.length > 3
+    return type === 'image_set' && images && images.length > 3
   }
 
   getImageWidth = (index) => {

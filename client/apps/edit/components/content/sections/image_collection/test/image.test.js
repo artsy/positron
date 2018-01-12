@@ -3,8 +3,8 @@ import Backbone from 'backbone'
 import { extend } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import { ImageCollectionImage } from '../components/image.jsx'
-import { RemoveButton } from 'client/components/remove_button/index.jsx'
+import { ImageCollectionImage } from '../components/image'
+import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 const { StandardArticle } = Fixtures
 
@@ -19,7 +19,6 @@ describe('ImageCollectionImage', () => {
       articleLayout: 'standard',
       section: new Backbone.Model(StandardArticle.sections[4]),
       index: 0,
-      imagesLoaded: true,
       width: 200,
       removeImage: jest.fn(),
       onChange: jest.fn()
@@ -31,7 +30,7 @@ describe('ImageCollectionImage', () => {
       <ImageCollectionImage {...props} />
     )
     expect(component.html()).toMatch(
-      'class="image-collection__img-container" style="width: 200px; opacity: 1;"'
+      'class="image-collection__img-container" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=80'
@@ -47,7 +46,7 @@ describe('ImageCollectionImage', () => {
       <ImageCollectionImage {...props} />
     )
     expect(component.html()).toMatch(
-      'class="image-collection__img-container" style="width: 200px; opacity: 1;"'
+      'class="image-collection__img-container" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=80'

@@ -8,7 +8,7 @@ import { RemoveButton } from 'client/components/remove_button'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
 import { SectionEmbed } from '../sections/embed'
-import { SectionImageCollection } from '../sections/image_collection/index.jsx'
+import { SectionImageCollection } from '../sections/image_collection'
 import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {

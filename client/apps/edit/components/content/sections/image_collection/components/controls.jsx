@@ -79,7 +79,7 @@ export class ImageCollectionControls extends Component {
 
   fillwidthAlert = () => {
     const { logErrorAction } = this.props
-    const message = 'Fullscreen layouts accept one asset, please remove extra images.'
+    const message = 'Fullscreen layouts accept one asset, please remove extra images or use another layout.'
 
     logErrorAction({ message })
   }

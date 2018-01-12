@@ -55,7 +55,7 @@ export class InputArtworkUrl extends Component {
           }}
         />
         <button
-          className={`avant-garde-button ${loading && 'is-loading'}`}
+          className={`avant-garde-button ${loading ? 'is-loading' : ''}`}
           onClick={() => this.getIdFromSlug(url)}
         >
           Add
