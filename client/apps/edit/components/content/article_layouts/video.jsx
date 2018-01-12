@@ -8,7 +8,6 @@ import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
-import { IconRemove } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconRemove'
 import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
 
 export class EditVideo extends Component {
@@ -18,8 +17,7 @@ export class EditVideo extends Component {
   }
 
   state = {
-    uploadProgress: null,
-    showVideo: false
+    uploadProgress: null
   }
 
   onMediaChange = (key, value) => {
@@ -100,24 +98,11 @@ export class EditVideo extends Component {
           <ProgressBar progress={uploadProgress} />
         }
 
-        <VideoPreview visible={this.state.showVideo}>
-          <video
-            controls
-            src={media.url}
-            onLoadedMetadata={(e) => this.onMediaChange('duration', e.target.duration)}
-          />
-          <div onClick={() => this.setState({ showVideo: false })}>
-            <IconRemove />
-          </div>
-        </VideoPreview>
-
         <VideoCover
           article={article}
           editTitle={this.editTitle()}
           editDescription={this.editDescription()}
           media={media}
-          playVideo={() => this.setState({ showVideo: true })}
-          hideCover={this.state.showVideo}
         />
 
         <EditCoverInput>
@@ -244,24 +229,5 @@ export const EditVideoContainer = styled.div`
         display: none;
       }
     }
-  }
-`
-
-const VideoPreview = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-
-  video {
-    width: 100%;
-  }
-
-  svg.remove {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 0;
   }
 `
