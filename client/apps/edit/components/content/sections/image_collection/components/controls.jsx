@@ -1,23 +1,29 @@
 import React, { Component } from 'react'
-const gemup = require('gemup')
-const sd = require('sharify').data
 import { clone, defer } from 'lodash'
 import Artwork from '/client/models/artwork.coffee'
 import Autocomplete from '/client/components/autocomplete/index.coffee'
 import FileInput from '/client/components/file_input/index.jsx'
 import SectionControls from '../../../section_controls/index.jsx'
 import UrlArtworkInput from './url_artwork_input.coffee'
+import PropTypes from 'prop-types'
+const sd = require('sharify').data
 
 export default class Controls extends Component {
-  constructor (props) {
-    super(props)
+  static propTypes = {
+    article: PropTypes.object,
+    channel: PropTypes.object,
+    images: PropTypes.array,
+    isHero: PropTypes.bool,
+    onChange: PropTypes.func,
+    section: PropTypes.object,
+    setProgress: PropTypes.func
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.setupAutocomplete()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.autocomplete.remove()
   }
 
@@ -26,12 +32,12 @@ export default class Controls extends Component {
     this.props.onChange()
   }
 
-  setupAutocomplete() {
+  setupAutocomplete () {
     const $el = $(this.refs.autocomplete)
     this.autocomplete = new Autocomplete({
       url: `${sd.ARTSY_URL}/api/search?q=%QUERY`,
       el: $el,
-      filter(res) {
+      filter (res) {
         const vals = []
         for (let r of Array.from(res._embedded.results)) {
           if ((r.type != null ? r.type.toLowerCase() : undefined) === 'artwork') {
@@ -46,7 +52,7 @@ export default class Controls extends Component {
         return vals
       },
       templates: {
-        suggestion(data) {
+        suggestion (data) {
           return `<div class='autocomplete-suggestion' style='background-image: url(${data.thumbnail})'></div>${data.value}`
         }
       },
@@ -87,16 +93,24 @@ export default class Controls extends Component {
     this.props.section.set('layout', layout)
   }
 
-  inputsAreDisabled(section) {
+  inputsAreDisabled (section) {
     return section.get('layout') === 'fillwidth' && section.get('images').length > 0
   }
 
-  fillwidthAlert() {
+  fillwidthAlert () {
     alert('Fullscreen layouts accept one asset, please remove extra images.')
   }
 
-  render() {
-    const { article, channel, images, isHero, section, setProgress, onChange } = this.props
+  render () {
+    const {
+      article,
+      channel,
+      images,
+      isHero,
+      section,
+      setProgress,
+      onChange
+    } = this.props
     const inputsAreDisabled = this.inputsAreDisabled(section)
 
     return (
@@ -105,7 +119,7 @@ export default class Controls extends Component {
           channel={channel}
           articleLayout={article.get('layout')}
           onChange={onChange}
-          sectionLayouts={isHero ? false : true}
+          sectionLayouts={isHero}
           isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
@@ -150,16 +164,16 @@ export default class Controls extends Component {
                   <div
                     className='radio-input'
                     onClick={() => this.toggleImagesetLayout('mini')}
-                    data-active={section.get('layout') !== 'full'} >
-                  </div>
+                    data-active={section.get('layout') !== 'full'}
+                  />
                   Mini
                 </div>
                 <div className='input-group'>
                   <div
                     className='radio-input'
                     onClick={() => this.toggleImagesetLayout('full')}
-                    data-active={section.get('layout') === 'full'} >
-                  </div>
+                    data-active={section.get('layout') === 'full'}
+                  />
                   Full
                 </div>
               </div>
