@@ -119,7 +119,7 @@ export default class Controls extends Component {
           channel={channel}
           articleLayout={article.get('layout')}
           onChange={onChange}
-          sectionLayouts={isHero}
+          sectionLayouts={!isHero}
           isHero={isHero}
           disabledAlert={this.fillwidthAlert}>
 
