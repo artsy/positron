@@ -516,6 +516,7 @@ describe 'Article Persistence', ->
                 title: 'The Piece'
                 date: '2015-04-01'
                 image: 'http://image.png'
+                credit: 'Credit Line'
               }
             ]
           }
@@ -530,6 +531,7 @@ describe 'Article Persistence', ->
         article.sections[0].images[1].type.should.equal 'artwork'
         article.sections[0].images[1].id.should.equal '123'
         article.sections[0].images[1].slug.should.equal 'andy-warhol'
+        article.sections[0].images[1].credit.should.equal 'Credit Line'
         done()
 
     it 'saves layouts', (done) ->
