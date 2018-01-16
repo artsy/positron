@@ -30,7 +30,7 @@ module.exports = class AutocompleteChannels extends Backbone.View
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value')
       queryTokenizer: Bloodhound.tokenizers.whitespace
       remote:
-        url: "#{sd.API_URL}/channels?user_id=#{sd.USER.id}&q=%QUERY"
+        url: "#{sd.API_URL}/channels?user_id=#{sd.USER.id}&q=%QUERY&sort=name"
         filter: (channels) -> for channel in channels.results
           { id: channel.id, value: channel.name }
         ajax:
