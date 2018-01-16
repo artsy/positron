@@ -1,7 +1,7 @@
 @import '../../../stylus_lib'
 
 .edit-section--image-collection
-  .edit-section__remove
+  .RemoveButton
     position absolute
     top -12px
     right -12px
@@ -13,7 +13,7 @@
       cursor pointer
       circle
         fill red-color
-  [data-target=true] .edit-section__remove
+  [data-target=true] .RemoveButton
     display none
 
 .image-collection
@@ -102,7 +102,8 @@
       margin-right 30px
       margin-left 0
 
-.SectionContainer[data-type=image_collection]
+.SectionContainer[data-type=image_collection],
+.SectionContainer[data-type=image_set]
   padding-bottom 0
   &[data-editing=true]
     // override section drag list to allow image dragging
@@ -131,7 +132,7 @@
     .image-collection__img-container
       width 100%
       min-width 100%
-    .edit-section--image-collection .edit-section__remove
+    .edit-section--image-collection .RemoveButton
       top 20px
       right 20px
       circle

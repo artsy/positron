@@ -129,19 +129,8 @@ describe('Video', () => {
     const component = mount(
       <SectionVideo {...props} />
     )
-    component.instance().onProgress(.5)
-    expect(component.state().progress).toEqual(.5)
+    component.instance().onProgress(0.5)
+    expect(component.state().progress).toEqual(0.5)
     expect(component.html()).toMatch('<div class="upload-progress" style="width: 50%;">')
   })
-
-  it('#onClickOff destroys the section if no video url', () => {
-    props.section.set('url', '')
-    const spy = jest.spyOn(props.section, 'destroy')
-    const component = mount(
-      <SectionVideo {...props} />
-    )
-    component.instance().onClickOff()
-    expect(spy).toHaveBeenCalled()
-  })
-
 })

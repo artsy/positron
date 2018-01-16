@@ -8,7 +8,6 @@ ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-dom/test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
-Article = require '../../../models/article.coffee'
 { Fixtures } = require('@artsy/reaction-force/dist/Components/Publishing')
 StandardArticle = Fixtures.StandardArticle
 r =
@@ -40,18 +39,17 @@ describe 'DragDropContainer Default', ->
         onDragEnd: @onDragEnd = sinon.stub()
         items: StandardArticle.sections[4].images
       }
-      article = new Article layout: 'standard'
       section = new Section StandardArticle.sections[4]
-      ImageDisplay = benv.require(
+      { ImageCollectionImage } = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
       )
       @children = [
         React.createElement(
-          ImageDisplay.default,
+          ImageCollectionImage,
           {
             key:'child-1',
-            i: 0,
-            article: article,
+            index: 0,
+            articleLayout: 'classic',
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[0],
@@ -60,11 +58,11 @@ describe 'DragDropContainer Default', ->
           }
         )
         React.createElement(
-          ImageDisplay.default,
+          ImageCollectionImage,
           {
             key:'child-2',
-            i: 1,
-            article: article,
+            index: 1,
+            articleLayout: 'classic',
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[1],
@@ -168,18 +166,17 @@ describe 'DragDropContainer Vertical', ->
         items: StandardArticle.sections[4].images
         layout: 'vertical'
       }
-      article = new Article layout: 'standard'
       section = new Section StandardArticle.sections[4]
-      ImageDisplay = benv.require(
+      { ImageCollectionImage } = benv.require(
         resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
       )
       @children = [
         React.createElement(
-          ImageDisplay.default,
+          ImageCollectionImage,
           {
             key:'child-1',
-            i: 0,
-            article: article,
+            index: 0,
+            articleLayout: 'classic',
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[0],
@@ -188,11 +185,11 @@ describe 'DragDropContainer Vertical', ->
           }
         )
         React.createElement(
-          ImageDisplay.default,
+          ImageCollectionImage,
           {
             key:'child-2',
-            i: 1,
-            article: article,
+            index: 1,
+            articleLayout: 'classic',
             section: section,
             width: null,
             image: StandardArticle.sections[4].images[1],

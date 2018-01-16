@@ -176,7 +176,7 @@ export class SectionImageCollection extends Component {
 
         <div className='image-collection__list'>
           {images.length > 0
-            ? section.get('type') === 'image_set'
+            ? section.get('type') === 'image_set' && !editing
               ? <ImageCollectionImageSet
                   articleLayout={article.get('layout')}
                   section={section}
