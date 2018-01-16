@@ -18,27 +18,27 @@ export class InputArtworkUrl extends Component {
     const id = last(url.split('/'))
 
     if (id.length) {
-      this.setState({ loading: true })
+      this.setState({ isLoading: true })
       this.addArtwork(id)
     }
   }
 
   addArtwork = async (id) => {
     const { addArtwork, fetchArtwork } = this.props
-    let loading = false
+    let isLoading = false
 
     try {
       const artwork = await fetchArtwork(id)
       addArtwork(artwork)
-      this.setState({ loading, url: '' })
+      this.setState({ isLoading, url: '' })
     } catch (error) {
-      this.setState({ loading })
+      this.setState({ isLoading })
     }
   }
 
   render () {
     const { disabled } = this.props
-    const { loading, url } = this.state
+    const { isLoading, url } = this.state
 
     return (
       <div className='InputArtworkUrl'>
@@ -55,7 +55,7 @@ export class InputArtworkUrl extends Component {
           }}
         />
         <button
-          className={`avant-garde-button ${loading ? 'is-loading' : ''}`}
+          className={`avant-garde-button ${isLoading ? 'is-loading' : ''}`}
           onClick={() => this.getIdFromSlug(url)}
         >
           Add
