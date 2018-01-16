@@ -4,6 +4,7 @@ import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Artwork from '../../../../../../../models/artwork.coffee'
 import SectionControls from '../../../section_controls'
+import { Autocomplete } from '/client/components/autocomplete2'
 import { ImageCollectionControls } from '../components/controls'
 const { StandardArticle } = Fixtures
 require('typeahead.js')
@@ -79,20 +80,13 @@ describe('ImageCollectionControls', () => {
       expect(component.instance().props.section.get('images')[3].height).toBe(800)
     })
 
-    xit('saves an artwork by url', async () => {
-      Backbone.sync = jest.fn(() => {
-        return artwork
-      })
-
+    it('Autocomplete onSelect resets the section images', () => {
       props.section.set('images', [])
       const component = getWrapper(props)
-      const input = component.find('.bordered-input').at(1)
+      const images = StandardArticle.sections[4].images
 
-      input.simulate('change', { target: { value: 'http://artsy.net/artwork/cool-art' } })
-      component.find('.avant-garde-button').at(0).simulate('click')
-      await Backbone.sync.mock.calls[0][2].success(artwork)
-
-      // expect(props.section.get('images')[0].get('type')).toMatch('artwork')
+      component.find(Autocomplete).first().props().onSelect(images)
+      expect(component.props().section.get('images')).toBe(images)
     })
 
     it('#onNewImage updates the section images', () => {
