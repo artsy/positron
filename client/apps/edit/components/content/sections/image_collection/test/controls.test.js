@@ -58,6 +58,15 @@ describe('ImageCollectionControls', () => {
     expect(component.html()).not.toMatch('placeholder="Add artwork url"')
   })
 
+  it('#componentWillUnmount destroys section on unmount if no images', () => {
+    props.section.set('images', [])
+    const spy = jest.spyOn(props.section, 'destroy')
+    const component = getWrapper(props)
+
+    component.instance().componentWillUnmount()
+    expect(spy).toHaveBeenCalled()
+  })
+
   describe('Artwork inputs', () => {
     it('#onUpload saves an image info after upload', () => {
       props.isHero = false

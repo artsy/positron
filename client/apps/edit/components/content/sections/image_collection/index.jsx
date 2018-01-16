@@ -29,10 +29,10 @@ export class SectionImageCollection extends Component {
   componentDidMount = () => {
     const { section } = this.props
 
-    section.on('change:images', this.onChange)
+    section.on('change:images', this.resetDimensions)
   }
 
-  onChange = () => {
+  resetDimensions = () => {
     const dimensions = this.setFillWidthDimensions()
 
     this.setState({ dimensions })
@@ -72,6 +72,7 @@ export class SectionImageCollection extends Component {
     }
     if (this.isImageSetWrapping()) {
       targetHeight = 400
+      containerSize = articleLayout === 'classic' ? 580 : 680
     }
     return { containerSize, targetHeight }
   }
@@ -87,7 +88,7 @@ export class SectionImageCollection extends Component {
     const { section } = this.props
 
     section.set({ images })
-    this.onChange()
+    this.resetDimensions()
   }
 
   isImageSetWrapping = () => {
@@ -173,14 +174,11 @@ export class SectionImageCollection extends Component {
 
         {progress && <ProgressBar progress={progress} cover />}
 
-        <div
-          className='image-collection__list'
-          style={{opacity: 1}}
-        >
+        <div className='image-collection__list'>
           {images.length > 0
             ? section.get('type') === 'image_set'
               ? <ImageCollectionImageSet
-                  article={article}
+                  articleLayout={article.get('layout')}
                   section={section}
                 />
 

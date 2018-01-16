@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { InputArtworkUrl } from '../components/input_artwork_url.jsx'
+import { InputArtworkUrl } from '../components/input_artwork_url'
 import { Artworks } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
 
 describe('InputArtworkUrl', () => {
