@@ -36,7 +36,7 @@ describe('EditImage', () => {
 
     expect(component.find(Image).length).toBe(1)
     expect(component.html()).toMatch(
-      'class="EditImage image-collection__img-container" style="width: 200px;"'
+      'class="EditImage" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=80'
@@ -52,7 +52,7 @@ describe('EditImage', () => {
 
     expect(component.find(Artwork).length).toBe(1)
     expect(component.html()).toMatch(
-      'class="EditImage image-collection__img-container" style="width: 200px;"'
+      'class="EditImage" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=80'

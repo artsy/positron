@@ -159,7 +159,7 @@ export class SectionImages extends Component {
     const images = section.get('images') || []
 
     return (
-      <section className='SectionImages edit-section--image-collection'>
+      <section className='SectionImages'>
         {editing &&
           <ImagesControls
             section={section}
@@ -174,7 +174,10 @@ export class SectionImages extends Component {
 
         {progress && <ProgressBar progress={progress} cover />}
 
-        <div className='image-collection__list'>
+        <div
+          className='SectionImages__list'
+          data-overflow={this.isImageSetWrapping()}
+        >
           {images.length > 0
             ? section.get('type') === 'image_set' && !editing
               ? <ImageSet

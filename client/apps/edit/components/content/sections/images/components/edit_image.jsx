@@ -63,7 +63,7 @@ export class EditImage extends Component {
 
     return (
       <div
-        className='EditImage image-collection__img-container'
+        className='EditImage'
         style={{ width }}
       >
 
@@ -84,10 +84,7 @@ export class EditImage extends Component {
         }
 
         {editing && removeImage &&
-          <RemoveButton
-            className='edit-section__remove'
-            onClick={() => removeImage(image)}
-          />
+          <RemoveButton onClick={() => removeImage(image)} />
         }
       </div>
     )

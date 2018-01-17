@@ -1,6 +1,6 @@
 @import '../../../stylus_lib'
 
-.edit-section--image-collection
+.SectionImages
   .RemoveButton
     position absolute
     top -12px
@@ -16,85 +16,30 @@
   [data-target=true] .RemoveButton
     display none
 
-.image-collection
-  &__img-container
+  .EditImage
     position relative
     padding-bottom 30px
     max-width 100%
     margin-right 30px
     &:last-child
       margin-right 0
-  &.single .image-collection__img-container
+
+  &.single .EditImage
     margin 0 auto 30px auto
-  &__img
-    width 100%
-    height auto
-  &__list
-    position relative
-    z-index -1
+
+.SectionImages__list
+  position relative
+  z-index -1
+  display flex
+  justify-content center
+  .drag-container
     display flex
     justify-content center
-    .drag-container
-      display flex
-      justify-content center
-    .drag-target
-      max-width 100%
-      margin-right 30px
-      &:last-child
-        margin-right 0
-
-.edit-section--image-collection
-  .edit-controls
-    &__artwork-inputs
-      padding-top controls-padding
-      input
-        background white
-        border-color white
-    .InputArtworkUrl
-      button
-        position relative
-        display inline-block
-        width 75px
-        font-size small-avant-garde-font-size + 1
-        height 40px
-        background-color gray-lighter-color
-      input
-        width calc(100% - 75px)
-    &__image-set-inputs
-      color white
-      avant-garde()
-      font-size 13px
-      align-items center
-
-      input
-        margin-bottom 0
-      .inputs
-        display flex
-        width calc(50% - 15px)
-      .layout-inputs
-        display flex
-        margin-left 20px
-      .input-group
-        display flex
-        align-items center
-        margin-right 20px
-        .radio-input
-          border 2px solid white
-          width 16px
-          height 16px
-          border-radius 50%
-          margin-right 10px
-          position relative
-          &[data-active=true]::after
-            content ''
-            background white
-            width .6em
-            height .62em
-            border-radius 50%
-            border 1px solid black
-            position absolute
-            left 1px
-            top 1px
+  .drag-target
+    max-width 100%
+    margin-right 30px
+    &:last-child
+      margin-right 0
   &[data-overflow=true] // for image sets with many images
     .drag-container
       flex-wrap wrap
@@ -102,18 +47,71 @@
       margin-right 30px
       margin-left 0
 
+.SectionImages .edit-controls
+  &__artwork-inputs
+    padding-top controls-padding
+    margin-bottom 20px
+    input
+      background white
+      border-color white
+      margin-bottom 0
+  .InputArtworkUrl
+    button
+      position relative
+      display inline-block
+      width 75px
+      font-size small-avant-garde-font-size + 1
+      height 40px
+      background-color gray-lighter-color
+    input
+      width calc(100% - 75px)
+  &__image-set-inputs
+    color white
+    avant-garde()
+    font-size 13px
+    align-items center
+    input
+      margin-bottom 0
+    .inputs
+      display flex
+      width calc(50% - 15px)
+    .layout-inputs
+      display flex
+      margin-left 20px
+    .input-group
+      display flex
+      align-items center
+      margin-right 20px
+      .radio-input
+        border 2px solid white
+        width 16px
+        height 16px
+        border-radius 50%
+        margin-right 10px
+        position relative
+        &[data-active=true]::after
+          content ''
+          background white
+          width .6em
+          height .62em
+          border-radius 50%
+          border 1px solid black
+          position absolute
+          left 1px
+          top 1px
+
 .SectionContainer[data-type=image_collection],
 .SectionContainer[data-type=image_set]
   padding-bottom 0
   &[data-editing=true]
     // override section drag list to allow image dragging
-    .image-collection__list
+    .SectionImages__list
       z-index 2 !important
 
 .SectionContainer[data-layout=column_width]
-  .image-collection__list .drag-container
+  .SectionImages__list .drag-container
     flex-direction column
-  .image-collection__img-container
+  .EditImage
     width 100%
 
 [data-layout='standard']
@@ -129,10 +127,10 @@
       flex-direction column
       .drag-target
         min-width 100%
-    .image-collection__img-container
+    .EditImage
       width 100%
       min-width 100%
-    .edit-section--image-collection .RemoveButton
+    .SectionImages .RemoveButton
       top 20px
       right 20px
       circle
