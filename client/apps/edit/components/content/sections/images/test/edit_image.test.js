@@ -2,16 +2,22 @@ import React from 'react'
 import Backbone from 'backbone'
 import { extend } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import { ImageCollectionImage } from '../components/image'
+import { Artwork, Fixtures, Image } from '@artsy/reaction-force/dist/Components/Publishing'
+import { EditImage } from '../components/edit_image'
 import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 const { StandardArticle } = Fixtures
 
-describe('ImageCollectionImage', () => {
+describe('EditImage', () => {
   let props
   let artwork = extend(StandardArticle.sections[4].images[2], {date: '2015'})
   let image = StandardArticle.sections[4].images[0]
+
+  const getWrapper = (props) => {
+    return mount(
+      <EditImage {...props} />
+    )
+  }
 
   beforeEach(() => {
     props = {
@@ -26,11 +32,11 @@ describe('ImageCollectionImage', () => {
   })
 
   it('renders an image', () => {
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
+    expect(component.find(Image).length).toBe(1)
     expect(component.html()).toMatch(
-      'class="image-collection__img-container" style="width: 200px;"'
+      'class="EditImage image-collection__img-container" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=80'
@@ -42,11 +48,11 @@ describe('ImageCollectionImage', () => {
 
   it('renders an artwork', () => {
     props.image = artwork
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
+    expect(component.find(Artwork).length).toBe(1)
     expect(component.html()).toMatch(
-      'class="image-collection__img-container" style="width: 200px;"'
+      'class="EditImage image-collection__img-container" style="width: 200px;"'
     )
     expect(component.html()).toMatch(
       'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=80'
@@ -59,41 +65,36 @@ describe('ImageCollectionImage', () => {
 
   it('if image, renders an editable caption with placeholder', () => {
     props.image.caption = ''
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
     expect(component.find(Paragraph).length).toBe(1)
     expect(component.html()).toMatch('class="public-DraftEditorPlaceholder-root"')
   })
 
   it('if artwork, does not render editable caption', () => {
     props.image = artwork
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
     expect(component.find(Paragraph).length).toBe(0)
   })
 
   it('hides the remove button when not editing', () => {
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
     expect(component.find(RemoveButton).length).toBe(0)
   })
 
   it('renders the remove button if editing and props.removeItem', () => {
     props.editing = true
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
     expect(component.find(RemoveButton).length).toBe(1)
   })
 
   it('calls removeItem when clicking remove icon', () => {
     props.editing = true
-    const component = mount(
-      <ImageCollectionImage {...props} />
-    )
+    const component = getWrapper(props)
+
     component.find(RemoveButton).at(0).simulate('click')
     expect(props.removeImage).toBeCalled()
   })

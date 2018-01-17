@@ -5,7 +5,7 @@ import { Artwork, Image } from '@artsy/reaction-force/dist/Components/Publishing
 import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 
-export class ImageCollectionImage extends Component {
+export class EditImage extends Component {
   static propTypes = {
     articleLayout: PropTypes.string.isRequired,
     editing: PropTypes.bool,
@@ -63,7 +63,7 @@ export class ImageCollectionImage extends Component {
 
     return (
       <div
-        className='image-collection__img-container'
+        className='EditImage image-collection__img-container'
         style={{ width }}
       >
 

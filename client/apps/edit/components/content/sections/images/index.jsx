@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { without } from 'lodash'
 import DragContainer from 'client/components/drag_drop/index.coffee'
-import ImageCollectionControls from './components/controls'
-import { ImageCollectionImage } from './components/image'
-import { ImageCollectionImageSet } from './components/image_set'
+import ImagesControls from './components/controls'
+import { EditImage } from './components/edit_image'
+import { ImageSet } from './components/image_set'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 
-export class SectionImageCollection extends Component {
+export class SectionImages extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
@@ -126,7 +126,7 @@ export class SectionImageCollection extends Component {
       }
 
       return (
-        <ImageCollectionImage key={index} {...props} />
+        <EditImage key={index} {...props} />
       )
     })
   }
@@ -159,9 +159,9 @@ export class SectionImageCollection extends Component {
     const images = section.get('images') || []
 
     return (
-      <section className='SectionImageCollection edit-section--image-collection'>
+      <section className='SectionImages edit-section--image-collection'>
         {editing &&
-          <ImageCollectionControls
+          <ImagesControls
             section={section}
             articleLayout={article.get('layout')}
             channel={channel}
@@ -177,7 +177,7 @@ export class SectionImageCollection extends Component {
         <div className='image-collection__list'>
           {images.length > 0
             ? section.get('type') === 'image_set' && !editing
-              ? <ImageCollectionImageSet
+              ? <ImageSet
                   articleLayout={article.get('layout')}
                   section={section}
                 />

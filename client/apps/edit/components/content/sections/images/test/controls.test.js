@@ -5,17 +5,17 @@ import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Artwork from '../../../../../../../models/artwork.coffee'
 import SectionControls from '../../../section_controls'
 import { Autocomplete } from '/client/components/autocomplete2'
-import { ImageCollectionControls } from '../components/controls'
+import { ImagesControls } from '../components/controls'
 const { StandardArticle } = Fixtures
 require('typeahead.js')
 
-describe('ImageCollectionControls', () => {
+describe('ImagesControls', () => {
   let props
   const artwork = StandardArticle.sections[4].images[2]
 
   const getWrapper = (props) => {
     return mount(
-      <ImageCollectionControls {...props} />
+      <ImagesControls {...props} />
     )
   }
 

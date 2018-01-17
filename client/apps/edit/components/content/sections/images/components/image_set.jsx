@@ -5,7 +5,7 @@ import {
   ImageSetPreviewClassic
 } from '@artsy/reaction-force/dist/Components/Publishing'
 
-export const ImageCollectionImageSet = (props) => {
+export const ImageSet = (props) => {
   const { articleLayout, section } = props
   const images = section.get('images') || []
   let itemProps = {}
@@ -29,7 +29,7 @@ export const ImageCollectionImageSet = (props) => {
   }
 }
 
-ImageCollectionImageSet.propTypes = {
+ImageSet.propTypes = {
   articleLayout: PropTypes.string.isRequired,
   section: PropTypes.object.isRequired
 }

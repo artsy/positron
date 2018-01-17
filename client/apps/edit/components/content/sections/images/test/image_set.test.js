@@ -6,16 +6,16 @@ import {
   ImageSetPreview,
   ImageSetPreviewClassic
 } from '@artsy/reaction-force/dist/Components/Publishing'
-import { ImageCollectionImageSet } from '../components/image_set'
+import { ImageSet } from '../components/image_set'
 
-describe('ImageCollectionImageSet', () => {
+describe('ImageSet', () => {
   let props = {
     section: new Backbone.Model(Fixtures.StandardArticle.sections[16])
   }
 
   const getWrapper = (props) => {
     return mount(
-      <ImageCollectionImageSet {...props} />
+      <ImageSet {...props} />
     )
   }
 

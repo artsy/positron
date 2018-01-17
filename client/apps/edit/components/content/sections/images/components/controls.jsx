@@ -11,7 +11,7 @@ import { logError } from 'client/actions/editActions'
 import { Autocomplete } from '/client/components/autocomplete2'
 import { InputArtworkUrl } from './input_artwork_url'
 
-export class ImageCollectionControls extends Component {
+export class ImagesControls extends Component {
   static propTypes = {
     articleLayout: PropTypes.string.isRequired,
     channel: PropTypes.object.isRequired,
@@ -194,4 +194,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ImageCollectionControls)
+)(ImagesControls)

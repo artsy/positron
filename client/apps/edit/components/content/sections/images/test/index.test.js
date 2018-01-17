@@ -14,8 +14,8 @@ import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
-import { ImageCollectionControls } from '../components/controls'
-import { SectionImageCollection } from '../index.jsx'
+import { ImagesControls } from '../components/controls'
+import { SectionImages } from '../index.jsx'
 require('typeahead.js')
 
 describe('SectionImageCollection', () => {
@@ -27,14 +27,14 @@ describe('SectionImageCollection', () => {
 
     return mount(
       <Provider store={store}>
-        <SectionImageCollection {...props} />
+        <SectionImages {...props} />
       </Provider>
     )
   }
 
   const getShallowWrapper = (props) => {
     return shallow(
-      <SectionImageCollection {...props} />
+      <SectionImages {...props} />
     )
   }
 
@@ -80,7 +80,7 @@ describe('SectionImageCollection', () => {
       props.editing = true
       const component = getWrapper(props)
 
-      expect(component.find(ImageCollectionControls).length).toBe(1)
+      expect(component.find(ImagesControls).length).toBe(1)
     })
 
     it('Renders a placeholder if editing and no images', () => {

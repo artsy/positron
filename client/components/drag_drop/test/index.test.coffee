@@ -40,12 +40,12 @@ describe 'DragDropContainer Default', ->
         items: StandardArticle.sections[4].images
       }
       section = new Section StandardArticle.sections[4]
-      { ImageCollectionImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
+      { EditImage } = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(
-          ImageCollectionImage,
+          EditImage,
           {
             key:'child-1',
             index: 0,
@@ -58,7 +58,7 @@ describe 'DragDropContainer Default', ->
           }
         )
         React.createElement(
-          ImageCollectionImage,
+          EditImage,
           {
             key:'child-2',
             index: 1,
@@ -167,12 +167,12 @@ describe 'DragDropContainer Vertical', ->
         layout: 'vertical'
       }
       section = new Section StandardArticle.sections[4]
-      { ImageCollectionImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/image_collection/components/image.jsx'
+      { EditImage } = benv.require(
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(
-          ImageCollectionImage,
+          EditImage,
           {
             key:'child-1',
             index: 0,
@@ -185,7 +185,7 @@ describe 'DragDropContainer Vertical', ->
           }
         )
         React.createElement(
-          ImageCollectionImage,
+          EditImage,
           {
             key:'child-2',
             index: 1,

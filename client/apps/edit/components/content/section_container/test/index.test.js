@@ -8,7 +8,7 @@ import { RemoveButton } from 'client/components/remove_button'
 import SectionSlideshow from '../../sections/slideshow'
 import SectionText from '../../sections/text'
 import { SectionEmbed } from '../../sections/embed'
-import { SectionImageCollection } from '../../sections/image_collection'
+import { SectionImages } from '../../sections/images'
 import { SectionVideo } from '../../sections/video'
 import { SectionContainer } from '../index'
 const { StandardArticle } = Fixtures
@@ -91,7 +91,7 @@ describe('SectionContainer', () => {
       const component = mount(
         <SectionContainer {...props} />
       )
-      expect(component.find(SectionImageCollection).length).toBe(1)
+      expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render an image_collection section', () => {
@@ -99,7 +99,7 @@ describe('SectionContainer', () => {
       const component = mount(
         <SectionContainer {...props} />
       )
-      expect(component.find(SectionImageCollection).length).toBe(1)
+      expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render an image_set section', () => {
@@ -107,7 +107,7 @@ describe('SectionContainer', () => {
       const component = mount(
         <SectionContainer {...props} />
       )
-      expect(component.find(SectionImageCollection).length).toBe(1)
+      expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render a slideshow section', () => {
@@ -145,7 +145,7 @@ describe('SectionContainer', () => {
       const component = mount(
         <SectionContainer {...props} />
       )
-      expect(component.find(SectionImageCollection).length).toBe(1)
+      expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render a video section', () => {
