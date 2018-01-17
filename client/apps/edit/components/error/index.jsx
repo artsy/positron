@@ -7,12 +7,12 @@ import * as Actions from 'client/actions/editActions'
 export class EditError extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired
+    edit: PropTypes.object.isRequired
   }
 
   render () {
     const { resetError } = this.props.actions
-    const { message } = this.props.error
+    const { message } = this.props.edit.error
 
     return (
       <div

@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { changeSection } from 'client/actions/editActions'
-import { SectionContainer } from '../section_container/index'
-import { SectionTool } from '../section_tool/index'
+import { SectionContainer } from '../section_container'
+import { SectionTool } from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
@@ -19,6 +19,8 @@ export class SectionList extends Component {
     const { sections } = this.props
 
     sections.on('add', this.onNewSection)
+    // TODO: Remove forceRerender
+    sections.on('change:layout', this.forceReRender)
     sections.on('reset', this.forceReRender)
     sections.on('destroy', this.forceReRender)
   }
@@ -88,7 +90,6 @@ export class SectionList extends Component {
         <SectionTool
           sections={sections}
           index={-1}
-          key={1}
           isEditing={activeSection !== null}
           firstSection
           isDraggable={false}
@@ -97,7 +98,7 @@ export class SectionList extends Component {
           ? <DragContainer
               items={sections.models}
               onDragEnd={this.onDragEnd}
-              isDraggable={!activeSection}
+              isDraggable={activeSection === null}
               layout='vertical'
               article={article}
             >

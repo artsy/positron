@@ -22,6 +22,14 @@ export class Controls extends Component {
     }
   }
 
+  componentWillUnmount = () => {
+    const { section } = this.props
+
+    if (!section.get('url')) {
+      section.destroy()
+    }
+  }
+
   onCoverImageChange = (url) => {
     const { onChange, section } = this.props
     const isValid = isEmpty(url) || isWebUri(url)
