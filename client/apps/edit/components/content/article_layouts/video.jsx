@@ -97,14 +97,14 @@ export class EditVideo extends Component {
         {uploadProgress &&
           <ProgressBar progress={uploadProgress} />
         }
-
-        <VideoCover
-          article={article}
-          editTitle={this.editTitle()}
-          editDescription={this.editDescription()}
-          media={media}
-        />
-
+        <div style={{position: 'relative'}}>
+          <VideoCover
+            article={article}
+            editTitle={this.editTitle()}
+            editDescription={this.editDescription()}
+            media={media}
+          />
+        </div>
         <EditCoverInput>
           <FileInput
             type='simple'
@@ -205,6 +205,7 @@ export const EditVideoContainer = styled.div`
   ${VideoCoverContainer} {
     width: 100%;
     margin-bottom: 40px;
+    position: relative;
   }
   ${EditVideoInput},
   ${EditCoverInput},
