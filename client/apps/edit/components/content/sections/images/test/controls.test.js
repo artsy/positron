@@ -1,4 +1,5 @@
 import { mount } from 'enzyme'
+import { extend } from 'lodash'
 import React from 'react'
 import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
@@ -19,6 +20,17 @@ describe('ImagesControls', () => {
     )
   }
 
+  const rawArtwork = {
+    description: 'Acrylic on glass, 66.3 × 40 × 2.5 cm',
+    title: 'Ryan Gander, Please be patient you two',
+    type: 'artwork',
+    _id: '5698bc71275b2479120000a9',
+    _links: {
+      self: {href: 'https://stagingapi.artsy.net/api/artworks/5698bc71275b2479120000a9'},
+      thumbnail: {href: 'https://d32dm0rphc51dk.cloudfront.net/S8Jb9AX0ickx4qyXjxWPkg/square.jpg'}
+    }
+  }
+
   beforeEach(() => {
     props = {
       articleLayout: 'standard',
@@ -33,7 +45,6 @@ describe('ImagesControls', () => {
 
     SectionControls.prototype.isScrollingOver = jest.fn().mockReturnValue(true)
     SectionControls.prototype.isScrolledPast = jest.fn().mockReturnValue(false)
-    Artwork.prototype.denormalized = jest.fn().mockReturnValue(artwork)
   })
 
   it('renders all fields', () => {
@@ -89,6 +100,47 @@ describe('ImagesControls', () => {
       expect(component.props().section.get('images')).toBe(images)
     })
 
+    it('#filterAutocomplete returns formatted artworks', () => {
+      const component = getWrapper(props)
+      const items = {_embedded: {results: [rawArtwork]}}
+      const filtered = component.instance().filterAutocomplete(items)[0]
+
+      expect(filtered._id).toBe(rawArtwork._id)
+      expect(filtered.title).toBe(rawArtwork.title)
+      expect(filtered.thumbnail_image).toBe(rawArtwork._links.thumbnail.href)
+      expect(filtered.type).toBe(rawArtwork.type)
+      expect(filtered.description).toBe(undefined)
+    })
+
+    it('#filterAutocomplete returns false for non-artwork items', () => {
+      const component = getWrapper(props)
+      const items = {_embedded: {results: [rawArtwork, {type: 'artist'}]}}
+      const filtered = component.instance().filterAutocomplete(items)
+
+      expect(filtered[0].type).toBe('artwork')
+      expect(filtered[1]).toBe(false)
+    })
+
+    it('#fetchDenormalizedArtwork returns a denormalized artwork', async () => {
+      Artwork.prototype.denormalized = jest.fn().mockReturnValueOnce(artwork)
+      Backbone.Model.prototype.fetch = jest.fn().mockReturnValueOnce(artwork)
+      const component = getWrapper(props)
+
+      const fetchedArtwork = await component.instance().fetchDenormalizedArtwork('1234')
+      expect(fetchedArtwork).toBe(artwork)
+    })
+
+    it('#fetchDenormalizedArtwork calls #logErrorAction on error', async () => {
+      Backbone.Model.prototype.fetch = jest.fn(() => {
+        const err = { message: 'an error' }
+        throw err
+      })
+      const component = getWrapper(props)
+
+      await component.instance().fetchDenormalizedArtwork('1234')
+      expect(component.props().logErrorAction.mock.calls.length).toBe(1)
+    })
+
     it('#onNewImage updates the section images', () => {
       const component = getWrapper(props)
 
@@ -113,7 +165,14 @@ describe('ImagesControls', () => {
       expect(inputsAreDisabled).toBe(true)
     })
 
-    it('Calls #logErrorAction if inputsAreDisabled and trying to add an image', () => {
+    it('#fillwidthAlert calls #logErrorAction', () => {
+      const component = getWrapper(props)
+
+      component.instance().fillwidthAlert()
+      expect(component.props().logErrorAction.mock.calls.length).toBe(1)
+    })
+
+    it('Calls #logErrorAction via #fillwidthAlert if inputsAreDisabled and trying to add an image', () => {
       props.section.set({layout: 'fillwidth'})
       const component = getWrapper(props)
 
@@ -135,14 +194,14 @@ describe('ImagesControls', () => {
       )
     })
 
-    it('changes imageset layout on button click', () => {
+    it('changes image_set layout on button click', () => {
       const component = getWrapper(props)
 
       component.find('.radio-input').at(1).simulate('click')
       expect(props.section.get('layout')).toMatch('full')
     })
 
-    it('changes imageset title on input', () => {
+    it('changes image_set title on input', () => {
       const component = getWrapper(props)
       const input = component.find('.edit-controls__image-set-inputs').find('input')
 

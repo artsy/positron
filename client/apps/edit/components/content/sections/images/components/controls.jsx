@@ -33,7 +33,7 @@ export class ImagesControls extends Component {
     return items._embedded.results.map((item) => {
       const { type } = item
 
-      if (type && type.toLowercase() === 'artwork') {
+      if (type && type.toLowerCase() === 'artwork') {
         const { title, _links } = item
         const { thumbnail, self } = _links
         const _id = self.href.substr(self.href.lastIndexOf('/') + 1)
