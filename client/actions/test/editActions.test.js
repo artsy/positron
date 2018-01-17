@@ -19,11 +19,18 @@ describe('editActions', () => {
     expect(changeSavedStatus.payload.isSaved).toBe(true)
   })
 
-  it('#changeSection sets the activeSection to arg', () => {
-    const changeSection = editActions.changeSection('display')
+  it('#changeSection sets activeSection to arg', () => {
+    const changeSection = editActions.changeSection(6)
 
     expect(changeSection.type).toBe('CHANGE_SECTION')
-    expect(changeSection.payload.activeSection).toBe('display')
+    expect(changeSection.payload.activeSection).toBe(6)
+  })
+
+  it('#changeView sets the activeView to arg', () => {
+    const changeView = editActions.changeView('display')
+
+    expect(changeView.type).toBe('CHANGE_VIEW')
+    expect(changeView.payload.activeView).toBe('display')
   })
 
   it('#deleteArticle destroys the article and sets isDeleting', () => {

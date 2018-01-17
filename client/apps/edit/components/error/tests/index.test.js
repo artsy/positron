@@ -10,8 +10,10 @@ describe('EditError', () => {
       actions: {
         resetError: jest.fn()
       },
-      error: {
-        message: 'Error Message'
+      edit: {
+        error: {
+          message: 'Error Message'
+        }
       }
     }
   })
@@ -20,7 +22,7 @@ describe('EditError', () => {
     const component = mount(
       <EditError {...props} />
     )
-    expect(component.text()).toMatch(props.error.message)
+    expect(component.text()).toMatch(props.edit.error.message)
   })
 
   it('Resets the error state on click', () => {

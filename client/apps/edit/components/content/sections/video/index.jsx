@@ -18,12 +18,6 @@ export class SectionVideo extends Component {
     progress: null
   }
 
-  onClickOff = () => {
-    if (!this.props.section.get('url')) {
-      this.props.section.destroy()
-    }
-  }
-
   onProgress = (progress) => {
     this.setState({progress})
   }

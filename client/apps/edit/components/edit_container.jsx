@@ -59,9 +59,9 @@ class EditContainer extends Component {
     this.setState({ lastUpdated: new Date() })
   }
 
-  getActiveSection = () => {
+  getActiveView = () => {
     const { article, channel, edit } = this.props
-    const { activeSection } = edit
+    const { activeView } = edit
 
     const props = {
       article,
@@ -70,7 +70,7 @@ class EditContainer extends Component {
       onChangeHero: this.onChangeHero
     }
 
-    switch (activeSection) {
+    switch (activeView) {
       case 'admin':
         return <EditAdmin {...props} />
       case 'content':
@@ -81,7 +81,7 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { error } = this.props
+    const { error } = this.props.edit
 
     return (
       <div className='EditContainer'>
@@ -90,7 +90,7 @@ class EditContainer extends Component {
 
         {error && <EditError />}
 
-        {this.getActiveSection()}
+        {this.getActiveView()}
 
       </div>
     )

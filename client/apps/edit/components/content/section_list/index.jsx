@@ -1,41 +1,57 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { changeSection } from 'client/actions/editActions'
+import { SectionContainer } from '../section_container'
+import { SectionTool } from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
-import { SectionContainer } from '../section_container/index'
-import { SectionTool } from '../section_tool/index'
 
 export class SectionList extends Component {
   static propTypes = {
+    activeSection: PropTypes.any,
     article: PropTypes.object.isRequired,
+    changeSectionAction: PropTypes.func,
     channel: PropTypes.object.isRequired,
     sections: PropTypes.object.isRequired
-  }
-
-  state = {
-    editingIndex: null
   }
 
   componentDidMount = () => {
     const { sections } = this.props
 
     sections.on('add', this.onNewSection)
+    // TODO: Remove forceRerender
+    sections.on('change:layout', this.forceReRender)
+    sections.on('reset', this.forceReRender)
+    sections.on('destroy', this.forceReRender)
   }
 
   onNewSection = (section) => {
-    const { sections } = this.props
+    const { changeSectionAction, sections } = this.props
+    const newActiveSection = sections.indexOf(section)
 
-    const editingIndex = sections.indexOf(section)
-    this.setState({ editingIndex })
+    changeSectionAction(newActiveSection)
+  }
+
+  onDragEnd = (newSections) => {
+    const { sections } = this.props
+    sections.reset(newSections)
+  }
+
+  forceReRender = () => {
+    // TODO: Move sections to redux so
+    // changes will trigger re-render
+    // Below forces update on Backbone change
+    this.setState({lastUpdated: new Date()})
   }
 
   renderSectionList = () => {
     const {
+      activeSection,
       article,
       channel,
+      changeSectionAction,
       sections
     } = this.props
-
-    const { editingIndex } = this.state
 
     return sections.map((section, index) => {
       if (section.get('type') !== 'callout') {
@@ -46,15 +62,15 @@ export class SectionList extends Component {
               section={section}
               index={index}
               isDraggable
-              editing={editingIndex === index}
+              editing={activeSection === index}
               channel={channel}
-              onSetEditing={(editingIndex) => this.setState({ editingIndex })}
+              onSetEditing={(i) => changeSectionAction(i)}
               article={article}
             />
             <SectionTool
               sections={sections}
               index={index}
-              editing={editingIndex !== 0}
+              editing={activeSection !== 0}
             />
           </div>
         )
@@ -63,16 +79,26 @@ export class SectionList extends Component {
   }
 
   render () {
-    const { article, sections } = this.props
-    const { editingIndex } = this.state
+    const {
+      article,
+      activeSection,
+      sections
+    } = this.props
 
     return (
       <div className='SectionList edit-sections__list'>
+        <SectionTool
+          sections={sections}
+          index={-1}
+          isEditing={activeSection !== null}
+          firstSection
+          isDraggable={false}
+        />
         {sections.length && sections.length > 1
           ? <DragContainer
               items={sections.models}
-              onDragEnd={(newSections) => sections.reset(newSections)}
-              isDraggable={!editingIndex}
+              onDragEnd={this.onDragEnd}
+              isDraggable={activeSection === null}
               layout='vertical'
               article={article}
             >
@@ -82,15 +108,20 @@ export class SectionList extends Component {
               {this.renderSectionList()}
             </div>
         }
-        <SectionTool
-          sections={sections}
-          index={-1}
-          key={1}
-          isEditing={editingIndex !== null}
-          firstSection
-          isDraggable={false}
-        />
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  activeSection: state.edit.activeSection
+})
+
+const mapDispatchToProps = {
+  changeSectionAction: changeSection
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionList)

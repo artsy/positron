@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.1.0",
-    "@artsy/reaction-force": "^0.16.10",
+    "@artsy/reaction-force": "^0.18.8",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
@@ -156,6 +156,7 @@
     "raf": "^3.4.0",
     "react-addons-test-utils": "^15.4.2",
     "react-transform-hmr": "^1.0.4",
+    "redux-mock-store": "^1.4.0",
     "rewire": "2.2.0",
     "should": "^7.1.0",
     "sinon": "^4.x.x",

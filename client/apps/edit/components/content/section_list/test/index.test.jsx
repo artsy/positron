@@ -16,7 +16,9 @@ describe('SectionList', () => {
     article = new Article(Fixtures.StandardArticle)
 
     props = {
+      activeSection: null,
       article,
+      changeSectionAction: jest.fn(),
       channel: new Channel(),
       sections: article.sections
     }
@@ -60,7 +62,7 @@ describe('SectionList', () => {
     expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
   })
 
-  it('Listens for a new section and set state to editing', () => {
+  it('Listens for a new section and dispatches changeSection with index', () => {
     const component = mount(
       <SectionList {...props} />
     )
@@ -69,6 +71,6 @@ describe('SectionList', () => {
       {type: 'embed'},
       {at: 3}
     )
-    expect(component.state().editingIndex).toBe(3)
+    expect(component.props().changeSectionAction.mock.calls[1][0]).toBe(3)
   })
 })

@@ -75,6 +75,7 @@ denormalizedArtwork = (->
       slug: @string().allow('', null)
     width: @number().allow(null)
     height: @number().allow(null)
+    credit: @string().allow('')
 ).call Joi
 
 ImageCollectionSection = (->
