@@ -3,7 +3,7 @@ import { findLinkEntities, Link } from './decorators'
 
 export const blockRenderMap = () => {
   return Immutable.Map({
-    'unstyled': {element: 'p'}
+    'unstyled': {element: 'div'}
   })
 }
 
