@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { uniq, compact } from 'lodash'
+import { uniq, clone, compact } from 'lodash'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 
 export class Autocomplete extends Component {
   static propTypes = {
+    autoFocus: PropTypes.bool,
     className: PropTypes.string,
     disabled: PropTypes.bool,
     filter: PropTypes.func,
@@ -84,12 +85,13 @@ export class Autocomplete extends Component {
 
   onSelect = async (selected) => {
     const { items, onSelect } = this.props
+    const newItems = clone(items)
 
     try {
       const item = await this.formatSelected(selected)
 
-      items.push(item)
-      onSelect(uniq(items))
+      newItems.push(item)
+      onSelect(uniq(newItems))
       this.onBlur()
 
       if (this.textInput) {
@@ -179,7 +181,12 @@ export class Autocomplete extends Component {
   }
 
   render () {
-    const { className, disabled, placeholder } = this.props
+    const {
+      autoFocus,
+      className,
+      disabled,
+      placeholder
+    } = this.props
 
     return (
       <div className={`Autocomplete ${className ? className : ''}`}>
@@ -189,6 +196,7 @@ export class Autocomplete extends Component {
           className='Autocomplete__icon'
         />
         <input
+          autoFocus={autoFocus}
           className='Autocomplete__input bordered-input'
           disabled={disabled}
           onChange={(e) => this.search(e.target.value)}
