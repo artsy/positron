@@ -95,6 +95,24 @@ describe 'Rich Text: Paragraph', ->
     it 'Renders existing link entities', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '<a href="http://artsy.net/">'
 
+  describe 'On change', ->
+    it 'Sets the editorState and html on change', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.setState.args[1][0].editorState.should.be.ok
+      @component.setState.args[1][0].html.should.be.ok
+
+    it 'Calls props.onChange if content has changed', ->
+      @component.setState = sinon.stub()
+      @component.handleKeyCommand('italic')
+      @component.props.onChange.called.should.eql true
+
+    it 'Does not call props.onChange if content has not changed', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.props.onChange.called.should.eql false
+      @component.setState.called.should.eql true
+
   describe 'Key commands', ->
 
     it 'Can toggle bold styles', ->
