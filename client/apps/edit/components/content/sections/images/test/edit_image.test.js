@@ -60,7 +60,7 @@ describe('EditImage', () => {
     expect(component.html()).toMatch('<span class="name">Matt Devine</span>')
     expect(component.html()).toMatch('Brass Tax')
     expect(component.html()).toMatch('<span class="date">2015</span>')
-    expect(component.text()).toMatch('Matt DevineBrass Tax2015Joanne Artman Gallery')
+    expect(component.text()).toMatch('Matt DevineBrass Tax, 2015Joanne Artman Gallery. Courtesy of The Metropolitan Museum of Art')
   })
 
   it('if image, renders an editable caption with placeholder', () => {

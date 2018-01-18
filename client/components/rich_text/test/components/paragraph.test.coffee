@@ -211,13 +211,13 @@ describe 'Rich Text: Paragraph', ->
     it 'allows linebreaks by default', ->
       @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 2
+      $(ReactDOM.findDOMNode(component)).find('.public-DraftStyleDefault-block').length.should.eql 2
 
     it 'strips linebreaks if props.stripLinebreaks', ->
       @props.stripLinebreaks = true
       @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 1
+      $(ReactDOM.findDOMNode(component)).find('.public-DraftStyleDefault-block').length.should.eql 1
 
     it 'interrupts key command for linebreak if props.stripLinebreaks', ->
       @props.stripLinebreaks = true
