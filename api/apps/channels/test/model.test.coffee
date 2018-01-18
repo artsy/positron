@@ -36,6 +36,22 @@ describe 'Channel', ->
           results[0].name.should.equal 'Channel'
           done()
 
+    it 'naturally sorts channels by last updated', (done) ->
+      Channel.save {
+        name: 'Apple'
+      }, (err, channel) ->
+        Channel.save {
+          name: 'Banana'
+        }, (err, channel) ->
+          Channel.where
+            offset: 10
+          , (err, res) ->
+            { total, count, results } = res
+            results[0].name.should.equal 'Apple'
+            results[1].name.should.equal 'Banana'
+            results.length.should.equal 2
+            done()
+
     it 'can sort channels', (done) ->
       Channel.save {
         name: 'Apple'
@@ -44,12 +60,13 @@ describe 'Channel', ->
           name: 'Banana'
         }, (err, channel) ->
           Channel.where
-            sort: 'name'
+            sort: '-name'
+            offset: 9
           , (err, res) ->
             { total, count, results } = res
-            results[0].name.should.equal 'Apple'
+            results[0].name.should.equal 'Editorial'
             results[1].name.should.equal 'Banana'
-            results[2].name.should.equal 'Editorial'
+            results[2].name.should.equal 'Apple'
             done()
 
   describe '#find', ->
