@@ -46,7 +46,7 @@ export const blockRenderMap = (layout, hasFeatures) => {
       'header-three': {element: 'h3'},
       'unordered-list-item': {element: 'li'},
       'ordered-list-item': {element: 'li'},
-      'unstyled': {element: 'p'}
+      'unstyled': {element: 'div'}
     })
   }
   if (layout === 'feature') {
@@ -57,7 +57,7 @@ export const blockRenderMap = (layout, hasFeatures) => {
       'blockquote': {element: 'blockquote'},
       'unordered-list-item': {element: 'li'},
       'ordered-list-item': {element: 'li'},
-      'unstyled': {element: 'p'}
+      'unstyled': {element: 'div'}
     })
   } else {
     // standard, classic on internal channels
@@ -67,7 +67,7 @@ export const blockRenderMap = (layout, hasFeatures) => {
       'blockquote': {element: 'blockquote'},
       'unordered-list-item': {element: 'li'},
       'ordered-list-item': {element: 'li'},
-      'unstyled': {element: 'p'}
+      'unstyled': {element: 'div'}
     })
   }
 }
