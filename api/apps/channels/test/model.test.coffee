@@ -36,6 +36,22 @@ describe 'Channel', ->
           results[0].name.should.equal 'Channel'
           done()
 
+    it 'can sort channels', (done) ->
+      Channel.save {
+        name: 'Apple'
+      }, (err, channel) ->
+        Channel.save {
+          name: 'Banana'
+        }, (err, channel) ->
+          Channel.where
+            sort: 'name'
+          , (err, res) ->
+            { total, count, results } = res
+            results[0].name.should.equal 'Apple'
+            results[1].name.should.equal 'Banana'
+            results[2].name.should.equal 'Editorial'
+            done()
+
   describe '#find', ->
 
     it 'finds a channel by an id string', (done) ->
