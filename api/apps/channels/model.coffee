@@ -41,6 +41,7 @@ request = require 'superagent'
   offset: @number()
   user_id: @string().objectid()
   q: @string()
+  sort: @string()
 ).call Joi
 
 #
@@ -58,13 +59,13 @@ request = require 'superagent'
     @mongoFetch input, callback
 
 @mongoFetch = (input, callback) ->
-  query = _.omit input, 'limit', 'offset', 'q', 'user_id'
+  query = _.omit input, 'limit', 'offset', 'q', 'user_id', 'sort'
   query.name = { $regex: ///#{input.q}///i } if input.q
   query.user_ids = input.user_id if input.user_id
   cursor = db.channels
     .find(query)
     .limit(input.limit)
-    .sort($natural: -1)
+    .sort(sortParamToQuery(input.sort))
     .skip(input.offset or 0)
   async.parallel [
     (cb) -> cursor.toArray cb
@@ -76,6 +77,16 @@ request = require 'superagent'
       count: count
       results: channels.map(@present)
     }
+
+sortParamToQuery = (input) ->
+  return { updated_at: -1 } unless input
+  sort = {}
+  for param in input.split(',')
+    if param.substring(0, 1) is '-'
+      sort[param.substring(1)] = -1
+    else
+      sort[param] = 1
+  sort
 
 #
 # Persistence
