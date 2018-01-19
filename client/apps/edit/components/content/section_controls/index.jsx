@@ -1,12 +1,21 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { IconImageFullscreen } from '@artsy/reaction-force/dist/Components/Publishing'
 
-export default class SectionControls extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { insideComponent: false }
+export class SectionControls extends Component {
+  static propTypes = {
+    articleLayout: PropTypes.string,
+    channel: PropTypes.object,
+    children: PropTypes.any,
+    disabledAlert: PropTypes.func,
+    isHero: PropTypes.bool,
+    onChange: PropTypes.func,
+    section: PropTypes.object.isRequired,
+    sectionLayouts: PropTypes.bool
   }
+
+  state = { insideComponent: false }
 
   componentDidMount () {
     this.setInsideComponent()
@@ -156,14 +165,13 @@ export default class SectionControls extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  channel: state.app.channel
+})
 
-SectionControls.propTypes = {
-  articleLayout: PropTypes.string,
-  channel: PropTypes.object,
-  children: PropTypes.any,
-  disabledAlert: PropTypes.func,
-  isHero: PropTypes.bool,
-  onChange: PropTypes.func,
-  section: PropTypes.object.isRequired,
-  sectionLayouts: PropTypes.bool
-}
+const mapDispatchToProps = {}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionControls)

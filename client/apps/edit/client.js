@@ -8,6 +8,7 @@ import Channel from '../../models/channel'
 import EditContainer from './components/edit_container'
 import EditLayout from './components/layout'
 import { Provider } from 'react-redux'
+import { extend } from 'lodash'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
 import { data as sd } from 'sharify'
@@ -23,7 +24,7 @@ export function init () {
 
   new EditLayout({ el: $('#layout-content'), article, channel })
 
-  const store = createReduxStore(reducers, initialState)
+  const store = createReduxStore(reducers, extend(initialState, { app: { channel } }))
 
   article.on('sync', () => store.dispatch(editActions.changeSavedStatus(true)))
 
@@ -31,7 +32,6 @@ export function init () {
     <Provider store={store}>
       <EditContainer
         article={article}
-        channel={channel}
         user={sd.USER}
       />
     </Provider>,

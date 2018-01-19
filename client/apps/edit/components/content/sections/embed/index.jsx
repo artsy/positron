@@ -8,7 +8,6 @@ import { EmbedControls } from './controls'
 export class SectionEmbed extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     section: PropTypes.object.isRequired
   }
@@ -38,7 +37,6 @@ export class SectionEmbed extends Component {
   render () {
     const {
       article,
-      channel,
       editing,
       section
     } = this.props
@@ -48,7 +46,6 @@ export class SectionEmbed extends Component {
         {editing &&
           <EmbedControls
             articleLayout={article.get('layout')}
-            channel={channel}
             section={section}
           />
         }

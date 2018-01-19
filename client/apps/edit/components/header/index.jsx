@@ -137,7 +137,7 @@ export class EditHeader extends Component {
               {this.getPublishText()}
             </button>
 
-            {channel.get('type') === 'editorial' &&
+            {channel.isEditorial() &&
               <button
                 className='avant-garde-button autolink'
               >
@@ -178,6 +178,7 @@ export class EditHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  channel: state.app.channel,
   edit: state.edit
 })
 

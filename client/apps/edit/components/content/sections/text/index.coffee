@@ -46,7 +46,7 @@ module.exports = React.createClass
     pluginType: null
     urlValue: null
     showMenu: false
-    hasFeatures: @props.channel.hasFeature 'follow'
+    hasFeatures: @props.hasFeatures
 
   componentDidMount: ->
     @props.sections.on 'change:autolink', @editorStateFromProps

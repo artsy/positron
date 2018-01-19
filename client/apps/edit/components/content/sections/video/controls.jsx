@@ -8,7 +8,6 @@ import { isWebUri } from 'valid-url'
 export class Controls extends Component {
   static propTypes = {
     articleLayout: PropTypes.string,
-    channel: PropTypes.object,
     isHero: PropTypes.bool,
     section: PropTypes.object,
     sectionLayouts: PropTypes.bool,
@@ -58,7 +57,6 @@ export class Controls extends Component {
   render () {
     const {
       articleLayout,
-      channel,
       isHero,
       section,
       sectionLayouts,
@@ -68,7 +66,6 @@ export class Controls extends Component {
     return (
       <SectionControls
         section={section}
-        channel={channel}
         isHero={isHero}
         sectionLayouts={sectionLayouts}
         articleLayout={articleLayout}>

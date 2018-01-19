@@ -7,7 +7,7 @@ import * as Actions from 'client/actions/editActions'
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
 import { EditDisplay } from './display/index.jsx'
-import { EditHeader } from './header/index.jsx'
+import EditHeader from './header/index.jsx'
 import EditError from './error/index.jsx'
 
 class EditContainer extends Component {
@@ -98,7 +98,8 @@ class EditContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ...state
+  channel: state.app.channel,
+  edit: state.edit
 })
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { SectionFooter } from '../sections/footer/index'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from 'client/actions/editActions'
+
+import SectionFooter from '../sections/footer/index'
 import { SectionHeader } from '../sections/header/index'
 import { SectionHero } from '../sections/hero/index'
 import SectionList from '../section_list/index'
@@ -31,13 +35,11 @@ export class EditArticle extends Component {
 
         <SectionList
           article={article}
-          channel={channel}
           sections={article.sections}
         />
 
         <SectionFooter
           article={article}
-          channel={channel}
           onChange={onChange}
         />
 
@@ -45,3 +47,15 @@ export class EditArticle extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  channel: state.app.channel
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(Actions, dispatch)
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditArticle)

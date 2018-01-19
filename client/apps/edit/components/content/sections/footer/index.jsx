@@ -1,35 +1,49 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
 
-export const SectionFooter = (props) => {
-  const { article, channel, onChange } = props
+export class SectionFooter extends Component {
+  static propTypes = {
+    article: PropTypes.object.isRequired,
+    channel: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
+  }
 
-  return (
-    <div className='SectionFooter'>
+  render () {
+    const { article, channel, onChange } = this.props
 
-      {channel.hasFeature('postscript') &&
-        <div
-          className='SectionFooter__postscript'
-          data-layout='column_width'
-        >
-          <Paragraph
-            html={article.get('postscript') || ''}
-            layout={article.get('layout')}
-            linked
-            onChange={(html) => onChange('postscript', html)}
-            placeholder='Postscript (optional)'
-            type='postscript'
-          />
-        </div>
-      }
+    return (
+      <div className='SectionFooter'>
 
-    </div>
-  )
+        {channel.hasFeature('postscript') &&
+          <div
+            className='SectionFooter__postscript'
+            data-layout='column_width'
+          >
+            <Paragraph
+              html={article.get('postscript') || ''}
+              layout={article.get('layout')}
+              linked
+              onChange={(html) => onChange('postscript', html)}
+              placeholder='Postscript (optional)'
+              type='postscript'
+            />
+          </div>
+        }
+
+      </div>
+    )
+  }
 }
 
-SectionFooter.propTypes = {
-  article: PropTypes.object.isRequired,
-  channel: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired
-}
+const mapStateToProps = (state) => ({
+  channel: state.app.channel
+})
+
+const mapDispatchToProps = (dispatch) => ({})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionFooter)

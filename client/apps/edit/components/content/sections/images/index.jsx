@@ -11,7 +11,6 @@ import { ProgressBar } from 'client/components/file_input/progress_bar'
 export class SectionImages extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     isHero: PropTypes.bool,
     section: PropTypes.object.isRequired
@@ -151,7 +150,6 @@ export class SectionImages extends Component {
     const { progress } = this.state
     const {
       article,
-      channel,
       editing,
       isHero,
       section
@@ -164,7 +162,6 @@ export class SectionImages extends Component {
           <ImagesControls
             section={section}
             articleLayout={article.get('layout')}
-            channel={channel}
             editing={editing}
             images={images}
             isHero={isHero}
