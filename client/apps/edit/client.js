@@ -28,10 +28,7 @@ export function init () {
 
   ReactDOM.render(
     <Provider store={store}>
-      <EditContainer
-        article={article}
-        user={sd.USER}
-      />
+      <EditContainer article={article} />
     </Provider>,
     $('#edit-content')[0]
   )
