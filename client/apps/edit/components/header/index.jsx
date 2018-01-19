@@ -12,7 +12,7 @@ export class EditHeader extends Component {
     article: PropTypes.object,
     channel: PropTypes.object,
     edit: PropTypes.object,
-    isAdmin: PropTypes.boolean
+    isAdmin: PropTypes.bool
   }
 
   isPublishable = () => {

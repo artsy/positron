@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import ModalCover from './ModalCover.jsx'
-import LayoutControls from './LayoutControls.jsx'
-import VideoControls from './VideoControls.jsx'
+import ModalCover from './ModalCover'
+import LayoutControls from './LayoutControls'
+import VideoControls from './VideoControls'
 
 export class HeaderControls extends Component {
   static propTypes = {

@@ -2,7 +2,6 @@ benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
 Backbone = require 'backbone'
-fixtures = require '../../../../../../../../test/helpers/fixtures'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-dom/test-utils'
@@ -67,15 +66,15 @@ describe 'Section Text', ->
         }
       ]
       article = new Backbone.Model {layout: 'classic'}
-      channel = {hasFeature: sinon.stub().returns(true)}
+
       @props = {
         editing: false
         section: @sections.models[0]
         sections: @sections
         index: 1
         onSetEditing: sinon.stub()
-        channel: channel
         article: article
+        hasFeatures: true
       }
       @altProps = {
         editing: true
@@ -83,7 +82,7 @@ describe 'Section Text', ->
         sections: @sections
         index: 1
         onSetEditing: sinon.stub()
-        channel: channel
+        hasFeatures: true
         article: article
         isContentStart: true
         isContentEnd: true
@@ -92,15 +91,13 @@ describe 'Section Text', ->
         editing: true
         section: @sections.models[2]
         sections: @sections
-        channel: channel
         article: article
         hasFeatures: true
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.stickyControlsBox = sinon.stub().returns {top: 20, left: 40}
+
         # a second component for text selection
-        @SectionText.__set__ 'sd',
-          CURRENT_CHANNEL: fixtures().channels
         @shortComponent = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
         @shortComponent.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
         shortSelection = @shortComponent.state.editorState.getSelection()

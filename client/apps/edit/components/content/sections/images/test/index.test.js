@@ -23,7 +23,14 @@ describe('SectionImageCollection', () => {
 
   const getWrapper = (props) => {
     const mockStore = configureStore([])
-    const store = mockStore({})
+    const store = mockStore({
+      app: {
+        channel: {
+          hasFeature: jest.fn().mockReturnValue(true),
+          isArtsyChannel: jest.fn().mockReturnValue(true)
+        }
+      }
+    })
 
     return mount(
       <Provider store={store}>

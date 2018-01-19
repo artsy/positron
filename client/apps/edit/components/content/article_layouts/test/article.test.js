@@ -1,11 +1,11 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '../../../../../../models/article'
-import { SectionFooter } from '../../sections/footer/index'
-import { SectionHeader } from '../../sections/header/index'
-import { SectionHero } from '../../sections/hero/index'
-import SectionList from '../../section_list/index'
+import Article from 'client/models/article.coffee'
+import SectionFooter from '../../sections/footer'
+import SectionList from '../../section_list'
+import { SectionHeader } from '../../sections/header'
+import { SectionHero } from '../../sections/hero'
 import { EditArticle } from '../article'
 
 describe('EditArticle', () => {
@@ -21,7 +21,7 @@ describe('EditArticle', () => {
     props = {
       article: new Article(Fixtures.StandardArticle),
       channel: {
-        hasFeature: jest.fn().mockReturnValueOnce(false)
+        hasFeature: jest.fn().mockReturnValue(false)
       },
       onChange: jest.fn(),
       onChangeHero: jest.fn()

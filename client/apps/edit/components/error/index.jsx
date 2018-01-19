@@ -5,18 +5,18 @@ import { resetError } from 'client/actions/editActions'
 
 export class EditError extends Component {
   static propTypes = {
-    resetError: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired
+    resetErrorAction: PropTypes.func,
+    error: PropTypes.object
   }
 
   render () {
-    const { resetError } = this.props
+    const { resetErrorAction } = this.props
     const { message } = this.props.error
 
     return (
       <div
         className='EditError flash-error'
-        onClick={resetError}
+        onClick={resetErrorAction}
       >
         {message}
       </div>
@@ -25,7 +25,7 @@ export class EditError extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  error: state.error
+  error: state.edit.error
 })
 
 const mapDispatchToProps = (dispatch) => ({

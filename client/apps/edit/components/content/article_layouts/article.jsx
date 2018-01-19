@@ -2,10 +2,10 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import SectionFooter from '../sections/footer/index'
-import { SectionHeader } from '../sections/header/index'
-import { SectionHero } from '../sections/hero/index'
-import SectionList from '../section_list/index'
+import SectionFooter from '../sections/footer'
+import SectionList from '../section_list'
+import { SectionHeader } from '../sections/header'
+import { SectionHero } from '../sections/hero'
 
 export class EditArticle extends Component {
   static propTypes = {
