@@ -4,18 +4,16 @@ import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Article from '../../models/article'
-import Channel from '../../models/channel'
 import EditContainer from './components/edit_container'
 import EditLayout from './components/layout'
 import { Provider } from 'react-redux'
-import { extend } from 'lodash'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
 import { data as sd } from 'sharify'
 
 export function init () {
   const article = new Article(sd.ARTICLE)
-  const channel = new Channel(sd.CURRENT_CHANNEL)
+  const channel = initialState.app.channel
   const author = _.pick(article.get('author'), 'id', 'name')
 
   article.set({
@@ -24,7 +22,7 @@ export function init () {
 
   new EditLayout({ el: $('#layout-content'), article, channel })
 
-  const store = createReduxStore(reducers, extend(initialState, { app: { channel } }))
+  const store = createReduxStore(reducers, initialState)
 
   article.on('sync', () => store.dispatch(editActions.changeSavedStatus(true)))
 
