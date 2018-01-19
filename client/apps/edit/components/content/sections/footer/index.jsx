@@ -41,9 +41,6 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel
 })
 
-const mapDispatchToProps = (dispatch) => ({})
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(SectionFooter)

@@ -169,9 +169,6 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel
 })
 
-const mapDispatchToProps = {}
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(SectionControls)

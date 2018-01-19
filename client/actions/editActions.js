@@ -13,7 +13,8 @@ export const actions = keyMirror(
 export const changeSavedStatus = (isSaved) => ({
   type: actions.CHANGE_SAVED_STATUS,
   payload: {
-    isSaved
+    isSaved,
+    lastUpdated: new Date()
   }
 })
 

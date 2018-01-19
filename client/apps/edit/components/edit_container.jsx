@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from 'client/actions/editActions'
+import { changeSavedStatus, saveArticle } from 'client/actions/editActions'
 
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
@@ -12,11 +11,12 @@ import EditError from './error/index.jsx'
 
 class EditContainer extends Component {
   static propTypes = {
+    activeView: PropTypes.string,
     article: PropTypes.object,
-    actions: PropTypes.object,
+    changeSavedStatusAction: PropTypes.func,
     channel: PropTypes.object,
-    edit: PropTypes.object,
     error: PropTypes.object,
+    saveArticleAction: PropTypes.func,
     user: PropTypes.object
   }
 
@@ -48,20 +48,22 @@ class EditContainer extends Component {
   }
 
   maybeSaveArticle = () => {
-    const { article, actions } = this.props
-    const { changeSavedStatus, saveArticle } = actions
+    const {
+      article,
+      changeSavedStatusAction,
+      saveArticleAction
+    } = this.props
 
     if (article.get('published')) {
-      changeSavedStatus(false)
+      changeSavedStatusAction(false)
     } else {
-      saveArticle(article)
+      saveArticleAction(article)
     }
     this.setState({ lastUpdated: new Date() })
   }
 
   getActiveView = () => {
-    const { article, channel, edit } = this.props
-    const { activeView } = edit
+    const { activeView, article, channel } = this.props
 
     const props = {
       article,
@@ -81,7 +83,7 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { error } = this.props.edit
+    const { error } = this.props
 
     return (
       <div className='EditContainer'>
@@ -98,12 +100,14 @@ class EditContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  activeView: state.edit.activeView,
   channel: state.app.channel,
-  edit: state.edit
+  error: state.edit.error
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(Actions, dispatch)
+  changeSavedStatusAction: changeSavedStatus,
+  saveArticleAction: saveArticle
 })
 
 export default connect(

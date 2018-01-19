@@ -182,13 +182,10 @@ export class ImagesControls extends Component {
   }
 }
 
-const mapStateToProps = (state) => state
-
 const mapDispatchToProps = {
   logErrorAction: logError
 }
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(ImagesControls)

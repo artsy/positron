@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from 'client/actions/editActions'
 
 import SectionFooter from '../sections/footer/index'
 import { SectionHeader } from '../sections/header/index'
@@ -13,6 +11,7 @@ export class EditArticle extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
+    lastUpdated: PropTypes.any,
     onChange: PropTypes.func.isRequired,
     onChangeHero: PropTypes.func.isRequired
   }
@@ -26,7 +25,6 @@ export class EditArticle extends Component {
         {channel.hasFeature('hero') &&
           <SectionHero
             article={article}
-            channel={channel}
             onChange={onChange}
           />
         }
@@ -48,14 +46,10 @@ export class EditArticle extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  channel: state.app.channel
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(Actions, dispatch)
+  channel: state.app.channel,
+  lastUpdated: state.edit.lastUpdated
 })
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(EditArticle)
