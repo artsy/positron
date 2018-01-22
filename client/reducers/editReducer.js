@@ -1,7 +1,17 @@
 import u from 'updeep'
+import { data as sd } from 'sharify'
+import { extend, pick } from 'lodash'
 import { actions } from 'client/actions/editActions'
 
+const setupArticle = () => {
+  const article = sd.ARTICLE
+  const author = pick(article.author, 'id', 'name')
+
+  return extend(article, { author })
+}
+
 export const initialState = {
+  article: setupArticle(),
   activeSection: null,
   activeView: 'content',
   error: null,
