@@ -25,9 +25,7 @@ describe('Edit Header Controls', () => {
         saveArticle: jest.fn()
       },
       article: new Article(Fixtures.StandardArticle),
-      channel: {
-        isEditorial: jest.fn().mockReturnValue(false)
-      },
+      channel: { type: 'partner' },
       edit: {
         isSaved: true,
         isSaving: false
@@ -51,7 +49,7 @@ describe('Edit Header Controls', () => {
   })
 
   it('renders auto-link button for editorial channel', () => {
-    props.channel.isEditorial.mockReturnValue(true)
+    props.channel.type = 'editorial'
     const component = getWrapper(props)
 
     expect(component.find('button').length).toBe(7)

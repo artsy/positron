@@ -13,7 +13,7 @@ import { data as sd } from 'sharify'
 
 export function init () {
   const article = new Article(sd.ARTICLE)
-  const channel = initialState.app.channel
+  const channel = sd.CURRENT_CHANNEL
   const author = _.pick(article.get('author'), 'id', 'name')
 
   article.set({

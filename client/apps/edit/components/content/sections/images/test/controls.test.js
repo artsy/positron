@@ -19,10 +19,7 @@ describe('ImagesControls', () => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {
-          hasFeature: jest.fn().mockReturnValue(true),
-          isArtsyChannel: jest.fn().mockReturnValue(true)
-        }
+        channel: { type: 'editorial' }
       }
     })
     return mount(

@@ -1,8 +1,7 @@
-import Channel from '../models/channel'
 import { data as sd } from 'sharify'
 
 export const initialState = {
-  channel: new Channel(sd.CURRENT_CHANNEL),
+  channel: sd.CURRENT_CHANNEL,
   isAdmin: sd.USER.type === 'Admin',
   user: sd.USER
 }

@@ -117,9 +117,9 @@ module.exports = React.createClass
 
   render: ->
     div { className: 'edit-admin--featuring edit-admin__fields', ref: 'container'},
-      div {className: 'fields-full'},
-        div {className: 'fields-left'},
-          if @props.channel.hasAssociation 'partners'
+      unless @props.channel.type is 'team'
+        div {className: 'fields-full'},
+          div {className: 'fields-left'},
             div {className: 'field-group'},
               label {}, 'Partner'
               AutocompleteList {
@@ -136,8 +136,7 @@ module.exports = React.createClass
                 resObject: (res) ->
                   id: res.body._id, value: res.body.name
               }
-        div {className: 'fields-right'},
-          if @props.channel.hasAssociation 'fairs'
+          div {className: 'fields-right'},
             div {className: 'field-group'},
               label {}, 'Fair'
               AutocompleteList {
@@ -154,10 +153,9 @@ module.exports = React.createClass
                 resObject: (res) ->
                   id: res.body._id, value: res.body.name
               }
-
-      div {className: 'fields-full'},
-        div {className: 'fields-left'},
-          if @props.channel.hasAssociation 'shows'
+      unless @props.channel.type is 'team'
+        div {className: 'fields-full'},
+          div {className: 'fields-left'},
             div {className: 'field-group'},
               label {}, 'Show'
               div { ref: 'show_ids' }
@@ -173,8 +171,7 @@ module.exports = React.createClass
                 resObject: (res) ->
                   id: res.body._id, value: res.body.name
               }
-        div {className: 'fields-right'},
-          if @props.channel.hasAssociation 'auctions'
+          div {className: 'fields-right'},
             div {className: 'field-group'},
               label {}, 'Auction'
               AutocompleteList {

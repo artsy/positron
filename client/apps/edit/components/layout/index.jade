@@ -5,7 +5,7 @@ block locals
 
 block content
   #edit-tab-pages
-    if channel.isArtsyChannel()
+    if channel.TYPE !== 'partner'
       #edit-seo
         .edit-seo__header-container
           .edit-seo__header

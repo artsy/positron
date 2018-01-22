@@ -10,7 +10,6 @@ import {
   ImageSetPreviewClassic
 } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '/client/models/article.coffee'
-import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
@@ -25,10 +24,7 @@ describe('SectionImageCollection', () => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {
-          hasFeature: jest.fn().mockReturnValue(true),
-          isArtsyChannel: jest.fn().mockReturnValue(true)
-        }
+        channel: {}
       }
     })
 
@@ -53,7 +49,6 @@ describe('SectionImageCollection', () => {
   beforeEach(() => {
     props = {
       article: new Article({layout: 'standard'}),
-      channel: new Channel(),
       editing: false,
       isHero: false,
       section: new Section(imageSection)

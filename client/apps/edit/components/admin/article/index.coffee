@@ -25,7 +25,7 @@ module.exports = AdminArticle = React.createClass
     ReactDOM.findDOMNode(@refs.container).classList += ' active'
 
   setInitialLayout: ->
-    return 'classic' unless @props.channel?.isEditorial()
+    return 'classic' unless @props.channel?.type is 'editorial'
     return @props.article?.get('layout') or 'standard'
 
   onChange: (key, value) ->
@@ -107,6 +107,8 @@ module.exports = AdminArticle = React.createClass
     active = if @state[key] is value then ' active' else ''
 
   render: ->
+    isEditorial = @props.channel.type is 'editorial'
+
     div { className: 'edit-admin--article edit-admin__fields', ref: 'container'},
 
       div {className: 'fields-full'},
@@ -123,7 +125,7 @@ module.exports = AdminArticle = React.createClass
           div {className: 'field-group'},
             label {},
               'Contributing Author'
-              if @props.channel.isEditorial()
+              if isEditorial
                 span {},
                   '* will be deprecated'
             AutocompleteList {
@@ -194,7 +196,7 @@ module.exports = AdminArticle = React.createClass
                   onClick: @onMagazineChange
                 }, 'No'
 
-          if @props.channel.isEditorial()
+          if isEditorial
             div {className: 'field-group article-layout'},
               label {}, 'Article Layout'
               div {className: 'button-group'},
@@ -261,7 +263,7 @@ module.exports = AdminArticle = React.createClass
                 onClick: @onScheduleChange
               }, @publishButtonText()
 
-          if @props.channel.isEditorial()
+          if isEditorial
             div {className: 'field-group'},
               label {}, 'Related Articles'
               AutocompleteList {

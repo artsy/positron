@@ -17,7 +17,7 @@ describe('SectionHero', () => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {isArtsyChannel: jest.fn().mockReturnThis()}
+        channel: {}
       }
     })
 

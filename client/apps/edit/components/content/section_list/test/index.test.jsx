@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
-import Channel from 'client/models/channel.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { SectionContainer } from '../../section_container'
 import { SectionTool } from '../../section_tool'
@@ -18,10 +17,7 @@ describe('SectionList', () => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {
-          hasFeature: jest.fn().mockReturnValue(true),
-          isArtsyChannel: jest.fn().mockReturnValue(true)
-        }
+        channel: {}
       }
     })
 
@@ -39,7 +35,6 @@ describe('SectionList', () => {
       activeSection: null,
       article,
       changeSectionAction: jest.fn(),
-      channel: new Channel(),
       sections: article.sections
     }
   })

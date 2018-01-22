@@ -18,11 +18,12 @@ export class EditArticle extends Component {
 
   render () {
     const { article, channel, onChange } = this.props
+    const hasHero = channel.type === 'support' || channel.type === 'team'
 
     return (
       <div className='EditArticle'>
 
-        {channel.hasFeature('hero') &&
+        {hasHero &&
           <SectionHero
             article={article}
             onChange={onChange}

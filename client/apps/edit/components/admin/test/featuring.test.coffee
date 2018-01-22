@@ -29,9 +29,10 @@ describe 'AdminFeaturing', ->
       })
       $.fn.typeahead = sinon.stub()
       AdminFeaturing = benv.require resolve __dirname, '../featuring/index.coffee'
+      @channel = {id: '123', type: 'editorial'}
       AdminFeaturing.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
-        CURRENT_CHANNEL: id: '123'
+        CURRENT_CHANNEL: @channel
         USER: access_token: ''
       }
       AdminFeaturing.__set__ 'AutocompleteList', @AutocompleteList = benv.require(
@@ -41,8 +42,6 @@ describe 'AdminFeaturing', ->
       AdminFeaturing.__set__ 'AutocompleteList', React.createFactory AutocompleteList
       @article = new Article
       @article.attributes = fixtures().articles
-      @channel = {id: '123'}
-      @channel.hasAssociation = sinon.stub().returns true
       @article.mentionedArtists.reset(
         [
           _.extend(fabricate 'artist', id: 'charles-ray', name: 'Charles Ray', _id: '456')
@@ -74,6 +73,12 @@ describe 'AdminFeaturing', ->
       $(autocompletes[1]).prop('placeholder').should.eql 'Search fairs by name...'
       $(autocompletes[2]).prop('placeholder').should.eql 'Search shows by name...'
       $(autocompletes[3]).prop('placeholder').should.eql 'Search auctions by name...'
+
+    it 'Does not render autocomplete fields for team channels', ->
+      @component.props.channel.type = 'team'
+      @component.forceUpdate()
+      autocompletes = $(ReactDOM.findDOMNode(@component)).find('.autocomplete-input').toArray()
+      autocompletes.length.should.eql 0
 
     it 'Renders the featured and mentioned fields', ->
       $(ReactDOM.findDOMNode(@component)).find('form input').first().attr('placeholder').should.eql 'Add an artist by slug or url...'

@@ -37,7 +37,6 @@ describe 'AdminAppearances', ->
       @article = new Article
       @article.attributes = fixtures().articles
       @channel = {id: '123'}
-      @channel.hasAssociation = sinon.stub().returns true
       props = {
         article: @article
         onChange: sinon.stub()

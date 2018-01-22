@@ -36,7 +36,7 @@ export class SectionControls extends Component {
 
   getHeaderSize = () => {
     // Add extra space for channels with Yoast
-    return this.props.channel.isArtsyChannel() ? 95 : 55
+    return this.props.channel.type === 'partner' ? 55 : 95
   }
 
   getPositionBottom () {
@@ -94,7 +94,8 @@ export class SectionControls extends Component {
   }
 
   hasImageSet () {
-    return this.sectionIsImage() && this.props.channel.hasFeature('image_set')
+    const { type } = this.props.channel
+    return this.sectionIsImage() && type === 'editorial' || type === 'team'
   }
 
   sectionIsImage () {

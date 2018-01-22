@@ -137,7 +137,7 @@ export class EditHeader extends Component {
               {this.getPublishText()}
             </button>
 
-            {channel.isEditorial() &&
+            {channel.type === 'editorial' &&
               <button
                 className='avant-garde-button autolink'
               >

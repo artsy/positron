@@ -32,9 +32,10 @@ describe 'AdminSuperArticle', ->
       $.fn.typeahead = sinon.stub()
       sinon.stub(Backbone, 'sync')
       AdminSuperArticle = benv.require resolve(__dirname, '../super_article/index.coffee')
+      @channel = {id: '123', type: 'editorial'}
       AdminSuperArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
-        CURRENT_CHANNEL: id: '123'
+        CURRENT_CHANNEL: @channel
         USER: access_token: ''
       }
       ImageUpload = benv.require resolve(__dirname, '../components/image_upload.coffee')
@@ -45,8 +46,6 @@ describe 'AdminSuperArticle', ->
         set: sinon.stub().returns
           end: sinon.stub().yields(null, body: {results: [{ id: '123', title: 'Artists'}]})
       AdminSuperArticle.__set__ 'AutocompleteList', React.createFactory @AutocompleteList
-      @channel = {id: '123'}
-      @channel.hasFeature = sinon.stub().returns true
       @article = new Article fixtures().articles
       props = {
         article: @article

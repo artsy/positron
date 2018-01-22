@@ -72,7 +72,6 @@ module.exports.ArticlesListView = ArticlesListView = React.createClass
           selected: null
           contentType: 'article'
           checkable: false
-          isArtsyChannel: @props.channel.isArtsyChannel() # TODO - REMOVE POST ARTICLE2
         }
     else
       @showEmptyMessage()

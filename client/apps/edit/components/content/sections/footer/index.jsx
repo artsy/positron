@@ -16,7 +16,7 @@ export class SectionFooter extends Component {
     return (
       <div className='SectionFooter'>
 
-        {channel.hasFeature('postscript') &&
+        {channel.type === 'editorial' &&
           <div
             className='SectionFooter__postscript'
             data-layout='column_width'

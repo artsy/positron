@@ -82,7 +82,7 @@ export class SectionContainer extends Component {
         return (
           <SectionText
             {...this.props}
-            hasFeatures={channel.hasFeature('follow')}
+            hasFeatures={channel.type !== 'partner'}
             isContentStart={start === index}
             isContentEnd={end === index}
           />
