@@ -60,7 +60,7 @@ export class SectionImages extends Component {
 
   getContainerSizes = () => {
     const { article, section } = this.props
-    const articleLayout = article.get('layout')
+    const articleLayout = article.layout
     const sectionLayout = section.get('layout')
 
     let containerSize = sectionLayout === 'column_width' ? 680 : 780
@@ -111,7 +111,7 @@ export class SectionImages extends Component {
   renderImages = (images) => {
     return images.map((image, index) => {
       const { article, editing, section } = this.props
-      const articleLayout = article.get('layout')
+      const articleLayout = article.layout
       const width = this.getImageWidth(index)
 
       const props = {
@@ -161,7 +161,7 @@ export class SectionImages extends Component {
         {editing &&
           <ImagesControls
             section={section}
-            articleLayout={article.get('layout')}
+            articleLayout={article.layout}
             editing={editing}
             images={images}
             isHero={isHero}
@@ -178,7 +178,7 @@ export class SectionImages extends Component {
           {images.length > 0
             ? section.get('type') === 'image_set' && !editing
               ? <ImageSet
-                  articleLayout={article.get('layout')}
+                  articleLayout={article.layout}
                   section={section}
                 />
 

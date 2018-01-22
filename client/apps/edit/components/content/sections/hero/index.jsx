@@ -44,13 +44,12 @@ export class SectionHero extends Component {
   }
 
   render () {
-    const { article } = this.props
     const { editing, hero } = this.state
+
     return (
       <div className='edit-section--hero'>
         {hero && hero.keys().length
           ? <SectionContainer
-              article={article}
               section={hero}
               onSetEditing={this.onSetEditing}
               isHero

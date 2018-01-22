@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from 'client/models/article.coffee'
+import Sections from 'client/collections/sections.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { SectionContainer } from '../../section_container'
 import { SectionTool } from '../../section_tool'
@@ -18,6 +18,9 @@ describe('SectionList', () => {
     const store = mockStore({
       app: {
         channel: {}
+      },
+      edit: {
+        article: Fixtures.StandardArticle
       }
     })
 
@@ -29,24 +32,23 @@ describe('SectionList', () => {
   }
 
   beforeEach(() => {
-    article = new Article(Fixtures.StandardArticle)
+    article = Fixtures.StandardArticle
 
     props = {
       activeSection: null,
-      article,
       changeSectionAction: jest.fn(),
-      sections: article.sections
+      sections: new Sections(article.sections)
     }
   })
 
   it('Renders the sections', () => {
     const component = getWrapper(props)
-    expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
+    expect(component.find(SectionContainer).length).toBe(article.sections.length)
   })
 
   it('Renders the section tools', () => {
     const component = getWrapper(props)
-    expect(component.find(SectionTool).length).toBe(props.article.sections.length + 1)
+    expect(component.find(SectionTool).length).toBe(article.sections.length + 1)
   })
 
   it('Renders drag container more than 1 section', () => {
@@ -66,7 +68,7 @@ describe('SectionList', () => {
     const component = getWrapper(props)
 
     expect(component.find(DragContainer).exists()).toBe(false)
-    expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
+    expect(component.find(SectionContainer).length).toBe(props.sections.length)
   })
 
   it('Listens for a new section and dispatches changeSection with index', () => {

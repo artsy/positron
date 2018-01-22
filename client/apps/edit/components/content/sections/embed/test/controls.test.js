@@ -26,6 +26,9 @@ describe('EmbedControls', () => {
     const store = mockStore({
       app: {
         channel: {}
+      },
+      edit: {
+        article: StandardArticle
       }
     })
 

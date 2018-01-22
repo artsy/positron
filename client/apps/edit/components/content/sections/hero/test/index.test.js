@@ -18,6 +18,9 @@ describe('SectionHero', () => {
     const store = mockStore({
       app: {
         channel: {}
+      },
+      edit: {
+        article: {}
       }
     })
 

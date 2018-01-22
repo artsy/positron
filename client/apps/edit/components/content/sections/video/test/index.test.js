@@ -12,9 +12,11 @@ describe('Video', () => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {hasFeature: jest.fn().mockReturnThis()}
+        channel: {}
       },
-      edit: { lastUpdated: new Date() }
+      edit: {
+        lastUpdated: new Date()
+      }
     })
     return mount(
       <Provider store={store}>
@@ -31,7 +33,7 @@ describe('Video', () => {
         cover_image_url: 'http://image.jpg',
         caption: 'A video caption.'
       }),
-      article: new Backbone.Model({layout: 'standard'})
+      article: {layout: 'standard'}
     }
   })
 
@@ -70,7 +72,7 @@ describe('Video', () => {
 
   it('renders fullscreen controls if article is feature', () => {
     props.editing = true
-    props.article.set('layout', 'feature')
+    props.article.layout = 'feature'
     const component = getWrapper(props)
 
     expect(component.find('a.layout').length).toEqual(3)

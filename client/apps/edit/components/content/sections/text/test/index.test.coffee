@@ -65,7 +65,7 @@ describe 'Section Text', ->
           type: 'text'
         }
       ]
-      article = new Backbone.Model {layout: 'classic'}
+      article = {layout: 'classic'}
 
       @props = {
         editing: false
@@ -140,7 +140,7 @@ describe 'Section Text', ->
   describe '#availableBlocks', ->
 
     it 'Returns the correct blocks for a feature article', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       availableBlocks = @shortComponent.availableBlocks()
       availableBlocks.should.eql [
         'header-one',
@@ -153,7 +153,7 @@ describe 'Section Text', ->
       ]
 
     it 'Returns the correct blocks for a standard article', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       availableBlocks = @shortComponent.availableBlocks()
       availableBlocks.should.eql [
         'header-two',
@@ -190,12 +190,12 @@ describe 'Section Text', ->
   describe 'Editorial Features', ->
 
     it 'Adds end-marker to a feature article', ->
-      @altProps.article.set 'layout', 'feature'
+      @altProps.article.layout = 'feature'
       component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
       component.state.html.should.containEql '<span class="content-end"> </span>'
 
     it 'Adds end-marker to a standard article', ->
-      @altProps.article.set 'layout', 'standard'
+      @altProps.article.layout = 'standard'
       component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
       component.state.html.should.containEql '<span class="content-end"> </span>'
 
@@ -214,7 +214,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
     it 'Can create strikethrough entities', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -222,7 +222,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle h1 block changes (feature)', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -242,7 +242,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h3>A short piece of text</h3>'
 
     it 'Can toggle h3 block changes without stripping styles (standard/feature)', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -292,7 +292,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle H1 entities (feature)', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       @shortComponent.render()
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('header-one')

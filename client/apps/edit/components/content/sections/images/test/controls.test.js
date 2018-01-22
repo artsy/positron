@@ -20,6 +20,9 @@ describe('ImagesControls', () => {
     const store = mockStore({
       app: {
         channel: { type: 'editorial' }
+      },
+      edit: {
+        article: StandardArticle
       }
     })
     return mount(
