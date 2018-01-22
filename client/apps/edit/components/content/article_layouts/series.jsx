@@ -1,4 +1,3 @@
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { FixedBackground } from '@artsy/reaction-force/dist/Components/Publishing/Series/FixedBackground'

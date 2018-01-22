@@ -6,7 +6,6 @@ import SectionControls from '../../section_controls/index'
 export const EmbedControls = (props) => {
   const {
     articleLayout,
-    channel,
     section
   } = props
 
@@ -14,7 +13,6 @@ export const EmbedControls = (props) => {
     <div className='EmbedControls'>
       <SectionControls
         section={section}
-        channel={channel}
         articleLayout={articleLayout}
         sectionLayouts
       >
@@ -57,6 +55,5 @@ export const EmbedControls = (props) => {
 
 EmbedControls.propTypes = {
   articleLayout: PropTypes.string.isRequired,
-  channel: PropTypes.object.isRequired,
   section: PropTypes.object.isRequired
 }

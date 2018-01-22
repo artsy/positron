@@ -9,7 +9,7 @@ import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { RelatedArticles } from '/client/apps/edit/components/content/sections/related_articles'
-import { EditSeries, EditSeriesContainer } from '../series'
+import { EditSeries } from '../series'
 require('typeahead.js')
 
 describe('EditSeries', () => {
@@ -18,9 +18,6 @@ describe('EditSeries', () => {
   beforeEach(() => {
     props = {
       article: new Article(Fixtures.SeriesArticle),
-      channel: {
-        hasFeature: jest.fn().mockReturnValueOnce(false)
-      },
       onChange: jest.fn()
     }
   })

@@ -1,16 +1,32 @@
 import React from 'react'
+import configureStore from 'redux-mock-store'
+import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
-import Channel from 'client/models/channel.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
-import { SectionContainer } from '../../section_container/index'
-import { SectionTool } from '../../section_tool/index'
+import { SectionContainer } from '../../section_container'
+import { SectionTool } from '../../section_tool'
 import { SectionList } from '../index'
 
 describe('SectionList', () => {
   let props
   let article
+
+  const getWrapper = (props) => {
+    const mockStore = configureStore([])
+    const store = mockStore({
+      app: {
+        channel: {}
+      }
+    })
+
+    return mount(
+      <Provider store={store}>
+        <SectionList {...props} />
+      </Provider>
+    )
+  }
 
   beforeEach(() => {
     article = new Article(Fixtures.StandardArticle)
@@ -19,53 +35,43 @@ describe('SectionList', () => {
       activeSection: null,
       article,
       changeSectionAction: jest.fn(),
-      channel: new Channel(),
       sections: article.sections
     }
   })
 
   it('Renders the sections', () => {
-    const component = mount(
-      <SectionList {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
   })
 
   it('Renders the section tools', () => {
-    const component = mount(
-      <SectionList {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(SectionTool).length).toBe(props.article.sections.length + 1)
   })
 
   it('Renders drag container more than 1 section', () => {
-    const component = mount(
-      <SectionList {...props} />
-    )
-    expect(component.find(DragContainer).length).not.toBe(0)
+    const component = getWrapper(props)
+    expect(component.find(DragContainer).exists()).toBe(true)
   })
 
   it('Does not render drag container if 1 or no sections', () => {
     props.sections.reset()
-    const component = mount(
-      <SectionList {...props} />
-    )
-    expect(component.find(DragContainer).length).toBe(0)
+    const component = getWrapper(props)
+
+    expect(component.find(DragContainer).exists()).toBe(false)
   })
 
   it('Does not render drag container if 1 section', () => {
     props.sections.reset([{type: 'embed'}])
-    const component = mount(
-      <SectionList {...props} />
-    )
-    expect(component.find(DragContainer).length).toBe(0)
+    const component = getWrapper(props)
+
+    expect(component.find(DragContainer).exists()).toBe(false)
     expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
   })
 
   it('Listens for a new section and dispatches changeSection with index', () => {
-    const component = mount(
-      <SectionList {...props} />
-    )
+    const component = getWrapper(props).find(SectionList)
+
     component.instance().onNewSection({type: 'embed'})
     component.props().sections.add(
       {type: 'embed'},

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { changeSection } from 'client/actions/editActions'
-import { SectionContainer } from '../section_container'
+import SectionContainer from '../section_container'
 import { SectionTool } from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 
@@ -11,7 +11,6 @@ export class SectionList extends Component {
     activeSection: PropTypes.any,
     article: PropTypes.object.isRequired,
     changeSectionAction: PropTypes.func,
-    channel: PropTypes.object.isRequired,
     sections: PropTypes.object.isRequired
   }
 
@@ -48,7 +47,6 @@ export class SectionList extends Component {
     const {
       activeSection,
       article,
-      channel,
       changeSectionAction,
       sections
     } = this.props
@@ -63,7 +61,6 @@ export class SectionList extends Component {
               index={index}
               isDraggable
               editing={activeSection === index}
-              channel={channel}
               onSetEditing={(i) => changeSectionAction(i)}
               article={article}
             />

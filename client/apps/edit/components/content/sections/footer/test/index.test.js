@@ -12,40 +12,39 @@ describe('SectionFooter', () => {
   beforeEach(() => {
     props = {
       article: new Backbone.Model(FeatureArticle),
-      channel: {
-        hasFeature: jest.fn().mockReturnValue(true)
-      },
+      channel: { type: 'editorial' },
       onChange: jest.fn()
     }
   })
 
-  it('Shows a postscript field if channel hasFeature', () => {
-    props.article.unset('postscript')
-    const component = mount(
+  const getWrapper = (props) => {
+    return mount(
       <SectionFooter {...props} />
     )
+  }
+
+  it('Shows a postscript field if channel hasFeature', () => {
+    props.article.unset('postscript')
+    const component = getWrapper(props)
 
     expect(component.find(Paragraph).length).toBe(1)
     expect(component.text()).toMatch('Postscript (optional)')
   })
 
   it('Does not a postscript field if channel does not hasFeature', () => {
-    props.channel.hasFeature.mockReturnValue(false)
-    const component = mount(
-      <SectionFooter {...props} />
-    )
+    props.channel.type = 'partner'
+    const component = getWrapper(props)
 
     expect(component.find(Paragraph).length).toBe(0)
     expect(component.text()).not.toMatch('Postscript (optional)')
   })
 
   it('Can render a saved postscript', () => {
-    const component = mount(
-      <SectionFooter {...props} />
-    )
+    const component = getWrapper(props)
     const expectedPostscript = FeatureArticle.postscript
       .replace('<p>', '')
       .replace('</p>', '')
+
     expect(component.html()).toMatch(expectedPostscript)
   })
 })

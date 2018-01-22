@@ -1,28 +1,31 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { SectionFooter } from '../sections/footer/index'
-import { SectionHeader } from '../sections/header/index'
-import { SectionHero } from '../sections/hero/index'
-import SectionList from '../section_list/index'
+import { connect } from 'react-redux'
+
+import SectionFooter from '../sections/footer'
+import SectionList from '../section_list'
+import { SectionHeader } from '../sections/header'
+import { SectionHero } from '../sections/hero'
 
 export class EditArticle extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
+    lastUpdated: PropTypes.any,
     onChange: PropTypes.func.isRequired,
     onChangeHero: PropTypes.func.isRequired
   }
 
   render () {
     const { article, channel, onChange } = this.props
+    const hasHero = channel.type === 'support' || channel.type === 'team'
 
     return (
       <div className='EditArticle'>
 
-        {channel.hasFeature('hero') &&
+        {hasHero &&
           <SectionHero
             article={article}
-            channel={channel}
             onChange={onChange}
           />
         }
@@ -31,13 +34,11 @@ export class EditArticle extends Component {
 
         <SectionList
           article={article}
-          channel={channel}
           sections={article.sections}
         />
 
         <SectionFooter
           article={article}
-          channel={channel}
           onChange={onChange}
         />
 
@@ -45,3 +46,11 @@ export class EditArticle extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  channel: state.app.channel,
+  lastUpdated: state.edit.lastUpdated
+})
+
+export default connect(
+  mapStateToProps
+)(EditArticle)

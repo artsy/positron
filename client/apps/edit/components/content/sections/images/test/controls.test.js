@@ -1,10 +1,11 @@
 import { mount } from 'enzyme'
-import { extend } from 'lodash'
 import React from 'react'
+import configureStore from 'redux-mock-store'
+import { Provider } from 'react-redux'
 import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Artwork from '../../../../../../../models/artwork.coffee'
-import SectionControls from '../../../section_controls'
+import { SectionControls } from '../../../section_controls'
 import { Autocomplete } from '/client/components/autocomplete2'
 import { ImagesControls } from '../components/controls'
 const { StandardArticle } = Fixtures
@@ -15,8 +16,16 @@ describe('ImagesControls', () => {
   const artwork = StandardArticle.sections[4].images[2]
 
   const getWrapper = (props) => {
+    const mockStore = configureStore([])
+    const store = mockStore({
+      app: {
+        channel: { type: 'editorial' }
+      }
+    })
     return mount(
-      <ImagesControls {...props} />
+      <Provider store={store}>
+        <ImagesControls {...props} />
+      </Provider>
     )
   }
 
@@ -34,10 +43,6 @@ describe('ImagesControls', () => {
   beforeEach(() => {
     props = {
       articleLayout: 'standard',
-      channel: {
-        hasFeature: jest.fn().mockReturnValue(true),
-        isArtsyChannel: jest.fn().mockReturnValue(true)
-      },
       logErrorAction: jest.fn(),
       section: new Backbone.Model(StandardArticle.sections[4]),
       setProgress: jest.fn()
@@ -73,7 +78,7 @@ describe('ImagesControls', () => {
   it('#componentWillUnmount destroys section on unmount if no images', () => {
     props.section.set('images', [])
     const spy = jest.spyOn(props.section, 'destroy')
-    const component = getWrapper(props)
+    const component = getWrapper(props).find(ImagesControls)
 
     component.instance().componentWillUnmount()
     expect(spy).toHaveBeenCalled()
@@ -82,13 +87,13 @@ describe('ImagesControls', () => {
   describe('Artwork inputs', () => {
     it('#onUpload saves an image info after upload', () => {
       props.isHero = false
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       component.instance().onUpload('http://image.jpg', 400, 800)
-      expect(component.instance().props.section.get('images')[3].type).toMatch('image')
-      expect(component.instance().props.section.get('images')[3].url).toMatch('http://image.jpg')
-      expect(component.instance().props.section.get('images')[3].width).toBe(400)
-      expect(component.instance().props.section.get('images')[3].height).toBe(800)
+      expect(props.section.get('images')[3].type).toMatch('image')
+      expect(props.section.get('images')[3].url).toMatch('http://image.jpg')
+      expect(props.section.get('images')[3].width).toBe(400)
+      expect(props.section.get('images')[3].height).toBe(800)
     })
 
     it('Autocomplete onSelect resets the section images', () => {
@@ -97,11 +102,11 @@ describe('ImagesControls', () => {
       const images = StandardArticle.sections[4].images
 
       component.find(Autocomplete).first().props().onSelect(images)
-      expect(component.props().section.get('images')).toBe(images)
+      expect(props.section.get('images')).toBe(images)
     })
 
     it('#filterAutocomplete returns formatted artworks', () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
       const items = {_embedded: {results: [rawArtwork]}}
       const filtered = component.instance().filterAutocomplete(items)[0]
 
@@ -113,7 +118,7 @@ describe('ImagesControls', () => {
     })
 
     it('#filterAutocomplete returns false for non-artwork items', () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
       const items = {_embedded: {results: [rawArtwork, {type: 'artist'}]}}
       const filtered = component.instance().filterAutocomplete(items)
 
@@ -124,7 +129,7 @@ describe('ImagesControls', () => {
     it('#fetchDenormalizedArtwork returns a denormalized artwork', async () => {
       Artwork.prototype.denormalized = jest.fn().mockReturnValueOnce(artwork)
       Backbone.Model.prototype.fetch = jest.fn().mockReturnValueOnce(artwork)
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       const fetchedArtwork = await component.instance().fetchDenormalizedArtwork('1234')
       expect(fetchedArtwork).toBe(artwork)
@@ -135,14 +140,14 @@ describe('ImagesControls', () => {
         const err = { message: 'an error' }
         throw err
       })
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       await component.instance().fetchDenormalizedArtwork('1234')
-      expect(component.props().logErrorAction.mock.calls.length).toBe(1)
+      expect(props.logErrorAction.mock.calls.length).toBe(1)
     })
 
     it('#onNewImage updates the section images', () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       component.instance().onNewImage(
         {type: 'artwork', image: 'artwork.jpg'}
@@ -151,7 +156,7 @@ describe('ImagesControls', () => {
     })
 
     it('#inputsAreDisabled returns false if layout is not fillwidth', () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       const inputsAreDisabled = component.instance().inputsAreDisabled(props.section)
       expect(inputsAreDisabled).toBe(false)
@@ -159,14 +164,14 @@ describe('ImagesControls', () => {
 
     it('#inputsAreDisabled returns true if fillwidth section has images', () => {
       props.section.set({layout: 'fillwidth'})
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       const inputsAreDisabled = component.instance().inputsAreDisabled(props.section)
       expect(inputsAreDisabled).toBe(true)
     })
 
     it('#fillwidthAlert calls #logErrorAction', () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).find(ImagesControls)
 
       component.instance().fillwidthAlert()
       expect(component.props().logErrorAction.mock.calls.length).toBe(1)
@@ -177,7 +182,7 @@ describe('ImagesControls', () => {
       const component = getWrapper(props)
 
       component.find('.edit-controls__artwork-inputs').at(0).simulate('click')
-      expect(component.props().logErrorAction.mock.calls.length).toBe(1)
+      expect(props.logErrorAction.mock.calls.length).toBe(1)
     })
   })
 

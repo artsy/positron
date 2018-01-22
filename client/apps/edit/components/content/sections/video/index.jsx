@@ -7,7 +7,6 @@ import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publish
 export class SectionVideo extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     hidePreview: PropTypes.bool,
     isHero: PropTypes.bool,
@@ -38,7 +37,6 @@ export class SectionVideo extends Component {
   renderSectionControls () {
     const {
       article,
-      channel,
       editing,
       hidePreview,
       isHero,
@@ -52,7 +50,6 @@ export class SectionVideo extends Component {
         <Controls
           article={article}
           section={section}
-          channel={channel}
           isHero={isHero}
           sectionLayouts={showSectionLayouts}
           articleLayout={article.get('layout')}

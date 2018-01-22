@@ -1,5 +1,7 @@
 import React from 'react'
 import Backbone from 'backbone'
+import configureStore from 'redux-mock-store'
+import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { RemoveButton } from 'client/components/remove_button'
 import { SectionContainer } from '../../../section_container'
@@ -11,21 +13,34 @@ const { ClassicArticle } = Fixtures
 describe('SectionHero', () => {
   let props
 
+  const getWrapper = (props) => {
+    const mockStore = configureStore([])
+    const store = mockStore({
+      app: {
+        channel: {}
+      }
+    })
+
+    return mount(
+      <Provider store={store}>
+        <SectionHero {...props} />
+      </Provider>
+    )
+  }
+
   beforeEach(() => {
     props = {
       article: new Backbone.Model(ClassicArticle),
-      channel: new Backbone.Model(),
       onChange: jest.fn()
     }
   })
 
   it('Displays a sectionTool if no section', () => {
     props.article.set('hero_section', null)
-    const component = mount(
-      <SectionHero {...props} />
-    )
-    expect(component.find(SectionTool).length).toBe(1)
-    expect(component.find(SectionContainer).length).toBe(0)
+    const component = getWrapper(props)
+
+    expect(component.find(SectionTool).exists()).toBe(true)
+    expect(component.find(SectionContainer).exists()).toBe(false)
   })
 
   it('Displays a sectionContainer has section', () => {
@@ -35,11 +50,10 @@ describe('SectionHero', () => {
         type: 'video'
       }
     })
-    const component = mount(
-      <SectionHero {...props} />
-    )
-    expect(component.find(SectionTool).length).toBe(0)
-    expect(component.find(SectionContainer).length).toBe(1)
+    const component = getWrapper(props)
+
+    expect(component.find(SectionTool).exists()).toBe(false)
+    expect(component.find(SectionContainer).exists()).toBe(true)
   })
 
   it('Can remove a hero if empty', () => {
@@ -48,9 +62,8 @@ describe('SectionHero', () => {
         type: 'video'
       }
     })
-    const component = mount(
-      <SectionHero {...props} />
-    )
+    const component = getWrapper(props)
+
     component.find(RemoveButton).simulate('click')
     expect(props.onChange.mock.calls[1][0]).toBe('hero_section')
     expect(props.onChange.mock.calls[1][1]).toBe(null)

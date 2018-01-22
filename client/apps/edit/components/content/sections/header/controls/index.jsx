@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import ModalCover from './ModalCover.jsx'
-import LayoutControls from './LayoutControls.jsx'
-import VideoControls from './VideoControls.jsx'
+import ModalCover from './ModalCover'
+import LayoutControls from './LayoutControls'
+import VideoControls from './VideoControls'
 
 export class HeaderControls extends Component {
   static propTypes = {
     article: PropTypes.object,
-    channel: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onProgress: PropTypes.func.isRequired,
     hero: PropTypes.object
@@ -45,7 +44,7 @@ export class HeaderControls extends Component {
 
   render () {
     const { isLayoutOpen, isVideoOpen } = this.state
-    const { article, channel, hero, onChange, onProgress } = this.props
+    const { article, hero, onChange, onProgress } = this.props
     const isModalOpen = isLayoutOpen || isVideoOpen
     const isBasicHero = hero.type === 'basic'
 
@@ -59,7 +58,6 @@ export class HeaderControls extends Component {
         {isBasicHero &&
           <VideoControls
             article={article}
-            channel={channel}
             isOpen={isVideoOpen}
             onChange={onChange}
             onProgress={onProgress}

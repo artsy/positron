@@ -8,7 +8,8 @@ export const initialState = {
   isDeleting: false,
   isPublishing: false,
   isSaving: false,
-  isSaved: true
+  isSaved: true,
+  lastUpdated: null
 }
 
 export function editReducer (state = initialState, action) {
@@ -16,7 +17,8 @@ export function editReducer (state = initialState, action) {
     case actions.CHANGE_SAVED_STATUS: {
       return u({
         isSaving: false,
-        isSaved: action.payload.isSaved
+        isSaved: action.payload.isSaved,
+        lastUpdated: action.payload.lastUpdated
       }, state)
     }
     case actions.CHANGE_SECTION: {

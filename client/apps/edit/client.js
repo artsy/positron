@@ -4,7 +4,6 @@ import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Article from '../../models/article'
-import Channel from '../../models/channel'
 import EditContainer from './components/edit_container'
 import EditLayout from './components/layout'
 import { Provider } from 'react-redux'
@@ -14,7 +13,7 @@ import { data as sd } from 'sharify'
 
 export function init () {
   const article = new Article(sd.ARTICLE)
-  const channel = new Channel(sd.CURRENT_CHANNEL)
+  const channel = sd.CURRENT_CHANNEL
   const author = _.pick(article.get('author'), 'id', 'name')
 
   article.set({
@@ -29,11 +28,7 @@ export function init () {
 
   ReactDOM.render(
     <Provider store={store}>
-      <EditContainer
-        article={article}
-        channel={channel}
-        user={sd.USER}
-      />
+      <EditContainer article={article} />
     </Provider>,
     $('#edit-content')[0]
   )
