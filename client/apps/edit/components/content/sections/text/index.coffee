@@ -46,7 +46,6 @@ module.exports = React.createClass
     pluginType: null
     urlValue: null
     showMenu: false
-    hasFeatures: @props.hasFeatures
 
   componentDidMount: ->
     @props.sections.on 'change:autolink', @editorStateFromProps
@@ -181,7 +180,7 @@ module.exports = React.createClass
       @onChange EditorState.push(editorState, newState, null)
 
   availableBlocks: ->
-    blockMap = Config.blockRenderMap(@props.article.get('layout'), @state.hasFeatures)
+    blockMap = Config.blockRenderMap(@props.article.get('layout'), @props.hasFeatures)
     available = Object.keys(blockMap.toObject())
     return Array.from(available)
 
@@ -221,7 +220,7 @@ module.exports = React.createClass
     @props.onSetEditing @props.index + increment
 
   toggleBlockType: (blockType) ->
-    unless blockType is 'blockquote' and !@state.hasFeatures
+    unless blockType is 'blockquote' and !@props.hasFeatures
       @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
       @setState showMenu: false
       if blockType is 'blockquote'
@@ -283,7 +282,7 @@ module.exports = React.createClass
   checkSelection: ->
     if !window.getSelection().isCollapsed
       editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
-      selectionTargetL = if @state.hasFeatures then 125 else 100
+      selectionTargetL = if @props.hasFeatures then 125 else 100
       @setState showMenu: true, selectionTarget: stickyControlsBox(editorPosition, -93, selectionTargetL)
     else
       @setState showMenu: false
@@ -303,10 +302,10 @@ module.exports = React.createClass
         if @state.showMenu
           React.createElement(
             TextNav, {
-              hasFeatures: @state.hasFeatures
-              blocks: Config.blockTypes @props.article.get('layout'), @state.hasFeatures
+              hasFeatures: @props.hasFeatures
+              blocks: Config.blockTypes @props.article.get('layout'), @props.hasFeatures
               toggleBlock: @toggleBlockType
-              styles: Config.inlineStyles @props.article.get('layout'), @state.hasFeatures
+              styles: Config.inlineStyles @props.article.get('layout'), @props.hasFeatures
               toggleStyle: @toggleInlineStyle
               promptForLink: @promptForLink
               makePlainText: @makePlainText
@@ -327,7 +326,7 @@ module.exports = React.createClass
             handleKeyCommand: @handleKeyCommand
             keyBindingFn: keyBindingFnFull
             handlePastedText: @onPaste
-            blockRenderMap: Config.blockRenderMap @props.article.get('layout'), @state.hasFeatures
+            blockRenderMap: Config.blockRenderMap @props.article.get('layout'), @props.hasFeatures
             handleReturn: @handleReturn
             onTab: @handleTab
             onLeftArrow: @handleChangeSection

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import EditArticle from './article_layouts/article.jsx'
-import { EditSeries } from './article_layouts/series.jsx'
-import { EditVideo } from './article_layouts/video.jsx'
+import EditArticle from './article_layouts/article'
+import { EditSeries } from './article_layouts/series'
+import { EditVideo } from './article_layouts/video'
 
 export class EditContent extends Component {
   static propTypes = {

@@ -176,8 +176,9 @@ describe 'Section Text', ->
       ]
 
     it 'Returns the correct blocks for a classic article without features', ->
-      @shortComponent.setState hasFeatures: false
-      availableBlocks = @shortComponent.availableBlocks()
+      @props.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      availableBlocks = component.availableBlocks()
       availableBlocks.should.eql [
         'header-two',
         'header-three',
@@ -261,8 +262,6 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
 
     it 'Can toggle blockquote changes (if hasFeatures)', ->
-      @shortComponent.setState hasFeatures: true
-      @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
       r.simulate.mouseDown r.find @shortComponent, 'blockquote'
@@ -332,11 +331,12 @@ describe 'Section Text', ->
       @shortComponent.props.section.get('layout').should.eql 'blockquote'
 
     it 'Cannot toggle Blockquotes if hasFeatures is false', ->
-      @shortComponent.setState hasFeatures: false
-      @shortComponent.setState = sinon.stub()
-      @shortComponent.handleKeyCommand('blockquote')
-      @shortComponent.setState.called.should.not.be.ok
-      @shortComponent.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
+      @altProps.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.setState = sinon.stub()
+      component.handleKeyCommand('blockquote')
+      component.setState.called.should.not.be.ok
+      component.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
 
     it 'Can make plain text', ->
       @shortComponent.setState = sinon.stub()
@@ -376,9 +376,10 @@ describe 'Section Text', ->
       $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 1
 
     it 'Does not show artist if hasFeatures is false', ->
-      @shortComponent.setState hasFeatures: false
-      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
-      $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 0
+      @altProps.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      r.simulate.mouseUp r.find component, 'edit-section--text__input'
+      $(ReactDOM.findDOMNode(component)).find('button.artist').length.should.eql 0
 
     it 'Can setup link prompt for artist blocks', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
