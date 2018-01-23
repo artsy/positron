@@ -143,6 +143,7 @@ export class SectionContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  article: state.edit.article,
   channel: state.app.channel
 })
 

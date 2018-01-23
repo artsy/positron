@@ -3,7 +3,6 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { Embed, Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '/client/models/article.coffee'
 import Section from '/client/models/section.coffee'
 import { SectionEmbed } from '../index'
 import { EmbedControls } from '../controls'
@@ -15,7 +14,7 @@ describe('Section Embed', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article({layout: 'standard'}),
+      article: StandardArticle,
       section: new Section(StandardArticle.sections[10])
     }
   })
@@ -31,6 +30,9 @@ describe('Section Embed', () => {
     const store = mockStore({
       app: {
         channel: {}
+      },
+      edit: {
+        article: StandardArticle
       }
     })
 
@@ -41,34 +43,32 @@ describe('Section Embed', () => {
     )
   }
 
-  describe('Section Embed', () => {
-    it('Renders saved data', () => {
-      const component = getWrapper(props)
-      expect(component.find(Embed).exists()).toBe(true)
-    })
+  it('Renders saved data', () => {
+    const component = getWrapper(props)
+    expect(component.find(Embed).exists()).toBe(true)
+  })
 
-    it('Renders placeholder if empty', () => {
-      props.section = new Section()
-      const component = getWrapper(props)
+  it('Renders placeholder if empty', () => {
+    props.section = new Section()
+    const component = getWrapper(props)
 
-      expect(component.find(Embed).exists()).toBe(false)
-      expect(component.text()).toBe('Add URL above')
-    })
+    expect(component.find(Embed).exists()).toBe(false)
+    expect(component.text()).toBe('Add URL above')
+  })
 
-    it('Renders controls if editing', () => {
-      props.editing = true
-      const component = getConnectedWrapper(props)
+  it('Renders controls if editing', () => {
+    props.editing = true
+    const component = getConnectedWrapper(props)
 
-      expect(component.find(EmbedControls).exists()).toBe(true)
-    })
+    expect(component.find(EmbedControls).exists()).toBe(true)
+  })
 
-    it('Destroys section on unmount if URL is empty', () => {
-      props.section = new Section()
-      const spy = jest.spyOn(props.section, 'destroy')
-      const component = getWrapper(props)
+  it('Destroys section on unmount if URL is empty', () => {
+    props.section = new Section()
+    const spy = jest.spyOn(props.section, 'destroy')
+    const component = getWrapper(props)
 
-      component.instance().componentWillUnmount()
-      expect(spy).toHaveBeenCalled()
-    })
+    component.instance().componentWillUnmount()
+    expect(spy).toHaveBeenCalled()
   })
 })

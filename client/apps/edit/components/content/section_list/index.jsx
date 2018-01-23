@@ -9,7 +9,6 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 export class SectionList extends Component {
   static propTypes = {
     activeSection: PropTypes.any,
-    article: PropTypes.object.isRequired,
     changeSectionAction: PropTypes.func,
     sections: PropTypes.object.isRequired
   }
@@ -46,7 +45,6 @@ export class SectionList extends Component {
   renderSectionList = () => {
     const {
       activeSection,
-      article,
       changeSectionAction,
       sections
     } = this.props
@@ -62,7 +60,6 @@ export class SectionList extends Component {
               isDraggable
               editing={activeSection === index}
               onSetEditing={(i) => changeSectionAction(i)}
-              article={article}
             />
             <SectionTool
               sections={sections}
@@ -77,7 +74,6 @@ export class SectionList extends Component {
 
   render () {
     const {
-      article,
       activeSection,
       sections
     } = this.props
@@ -97,7 +93,6 @@ export class SectionList extends Component {
               onDragEnd={this.onDragEnd}
               isDraggable={activeSection === null}
               layout='vertical'
-              article={article}
             >
               {this.renderSectionList()}
             </DragContainer>

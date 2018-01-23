@@ -45,7 +45,7 @@ export class SectionEmbed extends Component {
       <section className='SectionEmbed'>
         {editing &&
           <EmbedControls
-            articleLayout={article.get('layout')}
+            articleLayout={article.layout}
             section={section}
           />
         }

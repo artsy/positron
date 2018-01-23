@@ -167,6 +167,7 @@ export class SectionControls extends Component {
   }
 }
 const mapStateToProps = (state) => ({
+  article: state.edit.article,
   channel: state.app.channel
 })
 

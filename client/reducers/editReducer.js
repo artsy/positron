@@ -1,7 +1,17 @@
 import u from 'updeep'
+import { data as sd } from 'sharify'
+import { extend, pick } from 'lodash'
 import { actions } from 'client/actions/editActions'
 
+const setupArticle = () => {
+  const article = sd.ARTICLE
+  const author = pick(article.author, 'id', 'name')
+
+  return extend(article, { author })
+}
+
 export const initialState = {
+  article: setupArticle(),
   activeSection: null,
   activeView: 'content',
   error: null,
@@ -15,7 +25,10 @@ export const initialState = {
 export function editReducer (state = initialState, action) {
   switch (action.type) {
     case actions.CHANGE_SAVED_STATUS: {
+      const article = extend(state.article, action.payload.article)
+
       return u({
+        article,
         isSaving: false,
         isSaved: action.payload.isSaved,
         lastUpdated: action.payload.lastUpdated

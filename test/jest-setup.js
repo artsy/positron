@@ -5,6 +5,8 @@ import Enzyme from 'enzyme'
 import React from 'react'
 import DOM from 'react-dom-factories'
 import createClass from 'create-react-class'
+import sd from 'sharify'
+import { FeatureArticle } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Articles'
 
 // Patch React 16 with deprecated helpers
 React.DOM = DOM
@@ -24,4 +26,10 @@ window.matchMedia = window.matchMedia || function () {
     addListener: function () {},
     removeListener: function () {}
   }
+}
+
+sd.data = {
+  ARTICLE: FeatureArticle,
+  CHANNEL: {},
+  USER: {}
 }

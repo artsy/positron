@@ -63,7 +63,10 @@ describe('Feature Header Controls', () => {
 
     const getWrapper = (props) => {
       const mockStore = configureStore([])
-      const store = mockStore({app: { channel: {} }})
+      const store = mockStore({
+        app: { channel: {} },
+        edit: { article: {} }
+      })
 
       return mount(
         <Provider store={store}>

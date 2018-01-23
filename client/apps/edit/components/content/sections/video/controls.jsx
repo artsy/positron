@@ -68,8 +68,8 @@ export class Controls extends Component {
         section={section}
         isHero={isHero}
         sectionLayouts={sectionLayouts}
-        articleLayout={articleLayout}>
-
+        articleLayout={articleLayout}
+      >
         <h2>Video</h2>
         <input
           className='bordered-input bordered-input-dark'
