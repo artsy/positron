@@ -26,6 +26,7 @@ export function editReducer (state = initialState, action) {
   switch (action.type) {
     case actions.CHANGE_SAVED_STATUS: {
       return u({
+        article: action.payload.article,
         isSaving: false,
         isSaved: action.payload.isSaved,
         lastUpdated: action.payload.lastUpdated

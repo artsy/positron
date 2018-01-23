@@ -55,11 +55,10 @@ class EditContainer extends Component {
     } = this.props
 
     if (article.get('published')) {
-      changeSavedStatusAction(false)
+      changeSavedStatusAction(article.attributes, false)
     } else {
       saveArticleAction(article)
     }
-    this.setState({ lastUpdated: new Date() })
   }
 
   getActiveView = () => {
@@ -102,7 +101,8 @@ class EditContainer extends Component {
 const mapStateToProps = (state) => ({
   activeView: state.edit.activeView,
   channel: state.app.channel,
-  error: state.edit.error
+  error: state.edit.error,
+  lastUpdated: state.edit.lastUpdated
 })
 
 const mapDispatchToProps = {
