@@ -28,9 +28,9 @@ const mapStateToProps = (state) => ({
   error: state.edit.error
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = {
   resetErrorAction: resetError
-})
+}
 
 export default connect(
   mapStateToProps,

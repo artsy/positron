@@ -105,10 +105,10 @@ const mapStateToProps = (state) => ({
   error: state.edit.error
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = {
   changeSavedStatusAction: changeSavedStatus,
   saveArticleAction: saveArticle
-})
+}
 
 export default connect(
   mapStateToProps,
