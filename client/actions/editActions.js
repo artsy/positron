@@ -2,10 +2,11 @@ import keyMirror from 'client/lib/keyMirror'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
-  'CHANGE_SECTION',
   'CHANGE_VIEW',
   'DELETE_ARTICLE',
+  'EDIT_SECTION',
   'ERROR',
+  'NEW_SECTION',
   'PUBLISH_ARTICLE',
   'SAVE_ARTICLE'
 )
@@ -16,14 +17,6 @@ export const changeSavedStatus = (article, isSaved) => ({
     article,
     isSaved,
     lastUpdated: new Date()
-  }
-})
-
-export const changeSection = (activeSection) => ({
-  // Index of active article section
-  type: actions.CHANGE_SECTION,
-  payload: {
-    activeSection
   }
 })
 
@@ -46,6 +39,25 @@ export const deleteArticle = (article) => {
     type: actions.DELETE_ARTICLE,
     payload: {
       isDeleting: true
+    }
+  }
+}
+
+export const editSection = (activeSection) => ({
+  // Index of active article section
+  type: actions.EDIT_SECTION,
+  payload: {
+    activeSection
+  }
+})
+
+export const newSection = (type) => {
+  const section = setupSection(type)
+
+  return {
+    type: actions.NEW_SECTION,
+    payload: {
+      section
     }
   }
 }
@@ -88,3 +100,34 @@ export const resetError = () => ({
     error: null
   }
 })
+
+// UTILS
+export function setupSection (type) {
+  // set initial state of new section
+  switch (type) {
+    case 'video':
+      return {
+        type: 'video',
+        url: '',
+        layout: 'column_width'
+      }
+    case 'image_collection':
+      return {
+        type: 'image_collection',
+        layout: 'overflow_fillwidth',
+        images: []
+      }
+    case 'embed':
+      return {
+        type: 'embed',
+        url: '',
+        layout: 'column_width',
+        height: ''
+      }
+    case 'text':
+      return {
+        type: 'text',
+        body: ''
+      }
+  }
+}

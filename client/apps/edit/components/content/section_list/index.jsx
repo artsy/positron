@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeSection } from 'client/actions/editActions'
+import { editSection } from 'client/actions/editActions'
 import SectionContainer from '../section_container'
 import { SectionTool } from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
@@ -9,7 +9,7 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 export class SectionList extends Component {
   static propTypes = {
     activeSection: PropTypes.any,
-    changeSectionAction: PropTypes.func,
+    editSectionAction: PropTypes.func,
     sections: PropTypes.object.isRequired
   }
 
@@ -24,10 +24,10 @@ export class SectionList extends Component {
   }
 
   onNewSection = (section) => {
-    const { changeSectionAction, sections } = this.props
+    const { editSectionAction, sections } = this.props
     const newActiveSection = sections.indexOf(section)
 
-    changeSectionAction(newActiveSection)
+    editSectionAction(newActiveSection)
   }
 
   onDragEnd = (newSections) => {
@@ -45,7 +45,7 @@ export class SectionList extends Component {
   renderSectionList = () => {
     const {
       activeSection,
-      changeSectionAction,
+      editSectionAction,
       sections
     } = this.props
 
@@ -59,7 +59,7 @@ export class SectionList extends Component {
               index={index}
               isDraggable
               editing={activeSection === index}
-              onSetEditing={(i) => changeSectionAction(i)}
+              onSetEditing={(i) => editSectionAction(i)}
             />
             <SectionTool
               sections={sections}
@@ -110,7 +110,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  changeSectionAction: changeSection
+  editSectionAction: editSection
 }
 
 export default connect(

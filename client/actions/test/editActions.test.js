@@ -21,11 +21,11 @@ describe('editActions', () => {
     expect(changeSavedStatus.payload.article.title).toBe('Cool article')
   })
 
-  it('#changeSection sets activeSection to arg', () => {
-    const changeSection = editActions.changeSection(6)
+  it('#editSection sets activeSection to index and sets state.section', () => {
+    const editSection = editActions.editSection(6)
 
-    expect(changeSection.type).toBe('CHANGE_SECTION')
-    expect(changeSection.payload.activeSection).toBe(6)
+    expect(editSection.type).toBe('EDIT_SECTION')
+    expect(editSection.payload.activeSection).toBe(6)
   })
 
   it('#changeView sets the activeView to arg', () => {
@@ -57,6 +57,48 @@ describe('editActions', () => {
     expect(saveArticle.type).toBe('SAVE_ARTICLE')
     expect(saveArticle.payload.isSaving).toBe(true)
     expect(article.save.mock.calls.length).toBe(1)
+  })
+
+  describe('#newSection', () => {
+    it('Can create an embed section', () => {
+      const newSection = editActions.newSection('embed')
+      const { section } = newSection.payload
+
+      expect(newSection.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('embed')
+      expect(section.url).toBe('')
+      expect(section.layout).toBe('column_width')
+      expect(section.height).toBe('')
+    })
+
+    it('Can create an image_collection section', () => {
+      const newSection = editActions.newSection('image_collection')
+      const { section } = newSection.payload
+
+      expect(newSection.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('image_collection')
+      expect(section.images.length).toBe(0)
+      expect(section.layout).toBe('overflow_fillwidth')
+    })
+
+    it('Can create a text section', () => {
+      const newSection = editActions.newSection('text')
+      const { section } = newSection.payload
+
+      expect(newSection.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('text')
+      expect(section.body).toBe('')
+    })
+
+    it('Can create a video section', () => {
+      const newSection = editActions.newSection('video')
+      const { section } = newSection.payload
+
+      expect(newSection.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('video')
+      expect(section.url).toBe('')
+      expect(section.layout).toBe('column_width')
+    })
   })
 
   describe('Editing errors', () => {

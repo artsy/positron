@@ -16,5 +16,6 @@ describe('editReducer', () => {
     expect(initialState.isSaving).toBe(false)
     expect(initialState.isSaved).toBe(true)
     expect(initialState.lastUpdated).toBe(null)
+    expect(initialState.section).toBe(null)
   })
 })

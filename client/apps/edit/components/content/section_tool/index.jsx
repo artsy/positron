@@ -126,7 +126,13 @@ export class SectionTool extends Component {
   }
 
   render () {
-    const { firstSection, index, isEditing, isHero, sections } = this.props
+    const {
+      firstSection,
+      index,
+      isEditing,
+      isHero,
+      sections
+    } = this.props
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
     return (

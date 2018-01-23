@@ -5,6 +5,7 @@ import { actions } from 'client/actions/editActions'
 
 const setupArticle = () => {
   const article = sd.ARTICLE
+  // strip deprecated handles from author
   const author = pick(article.author, 'id', 'name')
 
   return extend(article, { author })
@@ -19,7 +20,8 @@ export const initialState = {
   isPublishing: false,
   isSaving: false,
   isSaved: true,
-  lastUpdated: null
+  lastUpdated: null,
+  section: null
 }
 
 export function editReducer (state = initialState, action) {
@@ -34,11 +36,18 @@ export function editReducer (state = initialState, action) {
         lastUpdated: action.payload.lastUpdated
       }, state)
     }
-    case actions.CHANGE_SECTION: {
+
+    case actions.EDIT_SECTION: {
+      const { activeSection } = action.payload
+      const { sections } = state.article
+      const section = sections[activeSection] || null
+
       return u({
-        activeSection: action.payload.activeSection
+        activeSection,
+        section
       }, state)
     }
+
     case actions.CHANGE_VIEW: {
       return u({
         activeView: action.payload.activeView
@@ -52,6 +61,12 @@ export function editReducer (state = initialState, action) {
     case actions.ERROR: {
       return u({
         error: action.payload.error
+      }, state)
+    }
+    case actions.NEW_SECTION: {
+      return u({
+        activeSection: state.article.sections.length,
+        section: action.payload.section
       }, state)
     }
     case actions.PUBLISH_ARTICLE: {
