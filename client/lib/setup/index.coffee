@@ -9,10 +9,8 @@ require './sharify'
 sharify = require 'sharify'
 bucketAssets = require 'bucket-assets'
 express = require 'express'
-session = require 'cookie-session'
 bodyParser = require 'body-parser'
 cookieParser = require 'cookie-parser'
-session = require 'cookie-session'
 Backbone = require 'backbone'
 path = require 'path'
 fs = require 'fs'
@@ -49,9 +47,7 @@ module.exports = (app) ->
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
   app.use logger
-  app.use session
-    secret: SESSION_SECRET
-    key: 'positron.sess'
+
   app.use bucketAssets()
   setupAuth app
   app.use locals

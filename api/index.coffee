@@ -1,4 +1,4 @@
-express = require "express"
+express = require 'express'
 bodyParser = require 'body-parser'
 logger = require 'artsy-morgan'
 { helpers, notFound, errorHandler } = require './lib/middleware'
@@ -10,6 +10,7 @@ logger = require 'artsy-morgan'
 debug = require('debug') 'api'
 cors = require 'cors'
 RavenServer = require 'raven'
+http = require('http')
 
 app = module.exports = express()
 

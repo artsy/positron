@@ -1,9 +1,12 @@
 import keyMirror from 'client/lib/keyMirror'
+import { emitAction } from './websocket'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_SECTION',
   'CHANGE_VIEW',
+  'START_EDITING_ARTICLE',
+  'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
   'PUBLISH_ARTICLE',
@@ -47,6 +50,26 @@ export const deleteArticle = (article) => {
     }
   }
 }
+
+export const startEditingArticle = emitAction((article) => {
+  return {
+    type: actions.START_EDITING_ARTICLE,
+    payload: {
+      timestamp: new Date().getMilliseconds(),
+      article
+    }
+  }
+})
+
+export const stopEditingArticle = emitAction((article) => {
+  return {
+    type: actions.STOP_EDITING_ARTICLE,
+    payload: {
+      timestamp: new Date().getMilliseconds(),
+      article
+    }
+  }
+})
 
 export const publishArticle = (article, published) => {
   article.set('published', published)

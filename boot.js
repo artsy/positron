@@ -10,6 +10,8 @@ import { createReloadable, isDevelopment } from '@artsy/express-reloadable'
 
 const app = module.exports = express()
 const debug = require('debug')('app')
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 
 const {
   ARTSY_URL,
@@ -61,13 +63,16 @@ artsyXapp.init(xappConfig, () => {
 
   // Start the server and send a message to IPC for the integration test
   // helper to hook into.
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     debug(`Listening on port ${PORT}`)
 
     if (typeof process.send === 'function') {
       process.send('listening')
     }
   })
+
+  require('./api/apps/websocket').init(io)
+  require('./client/lib/setup/session')(app, io)
 })
 
 // Crash if we can't get/refresh an xapp token
