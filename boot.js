@@ -61,7 +61,7 @@ artsyXapp.init(xappConfig, () => {
     app.use(require('./client'))
   }
 
-  require('./api/apps/websocket').init(io)
+  require('./client/apps/websocket').init(io)
   require('./client/lib/setup/session').initSocketSession(app, io)
 
   // Start the server and send a message to IPC for the integration test

@@ -1,10 +1,12 @@
 import keyMirror from 'client/lib/keyMirror'
-import { emitAction } from './websocket'
+import { emitAction } from 'client/apps/websocket/client'
+import { messageTypes } from 'client/apps/websocket/messageTypes'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_SECTION',
   'CHANGE_VIEW',
+  'VIEW_ARTICLES',
   'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
@@ -36,6 +38,14 @@ export const changeView = (activeView) => ({
   }
 })
 
+export const viewArticles = emitAction(() => ({
+  type: actions.VIEW_ARTICLES,
+  key: messageTypes.articlesRequested,
+  payload: {
+    timestamp: new Date().toISOString()
+  }
+}))
+
 export const deleteArticle = (article) => {
   article.destroy({
     success: () => {
@@ -54,8 +64,9 @@ export const deleteArticle = (article) => {
 export const startEditingArticle = emitAction((data) => {
   return {
     type: actions.START_EDITING_ARTICLE,
+    key: messageTypes.userStartedEditing,
     payload: {
-      timestamp: new Date().getMilliseconds(),
+      timestamp: new Date().toISOString(),
       ...data
     }
   }
@@ -64,8 +75,9 @@ export const startEditingArticle = emitAction((data) => {
 export const stopEditingArticle = emitAction((data) => {
   return {
     type: actions.STOP_EDITING_ARTICLE,
+    key: messageTypes.userStoppedEditing,
     payload: {
-      timestamp: new Date().getMilliseconds(),
+      timestamp: new Date().toISOString(),
       ...data
     }
   }
