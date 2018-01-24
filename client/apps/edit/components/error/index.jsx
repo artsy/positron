@@ -1,23 +1,22 @@
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import * as Actions from 'client/actions/editActions'
+import { resetError } from 'client/actions/editActions'
 
 export class EditError extends Component {
   static propTypes = {
-    actions: PropTypes.object.isRequired,
-    edit: PropTypes.object.isRequired
+    resetErrorAction: PropTypes.func,
+    error: PropTypes.object
   }
 
   render () {
-    const { resetError } = this.props.actions
-    const { message } = this.props.edit.error
+    const { resetErrorAction } = this.props
+    const { message } = this.props.error
 
     return (
       <div
         className='EditError flash-error'
-        onClick={resetError}
+        onClick={resetErrorAction}
       >
         {message}
       </div>
@@ -26,12 +25,12 @@ export class EditError extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ...state
+  error: state.edit.error
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(Actions, dispatch)
-})
+const mapDispatchToProps = {
+  resetErrorAction: resetError
+}
 
 export default connect(
   mapStateToProps,

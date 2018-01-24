@@ -16,9 +16,6 @@ describe('EditVideo', () => {
   beforeEach(() => {
     props = {
       article: new Article(Fixtures.VideoArticle),
-      channel: {
-        hasFeature: jest.fn().mockReturnValueOnce(false)
-      },
       onChange: jest.fn()
     }
   })

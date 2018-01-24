@@ -15,12 +15,13 @@ describe 'EditLayout', ->
     benv.setup =>
       tmpl = resolve __dirname, '../index.jade'
       sd = _.extend fixtures().locals.sd,
-        CURRENT_CHANNEL: @channel = new Channel fixtures().channels
+        CURRENT_CHANNEL: fixtures().channels
         USER: accessToken: 'foo'
         FORCE_URL: 'https://artsy.net'
       locals = _.extend fixtures().locals,
         article: @article = new Article fixtures().articles
         sd: sd
+        channel: new Channel
       benv.render tmpl, locals, =>
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
@@ -35,7 +36,6 @@ describe 'EditLayout', ->
         @view = new @EditLayout
           el: $('#layout-content')
           article: @article
-          channel: @channel
         @view.article.sync = sinon.stub()
         done()
 
@@ -145,7 +145,7 @@ describe 'EditLayout', ->
       view = new @EditLayout
         el: $('#layout-content')
         article: @article
-        channel: @channel
+        channel: new Channel
       view.article.sections = new Sections [
         {
           body: "<p>==Alice== was ==brave==</p>"
@@ -167,7 +167,7 @@ describe 'EditLayout', ->
       view = new @EditLayout
         el: $('#layout-content')
         article: @article
-        channel: @channel
+        channel: new Channel
       view.article.sections = new Sections [
         {
           body: "<p>==Alice== was ==brave==</p>"

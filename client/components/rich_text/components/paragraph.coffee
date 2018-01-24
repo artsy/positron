@@ -32,7 +32,7 @@ Config = require '../utils/config.js'
 editor = (props) -> React.createElement Editor, props
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 { TextNav } = require './text_nav.jsx'
-InputUrl = React.createFactory require './input_url.coffee'
+{ TextInputUrl } = require './input_url.jsx'
 Text = React.createFactory Text
 
 module.exports = React.createClass
@@ -65,8 +65,12 @@ module.exports = React.createClass
 
   onChange: (editorState) ->
     html = @convertToHtml editorState
+    currentContentState = @state.editorState.getCurrentContent()
+    newContentState = editorState.getCurrentContent()
+
+    if currentContentState != newContentState
+      @props.onChange(html)
     @setState editorState: editorState, html: html
-    @props.onChange(html)
 
   focus: ->
     @setState focus: true
@@ -196,8 +200,7 @@ module.exports = React.createClass
       entityKey
     )
 
-  removeLink: (e) ->
-    e.preventDefault()
+  removeLink: () ->
     { editorState } = @state
     selection = editorState.getSelection()
     if !selection.isCollapsed()
@@ -209,12 +212,14 @@ module.exports = React.createClass
 
   printUrlInput: ->
     if @state.showUrlInput
-      InputUrl {
-        selectionTarget: @state.selectionTarget
-        removeLink: @removeLink
-        confirmLink: @confirmLink
-        urlValue: @state.urlValue
-      }
+      React.createElement(
+        TextInputUrl, {
+          selectionTarget: @state.selectionTarget
+          removeLink: @removeLink
+          confirmLink: @confirmLink
+          urlValue: @state.urlValue
+        }
+      )
 
   checkSelection: ->
     if !window.getSelection().isCollapsed

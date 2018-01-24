@@ -9,7 +9,6 @@ import { PlainText } from '/client/components/rich_text/components/plain_text.js
 export class SectionHeader extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     onChange: PropTypes.func,
     onChangeHero: PropTypes.func
   }
@@ -119,7 +118,7 @@ export class SectionHeader extends Component {
   }
 
   render () {
-    const { article, channel, onChangeHero } = this.props
+    const { article, onChangeHero } = this.props
     const isFeature = article.get('layout') === 'feature'
     const isClassic = article.get('layout') === 'classic'
     const hero = article.get('hero_section') || {}
@@ -146,7 +145,6 @@ export class SectionHeader extends Component {
               onChange={onChangeHero}
               onProgress={this.onProgress}
               article={article}
-              channel={channel}
               hero={hero}
             />
           }

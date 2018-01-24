@@ -31,9 +31,10 @@ describe 'AdminArticle', ->
       $.fn.typeahead = sinon.stub()
       global.confirm = @confirm = sinon.stub()
       AdminArticle = benv.require resolve __dirname, '../article/index.coffee'
+      @channel = { type: 'partner', id: '123' }
       AdminArticle.__set__ 'sd', {
         API_URL: 'http://localhost:3005/api'
-        CURRENT_CHANNEL: id: '123'
+        CURRENT_CHANNEL: @channel
         USER: access_token: ''
       }
       DragContainer = benv.require resolve __dirname, '../../../../../components/drag_drop/index.coffee'
@@ -47,7 +48,6 @@ describe 'AdminArticle', ->
         contributing_authors: [{name: 'Molly Gottschalk', id: '123'}]
         indexable: true
         layout: 'standard'
-      @channel = { isEditorial: sinon.stub().returns(false) }
       props = {
         article: @article
         onChange: sinon.stub()
@@ -104,19 +104,19 @@ describe 'AdminArticle', ->
   describe 'Display: Editorial features', ->
 
     it 'Renders the layout buttons', ->
-      @channel.isEditorial.returns(true)
+      @channel.type = 'editorial'
       @component.forceUpdate()
       $(ReactDOM.findDOMNode(@component)).find('.article-layout .button-group').length.should.eql 1
       $(ReactDOM.findDOMNode(@component)).find('.article-layout .button-group button').length.should.eql 2
 
     it 'Renders the related article autocomplete', ->
-      @channel.isEditorial.returns(true)
+      @channel.type = 'editorial'
       @component.forceUpdate()
       $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Related Articles'
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search articles by title..."'
 
     it 'Renders the author_ids autocomplete', ->
-      @channel.isEditorial.returns(true)
+      @channel.type = 'editorial'
       @component.forceUpdate()
       $(ReactDOM.findDOMNode(@component)).text().should.containEql 'Authors'
       $(ReactDOM.findDOMNode(@component)).html().should.containEql 'placeholder="Search by author name..."'
@@ -219,7 +219,7 @@ describe 'AdminArticle', ->
 
     it '#onLayoutChange updates the layout', ->
       @component.onChange = sinon.stub()
-      @channel.isEditorial.returns(true)
+      @channel.type = 'editorial'
       @component.forceUpdate()
       r.simulate.click r.findTag(@component, 'button')[6]
       @component.onChange.args[0][0].should.eql 'layout'
@@ -227,7 +227,7 @@ describe 'AdminArticle', ->
 
     it '#onLayoutChange warns a user if data will be lost', ->
       @component.onChange = sinon.stub()
-      @channel.isEditorial.returns(true)
+      @channel.type = 'editorial'
       @component.props.article.set('layout', 'feature')
       @component.forceUpdate()
       r.simulate.click r.findTag(@component, 'button')[5]

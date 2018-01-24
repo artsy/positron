@@ -11,7 +11,6 @@ import { ProgressBar } from 'client/components/file_input/progress_bar'
 export class SectionImages extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     isHero: PropTypes.bool,
     section: PropTypes.object.isRequired
@@ -61,7 +60,7 @@ export class SectionImages extends Component {
 
   getContainerSizes = () => {
     const { article, section } = this.props
-    const articleLayout = article.get('layout')
+    const articleLayout = article.layout
     const sectionLayout = section.get('layout')
 
     let containerSize = sectionLayout === 'column_width' ? 680 : 780
@@ -112,7 +111,7 @@ export class SectionImages extends Component {
   renderImages = (images) => {
     return images.map((image, index) => {
       const { article, editing, section } = this.props
-      const articleLayout = article.get('layout')
+      const articleLayout = article.layout
       const width = this.getImageWidth(index)
 
       const props = {
@@ -151,7 +150,6 @@ export class SectionImages extends Component {
     const { progress } = this.state
     const {
       article,
-      channel,
       editing,
       isHero,
       section
@@ -163,8 +161,7 @@ export class SectionImages extends Component {
         {editing &&
           <ImagesControls
             section={section}
-            articleLayout={article.get('layout')}
-            channel={channel}
+            articleLayout={article.layout}
             editing={editing}
             images={images}
             isHero={isHero}
@@ -181,7 +178,7 @@ export class SectionImages extends Component {
           {images.length > 0
             ? section.get('type') === 'image_set' && !editing
               ? <ImageSet
-                  articleLayout={article.get('layout')}
+                  articleLayout={article.layout}
                   section={section}
                 />
 

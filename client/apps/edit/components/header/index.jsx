@@ -12,7 +12,7 @@ export class EditHeader extends Component {
     article: PropTypes.object,
     channel: PropTypes.object,
     edit: PropTypes.object,
-    user: PropTypes.object
+    isAdmin: PropTypes.bool
   }
 
   isPublishable = () => {
@@ -81,7 +81,7 @@ export class EditHeader extends Component {
   }
 
   render () {
-    const { article, actions, channel, edit, user } = this.props
+    const { article, actions, channel, edit, isAdmin } = this.props
     const { changeView } = actions
     const { activeView, isDeleting } = edit
     const { grayMedium, greenRegular } = colors
@@ -117,7 +117,7 @@ export class EditHeader extends Component {
               />
             </button>
 
-            {user.type === 'Admin' &&
+            {isAdmin &&
               <button
                 className='avant-garde-button'
                 onClick={() => changeView('admin')}
@@ -137,7 +137,7 @@ export class EditHeader extends Component {
               {this.getPublishText()}
             </button>
 
-            {channel.get('type') === 'editorial' &&
+            {channel.type === 'editorial' &&
               <button
                 className='avant-garde-button autolink'
               >
@@ -178,7 +178,9 @@ export class EditHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  edit: state.edit
+  channel: state.app.channel,
+  edit: state.edit,
+  isAdmin: state.app.isAdmin
 })
 
 const mapDispatchToProps = (dispatch) => ({

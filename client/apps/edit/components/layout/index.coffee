@@ -2,6 +2,7 @@ _ = require 'underscore'
 _s = require 'underscore.string'
 Backbone = require 'backbone'
 sd = require('sharify').data
+Channel = require '../../../../models/channel.coffee'
 User = require '../../../../models/user.coffee'
 YoastView = require './components/yoast/index.coffee'
 async = require 'async'
@@ -10,8 +11,9 @@ request = require 'superagent'
 module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
-    { @article, @channel } = options
+    { @article } = options
     @user = new User sd.USER
+    @channel = new Channel sd.CURRENT_CHANNEL
     @$window = $(window)
     @article.sections.removeBlank()
     @article.sync = _.debounce _.bind(@article.sync, @article), 500

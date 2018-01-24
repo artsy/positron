@@ -5,31 +5,29 @@ import { mount } from 'enzyme'
 describe('EditError', () => {
   let props
 
+  const getWrapper = (props) => {
+    return mount(
+      <EditError {...props} />
+    )
+  }
+
   beforeEach(() => {
     props = {
-      actions: {
-        resetError: jest.fn()
-      },
-      edit: {
-        error: {
-          message: 'Error Message'
-        }
+      resetErrorAction: jest.fn(),
+      error: {
+        message: 'Error Message'
       }
     }
   })
 
   it('Displays an error message', () => {
-    const component = mount(
-      <EditError {...props} />
-    )
-    expect(component.text()).toMatch(props.edit.error.message)
+    const component = getWrapper(props)
+    expect(component.text()).toMatch(props.error.message)
   })
 
   it('Resets the error state on click', () => {
-    const component = mount(
-      <EditError {...props} />
-    )
+    const component = getWrapper(props)
     component.simulate('click')
-    expect(props.actions.resetError.mock.calls.length).toBe(1)
+    expect(props.resetErrorAction.mock.calls.length).toBe(1)
   })
 })

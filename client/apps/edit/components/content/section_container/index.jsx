@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
@@ -64,7 +65,7 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { index, section } = this.props
+    const { channel, index, section } = this.props
 
     switch (section.get('type')) {
       case 'embed': {
@@ -82,6 +83,7 @@ export class SectionContainer extends Component {
         return (
           <SectionText
             {...this.props}
+            hasFeatures={channel.type !== 'partner'}
             isContentStart={start === index}
             isContentEnd={end === index}
           />
@@ -149,3 +151,12 @@ export class SectionContainer extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  channel: state.app.channel
+})
+
+export default connect(
+  mapStateToProps
+)(SectionContainer)

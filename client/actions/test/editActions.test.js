@@ -12,11 +12,13 @@ describe('editActions', () => {
     article.save = jest.fn()
   })
 
-  it('#changeSavedStatus sets isSaved to arg', () => {
-    const changeSavedStatus = editActions.changeSavedStatus(true)
+  it('#changeSavedStatus updates article and sets isSaved to arg', () => {
+    article.set('title', 'Cool article')
+    const changeSavedStatus = editActions.changeSavedStatus(article.attributes, true)
 
     expect(changeSavedStatus.type).toBe('CHANGE_SAVED_STATUS')
     expect(changeSavedStatus.payload.isSaved).toBe(true)
+    expect(changeSavedStatus.payload.article.title).toBe('Cool article')
   })
 
   it('#changeSection sets activeSection to arg', () => {

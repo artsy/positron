@@ -1,12 +1,21 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { IconImageFullscreen } from '@artsy/reaction-force/dist/Components/Publishing'
 
-export default class SectionControls extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { insideComponent: false }
+export class SectionControls extends Component {
+  static propTypes = {
+    articleLayout: PropTypes.string,
+    channel: PropTypes.object,
+    children: PropTypes.any,
+    disabledAlert: PropTypes.func,
+    isHero: PropTypes.bool,
+    onChange: PropTypes.func,
+    section: PropTypes.object.isRequired,
+    sectionLayouts: PropTypes.bool
   }
+
+  state = { insideComponent: false }
 
   componentDidMount () {
     this.setInsideComponent()
@@ -27,7 +36,7 @@ export default class SectionControls extends Component {
 
   getHeaderSize = () => {
     // Add extra space for channels with Yoast
-    return this.props.channel.isArtsyChannel() ? 95 : 55
+    return this.props.channel.type === 'partner' ? 55 : 95
   }
 
   getPositionBottom () {
@@ -85,7 +94,8 @@ export default class SectionControls extends Component {
   }
 
   hasImageSet () {
-    return this.sectionIsImage() && this.props.channel.hasFeature('image_set')
+    const { type } = this.props.channel
+    return this.sectionIsImage() && type === 'editorial' || type === 'team'
   }
 
   sectionIsImage () {
@@ -156,14 +166,11 @@ export default class SectionControls extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  channel: state.app.channel
+})
 
-SectionControls.propTypes = {
-  articleLayout: PropTypes.string,
-  channel: PropTypes.object,
-  children: PropTypes.any,
-  disabledAlert: PropTypes.func,
-  isHero: PropTypes.bool,
-  onChange: PropTypes.func,
-  section: PropTypes.object.isRequired,
-  sectionLayouts: PropTypes.bool
-}
+export default connect(
+  mapStateToProps
+)(SectionControls)
