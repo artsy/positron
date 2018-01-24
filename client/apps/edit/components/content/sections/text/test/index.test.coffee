@@ -42,13 +42,13 @@ describe 'Section Text', ->
       global.HTMLElement = window.HTMLElement
       global.document = window.document
       @SectionText = benv.require resolve(__dirname, '../index')
-      InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
+      { TextInputUrl } = benv.require(
+        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url')
       )
       { TextNav } = benv.require(
         resolve(__dirname, '../../../../../../../components/rich_text/components/text_nav')
       )
-      @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
+      @SectionText.__set__ 'TextInputUrl', TextInputUrl
       @SectionText.__set__ 'TextNav', TextNav
       @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @sections = new Backbone.Collection [
@@ -354,7 +354,7 @@ describe 'Section Text', ->
     it 'Opens a link input popup', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       r.simulate.mouseDown r.find @shortComponent, 'link'
-      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.TextInputUrl').length.should.eql 1
       @shortComponent.state.showUrlInput.should.eql true
 
     it 'Can confirm links', ->

@@ -52,10 +52,10 @@ describe 'Rich Text: Paragraph', ->
         resolve(__dirname, '../../components/text_nav')
       )
       @Paragraph.__set__ 'TextNav', TextNav
-      InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../components/input_url'), ['icons']
+      { TextInputUrl } = benv.require(
+        resolve(__dirname, '../../components/input_url')
       )
-      @Paragraph.__set__ 'InputUrl', React.createFactory InputUrl
+      @Paragraph.__set__ 'TextInputUrl', TextInputUrl
       @Paragraph.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @Paragraph.__set__ 'stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
       @leadParagraph = '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'

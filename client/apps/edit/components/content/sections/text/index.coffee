@@ -5,7 +5,7 @@ sd = require('sharify').data
 { Text } = require('@artsy/reaction-force/dist/Components/Publishing')
 Config = require './draft_config.js'
 { TextNav } = require '../../../../../../components/rich_text/components/text_nav.jsx'
-InputUrl = React.createFactory require '../../../../../../components/rich_text/components/input_url.coffee'
+{ TextInputUrl } = require '../../../../../../components/rich_text/components/input_url.jsx'
 Text = React.createFactory Text
 {
   setSelectionToStart,
@@ -335,10 +335,12 @@ module.exports = React.createClass
             onDownArrow: @handleChangeSection
           }
           if @props.editing and @state.showUrlInput
-            InputUrl {
-              removeLink: @removeLink
-              confirmLink: @confirmLink
-              selectionTarget: @state.selectionTarget
-              pluginType: @state.pluginType
-              urlValue: @state.urlValue
-            }
+            React.createElement(
+              TextInputUrl, {
+                removeLink: @removeLink
+                confirmLink: @confirmLink
+                selectionTarget: @state.selectionTarget
+                pluginType: @state.pluginType
+                urlValue: @state.urlValue
+              }
+            )
