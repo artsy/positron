@@ -8,7 +8,7 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
   static propTypes = {
-    activeSection: PropTypes.any,
+    sectionIndex: PropTypes.any,
     editSectionAction: PropTypes.func,
     sections: PropTypes.object.isRequired
   }
@@ -25,9 +25,9 @@ export class SectionList extends Component {
 
   onNewSection = (section) => {
     const { editSectionAction, sections } = this.props
-    const newActiveSection = sections.indexOf(section)
+    const newSectionIndex = sections.indexOf(section)
 
-    editSectionAction(newActiveSection)
+    editSectionAction(newSectionIndex)
   }
 
   onDragEnd = (newSections) => {
@@ -44,7 +44,7 @@ export class SectionList extends Component {
 
   renderSectionList = () => {
     const {
-      activeSection,
+      sectionIndex,
       editSectionAction,
       sections
     } = this.props
@@ -58,13 +58,13 @@ export class SectionList extends Component {
               section={section}
               index={index}
               isDraggable
-              editing={activeSection === index}
+              editing={sectionIndex === index}
               onSetEditing={(i) => editSectionAction(i)}
             />
             <SectionTool
               sections={sections}
               index={index}
-              editing={activeSection !== 0}
+              editing={sectionIndex !== 0}
             />
           </div>
         )
@@ -74,7 +74,7 @@ export class SectionList extends Component {
 
   render () {
     const {
-      activeSection,
+      sectionIndex,
       sections
     } = this.props
 
@@ -83,7 +83,7 @@ export class SectionList extends Component {
         <SectionTool
           sections={sections}
           index={-1}
-          isEditing={activeSection !== null}
+          isEditing={sectionIndex !== null}
           firstSection
           isDraggable={false}
         />
@@ -91,7 +91,7 @@ export class SectionList extends Component {
           ? <DragContainer
               items={sections.models}
               onDragEnd={this.onDragEnd}
-              isDraggable={activeSection === null}
+              isDraggable={sectionIndex === null}
               layout='vertical'
             >
               {this.renderSectionList()}
@@ -106,7 +106,7 @@ export class SectionList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  activeSection: state.edit.activeSection
+  sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {

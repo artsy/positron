@@ -21,11 +21,11 @@ describe('editActions', () => {
     expect(changeSavedStatus.payload.article.title).toBe('Cool article')
   })
 
-  it('#editSection sets activeSection to index and sets state.section', () => {
+  it('#editSection sets sectionIndex to index and sets state.section', () => {
     const editSection = editActions.editSection(6)
 
     expect(editSection.type).toBe('EDIT_SECTION')
-    expect(editSection.payload.activeSection).toBe(6)
+    expect(editSection.payload.sectionIndex).toBe(6)
   })
 
   it('#changeView sets the activeView to arg', () => {

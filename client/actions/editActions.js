@@ -43,21 +43,22 @@ export const deleteArticle = (article) => {
   }
 }
 
-export const editSection = (activeSection) => ({
-  // Index of active article section
+export const editSection = (sectionIndex) => ({
+  // Index of article section currently editing
   type: actions.EDIT_SECTION,
   payload: {
-    activeSection
+    sectionIndex
   }
 })
 
-export const newSection = (type) => {
+export const newSection = (type, sectionIndex) => {
   const section = setupSection(type)
 
   return {
     type: actions.NEW_SECTION,
     payload: {
-      section
+      section,
+      sectionIndex
     }
   }
 }
@@ -101,7 +102,7 @@ export const resetError = () => ({
   }
 })
 
-// UTILS
+// ACTION UTILS
 export function setupSection (type) {
   // set initial state of new section
   switch (type) {

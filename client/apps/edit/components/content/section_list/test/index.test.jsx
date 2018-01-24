@@ -35,7 +35,7 @@ describe('SectionList', () => {
     article = Fixtures.StandardArticle
 
     props = {
-      activeSection: null,
+      sectionIndex: null,
       editSectionAction: jest.fn(),
       sections: new Sections(article.sections)
     }

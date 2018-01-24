@@ -1,6 +1,6 @@
 import u from 'updeep'
 import { data as sd } from 'sharify'
-import { extend, pick } from 'lodash'
+import { clone, cloneDeep, extend, pick } from 'lodash'
 import { actions } from 'client/actions/editActions'
 
 const setupArticle = () => {
@@ -13,7 +13,7 @@ const setupArticle = () => {
 
 export const initialState = {
   article: setupArticle(),
-  activeSection: null,
+  sectionIndex: null,
   activeView: 'content',
   error: null,
   isDeleting: false,
@@ -38,12 +38,12 @@ export function editReducer (state = initialState, action) {
     }
 
     case actions.EDIT_SECTION: {
-      const { activeSection } = action.payload
+      const { sectionIndex } = action.payload
       const { sections } = state.article
-      const section = sections[activeSection] || null
+      const section = clone(sections[sectionIndex]) || null
 
       return u({
-        activeSection,
+        sectionIndex,
         section
       }, state)
     }
@@ -64,9 +64,15 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
     case actions.NEW_SECTION: {
+      const { section, sectionIndex } = action.payload
+      const article = cloneDeep(state.article)
+
+      article.sections.splice(sectionIndex, 0, section)
+
       return u({
-        activeSection: state.article.sections.length,
-        section: action.payload.section
+        article,
+        sectionIndex,
+        section
       }, state)
     }
     case actions.PUBLISH_ARTICLE: {
