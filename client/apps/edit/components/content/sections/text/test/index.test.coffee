@@ -366,7 +366,7 @@ describe 'Section Text', ->
       component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
       $(ReactDOM.findDOMNode(component)).find('.edit-section--text__input').text().should.containEql 'Erin & Shirreff'
       $(ReactDOM.findDOMNode(component)).find('.edit-section--text__input').html().should.containEql 'Erin &amp; Shirreff'
-      component.state.html.should.containEql 'Erin & Shirreff'
+      component.state.html.should.containEql 'Erin &amp; Shirreff'
 
   describe 'Artist plugin', ->
 
