@@ -27,39 +27,59 @@ describe('editReducer', () => {
     expect(initialState.sectionIndex).toBe(null)
   })
 
-  it('EDIT_SECTION adds editing section and sectionIndex to state', () => {
-    const sectionIndex = 2
-    const updatedState = editReducer(initialState, {
-      type: actions.EDIT_SECTION,
-      payload: {
-        sectionIndex
-      }
-    })
-    expect(updatedState.sectionIndex).toBe(sectionIndex)
-    expect(updatedState.section).toEqual(initialSections[2])
-  })
-
-  it('NEW_SECTION should insert a section into article.sections', () => {
-    const section = setupSection('text')
-    const sectionIndex = 2
-
-    const updatedState = editReducer(initialState, {
-      type: actions.NEW_SECTION,
-      payload: {
-        section,
-        sectionIndex
-      }
+  describe('Sections', () => {
+    it('EDIT_SECTION adds editing section and sectionIndex to state', () => {
+      const sectionIndex = 2
+      const updatedState = editReducer(initialState, {
+        type: actions.EDIT_SECTION,
+        payload: {
+          sectionIndex
+        }
+      })
+      expect(updatedState.sectionIndex).toBe(sectionIndex)
+      expect(updatedState.section).toEqual(initialSections[sectionIndex])
     })
 
-    expect(updatedState.sectionIndex).toBe(sectionIndex)
-    expect(updatedState.section.type).toBe(section.type)
-    expect(updatedState.section.body).toBe(section.body)
-    expect(updatedState.article.sections[2]).toBe(section)
-    expect(updatedState.article.sections[3]).toEqual(
-      initialSections[2]
-    )
-    expect(updatedState.article.sections.length).toBe(
-      initialSections.length + 1
-    )
+    it('NEW_SECTION should insert a section into article.sections', () => {
+      const section = setupSection('text')
+      const sectionIndex = 2
+
+      const updatedState = editReducer(initialState, {
+        type: actions.NEW_SECTION,
+        payload: {
+          section,
+          sectionIndex
+        }
+      })
+
+      expect(updatedState.sectionIndex).toBe(sectionIndex)
+      expect(updatedState.section.type).toBe(section.type)
+      expect(updatedState.section.body).toBe(section.body)
+      expect(updatedState.article.sections[sectionIndex]).toBe(section)
+      expect(updatedState.article.sections[3]).toEqual(
+        initialSections[2]
+      )
+      expect(updatedState.article.sections.length).toBe(
+        initialSections.length + 1
+      )
+    })
+
+    it('REMOVE_SECTION should remove a section by index', () => {
+      const sectionIndex = 2
+      const updatedState = editReducer(initialState, {
+        type: actions.REMOVE_SECTION,
+        payload: {
+          sectionIndex
+        }
+      })
+      expect(updatedState.section).toBe(null)
+      expect(updatedState.sectionIndex).toBe(null)
+      expect(updatedState.article.sections.length).toBe(
+        initialSections.length - 1
+      )
+      expect(updatedState.article.sections[2]).not.toEqual(
+        initialSections[2]
+      )
+    })
   })
 })

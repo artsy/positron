@@ -8,6 +8,7 @@ export const actions = keyMirror(
   'ERROR',
   'NEW_SECTION',
   'PUBLISH_ARTICLE',
+  'REMOVE_SECTION',
   'SAVE_ARTICLE'
 )
 
@@ -75,6 +76,13 @@ export const publishArticle = (article, published) => {
     }
   }
 }
+
+export const removeSection = (sectionIndex) => ({
+  type: actions.REMOVE_SECTION,
+  payload: {
+    sectionIndex
+  }
+})
 
 export const saveArticle = (article) => {
   article.save()

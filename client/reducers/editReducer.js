@@ -53,33 +53,49 @@ export function editReducer (state = initialState, action) {
         activeView: action.payload.activeView
       }, state)
     }
+
     case actions.DELETE_ARTICLE: {
       return u({
         isDeleting: action.payload.isDeleting
       }, state)
     }
+
     case actions.ERROR: {
       return u({
         error: action.payload.error
       }, state)
     }
+
     case actions.NEW_SECTION: {
       const { section, sectionIndex } = action.payload
       const article = cloneDeep(state.article)
 
       article.sections.splice(sectionIndex, 0, section)
-
       return u({
         article,
         sectionIndex,
         section
       }, state)
     }
+
     case actions.PUBLISH_ARTICLE: {
       return u({
         isPublishing: action.payload.isPublishing
       }, state)
     }
+
+    case actions.REMOVE_SECTION: {
+      const { sectionIndex } = action.payload
+      const article = cloneDeep(state.article)
+
+      article.sections.splice(sectionIndex, 1)
+      return u({
+        article,
+        sectionIndex: null,
+        section: null
+      }, state)
+    }
+
     case actions.SAVE_ARTICLE: {
       return u({
         isSaving: true

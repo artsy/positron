@@ -21,7 +21,7 @@ describe('editActions', () => {
     expect(changeSavedStatus.payload.article.title).toBe('Cool article')
   })
 
-  it('#editSection sets sectionIndex to index and sets state.section', () => {
+  it('#editSection sets sectionIndex to index', () => {
     const editSection = editActions.editSection(6)
 
     expect(editSection.type).toBe('EDIT_SECTION')
@@ -99,6 +99,13 @@ describe('editActions', () => {
       expect(section.url).toBe('')
       expect(section.layout).toBe('column_width')
     })
+  })
+
+  it('#removeSection sets sectionIndex to index', () => {
+    const editSection = editActions.removeSection(6)
+
+    expect(editSection.type).toBe('REMOVE_SECTION')
+    expect(editSection.payload.sectionIndex).toBe(6)
   })
 
   describe('Editing errors', () => {
