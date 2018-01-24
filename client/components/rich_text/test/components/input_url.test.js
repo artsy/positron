@@ -17,10 +17,7 @@ describe('TextInputUrl', () => {
       confirmLink: jest.fn(),
       pluginType: undefined,
       removeLink: jest.fn(),
-      selectionTarget: {
-        left: 40,
-        top: 20
-      },
+      selectionTarget: {},
       urlValue: null
     }
   })
@@ -33,14 +30,6 @@ describe('TextInputUrl', () => {
     expect(input.props.placeholder).toBe('Paste or type a link')
     expect(input.props.value).toBe('')
     expect(button.props.children).toBe('Apply')
-  })
-
-  it('Sets the position to props.selectionTarget', () => {
-    const component = getWrapper(props)
-    const { style } = component.find('.TextInputUrl').getElement().props
-
-    expect(style.left).toBe(props.selectionTarget.left)
-    expect(style.top).toBe(props.selectionTarget.top)
   })
 
   it('Can render an existing link', () => {

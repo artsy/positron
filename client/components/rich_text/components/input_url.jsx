@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
@@ -34,15 +35,12 @@ export class TextInputUrl extends Component {
   render () {
     const { url } = this.state
     const { removeLink, selectionTarget } = this.props
-    const { left, top } = selectionTarget
 
     return (
-      <div
+      <TextInputUrlContainer
         className='TextInputUrl'
-        style={{
-          top: top || 0,
-          left: left || 0
-        }}
+        top={selectionTarget.top}
+        left={selectionTarget.left}
       >
         <div className='TextInputUrl__input'>
           <input
@@ -71,7 +69,12 @@ export class TextInputUrl extends Component {
         >
           Apply
         </button>
-      </div>
+      </TextInputUrlContainer>
     )
   }
 }
+
+const TextInputUrlContainer = styled.div`
+  top: ${props => `${props.top}px` || 0};
+  left: ${props => `${props.left}px` || 0};
+`
