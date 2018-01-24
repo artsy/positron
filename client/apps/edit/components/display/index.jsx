@@ -23,7 +23,7 @@ export class EditDisplay extends Component {
       {title: 'Email'}
     ]
 
-    if (channel.get('type') === 'partner') {
+    if (channel.type === 'partner') {
       return (
         <div className='EditDisplay'>
           <DisplayPartner

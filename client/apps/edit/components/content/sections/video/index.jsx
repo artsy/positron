@@ -7,7 +7,6 @@ import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publish
 export class SectionVideo extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     hidePreview: PropTypes.bool,
     isHero: PropTypes.bool,
@@ -38,7 +37,6 @@ export class SectionVideo extends Component {
   renderSectionControls () {
     const {
       article,
-      channel,
       editing,
       hidePreview,
       isHero,
@@ -50,12 +48,10 @@ export class SectionVideo extends Component {
 
       return (
         <Controls
-          article={article}
           section={section}
-          channel={channel}
           isHero={isHero}
           sectionLayouts={showSectionLayouts}
-          articleLayout={article.get('layout')}
+          articleLayout={article.layout}
           onProgress={this.onProgress}
         />
       )
@@ -85,7 +81,7 @@ export class SectionVideo extends Component {
     if (hasUrl) {
       return (
         <Video
-          layout={article.get('layout')}
+          layout={article.layout}
           section={section.attributes}
         >
           {editing && this.renderRemoveButton()}
@@ -95,7 +91,7 @@ export class SectionVideo extends Component {
             html={section.get('caption')}
             onChange={(html) => section.set('caption', html)}
             stripLinebreaks
-            layout={article.get('layout')}
+            layout={article.layout}
           />
         </Video>
       )

@@ -52,10 +52,10 @@ describe 'Rich Text: Paragraph', ->
         resolve(__dirname, '../../components/text_nav')
       )
       @Paragraph.__set__ 'TextNav', TextNav
-      InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../components/input_url'), ['icons']
+      { TextInputUrl } = benv.require(
+        resolve(__dirname, '../../components/input_url')
       )
-      @Paragraph.__set__ 'InputUrl', React.createFactory InputUrl
+      @Paragraph.__set__ 'TextInputUrl', TextInputUrl
       @Paragraph.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @Paragraph.__set__ 'stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
       @leadParagraph = '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'
@@ -94,6 +94,24 @@ describe 'Rich Text: Paragraph', ->
 
     it 'Renders existing link entities', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '<a href="http://artsy.net/">'
+
+  describe 'On change', ->
+    it 'Sets the editorState and html on change', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.setState.args[1][0].editorState.should.be.ok
+      @component.setState.args[1][0].html.should.be.ok
+
+    it 'Calls props.onChange if content has changed', ->
+      @component.setState = sinon.stub()
+      @component.handleKeyCommand('italic')
+      @component.props.onChange.called.should.eql true
+
+    it 'Does not call props.onChange if content has not changed', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.props.onChange.called.should.eql false
+      @component.setState.called.should.eql true
 
   describe 'Key commands', ->
 

@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Section from '../../../../../../models/section.coffee'
-import { SectionContainer } from '../../section_container'
+import SectionContainer from '../../section_container'
 import { SectionTool } from '../../section_tool'
 
 export class SectionHero extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object,
     onChange: PropTypes.func.isRequired
   }
 
@@ -45,19 +44,17 @@ export class SectionHero extends Component {
   }
 
   render () {
-    const { article, channel } = this.props
     const { editing, hero } = this.state
+
     return (
       <div className='edit-section--hero'>
         {hero && hero.keys().length
           ? <SectionContainer
-              article={article}
               section={hero}
               onSetEditing={this.onSetEditing}
               isHero
               index={-1}
               editing={editing}
-              channel={channel}
               onRemoveHero={this.onRemoveHero}
             />
 

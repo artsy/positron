@@ -16,55 +16,56 @@ describe('EditDisplay', () => {
   beforeEach(() => {
     props = {
       article: new Article(Fixtures.StandardArticle),
-      channel: { get: jest.fn().mockReturnValue('editorial') },
+      channel: { type: 'editorial' },
       onChange: jest.fn()
     }
     props.article.set('email_metadata', {})
   })
 
-  it('Renders section-list for non-partners, opens magazine panel by default', () => {
-    const component = mount(
+  const getWrapper = (props) => {
+    return mount(
       <EditDisplay {...props} />
     )
-    expect(component.find(DropDownList).length).toBe(1)
-    expect(component.find(DisplayMagazine).length).toBe(1)
-    expect(component.find(DisplayPartner).length).toBe(0)
+  }
+
+  it('Renders section-list for non-partners, opens magazine panel by default', () => {
+    const component = getWrapper(props)
+
+    expect(component.find(DropDownList).exists()).toBe(true)
+    expect(component.find(DisplayMagazine).exists()).toBe(true)
+    expect(component.find(DisplayPartner).exists()).toBe(false)
   })
 
   it('Can dispay the social panel on click', () => {
-    const component = mount(
-      <EditDisplay {...props} />
-    )
+    const component = getWrapper(props)
     component.find('.DropDownItem__title').at(1).simulate('click')
+
     expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(1)
-    expect(component.find(DisplaySocial).length).toBe(1)
+    expect(component.find(DisplaySocial).exists()).toBe(true)
   })
 
   it('Can dispay the search panel on click', () => {
-    const component = mount(
-      <EditDisplay {...props} />
-    )
+    const component = getWrapper(props)
     component.find('.DropDownItem__title').at(2).simulate('click')
+
     expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(2)
-    expect(component.find(DisplaySearch).length).toBe(1)
+    expect(component.find(DisplaySearch).exists()).toBe(true)
   })
 
   it('Can dispay the email panel on click', () => {
-    const component = mount(
-      <EditDisplay {...props} />
-    )
+    const component = getWrapper(props)
     component.find('.DropDownItem__title').at(3).simulate('click')
+
     expect(component.find(DropDownList).instance().state.activeSections[1]).toBe(3)
-    expect(component.find(DisplayEmail).length).toBe(1)
+    expect(component.find(DisplayEmail).exists()).toBe(true)
   })
 
   it('Renders partner panel for partners', () => {
-    props.channel.get.mockReturnValueOnce('partner')
-    const component = mount(
-      <EditDisplay {...props} />
-    )
-    expect(component.find(DisplayPartner).length).toBe(1)
-    expect(component.find(DropDownList).length).toBe(0)
-    expect(component.find(DisplayMagazine).length).toBe(0)
+    props.channel.type = 'partner'
+    const component = getWrapper(props)
+
+    expect(component.find(DisplayPartner).exists()).toBe(true)
+    expect(component.find(DropDownList).exists()).toBe(false)
+    expect(component.find(DisplayMagazine).exists()).toBe(false)
   })
 })

@@ -10,7 +10,6 @@ import {
   ImageSetPreviewClassic
 } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '/client/models/article.coffee'
-import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
@@ -20,10 +19,18 @@ require('typeahead.js')
 
 describe('SectionImageCollection', () => {
   let props
+  let article
 
   const getWrapper = (props) => {
     const mockStore = configureStore([])
-    const store = mockStore({})
+    const store = mockStore({
+      app: {
+        channel: {}
+      },
+      edit: {
+        article
+      }
+    })
 
     return mount(
       <Provider store={store}>
@@ -45,8 +52,7 @@ describe('SectionImageCollection', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article({layout: 'standard'}),
-      channel: new Channel(),
+      article: {layout: 'standard'},
       editing: false,
       isHero: false,
       section: new Section(imageSection)
@@ -69,7 +75,7 @@ describe('SectionImageCollection', () => {
     })
 
     it('Renders a preview for classic image_set', () => {
-      props.article.set('layout', 'classic')
+      props.article.layout = 'classic'
       props.section = new Section(imageSetSection)
       const component = getWrapper(props)
 
@@ -149,7 +155,7 @@ describe('SectionImageCollection', () => {
       })
 
       it('#getContainerSizes returns sizes for overflow section in classic articles', () => {
-        props.article.set('layout', 'classic')
+        props.article.layout = 'classic'
         const component = getShallowWrapper(props)
         const sizes = component.instance().getContainerSizes()
 
@@ -158,7 +164,7 @@ describe('SectionImageCollection', () => {
       })
 
       it('#getContainerSizes returns sizes for column section in classic articles', () => {
-        props.article.set('layout', 'classic')
+        props.article.layout = 'classic'
         props.section.set('layout', 'column_width')
         const component = getShallowWrapper(props)
         const sizes = component.instance().getContainerSizes()
@@ -176,7 +182,7 @@ describe('SectionImageCollection', () => {
       })
 
       it('#getContainerSizes returns correct sizes for large image_sets in classic articles', () => {
-        props.article.set('layout', 'classic')
+        props.article.layout = 'classic'
         props.section = new Section(largeImageSetSection)
         const component = getShallowWrapper(props)
         const sizes = component.instance().getContainerSizes()

@@ -2,7 +2,6 @@ benv = require 'benv'
 { resolve } = require 'path'
 sinon = require 'sinon'
 Backbone = require 'backbone'
-fixtures = require '../../../../../../../../test/helpers/fixtures'
 React = require 'react'
 ReactDOM = require 'react-dom'
 ReactTestUtils = require 'react-dom/test-utils'
@@ -43,13 +42,13 @@ describe 'Section Text', ->
       global.HTMLElement = window.HTMLElement
       global.document = window.document
       @SectionText = benv.require resolve(__dirname, '../index')
-      InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url'), ['icons']
+      { TextInputUrl } = benv.require(
+        resolve(__dirname, '../../../../../../../components/rich_text/components/input_url')
       )
       { TextNav } = benv.require(
         resolve(__dirname, '../../../../../../../components/rich_text/components/text_nav')
       )
-      @SectionText.__set__ 'InputUrl', React.createFactory InputUrl
+      @SectionText.__set__ 'TextInputUrl', TextInputUrl
       @SectionText.__set__ 'TextNav', TextNav
       @SectionText.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @sections = new Backbone.Collection [
@@ -66,16 +65,16 @@ describe 'Section Text', ->
           type: 'text'
         }
       ]
-      article = new Backbone.Model {layout: 'classic'}
-      channel = {hasFeature: sinon.stub().returns(true)}
+      article = {layout: 'classic'}
+
       @props = {
         editing: false
         section: @sections.models[0]
         sections: @sections
         index: 1
         onSetEditing: sinon.stub()
-        channel: channel
         article: article
+        hasFeatures: true
       }
       @altProps = {
         editing: true
@@ -83,7 +82,7 @@ describe 'Section Text', ->
         sections: @sections
         index: 1
         onSetEditing: sinon.stub()
-        channel: channel
+        hasFeatures: true
         article: article
         isContentStart: true
         isContentEnd: true
@@ -92,15 +91,13 @@ describe 'Section Text', ->
         editing: true
         section: @sections.models[2]
         sections: @sections
-        channel: channel
         article: article
         hasFeatures: true
       }
       @component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0], => setTimeout =>
         @component.stickyControlsBox = sinon.stub().returns {top: 20, left: 40}
+
         # a second component for text selection
-        @SectionText.__set__ 'sd',
-          CURRENT_CHANNEL: fixtures().channels
         @shortComponent = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
         @shortComponent.state.editorState.getSelection().isCollapsed = sinon.stub().returns false
         shortSelection = @shortComponent.state.editorState.getSelection()
@@ -143,7 +140,7 @@ describe 'Section Text', ->
   describe '#availableBlocks', ->
 
     it 'Returns the correct blocks for a feature article', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       availableBlocks = @shortComponent.availableBlocks()
       availableBlocks.should.eql [
         'header-one',
@@ -156,7 +153,7 @@ describe 'Section Text', ->
       ]
 
     it 'Returns the correct blocks for a standard article', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       availableBlocks = @shortComponent.availableBlocks()
       availableBlocks.should.eql [
         'header-two',
@@ -179,8 +176,9 @@ describe 'Section Text', ->
       ]
 
     it 'Returns the correct blocks for a classic article without features', ->
-      @shortComponent.setState hasFeatures: false
-      availableBlocks = @shortComponent.availableBlocks()
+      @props.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @props), (@$el = $ "<div></div>")[0]
+      availableBlocks = component.availableBlocks()
       availableBlocks.should.eql [
         'header-two',
         'header-three',
@@ -192,12 +190,12 @@ describe 'Section Text', ->
   describe 'Editorial Features', ->
 
     it 'Adds end-marker to a feature article', ->
-      @altProps.article.set 'layout', 'feature'
+      @altProps.article.layout = 'feature'
       component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
       component.state.html.should.containEql '<span class="content-end"> </span>'
 
     it 'Adds end-marker to a standard article', ->
-      @altProps.article.set 'layout', 'standard'
+      @altProps.article.layout = 'standard'
       component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
       component.state.html.should.containEql '<span class="content-end"> </span>'
 
@@ -216,7 +214,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><strong>A <em>short</em> piece of text</strong></h2>'
 
     it 'Can create strikethrough entities', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -224,7 +222,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle h1 block changes (feature)', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -244,7 +242,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h3>A short piece of text</h3>'
 
     it 'Can toggle h3 block changes without stripping styles (standard/feature)', ->
-      @shortComponent.props.article.set 'layout', 'standard'
+      @shortComponent.props.article.layout = 'standard'
       @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
@@ -264,8 +262,6 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<ol><li>A <em>short</em> piece of <strong>text</strong></li></ol>'
 
     it 'Can toggle blockquote changes (if hasFeatures)', ->
-      @shortComponent.setState hasFeatures: true
-      @shortComponent.render()
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       @shortComponent.setState = sinon.stub()
       r.simulate.mouseDown r.find @shortComponent, 'blockquote'
@@ -296,7 +292,7 @@ describe 'Section Text', ->
       @shortComponent.setState.args[0][0].html.should.eql '<h2><span style="text-decoration:line-through">A <em>short</em> piece of <strong>text</strong></span></h2>'
 
     it 'Can toggle H1 entities (feature)', ->
-      @shortComponent.props.article.set 'layout', 'feature'
+      @shortComponent.props.article.layout = 'feature'
       @shortComponent.render()
       @shortComponent.setState = sinon.stub()
       @shortComponent.handleKeyCommand('header-one')
@@ -335,11 +331,12 @@ describe 'Section Text', ->
       @shortComponent.props.section.get('layout').should.eql 'blockquote'
 
     it 'Cannot toggle Blockquotes if hasFeatures is false', ->
-      @shortComponent.setState hasFeatures: false
-      @shortComponent.setState = sinon.stub()
-      @shortComponent.handleKeyCommand('blockquote')
-      @shortComponent.setState.called.should.not.be.ok
-      @shortComponent.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
+      @altProps.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      component.setState = sinon.stub()
+      component.handleKeyCommand('blockquote')
+      component.setState.called.should.not.be.ok
+      component.state.html.should.eql '<h2>A <em>short</em> piece of <strong>text</strong></h2>'
 
     it 'Can make plain text', ->
       @shortComponent.setState = sinon.stub()
@@ -357,7 +354,7 @@ describe 'Section Text', ->
     it 'Opens a link input popup', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
       r.simulate.mouseDown r.find @shortComponent, 'link'
-      $(ReactDOM.findDOMNode(@shortComponent)).find('.rich-text--url-input').length.should.eql 1
+      $(ReactDOM.findDOMNode(@shortComponent)).find('.TextInputUrl').length.should.eql 1
       @shortComponent.state.showUrlInput.should.eql true
 
     it 'Can confirm links', ->
@@ -379,9 +376,10 @@ describe 'Section Text', ->
       $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 1
 
     it 'Does not show artist if hasFeatures is false', ->
-      @shortComponent.setState hasFeatures: false
-      r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'
-      $(ReactDOM.findDOMNode(@shortComponent)).find('button.artist').length.should.eql 0
+      @altProps.hasFeatures = false
+      component = ReactDOM.render React.createElement(@SectionText, @altProps), (@$el = $ "<div></div>")[0]
+      r.simulate.mouseUp r.find component, 'edit-section--text__input'
+      $(ReactDOM.findDOMNode(component)).find('button.artist').length.should.eql 0
 
     it 'Can setup link prompt for artist blocks', ->
       r.simulate.mouseUp r.find @shortComponent, 'edit-section--text__input'

@@ -14,38 +14,37 @@ describe('EditAdmin', () => {
   beforeEach(() => {
     props = {
       article: new Article(Fixtures.StandardArticle),
-      channel: {
-        hasFeature: jest.fn().mockReturnValue(true),
-        isEditorial: jest.fn().mockReturnValue(true)
-      },
+      channel: { type: 'editorial' },
       onChange: jest.fn()
     }
   })
 
-  it('Renders dropdown', () => {
-    const component = shallow(
+  const getWrapper = (props) => {
+    return shallow(
       <EditAdmin {...props} />
     )
-    expect(component.find(DropDownList).length).toBe(1)
+  }
+
+  it('Renders dropdown', () => {
+    const component = getWrapper(props)
+
+    expect(component.find(DropDownList).exists()).toBe(true)
   })
 
   it('Renders editorial sections', () => {
-    const component = shallow(
-      <EditAdmin {...props} />
-    )
-    expect(component.find(AdminVerticalsTags).length).toBe(1)
+    const component = getWrapper(props)
+
+    expect(component.find(AdminVerticalsTags).exists()).toBe(true)
     expect(component.html()).toMatch('Super Article')
     expect(component.html()).toMatch('Sponsor')
   })
 
   it('Renders correct sections for non-editorial articles', () => {
-    props.channel.isEditorial = jest.fn().mockReturnValue(false)
-    props.channel.hasFeature = jest.fn().mockReturnValue(false)
-    const component = shallow(
-      <EditAdmin {...props} />
-    )
-    expect(component.find(AdminTags).length).toBe(1)
-    expect(component.find(AdminVerticalsTags).length).toBe(0)
+    props.channel.type = 'partner'
+    const component = getWrapper(props)
+
+    expect(component.find(AdminTags).exists()).toBe(true)
+    expect(component.find(AdminVerticalsTags).exists()).toBe(false)
     expect(component.html()).not.toMatch('Super Article')
     expect(component.html()).not.toMatch('Sponsor')
   })

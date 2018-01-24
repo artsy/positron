@@ -14,7 +14,6 @@ import { InputArtworkUrl } from './input_artwork_url'
 export class ImagesControls extends Component {
   static propTypes = {
     articleLayout: PropTypes.string.isRequired,
-    channel: PropTypes.object.isRequired,
     isHero: PropTypes.bool,
     logErrorAction: PropTypes.func,
     section: PropTypes.object.isRequired,
@@ -95,7 +94,6 @@ export class ImagesControls extends Component {
   render () {
     const {
       articleLayout,
-      channel,
       isHero,
       section,
       setProgress
@@ -106,7 +104,6 @@ export class ImagesControls extends Component {
     return (
         <SectionControls
           section={section}
-          channel={channel}
           articleLayout={articleLayout}
           sectionLayouts={!isHero}
           isHero={isHero}

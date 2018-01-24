@@ -32,13 +32,9 @@ export class EditAdmin extends Component {
       {title: 'Additional Appearances'}
     ]
 
-    if (channel.hasFeature('superArticle')) {
+    if (channel.type === 'editorial') {
       sections.push({title: 'Super Article'})
-    }
-    if (channel.hasFeature('sponsor')) {
       sections.push({title: 'Sponsor'})
-    }
-    if (channel.isEditorial()) {
       sections[0].title = 'Verticals & Tagging'
     }
     return sections
@@ -47,6 +43,7 @@ export class EditAdmin extends Component {
   render () {
     const { channel } = this.props
     const sections = this.getSections()
+    const isEditorial = channel.type === 'editorial'
 
     return (
       <div className='EditAdmin'>
@@ -57,7 +54,7 @@ export class EditAdmin extends Component {
           sections={sections}
         >
 
-          {channel.isEditorial()
+          {isEditorial
             ? <AdminVerticalsTags {...this.props} />
             : <AdminTags {...this.props} />
           }
@@ -68,10 +65,10 @@ export class EditAdmin extends Component {
 
           <AdminAppearances {...this.props} />
 
-          {channel.hasFeature('superArticle') &&
+          {isEditorial &&
             <AdminSuperArticle {...this.props} />
           }
-          {channel.hasFeature('sponsor') &&
+          {isEditorial &&
             <AdminSponsor {...this.props} />
           }
         </DropDownList>
