@@ -585,3 +585,9 @@ describe 'Section Text', ->
       @component.setState = sinon.stub()
       @component.onPaste('<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: Espacio Valverde • Galleries Sector, Booth 9F01</span></p>')
       @component.setState.args[0][0].html.should.containEql '<h2>Available at: Espacio Valverde • Galleries Sector, Booth 9F0101 &nbsp;'
+
+    it 'calls standardizeSpacing', ->
+      @SectionText.__set__ 'standardizeSpacing', standardizeSpacing = sinon.stub().returns('<p>hello</p><p>here again.</p>')
+      component = ReactDOM.render React.createElement(@SectionText, @artistProps), (@$el = $ "<div></div>")[0]
+      component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
+      standardizeSpacing.called.should.eql true

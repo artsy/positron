@@ -1,4 +1,5 @@
 import {
+  replaceUnicodeSpaces,
   standardizeSpacing,
   stripGoogleStyles,
   stripH3Tags
@@ -37,6 +38,13 @@ describe('Draft Utils: Text Stripping', () => {
     })
   })
 
+  describe('#replaceUnicodeSpaces', () => {
+    it('Replaces unicode linebreaks with and empty paragraph', () => {
+      const html = replaceUnicodeSpaces('<p>\u2028hello\u2029</p>')
+      expect(html).toBe('<p></p><p>hello</p><p></p>')
+    })
+  })
+
   describe('#stripH3Tags', () => {
     it('Removes nested html inside h3 blocks', () => {
       const html = stripH3Tags('<h3>A <em>short</em> piece of <strong>text</strong></h3>')
@@ -68,6 +76,11 @@ describe('Draft Utils: Text Stripping', () => {
       expect(stripGoogleStyles(googleHtmlLong)).toBe(
         '<p><span><strong>Available at: Espacio Valverde • Galleries Sector, Booth 9F01</strong></span></p>'
       )
+    })
+
+    it('Can replace unicode spaces', () => {
+      const html = stripGoogleStyles('<p>\u2028hello</p>')
+      expect(html).toBe('<p></p><p>hello</p>')
     })
 
     it('Replaces italic spans with <em> tags', () => {

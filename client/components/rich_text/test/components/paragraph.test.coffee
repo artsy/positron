@@ -251,7 +251,9 @@ describe 'Rich Text: Paragraph', ->
       @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
       @stripGoogleStyles.called.should.eql true
 
-    xit 'calls standardizeSpacing', ->
-      @component.onChange = sinon.stub()
-      @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
-      @component.standardizeSpacing.called.should.eql true
+    it 'calls standardizeSpacing', ->
+      @Paragraph.__set__ 'standardizeSpacing', standardizeSpacing = sinon.stub().returns('<p>hello</p><p>here again.</p>')
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0]
+      component.onChange = sinon.stub()
+      component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
+      standardizeSpacing.called.should.eql true
