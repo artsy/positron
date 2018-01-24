@@ -4,13 +4,13 @@ export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
   'DELETE_ARTICLE',
-  'EDIT_SECTION',
   'ERROR',
   'NEW_SECTION',
   'ON_CHANGE_SECTION',
   'PUBLISH_ARTICLE',
   'REMOVE_SECTION',
-  'SAVE_ARTICLE'
+  'SAVE_ARTICLE',
+  'SET_SECTION'
 )
 
 export const changeSavedStatus = (article, isSaved) => ({
@@ -45,9 +45,9 @@ export const deleteArticle = (article) => {
   }
 }
 
-export const editSection = (sectionIndex) => ({
+export const setSection = (sectionIndex) => ({
   // Index of article section currently editing
-  type: actions.EDIT_SECTION,
+  type: actions.SET_SECTION,
   payload: {
     sectionIndex
   }

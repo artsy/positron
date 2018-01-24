@@ -28,10 +28,10 @@ describe('editReducer', () => {
   })
 
   describe('Sections', () => {
-    it('EDIT_SECTION adds editing section and sectionIndex to state', () => {
+    it('SET_SECTION adds editing section and sectionIndex to state', () => {
       const sectionIndex = 2
       const updatedState = editReducer(initialState, {
-        type: actions.EDIT_SECTION,
+        type: actions.SET_SECTION,
         payload: {
           sectionIndex
         }

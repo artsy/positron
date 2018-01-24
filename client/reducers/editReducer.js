@@ -37,7 +37,7 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.EDIT_SECTION: {
+    case actions.SET_SECTION: {
       const { sectionIndex } = action.payload
       const { sections } = state.article
       const section = clone(sections[sectionIndex]) || null
