@@ -1,7 +1,5 @@
 export const standardizeSpacing = (html) => {
-  const noUnicode = replaceUnicodeSpaces(html)
-
-  const newHtml = noUnicode
+  const newHtml = html
     .replace(/<br>/g, '')
     .replace(/<span><\/span>/g, '')
     .replace(/<h2><\/h2>/g, '<p><br></p>')
@@ -117,6 +115,9 @@ export const stripGoogleStyles = (html) => {
 
   // 3. Replace bold/italic spans with actual strong/em tags
   strippedHtml = replaceGoogleFalseTags(strippedHtml)
+
+  // 4. Replace illegally pasted unicode spaces
+  strippedHtml = replaceUnicodeSpaces(strippedHtml)
 
   return strippedHtml
 }

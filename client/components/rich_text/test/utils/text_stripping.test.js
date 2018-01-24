@@ -17,11 +17,6 @@ describe('Draft Utils: Text Stripping', () => {
       expect(html).toBe('')
     })
 
-    it('Can replace unicode spaces', () => {
-      const html = standardizeSpacing('<p>\u2028hello</p>')
-      expect(html).toBe('<p><br></p><p>hello</p>')
-    })
-
     it('Replaces consecutive empty paragraphs with one', () => {
       const html = standardizeSpacing('<p></p><p></p>')
       expect(html).toBe('<p><br></p>')
@@ -81,6 +76,11 @@ describe('Draft Utils: Text Stripping', () => {
       expect(stripGoogleStyles(googleHtmlLong)).toBe(
         '<p><span><strong>Available at: Espacio Valverde • Galleries Sector, Booth 9F01</strong></span></p>'
       )
+    })
+
+    it('Can replace unicode spaces', () => {
+      const html = stripGoogleStyles('<p>\u2028hello</p>')
+      expect(html).toBe('<p></p><p>hello</p>')
     })
 
     it('Replaces italic spans with <em> tags', () => {

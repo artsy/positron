@@ -156,7 +156,6 @@ module.exports = React.createClass
     { editorState } = @state
     unless html
       html = '<div>' + text + '</div>'
-    html = standardizeSpacing(html)
     html = stripGoogleStyles(html)
     blocksFromHTML = convertFromRichHtml html
     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
