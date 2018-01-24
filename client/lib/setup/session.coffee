@@ -1,22 +1,19 @@
 session = require 'cookie-session'
+sharedsession = require 'express-socket.io-session'
+{ get } = require 'lodash'
 
 { SESSION_SECRET } = process.env
 
-module.exports = (app, io) ->
-  console.log "Setting up session"
-  
-  sess = session
-    secret: SESSION_SECRET
-    key: 'positron.sess'
-  app.use sess
+sess = exports.defaultSession = session
+  secret: SESSION_SECRET
+  key: 'positron.sess'
 
+exports.initSocketSession = (app, io) ->
   # copies express sessions to socket-io
-  io.use (socket, next) ->
-    sess socket.request, socket.request.res, next
+  io.use sharedsession(sess)
   
   # saves having to type "socket.request.session.user" everywhere
   io.use (socket, next) ->
-    user = _.get(socket, 'request.session.user')
-    if user
-      socket.user = user
+    user = get socket, "request.session.user"
+    socket.user = user if user
     next()

@@ -51,22 +51,22 @@ export const deleteArticle = (article) => {
   }
 }
 
-export const startEditingArticle = emitAction((article) => {
+export const startEditingArticle = emitAction((data) => {
   return {
     type: actions.START_EDITING_ARTICLE,
     payload: {
       timestamp: new Date().getMilliseconds(),
-      article
+      ...data
     }
   }
 })
 
-export const stopEditingArticle = emitAction((article) => {
+export const stopEditingArticle = emitAction((data) => {
   return {
     type: actions.STOP_EDITING_ARTICLE,
     payload: {
       timestamp: new Date().getMilliseconds(),
-      article
+      ...data
     }
   }
 })

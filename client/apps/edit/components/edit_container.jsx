@@ -33,6 +33,15 @@ class EditContainer extends Component {
     )
   }
 
+  componentDidMount () {
+    const { actions, user } = this.props
+    const { startEditingArticle } = actions
+    startEditingArticle({
+      user,
+      article: this.props.article.id
+    })
+  }
+
   onChange = (key, value) => {
     const { article } = this.props
 

@@ -10,6 +10,7 @@ import EditLayout from './components/layout'
 import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
+import { init as initWebsocket } from 'client/actions/websocket'
 import { data as sd } from 'sharify'
 
 export function init () {
@@ -24,6 +25,7 @@ export function init () {
   new EditLayout({ el: $('#layout-content'), article, channel })
 
   const store = createReduxStore(reducers, initialState)
+  initWebsocket(store)
 
   article.on('sync', () => store.dispatch(editActions.changeSavedStatus(true)))
 

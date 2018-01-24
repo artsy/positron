@@ -61,6 +61,9 @@ artsyXapp.init(xappConfig, () => {
     app.use(require('./client'))
   }
 
+  require('./api/apps/websocket').init(io)
+  require('./client/lib/setup/session').initSocketSession(app, io)
+
   // Start the server and send a message to IPC for the integration test
   // helper to hook into.
   server.listen(PORT, () => {
@@ -70,9 +73,6 @@ artsyXapp.init(xappConfig, () => {
       process.send('listening')
     }
   })
-
-  require('./api/apps/websocket').init(io)
-  require('./client/lib/setup/session')(app, io)
 })
 
 // Crash if we can't get/refresh an xapp token

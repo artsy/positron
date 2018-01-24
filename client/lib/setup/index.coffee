@@ -15,6 +15,7 @@ Backbone = require 'backbone'
 path = require 'path'
 fs = require 'fs'
 forceSSL = require 'express-force-ssl'
+session = require 'cookie-session'
 setupEnv = require './env'
 setupAuth = require './auth'
 logger = require 'artsy-morgan'
@@ -22,6 +23,7 @@ RavenServer = require 'raven'
 { locals, helpers, ua, sameOrigin } = require '../middleware'
 { requireChannel, requireLogin } = require './authorization'
 { parse } = require 'url'
+{ defaultSession } = require './session'
 { NODE_ENV, SESSION_SECRET, SENTRY_PRIVATE_DSN } = process.env
 
 module.exports = (app) ->
@@ -46,6 +48,7 @@ module.exports = (app) ->
   app.use cookieParser()
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
+  app.use defaultSession
   app.use logger
 
   app.use bucketAssets()
@@ -78,3 +81,4 @@ module.exports = (app) ->
     app.use RavenServer.errorHandler()
 
   require('../../components/error/server') app
+  app

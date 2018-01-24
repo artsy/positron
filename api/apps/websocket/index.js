@@ -11,11 +11,12 @@ const messageTypes = [
   return accum
 }, {})
 
-const onUserJoined = ({io, socket}) => {
-  console.log(socket.user)
+const onUserJoined = ({io, socket}, data) => {
+  console.log(socket.user, data)
 }
 
 function addListenersToSocket ({ io, socket }) {
+  socket.on('START_EDITING_ARTICLE', onUserJoined.bind(this, {io, socket}))
   socket.on(messageTypes.userJoined, onUserJoined.bind(this, {io, socket}))
 }
 
