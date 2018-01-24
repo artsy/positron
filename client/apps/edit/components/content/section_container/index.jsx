@@ -8,7 +8,7 @@ import { RemoveButton } from 'client/components/remove_button'
 
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
-import { ErrorBoundary } from '../../error/error_boundary'
+import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
 import { SectionImages } from '../sections/images'
 import { SectionVideo } from '../sections/video'
@@ -120,17 +120,10 @@ export class SectionContainer extends Component {
         >
           <div
             className='SectionContainer__hover-controls'
-            // onClick={this.onSetEditing}
+            onClick={this.onSetEditing}
           >
             {!isHero &&
-              <div
-                className='button-drag'
-                onClick={(e) => {
-                  e.preventDefault()
-                  const err = new Error('hello')
-                  throw err
-                }}
-              >
+              <div className='button-drag'>
                 <IconDrag background={colors.grayMedium} />
               </div>
             }

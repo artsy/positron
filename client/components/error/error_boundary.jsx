@@ -1,10 +1,13 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
 export class ErrorBoundary extends Component {
+  static propTypes = {
+    children: PropTypes.any
+  }
+
   componentDidCatch (error, errorInfo) {
-    debugger
-    console.log('THERE WAS AN ERROR')
-    alert(error)
+    console.error(error)
   }
 
   render () {

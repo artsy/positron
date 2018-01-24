@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import EditArticle from './article_layouts/article'
-import { ErrorBoundary } from '../error/error_boundary'
 import { EditSeries } from './article_layouts/series'
 import { EditVideo } from './article_layouts/video'
 
@@ -32,14 +31,12 @@ export class EditContent extends Component {
     const { article } = this.props
 
     return (
-      <ErrorBoundary>
-        <div
-          className={'EditContent'}
-          data-layout={article.get('layout')}
-        >
-          {this.getArticleLayout()}
-        </div>
-      </ErrorBoundary>
+      <div
+        className={'EditContent'}
+        data-layout={article.get('layout')}
+      >
+        {this.getArticleLayout()}
+      </div>
     )
   }
 }
