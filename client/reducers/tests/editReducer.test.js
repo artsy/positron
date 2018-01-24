@@ -1,4 +1,4 @@
-import { clone } from 'lodash'
+import { clone, extend } from 'lodash'
 import { editReducer } from '../editReducer'
 import { actions, setupSection } from '../../actions/editActions'
 import {
@@ -62,6 +62,26 @@ describe('editReducer', () => {
       expect(updatedState.article.sections.length).toBe(
         initialSections.length + 1
       )
+    })
+
+    it('ON_CHANGE_SECTION should update section keys and reset article.sections', () => {
+      const stateWithSection = extend(initialState, {
+        section: initialSections[0],
+        sectionIndex: 0
+      })
+      const key = 'body'
+      const value = '<p>A new piece of text.</p>'
+
+      const updatedState = editReducer(stateWithSection, {
+        type: actions.ON_CHANGE_SECTION,
+        payload: {
+          key,
+          value
+        }
+      })
+
+      expect(updatedState.section.body).toBe(value)
+      expect(updatedState.article.sections[0].body).toBe(value)
     })
 
     it('REMOVE_SECTION should remove a section by index', () => {

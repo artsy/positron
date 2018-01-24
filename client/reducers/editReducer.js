@@ -78,6 +78,21 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
+    case actions.ON_CHANGE_SECTION: {
+      const { key, value } = action.payload
+      const { sectionIndex } = state
+      const article = cloneDeep(state.article)
+      const section = cloneDeep(state.section)
+
+      section[key] = value
+      article.sections.splice(sectionIndex, 1, section)
+
+      return u({
+        article,
+        section
+      }, state)
+    }
+
     case actions.PUBLISH_ARTICLE: {
       return u({
         isPublishing: action.payload.isPublishing

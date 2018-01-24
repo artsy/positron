@@ -7,6 +7,7 @@ export const actions = keyMirror(
   'EDIT_SECTION',
   'ERROR',
   'NEW_SECTION',
+  'ON_CHANGE_SECTION',
   'PUBLISH_ARTICLE',
   'REMOVE_SECTION',
   'SAVE_ARTICLE'
@@ -60,6 +61,16 @@ export const newSection = (type, sectionIndex) => {
     payload: {
       section,
       sectionIndex
+    }
+  }
+}
+
+export const onChangeSection = (key, value) => {
+  return {
+    type: actions.ON_CHANGE_SECTION,
+    payload: {
+      key,
+      value
     }
   }
 }
