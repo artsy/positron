@@ -86,7 +86,7 @@ describe('Edit Header Controls', () => {
   })
 
   describe('Actions', () => {
-    it('Changes activeSection on edit-tab click', () => {
+    it('Changes activeView on edit-tab click', () => {
       const component = getWrapper(props)
       const button = component.find('button').at(1)
       button.simulate('click')

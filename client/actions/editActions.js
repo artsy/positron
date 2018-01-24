@@ -2,12 +2,15 @@ import keyMirror from 'client/lib/keyMirror'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
-  'CHANGE_SECTION',
   'CHANGE_VIEW',
   'DELETE_ARTICLE',
   'ERROR',
+  'NEW_SECTION',
+  'ON_CHANGE_SECTION',
   'PUBLISH_ARTICLE',
-  'SAVE_ARTICLE'
+  'REMOVE_SECTION',
+  'SAVE_ARTICLE',
+  'SET_SECTION'
 )
 
 export const changeSavedStatus = (article, isSaved) => ({
@@ -16,14 +19,6 @@ export const changeSavedStatus = (article, isSaved) => ({
     article,
     isSaved,
     lastUpdated: new Date()
-  }
-})
-
-export const changeSection = (activeSection) => ({
-  // Index of active article section
-  type: actions.CHANGE_SECTION,
-  payload: {
-    activeSection
   }
 })
 
@@ -50,6 +45,36 @@ export const deleteArticle = (article) => {
   }
 }
 
+export const setSection = (sectionIndex) => ({
+  // Index of article section currently editing
+  type: actions.SET_SECTION,
+  payload: {
+    sectionIndex
+  }
+})
+
+export const newSection = (type, sectionIndex) => {
+  const section = setupSection(type)
+
+  return {
+    type: actions.NEW_SECTION,
+    payload: {
+      section,
+      sectionIndex
+    }
+  }
+}
+
+export const onChangeSection = (key, value) => {
+  return {
+    type: actions.ON_CHANGE_SECTION,
+    payload: {
+      key,
+      value
+    }
+  }
+}
+
 export const publishArticle = (article, published) => {
   article.set('published', published)
   article.save()
@@ -62,6 +87,13 @@ export const publishArticle = (article, published) => {
     }
   }
 }
+
+export const removeSection = (sectionIndex) => ({
+  type: actions.REMOVE_SECTION,
+  payload: {
+    sectionIndex
+  }
+})
 
 export const saveArticle = (article) => {
   article.save()
@@ -88,3 +120,34 @@ export const resetError = () => ({
     error: null
   }
 })
+
+// ACTION UTILS
+export function setupSection (type) {
+  // set initial state of new section
+  switch (type) {
+    case 'video':
+      return {
+        type: 'video',
+        url: '',
+        layout: 'column_width'
+      }
+    case 'image_collection':
+      return {
+        type: 'image_collection',
+        layout: 'overflow_fillwidth',
+        images: []
+      }
+    case 'embed':
+      return {
+        type: 'embed',
+        url: '',
+        layout: 'column_width',
+        height: ''
+      }
+    case 'text':
+      return {
+        type: 'text',
+        body: ''
+      }
+  }
+}

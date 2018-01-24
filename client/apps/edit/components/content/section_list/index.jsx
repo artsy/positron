@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeSection } from 'client/actions/editActions'
+import { setSection } from 'client/actions/editActions'
 import SectionContainer from '../section_container'
 import { SectionTool } from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
   static propTypes = {
-    activeSection: PropTypes.any,
-    changeSectionAction: PropTypes.func,
+    sectionIndex: PropTypes.any,
+    setSectionAction: PropTypes.func,
     sections: PropTypes.object.isRequired
   }
 
@@ -24,10 +24,10 @@ export class SectionList extends Component {
   }
 
   onNewSection = (section) => {
-    const { changeSectionAction, sections } = this.props
-    const newActiveSection = sections.indexOf(section)
+    const { setSectionAction, sections } = this.props
+    const newSectionIndex = sections.indexOf(section)
 
-    changeSectionAction(newActiveSection)
+    setSectionAction(newSectionIndex)
   }
 
   onDragEnd = (newSections) => {
@@ -44,8 +44,8 @@ export class SectionList extends Component {
 
   renderSectionList = () => {
     const {
-      activeSection,
-      changeSectionAction,
+      sectionIndex,
+      setSectionAction,
       sections
     } = this.props
 
@@ -58,13 +58,13 @@ export class SectionList extends Component {
               section={section}
               index={index}
               isDraggable
-              editing={activeSection === index}
-              onSetEditing={(i) => changeSectionAction(i)}
+              editing={sectionIndex === index}
+              onSetEditing={(i) => setSectionAction(i)}
             />
             <SectionTool
               sections={sections}
               index={index}
-              editing={activeSection !== 0}
+              editing={sectionIndex !== 0}
             />
           </div>
         )
@@ -74,7 +74,7 @@ export class SectionList extends Component {
 
   render () {
     const {
-      activeSection,
+      sectionIndex,
       sections
     } = this.props
 
@@ -83,7 +83,7 @@ export class SectionList extends Component {
         <SectionTool
           sections={sections}
           index={-1}
-          isEditing={activeSection !== null}
+          isEditing={sectionIndex !== null}
           firstSection
           isDraggable={false}
         />
@@ -91,7 +91,7 @@ export class SectionList extends Component {
           ? <DragContainer
               items={sections.models}
               onDragEnd={this.onDragEnd}
-              isDraggable={activeSection === null}
+              isDraggable={sectionIndex === null}
               layout='vertical'
             >
               {this.renderSectionList()}
@@ -106,11 +106,11 @@ export class SectionList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  activeSection: state.edit.activeSection
+  sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {
-  changeSectionAction: changeSection
+  setSectionAction: setSection
 }
 
 export default connect(

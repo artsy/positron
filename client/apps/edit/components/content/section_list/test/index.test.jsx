@@ -35,8 +35,8 @@ describe('SectionList', () => {
     article = Fixtures.StandardArticle
 
     props = {
-      activeSection: null,
-      changeSectionAction: jest.fn(),
+      sectionIndex: null,
+      setSectionAction: jest.fn(),
       sections: new Sections(article.sections)
     }
   })
@@ -71,7 +71,7 @@ describe('SectionList', () => {
     expect(component.find(SectionContainer).length).toBe(props.sections.length)
   })
 
-  it('Listens for a new section and dispatches changeSection with index', () => {
+  it('Listens for a new section and dispatches setSection with index', () => {
     const component = getWrapper(props).find(SectionList)
 
     component.instance().onNewSection({type: 'embed'})
@@ -79,6 +79,6 @@ describe('SectionList', () => {
       {type: 'embed'},
       {at: 3}
     )
-    expect(component.props().changeSectionAction.mock.calls[1][0]).toBe(3)
+    expect(component.props().setSectionAction.mock.calls[1][0]).toBe(3)
   })
 })
