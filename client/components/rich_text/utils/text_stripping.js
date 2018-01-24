@@ -1,5 +1,7 @@
 export const standardizeSpacing = (html) => {
-  html = html
+  const noUnicode = replaceUnicodeSpaces(html)
+
+  const newHtml = noUnicode
     .replace(/<br>/g, '')
     .replace(/<span><\/span>/g, '')
     .replace(/<h2><\/h2>/g, '<p><br></p>')
@@ -9,8 +11,23 @@ export const standardizeSpacing = (html) => {
     .replace(/<p> <\/p>/g, '<p><br></p>')
     .replace(/<p><br><\/p><p><br><\/p>/g, '<p><br></p>')
     .replace(/  /g, ' &nbsp;')
-    .replace(/[\u{2028}-\u{2028}]/gu, '') // remove unicode spaces
-  return html
+
+  return newHtml
+}
+
+export const replaceUnicodeSpaces = (html) => {
+  // Replace unicode linebreaks with html breaks
+  const doc = document.createElement('div')
+  doc.innerHTML = html
+  const ps = doc.getElementsByTagName('p')
+
+  for (let i = 0; i < ps.length; i++) {
+    const innerP = doc.getElementsByTagName('p')[i].innerHTML
+      .replace(/[\u{2028}-\u{2029}]/gu, '</p><p>')
+    const newP = `<p>${innerP}</p>`
+    $(doc.getElementsByTagName('p')[i]).replaceWith(newP)
+  }
+  return doc.innerHTML
 }
 
 export const stripCharacterStyles = (contentBlock, keepAllowed) => {

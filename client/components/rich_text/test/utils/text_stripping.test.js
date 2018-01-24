@@ -1,4 +1,5 @@
 import {
+  replaceUnicodeSpaces,
   standardizeSpacing,
   stripGoogleStyles,
   stripH3Tags
@@ -14,6 +15,11 @@ describe('Draft Utils: Text Stripping', () => {
     it('Removes empty spans', () => {
       const html = standardizeSpacing('<span></span>')
       expect(html).toBe('')
+    })
+
+    it('Can replace unicode spaces', () => {
+      const html = standardizeSpacing('<p>\u2028hello</p>')
+      expect(html).toBe('<p><br></p><p>hello</p>')
     })
 
     it('Replaces consecutive empty paragraphs with one', () => {
@@ -34,6 +40,13 @@ describe('Draft Utils: Text Stripping', () => {
     it('Converts consecutive spaces into nbsp', () => {
       const html = standardizeSpacing('<p>   </p>')
       expect(html).toBe('<p> &nbsp; </p>')
+    })
+  })
+
+  describe('#replaceUnicodeSpaces', () => {
+    it('Replaces unicode linebreaks with and empty paragraph', () => {
+      const html = replaceUnicodeSpaces('<p>\u2028hello\u2029</p>')
+      expect(html).toBe('<p></p><p>hello</p><p></p>')
     })
   })
 
