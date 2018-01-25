@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   IconEditEmbed,
   IconEditImages,
@@ -9,6 +10,7 @@ import {
   IconHeroImage,
   IconHeroVideo
 } from '@artsy/reaction-force/dist/Components/Publishing'
+import { newSection } from 'client/actions/editActions'
 
 export class SectionTool extends Component {
   static propTypes = {
@@ -16,6 +18,7 @@ export class SectionTool extends Component {
     index: PropTypes.number,
     isEditing: PropTypes.bool,
     isHero: PropTypes.bool,
+    newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
     section: PropTypes.object,
     sections: PropTypes.array
@@ -59,10 +62,12 @@ export class SectionTool extends Component {
   }
 
   newSection = (type) => {
-    this.props.sections.add(
-      this.getProps(type),
-      {at: this.props.index + 1}
-    )
+    const { index, newSectionAction } = this.props
+    newSectionAction(type, index)
+    // this.props.sections.add(
+    //   this.getProps(type),
+    //   {at: this.props.index + 1}
+    // )
     this.setState({open: false})
   }
 
@@ -151,3 +156,18 @@ export class SectionTool extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  channel: state.app.channel,
+  section: state.edit.section
+})
+
+const mapDispatchToProps = {
+  newSectionAction: newSection
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionTool)

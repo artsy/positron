@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setSection } from 'client/actions/editActions'
 import SectionContainer from '../section_container'
-import { SectionTool } from '../section_tool'
+import SectionTool from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
