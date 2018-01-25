@@ -27,6 +27,7 @@ export const getSelectedLinkData = (editorState) => {
 }
 
 export const getSelectionLocation = (editorPosition) => {
+  debugger
   // get x/y location of currently selected text
   let target = getVisibleSelectionRect(window)
   const parent = {
@@ -51,6 +52,7 @@ export const setSelectionToStart = (editorState) => {
 
 export const stickyControlsBox = (editorPosition, fromTop, fromLeft) => {
   // Get position of pop-up controls from on parent and selection location
+  debugger
   const { target, parent } = exports.getSelectionLocation(editorPosition)
   const top = target.top - parent.top + fromTop
   const left = target.left - parent.left + (target.width / 2) - fromLeft

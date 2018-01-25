@@ -1,6 +1,7 @@
 import _s from 'underscore.string'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import {
   CompositeDecorator,
   ContentState,
@@ -9,7 +10,6 @@ import {
   RichUtils,
   Modifier
 } from 'draft-js'
-import { data as sd } from 'sharify'
 import { Text } from '@artsy/reaction-force/dist/Components/Publishing'
 import {
   setSelectionToStart,
@@ -33,6 +33,8 @@ import { TextNav } from 'client/components/rich_text/components/text_nav'
 import * as Config from './draft_config'
 
 export class SectionText extends Component {
+  // static domEditor
+
   static propTypes = {
     article: PropTypes.object,
     editing: PropTypes.bool,
@@ -102,60 +104,63 @@ export class SectionText extends Component {
   }
 
   handleChangeSection = () => {
-    debugger
+    console.log('handleChangeSection')
   }
 
   // KEYBOARD ACTIONS
   handleKeyCommand = () => {
-    debugger
+    console.log('handleKeyCommand')
   }
 
   handleReturn = () => {
-    debugger
+    console.log('handleReturn')
   }
 
   handleTab = () => {
-    debugger
+    console.log('handleTab')
   }
 
   onPaste = () => {
-    debugger
+    console.log('onPaste')
   }
 
   // CHANGE BLOCKS - TEXT NAV
   toggleBlock = () => {
-    debugger
+    console.log('toggleBlock')
   }
 
   toggleStyle = () => {
-    debugger
+    console.log('toggleStyle')
   }
 
   makePlainText = () => {
-    debugger
+    console.log('makePlainText')
   }
 
   // LINKS
   promptForLink = () => {
-    debugger
+    console.log('promptForLink')
   }
 
   // TEXT SELECTION
   checkSelection = () => {
     const { hasFeatures } = this.props
+    const hasSelection = !window.getSelection().isCollapsed
 
-    if (!window.getSelection().isCollapsed) {
-      debugger
-      const editorPosition = {top: 20, left: 20} //$(ReactDOM.findDOMNode(this.refs.editor)).offset()
-      const selectionLeft = hasFeatures ? 125 : 100
-      const selectionTarget = stickyControlsBox(editorPosition, -93, selectionLeft)
-
-      this.setState({
-        showMenu: true,
-        selectionTarget
-      })
-    } else {
-      this.setState({showMenu: false})
+    if (this.domEditor) {
+      if (hasSelection) {
+        const editorPosition = ReactDOM.findDOMNode(this.domEditor).getBoundingClientRect()
+        debugger
+        const selectionLeft = hasFeatures ? 125 : 100
+        const selectionTarget = stickyControlsBox(editorPosition, -93, selectionLeft)
+        debugger
+        this.setState({
+          showMenu: true,
+          selectionTarget
+        })
+      } else {
+        this.setState({showMenu: false})
+      }
     }
   }
 
@@ -205,7 +210,7 @@ export class SectionText extends Component {
           onKeyUp={this.checkSelection}
         >
           <Editor
-            ref='editor'
+            ref={(ref) => { this.domEditor = ref }}
             blockRenderMap={blockRenderMap}
             decorators={Config.decorators}
             editorState={editorState}
