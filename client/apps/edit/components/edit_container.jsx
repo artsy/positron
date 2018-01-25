@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { changeSavedStatus, saveArticle } from 'client/actions/editActions'
 
+import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
 import { EditDisplay } from './display/index.jsx'
@@ -87,11 +88,14 @@ class EditContainer extends Component {
     return (
       <div className='EditContainer'>
 
-        <EditHeader {...this.props} />
+        <ErrorBoundary>
+          <EditHeader {...this.props} />
+        </ErrorBoundary>
 
-        {error && <EditError />}
-
-        {this.getActiveView()}
+        <ErrorBoundary>
+          {error && <EditError />}
+          {this.getActiveView()}
+        </ErrorBoundary>
 
       </div>
     )
