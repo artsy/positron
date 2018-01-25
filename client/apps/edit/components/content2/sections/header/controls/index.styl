@@ -1,0 +1,67 @@
+.edit-header
+  &__container
+    AvantGarde('s13')
+    text-transform uppercase
+    margin-bottom 10px
+
+  &--video
+    position absolute
+    left 20px
+    top 20px
+    z-index 3
+    text-align left
+    cursor pointer
+    user-select none
+
+    .edit-section-container
+      background black
+      width 520px
+      position absolute
+      left 10px
+
+      &[data-editing=true]::after
+        display none
+
+    .edit-controls
+      padding-top 12px
+
+  &--controls
+    position absolute
+    right 20px
+    z-index 3
+    text-align right
+    user-select none
+    padding 20px 10px
+
+    &-open
+      cursor pointer
+
+    &__bg
+      position fixed
+      top 0
+      left 0
+      right 0
+      bottom 0
+      z-index 2
+
+    &__layout
+      border 2px solid
+      display flex
+      AvantGarde('s11')
+      margin-top 5px
+      text-align center
+
+      a
+        padding 20px
+        border-right 1px solid gray-color
+        background white
+        cursor pointer
+        display flex
+        flex-direction column
+        align-items center
+
+        &:last-child
+          border-right none
+
+        svg
+          margin 0 10px 10px 10px

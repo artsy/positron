@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { changeSavedStatus, saveArticle } from 'client/actions/editActions'
 
 import { EditAdmin } from './admin/index.jsx'
-import { EditContent } from './content/index.jsx'
+import { EditContent } from './content2/index.jsx'
 import { EditDisplay } from './display/index.jsx'
 import EditHeader from './header/index.jsx'
 import EditError from './error/index.jsx'

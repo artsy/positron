@@ -66,14 +66,14 @@ module.exports = React.createClass
     div { className: 'drag-container' },
       children.map (child, i) =>
         uniqueKey = if child.props.section then child.props.section.cid + i else i
-
+        #  TODO - UNIQUE KEY IS SOMETIMES NOT UNIQUE
         if child.props.isDraggable is false or !@props.isDraggable
           child
         else
           i = child.props.index or i
-          type = child.props.section?.get('type') or null
+          type = child.props.section?.type or null
           if child.type.displayName is 'SectionContainer'
-            layout = child.props.section?.get('layout') or 'column_width'
+            layout = child.props.section?.layout or 'column_width'
 
           DragTarget {
             key: uniqueKey + '-target'
