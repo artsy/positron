@@ -6,7 +6,6 @@ import Section from '../../../../../../../models/section'
 export default class VideoControls extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object,
     isOpen: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onProgress: PropTypes.func.isRequired,
@@ -14,7 +13,7 @@ export default class VideoControls extends Component {
   }
 
   render () {
-    const { article, channel, isOpen, onChange, onClick, onProgress } = this.props
+    const { article, isOpen, onChange, onClick, onProgress } = this.props
 
     return (
       <div className='edit-header--video'>
@@ -33,7 +32,6 @@ export default class VideoControls extends Component {
             >
               <Controls
                 section={new Section(article.get('hero_section'))}
-                channel={channel}
                 onChange={onChange}
                 onProgress={onProgress}
                 isHero

@@ -205,6 +205,7 @@ export const EditVideoContainer = styled.div`
   ${VideoCoverContainer} {
     width: 100%;
     margin-bottom: 40px;
+    position: relative;
   }
   ${EditVideoInput},
   ${EditCoverInput},

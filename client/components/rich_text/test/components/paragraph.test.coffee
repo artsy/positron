@@ -52,10 +52,10 @@ describe 'Rich Text: Paragraph', ->
         resolve(__dirname, '../../components/text_nav')
       )
       @Paragraph.__set__ 'TextNav', TextNav
-      InputUrl = benv.requireWithJadeify(
-        resolve(__dirname, '../../components/input_url'), ['icons']
+      { TextInputUrl } = benv.require(
+        resolve(__dirname, '../../components/input_url')
       )
-      @Paragraph.__set__ 'InputUrl', React.createFactory InputUrl
+      @Paragraph.__set__ 'TextInputUrl', TextInputUrl
       @Paragraph.__set__ 'stickyControlsBox', sinon.stub().returns {top: 20, left: 40}
       @Paragraph.__set__ 'stripGoogleStyles', @stripGoogleStyles = sinon.stub().returns('<p>hello</p><p>here again.</p>')
       @leadParagraph = '<p>Here is  the <em>lead</em> paragraph for  <b>this</b> article.</p>'
@@ -94,6 +94,24 @@ describe 'Rich Text: Paragraph', ->
 
     it 'Renders existing link entities', ->
       $(ReactDOM.findDOMNode(@component)).html().should.containEql '<a href="http://artsy.net/">'
+
+  describe 'On change', ->
+    it 'Sets the editorState and html on change', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.setState.args[1][0].editorState.should.be.ok
+      @component.setState.args[1][0].html.should.be.ok
+
+    it 'Calls props.onChange if content has changed', ->
+      @component.setState = sinon.stub()
+      @component.handleKeyCommand('italic')
+      @component.props.onChange.called.should.eql true
+
+    it 'Does not call props.onChange if content has not changed', ->
+      @component.setState = sinon.stub()
+      r.simulate.click r.find @component, 'rich-text--paragraph__input'
+      @component.props.onChange.called.should.eql false
+      @component.setState.called.should.eql true
 
   describe 'Key commands', ->
 
@@ -211,13 +229,13 @@ describe 'Rich Text: Paragraph', ->
     it 'allows linebreaks by default', ->
       @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 2
+      $(ReactDOM.findDOMNode(component)).find('.public-DraftStyleDefault-block').length.should.eql 2
 
     it 'strips linebreaks if props.stripLinebreaks', ->
       @props.stripLinebreaks = true
       @props.html = '<p>Here one paragraph.</p><p>Here is second paragraph</p>'
       component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0], =>
-      $(ReactDOM.findDOMNode(component)).find('p').length.should.eql 1
+      $(ReactDOM.findDOMNode(component)).find('.public-DraftStyleDefault-block').length.should.eql 1
 
     it 'interrupts key command for linebreak if props.stripLinebreaks', ->
       @props.stripLinebreaks = true
@@ -233,7 +251,9 @@ describe 'Rich Text: Paragraph', ->
       @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
       @stripGoogleStyles.called.should.eql true
 
-    xit 'calls standardizeSpacing', ->
-      @component.onChange = sinon.stub()
-      @component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
-      @component.standardizeSpacing.called.should.eql true
+    it 'calls standardizeSpacing', ->
+      @Paragraph.__set__ 'standardizeSpacing', standardizeSpacing = sinon.stub().returns('<p>hello</p><p>here again.</p>')
+      component = ReactDOM.render React.createElement(@Paragraph, @props), (@$el = $ "<div></div>")[0]
+      component.onChange = sinon.stub()
+      component.onPaste('hello here again.', '<p>hello</p><p>here again.</p>')
+      standardizeSpacing.called.should.eql true

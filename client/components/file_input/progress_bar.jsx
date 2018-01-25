@@ -4,10 +4,13 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 export const ProgressBar = (props) => {
-  const { color, progress } = props
+  const { color, cover, progress } = props
 
   return (
-    <ProgressContainer className='ProgressBar'>
+    <ProgressContainer
+      className='ProgressBar'
+      cover={cover}
+    >
       <Progress
         className='ProgressBar__bar'
         color={color}
@@ -19,6 +22,7 @@ export const ProgressBar = (props) => {
 
 ProgressBar.propTypes = {
   color: PropTypes.string,
+  cover: PropTypes.bool,
   progress: PropTypes.number
 }
 
@@ -29,6 +33,19 @@ ProgressBar.defaultProps = {
 const ProgressContainer = styled.div`
   width: 100%;
   background-color: white;
+  ${(props) => props.cover && `
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    z-index: 3;
+    background: rgba(255,255,255,.75);
+    padding: 20px;
+  `}
 `
 
 const Progress = styled.div`

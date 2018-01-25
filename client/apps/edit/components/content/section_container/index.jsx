@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
 
-import SectionImageCollection from '../sections/image_collection'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
 import { SectionEmbed } from '../sections/embed'
+import { SectionImages } from '../sections/images'
 import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
@@ -63,7 +64,7 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { index, section } = this.props
+    const { channel, index, section } = this.props
 
     switch (section.get('type')) {
       case 'embed': {
@@ -73,7 +74,7 @@ export class SectionContainer extends Component {
       case 'image':
       case 'image_set':
       case 'image_collection': {
-        return <SectionImageCollection {...this.props} />
+        return <SectionImages {...this.props} />
       }
 
       case 'text': {
@@ -81,6 +82,7 @@ export class SectionContainer extends Component {
         return (
           <SectionText
             {...this.props}
+            hasFeatures={channel.type !== 'partner'}
             isContentStart={start === index}
             isContentEnd={end === index}
           />
@@ -139,3 +141,12 @@ export class SectionContainer extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  channel: state.app.channel
+})
+
+export default connect(
+  mapStateToProps
+)(SectionContainer)
