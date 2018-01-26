@@ -5,6 +5,7 @@ export const messageTypes = keyMirror(
   'userLeft',
   'articlesRequested',
   'userStartedEditing',
+  'userCurrentlyEditing',
   'userStoppedEditing',
   'articleAdded',
   'articleLocked',

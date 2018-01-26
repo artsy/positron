@@ -48,7 +48,7 @@ export class ArticleList extends Component {
     return (
       <h2>
         <span>Last saved {moment(session.timestamp).fromNow()}</span>
-        <span className='name'>● {session.user.name}</span>
+        <span className='name'><span className='circle' /> {session.user.name}</span>
       </h2>
     )
   }
@@ -74,7 +74,7 @@ export class ArticleList extends Component {
               />
             : null}
           <a className={`article-list__article ${lockedClass}`}
-            href={isCurrentlyBeingEdited ? '' : `/articles/${article.id}/edit`}
+            href={`/articles/${article.id}/edit`}
             disabled={isCurrentlyBeingEdited}>
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
@@ -102,7 +102,7 @@ export class ArticleList extends Component {
                 <span className='lock' />
                 <span className='title'>Locked</span>
               </span>
-              : 'Preview'}
+              : 'View'}
           </a>
         </div>
       )
