@@ -8,6 +8,7 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
   static propTypes = {
+    editSection: PropTypes.object,
     sectionIndex: PropTypes.any,
     setSectionAction: PropTypes.func,
     article: PropTypes.object
@@ -46,25 +47,30 @@ export class SectionList extends Component {
   renderSectionList = () => {
     const {
       article,
+      editSection,
       sectionIndex,
       setSectionAction
     } = this.props
 
     return article.sections.map((section, index) => {
+      const editing = sectionIndex === index
       // if (section.type !== 'callout') {
-      if (section.type === 'image_collection') {
+      if (
+        section.type === 'image_collection' ||
+        section.type === 'image_set'
+      ) {
         return [
           <SectionContainer
-            key={section.cid}
+            key={`${index}-container`}
             sections={article.sections}
-            section={section}
+            section={editing ? editSection : section}
             index={index}
             isDraggable
-            editing={sectionIndex === index}
+            editing={editing}
             onSetEditing={(i) => setSectionAction(i)}
           />,
           <SectionTool
-            key={section.cid + 'tool'}
+            key={`${index}-tool`}
             sections={article.sections}
             index={index}
             editing={sectionIndex !== 0}
@@ -109,7 +115,8 @@ export class SectionList extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  sectionIndex: state.edit.sectionIndex
+  sectionIndex: state.edit.sectionIndex,
+  editSection: state.edit.section
 })
 
 const mapDispatchToProps = {

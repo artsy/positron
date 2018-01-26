@@ -7,7 +7,11 @@ import { Row, Col } from 'react-styled-flexboxgrid'
 import Artwork from '/client/models/artwork.coffee'
 import FileInput from '/client/components/file_input'
 import SectionControls from '../../../section_controls'
-import { logError } from 'client/actions/editActions'
+import {
+  logError,
+  onChangeSection,
+  removeSection
+} from 'client/actions/editActions'
 import { Autocomplete } from '/client/components/autocomplete2'
 import { InputArtworkUrl } from './input_artwork_url'
 
@@ -15,15 +19,22 @@ export class ImagesControls extends Component {
   static propTypes = {
     isHero: PropTypes.bool,
     logErrorAction: PropTypes.func,
+    onChange: PropTypes.func,
+    removeSectionAction: PropTypes.func,
     section: PropTypes.object.isRequired,
+    sectionIndex: PropTypes.number,
     setProgress: PropTypes.func
   }
 
   componentWillUnmount = () => {
-    const { section } = this.props
+    const {
+      removeSectionAction,
+      section,
+      sectionIndex
+    } = this.props
 
     if (!section.images.length) {
-      // section.destroy()
+      removeSectionAction(sectionIndex)
     }
   }
 
@@ -62,10 +73,10 @@ export class ImagesControls extends Component {
   }
 
   onNewImage = (image) => {
-    const { section } = this.props
+    const { section, onChange } = this.props
     const newImages = clone(section.images).concat(image)
 
-    section.set('images', newImages)
+    onChange('images', newImages)
   }
 
   onUpload = (image, width, height) => {
@@ -93,6 +104,7 @@ export class ImagesControls extends Component {
   render () {
     const {
       isHero,
+      onChange,
       section,
       setProgress
     } = this.props
@@ -125,7 +137,7 @@ export class ImagesControls extends Component {
                   filter={this.filterAutocomplete}
                   formatSelected={(item) => this.fetchDenormalizedArtwork(item._id)}
                   items={section.images || []}
-                  onSelect={(images) => section.set('images', images)}
+                  onSelect={(images) => onChange('images', images)}
                   placeholder='Search artworks by title...'
                   url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
                 />
@@ -147,7 +159,7 @@ export class ImagesControls extends Component {
                 className='bordered-input bordered-input-dark'
                 defaultValue={section.title}
                 onChange={(e) => {
-                  // section.set('title', e.target.value)
+                  onChange('title', e.target.value)
                 }}
                 placeholder='Image Set Title (optional)'
               />
@@ -158,7 +170,7 @@ export class ImagesControls extends Component {
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => section.set('layout', 'mini')}
+                    onClick={() => onChange('layout', 'mini')}
                     data-active={section.layout !== 'full'}
                   />
                   Mini
@@ -166,7 +178,7 @@ export class ImagesControls extends Component {
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => section.set('layout', 'full')}
+                    onClick={() => onChange('layout', 'full')}
                     data-active={section.layout === 'full'}
                   />
                   Full
@@ -180,10 +192,16 @@ export class ImagesControls extends Component {
   }
 }
 
-const mapStateToProps = (state) => state
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  section: state.edit.section,
+  sectionIndex: state.edit.sectionIndex
+})
 
 const mapDispatchToProps = {
-  logErrorAction: logError
+  logErrorAction: logError,
+  onChange: onChangeSection,
+  removeSectionAction: removeSection
 }
 
 export default connect(

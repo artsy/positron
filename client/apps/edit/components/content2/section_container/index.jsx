@@ -6,10 +6,10 @@ import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
 
+import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
 import { SectionEmbed } from '../sections/embed'
-import { SectionImages } from '../sections/images'
 import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
