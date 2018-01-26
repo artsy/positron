@@ -5,6 +5,10 @@ import { actions } from 'client/actions/editActions'
 
 const setupArticle = () => {
   const article = sd.ARTICLE
+  if (!article) {
+    return null
+  }
+
   // strip deprecated handles from author
   const author = pick(article.author, 'id', 'name')
 

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from 'client/actions/editActions'
+import * as Actions from 'client/actions/articlesActions'
 import { data as sd } from 'sharify'
 
 import $ from 'jquery'
@@ -12,7 +12,7 @@ import request from 'superagent'
 
 require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')
-const icons = function () { return require('../icons.jade')(...arguments) }
+const icons = () => require('../icons.jade')(...arguments)
 
 export class ArticlesListView extends Component {
   static propTypes = {

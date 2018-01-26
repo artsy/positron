@@ -5,7 +5,6 @@ import { messageTypes } from 'client/apps/websocket/messageTypes'
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
-  'VIEW_ARTICLES',
   'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
@@ -34,14 +33,6 @@ export const changeView = (activeView) => ({
     activeView
   }
 })
-
-export const viewArticles = emitAction(() => ({
-  type: actions.VIEW_ARTICLES,
-  key: messageTypes.articlesRequested,
-  payload: {
-    timestamp: new Date().toISOString()
-  }
-}))
 
 export const deleteArticle = (article) => {
   article.destroy({

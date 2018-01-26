@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeSavedStatus, saveArticle } from 'client/actions/editActions'
+import { changeSavedStatus, saveArticle, startEditingArticle } from 'client/actions/editActions'
 
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
@@ -17,6 +17,7 @@ class EditContainer extends Component {
     channel: PropTypes.object,
     error: PropTypes.object,
     saveArticleAction: PropTypes.func,
+    startEditingArticleAction: PropTypes.func,
     user: PropTypes.object
   }
 
@@ -34,9 +35,8 @@ class EditContainer extends Component {
   }
 
   componentDidMount () {
-    const { actions, user } = this.props
-    const { startEditingArticle } = actions
-    startEditingArticle({
+    const { startEditingArticleAction, user } = this.props
+    startEditingArticleAction({
       user,
       article: this.props.article.id
     })
@@ -111,12 +111,14 @@ const mapStateToProps = (state) => ({
   activeView: state.edit.activeView,
   channel: state.app.channel,
   error: state.edit.error,
-  lastUpdated: state.edit.lastUpdated
+  lastUpdated: state.edit.lastUpdated,
+  user: state.app.user
 })
 
 const mapDispatchToProps = {
   changeSavedStatusAction: changeSavedStatus,
-  saveArticleAction: saveArticle
+  saveArticleAction: saveArticle,
+  startEditingArticleAction: startEditingArticle
 }
 
 export default connect(

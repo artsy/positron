@@ -9,7 +9,7 @@ import EditLayout from './components/layout'
 import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
-import { init as initWebsocket } from 'client/actions/websocket'
+import { init as initWebsocket } from 'client/apps/websocket/client'
 import { data as sd } from 'sharify'
 
 export function init () {
