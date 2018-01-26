@@ -71,17 +71,20 @@ ContentEnd.propTypes = {
 //
 // Auto-set custom editorial entities
 //
-
 export const setContentEnd = (html, isEndText) => {
   const doc = document.createElement('div')
   doc.innerHTML = html
+
   // Remove existing end spans
   $(doc.getElementsByClassName('content-end')).replaceWith('')
-  // Insert content-end span if end text
-  if (isEndText) {
-    let oldHtml = $(doc).children().last().html()
-    let newHtml = oldHtml + '<span class="content-end"> </span>'
+
+  // Insert content-end span if last block is <p>
+  const lastChild = $(doc).children().last()
+
+  if (isEndText && lastChild.is('p')) {
+    const newHtml = `${lastChild.html()}<span class="content-end"> </span>`
     $(doc).children().last().html(newHtml)
   }
+
   return doc.innerHTML
 }

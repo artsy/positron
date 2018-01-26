@@ -1,4 +1,5 @@
 import _s from 'underscore.string'
+import { clone } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
@@ -11,6 +12,7 @@ import {
   Modifier
 } from 'draft-js'
 import { Text } from '@artsy/reaction-force/dist/Components/Publishing'
+import { convertFromRichHtml, convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
 import {
   setSelectionToStart,
   stickyControlsBox,
@@ -23,25 +25,22 @@ import {
   stripCharacterStyles,
   stripGoogleStyles
 } from 'client/components/rich_text/utils/text_stripping'
-import {
-  convertFromRichHtml,
-  convertToRichHtml
-} from 'client/components/rich_text/utils/convert_html'
 import { keyBindingFnFull } from 'client/components/rich_text/utils/keybindings'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
 import * as Config from './draft_config'
 
 export class SectionText extends Component {
-  // static domEditor
-
   static propTypes = {
     article: PropTypes.object,
     editing: PropTypes.bool,
     hasFeatures: PropTypes.bool,
+    index: PropTypes.number,
     isContentEnd: PropTypes.bool,
     isContentStart: PropTypes.bool,
-    section: PropTypes.object
+    onSetEditing: PropTypes.func,
+    section: PropTypes.object,
+    sections: PropTypes.object
   }
 
   constructor (props) {
@@ -58,8 +57,8 @@ export class SectionText extends Component {
       selectionTarget: null,
       showMenu: false,
       showUrlInput: false,
-      pluginType: null,
-      urlValue: null
+      plugin: null,
+      url: null
     }
   }
 
@@ -87,24 +86,28 @@ export class SectionText extends Component {
     }
 
     const blocksFromHTML = convertFromRichHtml(html)
-    let editorState = EditorState.createWithContent(
-      blocksFromHTML,
-      new CompositeDecorator(Config.decorators(article.layout))
-    )
+    const decorators = new CompositeDecorator(Config.decorators(article.layout))
+    let editorState = EditorState.createWithContent(blocksFromHTML, decorators)
+
     if (editing) {
       editorState = setSelectionToStart(editorState)
     }
+
     this.setState({ editorState, html })
   }
 
-  // SOME STUFF
-  onChange = () => {
-    // debugger
-    console.log('a change')
+  onChange = (editorState) => {
+    const { article, section } = this.props
+    const html = convertToRichHtml(editorState, article.layout)
+
+    this.setState({ editorState, html })
+    section.set('body', html)
   }
 
-  handleChangeSection = () => {
-    console.log('handleChangeSection')
+  focus = () => {
+    if (this.domEditor) {
+      this.domEditor.focus()
+    }
   }
 
   // KEYBOARD ACTIONS
@@ -124,36 +127,168 @@ export class SectionText extends Component {
     console.log('onPaste')
   }
 
-  // CHANGE BLOCKS - TEXT NAV
-  toggleBlock = () => {
-    console.log('toggleBlock')
+  handleChangeSection = () => {
+    console.log('handleChangeSection')
   }
 
-  toggleStyle = () => {
-    console.log('toggleStyle')
-  }
-
+  // TEXT MUTATIONS
   makePlainText = () => {
     console.log('makePlainText')
   }
 
+  toggleStyle = (style) => {
+    const { editorState } = this.state
+    const { layout } = this.props.article
+
+    const selection = getSelectionDetails(editorState)
+    const isH3 = selection.anchorType === 'header-three'
+    const isClassic = layout === 'classic'
+
+    if (isH3 && isClassic) {
+      // Dont allow inline styles in avant-garde font
+      const block = editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
+      stripCharacterStyles(block)
+    } else {
+      this.onChange(RichUtils.toggleInlineStyle(editorState, style))
+    }
+  }
+
+  toggleBlock = (block) => {
+    const { editorState } = this.state
+    const { hasFeatures, section } = this.props
+    const isBlockquote = block === 'blockquote'
+    const hasBlockquote = clone(section.get('body')).includes('<blockquote>')
+
+    if (!hasFeatures && isBlockquote) {
+      return 'handled'
+    }
+
+    this.onChange(RichUtils.toggleBlockType(editorState, block))
+    this.setState({ showMenu: false })
+
+    if (hasFeatures && isBlockquote) {
+      if (hasBlockquote) {
+        section.set('layout', null)
+      } else {
+        this.toggleBlockQuote()
+      }
+    }
+    return 'handled'
+  }
+
+  toggleBlockQuote = () => {
+    const {
+      index,
+      isContentEnd,
+      section,
+      sections,
+      onSetEditing
+    } = this.props
+
+    let increment = 0
+    let blockquote = setContentEnd(section.get('body'), isContentEnd)
+    const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
+    const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
+
+    if (afterBlock) {
+      // add text before blockquote to new text section
+      blockquote = blockquote.replace(afterBlock, '')
+      sections.add({type: 'text', body: afterBlock}, { at: index + 1 })
+    }
+    if (beforeBlock) {
+      // add text after blockquote to new text section
+      blockquote = blockquote.replace(beforeBlock, '')
+      sections.add({type: 'text', body: beforeBlock}, { at: index })
+      increment = 1
+    }
+
+    section.set({body: blockquote, layout: 'blockquote'})
+    onSetEditing(index + increment)
+  }
+
   // LINKS
-  promptForLink = () => {
-    console.log('promptForLink')
+  promptForLink = (plugin) => {
+    const { editorState } = this.state
+
+    if (this.domEditor && this.hasSelection()) {
+      const editor = ReactDOM.findDOMNode(this.domEditor)
+      const editorPosition = editor.getBoundingClientRect()
+      const selectionTarget = stickyControlsBox(editorPosition, 25, 200)
+      const url = getSelectedLinkData(editorState).url
+
+      this.setState({
+        showUrlInput: true,
+        showMenu: false,
+        url,
+        selectionTarget,
+        plugin
+      })
+    }
+  }
+
+  confirmLink = (url) => {
+    const { editorState, plugin } = this.state
+    const contentState = editorState.getCurrentContent()
+    const linkProps = { url }
+
+    if (plugin) {
+      linkProps.className = 'is-follow-link'
+    }
+    const currentContent = contentState.createEntity(
+      'LINK',
+      'MUTABLE',
+      linkProps
+    )
+    const entityKey = currentContent.getLastCreatedEntityKey()
+    const editorStateWithEntity = EditorState.set(editorState, { currentContent })
+    const editorStateWithLink = RichUtils.toggleLink(
+      editorStateWithEntity,
+      editorStateWithEntity.getSelection(),
+      entityKey
+    )
+
+    this.setState({
+      showMenu: false,
+      showUrlInput: false,
+      url: '',
+      selectionTarget: null,
+      plugin: null
+    })
+    this.onChange(editorStateWithLink)
+  }
+
+  removeLink = () => {
+    const { editorState } = this.state
+    const selection = editorState.getSelection()
+
+    const props = {
+      editorState,
+      plugin: null,
+      showUrlInput: false,
+      url: ''
+    }
+
+    if (!selection.isCollapsed()) {
+      props.editorState = RichUtils.toggleLink(editorState, selection, null)
+    }
+    this.setState(props)
   }
 
   // TEXT SELECTION
+  hasSelection = () => {
+    return !window.getSelection().isCollapsed
+  }
+
   checkSelection = () => {
     const { hasFeatures } = this.props
-    const hasSelection = !window.getSelection().isCollapsed
 
     if (this.domEditor) {
-      if (hasSelection) {
-        const editorPosition = ReactDOM.findDOMNode(this.domEditor).getBoundingClientRect()
-        debugger
+      if (this.hasSelection()) {
+        const editor = ReactDOM.findDOMNode(this.domEditor)
+        const editorPosition = editor.getBoundingClientRect()
         const selectionLeft = hasFeatures ? 125 : 100
         const selectionTarget = stickyControlsBox(editorPosition, -93, selectionLeft)
-        debugger
+
         this.setState({
           showMenu: true,
           selectionTarget
@@ -174,7 +309,10 @@ export class SectionText extends Component {
     const {
       editorState,
       selectionTarget,
-      showMenu
+      showMenu,
+      showUrlInput,
+      plugin,
+      url
     } = this.state
 
     const blocks = Config.blockTypes(article.layout, hasFeatures)
@@ -186,7 +324,7 @@ export class SectionText extends Component {
     <div
       className='edit-section--text'
       data-editing={editing}
-//       onClick: @focus
+      onClick={this.focus}
     >
       <Text
         layout={article.layout}
@@ -227,28 +365,23 @@ export class SectionText extends Component {
             spellcheck
           />
         </div>
+
+        {editing && showUrlInput &&
+          <TextInputUrl
+            removeLink={this.removeLink}
+            confirmLink={this.confirmLink}
+            selectionTarget={selectionTarget}
+            pluginType={plugin}
+            urlValue={url}
+          />
+        }
+
       </Text>
     </div>
     )
   }
 }
 
-// module.exports = React.createClass
-//   displayName: 'SectionText'
-
-//   getInitialState: ->
-//     editorState: EditorState.createEmpty(
-//       new CompositeDecorator(
-//         Config.decorators(@props.article.layout)
-//       )
-//     )
-//     focus: false
-//     html: null
-//     selectionTarget: null
-//     showUrlInput: false
-//     pluginType: null
-//     urlValue: null
-//     showMenu: false
 
 //   componentDidMount: ->
 //     @props.sections.on 'change:autolink', @editorStateFromProps
@@ -256,17 +389,6 @@ export class SectionText extends Component {
 //       @editorStateFromProps()
 //     else if @props.editing
 //       @focus()
-
-//   editorStateFromProps: ->
-//     html = standardizeSpacing @props.section.get('body')
-//     unless @props.article.layout is 'classic'
-//       html = setContentEnd(html, @props.isContentEnd)
-//     blocksFromHTML = convertFromRichHtml html
-//     editorState = EditorState.createWithContent(blocksFromHTML, new CompositeDecorator(Config.decorators(@props.article.layout)))
-//     editorState = setSelectionToStart(editorState) if @props.editing
-//     @setState
-//       html: html
-//       editorState: editorState
 
 //   componentDidUpdate: (prevProps) ->
 //     if @props.isContentEnd isnt prevProps.isContentEnd
@@ -277,11 +399,6 @@ export class SectionText extends Component {
 //       @focus()
 //     else if !@props.editing and @props.editing isnt prevProps.editing
 //       @refs.editor.blur()
-
-//   onChange: (editorState) ->
-//     html = convertToRichHtml editorState, @props.article.layout
-//     @setState editorState: editorState, html: html
-//     @props.section.set('body', html)
 
 //   onClickOff: -> #called from sectionContainer
 //     @setState focus: false, showMenu: false, showUrlInput: false

@@ -1,6 +1,5 @@
 import {
   getSelectionDetails,
-  getSelectionLocation,
   setSelectionToStart,
   stickyControlsBox
 } from '../../utils/text_selection'
@@ -55,33 +54,6 @@ describe('Draft Utils: Text Selection', () => {
       expect(selection.isLastCharacter).toBe(true)
       expect(selection.isFirstCharacter).toBe(false)
       expect(selection.anchorOffset).toBe(lastBlock.getLength())
-    })
-  })
-
-  describe('#getSelectionLocation', () => {
-    it('Returns coordinates of the selection and its parent', () => {
-      const selection = {
-        bottom: 170,
-        height: 25,
-        left: 425,
-        right: 525,
-        top: 145,
-        width: 95
-      }
-      Draft.getVisibleSelectionRect = jest.fn().mockReturnValue(selection)
-      const location = getSelectionLocation({top: 520, left: 50})
-
-      expect(location.target).toBe(selection)
-      expect(location.parent.top).toBe(20)
-      expect(location.parent.left).toBe(50)
-    })
-  })
-
-  describe('#stickyControlsBox', () => {
-    it('Returns coordinates of the sticky item', () => {
-      const position = stickyControlsBox({top: 520, left: 50}, 50, 100)
-      expect(position.top).toBe(175)
-      expect(position.left).toBe(322.5)
     })
   })
 
