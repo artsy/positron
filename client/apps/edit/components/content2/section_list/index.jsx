@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setSection } from 'client/actions/editActions'
+import { resetSections, setSection } from 'client/actions/editActions'
 import SectionContainer from '../section_container'
 import SectionTool from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
@@ -9,20 +9,10 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 export class SectionList extends Component {
   static propTypes = {
     editSection: PropTypes.object,
+    resetSectionsAction: PropTypes.func,
     sectionIndex: PropTypes.any,
     setSectionAction: PropTypes.func,
     article: PropTypes.object
-  }
-
-  componentDidMount = () => {
-    console.log('mounted')
-    // const { sections } = this.props
-
-    // sections.on('add', this.onNewSection)
-    // // TODO: Remove forceRerender
-    // sections.on('change:layout', this.forceReRender)
-    // sections.on('reset', this.forceReRender)
-    // sections.on('destroy', this.forceReRender)
   }
 
   onNewSection = (section) => {
@@ -33,15 +23,9 @@ export class SectionList extends Component {
   }
 
   onDragEnd = (newSections) => {
-    const { sections } = this.props.article
-    sections.reset(newSections)
-  }
+    const { resetSectionsAction } = this.props
 
-  forceReRender = () => {
-    // TODO: Move sections to redux so
-    // changes will trigger re-render
-    // Below forces update on Backbone change
-    this.setState({lastUpdated: new Date()})
+    resetSectionsAction(newSections)
   }
 
   renderSectionList = () => {
@@ -120,6 +104,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+  resetSectionsAction: resetSections,
   setSectionAction: setSection
 }
 

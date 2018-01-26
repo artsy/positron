@@ -108,6 +108,14 @@ describe('editActions', () => {
     expect(action.payload.sectionIndex).toBe(6)
   })
 
+  it('#resetSections sets sections to arg', () => {
+    const newSections = FeatureArticle.sections.slice(1, 0)
+    const action = editActions.resetSections(newSections)
+
+    expect(action.type).toBe('RESET_SECTIONS')
+    expect(action.payload.sections).toBe(newSections)
+  })
+
   describe('Editing errors', () => {
     it('#logError sets error to arg', () => {
       const message = 'Error message'

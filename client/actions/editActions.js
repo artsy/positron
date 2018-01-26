@@ -9,6 +9,7 @@ export const actions = keyMirror(
   'ON_CHANGE_SECTION',
   'PUBLISH_ARTICLE',
   'REMOVE_SECTION',
+  'RESET_SECTIONS',
   'SAVE_ARTICLE',
   'SET_SECTION'
 )
@@ -92,6 +93,13 @@ export const removeSection = (sectionIndex) => ({
   type: actions.REMOVE_SECTION,
   payload: {
     sectionIndex
+  }
+})
+
+export const resetSections = (sections) => ({
+  type: actions.RESET_SECTIONS,
+  payload: {
+    sections
   }
 })
 
