@@ -110,17 +110,114 @@ export class SectionText extends Component {
     }
   }
 
+  availableBlocks = () => {
+    const { article, hasFeatures } = this.props
+    const blockMap = Config.blockRenderMap(article.layout, hasFeatures)
+    const available = Object.keys(blockMap.toObject())
+
+    return Array.from(available)
+  }
+
+  splitSection = (anchorKey) => {
+    // Divide content into 2 text sections from cursor
+    const { editorState } = this.state
+    const { index, sections } = this.props
+
+    const blockArray = editorState.getCurrentContent().getBlocksAsArray()
+    let currentBlocks
+    let newBlocks
+
+    for (const [index, block] of blockArray) {
+      if (block.getKey() === anchorKey) {
+        currentBlocks = blockArray.splice(0, index)
+        newBlocks = clone(blockArray)
+      }
+    }
+    if (currentBlocks) {
+      const currentContent = ContentState.createFromBlockArray(currentBlocks)
+      const currentState = EditorState.push(
+        editorState, currentContent, 'remove-range'
+      )
+      const newContent = ContentState.createFromBlockArray(newBlocks)
+      const newState = EditorState.push(
+        editorState, newContent, null
+      )
+      const newHtml = convertToRichHtml(newState)
+
+      this.onChange(currentState)
+      sections.add({type: 'text', body: newHtml}, {at: index + 1})
+      return 'handled'
+    }
+  }
+
   // KEYBOARD ACTIONS
-  handleKeyCommand = () => {
-    console.log('handleKeyCommand')
+  handleKeyCommand = (key) => {
+    const { editorState } = this.state
+    const isValidBlock = this.availableBlocks().includes(key)
+
+    if (isValidBlock) {
+      return this.toggleBlock(key)
+    } else {
+      switch (key) {
+        case 'backspace': {
+          return this.handleBackspace(key)
+        }
+        case 'custom-clear': {
+          return this.makePlainText()
+        }
+        case 'link-prompt': {
+          const className = getSelectedLinkData(editorState).className
+          const hasPlugin = className && className.includes('is-follow-link')
+
+          if (hasPlugin) {
+            return this.promptForLink('artist')
+          } else {
+            return this.promptForLink()
+          }
+        }
+        case 'bold':
+        case 'italic':
+        case 'strikethrough': {
+          return this.toggleStyle(key.toUpperCase())
+        }
+        default: {
+          return 'not-handled'
+        }
+      }
+    }
   }
 
-  handleReturn = () => {
-    console.log('handleReturn')
+  handleReturn = (e) => {
+    const { editorState } = this.state
+    const {
+      anchorKey,
+      anchorOffset,
+      isFirstBlock
+    } = getSelectionDetails(editorState)
+
+    // dont split from the first block, to avoid creating empty blocks
+    // dont split from the middle of a paragraph
+    if (isFirstBlock || anchorOffset) {
+      return 'not-handled'
+    } else {
+      e.preventDefault()
+      this.splitSection(anchorKey)
+      return 'handled'
+    }
   }
 
-  handleTab = () => {
-    console.log('handleTab')
+  handleTab = (e) => {
+    // jump to next section
+    const { index, onSetEditing } = this.props
+    let newIndex = index + 1
+
+    if (e.shiftKey && index !== 0) {
+      // shift-tab to previous section
+      newIndex = index - 1
+    }
+
+    e.preventDefault()
+    onSetEditing(newIndex)
   }
 
   onPaste = () => {
