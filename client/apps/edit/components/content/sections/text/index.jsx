@@ -230,7 +230,24 @@ export class SectionText extends Component {
 
   // TEXT MUTATIONS
   makePlainText = () => {
-    console.log('makePlainText')
+    const { editorState } = this.state
+    const selection = editorState.getSelection()
+    const hasSelection = !selection.isCollapsed()
+
+    const noLinks = RichUtils.toggleLink(editorState, selection, null)
+    const unstyled = RichUtils.toggleBlockType(noLinks, 'unstyled')
+
+    const currentBlocks = unstyled.getCurrentContent().getBlocksAsArray()
+    const noStyles = currentBlocks.map((contentBlock) => {
+      return stripCharacterStyles(contentBlock)
+    })
+
+    const newContent = ContentState.createFromBlockArray(noStyles)
+    const newState = EditorState.push(editorState, newContent, null)
+
+    if (hasSelection) {
+      this.onChange(newState)
+    }
   }
 
   toggleStyle = (style) => {
