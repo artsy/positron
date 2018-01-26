@@ -1,4 +1,5 @@
 import keyMirror from 'client/lib/keyMirror'
+import Article from 'client/models/article.coffee'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
@@ -104,7 +105,12 @@ export const resetSections = (sections) => ({
 })
 
 export const saveArticle = (article) => {
-  article.save()
+  const newArticle = new Article(article)
+  newArticle.save()
+
+  // newArticle.on('sync', () => {
+  //   store.dispatch(changeSavedStatus(article, true))
+  // })
 
   return {
     type: actions.SAVE_ARTICLE,

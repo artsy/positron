@@ -89,7 +89,8 @@ export function editReducer (state = initialState, action) {
 
       return u({
         article,
-        section
+        section,
+        isSaved: false
       }, state)
     }
 
@@ -117,7 +118,8 @@ export function editReducer (state = initialState, action) {
 
       extend(article, { sections })
       return u({
-        article
+        article,
+        isSaved: false
       }, state)
     }
 

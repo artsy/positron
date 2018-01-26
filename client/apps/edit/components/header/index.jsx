@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { data as sd } from 'sharify'
 import * as Actions from 'client/actions/editActions'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
@@ -16,8 +17,21 @@ export class EditHeader extends Component {
   }
 
   isPublishable = () => {
-    const { article } = this.props
-    return article.finishedContent() && article.finishedThumbnail()
+    return this.finishedContent() && this.finishedDisplay()
+  }
+
+  finishedContent = () => {
+    const { title } = this.props.article
+
+    return title && title.length > 0
+  }
+
+  finishedDisplay = () => {
+    const { thumbnail_image, thumbnail_title } = this.props.article
+    const finishedImg = thumbnail_image && thumbnail_image.length > 0
+    const finishedTitle = thumbnail_title && thumbnail_title.length > 0
+
+    return finishedImg && finishedTitle
   }
 
   onPublish = () => {
@@ -26,7 +40,7 @@ export class EditHeader extends Component {
     if (this.isPublishable()) {
       actions.publishArticle(
         article,
-        !article.get('published')
+        !article.published
       )
     }
   }
@@ -57,7 +71,7 @@ export class EditHeader extends Component {
 
     if (isSaving) {
       return 'Saving...'
-    } else if (article.get('published')) {
+    } else if (article.published) {
       return 'Save Article'
     } else {
       return 'Save Draft'
@@ -67,7 +81,7 @@ export class EditHeader extends Component {
   getPublishText = () => {
     const { article, edit } = this.props
     const { isPublishing } = edit
-    const isPublished = article.get('published')
+    const isPublished = article.published
 
     if (isPublishing && isPublished) {
       return 'Publishing...'
@@ -100,7 +114,7 @@ export class EditHeader extends Component {
               <Icon
                 className='icon'
                 name='check'
-                color={article.finishedContent() ? greenRegular : grayMedium}
+                color={this.finishedContent() ? greenRegular : grayMedium}
               />
             </button>
 
@@ -113,7 +127,7 @@ export class EditHeader extends Component {
               <Icon
                 className='icon'
                 name='check'
-                color={article.finishedThumbnail() ? greenRegular : grayMedium}
+                color={this.finishedDisplay() ? greenRegular : grayMedium}
               />
             </button>
 
@@ -158,16 +172,20 @@ export class EditHeader extends Component {
           <button
             className='avant-garde-button'
             style={{color: this.getSaveColor()}}
-            onClick={() => article.get('published')
-              ? article.trigger('savePublished')
-              : actions.saveArticle(article)
+            onClick={() => actions.saveArticle(article)
+              // () => article.published
+              // ? article.trigger('savePublished')
+              // : actions.saveArticle(article)
             }>
             {this.getSaveText()}
           </button>
 
-          <a href={article.getFullSlug()} target='_blank'>
+          <a
+            href={`${sd.FORCE_URL}/article/${article.slug}`}
+            target='_blank'
+          >
             <button className='avant-garde-button'>
-              {article.get('published') ? 'View' : 'Preview'}
+              {article.published ? 'View' : 'Preview'}
             </button>
           </a>
         </div>
@@ -178,6 +196,7 @@ export class EditHeader extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  article: state.edit.article,
   channel: state.app.channel,
   edit: state.edit,
   isAdmin: state.app.isAdmin
