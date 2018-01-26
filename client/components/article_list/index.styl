@@ -23,9 +23,18 @@ thumbnail-width = 145px
     display inline-block
     cursor default
     text-decoration none
+    &.locked
+      color gray-dark-color
+      pointer-events none
+      cursor not-allowed
+      &:hover
+        opacity 1
     &:hover
       opacity .7
       cursor pointer
+    .name
+      margin-left 20px
+
   &__title
     .missing-title
       color gray-dark-color
@@ -39,3 +48,18 @@ thumbnail-width = 145px
       text-align center
       max-width 80%
       margin 0 auto
+  &__preview
+    &.locked
+      color gray-dark-color
+      pointer-events none
+      &:hover
+        color gray-dark-color
+    .lock
+      height 15px
+      width 15px
+      margin-right 5px
+      display inline-block
+      vertical-align middle
+      background url(/icons/lock.svg) center center no-repeat
+    .title
+      vertical-align middle

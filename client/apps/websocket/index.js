@@ -22,7 +22,6 @@ const onUserStartedEditing = ({io, socket}, data) => {
   console.log('onUserStartedEditing', data)
   const { timestamp, user, article } = data
   const { id, name } = user
-
   const currentSession = articlesEdited[data.article]
   if (currentSession && currentSession.user.id !== id) {
     socket.emit(articleLocked, articlesEdited[data.article])

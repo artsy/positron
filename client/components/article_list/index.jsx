@@ -4,7 +4,6 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { data as sd } from 'sharify'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
-
 import $ from 'jquery'
 
 const icons = () => require('./icons.jade')(...arguments)
@@ -44,6 +43,16 @@ export class ArticleList extends Component {
     }
   }
 
+  currentSessionText (article) {
+    const session = this.props.activeSessions[article.id]
+    return (
+      <h2>
+        <span>Last saved {moment(session.timestamp).fromNow()}</span>
+        <span className='name'>● {session.user.name}</span>
+      </h2>
+    )
+  }
+
   renderArticles () {
     const { checkable, articles, activeSessions, user } = this.props
     return articles.map(article => {
@@ -52,6 +61,7 @@ export class ArticleList extends Component {
       const isCurrentlyBeingEdited = session
       const isCurrentUserEditing = user && session && user.id === session.user.id
       const style = isCurrentlyBeingEdited ? {color: colors.grayMedium} : null
+      const lockedClass = isCurrentlyBeingEdited ? 'locked' : ''
 
       return (
         <div style={style} className='article-list__result paginated-list-item' key={article.id}>
@@ -63,8 +73,8 @@ export class ArticleList extends Component {
                 onClick={() => this.props.selected(article)}
               />
             : null}
-          <a className='article-list__article'
-            href={`/articles/${article.id}/edit`}
+          <a className={`article-list__article ${lockedClass}`}
+            href={isCurrentlyBeingEdited ? '' : `/articles/${article.id}/edit`}
             disabled={isCurrentlyBeingEdited}>
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
@@ -75,14 +85,24 @@ export class ArticleList extends Component {
                 ? <h1>{attrs.headline}</h1>
                 : <h1 className='missing-title'>Missing Title</h1>
               }
-              <h2>{this.publishText(article)}</h2>
+
+              {isCurrentlyBeingEdited
+                ? this.currentSessionText(article)
+                : <h2>{this.publishText(article)}</h2>
+              }
             </div>
           </a>
-          <a className='paginated-list-preview avant-garde-button'
+          <a className={`article-list__preview paginated-list-preview avant-garde-button ${lockedClass}`}
             href={`${sd.FORCE_URL}/article/${article.slug}`}
             disabled={isCurrentlyBeingEdited}
             target='_blank'>
-            {isCurrentlyBeingEdited ? 'Locked' : 'Preview'}
+
+            {isCurrentlyBeingEdited
+            ? <span>
+                <span className='lock' />
+                <span className='title'>Locked</span>
+              </span>
+              : 'Preview'}
           </a>
         </div>
       )
