@@ -1,4 +1,6 @@
 import Immutable from 'immutable'
+import { CompositeDecorator } from 'draft-js'
+
 import {
   ContentEnd,
   findContentEndEntities,
@@ -93,4 +95,10 @@ export const decorators = (layout) => {
     })
   }
   return decorators
+}
+
+export const composedDecorator = (layout) => {
+  new CompositeDecorator(
+    decorators(layout)
+  )
 }

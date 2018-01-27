@@ -1,8 +1,15 @@
+import { clone } from 'lodash'
 import {
+  ContentState,
   EditorState,
   getVisibleSelectionRect,
+  RichUtils,
   SelectionState
 } from 'draft-js'
+import {
+  convertFromRichHtml,
+  convertToRichHtml
+} from 'client/components/rich_text/utils/convert_html'
 
 export const getSelectedLinkData = (editorState) => {
   // Return attrs of selected link element
@@ -75,4 +82,67 @@ export const getSelectionDetails = (editorState) => {
     isLastBlock,
     isLastCharacter
   }
+}
+
+export const mergeHtmlIntoState = (editorState, beforeHtml, afterHtml) => {
+  const combinedHtml = beforeHtml + afterHtml
+  const combinedBlocks = convertFromRichHtml(combinedHtml)
+
+  const newState = EditorState.push(editorState, combinedBlocks, null)
+  const stateWithFocus = setSelectionToStart(newState)
+
+  return stateWithFocus
+}
+
+export const divideEditorState = (editorState, anchorKey) => {
+  const blockArray = editorState.getCurrentContent().getBlocksAsArray()
+  let beforeBlocks
+  let afterBlocks
+
+  blockArray.map((block, index) => {
+    if (block.getKey() === anchorKey) {
+      // split blocks at end of selected block
+      beforeBlocks = blockArray.splice(0, index)
+      afterBlocks = clone(blockArray)
+    }
+  })
+  if (beforeBlocks) {
+    const beforeContent = ContentState.createFromBlockArray(beforeBlocks)
+    const currentSectionState = EditorState.push(
+      editorState, beforeContent, 'remove-range'
+    )
+    const afterContent = ContentState.createFromBlockArray(afterBlocks)
+    const afterState = EditorState.push(
+      editorState, afterContent, null
+    )
+    const newSection = convertToRichHtml(afterState)
+
+    return {
+      currentSectionState,
+      newSection
+    }
+  }
+}
+
+export const addLinkToState = (editorState, linkData) => {
+  const contentState = editorState.getCurrentContent()
+
+  const contentWithLink = contentState.createEntity(
+    'LINK',
+    'MUTABLE',
+    linkData
+  )
+  const entityKey = contentWithLink.getLastCreatedEntityKey()
+
+  const editorStateWithEntity = EditorState.set(
+    editorState,
+    { currentContent: contentWithLink }
+  )
+  const editorStateWithLink = RichUtils.toggleLink(
+    editorStateWithEntity,
+    editorStateWithEntity.getSelection(),
+    entityKey
+  )
+
+  return editorStateWithLink
 }

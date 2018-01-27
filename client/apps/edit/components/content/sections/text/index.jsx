@@ -3,24 +3,21 @@ import { clone } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import {
-  CompositeDecorator,
-  ContentState,
-  Editor,
-  EditorState,
-  RichUtils,
-  Modifier
-} from 'draft-js'
+import { Editor, EditorState, RichUtils } from 'draft-js'
 import { Text } from '@artsy/reaction-force/dist/Components/Publishing'
 import { convertFromRichHtml, convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
 import {
-  setSelectionToStart,
-  stickyControlsBox,
+  addLinkToState,
+  divideEditorState,
   getSelectedLinkData,
-  getSelectionDetails
+  getSelectionDetails,
+  mergeHtmlIntoState,
+  setSelectionToStart,
+  stickyControlsBox
 } from 'client/components/rich_text/utils/text_selection'
 import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import {
+  makePlainText,
   removeDisallowedBlocks,
   standardizeSpacing,
   stripCharacterStyles,
@@ -49,9 +46,7 @@ export class SectionText extends Component {
 
     this.state = {
       editorState: EditorState.createEmpty(
-        new CompositeDecorator(
-          Config.decorators(props.article.layout)
-        )
+        Config.composedDecorator(props.article.layout)
       ),
       focus: false,
       html: null,
@@ -87,7 +82,7 @@ export class SectionText extends Component {
     }
 
     const blocksFromHTML = convertFromRichHtml(html)
-    const decorators = new CompositeDecorator(Config.decorators(article.layout))
+    const decorators = Config.composedDecorator(article.layout)
     let editorState = EditorState.createWithContent(blocksFromHTML, decorators)
 
     if (editing) {
@@ -113,40 +108,50 @@ export class SectionText extends Component {
 
   availableBlocks = () => {
     const { article, hasFeatures } = this.props
+    const availableBlocks = Config.blockRenderMapArray(article.layout, hasFeatures)
 
-    return Config.blockRenderMapArray(article.layout, hasFeatures)
+    return availableBlocks
   }
 
-  splitSection = (anchorKey) => {
-    // Divide content into 2 text sections from cursor
+  maybeSplitSection = (anchorKey) => {
+    // Called on return
+    // Maybe divide content into 2 text sections at cursor
     const { editorState } = this.state
     const { index, sections } = this.props
 
-    const blockArray = editorState.getCurrentContent().getBlocksAsArray()
-    let beforeBlocks
-    let afterBlocks
+    const hasDividedState = divideEditorState(editorState, anchorKey)
+    // If section gets divided, add new section
+    if (hasDividedState) {
+      const { currentSectionState, newSection } = hasDividedState
 
-    blockArray.map((block, index) => {
-      if (block.getKey() === anchorKey) {
-        // split blocks at end of selected block
-        beforeBlocks = blockArray.splice(0, index)
-        afterBlocks = clone(blockArray)
-      }
-    })
-    if (beforeBlocks) {
-      const beforeContent = ContentState.createFromBlockArray(beforeBlocks)
-      const beforeState = EditorState.push(
-        editorState, beforeContent, 'remove-range'
-      )
-      const afterContent = ContentState.createFromBlockArray(afterBlocks)
-      const afterState = EditorState.push(
-        editorState, afterContent, null
-      )
-      const body = convertToRichHtml(afterState)
+      this.onChange(currentSectionState)
+      sections.add({type: 'text', body: newSection}, {at: index + 1})
+    }
+    return 'handled'
+  }
 
-      this.onChange(beforeState)
-      sections.add({type: 'text', body}, {at: index + 1})
-      return 'handled'
+  handleBackspace = () => {
+    const { editorState, html } = this.state
+    const { index, onSetEditing, sections } = this.props
+
+    const selection = getSelectionDetails(editorState)
+    const { isFirstBlock, anchorOffset } = selection
+
+    const beforeIndex = index - 1
+    const sectionBefore = sections.models[beforeIndex].attributes
+    const sectionBeforeIsText = sectionBefore.type === 'text'
+    const isAtFirstCharacter = anchorOffset === 0
+
+    // only merge a section if focus is at 1st character of 1st block
+    if (isFirstBlock && isAtFirstCharacter && sectionBeforeIsText) {
+      const beforeHtml = sectionBefore.body
+      // delete section before
+      sectionBefore.destroy()
+      // merge html from both sections into new state
+      const newState = mergeHtmlIntoState(editorState, beforeHtml, html)
+      // update new section with combined html
+      this.onChange(newState)
+      onSetEditing(beforeIndex)
     }
   }
 
@@ -201,7 +206,7 @@ export class SectionText extends Component {
       return 'not-handled'
     } else {
       e.preventDefault()
-      this.splitSection(anchorKey)
+      this.maybeSplitSection(anchorKey)
       return 'handled'
     }
   }
@@ -240,21 +245,10 @@ export class SectionText extends Component {
   // TEXT MUTATIONS
   makePlainText = () => {
     const { editorState } = this.state
-    const selection = editorState.getSelection()
-    const hasSelection = !selection.isCollapsed()
-
-    const noLinks = RichUtils.toggleLink(editorState, selection, null)
-    const unstyled = RichUtils.toggleBlockType(noLinks, 'unstyled')
-
-    const currentBlocks = unstyled.getCurrentContent().getBlocksAsArray()
-    const noStyles = currentBlocks.map((contentBlock) => {
-      return stripCharacterStyles(contentBlock)
-    })
-
-    const newContent = ContentState.createFromBlockArray(noStyles)
-    const newState = EditorState.push(editorState, newContent, null)
+    const hasSelection = !editorState.getSelection().isCollapsed()
 
     if (hasSelection) {
+      const newState = makePlainText(editorState)
       this.onChange(newState)
     }
   }
@@ -351,24 +345,13 @@ export class SectionText extends Component {
 
   confirmLink = (url) => {
     const { editorState, plugin } = this.state
-    const contentState = editorState.getCurrentContent()
-    const linkProps = { url }
+    const linkData = { url }
 
     if (plugin) {
-      linkProps.className = 'is-follow-link'
+      linkData.className = 'is-follow-link'
     }
-    const currentContent = contentState.createEntity(
-      'LINK',
-      'MUTABLE',
-      linkProps
-    )
-    const entityKey = currentContent.getLastCreatedEntityKey()
-    const editorStateWithEntity = EditorState.set(editorState, { currentContent })
-    const editorStateWithLink = RichUtils.toggleLink(
-      editorStateWithEntity,
-      editorStateWithEntity.getSelection(),
-      entityKey
-    )
+
+    const editorStateWithLink = addLinkToState(editorState, linkData)
 
     this.setState({
       showMenu: false,

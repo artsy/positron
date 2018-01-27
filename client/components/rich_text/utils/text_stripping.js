@@ -1,7 +1,8 @@
 import {
   ContentState,
   EditorState,
-  Modifier
+  Modifier,
+  RichUtils
 } from 'draft-js'
 
 export const standardizeSpacing = (html) => {
@@ -88,6 +89,23 @@ export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks) => {
   const blockMap = ContentState.createFromBlockArray(cleanedBlocks, blocks).blockMap
   const newContent = Modifier.replaceWithFragment(currentContent, selection, blockMap)
   const newState = EditorState.push(editorState, newContent, 'insert-fragment')
+
+  return newState
+}
+
+export const makePlainText = (editorState) => {
+  const selection = editorState.getSelection()
+
+  const noLinks = RichUtils.toggleLink(editorState, selection, null)
+  const unstyled = RichUtils.toggleBlockType(noLinks, 'unstyled')
+
+  const currentBlocks = unstyled.getCurrentContent().getBlocksAsArray()
+  const plainBlocks = currentBlocks.map((contentBlock) => {
+    return stripCharacterStyles(contentBlock)
+  })
+
+  const newContent = ContentState.createFromBlockArray(plainBlocks)
+  const newState = EditorState.push(editorState, newContent, null)
 
   return newState
 }
