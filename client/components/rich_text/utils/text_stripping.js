@@ -1,3 +1,9 @@
+import {
+  ContentState,
+  EditorState,
+  Modifier
+} from 'draft-js'
+
 export const standardizeSpacing = (html) => {
   const newHtml = html
     .replace(/<br>/g, '')
@@ -64,6 +70,28 @@ export const stripH3Tags = (html) => {
   return doc.innerHTML
 }
 
+export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks) => {
+  const currentContent = editorState.getCurrentContent()
+  const selection = editorState.getSelection()
+
+  const cleanedBlocks = blocks.map((contentBlock) => {
+    const unstyled = stripCharacterStyles(contentBlock, true)
+    const isAllowedBlock = allowedBlocks.includes(unstyled.getType())
+    const isLink = unstyled.getType() === 'LINK'
+
+    if (isAllowedBlock || isLink) {
+      return unstyled
+    } else {
+      return unstyled.set('type', 'unstyled')
+    }
+  })
+  const blockMap = ContentState.createFromBlockArray(cleanedBlocks, blocks).blockMap
+  const newContent = Modifier.replaceWithFragment(currentContent, selection, blockMap)
+  const newState = EditorState.push(editorState, newContent, 'insert-fragment')
+
+  return newState
+}
+
 const replaceGoogleFalseTags = (html) => {
   let doc = document.createElement('div')
   doc.innerHTML = html
@@ -118,6 +146,9 @@ export const stripGoogleStyles = (html) => {
 
   // 4. Replace illegally pasted unicode spaces
   strippedHtml = replaceUnicodeSpaces(strippedHtml)
+
+  // 5. Strip non-style guide spaces
+  strippedHtml = standardizeSpacing(strippedHtml)
 
   return strippedHtml
 }

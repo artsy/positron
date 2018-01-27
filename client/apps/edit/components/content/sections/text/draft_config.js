@@ -72,6 +72,13 @@ export const blockRenderMap = (layout, hasFeatures) => {
   }
 }
 
+export const blockRenderMapArray = (layout, hasFeatures) => {
+  const blockMap = blockRenderMap(layout, hasFeatures)
+  const available = Object.keys(blockMap.toObject())
+
+  return Array.from(available)
+}
+
 export const decorators = (layout) => {
   const decorators = [
     {

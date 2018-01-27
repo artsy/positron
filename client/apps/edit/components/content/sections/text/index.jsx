@@ -21,6 +21,7 @@ import {
 } from 'client/components/rich_text/utils/text_selection'
 import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import {
+  removeDisallowedBlocks,
   standardizeSpacing,
   stripCharacterStyles,
   stripGoogleStyles
@@ -112,10 +113,8 @@ export class SectionText extends Component {
 
   availableBlocks = () => {
     const { article, hasFeatures } = this.props
-    const blockMap = Config.blockRenderMap(article.layout, hasFeatures)
-    const available = Object.keys(blockMap.toObject())
 
-    return Array.from(available)
+    return Config.blockRenderMapArray(article.layout, hasFeatures)
   }
 
   splitSection = (anchorKey) => {
@@ -124,28 +123,29 @@ export class SectionText extends Component {
     const { index, sections } = this.props
 
     const blockArray = editorState.getCurrentContent().getBlocksAsArray()
-    let currentBlocks
-    let newBlocks
+    let beforeBlocks
+    let afterBlocks
 
-    for (const [index, block] of blockArray) {
+    blockArray.map((block, index) => {
       if (block.getKey() === anchorKey) {
-        currentBlocks = blockArray.splice(0, index)
-        newBlocks = clone(blockArray)
+        // split blocks at end of selected block
+        beforeBlocks = blockArray.splice(0, index)
+        afterBlocks = clone(blockArray)
       }
-    }
-    if (currentBlocks) {
-      const currentContent = ContentState.createFromBlockArray(currentBlocks)
-      const currentState = EditorState.push(
-        editorState, currentContent, 'remove-range'
+    })
+    if (beforeBlocks) {
+      const beforeContent = ContentState.createFromBlockArray(beforeBlocks)
+      const beforeState = EditorState.push(
+        editorState, beforeContent, 'remove-range'
       )
-      const newContent = ContentState.createFromBlockArray(newBlocks)
-      const newState = EditorState.push(
-        editorState, newContent, null
+      const afterContent = ContentState.createFromBlockArray(afterBlocks)
+      const afterState = EditorState.push(
+        editorState, afterContent, null
       )
-      const newHtml = convertToRichHtml(newState)
+      const body = convertToRichHtml(afterState)
 
-      this.onChange(currentState)
-      sections.add({type: 'text', body: newHtml}, {at: index + 1})
+      this.onChange(beforeState)
+      sections.add({type: 'text', body}, {at: index + 1})
       return 'handled'
     }
   }
@@ -195,8 +195,8 @@ export class SectionText extends Component {
       isFirstBlock
     } = getSelectionDetails(editorState)
 
-    // dont split from the first block, to avoid creating empty blocks
-    // dont split from the middle of a paragraph
+    // Don't split from the first block, to avoid creating empty blocks
+    // Don't split from the middle of a paragraph
     if (isFirstBlock || anchorOffset) {
       return 'not-handled'
     } else {
@@ -220,8 +220,17 @@ export class SectionText extends Component {
     onSetEditing(newIndex)
   }
 
-  onPaste = () => {
-    console.log('onPaste')
+  onPaste = (text, html) => {
+    const { editorState } = this.state
+    const wrappedHtml = html || '<div>' + text + '</div>'
+    const formattedHtml = stripGoogleStyles(wrappedHtml)
+
+    const blocksFromHTML = convertFromRichHtml(formattedHtml).getBlocksAsArray()
+    const allowedBlocks = this.availableBlocks()
+    const newState = removeDisallowedBlocks(editorState, blocksFromHTML, allowedBlocks)
+
+    this.onChange(newState)
+    return 'handled'
   }
 
   handleChangeSection = () => {
