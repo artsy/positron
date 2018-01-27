@@ -96,8 +96,10 @@ export class SectionText extends Component {
     const { article, section } = this.props
     const html = convertToRichHtml(editorState, article.layout)
 
+    if (section.get('body') !== html) {
+      section.set('body', html)
+    }
     this.setState({ editorState, html })
-    section.set('body', html)
   }
 
   focus = () => {
@@ -382,7 +384,11 @@ export class SectionText extends Component {
 
   // TEXT SELECTION
   hasSelection = () => {
-    return !window.getSelection().isCollapsed
+    const { editorState } = this.state
+    const windowHasSelection = !window.getSelection().isCollapsed
+    const editorHasSelection = !editorState.getSelection().isCollapsed()
+
+    return windowHasSelection || editorHasSelection
   }
 
   checkSelection = () => {
