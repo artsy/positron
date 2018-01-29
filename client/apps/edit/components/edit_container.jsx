@@ -1,13 +1,20 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeSavedStatus, saveArticle, startEditingArticle } from 'client/actions/editActions'
+import {
+  changeSavedStatus,
+  saveArticle,
+  startEditingArticle,
+  updateArticle
+} from 'client/actions/editActions'
 
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
 import { EditDisplay } from './display/index.jsx'
 import EditHeader from './header/index.jsx'
 import EditError from './error/index.jsx'
+
+import { MessageModal } from './message'
 
 class EditContainer extends Component {
   static propTypes = {
@@ -18,14 +25,17 @@ class EditContainer extends Component {
     error: PropTypes.object,
     saveArticleAction: PropTypes.func,
     startEditingArticleAction: PropTypes.func,
-    user: PropTypes.object
+    user: PropTypes.object,
+    currentSession: PropTypes.object
   }
 
   constructor (props) {
     super(props)
 
     this.state = {
-      lastUpdated: null
+      lastUpdated: null,
+      isOtherUserInSession: !!props.currentSession,
+      inactivityPeriodEntered: false
     }
 
     props.article.sections.on(
@@ -42,10 +52,15 @@ class EditContainer extends Component {
     })
   }
 
+  componentWillUnmount () {
+    //TODO: Send stopEditingArticle action
+  }
+
   onChange = (key, value) => {
     const { article } = this.props
 
     article.set(key, value)
+    this.updateArticleAction(article.toJSON())
     this.maybeSaveArticle()
   }
 
@@ -91,17 +106,16 @@ class EditContainer extends Component {
   }
 
   render () {
-    const { error } = this.props
+    const { error, currentSession } = this.props
+    const { isOtherUserInSession, inactivityPeriodEntered } = this.state
 
     return (
       <div className='EditContainer'>
-
         <EditHeader {...this.props} />
-
         {error && <EditError />}
-
         {this.getActiveView()}
-
+        {isOtherUserInSession && <MessageModal type='locked' session={currentSession} />}
+        {inactivityPeriodEntered && <MessageModal type='timeout' session={currentSession} />}
       </div>
     )
   }
@@ -112,13 +126,15 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel,
   error: state.edit.error,
   lastUpdated: state.edit.lastUpdated,
-  user: state.app.user
+  user: state.app.user,
+  currentSession: state.edit.currentSession
 })
 
 const mapDispatchToProps = {
   changeSavedStatusAction: changeSavedStatus,
   saveArticleAction: saveArticle,
-  startEditingArticleAction: startEditingArticle
+  startEditingArticleAction: startEditingArticle,
+  updateArticleAction: updateArticle
 }
 
 export default connect(

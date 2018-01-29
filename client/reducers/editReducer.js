@@ -25,7 +25,8 @@ export const initialState = {
   isSaving: false,
   isSaved: true,
   lastUpdated: null,
-  section: null
+  section: null,
+  currentSession: sd.CURRENT_SESSION
 }
 
 export function editReducer (state = initialState, action) {

@@ -86,7 +86,6 @@ export class ArticlesListView extends Component {
   }
 
   showArticlesList () {
-    console.log(this.props.articles)
     if (this.props.articles && this.props.articles.length) {
       return (
         <div className='articles-list__container'>

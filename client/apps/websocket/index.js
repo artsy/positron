@@ -7,14 +7,14 @@ const {
   userStartedEditing
 } = messageTypes
 
-const articlesEdited = {}
+export const articlesInSession = {}
 
 const onArticlesRequested = ({io, socket}) => {
   console.log('onArticlesRequested')
   const event = articlesRequested
   socket.emit(event, {
     type: actions.EDITED_ARTICLES_RECEIVED,
-    payload: articlesEdited
+    payload: articlesInSession
   })
 }
 
@@ -22,13 +22,13 @@ const onUserStartedEditing = ({io, socket}, data) => {
   console.log('onUserStartedEditing', data)
   const { timestamp, user, article } = data
   const { id, name } = user
-  const currentSession = articlesEdited[data.article]
+  const currentSession = articlesInSession[data.article]
   if (currentSession && currentSession.user.id !== id) {
-    socket.emit(articleLocked, articlesEdited[data.article])
+    socket.emit(articleLocked, articlesInSession[data.article])
     return
   }
 
-  const newSession = articlesEdited[data.article] = {
+  const newSession = articlesInSession[data.article] = {
     timestamp,
     user: {
       id,
@@ -48,5 +48,6 @@ function addListenersToSocket ({ io, socket }) {
   socket.on(messageTypes.userStartedEditing, onUserStartedEditing.bind(this, {io, socket}))
 }
 
-export const init = (io) =>
+export const init = (io) => {
   io.on('connection', (socket) => addListenersToSocket({io, socket}))
+}

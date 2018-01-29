@@ -6,6 +6,7 @@ export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
   'START_EDITING_ARTICLE',
+  'UPDATE_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
@@ -53,6 +54,17 @@ export const startEditingArticle = emitAction((data) => {
   return {
     type: actions.START_EDITING_ARTICLE,
     key: messageTypes.userStartedEditing,
+    payload: {
+      timestamp: new Date().toISOString(),
+      ...data
+    }
+  }
+})
+
+export const updateArticle = emitAction((data) => {
+  return {
+    type: actions.UPDATE_ARTICLE,
+    key: messageTypes.userCurrentlyEditing,
     payload: {
       timestamp: new Date().toISOString(),
       ...data

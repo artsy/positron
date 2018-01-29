@@ -28,7 +28,7 @@ class Router extends Backbone.Router
     'settings/authors': 'authorsEdit'
 
   articleEdit: ->
-    require('../apps/edit/client.js').init()
+    require('../apps/edit/client').init()
 
   curationsEdit: ->
     require('../apps/settings/client/curations.coffee').init()

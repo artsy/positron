@@ -1,9 +1,11 @@
-import u from 'updeep'
 import { data as sd } from 'sharify'
+import { clone } from 'lodash'
 import { actions } from 'client/actions/articlesActions'
+import { actions as editActions } from 'client/actions/editActions'
 
 export const initialState = {
-  articles: sd.ARTICLES
+  articles: sd.ARTICLES,
+  articlesInSession: sd.ARTICLES_IN_SESSION || {}
 }
 
 export function articlesReducer (state = initialState, action) {
@@ -12,6 +14,25 @@ export function articlesReducer (state = initialState, action) {
       return {
         ...state,
         articlesInSession: action.payload
+      }
+    }
+    case editActions.START_EDITING_ARTICLE: {
+      const articlesInSession = clone(state.articlesInSession)
+      const session = action.payload
+      articlesInSession[action.article] = session
+
+      return {
+        ...state,
+        articlesInSession
+      }
+    }
+    case editActions.STOP_EDITING_ARTICLE: {
+      const articlesInSession = clone(state.articlesInSession)
+      delete articlesInSession[action.article]
+
+      return {
+        ...state,
+        articlesInSession
       }
     }
     default:
