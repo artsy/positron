@@ -34,6 +34,10 @@ class EditContainer extends Component {
     )
   }
 
+  componentDidMount = () => {
+    $('#edit-sections-spinner').hide()
+  }
+
   onChange = (key, value) => {
     const { article } = this.props
 
@@ -96,7 +100,6 @@ class EditContainer extends Component {
           {error && <EditError />}
           {this.getActiveView()}
         </ErrorBoundary>
-
       </div>
     )
   }

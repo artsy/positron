@@ -26,7 +26,6 @@ module.exports = class EditLayout extends Backbone.View
       @setupYoast()
       @article.on 'change', @onYoastKeyup
     @setupOnBeforeUnload()
-    @$('#edit-sections-spinner').hide()
 
   onFirstSave: =>
     Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
