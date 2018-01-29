@@ -5,6 +5,7 @@ import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
+import { removeSection } from 'client/actions/editActions'
 
 import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
@@ -21,6 +22,7 @@ export class SectionContainer extends Component {
     isHero: PropTypes.bool,
     onRemoveHero: PropTypes.func,
     onSetEditing: PropTypes.func.isRequired,
+    removeSectionAction: PropTypes.func,
     section: PropTypes.object.isRequired,
     sections: PropTypes.array
   }
@@ -36,15 +38,15 @@ export class SectionContainer extends Component {
     onSetEditing(setEditing)
   }
 
-  onRemoveSection = (e) => {
+  onRemoveSection = () => {
     const {
-      section,
+      index,
       isHero,
-      onRemoveHero
+      onRemoveHero,
+      removeSectionAction
     } = this.props
 
-    e.stopPropagation()
-    // section.destroy()
+    removeSectionAction(index)
 
     if (isHero) {
       onRemoveHero()
@@ -147,6 +149,11 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel
 })
 
+const mapDispatchToProps = {
+  removeSectionAction: removeSection
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SectionContainer)

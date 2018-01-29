@@ -84,9 +84,9 @@ export class EditHeader extends Component {
     const isPublished = article.published
 
     if (isPublishing && isPublished) {
-      return 'Publishing...'
-    } else if (isPublishing) {
       return 'Unpublishing...'
+    } else if (isPublishing) {
+      return 'Publishing...'
     } else if (isPublished) {
       return 'Unpublish'
     } else {

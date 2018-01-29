@@ -108,7 +108,8 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         sectionIndex: null,
-        section: null
+        section: null,
+        isSaved: false
       }, state)
     }
 

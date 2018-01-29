@@ -78,9 +78,10 @@ export const onChangeSection = (key, value) => {
 }
 
 export const publishArticle = (article, published) => {
-  article.set('published', published)
-  article.save()
-  article.trigger('finished')
+  const newArticle = new Article(article)
+  newArticle.set('published', published)
+  newArticle.save()
+  newArticle.trigger('finished')
 
   return {
     type: actions.PUBLISH_ARTICLE,
