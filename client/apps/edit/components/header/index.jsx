@@ -10,6 +10,7 @@ export class EditHeader extends Component {
   static propTypes = {
     actions: PropTypes.any,
     article: PropTypes.object,
+    beforeUnload: PropTypes.func,
     channel: PropTypes.object,
     edit: PropTypes.object,
     isAdmin: PropTypes.bool
@@ -29,6 +30,13 @@ export class EditHeader extends Component {
         !article.get('published')
       )
     }
+  }
+
+  onSave = () => {
+    const { actions, article, beforeUnload } = this.props
+
+    window.removeEventListener('beforeunload', beforeUnload)
+    actions.saveArticle(article)
   }
 
   onDelete = () => {
@@ -158,10 +166,8 @@ export class EditHeader extends Component {
           <button
             className='avant-garde-button'
             style={{color: this.getSaveColor()}}
-            onClick={() => article.get('published')
-              ? article.trigger('savePublished')
-              : actions.saveArticle(article)
-            }>
+            onClick={this.onSave}
+          >
             {this.getSaveText()}
           </button>
 
