@@ -61,7 +61,8 @@ export class ArticleList extends Component {
       const isCurrentlyBeingEdited = session
       const isCurrentUserEditing = user && session && user.id === session.user.id
       const style = isCurrentlyBeingEdited ? {color: colors.grayMedium} : null
-      const lockedClass = isCurrentlyBeingEdited ? 'locked' : ''
+      const shouldLockEditing = isCurrentlyBeingEdited && !isCurrentUserEditing
+      const lockedClass = shouldLockEditing ? 'locked' : ''
 
       return (
         <div style={style} className='article-list__result paginated-list-item' key={article.id}>
@@ -74,8 +75,7 @@ export class ArticleList extends Component {
               />
             : null}
           <a className={`article-list__article ${lockedClass}`}
-            href={`/articles/${article.id}/edit`}
-            disabled={isCurrentlyBeingEdited}>
+            href={`/articles/${article.id}/edit`}>
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
               {!attrs.image ? <div className='missing-img'>Missing thumbnail</div> : null}
@@ -86,7 +86,7 @@ export class ArticleList extends Component {
                 : <h1 className='missing-title'>Missing Title</h1>
               }
 
-              {isCurrentlyBeingEdited
+              {shouldLockEditing
                 ? this.currentSessionText(article)
                 : <h2>{this.publishText(article)}</h2>
               }
@@ -94,10 +94,9 @@ export class ArticleList extends Component {
           </a>
           <a className={`article-list__preview paginated-list-preview avant-garde-button ${lockedClass}`}
             href={`${sd.FORCE_URL}/article/${article.slug}`}
-            disabled={isCurrentlyBeingEdited}
             target='_blank'>
 
-            {isCurrentlyBeingEdited
+            {shouldLockEditing
             ? <span>
                 <span className='lock' />
                 <span className='title'>Locked</span>

@@ -100,7 +100,7 @@ export class MessageModal extends Component {
     const modal = ModalTypes[this.props.type]
 
     if (this.props.onClose && modal.canDismiss) {
-      this.props.onClose()
+      this.props.onClose(true)
     }
   }
 

@@ -19,7 +19,7 @@ export function articlesReducer (state = initialState, action) {
     case editActions.START_EDITING_ARTICLE: {
       const articlesInSession = clone(state.articlesInSession)
       const session = action.payload
-      articlesInSession[action.article] = session
+      articlesInSession[session.article] = session
 
       return {
         ...state,
@@ -28,7 +28,7 @@ export function articlesReducer (state = initialState, action) {
     }
     case editActions.STOP_EDITING_ARTICLE: {
       const articlesInSession = clone(state.articlesInSession)
-      delete articlesInSession[action.article]
+      delete articlesInSession[action.payload.article]
 
       return {
         ...state,

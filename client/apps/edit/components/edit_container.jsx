@@ -5,6 +5,7 @@ import {
   changeSavedStatus,
   saveArticle,
   startEditingArticle,
+  stopEditingArticle,
   updateArticle
 } from 'client/actions/editActions'
 
@@ -25,6 +26,8 @@ class EditContainer extends Component {
     error: PropTypes.object,
     saveArticleAction: PropTypes.func,
     startEditingArticleAction: PropTypes.func,
+    stopEditingArticleAction: PropTypes.func,
+    updateArticleAction: PropTypes.func,
     user: PropTypes.object,
     currentSession: PropTypes.object
   }
@@ -32,10 +35,14 @@ class EditContainer extends Component {
   constructor (props) {
     super(props)
 
+    const session = props.currentSession
+    const isCurrentUserEditing = props.user && session && props.user.id === session.user.id
+
     this.state = {
       lastUpdated: null,
-      isOtherUserInSession: !!props.currentSession,
-      inactivityPeriodEntered: false
+      isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
+      inactivityPeriodEntered: false,
+      shouldShowModal: true
     }
 
     props.article.sections.on(
@@ -50,17 +57,22 @@ class EditContainer extends Component {
       user,
       article: this.props.article.id
     })
+
+    window.addEventListener('beforeunload', this.sendStopEditing)
   }
 
   componentWillUnmount () {
-    //TODO: Send stopEditingArticle action
+    this.sendStopEditing()
+    window.removeEventListener('beforeunload', this.sendStopEditing)
   }
 
   onChange = (key, value) => {
-    const { article } = this.props
+    const { article, updateArticleAction } = this.props
 
     article.set(key, value)
-    this.updateArticleAction(article.toJSON())
+    updateArticleAction({
+      article: article.id
+    })
     this.maybeSaveArticle()
   }
 
@@ -69,6 +81,13 @@ class EditContainer extends Component {
     const hero = article.get('hero_section') || {}
     hero[key] = value
     this.onChange('hero_section', hero)
+  }
+
+  sendStopEditing = () => {
+    const { article, stopEditingArticleAction } = this.props
+    stopEditingArticleAction({
+      article: article.id
+    })
   }
 
   maybeSaveArticle = () => {
@@ -105,17 +124,24 @@ class EditContainer extends Component {
     }
   }
 
+  modalDidClose = () => {
+    this.setState({
+      shouldShowModal: false
+    })
+  }
+
   render () {
     const { error, currentSession } = this.props
-    const { isOtherUserInSession, inactivityPeriodEntered } = this.state
+    const { isOtherUserInSession, inactivityPeriodEntered, shouldShowModal } = this.state
+
+    let modalType = isOtherUserInSession ? 'locked' : (inactivityPeriodEntered ? 'timeout' : '')
 
     return (
       <div className='EditContainer'>
         <EditHeader {...this.props} />
         {error && <EditError />}
         {this.getActiveView()}
-        {isOtherUserInSession && <MessageModal type='locked' session={currentSession} />}
-        {inactivityPeriodEntered && <MessageModal type='timeout' session={currentSession} />}
+        {shouldShowModal && modalType && <MessageModal type={modalType} session={currentSession} onClose={this.modalDidClose} />}
       </div>
     )
   }
@@ -134,6 +160,7 @@ const mapDispatchToProps = {
   changeSavedStatusAction: changeSavedStatus,
   saveArticleAction: saveArticle,
   startEditingArticleAction: startEditingArticle,
+  stopEditingArticleAction: stopEditingArticle,
   updateArticleAction: updateArticle
 }
 
