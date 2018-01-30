@@ -79,7 +79,7 @@ export const onChangeSection = (key, value) => {
 }
 
 export const onFirstSave = (id) => {
-  location.assign(`/articles/${id}/edit`)
+  window.location.assign(`/articles/${id}/edit`)
 
   return {
     type: actions.ON_FIRST_SAVE
@@ -103,7 +103,7 @@ export const publishArticle = (article, published) => {
 }
 
 export const redirectToList = (published) => {
-  location.assign(`/articles?published=${published}`)
+  window.location.assign(`/articles?published=${published}`)
 
   return {
     type: actions.REDIRECT_TO_LIST
@@ -190,9 +190,9 @@ export function setupSection (type) {
   }
 }
 
-export function setSeoKeyword (article) {
+export const setSeoKeyword = (article) => {
   if (article.get('published')) {
-    const seo_keyword = $('input#edit-seo__focus-keyword').val()
+    const seo_keyword = $('input#edit-seo__focus-keyword').val() || ''
 
     article.set({ seo_keyword })
   }

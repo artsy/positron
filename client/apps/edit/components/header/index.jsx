@@ -33,9 +33,9 @@ export class EditHeader extends Component {
   }
 
   onSave = () => {
-    const { actions, article, beforeUnload } = this.props
+    const { actions, article } = this.props
 
-    window.removeEventListener('beforeunload', beforeUnload)
+    this.removeUnsavedAlert()
     actions.saveArticle(article)
   }
 
@@ -43,8 +43,15 @@ export class EditHeader extends Component {
     const { actions, article } = this.props
 
     if (confirm('Are you sure?')) {
+      this.removeUnsavedAlert()
       actions.deleteArticle(article)
     }
+  }
+
+  removeUnsavedAlert = () => {
+    const { beforeUnload } = this.props
+    // dont show popup for unsaved changes when saving/deleting
+    window.removeEventListener('beforeunload', beforeUnload)
   }
 
   getSaveColor = () => {
