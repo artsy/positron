@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { changeSavedStatus, saveArticle, toggleSpinner } from 'client/actions/editActions'
-
+import {
+  changeSavedStatus,
+  saveArticle,
+  toggleSpinner
+} from 'client/actions/editActions'
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
@@ -10,7 +13,7 @@ import { EditDisplay } from './display/index.jsx'
 import EditHeader from './header/index.jsx'
 import EditError from './error/index.jsx'
 
-class EditContainer extends Component {
+export class EditContainer extends Component {
   static propTypes = {
     activeView: PropTypes.string,
     article: PropTypes.object,
@@ -19,16 +22,11 @@ class EditContainer extends Component {
     error: PropTypes.object,
     isSaved: PropTypes.bool,
     saveArticleAction: PropTypes.func,
-    toggleSpinnerAction: PropTypes.func,
-    user: PropTypes.object
+    toggleSpinnerAction: PropTypes.func
   }
 
   constructor (props) {
     super(props)
-
-    this.state = {
-      lastUpdated: null
-    }
 
     this.beforeUnload = this.beforeUnload.bind(this)
     this.setupBeforeUnload()
