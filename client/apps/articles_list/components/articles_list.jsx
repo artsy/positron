@@ -14,7 +14,7 @@ require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')
 const icons = () => require('../icons.jade')(...arguments)
 
-export class ArticlesListView extends Component {
+export class ArticlesList extends Component {
   static propTypes = {
     actions: PropTypes.object,
     articles: PropTypes.array,
@@ -144,4 +144,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ArticlesListView)
+)(ArticlesList)

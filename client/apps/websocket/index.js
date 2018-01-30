@@ -1,6 +1,5 @@
 import { messageTypes } from './messageTypes'
 import { actions } from 'client/actions/articlesActions'
-import { actions as editActions } from 'client/actions/editActions'
 
 const {
   articlesRequested,
@@ -13,7 +12,7 @@ const {
 export const articlesInSession = {}
 
 const onArticlesRequested = ({io, socket}) => {
-  console.log('onArticlesRequested')
+  console.log('[socket] onArticlesRequested')
   const event = articlesRequested
   socket.emit(event, {
     type: actions.EDITED_ARTICLES_RECEIVED,
@@ -22,7 +21,7 @@ const onArticlesRequested = ({io, socket}) => {
 }
 
 const onUserStartedEditing = ({io, socket}, data) => {
-  console.log('onUserStartedEditing', data)
+  console.log('[socket] onUserStartedEditing', data)
   const { timestamp, user, article } = data
   const { id, name } = user
   const currentSession = articlesInSession[article]
@@ -58,7 +57,7 @@ const onUserCurrentlyEditing = ({io, socket}, data) => {
 }
 
 const onUserStoppedEditing = ({io, socket}, data) => {
-  console.log('onUserStoppedEditing', data)
+  console.log('[socket] onUserStoppedEditing', data)
   const { article, user } = data
   const currentSession = articlesInSession[article]
 
