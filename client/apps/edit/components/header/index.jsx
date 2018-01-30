@@ -10,6 +10,7 @@ export class EditHeader extends Component {
   static propTypes = {
     actions: PropTypes.any,
     article: PropTypes.object,
+    beforeUnload: PropTypes.func,
     channel: PropTypes.object,
     edit: PropTypes.object,
     isAdmin: PropTypes.bool
@@ -31,12 +32,26 @@ export class EditHeader extends Component {
     }
   }
 
+  onSave = () => {
+    const { actions, article } = this.props
+
+    this.removeUnsavedAlert()
+    actions.saveArticle(article)
+  }
+
   onDelete = () => {
     const { actions, article } = this.props
 
     if (confirm('Are you sure?')) {
+      this.removeUnsavedAlert()
       actions.deleteArticle(article)
     }
+  }
+
+  removeUnsavedAlert = () => {
+    const { beforeUnload } = this.props
+    // dont show popup for unsaved changes when saving/deleting
+    window.removeEventListener('beforeunload', beforeUnload)
   }
 
   getSaveColor = () => {
@@ -158,10 +173,8 @@ export class EditHeader extends Component {
           <button
             className='avant-garde-button'
             style={{color: this.getSaveColor()}}
-            onClick={() => article.get('published')
-              ? article.trigger('savePublished')
-              : actions.saveArticle(article)
-            }>
+            onClick={this.onSave}
+          >
             {this.getSaveText()}
           </button>
 
