@@ -26,7 +26,6 @@ describe 'EditLayout', ->
         benv.expose $: benv.require('jquery')
         Backbone.$ = $
         sinon.stub Backbone, 'sync'
-        sinon.stub Backbone.history, 'navigate'
         @EditLayout = rewire '../index.coffee'
         @EditLayout.__set__ 'YoastView', @YoastView = sinon.stub().returns onKeyup: @yoastKeyup = sinon.stub()
         @EditLayout.__set__ 'sd', sd
@@ -42,45 +41,7 @@ describe 'EditLayout', ->
   afterEach ->
     benv.teardown()
     Backbone.sync.restore()
-    Backbone.history.navigate.restore()
     _.debounce.restore()
-
-  describe '#serialize', ->
-
-    it 'adds the current user as the author_id', ->
-      @view.user.set id: 'foo'
-      @view.serialize().author_id.should.equal 'foo'
-
-  describe '#onFinished', ->
-
-    it 'redirects to the list if the articles is saved', ->
-      sinon.stub $.fn, 'ajaxStop'
-      @view.redirectToList = sinon.stub()
-      @view.onFinished()
-      $.fn.ajaxStop.args[0][0]()
-      @view.redirectToList.called.should.be.ok
-      $.fn.ajaxStop.restore()
-
-  describe '#onFirstSave', ->
-
-    it 'updates the url', ->
-      @view.article.set id: 'foo'
-      @view.onFirstSave()
-      Backbone.history.navigate.args[0][0].should.equal '/articles/foo/edit'
-
-  describe '#setupOnBeforeUnload', ->
-
-    it 'stops you if theres ajax requests going on', ->
-      $.active = 3
-      @view.setupOnBeforeUnload()
-      window.onbeforeunload().should.containEql 'not finished'
-
-    it 'stops you if theres a published article that is not yet saved', ->
-      $.active = 0
-      @view.changedSection = true
-      @view.finished = false
-      @view.setupOnBeforeUnload()
-      window.onbeforeunload().should.containEql 'do you wish to continue'
 
   describe '#getBodyText', ->
 
