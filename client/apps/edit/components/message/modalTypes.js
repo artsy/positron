@@ -12,7 +12,7 @@ export const ModalTypes = {
       {
         title: 'Home',
         action: () => {
-          document.location = '/articles/'
+          document.location.assign('/')
         }
       }
     ],
@@ -37,7 +37,7 @@ export const ModalTypes = {
       {
         title: 'Leave',
         action: () => {
-          document.location = '/articles/'
+          document.location.assign('/')
         }
       }
     ],

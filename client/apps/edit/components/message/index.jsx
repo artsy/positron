@@ -60,6 +60,10 @@ const ActionsContainer = styled.div`
   margin-right: 20px;
 `
 
+const ActionButton = styled.button`
+  margin-right: 15px;
+`
+
 const RedirectText = styled.span`
   ${Fonts.avantgarde('s11')};
   text-transform: uppercase;
@@ -70,7 +74,8 @@ export class MessageModal extends Component {
   static propTypes = {
     type: PropTypes.oneOf(['locked', 'timeout']),
     session: PropTypes.object,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
+    onTimerEnded: PropTypes.func
   }
 
   state = {
@@ -88,7 +93,8 @@ export class MessageModal extends Component {
   updateTimer = () => {
     const { timeLeft } = this.state
     if (timeLeft === 0) {
-      return this.props.onClose && this.props.onClose()
+      this.props.onTimerEnded && this.props.onTimerEnded()
+      return
     }
 
     this.setState({
@@ -107,7 +113,7 @@ export class MessageModal extends Component {
   render () {
     const { type, session } = this.props
     const { header, title, description, actions } = ModalTypes[type]
-    const { timestamp, user } = session
+    const { timestamp, user } = session || { timestamp: null, user: { name: null } }
     const count = this.state.timeLeft
     const time = `00:${count < 10 ? '0' + count : count}`
 
@@ -122,10 +128,10 @@ export class MessageModal extends Component {
           <Description>{description(moment(timestamp).fromNow(), user.name)}</Description>
           <Footer>
             <ActionsContainer>
-              {actions.map((a, i) => <button
+              {actions.map((a, i) => <ActionButton
                 key={i}
                 className='avant-garde-button'
-                onClick={a.action.bind(this)}>{a.title}</button>)}
+                onClick={a.action.bind(this)}>{a.title}</ActionButton>)}
             </ActionsContainer>
             <RedirectText>Redirecting in {time}</RedirectText>
           </Footer>

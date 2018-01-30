@@ -17,6 +17,8 @@ import EditError from './error/index.jsx'
 
 import { MessageModal } from './message'
 
+const INACTIVITY_TIMEOUT = 600 * 1000
+
 class EditContainer extends Component {
   static propTypes = {
     activeView: PropTypes.string,
@@ -58,17 +60,20 @@ class EditContainer extends Component {
       article: this.props.article.id
     })
 
+    this.resetInactivityCounter()
     window.addEventListener('beforeunload', this.sendStopEditing)
   }
 
   componentWillUnmount () {
     this.sendStopEditing()
     window.removeEventListener('beforeunload', this.sendStopEditing)
+    clearTimeout(this.inactivityTimer)
   }
 
   onChange = (key, value) => {
     const { article, updateArticleAction } = this.props
 
+    this.resetInactivityCounter()
     article.set(key, value)
     updateArticleAction({
       article: article.id
@@ -83,10 +88,24 @@ class EditContainer extends Component {
     this.onChange('hero_section', hero)
   }
 
+  resetInactivityCounter = () => {
+    if (this.inactivityTimer) {
+      clearTimeout(this.inactivityTimer)
+    }
+    this.inactivityTimer = setTimeout(this.setInactivityPeriod, INACTIVITY_TIMEOUT)
+  }
+
+  setInactivityPeriod = () => {
+    this.setState({
+      inactivityPeriodEntered: true
+    })
+  }
+
   sendStopEditing = () => {
-    const { article, stopEditingArticleAction } = this.props
+    const { article, stopEditingArticleAction, user } = this.props
     stopEditingArticleAction({
-      article: article.id
+      article: article.id,
+      user
     })
   }
 
@@ -141,7 +160,15 @@ class EditContainer extends Component {
         <EditHeader {...this.props} />
         {error && <EditError />}
         {this.getActiveView()}
-        {shouldShowModal && modalType && <MessageModal type={modalType} session={currentSession} onClose={this.modalDidClose} />}
+        {shouldShowModal && modalType &&
+          <MessageModal
+            type={modalType}
+            session={currentSession}
+            onClose={this.modalDidClose}
+            onTimerEnded={() => {
+              document.location.assign('/')
+            }}
+          />}
       </div>
     )
   }

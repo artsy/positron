@@ -59,7 +59,13 @@ const onUserCurrentlyEditing = ({io, socket}, data) => {
 
 const onUserStoppedEditing = ({io, socket}, data) => {
   console.log('onUserStoppedEditing', data)
-  const { article } = data
+  const { article, user } = data
+  const currentSession = articlesInSession[article]
+
+  if (currentSession && currentSession.user.id !== user.id) {
+    socket.emit(articleLocked, articlesInSession[article])
+    return
+  }
   delete articlesInSession[article]
 
   io.sockets.emit(userStoppedEditing, {
