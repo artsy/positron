@@ -24,6 +24,7 @@ describe('Edit Header Controls', () => {
         publishArticle: jest.fn(),
         saveArticle: jest.fn()
       },
+      beforeUnload: jest.fn(),
       article: new Article(Fixtures.StandardArticle),
       channel: { type: 'partner' },
       edit: {
@@ -139,14 +140,23 @@ describe('Edit Header Controls', () => {
     })
 
     it('Saves a published article on button click', () => {
-      props.article.trigger = jest.fn()
       props.article.set('published', true)
       const component = getWrapper(props)
       const button = component.find('button').at(4)
       button.simulate('click')
 
-      expect(props.actions.saveArticle.mock.calls.length).toBe(0)
-      expect(props.article.trigger.mock.calls[2][0]).toBe('savePublished')
+      expect(props.actions.saveArticle.mock.calls.length).toBe(1)
+    })
+
+    it('Removes beforeUnload listener on click', () => {
+      window.removeEventListener = jest.fn()
+      props.article.set('published', true)
+      const component = getWrapper(props)
+      const button = component.find('button').at(4)
+      button.simulate('click')
+
+      expect(window.removeEventListener.mock.calls[3][0]).toBe('beforeunload')
+      expect(window.removeEventListener.mock.calls[3][1]).toBe(props.beforeUnload)
     })
   })
 

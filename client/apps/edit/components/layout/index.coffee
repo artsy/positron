@@ -1,5 +1,4 @@
 _ = require 'underscore'
-_s = require 'underscore.string'
 Backbone = require 'backbone'
 sd = require('sharify').data
 Channel = require '../../../../models/channel.coffee'
@@ -12,57 +11,11 @@ module.exports = class EditLayout extends Backbone.View
 
   initialize: (options) ->
     { @article } = options
-    @user = new User sd.USER
     @channel = new Channel sd.CURRENT_CHANNEL
-    @$window = $(window)
-    @article.sections.removeBlank()
-    @article.sync = _.debounce _.bind(@article.sync, @article), 500
-    @article.sections.on 'add remove reset', @addRemoveReset
-    @article.on 'finished', @onFinished
-    @article.on 'loading', @showSpinner
-    @article.once 'sync', @onFirstSave if @article.isNew()
-    @article.on 'savePublished', @savePublished
+
     if @channel?.isArtsyChannel()
       @setupYoast()
       @article.on 'change', @onYoastKeyup
-    @setupOnBeforeUnload()
-    @$('#edit-sections-spinner').hide()
-
-  onFirstSave: =>
-    Backbone.history.navigate "/articles/#{@article.get 'id'}/edit"
-
-  setupOnBeforeUnload: ->
-    window.onbeforeunload = =>
-      if $.active > 0
-        "Your article is not finished saving."
-      else if @changedSection is true and not @finished
-        "You have unsaved changes, do you wish to continue?"
-      else
-        null
-
-  serialize: ->
-    {
-      author_id: @user.get('id')
-      seo_keyword: @$('input#edit-seo__focus-keyword').val()
-    }
-
-  redirectToList: =>
-    location.assign '/articles?published=' + @article.get('published')
-
-  showSpinner: =>
-    @$('#edit-sections-spinner').show()
-
-  onFinished: =>
-    @finished = true
-    @showSpinner()
-    $(document).ajaxStop @redirectToList
-
-  savePublished: =>
-    @article.save @serialize()
-    @onFinished()
-
-  addRemoveReset: =>
-    @changedSection = true
 
   events:
     'keyup #edit-seo__focus-keyword': 'onYoastKeyup'
