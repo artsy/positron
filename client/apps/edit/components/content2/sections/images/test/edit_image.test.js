@@ -1,6 +1,6 @@
 import React from 'react'
-import Backbone from 'backbone'
-import { extend } from 'lodash'
+import { clone, extend } from 'lodash'
+import { stripTags } from 'underscore.string'
 import { mount } from 'enzyme'
 import { Artwork, Fixtures, Image } from '@artsy/reaction-force/dist/Components/Publishing'
 import { EditImage } from '../components/edit_image'
@@ -22,8 +22,8 @@ describe('EditImage', () => {
   beforeEach(() => {
     props = {
       image,
-      articleLayout: 'standard',
-      section: new Backbone.Model(StandardArticle.sections[4]),
+      article: clone(StandardArticle),
+      section: clone(StandardArticle.sections[4]),
       index: 0,
       width: 200,
       removeImage: jest.fn(),
@@ -31,71 +31,96 @@ describe('EditImage', () => {
     }
   })
 
-  it('renders an image', () => {
-    const component = getWrapper(props)
+  describe('Rendering', () => {
+    it('renders an image', () => {
+      const component = getWrapper(props)
+      const srcToArray = props.image.url.split('%2F')
+      const fileName = srcToArray[srcToArray.length - 1]
+      const caption = stripTags(props.image.caption)
 
-    expect(component.find(Image).length).toBe(1)
-    expect(component.html()).toMatch(
-      'class="EditImage" style="width: 200px;"'
-    )
-    expect(component.html()).toMatch(
-      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fartsy-media-uploads.s3.amazonaws.com%2F5ZP7vKuVPqiynVU0jpFewQ%252Funnamed.png&amp;width=1200&amp;quality=80'
-    )
-    expect(component.html()).toMatch(
-      'alt="John Elisle, The Star, from the reimagined female Tarot cards. Courtesy of the artist.'
-    )
+      expect(component.find(Image).exists()).toBe(true)
+      expect(component.find('img').getElement().props.src).toMatch(fileName)
+      expect(component.text()).toMatch(caption)
+    })
+
+    it('renders an artwork', () => {
+      props.image = artwork
+      const component = getWrapper(props)
+      const srcToArray = artwork.image.split('/')
+      const fileName = srcToArray[srcToArray.length - 1]
+
+      expect(component.find(Artwork).exists()).toBe(true)
+      expect(component.text()).toMatch(artwork.date)
+      expect(component.text()).toMatch(artwork.artists[0].name)
+      expect(component.text()).toMatch(artwork.partner.name)
+      expect(component.find('img').getElement().props.src).toMatch(fileName)
+    })
   })
 
-  it('renders an artwork', () => {
-    props.image = artwork
-    const component = getWrapper(props)
+  describe('Dimensions', () => {
+    it('Sets the container width to props.width if multiple images', () => {
+      const component = getWrapper(props)
+      const imageContainer = component.find('.EditImage').first().getElement().props
 
-    expect(component.find(Artwork).length).toBe(1)
-    expect(component.html()).toMatch(
-      'class="EditImage" style="width: 200px;"'
-    )
-    expect(component.html()).toMatch(
-      'src="https://d7hftxdivxxvm.cloudfront.net?resize_to=width&amp;src=https%3A%2F%2Fd32dm0rphc51dk.cloudfront.net%2FlSBz0tsfvOAm2qKdWwgxLw%2Flarger.jpg&amp;width=1200&amp;quality=80'
-    )
-    expect(component.html()).toMatch('<span class="name">Matt Devine</span>')
-    expect(component.html()).toMatch('Brass Tax')
-    expect(component.html()).toMatch('<span class="date">2015</span>')
-    expect(component.text()).toMatch('Matt DevineBrass Tax, 2015Joanne Artman Gallery. Courtesy of The Metropolitan Museum of Art')
+      expect(imageContainer.width).toBe(props.width + 'px')
+    })
+
+    it('Sets the container width to 100% if single image and not classic', () => {
+      props.section.images = [props.image]
+      const component = getWrapper(props)
+      const imageContainer = component.find('.EditImage').first().getElement().props
+
+      expect(imageContainer.width).toBe('100%')
+    })
   })
 
-  it('if image, renders an editable caption with placeholder', () => {
-    props.image.caption = ''
-    const component = getWrapper(props)
+  describe('Caption', () => {
+    it('if image, renders an editable caption with placeholder', () => {
+      props.image.caption = ''
+      const component = getWrapper(props)
 
-    expect(component.find(Paragraph).length).toBe(1)
-    expect(component.html()).toMatch('class="public-DraftEditorPlaceholder-root"')
+      expect(component.find(Paragraph).exists()).toBe(true)
+      expect(component.html()).toMatch('class="public-DraftEditorPlaceholder-root"')
+    })
+
+    it('#onCaptionChange can change an image caption', () => {
+      const component = getWrapper(props)
+      const newCaption = '<p>New Caption</p>'
+
+      component.instance().onCaptionChange(newCaption)
+      expect(props.onChange.mock.calls[0][1][props.index].caption).toBe(newCaption)
+    })
+
+    it('if artwork, does not render editable caption', () => {
+      props.image = artwork
+      const component = getWrapper(props)
+
+      expect(component.find(Paragraph).exists()).toBe(false)
+    })
   })
 
-  it('if artwork, does not render editable caption', () => {
-    props.image = artwork
-    const component = getWrapper(props)
+  describe('Remove Image', () => {
+    it('hides the remove button when not editing', () => {
+      const component = getWrapper(props)
 
-    expect(component.find(Paragraph).length).toBe(0)
-  })
+      expect(component.find(RemoveButton).exists()).toBe(false)
+    })
 
-  it('hides the remove button when not editing', () => {
-    const component = getWrapper(props)
+    it('renders the remove button if editing and props.removeItem', () => {
+      props.editing = true
+      const component = getWrapper(props)
 
-    expect(component.find(RemoveButton).length).toBe(0)
-  })
+      expect(component.find(RemoveButton).exists()).toBe(true)
+    })
 
-  it('renders the remove button if editing and props.removeItem', () => {
-    props.editing = true
-    const component = getWrapper(props)
+    it('calls removeItem when clicking remove icon', () => {
+      props.editing = true
+      const component = getWrapper(props)
+      component.find(RemoveButton).first().simulate('click')
 
-    expect(component.find(RemoveButton).length).toBe(1)
-  })
-
-  it('calls removeItem when clicking remove icon', () => {
-    props.editing = true
-    const component = getWrapper(props)
-
-    component.find(RemoveButton).at(0).simulate('click')
-    expect(props.removeImage).toBeCalled()
+      expect(props.onChange.mock.calls[0][0]).toBe('images')
+      expect(props.onChange.mock.calls[0][1].length).toBe(props.section.images.length - 1)
+      expect(props.onChange.mock.calls[0][1][props.index].url).not.toBe(props.image.url)
+    })
   })
 })

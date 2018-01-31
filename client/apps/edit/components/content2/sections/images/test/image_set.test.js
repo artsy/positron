@@ -1,5 +1,4 @@
 import { mount } from 'enzyme'
-import Backbone from 'backbone'
 import React from 'react'
 import {
   Fixtures,
@@ -10,7 +9,7 @@ import { ImageSet } from '../components/image_set'
 
 describe('ImageSet', () => {
   let props = {
-    section: new Backbone.Model(Fixtures.StandardArticle.sections[16])
+    section: Fixtures.StandardArticle.sections[16]
   }
 
   const getWrapper = (props) => {
