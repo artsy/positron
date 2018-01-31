@@ -11,7 +11,7 @@ const {
 
 export const articlesInSession = {}
 
-const onArticlesRequested = ({io, socket}) => {
+export const onArticlesRequested = ({io, socket}) => {
   console.log('[socket] onArticlesRequested')
   const event = articlesRequested
   socket.emit(event, {
@@ -20,8 +20,8 @@ const onArticlesRequested = ({io, socket}) => {
   })
 }
 
-const onUserStartedEditing = ({io, socket}, data) => {
-  console.log('[socket] onUserStartedEditing', data)
+export const onUserStartedEditing = ({io, socket}, data) => {
+  console.log('[socket] onUserStartedEditing, userId: ', data.user.id, ', article: ', data.article)
   const { timestamp, user, article } = data
   const { id, name } = user
   const currentSession = articlesInSession[article]
@@ -45,7 +45,7 @@ const onUserStartedEditing = ({io, socket}, data) => {
   })
 }
 
-const onUserCurrentlyEditing = ({io, socket}, data) => {
+export const onUserCurrentlyEditing = ({io, socket}, data) => {
   const { article, timestamp } = data
   articlesInSession[article].timestamp = timestamp
 
@@ -56,8 +56,8 @@ const onUserCurrentlyEditing = ({io, socket}, data) => {
   })
 }
 
-const onUserStoppedEditing = ({io, socket}, data) => {
-  console.log('[socket] onUserStoppedEditing', data)
+export const onUserStoppedEditing = ({io, socket}, data) => {
+  console.log('[socket] onUserStoppedEditing, userId: ', data.user.id, ', article: ', data.article)
   const { article, user } = data
   const currentSession = articlesInSession[article]
 

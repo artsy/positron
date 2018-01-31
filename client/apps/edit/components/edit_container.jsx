@@ -19,7 +19,7 @@ import EditError from './error/index.jsx'
 
 import { MessageModal } from './message'
 
-const INACTIVITY_TIMEOUT = 10000 // 600 * 1000
+const INACTIVITY_TIMEOUT = 600 * 1000
 
 export class EditContainer extends Component {
   static propTypes = {
@@ -81,10 +81,9 @@ export class EditContainer extends Component {
     const { article } = this.props
 
     if (article.get('published')) {
-      article.on(
-        'change',
-        () => window.addEventListener('beforeunload', this.beforeUnload)
-      )
+      article.once('change', () => {
+        window.addEventListener('beforeunload', this.beforeUnload)
+      })
     }
   }
 

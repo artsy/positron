@@ -133,9 +133,7 @@ export class ArticlesList extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  ...state
-})
+const mapStateToProps = (state) => state
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(Actions, dispatch)

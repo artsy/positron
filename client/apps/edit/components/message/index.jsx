@@ -33,15 +33,17 @@ const Header = styled.div`
   text-transform: uppercase;
   color: ${p => p.color};
 `
+Header.displayName = 'Header'
 
 //TODO: Finish icon
 const HeaderIcon = styled.div`
 `
 
-const Title = styled.h1`
+export const Title = styled.h1`
   ${Fonts.garamond('s30')};
   margin-bottom: 15px;
 `
+Title.displayName = 'Title'
 
 const Description = styled.div`
   ${Fonts.garamond('s19')};
@@ -63,6 +65,7 @@ const ActionsContainer = styled.div`
 const ActionButton = styled.button`
   margin-right: 15px;
 `
+ActionButton.displayName = 'ActionButton'
 
 const RedirectText = styled.span`
   ${Fonts.avantgarde('s11')};
