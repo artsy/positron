@@ -7,10 +7,17 @@ describe('editActions', () => {
   let article
 
   beforeEach(() => {
+    window.location.assign = jest.fn()
     article = new Article(FeatureArticle)
     article.destroy = jest.fn()
     article.save = jest.fn()
   })
+
+  document.body.innerHTML =
+    '<div>' +
+    '  <div id="edit-sections-spinner" />' +
+    '  <input id="edit-seo__focus-keyword" value="ceramics" />' +
+    '</div>'
 
   it('#changeSavedStatus updates article and sets isSaved to arg', () => {
     article.set('title', 'Cool article')
@@ -43,20 +50,83 @@ describe('editActions', () => {
     expect(article.destroy.mock.calls.length).toBe(1)
   })
 
-  it('#publishArticle changes the publish status and saves the article', () => {
-    const action = editActions.publishArticle(article)
+  it('#redirectToList forwards to the articles list with published arg', () => {
+    editActions.redirectToList(true)
+    expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=true')
 
-    expect(action.type).toBe('PUBLISH_ARTICLE')
-    expect(action.payload.isPublishing).toBe(!article.get('published'))
-    expect(article.save.mock.calls.length).toBe(1)
+    editActions.redirectToList(false)
+    expect(window.location.assign.mock.calls[1][0]).toBe('/articles?published=false')
   })
 
-  it('#saveArticle sets isSaving to true and saves the article', () => {
-    const action = editActions.saveArticle(article)
+  it('#onFirstSave forwards to the article url', () => {
+    editActions.onFirstSave('12345')
 
-    expect(action.type).toBe('SAVE_ARTICLE')
-    expect(action.payload.isSaving).toBe(true)
-    expect(article.save.mock.calls.length).toBe(1)
+    expect(window.location.assign.mock.calls[0][0]).toBe('/articles/12345/edit')
+  })
+
+  it('#toggleSpinner shows/hides the loading spinner based on arg', () => {
+    editActions.toggleSpinner(false)
+    expect($('#edit-sections-spinner').css('display')).toBe('none')
+
+    editActions.toggleSpinner(true)
+    expect($('#edit-sections-spinner').css('display')).toBe('block')
+  })
+
+  describe('#saveArticle', () => {
+    it('Sets isSaving to true and saves the article', () => {
+      const action = editActions.saveArticle(article)
+
+      expect(action.type).toBe('SAVE_ARTICLE')
+      expect(action.payload.isSaving).toBe(true)
+      expect(article.save.mock.calls.length).toBe(1)
+    })
+
+    it('Redirects to list if published', () => {
+      editActions.saveArticle(article)
+      expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=true')
+    })
+
+    it('Does not redirect if unpublished', () => {
+      article.set('published', false)
+      editActions.saveArticle(article)
+
+      expect(window.location.assign.mock.calls.length).toBe(0)
+    })
+
+    it('Sets seo_keyword if published', () => {
+      editActions.saveArticle(article)
+
+      expect(article.get('seo_keyword')).toBe('ceramics')
+    })
+
+    it('Does not seo_keyword if unpublished', () => {
+      article.set('published', false)
+      editActions.saveArticle(article)
+
+      expect(article.get('seo_keyword')).toBe(undefined)
+    })
+  })
+
+  describe('#publishArticle', () => {
+    it('Changes the publish status and saves the article', () => {
+      const action = editActions.publishArticle(article)
+
+      expect(action.type).toBe('PUBLISH_ARTICLE')
+      expect(action.payload.isPublishing).toBe(!article.get('published'))
+      expect(article.save.mock.calls.length).toBe(1)
+    })
+
+    it('Sets seo_keyword if publishing', () => {
+      editActions.publishArticle(article, true)
+
+      expect(article.get('seo_keyword')).toBe('ceramics')
+    })
+
+    it('Does not seo_keyword if unpublishing', () => {
+      editActions.publishArticle(article)
+
+      expect(article.get('seo_keyword')).toBe(undefined)
+    })
   })
 
   describe('#newSection', () => {

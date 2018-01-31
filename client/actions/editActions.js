@@ -8,11 +8,14 @@ export const actions = keyMirror(
   'ERROR',
   'NEW_SECTION',
   'ON_CHANGE_SECTION',
+  'ON_FIRST_SAVE',
   'PUBLISH_ARTICLE',
+  'REDIRECT_TO_LIST',
   'REMOVE_SECTION',
   'RESET_SECTIONS',
   'SAVE_ARTICLE',
-  'SET_SECTION'
+  'SET_SECTION',
+  'TOGGLE_SPINNER'
 )
 
 export const changeSavedStatus = (article, isSaved) => ({
@@ -77,17 +80,36 @@ export const onChangeSection = (key, value) => {
   }
 }
 
+export const onFirstSave = (id) => {
+  window.location.assign(`/articles/${id}/edit`)
+
+  return {
+    type: actions.ON_FIRST_SAVE
+  }
+}
+
 export const publishArticle = (article, published) => {
   const newArticle = new Article(article)
+  if (published) {
+    setSeoKeyword(newArticle)
+  }
   newArticle.set('published', published)
   newArticle.save()
-  newArticle.trigger('finished')
+  redirectToList(published)
 
   return {
     type: actions.PUBLISH_ARTICLE,
     payload: {
       isPublishing: true
     }
+  }
+}
+
+export const redirectToList = (published) => {
+  window.location.assign(`/articles?published=${published}`)
+
+  return {
+    type: actions.REDIRECT_TO_LIST
   }
 }
 
@@ -107,17 +129,33 @@ export const resetSections = (sections) => ({
 
 export const saveArticle = (article) => {
   const newArticle = new Article(article)
+  setSeoKeyword(newArticle)
   newArticle.save()
 
   // newArticle.on('sync', () => {
   //   store.dispatch(changeSavedStatus(article, true))
   // })
 
+  if (article.published) {
+    redirectToList(true)
+  }
   return {
     type: actions.SAVE_ARTICLE,
     payload: {
       isSaving: true
     }
+  }
+}
+
+export const toggleSpinner = (isVisible) => {
+  if (isVisible) {
+    $('#edit-sections-spinner').show()
+  } else {
+    $('#edit-sections-spinner').hide()
+  }
+
+  return {
+    type: actions.TOGGLE_SPINNER
   }
 }
 
@@ -164,5 +202,13 @@ export function setupSection (type) {
         type: 'text',
         body: ''
       }
+  }
+}
+
+export const setSeoKeyword = (article) => {
+  if (article.get('published')) {
+    const seo_keyword = $('input#edit-seo__focus-keyword').val() || ''
+
+    article.set({ seo_keyword })
   }
 }
