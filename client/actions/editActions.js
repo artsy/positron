@@ -4,6 +4,7 @@ import Article from 'client/models/article.coffee'
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
+  'CHANGE_SECTION',
   'DELETE_ARTICLE',
   'ERROR',
   'NEW_SECTION',
@@ -73,8 +74,20 @@ export const newSection = (type, sectionIndex) => {
 }
 
 export const onChangeSection = (key, value) => {
+  return (dispatch, getState) => {
+    const article = getState().edit.article
+
+    dispatch(changeSection(key, value))
+
+    if (!article.published) {
+      dispatch(saveArticle())
+    }
+  }
+}
+
+export const changeSection = (key, value) => {
   return {
-    type: actions.ON_CHANGE_SECTION,
+    type: actions.CHANGE_SECTION,
     payload: {
       key,
       value
