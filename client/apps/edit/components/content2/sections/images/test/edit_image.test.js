@@ -27,7 +27,7 @@ describe('EditImage', () => {
       index: 0,
       width: 200,
       removeImage: jest.fn(),
-      onChange: jest.fn()
+      onChangeSectionAction: jest.fn()
     }
   })
 
@@ -88,7 +88,7 @@ describe('EditImage', () => {
       const newCaption = '<p>New Caption</p>'
 
       component.instance().onCaptionChange(newCaption)
-      expect(props.onChange.mock.calls[0][1][props.index].caption).toBe(newCaption)
+      expect(props.onChangeSectionAction.mock.calls[0][1][props.index].caption).toBe(newCaption)
     })
 
     it('if artwork, does not render editable caption', () => {
@@ -118,9 +118,9 @@ describe('EditImage', () => {
       const component = getWrapper(props)
       component.find(RemoveButton).first().simulate('click')
 
-      expect(props.onChange.mock.calls[0][0]).toBe('images')
-      expect(props.onChange.mock.calls[0][1].length).toBe(props.section.images.length - 1)
-      expect(props.onChange.mock.calls[0][1][props.index].url).not.toBe(props.image.url)
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(props.onChangeSectionAction.mock.calls[0][1].length).toBe(props.section.images.length - 1)
+      expect(props.onChangeSectionAction.mock.calls[0][1][props.index].url).not.toBe(props.image.url)
     })
   })
 })

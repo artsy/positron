@@ -32,35 +32,6 @@ export class SectionTool extends Component {
     this.setState({open: !this.state.open})
   }
 
-  // getProps (type) {
-  //   switch (type) {
-  //     case 'video':
-  //       return {
-  //         type: 'video',
-  //         url: '',
-  //         layout: 'column_width'
-  //       }
-  //     case 'image_collection':
-  //       return {
-  //         type: 'image_collection',
-  //         layout: 'overflow_fillwidth',
-  //         images: []
-  //       }
-  //     case 'embed':
-  //       return {
-  //         type: 'embed',
-  //         url: '',
-  //         layout: 'column_width',
-  //         height: ''
-  //       }
-  //     case 'text':
-  //       return {
-  //         type: 'text',
-  //         body: ''
-  //       }
-  //   }
-  // }
-
   newSection = (type) => {
     const { index, newSectionAction } = this.props
 

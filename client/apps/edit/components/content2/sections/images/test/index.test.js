@@ -60,7 +60,7 @@ describe('SectionImageCollection', () => {
       editing: false,
       isHero: false,
       section: imageSection,
-      onChange: jest.fn()
+      onChangeSectionAction: jest.fn()
     }
   })
 
@@ -138,8 +138,8 @@ describe('SectionImageCollection', () => {
 
       component.instance().onDragEnd(newImages)
 
-      expect(props.onChange.mock.calls[0][0]).toBe('images')
-      expect(props.onChange.mock.calls[0][1]).toBe(newImages)
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(newImages)
     })
   })
 
