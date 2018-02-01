@@ -10,8 +10,8 @@ import { removeSection } from 'client/actions/editActions'
 import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
+import SectionVideo from '../sections/video'
 import { SectionEmbed } from '../sections/embed'
-import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
   static propTypes = {

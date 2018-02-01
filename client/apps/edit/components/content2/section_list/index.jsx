@@ -41,7 +41,8 @@ export class SectionList extends Component {
       // if (section.type !== 'callout') {
       if (
         section.type === 'image_collection' ||
-        section.type === 'image_set'
+        section.type === 'image_set' ||
+        section.type === 'video'
       ) {
         return [
           <SectionContainer

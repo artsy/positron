@@ -25,6 +25,7 @@ export class ImagesControls extends Component {
     onChangeSectionAction: PropTypes.func,
     removeSectionAction: PropTypes.func,
     editSection: PropTypes.object,
+    section: PropTypes.object,
     sectionIndex: PropTypes.number,
     setProgress: PropTypes.func
   }
