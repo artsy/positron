@@ -10,7 +10,7 @@ import {
   IconHeroImage,
   IconHeroVideo
 } from '@artsy/reaction-force/dist/Components/Publishing'
-import { newSection } from 'client/actions/editActions'
+import { newHeroSection, newSection } from 'client/actions/editActions'
 
 export class SectionTool extends Component {
   static propTypes = {
@@ -18,9 +18,9 @@ export class SectionTool extends Component {
     index: PropTypes.number,
     isEditing: PropTypes.bool,
     isHero: PropTypes.bool,
+    newHeroSectionAction: PropTypes.func,
     newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
-    section: PropTypes.object,
     sections: PropTypes.array
   }
 
@@ -32,48 +32,48 @@ export class SectionTool extends Component {
     this.setState({open: !this.state.open})
   }
 
-  getProps (type) {
-    switch (type) {
-      case 'video':
-        return {
-          type: 'video',
-          url: '',
-          layout: 'column_width'
-        }
-      case 'image_collection':
-        return {
-          type: 'image_collection',
-          layout: 'overflow_fillwidth',
-          images: []
-        }
-      case 'embed':
-        return {
-          type: 'embed',
-          url: '',
-          layout: 'column_width',
-          height: ''
-        }
-      case 'text':
-        return {
-          type: 'text',
-          body: ''
-        }
-    }
-  }
+  // getProps (type) {
+  //   switch (type) {
+  //     case 'video':
+  //       return {
+  //         type: 'video',
+  //         url: '',
+  //         layout: 'column_width'
+  //       }
+  //     case 'image_collection':
+  //       return {
+  //         type: 'image_collection',
+  //         layout: 'overflow_fillwidth',
+  //         images: []
+  //       }
+  //     case 'embed':
+  //       return {
+  //         type: 'embed',
+  //         url: '',
+  //         layout: 'column_width',
+  //         height: ''
+  //       }
+  //     case 'text':
+  //       return {
+  //         type: 'text',
+  //         body: ''
+  //       }
+  //   }
+  // }
 
   newSection = (type) => {
     const { index, newSectionAction } = this.props
-    newSectionAction(type, index)
-    // this.props.sections.add(
-    //   this.getProps(type),
-    //   {at: this.props.index + 1}
-    // )
+
+    newSectionAction(type, index + 1)
     this.setState({open: false})
   }
 
   setHero = (type) => {
-    this.props.section.set(this.getProps(type))
-    this.props.onSetEditing(true)
+    const { newHeroSectionAction, onSetEditing } = this.props
+
+    newHeroSectionAction(type)
+    this.setState({open: false})
+    onSetEditing(true)
   }
 
   renderHeroMenu () {
@@ -134,6 +134,7 @@ export class SectionTool extends Component {
     const { firstSection, index, isEditing, isHero, sections } = this.props
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
+
     return (
       <div
         className={'edit-tool'}
@@ -159,11 +160,11 @@ export class SectionTool extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  channel: state.app.channel,
-  section: state.edit.section
+  channel: state.app.channel
 })
 
 const mapDispatchToProps = {
+  newHeroSectionAction: newHeroSection,
   newSectionAction: newSection
 }
 

@@ -1,3 +1,4 @@
+import { clone } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 
@@ -5,9 +6,11 @@ export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
   'CHANGE_SECTION',
+  'CHANGE_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
   'NEW_SECTION',
+  'ON_CHANGE_ARTICLE',
   'ON_CHANGE_SECTION',
   'ON_FIRST_SAVE',
   'PUBLISH_ARTICLE',
@@ -69,6 +72,50 @@ export const newSection = (type, sectionIndex) => {
     payload: {
       section,
       sectionIndex
+    }
+  }
+}
+
+export const newHeroSection = (type) => {
+  const section = setupSection(type)
+
+  return (dispatch, getState) => {
+    dispatch(changeArticle('hero_section', section))
+  }
+}
+
+export const onChangeArticle = (key, value) => {
+  return (dispatch, getState) => {
+    const article = getState().edit.article
+
+    dispatch(changeArticle(key, value))
+
+    if (!article.published) {
+      dispatch(saveArticle())
+    }
+  }
+}
+
+export const changeArticle = (key, value) => {
+  return {
+    type: actions.CHANGE_ARTICLE,
+    payload: {
+      key,
+      value
+    }
+  }
+}
+
+export const onChangeHero = (key, value) => {
+  return (dispatch, getState) => {
+    const article = getState().edit.article
+    const hero_section = clone(article.hero_section)
+
+    hero_section[key] = value
+    dispatch(changeArticle('hero_section', hero_section))
+
+    if (!article.published) {
+      dispatch(saveArticle())
     }
   }
 }

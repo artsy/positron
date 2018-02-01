@@ -4,9 +4,9 @@ import React, { Component } from 'react'
 import { clone, without } from 'lodash'
 import { connect } from 'react-redux'
 import { Artwork, Image } from '@artsy/reaction-force/dist/Components/Publishing'
-import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { onChangeSection } from 'client/actions/editActions'
+import { onChangeHero, onChangeSection } from 'client/actions/editActions'
+import { RemoveButton } from 'client/components/remove_button'
 
 export class EditImage extends Component {
   static propTypes = {
@@ -14,24 +14,39 @@ export class EditImage extends Component {
     editing: PropTypes.bool,
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    onChange: PropTypes.func,
+    isHero: PropTypes.bool,
+    onChangeHeroAction: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
     progress: PropTypes.number,
     section: PropTypes.object.isRequired,
     width: PropTypes.any
   }
 
+  onChange = (images) => {
+    const {
+      isHero,
+      onChangeHeroAction,
+      onChangeSectionAction
+    } = this.props
+
+    if (isHero) {
+      onChangeHeroAction('images', images)
+    } else {
+      onChangeSectionAction('images', images)
+    }
+  }
+
   removeImage = () => {
-    const { section, image, onChange } = this.props
+    const { section, image } = this.props
     const newImages = without(section.images, image)
 
-    onChange('images', newImages)
+    this.onChange(newImages)
   }
 
   onCaptionChange = (html) => {
     const {
       image,
       index,
-      onChange,
       section
     } = this.props
 
@@ -40,7 +55,8 @@ export class EditImage extends Component {
 
     newImage.caption = html
     newImages[index] = newImage
-    onChange('images', newImages)
+
+    this.onChange(newImages)
   }
 
   editCaption = () => {
@@ -111,7 +127,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onChange: onChangeSection
+  onChangeHeroAction: onChangeHero,
+  onChangeSectionAction: onChangeSection
 }
 
 export default connect(

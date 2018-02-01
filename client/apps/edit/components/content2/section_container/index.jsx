@@ -18,12 +18,12 @@ export class SectionContainer extends Component {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
-    index: PropTypes.number.isRequired,
+    index: PropTypes.number,
     isHero: PropTypes.bool,
     onRemoveHero: PropTypes.func,
-    onSetEditing: PropTypes.func.isRequired,
+    onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
-    section: PropTypes.object.isRequired,
+    section: PropTypes.object,
     sections: PropTypes.array
   }
 
@@ -31,10 +31,17 @@ export class SectionContainer extends Component {
     const {
       editing,
       index,
+      isHero,
       onSetEditing
     } = this.props
 
-    const setEditing = editing ? null : index
+    let setEditing
+
+    if (isHero) {
+      setEditing = !editing
+    } else {
+      setEditing = editing ? null : index
+    }
     onSetEditing(setEditing)
   }
 
@@ -46,10 +53,10 @@ export class SectionContainer extends Component {
       removeSectionAction
     } = this.props
 
-    removeSectionAction(index)
-
     if (isHero) {
       onRemoveHero()
+    } else {
+      removeSectionAction(index)
     }
   }
 
@@ -111,12 +118,13 @@ export class SectionContainer extends Component {
       isHero,
       section
     } = this.props
+    const { layout, type } = section
 
     return (
       <div className='SectionContainer'
         data-editing={editing}
-        data-layout={section.layout || 'column_width'}
-        data-type={section.type}
+        data-layout={layout || 'column_width'}
+        data-type={type}
       >
         <div
           className='SectionContainer__hover-controls'

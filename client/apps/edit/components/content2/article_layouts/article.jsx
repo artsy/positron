@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 
 import SectionFooter from '../sections/footer'
 import SectionList from '../section_list'
+import SectionHero from '../sections/hero'
 import { SectionHeader } from '../sections/header'
-import { SectionHero } from '../sections/hero'
 
 export class EditArticle extends Component {
   static propTypes = {
@@ -24,10 +24,7 @@ export class EditArticle extends Component {
       <div className='EditArticle'>
 
         {hasHero &&
-          <SectionHero
-            article={article}
-            onChange={onChange}
-          />
+          <SectionHero />
         }
 
         <SectionHeader {...this.props} />

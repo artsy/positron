@@ -9,6 +9,7 @@ import FileInput from '/client/components/file_input'
 import SectionControls from '../../../section_controls'
 import {
   logError,
+  onChangeHero,
   onChangeSection,
   removeSection
 } from 'client/actions/editActions'
@@ -17,11 +18,13 @@ import { InputArtworkUrl } from './input_artwork_url'
 
 export class ImagesControls extends Component {
   static propTypes = {
+    article: PropTypes.object,
     isHero: PropTypes.bool,
     logErrorAction: PropTypes.func,
-    onChange: PropTypes.func,
+    onChangeHeroAction: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
     removeSectionAction: PropTypes.func,
-    section: PropTypes.object.isRequired,
+    editSection: PropTypes.object,
     sectionIndex: PropTypes.number,
     setProgress: PropTypes.func
   }
@@ -29,11 +32,12 @@ export class ImagesControls extends Component {
   componentWillUnmount = () => {
     const {
       removeSectionAction,
-      section,
+      editSection,
+      isHero,
       sectionIndex
     } = this.props
 
-    if (!section.images.length) {
+    if (!isHero && !editSection.images.length) {
       removeSectionAction(sectionIndex)
     }
   }
@@ -73,10 +77,21 @@ export class ImagesControls extends Component {
   }
 
   onNewImage = (image) => {
-    const { section, onChange } = this.props
-    const newImages = clone(section.images).concat(image)
+    const {
+      editSection,
+      isHero,
+      section,
+      onChangeHeroAction,
+      onChangeSectionAction
+    } = this.props
 
-    onChange('images', newImages)
+    if (isHero) {
+      const newImages = clone(section.images).concat(image)
+      onChangeHeroAction('images', newImages)
+    } else {
+      const newImages = clone(editSection.images).concat(image)
+      onChangeSectionAction('images', newImages)
+    }
   }
 
   onUpload = (image, width, height) => {
@@ -90,8 +105,9 @@ export class ImagesControls extends Component {
   }
 
   inputsAreDisabled = () => {
-    const { section } = this.props
-    return section.layout === 'fillwidth' && section.images.length > 0
+    const { editSection, isHero } = this.props
+
+    return !isHero && editSection.layout === 'fillwidth' && editSection.images.length > 0
   }
 
   fillWidthAlert = () => {
@@ -103,13 +119,15 @@ export class ImagesControls extends Component {
 
   render () {
     const {
+      article,
       isHero,
-      onChange,
-      section,
+      onChangeSectionAction,
+      editSection,
       setProgress
     } = this.props
 
     const inputsAreDisabled = this.inputsAreDisabled()
+    const section = isHero ? article.hero_section : editSection
 
     return (
         <SectionControls
@@ -125,7 +143,7 @@ export class ImagesControls extends Component {
             />
           </div>
 
-          { !isHero &&
+          {!isHero &&
             <Row
               className='edit-controls__artwork-inputs'
               onClick={inputsAreDisabled ? this.fillWidthAlert : undefined}
@@ -137,7 +155,7 @@ export class ImagesControls extends Component {
                   filter={this.filterAutocomplete}
                   formatSelected={(item) => this.fetchDenormalizedArtwork(item._id)}
                   items={section.images || []}
-                  onSelect={(images) => onChange('images', images)}
+                  onSelect={(images) => onChangeSectionAction('images', images)}
                   placeholder='Search artworks by title...'
                   url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
                 />
@@ -151,7 +169,7 @@ export class ImagesControls extends Component {
             </Row>
           }
 
-        { section.type === 'image_set' &&
+        {!isHero && section.type === 'image_set' &&
           <Row className='edit-controls__image-set-inputs'>
             <Col xs={6}>
               <input
@@ -159,7 +177,7 @@ export class ImagesControls extends Component {
                 className='bordered-input bordered-input-dark'
                 defaultValue={section.title}
                 onChange={(e) => {
-                  onChange('title', e.target.value)
+                  onChangeSectionAction('title', e.target.value)
                 }}
                 placeholder='Image Set Title (optional)'
               />
@@ -170,7 +188,7 @@ export class ImagesControls extends Component {
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => onChange('layout', 'mini')}
+                    onClick={() => onChangeSectionAction('layout', 'mini')}
                     data-active={section.layout !== 'full'}
                   />
                   Mini
@@ -178,7 +196,7 @@ export class ImagesControls extends Component {
                 <div className='input-group'>
                   <div
                     className='radio-input'
-                    onClick={() => onChange('layout', 'full')}
+                    onClick={() => onChangeSectionAction('layout', 'full')}
                     data-active={section.layout === 'full'}
                   />
                   Full
@@ -194,13 +212,14 @@ export class ImagesControls extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  section: state.edit.section,
+  editSection: state.edit.section,
   sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {
   logErrorAction: logError,
-  onChange: onChangeSection,
+  onChangeHeroAction: onChangeHero,
+  onChangeSectionAction: onChangeSection,
   removeSectionAction: removeSection
 }
 

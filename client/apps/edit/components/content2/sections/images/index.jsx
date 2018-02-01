@@ -7,14 +7,15 @@ import ImagesControls from './components/controls'
 import EditImage from './components/edit_image'
 import { ImageSet } from './components/image_set'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
-import { onChangeSection } from 'client/actions/editActions'
+import { onChangeHero, onChangeSection } from 'client/actions/editActions'
 
 export class SectionImages extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     isHero: PropTypes.bool,
-    onChange: PropTypes.func,
+    onChangeHeroAction: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
     section: PropTypes.object.isRequired
   }
 
@@ -61,9 +62,17 @@ export class SectionImages extends Component {
   }
 
   onDragEnd = (images) => {
-    const { onChange } = this.props
+    const {
+      isHero,
+      onChangeHeroAction,
+      onChangeSectionAction
+    } = this.props
 
-    onChange('images', images)
+    if (isHero) {
+      onChangeHeroAction('images', images)
+    } else {
+      onChangeSectionAction('images', images)
+    }
   }
 
   isImageSetWrapping = () => {
@@ -86,13 +95,14 @@ export class SectionImages extends Component {
 
   renderImages = (images) => {
     return images.map((image, index) => {
-      const { editing, section } = this.props
+      const { editing, isHero, section } = this.props
       const width = this.getImageWidth(index)
 
       const props = {
         editing,
         image,
         index,
+        isHero,
         section,
         width
       }
@@ -104,12 +114,12 @@ export class SectionImages extends Component {
   }
 
   renderDraggableImages = (images) => {
-    const { editing, onChange } = this.props
+    const { editing } = this.props
 
     return (
       <DragContainer
         items={images}
-        onDragEnd={(images) => onChange('images', images)}
+        onDragEnd={this.onDragEnd}
         isDraggable={editing}
         dimensions={this.getFillWidthDimensions()}
         isWrapping={this.isImageSetWrapping()}
@@ -141,7 +151,9 @@ export class SectionImages extends Component {
           />
         }
 
-        {progress && <ProgressBar progress={progress} cover />}
+        {progress &&
+          <ProgressBar progress={progress} cover />
+        }
 
         <div
           className='SectionImages__list'
@@ -173,7 +185,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onChange: onChangeSection
+  onChangeHeroAction: onChangeHero,
+  onChangeSectionAction: onChangeSection
 }
 
 export default connect(
