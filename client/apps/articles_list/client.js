@@ -7,7 +7,6 @@ import { reducers, initialState } from 'client/reducers'
 import { init as initWebsocket } from 'client/apps/websocket/client'
 
 import ArticlesList from './components/articles_list'
-import Channel from 'client/models/channel.coffee'
 
 const store = createReduxStore(reducers, initialState)
 initWebsocket(store)
@@ -18,7 +17,6 @@ export const init = () => (
       <ArticlesList
         articles={sd.ARTICLES}
         published={sd.HAS_PUBLISHED}
-        channel={new Channel(sd.CURRENT_CHANNEL)}
       />
     </Provider>
   , document.getElementById('articles-list'))

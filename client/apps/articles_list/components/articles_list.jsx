@@ -133,7 +133,9 @@ export class ArticlesList extends Component {
   }
 }
 
-const mapStateToProps = (state) => state
+const mapStateToProps = (state) => ({
+  channel: state.app.channel
+})
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(Actions, dispatch)

@@ -10,7 +10,6 @@ const init = (store) => {
     .forEach(key =>
       socket.on(key, (data) => {
         const { type, payload } = data
-        console.log(type, payload)
         store.dispatch({ type, payload })
       })
     )

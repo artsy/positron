@@ -10,6 +10,7 @@ import { EditContent } from '../content/index.jsx'
 import { EditDisplay } from '../display/index.jsx'
 import { EditHeader } from '../header/index.jsx'
 import { EditError } from '../error/index.jsx'
+
 require('typeahead.js')
 
 describe('EditContainer', () => {
@@ -51,7 +52,16 @@ describe('EditContainer', () => {
       error: {},
       isSaved: false,
       saveArticleAction: jest.fn(),
-      toggleSpinnerAction: jest.fn()
+      toggleSpinnerAction: jest.fn(),
+      startEditingArticleAction: jest.fn(),
+      stopEditingArticleAction: jest.fn(),
+      updateArticleAction: jest.fn(),
+      user: {},
+      currentSession: {
+        user: {
+          id: '123'
+        }
+      }
     }
     window.addEventListener = jest.fn()
   })
