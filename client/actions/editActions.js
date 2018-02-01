@@ -18,14 +18,16 @@ export const actions = keyMirror(
   'TOGGLE_SPINNER'
 )
 
-export const changeSavedStatus = (article, isSaved) => ({
-  type: actions.CHANGE_SAVED_STATUS,
-  payload: {
-    article,
-    isSaved,
-    lastUpdated: new Date()
+export const changeSavedStatus = (article, isSaved) => {
+  return {
+    type: actions.CHANGE_SAVED_STATUS,
+    payload: {
+      article,
+      isSaved,
+      lastUpdated: new Date()
+    }
   }
-})
+}
 
 export const changeView = (activeView) => ({
   // Content, Admin, Display
@@ -127,18 +129,27 @@ export const resetSections = (sections) => ({
   }
 })
 
-export const saveArticle = (article) => {
-  const newArticle = new Article(article)
-  setSeoKeyword(newArticle)
-  newArticle.save()
+export const saveArticle = () => {
+  return (dispatch, getState) => {
+    const article = getState().edit.article
+    const newArticle = new Article(article)
 
-  // newArticle.on('sync', () => {
-  //   store.dispatch(changeSavedStatus(article, true))
-  // })
+    dispatch(saveArticlePending())
 
-  if (article.published) {
-    redirectToList(true)
+    newArticle.on('sync', () => {
+      dispatch(changeSavedStatus(article, true))
+    })
+
+    setSeoKeyword(newArticle)
+    newArticle.save()
+
+    if (article.published) {
+      redirectToList(true)
+    }
   }
+}
+
+export const saveArticlePending = () => {
   return {
     type: actions.SAVE_ARTICLE,
     payload: {
