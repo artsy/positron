@@ -6,6 +6,7 @@ import moment from 'moment'
 import { ModalTypes } from './modalTypes'
 import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing'
 
 const SplashBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
@@ -34,10 +35,6 @@ const Header = styled.div`
   color: ${p => p.color};
 `
 Header.displayName = 'Header'
-
-//TODO: Finish icon
-const HeaderIcon = styled.div`
-`
 
 export const Title = styled.h1`
   ${Fonts.garamond('s30')};
@@ -113,6 +110,13 @@ export class MessageModal extends Component {
     }
   }
 
+  getIconForType (type) {
+    switch (type) {
+      case 'lock': return <IconLock color={colors.grayMedium} width='10px' height='10px' />
+      default: return null
+    }
+  }
+
   render () {
     const { type, session } = this.props
     const { header, title, description, actions } = ModalTypes[type]
@@ -124,7 +128,7 @@ export class MessageModal extends Component {
       <SplashBackground onClick={this.close}>
         <Container>
           <Header color={colors[header.color]}>
-            {header.icon && <HeaderIcon icon='lock' />}
+            {header.icon && this.getIconForType(header.icon)}
             {header.text}
           </Header>
           <Title>{title}</Title>

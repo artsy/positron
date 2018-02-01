@@ -1,3 +1,4 @@
+
 export const ModalTypes = {
   'locked': {
     header: {

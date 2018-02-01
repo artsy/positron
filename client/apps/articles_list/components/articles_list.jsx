@@ -19,7 +19,8 @@ export class ArticlesList extends Component {
     actions: PropTypes.object,
     articles: PropTypes.array,
     published: PropTypes.bool,
-    channel: PropTypes.object
+    channel: PropTypes.object,
+    user: PropTypes.object
   }
 
   state = {
@@ -58,10 +59,11 @@ export class ArticlesList extends Component {
   }
 
   fetchFeed (type, offset, cb) {
-    const feedQuery = query(`published: ${type}, offset: ${offset}, channel_id: "${sd.CURRENT_CHANNEL.id}"`)
+    const { channel, user } = this.props
+    const feedQuery = query(`published: ${type}, offset: ${offset}, channel_id: "${channel.id}"`)
     return request
       .post(sd.API_URL + '/graphql')
-      .set('X-Access-Token', sd.USER != null ? sd.USER.access_token : undefined)
+      .set('X-Access-Token', user != null ? user.access_token : undefined)
       .send({query: feedQuery})
       .end((err, res) => {
         if (err || !(res.body != null ? res.body.data : undefined)) { return }
@@ -86,19 +88,24 @@ export class ArticlesList extends Component {
   }
 
   showArticlesList () {
+    const { channel } = this.props
+    const isArtsyChannel = (type) => {
+      return type in ['editorial', 'support', 'team']
+    }
+
     if (this.props.articles && this.props.articles.length) {
       return (
         <div className='articles-list__container'>
           <div className='articles-list__title'>Latest Articles</div>
           <FilterSearch
-            url={sd.API_URL + `/articles?published=${this.state.published}&channel_id=${sd.CURRENT_CHANNEL.id}&q=%QUERY`}
+            url={sd.API_URL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
             placeholder='Search Articles...'
             collection={this.state.articles}
             searchResults={this.setResults}
             selected={null}
             contentType='article'
             checkable={false}
-            isArtsyChannel={this.props.channel.isArtsyChannel()}
+            isArtsyChannel={isArtsyChannel(channel.type)}
           />
         </div>
       )
@@ -123,7 +130,7 @@ export class ArticlesList extends Component {
               </a>
             </nav>
             <div className='channel-name'>
-              {`${this.props.channel.get('name')}`}
+              {`${this.props.channel.name}`}
             </div>
           </div>
         </h1>

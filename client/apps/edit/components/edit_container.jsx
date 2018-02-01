@@ -48,7 +48,8 @@ export class EditContainer extends Component {
       lastUpdated: null,
       isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
       inactivityPeriodEntered: false,
-      shouldShowModal: true
+      shouldShowModal: true,
+      sentStopEditingEvent: false
     }
 
     this.setupBeforeUnload()
@@ -133,10 +134,16 @@ export class EditContainer extends Component {
   }
 
   sendStopEditing = () => {
+    if (this.state.sentStopEditingEvent) return
+
     const { article, stopEditingArticleAction, user } = this.props
     stopEditingArticleAction({
       article: article.id,
       user
+    })
+
+    this.setState({
+      sentStopEditingEvent: true
     })
   }
 

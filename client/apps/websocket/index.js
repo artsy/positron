@@ -1,5 +1,5 @@
 import { messageTypes } from './messageTypes'
-// import { actions } from 'client/actions/articlesActions'
+import { actions } from 'client/actions/articlesActions'
 
 const {
   articlesRequested,
@@ -15,7 +15,7 @@ export const onArticlesRequested = ({io, socket}) => {
   console.log('[socket] onArticlesRequested')
   const event = articlesRequested
   socket.emit(event, {
-    type: 'EDITED_ARTICLES_RECEIVED',
+    type: actions.EDITED_ARTICLES_RECEIVED,
     payload: articlesInSession
   })
 }
@@ -26,7 +26,10 @@ export const onUserStartedEditing = ({io, socket}, data) => {
   const { id, name } = user
   const currentSession = articlesInSession[article]
   if (currentSession && currentSession.user.id !== id) {
-    socket.emit(articleLocked, articlesInSession[article])
+    socket.emit(articleLocked, {
+      type: 'ARTICLE_LOCKED',
+      payload: articlesInSession[article]
+    })
     return
   }
 
@@ -51,7 +54,7 @@ export const onUserCurrentlyEditing = ({io, socket}, data) => {
 
   const event = articlesRequested
   io.sockets.emit(event, {
-    type: 'EDITED_ARTICLES_RECEIVED',
+    type: actions.EDITED_ARTICLES_RECEIVED,
     payload: articlesInSession
   })
 }
@@ -62,7 +65,10 @@ export const onUserStoppedEditing = ({io, socket}, data) => {
   const currentSession = articlesInSession[article]
 
   if (currentSession && currentSession.user.id !== user.id) {
-    socket.emit(articleLocked, articlesInSession[article])
+    socket.emit(articleLocked, {
+      type: 'ARTICLE_LOCKED',
+      payload: articlesInSession[article]
+    })
     return
   }
   delete articlesInSession[article]

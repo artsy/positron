@@ -4,6 +4,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { data as sd } from 'sharify'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing'
 import $ from 'jquery'
 
 const icons = () => require('./icons.jade')(...arguments)
@@ -98,7 +99,7 @@ export class ArticleList extends Component {
 
             {shouldLockEditing
             ? <span>
-                <span className='lock' />
+                <IconLock color={colors.grayMedium} width='10px' height='10px' />
                 <span className='title'>Locked</span>
               </span>
               : 'View'}
