@@ -5,10 +5,7 @@ import FileInput from 'client/components/file_input/index.jsx'
 import SectionControls from '../../section_controls/index.jsx'
 import { isEmpty } from 'underscore'
 import { isWebUri } from 'valid-url'
-import {
-  logError,
-  removeSection
-} from 'client/actions/editActions'
+import { removeSection } from 'client/actions/editActions'
 
 export class VideoControls extends Component {
   static propTypes = {
@@ -36,19 +33,16 @@ export class VideoControls extends Component {
   }
 
   onCoverImageChange = (url) => {
-    const { onChange, section } = this.props
+    const { onChange } = this.props
     const isValid = isEmpty(url) || isWebUri(url)
 
     if (isValid) {
-      debugger
-      // section.set('cover_image_url', url)
-      // onChange && onChange('cover_image_url', url)
+      onChange('cover_image_url', url)
     }
   }
 
   onVideoUrlChange = (url) => {
     const { onChange } = this.props
-    debugger
 
     if (isEmpty(url)) {
       onChange('url', '')
@@ -76,7 +70,7 @@ export class VideoControls extends Component {
         <input
           className='bordered-input bordered-input-dark'
           onChange={(e) => this.onVideoUrlChange(e.target.value)}
-          defaultValue={section.url}
+          value={section.url}
           placeholder='Paste a youtube or vimeo url (e.g. http://youtube.com/watch?v=id)'
           autoFocus
         />
@@ -97,7 +91,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  logErrorAction: logError,
   removeSectionAction: removeSection
 }
 

@@ -3,8 +3,9 @@ import Paragraph from '../../../../../../components/rich_text/components/paragra
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import VideoControls from './controls.jsx'
-import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Video } from '@artsy/reaction-force/dist/Components/Publishing'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
+import { RemoveButton } from 'client/components/remove_button'
 import { onChangeHero, onChangeSection } from 'client/actions/editActions'
 
 export class SectionVideo extends Component {
@@ -23,7 +24,7 @@ export class SectionVideo extends Component {
   }
 
   onProgress = (progress) => {
-    this.setState({progress})
+    this.setState({ progress })
   }
 
   onChange = (key, value) => {
@@ -32,7 +33,7 @@ export class SectionVideo extends Component {
       onChangeHeroAction,
       onChangeSectionAction
     } = this.props
-    debugger
+
     if (isHero) {
       onChangeHeroAction(key, value)
     } else {
@@ -45,11 +46,15 @@ export class SectionVideo extends Component {
 
     if (section.cover_image_url) {
       return (
-        <div
-          className='edit-section__remove'
-          onClick={() => this.onChange('cover_image_url', null)}>
-          <IconRemove />
-        </div>
+        <RemoveButton
+          onClick={() => this.onChange('cover_image_url', null)}
+        />
+      )
+    } else if (section.url) {
+      return (
+        <RemoveButton
+          onClick={() => this.onChange('url', '')}
+        />
       )
     }
   }
@@ -90,7 +95,6 @@ export class SectionVideo extends Component {
 
   render () {
     const {
-      article,
       editing,
       hidePreview,
       isHero,
@@ -98,17 +102,18 @@ export class SectionVideo extends Component {
     } = this.props
     const { progress } = this.state
 
-    const isEditing = editing ? ' is-editing' : ''
     const showSectionLayouts = !isHero && !hidePreview
 
     return (
-      <section className={'edit-section--video' + isEditing} >
+      <section
+        className='SectionVideo'
+        data-editing={editing}
+      >
         {editing &&
           <VideoControls
             section={section}
             isHero={isHero}
             showLayouts={showSectionLayouts}
-            articleLayout={article.layout}
             onChange={this.onChange}
             onProgress={this.onProgress}
           />

@@ -69,14 +69,14 @@ describe('SectionImageCollection', () => {
       const component = getWrapper(props)
 
       expect(component.find(Image).length).toBe(2)
-      expect(component.find(Artwork).length).toBe(1)
+      expect(component.find(Artwork).exists()).toBe(true)
     })
 
     it('Renders a preview for standard/feature image_set', () => {
       props.section = imageSetSection
       const component = getWrapper(props)
 
-      expect(component.find(ImageSetPreview).length).toBe(1)
+      expect(component.find(ImageSetPreview).exists()).toBe(true)
     })
 
     it('Renders a preview for classic image_set', () => {
@@ -84,14 +84,14 @@ describe('SectionImageCollection', () => {
       props.section = imageSetSection
       const component = getWrapper(props)
 
-      expect(component.find(ImageSetPreviewClassic).length).toBe(1)
+      expect(component.find(ImageSetPreviewClassic).exists()).toBe(true)
     })
 
     it('Renders controls if editing', () => {
       props.editing = true
       const component = getWrapper(props)
 
-      expect(component.find(ImagesControls).length).toBe(1)
+      expect(component.find(ImagesControls).exists()).toBe(true)
     })
 
     it('Renders a placeholder if editing and no images', () => {
@@ -106,7 +106,7 @@ describe('SectionImageCollection', () => {
       const component = getShallowWrapper(props)
       component.setState({progress: 0.65})
 
-      expect(component.find(ProgressBar).length).toBe(1)
+      expect(component.find(ProgressBar).exists()).toBe(true)
     })
   })
 
@@ -114,7 +114,7 @@ describe('SectionImageCollection', () => {
     it('Does not render draggable components if not editing', () => {
       const component = getWrapper(props)
 
-      expect(component.find(DragContainer).length).toBe(0)
+      expect(component.find(DragContainer).exists()).toBe(false)
     })
 
     it('Does not render draggable components if single image', () => {
@@ -122,14 +122,14 @@ describe('SectionImageCollection', () => {
       props.section.images = [imageSection.images[0]]
       const component = getWrapper(props)
 
-      expect(component.find(DragContainer).length).toBe(0)
+      expect(component.find(DragContainer).exists()).toBe(false)
     })
 
     it('Renders draggable components if more than one image and editing', () => {
       props.editing = true
       const component = getWrapper(props)
 
-      expect(component.find(DragContainer).length).toBe(1)
+      expect(component.find(DragContainer).exists()).toBe(true)
     })
 
     it('#onDragEnd calls onChange with reset section images', () => {
