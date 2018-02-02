@@ -92,7 +92,9 @@ export class ArticlesList extends Component {
     const isArtsyChannel = (type) => {
       return type in ['editorial', 'support', 'team']
     }
+    
 
+    //TODO: convert css to use styled-components
     if (this.props.articles && this.props.articles.length) {
       return (
         <div className='articles-list__container'>
