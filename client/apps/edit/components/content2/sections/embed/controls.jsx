@@ -43,7 +43,7 @@ export class EmbedControls extends Component {
               <input
                 autoFocus
                 className='bordered-input bordered-input-dark'
-                defaultValue={section.url || ''}
+                value={section.url || ''}
                 onChange={(e) => onChangeSectionAction('url', e.target.value)}
                 placeholder='https://files.artsy.net'
               />
@@ -54,7 +54,7 @@ export class EmbedControls extends Component {
               <h2>Height (optional)</h2>
               <input
                 className='bordered-input bordered-input-dark'
-                defaultValue={section.height || ''}
+                value={section.height || ''}
                 onChange={(e) => onChangeSectionAction('height', e.target.value)}
                 placeholder='400'
               />
@@ -63,7 +63,7 @@ export class EmbedControls extends Component {
               <h2>Mobile Height (optional)</h2>
               <input
                 className='bordered-input bordered-input-dark'
-                defaultValue={section.mobile_height || ''}
+                value={section.mobile_height || ''}
                 onChange={(e) => onChangeSectionAction('mobile_height', e.target.value)}
                 placeholder='300'
               />

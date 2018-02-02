@@ -67,8 +67,6 @@ export class LayoutControls extends Component {
 
   render () {
     const { section } = this.props
-    const hasImageSet = this.hasImageSet()
-    const hasFullscreen = this.sectionHasFullscreen()
 
     return (
       <nav className='edit-controls__layout'>
@@ -85,7 +83,7 @@ export class LayoutControls extends Component {
           data-active={section.layout === 'column_width'}
         />
 
-        {hasFullscreen &&
+        {this.sectionHasFullscreen() &&
           <a
             name='fillwidth'
             className='layout'
@@ -96,7 +94,7 @@ export class LayoutControls extends Component {
           </a>
         }
 
-        {hasImageSet &&
+        {this.hasImageSet() &&
           <a
             name='image_set'
             className='layout'
