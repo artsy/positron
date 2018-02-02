@@ -1,3 +1,5 @@
+//  Video section supports links from youtube or vimeo
+
 import PropTypes from 'prop-types'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
 import React, { Component } from 'react'

@@ -40,6 +40,7 @@ export class SectionList extends Component {
       const editing = sectionIndex === index
       // if (section.type !== 'callout') {
       if (
+        section.type === 'embed' ||
         section.type === 'image_collection' ||
         section.type === 'image_set' ||
         section.type === 'video'
