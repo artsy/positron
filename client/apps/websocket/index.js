@@ -1,5 +1,4 @@
 import { messageTypes } from './messageTypes'
-import { actions } from 'client/actions/articlesActions'
 
 const {
   articlesRequested,
@@ -15,7 +14,7 @@ export const onArticlesRequested = ({io, socket}) => {
   console.log('[socket] onArticlesRequested')
   const event = articlesRequested
   socket.emit(event, {
-    type: actions.EDITED_ARTICLES_RECEIVED,
+    type: 'EDITED_ARTICLES_RECEIVED',
     payload: articlesInSession
   })
 }
@@ -54,7 +53,7 @@ export const onUserCurrentlyEditing = ({io, socket}, data) => {
 
   const event = articlesRequested
   io.sockets.emit(event, {
-    type: actions.EDITED_ARTICLES_RECEIVED,
+    type: 'EDITED_ARTICLES_RECEIVED',
     payload: articlesInSession
   })
 }
