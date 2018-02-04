@@ -34,6 +34,7 @@ export class SectionText extends Component {
     editing: PropTypes.bool,
     hasFeatures: PropTypes.bool,
     index: PropTypes.number,
+    onChange: PropTypes.func,
     isContentEnd: PropTypes.bool,
     isContentStart: PropTypes.bool,
     onSetEditing: PropTypes.func,
@@ -56,12 +57,14 @@ export class SectionText extends Component {
       plugin: null,
       url: null
     }
+
+    props.sections.on('change:autolink', this.editorStateFromProps)
   }
 
   componentWillMount = () => {
     const { section } = this.props
 
-    if (section.get('body') && section.get('body').length) {
+    if (section.body && section.body.length) {
       this.setEditorStateFromProps()
     }
   }
@@ -75,7 +78,7 @@ export class SectionText extends Component {
       section
     } = this.props
 
-    let html = standardizeSpacing(section.get('body'))
+    let html = standardizeSpacing(section.body)
 
     if (article.layout !== 'classic') {
       html = setContentEnd(html, isContentEnd)
@@ -93,11 +96,11 @@ export class SectionText extends Component {
   }
 
   onChange = (editorState) => {
-    const { article, section } = this.props
+    const { article, onChange, section } = this.props
     const html = convertToRichHtml(editorState, article.layout)
 
-    if (section.get('body') !== html) {
-      section.set('body', html)
+    if (section.body !== html) {
+      onChange('body', html)
     }
     this.setState({ editorState, html })
   }
@@ -127,6 +130,7 @@ export class SectionText extends Component {
       const { currentSectionState, newSection } = hasDividedState
 
       this.onChange(currentSectionState)
+      // TODO: Redux newSectionAction
       sections.add({type: 'text', body: newSection}, {at: index + 1})
     }
     return 'handled'
@@ -140,13 +144,13 @@ export class SectionText extends Component {
     const { isFirstBlock, anchorOffset } = selection
 
     const beforeIndex = index - 1
-    const sectionBefore = sections.models[beforeIndex].attributes
-    const sectionBeforeIsText = sectionBefore.type === 'text'
+    const sectionBefore = sections.models[beforeIndex]
+    const sectionBeforeIsText = sectionBefore.get('type') === 'text'
     const isAtFirstCharacter = anchorOffset === 0
 
     // only merge a section if focus is at 1st character of 1st block
     if (isFirstBlock && isAtFirstCharacter && sectionBeforeIsText) {
-      const beforeHtml = sectionBefore.body
+      const beforeHtml = sectionBefore.get('body')
       // delete section before
       sectionBefore.destroy()
       // merge html from both sections into new state
@@ -154,7 +158,9 @@ export class SectionText extends Component {
       // update new section with combined html
       this.onChange(newState)
       onSetEditing(beforeIndex)
+      return 'handled'
     }
+    return 'not-handled'
   }
 
   // KEYBOARD ACTIONS
@@ -201,7 +207,6 @@ export class SectionText extends Component {
       anchorOffset,
       isFirstBlock
     } = getSelectionDetails(editorState)
-
     // Don't split from the first block, to avoid creating empty blocks
     // Don't split from the middle of a paragraph
     if (isFirstBlock || anchorOffset) {
@@ -240,8 +245,34 @@ export class SectionText extends Component {
     return 'handled'
   }
 
-  handleChangeSection = () => {
-    console.log('handleChangeSection')
+  handleChangeSection = (e) => {
+    // if cursor is arrow forward from last character of last block
+    // or cursor is arrow back from first character of first block
+    // jump to adjacent section
+    const { editorState } = this.state
+    const { index, onSetEditing } = this.state
+    let direction = 0
+
+    if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
+      direction = -1
+    } else if (['ArrowDown', 'ArrowRight'].includes(e.key)) {
+      direction = 1
+    }
+    const selection = getSelectionDetails(editorState)
+    const {
+      isFirstBlock,
+      isFirstCharacter,
+      isLastBlock,
+      isLastCharacter
+    } = selection
+    const isFirst = isFirstBlock && isFirstCharacter && direction === -1
+    const isLast = isLastBlock && isLastCharacter && direction === 1
+
+    if (isFirst || isLast) {
+      onSetEditing(index + direction)
+    } else {
+      return true
+    }
   }
 
   // TEXT MUTATIONS
@@ -274,9 +305,9 @@ export class SectionText extends Component {
 
   toggleBlock = (block) => {
     const { editorState } = this.state
-    const { hasFeatures, section } = this.props
+    const { hasFeatures, onChange, section } = this.props
     const isBlockquote = block === 'blockquote'
-    const hasBlockquote = clone(section.get('body')).includes('<blockquote>')
+    const hasBlockquote = clone(section.body).includes('<blockquote>')
 
     if (!hasFeatures && isBlockquote) {
       return 'handled'
@@ -287,7 +318,7 @@ export class SectionText extends Component {
 
     if (hasFeatures && isBlockquote) {
       if (hasBlockquote) {
-        section.set('layout', null)
+        onChange('layout', null)
       } else {
         this.toggleBlockQuote()
       }
@@ -299,36 +330,38 @@ export class SectionText extends Component {
     const {
       index,
       isContentEnd,
+      onChange,
+      onSetEditing,
       section,
-      sections,
-      onSetEditing
+      sections
     } = this.props
 
     let increment = 0
-    let blockquote = setContentEnd(section.get('body'), isContentEnd)
+    let blockquote = setContentEnd(section.body, isContentEnd)
     const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
     const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
 
     if (afterBlock) {
       // add text before blockquote to new text section
       blockquote = blockquote.replace(afterBlock, '')
+      // TODO: redux newSectionAction
       sections.add({type: 'text', body: afterBlock}, { at: index + 1 })
     }
     if (beforeBlock) {
       // add text after blockquote to new text section
       blockquote = blockquote.replace(beforeBlock, '')
+      // TODO: redux newSectionAction
       sections.add({type: 'text', body: beforeBlock}, { at: index })
       increment = 1
     }
-
-    section.set({body: blockquote, layout: 'blockquote'})
+    onChange('body', blockquote)
+    onChange('layout', 'blockquote')
     onSetEditing(index + increment)
   }
 
   // LINKS
   promptForLink = (plugin) => {
     const { editorState } = this.state
-
     if (this.domEditor && this.hasSelection()) {
       const editor = ReactDOM.findDOMNode(this.domEditor)
       const editorPosition = editor.getBoundingClientRect()
@@ -434,7 +467,7 @@ export class SectionText extends Component {
 
     return (
     <div
-      className='edit-section--text'
+      className='SectionText edit-section--text'
       data-editing={editing}
       onClick={this.focus}
     >
@@ -455,7 +488,7 @@ export class SectionText extends Component {
           />
         }
         <div
-          className='edit-section--text__input'
+          className='SectionText__input edit-section--text__input'
           onMouseUp={this.checkSelection}
           onKeyUp={this.checkSelection}
         >
@@ -493,286 +526,3 @@ export class SectionText extends Component {
     )
   }
 }
-
-
-//   componentDidMount: ->
-//     @props.sections.on 'change:autolink', @editorStateFromProps
-//     if @props.section.get('body')?.length
-//       @editorStateFromProps()
-//     else if @props.editing
-//       @focus()
-
-//   componentDidUpdate: (prevProps) ->
-//     if @props.isContentEnd isnt prevProps.isContentEnd
-//       unless @props.article.layout is 'classic'
-//         html = setContentEnd(@props.section.get('body'), @props.isContentEnd)
-//       @props.section.set('body', html)
-//     if @props.editing and @props.editing isnt prevProps.editing
-//       @focus()
-//     else if !@props.editing and @props.editing isnt prevProps.editing
-//       @refs.editor.blur()
-
-//   onClickOff: -> #called from sectionContainer
-//     @setState focus: false, showMenu: false, showUrlInput: false
-//     @props.section.destroy() if @props.section.get('body') is ''
-//     @refs.editor.blur()
-
-//   focus: ->
-//     @setState focus: true
-//     @refs.editor.focus()
-
-//   handleReturn: (e) ->
-//     selection = getSelectionDetails(@state.editorState)
-//     # dont split from the first block, to avoid creating empty blocks
-//     # dont split from the middle of a paragraph
-//     if selection.isFirstBlock or selection.anchorOffset
-//       return 'not-handled'
-//     else
-//       e.preventDefault()
-//       @splitSection(selection.anchorKey)
-//       return 'handled'
-
-//   handleTab: (e) ->
-//     e.preventDefault()
-//     index = @props.index + 1
-//     if e.shiftKey
-//       index = @props.index - 1
-//     @props.onSetEditing index
-
-//   handleBackspace: (e) ->
-//     selection = getSelectionDetails(@state.editorState)
-//     # only merge a section if cursor is in first character of first block
-//     if selection.isFirstBlock and selection.anchorOffset is 0 and
-//     @props.sections.models[@props.index - 1]?.get('type') is 'text'
-//       mergeIntoHTML = @props.sections.models[@props.index - 1].get('body')
-//       @props.sections.models[@props.index - 1].destroy()
-//       newHTML = mergeIntoHTML + @state.html
-//       blocksFromHTML = convertFromRichHtml newHTML
-//       newSectionState = EditorState.push(@state.editorState, blocksFromHTML, null)
-//       newSectionState = setSelectionToStart newSectionState
-//       @onChange newSectionState
-//       @props.onSetEditing @props.index - 1
-
-//   handleChangeSection: (e) ->
-//     direction = 0
-//     direction =  -1 if e.key in ['ArrowUp', 'ArrowLeft']
-//     direction =  1 if e.key in ['ArrowDown', 'ArrowRight']
-//     selection = getSelectionDetails @state.editorState
-//     # if cursor is arrowing forward from last charachter of last block,
-//     # or cursor is arrowing back from first character of first block,
-//     # jump to adjacent section
-//     if selection.isLastBlock and selection.isLastCharacter and direction is 1 or
-//     selection.isFirstBlock and selection.isFirstCharacter and direction is -1
-//       @props.onSetEditing @props.index + direction
-//     else
-//       return true
-
-//   splitSection: (anchorKey) ->
-//     { editorState } = @state
-//     blockArray = editorState.getCurrentContent().getBlocksAsArray()
-//     for block, i in blockArray
-//       if block?.getKey() is anchorKey
-//         currentBlockArray = blockArray.splice(0, i)
-//         newBlockArray = blockArray
-//     if currentBlockArray
-//       currentContent = ContentState.createFromBlockArray currentBlockArray
-//       currentState = EditorState.push(editorState, currentContent, 'remove-range')
-//       newSectionContent = ContentState.createFromBlockArray newBlockArray
-//       newSectionState = EditorState.push(editorState, newSectionContent, null)
-//       newSectionHtml = convertToRichHtml(newSectionState)
-//       @onChange currentState
-//       @props.sections.add {type: 'text', body: newSectionHtml}, {at: @props.index + 1}
-//       return 'handled'
-
-//   onPaste: (text, html) ->
-//     { editorState } = @state
-//     unless html
-//       html = '<div>' + text + '</div>'
-//     html = stripGoogleStyles(html)
-//     blocksFromHTML = convertFromRichHtml html
-//     convertedHtml = blocksFromHTML.getBlocksAsArray().map (contentBlock) =>
-//       unstyled = stripCharacterStyles contentBlock, true
-//       unless unstyled.getType() in @availableBlocks() or unstyled.getType() is 'LINK'
-//         unstyled = unstyled.set 'type', 'unstyled'
-//       return unstyled
-//     blockMap = ContentState.createFromBlockArray(convertedHtml, blocksFromHTML.getBlocksAsArray()).blockMap
-//     newState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), blockMap)
-//     @onChange EditorState.push(editorState, newState, 'insert-fragment')
-//     return 'handled'
-
-//   makePlainText: () ->
-//     { editorState } = @state
-//     selection = editorState.getSelection()
-//     noLinks = RichUtils.toggleLink editorState, selection, null
-//     noBlocks = RichUtils.toggleBlockType noLinks, 'unstyled'
-//     noStyles = noBlocks.getCurrentContent().getBlocksAsArray().map (contentBlock) ->
-//       stripCharacterStyles contentBlock
-//     newState = ContentState.createFromBlockArray noStyles
-//     if !selection.isCollapsed()
-//       @onChange EditorState.push(editorState, newState, null)
-
-//   availableBlocks: ->
-//     blockMap = Config.blockRenderMap(@props.article.layout, @props.hasFeatures)
-//     available = Object.keys(blockMap.toObject())
-//     return Array.from(available)
-
-//   handleKeyCommand: (e) ->
-//     if e in @availableBlocks()
-//       @toggleBlockType e
-//     else if e is 'custom-clear'
-//       @makePlainText()
-//     else if e is 'backspace'
-//       @handleBackspace e
-//     else if e in ['italic', 'bold']
-//       if @props.article.layout is 'classic' and
-//       getSelectionDetails(@state.editorState).anchorType is 'header-three'
-//         return 'handled'
-//       newState = RichUtils.handleKeyCommand @state.editorState, e
-//       @onChange newState if newState
-//     else if e is 'strikethrough'
-//       @toggleInlineStyle 'STRIKETHROUGH'
-//     else if e is 'link-prompt'
-//       className = getSelectedLinkData(@state.editorState).className
-//       return @promptForLink() unless className?.includes 'is-follow-link'
-//       @promptForLink 'artist'
-
-//   toggleBlockQuote: ->
-//     blockquote = @props.section.get('body')
-//     beforeBlock = _s(blockquote).strLeft('<blockquote>')?._wrapped
-//     afterBlock = _s(blockquote).strRight('</blockquote>')?._wrapped
-//     increment = 0
-//     if afterBlock
-//       blockquote = blockquote.replace(afterBlock, '')
-//       @props.sections.add {type: 'text', body: afterBlock}, {at: @props.index + 1}
-//     if beforeBlock
-//       blockquote = blockquote.replace(beforeBlock, '')
-//       @props.sections.add {type: 'text', body: beforeBlock}, {at: @props.index }
-//       increment = 1
-//     @props.section.set({body: blockquote, layout: 'blockquote'})
-//     @props.onSetEditing @props.index + increment
-
-//   toggleBlockType: (blockType) ->
-//     unless blockType is 'blockquote' and !@props.hasFeatures
-//       @onChange RichUtils.toggleBlockType(@state.editorState, blockType)
-//       @setState showMenu: false
-//       if blockType is 'blockquote'
-//         if @props.section.get('body').includes('<blockquote>')
-//           @toggleBlockQuote()
-//         else
-//           @props.section.set('layout', null)
-//     return 'handled'
-
-//   toggleInlineStyle: (inlineStyle) ->
-//     selection = getSelectionDetails(@state.editorState)
-//     if selection.anchorType is 'header-three' and @props.article.layout is 'classic'
-//       block = @state.editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
-//       stripCharacterStyles block
-//     else
-//       @onChange RichUtils.toggleInlineStyle(@state.editorState, inlineStyle)
-
-//   promptForLink: (pluginType) ->
-//     selectionTarget = null
-//     unless window.getSelection().isCollapsed
-//       editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
-//       selectionTarget = stickyControlsBox(editorPosition, 25, 200)
-//       url = getSelectedLinkData(@state.editorState).url
-//       @setState
-//         showUrlInput: true
-//         showMenu: false
-//         focus: false
-//         urlValue: url
-//         selectionTarget: selectionTarget
-//         pluginType: pluginType
-
-//   confirmLink: (urlValue) ->
-//     { editorState } = @state
-//     contentState = editorState.getCurrentContent()
-//     props = { url: urlValue }
-//     props.className = 'is-follow-link' if @state.pluginType
-//     contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', props)
-//     entityKey = contentStateWithEntity.getLastCreatedEntityKey()
-//     newEditorState = EditorState.set editorState, { currentContent: contentStateWithEntity }
-//     @setState
-//       showMenu: false
-//       showUrlInput: false
-//       urlValue: ''
-//       selectionTarget: null
-//       pluginType: null
-//     @onChange RichUtils.toggleLink(newEditorState, newEditorState.getSelection(), entityKey)
-
-//   removeLink: (e) ->
-//     e?.preventDefault()
-//     selection = @state.editorState.getSelection()
-//     if !selection.isCollapsed()
-//       @setState({
-//         pluginType: null
-//         showUrlInput: false
-//         urlValue: ''
-//         editorState: RichUtils.toggleLink(@state.editorState, selection, null)
-//       })
-
-//   checkSelection: ->
-//     if !window.getSelection().isCollapsed
-//       editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
-//       selectionTargetL = if @props.hasFeatures then 125 else 100
-//       @setState showMenu: true, selectionTarget: stickyControlsBox(editorPosition, -93, selectionTargetL)
-//     else
-//       @setState showMenu: false
-
-//   render: ->
-//     showDropCaps = if @props.editing then false else @props.isContentStart
-
-//     div {
-//       className: 'edit-section--text'
-//       onClick: @focus
-//       'data-editing': @props.editing
-//     },
-//       Text {
-//         layout: @props.article.layout
-//         isContentStart: showDropCaps
-//       },
-//         if @state.showMenu
-//           React.createElement(
-//             TextNav, {
-//               hasFeatures: @props.hasFeatures
-//               blocks: Config.blockTypes @props.article.layout, @props.hasFeatures
-//               toggleBlock: @toggleBlockType
-//               styles: Config.inlineStyles @props.article.layout, @props.hasFeatures
-//               toggleStyle: @toggleInlineStyle
-//               promptForLink: @promptForLink
-//               makePlainText: @makePlainText
-//               position: @state.selectionTarget
-//             }
-//           )
-//         div {
-//           className: 'edit-section--text__input'
-//           onMouseUp: @checkSelection
-//           onKeyUp: @checkSelection
-//         },
-//           editor {
-//             ref: 'editor'
-//             editorState: @state.editorState
-//             spellCheck: true
-//             onChange: @onChange
-//             decorators: Config.decorators
-//             handleKeyCommand: @handleKeyCommand
-//             keyBindingFn: keyBindingFnFull
-//             handlePastedText: @onPaste
-//             blockRenderMap: Config.blockRenderMap @props.article.layout, @props.hasFeatures
-//             handleReturn: @handleReturn
-//             onTab: @handleTab
-//             onLeftArrow: @handleChangeSection
-//             onUpArrow: @handleChangeSection
-//             onRightArrow: @handleChangeSection
-//             onDownArrow: @handleChangeSection
-//           }
-//           if @props.editing and @state.showUrlInput
-//             React.createElement(
-//               TextInputUrl, {
-//                 removeLink: @removeLink
-//                 confirmLink: @confirmLink
-//                 selectionTarget: @state.selectionTarget
-//                 pluginType: @state.pluginType
-//                 urlValue: @state.urlValue
-//               }
-//             )

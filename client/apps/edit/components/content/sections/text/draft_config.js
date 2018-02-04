@@ -98,7 +98,7 @@ export const decorators = (layout) => {
 }
 
 export const composedDecorator = (layout) => {
-  new CompositeDecorator(
+  return new CompositeDecorator(
     decorators(layout)
   )
 }

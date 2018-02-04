@@ -48,7 +48,6 @@ export const setSelectionToStart = (editorState) => {
 export const stickyControlsBox = (editorPosition, fromTop, fromLeft) => {
   // Get position of pop-up controls from selection and parent location
   const target = getVisibleSelectionRect(window)
-
   const top = target.top - editorPosition.top + fromTop
   const left = target.left - editorPosition.left + (target.width / 2) - fromLeft
 
@@ -126,7 +125,6 @@ export const divideEditorState = (editorState, anchorKey) => {
 
 export const addLinkToState = (editorState, linkData) => {
   const contentState = editorState.getCurrentContent()
-
   const contentWithLink = contentState.createEntity(
     'LINK',
     'MUTABLE',
