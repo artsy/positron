@@ -8,6 +8,7 @@ import { RemoveButton } from 'client/components/remove_button'
 
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
+import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
 import { SectionImages } from '../sections/images'
 import { SectionVideo } from '../sections/video'
@@ -111,33 +112,35 @@ export class SectionContainer extends Component {
     } = this.props
 
     return (
-      <div className='SectionContainer'
-        data-editing={editing}
-        data-layout={section.get('layout') || 'column_width'}
-        data-type={section.get('type')}
-      >
-        <div
-          className='SectionContainer__hover-controls'
-          onClick={this.onSetEditing}
+      <ErrorBoundary>
+        <div className='SectionContainer'
+          data-editing={editing}
+          data-layout={section.get('layout') || 'column_width'}
+          data-type={section.get('type')}
         >
-          {!isHero &&
-            <div className='button-drag'>
-              <IconDrag background={colors.grayMedium} />
-            </div>
-          }
-          <RemoveButton
-            onClick={this.onRemoveSection}
-            background={colors.grayMedium}
+          <div
+            className='SectionContainer__hover-controls'
+            onClick={this.onSetEditing}
+          >
+            {!isHero &&
+              <div className='button-drag'>
+                <IconDrag background={colors.grayMedium} />
+              </div>
+            }
+            <RemoveButton
+              onClick={this.onRemoveSection}
+              background={colors.grayMedium}
+            />
+          </div>
+
+          {this.getSectionComponent()}
+
+          <div
+            className='SectionContainer__container-bg'
+            onClick={this.onSetEditing}
           />
         </div>
-
-        {this.getSectionComponent()}
-
-        <div
-          className='SectionContainer__container-bg'
-          onClick={this.onSetEditing}
-        />
-      </div>
+      </ErrorBoundary>
     )
   }
 }
