@@ -72,10 +72,10 @@ export const stripH3Tags = (html) => {
   return doc.innerHTML
 }
 
-export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks) => {
+export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks, keepExisting) => {
   const currentContent = editorState.getCurrentContent()
   const selection = editorState.getSelection()
-
+  let newState
   const cleanedBlocks = blocks.map((contentBlock) => {
     const unstyled = stripCharacterStyles(contentBlock, true)
     const isAllowedBlock = allowedBlocks.includes(unstyled.getType())
@@ -87,9 +87,15 @@ export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks) => {
       return unstyled.set('type', 'unstyled')
     }
   })
-  const blockMap = ContentState.createFromBlockArray(cleanedBlocks, blocks).blockMap
-  const newContent = Modifier.replaceWithFragment(currentContent, selection, blockMap)
-  const newState = EditorState.push(editorState, newContent, 'insert-fragment')
+
+  const newBlocks = ContentState.createFromBlockArray(cleanedBlocks, blocks)
+
+  if (keepExisting) {
+    const newContent = Modifier.replaceWithFragment(currentContent, selection, newBlocks.blockMap)
+    newState = EditorState.push(editorState, newContent, null)
+  } else {
+    newState = EditorState.push(editorState, newBlocks, null)
+  }
 
   return newState
 }

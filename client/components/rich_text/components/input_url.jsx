@@ -17,7 +17,8 @@ export class TextInputUrl extends Component {
     url: this.props.urlValue || ''
   }
 
-  confirmLink = () => {
+  confirmLink = (e) => {
+    e.preventDefault()
     const { url } = this.state
     const {
       confirmLink,
@@ -51,13 +52,13 @@ export class TextInputUrl extends Component {
             placeholder='Paste or type a link'
             onKeyUp={(e) => {
               if (e.key === 'Enter') {
-                this.confirmLink()
+                this.confirmLink(e)
               }
             }}
           />
           {url.length > 0 &&
             <RemoveButton
-              onClick={removeLink}
+              onMouseDown={removeLink}
               background={colors.grayMedium}
             />
           }
@@ -65,7 +66,7 @@ export class TextInputUrl extends Component {
 
         <button
           className='add-link'
-          onClick={this.confirmLink}
+          onMouseDown={this.confirmLink}
         >
           Apply
         </button>

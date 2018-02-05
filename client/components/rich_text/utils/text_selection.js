@@ -131,7 +131,6 @@ export const addLinkToState = (editorState, linkData) => {
     linkData
   )
   const entityKey = contentWithLink.getLastCreatedEntityKey()
-
   const editorStateWithEntity = EditorState.set(
     editorState,
     { currentContent: contentWithLink }

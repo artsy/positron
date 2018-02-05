@@ -1,11 +1,15 @@
 import {
+  addLinkToState,
+  divideEditorState,
   getSelectionDetails,
   setSelectionToStart,
+  mergeHtmlIntoState,
   stickyControlsBox
 } from '../../utils/text_selection'
-import { convertFromRichHtml } from '../../utils/convert_html'
+import { decorators } from '../../utils/config'
+import { convertFromRichHtml, convertToRichHtml } from '../../utils/convert_html'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-const Draft = require('draft-js')
+import Draft from 'draft-js'
 
 describe('Draft Utils: Text Selection', () => {
   window.pageYOffset = 500
@@ -77,5 +81,97 @@ describe('Draft Utils: Text Selection', () => {
       editorState = setSelectionToStart(editorState)
       expect(editorState.getSelection().anchorOffset).toBe(0)
     })
+  })
+
+  it('#stickyControlsBox Returns coordinates of the sticky item', () => {
+    window.pageYOffset = 500
+    const getClientRects = jest.fn().mockReturnValue([{
+      bottom: 170,
+      height: 25,
+      left: 425,
+      right: 525,
+      top: 145,
+      width: 95
+    }])
+    const getRangeAt = jest.fn().mockReturnValue({ getClientRects })
+
+    window.getSelection = jest.fn().mockReturnValue({
+      isCollapsed: false,
+      getRangeAt
+    })
+    global.getSelection = jest.fn().mockReturnValue({
+      anchorNode: {},
+      anchorOffset: 4,
+      baseNode: {},
+      baseOffset: 4,
+      extentNode: {},
+      extentOffset: 12,
+      focusNode: {},
+      focusOffset: 12,
+      isCollapsed: false,
+      rangeCount: 1,
+      type: 'Range',
+      getRangeAt
+    })
+
+    const position = stickyControlsBox({top: 20, left: 50}, 50, 100)
+
+    expect(position.top).toBe(175)
+    expect(position.left).toBe(325)
+  })
+
+  it('#mergeHtmlIntoState Combines two blocks of HTML into one editorState', () => {
+    const editorState = Draft.EditorState.createEmpty()
+    const beforeHtml = Fixtures.StandardArticle.sections[0].body
+    const afterHtml = Fixtures.StandardArticle.sections[1].body
+    const mergedState = mergeHtmlIntoState(editorState, beforeHtml, afterHtml)
+    const newText = mergedState.getCurrentContent().getPlainText()
+
+    expect(newText).toMatch('What would Antoine Court de Gébelin think of the Happy Squirrel?')
+    expect(newText).toMatch('With works by Franz Ackermann, Ai Weiwei, Pawel Althamer, Billy Childish')
+  })
+
+  it('#divideEditorState Divides an editorState into two, returns html for new section', () => {
+    const blocksFromHTML = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const editorState = Draft.EditorState.createWithContent(blocksFromHTML)
+    const anchorKey = editorState.getCurrentContent().getLastBlock().key
+
+    const dividedState = divideEditorState(editorState, anchorKey)
+    const newStateToHtml = dividedState.currentSectionState.getCurrentContent().getPlainText()
+
+    expect(newStateToHtml).toMatch('What would Antoine Court de Gébelin think of the Happy Squirrel?')
+    expect(dividedState.newSection).not.toMatch('What would Antoine Court de Gébelin think of the Happy Squirrel?')
+
+    expect(newStateToHtml).not.toMatch('So what would de Gébelin’s reaction be?')
+    expect(dividedState.newSection).toMatch('So what would de Gébelin’s reaction be?')
+  })
+
+  it('#addLinkToState Applies a new link entity to editorState at selection', () => {
+    const getSelection = (editorState) => {
+      const startSelection = editorState.getSelection()
+      const startEditorState = editorState.getCurrentContent()
+      const { key, text } = startEditorState.getFirstBlock()
+      const selection = startSelection.merge({
+        anchorKey: key,
+        anchorOffset: 0,
+        focusKey: key,
+        focusOffset: text.length
+      })
+      const newEditorState = Draft.EditorState.acceptSelection(editorState, selection)
+      return newEditorState
+    }
+
+    const blocksFromHTML = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const editorState = Draft.EditorState.createWithContent(
+      blocksFromHTML,
+      new Draft.CompositeDecorator(decorators(true))
+    )
+    const editorStateWithSelection = getSelection(editorState)
+    const linkData = {url: 'http://link.com'}
+
+    const stateWithLink = addLinkToState(editorStateWithSelection, linkData)
+    const htmlWithLink = convertToRichHtml(stateWithLink, 'standard')
+
+    expect(htmlWithLink).toMatch('<a href="http://link.com">')
   })
 })

@@ -62,10 +62,39 @@ export class SectionText extends Component {
   }
 
   componentWillMount = () => {
-    const { section } = this.props
+    const { editing, section } = this.props
 
     if (section.body && section.body.length) {
       this.setEditorStateFromProps()
+    } else if (editing) {
+      this.focus()
+    }
+  }
+
+  componentDidUpdate = (prevProps) => {
+    const {
+      article,
+      editing,
+      isContentEnd,
+      onChange,
+      section
+    } = this.props
+
+    // Reset contentEnd markers if end has changed
+    if (isContentEnd !== prevProps.isContentEnd) {
+      if (article.layout !== 'classic') {
+        const html = setContentEnd(section.body, isContentEnd)
+        onChange('body', html)
+      }
+    }
+    // Focus/blur editor if editing prop has changed
+    // For change of section via key commands (handleTab, splitSection)
+    if (editing && editing !== prevProps.editing) {
+      this.focus()
+    } else if (!editing && editing !== prevProps.editing) {
+      if (this.domEditor) {
+        this.domEditor.blur()
+      }
     }
   }
 
@@ -236,10 +265,9 @@ export class SectionText extends Component {
     const { editorState } = this.state
     const wrappedHtml = html || '<div>' + text + '</div>'
     const formattedHtml = stripGoogleStyles(wrappedHtml)
-
     const blocksFromHTML = convertFromRichHtml(formattedHtml).getBlocksAsArray()
     const allowedBlocks = this.availableBlocks()
-    const newState = removeDisallowedBlocks(editorState, blocksFromHTML, allowedBlocks)
+    const newState = removeDisallowedBlocks(editorState, blocksFromHTML, allowedBlocks, true)
 
     this.onChange(newState)
     return 'handled'
@@ -250,14 +278,15 @@ export class SectionText extends Component {
     // or cursor is arrow back from first character of first block
     // jump to adjacent section
     const { editorState } = this.state
-    const { index, onSetEditing } = this.state
-    let direction = 0
+    const { index, onSetEditing } = this.props
 
+    let direction = 0
     if (['ArrowUp', 'ArrowLeft'].includes(e.key)) {
       direction = -1
     } else if (['ArrowDown', 'ArrowRight'].includes(e.key)) {
       direction = 1
     }
+
     const selection = getSelectionDetails(editorState)
     const {
       isFirstBlock,
@@ -385,7 +414,6 @@ export class SectionText extends Component {
     if (plugin) {
       linkData.className = 'is-follow-link'
     }
-
     const editorStateWithLink = addLinkToState(editorState, linkData)
 
     this.setState({
@@ -426,8 +454,9 @@ export class SectionText extends Component {
 
   checkSelection = () => {
     const { hasFeatures } = this.props
+    const { showUrlInput } = this.state
 
-    if (this.domEditor) {
+    if (this.domEditor && !showUrlInput) {
       if (this.hasSelection()) {
         const editor = ReactDOM.findDOMNode(this.domEditor)
         const editorPosition = editor.getBoundingClientRect()
@@ -467,7 +496,7 @@ export class SectionText extends Component {
 
     return (
     <div
-      className='SectionText edit-section--text'
+      className='SectionText'
       data-editing={editing}
       onClick={this.focus}
     >
@@ -488,7 +517,7 @@ export class SectionText extends Component {
           />
         }
         <div
-          className='SectionText__input edit-section--text__input'
+          className='SectionText__input'
           onMouseUp={this.checkSelection}
           onKeyUp={this.checkSelection}
         >

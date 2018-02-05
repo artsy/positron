@@ -106,12 +106,15 @@ describe('SectionText', () => {
       expect(component.state().showMenu).toBe(true)
     })
 
-    xit('Converts html on change with only plugin supported classes', () => {
+    it('Converts html onChange with only plugin supported classes', () => {
+      props.section.body = '<p class="cool-thing">Cool thing. </p><h2><span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span></h2>'
+      const component = getWrapper(props)
+      component.instance().onChange(component.state().editorState)
 
+      expect(component.state().html).toBe(
+        '<p>Cool thing. </p><h2><span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span></h2>'
+      )
     })
-// it 'Converts html on change with only plugin supported classes', ->
-//   @component.onChange(@component.state.editorState)
-//   @component.state.html.should.eql '<h2>01 &nbsp;<a href="artsy.net">here is a link.</a></h2><p>In 2016, K mounted a <span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span> at prescient Berlin gallery <a href="https://www.artsy.net/kow">KOW</a>, restaging his installation <em>It’s Spring and the Weather is Great so let’s close all object matters</em> (2012), for which he created seven step ladders with microphones and instruments attached for a performance initially meant to take place at Speakers’ Corner in London’s Hyde Park that was eventually mounted in 2010 at the <a href="https://www.artsy.net/serpentineuk">Serpentine Galleries</a>.</p><p><br></p>'
   })
 
   describe('#availableBlocks', () => {
