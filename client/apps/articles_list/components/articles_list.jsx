@@ -1,26 +1,24 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from 'client/actions/articlesActions'
-import { data as sd } from 'sharify'
-
+import { viewArticles } from 'client/actions/articlesActions'
+import request from 'superagent'
 import $ from 'jquery'
 import { debounce } from 'lodash'
 import FilterSearch from 'client/components/filter_search/index.coffee'
-import request from 'superagent'
+import IconNewArticle from '../../../components/layout/public/icons/layout_new_article.svg'
 
 require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')
-const icons = () => require('../icons.jade')(...arguments)
 
 export class ArticlesList extends Component {
   static propTypes = {
-    actions: PropTypes.object,
     articles: PropTypes.array,
     published: PropTypes.bool,
     channel: PropTypes.object,
-    user: PropTypes.object
+    apiURL: PropTypes.string,
+    user: PropTypes.object,
+    viewArticlesAction: PropTypes.func
   }
 
   state = {
@@ -30,39 +28,40 @@ export class ArticlesList extends Component {
   }
 
   componentDidMount () {
-    const { viewArticles } = this.props.actions
-    viewArticles()
+    const { viewArticlesAction } = this.props
+    viewArticlesAction()
 
     const canLoadMore = debounce(this.canLoadMore, 300)
-    return $.onInfiniteScroll(canLoadMore)
+    $.onInfiniteScroll(canLoadMore)
   }
 
   canLoadMore = () => {
+    // TODO: remove jQuery
     if ($('.filter-search__input').val()) { return }
     $('.loading-spinner').fadeIn()
-    return this.fetchFeed(this.state.published, this.state.offset + 10, this.appendMore.bind(this))
+    this.fetchFeed(this.state.published, this.state.offset + 10, this.appendMore.bind(this))
   }
 
   setResults = (results) => {
-    return this.setState({articles: results})
+    this.setState({articles: results})
   }
 
   setPublished (type) {
     this.setState({published: type, offset: 0})
-    return this.fetchFeed(type, 0, this.setResults)
+    this.fetchFeed(type, 0, this.setResults)
   }
 
   appendMore (results) {
     const articles = this.state.articles.concat(results)
     this.setState({articles})
-    return $('.loading-spinner').fadeOut()
+    $('.loading-spinner').fadeOut()
   }
 
   fetchFeed (type, offset, cb) {
-    const { channel, user } = this.props
+    const { channel, user, apiURL } = this.props
     const feedQuery = query(`published: ${type}, offset: ${offset}, channel_id: "${channel.id}"`)
-    return request
-      .post(sd.API_URL + '/graphql')
+    request
+      .post(apiURL + '/graphql')
       .set('X-Access-Token', user != null ? user.access_token : undefined)
       .send({query: feedQuery})
       .end((err, res) => {
@@ -74,25 +73,24 @@ export class ArticlesList extends Component {
 
   showEmptyMessage () {
     return (
-      <div className='article=list__empty'>
+      <div className='article-list__empty'>
         <div>You haven’t written any articles yet.</div>
         <div>Artsy Writer is a tool for writing stories about art on Artsy.</div>
         <div>Get started by writing an article or reaching out to your liaison for help.</div>
         <a
           className='avant-garde-button avant-garde-button-black article-new-button'
-          href='/articles/new'
-          dangerouslySetInnerHTML={{ __html: $(icons()).filter('.new-article').html() + 'Write An Article' }}
-        />
+          href='/articles/new'>
+          <IconNewArticle /> Write An Article
+        </a>
       </div>
     )
   }
 
   showArticlesList () {
-    const { channel } = this.props
+    const { channel, apiURL } = this.props
     const isArtsyChannel = (type) => {
       return type in ['editorial', 'support', 'team']
     }
-    
 
     //TODO: convert css to use styled-components
     if (this.props.articles && this.props.articles.length) {
@@ -100,7 +98,7 @@ export class ArticlesList extends Component {
         <div className='articles-list__container'>
           <div className='articles-list__title'>Latest Articles</div>
           <FilterSearch
-            url={sd.API_URL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
+            url={apiURL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
             placeholder='Search Articles...'
             collection={this.state.articles}
             searchResults={this.setResults}
@@ -143,11 +141,12 @@ export class ArticlesList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  channel: state.app.channel
+  channel: state.app.channel,
+  apiURL: state.app.apiURL
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(Actions, dispatch)
+  viewArticlesAction: viewArticles
 })
 
 export default connect(

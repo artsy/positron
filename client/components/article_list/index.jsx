@@ -1,13 +1,20 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import moment from 'moment'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { data as sd } from 'sharify'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
-import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing'
-import $ from 'jquery'
+import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconLock'
+import Icon from '@artsy/reaction-force/dist/Components/Icon'
 
-const icons = () => require('./icons.jade')(...arguments)
+const IconCheckCircle = styled(Icon)`
+  color: ${colors.grayMedium};
+  font-size: 30px;
+
+  &:hover {
+    color: black;
+  }
+`
 
 export class ArticleList extends Component {
   static propTypes = {
@@ -16,8 +23,14 @@ export class ArticleList extends Component {
     articles: PropTypes.array,
     selected: PropTypes.func,
     activeSessions: PropTypes.object,
-    user: PropTypes.object
+    user: PropTypes.object,
+    forceURL: PropTypes.string
   }
+
+  static defaultProps = {
+    activeSessions: {}
+  }
+
   getDisplayAttrs (article) {
     if ((this.props.display === 'email') && article.email_metadata) {
       return {
@@ -55,7 +68,7 @@ export class ArticleList extends Component {
   }
 
   renderArticles () {
-    const { checkable, articles, activeSessions, user } = this.props
+    const { checkable, articles, activeSessions, user, forceURL } = this.props
     return articles.map(article => {
       const attrs = this.getDisplayAttrs(article)
       const session = activeSessions[article.id]
@@ -67,14 +80,13 @@ export class ArticleList extends Component {
 
       return (
         <div style={style} className='article-list__result paginated-list-item' key={article.id}>
-          {checkable
-            ? <div
+          {checkable && <div
                 className='article-list__checkcircle'
                 ref={article.id}
-                dangerouslySetInnerHTML={{__html: $(icons()).filter('.check-circle').html()}}
                 onClick={() => this.props.selected(article)}
-              />
-            : null}
+              >
+                <IconCheckCircle name='follow-circle.is-following' />
+          </div>}
           <a className={`article-list__article ${lockedClass}`}
             href={`/articles/${article.id}/edit`}>
             <div className='article-list__image paginated-list-img'
@@ -94,7 +106,7 @@ export class ArticleList extends Component {
             </div>
           </a>
           <a className={`article-list__preview paginated-list-preview avant-garde-button ${lockedClass}`}
-            href={`${sd.FORCE_URL}/article/${article.slug}`}
+            href={`${forceURL}/article/${article.slug}`}
             target='_blank'>
 
             {shouldLockEditing
@@ -122,7 +134,8 @@ export class ArticleList extends Component {
 
 const mapStateToProps = (state) => ({
   activeSessions: state.articlesList.articlesInSession || {},
-  user: state.app.user
+  user: state.app.user,
+  forceURL: state.app.forceURL
 })
 
 export default connect(mapStateToProps)(ArticleList)

@@ -1,6 +1,7 @@
 import keyMirror from 'client/lib/keyMirror'
 import { emitAction } from 'client/apps/websocket/client'
 import { messageTypes } from 'client/apps/websocket/messageTypes'
+import $ from 'jquery'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
