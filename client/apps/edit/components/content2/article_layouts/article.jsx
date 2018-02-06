@@ -3,17 +3,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import SectionFooter from '../sections/footer'
-import SectionList from '../section_list'
+import SectionHeader from '../sections/header'
 import SectionHero from '../sections/hero'
-import { SectionHeader } from '../sections/header'
+import SectionList from '../section_list'
 
 export class EditArticle extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
-    lastUpdated: PropTypes.any,
-    onChange: PropTypes.func.isRequired,
-    onChangeHero: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   }
 
   render () {
@@ -27,7 +25,7 @@ export class EditArticle extends Component {
           <SectionHero />
         }
 
-        <SectionHeader {...this.props} />
+        <SectionHeader />
 
         <SectionList />
 

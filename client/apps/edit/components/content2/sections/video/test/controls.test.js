@@ -5,7 +5,7 @@ import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
 import FileInput from 'client/components/file_input/index.jsx'
 import { SectionControls } from '../../../section_controls'
-import { VideoControls } from '../controls.jsx'
+import { VideoSectionControls } from '../controls.jsx'
 import { Videos } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
 
 describe('Video', () => {
@@ -28,7 +28,7 @@ describe('Video', () => {
     return mount(
       <Provider store={store}>
         <section>
-          <VideoControls {...props} />
+          <VideoSectionControls {...props} />
         </section>
       </Provider>
     )
@@ -129,7 +129,7 @@ describe('Video', () => {
 
   it('Removes the section on unmount if no url', () => {
     props.section.url = ''
-    const component = getWrapper(props).find(VideoControls)
+    const component = getWrapper(props).find(VideoSectionControls)
 
     component.instance().componentWillUnmount()
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.sectionIndex)

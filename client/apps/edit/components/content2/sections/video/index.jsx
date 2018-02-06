@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import VideoControls from './controls.jsx'
+import VideoSectionControls from './controls.jsx'
 import { Video } from '@artsy/reaction-force/dist/Components/Publishing'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
@@ -112,7 +112,7 @@ export class SectionVideo extends Component {
         data-editing={editing}
       >
         {editing &&
-          <VideoControls
+          <VideoSectionControls
             section={section}
             isHero={isHero}
             showLayouts={showSectionLayouts}

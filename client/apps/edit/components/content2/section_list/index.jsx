@@ -28,7 +28,7 @@ export class SectionList extends Component {
     resetSectionsAction(newSections)
   }
 
-  renderSectionList = () => {
+  renderSectionList = (sections) => {
     const {
       article,
       editSection,
@@ -36,7 +36,7 @@ export class SectionList extends Component {
       setSectionAction
     } = this.props
 
-    return article.sections.map((section, index) => {
+    return sections.map((section, index) => {
       const editing = sectionIndex === index
       // if (section.type !== 'callout') {
       if (
@@ -72,6 +72,8 @@ export class SectionList extends Component {
       article
     } = this.props
 
+    const sections = article.sections || []
+
     return (
       <div className='SectionList edit-sections__list'>
         <SectionTool
@@ -81,17 +83,17 @@ export class SectionList extends Component {
           firstSection
           isDraggable={false}
         />
-        {article.sections.length && article.sections.length > 1
+        {sections.length > 1
           ? <DragContainer
               items={article.sections}
               onDragEnd={this.onDragEnd}
               isDraggable={sectionIndex === null}
               layout='vertical'
             >
-              {this.renderSectionList()}
+              {this.renderSectionList(sections)}
             </DragContainer>
           : <div>
-              {this.renderSectionList()}
+              {this.renderSectionList(sections)}
             </div>
         }
       </div>

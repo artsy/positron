@@ -6,7 +6,7 @@ import { mount } from 'enzyme'
 import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
-import { VideoControls } from '../controls.jsx'
+import { VideoSectionControls } from '../controls.jsx'
 import { SectionVideo } from '../index.jsx'
 import { Videos } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
 
@@ -68,7 +68,7 @@ describe('Video', () => {
     props.editing = true
     const component = getWrapper(props)
 
-    expect(component.find(VideoControls).exists()).toBe(true)
+    expect(component.find(VideoSectionControls).exists()).toBe(true)
     expect(component.find('a.layout').exists()).toBe(true)
   })
 
@@ -77,7 +77,7 @@ describe('Video', () => {
     props.isHero = true
     const component = getWrapper(props)
 
-    expect(component.find(VideoControls).exists()).toBe(true)
+    expect(component.find(VideoSectionControls).exists()).toBe(true)
     expect(component.find('a.layout').exists()).toBe(false)
   })
 
@@ -86,7 +86,7 @@ describe('Video', () => {
     props.hidePreview = true
     const component = getWrapper(props)
 
-    expect(component.find(VideoControls).exists()).toBe(true)
+    expect(component.find(VideoSectionControls).exists()).toBe(true)
     expect(component.find('a.layout').exists()).toBe(false)
   })
 

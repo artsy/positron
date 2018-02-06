@@ -7,7 +7,7 @@ import { isEmpty } from 'underscore'
 import { isWebUri } from 'valid-url'
 import { removeSection } from 'client/actions/editActions'
 
-export class VideoControls extends Component {
+export class VideoSectionControls extends Component {
   static propTypes = {
     editSection: PropTypes.object,
     isHero: PropTypes.bool,
@@ -97,4 +97,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(VideoControls)
+)(VideoSectionControls)
