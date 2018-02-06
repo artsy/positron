@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class SectionFooter extends Component {
   static propTypes = {
@@ -22,8 +23,8 @@ export class SectionFooter extends Component {
             data-layout='column_width'
           >
             <Paragraph
-              html={article.get('postscript') || ''}
-              layout={article.get('layout')}
+              html={article.postscript || ''}
+              layout={article.layout}
               linked
               onChange={(html) => onChange('postscript', html)}
               placeholder='Postscript (optional)'
@@ -38,9 +39,15 @@ export class SectionFooter extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  article: state.edit.article,
   channel: state.app.channel
 })
 
+const mapDispatchToProps = {
+  onChange: onChangeArticle
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SectionFooter)
