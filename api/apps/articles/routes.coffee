@@ -3,6 +3,7 @@ _ = require 'underscore'
 { setUser } = require '../users/routes'
 User = require '../users/model.coffee'
 
+
 # GET /api/articles
 @index = (req, res, next) ->
   if (req.query.published is 'false' or req.query.scheduled is 'true') and not req.query.channel_id
@@ -69,3 +70,4 @@ User = require '../users/model.coffee'
     return next err if err
     return res.err 404, 'Article not found.' unless req.article = article
     if req.article?.published then next() else setUser(req, res, next)
+
