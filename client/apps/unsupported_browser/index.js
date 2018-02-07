@@ -1,7 +1,6 @@
 import express from 'express'
+import { index } from 'client/apps/unsupported_browser/routes'
 
 const app = (module.exports = express())
 
-app.get('/unsupported', (req, res, next) => {
-  res.send('You must use the lastest version of Chrome, Safari, Firefox, or Internet Explorer to use Artsy Writer.')
-})
+app.get('/unsupported', index)
