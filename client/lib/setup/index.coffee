@@ -59,6 +59,7 @@ module.exports = (app) ->
 
   # Mount display
   app.use require '../../apps/display'
+  app.use require '../../apps/unsupported_browser'
   # Mount and authorize apps
   app.use ua
   app.use requireLogin
