@@ -7,6 +7,7 @@ import { RemoveButton } from 'client/components/remove_button'
 export class TextInputUrl extends Component {
   static propTypes = {
     confirmLink: PropTypes.func,
+    onClickOff: PropTypes.func,
     pluginType: PropTypes.string,
     removeLink: PropTypes.func,
     selectionTarget: PropTypes.object,
@@ -35,42 +36,48 @@ export class TextInputUrl extends Component {
 
   render () {
     const { url } = this.state
-    const { removeLink, selectionTarget } = this.props
+    const { onClickOff, removeLink, selectionTarget } = this.props
 
     return (
-      <TextInputUrlContainer
-        className='TextInputUrl'
-        top={selectionTarget.top}
-        left={selectionTarget.left}
-      >
-        <div className='TextInputUrl__input'>
-          <input
-            autoFocus
-            className='bordered-input'
-            value={url}
-            onChange={(e) => this.setState({url: e.target.value})}
-            placeholder='Paste or type a link'
-            onKeyUp={(e) => {
-              if (e.key === 'Enter') {
-                this.confirmLink(e)
-              }
-            }}
-          />
-          {url.length > 0 &&
-            <RemoveButton
-              onMouseDown={removeLink}
-              background={colors.grayMedium}
-            />
-          }
-        </div>
-
-        <button
-          className='add-link'
-          onMouseDown={this.confirmLink}
+      <div>
+        <div
+          onClick={onClickOff}
+          className='TextInputUrl__bg'
+        />
+        <TextInputUrlContainer
+          className='TextInputUrl'
+          top={selectionTarget.top}
+          left={selectionTarget.left}
         >
-          Apply
-        </button>
-      </TextInputUrlContainer>
+          <div className='TextInputUrl__input'>
+            <input
+              autoFocus
+              className='bordered-input'
+              value={url}
+              onChange={(e) => this.setState({url: e.target.value})}
+              placeholder='Paste or type a link'
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  this.confirmLink(e)
+                }
+              }}
+            />
+            {url.length > 0 &&
+              <RemoveButton
+                onMouseDown={removeLink}
+                background={colors.grayMedium}
+              />
+            }
+          </div>
+
+          <button
+            className='add-link'
+            onMouseDown={this.confirmLink}
+          >
+            Apply
+          </button>
+        </TextInputUrlContainer>
+      </div>
     )
   }
 }

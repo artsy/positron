@@ -5,7 +5,6 @@ import { EditorState } from 'draft-js'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Sections from '/client/collections/sections.coffee'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
-import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { SectionText } from '../index.jsx'
 const { StandardArticle } = Fixtures
 
@@ -21,13 +20,14 @@ describe('SectionText', () => {
   }
 
   beforeEach(() => {
+    window.scrollTo = jest.fn()
     article = clone(StandardArticle)
     props = {
       article,
       index: 2,
       onChange: jest.fn(),
       onSetEditing: jest.fn(),
-      section: article.sections[11],
+      section: clone(article.sections[11]),
       sections: new Sections(article.sections)
     }
     window.pageYOffset = 500
@@ -66,9 +66,11 @@ describe('SectionText', () => {
       const startSelection = component.state().editorState.getSelection()
       const startEditorState = component.state().editorState.getCurrentContent()
       const { key, text } = getLast ? startEditorState.getLastBlock() : startEditorState.getFirstBlock()
+      const anchorOffset = getLast ? text.length : 0
+
       const selection = startSelection.merge({
         anchorKey: key,
-        anchorOffset: 0,
+        anchorOffset,
         focusKey: key,
         focusOffset: text.length
       })
@@ -107,6 +109,7 @@ describe('SectionText', () => {
     })
 
     it('Converts html onChange with only plugin supported classes', () => {
+      props.hasFeatures = true
       props.section.body = '<p class="cool-thing">Cool thing. </p><h2><span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span></h2>'
       const component = getWrapper(props)
       component.instance().onChange(component.state().editorState)
@@ -115,77 +118,22 @@ describe('SectionText', () => {
         '<p>Cool thing. </p><h2><span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span></h2>'
       )
     })
-  })
 
-  describe('#availableBlocks', () => {
-    it('Returns the correct blocks for a feature article', () => {
-      props.article.layout = 'feature'
-      props.hasFeatures = true
+    it('Strips plugin classes from html onChange if hasFeatures is false', () => {
+      props.section.body = '<p class="cool-thing">Cool thing. </p><h2><span><a href="https://www.artsy.net/artist/kow-hiwa" class="is-follow-link">solo show</a><a data-id="kow-hiwa" class="entity-follow artist-follow"></a></span></h2>'
       const component = getWrapper(props)
-      const expected = component.instance().availableBlocks()
+      component.instance().onChange(component.state().editorState)
 
-      expect(expected).toEqual([
-        'header-one',
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
-      ])
-    })
-
-    it('Returns the correct blocks for a standard article', () => {
-      props.article.layout = 'standard'
-      props.hasFeatures = true
-      const component = getWrapper(props)
-      const expected = component.instance().availableBlocks()
-
-      expect(expected).toEqual([
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
-      ])
-    })
-
-    it('Returns the correct blocks for a classic article with features', () => {
-      props.article.layout = 'classic'
-      props.hasFeatures = true
-      const component = getWrapper(props)
-      const expected = component.instance().availableBlocks()
-
-      expect(expected).toEqual([
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
-      ])
-    })
-
-    it('Returns the correct blocks for a classic article without features', () => {
-      props.article.layout = 'classic'
-      props.hasFeatures = false
-      const component = getWrapper(props)
-      const expected = component.instance().availableBlocks()
-
-      expect(expected).toEqual([
-        'header-two',
-        'header-three',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
-      ])
+      expect(component.state().html).toBe(
+        '<p>Cool thing. </p><h2><a href="https://www.artsy.net/artist/kow-hiwa">solo show</a></h2>'
+      )
     })
   })
 
   describe('Editorial Features', () => {
     it('Adds end-marker to a standard article', () => {
       props.isContentEnd = true
+      props.hasFeatures = true
       props.section = StandardArticle.sections[0]
       const component = getWrapper(props)
 
@@ -215,313 +163,6 @@ describe('SectionText', () => {
       const component = getWrapper(props)
 
       expect(component.state().html).not.toMatch('class="content-end"')
-    })
-  })
-
-  describe('Rich text events', () => {
-    beforeEach(() => {
-      props.section = {body: '<p>A short piece of text</p>'}
-    })
-
-    describe('TextNav', () => {
-      it('Can create italic entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.italic').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<p><em>A short piece of text</em></p>')
-      })
-
-      it('Can create bold entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.bold').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<p><strong>A short piece of text</strong></p>')
-      })
-
-      it('Can create strikethrough entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.strikethrough').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<p><span style="text-decoration:line-through">A short piece of text</span></p>')
-      })
-
-      it('Can create h1 blocks (feature)', () => {
-        props.article.layout = 'feature'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.header-one').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<h1>A short piece of text</h1>')
-      })
-
-      it('Can create h2 blocks', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.header-two').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<h2>A short piece of text</h2>')
-      })
-
-      it('Can create h3 blocks', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.header-three').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<h3>A short piece of text</h3>')
-      })
-
-      it('Can create h3 blocks without stripping styles (standard/feature)', () => {
-        props.section.body = '<p><em>A short piece of text</em></p>'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.header-three').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<h3><em>A short piece of text</em></h3>')
-      })
-
-      it('Strips styles from h3 blocks in classic articles', () => {
-        props.section.body = '<p><em>A short piece of text</em></p>'
-        props.article.layout = 'classic'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.header-three').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<h3>A short piece of text</h3>')
-      })
-
-      it('Can create UL blocks', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.unordered-list-item').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<ul><li>A short piece of text</li></ul>')
-      })
-
-      it('Can create OL blocks', () => {
-        props.article.layout = 'classic'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.ordered-list-item').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<ol><li>A short piece of text</li></ol>')
-      })
-
-      it('Can create blockquote blocks', () => {
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.blockquote').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<blockquote>A short piece of text</blockquote>')
-      })
-
-      it('Can make plain text', () => {
-        props.section.body = '<h3><em>A short piece of text</em></h3>'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.clear-formatting').simulate('mouseDown')
-
-        expect(component.state().html).toBe('<p>A short piece of text</p>')
-      })
-    })
-    describe('#handleKeyCommand', () => {
-      it('Can create bold entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('bold')
-
-        expect(component.state().html).toBe('<p><strong>A short piece of text</strong></p>')
-      })
-
-      it('Can create italic entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('italic')
-
-        expect(component.state().html).toBe('<p><em>A short piece of text</em></p>')
-      })
-
-      it('Can create strikethrough entities', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('strikethrough')
-
-        expect(component.state().html).toBe(
-          '<p><span style="text-decoration:line-through">A short piece of text</span></p>'
-        )
-      })
-
-      it('Can create h1 blocks (feature)', () => {
-        props.article.layout = 'feature'
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('header-one')
-
-        expect(component.state().html).toBe('<h1>A short piece of text</h1>')
-      })
-
-      it('Cannot create h1 blocks if classic or standard', () => {
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('header-one')
-
-        expect(component.state().html).toBe('<p>A short piece of text</p>')
-      })
-
-      it('Can create h2 blocks (feature)', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('header-two')
-
-        expect(component.state().html).toBe('<h2>A short piece of text</h2>')
-      })
-
-      it('Can create h3 blocks (feature)', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('header-three')
-
-        expect(component.state().html).toBe('<h3>A short piece of text</h3>')
-      })
-
-      it('Can create UL blocks (feature)', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('unordered-list-item')
-
-        expect(component.state().html).toBe('<ul><li>A short piece of text</li></ul>')
-      })
-
-      it('Can create OL blocks (feature)', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('ordered-list-item')
-
-        expect(component.state().html).toBe('<ol><li>A short piece of text</li></ol>')
-      })
-
-      it('Can create blockquote blocks', () => {
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('blockquote')
-
-        expect(component.state().html).toBe('<blockquote>A short piece of text</blockquote>')
-      })
-
-      it('Cannot create blockquotes if props.hasFeatures is false', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('blockquote')
-
-        expect(component.state().html).toBe('<p>A short piece of text</p>')
-      })
-
-      it('Can make plain text', () => {
-        props.section.body = '<h3><em>A short piece of text</em></h3>'
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.instance().handleKeyCommand('custom-clear')
-
-        expect(component.state().html).toBe('<p>A short piece of text</p>')
-      })
-    })
-  })
-  describe('Links', () => {
-    it('Opens a link input popup from the menu', () => {
-      props.editing = true
-      const component = getWrapper(props)
-      component.instance().onChange(getSelection())
-      component.find('.SectionText__input').simulate('mouseUp')
-      component.find('.link').simulate('mouseDown')
-
-      expect(component.state().showUrlInput).toBe(true)
-      expect(component.find(TextInputUrl).exists()).toBe(true)
-    })
-
-    it('Opens a link input popup via key command', () => {
-      props.editing = true
-      const component = getWrapper(props)
-      component.instance().onChange(getSelection())
-      component.find('.SectionText__input').simulate('mouseUp')
-      component.instance().handleKeyCommand('link-prompt')
-
-      expect(component.state().showUrlInput).toBe(true)
-      expect(component.html()).toMatch('class="TextInputUrl')
-    })
-
-    it('Can confirm links', () => {
-      const component = getWrapper(props)
-      component.instance().onChange(getSelection())
-
-      component.instance().confirmLink('link.com')
-      expect(component.state().html).toMatch('<a href="link.com">')
-      expect(component.html()).toMatch('<a href="link.com">')
-    })
-
-    it('Can handle special characters inside links correctly', () => {
-      props.section.body = '<a href="http://artsy.net">Hauser & Wirth</a>'
-      const component = getWrapper(props)
-
-      expect(component.state().html).toMatch('Hauser &amp; Wirth')
-      expect(component.html()).toMatch('Hauser &amp; Wirth')
-      expect(component.text()).toMatch('Hauser & Wirth')
-    })
-
-    describe('Artist follow plugin', () => {
-      it('Renders an artist menu item if hasFeatures is true', () => {
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-
-        expect(component.find('.artist').exists()).toBe(true)
-      })
-
-      it('Does not show artist if hasFeatures is false', () => {
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-
-        expect(component.find('.artist').exists()).toBe(false)
-      })
-
-      it('Can setup link prompt for artist blocks', () => {
-        props.hasFeatures = true
-        const component = getWrapper(props)
-        component.instance().onChange(getSelection())
-        component.find('.SectionText__input').simulate('mouseUp')
-        component.find('.artist').simulate('mouseDown')
-
-        expect(component.state().showUrlInput).toBe(true)
-        expect(component.state().plugin).toBe('artist')
-      })
-
-      it('Adds data-id to artist links', () => {
-        props.hasFeatures = true
-        props.section.body = '<p><a href="https://www.artsy.net/artist/erin-shirreff" class="is-follow-link">Erin Shirreff</a> is an artist.</p>'
-        const component = getWrapper(props)
-        component.instance().onChange(component.state().editorState)
-
-        expect(component.state().html).toMatch('<a data-id="erin-shirreff" class="entity-follow artist-follow"></a>')
-      })
     })
   })
 
@@ -668,7 +309,7 @@ describe('SectionText', () => {
       )
 
       expect(component.state().html).toMatch(
-        '<p>Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul><p>yep.'
+        'Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul><p>yep.'
       )
       expect(component.state().html).toMatch('What would Antoine Court de Gébelin think of the Happy Squirrel?')
     })
@@ -691,65 +332,40 @@ describe('SectionText', () => {
       expect(component.state().html).toBe('<p>Hello.</p>')
     })
   })
+
+  describe('#handleChangeSection', () => {
+    it('R-> Moves the cursor to the next section if at end of block', () => {
+      props.section.body = '<p>A text before.</p>'
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection(true))
+      component.instance().handleChangeSection({key: 'ArrowRight'})
+
+      expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index + 1)
+    })
+
+    it('L-> Moves the cursor to the previous section if at start of block', () => {
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection())
+      component.instance().handleChangeSection({key: 'ArrowLeft'})
+
+      expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index - 1)
+    })
+
+    it('U-> Moves the cursor to the previous section if at start of block', () => {
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection())
+      component.instance().handleChangeSection({key: 'ArrowUp'})
+
+      expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index - 1)
+    })
+
+    it('D-> Moves the cursor to the next section if at end of block', () => {
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection(true))
+      component.instance().focus()
+      component.instance().handleChangeSection({key: 'ArrowDown'})
+
+      expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index + 1)
+    })
+  })
 })
-
-// xdescribe '#handleChangeSection', ->
-
-// it 'R-> Moves the cursor to next block if at end of block', ->
-//   setSelection = @component.state.editorState.getSelection().merge({
-//     anchorKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-//     anchorOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
-//     focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-//     focusOffset: @component.state.editorState.getCurrentContent().getFirstBlock().getLength()
-//   })
-//   newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
-//   @component.onChange newEditorState
-//   @component.onChange = sinon.stub()
-//   @component.handleKeyCommand({key: 'ArrowRight'})
-//   prevSelection = @component.state.editorState.getSelection()
-//   newSelection = @component.onChange.args[0][0].getSelection()
-//   newSelection.anchorOffset.should.eql 0
-//   newSelection.anchorOffset.should.not.eql prevSelection.achorOffset
-//   newSelection.anchorKey.should.not.eql prevSelection.anchorKey
-
-// it 'L-> Moves the cursor to previous block if at start of block', ->
-//   firstBlock = @component.state.editorState.getCurrentContent().getFirstBlock().key
-//   setSelection = @component.state.editorState.getSelection().merge({
-//     anchorKey: @component.state.editorState.getCurrentContent().getBlockAfter(firstBlock).key
-//     anchorOffset: 0
-//     focusKey: @component.state.editorState.getCurrentContent().getBlockAfter(firstBlock).key
-//     focusOffset: 0
-//   })
-//   newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
-//   @component.onChange newEditorState
-//   @component.onChange = sinon.stub()
-//   @component.handleKeyCommand({key: 'ArrowLeft'})
-//   prevSelection = @component.state.editorState.getSelection()
-//   newSelection = @component.onChange.args[0][0].getSelection()
-//   newSelection.anchorOffset.should.eql 19
-//   newSelection.anchorOffset.should.not.eql prevSelection.achorOffset
-//   newSelection.anchorKey.should.not.eql prevSelection.anchorKey
-
-// it 'R-> Moves the cursor to the next section if at end of block', ->
-//   setSelection = @component.state.editorState.getSelection().merge({
-//     anchorKey: @component.state.editorState.getCurrentContent().getLastBlock().key
-//     anchorOffset: @component.state.editorState.getCurrentContent().getLastBlock().getLength()
-//     focusKey: @component.state.editorState.getCurrentContent().getLastBlock().key
-//     focusOffset: @component.state.editorState.getCurrentContent().getLastBlock().getLength()
-//   })
-//   newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
-//   @component.onChange newEditorState
-//   @component.handleKeyCommand({key: 'ArrowRight'})
-//   @component.props.onSetEditing.args[0][0].should.eql 2
-
-// it 'L-> Moves the cursor to the previous section if at start of block', ->
-//   setSelection = @component.state.editorState.getSelection().merge({
-//     anchorKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-//     anchorOffset: 0
-//     focusKey: @component.state.editorState.getCurrentContent().getFirstBlock().key
-//     focusOffset: 0
-//   })
-//   newEditorState = EditorState.acceptSelection(@component.state.editorState, setSelection)
-//   @component.onChange newEditorState
-//   @component.handleKeyCommand({key: 'ArrowLeft'})
-//   @component.props.onSetEditing.args[0][0].should.eql 0

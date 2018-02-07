@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom'
 import { clone } from 'lodash'
 import {
   ContentState,
@@ -93,7 +94,7 @@ export const mergeHtmlIntoState = (editorState, beforeHtml, afterHtml) => {
   return stateWithFocus
 }
 
-export const divideEditorState = (editorState, anchorKey) => {
+export const divideEditorState = (editorState, anchorKey, layout) => {
   const blockArray = editorState.getCurrentContent().getBlocksAsArray()
   let beforeBlocks
   let afterBlocks
@@ -114,7 +115,7 @@ export const divideEditorState = (editorState, anchorKey) => {
     const afterState = EditorState.push(
       editorState, afterContent, null
     )
-    const newSection = convertToRichHtml(afterState)
+    const newSection = convertToRichHtml(afterState, layout)
 
     return {
       currentSectionState,
@@ -123,8 +124,14 @@ export const divideEditorState = (editorState, anchorKey) => {
   }
 }
 
-export const addLinkToState = (editorState, linkData) => {
+export const addLinkToState = (editorState, url, plugin) => {
   const contentState = editorState.getCurrentContent()
+  const linkData = { url }
+
+  if (plugin) {
+    linkData.className = 'is-follow-link'
+  }
+
   const contentWithLink = contentState.createEntity(
     'LINK',
     'MUTABLE',
@@ -142,4 +149,32 @@ export const addLinkToState = (editorState, linkData) => {
   )
 
   return editorStateWithLink
+}
+
+export const hasSelection = (editorState) => {
+  const windowHasSelection = !window.getSelection().isCollapsed
+  const editorHasSelection = !editorState.getSelection().isCollapsed()
+
+  return windowHasSelection || editorHasSelection
+}
+
+export const getMenuSelectionTarget = (editorRef, editorState, hasFeatures) => {
+  if (hasSelection(editorState)) {
+    const editor = ReactDOM.findDOMNode(editorRef)
+    const editorPosition = editor.getBoundingClientRect()
+    const selectionLeft = hasFeatures ? 125 : 100
+    const selectionTarget = stickyControlsBox(editorPosition, -93, selectionLeft)
+
+    return selectionTarget
+  }
+}
+
+export const getLinkSelectionTarget = (editorRef, editorState) => {
+  if (hasSelection(editorState)) {
+    const editor = ReactDOM.findDOMNode(editorRef)
+    const editorPosition = editor.getBoundingClientRect()
+    const selectionTarget = stickyControlsBox(editorPosition, 25, 200)
+
+    return selectionTarget
+  }
 }

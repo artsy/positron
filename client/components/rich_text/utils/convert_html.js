@@ -1,17 +1,21 @@
 import React from 'react'
 import { convertFromHTML, convertToHTML } from 'draft-convert'
-import { standardizeSpacing, stripH3Tags } from './text_stripping'
+import {
+  removeDisallowedBlocks,
+  standardizeSpacing,
+  stripGoogleStyles,
+  stripH3Tags
+} from './text_stripping'
 import { unescapeHTML } from 'underscore.string'
 
-export const convertToRichHtml = (editorState, layout) => {
+export const convertToRichHtml = (editorState, layout, hasFeatures) => {
   let html = convertToHTML({
     entityToHTML: (entity, originalText) => {
       const { className, url } = entity.data
 
       if (entity.type === 'LINK') {
         const innerText = unescapeHTML(originalText)
-
-        if (className && className.includes('is-follow-link')) {
+        if (hasFeatures && className && className.includes('is-follow-link')) {
           const artist = url.split('/artist/')[1]
 
           return (
@@ -93,4 +97,16 @@ export const convertFromRichHtml = (html) => {
     }
   })(html)
   return blocksFromHTML
+}
+
+export const getFormattedState = (editorState, html, layout, hasFeatures, keepAllowed) => {
+  const formattedHTML = stripGoogleStyles(html)
+  const blocksFromHTML = convertFromRichHtml(formattedHTML).getBlocksAsArray()
+  const newState = removeDisallowedBlocks(editorState, blocksFromHTML, layout, hasFeatures, keepAllowed)
+  const newHTML = convertToRichHtml(newState, layout, hasFeatures)
+
+  return {
+    editorState: newState,
+    html: newHTML
+  }
 }

@@ -167,9 +167,8 @@ describe('Draft Utils: Text Selection', () => {
       new Draft.CompositeDecorator(decorators(true))
     )
     const editorStateWithSelection = getSelection(editorState)
-    const linkData = {url: 'http://link.com'}
 
-    const stateWithLink = addLinkToState(editorStateWithSelection, linkData)
+    const stateWithLink = addLinkToState(editorStateWithSelection, 'http://link.com')
     const htmlWithLink = convertToRichHtml(stateWithLink, 'standard')
 
     expect(htmlWithLink).toMatch('<a href="http://link.com">')

@@ -1,9 +1,12 @@
+import _s from 'underscore.string'
 import {
   ContentState,
   EditorState,
   Modifier,
   RichUtils
 } from 'draft-js'
+import { setContentEnd } from 'client/components/rich_text/utils/decorators'
+import { blockRenderMapArray } from 'client/apps/edit/components/content/sections/text/draft_config.js'
 
 export const standardizeSpacing = (html) => {
   const newHtml = html
@@ -71,11 +74,12 @@ export const stripH3Tags = (html) => {
   }
   return doc.innerHTML
 }
-
-export const removeDisallowedBlocks = (editorState, blocks, allowedBlocks, keepExisting) => {
+export const removeDisallowedBlocks = (editorState, blocks, layout, hasFeatures, keepExisting) => {
+  const allowedBlocks = blockRenderMapArray(layout, hasFeatures)
   const currentContent = editorState.getCurrentContent()
   const selection = editorState.getSelection()
   let newState
+
   const cleanedBlocks = blocks.map((contentBlock) => {
     const unstyled = stripCharacterStyles(contentBlock, true)
     const isAllowedBlock = allowedBlocks.includes(unstyled.getType())
@@ -176,4 +180,29 @@ export const stripGoogleStyles = (html) => {
   strippedHtml = standardizeSpacing(strippedHtml)
 
   return strippedHtml
+}
+
+export const makeBlockQuote = (html) => {
+  let increment = 0
+  let blockquote = setContentEnd(html, false)
+  const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
+  const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
+
+  if (afterBlock) {
+    // add text before blockquote to new text section
+    blockquote = blockquote.replace(afterBlock, '')
+  }
+  if (beforeBlock) {
+    // add text after blockquote to new text section
+    blockquote = blockquote.replace(beforeBlock, '')
+    // TODO: redux newSectionAction
+    increment = 1
+  }
+
+  return {
+    blockquote,
+    beforeBlock,
+    afterBlock,
+    increment
+  }
 }
