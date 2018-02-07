@@ -7,13 +7,15 @@ export const RemoveButton = (props) => {
     background,
     className,
     color,
-    onClick
+    onClick,
+    onMouseDown
   } = props
 
   return (
     <div
       className={`RemoveButton ${className || ''}`}
       onClick={onClick}
+      onMouseDown={onMouseDown}
     >
       <IconRemove
         color={color}
@@ -27,5 +29,6 @@ RemoveButton.propTypes = {
   background: PropTypes.string,
   className: PropTypes.string,
   color: PropTypes.string,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func,
+  onMouseDown: PropTypes.func
 }
