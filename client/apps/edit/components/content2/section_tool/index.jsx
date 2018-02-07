@@ -103,23 +103,27 @@ export class SectionTool extends Component {
 
   render () {
     const { firstSection, index, isEditing, isHero, sections } = this.props
+    const { open } = this.state
+
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
 
     return (
       <div
         className={'edit-tool'}
-        data-state-open={this.state.open}
+        data-state-open={open}
         data-editing={isEditing}
         data-visible={isFirstSection || isLastSection}
         data-hero={isHero}>
+
         <div
           className='edit-tool__icon'
           onClick={this.toggleOpen}>
           <IconEditSection
-            fill={this.state.open || !isHero ? '#000' : '#CCC'}
-            isClosing={this.state.open} />
+            fill={open || !isHero ? '#000' : '#CCC'}
+            isClosing={open} />
         </div>
+
         { isHero
           ? this.renderHeroMenu()
           : this.renderSectionMenu()

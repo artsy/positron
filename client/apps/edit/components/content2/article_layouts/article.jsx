@@ -9,38 +9,27 @@ import SectionList from '../section_list'
 
 export class EditArticle extends Component {
   static propTypes = {
-    article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    channel: PropTypes.object.isRequired
   }
 
   render () {
-    const { article, channel, onChange } = this.props
+    const { channel } = this.props
     const hasHero = channel.type === 'support' || channel.type === 'team'
 
     return (
       <div className='EditArticle'>
-
         {hasHero &&
           <SectionHero />
         }
-
         <SectionHeader />
-
         <SectionList />
-
-        <SectionFooter
-          article={article}
-          onChange={onChange}
-        />
-
+        <SectionFooter />
       </div>
     )
   }
 }
 const mapStateToProps = (state) => ({
-  channel: state.app.channel,
-  lastUpdated: state.edit.lastUpdated
+  channel: state.app.channel
 })
 
 export default connect(

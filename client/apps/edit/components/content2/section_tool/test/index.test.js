@@ -19,7 +19,7 @@ describe('SectionTool', () => {
     isHero: false,
     section: null,
     index: FeatureArticle.sections.length - 1,
-    sections: new Backbone.Collection(FeatureArticle.sections)
+    sections: FeatureArticle.sections
   }
 
   it('opens on click', () => {
@@ -49,7 +49,7 @@ describe('SectionTool', () => {
     component.find('.edit-tool__icon').simulate('click')
     component.find(IconEditText).simulate('click')
     expect(component.props().sections.length).toBe(originalSections + 1)
-    expect(component.props().sections.pop().get('type')).toMatch('text')
+    expect(component.props().sections.pop().type).toMatch('text')
   })
 
   it('Adds a data-visible prop to the last section tool', () => {
@@ -73,7 +73,7 @@ describe('SectionTool: Hero', () => {
   const props = {
     isEditing: false,
     isHero: true,
-    section: new Backbone.Model,
+    section: {},
     index: -1,
     sections: new Backbone.Collection(FeatureArticle.sections),
     onSetEditing: jest.fn()
