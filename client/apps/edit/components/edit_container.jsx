@@ -61,8 +61,9 @@ export class EditContainer extends Component {
   }
 
   componentDidMount () {
-    const { startEditingArticleAction, user } = this.props
+    const { channel, startEditingArticleAction, user } = this.props
     startEditingArticleAction({
+      channel,
       user,
       article: this.props.article.id
     })
@@ -102,11 +103,12 @@ export class EditContainer extends Component {
   }
 
   onChange = (key, value) => {
-    const { article, updateArticleAction } = this.props
+    const { article, channel, updateArticleAction } = this.props
 
     this.resetInactivityCounter()
     article.set(key, value)
     updateArticleAction({
+      channel,
       article: article.id
     })
     this.maybeSaveArticle()
@@ -136,8 +138,9 @@ export class EditContainer extends Component {
   sendStopEditing = () => {
     if (this.state.sentStopEditingEvent) return
 
-    const { article, stopEditingArticleAction, user } = this.props
+    const { article, channel, stopEditingArticleAction, user } = this.props
     stopEditingArticleAction({
+      channel,
       article: article.id,
       user
     })

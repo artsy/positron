@@ -122,9 +122,11 @@ export class ArticleList extends Component {
   }
 
   render () {
+    const articles = this.props.articles || {}
+
     return (
       <div className='article-list__results'>
-        {!this.props.articles.length
+        {!articles.length
           ? <div className='article-list__no-results'>No Results Found</div>
           : this.renderArticles()}
       </div>

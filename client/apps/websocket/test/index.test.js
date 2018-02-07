@@ -1,5 +1,6 @@
 import {
-  articlesInSession,
+  sessions,
+  getSessionsForChannel,
   onArticlesRequested,
   onUserCurrentlyEditing,
   onUserStartedEditing,
@@ -22,24 +23,31 @@ describe('WebSocket Server', () => {
       emit: jest.fn()
     }
 
-    articlesInSession['123456'] = {
+    sessions['123456'] = {
       timestamp: '2018-01-30T23:12:20.973Z',
       user: {
         id: '123',
         name: 'John Doe'
       },
-      article: '123456'
+      article: '123456',
+      channel: {
+        id: '1',
+        name: 'Artsy Editorial',
+        type: 'editorial'
+      }
     }
   })
 
   it('sends articles in session when requested by client', () => {
-    onArticlesRequested({io, socket})
+    const eventType = 'EDITED_ARTICLES_RECEIVED'
+    data = getEditingEvent(eventType)
+    onArticlesRequested({io, socket}, {channel: data.channel})
 
     expect(socket.emit.mock.calls.length).toBe(1)
     expect(socket.emit.mock.calls[0][0]).toBe('articlesRequested')
     expect(socket.emit.mock.calls[0][1]).toEqual({
-      type: 'EDITED_ARTICLES_RECEIVED',
-      payload: articlesInSession
+      type: eventType,
+      payload: getSessionsForChannel(sessions, data.channel)
     })
   })
 
@@ -52,7 +60,7 @@ describe('WebSocket Server', () => {
     expect(io.sockets.emit.mock.calls[0][0]).toBe('userStartedEditing')
     expect(io.sockets.emit.mock.calls[0][1]).toEqual({
       type: eventType,
-      payload: articlesInSession[data.article]
+      payload: sessions[data.article]
     })
   })
 
@@ -66,12 +74,12 @@ describe('WebSocket Server', () => {
     }
     data = getEditingEvent(eventType)
 
-    expect(articlesInSession[data.article]).not.toBeUndefined()
+    expect(sessions[data.article]).not.toBeUndefined()
     onUserStoppedEditing({io, socket}, data)
     expect(io.sockets.emit.mock.calls.length).toBe(1)
     expect(io.sockets.emit.mock.calls[0][0]).toBe('userStoppedEditing')
     expect(io.sockets.emit.mock.calls[0][1]).toEqual(event)
-    expect(articlesInSession[data.article]).toBeUndefined()
+    expect(sessions[data.article]).toBeUndefined()
   })
 
   it('broadcasts a message when a user is currently editing', () => {
@@ -80,7 +88,7 @@ describe('WebSocket Server', () => {
     expect(io.sockets.emit.mock.calls[0][0]).toBe('articlesRequested')
     expect(io.sockets.emit.mock.calls[0][1]).toEqual({
       type: 'EDITED_ARTICLES_RECEIVED',
-      payload: articlesInSession
+      payload: getSessionsForChannel(sessions, data.channel)
     })
   })
 })
@@ -98,5 +106,10 @@ let getEditingEvent = (type) => ({
     }
   },
   article: '123456',
-  type
+  type,
+  channel: {
+    id: '1',
+    name: 'Artsy Editorial',
+    type: 'editorial'
+  }
 })

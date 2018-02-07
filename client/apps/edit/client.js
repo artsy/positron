@@ -27,7 +27,7 @@ export function init () {
   new EditLayout({ el: $('#layout-content'), article, channel })
 
   const store = createReduxStore(reducers, initialState)
-  initWebsocket(store)
+  initWebsocket(store, sd.APP_URL)
 
   if (article.isNew()) {
     article.once('sync', () => {

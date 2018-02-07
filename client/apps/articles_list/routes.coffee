@@ -3,7 +3,7 @@ query = require './query.coffee'
 Lokka = require('lokka').Lokka
 Transport = require('lokka-transport-http').Transport
 { API_URL } = process.env
-{ articlesInSession } = require '../websocket'
+{ getSessionsForChannel } = require '../websocket'
 
 @articles_list = (req, res, next) ->
   channel_id = req.user?.get('current_channel').id
@@ -31,9 +31,9 @@ Transport = require('lokka-transport-http').Transport
 
 renderArticles = (res, req, result, published) ->
   res.locals.sd.ARTICLES = result.articles
-  res.locals.sd.ARTICLES_IN_SESSION = articlesInSession
-  res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
+  channel = res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
+  res.locals.sd.ARTICLES_IN_SESSION = getSessionsForChannel channel
   res.locals.sd.HAS_PUBLISHED = published
   res.render 'index',
     articles: result.articles || []
-    current_channel: req.user?.get('current_channel')
+    current_channel: channel
