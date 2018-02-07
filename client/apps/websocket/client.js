@@ -1,10 +1,10 @@
 import io from 'socket.io-client'
 import { messageTypes } from './messageTypes'
 
-const sd = require('sharify').data
-const socket = io(sd.APP_URL)
+let socket
 
-const init = (store) => {
+const init = (store, rootURL) => {
+  socket = io(rootURL)
   // add listeners to socket messages so we can re-dispatch them as actions
   Object.keys(messageTypes)
     .forEach(key =>

@@ -2,12 +2,12 @@ Article = require '../../models/article'
 User = require '../../models/user'
 Channel = require '../../models/channel'
 sd = require('sharify').data
-{ articlesInSession } = require '../websocket'
+{ sessions } = require '../websocket'
 
 @create = (req, res, next) ->
   channel = new Channel req.user.get('current_channel')
   res.locals.sd.CURRENT_CHANNEL = channel
-  res.locals.sd.CURRENT_SESSION = articlesInSession[req.params.id]
+  res.locals.sd.CURRENT_SESSION = sessions[req.params.id]
   article = new Article {
     channel_id: channel.get('id') if channel.get('type') isnt 'partner'
     partner_channel_id: channel.get('id') if channel.get('type') is 'partner'
@@ -24,7 +24,7 @@ sd = require('sharify').data
     error: res.backboneError
     success: (article) ->
       return next() unless req.user.hasArticleAccess article
-      res.locals.sd.CURRENT_SESSION = articlesInSession[req.params.id]
+      res.locals.sd.CURRENT_SESSION = sessions[req.params.id]
       res.locals.sd.ACCESS_TOKEN = req.user.get('access_token')
       res.locals.sd.CURRENT_CHANNEL = new Channel req.user.get('current_channel')
       if (article.get('channel_id') or article.get('partner_channel_id')) isnt req.user.get('current_channel').id
@@ -34,7 +34,7 @@ sd = require('sharify').data
 
 render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()
-  res.locals.sd.CURRENT_SESSION = articlesInSession[req.params.id]
+  res.locals.sd.CURRENT_SESSION = sessions[req.params.id]
 
   view = if res.locals.sd.IS_MOBILE then 'mobile/index' else 'layout/index'
   res.render view, article: article

@@ -7,10 +7,11 @@ export const actions = keyMirror(
   'EDITED_ARTICLES_RECEIVED'
 )
 
-export const viewArticles = emitAction(() => ({
+export const viewArticles = emitAction((channel) => ({
   type: actions.VIEW_ARTICLES,
   key: messageTypes.articlesRequested,
   payload: {
+    channel,
     timestamp: new Date().toISOString()
   }
 }))

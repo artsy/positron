@@ -1,4 +1,5 @@
 import { messageTypes } from './messageTypes'
+import { filter } from 'lodash'
 
 const {
   articlesRequested,
@@ -8,37 +9,43 @@ const {
   userCurrentlyEditing
 } = messageTypes
 
-export const articlesInSession = {}
+export const sessions = {}
 
-export const onArticlesRequested = ({io, socket}) => {
-  console.log('[socket] onArticlesRequested')
+export const getSessionsForChannel = (channel) => {
+  return filter(sessions, s => s.channel.id === channel.id)
+}
+
+export const onArticlesRequested = ({io, socket}, { channel }) => {
+  console.log('[socket] onArticlesRequested, channel id: ', channel.id)
   const event = articlesRequested
+
   socket.emit(event, {
     type: 'EDITED_ARTICLES_RECEIVED',
-    payload: articlesInSession
+    payload: getSessionsForChannel(sessions, channel)
   })
 }
 
 export const onUserStartedEditing = ({io, socket}, data) => {
   console.log('[socket] onUserStartedEditing, userId: ', data.user.id, ', article: ', data.article)
-  const { timestamp, user, article } = data
+  const { channel, timestamp, user, article } = data
   const { id, name } = user
-  const currentSession = articlesInSession[article]
+  const currentSession = sessions[article]
   if (currentSession && currentSession.user.id !== id) {
     socket.emit(articleLocked, {
       type: 'ARTICLE_LOCKED',
-      payload: articlesInSession[article]
+      payload: sessions[article]
     })
     return
   }
 
-  const newSession = articlesInSession[article] = {
+  const newSession = sessions[article] = {
     timestamp,
     user: {
       id,
       name
     },
-    article
+    article,
+    channel
   }
 
   io.sockets.emit(userStartedEditing, {
@@ -49,28 +56,28 @@ export const onUserStartedEditing = ({io, socket}, data) => {
 
 export const onUserCurrentlyEditing = ({io, socket}, data) => {
   const { article, timestamp } = data
-  articlesInSession[article].timestamp = timestamp
+  sessions[article].timestamp = timestamp
 
   const event = articlesRequested
   io.sockets.emit(event, {
     type: 'EDITED_ARTICLES_RECEIVED',
-    payload: articlesInSession
+    payload: getSessionsForChannel(sessions, data.channel)
   })
 }
 
 export const onUserStoppedEditing = ({io, socket}, data) => {
   console.log('[socket] onUserStoppedEditing, userId: ', data.user.id, ', article: ', data.article)
   const { article, user } = data
-  const currentSession = articlesInSession[article]
+  const currentSession = sessions[article]
 
   if (currentSession && currentSession.user.id !== user.id) {
     socket.emit(articleLocked, {
       type: 'ARTICLE_LOCKED',
-      payload: articlesInSession[article]
+      payload: sessions[article]
     })
     return
   }
-  delete articlesInSession[article]
+  delete sessions[article]
 
   io.sockets.emit(userStoppedEditing, {
     type: data.type,

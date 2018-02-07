@@ -9,7 +9,7 @@ import { init as initWebsocket } from 'client/apps/websocket/client'
 import ArticlesList from './components/articles_list'
 
 const store = createReduxStore(reducers, initialState)
-initWebsocket(store)
+initWebsocket(store, sd.APP_URL)
 
 export const init = () => (
   render(

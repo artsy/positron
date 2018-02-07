@@ -28,8 +28,8 @@ export class ArticlesList extends Component {
   }
 
   componentDidMount () {
-    const { viewArticlesAction } = this.props
-    viewArticlesAction()
+    const { channel, viewArticlesAction } = this.props
+    viewArticlesAction(channel)
 
     const canLoadMore = debounce(this.canLoadMore, 300)
     $.onInfiniteScroll(canLoadMore)
