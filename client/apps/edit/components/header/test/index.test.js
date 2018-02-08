@@ -1,10 +1,10 @@
 import React from 'react'
-import Article from '../../../../../models/article'
-import { EditHeader } from '../index'
+import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import { EditHeader } from '../index'
 
 describe('Edit Header Controls', () => {
   let props
@@ -25,11 +25,12 @@ describe('Edit Header Controls', () => {
         saveArticle: jest.fn()
       },
       beforeUnload: jest.fn(),
-      article: new Article(Fixtures.StandardArticle),
+      article: clone(Fixtures.StandardArticle),
       channel: { type: 'partner' },
       edit: {
         isSaved: true,
-        isSaving: false
+        isSaving: false,
+        isPublishing: false
       },
       isAdmin: false
     }
@@ -65,21 +66,21 @@ describe('Edit Header Controls', () => {
     })
 
     it('Content indicates non-completion', () => {
-      delete props.article.attributes.title
+      delete props.article.title
       const component = getWrapper(props)
 
       expect(component.find(Icon).first().props().color).toBe(colors.grayMedium)
     })
 
     it('Display indicates completion if complete', () => {
-      props.article.set('thumbnail_image', 'image.jpg')
+      props.article.thumbnail_image = 'image.jpg'
       const component = getWrapper(props)
 
       expect(component.find(Icon).last().props().color).toBe(colors.greenRegular)
     })
 
     it('Display indicates non-completion', () => {
-      delete props.article.attributes.thumbnail_image
+      delete props.article.thumbnail_image
       const component = getWrapper(props)
 
       expect(component.find(Icon).last().props().color).toBe(colors.grayMedium)
@@ -96,7 +97,7 @@ describe('Edit Header Controls', () => {
     })
 
     it('Publishes an article on button click', () => {
-      props.article.set('thumbnail_image', 'image.jpg')
+      props.article.thumbnail_image = 'image.jpg'
       const component = getWrapper(props)
       const button = component.find('button').at(2)
       button.simulate('click')
@@ -106,10 +107,8 @@ describe('Edit Header Controls', () => {
     })
 
     it('Unpublishes an article on button click', () => {
-      props.article.set({
-        thumbnail_image: 'image.jpg',
-        published: true
-      })
+      props.article.thumbnail_image = 'image.jpg'
+      props.article.published = true
       const component = getWrapper(props)
       const button = component.find('button').at(2)
       button.simulate('click')
@@ -140,7 +139,7 @@ describe('Edit Header Controls', () => {
     })
 
     it('Saves a published article on button click', () => {
-      props.article.set('published', true)
+      props.article.published = true
       const component = getWrapper(props)
       const button = component.find('button').at(4)
       button.simulate('click')
@@ -150,7 +149,7 @@ describe('Edit Header Controls', () => {
 
     it('Removes beforeUnload listener on click', () => {
       window.removeEventListener = jest.fn()
-      props.article.set('published', true)
+      props.article.published = true
       const component = getWrapper(props)
       const button = component.find('button').at(4)
       button.simulate('click')
@@ -162,11 +161,11 @@ describe('Edit Header Controls', () => {
 
   describe('Publish button', () => {
     beforeEach(() => {
-      props.article.set('thumbnail_image', 'image.jpg')
+      props.article.thumbnail_image = 'image.jpg'
     })
 
     it('Is disabled if content is not complete', () => {
-      delete props.article.attributes.thumbnail_image
+      delete props.article.thumbnail_image
       const component = getWrapper(props)
 
       expect(component.html()).toMatch('data-disabled="true"')
@@ -181,7 +180,6 @@ describe('Edit Header Controls', () => {
 
     it('Renders "Publishing..." if publishing and isPublishing', () => {
       props.edit.isPublishing = true
-      props.article.set('published', true)
       // set article published because isPublished is set after save
       const component = getWrapper(props)
 
@@ -189,7 +187,7 @@ describe('Edit Header Controls', () => {
     })
 
     it('Renders "Unpublish" if published', () => {
-      props.article.set('published', true)
+      props.article.published = true
       const component = getWrapper(props)
 
       expect(component.text()).toMatch('Unpublish')
@@ -197,7 +195,7 @@ describe('Edit Header Controls', () => {
 
     it('Renders "Unpublishing..." if published and isPublishing', () => {
       props.edit.isPublishing = true
-      props.article.set('published', false)
+      props.article.published = true
       // set article published because isPublished is set after save
       const component = getWrapper(props)
 
@@ -213,7 +211,7 @@ describe('Edit Header Controls', () => {
     })
 
     it('Renders "Save Article" if published', () => {
-      props.article.set('published', true)
+      props.article.published = true
       const component = getWrapper(props)
 
       expect(component.text()).toMatch('Save Article')
@@ -252,12 +250,12 @@ describe('Edit Header Controls', () => {
     it('Renders "Preview" if unpublished', () => {
       const component = getWrapper(props)
 
-      expect(component.html()).toMatch(props.article.get('slug'))
+      expect(component.html()).toMatch(props.article.slug)
       expect(component.html()).toMatch('Preview')
     })
 
     it('Renders "View" if published', () => {
-      props.article.set('published', true)
+      props.article.published = true
       const component = getWrapper(props)
 
       expect(component.html()).not.toMatch('Preview')

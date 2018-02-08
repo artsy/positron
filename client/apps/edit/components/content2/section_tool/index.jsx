@@ -114,14 +114,17 @@ export class SectionTool extends Component {
         data-state-open={open}
         data-editing={isEditing}
         data-visible={isFirstSection || isLastSection}
-        data-hero={isHero}>
+        data-hero={isHero}
+      >
 
         <div
           className='edit-tool__icon'
-          onClick={this.toggleOpen}>
+          onClick={this.toggleOpen}
+        >
           <IconEditSection
             fill={open || !isHero ? '#000' : '#CCC'}
-            isClosing={open} />
+            isClosing={open}
+          />
         </div>
 
         { isHero

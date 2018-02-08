@@ -6,7 +6,7 @@ import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Article from '../../../../models/article.coffee'
 import { EditContainer } from '../edit_container'
 import { EditAdmin } from '../admin/index.jsx'
-import { EditContent } from '../content/index.jsx'
+import { EditContent } from '../content2/index.jsx'
 import { EditDisplay } from '../display/index.jsx'
 import { EditHeader } from '../header/index.jsx'
 import { EditError } from '../error/index.jsx'
@@ -74,7 +74,7 @@ describe('EditContainer', () => {
     const component = getShallowWrapper(props)
     component.instance().onChange('title', title)
 
-    expect(props.saveArticleAction.mock.calls[0][0].get('title')).toBe(title)
+    expect(props.saveArticleAction.mock.calls[0][0].title).toBe(title)
   })
 
   it('#onChangeHero sets the article hero_section with key/value and calls #maybeSaveArticle', () => {
@@ -82,7 +82,7 @@ describe('EditContainer', () => {
     const component = getShallowWrapper(props)
     component.instance().onChangeHero('url', url)
 
-    expect(props.saveArticleAction.mock.calls[0][0].get('hero_section').url).toBe(url)
+    expect(props.saveArticleAction.mock.calls[0][0].hero_section.url).toBe(url)
   })
 
   describe('#maybeSaveArticle', () => {
@@ -90,7 +90,7 @@ describe('EditContainer', () => {
       const component = getShallowWrapper(props)
       component.instance().maybeSaveArticle()
 
-      expect(props.saveArticleAction.mock.calls[0][0]).toBe(props.article)
+      expect(props.saveArticleAction.mock.calls[0][0]).toBe(props.article.attributes)
     })
 
     it('Calls #changeSavedStatusAction if published', () => {

@@ -19,6 +19,7 @@ export const actions = keyMirror(
   'RESET_SECTIONS',
   'SAVE_ARTICLE',
   'SET_SECTION',
+  'SET_SEO_KEYWORD',
   'TOGGLE_SPINNER'
 )
 
@@ -150,15 +151,25 @@ export const onFirstSave = (id) => {
   }
 }
 
-export const publishArticle = (article, published) => {
-  const newArticle = new Article(article)
-  if (published) {
-    setSeoKeyword(newArticle)
-  }
-  newArticle.set('published', published)
-  newArticle.save()
-  redirectToList(published)
+export const publishArticle = () => {
+  return (dispatch, getState) => {
+    dispatch(publishArticlePending())
 
+    const article = clone(getState().edit.article)
+    const published = !article.published
+    const newArticle = new Article(article)
+
+    newArticle.set('published', published)
+    if (published) {
+      dispatch(setSeoKeyword(newArticle))
+    }
+    newArticle.save()
+
+    dispatch(redirectToList(published))
+  }
+}
+
+export const publishArticlePending = () => {
   return {
     type: actions.PUBLISH_ARTICLE,
     payload: {
@@ -200,11 +211,11 @@ export const saveArticle = () => {
       dispatch(changeSavedStatus(article, true))
     })
 
-    setSeoKeyword(newArticle)
+    dispatch(setSeoKeyword(newArticle))
     newArticle.save()
 
     if (article.published) {
-      redirectToList(true)
+      dispatch(redirectToList(true))
     }
   }
 }
@@ -281,5 +292,8 @@ export const setSeoKeyword = (article) => {
     const seo_keyword = $('input#edit-seo__focus-keyword').val() || ''
 
     article.set({ seo_keyword })
+  }
+  return {
+    type: actions.SET_SEO_KEYWORD
   }
 }

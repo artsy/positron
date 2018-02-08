@@ -1,6 +1,8 @@
 import * as editActions from '../editActions'
-import Article from '../../models/article'
+import { clone } from 'lodash'
+import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import Article from 'client/models/article.coffee'
 const { FeatureArticle } = Fixtures
 
 describe('editActions', () => {
@@ -8,7 +10,7 @@ describe('editActions', () => {
 
   beforeEach(() => {
     window.location.assign = jest.fn()
-    article = new Article(FeatureArticle)
+    article = clone(FeatureArticle)
     article.destroy = jest.fn()
     article.save = jest.fn()
   })
@@ -20,8 +22,8 @@ describe('editActions', () => {
     '</div>'
 
   it('#changeSavedStatus updates article and sets isSaved to arg', () => {
-    article.set('title', 'Cool article')
-    const action = editActions.changeSavedStatus(article.attributes, true)
+    article.title = 'Cool article'
+    const action = editActions.changeSavedStatus(article, true)
 
     expect(action.type).toBe('CHANGE_SAVED_STATUS')
     expect(action.payload.isSaved).toBe(true)
@@ -73,59 +75,109 @@ describe('editActions', () => {
   })
 
   describe('#saveArticle', () => {
-    it('Sets isSaving to true and saves the article', () => {
-      const action = editActions.saveArticle(article)
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
-      expect(action.type).toBe('SAVE_ARTICLE')
-      expect(action.payload.isSaving).toBe(true)
-      expect(article.save.mock.calls.length).toBe(1)
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({edit: { article }}))
+      dispatch = jest.fn()
+    })
+
+    it('Sets isSaving to true and saves the article', () => {
+      editActions.saveArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('SAVE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.isSaving).toBe(true)
+      expect(Backbone.sync.mock.calls[0][0]).toBe('update')
     })
 
     it('Redirects to list if published', () => {
-      editActions.saveArticle(article)
+      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      editActions.saveArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[2][0].type).toBe('REDIRECT_TO_LIST')
       expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=true')
     })
 
     it('Does not redirect if unpublished', () => {
-      article.set('published', false)
-      editActions.saveArticle(article)
+      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      editActions.saveArticle()(dispatch, getState)
 
       expect(window.location.assign.mock.calls.length).toBe(0)
     })
 
     it('Sets seo_keyword if published', () => {
-      editActions.saveArticle(article)
-
-      expect(article.get('seo_keyword')).toBe('ceramics')
+      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      editActions.saveArticle()(dispatch, getState)
+      expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
+      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe('ceramics')
     })
 
     it('Does not seo_keyword if unpublished', () => {
-      article.set('published', false)
-      editActions.saveArticle(article)
+      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      editActions.saveArticle()(dispatch, getState)
 
-      expect(article.get('seo_keyword')).toBe(undefined)
+      expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
+      expect(setArticleSpy.mock.calls.length).toBe(1)
+      expect(setArticleSpy.mock.calls[0][0].seo_keyword).toBeFalsy()
     })
   })
 
   describe('#publishArticle', () => {
-    it('Changes the publish status and saves the article', () => {
-      const action = editActions.publishArticle(article)
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
-      expect(action.type).toBe('PUBLISH_ARTICLE')
-      expect(action.payload.isPublishing).toBe(!article.get('published'))
-      expect(article.save.mock.calls.length).toBe(1)
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({edit: { article }}))
+      dispatch = jest.fn()
+    })
+
+    it('Changes the publish status and saves the article', () => {
+      getState = jest.fn(() => ({edit: {article: {published: false, id: '123'}}}))
+      editActions.publishArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('PUBLISH_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.isPublishing).toBe(true)
+      expect(Backbone.sync.mock.calls[0][0]).toBe('update')
+      expect(Backbone.sync.mock.calls[0][1].get('published')).toBe(true)
     })
 
     it('Sets seo_keyword if publishing', () => {
-      editActions.publishArticle(article, true)
+      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      editActions.publishArticle()(dispatch, getState)
 
-      expect(article.get('seo_keyword')).toBe('ceramics')
+      expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
+      expect(setArticleSpy.mock.calls[2][0].seo_keyword).toBe('ceramics')
     })
 
     it('Does not seo_keyword if unpublishing', () => {
-      editActions.publishArticle(article)
+      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      editActions.publishArticle()(dispatch, getState)
 
-      expect(article.get('seo_keyword')).toBe(undefined)
+      expect(dispatch.mock.calls[1][0].type).toBe('REDIRECT_TO_LIST')
+      expect(Backbone.sync.mock.calls[0][1].get('seo_keyword')).toBeFalsy()
+    })
+
+    it('Redirects to published list if publishing', () => {
+      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      editActions.publishArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[2][0].type).toBe('REDIRECT_TO_LIST')
+      expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=true')
+    })
+
+    it('Redirects to drafts list if unpublishing', () => {
+      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      editActions.publishArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[1][0].type).toBe('REDIRECT_TO_LIST')
+      expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=false')
     })
   })
 

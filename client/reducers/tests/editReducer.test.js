@@ -64,7 +64,7 @@ describe('editReducer', () => {
       )
     })
 
-    it('ON_CHANGE_SECTION should update section keys and reset article.sections', () => {
+    it('CHANGE_SECTION should update section keys and reset article.sections', () => {
       const stateWithSection = extend(initialState, {
         section: initialSections[0],
         sectionIndex: 0
@@ -73,7 +73,7 @@ describe('editReducer', () => {
       const value = '<p>A new piece of text.</p>'
 
       const updatedState = editReducer(stateWithSection, {
-        type: actions.ON_CHANGE_SECTION,
+        type: actions.CHANGE_SECTION,
         payload: {
           key,
           value

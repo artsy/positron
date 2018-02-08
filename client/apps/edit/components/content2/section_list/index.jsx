@@ -8,11 +8,11 @@ import DragContainer from 'client/components/drag_drop/index.coffee'
 
 export class SectionList extends Component {
   static propTypes = {
+    article: PropTypes.object,
     editSection: PropTypes.object,
     resetSectionsAction: PropTypes.func,
     sectionIndex: PropTypes.any,
-    setSectionAction: PropTypes.func,
-    article: PropTypes.object
+    setSectionAction: PropTypes.func
   }
 
   onNewSection = (section) => {
