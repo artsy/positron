@@ -69,6 +69,7 @@ export class ArticleList extends Component {
 
   renderArticles () {
     const { checkable, articles, activeSessions, user, forceURL } = this.props
+
     return articles.map(article => {
       const attrs = this.getDisplayAttrs(article)
       const session = activeSessions[article.id]
