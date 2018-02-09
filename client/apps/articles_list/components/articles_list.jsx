@@ -18,7 +18,9 @@ export class ArticlesList extends Component {
     channel: PropTypes.object,
     apiURL: PropTypes.string,
     user: PropTypes.object,
-    viewArticlesAction: PropTypes.func
+    viewArticlesAction: PropTypes.func,
+    checkable: PropTypes.bool,
+    selected: PropTypes.func
   }
 
   state = {
@@ -87,12 +89,12 @@ export class ArticlesList extends Component {
   }
 
   showArticlesList () {
-    const { channel, apiURL } = this.props
+    const { channel, apiURL, checkable, selected } = this.props
     const isArtsyChannel = (type) => {
       return type in ['editorial', 'support', 'team']
     }
 
-    //TODO: convert css to use styled-components
+    // TODO: convert css to use styled-components
     if (this.props.articles && this.props.articles.length) {
       return (
         <div className='articles-list__container'>
@@ -102,9 +104,9 @@ export class ArticlesList extends Component {
             placeholder='Search Articles...'
             collection={this.state.articles}
             searchResults={this.setResults}
-            selected={null}
+            selected={selected}
             contentType='article'
-            checkable={false}
+            checkable={checkable || false}
             isArtsyChannel={isArtsyChannel(channel.type)}
           />
         </div>
@@ -142,7 +144,8 @@ export class ArticlesList extends Component {
 
 const mapStateToProps = (state) => ({
   channel: state.app.channel,
-  apiURL: state.app.apiURL
+  apiURL: state.app.apiURL,
+  user: state.app.user
 })
 
 const mapDispatchToProps = (dispatch) => ({
