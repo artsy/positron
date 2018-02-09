@@ -1,0 +1,46 @@
+@import '../stylus_lib'
+
+.EditHeader
+  display flex
+  justify-content space-between
+  padding 10px
+  position fixed
+  top 0
+  left 110px
+  right 0
+  background white
+  z-index 100
+
+  button
+    border-radius 0
+    padding 11px 18px
+    &[data-disabled=true]
+      background gray-lighter-color
+      color gray-dark-color
+    &[data-disabled=false],
+    &[data-active=true]
+      color black
+    &.delete
+      border none
+
+  &__left
+    display flex
+    button
+      margin-right 10px
+      color gray-color
+      &:hover
+        color black
+      &.check
+        margin 0
+        border-right 0
+        .icon
+          font-size 10px
+          margin-right 0
+          margin-left 10px
+
+  &__right
+    button
+      margin-left 10px
+
+#edit-content .EditHeader a
+  background-image none

@@ -1,0 +1,157 @@
+@import './controls'
+
+.edit-header
+  position relative
+
+  .DraftEditor-root
+    position relative
+
+  .public-DraftEditorPlaceholder-inner
+    position absolute
+    top 0
+    color gray-dark-color
+
+  .plain-text[name='title']
+    .public-DraftEditorPlaceholder-inner:after
+      content ' *'
+      color red-color
+
+  .upload-progress
+    min-width 0
+
+  div[class*='Header__Vertical'] span
+    color gray-dark-color
+
+  &__image-container
+    position absolute
+    top 20px
+    left 20px
+    right 20px
+    bottom 20px
+
+  .file-input.simple
+    height 100%
+    max-height 400px
+    min-height 400px
+
+    .file-input__upload-container
+      position absolute
+      top 0
+      left 0
+      right 0
+      bottom 0
+
+      h1:before
+        content '+ '
+        font-size 1.5em
+
+  &__remove
+    width 30px
+    height 30px
+    position absolute
+    right 8px
+    top 8px
+
+    circle
+      transition all .3s
+
+    &:hover
+      cursor pointer
+      circle
+        fill red-color
+
+#edit-content .edit-header a
+  background-image none
+
+[data-layout='classic'] .edit-header
+  padding-top 10px
+
+  .plain-text .public-DraftEditorPlaceholder-inner
+    left 0
+    right 0
+
+  .rich-text--paragraph
+    font-size 20px
+    line-height 26px
+    text-align left
+    margin-top 10px
+    max-width 580px
+    margin 10px auto 30px auto
+
+[data-layout='standard'] .edit-header
+  padding-top 10px
+
+[data-layout='feature'] .edit-header
+  margin-bottom 30px
+
+  div[class^='FeatureHeader__Deck']
+    min-width 30%
+    max-width 50%
+
+  div[class^='FeatureHeader__TextAsset']
+    position relative
+    min-height 440px
+
+  [data-type=split]
+    max-height calc(100vh \- 115px)
+    padding-top 20px
+
+    .file-input.simple
+      max-height 100%
+      min-height 100%
+
+    .edit-header__image-container
+      top 0
+      left 0
+      right 0
+      bottom 0
+
+    div[class^='FeatureHeader__Deck']
+      max-width 100%
+
+  [data-type=split]
+    .edit-header__remove
+      right -8px
+      top -8px
+
+  [data-type=basic]
+    margin-top 0
+    div[class^="Grid__Grid-"]
+      padding-top 40px
+    .public-DraftEditorPlaceholder-inner
+      text-align center
+      width 100%
+
+  [data-type=fullscreen]
+    height calc(100vh \- 95px)
+    .file-input.simple
+      height inherit
+      min-height 0
+      max-height 100%
+      width 235px
+      z-index 1
+      padding 0
+
+      h1
+        font-size 13px
+
+      h2
+        display none
+
+    .edit-header__image-container
+      top 10px
+      left 0
+
+      &[data-has-image=false]
+        .file-input.simple h1
+          color black
+
+    .file-input__upload-container
+      align-items flex-start
+      background none
+
+    .public-DraftEditorPlaceholder-inner
+      color white
+
+    div[class^='FeatureHeader__Vertical'] span
+      color white
