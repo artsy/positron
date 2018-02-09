@@ -1,4 +1,4 @@
-// A container for inputs that change sections
+// A container for section inputs
 // Position changes on scroll to stick to section top
 
 import styled from 'styled-components'

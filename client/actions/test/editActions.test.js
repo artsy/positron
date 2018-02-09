@@ -183,43 +183,70 @@ describe('editActions', () => {
 
   describe('#newSection', () => {
     it('Can create an embed section', () => {
-      const action = editActions.newSection('embed')
-      const { section } = action.payload
+      const action = editActions.newSection('embed', 3)
+      const { section, sectionIndex } = action.payload
 
       expect(action.type).toBe('NEW_SECTION')
       expect(section.type).toBe('embed')
       expect(section.url).toBe('')
       expect(section.layout).toBe('column_width')
       expect(section.height).toBe('')
+      expect(sectionIndex).toBe(3)
     })
 
     it('Can create an image_collection section', () => {
-      const action = editActions.newSection('image_collection')
-      const { section } = action.payload
+      const action = editActions.newSection('image_collection', 3)
+      const { section, sectionIndex } = action.payload
 
       expect(action.type).toBe('NEW_SECTION')
       expect(section.type).toBe('image_collection')
       expect(section.images.length).toBe(0)
       expect(section.layout).toBe('overflow_fillwidth')
+      expect(sectionIndex).toBe(3)
     })
 
     it('Can create a text section', () => {
-      const action = editActions.newSection('text')
-      const { section } = action.payload
+      const action = editActions.newSection('text', 3)
+      const { section, sectionIndex } = action.payload
 
       expect(action.type).toBe('NEW_SECTION')
       expect(section.type).toBe('text')
       expect(section.body).toBe('')
+      expect(sectionIndex).toBe(3)
+    })
+
+    it('Can create a blockquote section', () => {
+      const action = editActions.newSection('blockquote', 3)
+      const { section, sectionIndex } = action.payload
+
+      expect(action.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('text')
+      expect(section.body).toBe('')
+      expect(section.layout).toBe('blockquote')
+      expect(sectionIndex).toBe(3)
     })
 
     it('Can create a video section', () => {
-      const action = editActions.newSection('video')
-      const { section } = action.payload
+      const action = editActions.newSection('video', 3)
+      const { section, sectionIndex } = action.payload
 
       expect(action.type).toBe('NEW_SECTION')
       expect(section.type).toBe('video')
       expect(section.url).toBe('')
       expect(section.layout).toBe('column_width')
+      expect(sectionIndex).toBe(3)
+    })
+
+    it('Can add attributes to a new section', () => {
+      const body = '<p>The Precarious, Glamorous Lives of Independent Curators</p>'
+      const action = editActions.newSection('blockquote', 3, { body })
+      const { section, sectionIndex } = action.payload
+
+      expect(action.type).toBe('NEW_SECTION')
+      expect(section.type).toBe('text')
+      expect(section.body).toBe(body)
+      expect(section.layout).toBe('blockquote')
+      expect(sectionIndex).toBe(3)
     })
   })
 

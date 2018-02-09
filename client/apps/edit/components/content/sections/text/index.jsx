@@ -21,9 +21,11 @@ export class SectionText extends Component {
     onChange: PropTypes.func,
     isContentEnd: PropTypes.bool,
     isContentStart: PropTypes.bool,
+    onNewSection: PropTypes.func,
+    onRemoveSection: PropTypes.func,
     onSetEditing: PropTypes.func,
     section: PropTypes.object,
-    sections: PropTypes.object
+    sections: PropTypes.array
   }
 
   constructor (props) {
@@ -41,15 +43,21 @@ export class SectionText extends Component {
       url: null
     }
 
-    props.sections.on('change:autolink', this.setEditorStateFromProps)
+    // props.sections.on('change:autolink', this.setEditorStateFromProps)
   }
 
   componentWillMount = () => {
-    const { editing, section } = this.props
+    const { section } = this.props
 
     if (section.body && section.body.length) {
       this.setEditorStateFromProps()
-    } else if (editing) {
+    }
+  }
+
+  componentDidMount = () => {
+    const { editing } = this.props
+
+    if (editing) {
       this.focus()
     }
   }
@@ -73,7 +81,11 @@ export class SectionText extends Component {
     // Focus/blur editor if editing prop has changed
     // For change of section via key commands (handleTab, splitSection)
     if (editing && editing !== prevProps.editing) {
-      this.focus()
+      if (section.body !== prevProps.section.body && section.body.length) {
+        this.setEditorStateFromProps()
+      } else {
+        this.focus()
+      }
     } else if (!editing && editing !== prevProps.editing) {
       if (this.domEditor) {
         this.domEditor.blur()
@@ -106,7 +118,7 @@ export class SectionText extends Component {
   maybeSplitSection = (anchorKey) => {
     // Called on return
     const { editorState } = this.state
-    const { article, index, sections } = this.props
+    const { article, index, onNewSection } = this.props
 
     const hasDividedState = Selection.divideEditorState(editorState, anchorKey, article.layout)
     // If section gets divided, add new section
@@ -114,8 +126,7 @@ export class SectionText extends Component {
       const { currentSectionState, newSection } = hasDividedState
 
       this.onChange(currentSectionState)
-      // TODO: Redux newSectionAction
-      sections.add({type: 'text', body: newSection}, {at: index + 1})
+      onNewSection('text', index + 1, {body: newSection})
     }
     return 'handled'
   }
@@ -123,16 +134,15 @@ export class SectionText extends Component {
   handleBackspace = () => {
     // Maybe merge sections
     const { editorState, html } = this.state
-    const { index, onSetEditing, sections } = this.props
+    const { index, onRemoveSection, sections } = this.props
 
     const beforeIndex = index - 1
-    const sectionBefore = sections.models[beforeIndex]
-    const newState = KeyBindings.handleBackspace(editorState, html, sectionBefore.attributes)
+    const sectionBefore = sections[beforeIndex]
+    const newState = KeyBindings.handleBackspace(editorState, html, sectionBefore)
 
     if (newState) {
-      sectionBefore.destroy()
       this.onChange(newState)
-      onSetEditing(beforeIndex)
+      onRemoveSection(beforeIndex)
       return 'handled'
     }
     return 'not-handled'
@@ -258,8 +268,8 @@ export class SectionText extends Component {
       index,
       onChange,
       onSetEditing,
-      section,
-      sections
+      onNewSection,
+      section
     } = this.props
     const {
       afterBlock,
@@ -269,12 +279,10 @@ export class SectionText extends Component {
     } = Strip.makeBlockQuote(section.body)
 
     if (afterBlock) {
-      // TODO: redux newSectionAction
-      sections.add({type: 'text', body: afterBlock}, { at: index + 1 })
+      onNewSection('text', index + 1, {body: afterBlock})
     }
     if (beforeBlock) {
-      // TODO: redux newSectionAction
-      sections.add({type: 'text', body: beforeBlock}, { at: index })
+      onNewSection('text', index, {body: beforeBlock})
     }
     onChange('body', blockquote)
     onChange('layout', 'blockquote')

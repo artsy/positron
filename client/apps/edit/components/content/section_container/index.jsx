@@ -5,11 +5,11 @@ import { clone, extend, findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
-import { removeSection } from 'client/actions/editActions'
+import { newSection, onChangeSection, removeSection } from 'client/actions/editActions'
 
 import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
-import SectionText from '../sections/text'
+import { SectionText } from '../sections/text'
 import SectionVideo from '../sections/video'
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
@@ -21,7 +21,9 @@ export class SectionContainer extends Component {
     editing: PropTypes.bool,
     index: PropTypes.number,
     isHero: PropTypes.bool,
+    newSectionAction: PropTypes.func,
     onRemoveHero: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
     section: PropTypes.object,
@@ -61,12 +63,6 @@ export class SectionContainer extends Component {
     }
   }
 
-  onChangeSection = (key, value) => {
-    const { section } = this.props
-    // TODO: Use redux action
-    section.set(key, value)
-  }
-
   getContentStartEnd = () => {
     // TODO: move into text section
     const { sections } = this.props
@@ -80,7 +76,7 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { channel, index, section } = this.props
+    const { channel, index, newSectionAction, onChangeSectionAction, removeSectionAction, section } = this.props
 
     switch (section.type) {
       case 'embed': {
@@ -96,11 +92,12 @@ export class SectionContainer extends Component {
       case 'text': {
         const { end, start } = this.getContentStartEnd()
         const textProps = extend(clone(this.props), {
-          section: section.attributes,
           hasFeatures: channel.type !== 'partner',
           isContentStart: start === index,
           isContentEnd: end === index,
-          onChange: this.onChangeSection
+          onNewSection: newSectionAction,
+          onRemoveSection: removeSectionAction,
+          onChange: onChangeSectionAction
         })
         return (
           <SectionText {...textProps} />
@@ -108,15 +105,11 @@ export class SectionContainer extends Component {
       }
 
       case 'video': {
-        return (
-          <SectionVideo {...this.props} />
-        )
+        return <SectionVideo {...this.props} />
       }
 
       case 'slideshow': {
-        return (
-          <SectionSlideshow {...this.props} />
-        )
+        return <SectionSlideshow {...this.props} />
       }
     }
   }
@@ -169,6 +162,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+  newSectionAction: newSection,
+  onChangeSectionAction: onChangeSection,
   removeSectionAction: removeSection
 }
 

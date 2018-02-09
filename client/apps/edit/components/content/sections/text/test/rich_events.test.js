@@ -20,6 +20,7 @@ describe('SectionText: Rich Events', () => {
       index: 2,
       onChange: jest.fn(),
       onSetEditing: jest.fn(),
+      onNewSection: jest.fn(),
       section: {body: '<p>A short piece of text</p>'},
       sections: new Sections([])
     }

@@ -38,13 +38,7 @@ export class SectionList extends Component {
 
     return sections.map((section, index) => {
       const editing = sectionIndex === index
-      // if (section.type !== 'callout') {
-      if (
-        section.type === 'embed' ||
-        section.type === 'image_collection' ||
-        section.type === 'image_set' ||
-        section.type === 'video'
-      ) {
+      if (section.type !== 'callout') {
         return [
           <SectionContainer
             key={`${index}-container`}

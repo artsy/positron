@@ -1,4 +1,4 @@
-import { clone } from 'lodash'
+import { clone, extend } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -104,8 +104,8 @@ export const setSection = (sectionIndex) => ({
   }
 })
 
-export const newSection = (type, sectionIndex) => {
-  const section = setupSection(type)
+export const newSection = (type, sectionIndex, attrs = {}) => {
+  const section = extend(setupSection(type), attrs)
 
   return {
     type: actions.NEW_SECTION,
@@ -322,6 +322,12 @@ export function setupSection (type) {
       return {
         type: 'text',
         body: ''
+      }
+    case 'blockquote':
+      return {
+        type: 'text',
+        body: '',
+        layout: 'blockquote'
       }
   }
 }
