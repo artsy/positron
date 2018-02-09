@@ -5,50 +5,58 @@ import { findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
+import { removeSection } from 'client/actions/editActions'
 
+import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
-import { ErrorBoundary } from 'client/components/error/error_boundary'
+import SectionVideo from '../sections/video'
 import { SectionEmbed } from '../sections/embed'
-import { SectionImages } from '../sections/images'
-import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
-    index: PropTypes.number.isRequired,
+    index: PropTypes.number,
     isHero: PropTypes.bool,
     onRemoveHero: PropTypes.func,
-    onSetEditing: PropTypes.func.isRequired,
-    section: PropTypes.object.isRequired,
-    sections: PropTypes.object
+    onSetEditing: PropTypes.func,
+    removeSectionAction: PropTypes.func,
+    section: PropTypes.object,
+    sections: PropTypes.array
   }
 
   onSetEditing = () => {
     const {
       editing,
       index,
+      isHero,
       onSetEditing
     } = this.props
 
-    const setEditing = editing ? null : index
+    let setEditing
+
+    if (isHero) {
+      setEditing = !editing
+    } else {
+      setEditing = editing ? null : index
+    }
     onSetEditing(setEditing)
   }
 
-  onRemoveSection = (e) => {
+  onRemoveSection = () => {
     const {
-      section,
+      index,
       isHero,
-      onRemoveHero
+      onRemoveHero,
+      removeSectionAction
     } = this.props
-
-    e.stopPropagation()
-    section.destroy()
 
     if (isHero) {
       onRemoveHero()
+    } else {
+      removeSectionAction(index)
     }
   }
 
@@ -56,7 +64,7 @@ export class SectionContainer extends Component {
     // TODO: move into text section
     const { sections } = this.props
     const types = sections && sections.map((section, i) => {
-      return { type: section.get('type'), index: i }
+      return { type: section.type, index: i }
     })
     const start = findIndex(types, {type: 'text'})
     const end = findLastIndex(types, {type: 'text'})
@@ -67,7 +75,7 @@ export class SectionContainer extends Component {
   getSectionComponent = () => {
     const { channel, index, section } = this.props
 
-    switch (section.get('type')) {
+    switch (section.type) {
       case 'embed': {
         return <SectionEmbed {...this.props} />
       }
@@ -110,37 +118,36 @@ export class SectionContainer extends Component {
       isHero,
       section
     } = this.props
+    const { layout, type } = section
 
     return (
-      <ErrorBoundary>
-        <div className='SectionContainer'
-          data-editing={editing}
-          data-layout={section.get('layout') || 'column_width'}
-          data-type={section.get('type')}
+      <div className='SectionContainer'
+        data-editing={editing}
+        data-layout={layout || 'column_width'}
+        data-type={type}
+      >
+        <div
+          className='SectionContainer__hover-controls'
+          onClick={this.onSetEditing}
         >
-          <div
-            className='SectionContainer__hover-controls'
-            onClick={this.onSetEditing}
-          >
-            {!isHero &&
-              <div className='button-drag'>
-                <IconDrag background={colors.grayMedium} />
-              </div>
-            }
-            <RemoveButton
-              onClick={this.onRemoveSection}
-              background={colors.grayMedium}
-            />
-          </div>
-
-          {this.getSectionComponent()}
-
-          <div
-            className='SectionContainer__container-bg'
-            onClick={this.onSetEditing}
+          {!isHero &&
+            <div className='button-drag'>
+              <IconDrag background={colors.grayMedium} />
+            </div>
+          }
+          <RemoveButton
+            onClick={this.onRemoveSection}
+            background={colors.grayMedium}
           />
         </div>
-      </ErrorBoundary>
+
+        {this.getSectionComponent()}
+
+        <div
+          className='SectionContainer__container-bg'
+          onClick={this.onSetEditing}
+        />
+      </div>
     )
   }
 }
@@ -150,6 +157,11 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel
 })
 
+const mapDispatchToProps = {
+  removeSectionAction: removeSection
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SectionContainer)
