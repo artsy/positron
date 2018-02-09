@@ -16,6 +16,7 @@ const { FeatureArticle } = Fixtures
 
 describe('SectionTool', () => {
   let props
+  let sections
 
   const getWrapper = (props) => {
     return mount(
@@ -23,14 +24,16 @@ describe('SectionTool', () => {
     )
   }
 
-  describe('SectionList', () => {
+  describe('In SectionList', () => {
     beforeEach(() => {
+      sections = clone(FeatureArticle.sections)
+
       props = {
         isEditing: false,
         isHero: false,
         section: null,
-        index: clone(FeatureArticle.sections).length - 1,
-        sections: clone(FeatureArticle.sections),
+        index: sections.length - 1,
+        sections,
         newSectionAction: jest.fn()
       }
     })
@@ -69,7 +72,7 @@ describe('SectionTool', () => {
 
     it('Adds a data-visible prop to the first section tool if no sections', () => {
       props.firstSection = true
-      props.sections = new Backbone.Collection()
+      props.sections = []
       const component = getWrapper(props)
 
       expect(component.html()).toMatch('data-visible="true"')

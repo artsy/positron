@@ -42,12 +42,12 @@ describe('SectionList', () => {
     }
   })
 
-  xit('Renders the sections', () => {
+  it('Renders the sections', () => {
     const component = getWrapper(props)
     expect(component.find(SectionContainer).length).toBe(props.article.sections.length)
   })
 
-  xit('Renders the section tools', () => {
+  it('Renders the section tools', () => {
     const component = getWrapper(props)
     expect(component.find(SectionTool).length).toBe(props.article.sections.length + 1)
   })

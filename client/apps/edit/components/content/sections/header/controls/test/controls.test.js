@@ -81,6 +81,7 @@ describe('Feature Header Controls', () => {
       props = {
         article: Fixtures.StandardArticle,
         onChange: jest.fn(),
+        onChangeHeroAction: jest.fn(),
         onClick: jest.fn(),
         onProgress: jest.fn()
       }

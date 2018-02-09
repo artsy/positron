@@ -82,8 +82,8 @@ describe('SectionContainer', () => {
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index)
   })
 
-  xit('#getContentStartEnd finds the first and last text section', () => {
-    const component = getWrapper(props)
+  it('#getContentStartEnd finds the first and last text section', () => {
+    const component = getWrapper(props).find(SectionContainer)
     const startEnd = component.instance().getContentStartEnd()
 
     expect(startEnd.start).toBe(0)
@@ -121,7 +121,7 @@ describe('SectionContainer', () => {
       expect(component.find(SectionSlideshow).length).toBe(1)
     })
 
-    xit('Can render a text section', () => {
+    it('Can render a text section', () => {
       props.section = {type: 'text'}
       const component = getWrapper(props)
       expect(component.find(SectionText).length).toBe(1)

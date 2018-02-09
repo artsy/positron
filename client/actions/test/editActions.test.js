@@ -11,8 +11,6 @@ describe('editActions', () => {
   beforeEach(() => {
     window.location.assign = jest.fn()
     article = clone(FeatureArticle)
-    article.destroy = jest.fn()
-    article.save = jest.fn()
   })
 
   document.body.innerHTML =
@@ -44,14 +42,6 @@ describe('editActions', () => {
     expect(action.payload.activeView).toBe('display')
   })
 
-  it('#deleteArticle destroys the article and sets isDeleting', () => {
-    const action = editActions.deleteArticle(article)
-
-    expect(action.type).toBe('DELETE_ARTICLE')
-    expect(action.payload.isDeleting).toBe(true)
-    expect(article.destroy.mock.calls.length).toBe(1)
-  })
-
   it('#redirectToList forwards to the articles list with published arg', () => {
     editActions.redirectToList(true)
     expect(window.location.assign.mock.calls[0][0]).toBe('/articles?published=true')
@@ -72,6 +62,27 @@ describe('editActions', () => {
 
     editActions.toggleSpinner(true)
     expect($('#edit-sections-spinner').css('display')).toBe('block')
+  })
+
+  describe('#deleteArticle', () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({edit: { article }}))
+      dispatch = jest.fn()
+    })
+
+    it('#deleteArticle destroys the article and sets isDeleting', () => {
+      editActions.deleteArticle()(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('DELETE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.isDeleting).toBe(true)
+      expect(Backbone.sync.mock.calls[0][0]).toBe('delete')
+    })
   })
 
   describe('#saveArticle', () => {

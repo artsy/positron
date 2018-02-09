@@ -36,29 +36,26 @@ export class EditHeader extends Component {
   }
 
   onPublish = () => {
-    const { actions, article } = this.props
+    const { actions } = this.props
 
     if (this.isPublishable()) {
-      actions.publishArticle(
-        article,
-        !article.published
-      )
+      actions.publishArticle()
     }
   }
 
   onSave = () => {
-    const { actions, article } = this.props
+    const { actions } = this.props
 
     this.removeUnsavedAlert()
-    actions.saveArticle(article)
+    actions.saveArticle()
   }
 
   onDelete = () => {
-    const { actions, article } = this.props
+    const { actions } = this.props
 
     if (confirm('Are you sure?')) {
       this.removeUnsavedAlert()
-      actions.deleteArticle(article)
+      actions.deleteArticle()
     }
   }
 

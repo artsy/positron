@@ -25,7 +25,7 @@ describe('EditContainer', () => {
       },
       edit: {
         activeView: props.activeView,
-        article: props.article,
+        article: props.article.attributes,
         error: props.error
       }
     })

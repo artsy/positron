@@ -48,13 +48,21 @@ export const changeView = (activeView) => ({
   }
 })
 
-export const deleteArticle = (article) => {
-  article.destroy({
-    success: () => {
-      article.trigger('finished')
-    }
-  })
+export const deleteArticle = (key, value) => {
+  return (dispatch, getState) => {
+    const { article } = getState().edit
+    const newArticle = new Article(article)
 
+    dispatch(deleteArticlePending())
+    newArticle.destroy({
+      success: () => {
+        dispatch(redirectToList(true))
+      }
+    })
+  }
+}
+
+export const deleteArticlePending = () => {
   return {
     type: actions.DELETE_ARTICLE,
     payload: {
@@ -126,7 +134,7 @@ export const newHeroSection = (type) => {
 
 export const onChangeArticle = (key, value) => {
   return (dispatch, getState) => {
-    const article = getState().edit.article
+    const { article } = getState().edit
 
     dispatch(changeArticle(key, value))
 
@@ -148,7 +156,7 @@ export const changeArticle = (key, value) => {
 
 export const onChangeHero = (key, value) => {
   return (dispatch, getState) => {
-    const article = getState().edit.article
+    const { article } = getState().edit
     const hero_section = clone(article.hero_section)
 
     hero_section[key] = value
@@ -162,7 +170,7 @@ export const onChangeHero = (key, value) => {
 
 export const onChangeSection = (key, value) => {
   return (dispatch, getState) => {
-    const article = getState().edit.article
+    const { article } = getState().edit
 
     dispatch(changeSection(key, value))
 
@@ -193,8 +201,7 @@ export const onFirstSave = (id) => {
 export const publishArticle = () => {
   return (dispatch, getState) => {
     dispatch(publishArticlePending())
-
-    const article = clone(getState().edit.article)
+    const { article } = getState().edit
     const published = !article.published
     const newArticle = new Article(article)
 
@@ -241,7 +248,7 @@ export const resetSections = (sections) => ({
 
 export const saveArticle = () => {
   return (dispatch, getState) => {
-    const article = getState().edit.article
+    const { article } = getState().edit
     const newArticle = new Article(article)
 
     dispatch(saveArticlePending())

@@ -102,7 +102,7 @@ describe('editReducer', () => {
       )
     })
 
-    it('RESET_SECTIONS should reset a sections to provided array', () => {
+    it('RESET_SECTIONS should reset the sections to provided array', () => {
       const sections = initialSections.slice(1, 3)
       const updatedState = editReducer(initialState, {
         type: actions.RESET_SECTIONS,
