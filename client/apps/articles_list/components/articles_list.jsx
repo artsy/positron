@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { viewArticles } from 'client/actions/articlesActions'
 import request from 'superagent'
@@ -7,9 +8,65 @@ import $ from 'jquery'
 import { debounce } from 'lodash'
 import FilterSearch from 'client/components/filter_search/index.coffee'
 import IconNewArticle from '../../../components/layout/public/icons/layout_new_article.svg'
+import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
 
 require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')
+
+const Header = styled.h1`
+  position: fixed;
+  top: 0;
+  left: 110px;
+  right: 0;
+  background-color: white;
+  z-index: 10;
+`
+
+const ArticlesContainer = styled.div`
+  margin-top: 105px;
+  position: relative;
+`
+
+const MaxWidthContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const Title = styled.div`
+  ${Fonts.garamond('s30')};
+  padding: 20px 0;
+`
+
+const EmptyState = styled.div`
+  text-align: center;
+  margin-top: 150px;
+`
+
+const EmptyStateSection = styled.div`
+  font-size: 20px;
+  line-height: 28px;
+`
+
+const EmptyStateTitle = styled.div`
+  margin-top: 28px;
+  margin-bottom: 45px;
+  line-height: 28px;
+  font-size: 24px;
+  font-weight: bold;
+  position: relative;
+  &:after {
+    content: '.';
+    border-bottom: 3px solid #000;
+    width: 50px;
+    color: transparent;
+    position: absolute;
+    display: block;
+    margin: auto;
+    left: calc(50% - 25px);
+    margin-top: -10px;
+  }
+`
 
 export class ArticlesList extends Component {
   static propTypes = {
@@ -75,16 +132,16 @@ export class ArticlesList extends Component {
 
   showEmptyMessage () {
     return (
-      <div className='article-list__empty'>
-        <div>You haven’t written any articles yet.</div>
-        <div>Artsy Writer is a tool for writing stories about art on Artsy.</div>
-        <div>Get started by writing an article or reaching out to your liaison for help.</div>
+      <EmptyState>
+        <EmptyStateTitle>You haven’t written any articles yet.</EmptyStateTitle>
+        <EmptyStateSection>Artsy Writer is a tool for writing stories about art on Artsy.</EmptyStateSection>
+        <EmptyStateSection>Get started by writing an article or reaching out to your liaison for help.</EmptyStateSection>
         <a
-          className='avant-garde-button avant-garde-button-black article-new-button'
+          className='avant-garde-button avant-garde-button-black'
           href='/articles/new'>
           <IconNewArticle /> Write An Article
         </a>
-      </div>
+      </EmptyState>
     )
   }
 
@@ -94,11 +151,10 @@ export class ArticlesList extends Component {
       return type in ['editorial', 'support', 'team']
     }
 
-    // TODO: convert css to use styled-components
     if (this.props.articles && this.props.articles.length) {
       return (
-        <div className='articles-list__container'>
-          <div className='articles-list__title'>Latest Articles</div>
+        <ArticlesContainer>
+          <Title>Latest Articles</Title>
           <FilterSearch
             url={apiURL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
             placeholder='Search Articles...'
@@ -109,7 +165,7 @@ export class ArticlesList extends Component {
             checkable={checkable || false}
             isArtsyChannel={isArtsyChannel(channel.type)}
           />
-        </div>
+        </ArticlesContainer>
       )
     } else {
       return this.showEmptyMessage()
@@ -118,9 +174,9 @@ export class ArticlesList extends Component {
 
   render () {
     return (
-      <div className='articles-list'>
-        <h1 className='articles-list__header page-header'>
-          <div className='max-width-container'>
+      <div>
+        <Header className='page-header'>
+          <MaxWidthContainer className='max-width-container'>
             <nav className='nav-tabs'>
               <a className={`${this.state.published === true ? 'is-active' : ''} published`}
                 onClick={() => this.setPublished(true)}>
@@ -134,8 +190,8 @@ export class ArticlesList extends Component {
             <div className='channel-name'>
               {`${this.props.channel.name}`}
             </div>
-          </div>
-        </h1>
+          </MaxWidthContainer>
+        </Header>
         {this.showArticlesList()}
       </div>
     )

@@ -1,26 +1,8 @@
-.articles-list
-  &__header
-    position fixed
-    top 0
-    left 110px
-    right 0
-    background-color white
-    z-index 10
-    .max-width-container
-      display flex
-      justify-content space-between
-      align-items center
-  &__container
-    margin-top 105px
-    position relative
-  &__title
-    garamond headline
-    padding 20px 0
-  .filter-search__header-container
-    position absolute
-    top 20px
-    right 0
-    border none
+.filter-search__header-container
+  position absolute
+  top 20px
+  right 0
+  border none
 
 #articles-list-loading
   position relative
@@ -29,42 +11,6 @@
     display none
 .article-list__results
   border-top 3px solid gray-lighter-color
-.article-list__empty
-  text-align center
-  margin-top 150px
-  div
-    font-size 20px
-    line-height 28px
-  div:first-child
-    margin-top 28px
-    margin-bottom 45px
-    font-size 24px
-    font-weight bold
-    position relative
-    &::after
-      content '.'
-      border-bottom 3px solid #000
-      width 50px
-      color transparent
-      position absolute
-      display block
-      margin auto
-      left "calc(50% - %s)" % (@width / 2)
-      margin-top -10px
-  a.avant-garde-button
-    faux-underline()
-    cursor pointer
-    padding 11px 45px
-    margin-top 25px
-  svg
-    fill white
-    width 22px
-    display inline
-    vertical-align middle
-    margin-right 15px
-    position relative
-    top -3px
-    left 0
 
 .article-list-scheduled
   color green-color
