@@ -1,6 +1,10 @@
 .rich-text--paragraph
   position relative
 
+div[class^='Caption__CaptionContainer']
+  .rich-text--paragraph a
+    border-bottom 1px solid
+
 .TextInputUrl
   position absolute
   background-color black
@@ -16,7 +20,12 @@
       max-width 300px
       garamond l-caption
       height 30px
-
+  &__bg
+    position fixed
+    top 0
+    left 0
+    right 0
+    bottom 0
   button.add-link
     background gray-lighter-color
     border 0

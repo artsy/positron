@@ -32,7 +32,6 @@ describe 'index', ->
     @urlencoded.args[0][0].extended.should.be.true()
     @bucketAssets.called.should.be.true()
     @setupAuth.called.should.be.true()
-    @app.use.args[4][0].name.should.equal 'logger'
 
 describe 'development environment', ->
 
@@ -49,7 +48,7 @@ describe 'development environment', ->
     setup @app
 
   it 'mounts logger middleware', ->
-    @app.use.args[4][0].name.should.equal 'logger'
+    @app.use.args[5][0].name.should.equal 'logger'
 
 describe 'production environment', ->
 
@@ -66,7 +65,7 @@ describe 'production environment', ->
     setup @app
 
   it 'mounts logger middleware', ->
-    @app.use.args[5][0].name.should.equal 'logger'
+    @app.use.args[6][0].name.should.equal 'logger'
 
   it 'sets SSL options', ->
     @app.set.args[3][0].should.equal 'forceSSLOptions'

@@ -1,12 +1,18 @@
 import { clone } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
+import { emitAction } from 'client/apps/websocket/client'
+import { messageTypes } from 'client/apps/websocket/messageTypes'
+import $ from 'jquery'
 
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
   'CHANGE_SECTION',
   'CHANGE_ARTICLE',
+  'START_EDITING_ARTICLE',
+  'UPDATE_ARTICLE',
+  'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
   'NEW_SECTION',
@@ -56,6 +62,39 @@ export const deleteArticle = (article) => {
     }
   }
 }
+
+export const startEditingArticle = emitAction((data) => {
+  return {
+    type: actions.START_EDITING_ARTICLE,
+    key: messageTypes.userStartedEditing,
+    payload: {
+      timestamp: new Date().toISOString(),
+      ...data
+    }
+  }
+})
+
+export const updateArticle = emitAction((data) => {
+  return {
+    type: actions.UPDATE_ARTICLE,
+    key: messageTypes.userCurrentlyEditing,
+    payload: {
+      timestamp: new Date().toISOString(),
+      ...data
+    }
+  }
+})
+
+export const stopEditingArticle = emitAction((data) => {
+  return {
+    type: actions.STOP_EDITING_ARTICLE,
+    key: messageTypes.userStoppedEditing,
+    payload: {
+      timestamp: new Date().toISOString(),
+      ...data
+    }
+  }
+})
 
 export const setSection = (sectionIndex) => ({
   // Index of article section currently editing

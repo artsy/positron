@@ -10,6 +10,7 @@ import { EditContent } from '../content/index.jsx'
 import { EditDisplay } from '../display/index.jsx'
 import { EditHeader } from '../header/index.jsx'
 import { EditError } from '../error/index.jsx'
+
 require('typeahead.js')
 
 describe('EditContainer', () => {
@@ -51,7 +52,19 @@ describe('EditContainer', () => {
       error: {},
       isSaved: false,
       saveArticleAction: jest.fn(),
-      toggleSpinnerAction: jest.fn()
+      toggleSpinnerAction: jest.fn(),
+      startEditingArticleAction: jest.fn(),
+      stopEditingArticleAction: jest.fn(),
+      updateArticleAction: jest.fn(),
+      user: {
+        id: '123',
+        name: 'John Doe'
+      },
+      currentSession: {
+        user: {
+          id: '123'
+        }
+      }
     }
     window.addEventListener = jest.fn()
   })
@@ -83,6 +96,39 @@ describe('EditContainer', () => {
     component.instance().onChangeHero('url', url)
 
     expect(props.saveArticleAction.mock.calls[0][0].hero_section.url).toBe(url)
+  })
+
+  it('sends a #startEditingArticleAction when mounting', () => {
+    const wrapper = getWrapper(props)
+    expect(props.startEditingArticleAction.mock.calls[0][0]).toMatchObject({
+      user: props.user,
+      article: props.article.id
+    })
+    wrapper.unmount()
+  })
+
+  it('sends a #stopEditingArticleAction when unmounting', () => {
+    const wrapper = getWrapper(props)
+    wrapper.unmount()
+    expect(props.stopEditingArticleAction.mock.calls[0][0]).toMatchObject({
+      user: props.user,
+      article: props.article.id
+    })
+  })
+
+  it('sets #inactivityPeriodEntered to true after the standby time is exceeded', () => {
+    jest.useFakeTimers()
+    const assignFn = window.document.location.assign = jest.fn()
+    const wrapper = getWrapper(props)
+    const instance = wrapper.find(EditContainer).instance()
+    expect(instance.state.inactivityPeriodEntered).toBeFalsy()
+
+    // jest.runAllTimers()
+    jest.advanceTimersByTime(700 * 1000)
+
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 600 * 1000)
+    expect(instance.state.inactivityPeriodEntered).toBeTruthy()
+    expect(assignFn).toBeCalledWith('/')
   })
 
   describe('#maybeSaveArticle', () => {

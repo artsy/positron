@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { findIndex, findLastIndex } from 'lodash'
+import { clone, extend, findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
@@ -11,6 +11,7 @@ import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
 import SectionText from '../sections/text'
 import SectionVideo from '../sections/video'
+import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
 
 export class SectionContainer extends Component {
@@ -60,6 +61,12 @@ export class SectionContainer extends Component {
     }
   }
 
+  onChangeSection = (key, value) => {
+    const { section } = this.props
+    // TODO: Use redux action
+    section.set(key, value)
+  }
+
   getContentStartEnd = () => {
     // TODO: move into text section
     const { sections } = this.props
@@ -88,13 +95,15 @@ export class SectionContainer extends Component {
 
       case 'text': {
         const { end, start } = this.getContentStartEnd()
+        const textProps = extend(clone(this.props), {
+          section: section.attributes,
+          hasFeatures: channel.type !== 'partner',
+          isContentStart: start === index,
+          isContentEnd: end === index,
+          onChange: this.onChangeSection
+        })
         return (
-          <SectionText
-            {...this.props}
-            hasFeatures={channel.type !== 'partner'}
-            isContentStart={start === index}
-            isContentEnd={end === index}
-          />
+          <SectionText {...textProps} />
         )
       }
 
@@ -121,33 +130,35 @@ export class SectionContainer extends Component {
     const { layout, type } = section
 
     return (
-      <div className='SectionContainer'
-        data-editing={editing}
-        data-layout={layout || 'column_width'}
-        data-type={type}
-      >
-        <div
-          className='SectionContainer__hover-controls'
-          onClick={this.onSetEditing}
+      <ErrorBoundary>
+        <div className='SectionContainer'
+          data-editing={editing}
+          data-layout={layout || 'column_width'}
+          data-type={type}
         >
-          {!isHero &&
-            <div className='button-drag'>
-              <IconDrag background={colors.grayMedium} />
-            </div>
-          }
-          <RemoveButton
-            onClick={this.onRemoveSection}
-            background={colors.grayMedium}
+          <div
+            className='SectionContainer__hover-controls'
+            onClick={this.onSetEditing}
+          >
+            {!isHero &&
+              <div className='button-drag'>
+                <IconDrag background={colors.grayMedium} />
+              </div>
+            }
+            <RemoveButton
+              onClick={this.onRemoveSection}
+              background={colors.grayMedium}
+            />
+          </div>
+
+          {this.getSectionComponent()}
+
+          <div
+            className='SectionContainer__container-bg'
+            onClick={this.onSetEditing}
           />
         </div>
-
-        {this.getSectionComponent()}
-
-        <div
-          className='SectionContainer__container-bg'
-          onClick={this.onSetEditing}
-        />
-      </div>
+      </ErrorBoundary>
     )
   }
 }

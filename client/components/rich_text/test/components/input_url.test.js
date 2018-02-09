@@ -61,7 +61,7 @@ describe('TextInputUrl', () => {
     const url = 'http://link.com'
     const button = component.find('button')
     component.setState({ url })
-    button.simulate('click')
+    button.simulate('mouseDown')
 
     expect(props.confirmLink.mock.calls[0][0]).toBe(url)
   })
@@ -72,7 +72,7 @@ describe('TextInputUrl', () => {
     const url = 'http://link.com'
     const button = component.find('button')
     component.setState({ url })
-    button.simulate('click')
+    button.simulate('mouseDown')
 
     expect(props.confirmLink.mock.calls[0][0]).toBe(url)
     expect(props.confirmLink.mock.calls[0][1]).toBe(props.pluginType)
@@ -83,7 +83,7 @@ describe('TextInputUrl', () => {
     const url = ''
     const button = component.find('button')
     component.setState({ url })
-    button.simulate('click')
+    button.simulate('mouseDown')
 
     expect(props.confirmLink.mock.calls.length).toBe(0)
     expect(props.removeLink.mock.calls.length).toBe(1)
@@ -92,7 +92,7 @@ describe('TextInputUrl', () => {
   it('Can remove a link', () => {
     props.urlValue = 'http://artsy.net'
     const component = getWrapper(props)
-    component.find(RemoveButton).simulate('click')
+    component.find(RemoveButton).simulate('mouseDown')
 
     expect(props.removeLink.mock.calls.length).toBe(1)
   })

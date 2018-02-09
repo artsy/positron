@@ -7,6 +7,7 @@ describe('PlainText', () => {
     name: 'title',
     onChange: jest.fn()
   }
+  window.scrollTo = jest.fn()
 
   it('renders a draft editor with placeholder', () => {
     const wrapper = mount(

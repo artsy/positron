@@ -162,7 +162,7 @@ module.exports = React.createClass
     selectionTarget = {top: 0, left: 0}
     url = ''
     if !selection.isCollapsed()
-      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      editorPosition = ReactDOM.findDOMNode(@refs.editor).getBoundingClientRect()
       selectionTarget = stickyControlsBox(editorPosition, 25, 200)
       contentState = editorState.getCurrentContent()
       startKey = selection.getStartKey()
@@ -214,6 +214,7 @@ module.exports = React.createClass
     if @state.showUrlInput
       React.createElement(
         TextInputUrl, {
+          onClickOff: () => @setState({showUrlInput: false})
           selectionTarget: @state.selectionTarget
           removeLink: @removeLink
           confirmLink: @confirmLink
@@ -223,7 +224,7 @@ module.exports = React.createClass
 
   checkSelection: ->
     if !window.getSelection().isCollapsed
-      editorPosition = $(ReactDOM.findDOMNode(@refs.editor)).offset()
+      editorPosition = ReactDOM.findDOMNode(@refs.editor).getBoundingClientRect()
       selectionTargetL = Config.inlineStyles(@props.type).length * 25
       selectionTargetL = selectionTargetL + 25 if @hasLinks()
       @setState showNav: true, selectionTarget: stickyControlsBox(editorPosition, -43, selectionTargetL)

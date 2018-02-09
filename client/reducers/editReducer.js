@@ -5,6 +5,10 @@ import { actions } from 'client/actions/editActions'
 
 const setupArticle = () => {
   const article = sd.ARTICLE
+  if (!article) {
+    return null
+  }
+
   // strip deprecated handles from author
   const author = pick(article.author, 'id', 'name')
 
@@ -21,7 +25,8 @@ export const initialState = {
   isSaving: false,
   isSaved: true,
   lastUpdated: null,
-  section: null
+  section: null,
+  currentSession: sd.CURRENT_SESSION
 }
 
 export function editReducer (state = initialState, action) {
