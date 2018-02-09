@@ -1,0 +1,34 @@
+@import '../../../stylus_lib'
+
+.SectionText
+  position relative
+  z-index -1
+  &[data-editing=true]
+    z-index 100
+  ol li, ul li, li
+    list-style none
+    .public-DraftStyleDefault-ltr
+      display list-item
+      margin-left 20px
+      padding-left 10px
+  ol li .public-DraftStyleDefault-ltr,
+  li.public-DraftStyleDefault-orderedListItem .public-DraftStyleDefault-ltr
+    list-style decimal
+  ul li .public-DraftStyleDefault-ltr,
+  li.public-DraftStyleDefault-unorderedListItem .public-DraftStyleDefault-ltr
+    list-style disc
+  nav
+    &.has-plugins
+      button.clear-formatting,
+      button.header-three
+        border-right none
+  &__input
+    position relative
+    .artist-follow
+      background-image none !important
+      &:before
+        content url(/icons/circle_plus.svg) !important
+
+.SectionContainer[data-type=text][data-editing=true]
+  .SectionContainer__hover-controls
+    border-color white

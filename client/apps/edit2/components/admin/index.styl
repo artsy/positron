@@ -1,0 +1,56 @@
+@import '../stylus_lib'
+@import './article'
+@import './featuring'
+@import './super_article'
+
+.edit-admin__fields
+  display flex
+  justify-content space-between
+  height 0
+  opacity 0
+  overflow hidden
+  transition all .65s
+  &.active
+    margin-top 30px
+    margin-bottom 120px
+    height initial
+    opacity 1
+    transition all .65s
+    overflow visible
+  input[disabled], textarea[disabled]
+    background-color gray-lightest-color
+    border-color gray-lighter-color
+    cursor no-drop
+  .tt-hint
+    visibility hidden
+  .autocomplete-select-input
+    margin-top 5px
+
+.edit-admin--appearances
+  flex-direction column
+  .autocomplete-select
+    height 250px
+
+.EditAdmin
+  margin 95px auto
+
+.AdminVerticalsTags
+  .Autocomplete
+    z-index inherit
+  button.avant-garde-button
+    margin 5px 8px 8px 0px
+    border-radius 1px
+    padding 13px 15px
+    &.disabled
+      background-color gray-lightest-color
+      &:hover
+        color black
+
+  .fields-left
+    .avant-garde-button.avant-garde-button-black:hover,
+    .avant-garde-button.avant-garde-button-black:focus,
+    button:active
+      background black
+      border-color black
+    .field-group:first-child
+      margin-bottom 30px
