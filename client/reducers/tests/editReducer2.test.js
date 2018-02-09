@@ -104,10 +104,11 @@ describe('editReducer', () => {
 
     it('RESET_SECTIONS should reset the sections to provided array', () => {
       const sections = initialSections.slice(1, 3)
+      const article = { sections }
       const updatedState = editReducer(initialState, {
         type: actions.RESET_SECTIONS,
         payload: {
-          sections
+          article
         }
       })
       expect(updatedState.article.sections).toEqual(sections)

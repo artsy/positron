@@ -13,11 +13,12 @@ describe('editActions', () => {
     article = clone(FeatureArticle)
   })
 
-  document.body.innerHTML =
-    '<div>' +
-    '  <div id="edit-sections-spinner" />' +
-    '  <input id="edit-seo__focus-keyword" value="ceramics" />' +
-    '</div>'
+  document.body.innerHTML = `
+    <div>
+      <div id="edit-sections-spinner" />
+      <input id="edit-seo__focus-keyword" value="ceramics" />
+    </div>'
+  `
 
   it('#changeSavedStatus updates article and sets isSaved to arg', () => {
     article.title = 'Cool article'
@@ -267,13 +268,23 @@ describe('editActions', () => {
     expect(action.type).toBe('REMOVE_SECTION')
     expect(action.payload.sectionIndex).toBe(6)
   })
+  describe('#publishArticle', () => {
+    let getState
+    let dispatch
 
-  it('#resetSections sets sections to arg', () => {
-    const newSections = FeatureArticle.sections.slice(1, 0)
-    const action = editActions.resetSections(newSections)
+    beforeEach(() => {
+      getState = jest.fn(() => ({edit: { article }}))
+      dispatch = jest.fn()
+    })
 
-    expect(action.type).toBe('RESET_SECTIONS')
-    expect(action.payload.sections).toBe(newSections)
+    it('#resetSections sets sections to arg', () => {
+      const sections = [{title: 'Cool exhibition'}]
+      getState = jest.fn((article) => ({edit: {article: {published: false}}}))
+      editActions.resetSections(sections)(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('RESET_SECTIONS')
+      expect(dispatch.mock.calls[0][0].payload.article.sections).toBe(sections)
+    })
   })
 
   describe('Editing errors', () => {

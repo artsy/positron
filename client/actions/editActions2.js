@@ -239,10 +239,19 @@ export const removeSection = (sectionIndex) => ({
   }
 })
 
-export const resetSections = (sections) => ({
+export const resetSections = (sections) => {
+  return (dispatch, getState) => {
+    const { article } = getState().edit
+    const newArticle = extend(article, { sections })
+
+    dispatch(onResetSections(newArticle))
+  }
+}
+
+export const onResetSections = (article) => ({
   type: actions.RESET_SECTIONS,
   payload: {
-    sections
+    article
   }
 })
 
