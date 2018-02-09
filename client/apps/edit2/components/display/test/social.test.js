@@ -6,7 +6,7 @@ import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplaySocial } from '../components/social'
 import ImageUpload from 'client/apps/edit2/components/admin/components/image_upload.coffee'
 
-describe('DisplaySocial', () => {
+xdescribe('DisplaySocial', () => {
   let props
   let social_description
   let social_image
