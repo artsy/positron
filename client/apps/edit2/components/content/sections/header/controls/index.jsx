@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ModalCover from './ModalCover'
-import LayoutControls from './LayoutControls'
-import VideoControls from './VideoControls'
+import { VideoControls } from './VideoControls'
+import { LayoutControls } from './LayoutControls'
+import { onChangeHero } from 'client/actions/editActions'
 
 export class HeaderControls extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChange: PropTypes.func.isRequired,
-    onProgress: PropTypes.func.isRequired,
-    hero: PropTypes.object
+    onChangeHeroAction: PropTypes.func.isRequired,
+    onProgress: PropTypes.func.isRequired
   }
 
   state = {
@@ -44,7 +45,9 @@ export class HeaderControls extends Component {
 
   render () {
     const { isLayoutOpen, isVideoOpen } = this.state
-    const { article, hero, onChange, onProgress } = this.props
+    const { article, onChangeHeroAction, onProgress } = this.props
+
+    const hero = article.hero_section || {}
     const isModalOpen = isLayoutOpen || isVideoOpen
     const isBasicHero = hero.type === 'basic'
 
@@ -59,7 +62,7 @@ export class HeaderControls extends Component {
           <VideoControls
             article={article}
             isOpen={isVideoOpen}
-            onChange={onChange}
+            onChange={onChangeHeroAction}
             onProgress={onProgress}
             onClick={() => this.toggleControls('video')}
           />
@@ -67,10 +70,23 @@ export class HeaderControls extends Component {
         <LayoutControls
           hero={hero}
           isOpen={isLayoutOpen}
-          onChange={onChange}
+          onChange={onChangeHeroAction}
           onClick={() => this.toggleControls('layout')}
         />
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeHeroAction: onChangeHero
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HeaderControls)
