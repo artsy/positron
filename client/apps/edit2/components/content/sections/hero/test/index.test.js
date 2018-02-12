@@ -59,7 +59,7 @@ describe('SectionHero', () => {
     expect(component.find(SectionContainer).exists()).toBe(true)
   })
 
-  it('Can remove a hero if empty', () => {
+  xit('Can remove a hero if empty', () => {
     props.article.set({
       hero_section: {
         type: 'video'
