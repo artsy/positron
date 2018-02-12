@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { SectionVideo } from '../index.jsx'
 
-describe('Video', () => {
+xdescribe('Video', () => {
   let props
 
   const getWrapper = (props) => {

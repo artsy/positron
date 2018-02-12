@@ -6,7 +6,7 @@ import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayEmail } from '../components/email'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
-describe('DisplayEmail', () => {
+xdescribe('DisplayEmail', () => {
   let props
   let email_metadata = {
     author: 'Molly Gottschalk',
