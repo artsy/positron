@@ -70,6 +70,11 @@ const RedirectText = styled.span`
   color: ${colors.grayMedium};
 `
 
+const IconContainer = styled.div`
+  margin-right: 5px;
+  display: inline-block;
+`
+
 export class MessageModal extends Component {
   static propTypes = {
     type: PropTypes.oneOf(['locked', 'timeout']),
@@ -112,7 +117,7 @@ export class MessageModal extends Component {
 
   getIconForType (type) {
     switch (type) {
-      case 'lock': return <IconLock color={colors.grayMedium} width='10px' height='10px' />
+      case 'lock': return <IconContainer><IconLock color={colors.grayMedium} width='10px' height='10px' /></IconContainer>
       default: return null
     }
   }

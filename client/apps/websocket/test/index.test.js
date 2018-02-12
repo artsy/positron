@@ -36,6 +36,38 @@ describe('WebSocket Server', () => {
         type: 'editorial'
       }
     }
+
+    sessions['246810'] = {
+      timestamp: '2018-01-30T23:12:20.973Z',
+      user: {
+        id: '124',
+        name: 'Ellen Poe'
+      },
+      article: '246810',
+      channel: {
+        id: '2',
+        name: 'Other Editors',
+        type: 'editorial'
+      }
+    }
+  })
+
+  it('should return a filtered list by channels', () => {
+    expect(getSessionsForChannel({id: '2'})).toEqual({
+      '246810': {
+        timestamp: '2018-01-30T23:12:20.973Z',
+        user: {
+          id: '124',
+          name: 'Ellen Poe'
+        },
+        article: '246810',
+        channel: {
+          id: '2',
+          name: 'Other Editors',
+          type: 'editorial'
+        }
+      }
+    })
   })
 
   it('sends articles in session when requested by client', () => {
