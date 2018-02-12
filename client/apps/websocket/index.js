@@ -62,6 +62,9 @@ export const onUserStartedEditing = ({io, socket}, data) => {
 
 export const onUserCurrentlyEditing = ({io, socket}, data) => {
   const { article, timestamp } = data
+  if (!sessions[article]) {
+    return
+  }
   sessions[article].timestamp = timestamp
 
   const event = articlesRequested
