@@ -37,10 +37,7 @@ export class EditArticle extends Component {
           sections={article.sections}
         />
 
-        <SectionFooter
-          article={article}
-          onChange={onChange}
-        />
+        <SectionFooter />
 
       </div>
     )

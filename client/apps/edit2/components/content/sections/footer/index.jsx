@@ -2,16 +2,17 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class SectionFooter extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChangeArticleAction: PropTypes.func.isRequired
   }
 
   render () {
-    const { article, channel, onChange } = this.props
+    const { article, channel, onChangeArticleAction } = this.props
 
     return (
       <div className='SectionFooter'>
@@ -22,10 +23,10 @@ export class SectionFooter extends Component {
             data-layout='column_width'
           >
             <Paragraph
-              html={article.get('postscript') || ''}
-              layout={article.get('layout')}
+              html={article.postscript || ''}
+              layout={article.layout}
               linked
-              onChange={(html) => onChange('postscript', html)}
+              onChange={(html) => onChangeArticleAction('postscript', html)}
               placeholder='Postscript (optional)'
               type='postscript'
             />
@@ -38,9 +39,15 @@ export class SectionFooter extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  article: state.edit.article,
   channel: state.app.channel
 })
 
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SectionFooter)
