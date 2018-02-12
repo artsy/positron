@@ -199,10 +199,7 @@ export class EditContainer extends Component {
     return (
       <div className='EditContainer'>
         <ErrorBoundary>
-          <EditHeader
-            {...this.props}
-            beforeUnload={this.beforeUnload}
-          />
+          <EditHeader beforeUnload={this.beforeUnload} />
         </ErrorBoundary>
 
         <ErrorBoundary>
