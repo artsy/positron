@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { data as sd } from 'sharify'
 import * as Actions from 'client/actions/editActions'
 import Icon from '@artsy/reaction-force/dist/Components/Icon'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
@@ -15,6 +14,7 @@ export class EditHeader extends Component {
     beforeUnload: PropTypes.func,
     channel: PropTypes.object,
     edit: PropTypes.object,
+    forceURL: PropTypes.string,
     isAdmin: PropTypes.bool
   }
 
@@ -108,7 +108,14 @@ export class EditHeader extends Component {
   }
 
   render () {
-    const { article, actions, channel, edit, isAdmin } = this.props
+    const {
+      article,
+      actions,
+      channel,
+      edit,
+      forceURL,
+      isAdmin
+    } = this.props
     const { changeView } = actions
     const { activeView, isDeleting } = edit
     const { grayMedium, greenRegular } = colors
@@ -191,7 +198,7 @@ export class EditHeader extends Component {
           </SaveButton>
 
           <a
-            href={`${sd.FORCE_URL}/article/${article.slug}`}
+            href={`${forceURL}/article/${article.slug}`}
             target='_blank'
           >
             <button className='avant-garde-button'>
@@ -209,6 +216,7 @@ const mapStateToProps = (state) => ({
   article: state.edit.article,
   channel: state.app.channel,
   edit: state.edit,
+  forceURL: state.app.forceURL,
   isAdmin: state.app.isAdmin
 })
 
