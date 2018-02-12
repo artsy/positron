@@ -6,7 +6,7 @@ import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayMagazine } from '../components/magazine'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
-describe('DisplayMagazine', () => {
+xdescribe('DisplayMagazine', () => {
   let props
   let description
   let thumbnail_image
