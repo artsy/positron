@@ -83,6 +83,15 @@ describe('WebSocket Server', () => {
     })
   })
 
+  it('does not broadcast an update for #userCurrentlyEditing if the session is invalid', () => {
+    onUserCurrentlyEditing({io, socket}, {
+      timestamp: new Date().toISOString(),
+      article: '-1'
+    })
+
+    expect(io.sockets.emit.mock.calls.length).toBe(0)
+  })
+
   it('broadcasts a message to clients when a user starts editing', () => {
     const eventType = 'START_EDITING_ARTICLE'
     data = getEditingEvent(eventType)
