@@ -16,7 +16,7 @@ import { ImagesControls } from '../components/controls'
 import { SectionImages } from '../index'
 require('typeahead.js')
 
-xdescribe('SectionImageCollection', () => {
+describe('SectionImageCollection', () => {
   let props
   let article
   let imageSection

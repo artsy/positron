@@ -1,5 +1,5 @@
 import React from 'react'
-import { clone, extend } from 'lodash'
+import { cloneDeep, extend } from 'lodash'
 import { stripTags } from 'underscore.string'
 import { mount } from 'enzyme'
 import { Artwork, Fixtures, Image } from '@artsy/reaction-force/dist/Components/Publishing'
@@ -22,8 +22,8 @@ describe('EditImage', () => {
   beforeEach(() => {
     props = {
       image,
-      article: clone(StandardArticle),
-      section: clone(StandardArticle.sections[4]),
+      article: cloneDeep(StandardArticle),
+      section: cloneDeep(StandardArticle.sections[4]),
       index: 0,
       width: 200,
       removeImage: jest.fn(),

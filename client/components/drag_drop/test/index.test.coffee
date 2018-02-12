@@ -39,9 +39,9 @@ describe 'DragDropContainer Default', ->
         onDragEnd: @onDragEnd = sinon.stub()
         items: StandardArticle.sections[4].images
       }
-      section = new Section StandardArticle.sections[4]
+
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit2/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(
@@ -49,8 +49,8 @@ describe 'DragDropContainer Default', ->
           {
             key:'child-1',
             index: 0,
-            articleLayout: 'classic',
-            section: section,
+            article: {layout: 'classic'},
+            section: StandardArticle.sections[4],
             width: null,
             image: StandardArticle.sections[4].images[0],
             removeItem: sinon.stub(),
@@ -62,8 +62,8 @@ describe 'DragDropContainer Default', ->
           {
             key:'child-2',
             index: 1,
-            articleLayout: 'classic',
-            section: section,
+            article: {layout: 'classic'},
+            section: StandardArticle.sections[4],
             width: null,
             image: StandardArticle.sections[4].images[1],
             removeItem: sinon.stub(),
@@ -166,9 +166,9 @@ describe 'DragDropContainer Vertical', ->
         items: StandardArticle.sections[4].images
         layout: 'vertical'
       }
-      section = new Section StandardArticle.sections[4]
+
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit2/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(
@@ -176,8 +176,8 @@ describe 'DragDropContainer Vertical', ->
           {
             key:'child-1',
             index: 0,
-            articleLayout: 'classic',
-            section: section,
+            article: {layout: 'classic'},
+            section: StandardArticle.sections[4],
             width: null,
             image: StandardArticle.sections[4].images[0],
             removeItem: sinon.stub(),
@@ -189,8 +189,8 @@ describe 'DragDropContainer Vertical', ->
           {
             key:'child-2',
             index: 1,
-            articleLayout: 'classic',
-            section: section,
+            article: {layout: 'classic'},
+            section: StandardArticle.sections[4],
             width: null,
             image: StandardArticle.sections[4].images[1],
             removeItem: sinon.stub(),
