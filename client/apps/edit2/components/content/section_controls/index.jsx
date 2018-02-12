@@ -1,5 +1,7 @@
-// A container for section inputs
-// Position changes on scroll to stick to section top
+/**
+ * A container for section inputs
+ * Position changes on scroll to stick to section top
+**/
 
 import styled from 'styled-components'
 import PropTypes from 'prop-types'

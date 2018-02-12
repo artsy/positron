@@ -10,11 +10,11 @@ export class LayoutControls extends Component {
     channel: PropTypes.object,
     disabledAlert: PropTypes.func,
     section: PropTypes.object,
-    onChange: PropTypes.func
+    onChangeSectionAction: PropTypes.func
   }
 
   changeLayout = (layout) => {
-    const { section, disabledAlert, onChange } = this.props
+    const { section, disabledAlert, onChangeSectionAction } = this.props
     const { images, type } = section
 
     const isFillwidth = layout === 'fillwidth'
@@ -24,17 +24,17 @@ export class LayoutControls extends Component {
       return disabledAlert()
     }
     if (type === 'image_set') {
-      onChange('type', 'image_collection')
+      onChangeSectionAction('type', 'image_collection')
     }
-    onChange('layout', layout)
+    onChangeSectionAction('layout', layout)
   }
 
   toggleImageSet = () => {
-    const { section, onChange } = this.props
+    const { section, onChangeSectionAction } = this.props
 
     if (section.type === 'image_collection') {
-      onChange('type', 'image_set')
-      onChange('layout', 'mini')
+      onChangeSectionAction('type', 'image_set')
+      onChangeSectionAction('layout', 'mini')
     }
   }
 
@@ -114,7 +114,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onChange: onChangeSection
+  onChangeSectionAction: onChangeSection
 }
 
 export default connect(

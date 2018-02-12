@@ -37,7 +37,7 @@ describe('Section LayoutControls', () => {
       channel: { type: 'editorial' },
       section: clone(StandardArticle.sections[4]),
       article: {layout: 'standard'},
-      onChange: jest.fn(),
+      onChangeSectionAction: jest.fn(),
       disabledAlert: jest.fn()
     }
   })
@@ -103,8 +103,8 @@ describe('Section LayoutControls', () => {
       const component = getWrapper(props)
 
       component.find('.layout').at(1).simulate('click')
-      expect(props.onChange.mock.calls[0][0]).toBe('layout')
-      expect(props.onChange.mock.calls[0][1]).toBe('column_width')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('column_width')
     })
 
     it('when toggling fullscreen, alerts the user if too many images', () => {
@@ -113,7 +113,7 @@ describe('Section LayoutControls', () => {
 
       component.find('.layout').at(2).simulate('click')
       expect(props.disabledAlert.mock.calls.length).toBe(1)
-      expect(props.onChange).not.toBeCalled()
+      expect(props.onChangeSectionAction).not.toBeCalled()
     })
 
     it('can convert an image_set into an image_collection', () => {
@@ -123,10 +123,10 @@ describe('Section LayoutControls', () => {
       const component = getWrapper(props)
 
       component.find('.layout').at(1).simulate('click')
-      expect(props.onChange.mock.calls[0][0]).toBe('type')
-      expect(props.onChange.mock.calls[0][1]).toBe('image_collection')
-      expect(props.onChange.mock.calls[1][0]).toBe('layout')
-      expect(props.onChange.mock.calls[1][1]).toBe('column_width')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('type')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('image_collection')
+      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('column_width')
     })
   })
 
@@ -135,10 +135,10 @@ describe('Section LayoutControls', () => {
       const component = getWrapper(props)
 
       component.find('.layout').at(2).simulate('click')
-      expect(props.onChange.mock.calls[0][0]).toBe('type')
-      expect(props.onChange.mock.calls[0][1]).toBe('image_set')
-      expect(props.onChange.mock.calls[1][0]).toBe('layout')
-      expect(props.onChange.mock.calls[1][1]).toBe('mini')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('type')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('image_set')
+      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('mini')
     })
 
     it('does nothing if section is already an image_set', () => {
@@ -147,7 +147,7 @@ describe('Section LayoutControls', () => {
       const component = getWrapper(props)
 
       component.find('.layout').at(2).simulate('click')
-      expect(props.onChange).not.toBeCalled()
+      expect(props.onChangeSectionAction).not.toBeCalled()
     })
   })
 })
