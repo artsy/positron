@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { clone } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
 import { SectionFooter } from '../index.jsx'
@@ -11,7 +11,7 @@ describe('SectionFooter', () => {
 
   beforeEach(() => {
     props = {
-      article: clone(FeatureArticle),
+      article: cloneDeep(FeatureArticle),
       channel: { type: 'editorial' },
       onChangeArticleAction: jest.fn()
     }
