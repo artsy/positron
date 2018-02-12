@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   IconEditEmbed,
   IconEditImages,
@@ -9,6 +10,7 @@ import {
   IconHeroImage,
   IconHeroVideo
 } from '@artsy/reaction-force/dist/Components/Publishing'
+import { newHeroSection, newSection } from 'client/actions/editActions'
 
 export class SectionTool extends Component {
   static propTypes = {
@@ -16,9 +18,10 @@ export class SectionTool extends Component {
     index: PropTypes.number,
     isEditing: PropTypes.bool,
     isHero: PropTypes.bool,
+    newHeroSectionAction: PropTypes.func,
+    newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
-    section: PropTypes.object,
-    sections: PropTypes.object
+    sections: PropTypes.array
   }
 
   state = {
@@ -29,46 +32,19 @@ export class SectionTool extends Component {
     this.setState({open: !this.state.open})
   }
 
-  getProps (type) {
-    switch (type) {
-      case 'video':
-        return {
-          type: 'video',
-          url: '',
-          layout: 'column_width'
-        }
-      case 'image_collection':
-        return {
-          type: 'image_collection',
-          layout: 'overflow_fillwidth',
-          images: []
-        }
-      case 'embed':
-        return {
-          type: 'embed',
-          url: '',
-          layout: 'column_width',
-          height: ''
-        }
-      case 'text':
-        return {
-          type: 'text',
-          body: ''
-        }
-    }
-  }
-
   newSection = (type) => {
-    this.props.sections.add(
-      this.getProps(type),
-      {at: this.props.index + 1}
-    )
+    const { index, newSectionAction } = this.props
+
+    newSectionAction(type, index + 1)
     this.setState({open: false})
   }
 
   setHero = (type) => {
-    this.props.section.set(this.getProps(type))
-    this.props.onSetEditing(true)
+    const { newHeroSectionAction, onSetEditing } = this.props
+
+    newHeroSectionAction(type)
+    this.setState({open: false})
+    onSetEditing(true)
   }
 
   renderHeroMenu () {
@@ -127,22 +103,30 @@ export class SectionTool extends Component {
 
   render () {
     const { firstSection, index, isEditing, isHero, sections } = this.props
+    const { open } = this.state
+
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
+
     return (
       <div
         className={'edit-tool'}
-        data-state-open={this.state.open}
+        data-state-open={open}
         data-editing={isEditing}
         data-visible={isFirstSection || isLastSection}
-        data-hero={isHero}>
+        data-hero={isHero}
+      >
+
         <div
           className='edit-tool__icon'
-          onClick={this.toggleOpen}>
+          onClick={this.toggleOpen}
+        >
           <IconEditSection
-            fill={this.state.open || !isHero ? '#000' : '#CCC'}
-            isClosing={this.state.open} />
+            fill={open || !isHero ? '#000' : '#CCC'}
+            isClosing={open}
+          />
         </div>
+
         { isHero
           ? this.renderHeroMenu()
           : this.renderSectionMenu()
@@ -151,3 +135,18 @@ export class SectionTool extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  channel: state.app.channel
+})
+
+const mapDispatchToProps = {
+  newHeroSectionAction: newHeroSection,
+  newSectionAction: newSection
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionTool)
