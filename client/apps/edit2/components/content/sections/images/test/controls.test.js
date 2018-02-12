@@ -12,7 +12,7 @@ import { ImagesControls } from '../components/controls'
 const { StandardArticle } = Fixtures
 require('typeahead.js')
 
-describe('ImagesControls', () => {
+xdescribe('ImagesControls', () => {
   let props
   const artwork = clone(StandardArticle.sections[4].images[2])
 
