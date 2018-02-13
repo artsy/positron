@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Controls } from '../../video/controls.jsx'
-import Section from '../../../../../../../models/section'
+import VideoSectionControls from '../../video/controls'
 
-export default class VideoControls extends Component {
+export class VideoControls extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
@@ -30,8 +29,8 @@ export default class VideoControls extends Component {
               data-editing
               data-type='video'
             >
-              <Controls
-                section={new Section(article.get('hero_section'))}
+              <VideoSectionControls
+                section={article.hero_section}
                 onChange={onChange}
                 onProgress={onProgress}
                 isHero
