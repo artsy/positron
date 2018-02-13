@@ -35,11 +35,10 @@ describe 'FilterSearch Article', ->
       )
       ArticleList = benv.requireWithJadeify(
         resolve(__dirname, '../../article_list/index')
-        ['icons']
+        []
       )
-      ArticleList.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
       FilterSearch.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
-      FilterSearch.__set__ 'ArticleList', React.createFactory(ArticleList)
+      FilterSearch.__set__ 'ArticleList', React.createFactory(ArticleList.ArticleList)
       props = {
           collection: [{id: '123', thumbnail_title: 'Game of Thrones', slug: 'artsy-editorial-game-of-thrones'}]
           url: 'url'
@@ -59,7 +58,7 @@ describe 'FilterSearch Article', ->
 
   it 'renders an initial set of articles', ->
     $(ReactDOM.findDOMNode(@component)).html().should.containEql 'Game of Thrones'
-    $(ReactDOM.findDOMNode(@component)).html().should.containEql 'http://artsy.net/article/artsy-editorial-game-of-thrones'
+    $(ReactDOM.findDOMNode(@component)).html().should.containEql '/article/artsy-editorial-game-of-thrones'
 
   it 'selects the article when clicking the check button', ->
     r.simulate.click r.find @component, 'article-list__checkcircle'

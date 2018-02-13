@@ -1,6 +1,17 @@
+import _s from 'underscore.string'
+import {
+  ContentState,
+  EditorState,
+  Modifier,
+  RichUtils
+} from 'draft-js'
+import { setContentEnd } from 'client/components/rich_text/utils/decorators'
+import { blockRenderMapArray } from 'client/apps/edit/components/content/sections/text/draft_config.js'
+
 export const standardizeSpacing = (html) => {
   const newHtml = html
     .replace(/<br>/g, '')
+    .replace(/<br\/>/g, '')
     .replace(/<span><\/span>/g, '')
     .replace(/<h2><\/h2>/g, '<p><br></p>')
     .replace(/<h3><\/h3>/g, '<p><br></p>')
@@ -63,6 +74,52 @@ export const stripH3Tags = (html) => {
   }
   return doc.innerHTML
 }
+export const removeDisallowedBlocks = (editorState, blocks, layout, hasFeatures, keepExisting) => {
+  const allowedBlocks = blockRenderMapArray(layout, hasFeatures)
+  const currentContent = editorState.getCurrentContent()
+  const selection = editorState.getSelection()
+  let newState
+
+  const cleanedBlocks = blocks.map((contentBlock) => {
+    const unstyled = stripCharacterStyles(contentBlock, true)
+    const isAllowedBlock = allowedBlocks.includes(unstyled.getType())
+    const isLink = unstyled.getType() === 'LINK'
+
+    if (isAllowedBlock || isLink) {
+      return unstyled
+    } else {
+      return unstyled.set('type', 'unstyled')
+    }
+  })
+
+  const newBlocks = ContentState.createFromBlockArray(cleanedBlocks, blocks)
+
+  if (keepExisting) {
+    const newContent = Modifier.replaceWithFragment(currentContent, selection, newBlocks.blockMap)
+    newState = EditorState.push(editorState, newContent, null)
+  } else {
+    newState = EditorState.push(editorState, newBlocks, null)
+  }
+
+  return newState
+}
+
+export const makePlainText = (editorState) => {
+  const selection = editorState.getSelection()
+
+  const noLinks = RichUtils.toggleLink(editorState, selection, null)
+  const unstyled = RichUtils.toggleBlockType(noLinks, 'unstyled')
+
+  const currentBlocks = unstyled.getCurrentContent().getBlocksAsArray()
+  const plainBlocks = currentBlocks.map((contentBlock) => {
+    return stripCharacterStyles(contentBlock)
+  })
+
+  const newContent = ContentState.createFromBlockArray(plainBlocks)
+  const newState = EditorState.push(editorState, newContent, null)
+
+  return newState
+}
 
 const replaceGoogleFalseTags = (html) => {
   let doc = document.createElement('div')
@@ -119,5 +176,33 @@ export const stripGoogleStyles = (html) => {
   // 4. Replace illegally pasted unicode spaces
   strippedHtml = replaceUnicodeSpaces(strippedHtml)
 
+  // 5. Strip non-style guide spaces
+  strippedHtml = standardizeSpacing(strippedHtml)
+
   return strippedHtml
+}
+
+export const makeBlockQuote = (html) => {
+  let increment = 0
+  let blockquote = setContentEnd(html, false)
+  const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
+  const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
+
+  if (afterBlock) {
+    // add text before blockquote to new text section
+    blockquote = blockquote.replace(afterBlock, '')
+  }
+  if (beforeBlock) {
+    // add text after blockquote to new text section
+    blockquote = blockquote.replace(beforeBlock, '')
+    // TODO: redux newSectionAction
+    increment = 1
+  }
+
+  return {
+    blockquote,
+    beforeBlock,
+    afterBlock,
+    increment
+  }
 }

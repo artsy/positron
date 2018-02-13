@@ -1,0 +1,20 @@
+.edit-section--video
+  .edit-section__remove
+    width 30px
+    height 30px
+    position absolute
+    top -12px
+    right -12px
+    circle
+      transition all .3s
+    &:hover
+      circle
+        fill red-color
+  .public-DraftEditorPlaceholder-inner
+    position absolute
+  div[class*="video__VideoContainer-"]
+    z-index -1
+  &.is-editing
+    z-index 100
+    div[class*="video__VideoContainer-"]
+      z-index 1

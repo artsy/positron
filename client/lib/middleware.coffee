@@ -36,10 +36,7 @@ Channel = require '../models/channel'
   if allowed
     next()
   else
-    next new Error(
-      "You must use the lastest version of Chrome, Safari, " +
-      "Firefox, or Internet Explorer to use Artsy Writer."
-    )
+    res.redirect('/unsupported')
 
 # Makes sure that writer.artsy.net cannot be embedded elsewhere
 @sameOrigin = (req, res, next) ->
