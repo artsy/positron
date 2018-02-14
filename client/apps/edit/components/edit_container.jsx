@@ -160,7 +160,7 @@ export class EditContainer extends Component {
     if (article.get('published')) {
       changeSavedStatusAction(article.attributes, false)
     } else {
-      saveArticleAction(article)
+      saveArticleAction(article.attributes)
     }
   }
 

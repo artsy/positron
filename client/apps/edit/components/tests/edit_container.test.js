@@ -25,7 +25,7 @@ describe('EditContainer', () => {
       },
       edit: {
         activeView: props.activeView,
-        article: props.article,
+        article: props.article.attributes,
         error: props.error
       }
     })
@@ -87,7 +87,7 @@ describe('EditContainer', () => {
     const component = getShallowWrapper(props)
     component.instance().onChange('title', title)
 
-    expect(props.saveArticleAction.mock.calls[0][0].get('title')).toBe(title)
+    expect(props.saveArticleAction.mock.calls[0][0].title).toBe(title)
   })
 
   it('#onChangeHero sets the article hero_section with key/value and calls #maybeSaveArticle', () => {
@@ -95,7 +95,7 @@ describe('EditContainer', () => {
     const component = getShallowWrapper(props)
     component.instance().onChangeHero('url', url)
 
-    expect(props.saveArticleAction.mock.calls[0][0].get('hero_section').url).toBe(url)
+    expect(props.saveArticleAction.mock.calls[0][0].hero_section.url).toBe(url)
   })
 
   it('sends a #startEditingArticleAction when mounting', () => {
@@ -136,7 +136,7 @@ describe('EditContainer', () => {
       const component = getShallowWrapper(props)
       component.instance().maybeSaveArticle()
 
-      expect(props.saveArticleAction.mock.calls[0][0]).toBe(props.article)
+      expect(props.saveArticleAction.mock.calls[0][0]).toBe(props.article.attributes)
     })
 
     it('Calls #changeSavedStatusAction if published', () => {

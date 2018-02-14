@@ -59,6 +59,17 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
+    case actions.CHANGE_ARTICLE: {
+      const { key, value } = action.payload
+      const article = cloneDeep(state.article)
+      article[key] = value
+
+      return u({
+        article,
+        isSaved: false
+      }, state)
+    }
+
     case actions.DELETE_ARTICLE: {
       return u({
         isDeleting: action.payload.isDeleting
@@ -83,7 +94,7 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.ON_CHANGE_SECTION: {
+    case actions.CHANGE_SECTION: {
       const { key, value } = action.payload
       const { sectionIndex } = state
       const article = cloneDeep(state.article)
@@ -94,7 +105,8 @@ export function editReducer (state = initialState, action) {
 
       return u({
         article,
-        section
+        section,
+        isSaved: false
       }, state)
     }
 
@@ -112,7 +124,19 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         sectionIndex: null,
-        section: null
+        section: null,
+        isSaved: false
+      }, state)
+    }
+
+    case actions.RESET_SECTIONS: {
+      const article = cloneDeep(state.article)
+      const { sections } = action.payload
+
+      extend(article, { sections })
+      return u({
+        article,
+        isSaved: false
       }, state)
     }
 

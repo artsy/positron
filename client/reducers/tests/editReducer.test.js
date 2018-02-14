@@ -64,7 +64,7 @@ describe('editReducer', () => {
       )
     })
 
-    it('ON_CHANGE_SECTION should update section keys and reset article.sections', () => {
+    it('CHANGE_SECTION should update section keys and reset article.sections', () => {
       const stateWithSection = extend(initialState, {
         section: initialSections[0],
         sectionIndex: 0
@@ -73,7 +73,7 @@ describe('editReducer', () => {
       const value = '<p>A new piece of text.</p>'
 
       const updatedState = editReducer(stateWithSection, {
-        type: actions.ON_CHANGE_SECTION,
+        type: actions.CHANGE_SECTION,
         payload: {
           key,
           value
@@ -100,6 +100,17 @@ describe('editReducer', () => {
       expect(updatedState.article.sections[2]).not.toEqual(
         initialSections[2]
       )
+    })
+
+    it('RESET_SECTIONS should reset the sections to provided array', () => {
+      const sections = initialSections.slice(1, 3)
+      const updatedState = editReducer(initialState, {
+        type: actions.RESET_SECTIONS,
+        payload: {
+          sections
+        }
+      })
+      expect(updatedState.article.sections).toEqual(sections)
     })
   })
 })
