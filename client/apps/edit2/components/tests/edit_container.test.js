@@ -123,7 +123,6 @@ describe('EditContainer', () => {
     const instance = wrapper.find(EditContainer).instance()
     expect(instance.state.inactivityPeriodEntered).toBeFalsy()
 
-    // jest.runAllTimers()
     jest.advanceTimersByTime(700 * 1000)
 
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 600 * 1000)
