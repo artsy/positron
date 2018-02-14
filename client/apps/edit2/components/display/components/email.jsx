@@ -1,27 +1,30 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { clone } from 'lodash'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { EmailPreview } from './preview/email_preview'
+import { onChangeArticle } from 'client/actions/editActions'
 import { CharacterLimit } from 'client/components/character_limit'
+import { EmailPreview } from './preview/email_preview'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
 export class DisplayEmail extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChange: PropTypes.func
+    onChangeArticleAction: PropTypes.func
   }
 
   onChange = (key, value) => {
-    const { article, onChange } = this.props
-    const emailMetadata = article.get('email_metadata') || {}
+    const { article, onChangeArticleAction } = this.props
+    const emailMetadata = clone(article.email_metadata) || {}
 
     emailMetadata[key] = value
-    onChange('email_metadata', emailMetadata)
+    onChangeArticleAction('email_metadata', emailMetadata)
   }
 
   render () {
-    const { article, onChange } = this.props
-    const emailMetadata = article.get('email_metadata') || {}
+    const { article, onChangeArticleAction } = this.props
+    const emailMetadata = article.email_metadata || {}
     const {
       author,
       custom_text,
@@ -65,10 +68,9 @@ export class DisplayEmail extends Component {
           <div className='field-group'>
             <label>Author</label>
             <input
-              onChange={(e) => this.onChange(e.target.name, e.target.value)}
+              onChange={(e) => this.onChange('author', e.target.value)}
               defaultValue={author || ''}
               className='bordered-input'
-              name='author'
             />
           </div>
 
@@ -81,11 +83,11 @@ export class DisplayEmail extends Component {
         <Col xs={12}>
           <div
             className='field-group flat-checkbox'
-            onClick={() => onChange('send_body', !article.get('send_body'))}>
+            onClick={() => onChangeArticleAction('send_body', !article.send_body)}>
             <input
               readOnly
               type='checkbox'
-              checked={article.get('send_body')}
+              checked={article.send_body}
             />
             <label>Send Article Body To Sailthru</label>
           </div>
@@ -94,3 +96,16 @@ export class DisplayEmail extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DisplayEmail)
