@@ -1,4 +1,6 @@
 import { messageTypes } from './messageTypes'
+import Session from 'client/models/session'
+import Sessions from 'client/collections/sessions'
 
 const {
   articlesRequested,
@@ -8,17 +10,22 @@ const {
   userCurrentlyEditing
 } = messageTypes
 
-export const sessions = {}
+export const sessions = new Sessions()
 
 export const getSessionsForChannel = (channel) => {
-  const filteredSessions = {}
+  // const filteredSessions = {}
 
-  for (let [key, session] of Object.entries(sessions)) {
-    if (channel.id === session.channel.id) {
-      filteredSessions[key] = session
-    }
-  }
-  return filteredSessions
+  // for (let [key, session] of Object.entries(sessions)) {
+  //   if (channel.id === session.channel.id) {
+  //     filteredSessions[key] = session
+  //   }
+  // }
+  // return filteredSessions
+
+  sessions.fetch({
+  }).then((data) => {
+    console.log(data)
+  })
 }
 
 export const onArticlesRequested = ({io, socket}, { channel }) => {
@@ -44,7 +51,7 @@ export const onUserStartedEditing = ({io, socket}, data) => {
     return
   }
 
-  const newSession = sessions[article] = {
+  const newSession = {
     timestamp,
     user: {
       id,
@@ -53,6 +60,9 @@ export const onUserStartedEditing = ({io, socket}, data) => {
     article,
     channel
   }
+
+  const model = new Session(newSession)
+  model.save()
 
   io.sockets.emit(userStartedEditing, {
     type: data.type,
