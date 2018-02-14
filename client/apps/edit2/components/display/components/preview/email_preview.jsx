@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { getArticleByline } from 'client/models/article.js'
+import { getArticleByline } from '../../../../../../models/article.js'
 import { crop } from '../../../../../../components/resizer/index.coffee'
 
 export const EmailPreview = (props) => {

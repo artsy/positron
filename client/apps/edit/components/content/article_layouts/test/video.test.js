@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '../../../../../../models/article'
+import Article from '../../../../../../models/article.coffee'
 import { VideoAbout } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoCover'
 import FileInput from '/client/components/file_input/index.jsx'

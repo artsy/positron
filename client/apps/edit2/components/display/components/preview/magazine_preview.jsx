@@ -4,7 +4,7 @@ import React from 'react'
 import { IconSocialEmail } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialEmail'
 import { IconSocialFacebook } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialFacebook'
 import { IconSocialTwitter } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialTwitter'
-import { getArticleByline } from 'client/models/article.js'
+import { getArticleByline } from '../../../../../../models/article.js'
 import { crop } from '../../../../../../components/resizer/index.coffee'
 
 export const MagazinePreview = (props) => {

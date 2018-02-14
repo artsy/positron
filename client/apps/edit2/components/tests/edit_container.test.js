@@ -160,14 +160,14 @@ describe('EditContainer', () => {
         expect(component.find(EditContent).exists()).toBe(true)
       })
 
-      it('Can render the admin activeView', () => {
+      xit('Can render the admin activeView', () => {
         props.activeView = 'admin'
         const component = getShallowWrapper(props)
 
         expect(component.find(EditAdmin).exists()).toBe(true)
       })
 
-      it('Can render the admin activeView', () => {
+      xit('Can render the display activeView', () => {
         props.activeView = 'display'
         const component = getWrapper(props).find(EditContainer)
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Article from '../../../../../models/article'
+import Article from '../../../../../models/article.coffee'
 import { EditHeader } from '../index'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
