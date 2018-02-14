@@ -1,20 +1,46 @@
-import { clone } from 'lodash'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { clone, without } from 'lodash'
+import { connect } from 'react-redux'
 import { Artwork, Image } from '@artsy/reaction-force/dist/Components/Publishing'
-import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { onChangeHero, onChangeSection } from 'client/actions/editActions'
+import { RemoveButton } from 'client/components/remove_button'
 
 export class EditImage extends Component {
   static propTypes = {
-    articleLayout: PropTypes.string.isRequired,
+    article: PropTypes.object,
     editing: PropTypes.bool,
     image: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
+    isHero: PropTypes.bool,
+    onChangeHeroAction: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
     progress: PropTypes.number,
-    removeImage: PropTypes.func,
     section: PropTypes.object.isRequired,
     width: PropTypes.any
+  }
+
+  onChange = (images) => {
+    const {
+      isHero,
+      onChangeHeroAction,
+      onChangeSectionAction
+    } = this.props
+
+    if (isHero) {
+      onChangeHeroAction('images', images)
+    } else {
+      onChangeSectionAction('images', images)
+    }
+  }
+
+  removeImage = () => {
+    const { section, image } = this.props
+    const newImages = without(section.images, image)
+
+    this.onChange(newImages)
   }
 
   onCaptionChange = (html) => {
@@ -24,16 +50,17 @@ export class EditImage extends Component {
       section
     } = this.props
 
-    const newImages = clone(section.get('images'))
+    const newImages = clone(section.images)
     let newImage = Object.assign({}, image)
 
     newImage.caption = html
     newImages[index] = newImage
-    section.set('images', newImages)
+
+    this.onChange(newImages)
   }
 
   editCaption = () => {
-    const { articleLayout, image, progress } = this.props
+    const { article, image, progress } = this.props
 
     if (!progress) {
       return (
@@ -43,7 +70,7 @@ export class EditImage extends Component {
           html={image.caption || ''}
           onChange={this.onCaptionChange}
           stripLinebreaks
-          layout={articleLayout}
+          layout={article.layout}
         />
       )
     }
@@ -51,42 +78,64 @@ export class EditImage extends Component {
 
   render () {
     const {
-      articleLayout,
+      article,
       editing,
       image,
-      removeImage,
       section,
       width
     } = this.props
 
     const isArtwork = image.type === 'artwork'
+    const isClassic = article.layout === 'classic'
+    const isSingle = section.images.length === 1
+
+    const imgWidth = isSingle && !isClassic ? '100%' : `${width}px`
 
     return (
-      <div
+      <EditImageContainer
         className='EditImage'
-        style={{ width }}
+        width={imgWidth}
       >
 
         {isArtwork
           ? <Artwork
               artwork={image}
-              layout={articleLayout}
+              layout={article.layout}
               linked={false}
-              sectionLayout={section.get('layout')}
+              sectionLayout={section.layout}
             />
 
             : <Image
                 editCaption={this.editCaption}
                 image={image}
+                layout={article.layout}
                 linked={false}
-                sectionLayout={section.get('layout')}
+                sectionLayout={section.layout}
               />
         }
 
-        {editing && removeImage &&
-          <RemoveButton onClick={() => removeImage(image)} />
+        {editing &&
+          <RemoveButton onClick={this.removeImage} />
         }
-      </div>
+      </EditImageContainer>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeHeroAction: onChangeHero,
+  onChangeSectionAction: onChangeSection
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditImage)
+
+const EditImageContainer = styled.div`
+  width: ${(props) => props.width};
+`
