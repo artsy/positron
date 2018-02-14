@@ -9,7 +9,7 @@ path = require 'path'
 { MONGOHQ_URL } = process.env
 debug = require('debug') 'api'
 
-collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels', 'tags', 'verticals', 'authors']
+collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels', 'tags', 'verticals', 'authors', 'sessions']
 db = mongojs MONGOHQ_URL, collections
 
 exit = (msg) -> (err) ->
