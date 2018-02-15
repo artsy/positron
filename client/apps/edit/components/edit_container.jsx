@@ -48,7 +48,7 @@ export class EditContainer extends Component {
       lastUpdated: null,
       isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
       inactivityPeriodEntered: false,
-      shouldShowModal: true,
+      shouldShowModal: !props.article.isNew(),
       sentStopEditingEvent: false
     }
 
