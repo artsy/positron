@@ -1,9 +1,14 @@
+import Draft from 'draft-js'
 import {
+  makePlainText,
+  removeDisallowedBlocks,
   replaceUnicodeSpaces,
   standardizeSpacing,
   stripGoogleStyles,
   stripH3Tags
 } from '../../utils/text_stripping'
+import { decorators } from '../../utils/config'
+import { convertFromRichHtml, convertToRichHtml } from '../../utils/convert_html'
 
 describe('Draft Utils: Text Stripping', () => {
   describe('#standardizeSpacing', () => {
@@ -80,7 +85,7 @@ describe('Draft Utils: Text Stripping', () => {
 
     it('Can replace unicode spaces', () => {
       const html = stripGoogleStyles('<p>\u2028hello</p>')
-      expect(html).toBe('<p></p><p>hello</p>')
+      expect(html).toBe('<p><br></p><p>hello</p>')
     })
 
     it('Replaces italic spans with <em> tags', () => {
@@ -98,5 +103,53 @@ describe('Draft Utils: Text Stripping', () => {
         '<p><span><strong><em>Available at: Espacio Valverde • Galleries Sector, Booth 9F01</em></strong></span></p>'
       )
     })
+  })
+
+  it('#removeDisallowedBlocks converts disallowed html elements to paragraphs', () => {
+    const html = '<p>Hi.</p><blockquote>Hello.</blockquote><h1>Sup.</h1>'
+    const allowedBlocks = [
+      'header-two',
+      'header-three',
+      'unordered-list-item',
+      'ordered-list-item',
+      'unstyled'
+    ]
+    const blocksFromHTML = convertFromRichHtml(html)
+
+    const editorState = Draft.EditorState.createWithContent(
+      blocksFromHTML,
+      new Draft.CompositeDecorator(decorators(true))
+    )
+    const cleanedState = removeDisallowedBlocks(editorState, blocksFromHTML.getBlocksAsArray(), allowedBlocks)
+    const stateAsHtml = convertToRichHtml(cleanedState, 'classic')
+
+    expect(stateAsHtml).toBe('<p>Hi.</p><p>Hello.</p><p>Sup.</p>')
+  })
+
+  it('#makePlainText strips styles and links from text', () => {
+    const html = '<p><a href="link.com">Hello</a> <strong>there</strong>.</p><h2><em>Sup.</em></h2>'
+    const blocksFromHTML = convertFromRichHtml(html)
+    const editorState = Draft.EditorState.createWithContent(
+      blocksFromHTML,
+      new Draft.CompositeDecorator(decorators(true))
+    )
+    const getSelection = (editorState) => {
+      const startSelection = editorState.getSelection()
+      const startEditorState = editorState.getCurrentContent()
+      const { key, text } = startEditorState.getFirstBlock()
+      const selection = startSelection.merge({
+        anchorKey: key,
+        anchorOffset: 0,
+        focusKey: key,
+        focusOffset: text.length
+      })
+      const newEditorState = Draft.EditorState.acceptSelection(editorState, selection)
+      return newEditorState
+    }
+
+    const stateWithSelection = getSelection(editorState)
+    const cleanedState = makePlainText(stateWithSelection)
+    const stateAsHtml = convertToRichHtml(cleanedState, 'classic')
+    expect(stateAsHtml).toBe('<p>Hello there.</p><h2>Sup.</h2>')
   })
 })
