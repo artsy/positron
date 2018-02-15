@@ -35,10 +35,11 @@ export const onArticlesRequested = ({io, socket}, { channel }) => {
   const event = articlesRequested
 
   return getSessionsForChannel(channel).then(sessions => {
-    return socket.emit(event, {
+    socket.emit(event, {
       type: 'EDITED_ARTICLES_RECEIVED',
       payload: sessions
     })
+    return sessions
   })
 }
 

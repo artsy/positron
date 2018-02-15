@@ -18,8 +18,6 @@ export function articlesReducer (state = initialState, action) {
     }
     case editActions.START_EDITING_ARTICLE: {
       const session = action.payload
-      // const articlesInSession = cloneDeep(state.articlesInSession)
-      // articlesInSession[session.article] = session
 
       return u({
         articlesInSession: {

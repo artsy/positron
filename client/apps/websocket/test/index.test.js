@@ -1,5 +1,4 @@
 const {
-  sessions,
   getSessionsForChannel,
   onArticlesRequested,
   onUserCurrentlyEditing,
@@ -7,14 +6,11 @@ const {
   onUserStoppedEditing
 } = require('../index')
 
-jest.mock('../index')
-
-// let { sessions } = require('../index')
-
-xdescribe('WebSocket Server', () => {
+describe('WebSocket Server', () => {
   let io
   let socket
   let data
+  let originalFetch
 
   beforeEach(() => {
     io = {
@@ -27,15 +23,21 @@ xdescribe('WebSocket Server', () => {
       emit: jest.fn()
     }
 
-    // sessions = {
-    //   fetch
-    // }
+    let Backbone = require('backbone')
+    originalFetch = Backbone.Collection.prototype.fetch
+    Backbone.Collection.prototype.fetch = fetch
   })
 
-  it('should return a filtered list by channels', (done) => {
+  afterAll(() => {
+    require('backbone').Collection.prototype.fetch = originalFetch
+  })
+
+  it('should return a filtered list by channels', () => {
     return getSessionsForChannel({id: '2'}).then(sessions => {
       return expect(sessions).toEqual({
         '246810': {
+          _id: 246810,
+          id: 246810,
           timestamp: '2018-01-30T23:12:20.973Z',
           user: {
             id: '124',
@@ -55,12 +57,12 @@ xdescribe('WebSocket Server', () => {
   it('sends articles in session when requested by client', () => {
     const eventType = 'EDITED_ARTICLES_RECEIVED'
     data = getEditingEvent(eventType)
-    return onArticlesRequested({io, socket}, {channel: data.channel}).then(() => {
+    return onArticlesRequested({io, socket}, {channel: data.channel}).then(sessions => {
       expect(socket.emit.mock.calls.length).toBe(1)
       expect(socket.emit.mock.calls[0][0]).toBe('articlesRequested')
       return expect(socket.emit.mock.calls[0][1]).toEqual({
         type: eventType,
-        payload: getSessionsForChannel(sessions, data.channel)
+        payload: sessions
       })
     })
   })
@@ -68,7 +70,10 @@ xdescribe('WebSocket Server', () => {
   it('does not broadcast an update for #userCurrentlyEditing if the session is invalid', () => {
     return onUserCurrentlyEditing({io, socket}, {
       timestamp: new Date().toISOString(),
-      article: '-1'
+      article: '-1',
+      channel: {
+        id: '1'
+      }
     }).then(() => {
       return expect(io.sockets.emit.mock.calls.length).toBe(0)
     })
@@ -77,12 +82,12 @@ xdescribe('WebSocket Server', () => {
   it('broadcasts a message to clients when a user starts editing', () => {
     const eventType = 'START_EDITING_ARTICLE'
     data = getEditingEvent(eventType)
-    return onUserStartedEditing({io, socket}, data).then(() => {
+    return onUserStartedEditing({io, socket}, data).then((session) => {
       expect(io.sockets.emit.mock.calls.length).toBe(1)
       expect(io.sockets.emit.mock.calls[0][0]).toBe('userStartedEditing')
       return expect(io.sockets.emit.mock.calls[0][1]).toEqual({
         type: eventType,
-        payload: sessions[data.article]
+        payload: session
       })
     })
   })
@@ -97,22 +102,24 @@ xdescribe('WebSocket Server', () => {
     }
     data = getEditingEvent(eventType)
 
-    expect(sessions[data.article]).not.toBeUndefined()
-    return onUserStoppedEditing({io, socket}, data).then(() => {
-      expect(io.sockets.emit.mock.calls.length).toBe(1)
-      expect(io.sockets.emit.mock.calls[0][0]).toBe('userStoppedEditing')
-      expect(io.sockets.emit.mock.calls[0][1]).toEqual(event)
-      return expect(sessions[data.article]).toBeUndefined()
+    return getSessionsForChannel(data.channel, sessions => {
+      expect(sessions[data.article]).not.toBeUndefined()
+      return onUserStoppedEditing({io, socket}, data).then(() => {
+        expect(io.sockets.emit.mock.calls.length).toBe(1)
+        expect(io.sockets.emit.mock.calls[0][0]).toBe('userStoppedEditing')
+        expect(io.sockets.emit.mock.calls[0][1]).toEqual(event)
+        return expect(sessions[data.article]).toBeUndefined()
+      })
     })
   })
 
   it('broadcasts a message when a user is currently editing', () => {
-    onUserCurrentlyEditing({io, socket}, data)
-
-    expect(io.sockets.emit.mock.calls[0][0]).toBe('articlesRequested')
-    expect(io.sockets.emit.mock.calls[0][1]).toEqual({
-      type: 'EDITED_ARTICLES_RECEIVED',
-      payload: getSessionsForChannel(sessions, data.channel)
+    onUserCurrentlyEditing({io, socket}, data).then(() => {
+      expect(io.sockets.emit.mock.calls[0][0]).toBe('articlesRequested')
+      expect(io.sockets.emit.mock.calls[0][1]).toEqual({
+        type: 'EDITED_ARTICLES_RECEIVED',
+        payload: fetch().resolve()[0]
+      })
     })
   })
 })
@@ -138,37 +145,35 @@ const getEditingEvent = (type) => ({
   }
 })
 
-const fetch = () => {
+function fetch () {
   return new Promise((resolve) => {
-    resolve({
-      123456: {
-        _id: 123456,
-        timestamp: '2018-01-30T23:12:20.973Z',
-        user: {
-          id: '123',
-          name: 'John Doe'
-        },
-        article: '123456',
-        channel: {
-          id: '1',
-          name: 'Artsy Editorial',
-          type: 'editorial'
-        }
+    resolve([{
+      _id: 123456,
+      timestamp: '2018-01-30T23:12:20.973Z',
+      user: {
+        id: '123',
+        name: 'John Doe'
       },
-      246810: {
-        _id: 246810,
-        timestamp: '2018-01-30T23:12:20.973Z',
-        user: {
-          id: '124',
-          name: 'Ellen Poe'
-        },
-        article: '246810',
-        channel: {
-          id: '2',
-          name: 'Other Editors',
-          type: 'editorial'
-        }
+      article: '123456',
+      channel: {
+        id: '1',
+        name: 'Artsy Editorial',
+        type: 'editorial'
       }
-    })
+    },
+    {
+      _id: 246810,
+      timestamp: '2018-01-30T23:12:20.973Z',
+      user: {
+        id: '124',
+        name: 'Ellen Poe'
+      },
+      article: '246810',
+      channel: {
+        id: '2',
+        name: 'Other Editors',
+        type: 'editorial'
+      }
+    }])
   })
 }
