@@ -6,6 +6,8 @@ const {
   onUserStoppedEditing
 } = require('../index')
 
+const Backbone = require('backbone')
+
 describe('WebSocket Server', () => {
   let io
   let socket
@@ -23,13 +25,12 @@ describe('WebSocket Server', () => {
       emit: jest.fn()
     }
 
-    let Backbone = require('backbone')
     originalFetch = Backbone.Collection.prototype.fetch
     Backbone.Collection.prototype.fetch = fetch
   })
 
   afterAll(() => {
-    require('backbone').Collection.prototype.fetch = originalFetch
+    Backbone.Collection.prototype.fetch = originalFetch
   })
 
   it('should return a filtered list by channels', () => {
