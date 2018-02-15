@@ -32,8 +32,9 @@ Transport = require('lokka-transport-http').Transport
 renderArticles = (res, req, result, published) ->
   res.locals.sd.ARTICLES = result.articles
   channel = res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')
-  res.locals.sd.ARTICLES_IN_SESSION = getSessionsForChannel channel
-  res.locals.sd.HAS_PUBLISHED = published
-  res.render 'index',
-    articles: result.articles || []
-    current_channel: channel
+  getSessionsForChannel channel, (sessions) ->
+    res.locals.sd.ARTICLES_IN_SESSION = sessions
+    res.locals.sd.HAS_PUBLISHED = published
+    res.render 'index',
+      articles: result.articles || []
+      current_channel: channel

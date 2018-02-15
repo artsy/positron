@@ -1,7 +1,8 @@
 import Joi from 'api/lib/joi.coffee'
-import db from 'api/lib/db.coffee'
 import { omit } from 'lodash'
 import { ObjectId } from 'mongojs'
+
+const db = require('api/lib/db.coffee')
 
 const schema = Joi.object().keys({
   timestamp: Joi.date(),
@@ -9,8 +10,12 @@ const schema = Joi.object().keys({
     id: Joi.string().objectid(),
     name: Joi.string()
   }),
-  article_id: Joi.string().objectid(),
-  channel_id: Joi.string().objectid()
+  article: Joi.string().objectid(),
+  channel: Joi.object().keys({
+    id: Joi.string().objectid(),
+    name: Joi.string(),
+    type: Joi.string()
+  })
 })
 
 const querySchema = {
@@ -23,9 +28,7 @@ export const where = (input, callback) => {
       return callback(err)
     }
 
-    const cursor = db
-      .sessions
-      .find(input)
+    const cursor = db.sessions.find(input)
 
     cursor.toArray((err, sessions) => {
       callback(err, sessions)
@@ -33,15 +36,18 @@ export const where = (input, callback) => {
   })
 }
 
-export const save = (input, callback) => {
-  Joi.validate(input, schema, {}, (err, input) => {
+export const save = (inputData, callback) => {
+  const id = inputData.id
+  delete inputData.id
+
+  Joi.validate(inputData, schema, {}, (err, input) => {
     if (err) {
       callback(err)
     }
 
     const data = {
-      ...omit(input, 'id'),
-      _id: input.id
+      ...omit(inputData, 'id'),
+      _id: id
     }
 
     db.sessions.save(data, callback)
@@ -49,7 +55,7 @@ export const save = (input, callback) => {
 }
 
 export const destroy = (id, callback) => {
-  db.sessions.remove({ _id: ObjectId(id) }, callback)
+  db.sessions.remove({ _id: id }, callback)
 }
 
 export default { schema, querySchema }

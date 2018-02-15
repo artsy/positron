@@ -23,5 +23,6 @@ export const deleteSession = (req, res, next) => {
     if (err) {
       return next(err)
     }
+    res.send({id: req.params.id})
   })
 }

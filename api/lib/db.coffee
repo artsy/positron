@@ -20,5 +20,7 @@ exit = (msg) -> (err) ->
 db.on 'close', exit('Mongo Connection Closed')
 db.on 'error', exit('Mongo Error')
 
+db.createCollection('sessions', {})
+
 module.exports = db
 module.exports.collections = collections
