@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '../../../../../models/article'
+import Article from '../../../../../models/article.coffee'
 import { EditDisplay } from '../index'
 import { DisplayEmail } from '../components/email'
 import { DisplayMagazine } from '../components/magazine'

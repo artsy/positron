@@ -1,7 +1,9 @@
+import configureStore from 'redux-mock-store'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '../../../../../models/article'
+import { Provider } from 'react-redux'
 import { EditDisplay } from '../index'
 import { DisplayEmail } from '../components/email'
 import { DisplayMagazine } from '../components/magazine'
@@ -13,20 +15,33 @@ import { DropDownList } from 'client/components/drop_down/drop_down_list'
 describe('EditDisplay', () => {
   let props
 
+  const getWrapper = (props) => {
+    const mockStore = configureStore([])
+
+    const store = mockStore({
+      app: {
+        channel: props.channel
+      },
+      edit: {
+        article: props.article
+      }
+    })
+
+    return mount(
+      <Provider store={store}>
+       <EditDisplay {...props} />
+      </Provider>
+    )
+  }
+
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.StandardArticle),
+      article: cloneDeep(Fixtures.StandardArticle),
       channel: { type: 'editorial' },
       onChange: jest.fn()
     }
-    props.article.set('email_metadata', {})
+    props.article.email_metadata = {}
   })
-
-  const getWrapper = (props) => {
-    return mount(
-      <EditDisplay {...props} />
-    )
-  }
 
   it('Renders section-list for non-partners, opens magazine panel by default', () => {
     const component = getWrapper(props)

@@ -1,61 +1,78 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { onChangeArticle } from 'client/actions/editActions'
 import { MagazinePreview } from './preview/magazine_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
-export const DisplayMagazine = (props) => {
-  const { article, onChange } = props
+export class DisplayMagazine extends Component {
+  static propTypes = {
+    article: PropTypes.object,
+    onChangeArticleAction: PropTypes.func
+  }
 
-  return (
-    <Row className='DisplayMagazine'>
+  render () {
+    const { article, onChangeArticleAction } = this.props
 
-      <Col xs={4}>
-        <div className='field-group'>
-          <label>Magazine Image</label>
-          <ImageUpload
-            name='thumbnail_image'
-            src={article.get('thumbnail_image') || ''}
-            onChange={(key, value) => onChange(key, value)}
-          />
-        </div>
+    return (
+      <Row className='DisplayMagazine'>
 
-        <div className='field-group'>
-          <CharacterLimit
-            label='Magazine Headline'
-            limit={97}
-            type='textarea'
-            onChange={(value) => onChange('thumbnail_title', value)}
-            defaultValue={article.get('thumbnail_title')}
-          />
-          <div
-            className='title-fill'
-            onClick={(value) => onChange('thumbnail_title', article.get('title'))}
-          >
-            Use Article Title
+        <Col xs={4}>
+          <div className='field-group'>
+            <label>Magazine Image</label>
+            <ImageUpload
+              name='thumbnail_image'
+              src={article.thumbnail_image || ''}
+              onChange={(key, value) => onChangeArticleAction(key, value)}
+            />
           </div>
-        </div>
 
-        <div className='field-group'>
-          <CharacterLimit
-            label='Magazine Description'
-            limit={160}
-            type='textarea'
-            onChange={(value) => onChange('description', value)}
-            defaultValue={article.get('description')}
-          />
-        </div>
-      </Col>
+          <div className='field-group'>
+            <CharacterLimit
+              label='Magazine Headline'
+              limit={97}
+              type='textarea'
+              onChange={(value) => onChangeArticleAction('thumbnail_title', value)}
+              defaultValue={article.thumbnail_title}
+            />
+            <div
+              className='title-fill'
+              onClick={(value) => onChangeArticleAction('thumbnail_title', article.title)}
+            >
+              Use Article Title
+            </div>
+          </div>
 
-      <Col xs={8}>
-        <MagazinePreview article={article} />
-      </Col>
-    </Row>
-  )
+          <div className='field-group'>
+            <CharacterLimit
+              label='Magazine Description'
+              limit={160}
+              type='textarea'
+              onChange={(value) => onChangeArticleAction('description', value)}
+              defaultValue={article.description}
+            />
+          </div>
+        </Col>
+
+        <Col xs={8}>
+          <MagazinePreview article={article} />
+        </Col>
+      </Row>
+    )
+  }
 }
 
-DisplayMagazine.propTypes = {
-  article: PropTypes.object,
-  onChange: PropTypes.func
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DisplayMagazine)

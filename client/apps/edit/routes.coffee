@@ -1,4 +1,4 @@
-Article = require '../../models/article'
+Article = require '../../models/article.coffee'
 User = require '../../models/user'
 Channel = require '../../models/channel'
 sd = require('sharify').data

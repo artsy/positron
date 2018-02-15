@@ -1,7 +1,7 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
-import Article from '../../../../../../../../models/article'
+import Article from '../../../../../../../../models/article.coffee'
 import LayoutControls from '../LayoutControls'
 import ModalCover from '../ModalCover'
 import VideoControls from '../VideoControls'
