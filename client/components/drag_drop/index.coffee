@@ -65,18 +65,15 @@ module.exports = React.createClass
 
     div { className: 'drag-container' },
       children.map (child, i) =>
-        uniqueKey = if child.props.section then child.props.section.cid + i else i
-
         if child.props.isDraggable is false or !@props.isDraggable
           child
         else
-          i = child.props.index or i
-          type = child.props.section?.get('type') or null
+          type = child.props.section?.type or null
           if child.type.displayName is 'SectionContainer'
-            layout = child.props.section?.get('layout') or 'column_width'
+            layout = child.props.section?.layout or 'column_width'
 
           DragTarget {
-            key: uniqueKey + '-target'
+            key: i + '-' + child.type.displayName + '-target'
             i: i
             setDragTarget: @setDragTarget
             activeSource: @state.dragSource is i
@@ -93,7 +90,7 @@ module.exports = React.createClass
             React.createElement(
               DragSource, {
                 index: i
-                key: uniqueKey + '-source'
+                key: i + child.type.displayName + '-source'
                 setDragSource: @setDragSource
                 activeSource: @state.dragSource is i
                 activeTarget: @state.dragTarget is i

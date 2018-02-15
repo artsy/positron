@@ -1,3 +1,4 @@
+import { clone, extend } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import configureStore from 'redux-mock-store'
@@ -11,9 +12,9 @@ import { ImagesControls } from '../components/controls'
 const { StandardArticle } = Fixtures
 require('typeahead.js')
 
-xdescribe('ImagesControls', () => {
+describe('ImagesControls', () => {
   let props
-  const artwork = StandardArticle.sections[4].images[2]
+  const artwork = clone(StandardArticle.sections[4].images[2])
 
   const getWrapper = (props) => {
     const mockStore = configureStore([])
@@ -22,12 +23,15 @@ xdescribe('ImagesControls', () => {
         channel: { type: 'editorial' }
       },
       edit: {
-        article: StandardArticle
+        article: props.article,
+        section: props.editSection
       }
     })
     return mount(
       <Provider store={store}>
-        <ImagesControls {...props} />
+        <section>
+          <ImagesControls {...props} />
+        </section>
       </Provider>
     )
   }
@@ -45,10 +49,13 @@ xdescribe('ImagesControls', () => {
 
   beforeEach(() => {
     props = {
-      articleLayout: 'standard',
+      article: clone(StandardArticle),
       logErrorAction: jest.fn(),
-      section: new Backbone.Model(StandardArticle.sections[4]),
-      setProgress: jest.fn()
+      editSection: clone(StandardArticle.sections[4]),
+      sectionIndex: 2,
+      setProgress: jest.fn(),
+      onChangeSectionAction: jest.fn(),
+      removeSectionAction: jest.fn()
     }
 
     SectionControls.prototype.isScrollingOver = jest.fn().mockReturnValue(true)
@@ -78,13 +85,12 @@ xdescribe('ImagesControls', () => {
     expect(component.html()).not.toMatch('placeholder="Add artwork url"')
   })
 
-  it('#componentWillUnmount destroys section on unmount if no images', () => {
-    props.section.set('images', [])
-    const spy = jest.spyOn(props.section, 'destroy')
+  it('#componentWillUnmount resmoves the section on unmount if no images', () => {
+    props.editSection.images = []
     const component = getWrapper(props).find(ImagesControls)
 
     component.instance().componentWillUnmount()
-    expect(spy).toHaveBeenCalled()
+    expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.sectionIndex)
   })
 
   describe('Artwork inputs', () => {
@@ -93,19 +99,24 @@ xdescribe('ImagesControls', () => {
       const component = getWrapper(props).find(ImagesControls)
 
       component.instance().onUpload('http://image.jpg', 400, 800)
-      expect(props.section.get('images')[3].type).toMatch('image')
-      expect(props.section.get('images')[3].url).toMatch('http://image.jpg')
-      expect(props.section.get('images')[3].width).toBe(400)
-      expect(props.section.get('images')[3].height).toBe(800)
+      const newImages = props.onChangeSectionAction.mock.calls[0][1]
+      const newImage = props.onChangeSectionAction.mock.calls[0][1][3]
+
+      expect(newImages.length).toBe(props.editSection.images.length + 1)
+      expect(newImage.type).toMatch('image')
+      expect(newImage.url).toMatch('http://image.jpg')
+      expect(newImage.width).toBe(400)
+      expect(newImage.height).toBe(800)
     })
 
     it('Autocomplete onSelect resets the section images', () => {
-      props.section.set('images', [])
+      props.editSection.images = []
       const component = getWrapper(props)
       const images = StandardArticle.sections[4].images
 
       component.find(Autocomplete).first().props().onSelect(images)
-      expect(props.section.get('images')).toBe(images)
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(images)
     })
 
     it('#filterAutocomplete returns formatted artworks', () => {
@@ -155,7 +166,13 @@ xdescribe('ImagesControls', () => {
       component.instance().onNewImage(
         {type: 'artwork', image: 'artwork.jpg'}
       )
-      expect(props.section.get('images')[3].image).toMatch('artwork.jpg')
+      const newImages = props.onChangeSectionAction.mock.calls[0][1]
+      const newImage = props.onChangeSectionAction.mock.calls[0][1][3]
+
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(newImages.length).toBe(props.editSection.images.length + 1)
+      expect(newImage.type).toMatch('artwork')
+      expect(newImage.image).toMatch('artwork.jpg')
     })
 
     it('#inputsAreDisabled returns false if layout is not fillwidth', () => {
@@ -166,22 +183,22 @@ xdescribe('ImagesControls', () => {
     })
 
     it('#inputsAreDisabled returns true if fillwidth section has images', () => {
-      props.section.set({layout: 'fillwidth'})
+      props.editSection.layout = 'fillwidth'
       const component = getWrapper(props).find(ImagesControls)
 
       const inputsAreDisabled = component.instance().inputsAreDisabled(props.section)
       expect(inputsAreDisabled).toBe(true)
     })
 
-    it('#fillwidthAlert calls #logErrorAction', () => {
+    it('#fillWidthAlert calls #logErrorAction', () => {
       const component = getWrapper(props).find(ImagesControls)
 
-      component.instance().fillwidthAlert()
+      component.instance().fillWidthAlert()
       expect(component.props().logErrorAction.mock.calls.length).toBe(1)
     })
 
-    it('Calls #logErrorAction via #fillwidthAlert if inputsAreDisabled and trying to add an image', () => {
-      props.section.set({layout: 'fillwidth'})
+    it('Calls #logErrorAction via #fillWidthAlert if inputsAreDisabled and trying to add an image', () => {
+      props.editSection.layout = 'fillwidth'
       const component = getWrapper(props)
 
       component.find('.edit-controls__artwork-inputs').at(0).simulate('click')
@@ -191,7 +208,7 @@ xdescribe('ImagesControls', () => {
 
   describe('Image Set inputs', () => {
     beforeEach(() => {
-      props.section.set({type: 'image_set', layout: 'mini'})
+      extend(props.editSection, {type: 'image_set', layout: 'mini'})
     })
 
     it('Renders the active image_set layout', () => {
@@ -206,15 +223,18 @@ xdescribe('ImagesControls', () => {
       const component = getWrapper(props)
 
       component.find('.radio-input').at(1).simulate('click')
-      expect(props.section.get('layout')).toMatch('full')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('full')
     })
 
     it('changes image_set title on input', () => {
       const component = getWrapper(props)
       const input = component.find('.edit-controls__image-set-inputs').find('input')
+      const newTitle = 'A title for the Image Set'
+      input.simulate('change', { target: { value: newTitle } })
 
-      input.simulate('change', { target: { value: 'A title for the Image Set' } })
-      expect(props.section.get('title')).toMatch('A title for the Image Set')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('title')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(newTitle)
     })
   })
 })
