@@ -14,9 +14,15 @@
     "deploy": "sh scripts/deploy.sh",
     "mocha": "sh scripts/mocha.sh"
   },
+  "resolutions": {
+    "relay-compiler": "https://github.com/alloy/relay/releases/download/v1.5.0-plugin.2/relay-compiler-1.5.0-plugin.2.tgz",
+    "relay-runtime": "https://github.com/alloy/relay/releases/download/v1.5.0-plugin.2/relay-runtime-1.5.0-plugin.2.tgz",
+    "babel-plugin-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-plugin.2/babel-plugin-relay-1.5.0-plugin.2.tgz",
+    "react-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-plugin.2/react-relay-1.5.0-plugin.2.tgz"
+  },
   "dependencies": {
     "@artsy/express-reloadable": "^1.1.0",
-    "@artsy/reaction-force": "^0.18.17",
+    "@artsy/reaction-force": "^0.22.0",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
