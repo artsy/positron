@@ -1,18 +1,17 @@
-const {
+import {
   getSessionsForChannel,
   onArticlesRequested,
   onUserCurrentlyEditing,
   onUserStartedEditing,
   onUserStoppedEditing
-} = require('../index')
+} from '../index'
 
-const Backbone = require('backbone')
+import Sessions from '../../../collections/sessions'
 
 describe('WebSocket Server', () => {
   let io
   let socket
   let data
-  let originalFetch
 
   beforeEach(() => {
     io = {
@@ -25,12 +24,7 @@ describe('WebSocket Server', () => {
       emit: jest.fn()
     }
 
-    originalFetch = Backbone.Collection.prototype.fetch
-    Backbone.Collection.prototype.fetch = fetch
-  })
-
-  afterAll(() => {
-    Backbone.Collection.prototype.fetch = originalFetch
+    Sessions.prototype.fetch = fetch
   })
 
   it('should return a filtered list by channels', () => {
