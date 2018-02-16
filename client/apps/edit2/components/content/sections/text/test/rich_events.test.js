@@ -1,7 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
-import Sections from '/client/collections/sections.coffee'
 import { SectionText } from '../index.jsx'
 
 describe('SectionText: Rich Events', () => {
@@ -20,8 +19,9 @@ describe('SectionText: Rich Events', () => {
       index: 2,
       onChange: jest.fn(),
       onSetEditing: jest.fn(),
+      onNewSection: jest.fn(),
       section: {body: '<p>A short piece of text</p>'},
-      sections: new Sections([])
+      sections: []
     }
     const getClientRects = jest.fn().mockReturnValue([{
       bottom: 170,
