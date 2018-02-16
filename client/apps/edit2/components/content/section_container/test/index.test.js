@@ -126,7 +126,7 @@ describe('SectionContainer', () => {
       expect(component.find(SectionText).length).toBe(1)
     })
 
-    it('Can render a video section', () => {
+    xit('Can render a video section', () => {
       props.section = new Section({type: 'video'})
       const component = mount(
         <SectionContainer {...props} />
@@ -148,7 +148,7 @@ describe('SectionContainer', () => {
       expect(component.find(SectionImages).length).toBe(1)
     })
 
-    it('Can render a video section', () => {
+    xit('Can render a video section', () => {
       props.section.set({type: 'video'})
       const component = mount(
         <SectionContainer {...props} />
