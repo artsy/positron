@@ -1,6 +1,5 @@
 import Joi from 'api/lib/joi.coffee'
 import { omit } from 'lodash'
-import { ObjectId } from 'mongojs'
 
 const db = require('api/lib/db.coffee')
 
@@ -55,7 +54,9 @@ export const save = (inputData, callback) => {
 }
 
 export const destroy = (id, callback) => {
-  db.sessions.remove({ _id: id }, callback)
+  db.sessions.remove({ _id: id }, (err, data) => {
+    callback(err, { _id: id })
+  })
 }
 
 export default { schema, querySchema }

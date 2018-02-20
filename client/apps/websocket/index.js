@@ -48,7 +48,6 @@ export const onUserStartedEditing = ({io, socket}, data) => {
   const { channel, timestamp, user, article } = data
   const { id, name } = user
 
-  console.log(getSessionsForChannel)
   return getSessionsForChannel(channel).then(sessions => {
     const currentSession = sessions[article]
     if (currentSession && currentSession.user.id !== id) {
