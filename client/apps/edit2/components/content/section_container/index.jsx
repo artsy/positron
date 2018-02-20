@@ -5,64 +5,69 @@ import { clone, extend, findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction-force/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction-force/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
+import { newSection, onChangeSection, removeSection } from 'client/actions/editActions'
 
+import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
-import { SectionText } from '../sections/text/index.jsx'
+import { SectionText } from '../sections/text'
+import SectionVideo from '../sections/video'
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
-import { SectionImages } from '../sections/images'
-import { SectionVideo } from '../sections/video'
 
 export class SectionContainer extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
-    index: PropTypes.number.isRequired,
+    index: PropTypes.number,
     isHero: PropTypes.bool,
+    newSectionAction: PropTypes.func,
     onRemoveHero: PropTypes.func,
-    onSetEditing: PropTypes.func.isRequired,
-    section: PropTypes.object.isRequired,
-    sections: PropTypes.object
+    onChangeSectionAction: PropTypes.func,
+    onSetEditing: PropTypes.func,
+    removeSectionAction: PropTypes.func,
+    section: PropTypes.object,
+    sections: PropTypes.array
   }
 
   onSetEditing = () => {
     const {
       editing,
       index,
+      isHero,
       onSetEditing
     } = this.props
 
-    const setEditing = editing ? null : index
+    let setEditing
+
+    if (isHero) {
+      setEditing = !editing
+    } else {
+      setEditing = editing ? null : index
+    }
     onSetEditing(setEditing)
   }
 
-  onRemoveSection = (e) => {
+  onRemoveSection = () => {
     const {
-      section,
+      index,
       isHero,
-      onRemoveHero
+      onRemoveHero,
+      removeSectionAction
     } = this.props
-
-    e.stopPropagation()
-    section.destroy()
 
     if (isHero) {
       onRemoveHero()
+    } else {
+      removeSectionAction(index)
     }
-  }
-
-  onChangeSection = (key, value) => {
-    const { section } = this.props
-    // TODO: Use redux action
-    section.set(key, value)
   }
 
   getContentStartEnd = () => {
     // TODO: move into text section
     const { sections } = this.props
     const types = sections && sections.map((section, i) => {
-      return { type: section.get('type'), index: i }
+      return { type: section.type, index: i }
     })
     const start = findIndex(types, {type: 'text'})
     const end = findLastIndex(types, {type: 'text'})
@@ -71,9 +76,9 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { channel, index, section } = this.props
+    const { channel, index, newSectionAction, onChangeSectionAction, removeSectionAction, section } = this.props
 
-    switch (section.get('type')) {
+    switch (section.type) {
       case 'embed': {
         return <SectionEmbed {...this.props} />
       }
@@ -87,11 +92,12 @@ export class SectionContainer extends Component {
       case 'text': {
         const { end, start } = this.getContentStartEnd()
         const textProps = extend(clone(this.props), {
-          section: section.attributes,
           hasFeatures: channel.type !== 'partner',
           isContentStart: start === index,
           isContentEnd: end === index,
-          onChange: this.onChangeSection
+          onNewSection: newSectionAction,
+          onRemoveSection: removeSectionAction,
+          onChange: onChangeSectionAction
         })
         return (
           <SectionText {...textProps} />
@@ -99,15 +105,11 @@ export class SectionContainer extends Component {
       }
 
       case 'video': {
-        return (
-          <SectionVideo {...this.props} />
-        )
+        return <SectionVideo {...this.props} />
       }
 
       case 'slideshow': {
-        return (
-          <SectionSlideshow {...this.props} />
-        )
+        return <SectionSlideshow {...this.props} />
       }
     }
   }
@@ -118,13 +120,14 @@ export class SectionContainer extends Component {
       isHero,
       section
     } = this.props
+    const { layout, type } = section
 
     return (
       <ErrorBoundary>
         <div className='SectionContainer'
           data-editing={editing}
-          data-layout={section.get('layout') || 'column_width'}
-          data-type={section.get('type')}
+          data-layout={layout || 'column_width'}
+          data-type={type}
         >
           <div
             className='SectionContainer__hover-controls'
@@ -158,6 +161,13 @@ const mapStateToProps = (state) => ({
   channel: state.app.channel
 })
 
+const mapDispatchToProps = {
+  newSectionAction: newSection,
+  onChangeSectionAction: onChangeSection,
+  removeSectionAction: removeSection
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SectionContainer)
