@@ -6,7 +6,7 @@ import {
   onUserStoppedEditing
 } from '../index'
 
-import Sessions from '../../../collections/sessions'
+import Sessions from 'client/collections/sessions'
 
 describe('WebSocket Server', () => {
   let io
