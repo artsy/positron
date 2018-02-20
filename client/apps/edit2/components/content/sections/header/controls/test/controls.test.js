@@ -107,7 +107,7 @@ describe('Feature Header Controls', () => {
       expect(component.find(VideoControls).getElement().props.isOpen).toBe(false)
     })
 
-    xit('opens the embed menu on click', () => {
+    it('opens the embed menu on click', () => {
       const component = getWrapper(props)
       component.find('.edit-header--video-open').at(0).simulate('click')
 
