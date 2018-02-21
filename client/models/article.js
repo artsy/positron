@@ -1,5 +1,7 @@
 import _s from 'underscore.string'
-import { pluck } from 'underscore'
+import cheerio from 'cheerio'
+import url from 'url'
+import { compact, flatten, last, pluck } from 'underscore'
 
 export const getArticleByline = (article) => {
   const { contributing_authors, author } = article
@@ -9,4 +11,66 @@ export const getArticleByline = (article) => {
   } else if (author.name) {
     return author.name
   }
+}
+
+export const getSlugsFromHTML = (html, model) => {
+  const $ = cheerio.load(html)
+  const slugs = compact($('a')).map((a) => {
+    let href = $(a).attr('href')
+    if (href) {
+      if (href.match('google')) {
+        href = decodeURIComponent(href.replace('https://www.google.com/url?q=', ''))
+        href = href.split('&')[0]
+      }
+      if (href.match(`artsy.net/${model}`)) {
+        href = last(url.parse(href).pathname.split('/'))
+      }
+      return href
+    } else {
+      return null
+    }
+  })
+  return slugs
+}
+
+export const getMentionedArtistSlugs = (article) => {
+  const slugs = article.sections.map((section) => {
+    switch (section.type) {
+      case 'text': {
+        return getSlugsFromHTML(section.body, 'artist')
+      }
+      case 'image_set':
+      case 'image_collection': {
+        return section.images.map((image) => {
+          if (image.type === 'artwork') {
+            return image.artists.map((artist) => artist.id)
+          } else {
+            return getSlugsFromHTML(image.caption, 'artist')
+          }
+        })
+      }
+    }
+  })
+  return compact(flatten(slugs))
+}
+
+export const getMentionedArtworkSlugs = (article) => {
+  const slugs = article.sections.map((section) => {
+    switch (section.type) {
+      case 'text': {
+        return getSlugsFromHTML(section.body, 'artwork')
+      }
+      case 'image_set':
+      case 'image_collection': {
+        return section.images.map((image) => {
+          if (image.type === 'artwork') {
+            return image.slug
+          } else {
+            return getSlugsFromHTML(image.caption, 'artwork')
+          }
+        })
+      }
+    }
+  })
+  return compact(flatten(slugs))
 }
