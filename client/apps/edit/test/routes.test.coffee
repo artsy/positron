@@ -14,16 +14,22 @@ describe 'routes', ->
     @res = { render: sinon.stub(), locals: { sd: {} }, redirect: sinon.stub() }
     @routes = rewire '../routes.coffee'
     @routes.__set__ 'sd', {NO_INDEX_CHANNELS: '123|456'}
+    @routes.__set__ 'getSessionsForChannel', (channel, callback) ->
+      new Promise((resolve) ->
+        callback(fixtures().sessions) if callback
+        resolve(fixtures().sessions)
+      )
 
   afterEach ->
     Backbone.sync.restore()
 
   describe '#create', ->
 
-    it 'renders an empty article', ->
-      @routes.create @req, @res
-      @res.render.args[0][0].should.equal 'layout/index'
-      @res.render.args[0][1].article.isNew().should.be.ok
+    it 'renders an empty article', () ->
+      res = @res
+      @routes.create(@req, @res).then ->
+        res.render.args[0][0].should.equal 'layout/index'
+        res.render.args[0][1].article.isNew().should.be.ok
 
     it 'sets defaults for channel types, non partner', ->
       @routes.create @req, @res
