@@ -1,11 +1,12 @@
 import {
-  sessions,
   getSessionsForChannel,
   onArticlesRequested,
   onUserCurrentlyEditing,
   onUserStartedEditing,
   onUserStoppedEditing
 } from '../index'
+
+import Sessions from 'client/collections/sessions'
 
 describe('WebSocket Server', () => {
   let io
@@ -23,85 +24,66 @@ describe('WebSocket Server', () => {
       emit: jest.fn()
     }
 
-    sessions['123456'] = {
-      timestamp: '2018-01-30T23:12:20.973Z',
-      user: {
-        id: '123',
-        name: 'John Doe'
-      },
-      article: '123456',
-      channel: {
-        id: '1',
-        name: 'Artsy Editorial',
-        type: 'editorial'
-      }
-    }
-
-    sessions['246810'] = {
-      timestamp: '2018-01-30T23:12:20.973Z',
-      user: {
-        id: '124',
-        name: 'Ellen Poe'
-      },
-      article: '246810',
-      channel: {
-        id: '2',
-        name: 'Other Editors',
-        type: 'editorial'
-      }
-    }
+    Sessions.prototype.fetch = fetch
   })
 
   it('should return a filtered list by channels', () => {
-    expect(getSessionsForChannel({id: '2'})).toEqual({
-      '246810': {
-        timestamp: '2018-01-30T23:12:20.973Z',
-        user: {
-          id: '124',
-          name: 'Ellen Poe'
-        },
-        article: '246810',
-        channel: {
-          id: '2',
-          name: 'Other Editors',
-          type: 'editorial'
+    return getSessionsForChannel({id: '2'}).then(sessions => {
+      return expect(sessions).toEqual({
+        '246810': {
+          _id: 246810,
+          id: 246810,
+          timestamp: '2018-01-30T23:12:20.973Z',
+          user: {
+            id: '124',
+            name: 'Ellen Poe'
+          },
+          article: '246810',
+          channel: {
+            id: '2',
+            name: 'Other Editors',
+            type: 'editorial'
+          }
         }
-      }
+      })
     })
   })
 
   it('sends articles in session when requested by client', () => {
     const eventType = 'EDITED_ARTICLES_RECEIVED'
     data = getEditingEvent(eventType)
-    onArticlesRequested({io, socket}, {channel: data.channel})
-
-    expect(socket.emit.mock.calls.length).toBe(1)
-    expect(socket.emit.mock.calls[0][0]).toBe('articlesRequested')
-    expect(socket.emit.mock.calls[0][1]).toEqual({
-      type: eventType,
-      payload: getSessionsForChannel(sessions, data.channel)
+    return onArticlesRequested({io, socket}, {channel: data.channel}).then(sessions => {
+      expect(socket.emit.mock.calls.length).toBe(1)
+      expect(socket.emit.mock.calls[0][0]).toBe('articlesRequested')
+      return expect(socket.emit.mock.calls[0][1]).toEqual({
+        type: eventType,
+        payload: sessions
+      })
     })
   })
 
   it('does not broadcast an update for #userCurrentlyEditing if the session is invalid', () => {
-    onUserCurrentlyEditing({io, socket}, {
+    return onUserCurrentlyEditing({io, socket}, {
       timestamp: new Date().toISOString(),
-      article: '-1'
+      article: '-1',
+      channel: {
+        id: '1'
+      }
+    }).then(() => {
+      return expect(io.sockets.emit.mock.calls.length).toBe(0)
     })
-
-    expect(io.sockets.emit.mock.calls.length).toBe(0)
   })
 
   it('broadcasts a message to clients when a user starts editing', () => {
     const eventType = 'START_EDITING_ARTICLE'
     data = getEditingEvent(eventType)
-    onUserStartedEditing({io, socket}, data)
-
-    expect(io.sockets.emit.mock.calls.length).toBe(1)
-    expect(io.sockets.emit.mock.calls[0][0]).toBe('userStartedEditing')
-    expect(io.sockets.emit.mock.calls[0][1]).toEqual({
-      type: eventType,
-      payload: sessions[data.article]
+    return onUserStartedEditing({io, socket}, data).then((session) => {
+      expect(io.sockets.emit.mock.calls.length).toBe(1)
+      expect(io.sockets.emit.mock.calls[0][0]).toBe('userStartedEditing')
+      return expect(io.sockets.emit.mock.calls[0][1]).toEqual({
+        type: eventType,
+        payload: session
+      })
     })
   })
 
@@ -115,26 +97,29 @@ describe('WebSocket Server', () => {
     }
     data = getEditingEvent(eventType)
 
-    expect(sessions[data.article]).not.toBeUndefined()
-    onUserStoppedEditing({io, socket}, data)
-    expect(io.sockets.emit.mock.calls.length).toBe(1)
-    expect(io.sockets.emit.mock.calls[0][0]).toBe('userStoppedEditing')
-    expect(io.sockets.emit.mock.calls[0][1]).toEqual(event)
-    expect(sessions[data.article]).toBeUndefined()
+    return getSessionsForChannel(data.channel, sessions => {
+      expect(sessions[data.article]).not.toBeUndefined()
+      return onUserStoppedEditing({io, socket}, data).then(() => {
+        expect(io.sockets.emit.mock.calls.length).toBe(1)
+        expect(io.sockets.emit.mock.calls[0][0]).toBe('userStoppedEditing')
+        expect(io.sockets.emit.mock.calls[0][1]).toEqual(event)
+        return expect(sessions[data.article]).toBeUndefined()
+      })
+    })
   })
 
   it('broadcasts a message when a user is currently editing', () => {
-    onUserCurrentlyEditing({io, socket}, data)
-
-    expect(io.sockets.emit.mock.calls[0][0]).toBe('articlesRequested')
-    expect(io.sockets.emit.mock.calls[0][1]).toEqual({
-      type: 'EDITED_ARTICLES_RECEIVED',
-      payload: getSessionsForChannel(sessions, data.channel)
+    onUserCurrentlyEditing({io, socket}, data).then(() => {
+      expect(io.sockets.emit.mock.calls[0][0]).toBe('articlesRequested')
+      expect(io.sockets.emit.mock.calls[0][1]).toEqual({
+        type: 'EDITED_ARTICLES_RECEIVED',
+        payload: fetch().resolve()[0]
+      })
     })
   })
 })
 
-let getEditingEvent = (type) => ({
+const getEditingEvent = (type) => ({
   timestamp: '2018-01-30T23:12:20.973Z',
   user: {
     name: 'John Doe',
@@ -154,3 +139,36 @@ let getEditingEvent = (type) => ({
     type: 'editorial'
   }
 })
+
+function fetch () {
+  return new Promise((resolve) => {
+    resolve([{
+      _id: 123456,
+      timestamp: '2018-01-30T23:12:20.973Z',
+      user: {
+        id: '123',
+        name: 'John Doe'
+      },
+      article: '123456',
+      channel: {
+        id: '1',
+        name: 'Artsy Editorial',
+        type: 'editorial'
+      }
+    },
+    {
+      _id: 246810,
+      timestamp: '2018-01-30T23:12:20.973Z',
+      user: {
+        id: '124',
+        name: 'Ellen Poe'
+      },
+      article: '246810',
+      channel: {
+        id: '2',
+        name: 'Other Editors',
+        type: 'editorial'
+      }
+    }])
+  })
+}
