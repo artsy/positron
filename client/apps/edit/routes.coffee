@@ -38,7 +38,6 @@ render = (req, res, article) ->
   getSessionsForChannel channel, (sessions) ->
     res.locals.sd.CURRENT_SESSION = sessions[req.params.id]
     view = if res.locals.sd.IS_MOBILE then 'mobile/index' else 'layout/index'
-    console.log 'about to call res.render'
     res.render view, article: article
 
 setChannelIndexable = (channel, article) ->

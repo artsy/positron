@@ -26,10 +26,9 @@ describe 'routes', ->
   describe '#create', ->
 
     it 'renders an empty article', () ->
-      res = @res
-      @routes.create(@req, @res).then ->
-        res.render.args[0][0].should.equal 'layout/index'
-        res.render.args[0][1].article.isNew().should.be.ok
+      @routes.create(@req, @res)
+      @res.render.args[0][0].should.equal 'layout/index'
+      @res.render.args[0][1].article.isNew().should.be.ok
 
     it 'sets defaults for channel types, non partner', ->
       @routes.create @req, @res
