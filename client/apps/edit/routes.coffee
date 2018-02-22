@@ -36,7 +36,7 @@ render = (req, res, article) ->
   res.locals.sd.ARTICLE = article.toJSON()
   channel = new Channel req.user.get('current_channel')
   getSessionsForChannel channel, (sessions) ->
-    res.locals.sd.CURRENT_SESSION = sessions[req.params.id]
+    res.locals.sd.CURRENT_SESSION = sessions[article.id]
     view = if res.locals.sd.IS_MOBILE then 'mobile/index' else 'layout/index'
     res.render view, article: article
 

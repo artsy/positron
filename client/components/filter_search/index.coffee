@@ -3,7 +3,7 @@ React = require 'react'
 { label, input, div, button, a, h1, h2 } = React.DOM
 moment = require 'moment'
 sd = require('sharify').data
-ArticleList = React.createFactory require('../article_list/').ArticleList
+ArticleList = React.createFactory require('../article_list/').default
 TagList = React.createFactory require '../tag_list/index.coffee'
 
 module.exports = React.createClass
