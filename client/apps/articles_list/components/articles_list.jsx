@@ -153,7 +153,7 @@ export class ArticlesList extends Component {
 
     if (this.props.articles && this.props.articles.length) {
       return (
-        <ArticlesContainer>
+        <ArticlesContainer className='articles-list'>
           <Title>Latest Articles</Title>
           <FilterSearch
             url={apiURL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
