@@ -10,6 +10,7 @@ import { EditContent } from '../content/index.jsx'
 import { EditDisplay } from '../display/index.jsx'
 import { EditHeader } from '../header/index.jsx'
 import { EditError } from '../error/index.jsx'
+import { omit } from 'lodash'
 
 require('typeahead.js')
 
@@ -129,6 +130,14 @@ describe('EditContainer', () => {
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 600 * 1000)
     expect(instance.state.inactivityPeriodEntered).toBeTruthy()
     expect(assignFn).toBeCalledWith('/')
+  })
+
+  it('hides lockout modal if article #isNew', () => {
+    let newArticle = omit(Fixtures.StandardArticle, 'id')
+    props.article = new Article(newArticle)
+
+    const wrapper = getShallowWrapper(props)
+    expect(wrapper.instance().state.shouldShowModal).toBeFalsy()
   })
 
   describe('#maybeSaveArticle', () => {

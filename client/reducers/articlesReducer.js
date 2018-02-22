@@ -1,6 +1,6 @@
 import u from 'updeep'
 import { data as sd } from 'sharify'
-import { cloneDeep } from 'lodash'
+import { omit } from 'lodash'
 import { actions } from 'client/actions/articlesActions'
 import { actions as editActions } from 'client/actions/editActions'
 
@@ -17,21 +17,20 @@ export function articlesReducer (state = initialState, action) {
       }, state)
     }
     case editActions.START_EDITING_ARTICLE: {
-      const articlesInSession = cloneDeep(state.articlesInSession)
       const session = action.payload
-      articlesInSession[session.article] = session
 
       return u({
-        articlesInSession
+        articlesInSession: {
+          [session.article]: session
+        }
       }, state)
     }
     case editActions.STOP_EDITING_ARTICLE: {
-      const articlesInSession = cloneDeep(state.articlesInSession)
-      delete articlesInSession[action.payload.article]
-
-      return u({
-        articlesInSession
-      }, state)
+      const sessions = omit(state.articlesInSession, action.payload.article)
+      return {
+        ...state,
+        articlesInSession: sessions
+      }
     }
     default:
       return state

@@ -26,7 +26,7 @@ describe 'QueueView', ->
       }
       mod.__set__ 'FilterSearch', @FilterSearch = sinon.stub()
       mod.__set__ 'QueuedArticles', @QueuedArticles = sinon.stub()
-      mod.__set__ 'ArticleList', @ArticleList = sinon.stub()
+
       @request =
         post: sinon.stub().returns
           set: sinon.stub().returns
@@ -36,13 +36,13 @@ describe 'QueueView', ->
                 body: data: articles: [fixtures().articles, fixtures().articles]
               )
       mod.__set__ 'request', @request
-      props = {
+      @props = {
           scheduledArticles: [_.extend fixtures().articles, id: '456']
           feed: 'scheduled'
           channel: {name: 'Artsy Editorial'}
         }
-      @rendered = ReactDOMServer.renderToString React.createElement(QueueView, props)
-      @component = ReactDOM.render React.createElement(QueueView, props), (@$el = $ "<div></div>")[0], =>
+      @rendered = ReactDOMServer.renderToString React.createElement(QueueView, @props)
+      @component = ReactDOM.render React.createElement(QueueView, @props), (@$el = $ "<div></div>")[0], =>
         setTimeout =>
           sinon.stub @component, 'saveSelected'
           sinon.stub @component, 'setState'
@@ -56,10 +56,13 @@ describe 'QueueView', ->
     $(@rendered).html().should.containEql 'Daily Email'
     $(@rendered).html().should.containEql 'Weekly Email'
     $(@rendered).html().should.containEql 'Artsy Editorial'
+  
+  it 'renders the list of articles', ->
+    $('.paginated-list-item h1', @rendered).html().should.containEql 'Top Ten Booths at miart 2014'
 
   it 'scheduledArticles gets passed along to components', ->
     @component.state.scheduledArticles.length.should.equal 1
-    @ArticleList.args[0][0].articles.length.should.equal 1
+    $('.article-list__article', @rendered).attr('href').should.equal '/articles/456/edit'
 
   it 'updates feed for daily panel', ->
     @component.fetchFeed 'daily_email'

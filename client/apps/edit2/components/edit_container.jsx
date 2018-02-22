@@ -13,7 +13,7 @@ import {
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { EditAdmin } from './admin/index.jsx'
 import { EditContent } from './content/index.jsx'
-import { EditDisplay } from './display/index.jsx'
+import EditDisplay from './display/index.jsx'
 import EditHeader from './header/index.jsx'
 import EditError from './error/index.jsx'
 

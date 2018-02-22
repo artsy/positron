@@ -1,12 +1,11 @@
 Backbone = require 'backbone'
 _ = require 'underscore'
 React = require 'react'
-ReactDOM = require 'react-dom'
 { div, nav, a, h1 } = React.DOM
 Article = require '../../../models/article.coffee'
 FilterSearch = React.createFactory require '../../../components/filter_search/index.coffee'
 QueuedArticles = React.createFactory require './queued.coffee'
-ArticleList = React.createFactory require '../../../components/article_list'
+ArticleList = React.createFactory require('../../../components/article_list').ArticleList
 query = require '../query.coffee'
 sd = require('sharify').data
 request = require 'superagent'
@@ -140,10 +139,3 @@ module.exports.QueueView = QueueView = React.createClass
             searchResults: @searchResults
             contentType: 'article'
           }
-
-module.exports.init = ->
-  props =
-    scheduledArticles: sd.SCHEDULED_ARTICLES
-    feed: 'scheduled'
-    channel: sd.CURRENT_CHANNEL
-  ReactDOM.render React.createElement(QueueView, props), document.getElementById('queue-root')

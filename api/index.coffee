@@ -39,6 +39,7 @@ app.use require './apps/verticals'
 app.use require './apps/authors'
 app.use require './apps/graphql/index.js'
 app.use require './apps/search/index.js'
+app.use require './apps/sessions/index.js'
 
 if SENTRY_PRIVATE_DSN
   app.use RavenServer.errorHandler()

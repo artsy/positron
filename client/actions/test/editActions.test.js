@@ -1,5 +1,5 @@
 import * as editActions from '../editActions'
-import Article from '../../models/article'
+import Article from '../../models/article.coffee'
 import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
 const { FeatureArticle } = Fixtures
 
