@@ -1,7 +1,10 @@
 import Joi from 'api/lib/joi.coffee'
 import { omit } from 'lodash'
+import moment from 'moment'
 
 const db = require('api/lib/db.coffee')
+
+const INVALID_THRESHOLD = 10 // in minutes
 
 const schema = Joi.object().keys({
   timestamp: Joi.date(),
@@ -27,17 +30,31 @@ export const where = (input, callback) => {
       return callback(err)
     }
 
-    const cursor = db.sessions.find(input)
+    const timeLimit = moment().subtract(INVALID_THRESHOLD, 'minutes').format()
+
+    const cursor = db.sessions.find({
+      timestamp: {
+        $gte: timeLimit
+      }
+    })
 
     cursor.toArray((err, sessions) => {
       callback(err, sessions)
+    })
+
+    // clear out any session that hasn't been updated
+    // in more than a given max 
+    db.sessions.remove({
+      timestamp: {
+        $lte: timeLimit
+      }
     })
   })
 }
 
 export const save = (inputData, callback) => {
   const id = inputData.id
-  delete inputData.id
+  inputData = omit(inputData, 'id', '_id')
 
   Joi.validate(inputData, schema, {}, (err, input) => {
     if (err) {

@@ -21,7 +21,7 @@ describe('sessions endpoints', () => {
       request
         .get('http://localhost:5000/sessions')
         .end((_, res) => {
-          res.body.length.should.equal(2)
+          res.body.length.should.equal(3)
           res.body[1]._id.should.equal(246810)
           res.body[0]._id.should.equal(123456)
           done()
