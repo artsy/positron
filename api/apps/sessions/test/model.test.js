@@ -10,7 +10,7 @@ describe('Sessions Model', () => {
 
   it('#where', (done) => {
     where({}, (_, data) => {
-      data.length.should.equal(2)
+      data.length.should.equal(3)
       data[0].user.id.should.equal('123')
       done()
     })
@@ -18,6 +18,7 @@ describe('Sessions Model', () => {
 
   it('#save', (done) => {
     save({
+      _id: '59fa424574132b001d917253',
       id: '59fa424574132b001d917253',
       timestamp: '2018-02-20T21:13:09.358Z',
       user: { id: '586ff4069c18db5923002ca6', name: 'Luc Succes' },
@@ -35,7 +36,7 @@ describe('Sessions Model', () => {
 
   it('#destroy', (done) => {
     where({}, (_, data) => {
-      data.length.should.equal(2)
+      data.length.should.equal(3)
       destroy('123456', (_, session) => {
         session._id.should.equal('123456')
         done()

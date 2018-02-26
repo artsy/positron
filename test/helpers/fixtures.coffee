@@ -223,7 +223,7 @@ module.exports = ->
   fixtures.sessions = [
     {
       _id: 123456
-      timestamp: '2018-01-30T23:12:20.973Z'
+      timestamp: moment(new Date()).subtract(3, 'minutes').format()
       user: {
         id: '123'
         name: 'John Doe'
@@ -237,12 +237,38 @@ module.exports = ->
     },
     {
       _id: 246810
-      timestamp: '2018-01-30T23:12:20.973Z'
+      timestamp: moment(new Date()).subtract(5, 'minutes').format()
       user: {
         id: '124'
         name: 'Ellen Poe'
       }
       article: '246810'
+      channel: {
+        id: '2'
+        name: 'Other Editors'
+        type: 'editorial'
+      }
+    },
+    {
+      _id: 246814
+      timestamp: moment(new Date()).subtract(4, 'minutes').format()
+      user: {
+        id: '126'
+        name: 'Steve Publisher'
+      }
+      channel: {
+        id: '1'
+        name: 'Artsy Editorial'
+        type: 'editorial'
+      }
+    },
+    {
+      _id: 246920
+      timestamp: moment(new Date()).subtract(1, 'hours').format()
+      user: {
+        id: '210'
+        name: 'Richard Lafosse'
+      }
       channel: {
         id: '2'
         name: 'Other Editors'
