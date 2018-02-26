@@ -10,7 +10,7 @@ import {
   IconLink,
   IconOrderedList,
   IconUnorderedList
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 
 describe('TextNav', () => {
   let props

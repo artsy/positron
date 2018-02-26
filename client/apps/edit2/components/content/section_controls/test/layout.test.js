@@ -4,7 +4,7 @@ import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
 import { LayoutControls } from '../layout.jsx'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 const { StandardArticle, FeatureArticle } = Fixtures
 
 describe('Section LayoutControls', () => {

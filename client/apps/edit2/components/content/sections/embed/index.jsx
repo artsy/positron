@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Embed } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Embed } from '@artsy/reaction/dist/Components/Publishing'
 import EmbedControls from './controls'
 
 // Embed section supports external content via iframes

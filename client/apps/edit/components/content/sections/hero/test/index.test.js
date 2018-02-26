@@ -7,7 +7,7 @@ import { RemoveButton } from 'client/components/remove_button'
 import { SectionContainer } from '../../../section_container'
 import { SectionTool } from '../../../section_tool'
 import { SectionHero } from '../index'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 const { ClassicArticle } = Fixtures
 
 describe('SectionHero', () => {

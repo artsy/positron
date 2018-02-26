@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import Backbone from 'backbone'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from '../../../../../../models/article.coffee'
 import { AdminVerticalsTags } from '../../components/verticals_tags.jsx'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'

@@ -3,7 +3,7 @@ import { editReducer } from '../editReducer'
 import { actions, setupSection } from '../../actions/editActions'
 import {
   FeatureArticle
-} from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Articles'
+} from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('editReducer', () => {
   let initialState

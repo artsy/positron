@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import colors from '@artsy/reaction/dist/Assets/Colors'
 import { RemoveButton } from 'client/components/remove_button'
 
 export class TextInputUrl extends Component {

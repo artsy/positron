@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/Display/DisplayPanel'
+import { DisplayPanel } from '@artsy/reaction/dist/Components/Publishing/Display/DisplayPanel'
 import track from 'react-tracking'
 const sd = require('sharify').data
 

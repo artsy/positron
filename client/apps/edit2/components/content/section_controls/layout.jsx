@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { IconImageFullscreen } from '@artsy/reaction-force/dist/Components/Publishing'
+import { IconImageFullscreen } from '@artsy/reaction/dist/Components/Publishing'
 import { onChangeSection } from 'client/actions/editActions'
 
 export class LayoutControls extends Component {

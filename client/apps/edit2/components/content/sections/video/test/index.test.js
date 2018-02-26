@@ -8,7 +8,7 @@ import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
 import { VideoSectionControls } from '../controls.jsx'
 import { SectionVideo } from '../index.jsx'
-import { Videos } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
+import { Videos } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Components'
 
 describe('Video', () => {
   let props

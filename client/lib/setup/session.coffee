@@ -11,7 +11,7 @@ sess = exports.defaultSession = session
 exports.initSocketSession = (app, io) ->
   # copies express sessions to socket-io
   io.use sharedsession(sess)
-  
+
   # saves having to type "socket.request.session.user" everywhere
   io.use (socket, next) ->
     user = get socket, "request.session.user"

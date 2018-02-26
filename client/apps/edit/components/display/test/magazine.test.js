@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from '../../../../../models/article.coffee'
 import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayMagazine } from '../components/magazine'

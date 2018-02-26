@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Backbone from 'backbone'
 import { Autocomplete } from '../index.jsx'
 require('typeahead.js')

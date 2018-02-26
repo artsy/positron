@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { SectionControls } from '../../../section_controls'
 import { EmbedControls } from '../controls'
 

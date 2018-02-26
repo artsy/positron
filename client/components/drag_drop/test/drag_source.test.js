@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { EditableChild } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Helpers'
+import { EditableChild } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Helpers'
 import { DragSource } from '../drag_source.jsx'
 
 describe('DragSource', () => {

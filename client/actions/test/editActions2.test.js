@@ -1,7 +1,7 @@
 import * as editActions from '../editActions2'
 import { clone } from 'lodash'
 import Backbone from 'backbone'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
 const { FeatureArticle } = Fixtures
 
