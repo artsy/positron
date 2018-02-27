@@ -9,7 +9,7 @@ import {
   IconEditVideo,
   IconHeroImage,
   IconHeroVideo
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 import { newHeroSection, newSection } from 'client/actions/editActions'
 
 export class SectionTool extends Component {

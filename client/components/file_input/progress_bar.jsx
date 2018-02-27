@@ -1,4 +1,4 @@
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import colors from '@artsy/reaction/dist/Assets/Colors'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React from 'react'

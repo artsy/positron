@@ -2,13 +2,13 @@ import moment from 'moment'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { VideoAbout, VideoAboutContainer } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoAbout'
-import { VideoCover, VideoCoverContainer } from '@artsy/reaction-force/dist/Components/Publishing/Video/VideoCover'
+import { VideoAbout, VideoAboutContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
+import { VideoCover, VideoCoverContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
-import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
+import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
 
 export class EditVideo extends Component {
   static propTypes = {

@@ -1,9 +1,9 @@
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { IconSocialEmail } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialEmail'
-import { IconSocialFacebook } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialFacebook'
-import { IconSocialTwitter } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconSocialTwitter'
+import { IconSocialEmail } from '@artsy/reaction/dist/Components/Publishing/Icon/IconSocialEmail'
+import { IconSocialFacebook } from '@artsy/reaction/dist/Components/Publishing/Icon/IconSocialFacebook'
+import { IconSocialTwitter } from '@artsy/reaction/dist/Components/Publishing/Icon/IconSocialTwitter'
 import { getArticleByline } from '../../../../../../models/article.js'
 import { crop } from '../../../../../../components/resizer/index.coffee'
 

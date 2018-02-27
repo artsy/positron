@@ -2,7 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import Section from '/client/models/section.coffee'
 import { SectionControls } from '../index'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 const { StandardArticle, FeatureArticle } = Fixtures
 
 describe('Section Controls', () => {

@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
-import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing/Icon/IconLock'
-import Icon from '@artsy/reaction-force/dist/Components/Icon'
+import colors from '@artsy/reaction/dist/Assets/Colors'
+import { IconLock } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLock'
+import Icon from '@artsy/reaction/dist/Components/Icon'
 
 const IconCheckCircle = styled(Icon)`
   color: ${colors.grayMedium};

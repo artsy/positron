@@ -6,7 +6,7 @@ import {
   IconLayoutSplit,
   IconLayoutText,
   IconLayoutBasic
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 
 export default class LayoutControls extends Component {
   static propTypes = {

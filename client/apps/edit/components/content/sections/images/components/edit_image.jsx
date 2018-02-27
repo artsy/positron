@@ -1,7 +1,7 @@
 import { clone } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Artwork, Image } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Artwork, Image } from '@artsy/reaction/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 

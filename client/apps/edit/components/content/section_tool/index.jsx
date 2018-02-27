@@ -8,7 +8,7 @@ import {
   IconEditVideo,
   IconHeroImage,
   IconHeroVideo
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 
 export class SectionTool extends Component {
   static propTypes = {

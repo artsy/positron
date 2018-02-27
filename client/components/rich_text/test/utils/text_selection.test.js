@@ -8,7 +8,7 @@ import {
 } from '../../utils/text_selection'
 import { decorators } from '../../utils/config'
 import { convertFromRichHtml, convertToRichHtml } from '../../utils/convert_html'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Draft from 'draft-js'
 
 describe('Draft Utils: Text Selection', () => {

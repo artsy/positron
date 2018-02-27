@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { flatten, map } from 'lodash'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import colors from '@artsy/reaction/dist/Assets/Colors'
 import {
   IconArtist,
   IconBlockquote,
@@ -9,7 +9,7 @@ import {
   IconLink,
   IconOrderedList,
   IconUnorderedList
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 
 export class TextNav extends React.Component {
   onToggle = (e, action) => {

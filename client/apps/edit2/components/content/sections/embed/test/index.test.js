@@ -2,7 +2,7 @@ import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
-import { Embed, Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Embed, Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { SectionEmbed } from '../index'
 import { EmbedControls } from '../controls'
 

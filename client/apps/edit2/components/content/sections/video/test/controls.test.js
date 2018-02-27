@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import FileInput from 'client/components/file_input'
 import { SectionControls } from '../../../section_controls'
 import { VideoSectionControls } from '../controls'
-import { Videos } from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
+import { Videos } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Components'
 
 describe('Video', () => {
   let props
