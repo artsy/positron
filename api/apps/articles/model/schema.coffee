@@ -108,7 +108,7 @@ ImageCollectionSection = (->
     id: @string().objectid()
   ).allow(null)
   title: @string().allow('', null)
-  layout: @string().allow('classic', 'standard', 'series', 'feature', 'video').default('classic')
+  layout: @string().allow('classic', 'feature', 'news', 'standard', 'series', 'video').default('classic')
   updated_at: @date()
   published: @boolean().default(false)
   published_at: @date().allow(null)
@@ -236,6 +236,9 @@ ImageCollectionSection = (->
   search_description: @string().allow('', null)
   seo_keyword: @string().allow('', null)
   keywords: @array().items(@string()).allow(null)
+  news_source: @object().default({}).keys
+    title: @string().allow('')
+    url: @string().allow('')
 ).call Joi
 
 #
