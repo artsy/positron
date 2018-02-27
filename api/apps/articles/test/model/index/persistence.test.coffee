@@ -816,3 +816,13 @@ describe 'Article Persistence', ->
         article.sponsor.partner_logo_link.should.equal 'https://partner.com'
         done()
 
+    it 'saves a news_source', (done) ->
+      Article.save {
+        news_source:
+          title: 'The New York Times'
+          url: 'https://nytimes.com'
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.news_source.title.should.equal 'The New York Times'
+        article.news_source.url.should.equal 'https://nytimes.com'
+        done()
