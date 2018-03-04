@@ -1,5 +1,4 @@
 import React from 'react'
-import Backbone from 'backbone'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import {
@@ -10,7 +9,7 @@ import {
   IconEditVideo,
   IconHeroImage,
   IconHeroVideo
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 import { SectionTool } from '../index'
 const { FeatureArticle } = Fixtures
 

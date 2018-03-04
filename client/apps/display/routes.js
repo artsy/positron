@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/server'
 import request from 'superagent'
-import { DisplayPanel } from '@artsy/reaction-force/dist/Components/Publishing/Display/DisplayPanel'
+import { DisplayPanel } from '@artsy/reaction/dist/Components/Publishing/Display/DisplayPanel'
 import { ServerStyleSheet } from 'styled-components'
 import { DisplayQuery } from 'client/apps/display/query'
 

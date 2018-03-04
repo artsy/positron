@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
-import { ArticleCard } from '@artsy/reaction-force/dist/Components/Publishing/Series/ArticleCard'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
+import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/Series/ArticleCard'
 
 export class EditArticleCard extends Component {
   static propTypes = {

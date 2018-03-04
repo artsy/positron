@@ -4,7 +4,7 @@ import { PlainText } from '/client/components/rich_text/components/plain_text.js
 import { SectionHeader } from '../index.jsx'
 import { mount } from 'enzyme'
 
-import { Fixtures, Header } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures, Header } from '@artsy/reaction/dist/Components/Publishing'
 const ClassicArticle = Fixtures.ClassicArticle
 const FeatureArticle = Fixtures.FeatureArticle
 const StandardArticle = Fixtures.StandardArticle

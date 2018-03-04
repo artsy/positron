@@ -50,7 +50,7 @@ artsyXapp.init(xappConfig, () => {
 
     mountAndReload('./client', {
       watchModules: [
-        '@artsy/reaction-force'
+        '@artsy/reaction'
       ]
     })
 

@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
 import { RemoveButton } from '../index'
 
 describe('RemoveButton', () => {

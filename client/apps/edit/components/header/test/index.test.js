@@ -2,9 +2,9 @@ import React from 'react'
 import Article from '../../../../../models/article.coffee'
 import { EditHeader } from '../index'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
-import Icon from '@artsy/reaction-force/dist/Components/Icon'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import Icon from '@artsy/reaction/dist/Components/Icon'
+import colors from '@artsy/reaction/dist/Assets/Colors'
 
 describe('Edit Header Controls', () => {
   let props

@@ -9,7 +9,7 @@ import {
   UnitCanvasImage,
   UnitCanvasOverlay,
   UnitCanvasSlideshow
-} from '@artsy/reaction-force/dist/Components/Publishing/Fixtures/Components'
+} from '@artsy/reaction/dist/Components/Publishing/Fixtures/Components'
 
 describe('Canvas', () => {
   const props = {

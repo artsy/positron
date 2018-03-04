@@ -28,7 +28,6 @@ Transport = require('lokka-transport-http').Transport
             renderArticles res, req, result, false
     .catch -> next()
 
-
 renderArticles = (res, req, result, published) ->
   res.locals.sd.ARTICLES = result.articles
   channel = res.locals.sd.CURRENT_CHANNEL = req.user?.get('current_channel')

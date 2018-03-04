@@ -1,6 +1,6 @@
 // Images section supports a mix of uploaded images and artworks
 
-import FillWidth from '@artsy/reaction-force/dist/Utils/fillwidth'
+import FillWidth from '@artsy/reaction/dist/Utils/fillwidth'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'

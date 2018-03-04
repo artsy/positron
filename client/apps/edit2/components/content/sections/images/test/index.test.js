@@ -9,7 +9,7 @@ import {
   Image,
   ImageSetPreview,
   ImageSetPreviewClassic
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { ImagesControls } from '../components/controls'

@@ -12,7 +12,7 @@ import {
   IconLayoutFullscreen,
   IconLayoutSplit,
   IconLayoutText
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 
 describe('Feature Header Controls', () => {
   describe('LayoutControls', () => {

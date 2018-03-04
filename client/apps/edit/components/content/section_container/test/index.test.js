@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { Fixtures, IconDrag, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures, IconDrag, IconRemove } from '@artsy/reaction/dist/Components/Publishing'
 import Article from '/client/models/article.coffee'
 import Channel from '/client/models/channel.coffee'
 import Section from '/client/models/section.coffee'

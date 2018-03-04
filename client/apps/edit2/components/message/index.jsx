@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import moment from 'moment'
 
 import { ModalTypes } from './modalTypes'
-import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
-import { IconLock } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import colors from '@artsy/reaction/dist/Assets/Colors'
+import { IconLock } from '@artsy/reaction/dist/Components/Publishing'
 
 const SplashBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);

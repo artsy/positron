@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
 import SectionFooter from '../../sections/footer'
 import SectionList from '../../section_list'

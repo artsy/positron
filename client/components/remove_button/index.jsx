@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
 
 export const RemoveButton = (props) => {
   const {

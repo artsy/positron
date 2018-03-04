@@ -1,4 +1,4 @@
-import FillWidth from '@artsy/reaction-force/dist/Utils/fillwidth'
+import FillWidth from '@artsy/reaction/dist/Utils/fillwidth'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { without } from 'lodash'

@@ -8,8 +8,7 @@ import {
   Image,
   ImageSetPreview,
   ImageSetPreviewClassic
-} from '@artsy/reaction-force/dist/Components/Publishing'
-import Article from '/client/models/article.coffee'
+} from '@artsy/reaction/dist/Components/Publishing'
 import Section from '/client/models/section.coffee'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'

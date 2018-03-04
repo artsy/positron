@@ -4,8 +4,8 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from 'client/actions/editActions'
-import Icon from '@artsy/reaction-force/dist/Components/Icon'
-import colors from '@artsy/reaction-force/dist/Assets/Colors'
+import Icon from '@artsy/reaction/dist/Components/Icon'
+import colors from '@artsy/reaction/dist/Assets/Colors'
 
 export class EditHeader extends Component {
   static propTypes = {

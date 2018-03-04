@@ -8,7 +8,7 @@ import $ from 'jquery'
 import { debounce } from 'lodash'
 import FilterSearch from 'client/components/filter_search/index.coffee'
 import IconNewArticle from '../../../components/layout/public/icons/layout_new_article.svg'
-import { Fonts } from '@artsy/reaction-force/dist/Components/Publishing/Fonts'
+import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
 
 require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')

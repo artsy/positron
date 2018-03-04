@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from '../../../../../models/article.coffee'
 import { DropDownList } from 'client/components/drop_down/drop_down_list'
 import { AdminTags } from '../components/tags'

@@ -5,7 +5,7 @@ import {
   Fixtures,
   ImageSetPreview,
   ImageSetPreviewClassic
-} from '@artsy/reaction-force/dist/Components/Publishing'
+} from '@artsy/reaction/dist/Components/Publishing'
 import { ImageSet } from '../components/image_set'
 
 describe('ImageSet', () => {

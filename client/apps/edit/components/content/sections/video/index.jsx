@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
 import React, { Component } from 'react'
 import { Controls } from './controls.jsx'
-import { Video, IconRemove } from '@artsy/reaction-force/dist/Components/Publishing'
+import { Video, IconRemove } from '@artsy/reaction/dist/Components/Publishing'
 
 export class SectionVideo extends Component {
   static propTypes = {
