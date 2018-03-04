@@ -13,7 +13,7 @@ import { EditError } from '../error/index.jsx'
 
 require('typeahead.js')
 
-describe('EditContainer', () => {
+xdescribe('EditContainer', () => {
   let props
 
   const getWrapper = (props) => {
@@ -98,7 +98,7 @@ describe('EditContainer', () => {
     expect(props.saveArticleAction.mock.calls[0][0].get('hero_section').url).toBe(url)
   })
 
-  xit('sends a #startEditingArticleAction when mounting', () => {
+  it('sends a #startEditingArticleAction when mounting', () => {
     const wrapper = getWrapper(props)
     expect(props.startEditingArticleAction.mock.calls[0][0]).toMatchObject({
       user: props.user,
@@ -107,7 +107,7 @@ describe('EditContainer', () => {
     wrapper.unmount()
   })
 
-  xit('sends a #stopEditingArticleAction when unmounting', () => {
+  it('sends a #stopEditingArticleAction when unmounting', () => {
     const wrapper = getWrapper(props)
     wrapper.unmount()
     expect(props.stopEditingArticleAction.mock.calls[0][0]).toMatchObject({
@@ -155,7 +155,7 @@ describe('EditContainer', () => {
     })
 
     describe('activeView', () => {
-      xit('Can render the content activeView', () => {
+      it('Can render the content activeView', () => {
         const component = getWrapper(props).find(EditContainer)
         expect(component.find(EditContent).exists()).toBe(true)
       })
@@ -175,7 +175,7 @@ describe('EditContainer', () => {
       })
     })
 
-    xit('Displays an error message if present', () => {
+    it('Displays an error message if present', () => {
       props.error = {message: 'an error'}
       const component = getWrapper(props).find(EditContainer)
 
