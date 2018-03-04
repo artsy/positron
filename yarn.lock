@@ -10,9 +10,9 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/reaction@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.26.0.tgz#d8603b19d12e64485796e7df0204638ff1dc9dc2"
+"@artsy/reaction@^0.26.4":
+  version "0.26.4"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.26.4.tgz#02ff764de067019e7f99bdf2adb7b4cddfa8529b"
   dependencies:
     history "^4.6.1"
     isomorphic-fetch "^2.2.1"
@@ -9038,7 +9038,7 @@ ua-parser@^0.3.5:
   dependencies:
     yamlparser ">=0.0.2"
 
-uglify-js@2.x.x, uglify-js@^2.6, uglify-js@^2.8.29:
+uglify-js@2.x.x, uglify-js@^2.4.19, uglify-js@^2.6, uglify-js@^2.8.29:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:

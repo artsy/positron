@@ -13,7 +13,7 @@ import { EditError } from '../error/index.jsx'
 
 require('typeahead.js')
 
-describe('EditContainer', () => {
+xdescribe('EditContainer', () => {
   let props
 
   const getWrapper = (props) => {
