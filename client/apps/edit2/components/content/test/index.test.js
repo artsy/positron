@@ -10,7 +10,7 @@ import { EditVideo } from '../article_layouts/video'
 import { EditContent } from '../index'
 require('typeahead.js')
 
-describe('EditContent', () => {
+xdescribe('EditContent', () => {
   let props
 
   const getWrapper = (props) => {
