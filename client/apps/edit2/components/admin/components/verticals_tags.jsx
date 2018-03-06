@@ -1,18 +1,20 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { data as sd } from 'sharify'
+import { connect } from 'react-redux'
 import Verticals from '../../../../../collections/verticals.coffee'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class AdminVerticalsTags extends Component {
   static propTypes = {
+    apiURL: PropTypes.string,
     article: PropTypes.object,
-    onChange: PropTypes.func
+    onChangeArticleAction: PropTypes.func
   }
 
   state = {
-    vertical: this.props.article.get('vertical') || null,
+    vertical: this.props.article.vertical || null,
     verticals: []
   }
 
@@ -32,8 +34,8 @@ export class AdminVerticalsTags extends Component {
 
   renderVerticalsList = () => {
     const { verticals } = this.state
-    const { article, onChange } = this.props
-    const name = article.get('vertical') && article.get('vertical').name
+    const { article, onChangeArticleAction } = this.props
+    const { name } = article.vertical
 
     return verticals.map((item, index) => {
       const isActive = name && item.get('name') === name
@@ -46,7 +48,7 @@ export class AdminVerticalsTags extends Component {
           data-active={isActive}
           onClick={() => {
             const vertical = isActive ? null : item.attributes
-            onChange('vertical', vertical)
+            onChangeArticleAction('vertical', vertical)
           }}
         >
           {item.get('name')}
@@ -56,7 +58,7 @@ export class AdminVerticalsTags extends Component {
   }
 
   render () {
-    const { article, onChange } = this.props
+    const { apiURL, article, onChangeArticleAction } = this.props
 
     return (
       <Row className='AdminVerticalsTags'>
@@ -71,32 +73,32 @@ export class AdminVerticalsTags extends Component {
           <div className='field-group tags'>
             <label>Topic Tags</label>
             <AutocompleteInlineList
-              items={article.get('tags') || []}
+              items={article.tags || []}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }
                 })
               }}
               formatSelected={(tag) => tag.name}
-              onSelect={(tags) => onChange('tags', tags)}
+              onSelect={(tags) => onChangeArticleAction('tags', tags)}
               placeholder='Start typing a topic tag...'
-              url={`${sd.API_URL}/tags?public=true&q=%QUERY`}
+              url={`${apiURL}/tags?public=true&q=%QUERY`}
             />
           </div>
 
           <div className='field-group tracking-tags'>
             <label>Tracking Tags</label>
             <AutocompleteInlineList
-              items={article.get('tracking_tags') || []}
+              items={article.tracking_tags || []}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }
                 })
               }}
               formatSelected={(tag) => tag.name}
-              onSelect={(tags) => onChange('tracking_tags', tags)}
+              onSelect={(tags) => onChangeArticleAction('tracking_tags', tags)}
               placeholder='Start typing a tracking tag...'
-              url={`${sd.API_URL}/tags?public=false&q=%QUERY`}
+              url={`${apiURL}/tags?public=false&q=%QUERY`}
             />
           </div>
         </Col>
@@ -105,3 +107,17 @@ export class AdminVerticalsTags extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  apiURL: state.app.apiURL,
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminVerticalsTags)
