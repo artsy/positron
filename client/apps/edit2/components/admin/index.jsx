@@ -5,7 +5,7 @@ import { DropDownList } from 'client/components/drop_down/drop_down_list'
 import AdminArticle from './article/index.coffee'
 import AdminFeaturing from './featuring/index.coffee'
 import AdminSuperArticle from './super_article/index.coffee'
-import AdminAppearances from './appearances/index.coffee'
+import AdminAppearances from './components/appearances'
 import AdminSponsor from './components/sponsor'
 import AdminTags from './components/tags'
 import AdminVerticalsTags from './components/verticals_tags'
@@ -63,7 +63,7 @@ export class EditAdmin extends Component {
 
           <AdminFeaturing {...this.props} />
 
-          <AdminAppearances {...this.props} />
+          <AdminAppearances />
 
           {isEditorial &&
             <AdminSuperArticle {...this.props} />
