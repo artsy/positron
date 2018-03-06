@@ -6,7 +6,7 @@ import AdminArticle from './article/index.coffee'
 import AdminFeaturing from './featuring/index.coffee'
 import AdminSuperArticle from './super_article/index.coffee'
 import AdminAppearances from './appearances/index.coffee'
-import { AdminSponsor } from './components/sponsor'
+import AdminSponsor from './components/sponsor'
 import { AdminTags } from './components/tags'
 import { AdminVerticalsTags } from './components/verticals_tags'
 
@@ -69,7 +69,7 @@ export class EditAdmin extends Component {
             <AdminSuperArticle {...this.props} />
           }
           {isEditorial &&
-            <AdminSponsor {...this.props} />
+            <AdminSponsor />
           }
         </DropDownList>
       </div>
