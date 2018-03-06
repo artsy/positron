@@ -78,6 +78,7 @@ export function PartnersQuery (ids) {
 }
 
 export function ShowsQuery (ids) {
+  // TODO: Add query to metaphysics
   return `
     {
       partner_shows(ids: ${stringifyJSONForWeb(ids)}) {
