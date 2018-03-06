@@ -56,7 +56,7 @@ export class EditAdmin extends Component {
 
           {isEditorial
             ? <AdminVerticalsTags {...this.props} />
-            : <AdminTags {...this.props} />
+            : <AdminTags />
           }
 
           <AdminArticle {...this.props} />
