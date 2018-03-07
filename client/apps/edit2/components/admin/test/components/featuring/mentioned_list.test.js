@@ -38,7 +38,7 @@ describe('MentionedList', () => {
   beforeEach(() => {
     props = {
       article: cloneDeep(Fixtures.StandardArticle),
-      onAddFeatureAction: jest.fn(),
+      onAddFeaturedItemAction: jest.fn(),
       featured: {artist: [], artwork: []},
       mentioned: {
         artist: [{
@@ -52,7 +52,7 @@ describe('MentionedList', () => {
       },
       metaphysicsURL: 'https://metaphysics-staging.artsy.net',
       model: 'artist',
-      setMentionedAction: jest.fn(),
+      setMentionedItemsAction: jest.fn(),
       user: { access_token: '' }
     }
 
@@ -103,7 +103,7 @@ describe('MentionedList', () => {
     Artists.prototype.getOrFetchIds = jest.fn()
     getWrapper(props)
     Artists.prototype.getOrFetchIds.mock.calls[0][1].success(props.model, [])
-    expect(props.setMentionedAction).toBeCalled()
+    expect(props.setMentionedItemsAction).toBeCalled()
   })
 
   it('#getMentionedArtworks fetches items and calls #setMentionedAction', () => {
@@ -111,7 +111,7 @@ describe('MentionedList', () => {
     props.model = 'artwork'
     getWrapper(props)
     Artworks.prototype.getOrFetchIds.mock.calls[0][1].success(props.model, [])
-    expect(props.setMentionedAction).toBeCalled()
+    expect(props.setMentionedItemsAction).toBeCalled()
   })
 
   it('Renders "Feature All" checkbox if mentioned length', () => {
@@ -123,9 +123,9 @@ describe('MentionedList', () => {
     const component = getWrapper(props)
     component.find('.flat-checkbox').first().simulate('click')
 
-    expect(props.onAddFeatureAction.mock.calls[0][0]).toBe(props.model)
-    expect(props.onAddFeatureAction.mock.calls[0][1].name).toMatch(props.mentioned.artist[0].name)
-    expect(props.onAddFeatureAction.mock.calls[0][1]._id).toMatch(props.mentioned.artist[0]._id)
+    expect(props.onAddFeaturedItemAction.mock.calls[0][0]).toBe(props.model)
+    expect(props.onAddFeaturedItemAction.mock.calls[0][1].name).toMatch(props.mentioned.artist[0].name)
+    expect(props.onAddFeaturedItemAction.mock.calls[0][1]._id).toMatch(props.mentioned.artist[0]._id)
   })
 
   it('#isFeatured returns true if item _id is already featured', () => {

@@ -78,7 +78,7 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.CHANGE_FEATURED: {
+    case actions.CHANGE_FEATURED_ITEMS: {
       const { featured } = action.payload
 
       return u({
@@ -112,7 +112,6 @@ export function editReducer (state = initialState, action) {
 
     case actions.CHANGE_SECTION: {
       const { key, value } = action.payload
-      console.log(key, value)
       const { sectionIndex } = state
       const article = cloneDeep(state.article)
       const section = cloneDeep(state.section)
@@ -163,7 +162,7 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.SET_MENTIONED: {
+    case actions.SET_MENTIONED_ITEMS: {
       const mentioned = cloneDeep(state.mentioned)
       const { model, items } = action.payload
       mentioned[model] = items

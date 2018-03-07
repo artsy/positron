@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { pluck } from 'underscore'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { onAddFeature, setMentioned } from 'client/actions/editActions2.js'
+import { onAddFeaturedItem, setMentionedItems } from 'client/actions/editActions2.js'
 import * as ArticleUtils from 'client/models/article.js'
 import Artists from 'client/collections/artists.coffee'
 import Artworks from 'client/collections/artworks.coffee'
@@ -15,8 +15,8 @@ export class MentionedList extends Component {
     featured: PropTypes.object,
     mentioned: PropTypes.object,
     model: PropTypes.string,
-    onAddFeatureAction: PropTypes.func,
-    setMentionedAction: PropTypes.func
+    onAddFeaturedItemAction: PropTypes.func,
+    setMentionedItemsAction: PropTypes.func
   }
 
   componentWillMount = () => {
@@ -30,7 +30,7 @@ export class MentionedList extends Component {
   }
 
   getMentionedArtists = () => {
-    const { article, setMentionedAction } = this.props
+    const { article, setMentionedItemsAction } = this.props
     const artists = new Artists()
     const ids = ArticleUtils.getMentionedArtistSlugs(article)
 
@@ -39,13 +39,13 @@ export class MentionedList extends Component {
         const denormalizedArtists = artists.models.map((item) => {
           return { _id: item.get('_id'), name: item.get('name') }
         })
-        setMentionedAction('artist', denormalizedArtists)
+        setMentionedItemsAction('artist', denormalizedArtists)
       }
     })
   }
 
   getMentionedArtworks = () => {
-    const { article, setMentionedAction } = this.props
+    const { article, setMentionedItemsAction } = this.props
     const artworks = new Artworks()
     const ids = ArticleUtils.getMentionedArtworkSlugs(article)
 
@@ -54,7 +54,7 @@ export class MentionedList extends Component {
         const denormalizedArtworks = artworks.models.map((item) => {
           return { _id: item.get('_id'), name: item.get('title') }
         })
-        setMentionedAction('artwork', denormalizedArtworks)
+        setMentionedItemsAction('artwork', denormalizedArtworks)
       }
     })
   }
@@ -79,15 +79,15 @@ export class MentionedList extends Component {
   }
 
   featureAll = () => {
-    const { model, onAddFeatureAction } = this.props
+    const { model, onAddFeaturedItemAction } = this.props
 
     this.notFeaturedArray().map((item) => {
-      onAddFeatureAction(model, item)
+      onAddFeaturedItemAction(model, item)
     })
   }
 
   renderItem = (item, index) => {
-    const { model, onAddFeatureAction } = this.props
+    const { model, onAddFeaturedItemAction } = this.props
     const { _id, name } = item
 
     if (!this.isFeatured(_id)) {
@@ -96,7 +96,7 @@ export class MentionedList extends Component {
           className='MentionedList__item'
           color={colors.grayDark}
           key={_id}
-          onClick={() => onAddFeatureAction(model, item)}
+          onClick={() => onAddFeaturedItemAction(model, item)}
         >
           {name}
           <span className='mention' />
@@ -143,8 +143,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onAddFeatureAction: onAddFeature,
-  setMentionedAction: setMentioned
+  onAddFeaturedItemAction: onAddFeaturedItem,
+  setMentionedItemsAction: setMentionedItems
 }
 
 export default connect(

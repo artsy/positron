@@ -8,7 +8,7 @@ import { onChangeArticle } from 'client/actions/editActions'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
 import * as Queries from 'client/queries/metaphysics'
 
-export class MetaphysicsAutocomplete extends Component {
+export class AutocompleteListMetaphysics extends Component {
   static propTypes = {
     article: PropTypes.object,
     artsyURL: PropTypes.string,
@@ -127,4 +127,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MetaphysicsAutocomplete)
+)(AutocompleteListMetaphysics)

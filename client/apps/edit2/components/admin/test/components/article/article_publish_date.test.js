@@ -75,8 +75,8 @@ describe('ArticlePublishDate', () => {
       delete props.article.published_at
       const component = getWrapper(props)
 
-      expect(component.find('input[type="time"]').getElement().props.defaultValue).toBe(
-        moment().local().format('HH:m')
+      expect(component.find('input[type="time"]').getElement().props.defaultValue).toMatch(
+        moment().local().format('HH:')
       )
     })
 
@@ -106,8 +106,7 @@ describe('ArticlePublishDate', () => {
       component.instance().onScheduleChange()
 
       expect(props.onChange.mock.calls[0][0]).toBe('published_at')
-      // Not sure why this isn't matching above, maybe looking for local?
-      expect(props.onChange.mock.calls[0][1]).toMatch('06:34')
+      expect(props.onChange.mock.calls[0][1]).toMatch('02:34')
     })
   })
 

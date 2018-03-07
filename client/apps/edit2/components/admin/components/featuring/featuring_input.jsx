@@ -3,14 +3,14 @@ import { last } from 'lodash'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { onAddFeature } from 'client/actions/editActions2.js'
+import { onAddFeaturedItem } from 'client/actions/editActions2.js'
 import * as Queries from 'client/queries/metaphysics'
 
 export class FeaturingInput extends Component {
   static propTypes = {
     metaphysicsURL: PropTypes.string,
     model: PropTypes.string,
-    onAddFeatureAction: PropTypes.func,
+    onAddFeaturedItemAction: PropTypes.func,
     user: PropTypes.object
   }
 
@@ -32,7 +32,7 @@ export class FeaturingInput extends Component {
     const {
       metaphysicsURL,
       model,
-      onAddFeatureAction,
+      onAddFeaturedItemAction,
       user
     } = this.props
 
@@ -47,7 +47,7 @@ export class FeaturingInput extends Component {
         if (err) {
           console.error(err)
         }
-        onAddFeatureAction(model, res.body.data[model])
+        onAddFeaturedItemAction(model, res.body.data[model])
         this.setState({loading: false, value: ''})
       })
   }
@@ -85,7 +85,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  onAddFeatureAction: onAddFeature
+  onAddFeaturedItemAction: onAddFeaturedItem
 }
 
 export default connect(

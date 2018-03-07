@@ -1,13 +1,13 @@
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import MetaphysicsAutocomplete from './metaphysics_autocomplete'
+import AutocompleteListMetaphysics from './autocomplete_list_metaphysics'
 
 export const AdminAppearances = (props) => {
   return (
     <div>
       <Row>
         <Col xs={6}>
-          <MetaphysicsAutocomplete
+          <AutocompleteListMetaphysics
             field='fair_programming_ids'
             label='Fair Programming'
             model='fairs'
@@ -16,7 +16,7 @@ export const AdminAppearances = (props) => {
         </Col>
 
         <Col xs={6}>
-          <MetaphysicsAutocomplete
+          <AutocompleteListMetaphysics
             field='fair_artsy_ids'
             label='Artsy at the Fair'
             model='fairs'
@@ -27,7 +27,7 @@ export const AdminAppearances = (props) => {
 
       <Row>
         <Col xs={6}>
-          <MetaphysicsAutocomplete
+          <AutocompleteListMetaphysics
             field='fair_about_ids'
             label='About the Fair'
             model='fairs'
@@ -36,7 +36,7 @@ export const AdminAppearances = (props) => {
         </Col>
 
         <Col xs={6}>
-          <MetaphysicsAutocomplete
+          <AutocompleteListMetaphysics
             field='biography_for_artist_id'
             label='Extended Artist Biography'
             model='artists'

@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { MetaphysicsAutocomplete } from '../../components/metaphysics_autocomplete'
+import { AutocompleteListMetaphysics } from '../../components/autocomplete_list_metaphysics'
 import * as Queries from 'client/queries/metaphysics'
 require('typeahead.js')
 
@@ -20,13 +20,13 @@ jest.mock('superagent', () => {
   }
 })
 
-describe('MetaphysicsAutocomplete', () => {
+describe('AutocompleteListMetaphysics', () => {
   let props
   let response
 
   const getWrapper = (props) => {
     return mount(
-      <MetaphysicsAutocomplete {...props} />
+      <AutocompleteListMetaphysics {...props} />
     )
   }
 

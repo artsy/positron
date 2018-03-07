@@ -11,7 +11,7 @@ export const actions = keyMirror(
   'CHANGE_VIEW',
   'CHANGE_SECTION',
   'CHANGE_ARTICLE',
-  'CHANGE_FEATURED',
+  'CHANGE_FEATURED_ITEMS',
   'UPDATE_ARTICLE',
   'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
@@ -26,7 +26,7 @@ export const actions = keyMirror(
   'REMOVE_SECTION',
   'RESET_SECTIONS',
   'SAVE_ARTICLE',
-  'SET_MENTIONED',
+  'SET_MENTIONED_ITEMS',
   'SET_SECTION',
   'SET_SEO_KEYWORD',
   'TOGGLE_SPINNER'
@@ -287,7 +287,7 @@ export const saveArticlePending = () => {
   }
 }
 
-export const onAddFeature = (model, item) => {
+export const onAddFeaturedItem = (model, item) => {
   return (dispatch, getState) => {
     const { article, featured } = getState().edit
     const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
@@ -298,7 +298,7 @@ export const onAddFeature = (model, item) => {
     newFeaturedIds.push(item._id)
 
     dispatch(changeArticle(key, newFeaturedIds))
-    dispatch(changeFeatured(newFeatured))
+    dispatch(changeFeaturedItems(newFeatured))
   }
 }
 
@@ -308,7 +308,7 @@ export const onFetchFeatured = (model, items) => {
     let newFeatured = cloneDeep(featured)
 
     newFeatured[model] = items
-    dispatch(changeFeatured(newFeatured))
+    dispatch(changeFeaturedItems(newFeatured))
   }
 }
 
@@ -323,22 +323,22 @@ export const onRemoveFeature = (model, item, index) => {
     newFeaturedIds = without(newFeaturedIds, item._id)
 
     dispatch(changeArticle(key, newFeaturedIds))
-    dispatch(changeFeatured(newFeatured))
+    dispatch(changeFeaturedItems(newFeatured))
   }
 }
 
-export const changeFeatured = (featured) => {
+export const changeFeaturedItems = (featured) => {
   return {
-    type: actions.CHANGE_FEATURED,
+    type: actions.CHANGE_FEATURED_ITEMS,
     payload: {
       featured
     }
   }
 }
 
-export const setMentioned = (model, items) => {
+export const setMentionedItems = (model, items) => {
   return {
-    type: actions.SET_MENTIONED,
+    type: actions.SET_MENTIONED_ITEMS,
     payload: {
       model,
       items

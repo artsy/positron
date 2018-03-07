@@ -6,7 +6,7 @@ import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { Provider } from 'react-redux'
 import { AdminAppearances } from '../../components/appearances'
-import { MetaphysicsAutocomplete } from '../../components/metaphysics_autocomplete'
+import { AutocompleteListMetaphysics } from '../../components/autocomplete_list_metaphysics'
 require('typeahead.js')
 
 describe('FeaturingMentioned', () => {
@@ -38,6 +38,6 @@ describe('FeaturingMentioned', () => {
 
   it('Renders autocomplete components', () => {
     const component = getWrapper(props)
-    expect(component.find(MetaphysicsAutocomplete).length).toBe(4)
+    expect(component.find(AutocompleteListMetaphysics).length).toBe(4)
   })
 })

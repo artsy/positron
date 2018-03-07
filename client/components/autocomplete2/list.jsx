@@ -57,7 +57,7 @@ export class AutocompleteList extends Component {
     const { items } = this.state
 
     return (
-      <div className={`Autocomplete--list ${className || ''}`}>
+      <div className={`AutocompleteList ${className || ''}`}>
         {items.length > 0 &&
           <div className='Autocomplete__list'>
             {items.map((item, i) => {

@@ -6,9 +6,9 @@ import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { Provider } from 'react-redux'
 import { CharacterLimit } from 'client/components/character_limit'
 import { DisplaySocial } from '../components/social'
-import ImageUpload from 'client/apps/edit2/components/admin/components/image_upload.coffee'
+import ImageUpload from '../../admin/components/image_upload.coffee'
 
-describe('DisplaySocial', () => {
+xdescribe('DisplaySocial', () => {
   let props
 
   const getWrapper = (props) => {

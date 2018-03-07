@@ -194,7 +194,7 @@ export default connect(
 
 const Button = styled.button`
   padding: 10px 20px;
-  border: 2px solid #ccc;
+  border: 2px solid ${colors.grayMedium};
   color: ${props => props.active ? 'black' : colors.grayMedium};
   ${Fonts.avantgarde('s11')}
   outline: none;

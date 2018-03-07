@@ -31,7 +31,7 @@ describe('FeaturingInput', () => {
       article: cloneDeep(Fixtures.StandardArticle),
       metaphysicsURL: 'https://metaphysics-staging.artsy.net',
       model: 'artist',
-      onAddFeatureAction: jest.fn(),
+      onAddFeaturedItemAction: jest.fn(),
       user: { access_token: '' }
     }
 
@@ -88,11 +88,11 @@ describe('FeaturingInput', () => {
 
   it('#fetchItem adds the item to featured after fetch', () => {
     request.end.mockImplementation(() => {
-      props.onAddFeatureAction(response.body.data.artist)
+      props.onAddFeaturedItemAction(response.body.data.artist)
     })
     const component = getWrapper(props)
     component.instance().onFeature('pablo-picasso')
 
-    expect(props.onAddFeatureAction.mock.calls[0][0].name).toBe('Pablo Picasso')
+    expect(props.onAddFeaturedItemAction.mock.calls[0][0].name).toBe('Pablo Picasso')
   })
 })
