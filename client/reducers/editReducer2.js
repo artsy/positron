@@ -1,7 +1,7 @@
 import u from 'updeep'
 import { data as sd } from 'sharify'
 import { clone, cloneDeep, extend, pick } from 'lodash'
-import { actions } from 'client/actions/editActions2'
+import { actions } from 'client/actions/editActions'
 
 const setupArticle = () => {
   const article = sd.ARTICLE
@@ -16,17 +16,25 @@ const setupArticle = () => {
 }
 
 export const initialState = {
-  article: setupArticle(),
-  sectionIndex: null,
   activeView: 'content',
+  article: setupArticle(),
+  currentSession: sd.CURRENT_SESSION,
   error: null,
+  featured: {
+    artist: [],
+    artwork: []
+  },
   isDeleting: false,
   isPublishing: false,
   isSaving: false,
   isSaved: true,
   lastUpdated: null,
+  mentioned: {
+    artist: [],
+    artwork: []
+  },
   section: null,
-  currentSession: sd.CURRENT_SESSION
+  sectionIndex: null
 }
 
 export function editReducer (state = initialState, action) {
@@ -67,6 +75,14 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         isSaved: false
+      }, state)
+    }
+
+    case actions.CHANGE_FEATURED: {
+      const { featured } = action.payload
+
+      return u({
+        featured
       }, state)
     }
 
@@ -130,8 +146,10 @@ export function editReducer (state = initialState, action) {
     }
 
     case actions.RESET_SECTIONS: {
-      const { article } = action.payload
+      const article = cloneDeep(state.article)
+      const { sections } = action.payload
 
+      extend(article, { sections })
       return u({
         article,
         isSaved: false
@@ -141,6 +159,16 @@ export function editReducer (state = initialState, action) {
     case actions.SAVE_ARTICLE: {
       return u({
         isSaving: true
+      }, state)
+    }
+
+    case actions.SET_MENTIONED: {
+      const mentioned = cloneDeep(state.mentioned)
+      const { model, items } = action.payload
+      mentioned[model] = items
+
+      return u({
+        mentioned
       }, state)
     }
   }
