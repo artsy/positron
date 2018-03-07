@@ -1,10 +1,10 @@
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { DropDownList } from 'client/components/drop_down/drop_down_list'
-
-import AdminAppearances from './components/appearances'
+import { AdminAppearances } from './components/appearances'
+import { AdminFeaturing } from './components/featuring'
 import AdminArticle from './components/article'
-import AdminFeaturing from './components/featuring'
 import AdminSponsor from './components/sponsor'
 import AdminSuperArticle from './components/super_article'
 import AdminTags from './components/tags'
@@ -52,7 +52,9 @@ export class EditAdmin extends Component {
           }
 
           <AdminArticle />
+
           <AdminFeaturing />
+
           <AdminAppearances />
 
           {isEditorial &&
@@ -66,3 +68,11 @@ export class EditAdmin extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  channel: state.app.channel
+})
+
+export default connect(
+  mapStateToProps
+)(EditAdmin)
