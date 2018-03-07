@@ -1,6 +1,9 @@
+import colors from '@artsy/reaction/dist/Assets/Colors'
+import styled from 'styled-components'
 import { clone } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
 import { Autocomplete } from '/client/components/autocomplete2/index'
 
 export class AutocompleteList extends Component {
@@ -54,34 +57,51 @@ export class AutocompleteList extends Component {
     const { items } = this.state
 
     return (
-      <div className={`AutocompleteList ${className || ''}`}>
-
-        <div className='Autocomplete__list'>
-          {items.length > 0 && items.map((item, i) => {
-            const { title, name } = item
-            return (
-              <div
-                className='Autocomplete__list-item'
-                key={i}
-              >
-                {formatSelected
-                  ? formatSelected()
-                  : <span className='selected'>
-                      {title || name}
-                    </span>
-                }
-                <button
-                  className='remove-button'
-                  onClick={() => this.onRemoveItem(i)}
-                />
-              </div>
-            )
-          })}
-        </div>
-
+      <div className={`Autocomplete--list ${className || ''}`}>
+        {items.length > 0 &&
+          <div className='Autocomplete__list'>
+            {items.map((item, i) => {
+              const title = item ? item.title || item.name : ''
+              return (
+                <ListItem
+                  className='Autocomplete__list-item'
+                  key={i}
+                >
+                  {formatSelected
+                    ? formatSelected()
+                    : <span className='selected'>
+                        {title}
+                      </span>
+                  }
+                  <button
+                    className='remove-button'
+                    onClick={() => this.onRemoveItem(i)}
+                  />
+                </ListItem>
+              )
+            })}
+          </div>
+        }
         <Autocomplete {...this.props} />
 
       </div>
     )
   }
 }
+
+export const ListItem = styled.div`
+  ${Fonts.garamond('s17')}
+  align-items: center;
+  border: 2px solid ${colors.grayRegular};
+  color: ${props => props.color ? props.color : colors.purpleRegular};
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0;
+  line-height: 26px;
+  margin-bottom: 10px;
+  overflow: ellipsis;
+  padding: 5px 20px 5px 10px;
+  position: relative;
+  text-transform: none;
+`
