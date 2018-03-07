@@ -1,4 +1,5 @@
-import { clone, extend } from 'lodash'
+
+import { clone, cloneDeep, extend, without } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -10,8 +11,9 @@ export const actions = keyMirror(
   'CHANGE_VIEW',
   'CHANGE_SECTION',
   'CHANGE_ARTICLE',
-  'START_EDITING_ARTICLE',
+  'CHANGE_FEATURED',
   'UPDATE_ARTICLE',
+  'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
@@ -24,6 +26,7 @@ export const actions = keyMirror(
   'REMOVE_SECTION',
   'RESET_SECTIONS',
   'SAVE_ARTICLE',
+  'SET_MENTIONED',
   'SET_SECTION',
   'SET_SEO_KEYWORD',
   'TOGGLE_SPINNER'
@@ -280,6 +283,65 @@ export const saveArticlePending = () => {
     type: actions.SAVE_ARTICLE,
     payload: {
       isSaving: true
+    }
+  }
+}
+
+export const onAddFeature = (model, item) => {
+  return (dispatch, getState) => {
+    const { article, featured } = getState().edit
+    const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
+    let newFeatured = cloneDeep(featured)
+    let newFeaturedIds = cloneDeep(article)[key] || []
+
+    newFeatured[model].push(item)
+    newFeaturedIds.push(item._id)
+
+    dispatch(changeArticle(key, newFeaturedIds))
+    dispatch(changeFeatured(newFeatured))
+  }
+}
+
+export const onFetchFeatured = (model, items) => {
+  return (dispatch, getState) => {
+    const { featured } = getState().edit
+    let newFeatured = cloneDeep(featured)
+
+    newFeatured[model] = items
+    dispatch(changeFeatured(newFeatured))
+  }
+}
+
+export const onRemoveFeature = (model, item, index) => {
+  return (dispatch, getState) => {
+    const { article, featured } = getState().edit
+    const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
+    let newFeatured = cloneDeep(featured)
+    let newFeaturedIds = cloneDeep(article)[key]
+
+    newFeatured[model] = newFeatured[model].splice(1, index)
+    newFeaturedIds = without(newFeaturedIds, item._id)
+
+    dispatch(changeArticle(key, newFeaturedIds))
+    dispatch(changeFeatured(newFeatured))
+  }
+}
+
+export const changeFeatured = (featured) => {
+  return {
+    type: actions.CHANGE_FEATURED,
+    payload: {
+      featured
+    }
+  }
+}
+
+export const setMentioned = (model, items) => {
+  return {
+    type: actions.SET_MENTIONED,
+    payload: {
+      model,
+      items
     }
   }
 }
