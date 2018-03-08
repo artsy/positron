@@ -1,33 +1,45 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import configureStore from 'redux-mock-store'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from 'client/models/article.coffee'
-import SectionFooter from '../../sections/footer'
-import SectionList from '../../section_list'
+import { Provider } from 'react-redux'
+import { mount } from 'enzyme'
+import { SectionFooter } from '../../sections/footer'
 import { SectionHeader } from '../../sections/header'
 import { SectionHero } from '../../sections/hero'
+import { SectionList } from '../../section_list'
 import { EditArticle } from '../article'
 
 describe('EditArticle', () => {
   let props
 
   const getWrapper = (props) => {
-    return shallow(
-      <EditArticle {...props} />
+    const mockStore = configureStore([])
+    const store = mockStore({
+      app: {
+        channel: props.channel
+      },
+      edit: {
+        article: props.article
+      }
+    })
+
+    return mount(
+      <Provider store={store}>
+        <EditArticle {...props} />
+      </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.StandardArticle),
       channel: { type: 'editorial' },
-      onChange: jest.fn(),
-      onChangeHero: jest.fn()
+      article: Fixtures.FeatureArticle
     }
   })
 
   it('Does not render SectionHero if channel does not have feature', () => {
     const component = getWrapper(props)
+
     expect(component.find(SectionHero).exists()).toBe(false)
   })
 
