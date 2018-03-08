@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import EditArticle from './article_layouts/article'
 import EditSeries from './article_layouts/series'
-import { EditVideo } from './article_layouts/video'
+import EditVideo from './article_layouts/video'
 
 export class EditContent extends Component {
   static propTypes = {
@@ -18,7 +18,7 @@ export class EditContent extends Component {
         return <EditSeries />
       }
       case 'video': {
-        return <EditVideo {...this.props} />
+        return <EditVideo />
       }
       default: {
         return <EditArticle />
