@@ -1,6 +1,6 @@
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import { connect } from 'react-redux'
-import { pluck } from 'underscore'
+import { uniq } from 'lodash'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { onAddFeaturedItem, setMentionedItems } from 'client/actions/editActions2.js'
@@ -12,7 +12,6 @@ import { ListItem } from 'client/components/autocomplete2/list'
 export class MentionedList extends Component {
   static propTypes = {
     article: PropTypes.object,
-    featured: PropTypes.object,
     mentioned: PropTypes.object,
     model: PropTypes.string,
     onAddFeaturedItemAction: PropTypes.func,
@@ -68,14 +67,20 @@ export class MentionedList extends Component {
         canBeFeatured.push(item)
       }
     })
-    return canBeFeatured
+    return uniq(canBeFeatured)
   }
 
   isFeatured = (id) => {
-    const { featured, model } = this.props
-    const isFeatured = pluck(featured[model], '_id')
+    const { article, model } = this.props
+    let ids
 
-    return isFeatured.includes(id)
+    if (model === 'artist') {
+      ids = article.primary_featured_artist_ids || []
+    } else {
+      ids = article.featured_artwork_ids || []
+    }
+
+    return ids.includes(id)
   }
 
   featureAll = () => {
@@ -137,7 +142,6 @@ export class MentionedList extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  featured: state.edit.featured,
   mentioned: state.edit.mentioned,
   user: state.app.user
 })

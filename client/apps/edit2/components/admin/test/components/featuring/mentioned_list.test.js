@@ -15,7 +15,7 @@ describe('MentionedList', () => {
 
   const getWrapper = (props) => {
     const mockStore = configureStore([])
-    const { article, featured, mentioned } = props
+    const { article, mentioned } = props
 
     const store = mockStore({
       app: {
@@ -23,7 +23,6 @@ describe('MentionedList', () => {
       },
       edit: {
         article,
-        featured,
         mentioned
       }
     })
@@ -39,7 +38,6 @@ describe('MentionedList', () => {
     props = {
       article: cloneDeep(Fixtures.StandardArticle),
       onAddFeaturedItemAction: jest.fn(),
-      featured: {artist: [], artwork: []},
       mentioned: {
         artist: [{
           _id: '123',
@@ -129,7 +127,7 @@ describe('MentionedList', () => {
   })
 
   it('#isFeatured returns true if item _id is already featured', () => {
-    props.featured.artist = cloneDeep(props.mentioned.artist)
+    props.article.primary_featured_artist_ids = ['123']
     const component = getWrapper(props).find(MentionedList)
     const isFeatured = component.instance().isFeatured(props.mentioned.artist[0]._id)
 
@@ -137,7 +135,7 @@ describe('MentionedList', () => {
   })
 
   it('#isFeatured returns false if item _id is not featured', () => {
-    props.featured.artist = []
+    props.article.primary_featured_artist_ids = []
     const component = getWrapper(props).find(MentionedList)
     const isFeatured = component.instance().isFeatured(props.mentioned.artist[0]._id)
 
@@ -146,7 +144,7 @@ describe('MentionedList', () => {
 
   it('#notFeaturedArray returns array of mentioned items that are not featured', () => {
     const artist = {_id: '234', name: 'Chip Hughes'}
-    props.featured.artist = cloneDeep(props.mentioned.artist)
+    props.article.primary_featured_artist_ids = ['123']
     props.mentioned.artist.push(artist)
     const component = getWrapper(props).find(MentionedList)
     const notFeaturedArray = component.instance().notFeaturedArray()

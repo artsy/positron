@@ -17,9 +17,9 @@ describe('AutocompleteList', () => {
 
   beforeEach(() => {
     items = [
-      { id: '123', title: 'First Article' },
-      { id: '234', title: 'Second Article' },
-      { id: '345', title: 'Third Article' }
+      { _id: '123', title: 'First Article' },
+      { _id: '234', title: 'Second Article' },
+      { _id: '345', title: 'Third Article' }
     ]
 
     fetchItems = jest.fn((fetchedItems, cb) => {

@@ -55,7 +55,7 @@ describe('AdminFeaturing', () => {
 
   it('Renders autocomplete fields', () => {
     const component = getWrapper(props)
-    expect(component.find(AutocompleteList).length).toBe(4)
+    expect(component.find(AutocompleteList).length).toBe(6)
   })
 
   it('Renders feature/mentioned fields', () => {

@@ -120,7 +120,7 @@ describe('AutocompleteListMetaphysics', () => {
   it('#idsToFetch returns unfetched ids based on field and fetchedItems', () => {
     props.article.fair_ids = ['123', '456']
     const component = getWrapper(props)
-    const idsToFetch = component.instance().idsToFetch([{id: '123'}])
+    const idsToFetch = component.instance().idsToFetch([{_id: '123'}])
 
     expect(idsToFetch.length).toBe(1)
     expect(idsToFetch[0]).toBe('456')

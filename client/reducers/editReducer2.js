@@ -20,10 +20,6 @@ export const initialState = {
   article: setupArticle(),
   currentSession: sd.CURRENT_SESSION,
   error: null,
-  featured: {
-    artist: [],
-    artwork: []
-  },
   isDeleting: false,
   isPublishing: false,
   isSaving: false,
@@ -75,14 +71,6 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         isSaved: false
-      }, state)
-    }
-
-    case actions.CHANGE_FEATURED_ITEMS: {
-      const { featured } = action.payload
-
-      return u({
-        featured
       }, state)
     }
 

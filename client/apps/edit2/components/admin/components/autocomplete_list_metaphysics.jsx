@@ -28,6 +28,9 @@ export class AutocompleteListMetaphysics extends Component {
       case 'artists': {
         return Queries.ArtistsQuery
       }
+      case 'artworks': {
+        return Queries.ArtworksQuery
+      }
       case 'fairs': {
         return Queries.FairsQuery
       }
@@ -46,7 +49,7 @@ export class AutocompleteListMetaphysics extends Component {
   idsToFetch = (fetchedItems) => {
     const { article, field } = this.props
     let allIds = clone(article[field])
-    const alreadyFetched = uniq(pluck(fetchedItems, 'id'))
+    const alreadyFetched = uniq(pluck(fetchedItems, '_id'))
 
     return difference(allIds, alreadyFetched)
   }
@@ -95,7 +98,7 @@ export class AutocompleteListMetaphysics extends Component {
 
     return (
       <div className='field-group'>
-        <label>{label}</label>
+        <label>{label || model}</label>
         <AutocompleteList
           fetchItems={(fetchedItems, cb) => this.fetchItems(fetchedItems, cb)}
           items={article[field] || []}
@@ -105,7 +108,7 @@ export class AutocompleteListMetaphysics extends Component {
             })
           }}
           onSelect={(results) => onChangeArticleAction(field, results)}
-          placeholder={placeholder}
+          placeholder={placeholder || `Search ${model} by name...`}
           url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
         />
       </div>

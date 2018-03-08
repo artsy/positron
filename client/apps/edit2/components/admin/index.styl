@@ -41,11 +41,20 @@
     .field-group:first-child
       margin-bottom 30px
 
-.FeaturingList,
+.admin-form-container .FeaturingMentioned
+  label
+    margin-bottom 5px
+  .AutocompleteList
+    display flex
+    flex-direction column-reverse
+    .Autocomplete__input
+      margin-top 0
+    .Autocomplete__list
+      margin-top 10px
+
 .MentionedList
   display flex
   flex-direction column
-.FeaturingList__item,
 .MentionedList__item
   &:first-child
     margin-top 10px

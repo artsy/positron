@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import FeaturingInput from './featuring_input'
-import FeaturingList from './featuring_list'
 import MentionedList from './mentioned_list'
+import AutocompleteListMetaphysics from '../autocomplete_list_metaphysics'
 
 export class FeaturingMentioned extends Component {
   static propTypes = {
@@ -12,14 +11,16 @@ export class FeaturingMentioned extends Component {
   render () {
     const { model } = this.props
 
+    const field = model === 'artist'
+      ? 'primary_featured_artist_ids'
+      : 'featured_artwork_ids'
+
     return (
       <div className='FeaturingMentioned'>
-        <label>
-          {`${model}s`}
-        </label>
-
-        <FeaturingInput model={model} />
-        <FeaturingList model={model} />
+          <AutocompleteListMetaphysics
+            field={field}
+            model={`${model}s`}
+          />
         <MentionedList model={model} />
       </div>
     )

@@ -5,9 +5,9 @@ import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { Provider } from 'react-redux'
 import { FeaturingMentioned } from '../../../components/featuring/featuring_mentioned'
-import { FeaturingInput } from '../../../components/featuring/featuring_input'
-import { FeaturingList } from '../../../components/featuring/featuring_list'
 import { MentionedList } from '../../../components/featuring/mentioned_list'
+import AutocompleteListMetaphysics from '../../../components/autocomplete_list_metaphysics'
+require('typeahead.js')
 
 describe('FeaturingMentioned', () => {
   let props
@@ -52,8 +52,7 @@ describe('FeaturingMentioned', () => {
   it('Renders expected components', () => {
     const component = getWrapper(props)
 
-    expect(component.find(FeaturingInput).exists()).toBe(true)
-    expect(component.find(FeaturingList).exists()).toBe(true)
+    expect(component.find(AutocompleteListMetaphysics).exists()).toBe(true)
     expect(component.find(MentionedList).exists()).toBe(true)
   })
 })
