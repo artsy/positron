@@ -1,8 +1,8 @@
 import request from 'superagent'
 import React from 'react'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from '/client/models/article.coffee'
 import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/Series/ArticleCard'
 import { EditArticleCard } from '../components/edit_article_card'
 import { RelatedArticlesInput } from '../components/related_articles_input'
@@ -36,7 +36,7 @@ describe('RelatedArticles', () => {
     })
 
     props = {
-      article: new Article(Fixtures.StandardArticle),
+      article: cloneDeep(Fixtures.StandardArticle),
       onChange: jest.fn()
     }
   })
@@ -47,14 +47,14 @@ describe('RelatedArticles', () => {
     )
     expect(component.find(RelatedArticlesInput).length).toBe(1)
     expect(component.find(ArticleCard).length).toBe(1)
-    expect(component.text()).toMatch(props.article.get('title'))
+    expect(component.text()).toMatch(props.article.title)
     expect(component.text()).toMatch('Title')
-    expect(component.text()).toMatch('Article of video description...')
+    expect(component.text()).toMatch('Article or video description...')
     expect(component.text()).toMatch('Publish Date')
   })
 
   it('Fetches related and renders EditArticleCard if related_article_ids length', () => {
-    props.article.set('related_article_ids', ['123', '456'])
+    props.article.related_article_ids = ['123', '456']
     const component = mount(
       <RelatedArticles {...props} />
     )
@@ -74,7 +74,7 @@ describe('RelatedArticles', () => {
   })
 
   it('onRemoveArticle calls onChange and resets state.relatedArticles', () => {
-    props.article.set('related_article_ids', ['123', '678'])
+    props.article.related_article_ids = ['123', '678']
     const component = mount(
       <RelatedArticles {...props} />
     )

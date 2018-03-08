@@ -26,7 +26,7 @@ export class RelatedArticles extends Component {
   }
 
   fetchArticles = () => {
-    const { related_article_ids } = this.props.article.attributes
+    const { related_article_ids } = this.props.article
     const { relatedArticles } = this.state
     const alreadyFetched = pluck(relatedArticles, 'id')
     const idsToFetch = difference(related_article_ids, alreadyFetched)
@@ -67,7 +67,7 @@ export class RelatedArticles extends Component {
   onRemoveArticle = (id, index) => {
     const { article, onChange } = this.props
     const { relatedArticles } = this.state
-    const { related_article_ids } = article.attributes
+    const { related_article_ids } = article
     const newRelatedIds = without(related_article_ids, id)
 
     relatedArticles.splice(index, 1)
@@ -114,11 +114,11 @@ export class RelatedArticles extends Component {
       <div className='RelatedArticles__preview'>
         <ArticleCard
           editTitle='Title'
-          editDescription='Article of video description...'
+          editDescription='Article or video description...'
           editImage={() => <div />}
           editDate='Publish Date'
           article={{}}
-          series={article.attributes}
+          series={article}
           color={color}
         />
       </div>
