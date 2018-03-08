@@ -1,4 +1,5 @@
-import { clone, extend } from 'lodash'
+
+import { clone, cloneDeep, extend, without } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -10,8 +11,8 @@ export const actions = keyMirror(
   'CHANGE_VIEW',
   'CHANGE_SECTION',
   'CHANGE_ARTICLE',
-  'START_EDITING_ARTICLE',
   'UPDATE_ARTICLE',
+  'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
@@ -24,6 +25,7 @@ export const actions = keyMirror(
   'REMOVE_SECTION',
   'RESET_SECTIONS',
   'SAVE_ARTICLE',
+  'SET_MENTIONED_ITEMS',
   'SET_SECTION',
   'SET_SEO_KEYWORD',
   'TOGGLE_SPINNER'
@@ -280,6 +282,27 @@ export const saveArticlePending = () => {
     type: actions.SAVE_ARTICLE,
     payload: {
       isSaving: true
+    }
+  }
+}
+
+export const onAddFeaturedItem = (model, item) => {
+  return (dispatch, getState) => {
+    const { article } = getState().edit
+    const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
+    let newFeaturedIds = cloneDeep(article)[key] || []
+
+    newFeaturedIds.push(item._id)
+    dispatch(changeArticle(key, newFeaturedIds))
+  }
+}
+
+export const setMentionedItems = (model, items) => {
+  return {
+    type: actions.SET_MENTIONED_ITEMS,
+    payload: {
+      model,
+      items
     }
   }
 }

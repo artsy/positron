@@ -2,7 +2,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 _ = require 'underscore'
 { div, section, label, span, textarea, button } = React.DOM
-dropdownHeader = React.createFactory require '../../../../edit/components/admin/components/dropdown_header.coffee'
+dropdownHeader = React.createFactory require './dropdown_header.coffee'
 sectionFields = React.createFactory require './venice_section.coffee'
 AutocompleteList = React.createFactory require '../../../../../components/autocomplete_list/index.coffee'
 

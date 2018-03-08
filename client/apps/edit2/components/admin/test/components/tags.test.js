@@ -1,6 +1,5 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import Article from '../../../../../../models/article.coffee'
 import { AdminTags } from '../../components/tags.jsx'
 
 describe('AdminTags', () => {
@@ -8,11 +7,11 @@ describe('AdminTags', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article({
+      article: {
         tags: ['Cats', 'Kittens'],
         tracking_tags: ['Dogs', 'Puppies']
-      }),
-      onChange: jest.fn()
+      },
+      onChangeArticleAction: jest.fn()
     }
   })
 
@@ -32,8 +31,8 @@ describe('AdminTags', () => {
       )
       const input = component.find('.tags input').first()
 
-      expect(input.props().defaultValue).toMatch(props.article.get('tags')[0])
-      expect(input.props().defaultValue).toMatch(props.article.get('tags')[1])
+      expect(input.props().defaultValue).toMatch(props.article.tags[0])
+      expect(input.props().defaultValue).toMatch(props.article.tags[1])
     })
 
     it('Adds new tags on input', () => {
@@ -43,8 +42,8 @@ describe('AdminTags', () => {
       const input = component.find('.tags input').first()
       input.simulate('change', {target: {value: 'New York, Photography'}})
 
-      expect(props.onChange.mock.calls[0][0]).toBe('tags')
-      expect(props.onChange.mock.calls[0][1][0]).toBe('New York')
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('tags')
+      expect(props.onChangeArticleAction.mock.calls[0][1][0]).toBe('New York')
     })
   })
 
@@ -64,8 +63,8 @@ describe('AdminTags', () => {
       )
       const input = component.find('.tracking-tags input').first()
 
-      expect(input.props().defaultValue).toMatch(props.article.get('tracking_tags')[0])
-      expect(input.props().defaultValue).toMatch(props.article.get('tracking_tags')[1])
+      expect(input.props().defaultValue).toMatch(props.article.tracking_tags[0])
+      expect(input.props().defaultValue).toMatch(props.article.tracking_tags[1])
     })
 
     it('Adds new tracking tags on input', () => {
@@ -75,8 +74,8 @@ describe('AdminTags', () => {
       const input = component.find('.tracking-tags input').first()
       input.simulate('change', {target: {value: 'New York, Photography'}})
 
-      expect(props.onChange.mock.calls[0][0]).toBe('tracking_tags')
-      expect(props.onChange.mock.calls[0][1][0]).toBe('New York')
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('tracking_tags')
+      expect(props.onChangeArticleAction.mock.calls[0][1][0]).toBe('New York')
     })
   })
 })
