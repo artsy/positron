@@ -2,8 +2,6 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  changeSavedStatus,
-  saveArticle,
   startEditingArticle,
   stopEditingArticle,
   updateArticle,
@@ -11,11 +9,11 @@ import {
 } from 'client/actions/editActions'
 
 import { ErrorBoundary } from 'client/components/error/error_boundary'
-import { EditAdmin } from './admin/index.jsx'
-import { EditContent } from './content/index.jsx'
-import { EditDisplay } from './display/index.jsx'
-import EditHeader from './header/index.jsx'
-import EditError from './error/index.jsx'
+import EditAdmin from './admin'
+import EditContent from './content'
+import EditDisplay from './display'
+import EditError from './error'
+import EditHeader from './header'
 
 import { MessageModal } from './message'
 
@@ -25,14 +23,12 @@ export class EditContainer extends Component {
   static propTypes = {
     activeView: PropTypes.string,
     article: PropTypes.object,
-    changeSavedStatusAction: PropTypes.func,
     channel: PropTypes.object,
     error: PropTypes.object,
     isSaved: PropTypes.bool,
-    saveArticleAction: PropTypes.func,
     startEditingArticleAction: PropTypes.func,
     stopEditingArticleAction: PropTypes.func,
-    updateArticleAction: PropTypes.func,
+    // updateArticleAction: PropTypes.func,
     user: PropTypes.object,
     currentSession: PropTypes.object,
     toggleSpinnerAction: PropTypes.func
@@ -48,24 +44,25 @@ export class EditContainer extends Component {
       lastUpdated: null,
       isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
       inactivityPeriodEntered: false,
-      shouldShowModal: !props.article.isNew(),
+      shouldShowModal: true,
       sentStopEditingEvent: false
     }
 
     this.setupBeforeUnload()
 
-    props.article.sections.on(
-      'change add remove reset',
-      () => this.maybeSaveArticle()
-    )
+    // props.article.sections.on(
+    //   'change add remove reset',
+    //   () => this.maybeSaveArticle()
+    // )
   }
 
   componentDidMount () {
-    const { channel, startEditingArticleAction, user } = this.props
+    const { article, channel, startEditingArticleAction, user } = this.props
+
     startEditingArticleAction({
       channel,
       user,
-      article: this.props.article.id
+      article: article.id
     })
 
     this.resetInactivityCounter()
@@ -82,10 +79,10 @@ export class EditContainer extends Component {
   setupBeforeUnload = () => {
     const { article } = this.props
 
-    if (article.get('published')) {
-      article.once('change', () => {
-        window.addEventListener('beforeunload', this.beforeUnload)
-      })
+    if (article.published) {
+    //   article.once('change', () => {
+      window.addEventListener('beforeunload', this.beforeUnload)
+    //   })
     }
   }
 
@@ -102,25 +99,17 @@ export class EditContainer extends Component {
     }
   }
 
-  onChange = (key, value) => {
-    const { article, channel, updateArticleAction } = this.props
+  // onChange = (key, value) => {
+  //   const { article, channel, updateArticleAction } = this.props
 
-    this.resetInactivityCounter()
-    article.set(key, value)
-    updateArticleAction({
-      channel,
-      article: article.id
-    })
-    this.maybeSaveArticle()
-  }
-
-  onChangeHero = (key, value) => {
-    const { article } = this.props
-    const hero = article.get('hero_section') || {}
-
-    hero[key] = value
-    this.onChange('hero_section', hero)
-  }
+  //   this.resetInactivityCounter()
+  //   article.set(key, value)
+  //   updateArticleAction({
+  //     channel,
+  //     article: article.id
+  //   })
+  //   this.maybeSaveArticle()
+  // }
 
   resetInactivityCounter = () => {
     if (this.inactivityTimer) {
@@ -150,37 +139,16 @@ export class EditContainer extends Component {
     })
   }
 
-  maybeSaveArticle = () => {
-    const {
-      article,
-      changeSavedStatusAction,
-      saveArticleAction
-    } = this.props
-
-    if (article.get('published')) {
-      changeSavedStatusAction(article.attributes, false)
-    } else {
-      saveArticleAction(article)
-    }
-  }
-
   getActiveView = () => {
-    const { activeView, article, channel } = this.props
-
-    const props = {
-      article,
-      channel,
-      onChange: this.onChange,
-      onChangeHero: this.onChangeHero
-    }
+    const { activeView } = this.props
 
     switch (activeView) {
       case 'admin':
-        return <EditAdmin {...props} />
+        return <EditAdmin />
       case 'content':
-        return <EditContent {...props} />
+        return <EditContent />
       case 'display':
-        return <EditDisplay {...props} />
+        return <EditDisplay />
     }
   }
 
@@ -199,10 +167,7 @@ export class EditContainer extends Component {
     return (
       <div className='EditContainer'>
         <ErrorBoundary>
-          <EditHeader
-            {...this.props}
-            beforeUnload={this.beforeUnload}
-          />
+          <EditHeader beforeUnload={this.beforeUnload} />
         </ErrorBoundary>
 
         <ErrorBoundary>
@@ -226,6 +191,7 @@ export class EditContainer extends Component {
 
 const mapStateToProps = (state) => ({
   activeView: state.edit.activeView,
+  article: state.edit.article,
   channel: state.app.channel,
   error: state.edit.error,
   lastUpdated: state.edit.lastUpdated,
@@ -235,8 +201,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  changeSavedStatusAction: changeSavedStatus,
-  saveArticleAction: saveArticle,
   startEditingArticleAction: startEditingArticle,
   stopEditingArticleAction: stopEditingArticle,
   updateArticleAction: updateArticle,

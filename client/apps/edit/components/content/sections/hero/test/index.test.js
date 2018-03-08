@@ -1,7 +1,7 @@
 import React from 'react'
-import Backbone from 'backbone'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
+import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { RemoveButton } from 'client/components/remove_button'
 import { SectionContainer } from '../../../section_container'
@@ -20,7 +20,7 @@ describe('SectionHero', () => {
         channel: {}
       },
       edit: {
-        article: {}
+        article: props.article
       }
     })
 
@@ -33,26 +33,37 @@ describe('SectionHero', () => {
 
   beforeEach(() => {
     props = {
-      article: new Backbone.Model(ClassicArticle),
-      onChange: jest.fn()
+      article: clone(ClassicArticle),
+      onChangeArticleAction: jest.fn()
     }
   })
 
   it('Displays a sectionTool if no section', () => {
-    props.article.set('hero_section', null)
+    props.article.hero_section = null
     const component = getWrapper(props)
 
     expect(component.find(SectionTool).exists()).toBe(true)
     expect(component.find(SectionContainer).exists()).toBe(false)
   })
 
-  it('Displays a sectionContainer has section', () => {
-    props.article.set({
-      hero_section: {
-        url: 'http://youtube.com',
-        type: 'video'
-      }
-    })
+  it('Displays a sectionContainer with video section', () => {
+    props.article.hero_section = {
+      url: 'http://youtube.com',
+      type: 'video'
+    }
+
+    const component = getWrapper(props)
+
+    expect(component.find(SectionTool).exists()).toBe(false)
+    expect(component.find(SectionContainer).exists()).toBe(true)
+  })
+
+  it('Displays a sectionContainer with image section', () => {
+    props.article.hero_section = {
+      images: [],
+      type: 'image'
+    }
+
     const component = getWrapper(props)
 
     expect(component.find(SectionTool).exists()).toBe(false)
@@ -60,15 +71,14 @@ describe('SectionHero', () => {
   })
 
   it('Can remove a hero if empty', () => {
-    props.article.set({
-      hero_section: {
-        type: 'video'
-      }
-    })
+    props.article.hero_section = {
+      type: 'image'
+    }
+
     const component = getWrapper(props)
 
     component.find(RemoveButton).simulate('click')
-    expect(props.onChange.mock.calls[1][0]).toBe('hero_section')
-    expect(props.onChange.mock.calls[1][1]).toBe(null)
+    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('hero_section')
+    expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(null)
   })
 })

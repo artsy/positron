@@ -1,8 +1,8 @@
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import Backbone from 'backbone'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from '../../../../../../models/article.coffee'
 import { AdminVerticalsTags } from '../../components/verticals_tags.jsx'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
 require('typeahead.js')
@@ -12,15 +12,15 @@ describe('AdminVerticalsTags', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.FeatureArticle),
-      onChange: jest.fn()
+      article: cloneDeep(Fixtures.FeatureArticle),
+      onChangeArticleAction: jest.fn()
     }
 
     Backbone.Collection.prototype.fetch = jest.fn((res) => {
       const verticals = new Backbone.Collection([
         {id: '123', name: 'Art'},
         {id: '456', name: 'News'},
-        props.article.get('vertical')
+        props.article.vertical
       ])
       return res.success(verticals)
     })
@@ -32,7 +32,7 @@ describe('AdminVerticalsTags', () => {
         <AdminVerticalsTags {...props} />
       )
       expect(component.find('.verticals button').length).toBe(3)
-      expect(component.text()).toMatch(props.article.get('vertical').name)
+      expect(component.text()).toMatch(props.article.vertical.name)
     })
 
     it('Knows which vertical is active', () => {
@@ -40,7 +40,7 @@ describe('AdminVerticalsTags', () => {
         <AdminVerticalsTags {...props} />
       )
       expect(component.find('.verticals button[data-active=true]').at(0).text()).toMatch(
-        component.props().article.get('vertical').name
+        component.props().article.vertical.name
       )
     })
 
@@ -51,8 +51,8 @@ describe('AdminVerticalsTags', () => {
       const button = component.find('.verticals button').last()
       button.simulate('click')
 
-      expect(props.onChange.mock.calls[0][0]).toBe('vertical')
-      expect(props.onChange.mock.calls[0][1].name).toBe('News')
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('vertical')
+      expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe('News')
     })
 
     it('Unsets vertical when clicking active vertical', () => {
@@ -62,8 +62,8 @@ describe('AdminVerticalsTags', () => {
       const button = component.find('button[data-active=true]').at(0)
       button.simulate('click')
 
-      expect(props.onChange.mock.calls[0][0]).toBe('vertical')
-      expect(props.onChange.mock.calls[0][1]).toBe(null)
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('vertical')
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(null)
     })
   })
 
@@ -75,7 +75,7 @@ describe('AdminVerticalsTags', () => {
       const input = component.find(AutocompleteInlineList).first()
 
       expect(input.props().placeholder).toMatch('Start typing a topic tag...')
-      expect(input.props().items).toBe(props.article.get('tags'))
+      expect(input.props().items).toBe(props.article.tags)
     })
 
     it('Renders a list of saved topic tags', () => {
@@ -84,8 +84,8 @@ describe('AdminVerticalsTags', () => {
       )
       const tagsList = component.find('.tags .Autocomplete__list-item')
 
-      expect(tagsList.length).toBe(props.article.get('tags').length)
-      expect(tagsList.at(0).text()).toMatch(props.article.get('tags')[0])
+      expect(tagsList.length).toBe(props.article.tags.length)
+      expect(tagsList.at(0).text()).toMatch(props.article.tags[0])
     })
 
     it('Can remove a saved topic tag', () => {
@@ -95,8 +95,8 @@ describe('AdminVerticalsTags', () => {
       const button = component.find('.tags .Autocomplete__list-item button').at(0)
       button.simulate('click')
 
-      expect(props.onChange.mock.calls[0][0]).toBe('tags')
-      expect(props.onChange.mock.calls[0][1].length).toBe(0)
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('tags')
+      expect(props.onChangeArticleAction.mock.calls[0][1].length).toBe(0)
     })
   })
 
@@ -108,7 +108,7 @@ describe('AdminVerticalsTags', () => {
       const input = component.find(AutocompleteInlineList).last()
 
       expect(input.props().placeholder).toMatch('Start typing a tracking tag...')
-      expect(input.props().items).toBe(props.article.get('tracking_tags'))
+      expect(input.props().items).toBe(props.article.tracking_tags)
     })
 
     it('Renders a list of saved tracking tags', () => {
@@ -117,8 +117,8 @@ describe('AdminVerticalsTags', () => {
       )
       const tagsList = component.find('.tracking-tags .Autocomplete__list-item')
 
-      expect(tagsList.length).toBe(props.article.get('tracking_tags').length)
-      expect(tagsList.at(0).text()).toMatch(props.article.get('tracking_tags')[0])
+      expect(tagsList.length).toBe(props.article.tracking_tags.length)
+      expect(tagsList.at(0).text()).toMatch(props.article.tracking_tags[0])
     })
 
     it('Can remove a saved tracking tag', () => {
@@ -128,8 +128,8 @@ describe('AdminVerticalsTags', () => {
       const button = component.find('.tracking-tags .Autocomplete__list-item button').at(0)
       button.simulate('click')
 
-      expect(props.onChange.mock.calls[0][0]).toBe('tracking_tags')
-      expect(props.onChange.mock.calls[0][1].length).toBe(0)
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('tracking_tags')
+      expect(props.onChangeArticleAction.mock.calls[0][1].length).toBe(0)
     })
   })
 })

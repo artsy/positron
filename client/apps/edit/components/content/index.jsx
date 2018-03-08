@@ -1,3 +1,4 @@
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import EditArticle from './article_layouts/article'
@@ -6,15 +7,13 @@ import { EditVideo } from './article_layouts/video'
 
 export class EditContent extends Component {
   static propTypes = {
-    article: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onChangeHero: PropTypes.func.isRequired
+    article: PropTypes.object
   }
 
   getArticleLayout = () => {
     const { article } = this.props
 
-    switch (article.get('layout')) {
+    switch (article.layout) {
       case 'series': {
         return <EditSeries {...this.props} />
       }
@@ -22,7 +21,7 @@ export class EditContent extends Component {
         return <EditVideo {...this.props} />
       }
       default: {
-        return <EditArticle {...this.props} />
+        return <EditArticle />
       }
     }
   }
@@ -33,10 +32,18 @@ export class EditContent extends Component {
     return (
       <div
         className={'EditContent'}
-        data-layout={article.get('layout')}
+        data-layout={article.layout}
       >
         {this.getArticleLayout()}
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+export default connect(
+  mapStateToProps
+)(EditContent)

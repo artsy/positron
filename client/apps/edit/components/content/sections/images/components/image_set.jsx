@@ -7,7 +7,8 @@ import {
 
 export const ImageSet = (props) => {
   const { articleLayout, section } = props
-  const images = section.get('images') || []
+  const { layout, title } = section
+  const images = section.images || []
   let itemProps = {}
 
   if (articleLayout === 'classic') {
@@ -19,8 +20,8 @@ export const ImageSet = (props) => {
   } else {
     itemProps.section = {
       images,
-      layout: section.get('layout'),
-      title: section.get('title')
+      layout,
+      title
     }
 
     return (

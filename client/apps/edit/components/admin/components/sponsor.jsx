@@ -1,25 +1,28 @@
+import { clone } from 'lodash'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ImageUpload from './image_upload.coffee'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class AdminSponsor extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChange: PropTypes.func
+    onChangeArticleAction: PropTypes.func
   }
 
   onChange = (key, value) => {
-    const { article, onChange } = this.props
-    const sponsor = article.get('sponsor') || {}
+    const { article, onChangeArticleAction } = this.props
+    const sponsor = clone(article.sponsor) || {}
 
     sponsor[key] = value
-    onChange('sponsor', sponsor)
+    onChangeArticleAction('sponsor', sponsor)
   }
 
   render () {
     const { article } = this.props
-    const sponsor = article.get('sponsor') || {}
+    const sponsor = article.sponsor || {}
 
     return (
       <Row className='AdminSponsor'>
@@ -64,3 +67,16 @@ export class AdminSponsor extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminSponsor)

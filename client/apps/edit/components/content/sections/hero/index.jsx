@@ -1,66 +1,62 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Section from '../../../../../../models/section.coffee'
+import { connect } from 'react-redux'
 import SectionContainer from '../../section_container'
-import { SectionTool } from '../../section_tool'
+import SectionTool from '../../section_tool'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class SectionHero extends Component {
   static propTypes = {
-    article: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    article: PropTypes.object,
+    onChangeArticleAction: PropTypes.func
   }
 
-  constructor (props) {
-    super(props)
-
-    const hero = new Section(props.article.get('hero_section'))
-
-    hero.on('change', (hero) => {
-      props.onChange('hero_section', hero.attributes)
-    })
-
-    this.state = {
-      editing: false,
-      hero
-    }
+  state = {
+    editing: false
   }
 
   onRemoveHero = () => {
-    this.state.hero.clear()
-    this.props.onChange('hero_section', null)
+    const { onChangeArticleAction } = this.props
+
+    onChangeArticleAction('hero_section', null)
   }
 
-  onSetEditing = (isEditing) => {
-    const hasHero = this.props.article.finishedHero()
+  onSetEditing = (editing) => {
+    const hasHero = this.finishedHero()
 
-    if (isEditing) {
-      this.setState({ editing: true })
-    } else {
-      if (!hasHero) {
-        this.onRemoveHero()
-      }
-      this.setState({ editing: false })
+    if (!editing && !hasHero) {
+      this.onRemoveHero()
     }
+    this.setState({ editing })
+  }
+
+  finishedHero = () => {
+    const { hero_section } = this.props.article
+    const hasImages = hero_section.images && hero_section.images.length
+    const hasVideo = hero_section.url
+
+    return hasImages || hasVideo
   }
 
   render () {
-    const { editing, hero } = this.state
+    const { hero_section } = this.props.article
+    const { editing } = this.state
 
     return (
       <div className='edit-section--hero'>
-        {hero && hero.keys().length
+        {hero_section
           ? <SectionContainer
-              section={hero}
               onSetEditing={this.onSetEditing}
               isHero
               index={-1}
               editing={editing}
               onRemoveHero={this.onRemoveHero}
+              section={hero_section}
             />
 
           : <SectionTool
-              section={hero}
-              onSetEditing={this.onSetEditing}
+              section={hero_section}
+              onSetEditing={(editing) => this.setState({ editing })}
               isHero
               index={-1}
               editing={editing}
@@ -70,3 +66,16 @@ export class SectionHero extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionHero)

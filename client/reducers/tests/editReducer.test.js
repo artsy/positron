@@ -1,4 +1,4 @@
-import { clone, extend } from 'lodash'
+import { cloneDeep, extend } from 'lodash'
 import { editReducer } from '../editReducer'
 import { actions, setupSection } from '../../actions/editActions'
 import {
@@ -10,8 +10,8 @@ describe('editReducer', () => {
   let initialSections
 
   beforeEach(() => {
-    initialState = editReducer(undefined, {})
-    initialSections = clone(FeatureArticle.sections)
+    initialState = editReducer(undefined, { payload: {} })
+    initialSections = cloneDeep(FeatureArticle.sections)
   })
 
   it('should return the initial state', () => {
@@ -36,6 +36,7 @@ describe('editReducer', () => {
           sectionIndex
         }
       })
+
       expect(updatedState.sectionIndex).toBe(sectionIndex)
       expect(updatedState.section).toEqual(initialSections[sectionIndex])
     })
@@ -64,24 +65,23 @@ describe('editReducer', () => {
       )
     })
 
-    it('ON_CHANGE_SECTION should update section keys and reset article.sections', () => {
-      const stateWithSection = extend(initialState, {
-        section: initialSections[0],
+    xit('CHANGE_SECTION should update section keys and reset article.sections', () => {
+      const stateWithSection = extend(cloneDeep(initialState), {
+        section: cloneDeep(initialSections[0]),
         sectionIndex: 0
       })
       const key = 'body'
       const value = '<p>A new piece of text.</p>'
 
       const updatedState = editReducer(stateWithSection, {
-        type: actions.ON_CHANGE_SECTION,
+        type: actions.CHANGE_SECTION,
         payload: {
           key,
           value
         }
       })
-
-      expect(updatedState.section.body).toBe(value)
-      expect(updatedState.article.sections[0].body).toBe(value)
+      expect(updatedState.section.body).toMatch(value)
+      expect(updatedState.article.sections[0].body).toMatch(value)
     })
 
     it('REMOVE_SECTION should remove a section by index', () => {
@@ -100,6 +100,18 @@ describe('editReducer', () => {
       expect(updatedState.article.sections[2]).not.toEqual(
         initialSections[2]
       )
+    })
+
+    it('RESET_SECTIONS should reset the sections to provided array', () => {
+      const sections = initialSections.slice(1, 3)
+      const updatedState = editReducer(initialState, {
+        type: actions.RESET_SECTIONS,
+        payload: {
+          article: { sections }
+        }
+      })
+
+      expect(updatedState.article.sections.length).not.toEqual(initialSections.length)
     })
   })
 })
