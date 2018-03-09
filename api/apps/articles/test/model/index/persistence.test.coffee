@@ -534,6 +534,23 @@ describe 'Article Persistence', ->
         article.sections[0].images[1].credit.should.equal 'Credit Line'
         done()
 
+    it 'saves social_embed sections', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        sections: [
+          {
+            type: 'social_embed'
+            layout: 'column_width'
+            url: 'http://instagram.com/foo'
+          }
+        ]
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.sections[0].layout.should.equal 'column_width'
+        article.sections[0].url.should.equal 'http://instagram.com/foo'
+        article.sections[0].type.should.equal 'social_embed'
+        done()
+
     it 'saves layouts', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
