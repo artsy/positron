@@ -52,7 +52,7 @@ export const changeView = (activeView) => ({
 
 export const deleteArticle = (key, value) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const newArticle = new Article(article)
 
     dispatch(deleteArticlePending())
@@ -115,7 +115,7 @@ export const setSection = (sectionIndex) => ({
 })
 
 export const newSection = (type, sectionIndex, attrs = {}) => {
-  const section = extend(setupSection(type), attrs)
+  const section = {...setupSection(type), ...attrs}
 
   return {
     type: actions.NEW_SECTION,
@@ -136,7 +136,7 @@ export const newHeroSection = (type) => {
 
 export const onChangeArticle = (key, value) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
 
     dispatch(changeArticle(key, value))
 
@@ -158,7 +158,7 @@ export const changeArticle = (key, value) => {
 
 export const onChangeHero = (key, value) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const hero_section = clone(article.hero_section) || {}
 
     hero_section[key] = value
@@ -172,7 +172,7 @@ export const onChangeHero = (key, value) => {
 
 export const onChangeSection = (key, value) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
 
     dispatch(changeSection(key, value))
 
@@ -203,7 +203,7 @@ export const onFirstSave = (id) => {
 export const publishArticle = () => {
   return (dispatch, getState) => {
     dispatch(publishArticlePending())
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const published = !article.published
     const newArticle = new Article(article)
 
@@ -243,9 +243,9 @@ export const removeSection = (sectionIndex) => ({
 
 export const resetSections = (sections) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const newArticle = extend(cloneDeep(article), { sections })
-    debugger
+
     dispatch(onResetSections(newArticle))
   }
 }
@@ -259,7 +259,7 @@ export const onResetSections = (article) => ({
 
 export const saveArticle = () => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const newArticle = new Article(article)
 
     dispatch(saveArticlePending())
@@ -288,7 +288,7 @@ export const saveArticlePending = () => {
 
 export const onAddFeaturedItem = (model, item) => {
   return (dispatch, getState) => {
-    const { article } = getState().edit
+    const { edit: { article } } = getState()
     const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
     let newFeaturedIds = cloneDeep(article)[key] || []
 

@@ -1,5 +1,5 @@
 import * as editActions from '../editActions'
-import { clone } from 'lodash'
+import { cloneDeep } from 'lodash'
 import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
@@ -10,7 +10,7 @@ describe('editActions', () => {
 
   beforeEach(() => {
     window.location.assign = jest.fn()
-    article = clone(FeatureArticle)
+    article = cloneDeep(FeatureArticle)
   })
 
   document.body.innerHTML = `

@@ -73,7 +73,7 @@ export class AdminVerticalsTags extends Component {
           <div className='field-group tags'>
             <label>Topic Tags</label>
             <AutocompleteInlineList
-              items={article.tags || []}
+              items={article.tags}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }
@@ -89,7 +89,7 @@ export class AdminVerticalsTags extends Component {
           <div className='field-group tracking-tags'>
             <label>Tracking Tags</label>
             <AutocompleteInlineList
-              items={article.tracking_tags || []}
+              items={article.tracking_tags}
               filter={(tags) => {
                 return tags.results.map((tag) => {
                   return { id: tag.id, name: tag.name }

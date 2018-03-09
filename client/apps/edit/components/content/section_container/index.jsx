@@ -41,8 +41,10 @@ export class SectionContainer extends Component {
     let setEditing
 
     if (isHero) {
+      // use boolean if article.hero_section
       setEditing = !editing
     } else {
+      // use the section index if article.section
       setEditing = editing ? null : index
     }
     onSetEditing(setEditing)
