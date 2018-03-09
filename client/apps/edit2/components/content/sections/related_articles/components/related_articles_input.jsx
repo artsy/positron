@@ -13,7 +13,7 @@ export class RelatedArticlesInput extends Component {
 
   render () {
     const { article, color, onChange } = this.props
-    const related = article.get('related_article_ids') || []
+    const related = article.related_article_ids || []
 
     return (
       <RelatedArticlesInputContainer
