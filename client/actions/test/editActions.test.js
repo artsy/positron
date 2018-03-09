@@ -20,6 +20,50 @@ describe('editActions', () => {
     </div>'
   `
 
+  describe('#onChangeArticle', () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({
+        edit: { article },
+        app: { channel: {type: 'editorial'} }
+      }))
+      dispatch = jest.fn()
+    })
+
+    it('calls #changeArticle with new attrs', () => {
+      editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('title')
+      expect(dispatch.mock.calls[0][0].payload.value).toBe('New Title')
+    })
+
+    it('calls #updateArticle with new attrs', () => {
+      editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+
+      expect(dispatch.mock.calls[1][0].type).toBe('UPDATE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].key).toBe('userCurrentlyEditing')
+      expect(dispatch.mock.calls[1][0].payload.article).toBe(article.id)
+    })
+
+    it('does not call #saveArticle if published', () => {
+      editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+      expect(dispatch.mock.calls.length).toBe(2)
+    })
+
+    it('calls #saveArticle if draft', () => {
+      article.published = false
+      editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+
+      expect(dispatch.mock.calls.length).toBe(3)
+    })
+  })
+
   it('#changeSavedStatus updates article and sets isSaved to arg', () => {
     article.title = 'Cool article'
     const action = editActions.changeSavedStatus(article, true)

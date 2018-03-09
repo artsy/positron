@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { once } from 'lodash'
 import {
   startEditingArticle,
   stopEditingArticle,
-  updateArticle,
   toggleSpinner
 } from 'client/actions/editActions'
 
@@ -28,7 +28,6 @@ export class EditContainer extends Component {
     isSaved: PropTypes.bool,
     startEditingArticleAction: PropTypes.func,
     stopEditingArticleAction: PropTypes.func,
-    // updateArticleAction: PropTypes.func,
     user: PropTypes.object,
     currentSession: PropTypes.object,
     toggleSpinnerAction: PropTypes.func
@@ -47,13 +46,6 @@ export class EditContainer extends Component {
       shouldShowModal: true,
       sentStopEditingEvent: false
     }
-
-    this.setupBeforeUnload()
-
-    // props.article.sections.on(
-    //   'change add remove reset',
-    //   () => this.maybeSaveArticle()
-    // )
   }
 
   componentDidMount () {
@@ -70,7 +62,16 @@ export class EditContainer extends Component {
     window.addEventListener('beforeunload', this.sendStopEditing)
   }
 
-  componentWillUnmount () {
+  componentWillReceiveProps = (nextProps) => {
+    if (this.props.article !== nextProps.article) {
+      const setupBeforeUnload = once(this.setupBeforeUnload)
+
+      this.resetInactivityCounter()
+      setupBeforeUnload()
+    }
+  }
+
+  componentWillUnmount = () => {
     this.sendStopEditing()
     window.removeEventListener('beforeunload', this.sendStopEditing)
     clearTimeout(this.inactivityTimer)
@@ -96,17 +97,6 @@ export class EditContainer extends Component {
       e.returnValue = undefined
     }
   }
-
-  // onChange = (key, value) => {
-  //   const { article, channel, updateArticleAction } = this.props
-
-  //   this.resetInactivityCounter()
-  //   article.set(key, value)
-  //   updateArticleAction({
-  //     channel,
-  //     article: article.id
-  //   })
-  // }
 
   resetInactivityCounter = () => {
     if (this.inactivityTimer) {
@@ -200,7 +190,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   startEditingArticleAction: startEditingArticle,
   stopEditingArticleAction: stopEditingArticle,
-  updateArticleAction: updateArticle,
   toggleSpinnerAction: toggleSpinner
 }
 

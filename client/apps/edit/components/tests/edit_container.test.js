@@ -73,28 +73,11 @@ describe('EditContainer', () => {
     expect(props.toggleSpinnerAction.mock.calls[0][0]).toBe(false)
   })
 
-  xit('sets up an event listener for #beforeUnload when a published article changes', () => {
-    props.article.published = true
+  it('sets up an event listener for #beforeUnload if article is published and changed', () => {
     const component = getShallowWrapper(props)
-    component.instance().props.article.set('title', 'New Title')
+    component.instance().componentWillReceiveProps({article: {published: true}})
 
     expect(window.addEventListener.mock.calls[0][0]).toBe('beforeunload')
-  })
-
-  xit('#onChange sets the article with key/value and calls #maybeSaveArticle', () => {
-    const title = 'New Title'
-    const component = getShallowWrapper(props)
-    component.instance().onChange('title', title)
-
-    expect(props.saveArticleAction.mock.calls[0][0].get('title')).toBe(title)
-  })
-
-  xit('#onChangeHero sets the article hero_section with key/value and calls #maybeSaveArticle', () => {
-    const url = 'New Url'
-    const component = getShallowWrapper(props)
-    component.instance().onChangeHero('url', url)
-
-    expect(props.saveArticleAction.mock.calls[0][0].get('hero_section').url).toBe(url)
   })
 
   it('sends a #startEditingArticleAction when mounting', () => {

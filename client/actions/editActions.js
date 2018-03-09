@@ -136,9 +136,16 @@ export const newHeroSection = (type) => {
 
 export const onChangeArticle = (key, value) => {
   return (dispatch, getState) => {
-    const { edit: { article } } = getState()
+    const {
+      app: { channel },
+      edit: { article }
+    } = getState()
 
     dispatch(changeArticle(key, value))
+    dispatch(updateArticle({
+      channel,
+      article: article.id
+    }))
 
     if (!article.published) {
       dispatch(saveArticle())
