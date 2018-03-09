@@ -8,7 +8,7 @@ import { CharacterLimit } from 'client/components/character_limit'
 import { DisplaySocial } from '../components/social'
 import ImageUpload from '../../admin/components/image_upload.coffee'
 
-xdescribe('DisplaySocial', () => {
+describe('DisplaySocial', () => {
   let props
 
   const getWrapper = (props) => {

@@ -8,7 +8,7 @@ import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayPartner } from '../components/partner'
 import ImageUpload from '../../admin/components/image_upload.coffee'
 
-xdescribe('DisplayPartner', () => {
+describe('DisplayPartner', () => {
   let props
 
   const getWrapper = (props) => {

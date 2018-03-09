@@ -80,9 +80,7 @@ export class EditContainer extends Component {
     const { article } = this.props
 
     if (article.published) {
-    //   article.once('change', () => {
       window.addEventListener('beforeunload', this.beforeUnload)
-    //   })
     }
   }
 
@@ -108,7 +106,6 @@ export class EditContainer extends Component {
   //     channel,
   //     article: article.id
   //   })
-  //   this.maybeSaveArticle()
   // }
 
   resetInactivityCounter = () => {
