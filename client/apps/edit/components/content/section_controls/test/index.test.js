@@ -72,16 +72,15 @@ describe('Section Controls', () => {
       expect(component.state.insideComponent).toBe(true)
     })
 
-    xit('returns false if item is scrolled past', () => {
-      SectionControls.prototype.isScrolledPast.mockReturnValueOnce(true)
+    it('returns false if item is scrolled past', () => {
       const component = getWrapper(props).find(SectionControls).instance()
-
+      component.isScrolledPast = jest.fn().mockReturnValue(true)
       component.setInsideComponent()
+
       expect(component.state.insideComponent).toBe(false)
     })
 
     it('returns false when hero section', () => {
-      SectionControls.prototype.isScrolledPast = jest.fn().mockReturnValue(false)
       props.isHero = true
       const component = getWrapper(props).find(SectionControls).instance()
 
