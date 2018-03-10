@@ -20,8 +20,7 @@ describe('EditContent', () => {
         channel: {hasFeature: jest.fn().mockReturnThis()}
       },
       edit: {
-        article: props.article,
-        lastUpdated: new Date()
+        article: props.article
       }
     })
     return mount(

@@ -36,8 +36,7 @@ export const changeSavedStatus = (article, isSaved) => {
     type: actions.CHANGE_SAVED_STATUS,
     payload: {
       article,
-      isSaved,
-      lastUpdated: new Date()
+      isSaved
     }
   }
 }

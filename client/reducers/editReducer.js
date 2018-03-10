@@ -24,7 +24,6 @@ export const initialState = {
   isPublishing: false,
   isSaving: false,
   isSaved: true,
-  lastUpdated: null,
   mentioned: {
     artist: [],
     artwork: []
@@ -41,8 +40,7 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         isSaving: false,
-        isSaved: action.payload.isSaved,
-        lastUpdated: action.payload.lastUpdated
+        isSaved: action.payload.isSaved
       }, state)
     }
 

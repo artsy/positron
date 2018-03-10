@@ -40,7 +40,6 @@ export class EditContainer extends Component {
     const isCurrentUserEditing = props.user && session && props.user.id === session.user.id
 
     this.state = {
-      lastUpdated: null,
       isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
       inactivityPeriodEntered: false,
       shouldShowModal: true,
@@ -181,7 +180,6 @@ const mapStateToProps = (state) => ({
   article: state.edit.article,
   channel: state.app.channel,
   error: state.edit.error,
-  lastUpdated: state.edit.lastUpdated,
   user: state.app.user,
   currentSession: state.edit.currentSession,
   isSaved: state.edit.isSaved

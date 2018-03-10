@@ -1,9 +1,7 @@
 import { cloneDeep, extend } from 'lodash'
 import { editReducer } from '../editReducer'
 import { actions, setupSection } from '../../actions/editActions'
-import {
-  FeatureArticle
-} from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('editReducer', () => {
   let initialState
@@ -22,7 +20,6 @@ describe('editReducer', () => {
     expect(initialState.isPublishing).toBe(false)
     expect(initialState.isSaving).toBe(false)
     expect(initialState.isSaved).toBe(true)
-    expect(initialState.lastUpdated).toBe(null)
     expect(initialState.section).toBe(null)
     expect(initialState.sectionIndex).toBe(null)
   })
