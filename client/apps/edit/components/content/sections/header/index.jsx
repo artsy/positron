@@ -1,16 +1,21 @@
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Header, IconRemove } from '@artsy/reaction/dist/Components/Publishing'
-import { HeaderControls } from './controls/index.jsx'
+import { connect } from 'react-redux'
+import { Header } from '@artsy/reaction/dist/Components/Publishing'
+import FileInput from '/client/components/file_input/index.jsx'
+import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
+import HeaderControls from './controls/index.jsx'
 import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
+import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
+import { RemoveButton } from 'client/components/remove_button'
+import { onChangeArticle, onChangeHero } from 'client/actions/editActions'
 
 export class SectionHeader extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
     onChange: PropTypes.func,
-    onChangeHero: PropTypes.func
+    onChangeHeroAction: PropTypes.func
   }
 
   state = {
@@ -26,33 +31,32 @@ export class SectionHeader extends Component {
 
     return (
       <PlainText
-        content={article.get('title')}
-        onChange={(key, value) => onChange('title', value)}
+        content={article.title}
+        onChange={(content) => onChange('title', content)}
         placeholder='Title'
-        name='title'
       />
     )
   }
 
   renderFeatureDeck = (hero) => {
-    const { onChangeHero } = this.props
+    const { onChangeHeroAction } = this.props
 
     return (
       <PlainText
         content={hero.deck}
-        onChange={(content) => onChangeHero('deck', content)}
+        onChange={(content) => onChangeHeroAction('deck', content)}
         placeholder='Deck (optional)'
       />
     )
   }
 
   renderFileUpload (prompt) {
-    const { onChangeHero } = this.props
+    const { onChangeHeroAction } = this.props
 
     return (
       <FileInput
         type='simple'
-        onUpload={(src) => onChangeHero('url', src)}
+        onUpload={(src) => onChangeHeroAction('url', src)}
         prompt={prompt}
         video
         onProgress={this.onProgress}
@@ -62,7 +66,9 @@ export class SectionHeader extends Component {
 
   renderImage (hero) {
     const { type, url } = hero
-    const { onChangeHero } = this.props
+    const { onChangeHeroAction } = this.props
+    const { progress } = this.state
+
     const isFullscreen = type && type === 'fullscreen'
     const hasUrl = url && url.length
     const prompt = isFullscreen ? 'Add Background' : 'Add Image or Video'
@@ -75,30 +81,32 @@ export class SectionHeader extends Component {
       )
     } else if (hasUrl) {
       return (
-        <div
-          className='edit-header__remove'
-          onClick={() => onChangeHero('url', '')}>
-          <IconRemove />
-        </div>
+        <RemoveButton
+          onClick={() => onChangeHeroAction('url', '')}
+        />
       )
     } else {
       return (
         <div className='edit-header__image-container' data-has-image={false}>
           {this.renderFileUpload(prompt)}
-          {this.state.progress && this.renderProgress()}
+
+          {progress &&
+            <ProgressBar progress={progress} cover />
+          }
         </div>
       )
     }
   }
 
-  renderProgress = () => {
-    return (
-      <div className='upload-progress-container'>
-        <div
-          className='upload-progress'
-          style={{width: (this.state.progress * 100) + '%'}} />
-      </div>
-    )
+  getPublishDate = () => {
+    const { article } = this.props
+    let date = new Date()
+    if (article.published) {
+      date = article.published_at
+    } else if (article.scheduled_publish_at) {
+      date = article.scheduled_publish_at
+    }
+    return moment(date).local().toISOString()
   }
 
   renderLeadParagraph = () => {
@@ -106,27 +114,28 @@ export class SectionHeader extends Component {
 
     return (
       <Paragraph
-        html={article.get('lead_paragraph')}
+        html={article.lead_paragraph}
         onChange={(input) => onChange('lead_paragraph', input)}
         placeholder='Lead Paragraph (optional)'
         type='lead_paragraph'
         linked={false}
         stripLinebreaks
-        layout={article.get('layout')}
+        layout={article.layout}
       />
     )
   }
 
   render () {
-    const { article, onChangeHero } = this.props
-    const isFeature = article.get('layout') === 'feature'
-    const isClassic = article.get('layout') === 'classic'
-    const hero = article.get('hero_section') || {}
+    const { article } = this.props
+
+    const isFeature = article.layout === 'feature'
+    const isClassic = article.layout === 'classic'
+    const hero = article.hero_section || {}
 
     if (isClassic) {
       return (
         <div className='edit-header'>
-          <Header article={article.attributes} date={article.getPublishDate()}>
+          <Header article={article} date={this.getPublishDate()}>
             {this.renderTitle()}
             {this.renderLeadParagraph()}
           </Header>
@@ -141,15 +150,10 @@ export class SectionHeader extends Component {
           data-type={headerType}
         >
           {isFeature &&
-            <HeaderControls
-              onChange={onChangeHero}
-              onProgress={this.onProgress}
-              article={article}
-              hero={hero}
-            />
+            <HeaderControls onProgress={this.onProgress} />
           }
 
-          <Header article={article.attributes} date={article.getPublishDate()}>
+          <Header article={article} date={this.getPublishDate()}>
             <span>Missing Vertical</span>
             {this.renderTitle()}
             {isFeature && this.renderFeatureDeck(hero)}
@@ -160,3 +164,17 @@ export class SectionHeader extends Component {
     }
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeHeroAction: onChangeHero,
+  onChange: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionHeader)

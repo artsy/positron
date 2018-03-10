@@ -1,7 +1,7 @@
 import React from 'react'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from '../../../../../../models/article.coffee'
 import { VideoAbout } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
 import FileInput from '/client/components/file_input/index.jsx'
@@ -15,8 +15,8 @@ describe('EditVideo', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.VideoArticle),
-      onChange: jest.fn()
+      article: cloneDeep(Fixtures.VideoArticle),
+      onChangeArticleAction: jest.fn()
     }
   })
 
@@ -50,13 +50,13 @@ describe('EditVideo', () => {
       <EditVideo {...props} />
     )
     component.instance().onMediaChange('description', '')
-    expect(props.onChange.mock.calls[0][1].description).toBe('')
+    expect(props.onChangeArticleAction.mock.calls[0][1].description).toBe('')
     component.instance().onMediaChange('description', 'Sample Description')
-    expect(props.onChange.mock.calls[0][1].description).toBe('Sample Description')
+    expect(props.onChangeArticleAction.mock.calls[1][1].description).toBe('Sample Description')
     component.instance().onMediaChange('duration', 100)
-    expect(props.onChange.mock.calls[0][1].duration).toBe(100)
+    expect(props.onChangeArticleAction.mock.calls[2][1].duration).toBe(100)
     component.instance().onMediaChange('published', false)
-    expect(props.onChange.mock.calls[0][1].published).toBe(false)
+    expect(props.onChangeArticleAction.mock.calls[3][1].published).toBe(false)
   })
 
   it('toggles published state on media', () => {
@@ -64,7 +64,9 @@ describe('EditVideo', () => {
       <EditVideo {...props} />
     )
     component.find(EditVideoPublished).simulate('click')
-    expect(props.onChange.mock.calls[0][1].published).toBe(true)
+
+    expect(props.onChangeArticleAction.mock.calls[0][1].published).toBe(false)
+    expect(props.onChangeArticleAction.mock.calls[0][1].published).not.toBe(props.article.media.published)
   })
 
   it('sets release_date on media', () => {
@@ -73,6 +75,6 @@ describe('EditVideo', () => {
     )
     const input = component.find('input[type="date"]')
     input.simulate('change', { target: { value: '2017-02-07' } })
-    expect(props.onChange.mock.calls[0][1].release_date).toMatch('2017-02-07')
+    expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch('2017-02-07')
   })
 })

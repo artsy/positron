@@ -19,7 +19,7 @@ export class ArticleAuthors extends Component {
 
   onChangeAuthor = (name) => {
     const { article, onChangeArticleAction } = this.props
-    const author = clone(article.author)
+    const author = clone(article.author) || {}
 
     author.name = name
     onChangeArticleAction('author', author)
@@ -60,7 +60,7 @@ export class ArticleAuthors extends Component {
       apiURL,
       onChangeArticleAction
     } = this.props
-    const { name } = article.author
+    const name = article.author ? article.author.name : ''
 
     return (
       <Row>
@@ -69,7 +69,7 @@ export class ArticleAuthors extends Component {
             <label>Primary Author</label>
             <input
               className='bordered-input'
-              defaultValue={name || ''}
+              defaultValue={name}
               onChange={(e) => this.onChangeAuthor(e.target.value)}
             />
           </div>

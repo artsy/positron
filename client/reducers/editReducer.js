@@ -16,17 +16,20 @@ const setupArticle = () => {
 }
 
 export const initialState = {
-  article: setupArticle(),
-  sectionIndex: null,
   activeView: 'content',
+  article: setupArticle(),
+  currentSession: sd.CURRENT_SESSION,
   error: null,
   isDeleting: false,
   isPublishing: false,
   isSaving: false,
   isSaved: true,
-  lastUpdated: null,
+  mentioned: {
+    artist: [],
+    artwork: []
+  },
   section: null,
-  currentSession: sd.CURRENT_SESSION
+  sectionIndex: null
 }
 
 export function editReducer (state = initialState, action) {
@@ -37,8 +40,7 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         isSaving: false,
-        isSaved: action.payload.isSaved,
-        lastUpdated: action.payload.lastUpdated
+        isSaved: action.payload.isSaved
       }, state)
     }
 
@@ -56,6 +58,17 @@ export function editReducer (state = initialState, action) {
     case actions.CHANGE_VIEW: {
       return u({
         activeView: action.payload.activeView
+      }, state)
+    }
+
+    case actions.CHANGE_ARTICLE: {
+      const { key, value } = action.payload
+      const article = cloneDeep(state.article)
+      article[key] = value
+
+      return u({
+        article,
+        isSaved: false
       }, state)
     }
 
@@ -83,7 +96,7 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.ON_CHANGE_SECTION: {
+    case actions.CHANGE_SECTION: {
       const { key, value } = action.payload
       const { sectionIndex } = state
       const article = cloneDeep(state.article)
@@ -94,7 +107,8 @@ export function editReducer (state = initialState, action) {
 
       return u({
         article,
-        section
+        section,
+        isSaved: false
       }, state)
     }
 
@@ -112,13 +126,33 @@ export function editReducer (state = initialState, action) {
       return u({
         article,
         sectionIndex: null,
-        section: null
+        section: null,
+        isSaved: false
+      }, state)
+    }
+
+    case actions.RESET_SECTIONS: {
+      const { article } = action.payload
+
+      return u({
+        article,
+        isSaved: false
       }, state)
     }
 
     case actions.SAVE_ARTICLE: {
       return u({
         isSaving: true
+      }, state)
+    }
+
+    case actions.SET_MENTIONED_ITEMS: {
+      const mentioned = cloneDeep(state.mentioned)
+      const { model, items } = action.payload
+      mentioned[model] = items
+
+      return u({
+        mentioned
       }, state)
     }
   }

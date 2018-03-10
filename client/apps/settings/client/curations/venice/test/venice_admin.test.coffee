@@ -33,7 +33,7 @@ describe 'VeniceAdmin', ->
       VeniceAdmin = benv.require resolve __dirname, '../venice_admin.coffee'
       Autocomplete = benv.require resolve __dirname, '../../../../../../components/autocomplete_list/index.coffee'
       dropdownHeader = benv.requireWithJadeify(
-        resolve(__dirname, '../../../../../edit/components/admin/components/dropdown_header.coffee'), ['icons']
+        resolve(__dirname, '../dropdown_header.coffee'), ['icons']
       )
       VeniceAdmin.__set__ 'dropdownHeader', React.createFactory dropdownHeader
       VeniceAdmin.__set__ 'sd', {

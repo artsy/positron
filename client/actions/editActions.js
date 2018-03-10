@@ -1,4 +1,7 @@
+
+import { clone, cloneDeep, extend } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
+import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
 import { messageTypes } from 'client/apps/websocket/messageTypes'
 import $ from 'jquery'
@@ -6,30 +9,37 @@ import $ from 'jquery'
 export const actions = keyMirror(
   'CHANGE_SAVED_STATUS',
   'CHANGE_VIEW',
-  'START_EDITING_ARTICLE',
+  'CHANGE_SECTION',
+  'CHANGE_ARTICLE',
   'UPDATE_ARTICLE',
+  'START_EDITING_ARTICLE',
   'STOP_EDITING_ARTICLE',
   'DELETE_ARTICLE',
   'ERROR',
   'NEW_SECTION',
+  'ON_CHANGE_ARTICLE',
   'ON_CHANGE_SECTION',
   'ON_FIRST_SAVE',
   'PUBLISH_ARTICLE',
   'REDIRECT_TO_LIST',
   'REMOVE_SECTION',
+  'RESET_SECTIONS',
   'SAVE_ARTICLE',
+  'SET_MENTIONED_ITEMS',
   'SET_SECTION',
+  'SET_SEO_KEYWORD',
   'TOGGLE_SPINNER'
 )
 
-export const changeSavedStatus = (article, isSaved) => ({
-  type: actions.CHANGE_SAVED_STATUS,
-  payload: {
-    article,
-    isSaved,
-    lastUpdated: new Date()
+export const changeSavedStatus = (article, isSaved) => {
+  return {
+    type: actions.CHANGE_SAVED_STATUS,
+    payload: {
+      article,
+      isSaved
+    }
   }
-})
+}
 
 export const changeView = (activeView) => ({
   // Content, Admin, Display
@@ -39,13 +49,21 @@ export const changeView = (activeView) => ({
   }
 })
 
-export const deleteArticle = (article) => {
-  article.destroy({
-    success: () => {
-      article.trigger('finished')
-    }
-  })
+export const deleteArticle = (key, value) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    const newArticle = new Article(article)
 
+    dispatch(deleteArticlePending())
+    newArticle.destroy({
+      success: () => {
+        dispatch(redirectToList(true))
+      }
+    })
+  }
+}
+
+export const deleteArticlePending = () => {
   return {
     type: actions.DELETE_ARTICLE,
     payload: {
@@ -95,8 +113,8 @@ export const setSection = (sectionIndex) => ({
   }
 })
 
-export const newSection = (type, sectionIndex) => {
-  const section = setupSection(type)
+export const newSection = (type, sectionIndex, attrs = {}) => {
+  const section = {...setupSection(type), ...attrs}
 
   return {
     type: actions.NEW_SECTION,
@@ -107,9 +125,72 @@ export const newSection = (type, sectionIndex) => {
   }
 }
 
-export const onChangeSection = (key, value) => {
+export const newHeroSection = (type) => {
+  const section = setupSection(type)
+
+  return (dispatch, getState) => {
+    dispatch(changeArticle('hero_section', section))
+  }
+}
+
+export const onChangeArticle = (key, value) => {
+  return (dispatch, getState) => {
+    const {
+      app: { channel },
+      edit: { article }
+    } = getState()
+
+    dispatch(changeArticle(key, value))
+    dispatch(updateArticle({
+      channel,
+      article: article.id
+    }))
+
+    if (!article.published) {
+      dispatch(saveArticle())
+    }
+  }
+}
+
+export const changeArticle = (key, value) => {
   return {
-    type: actions.ON_CHANGE_SECTION,
+    type: actions.CHANGE_ARTICLE,
+    payload: {
+      key,
+      value
+    }
+  }
+}
+
+export const onChangeHero = (key, value) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    const hero_section = clone(article.hero_section) || {}
+
+    hero_section[key] = value
+    dispatch(changeArticle('hero_section', hero_section))
+
+    if (!article.published) {
+      dispatch(saveArticle())
+    }
+  }
+}
+
+export const onChangeSection = (key, value) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+
+    dispatch(changeSection(key, value))
+
+    if (!article.published) {
+      dispatch(saveArticle())
+    }
+  }
+}
+
+export const changeSection = (key, value) => {
+  return {
+    type: actions.CHANGE_SECTION,
     payload: {
       key,
       value
@@ -125,14 +206,24 @@ export const onFirstSave = (id) => {
   }
 }
 
-export const publishArticle = (article, published) => {
-  if (published) {
-    setSeoKeyword(article)
-  }
-  article.set('published', published)
-  article.save()
-  redirectToList(published)
+export const publishArticle = () => {
+  return (dispatch, getState) => {
+    dispatch(publishArticlePending())
+    const { edit: { article } } = getState()
+    const published = !article.published
+    const newArticle = new Article(article)
 
+    newArticle.set({ published })
+    if (published) {
+      dispatch(setSeoKeyword(newArticle))
+    }
+    newArticle.save()
+
+    dispatch(redirectToList(published))
+  }
+}
+
+export const publishArticlePending = () => {
   return {
     type: actions.PUBLISH_ARTICLE,
     payload: {
@@ -156,17 +247,68 @@ export const removeSection = (sectionIndex) => ({
   }
 })
 
-export const saveArticle = (article) => {
-  setSeoKeyword(article)
-  article.save()
+export const resetSections = (sections) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    const newArticle = extend(cloneDeep(article), { sections })
 
-  if (article.get('published')) {
-    redirectToList(true)
+    dispatch(onResetSections(newArticle))
   }
+}
+
+export const onResetSections = (article) => ({
+  type: actions.RESET_SECTIONS,
+  payload: {
+    article
+  }
+})
+
+export const saveArticle = () => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    const newArticle = new Article(article)
+
+    dispatch(saveArticlePending())
+
+    newArticle.on('sync', () => {
+      dispatch(changeSavedStatus(article, true))
+    })
+
+    dispatch(setSeoKeyword(newArticle))
+    newArticle.save()
+
+    if (article.published) {
+      dispatch(redirectToList(true))
+    }
+  }
+}
+
+export const saveArticlePending = () => {
   return {
     type: actions.SAVE_ARTICLE,
     payload: {
       isSaving: true
+    }
+  }
+}
+
+export const onAddFeaturedItem = (model, item) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    const key = model === 'artist' ? 'primary_featured_artist_ids' : 'featured_artwork_ids'
+    let newFeaturedIds = cloneDeep(article)[key] || []
+
+    newFeaturedIds.push(item._id)
+    dispatch(changeArticle(key, newFeaturedIds))
+  }
+}
+
+export const setMentionedItems = (model, items) => {
+  return {
+    type: actions.SET_MENTIONED_ITEMS,
+    payload: {
+      model,
+      items
     }
   }
 }
@@ -226,6 +368,12 @@ export function setupSection (type) {
         type: 'text',
         body: ''
       }
+    case 'blockquote':
+      return {
+        type: 'text',
+        body: '',
+        layout: 'blockquote'
+      }
   }
 }
 
@@ -234,5 +382,8 @@ export const setSeoKeyword = (article) => {
     const seo_keyword = $('input#edit-seo__focus-keyword').val() || ''
 
     article.set({ seo_keyword })
+  }
+  return {
+    type: actions.SET_SEO_KEYWORD
   }
 }

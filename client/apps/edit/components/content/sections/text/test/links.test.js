@@ -3,7 +3,6 @@ import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Sections from '/client/collections/sections.coffee'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { SectionText } from '../index.jsx'
 const { StandardArticle } = Fixtures
@@ -27,8 +26,9 @@ describe('SectionText: Links', () => {
       onChange: jest.fn(),
       onSetEditing: jest.fn(),
       section: article.sections[11],
-      sections: new Sections(article.sections)
+      sections: article.sections
     }
+    window.scrollTo = jest.fn()
     window.pageYOffset = 500
     const getClientRects = jest.fn().mockReturnValue([{
       bottom: 170,

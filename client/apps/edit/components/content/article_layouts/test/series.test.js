@@ -1,7 +1,7 @@
 import React from 'react'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from '../../../../../../models/article.coffee'
 import { FixedBackground } from '@artsy/reaction/dist/Components/Publishing/Series/FixedBackground'
 import { SeriesAbout } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle'
@@ -17,8 +17,8 @@ describe('EditSeries', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.SeriesArticle),
-      onChange: jest.fn()
+      article: cloneDeep(Fixtures.SeriesArticle),
+      onChangeArticleAction: jest.fn()
     }
   })
 
@@ -46,7 +46,7 @@ describe('EditSeries', () => {
   })
 
   it('Renders a file input for background image ', () => {
-    props.article.set('hero_section', { url: null })
+    props.article.hero_section = { url: null }
     const component = mount(
       <EditSeries {...props} />
     )
@@ -55,19 +55,19 @@ describe('EditSeries', () => {
   })
 
   it('Can save a hero_section with type', () => {
-    props.article.unset('hero_section')
+    delete props.article.hero_section
     const component = mount(
       <EditSeries {...props} />
     )
     const input = component.find(FileInput).first().getElement()
     input.props.onUpload('http://new-image.jpg')
-    expect(props.onChange.mock.calls[0][0]).toBe('hero_section')
-    expect(props.onChange.mock.calls[0][1].url).toBe('http://new-image.jpg')
-    expect(props.onChange.mock.calls[0][1].type).toBe('series')
+    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('hero_section')
+    expect(props.onChangeArticleAction.mock.calls[0][1].url).toBe('http://new-image.jpg')
+    expect(props.onChangeArticleAction.mock.calls[0][1].type).toBe('series')
   })
 
   it('Renders a background image if url', () => {
-    props.article.set('hero_section', {url: 'http://image.jpg'})
+    props.article.hero_section = {url: 'http://image.jpg'}
     const component = mount(
       <EditSeries {...props} />
     )

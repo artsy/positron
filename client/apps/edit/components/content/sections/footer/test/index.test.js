@@ -1,6 +1,6 @@
 import React from 'react'
-import Backbone from 'backbone'
 import { mount } from 'enzyme'
+import { cloneDeep } from 'lodash'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
 import { SectionFooter } from '../index.jsx'
@@ -11,9 +11,9 @@ describe('SectionFooter', () => {
 
   beforeEach(() => {
     props = {
-      article: new Backbone.Model(FeatureArticle),
+      article: cloneDeep(FeatureArticle),
       channel: { type: 'editorial' },
-      onChange: jest.fn()
+      onChangeArticleAction: jest.fn()
     }
   })
 
@@ -24,10 +24,10 @@ describe('SectionFooter', () => {
   }
 
   it('Shows a postscript field if channel hasFeature', () => {
-    props.article.unset('postscript')
+    props.article.postscript = ''
     const component = getWrapper(props)
 
-    expect(component.find(Paragraph).length).toBe(1)
+    expect(component.find(Paragraph).exists()).toBe(true)
     expect(component.text()).toMatch('Postscript (optional)')
   })
 
@@ -35,7 +35,7 @@ describe('SectionFooter', () => {
     props.channel.type = 'partner'
     const component = getWrapper(props)
 
-    expect(component.find(Paragraph).length).toBe(0)
+    expect(component.find(Paragraph).exists()).toBe(false)
     expect(component.text()).not.toMatch('Postscript (optional)')
   })
 

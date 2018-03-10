@@ -49,3 +49,5 @@ export class AutocompleteInlineList extends Component {
     )
   }
 }
+
+AutocompleteInlineList.defaultProps = { items: [] }

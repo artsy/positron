@@ -1,34 +1,30 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Section from '/client/models/section.coffee'
-import SectionControls from '../../../section_controls'
+import { SectionControls } from '../../../section_controls'
 import { EmbedControls } from '../controls'
-
-const { StandardArticle } = Fixtures
 
 describe('EmbedControls', () => {
   let props
+  let section
+
   SectionControls.prototype.isScrollingOver = jest.fn()
   SectionControls.prototype.isScrolledPast = jest.fn()
 
-  beforeEach(() => {
-    props = {
-      articleLayout: 'standard',
-      section: new Section(StandardArticle.sections[10])
-    }
-  })
-
   const getWrapper = (props) => {
     const mockStore = configureStore([])
+
     const store = mockStore({
       app: {
-        channel: {}
+        channel: { type: 'editorial' }
       },
       edit: {
-        article: StandardArticle
+        article: Fixtures.StandardArticle,
+        section: props.section,
+        sectionIndex: props.sectionIndex
       }
     })
 
@@ -41,6 +37,17 @@ describe('EmbedControls', () => {
     )
   }
 
+  beforeEach(() => {
+    section = cloneDeep(Fixtures.StandardArticle.sections[10])
+
+    props = {
+      onChangeSectionAction: jest.fn(),
+      removeSectionAction: jest.fn(),
+      section,
+      sectionIndex: 2
+    }
+  })
+
   it('Renders the inputs', () => {
     const component = getWrapper(props)
 
@@ -52,35 +59,46 @@ describe('EmbedControls', () => {
     const component = getWrapper(props)
     const inputs = component.find('input')
 
-    expect(inputs.at(0).props().defaultValue).toBe(props.section.get('url'))
-    expect(inputs.at(1).props().defaultValue).toBe(props.section.get('height'))
-    expect(inputs.at(2).props().defaultValue).toBe(props.section.get('mobile_height'))
+    expect(inputs.at(0).props().value).toBe(props.section.url)
+    expect(inputs.at(1).props().value).toBe(props.section.height)
+    expect(inputs.at(2).props().value).toBe(props.section.mobile_height)
   })
 
   it('Can change URL', () => {
     const component = getWrapper(props)
     const input = component.find('input').at(0)
-    const e = {target: {value: 'new value'}}
-    input.simulate('change', e)
+    const value = 'new value'
 
-    expect(props.section.get('url')).toBe(e.target.value)
+    input.simulate('change', {target: { value }})
+    expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('url')
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
 
   it('Can change height', () => {
     const component = getWrapper(props)
     const input = component.find('input').at(1)
-    const e = {target: {value: '500'}}
-    input.simulate('change', e)
+    const value = '500'
 
-    expect(props.section.get('height')).toBe(e.target.value)
+    input.simulate('change', {target: { value }})
+    expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('height')
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
 
   it('Can change mobile height', () => {
     const component = getWrapper(props)
     const input = component.find('input').at(2)
-    const e = {target: {value: '200'}}
-    input.simulate('change', e)
+    const value = '200'
 
-    expect(props.section.get('mobile_height')).toBe(e.target.value)
+    input.simulate('change', {target: { value }})
+    expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('mobile_height')
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
+  })
+
+  it('Destroys section on unmount if URL is empty', () => {
+    props.section = {type: 'embed'}
+    const component = getWrapper(props).find(EmbedControls)
+
+    component.instance().componentWillUnmount()
+    expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.sectionIndex)
   })
 })

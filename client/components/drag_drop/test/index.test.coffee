@@ -41,7 +41,7 @@ describe 'DragDropContainer Default', ->
       }
 
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit2/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(
@@ -168,7 +168,7 @@ describe 'DragDropContainer Vertical', ->
       }
 
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit2/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
       )
       @children = [
         React.createElement(

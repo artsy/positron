@@ -1,5 +1,7 @@
 import moment from 'moment'
 import styled from 'styled-components'
+import { clone } from 'lodash'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { VideoAbout, VideoAboutContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
@@ -9,11 +11,12 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class EditVideo extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChangeArticleAction: PropTypes.func.isRequired
   }
 
   state = {
@@ -21,11 +24,11 @@ export class EditVideo extends Component {
   }
 
   onMediaChange = (key, value) => {
-    const { article, onChange } = this.props
-    const media = article.get('media') || {}
+    const { article, onChangeArticleAction } = this.props
+    const media = clone(article.media) || {}
 
     media[key] = value
-    onChange('media', media)
+    onChangeArticleAction('media', media)
   }
 
   onDateChange = (e) => {
@@ -34,12 +37,12 @@ export class EditVideo extends Component {
   }
 
   editDescription = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
       <PlainText
-        content={article.get('description')}
-        onChange={(key, value) => onChange('description', value)}
+        content={article.description}
+        onChange={(key, value) => onChangeArticleAction('description', value)}
         placeholder='Description'
         name='description'
       />
@@ -47,12 +50,12 @@ export class EditVideo extends Component {
   }
 
   editTitle = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
       <PlainText
-        content={article.get('title')}
-        onChange={(key, value) => onChange('title', value)}
+        content={article.title}
+        onChange={(key, value) => onChangeArticleAction('title', value)}
         placeholder='Title'
         name='title'
       />
@@ -61,7 +64,7 @@ export class EditVideo extends Component {
 
   editMediaDescription = () => {
     const { article } = this.props
-    const description = article.get('media') && article.get('media').description
+    const description = article.media && article.media.description
 
     return (
       <Paragraph
@@ -75,7 +78,7 @@ export class EditVideo extends Component {
 
   editMediaCredits = () => {
     const { article } = this.props
-    const credits = article.get('media') && article.get('media').credits
+    const credits = article.media && article.media.credits
 
     return (
       <Paragraph
@@ -90,7 +93,7 @@ export class EditVideo extends Component {
   render () {
     const { article } = this.props
     const { uploadProgress } = this.state
-    const media = article.get('media') || {}
+    const media = article.media || {}
 
     return (
       <EditVideoContainer>
@@ -161,6 +164,19 @@ export class EditVideo extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditVideo)
 
 const MaxWidthContainer = styled.div`
   max-width: 1200px;

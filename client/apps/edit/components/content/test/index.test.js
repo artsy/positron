@@ -1,9 +1,9 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Article from '../../../../../models/article.coffee'
 import { EditArticle } from '../article_layouts/article'
 import { EditSeries } from '../article_layouts/series'
 import { EditVideo } from '../article_layouts/video'
@@ -20,8 +20,7 @@ describe('EditContent', () => {
         channel: {hasFeature: jest.fn().mockReturnThis()}
       },
       edit: {
-        article: Fixtures.StandardArticle,
-        lastUpdated: new Date()
+        article: props.article
       }
     })
     return mount(
@@ -33,9 +32,7 @@ describe('EditContent', () => {
 
   beforeEach(() => {
     props = {
-      article: new Article(Fixtures.StandardArticle),
-      onChange: jest.fn(),
-      onChangeHero: jest.fn()
+      article: cloneDeep(Fixtures.StandardArticle)
     }
   })
 
@@ -47,7 +44,7 @@ describe('EditContent', () => {
   })
 
   it('Renders EditSeries if article layout is series', () => {
-    props.article.set('layout', 'series')
+    props.article.layout = 'series'
     const component = getWrapper(props)
 
     expect(component.find(EditSeries).exists()).toBe(true)
@@ -55,7 +52,7 @@ describe('EditContent', () => {
   })
 
   it('Renders EditVideo if article layout is video', () => {
-    props.article.set('layout', 'video')
+    props.article.layout = 'video'
     const component = getWrapper(props)
 
     expect(component.find(EditVideo).exists()).toBe(true)
