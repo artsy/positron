@@ -76,6 +76,16 @@ describe('SectionTool', () => {
 
       expect(component.html()).toMatch('data-visible="true"')
     })
+
+    it('does not render embed option on non-editorial', () => {
+      props.channel = {
+        type: 'team'
+      }
+      const component = getWrapper(props)
+      component.find('.edit-tool__icon').simulate('click')
+
+      expect(component.find(IconEditEmbed).exists()).toBe(false)
+    })
   })
 
   describe('SectionTool: Hero', () => {
