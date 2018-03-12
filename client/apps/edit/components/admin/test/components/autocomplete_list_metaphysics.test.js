@@ -97,7 +97,7 @@ describe('AutocompleteListMetaphysics', () => {
       const component = getWrapper(props)
       const query = component.instance().getQuery('partner_shows')
 
-      expect(query).toBe(Queries.PartnersQuery)
+      expect(query).toBe(Queries.ShowsQuery)
     })
 
     it('Returns the correct query for auctions', () => {
