@@ -23,9 +23,10 @@ export const getSlugsFromHTML = (html, model) => {
         href = href.split('&')[0]
       }
       if (href.match(`artsy.net/${model}`)) {
-        href = last(url.parse(href).pathname.split('/'))
+        return last(url.parse(href).pathname.split('/'))
+      } else {
+        return null
       }
-      return href
     } else {
       return null
     }
