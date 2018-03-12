@@ -33,7 +33,13 @@ describe('SectionTool', () => {
         section: null,
         index: sections.length - 1,
         sections,
-        newSectionAction: jest.fn()
+        newSectionAction: jest.fn(),
+        article: {
+          layout: 'standard'
+        },
+        channel: {
+          type: 'editorial'
+        }
       }
     })
 
@@ -77,14 +83,28 @@ describe('SectionTool', () => {
       expect(component.html()).toMatch('data-visible="true"')
     })
 
-    it('does not render embed option on non-editorial', () => {
+    it('does not render embed option on lower tier channels', () => {
       props.channel = {
         type: 'team'
       }
+      props.article = { layout: 'news' }
+
       const component = getWrapper(props)
       component.find('.edit-tool__icon').simulate('click')
 
       expect(component.find(IconEditEmbed).exists()).toBe(false)
+    })
+
+    it('does not render video option on news layouts', () => {
+      props.channel = {
+        type: 'team'
+      }
+      props.article = { layout: 'news' }
+
+      const component = getWrapper(props)
+      component.find('.edit-tool__icon').simulate('click')
+
+      expect(component.find(IconEditVideo).exists()).toBe(false)
     })
   })
 
