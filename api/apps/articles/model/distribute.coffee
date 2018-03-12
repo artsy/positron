@@ -71,7 +71,7 @@ postFacebookAPI = (article, cb) ->
           .send
             access_token: INSTANT_ARTICLE_ACCESS_TOKEN
             development_mode: NODE_ENV isnt 'production'
-            published: false # TODO: Reset after IA test
+            published: NODE_ENV is 'production'
             html_source: html
           .end (err, response) ->
             return cb err if err
