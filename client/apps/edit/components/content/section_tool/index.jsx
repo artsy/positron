@@ -22,7 +22,8 @@ export class SectionTool extends Component {
     newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
     sections: PropTypes.array,
-    channel: PropTypes.object
+    channel: PropTypes.object,
+    article: PropTypes.object
   }
 
   state = {
@@ -85,14 +86,18 @@ export class SectionTool extends Component {
             <IconEditImages />
             Images
           </li>
-          <li
-            className='edit-tool__edit-video'
-            onClick={() => this.newSection('video')}>
-            <IconEditVideo />
-            Video
-          </li>
+          {
+            this.props.article.layout !== 'news' &&
+            <li
+              className='edit-tool__edit-video'
+              onClick={() => this.newSection('video')}>
+              <IconEditVideo />
+              Video
+            </li>
+          }
           {
             ['editorial', 'team'].includes(this.props.channel.type) &&
+            this.props.article.layout !== 'news' &&
             <li
               className='edit-tool__edit-embed'
               onClick={() => this.newSection('embed')}>
