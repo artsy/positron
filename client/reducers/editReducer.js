@@ -88,7 +88,12 @@ export function editReducer (state = initialState, action) {
       const { section, sectionIndex } = action.payload
       const article = cloneDeep(state.article)
 
-      article.sections.splice(sectionIndex, 0, section)
+      if (article.sections) {
+        article.sections.splice(sectionIndex, 0, section)
+      } else {
+        article.sections = [section]
+      }
+
       return u({
         article,
         sectionIndex,

@@ -42,8 +42,6 @@ export class SectionText extends Component {
       plugin: null,
       url: null
     }
-    // TODO: MOVE AUTOLINK TO REDUX ACTIONS
-    // props.sections.on('change:autolink', this.setEditorStateFromProps)
   }
 
   componentWillMount = () => {
@@ -65,38 +63,19 @@ export class SectionText extends Component {
   componentDidUpdate = (prevProps) => {
     const {
       article,
-      editing,
       isContentEnd,
       onChange,
       section
     } = this.props
 
-    const lastSectionChanged = isContentEnd !== prevProps.isContentEnd
-    const bodyHasChanged = section.body !== prevProps.section.body && section.body.length
-    const bodyWasSwapped = bodyHasChanged && section.body !== this.state.html
-    const startedEditing = editing && editing !== prevProps.editing
-    const stoppedEditing = !editing && editing !== prevProps.editing
+    this.maybeResetEditor(prevProps)
 
+    const lastSectionChanged = isContentEnd !== prevProps.isContentEnd
     // Reset contentEnd markers if end has changed
     if (lastSectionChanged) {
-      if (article.layout !== 'classic') {
+      if (['feature', 'standard'].includes(article.layout)) {
         const html = setContentEnd(section.body, isContentEnd)
         onChange('body', html)
-      }
-    }
-
-    // Focus/blur editor if editing prop has changed
-    // For change of section via key commands (handleTab, splitSection)
-    // Or re-initializing text after drag/drop
-    if (startedEditing || bodyWasSwapped) {
-      if (bodyHasChanged) {
-        this.setEditorStateFromProps()
-      } else {
-        this.focus()
-      }
-    } else if (stoppedEditing) {
-      if (this.domEditor) {
-        this.domEditor.blur()
       }
     }
   }
@@ -108,8 +87,9 @@ export class SectionText extends Component {
   }
 
   onChange = (editorState) => {
-    const { article, hasFeatures, onChange, section } = this.props
-    const html = convertToRichHtml(editorState, article.layout, hasFeatures)
+    const { article, hasFeatures, isContentEnd, onChange, section } = this.props
+    const convertedHtml = convertToRichHtml(editorState, article.layout, hasFeatures)
+    const html = setContentEnd(convertedHtml, isContentEnd)
 
     if (section.body !== html) {
       onChange('body', html)
@@ -117,9 +97,39 @@ export class SectionText extends Component {
     this.setState({ editorState, html })
   }
 
+  blur = () => {
+    if (this.domEditor) {
+      this.domEditor.blur()
+    }
+  }
+
   focus = () => {
     if (this.domEditor) {
       this.domEditor.focus()
+    }
+  }
+
+  maybeResetEditor = (prevProps) => {
+    const { editing, section } = this.props
+    const { html } = this.state
+
+    const bodyHasChanged = section.body !== prevProps.section.body && section.body.length > 0
+    const bodyWasSwapped = bodyHasChanged && section.body !== html
+    const startedEditing = editing && editing !== prevProps.editing
+    const stoppedEditing = !editing && editing !== prevProps.editing
+
+    if (startedEditing || bodyWasSwapped) {
+      if (bodyHasChanged) {
+        // Re-initialize editor with new text, happens during
+        // drag/drop or changing edit section w/ handleTab or splitSection
+        this.setEditorStateFromProps()
+      } else {
+        // Focus editor if editing
+        this.focus()
+      }
+    } else if (stoppedEditing) {
+      // Blur editor if no longer editing
+      this.blur()
     }
   }
 
@@ -243,9 +253,8 @@ export class SectionText extends Component {
       // Dont allow inline styles in avant-garde font
       const block = editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
       Strip.stripCharacterStyles(block)
-    } //else {
+    }
     this.onChange(RichUtils.toggleInlineStyle(editorState, style))
-    // }
   }
 
   toggleBlock = (block) => {

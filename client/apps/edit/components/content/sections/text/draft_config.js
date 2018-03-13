@@ -16,29 +16,59 @@ export const inlineStyles = (layout) => {
     {label: 'B', name: 'BOLD'},
     {label: 'I', name: 'ITALIC'}
   ]
-  if (layout === 'standard') {
+  if (['standard', 'news'].includes(layout)) {
     styles.push({label: ' S ', name: 'STRIKETHROUGH'})
   }
   return styles
 }
 
 export const blockTypes = (layout, hasFeatures) => {
-  // blocks available on menu display
-  const blocks = [
-    {label: 'H2', name: 'header-two'},
-    {label: 'H3', name: 'header-three'},
-    {name: 'unordered-list-item'}
-  ]
-  if (layout === 'feature') {
-    blocks.unshift({label: 'H1', name: 'header-one'})
+  // blocks available in pop-up menu
+  switch (layout) {
+    case 'classic': {
+      if (!hasFeatures) {
+        return [
+          {label: 'H2', name: 'header-two'},
+          {label: 'H3', name: 'header-three'},
+          {name: 'ordered-list-item'},
+          {name: 'unordered-list-item'}
+        ]
+      } else {
+        return [
+          {label: 'H2', name: 'header-two'},
+          {label: 'H3', name: 'header-three'},
+          {name: 'ordered-list-item'},
+          {name: 'unordered-list-item'},
+          {name: 'blockquote'}
+        ]
+      }
+    }
+    case 'feature': {
+      return [
+        {label: 'H1', name: 'header-one'},
+        {label: 'H2', name: 'header-two'},
+        {label: 'H3', name: 'header-three'},
+        {name: 'unordered-list-item'},
+        {name: 'blockquote'}
+      ]
+    }
+    case 'news': {
+      return [
+        {label: 'H3', name: 'header-three'},
+        {name: 'ordered-list-item'},
+        {name: 'unordered-list-item'},
+        {name: 'blockquote'}
+      ]
+    }
+    default: {
+      return [
+        {label: 'H2', name: 'header-two'},
+        {label: 'H3', name: 'header-three'},
+        {name: 'unordered-list-item'},
+        {name: 'blockquote'}
+      ]
+    }
   }
-  if (layout === 'classic') {
-    blocks.push({name: 'ordered-list-item'})
-  }
-  if (hasFeatures) {
-    blocks.push({name: 'blockquote'})
-  }
-  return blocks
 }
 
 export const blockRenderMap = (layout, hasFeatures) => {
@@ -52,27 +82,40 @@ export const blockRenderMap = (layout, hasFeatures) => {
       'ordered-list-item': {element: 'li'},
       'unstyled': {element: 'div'}
     })
-  }
-  if (layout === 'feature') {
-    return Immutable.Map({
-      'header-one': { element: 'h1' },
-      'header-two': {element: 'h2'},
-      'header-three': {element: 'h3'},
-      'blockquote': {element: 'blockquote'},
-      'unordered-list-item': {element: 'li'},
-      'ordered-list-item': {element: 'li'},
-      'unstyled': {element: 'div'}
-    })
   } else {
-    // standard, classic on internal channels
-    return Immutable.Map({
-      'header-two': {element: 'h2'},
-      'header-three': {element: 'h3'},
-      'blockquote': {element: 'blockquote'},
-      'unordered-list-item': {element: 'li'},
-      'ordered-list-item': {element: 'li'},
-      'unstyled': {element: 'div'}
-    })
+    switch (layout) {
+      case 'feature': {
+        return Immutable.Map({
+          'header-one': { element: 'h1' },
+          'header-two': {element: 'h2'},
+          'header-three': {element: 'h3'},
+          'blockquote': {element: 'blockquote'},
+          'unordered-list-item': {element: 'li'},
+          'ordered-list-item': {element: 'li'},
+          'unstyled': {element: 'div'}
+        })
+      }
+      case 'news': {
+        return Immutable.Map({
+          'header-three': {element: 'h3'},
+          'unordered-list-item': {element: 'li'},
+          'ordered-list-item': {element: 'li'},
+          'blockquote': {element: 'blockquote'},
+          'unstyled': {element: 'div'}
+        })
+      }
+      default: {
+        // standard, classic on internal channels
+        return Immutable.Map({
+          'header-two': {element: 'h2'},
+          'header-three': {element: 'h3'},
+          'blockquote': {element: 'blockquote'},
+          'unordered-list-item': {element: 'li'},
+          'ordered-list-item': {element: 'li'},
+          'unstyled': {element: 'div'}
+        })
+      }
+    }
   }
 }
 
@@ -121,7 +164,7 @@ export const setEditorStateFromProps = (props) => {
 
   const decorators = composedDecorator(article.layout)
   const emptyState = EditorState.createEmpty(decorators)
-  const hasContentEnd = isContentEnd && article.layout !== 'classic'
+  const hasContentEnd = isContentEnd && ['feature', 'standard'].includes(article.layout)
   let editorState
 
   const formattedData = getFormattedState(emptyState, section.body, article.layout, hasFeatures)
