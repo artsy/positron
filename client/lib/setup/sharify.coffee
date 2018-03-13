@@ -27,4 +27,5 @@ sharify.data = _.pick process.env,
   'SENTRY_PUBLIC_DSN',
   'NO_INDEX_CHANNELS',
   'WEBFONT_URL',
-  'GRAPHQL_ENDPOINT'
+  'GRAPHQL_ENDPOINT',
+  'DEV_FEATURES'
