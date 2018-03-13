@@ -56,6 +56,7 @@ export class SectionList extends Component {
               sections={article.sections}
               index={index}
               editing={sectionIndex !== 0}
+              isDraggable={false}
             />
           ]
         }

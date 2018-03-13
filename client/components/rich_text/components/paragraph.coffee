@@ -60,6 +60,11 @@ module.exports = React.createClass
           new CompositeDecorator Config.decorators(@hasLinks())
         )
 
+  componentDidUpdate: (prevProps) ->
+    if @props.html != prevProps.html && @props.html != @state.html
+      # re-initialize on drag/drop
+      @componentDidMount()
+
   hasLinks: ->
     return true if @props.linked or @props.type in ['caption', 'postscript']
 

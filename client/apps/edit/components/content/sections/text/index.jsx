@@ -71,22 +71,30 @@ export class SectionText extends Component {
       section
     } = this.props
 
+    const lastSectionChanged = isContentEnd !== prevProps.isContentEnd
+    const bodyHasChanged = section.body !== prevProps.section.body && section.body.length
+    const bodyWasSwapped = bodyHasChanged && section.body !== this.state.html
+    const startedEditing = editing && editing !== prevProps.editing
+    const stoppedEditing = !editing && editing !== prevProps.editing
+
     // Reset contentEnd markers if end has changed
-    if (isContentEnd !== prevProps.isContentEnd) {
+    if (lastSectionChanged) {
       if (article.layout !== 'classic') {
         const html = setContentEnd(section.body, isContentEnd)
         onChange('body', html)
       }
     }
+
     // Focus/blur editor if editing prop has changed
     // For change of section via key commands (handleTab, splitSection)
-    if (editing && editing !== prevProps.editing) {
-      if (section.body !== prevProps.section.body && section.body.length) {
+    // Or re-initializing text after drag/drop
+    if (startedEditing || bodyWasSwapped) {
+      if (bodyHasChanged) {
         this.setEditorStateFromProps()
       } else {
         this.focus()
       }
-    } else if (!editing && editing !== prevProps.editing) {
+    } else if (stoppedEditing) {
       if (this.domEditor) {
         this.domEditor.blur()
       }
