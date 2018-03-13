@@ -26,4 +26,5 @@ sharify.data = _.pick process.env,
   'EF_VENICE',
   'SENTRY_PUBLIC_DSN',
   'NO_INDEX_CHANNELS',
-  'WEBFONT_URL'
+  'WEBFONT_URL',
+  'GRAPHQL_ENDPOINT'

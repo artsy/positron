@@ -38,7 +38,7 @@ export class AutocompleteListMetaphysics extends Component {
         return Queries.PartnersQuery
       }
       case 'partner_shows': {
-        return Queries.PartnersQuery
+        return Queries.ShowsQuery
       }
       case 'sales': {
         return Queries.AuctionsQuery
