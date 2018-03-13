@@ -10,6 +10,7 @@ describe('editReducer', () => {
   beforeEach(() => {
     initialState = editReducer(undefined, { payload: {} })
     initialSections = cloneDeep(FeatureArticle.sections)
+    initialState.article = cloneDeep(FeatureArticle)
   })
 
   it('should return the initial state', () => {
@@ -62,7 +63,27 @@ describe('editReducer', () => {
       )
     })
 
-    xit('CHANGE_SECTION should update section keys and reset article.sections', () => {
+    it('NEW_SECTION can add a section to an article without sections', () => {
+      initialState.article = extend(cloneDeep(initialState.article), {sections: null})
+      const section = setupSection('text')
+      const sectionIndex = 0
+
+      const updatedState = editReducer(initialState, {
+        type: actions.NEW_SECTION,
+        payload: {
+          section,
+          sectionIndex
+        }
+      })
+
+      expect(updatedState.sectionIndex).toBe(sectionIndex)
+      expect(updatedState.section.type).toBe(section.type)
+      expect(updatedState.section.body).toBe(section.body)
+      expect(updatedState.article.sections[sectionIndex]).toBe(section)
+      expect(updatedState.article.sections.length).toBe(1)
+    })
+
+    it('CHANGE_SECTION should update section keys and reset article.sections', () => {
       const stateWithSection = extend(cloneDeep(initialState), {
         section: cloneDeep(initialSections[0]),
         sectionIndex: 0

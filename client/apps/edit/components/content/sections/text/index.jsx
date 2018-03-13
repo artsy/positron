@@ -73,7 +73,7 @@ export class SectionText extends Component {
 
     // Reset contentEnd markers if end has changed
     if (isContentEnd !== prevProps.isContentEnd) {
-      if (article.layout !== 'classic') {
+      if (['feature', 'standard'].includes(article.layout)) {
         const html = setContentEnd(section.body, isContentEnd)
         onChange('body', html)
       }
@@ -235,9 +235,8 @@ export class SectionText extends Component {
       // Dont allow inline styles in avant-garde font
       const block = editorState.getCurrentContent().getBlockForKey(selection.anchorKey)
       Strip.stripCharacterStyles(block)
-    } //else {
+    }
     this.onChange(RichUtils.toggleInlineStyle(editorState, style))
-    // }
   }
 
   toggleBlock = (block) => {

@@ -60,14 +60,13 @@ export default connect(
 )(EditNews)
 
 const EditNewsContainer = styled.div`
-  max-width: 780px;
+  max-width: 820px;
   margin: 40px auto;
 
   .SectionText {
     max-width: 680px;
   }
-
-  .SectionContainer {
-    padding: 20px 0;
+  div[class*='NewsByline__NewsBylineContainer'] {
+    padding: 0 20px;
   }
 `
