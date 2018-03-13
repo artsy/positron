@@ -57,7 +57,7 @@ export const deleteArticle = (key, value) => {
     dispatch(deleteArticlePending())
     newArticle.destroy({
       success: () => {
-        dispatch(redirectToList(true))
+        dispatch(redirectToList(article.published))
       }
     })
   }
