@@ -140,6 +140,13 @@ ImageCollectionSection = (->
       mobile_height: @string().allow('',null)
       layout: @string().allow('column_width', 'overflow', 'overflow_fillwidth', 'fillwidth', '', null)
     @object().meta(
+      name: 'SocialEmbed'
+      isTypeOf: (data) -> data.type is 'social_embed'
+    ).keys
+      type: @string().valid('social_embed')
+      url: @string().allow('',null)
+      layout: @string().allow('column_width', null)
+    @object().meta(
       name: 'Text'
       isTypeOf: (data) -> data.type is 'text'
     ).keys
