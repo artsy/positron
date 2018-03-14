@@ -56,6 +56,7 @@ export class SectionList extends Component {
               sections={article.sections}
               index={index}
               editing={sectionIndex !== 0}
+              isDraggable={false}
             />
           ]
         }
@@ -72,7 +73,7 @@ export class SectionList extends Component {
     return (
       <div className='SectionList edit-sections__list'>
         <SectionTool
-          sections={article.sections}
+          sections={article.sections || []}
           index={-1}
           isEditing={sectionIndex !== null}
           firstSection

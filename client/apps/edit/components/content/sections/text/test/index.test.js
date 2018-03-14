@@ -1,5 +1,5 @@
 import React from 'react'
-import { clone } from 'lodash'
+import { clone, extend } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
@@ -164,6 +164,66 @@ describe('SectionText', () => {
       const component = getWrapper(props)
 
       expect(component.state().html).not.toMatch('class="content-end"')
+    })
+  })
+
+  describe('#componentDidUpdate', () => {
+    it('Calls #setContentEnd if isContentEnd has changed', () => {
+      props.section.body = '<p>A text before.</p>'
+      const prevProps = extend(props, {isContentEnd: !props.isContentEnd})
+      const component = getWrapper(props)
+      component.instance().componentDidUpdate(prevProps)
+
+      expect(component.state().html).toMatch('<span class="content-end">')
+    })
+
+    it('Calls #maybeResetEditor', () => {
+      const component = getWrapper(props)
+      component.instance().maybeResetEditor = jest.fn()
+      component.instance().componentDidUpdate(props)
+
+      expect(component.instance().maybeResetEditor).toBeCalled()
+    })
+  })
+
+  describe('#maybeResetEditor', () => {
+    it('Calls #setEditorStateFromProps if new body and started editing', () => {
+      props.editing = true
+      const component = getWrapper(props)
+      component.instance().setEditorStateFromProps = jest.fn()
+      const prevProps = {
+        section: {body: '<p>A text before.</p>', type: 'text'},
+        editing: false
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().setEditorStateFromProps).toBeCalled()
+    })
+
+    it('Focuses the editor if started editing and no body change', () => {
+      props.editing = true
+      const component = getWrapper(props)
+      component.instance().focus = jest.fn()
+      const prevProps = {
+        section: props.section,
+        editing: false
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().focus).toBeCalled()
+    })
+
+    it('Blurs the editor if stopped editing', () => {
+      props.editing = false
+      const component = getWrapper(props)
+      component.instance().blur = jest.fn()
+      const prevProps = {
+        section: props.section,
+        editing: true
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().blur).toBeCalled()
     })
   })
 
