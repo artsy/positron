@@ -1,27 +1,29 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { clean } from 'underscore.string'
+import { connect } from 'react-redux'
 import { uniq } from 'lodash'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class AdminTags extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChange: PropTypes.func
+    onChangeArticleAction: PropTypes.func
   }
 
   onChange = (key, value) => {
-    const { onChange } = this.props
+    const { onChangeArticleAction } = this.props
 
     let tagsArray = value.split(',').map((tag) => clean(tag))
     tagsArray = tagsArray.filter(Boolean)
-    onChange(key, uniq(tagsArray))
+    onChangeArticleAction(key, uniq(tagsArray))
   }
 
   render () {
     const { article } = this.props
-    const topicTags = article.get('tags') || []
-    const trackingTags = article.get('tracking_tags') || []
+    const topicTags = article.tags || []
+    const trackingTags = article.tracking_tags || []
 
     return (
       <Row className='AdminTags'>
@@ -50,3 +52,16 @@ export class AdminTags extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminTags)

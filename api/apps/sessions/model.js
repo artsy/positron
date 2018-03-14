@@ -10,7 +10,7 @@ const schema = Joi.object().keys({
   timestamp: Joi.date(),
   user: Joi.object().keys({
     id: Joi.string().objectid(),
-    name: Joi.string()
+    name: Joi.string().default('')
   }),
   article: Joi.string().objectid(),
   channel: Joi.object().keys({

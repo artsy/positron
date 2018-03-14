@@ -1,9 +1,8 @@
 import React from 'react'
-import { clone } from 'lodash'
+import { clone, extend } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Sections from '/client/collections/sections.coffee'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
 import { SectionText } from '../index.jsx'
 const { StandardArticle } = Fixtures
@@ -26,9 +25,11 @@ describe('SectionText', () => {
       article,
       index: 2,
       onChange: jest.fn(),
+      onNewSection: jest.fn(),
       onSetEditing: jest.fn(),
+      onRemoveSection: jest.fn(),
       section: clone(article.sections[11]),
-      sections: new Sections(article.sections)
+      sections: article.sections
     }
     window.pageYOffset = 500
     const getClientRects = jest.fn().mockReturnValue([{
@@ -166,9 +167,68 @@ describe('SectionText', () => {
     })
   })
 
+  describe('#componentDidUpdate', () => {
+    it('Calls #setContentEnd if isContentEnd has changed', () => {
+      props.section.body = '<p>A text before.</p>'
+      const prevProps = extend(props, {isContentEnd: !props.isContentEnd})
+      const component = getWrapper(props)
+      component.instance().componentDidUpdate(prevProps)
+
+      expect(component.state().html).toMatch('<span class="content-end">')
+    })
+
+    it('Calls #maybeResetEditor', () => {
+      const component = getWrapper(props)
+      component.instance().maybeResetEditor = jest.fn()
+      component.instance().componentDidUpdate(props)
+
+      expect(component.instance().maybeResetEditor).toBeCalled()
+    })
+  })
+
+  describe('#maybeResetEditor', () => {
+    it('Calls #setEditorStateFromProps if new body and started editing', () => {
+      props.editing = true
+      const component = getWrapper(props)
+      component.instance().setEditorStateFromProps = jest.fn()
+      const prevProps = {
+        section: {body: '<p>A text before.</p>', type: 'text'},
+        editing: false
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().setEditorStateFromProps).toBeCalled()
+    })
+
+    it('Focuses the editor if started editing and no body change', () => {
+      props.editing = true
+      const component = getWrapper(props)
+      component.instance().focus = jest.fn()
+      const prevProps = {
+        section: props.section,
+        editing: false
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().focus).toBeCalled()
+    })
+
+    it('Blurs the editor if stopped editing', () => {
+      props.editing = false
+      const component = getWrapper(props)
+      component.instance().blur = jest.fn()
+      const prevProps = {
+        section: props.section,
+        editing: true
+      }
+      component.instance().maybeResetEditor(prevProps)
+
+      expect(component.instance().blur).toBeCalled()
+    })
+  })
+
   describe('#toggleBlockQuote', () => {
     it('Splits a blockquote into its own text section', () => {
-      const originalLength = props.sections.models.length
       props.hasFeatures = true
       props.section.body = '<p>A text before.</p><blockquote>A blockquote.</blockquote><p>A text after.</p>'
       const component = getWrapper(props)
@@ -178,31 +238,31 @@ describe('SectionText', () => {
       expect(props.onChange.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
       expect(props.onChange.mock.calls[1][0]).toBe('layout')
       expect(props.onChange.mock.calls[1][1]).toBe('blockquote')
-      expect(props.sections.length).toBe(originalLength + 2)
+      expect(props.onNewSection.mock.calls.length).toBe(2)
     })
 
     it('Creates a new section for text before a blockquote', () => {
-      const originalLength = props.sections.models.length
+      const beforeText = '<p>A text before.</p>'
       props.hasFeatures = true
-      props.section.body = '<p>A text before.</p><blockquote>A blockquote.</blockquote>'
+      props.section.body = `${beforeText}<blockquote>A blockquote.</blockquote>`
       const component = getWrapper(props)
       component.instance().toggleBlockQuote()
-      const newSection = component.props().sections.models[component.props().index]
 
-      expect(props.sections.length).toBe(originalLength + 1)
-      expect(newSection.get('body')).toBe('<p>A text before.</p>')
+      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
+      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index)
+      expect(props.onNewSection.mock.calls[0][2].body).toBe(beforeText)
     })
 
     it('Creates a new section for text after a blockquote', () => {
-      const originalLength = props.sections.models.length
+      const afterText = '<p>A text after.</p>'
       props.hasFeatures = true
-      props.section.body = '<blockquote>A blockquote.</blockquote><p>A text after.</p>'
+      props.section.body = `<blockquote>A blockquote.</blockquote>${afterText}`
       const component = getWrapper(props)
       component.instance().toggleBlockQuote()
-      const newSection = component.props().sections.models[component.props().index + 1]
 
-      expect(props.sections.length).toBe(originalLength + 1)
-      expect(newSection.get('body')).toBe('<p>A text after.</p>')
+      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
+      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index + 1)
+      expect(props.onNewSection.mock.calls[0][2].body).toBe(afterText)
     })
   })
 
@@ -248,7 +308,6 @@ describe('SectionText', () => {
     })
 
     it('Calls maybeSplitSection if in empty block', () => {
-      const originalLength = props.sections.models.length
       props.section.body = '<p>hello</p><p><br></p>'
       const component = getWrapper(props)
       component.instance().onChange(getSelection(true))
@@ -259,7 +318,11 @@ describe('SectionText', () => {
       })
 
       expect(handleReturn).toBe('handled')
-      expect(props.sections.models.length).toBe(originalLength + 1)
+      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
+      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index + 1)
+      expect(props.onNewSection.mock.calls[0][2].body).toBe('')
+      expect(props.onChange.mock.calls[0][0]).toBe('body')
+      expect(props.onChange.mock.calls[0][1]).toBe('<p>hello</p>')
     })
   })
 
@@ -281,7 +344,7 @@ describe('SectionText', () => {
       const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
 
       expect(handleBackspace).toBe('handled')
-      expect(props.onSetEditing.mock.calls.length).toBe(props.index - 1)
+      expect(props.onRemoveSection.mock.calls[0][0]).toBe(props.index - 1)
       expect(component.state().html).toMatch(props.section.body)
       expect(component.state().html).toMatch(article.sections[props.index - 1].body)
     })

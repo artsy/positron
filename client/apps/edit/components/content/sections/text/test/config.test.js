@@ -36,6 +36,18 @@ describe('SectionText: Config', () => {
       ])
     })
 
+    it('Returns the correct blocks for a news article', () => {
+      const blocks = Config.blockRenderMapArray('news', true)
+
+      expect(blocks).toEqual([
+        'header-three',
+        'unordered-list-item',
+        'ordered-list-item',
+        'blockquote',
+        'unstyled'
+      ])
+    })
+
     it('Returns the correct blocks for a classic article with features', () => {
       const blocks = Config.blockRenderMapArray('classic', true)
 
@@ -69,6 +81,7 @@ describe('SectionText: Config', () => {
       expect(styles[0]).toBe('BOLD')
       expect(styles[1]).toBe('ITALIC')
     })
+
     it('Returns rich elements for a standard article', () => {
       const styles = pluck(Config.inlineStyles('standard'), 'name')
 
@@ -76,6 +89,15 @@ describe('SectionText: Config', () => {
       expect(styles[1]).toBe('ITALIC')
       expect(styles[2]).toBe('STRIKETHROUGH')
     })
+
+    it('Returns rich elements for a news article', () => {
+      const styles = pluck(Config.inlineStyles('news'), 'name')
+
+      expect(styles[0]).toBe('BOLD')
+      expect(styles[1]).toBe('ITALIC')
+      expect(styles[2]).toBe('STRIKETHROUGH')
+    })
+
     it('Returns rich elements for a classic article', () => {
       const styles = pluck(Config.inlineStyles('classic'), 'name')
 
@@ -108,6 +130,14 @@ describe('SectionText: Config', () => {
 
       expect(blocks.length).toBe(4)
       expect(blockMap.size).toBe(6)
+      expect(styles.length).toBe(3)
+    })
+
+    it('Returns rich elements for a news article', () => {
+      const { blocks, blockMap, styles } = Config.getRichElements('news', true)
+
+      expect(blocks.length).toBe(4)
+      expect(blockMap.size).toBe(5)
       expect(styles.length).toBe(3)
     })
 
@@ -158,6 +188,16 @@ describe('SectionText: Config', () => {
 
       expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span><span class="content-end"> </span></p>')
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+    })
+
+    it('Sets up editorState and formatted html for news articles', () => {
+      props.article = {layout: 'news'}
+      props.isContentEnd = true
+      const { editorState, html } = Config.setEditorStateFromProps(props)
+
+      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
+      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).not.toMatch('<span class="content-end">')
     })
 
     it('Sets up editorState and formatted html for classic articles with features', () => {

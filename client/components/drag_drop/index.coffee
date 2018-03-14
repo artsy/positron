@@ -42,7 +42,7 @@ module.exports = React.createClass
     dropZonePosition
 
   onDragEnd: ->
-    newItems = _.clone(@props.items)
+    newItems = _.cloneDeep(@props.items)
     moved = newItems.splice @state.dragSource, 1
     newItems.splice @state.dragTarget, 0, moved[0]
 
@@ -74,7 +74,7 @@ module.exports = React.createClass
 
           DragTarget {
             key: i + '-' + child.type.displayName + '-target'
-            i: i
+            i: child.props.index or i
             setDragTarget: @setDragTarget
             activeSource: @state.dragSource is i
             activeTarget: @state.dragTarget is i
@@ -89,7 +89,7 @@ module.exports = React.createClass
           },
             React.createElement(
               DragSource, {
-                index: i
+                index: child.props.index or i
                 key: i + child.type.displayName + '-source'
                 setDragSource: @setDragSource
                 activeSource: @state.dragSource is i

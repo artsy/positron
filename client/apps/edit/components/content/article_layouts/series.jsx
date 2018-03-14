@@ -1,3 +1,4 @@
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { FixedBackground } from '@artsy/reaction/dist/Components/Publishing/Series/FixedBackground'
@@ -9,11 +10,12 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { RelatedArticles } from '../sections/related_articles/index'
+import { onChangeArticle } from 'client/actions/editActions'
 
 export class EditSeries extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChangeArticleAction: PropTypes.func.isRequired
   }
 
   state = {
@@ -21,22 +23,22 @@ export class EditSeries extends Component {
   }
 
   onChangeHero = (url) => {
-    const { onChange } = this.props
+    const { onChangeArticleAction } = this.props
     const hero_section = {
       url,
       type: 'series'
     }
 
-    onChange('hero_section', hero_section)
+    onChangeArticleAction('hero_section', hero_section)
   }
 
   editTitle = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
       <PlainText
-        content={article.get('title')}
-        onChange={(key, value) => onChange('title', value)}
+        content={article.title}
+        onChange={(key, value) => onChangeArticleAction('title', value)}
         placeholder='Title'
         name='title'
       />
@@ -44,22 +46,22 @@ export class EditSeries extends Component {
   }
 
   editDescription = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
       <Paragraph
-        html={article.get('series_description') || ''}
+        html={article.series_description || ''}
         linked
-        onChange={(html) => onChange('series_description', html)}
+        onChange={(html) => onChangeArticleAction('series_description', html)}
         placeholder='Start writing here...'
       />
     )
   }
 
   render () {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
     const { uploadProgress } = this.state
-    const { url } = article.attributes.hero_section || {}
+    const { url } = article.hero_section || {}
 
     return (
       <div className='EditSeries'>
@@ -89,7 +91,7 @@ export class EditSeries extends Component {
 
           <RelatedArticles
             article={article}
-            onChange={onChange}
+            onChange={onChangeArticleAction}
             color='white'
           />
 
@@ -104,3 +106,16 @@ export class EditSeries extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article
+})
+
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditSeries)

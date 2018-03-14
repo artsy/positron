@@ -45,7 +45,7 @@ export function init () {
 
   ReactDOM.render(
     <Provider store={store}>
-      <EditContainer article={article} />
+      <EditContainer />
     </Provider>,
     $('#edit-content')[0]
   )

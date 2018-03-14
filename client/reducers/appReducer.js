@@ -1,12 +1,14 @@
 import { data as sd } from 'sharify'
 
 export const initialState = {
-  channel: sd.CURRENT_CHANNEL,
-  isAdmin: sd.USER.type === 'Admin',
-  user: sd.USER,
+  apiURL: sd.API_URL,
   appURL: sd.APP_URL,
+  artsyURL: sd.ARTSY_URL,
+  channel: sd.CURRENT_CHANNEL,
   forceURL: sd.FORCE_URL,
-  apiURL: sd.API_URL
+  isAdmin: sd.USER.type === 'Admin',
+  metaphysicsURL: sd.GRAPHQL_ENDPOINT,
+  user: sd.USER
 }
 
 export function appReducer (state = initialState, action) {
