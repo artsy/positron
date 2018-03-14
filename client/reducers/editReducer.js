@@ -11,8 +11,9 @@ const setupArticle = () => {
 
   // strip deprecated handles from author
   const author = pick(article.author, 'id', 'name')
+  const author_id = sd.USER.id
 
-  return extend(article, { author })
+  return extend(article, { author, author_id })
 }
 
 export const initialState = {
