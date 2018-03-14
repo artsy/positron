@@ -105,6 +105,15 @@ export class SectionTool extends Component {
               Embed
             </li>
           }
+          {
+            this.props.article.layout === 'news' &&
+            <li
+              className='edit-tool__edit-socialembed'
+              onClick={() => this.newSection('social_embed')}>
+              <IconEditEmbed />
+              Social Embed
+            </li>
+          }
         </ul>
       )
     }
