@@ -85,7 +85,9 @@ describe('ImagesControls', () => {
     expect(component.html()).not.toMatch('placeholder="Add artwork url"')
   })
 
-  it('#componentWillUnmount resmoves the section on unmount if no images', () => {
+  xit('does not display layouts if article layout is news', () => {})
+
+  it('#componentWillUnmount removes the section on unmount if no images', () => {
     props.editSection.images = []
     const component = getWrapper(props).find(ImagesControls)
 
@@ -118,6 +120,8 @@ describe('ImagesControls', () => {
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(images)
     })
+
+    xit('Autocomplete onSelect limits images to 1 if layout is news', () => {})
 
     it('#filterAutocomplete returns formatted artworks', () => {
       const component = getWrapper(props).find(ImagesControls)
@@ -174,6 +178,10 @@ describe('ImagesControls', () => {
       expect(newImage.type).toMatch('artwork')
       expect(newImage.image).toMatch('artwork.jpg')
     })
+
+    it('#onNewImage can update hero section images', () => {})
+
+    it('#onNewImage limits images to 1 if layout is news', () => {})
 
     it('#inputsAreDisabled returns false if layout is not fillwidth', () => {
       const component = getWrapper(props).find(ImagesControls)
