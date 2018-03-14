@@ -18,7 +18,11 @@ const metaFields = {
   is_super_sub_article: boolean().meta({
     resolve: async (root) => (await getSuperArticleCount(root.id)) > 0
   }),
-  relatedArticlesCanvas: array().items(object(Article.inputSchema)).meta({
+  relatedArticlesCanvas: array().items(object(Article.inputSchema).concat(object({
+    authors: array().items(object(Author.schema)).meta({
+      resolve: resolvers.relatedAuthors
+    })
+  }))).meta({
     name: 'RelatedArticlesCanvas',
     resolve: resolvers.relatedArticlesCanvas
   }),

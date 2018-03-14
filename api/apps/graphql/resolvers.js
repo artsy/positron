@@ -232,6 +232,7 @@ export const relatedArticlesPanel = (root) => {
 
 export const relatedArticlesCanvas = (root) => {
   const vertical = root.vertical && root.vertical.id ? ObjectId(root.vertical.id) : null
+
   const args = {
     omit: [ObjectId(root.id)],
     published: true,
@@ -245,6 +246,7 @@ export const relatedArticlesCanvas = (root) => {
   return new Promise(async (resolve, reject) => {
     const relatedArticles = await promisedMongoFetch(_.pick(args, _.identity))
     .catch((e) => reject(e))
+
     if (relatedArticles.results.length) {
       resolve(presentCollection(relatedArticles).results)
     } else {

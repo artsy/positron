@@ -1,5 +1,8 @@
 import request from 'superagent'
-import { ArticleSectionsQuery } from 'api/apps/graphql/test/queries'
+import {
+  ArticleSectionsQuery,
+  RelatedArticlesCanvasQuery
+} from 'api/apps/graphql/test/queries'
 
 const app = require('../../../index.coffee')
 const {
@@ -61,6 +64,33 @@ describe('graphql endpoint', () => {
           res.body.data.articles[0].sections[5].url.should.equal('http://youtu.be/yYjLrJRuMnY')
           done()
         })
+    })
+  })
+
+  xit('can get authors in relatedArticlesCanvas', (done) => {
+    fabricate('authors', [
+      { id: '12345', name: 'Kana' }
+    ], (err, articles) => {
+      fabricate('articles', [
+        fixtures.articles,
+        {
+          published: true,
+          featured: true,
+          vertical: { name: 'Culture', id: '55356a9deca560a0137bb4a7' },
+          channel_id: '5aa99c11da4c00d6bc33a816',
+          author_ids: ['12345']
+        }
+      ], (err, articles) => {
+        request
+          .post('http://localhost:5000/graphql')
+          .send({ query: RelatedArticlesCanvasQuery })
+          .end((err, res) => {
+            res.body.data.articles.length.should.equal(2)
+            res.body.data.articles[1].relatedArticlesCanvas[0].title.should.equal('Top Ten Booths')
+            res.body.data.articles[1].relatedArticlesCanvas[0].authors[0].name.should.equal('Kana')
+            done()
+          })
+      })
     })
   })
 })
