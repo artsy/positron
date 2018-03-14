@@ -137,6 +137,7 @@ describe('editActions', () => {
 
     beforeEach(() => {
       setArticleSpy.mockClear()
+      Article.prototype.isNew = jest.fn().mockReturnValue(false)
       Backbone.sync = jest.fn()
       getState = jest.fn(() => ({edit: { article }}))
       dispatch = jest.fn()
@@ -179,6 +180,16 @@ describe('editActions', () => {
       expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
       expect(setArticleSpy.mock.calls.length).toBe(1)
       expect(setArticleSpy.mock.calls[0][0].seo_keyword).toBeFalsy()
+    })
+
+    it('Redirects to article if new', () => {
+      Article.prototype.isNew.mockReturnValueOnce(true)
+      Backbone.sync = jest.fn(() => {
+        editActions.onFirstSave('12345')
+      })
+      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      editActions.saveArticle()(dispatch, getState)
+      expect(window.location.assign.mock.calls[0][0]).toBe('/articles/12345/edit')
     })
   })
 
