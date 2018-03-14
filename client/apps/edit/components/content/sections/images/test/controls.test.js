@@ -54,6 +54,7 @@ describe('ImagesControls', () => {
       editSection: clone(StandardArticle.sections[4]),
       sectionIndex: 2,
       setProgress: jest.fn(),
+      onChangeHeroAction: jest.fn(),
       onChangeSectionAction: jest.fn(),
       removeSectionAction: jest.fn()
     }
@@ -85,7 +86,12 @@ describe('ImagesControls', () => {
     expect(component.html()).not.toMatch('placeholder="Add artwork url"')
   })
 
-  xit('does not display layouts if article layout is news', () => {})
+  it('does not display layouts if article layout is news', () => {
+    props.article.layout = 'news'
+    const component = getWrapper(props)
+
+    expect(component.html()).not.toMatch('class="layout"')
+  })
 
   it('#componentWillUnmount removes the section on unmount if no images', () => {
     props.editSection.images = []
@@ -121,7 +127,19 @@ describe('ImagesControls', () => {
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(images)
     })
 
-    xit('Autocomplete onSelect limits images to 1 if layout is news', () => {})
+    it('Autocomplete onSelect limits images to 1 if layout is news', () => {
+      props.article.layout = 'news'
+      props.editSection.images = clone(StandardArticle.sections[4].images)
+      const component = getWrapper(props)
+      const images = clone(props.editSection.images)
+      const newImage = {type: 'image', url: 'http://image.jpg'}
+      images.push(newImage)
+
+      component.find(Autocomplete).first().props().onSelect(images)
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(props.onChangeSectionAction.mock.calls[0][1].length).toBe(1)
+      expect(props.onChangeSectionAction.mock.calls[0][1][0]).toBe(newImage)
+    })
 
     it('#filterAutocomplete returns formatted artworks', () => {
       const component = getWrapper(props).find(ImagesControls)
@@ -166,7 +184,6 @@ describe('ImagesControls', () => {
 
     it('#onNewImage updates the section images', () => {
       const component = getWrapper(props).find(ImagesControls)
-
       component.instance().onNewImage(
         {type: 'artwork', image: 'artwork.jpg'}
       )
@@ -179,9 +196,36 @@ describe('ImagesControls', () => {
       expect(newImage.image).toMatch('artwork.jpg')
     })
 
-    it('#onNewImage can update hero section images', () => {})
+    it('#onNewImage can update hero section images', () => {
+      props.isHero = true
+      props.section = {type: 'image', images: clone(StandardArticle.sections[4].images)}
+      const component = getWrapper(props).find(ImagesControls)
+      component.instance().onNewImage(
+        {type: 'artwork', image: 'artwork.jpg'}
+      )
+      const newImages = props.onChangeHeroAction.mock.calls[0][1]
+      const newImage = props.onChangeHeroAction.mock.calls[0][1][3]
 
-    it('#onNewImage limits images to 1 if layout is news', () => {})
+      expect(props.onChangeHeroAction.mock.calls[0][0]).toBe('images')
+      expect(newImages.length).toBe(props.section.images.length + 1)
+      expect(newImage.type).toMatch('artwork')
+      expect(newImage.image).toMatch('artwork.jpg')
+    })
+
+    it('#onNewImage limits images to 1 if layout is news', () => {
+      props.article.layout = 'news'
+      props.editSection = {type: 'image', images: clone(StandardArticle.sections[4].images)}
+      const component = getWrapper(props).find(ImagesControls)
+      component.instance().onNewImage(
+        {type: 'artwork', image: 'artwork.jpg'}
+      )
+      const newImages = props.onChangeSectionAction.mock.calls[0][1]
+      const newImage = props.onChangeSectionAction.mock.calls[0][1][0]
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('images')
+      expect(newImages.length).toBe(1)
+      expect(newImage.type).toMatch('artwork')
+      expect(newImage.image).toMatch('artwork.jpg')
+    })
 
     it('#inputsAreDisabled returns false if layout is not fillwidth', () => {
       const component = getWrapper(props).find(ImagesControls)
