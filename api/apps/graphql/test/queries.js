@@ -79,3 +79,23 @@ export const ArticleSectionsQuery = `
   }
   ${sectionFragments}
 `
+
+export const RelatedArticlesCanvasQuery = `
+  {
+    articles(published: true) {
+      title
+      id
+      channel_id
+      vertical {
+        id
+        name
+      }
+      relatedArticlesCanvas {
+        title
+        authors {
+          name
+        }
+      }
+    }
+  }
+`
