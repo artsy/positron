@@ -3,7 +3,7 @@ import { data as sd } from 'sharify'
 import { clone, cloneDeep, extend, pick } from 'lodash'
 import { actions } from 'client/actions/editActions'
 
-const setupArticle = () => {
+export const setupArticle = () => {
   const article = sd.ARTICLE
   if (!article) {
     return null
