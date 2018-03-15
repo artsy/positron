@@ -274,6 +274,12 @@ export const saveArticle = () => {
       dispatch(changeSavedStatus(article, true))
     })
 
+    if (newArticle.isNew()) {
+      newArticle.once('sync', () => {
+        dispatch(onFirstSave(newArticle.id))
+      })
+    }
+
     dispatch(setSeoKeyword(newArticle))
     newArticle.save()
 

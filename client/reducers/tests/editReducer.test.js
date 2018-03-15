@@ -1,5 +1,6 @@
 import { cloneDeep, extend } from 'lodash'
-import { editReducer } from '../editReducer'
+import { data as sd } from 'sharify'
+import { editReducer, setupArticle } from '../editReducer'
 import { actions, setupSection } from '../../actions/editActions'
 import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
@@ -23,6 +24,14 @@ describe('editReducer', () => {
     expect(initialState.isSaved).toBe(true)
     expect(initialState.section).toBe(null)
     expect(initialState.sectionIndex).toBe(null)
+  })
+
+  it('#setupArticle should cleanup the author and set author_id', () => {
+    sd.ARTICLE.author = extend(sd.ARTICLE.author, {twitter_handle: '@artsy'})
+    const article = setupArticle()
+
+    expect(sd.ARTICLE.author.twitter_handle).toBeFalsy()
+    expect(article.author_id).toBe(sd.USER.id)
   })
 
   describe('Sections', () => {

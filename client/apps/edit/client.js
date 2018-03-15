@@ -1,5 +1,3 @@
-import * as editActions from 'client/actions/editActions'
-import _ from 'underscore'
 import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -15,33 +13,11 @@ import { data as sd } from 'sharify'
 export function init () {
   const article = new Article(sd.ARTICLE)
   const channel = sd.CURRENT_CHANNEL
-  const author = _.pick(article.get('author'), 'id', 'name')
-  const author_id = sd.USER.id
-
-  article.set({
-    author,
-    author_id
-  })
-  article.sections.removeBlank()
 
   new EditLayout({ el: $('#layout-content'), article, channel })
 
   const store = createReduxStore(reducers, initialState)
   initWebsocket(store, sd.APP_URL)
-
-  if (article.isNew()) {
-    article.once('sync', () => {
-      editActions.onFirstSave(article.get('id'))
-    })
-  }
-
-  article.on('sync', () => {
-    store.dispatch(editActions.changeSavedStatus(article.attributes, true))
-  })
-
-  article.on('finished', () => {
-    $(document).ajaxStop(() => editActions.redirectToList(article.get('published')))
-  })
 
   ReactDOM.render(
     <Provider store={store}>

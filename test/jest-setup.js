@@ -31,5 +31,5 @@ window.matchMedia = window.matchMedia || function () {
 sd.data = {
   ARTICLE: FeatureArticle,
   CHANNEL: {},
-  USER: {}
+  USER: {id: '57b5fc6acd530e65f8000406'}
 }
