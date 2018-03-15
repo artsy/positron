@@ -337,6 +337,17 @@ describe('SectionText', () => {
       expect(props.onSetEditing.mock.calls.length).toBe(0)
     })
 
+    it('Returns default behavior if section index is 0', () => {
+      props.index = 0
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection(true))
+      component.instance().focus()
+      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+
+      expect(handleBackspace).toBe('not-handled')
+      expect(props.onSetEditing.mock.calls.length).toBe(0)
+    })
+
     it('Merges section with previous section if at start of block', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection())

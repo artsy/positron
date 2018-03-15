@@ -123,7 +123,7 @@ export const handleBackspace = (editorState, html, sectionBefore) => {
   const selection = getSelectionDetails(editorState)
   const { isFirstBlock, anchorOffset } = selection
 
-  const sectionBeforeIsText = sectionBefore.type === 'text'
+  const sectionBeforeIsText = sectionBefore && sectionBefore.type === 'text'
   const isAtFirstCharacter = anchorOffset === 0
 
   // only merge a section if focus is at 1st character of 1st block
