@@ -17,6 +17,7 @@ module.exports = ->
     thumbnail_image: 'http://kitten.com',
     tier: 1,
     vertical: {name: 'Culture', id: '55356a9deca560a0137bb4a7'}
+    channel_id: '5aa99c11da4c00d6bc33a816'
     tags: ['Fair Coverage', 'Magazine']
     tracking_tags: ['Newsfeed', 'Video']
     title: 'Top Ten Booths',
