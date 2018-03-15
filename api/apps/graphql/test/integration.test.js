@@ -3,6 +3,7 @@ import {
   ArticleSectionsQuery,
   RelatedArticlesCanvasQuery
 } from 'api/apps/graphql/test/queries'
+const { ObjectId } = require('mongojs')
 
 const app = require('../../../index.coffee')
 const {
@@ -67,18 +68,18 @@ describe('graphql endpoint', () => {
     })
   })
 
-  xit('can get authors in relatedArticlesCanvas', (done) => {
+  it('can get authors in relatedArticlesCanvas', (done) => {
     fabricate('authors', [
-      { id: '12345', name: 'Kana' }
+      { _id: ObjectId('55356a9deca560a0137bb4ae'), name: 'Kana' }
     ], (err, articles) => {
       fabricate('articles', [
         fixtures.articles,
         {
           published: true,
           featured: true,
-          vertical: { name: 'Culture', id: '55356a9deca560a0137bb4a7' },
-          channel_id: '5aa99c11da4c00d6bc33a816',
-          author_ids: ['12345']
+          vertical: { name: 'Culture', id: ObjectId('55356a9deca560a0137bb4a7') },
+          channel_id: ObjectId('5aa99c11da4c00d6bc33a816'),
+          author_ids: [ObjectId('55356a9deca560a0137bb4ae')]
         }
       ], (err, articles) => {
         request
