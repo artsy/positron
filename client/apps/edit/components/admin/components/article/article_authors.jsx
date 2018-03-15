@@ -8,11 +8,13 @@ import { Col, Row } from 'react-styled-flexboxgrid'
 import { onChangeArticle } from 'client/actions/editActions'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
 import { AuthorsQuery } from 'client/queries/authors'
+import AutocompleteListMetaphysics from '../autocomplete_list_metaphysics'
 
 export class ArticleAuthors extends Component {
   static propTypes = {
     article: PropTypes.object,
     apiURL: PropTypes.string,
+    isEditorial: PropTypes.bool,
     onChangeArticleAction: PropTypes.func,
     user: PropTypes.object
   }
@@ -58,6 +60,7 @@ export class ArticleAuthors extends Component {
     const {
       article,
       apiURL,
+      isEditorial,
       onChangeArticleAction
     } = this.props
     const name = article.author ? article.author.name : ''
@@ -76,24 +79,34 @@ export class ArticleAuthors extends Component {
         </Col>
 
         <Col xs={6}>
+          {isEditorial &&
+            <div className='field-group'>
+              <label>Authors</label>
+              <AutocompleteList
+                fetchItems={this.fetchAuthors}
+                items={article.author_ids || []}
+                filter={(items) => {
+                  return items.results.map((item) => {
+                    const { id, image_url, name } = item
+                    return {
+                      id,
+                      thumbnail_image: image_url,
+                      name
+                    }
+                  })
+                }}
+                onSelect={(results) => onChangeArticleAction('author_ids', results)}
+                placeholder='Search by author name...'
+                url={`${apiURL}/authors?q=%QUERY`}
+              />
+            </div>
+          }
+
           <div className='field-group'>
-            <label>Authors</label>
-            <AutocompleteList
-              fetchItems={this.fetchAuthors}
-              items={article.author_ids || []}
-              filter={(items) => {
-                return items.results.map((item) => {
-                  const { id, image_url, name } = item
-                  return {
-                    id,
-                    thumbnail_image: image_url,
-                    name
-                  }
-                })
-              }}
-              onSelect={(results) => onChangeArticleAction('author_ids', results)}
-              placeholder='Search by author name...'
-              url={`${apiURL}/authors?q=%QUERY`}
+            <AutocompleteListMetaphysics
+              field='contributing_authors'
+              label='Contributing Authors'
+              model='users'
             />
           </div>
         </Col>
@@ -105,6 +118,7 @@ export class ArticleAuthors extends Component {
 const mapStateToProps = (state) => ({
   apiURL: state.app.apiURL,
   article: state.edit.article,
+  isEditorial: state.app.isEditorial,
   user: state.app.user
 })
 
