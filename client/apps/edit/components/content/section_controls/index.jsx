@@ -65,10 +65,9 @@ export class SectionControls extends Component {
 
       if (insideComponent && !isHero) {
         return stickyBottom + 'px'
-      } else {
-        return '100%'
       }
     }
+    return '100%'
   }
 
   isScrollingOver = ($section) => {
