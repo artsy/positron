@@ -72,6 +72,7 @@ export const relatedAuthors = (root) => {
   const args = {
     ids: root.author_ids
   }
+
   return new Promise(async (resolve, reject) => {
     if (args.ids && args.ids.length) {
       Author.mongoFetch(args, (err, {results}) => {

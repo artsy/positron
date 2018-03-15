@@ -58,17 +58,20 @@ describe "User", ->
 
     it 'returns true for a member of a channel on a channel article', ->
       @article = new Article fixtures().articles
-      @user = new User _.extend fixtures().users, { channel_ids: ['1234'] }
+      @user = new User _.extend fixtures().users, { channel_ids: ['5aa99c11da4c00d6bc33a816'] }
       @user.hasArticleAccess(@article).should.be.true()
 
     it 'returns true for a member of a partner on a partner article', ->
-      @article = new Article _.extend fixtures().articles, { partner_channel_id: '1234' }
+      @article = new Article _.extend fixtures().articles, {
+        partner_channel_id: '1234'
+        channel_id: null
+      }
       @user = new User _.extend fixtures().users, { partner_ids: ['1234'] }
       @user.hasArticleAccess(@article).should.be.true()
 
     it 'returns true for a member of an Admin on a partner article', ->
       @article = new Article fixtures().articles
-      @user = new User _.extend fixtures().users, { channel_ids: ['1234'] }
+      @user = new User _.extend fixtures().users, { channel_ids: ['5aa99c11da4c00d6bc33a816'] }
       @user.hasArticleAccess(@article).should.be.true()
 
     it 'returns false for a member of a channel on a partner article', ->
