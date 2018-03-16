@@ -2,20 +2,18 @@ import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { NewsArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { SocialEmbed } from '@artsy/reaction/dist/Components/Publishing/Sections/SocialEmbed'
 import { SectionSocialEmbed } from '../index'
 import { SocialEmbedControls } from '../controls'
 
-const { NewsArticle } = Fixtures
-
-describe('Section Embed', () => {
+describe('Section Social Embed', () => {
   let props
 
   beforeEach(() => {
     props = {
       article: NewsArticle,
-      section: NewsArticle.sections[10]
+      section: NewsArticle.sections[2]
     }
   })
 
@@ -27,7 +25,7 @@ describe('Section Embed', () => {
       },
       edit: {
         article: NewsArticle,
-        section: NewsArticle.sections[10]
+        section: NewsArticle.sections[2]
       }
     })
 
@@ -48,7 +46,7 @@ describe('Section Embed', () => {
     const component = getWrapper(props)
 
     expect(component.find(SocialEmbed).exists()).toBe(false)
-    expect(component.text()).toBe('Add URL above')
+    expect(component.text()).toBe('Add Twitter or Instagram URL above')
   })
 
   it('Renders controls if editing', () => {

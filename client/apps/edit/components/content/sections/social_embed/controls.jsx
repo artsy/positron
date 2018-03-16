@@ -32,7 +32,7 @@ export class SocialEmbedControls extends Component {
     } = this.props
 
     return (
-      <div className='EmbedControls'>
+      <div className='SocialEmbedControls'>
         <SectionControls
           section={section}
         >
@@ -44,7 +44,7 @@ export class SocialEmbedControls extends Component {
                 className='bordered-input bordered-input-dark'
                 value={section.url || ''}
                 onChange={(e) => onChangeSectionAction('url', e.target.value)}
-                placeholder='https://files.artsy.net'
+                placeholder='https://www.instagram.com/'
               />
             </Col>
           </Row>

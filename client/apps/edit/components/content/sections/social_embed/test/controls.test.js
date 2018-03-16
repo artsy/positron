@@ -3,11 +3,11 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { NewsArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { SectionControls } from '../../../section_controls'
 import { SocialEmbedControls } from '../controls'
 
-describe('EmbedControls', () => {
+describe('SocialEmbedControls', () => {
   let props
   let section
 
@@ -22,7 +22,7 @@ describe('EmbedControls', () => {
         channel: { type: 'editorial' }
       },
       edit: {
-        article: Fixtures.NewsArticle,
+        article: NewsArticle,
         section: props.section,
         sectionIndex: props.sectionIndex
       }
@@ -38,7 +38,7 @@ describe('EmbedControls', () => {
   }
 
   beforeEach(() => {
-    section = cloneDeep(Fixtures.NewsArticle.sections[10])
+    section = cloneDeep(NewsArticle.sections[2])
 
     props = {
       onChangeSectionAction: jest.fn(),
@@ -48,11 +48,11 @@ describe('EmbedControls', () => {
     }
   })
 
-  it('Renders the inputs', () => {
+  it('Renders the input', () => {
     const component = getWrapper(props)
 
     expect(component.find(SectionControls).length).toBe(1)
-    expect(component.find('input').length).toBe(3)
+    expect(component.find('input').length).toBe(1)
   })
 
   it('Renders saved data', () => {
@@ -60,8 +60,6 @@ describe('EmbedControls', () => {
     const inputs = component.find('input')
 
     expect(inputs.at(0).props().value).toBe(props.section.url)
-    expect(inputs.at(1).props().value).toBe(props.section.height)
-    expect(inputs.at(2).props().value).toBe(props.section.mobile_height)
   })
 
   it('Can change URL', () => {
@@ -71,26 +69,6 @@ describe('EmbedControls', () => {
 
     input.simulate('change', {target: { value }})
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('url')
-    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
-  })
-
-  it('Can change height', () => {
-    const component = getWrapper(props)
-    const input = component.find('input').at(1)
-    const value = '500'
-
-    input.simulate('change', {target: { value }})
-    expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('height')
-    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
-  })
-
-  it('Can change mobile height', () => {
-    const component = getWrapper(props)
-    const input = component.find('input').at(2)
-    const value = '200'
-
-    input.simulate('change', {target: { value }})
-    expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('mobile_height')
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
 
