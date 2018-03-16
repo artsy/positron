@@ -82,14 +82,6 @@ describe('SectionContainer', () => {
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index)
   })
 
-  it('#getContentStartEnd finds the first and last text section', () => {
-    const component = getWrapper(props).find(SectionContainer)
-    const startEnd = component.instance().getContentStartEnd()
-
-    expect(startEnd.start).toBe(0)
-    expect(startEnd.end).toBe(17)
-  })
-
   describe('Sections', () => {
     it('Can render an embed section', () => {
       props.section = {type: 'embed'}
