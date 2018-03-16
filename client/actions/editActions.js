@@ -293,8 +293,6 @@ export const saveArticle = () => {
   }
 }
 
-const debouncedSaveArticle = debounce(saveArticle, 500)
-
 export const saveArticlePending = () => {
   return {
     type: actions.SAVE_ARTICLE,
