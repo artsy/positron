@@ -1,10 +1,13 @@
+import configureStore from 'redux-mock-store'
 import request from 'superagent'
 import { cloneDeep, extend } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
+import { Provider } from 'react-redux'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { ArticleAuthors } from '../../../components/article/article_authors'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
+import { AutocompleteListMetaphysics } from '../../../components/autocomplete_list_metaphysics'
 require('typeahead.js')
 
 jest.mock('superagent', () => {
@@ -24,8 +27,18 @@ describe('ArticleAuthors', () => {
   let response
 
   const getWrapper = (props) => {
+    const mockStore = configureStore([])
+    const { article, channel } = props
+
+    const store = mockStore({
+      app: { channel },
+      edit: { article }
+    })
+
     return mount(
-      <ArticleAuthors {...props} />
+      <Provider store={store}>
+        <ArticleAuthors {...props} />
+      </Provider>
     )
   }
 
@@ -65,13 +78,18 @@ describe('ArticleAuthors', () => {
     expect(component.find(AutocompleteList).exists()).toBe(true)
   })
 
+  it('Renders contributing authors autocomplete', () => {
+    const component = getWrapper(props)
+    expect(component.find(AutocompleteListMetaphysics).length).toBe(1)
+  })
+
   it('#fetchAuthors fetches authors', () => {
     props.article.author_ids = ['123']
     const callback = jest.fn()
     request.query().end.mockImplementation(() => {
       callback(response.body.data.authors)
     })
-    const component = getWrapper(props)
+    const component = getWrapper(props).find(ArticleAuthors)
 
     component.instance().fetchAuthors()
     expect(callback).toBeCalled()

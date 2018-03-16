@@ -23,7 +23,7 @@ jest.mock('superagent', () => {
   }
 })
 
-describe('AdminFeaturing', () => {
+describe('AdminArticle', () => {
   let props
   let response
 
@@ -143,6 +143,7 @@ describe('AdminFeaturing', () => {
   })
 
   describe('Editing', () => {
+
     it('Can change article tier', () => {
       props.article.tier = 1
       const component = getWrapper(props)

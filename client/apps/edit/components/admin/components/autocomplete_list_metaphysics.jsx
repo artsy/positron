@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { clone, uniq } from 'lodash'
+import { clone, compact, dropRight, uniq } from 'lodash'
 import { connect } from 'react-redux'
 import { difference, flatten, pluck } from 'underscore'
 import PropTypes from 'prop-types'
@@ -43,14 +43,21 @@ export class AutocompleteListMetaphysics extends Component {
       case 'sales': {
         return Queries.AuctionsQuery
       }
+      case 'users': {
+        return Queries.UsersQuery
+      }
     }
   }
 
   idsToFetch = (fetchedItems) => {
-    const { article, field } = this.props
+    const { article, field, model } = this.props
+    let alreadyFetched = uniq(pluck(fetchedItems, '_id'))
     let allIds = clone(article[field])
-    const alreadyFetched = uniq(pluck(fetchedItems, '_id'))
 
+    if (model === 'users') {
+      allIds = pluck(allIds, 'id')
+      alreadyFetched = uniq(pluck(fetchedItems, 'id'))
+    }
     return difference(allIds, alreadyFetched)
   }
 
@@ -85,6 +92,34 @@ export class AutocompleteListMetaphysics extends Component {
     }
   }
 
+  getFilter = () => {
+    const { model } = this.props
+
+    const filter = (items) => {
+      return items.map((item) => {
+        return { id: item._id, name: item.name }
+      })
+    }
+
+    const usersFilter = (items) => {
+      return items.map((item) => {
+        return {
+          id: item.id,
+          name: compact([item.name, item.email]).join(', ')
+        }
+      })
+    }
+
+    return model === 'users' ? usersFilter : filter
+  }
+
+  formatSelectedUser = (item) => {
+    return {
+      id: item.id,
+      name: dropRight(item.name.split(',')).join(', ')
+    }
+  }
+
   render () {
     const {
       article,
@@ -101,12 +136,9 @@ export class AutocompleteListMetaphysics extends Component {
         <label>{label || model}</label>
         <AutocompleteList
           fetchItems={(fetchedItems, cb) => this.fetchItems(fetchedItems, cb)}
+          formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
           items={article[field] || []}
-          filter={(items) => {
-            return items.map((item) => {
-              return { id: item._id, name: item.name }
-            })
-          }}
+          filter={this.getFilter()}
           onSelect={(results) => onChangeArticleAction(field, results)}
           placeholder={placeholder || `Search ${model} by name...`}
           url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}

@@ -7,6 +7,7 @@ export const initialState = {
   channel: sd.CURRENT_CHANNEL,
   forceURL: sd.FORCE_URL,
   isAdmin: sd.USER.type === 'Admin',
+  isEditorial: sd.CURRENT_CHANNEL.type === 'editorial',
   metaphysicsURL: sd.GRAPHQL_ENDPOINT,
   user: sd.USER
 }

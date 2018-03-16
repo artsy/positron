@@ -12,6 +12,18 @@ import { EditHeader } from '../header'
 import { EditError } from '../error'
 require('typeahead.js')
 
+jest.mock('superagent', () => {
+  return {
+    get: jest.genMockFunction().mockReturnThis(),
+    set: jest.genMockFunction().mockReturnThis(),
+    query: jest.fn().mockReturnValue(
+      {
+        end: jest.fn()
+      }
+    )
+  }
+})
+
 describe('EditContainer', () => {
   let props
 

@@ -115,12 +115,31 @@ describe('AutocompleteListMetaphysics', () => {
 
       expect(query).toBe(Queries.ArtistsQuery)
     })
+
+    it('Returns the correct query for users', () => {
+      props.model = 'users'
+      const component = getWrapper(props)
+      const query = component.instance().getQuery()
+
+      expect(query).toBe(Queries.UsersQuery)
+    })
   })
 
   it('#idsToFetch returns unfetched ids based on field and fetchedItems', () => {
     props.article.fair_ids = ['123', '456']
     const component = getWrapper(props)
     const idsToFetch = component.instance().idsToFetch([{_id: '123'}])
+
+    expect(idsToFetch.length).toBe(1)
+    expect(idsToFetch[0]).toBe('456')
+  })
+
+  it('#idsToFetch returns unfetched ids for users', () => {
+    props.model = 'users'
+    props.field = 'contributing_authors'
+    props.article.contributing_authors = [{id: '123'}, {id: '456'}]
+    const component = getWrapper(props)
+    const idsToFetch = component.instance().idsToFetch([{id: '123'}])
 
     expect(idsToFetch.length).toBe(1)
     expect(idsToFetch[0]).toBe('456')
@@ -181,6 +200,61 @@ describe('AutocompleteListMetaphysics', () => {
 
       expect(cb.mock.calls[0][0][0]._id).toBe('123')
       expect(cb.mock.calls[0][0][0].name).toBe('NADA New York')
+    })
+  })
+
+  describe('#getFilter', () => {
+    it('Returns correct data for non-user models', () => {
+      const component = getWrapper(props)
+      const items = [{
+        _id: '123',
+        name: 'NADA New York'
+      }]
+      const filter = component.instance().getFilter()
+      const filteredItem = filter(items)[0]
+
+      expect(filteredItem.id).toBe(items[0]._id)
+      expect(filteredItem.name).toBe(items[0].name)
+    })
+
+    it('Returns correct data for users model', () => {
+      props.model = 'users'
+      const component = getWrapper(props)
+      const items = [{
+        id: '123',
+        name: 'Molly Gottschalk',
+        email: 'email@email.com'
+      }]
+      const filter = component.instance().getFilter()
+      const filteredItem = filter(items)[0]
+
+      expect(filteredItem.id).toBe(items[0].id)
+      expect(filteredItem.name).toBe(`${items[0].name}, ${items[0].email}`)
+    })
+  })
+
+  describe('#formatSelectedUser', () => {
+    it('Is passed as #formatSelected prop to AutocompleteList if model is users', () => {
+      props.model = 'users'
+      const component = getWrapper(props)
+      expect(component.find(AutocompleteList).getElement().props.formatSelected).not.toBeFalsy()
+    })
+
+    it('Does not pass #formatSelected prop to AutocompleteList if model isnt users', () => {
+      const component = getWrapper(props)
+      expect(component.find(AutocompleteList).getElement().props.formatSelected).toBeFalsy()
+    })
+
+    it('Returns removes email from user name', () => {
+      const item = {
+        id: '123',
+        name: 'Molly Gottschalk, email@email.com'
+      }
+      const component = getWrapper(props)
+      const formattedItem = component.instance().formatSelectedUser(item)
+
+      expect(formattedItem.id).toBe(item.id)
+      expect(formattedItem.name).toBe('Molly Gottschalk')
     })
   })
 })

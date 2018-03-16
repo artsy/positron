@@ -13,6 +13,7 @@ export class AutocompleteList extends Component {
     filter: PropTypes.func,
     fetchItems: PropTypes.func,
     formatSelected: PropTypes.func,
+    formatListItem: PropTypes.func,
     formatSearchResult: PropTypes.func,
     items: PropTypes.array,
     onSelect: PropTypes.func,
@@ -55,7 +56,7 @@ export class AutocompleteList extends Component {
   }
 
   render () {
-    const { className, formatSelected } = this.props
+    const { className, formatListItem } = this.props
     const { items } = this.state
 
     return (
@@ -69,8 +70,8 @@ export class AutocompleteList extends Component {
                   className='Autocomplete__list-item'
                   key={i}
                 >
-                  {formatSelected
-                    ? formatSelected()
+                  {formatListItem
+                    ? formatListItem()
                     : <span className='selected'>
                         {title}
                       </span>
