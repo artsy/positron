@@ -133,7 +133,7 @@ export const newHeroSection = (type) => {
   }
 }
 
-const dispatchDebouncedSave = debounce((dispatch) => {
+const debouncedSaveDispatch = debounce((dispatch) => {
   dispatch(saveArticle())
 }, 500)
 
@@ -151,7 +151,7 @@ export const onChangeArticle = (key, value) => {
     }))
 
     if (!article.published) {
-      dispatchDebouncedSave(dispatch)
+      debouncedSaveDispatch(dispatch)
     }
   }
 }
@@ -175,7 +175,7 @@ export const onChangeHero = (key, value) => {
     dispatch(changeArticle('hero_section', hero_section))
 
     if (!article.published) {
-      dispatchDebouncedSave(dispatch)
+      debouncedSaveDispatch(dispatch)
     }
   }
 }
@@ -187,7 +187,7 @@ export const onChangeSection = (key, value) => {
     dispatch(changeSection(key, value))
 
     if (!article.published) {
-      dispatchDebouncedSave(dispatch)
+      debouncedSaveDispatch(dispatch)
     }
   }
 }

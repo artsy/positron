@@ -107,7 +107,6 @@
     "react-tracking": "^5.1.0",
     "react-waypoint": "^7.3.1",
     "redux": "^3.7.2",
-    "redux-debounce": "^1.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "sailthru-client": "^2.0.3",
@@ -179,6 +178,12 @@
     "webpack-hot-middleware": "^2.20.0",
     "webpack-notifier": "^1.5.0",
     "zombie": "^5.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true
   },
   "jest": {
     "transform": {
