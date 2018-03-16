@@ -50,15 +50,18 @@ export class EditContainer extends Component {
   componentDidMount () {
     const { article, channel, startEditingArticleAction, user } = this.props
 
-    startEditingArticleAction({
-      channel,
-      user,
-      article: article.id
-    })
+    if (article.id) {
+    // wait for new articles to be saved before setup
+      startEditingArticleAction({
+        channel,
+        user,
+        article: article.id
+      })
 
-    this.resetInactivityCounter()
-    this.props.toggleSpinnerAction(false)
-    window.addEventListener('beforeunload', this.sendStopEditing)
+      this.resetInactivityCounter()
+      window.addEventListener('beforeunload', this.sendStopEditing)
+      this.props.toggleSpinnerAction(false)
+    }
   }
 
   componentWillReceiveProps = (nextProps) => {

@@ -85,6 +85,12 @@ describe('EditContainer', () => {
     expect(props.toggleSpinnerAction.mock.calls[0][0]).toBe(false)
   })
 
+  it('#componentDidMount does not hide the loading spinner if article is new', () => {
+    delete props.article.id
+    getShallowWrapper(props)
+    expect(props.toggleSpinnerAction).not.toBeCalled()
+  })
+
   it('sets up an event listener for #beforeUnload if article is published and changed', () => {
     const component = getShallowWrapper(props)
     component.instance().componentWillReceiveProps({article: {published: true}})
