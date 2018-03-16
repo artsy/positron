@@ -3,6 +3,7 @@
  */
 
 import artsyXapp from 'artsy-xapp'
+import compression from 'compression'
 import express from 'express'
 import newrelic from 'artsy-newrelic'
 import { IpFilter } from 'express-ipfilter'
@@ -20,6 +21,9 @@ const {
   IP_BLACKLIST = '',
   PORT
 } = process.env
+
+// Gzip compression
+app.use(compression())
 
 // Blacklist ips
 app.use(
