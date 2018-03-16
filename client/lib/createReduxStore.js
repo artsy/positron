@@ -1,6 +1,7 @@
 import get from 'lodash.get'
 import thunkMiddleware from 'redux-thunk'
 import { createLogger } from 'redux-logger'
+import createDebounce from 'redux-debounce'
 import { compose, createStore, applyMiddleware } from 'redux'
 import { contains } from 'underscore'
 import { data as sd } from 'sharify'
@@ -9,8 +10,14 @@ export function createReduxStore (rootReducer, initialState = {}) {
   const isDevelopment = contains(['development', 'staging'], sd.NODE_ENV)
   let composeEnhancers = compose
 
+  const debounceConfig = {
+    simple: 300
+  }
+  const debounceMiddleware = createDebounce(debounceConfig)
+
   const middleware = [
-    thunkMiddleware
+    thunkMiddleware,
+    debounceMiddleware
   ]
 
   if (isDevelopment) {
