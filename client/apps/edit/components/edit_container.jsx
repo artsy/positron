@@ -48,17 +48,13 @@ export class EditContainer extends Component {
   }
 
   componentDidMount () {
-    const { article, channel, startEditingArticleAction, user } = this.props
+    const { article } = this.props
 
-    startEditingArticleAction({
-      channel,
-      user,
-      article: article.id
-    })
-
-    this.resetInactivityCounter()
-    this.props.toggleSpinnerAction(false)
-    window.addEventListener('beforeunload', this.sendStopEditing)
+    if (article.id) {
+    // wait for new articles to be saved before setup
+      this.setupLockout()
+      this.props.toggleSpinnerAction(false)
+    }
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -82,6 +78,24 @@ export class EditContainer extends Component {
     if (article.published) {
       window.addEventListener('beforeunload', this.beforeUnload)
     }
+  }
+
+  setupLockout = () => {
+    const {
+      article,
+      channel,
+      startEditingArticleAction,
+      user
+    } = this.props
+
+    startEditingArticleAction({
+      channel,
+      user,
+      article: article.id
+    })
+
+    this.resetInactivityCounter()
+    window.addEventListener('beforeunload', this.sendStopEditing)
   }
 
   beforeUnload = (e) => {

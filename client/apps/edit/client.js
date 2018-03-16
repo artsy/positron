@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { reducers, initialState } from 'client/reducers'
 import { createReduxStore } from 'client/lib/createReduxStore'
 import { init as initWebsocket } from 'client/apps/websocket/client'
+import * as editActions from 'client/actions/editActions'
 import { data as sd } from 'sharify'
 
 export function init () {
@@ -18,6 +19,10 @@ export function init () {
 
   const store = createReduxStore(reducers, initialState)
   initWebsocket(store, sd.APP_URL)
+
+  if (article.isNew()) {
+    store.dispatch(editActions.saveArticle())
+  }
 
   ReactDOM.render(
     <Provider store={store}>
