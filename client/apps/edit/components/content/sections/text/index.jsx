@@ -1,4 +1,5 @@
 import { clone } from 'lodash'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Editor, EditorState, RichUtils } from 'draft-js'
@@ -11,6 +12,8 @@ import { convertToRichHtml } from 'client/components/rich_text/utils/convert_htm
 import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
+import { onChangeSection, newSection, removeSection } from 'client/actions/editActions'
+import { getContentStartEnd } from 'client/models/article.js'
 
 export class SectionText extends Component {
   static propTypes = {
@@ -18,12 +21,10 @@ export class SectionText extends Component {
     editing: PropTypes.bool,
     hasFeatures: PropTypes.bool,
     index: PropTypes.number,
-    onChange: PropTypes.func,
-    isContentEnd: PropTypes.bool,
-    isContentStart: PropTypes.bool,
-    onNewSection: PropTypes.func,
-    onRemoveSection: PropTypes.func,
+    onChangeSectionAction: PropTypes.func,
+    newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
+    removeSectionAction: PropTypes.func,
     section: PropTypes.object,
     sections: PropTypes.array
   }
@@ -63,19 +64,18 @@ export class SectionText extends Component {
   componentDidUpdate = (prevProps) => {
     const {
       article,
-      isContentEnd,
-      onChange,
+      onChangeSectionAction,
       section
     } = this.props
 
     this.maybeResetEditor(prevProps)
 
-    const lastSectionChanged = isContentEnd !== prevProps.isContentEnd
+    const lastSectionChanged = getContentStartEnd(article).end !== getContentStartEnd(prevProps.article).end
     // Reset contentEnd markers if end has changed
     if (lastSectionChanged) {
       if (['feature', 'standard'].includes(article.layout)) {
-        const html = setContentEnd(section.body, isContentEnd)
-        onChange('body', html)
+        const html = setContentEnd(section.body, this.isContentEnd())
+        onChangeSectionAction('body', html)
       }
     }
   }
@@ -87,12 +87,12 @@ export class SectionText extends Component {
   }
 
   onChange = (editorState) => {
-    const { article, hasFeatures, isContentEnd, onChange, section } = this.props
+    const { article, hasFeatures, onChangeSectionAction, section } = this.props
     const convertedHtml = convertToRichHtml(editorState, article.layout, hasFeatures)
-    const html = setContentEnd(convertedHtml, isContentEnd)
+    const html = setContentEnd(convertedHtml, this.isContentEnd())
 
     if (section.body !== html) {
-      onChange('body', html)
+      onChangeSectionAction('body', html)
     }
     this.setState({ editorState, html })
   }
@@ -136,7 +136,7 @@ export class SectionText extends Component {
   maybeSplitSection = (anchorKey) => {
     // Called on return
     const { editorState } = this.state
-    const { article, index, onNewSection } = this.props
+    const { article, index, newSectionAction } = this.props
 
     const hasDividedState = Selection.divideEditorState(editorState, anchorKey, article.layout)
     // If section gets divided, add new section
@@ -144,15 +144,27 @@ export class SectionText extends Component {
       const { currentSectionState, newSection } = hasDividedState
 
       this.onChange(currentSectionState)
-      onNewSection('text', index + 1, {body: newSection})
+      newSectionAction('text', index + 1, {body: newSection})
     }
     return 'handled'
+  }
+
+  isContentStart = () => {
+    const { article, index } = this.props
+
+    return getContentStartEnd(article).start === index
+  }
+
+  isContentEnd = () => {
+    const { article, index } = this.props
+
+    return getContentStartEnd(article).end === index
   }
 
   handleBackspace = () => {
     // Maybe merge sections
     const { editorState, html } = this.state
-    const { index, onRemoveSection, sections } = this.props
+    const { index, removeSectionAction, sections } = this.props
 
     const beforeIndex = index - 1
     const sectionBefore = sections[beforeIndex]
@@ -160,7 +172,7 @@ export class SectionText extends Component {
 
     if (newState) {
       this.onChange(newState)
-      onRemoveSection(beforeIndex)
+      removeSectionAction(beforeIndex)
       return 'handled'
     }
     return 'not-handled'
@@ -259,7 +271,7 @@ export class SectionText extends Component {
 
   toggleBlock = (block) => {
     const { editorState } = this.state
-    const { hasFeatures, onChange, section } = this.props
+    const { hasFeatures, onChangeSectionAction, section } = this.props
     const isBlockquote = block === 'blockquote'
     const hasBlockquote = clone(section.body).includes('<blockquote>')
 
@@ -272,7 +284,7 @@ export class SectionText extends Component {
 
     if (hasFeatures && isBlockquote) {
       if (hasBlockquote) {
-        onChange('layout', null)
+        onChangeSectionAction('layout', null)
       } else {
         this.toggleBlockQuote()
       }
@@ -283,9 +295,9 @@ export class SectionText extends Component {
   toggleBlockQuote = () => {
     const {
       index,
-      onChange,
+      onChangeSectionAction,
       onSetEditing,
-      onNewSection,
+      newSectionAction,
       section
     } = this.props
     const {
@@ -296,13 +308,13 @@ export class SectionText extends Component {
     } = Strip.makeBlockQuote(section.body)
 
     if (afterBlock) {
-      onNewSection('text', index + 1, {body: afterBlock})
+      newSectionAction('text', index + 1, {body: afterBlock})
     }
     if (beforeBlock) {
-      onNewSection('text', index, {body: beforeBlock})
+      newSectionAction('text', index, {body: beforeBlock})
     }
-    onChange('body', blockquote)
-    onChange('layout', 'blockquote')
+    onChangeSectionAction('body', blockquote)
+    onChangeSectionAction('layout', 'blockquote')
     onSetEditing(index + increment)
   }
 
@@ -376,8 +388,7 @@ export class SectionText extends Component {
     const {
       article,
       editing,
-      hasFeatures,
-      isContentStart
+      hasFeatures
     } = this.props
     const {
       editorState,
@@ -393,7 +404,7 @@ export class SectionText extends Component {
       styles,
       decorators
     } = Config.getRichElements(article.layout, hasFeatures)
-    const showDropCaps = editing ? false : isContentStart
+    const showDropCaps = editing ? false : this.isContentStart()
 
     return (
     <div
@@ -456,3 +467,19 @@ export class SectionText extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  article: state.edit.article,
+  hasFeatures: state.app.channel.type !== 'partner'
+})
+
+const mapDispatchToProps = {
+  onChangeSectionAction: onChangeSection,
+  newSectionAction: newSection,
+  removeSectionAction: removeSection
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionText)
