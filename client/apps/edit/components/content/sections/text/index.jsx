@@ -26,7 +26,7 @@ export class SectionText extends Component {
     onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
     section: PropTypes.object,
-    sections: PropTypes.array
+    sectionIndex: PropTypes.number
   }
 
   constructor (props) {
@@ -54,30 +54,13 @@ export class SectionText extends Component {
   }
 
   componentDidMount = () => {
-    const { editing } = this.props
-
-    if (editing) {
+    if (this.isEditing()) {
       this.focus()
     }
   }
 
   componentDidUpdate = (prevProps) => {
-    const {
-      article,
-      onChangeSectionAction,
-      section
-    } = this.props
-
     this.maybeResetEditor(prevProps)
-
-    const lastSectionChanged = getContentStartEnd(article).end !== getContentStartEnd(prevProps.article).end
-    // Reset contentEnd markers if end has changed
-    if (lastSectionChanged) {
-      if (['feature', 'standard'].includes(article.layout)) {
-        const html = setContentEnd(section.body, this.isContentEnd())
-        onChangeSectionAction('body', html)
-      }
-    }
   }
 
   // EDITOR AND CONTENT STATE
@@ -97,6 +80,12 @@ export class SectionText extends Component {
     this.setState({ editorState, html })
   }
 
+  isEditing = () => {
+    const { index, sectionIndex } = this.props
+
+    return index === sectionIndex
+  }
+
   blur = () => {
     if (this.domEditor) {
       this.domEditor.blur()
@@ -110,7 +99,13 @@ export class SectionText extends Component {
   }
 
   maybeResetEditor = (prevProps) => {
-    const { editing, section } = this.props
+    const {
+      article,
+      editing,
+      onChangeSectionAction,
+      section,
+      sectionIndex
+    } = this.props
     const { html } = this.state
 
     const bodyHasChanged = section.body !== prevProps.section.body && section.body.length > 0
@@ -130,6 +125,16 @@ export class SectionText extends Component {
     } else if (stoppedEditing) {
       // Blur editor if no longer editing
       this.blur()
+    }
+
+    const sectionIndexChanged = sectionIndex !== prevProps.sectionIndex
+    const lastSectionChanged = getContentStartEnd(article).end !== getContentStartEnd(prevProps.article).end
+    // Reset contentEnd markers if end has changed
+    if (lastSectionChanged || sectionIndexChanged) {
+      if (['feature', 'standard'].includes(article.layout)) {
+        const html = setContentEnd(section.body, this.isContentEnd())
+        onChangeSectionAction('body', html)
+      }
     }
   }
 
@@ -164,7 +169,7 @@ export class SectionText extends Component {
   handleBackspace = () => {
     // Maybe merge sections
     const { editorState, html } = this.state
-    const { index, removeSectionAction, sections } = this.props
+    const { index, removeSectionAction, article: { sections } } = this.props
 
     const beforeIndex = index - 1
     const sectionBefore = sections[beforeIndex]
@@ -385,11 +390,7 @@ export class SectionText extends Component {
   }
 
   render () {
-    const {
-      article,
-      editing,
-      hasFeatures
-    } = this.props
+    const { article, hasFeatures } = this.props
     const {
       editorState,
       selectionTarget,
@@ -404,6 +405,7 @@ export class SectionText extends Component {
       styles,
       decorators
     } = Config.getRichElements(article.layout, hasFeatures)
+    const editing = this.isEditing()
     const showDropCaps = editing ? false : this.isContentStart()
 
     return (
@@ -470,7 +472,8 @@ export class SectionText extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  hasFeatures: state.app.channel.type !== 'partner'
+  hasFeatures: state.app.channel.type !== 'partner',
+  sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {

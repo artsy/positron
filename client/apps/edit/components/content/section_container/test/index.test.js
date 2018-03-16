@@ -16,6 +16,7 @@ require('typeahead.js')
 
 describe('SectionContainer', () => {
   let props
+  window.scrollTo = jest.fn()
 
   const getWrapper = (props) => {
     const mockStore = configureStore([])
@@ -27,7 +28,7 @@ describe('SectionContainer', () => {
       edit: {
         article: props.article,
         section: props.section,
-        sectionIndex: props.index
+        sectionIndex: props.sectionIndex
       }
     })
 
@@ -51,6 +52,7 @@ describe('SectionContainer', () => {
       onSetEditing: jest.fn(),
       section: {type: 'image_collection', layout: 'overflow_fillwidth'},
       sections: article.sections,
+      sectionIndex: 1,
       removeSectionAction: jest.fn()
     }
   })
@@ -62,13 +64,13 @@ describe('SectionContainer', () => {
   })
 
   it('Calls onSetEditing with index on section click', () => {
+    props.sectionIndex = 0
     const component = getWrapper(props)
     component.find('.SectionContainer__hover-controls').at(0).simulate('click')
     expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index)
   })
 
   it('Calls onSetEditing with null on click off', () => {
-    props.editing = true
     const component = getWrapper(props)
 
     component.find('.SectionContainer__hover-controls').at(0).simulate('click')
@@ -114,6 +116,7 @@ describe('SectionContainer', () => {
     })
 
     it('Can render a text section', () => {
+      props.sectionIndex = 0
       props.section = {type: 'text'}
       const component = getWrapper(props)
       expect(component.find(SectionText).length).toBe(1)

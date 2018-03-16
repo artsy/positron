@@ -23,7 +23,17 @@ export class SectionContainer extends Component {
     onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
     section: PropTypes.object,
-    sections: PropTypes.array
+    sections: PropTypes.array,
+    sectionIndex: PropTypes.number
+  }
+
+  isEditing = () => {
+    const { index, editing, isHero, sectionIndex } = this.props
+    if (isHero) {
+      return editing
+    } else {
+      return index === sectionIndex
+    }
   }
 
   onSetEditing = () => {
@@ -41,7 +51,7 @@ export class SectionContainer extends Component {
       setEditing = !editing
     } else {
       // use the section index if article.section
-      setEditing = editing ? null : index
+      setEditing = this.isEditing() ? null : index
     }
     onSetEditing(setEditing)
   }
@@ -93,7 +103,6 @@ export class SectionContainer extends Component {
 
   render () {
     const {
-      editing,
       isHero,
       section
     } = this.props
@@ -102,7 +111,7 @@ export class SectionContainer extends Component {
     return (
       <ErrorBoundary>
         <div className='SectionContainer'
-          data-editing={editing}
+          data-editing={this.isEditing()}
           data-layout={layout || 'column_width'}
           data-type={type}
         >
@@ -134,7 +143,8 @@ export class SectionContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  article: state.edit.article
+  article: state.edit.article,
+  sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {
