@@ -78,7 +78,14 @@ export class SectionContainer extends Component {
   }
 
   getSectionComponent = () => {
-    const { channel, index, newSectionAction, onChangeSectionAction, removeSectionAction, section } = this.props
+    const {
+      channel,
+      index,
+      newSectionAction,
+      onChangeSectionAction,
+      removeSectionAction,
+      section
+    } = this.props
 
     switch (section.type) {
       case 'embed': {

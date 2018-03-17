@@ -87,3 +87,14 @@ export function ShowsQuery (ids) {
     }
   `
 }
+
+export function UsersQuery (ids) {
+  return `
+    {
+      users(ids: ${stringifyJSONForWeb(ids)}) {
+        id
+        name
+      }
+    }
+  `
+}

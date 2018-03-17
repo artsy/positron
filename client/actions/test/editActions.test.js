@@ -56,11 +56,96 @@ describe('editActions', () => {
       expect(dispatch.mock.calls.length).toBe(2)
     })
 
-    it('calls #saveArticle if draft', () => {
+    it('calls debounced #saveArticle if draft', (done) => {
       article.published = false
-      editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+      editActions.onChangeArticle('title', 'N')(dispatch, getState)
+      editActions.onChangeArticle('title', 'Ne')(dispatch, getState)
+      editActions.onChangeArticle('title', 'New')(dispatch, getState)
 
-      expect(dispatch.mock.calls.length).toBe(3)
+      setTimeout(() => {
+        expect(dispatch.mock.calls.length).toBe(7)
+        done()
+      }, 600)
+    })
+  })
+
+  describe('#onChangeHero', () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({
+        edit: { article }
+      }))
+      dispatch = jest.fn()
+    })
+
+    it('calls #changeArticle with new attrs', () => {
+      editActions.onChangeHero('type', 'basic')(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
+      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('basic')
+    })
+
+    it('does not call #saveArticle if published', () => {
+      editActions.onChangeHero('type', 'basic')(dispatch, getState)
+      expect(dispatch.mock.calls.length).toBe(1)
+    })
+
+    it('calls debounced #saveArticle if draft', done => {
+      article.published = false
+      editActions.onChangeHero('deck', 'De')(dispatch, getState)
+      editActions.onChangeHero('deck', 'Dec')(dispatch, getState)
+      editActions.onChangeHero('deck', 'Deck')(dispatch, getState)
+
+      setTimeout(() => {
+        expect(dispatch.mock.calls.length).toBe(4)
+        done()
+      }, 600)
+    })
+  })
+
+  describe('#onChangeSection', () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      getState = jest.fn(() => ({
+        edit: { article }
+      }))
+      dispatch = jest.fn()
+    })
+
+    it('calls #changeArticle with new attrs', () => {
+      editActions.onChangeSection('body', 'New Text')(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_SECTION')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('body')
+      expect(dispatch.mock.calls[0][0].payload.value).toBe('New Text')
+    })
+
+    it('does not call #saveArticle if published', () => {
+      editActions.onChangeSection('body', 'New Text')(dispatch, getState)
+      expect(dispatch.mock.calls.length).toBe(1)
+    })
+
+    it('calls debounced #saveArticle if draft', done => {
+      article.published = false
+      editActions.onChangeSection('body', 'New')(dispatch, getState)
+      editActions.onChangeSection('body', 'New Te')(dispatch, getState)
+      editActions.onChangeSection('body', 'New Text')(dispatch, getState)
+
+      setTimeout(() => {
+        expect(dispatch.mock.calls.length).toBe(4)
+        done()
+      }, 600)
     })
   })
 

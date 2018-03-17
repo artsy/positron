@@ -71,7 +71,14 @@ export class SectionTool extends Component {
   }
 
   renderSectionMenu () {
-    if (this.state.open) {
+    const {
+      channel: { type },
+      article: { layout }
+    } = this.props
+    const { open } = this.state
+    const isNews = layout === 'news'
+
+    if (open) {
       return (
         <ul className='edit-tool__menu'>
           <li
@@ -84,10 +91,9 @@ export class SectionTool extends Component {
             className='edit-tool__edit-images'
             onClick={() => this.newSection('image_collection')}>
             <IconEditImages />
-            Images
+            {isNews ? 'Image' : 'Images'}
           </li>
-          {
-            this.props.article.layout !== 'news' &&
+          {!isNews &&
             <li
               className='edit-tool__edit-video'
               onClick={() => this.newSection('video')}>
@@ -95,9 +101,7 @@ export class SectionTool extends Component {
               Video
             </li>
           }
-          {
-            ['editorial', 'team'].includes(this.props.channel.type) &&
-            this.props.article.layout !== 'news' &&
+          {['editorial', 'team'].includes(type) && !isNews &&
             <li
               className='edit-tool__edit-embed'
               onClick={() => this.newSection('embed')}>

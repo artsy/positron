@@ -12,6 +12,18 @@ import { EditHeader } from '../header'
 import { EditError } from '../error'
 require('typeahead.js')
 
+jest.mock('superagent', () => {
+  return {
+    get: jest.genMockFunction().mockReturnThis(),
+    set: jest.genMockFunction().mockReturnThis(),
+    query: jest.fn().mockReturnValue(
+      {
+        end: jest.fn()
+      }
+    )
+  }
+})
+
 describe('EditContainer', () => {
   let props
 
@@ -71,6 +83,29 @@ describe('EditContainer', () => {
   it('#componentDidMount hides the loading spinner', () => {
     getShallowWrapper(props)
     expect(props.toggleSpinnerAction.mock.calls[0][0]).toBe(false)
+  })
+
+  it('#componentDidMount does not hide the loading spinner if article is new', () => {
+    delete props.article.id
+    getShallowWrapper(props)
+    expect(props.toggleSpinnerAction).not.toBeCalled()
+  })
+
+  it('#componentDidMount calls #setupLockout', () => {
+    const component = getShallowWrapper(props)
+    component.instance().setupLockout = jest.fn()
+    component.instance().componentDidMount()
+
+    expect(component.instance().setupLockout).toBeCalled()
+  })
+
+  it('#componentDidMount does not call #setupLockout if article is new', () => {
+    delete props.article.id
+    const component = getShallowWrapper(props)
+    component.instance().setupLockout = jest.fn()
+    component.instance().componentDidMount()
+
+    expect(component.instance().setupLockout).not.toBeCalled()
   })
 
   it('sets up an event listener for #beforeUnload if article is published and changed', () => {

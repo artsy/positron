@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { clone } from 'lodash'
+import { clone, difference } from 'lodash'
 import { connect } from 'react-redux'
 import { data as sd } from 'sharify'
 import { Row, Col } from 'react-styled-flexboxgrid'
@@ -79,18 +79,24 @@ export class ImagesControls extends Component {
 
   onNewImage = (image) => {
     const {
+      article: { layout },
       editSection,
       isHero,
       section,
       onChangeHeroAction,
       onChangeSectionAction
     } = this.props
+    let newImages
 
     if (isHero) {
-      const newImages = clone(section.images).concat(image)
+      newImages = clone(section.images).concat(image)
       onChangeHeroAction('images', newImages)
     } else {
-      const newImages = clone(editSection.images).concat(image)
+      if (layout === 'news') {
+        newImages = [image]
+      } else {
+        newImages = clone(editSection.images).concat(image)
+      }
       onChangeSectionAction('images', newImages)
     }
   }
@@ -103,6 +109,22 @@ export class ImagesControls extends Component {
       height: height,
       caption: ''
     })
+  }
+
+  onSelectArtwork = (images) => {
+    const {
+      article: { layout },
+      editSection,
+      onChangeSectionAction
+    } = this.props
+
+    if (layout === 'news') {
+      const existingImages = clone(editSection.images) || []
+      const newImages = difference(images, existingImages)
+      onChangeSectionAction('images', newImages)
+    } else {
+      onChangeSectionAction('images', images)
+    }
   }
 
   inputsAreDisabled = () => {
@@ -129,10 +151,11 @@ export class ImagesControls extends Component {
 
     const inputsAreDisabled = this.inputsAreDisabled()
     const section = isHero ? article.hero_section : editSection
+    const isNews = article.layout === 'news'
 
     return (
         <SectionControls
-          showLayouts={!isHero}
+          showLayouts={!isHero && !isNews}
           isHero={isHero}
           disabledAlert={this.fillWidthAlert}
         >
@@ -156,7 +179,7 @@ export class ImagesControls extends Component {
                   filter={this.filterAutocomplete}
                   formatSelected={(item) => this.fetchDenormalizedArtwork(item._id)}
                   items={section.images || []}
-                  onSelect={(images) => onChangeSectionAction('images', images)}
+                  onSelect={this.onSelectArtwork}
                   placeholder='Search artworks by title...'
                   url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
                 />

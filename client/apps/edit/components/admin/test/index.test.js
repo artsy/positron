@@ -10,6 +10,18 @@ import { AdminVerticalsTags } from '../components/verticals_tags'
 import { EditAdmin } from '../index.jsx'
 require('typeahead.js')
 
+jest.mock('superagent', () => {
+  return {
+    get: jest.genMockFunction().mockReturnThis(),
+    set: jest.genMockFunction().mockReturnThis(),
+    query: jest.fn().mockReturnValue(
+      {
+        end: jest.fn()
+      }
+    )
+  }
+})
+
 describe('EditAdmin', () => {
   let props
 
