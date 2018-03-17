@@ -179,6 +179,12 @@
     "webpack-notifier": "^1.5.0",
     "zombie": "^5.0.5"
   },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true
+  },
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",

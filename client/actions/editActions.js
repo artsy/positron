@@ -1,5 +1,5 @@
 
-import { clone, cloneDeep, extend } from 'lodash'
+import { clone, cloneDeep, debounce, extend } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -133,6 +133,10 @@ export const newHeroSection = (type) => {
   }
 }
 
+const debouncedSaveDispatch = debounce((dispatch) => {
+  dispatch(saveArticle())
+}, 500)
+
 export const onChangeArticle = (key, value) => {
   return (dispatch, getState) => {
     const {
@@ -147,7 +151,7 @@ export const onChangeArticle = (key, value) => {
     }))
 
     if (!article.published) {
-      dispatch(saveArticle())
+      debouncedSaveDispatch(dispatch)
     }
   }
 }
@@ -171,7 +175,7 @@ export const onChangeHero = (key, value) => {
     dispatch(changeArticle('hero_section', hero_section))
 
     if (!article.published) {
-      dispatch(saveArticle())
+      debouncedSaveDispatch(dispatch)
     }
   }
 }
@@ -183,7 +187,7 @@ export const onChangeSection = (key, value) => {
     dispatch(changeSection(key, value))
 
     if (!article.published) {
-      dispatch(saveArticle())
+      debouncedSaveDispatch(dispatch)
     }
   }
 }
