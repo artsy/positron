@@ -17,9 +17,9 @@ describe('SectionText: Rich Events', () => {
     props = {
       article: {layout: 'feature'},
       index: 2,
-      onChange: jest.fn(),
+      onChangeSectionAction: jest.fn(),
       onSetEditing: jest.fn(),
-      onNewSection: jest.fn(),
+      newSectionAction: jest.fn(),
       section: {body: '<p>A short piece of text</p>'},
       sections: []
     }

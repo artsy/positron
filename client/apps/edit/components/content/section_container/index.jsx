@@ -1,33 +1,40 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { clone, extend, findIndex, findLastIndex } from 'lodash'
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
-import { newSection, onChangeSection, removeSection } from 'client/actions/editActions'
+import { removeSection } from 'client/actions/editActions'
 
 import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'
-import { SectionText } from '../sections/text'
+import SectionText from '../sections/text'
 import SectionVideo from '../sections/video'
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
+import { SectionSocialEmbed } from '../sections/social_embed'
 
 export class SectionContainer extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    channel: PropTypes.object.isRequired,
     editing: PropTypes.bool,
     index: PropTypes.number,
     isHero: PropTypes.bool,
-    newSectionAction: PropTypes.func,
     onRemoveHero: PropTypes.func,
-    onChangeSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
     section: PropTypes.object,
-    sections: PropTypes.array
+    sections: PropTypes.array,
+    sectionIndex: PropTypes.number
+  }
+
+  isEditing = () => {
+    const { index, editing, isHero, sectionIndex } = this.props
+    if (isHero) {
+      return editing
+    } else {
+      return index === sectionIndex
+    }
   }
 
   onSetEditing = () => {
@@ -45,7 +52,7 @@ export class SectionContainer extends Component {
       setEditing = !editing
     } else {
       // use the section index if article.section
-      setEditing = editing ? null : index
+      setEditing = this.isEditing() ? null : index
     }
     onSetEditing(setEditing)
   }
@@ -65,33 +72,16 @@ export class SectionContainer extends Component {
     }
   }
 
-  getContentStartEnd = () => {
-    // TODO: move into text section
-    const { sections } = this.props
-    const types = sections && sections.map((section, i) => {
-      return { type: section.type, index: i }
-    })
-    const start = findIndex(types, {type: 'text'})
-    const end = findLastIndex(types, {type: 'text'})
-
-    return { start, end }
-  }
-
   getSectionComponent = () => {
-    const {
-      channel,
-      index,
-      newSectionAction,
-      onChangeSectionAction,
-      removeSectionAction,
-      section
-    } = this.props
+    const { section } = this.props
 
     switch (section.type) {
       case 'embed': {
         return <SectionEmbed {...this.props} />
       }
-
+      case 'social_embed': {
+        return <SectionSocialEmbed {...this.props} />
+      } 
       case 'image':
       case 'image_set':
       case 'image_collection': {
@@ -99,17 +89,8 @@ export class SectionContainer extends Component {
       }
 
       case 'text': {
-        const { end, start } = this.getContentStartEnd()
-        const textProps = extend(clone(this.props), {
-          hasFeatures: channel.type !== 'partner',
-          isContentStart: start === index,
-          isContentEnd: end === index,
-          onNewSection: newSectionAction,
-          onRemoveSection: removeSectionAction,
-          onChange: onChangeSectionAction
-        })
         return (
-          <SectionText {...textProps} />
+          <SectionText {...this.props} />
         )
       }
 
@@ -125,7 +106,6 @@ export class SectionContainer extends Component {
 
   render () {
     const {
-      editing,
       isHero,
       section
     } = this.props
@@ -134,7 +114,7 @@ export class SectionContainer extends Component {
     return (
       <ErrorBoundary>
         <div className='SectionContainer'
-          data-editing={editing}
+          data-editing={this.isEditing()}
           data-layout={layout || 'column_width'}
           data-type={type}
         >
@@ -167,12 +147,10 @@ export class SectionContainer extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  channel: state.app.channel
+  sectionIndex: state.edit.sectionIndex
 })
 
 const mapDispatchToProps = {
-  newSectionAction: newSection,
-  onChangeSectionAction: onChangeSection,
   removeSectionAction: removeSection
 }
 
