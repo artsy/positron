@@ -99,13 +99,7 @@ export class SectionText extends Component {
   }
 
   maybeResetEditor = (prevProps) => {
-    const {
-      article,
-      editing,
-      onChangeSectionAction,
-      section,
-      sectionIndex
-    } = this.props
+    const { editing, section } = this.props
     const { html } = this.state
 
     const bodyHasChanged = section.body !== prevProps.section.body && section.body.length > 0
@@ -125,16 +119,6 @@ export class SectionText extends Component {
     } else if (stoppedEditing) {
       // Blur editor if no longer editing
       this.blur()
-    }
-
-    const sectionIndexChanged = sectionIndex !== prevProps.sectionIndex
-    const lastSectionChanged = getContentStartEnd(article).end !== getContentStartEnd(prevProps.article).end
-    // Reset contentEnd markers if end has changed
-    if (lastSectionChanged || sectionIndexChanged) {
-      if (['feature', 'standard'].includes(article.layout)) {
-        const html = setContentEnd(section.body, this.isContentEnd())
-        onChangeSectionAction('body', html)
-      }
     }
   }
 
