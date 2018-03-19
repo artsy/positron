@@ -160,7 +160,7 @@ export class SectionTool extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  hasFeatures: state.app.channel.type !== 'partner'
+  hasFeatures: state.app.hasFeatures
 })
 
 const mapDispatchToProps = {
