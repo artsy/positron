@@ -174,7 +174,6 @@ export class ImagesControls extends Component {
             >
               <Col xs={6}>
                 <Autocomplete
-                  autoFocus
                   disabled={inputsAreDisabled}
                   filter={this.filterAutocomplete}
                   formatSelected={(item) => this.fetchDenormalizedArtwork(item._id)}
