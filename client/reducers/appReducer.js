@@ -8,6 +8,7 @@ export const initialState = {
   forceURL: sd.FORCE_URL,
   isAdmin: sd.USER.type === 'Admin',
   isEditorial: sd.CURRENT_CHANNEL.type === 'editorial',
+  isPartnerChannel: sd.CURRENT_CHANNEL.type === 'partner',
   metaphysicsURL: sd.GRAPHQL_ENDPOINT,
   user: sd.USER
 }
