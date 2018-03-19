@@ -16,50 +16,6 @@ describe "Article", ->
     Article.__set__ 'EDITORIAL_CHANNEL', '12345'
     @article = new Article
 
-  describe '#prepForInstant', ->
-
-    it 'returns the article with empty tags removed', (cb) ->
-      @article.set 'sections', [
-        { type: 'text', body: '<p>First Paragraph</p><p></p>' },
-        { type: 'text', body: '<p>Second Paragraph</p><br>'}
-      ]
-      @article.prepForInstant =>
-        @article.get('sections')[0].body.should.equal '<p>First Paragraph</p>'
-        @article.get('sections')[1].body.should.equal '<p>Second Paragraph</p>'
-        cb()
-
-    it 'returns the article with captions p tags replaced by h1', (cb) ->
-      @article.set 'sections', [
-        { type: 'image_set', images: [
-          { type: 'image', caption: '<p>A place for credit</p>' }
-        ]}
-      ]
-      @article.prepForInstant =>
-        @article.get('sections')[0].images[0].caption.should.equal '<h1>A place for credit</h1>'
-        cb()
-
-  describe '#hasInstantArticle', ->
-
-    it 'returns true if it is featured and the right layout', ->
-      @article.set({
-        featured: true
-        layout: 'standard'
-      })
-      @article.hasInstantArticle().should.be.true()
-
-    it 'returns false if it is not featured', ->
-      @article.set({
-        featured: false
-      })
-      @article.hasInstantArticle().should.be.false()
-    
-    it 'returns false if not the right layout', ->
-      @article.set({
-        featured: true
-        layout: 'video'
-      })
-      @article.hasInstantArticle().should.be.false()
-
   describe '#isFeature', ->
 
     it 'returns true for featured articles', ->

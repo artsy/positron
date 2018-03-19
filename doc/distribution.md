@@ -4,7 +4,6 @@ When an editor publishes content in Writer, it gets distributed across the web. 
 
 ### Table of contents
 - [Artsy.net](#artsy.net)
-- [Facebook Instant Articles](#facebook-instant-articles-(fbia))
 - [Email](#email-(sailthru))
 - [Google AMP](#google-amp)
 - [RSS](#rss)
@@ -31,13 +30,6 @@ Articles are responsive, so they look good on all devices
 
 ![responsive-article](http://files.artsy.net/images/screen-shot-2017-05-25-at-13624-pm.png)
 Image from [ami.responsivedesign.is](http://ami.responsivedesign.is/)
-
-## Facebook Instant Articles (FBIA)
-
-![fbia](https://tctechcrunch2011.files.wordpress.com/2015/10/instant-articles-gif.gif)
-Image from [Techcrunch](https://techcrunch.com/2016/02/17/instant-articles/)
-
-We use the [Instant Articles API](https://developers.facebook.com/docs/instant-articles/api) to send new articles and updates to Facebook. On every published article save, we kick off a request to Facebook's `instant_articles` endpoint with any recent changes. You can check out the way we fire the distribution [here](https://github.com/artsy/positron/blob/master/api/apps/articles/model/distribute.coffee) in the `postFacebookAPI` method and the way we build out the content in [this directory](https://github.com/artsy/positron/tree/master/api/apps/articles/components/instant_articles).
 
 ## Email (Sailthru)
 

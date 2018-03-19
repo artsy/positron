@@ -156,27 +156,6 @@ describe 'Save', ->
           @sailthru.apiDelete.args[1][1].url.should.containEql 'slug-two'
           done()
 
-    describe 'send article to Facebook Instant Articles', ->
-
-      it 'sends the article', (done) ->
-        Distribute.distributeArticle {
-          author_id: '5086df098523e60002000018'
-          published: true
-          featured: true
-          layout: 'standard'
-          slugs: ['artsy-editorial-test']
-          sections: [
-            {
-              type: 'text'
-              body: '<p>This is a paragraph</p>'
-            }
-          ]
-        }, (err, article) =>
-          @post.args[0][0].should.equal 'https://graph.facebook.com/v2.7/12345/instant_articles'
-          @send.args[0][0].html_source.should.containEql '<p>This is a paragraph</p>'
-          @send.args[0][0].html_source.should.containEql 'fb:article_style'
-          done()
-
       it 'performs a deep copy so it doesnt affect the original article when prepping', (done) ->
         originalArticle = {
           author_id: '5086df098523e60002000018'
