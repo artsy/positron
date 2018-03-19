@@ -92,7 +92,7 @@ describe('SectionTool', () => {
       const component = getWrapper(props)
       component.find('.edit-tool__icon').simulate('click')
 
-      expect(component.find(IconEditEmbed).exists()).toBe(false)
+      expect(component.find(IconEditEmbed).length).toBe(1)
     })
 
     it('does not render video option on news layouts', () => {

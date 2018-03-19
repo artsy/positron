@@ -22,7 +22,7 @@ describe('SocialEmbedControls', () => {
         channel: { type: 'editorial' }
       },
       edit: {
-        article: NewsArticle,
+        article: props.article,
         section: props.section,
         sectionIndex: props.sectionIndex
       }

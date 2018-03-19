@@ -1,6 +1,7 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
+import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { NewsArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { SocialEmbed } from '@artsy/reaction/dist/Components/Publishing/Sections/SocialEmbed'
@@ -12,7 +13,7 @@ describe('Section Social Embed', () => {
 
   beforeEach(() => {
     props = {
-      article: NewsArticle,
+      article: cloneDeep(NewsArticle),
       section: NewsArticle.sections[2]
     }
   })
@@ -24,7 +25,7 @@ describe('Section Social Embed', () => {
         channel: {}
       },
       edit: {
-        article: NewsArticle,
+        article: props.article,
         section: NewsArticle.sections[2]
       }
     })
