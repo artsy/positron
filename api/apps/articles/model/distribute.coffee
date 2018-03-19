@@ -5,7 +5,6 @@
   SAILTHRU_SECRET
   FORCE_URL
   FB_PAGE_ID
-  INSTANT_ARTICLE_ACCESS_TOKEN
   GEMINI_CLOUDFRONT_URL
   NODE_ENV
   SEGMENT_WRITE_KEY_FORCE
@@ -28,8 +27,6 @@ particle = require 'particle'
   cleanArticlesInSailthru article.slugs
   async.parallel [
     (callback) ->
-      postFacebookAPI article, callback
-    (callback) ->
       postSailthruAPI article, callback
   ], (err, results) ->
     debug err if err
@@ -47,35 +44,6 @@ cleanArticlesInSailthru = (slugs = []) =>
     slugs.forEach (slug, i) =>
       unless i is slugs.length - 1
         @deleteArticleFromSailthru slug, ->
-
-postFacebookAPI = (article, cb) ->
-  article = new Article cloneDeep article
-  return cb() unless article.hasInstantArticle()
-
-  article.prepForInstant ->
-    jade.renderFile 'api/apps/articles/components/instant_articles/index.jade',
-      {
-        article: article
-        forceUrl: FORCE_URL
-        displayUrl: APP_URL + '/display'
-        segmentWriteKey: SEGMENT_WRITE_KEY_FORCE
-        toSentence: _s.toSentence
-        _: _
-        moment: moment
-        particle: particle
-      },
-      (err, html) ->
-        return cb() if err
-        request
-          .post "https://graph.facebook.com/v2.7/#{FB_PAGE_ID}/instant_articles"
-          .send
-            access_token: INSTANT_ARTICLE_ACCESS_TOKEN
-            development_mode: NODE_ENV isnt 'production'
-            published: NODE_ENV is 'production'
-            html_source: html
-          .end (err, response) ->
-            return cb err if err
-            cb response
 
 postSailthruAPI = (article, cb) ->
   return cb() if article.scheduled_publish_at

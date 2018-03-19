@@ -38,36 +38,8 @@ module.exports = class Article extends Backbone.Model
   isFeatured: ->
     @get('featured')
 
-  hasInstantArticle: ->
-    @get('featured') and @get('layout') in ['standard', 'feature']
-
   isEditorial: ->
     @get('channel_id')?.toString() is EDITORIAL_CHANNEL
-
-  prepForInstant: (cb) ->
-    @getAuthors (authors) =>
-      sections =  _.map @get('sections'), (section) =>
-        if section.type is 'text'
-          $ = cheerio.load(section.body)
-          $('br').remove()
-          $('*:empty').remove()
-          $('p').each ->
-            $(this).remove() if $(this).text().length is 0
-          section.body = $.html()
-          section.body = @replaceTagWith(section.body, 'h3', 'h2')
-          section
-        else if section.type in ['image_set', 'image_collection']
-          section.images = _.map section.images, (image) =>
-            if image.type is 'image'
-              image.caption = @replaceTagWith(image.caption, 'p', 'h1') if image.caption
-            image
-          section
-        else
-          section
-      @set
-        sections: sections
-        authors: authors
-      cb()
 
   replaceTagWith: (htmlStr, findTag, replaceTag) ->
     $ = cheerio.load(htmlStr)
