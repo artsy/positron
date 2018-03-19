@@ -14,16 +14,16 @@ import { newHeroSection, newSection } from 'client/actions/editActions'
 
 export class SectionTool extends Component {
   static propTypes = {
+    article: PropTypes.object,
     firstSection: PropTypes.bool,
+    hasFeatures: PropTypes.bool,
     index: PropTypes.number,
     isEditing: PropTypes.bool,
     isHero: PropTypes.bool,
     newHeroSectionAction: PropTypes.func,
     newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
-    sections: PropTypes.array,
-    channel: PropTypes.object,
-    article: PropTypes.object
+    sections: PropTypes.array
   }
 
   state = {
@@ -72,8 +72,9 @@ export class SectionTool extends Component {
 
   renderSectionMenu () {
     const {
-      channel: { type },
-      article: { layout }
+      article: { layout },
+      firstSection,
+      hasFeatures
     } = this.props
     const { open } = this.state
     const isNews = layout === 'news'
@@ -101,7 +102,7 @@ export class SectionTool extends Component {
               Video
             </li>
           }
-          {['editorial', 'team'].includes(type) && !isNews &&
+          {hasFeatures && !isNews &&
             <li
               className='edit-tool__edit-embed'
               onClick={() => this.newSection('embed')}>
@@ -109,8 +110,7 @@ export class SectionTool extends Component {
               Embed
             </li>
           }
-          {
-            this.props.article.layout === 'news' &&
+          {isNews && !firstSection &&
             <li
               className='edit-tool__edit-socialembed'
               onClick={() => this.newSection('social_embed')}>
@@ -160,7 +160,7 @@ export class SectionTool extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  channel: state.app.channel
+  hasFeatures: state.app.channel.type !== 'partner'
 })
 
 const mapDispatchToProps = {
