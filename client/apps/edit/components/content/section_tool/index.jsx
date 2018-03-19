@@ -16,10 +16,10 @@ export class SectionTool extends Component {
   static propTypes = {
     article: PropTypes.object,
     firstSection: PropTypes.bool,
-    hasFeatures: PropTypes.bool,
     index: PropTypes.number,
     isEditing: PropTypes.bool,
     isHero: PropTypes.bool,
+    isPartnerChannel: PropTypes.bool,
     newHeroSectionAction: PropTypes.func,
     newSectionAction: PropTypes.func,
     onSetEditing: PropTypes.func,
@@ -74,7 +74,7 @@ export class SectionTool extends Component {
     const {
       article: { layout },
       firstSection,
-      hasFeatures
+      isPartnerChannel
     } = this.props
     const { open } = this.state
     const isNews = layout === 'news'
@@ -102,7 +102,7 @@ export class SectionTool extends Component {
               Video
             </li>
           }
-          {hasFeatures && !isNews &&
+          {!isPartnerChannel && !isNews &&
             <li
               className='edit-tool__edit-embed'
               onClick={() => this.newSection('embed')}>
@@ -160,7 +160,7 @@ export class SectionTool extends Component {
 
 const mapStateToProps = (state) => ({
   article: state.edit.article,
-  hasFeatures: state.app.hasFeatures
+  isPartnerChannel: state.app.isPartnerChannel
 })
 
 const mapDispatchToProps = {

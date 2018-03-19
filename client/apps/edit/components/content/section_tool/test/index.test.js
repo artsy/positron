@@ -34,7 +34,7 @@ describe('SectionTool', () => {
         channel: {
           type: 'editorial'
         },
-        hasFeatures: true,
+        isPartnerChannel: false,
         isEditing: false,
         index: sections.length - 1,
         isHero: false,
@@ -75,7 +75,7 @@ describe('SectionTool', () => {
     })
 
     describe('Section options', () => {
-      it('Renders correct icons for Classic layout with features', () => {
+      it('Renders correct icons for Classic layout with internal channel features', () => {
         props.article.layout = 'classic'
         const component = getWrapper(props)
         component.find('.edit-tool__icon').simulate('click')
@@ -86,9 +86,9 @@ describe('SectionTool', () => {
         expect(component.find(IconEditEmbed).exists()).toBe(true)
       })
 
-      it('Renders correct icons for Classic layout without features', () => {
+      it('Renders correct icons for Classic layout in partner channel', () => {
         props.article.layout = 'classic'
-        props.hasFeatures = false
+        props.isPartnerChannel = true
         const component = getWrapper(props)
         component.find('.edit-tool__icon').simulate('click')
 

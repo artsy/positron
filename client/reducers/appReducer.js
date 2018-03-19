@@ -6,9 +6,9 @@ export const initialState = {
   artsyURL: sd.ARTSY_URL,
   channel: sd.CURRENT_CHANNEL,
   forceURL: sd.FORCE_URL,
-  hasFeatures: sd.CURRENT_CHANNEL.type !== 'partner',
   isAdmin: sd.USER.type === 'Admin',
   isEditorial: sd.CURRENT_CHANNEL.type === 'editorial',
+  isPartnerChannel: sd.CURRENT_CHANNEL.type === 'partner',
   metaphysicsURL: sd.GRAPHQL_ENDPOINT,
   user: sd.USER
 }
