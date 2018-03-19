@@ -156,25 +156,6 @@ describe 'Save', ->
           @sailthru.apiDelete.args[1][1].url.should.containEql 'slug-two'
           done()
 
-      it 'performs a deep copy so it doesnt affect the original article when prepping', (done) ->
-        originalArticle = {
-          author_id: '5086df098523e60002000018'
-          published: true
-          featured: true
-          layout: 'standard'
-          slugs: ['artsy-editorial-test']
-          sections: [
-            {
-              type: 'text'
-              body: '<h3>This is a paragraph</h3>'
-            }
-          ]
-        }
-        Distribute.distributeArticle originalArticle, (err, article) =>
-          @send.args[0][0].html_source.should.containEql '<h2>This is a paragraph</h2>'
-          originalArticle.sections[0].body.should.containEql '<h3>This is a paragraph</h3>'
-          done()
-
   describe '#deleteArticleFromSailthru', ->
 
     it 'deletes the article from sailthru', (done) ->
