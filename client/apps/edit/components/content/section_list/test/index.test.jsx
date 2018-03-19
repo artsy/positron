@@ -37,6 +37,8 @@ describe('SectionList', () => {
 
     props = {
       article,
+      logErrorAction: jest.fn(),
+      resetSectionsAction: jest.fn(),
       sectionIndex: null,
       setSectionAction: jest.fn()
     }
@@ -80,5 +82,19 @@ describe('SectionList', () => {
     component.instance().onNewSection(newSection)
 
     expect(component.props().setSectionAction.mock.calls[0][0]).toBe(sections.length - 1)
+  })
+
+  it('Shows an error if attempting to drag a news social_embed to first section', () => {
+    props.article.layout = 'news'
+    const component = getWrapper(props).find(SectionList)
+    component.instance().onDragEnd([
+      {type: 'social_embed'},
+      {type: 'text'}
+    ])
+
+    expect(props.logErrorAction.mock.calls[0][0].message).toBe(
+      'Embeds are not allowed in the first section.'
+    )
+    expect(props.resetSectionsAction).not.toBeCalled()
   })
 })
