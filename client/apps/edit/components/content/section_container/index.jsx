@@ -13,6 +13,7 @@ import { SectionText } from '../sections/text'
 import SectionVideo from '../sections/video'
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import { SectionEmbed } from '../sections/embed'
+import { SectionSocialEmbed } from '../sections/social_embed'
 
 export class SectionContainer extends Component {
   static propTypes = {
@@ -91,7 +92,9 @@ export class SectionContainer extends Component {
       case 'embed': {
         return <SectionEmbed {...this.props} />
       }
-
+      case 'social_embed': {
+        return <SectionSocialEmbed {...this.props} />
+      } 
       case 'image':
       case 'image_set':
       case 'image_collection': {

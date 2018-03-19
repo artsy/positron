@@ -373,6 +373,12 @@ export function setupSection (type) {
         layout: 'column_width',
         height: ''
       }
+    case 'social_embed':
+      return {
+        type: 'social_embed',
+        url: '',
+        layout: 'column_width'
+      }
     case 'text':
       return {
         type: 'text',
