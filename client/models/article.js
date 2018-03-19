@@ -1,7 +1,14 @@
 import _s from 'underscore.string'
 import cheerio from 'cheerio'
 import url from 'url'
-import { compact, flatten, last, pluck } from 'underscore'
+import {
+  compact,
+  findIndex,
+  findLastIndex,
+  flatten,
+  last,
+  pluck
+} from 'underscore'
 
 export const getArticleByline = (article) => {
   const { contributing_authors, author } = article
@@ -74,4 +81,15 @@ export const getMentionedArtworkSlugs = (article) => {
     }
   })
   return compact(flatten(slugs))
+}
+
+export const getContentStartEnd = (article) => {
+  const { sections } = article || []
+  const types = sections && sections.map((section, i) => {
+    return { type: section.type, index: i }
+  })
+  const start = findIndex(types, {type: 'text'})
+  const end = findLastIndex(types, {type: 'text'})
+
+  return { start, end }
 }

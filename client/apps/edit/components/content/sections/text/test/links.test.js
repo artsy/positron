@@ -23,7 +23,7 @@ describe('SectionText: Links', () => {
     props = {
       article,
       index: 2,
-      onChange: jest.fn(),
+      onChangeSectionAction: jest.fn(),
       onSetEditing: jest.fn(),
       section: article.sections[11],
       sections: article.sections
@@ -77,7 +77,7 @@ describe('SectionText: Links', () => {
   })
 
   it('Opens a link input popup from the menu', () => {
-    props.editing = true
+    props.sectionIndex = props.index
     const component = getWrapper(props)
     component.instance().onChange(getSelection())
     component.find('.SectionText__input').simulate('mouseUp')
@@ -88,7 +88,7 @@ describe('SectionText: Links', () => {
   })
 
   it('Opens a link input popup via key command', () => {
-    props.editing = true
+    props.sectionIndex = props.index
     const component = getWrapper(props)
     component.instance().onChange(getSelection())
     component.find('.SectionText__input').simulate('mouseUp')

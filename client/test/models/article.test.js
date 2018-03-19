@@ -108,4 +108,30 @@ describe('Article', () => {
       expect(result[2]).toBe('chip-hughes-stripes')
     })
   })
+
+  describe('#getContentStartEnd', () => {
+    let article
+
+    beforeEach(() => {
+      article = {
+        author: {id: '50f4367051e7956b6e00045d', name: 'Artsy Editorial'},
+        contributing_authors: [],
+        sections: [
+          {type: 'text', body: '<p>Hello.</p>'},
+          {type: 'image_collection', images: []},
+          {type: 'text', body: '<p>Hello.</p>'},
+          {type: 'image_collection', images: []}
+        ]
+      }
+    })
+    it('Finds the first text section', () => {
+      const startEnd = Article.getContentStartEnd(article)
+      expect(startEnd.start).toBe(0)
+    })
+
+    it('Finds the last text section', () => {
+      const startEnd = Article.getContentStartEnd(article)
+      expect(startEnd.end).toBe(2)
+    })
+  })
 })

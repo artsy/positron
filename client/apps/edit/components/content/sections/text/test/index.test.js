@@ -24,10 +24,10 @@ describe('SectionText', () => {
     props = {
       article,
       index: 2,
-      onChange: jest.fn(),
-      onNewSection: jest.fn(),
+      onChangeSectionAction: jest.fn(),
+      newSectionAction: jest.fn(),
       onSetEditing: jest.fn(),
-      onRemoveSection: jest.fn(),
+      removeSectionAction: jest.fn(),
       section: clone(article.sections[11]),
       sections: article.sections
     }
@@ -234,11 +234,11 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().toggleBlockQuote()
 
-      expect(props.onChange.mock.calls[0][0]).toBe('body')
-      expect(props.onChange.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
-      expect(props.onChange.mock.calls[1][0]).toBe('layout')
-      expect(props.onChange.mock.calls[1][1]).toBe('blockquote')
-      expect(props.onNewSection.mock.calls.length).toBe(2)
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('body')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
+      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('blockquote')
+      expect(props.newSectionAction.mock.calls.length).toBe(2)
     })
 
     it('Creates a new section for text before a blockquote', () => {
@@ -248,9 +248,9 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().toggleBlockQuote()
 
-      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
-      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index)
-      expect(props.onNewSection.mock.calls[0][2].body).toBe(beforeText)
+      expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
+      expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index)
+      expect(props.newSectionAction.mock.calls[0][2].body).toBe(beforeText)
     })
 
     it('Creates a new section for text after a blockquote', () => {
@@ -260,9 +260,9 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().toggleBlockQuote()
 
-      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
-      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index + 1)
-      expect(props.onNewSection.mock.calls[0][2].body).toBe(afterText)
+      expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
+      expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index + 1)
+      expect(props.newSectionAction.mock.calls[0][2].body).toBe(afterText)
     })
   })
 
@@ -318,11 +318,11 @@ describe('SectionText', () => {
       })
 
       expect(handleReturn).toBe('handled')
-      expect(props.onNewSection.mock.calls[0][0]).toBe('text')
-      expect(props.onNewSection.mock.calls[0][1]).toBe(props.index + 1)
-      expect(props.onNewSection.mock.calls[0][2].body).toBe('')
-      expect(props.onChange.mock.calls[0][0]).toBe('body')
-      expect(props.onChange.mock.calls[0][1]).toBe('<p>hello</p>')
+      expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
+      expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index + 1)
+      expect(props.newSectionAction.mock.calls[0][2].body).toBe('')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('body')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('<p>hello</p>')
     })
   })
 
@@ -355,7 +355,7 @@ describe('SectionText', () => {
       const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
 
       expect(handleBackspace).toBe('handled')
-      expect(props.onRemoveSection.mock.calls[0][0]).toBe(props.index - 1)
+      expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
       expect(component.state().html).toMatch(props.section.body)
       expect(component.state().html).toMatch(article.sections[props.index - 1].body)
     })
