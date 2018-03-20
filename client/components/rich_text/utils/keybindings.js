@@ -1,6 +1,7 @@
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js'
 import { getFormattedState } from './convert_html'
 import { getSelectionDetails, mergeHtmlIntoState } from './text_selection'
+import { stripBlockquote } from './text_stripping'
 
 export const keyBindingFnFull = (e) => {
   // Custom key commands for full editor
@@ -130,7 +131,11 @@ export const handleBackspace = (editorState, html, sectionBefore) => {
   if (isFirstBlock && isAtFirstCharacter && sectionBeforeIsText) {
     const beforeHtml = sectionBefore.body
     // merge html from both sections into new state
-    const newState = mergeHtmlIntoState(editorState, beforeHtml, html)
+    const newState = mergeHtmlIntoState(
+      editorState,
+      stripBlockquote(beforeHtml),
+      stripBlockquote(html)
+    )
     return newState
   }
 }

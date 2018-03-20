@@ -1,5 +1,5 @@
 
-import { clone, cloneDeep, debounce, extend } from 'lodash'
+import { clone, cloneDeep, debounce } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -244,28 +244,15 @@ export const redirectToList = (published) => {
   }
 }
 
-export const removeSection = (sectionIndex) => ({
-  type: actions.REMOVE_SECTION,
-  payload: {
-    sectionIndex
-  }
-})
-
-export const resetSections = (sections) => {
+export const removeSection = (sectionIndex) => {
   return (dispatch, getState) => {
     const { edit: { article } } = getState()
-    const newArticle = extend(cloneDeep(article), { sections })
+    const newArticle = cloneDeep(article)
 
-    dispatch(onResetSections(newArticle))
+    newArticle.sections.splice(sectionIndex, 1)
+    dispatch(onChangeArticle('sections', newArticle.sections))
   }
 }
-
-export const onResetSections = (article) => ({
-  type: actions.RESET_SECTIONS,
-  payload: {
-    article
-  }
-})
 
 export const saveArticle = () => {
   return (dispatch, getState) => {

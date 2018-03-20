@@ -110,35 +110,5 @@ describe('editReducer', () => {
       expect(updatedState.section.body).toMatch(value)
       expect(updatedState.article.sections[0].body).toMatch(value)
     })
-
-    it('REMOVE_SECTION should remove a section by index', () => {
-      const sectionIndex = 2
-      const updatedState = editReducer(initialState, {
-        type: actions.REMOVE_SECTION,
-        payload: {
-          sectionIndex
-        }
-      })
-      expect(updatedState.section).toBe(null)
-      expect(updatedState.sectionIndex).toBe(null)
-      expect(updatedState.article.sections.length).toBe(
-        initialSections.length - 1
-      )
-      expect(updatedState.article.sections[2]).not.toEqual(
-        initialSections[2]
-      )
-    })
-
-    it('RESET_SECTIONS should reset the sections to provided array', () => {
-      const sections = initialSections.slice(1, 3)
-      const updatedState = editReducer(initialState, {
-        type: actions.RESET_SECTIONS,
-        payload: {
-          article: { sections }
-        }
-      })
-
-      expect(updatedState.article.sections.length).not.toEqual(initialSections.length)
-    })
   })
 })

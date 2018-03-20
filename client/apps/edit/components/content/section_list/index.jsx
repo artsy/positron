@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { compact } from 'lodash'
 import { connect } from 'react-redux'
-import { logError, resetSections, setSection } from 'client/actions/editActions'
+import { logError, onChangeArticle, setSection } from 'client/actions/editActions'
 import SectionContainer from '../section_container'
 import SectionTool from '../section_tool'
 import DragContainer from 'client/components/drag_drop/index.coffee'
@@ -12,7 +12,7 @@ export class SectionList extends Component {
     article: PropTypes.object,
     editSection: PropTypes.object,
     logErrorAction: PropTypes.func,
-    resetSectionsAction: PropTypes.func,
+    onChangeArticleAction: PropTypes.func,
     sectionIndex: PropTypes.any,
     setSectionAction: PropTypes.func
   }
@@ -28,7 +28,7 @@ export class SectionList extends Component {
     const {
       article: { layout },
       logErrorAction,
-      resetSectionsAction
+      onChangeArticleAction
     } = this.props
 
     if (newSections[0].type === 'social_embed' && layout === 'news') {
@@ -36,7 +36,7 @@ export class SectionList extends Component {
         message: 'Embeds are not allowed in the first section.'
       })
     }
-    resetSectionsAction(compact(newSections))
+    onChangeArticleAction('sections', compact(newSections))
   }
 
   renderSectionList = () => {
@@ -115,7 +115,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   logErrorAction: logError,
-  resetSectionsAction: resetSections,
+  onChangeArticleAction: onChangeArticle,
   setSectionAction: setSection
 }
 
