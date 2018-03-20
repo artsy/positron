@@ -402,14 +402,7 @@ describe('editActions', () => {
     })
   })
 
-  it('#removeSection sets sectionIndex to index', () => {
-    const action = editActions.removeSection(6)
-
-    expect(action.type).toBe('REMOVE_SECTION')
-    expect(action.payload.sectionIndex).toBe(6)
-  })
-
-  describe('#publishArticle', () => {
+  describe('#newHeroSection', () => {
     let getState
     let dispatch
 
@@ -418,14 +411,34 @@ describe('editActions', () => {
       dispatch = jest.fn()
     })
 
-    it('#resetSections sets sections to arg', () => {
-      const sections = [{title: 'Cool exhibition'}]
-      getState = jest.fn((article) => ({edit: {article: {published: false}}}))
-      editActions.resetSections(sections)(dispatch, getState)
+    it('Can create an image_collection section', () => {
+      editActions.newHeroSection('image_collection')(dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('RESET_SECTIONS')
-      expect(dispatch.mock.calls[0][0].payload.article.sections).toBe(sections)
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
+      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('image_collection')
     })
+
+    it('Can create a video section', () => {
+      editActions.newHeroSection('video')(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
+      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('video')
+    })
+  })
+
+  it('#removeSection calls #onChangeArticle with new sections', () => {
+    let dispatch = jest.fn()
+    let getState = jest.fn(() => ({edit: { article }, app: {channel: { type: 'editorial' }}}))
+    editActions.removeSection(6)(dispatch, getState)
+    dispatch.mock.calls[0][0](dispatch, getState)
+
+    expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+    expect(dispatch.mock.calls[1][0].payload.key).toBe('sections')
+    expect(dispatch.mock.calls[1][0].payload.value[6].body).toBe(article.sections[7].body)
+    expect(dispatch.mock.calls[1][0].payload.value[5].body).toBe(article.sections[5].body)
+    expect(dispatch.mock.calls[1][0].payload.value.length).toBe(article.sections.length - 1)
   })
 
   describe('Editing errors', () => {
@@ -443,6 +456,52 @@ describe('editActions', () => {
 
       expect(action.type).toBe('ERROR')
       expect(action.payload.error).toBe(null)
+    })
+  })
+
+  describe('#onAddFeaturedItem', () => {
+    let getState
+    let dispatch
+
+    beforeEach(() => {
+      getState = jest.fn(() => ({edit: { article }}))
+      dispatch = jest.fn()
+    })
+
+    it('Can add a featured artist', () => {
+      editActions.onAddFeaturedItem('artist', {_id: '123'})(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('primary_featured_artist_ids')
+      expect(dispatch.mock.calls[0][0].payload.value[0]).toBe('123')
+    })
+
+    it('Can add a featured artwork', () => {
+      editActions.onAddFeaturedItem('artwork', {_id: '123'})(dispatch, getState)
+
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[0][0].payload.key).toBe('featured_artwork_ids')
+      expect(dispatch.mock.calls[0][0].payload.value[0]).toBe('123')
+    })
+  })
+
+  describe('#setMentionedItems', () => {
+    it('Can set mentioned artists', () => {
+      const items = [{name: 'Joseph Beuys', _id: '123'}]
+      const action = editActions.setMentionedItems('artist', items)
+
+      expect(action.type).toBe('SET_MENTIONED_ITEMS')
+      expect(action.payload.model).toBe('artist')
+      expect(action.payload.items[0]).toBe(items[0])
+    })
+
+    it('Can set mentioned artworks', () => {
+      const items = [{title: 'Stripes', _id: '123'}]
+      const action = editActions.setMentionedItems('artwork', items)
+
+      expect(action.type).toBe('SET_MENTIONED_ITEMS')
+      expect(action.payload.model).toBe('artwork')
+      expect(action.payload.items[0]).toBe(items[0])
     })
   })
 })
