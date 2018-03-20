@@ -160,7 +160,7 @@ describe('SectionText: Config', () => {
     let props
 
     beforeEach(() => {
-      body = '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a><span class="content-end"> </span></p>'
+      body = '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a></p>'
       section = { body }
       props = {
         section,
@@ -174,6 +174,7 @@ describe('SectionText: Config', () => {
 
       expect(html).toMatch('<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).not.toMatch('<span class="content-end">')
     })
 
     it('Sets up editorState and formatted html for standard articles', () => {
@@ -182,6 +183,7 @@ describe('SectionText: Config', () => {
 
       expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).not.toMatch('<span class="content-end">')
     })
 
     it('Sets up editorState and formatted html for news articles', () => {

@@ -103,6 +103,7 @@ export class EditImage extends Component {
               layout={article.layout}
               linked={false}
               sectionLayout={section.layout}
+              editing
             />
 
             : <Image

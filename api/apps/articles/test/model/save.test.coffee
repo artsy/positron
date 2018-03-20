@@ -168,26 +168,6 @@ describe 'Save', ->
         ]
       })
 
-    it 'can save content-start and content-end spans (whitelist class)', (done) ->
-      Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
-          article.sections[0].body.should.containEql '<span class="content-start">'
-          article.sections[1].body.should.containEql '<span class="content-end">'
-          done()
-      )(null, {
-        _id: ObjectId '5086df098523e60002000011'
-        sections: [
-          {
-            type: 'text'
-            body: ' <p><span class="content-start">I</span>t’s one month before the Oculus Rift</p>'
-          },
-          {
-            type: 'text'
-            body: '<p>Feeling of aesthetic, artistic, and conceptual revelation. <span class="content-end"></span></p>'
-          }
-        ]
-      })
-
     it 'can save layouts on text sections', (done) ->
       Save.sanitizeAndSave( ->
         Article.find '5086df098523e60002000011', (err, article) =>
