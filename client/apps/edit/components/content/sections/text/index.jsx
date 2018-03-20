@@ -8,7 +8,7 @@ import * as KeyBindings from 'client/components/rich_text/utils/keybindings'
 import * as Selection from 'client/components/rich_text/utils/text_selection'
 import * as Strip from 'client/components/rich_text/utils/text_stripping'
 import * as Config from './draft_config'
-import { convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
+import { convertFromRichHtml, convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
 import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
@@ -75,6 +75,7 @@ export class SectionText extends Component {
     const html = setContentEnd(convertedHtml, this.isContentEnd())
 
     if (section.body !== html) {
+      // Don't call onChange for focus changes
       onChangeSectionAction('body', html)
     }
     this.setState({ editorState, html })
@@ -153,13 +154,22 @@ export class SectionText extends Component {
   handleBackspace = () => {
     // Maybe merge sections
     const { editorState, html } = this.state
-    const { index, removeSectionAction, article: { sections } } = this.props
-
+    const {
+      article: { sections },
+      index,
+      onChangeSectionAction,
+      removeSectionAction
+    } = this.props
     const beforeIndex = index - 1
     const sectionBefore = sections[beforeIndex]
+    const hasBlockquote = sectionBefore && sectionBefore.body.includes('<blockquote>') || html.includes('<blockquote>')
     const newState = KeyBindings.handleBackspace(editorState, html, sectionBefore)
 
     if (newState) {
+      if (hasBlockquote) {
+        // remove layout/blockquotes when merging sections together
+        onChangeSectionAction('layout', null)
+      }
       this.onChange(newState)
       removeSectionAction(beforeIndex)
       return 'handled'
@@ -268,42 +278,55 @@ export class SectionText extends Component {
       return 'handled'
     }
 
-    this.onChange(RichUtils.toggleBlockType(editorState, block))
-    this.setState({ showMenu: false })
-
     if (hasFeatures && isBlockquote) {
       if (hasBlockquote) {
         onChangeSectionAction('layout', null)
       } else {
-        this.toggleBlockQuote()
+        return this.toggleBlockQuote()
       }
     }
+    this.onChange(RichUtils.toggleBlockType(editorState, block))
+    this.setState({ showMenu: false })
     return 'handled'
   }
 
   toggleBlockQuote = () => {
     const {
+      article,
+      hasFeatures,
       index,
       onChangeSectionAction,
       onSetEditing,
-      newSectionAction,
-      section
+      newSectionAction
     } = this.props
+    const { editorState } = this.state
+
+    // Generate new state and html with blockquote
+    const newEditorState = RichUtils.toggleBlockType(editorState, 'blockquote')
+    const convertedHtml = convertToRichHtml(newEditorState, article.layout, hasFeatures)
+    // Get html of blockquote and before/after blocks if existing
     const {
       afterBlock,
       beforeBlock,
       blockquote,
       increment
-    } = Strip.makeBlockQuote(section.body)
-
+    } = Strip.makeBlockQuote(convertedHtml)
+    // Setup new editorState with only blockquote html
+    const editorContent = convertFromRichHtml(blockquote)
+    const stateWithBlockquote = EditorState.createWithContent(
+      editorContent,
+      Config.composedDecorator(article.layout)
+    )
+    this.onChange(stateWithBlockquote)
+    onChangeSectionAction('layout', 'blockquote')
+    // Add new blocks before/after if applicable
     if (afterBlock) {
       newSectionAction('text', index + 1, {body: afterBlock})
     }
     if (beforeBlock) {
       newSectionAction('text', index, {body: beforeBlock})
     }
-    onChangeSectionAction('body', blockquote)
-    onChangeSectionAction('layout', 'blockquote')
+    // Reset focus to block with blockquote
     onSetEditing(index + increment)
   }
 
