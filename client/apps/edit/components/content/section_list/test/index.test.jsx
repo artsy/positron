@@ -38,7 +38,7 @@ describe('SectionList', () => {
     props = {
       article,
       logErrorAction: jest.fn(),
-      resetSectionsAction: jest.fn(),
+      onChangeArticleAction: jest.fn(),
       sectionIndex: null,
       setSectionAction: jest.fn()
     }
@@ -95,6 +95,6 @@ describe('SectionList', () => {
     expect(props.logErrorAction.mock.calls[0][0].message).toBe(
       'Embeds are not allowed in the first section.'
     )
-    expect(props.resetSectionsAction).not.toBeCalled()
+    expect(props.onChangeArticleAction).not.toBeCalled()
   })
 })

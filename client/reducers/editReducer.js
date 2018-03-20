@@ -124,28 +124,6 @@ export function editReducer (state = initialState, action) {
       }, state)
     }
 
-    case actions.REMOVE_SECTION: {
-      const { sectionIndex } = action.payload
-      const article = cloneDeep(state.article)
-
-      article.sections.splice(sectionIndex, 1)
-      return u({
-        article,
-        sectionIndex: null,
-        section: null,
-        isSaved: false
-      }, state)
-    }
-
-    case actions.RESET_SECTIONS: {
-      const { article } = action.payload
-
-      return u({
-        article,
-        isSaved: false
-      }, state)
-    }
-
     case actions.SAVE_ARTICLE: {
       return u({
         isSaving: true

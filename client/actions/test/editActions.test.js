@@ -402,30 +402,17 @@ describe('editActions', () => {
     })
   })
 
-  it('#removeSection sets sectionIndex to index', () => {
-    const action = editActions.removeSection(6)
+  it('#removeSection calls #onChangeArticle with new sections', () => {
+    let dispatch = jest.fn()
+    let getState = jest.fn(() => ({edit: { article }, app: {channel: { type: 'editorial' }}}))
+    editActions.removeSection(6)(dispatch, getState)
+    dispatch.mock.calls[0][0](dispatch, getState)
 
-    expect(action.type).toBe('REMOVE_SECTION')
-    expect(action.payload.sectionIndex).toBe(6)
-  })
-
-  describe('#publishArticle', () => {
-    let getState
-    let dispatch
-
-    beforeEach(() => {
-      getState = jest.fn(() => ({edit: { article }}))
-      dispatch = jest.fn()
-    })
-
-    it('#resetSections sets sections to arg', () => {
-      const sections = [{title: 'Cool exhibition'}]
-      getState = jest.fn((article) => ({edit: {article: {published: false}}}))
-      editActions.resetSections(sections)(dispatch, getState)
-
-      expect(dispatch.mock.calls[0][0].type).toBe('RESET_SECTIONS')
-      expect(dispatch.mock.calls[0][0].payload.article.sections).toBe(sections)
-    })
+    expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+    expect(dispatch.mock.calls[1][0].payload.key).toBe('sections')
+    expect(dispatch.mock.calls[1][0].payload.value[6].body).toBe(article.sections[7].body)
+    expect(dispatch.mock.calls[1][0].payload.value[5].body).toBe(article.sections[5].body)
+    expect(dispatch.mock.calls[1][0].payload.value.length).toBe(article.sections.length - 1)
   })
 
   describe('Editing errors', () => {
@@ -445,4 +432,8 @@ describe('editActions', () => {
       expect(action.payload.error).toBe(null)
     })
   })
+
+  describe('#onAddFeaturedItem', () => {})
+  describe('#setMentionedItems', () => {})
+  describe('#newHeroSection', () => {})
 })
