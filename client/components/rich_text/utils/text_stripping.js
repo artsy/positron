@@ -5,7 +5,6 @@ import {
   Modifier,
   RichUtils
 } from 'draft-js'
-import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import { blockRenderMapArray } from 'client/apps/edit/components/content/sections/text/draft_config.js'
 
 export const standardizeSpacing = (html) => {
@@ -184,7 +183,7 @@ export const stripGoogleStyles = (html) => {
 
 export const makeBlockQuote = (html) => {
   let increment = 0
-  let blockquote = setContentEnd(html, false)
+  let blockquote = html
   const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
   const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
 

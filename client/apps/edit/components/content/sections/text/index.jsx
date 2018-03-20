@@ -9,7 +9,6 @@ import * as Selection from 'client/components/rich_text/utils/text_selection'
 import * as Strip from 'client/components/rich_text/utils/text_stripping'
 import * as Config from './draft_config'
 import { convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
-import { setContentEnd } from 'client/components/rich_text/utils/decorators'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
 import { onChangeSection, newSection, removeSection } from 'client/actions/editActions'
@@ -71,8 +70,7 @@ export class SectionText extends Component {
 
   onChange = (editorState) => {
     const { article, hasFeatures, onChangeSectionAction, section } = this.props
-    const convertedHtml = convertToRichHtml(editorState, article.layout, hasFeatures)
-    const html = setContentEnd(convertedHtml, this.isContentEnd())
+    const html = convertToRichHtml(editorState, article.layout, hasFeatures)
 
     if (section.body !== html) {
       onChangeSectionAction('body', html)
@@ -142,12 +140,6 @@ export class SectionText extends Component {
     const { article, index } = this.props
 
     return getContentStartEnd(article).start === index
-  }
-
-  isContentEnd = () => {
-    const { article, index } = this.props
-
-    return getContentStartEnd(article).end === index
   }
 
   handleBackspace = () => {
