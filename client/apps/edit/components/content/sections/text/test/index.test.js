@@ -228,41 +228,53 @@ describe('SectionText', () => {
   })
 
   describe('#toggleBlockQuote', () => {
-    it('Splits a blockquote into its own text section', () => {
+    it('Can create a blockquote', () => {
       props.hasFeatures = true
-      props.section.body = '<p>A text before.</p><blockquote>A blockquote.</blockquote><p>A text after.</p>'
+      props.section.body = '<p>A blockquote.</p>'
       const component = getWrapper(props)
-      component.instance().toggleBlockQuote()
+      component.instance().onChange(getSelection())
+      component.instance().focus()
+      component.instance().toggleBlock('blockquote')
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('body')
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
       expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
       expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('blockquote')
-      expect(props.newSectionAction.mock.calls.length).toBe(2)
+      expect(props.newSectionAction).not.toBeCalled()
     })
 
-    it('Creates a new section for text before a blockquote', () => {
-      const beforeText = '<p>A text before.</p>'
+    it('Can create a blockquote with text after', () => {
       props.hasFeatures = true
-      props.section.body = `${beforeText}<blockquote>A blockquote.</blockquote>`
+      props.section.body = '<p>A blockquote.</p><p>A text after.</p>'
       const component = getWrapper(props)
-      component.instance().toggleBlockQuote()
+      component.instance().onChange(getSelection())
+      component.instance().focus()
+      component.instance().toggleBlock('blockquote')
 
-      expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
-      expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index)
-      expect(props.newSectionAction.mock.calls[0][2].body).toBe(beforeText)
-    })
-
-    it('Creates a new section for text after a blockquote', () => {
-      const afterText = '<p>A text after.</p>'
-      props.hasFeatures = true
-      props.section.body = `<blockquote>A blockquote.</blockquote>${afterText}`
-      const component = getWrapper(props)
-      component.instance().toggleBlockQuote()
-
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('body')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
+      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('blockquote')
       expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
       expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index + 1)
-      expect(props.newSectionAction.mock.calls[0][2].body).toBe(afterText)
+      expect(props.newSectionAction.mock.calls[0][2].body).toBe('<p>A text after.</p>')
+    })
+
+    it('Can create a blockquote with text before', () => {
+      props.hasFeatures = true
+      props.section.body = '<p>A text before.</p><p>A blockquote.</p>'
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection(true))
+      component.instance().focus()
+      component.instance().toggleBlock('blockquote')
+
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('body')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe('<blockquote>A blockquote.</blockquote>')
+      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe('blockquote')
+      expect(props.newSectionAction.mock.calls[0][0]).toBe('text')
+      expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index)
+      expect(props.newSectionAction.mock.calls[0][2].body).toBe('<p>A text before.</p>')
     })
   })
 
@@ -357,6 +369,23 @@ describe('SectionText', () => {
       expect(handleBackspace).toBe('handled')
       expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
       expect(component.state().html).toMatch(props.section.body)
+      expect(component.state().html).toMatch(article.sections[props.index - 1].body)
+    })
+
+    it('Removes blockquotes when merging mixed sections', () => {
+      props.hasFeatures = true
+      props.section.body = '<blockquote>Hello</blockquote>'
+      props.section.layout = 'blockquote'
+      const component = getWrapper(props)
+      component.instance().onChange(getSelection())
+      component.instance().focus()
+      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+
+      expect(handleBackspace).toBe('handled')
+      expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
+      expect(component.state().html).toMatch('<p>Hello</p>')
+      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('layout')
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBeFalsy()
       expect(component.state().html).toMatch(article.sections[props.index - 1].body)
     })
   })
