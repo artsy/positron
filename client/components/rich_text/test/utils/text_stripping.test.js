@@ -4,6 +4,7 @@ import {
   removeDisallowedBlocks,
   replaceUnicodeSpaces,
   standardizeSpacing,
+  stripBlockquote,
   stripGoogleStyles,
   stripH3Tags
 } from '../../utils/text_stripping'
@@ -151,5 +152,12 @@ describe('Draft Utils: Text Stripping', () => {
     const cleanedState = makePlainText(stateWithSelection)
     const stateAsHtml = convertToRichHtml(cleanedState, 'classic')
     expect(stateAsHtml).toBe('<p>Hello there.</p><h2>Sup.</h2>')
+  })
+
+  it('#stripBlockquote replaces blockquotes with paragraphs', () => {
+    const html = '<blockquote>hello.</blockquote>'
+    const stripped = stripBlockquote(html)
+
+    expect(stripped).toBe('<p>hello.</p>')
   })
 })

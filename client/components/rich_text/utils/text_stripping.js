@@ -187,11 +187,11 @@ export const makeBlockQuote = (html) => {
   const beforeBlock = _s(blockquote).strLeft('<blockquote>')._wrapped
   const afterBlock = _s(blockquote).strRight('</blockquote>')._wrapped
 
-  if (afterBlock) {
+  if (afterBlock.length) {
     // add text before blockquote to new text section
     blockquote = blockquote.replace(afterBlock, '')
   }
-  if (beforeBlock) {
+  if (beforeBlock.length) {
     // add text after blockquote to new text section
     blockquote = blockquote.replace(beforeBlock, '')
     // TODO: redux newSectionAction
@@ -200,8 +200,15 @@ export const makeBlockQuote = (html) => {
 
   return {
     blockquote,
-    beforeBlock,
-    afterBlock,
+    beforeBlock: beforeBlock.length && beforeBlock,
+    afterBlock: afterBlock.length && afterBlock,
     increment
   }
+}
+
+export const stripBlockquote = (html) => {
+  let newHtml = html
+    .replace('<blockquote>', '<p>')
+    .replace('</blockquote>', '</p>')
+  return newHtml
 }
