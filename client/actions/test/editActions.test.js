@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash'
 import Backbone from 'backbone'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import Article from 'client/models/article.coffee'
+import $ from 'jquery'
 const { FeatureArticle } = Fixtures
 
 describe('editActions', () => {
@@ -43,17 +44,19 @@ describe('editActions', () => {
       expect(dispatch.mock.calls[0][0].payload.value).toBe('New Title')
     })
 
-    it('calls #updateArticle with new attrs', () => {
+    it('calls debounced #updateArticle with new attrs', (done) => {
       editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
-
-      expect(dispatch.mock.calls[1][0].type).toBe('UPDATE_ARTICLE')
-      expect(dispatch.mock.calls[1][0].key).toBe('userCurrentlyEditing')
-      expect(dispatch.mock.calls[1][0].payload.article).toBe(article.id)
+      setTimeout(() => {
+        expect(dispatch.mock.calls[1][0].type).toBe('UPDATE_ARTICLE')
+        expect(dispatch.mock.calls[1][0].key).toBe('userCurrentlyEditing')
+        expect(dispatch.mock.calls[1][0].payload.article).toBe(article.id)
+        done()
+      }, 550)
     })
 
     it('does not call #saveArticle if published', () => {
       editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
-      expect(dispatch.mock.calls.length).toBe(2)
+      expect(dispatch.mock.calls.length).toBe(1)
     })
 
     it('calls debounced #saveArticle if draft', (done) => {
@@ -63,9 +66,9 @@ describe('editActions', () => {
       editActions.onChangeArticle('title', 'New')(dispatch, getState)
 
       setTimeout(() => {
-        expect(dispatch.mock.calls.length).toBe(7)
+        expect(dispatch.mock.calls.length).toBe(5)
         done()
-      }, 600)
+      }, 550)
     })
   })
 
@@ -105,7 +108,7 @@ describe('editActions', () => {
       setTimeout(() => {
         expect(dispatch.mock.calls.length).toBe(4)
         done()
-      }, 600)
+      }, 550)
     })
   })
 
@@ -145,7 +148,7 @@ describe('editActions', () => {
       setTimeout(() => {
         expect(dispatch.mock.calls.length).toBe(4)
         done()
-      }, 600)
+      }, 550)
     })
   })
 

@@ -137,6 +137,10 @@ const debouncedSaveDispatch = debounce((dispatch) => {
   dispatch(saveArticle())
 }, 500)
 
+const debouncedUpdateDispatch = debounce((dispatch, options) => {
+  dispatch(updateArticle(options))
+}, 500)
+
 export const onChangeArticle = (key, value) => {
   return (dispatch, getState) => {
     const {
@@ -145,10 +149,8 @@ export const onChangeArticle = (key, value) => {
     } = getState()
 
     dispatch(changeArticle(key, value))
-    dispatch(updateArticle({
-      channel,
-      article: article.id
-    }))
+
+    debouncedUpdateDispatch(dispatch, { channel, article: article.id })
 
     if (!article.published) {
       debouncedSaveDispatch(dispatch)
