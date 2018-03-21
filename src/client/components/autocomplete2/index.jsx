@@ -91,6 +91,7 @@ export class Autocomplete extends Component {
       const item = await this.formatSelected(selected)
 
       newItems.push(item)
+      console.log(newItems)
       onSelect(uniq(newItems))
       this.onBlur()
 

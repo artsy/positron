@@ -41,6 +41,7 @@ export const AdminAppearances = (props) => {
             label='Extended Artist Biography'
             model='artists'
             placeholder='Search by artist name...'
+            type='select'
           />
         </Col>
       </Row>

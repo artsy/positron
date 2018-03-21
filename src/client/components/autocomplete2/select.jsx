@@ -1,12 +1,11 @@
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import styled from 'styled-components'
-import { clone, map, uniq } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
 import { Autocomplete } from '/client/components/autocomplete2/index'
 
-export class AutocompleteList extends Component {
+export class AutocompleteSelect extends Component {
   static propTypes = {
     className: PropTypes.string,
     disabled: PropTypes.bool,
@@ -15,77 +14,80 @@ export class AutocompleteList extends Component {
     formatSelected: PropTypes.func,
     formatListItem: PropTypes.func,
     formatSearchResult: PropTypes.func,
-    items: PropTypes.array,
+    item: PropTypes.string,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
     url: PropTypes.string
   }
 
   state = {
-    items: []
+    item: null
   }
 
   componentWillMount = () => {
-    this.fetchItems()
+    this.fetchItem()
   }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.items !== this.props.items) {
-      this.fetchItems()
+    if (prevProps.item !== this.props.item) {
+      this.fetchItem()
     }
   }
 
-  fetchItems = () => {
+  fetchItem = () => {
     const { fetchItems } = this.props
-    const { items } = this.state
+    const { item } = this.state
 
-    fetchItems(items, (fetchedItems) => {
-      this.setState({ items: fetchedItems })
+    fetchItems(item, (fetchedItems) => {
+      this.setState({ item: fetchedItems[0] })
     })
   }
 
-  onRemoveItem = (item) => {
+  onRemoveItem = () => {
     const { onSelect } = this.props
-    const { items } = this.state
-    const newItems = clone(items)
 
-    newItems.splice(item, 1)
-    const newItemsIds = uniq(map(newItems, '_id'))
-    onSelect(newItemsIds)
-    this.setState({items: newItems})
+    this.setState({item: null})
+    onSelect(null)
+  }
+
+  onSelect = (results) => {
+    const { onSelect } = this.props
+
+    this.setState({ item: results[0] })
+    onSelect(results[0])
   }
 
   render () {
     const { className, formatListItem } = this.props
-    const { items } = this.state
+    const { item } = this.state
+
+    const props = {
+      ...this.props,
+      items: [item],
+      onSelect: this.onSelect
+    }
 
     return (
       <div className={`AutocompleteList ${className || ''}`}>
-        {items.length > 0 &&
+        {item &&
           <div className='Autocomplete__list'>
-            {items.map((item, i) => {
-              const title = item ? item.title || item.name : ''
-              return (
-                <ListItem
-                  className='Autocomplete__list-item'
-                  key={i}
-                >
-                  {formatListItem
-                    ? formatListItem()
-                    : <span className='selected'>
-                        {title}
-                      </span>
-                  }
-                  <button
-                    className='remove-button'
-                    onClick={() => this.onRemoveItem(i)}
-                  />
-                </ListItem>
-              )
-            })}
+            <ListItem
+              className='Autocomplete__list-item'
+            >
+              {formatListItem
+                ? formatListItem()
+                : <span className='selected'>
+                    {item.title}
+                  </span>
+              }
+              <button
+                className='remove-button'
+                onClick={() => this.onRemoveItem()}
+              />
+            </ListItem>
           </div>
         }
-        <Autocomplete {...this.props} />
+        <Autocomplete {...props} />
 
       </div>
     )
