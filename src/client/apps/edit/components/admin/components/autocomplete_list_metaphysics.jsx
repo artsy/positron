@@ -71,9 +71,9 @@ export class AutocompleteListMetaphysics extends Component {
     const {
       metaphysicsURL,
       model,
-      type,
       user
     } = this.props
+
     let newItems = clone(fetchedItems)
     const query = this.getQuery(model)
     const idsToFetch = this.idsToFetch(fetchedItems)
@@ -92,14 +92,41 @@ export class AutocompleteListMetaphysics extends Component {
           }
           newItems.push(res.body.data[model])
           const uniqItems = uniq(flatten(newItems))
-          if (type === 'select') {
-            cb(uniqItems[0])
-          } else {
-            cb(uniqItems)
-          }
+          cb(uniqItems)
         })
     } else {
       return fetchedItems
+    }
+  }
+
+  fetchItem = (item, cb) => {
+    const {
+      article,
+      field,
+      metaphysicsURL,
+      model,
+      user
+    } = this.props
+
+    const query = this.getQuery(model)
+
+    const idToFetch = article[field]
+
+    if (idToFetch) {
+      request
+        .get(`${metaphysicsURL}`)
+        .set({
+          Accept: 'application/json',
+          'X-Access-Token': user && user.access_token
+        })
+        .query({ query: query(idToFetch) })
+        .end((err, res) => {
+          if (err) {
+            console.error(err)
+          }
+          console.log(res.body.data[model])
+          cb(res.body.data[model])
+        })
     }
   }
 
@@ -145,11 +172,11 @@ export class AutocompleteListMetaphysics extends Component {
     switch (type) {
       case 'select': {
         return <AutocompleteSelect
-          fetchItems={(fetchedItem, cb) => this.fetchItems([fetchedItem], cb)}
+          fetchItem={(item, cb) => { this.fetchItem(item, cb) }}
           formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
           item={article[field] || null}
           filter={this.getFilter()}
-          onSelect={(results) => onChangeArticleAction(field, results)}
+          onSelect={(result) => onChangeArticleAction(field, result)}
           placeholder={placeholder || `Search ${model} by name...`}
           url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
         />

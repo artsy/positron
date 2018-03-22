@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { uniq, clone, compact } from 'lodash'
+import { clone, compact } from 'lodash'
 import Icon from '@artsy/reaction/dist/Components/Icon'
 
 export class Autocomplete extends Component {
@@ -85,14 +85,13 @@ export class Autocomplete extends Component {
 
   onSelect = async (selected) => {
     const { items, onSelect } = this.props
-    const newItems = clone(items)
+    let newItems = clone(items)
 
     try {
       const item = await this.formatSelected(selected)
 
       newItems.push(item)
-      console.log(newItems)
-      onSelect(uniq(newItems))
+      onSelect(newItems)
       this.onBlur()
 
       if (this.textInput) {

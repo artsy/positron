@@ -1,16 +1,14 @@
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
 import { Autocomplete } from '/client/components/autocomplete2/index'
+import { ListItem } from './list'
 
 export class AutocompleteSelect extends Component {
   static propTypes = {
     className: PropTypes.string,
     disabled: PropTypes.bool,
     filter: PropTypes.func,
-    fetchItems: PropTypes.func,
+    fetchItem: PropTypes.func,
     formatSelected: PropTypes.func,
     formatListItem: PropTypes.func,
     formatSearchResult: PropTypes.func,
@@ -35,26 +33,24 @@ export class AutocompleteSelect extends Component {
   }
 
   fetchItem = () => {
-    const { fetchItems } = this.props
+    const { fetchItem } = this.props
     const { item } = this.state
 
-    fetchItems(item, (fetchedItems) => {
-      this.setState({ item: fetchedItems[0] })
+    fetchItem(item, fetchedItem => {
+      this.setState({ item: fetchedItem[0] })
     })
   }
 
   onRemoveItem = () => {
     const { onSelect } = this.props
-
     this.setState({item: null})
     onSelect(null)
   }
 
-  onSelect = (results) => {
+  onSelect = (items) => {
     const { onSelect } = this.props
-
-    this.setState({ item: results[0] })
-    onSelect(results[0])
+    this.setState({ item: items[0] })
+    onSelect(items[0])
   }
 
   render () {
@@ -63,50 +59,33 @@ export class AutocompleteSelect extends Component {
 
     const props = {
       ...this.props,
-      items: [item],
+      items: item,
       onSelect: this.onSelect
     }
 
+    const title = item ? item.title || item.name : ''
     return (
       <div className={`AutocompleteList ${className || ''}`}>
-        {item &&
-          <div className='Autocomplete__list'>
-            <ListItem
-              className='Autocomplete__list-item'
-            >
-              {formatListItem
-                ? formatListItem()
-                : <span className='selected'>
-                    {item.title}
-                  </span>
-              }
-              <button
-                className='remove-button'
-                onClick={() => this.onRemoveItem()}
-              />
-            </ListItem>
-          </div>
+        {item
+          ? <div className='Autocomplete__list'>
+              <ListItem
+                className='Autocomplete__list-item'
+              >
+                {formatListItem
+                  ? formatListItem()
+                  : <span className='selected'>
+                      {title}
+                    </span>
+                }
+                <button
+                  className='remove-button'
+                  onClick={() => this.onRemoveItem()}
+                />
+              </ListItem>
+            </div>
+          : <Autocomplete {...props} />
         }
-        <Autocomplete {...props} />
-
       </div>
     )
   }
 }
-
-export const ListItem = styled.div`
-  ${Fonts.garamond('s17')}
-  align-items: center;
-  border: 2px solid ${colors.grayRegular};
-  color: ${props => props.color ? props.color : colors.purpleRegular};
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  letter-spacing: 0;
-  line-height: 26px;
-  margin-bottom: 10px;
-  overflow: ellipsis;
-  padding: 5px 20px 5px 10px;
-  position: relative;
-  text-transform: none;
-`
