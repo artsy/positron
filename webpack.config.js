@@ -1,3 +1,5 @@
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
@@ -38,7 +40,7 @@ const config = {
         loader: 'jade-loader'
       },
       {
-        test: /\.(js|jsx)$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -48,6 +50,11 @@ const config = {
             }
           }
         ]
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader'
       },
       {
         test: /\.json$/,
@@ -74,6 +81,17 @@ const config = {
     ]
   },
   plugins: [
+    // new ForkTsCheckerWebpackPlugin({
+    //   formatter: 'codeframe',
+    //   formatterOptions: 'highlightCode',
+    //   tslint: false,
+    //   checkSyntacticErrors: true,
+    //   watch: ['./client']
+    // }),
+    // new ForkTsCheckerNotifierWebpackPlugin({
+    //   excludeWarnings: true,
+    //   skipFirstNotification: true
+    // }),
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
         messages: [`[Positron] Listening on http://localhost:${PORT} \n`]
@@ -94,7 +112,7 @@ const config = {
     })
   ],
   resolve: {
-    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl'],
+    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl', '.ts', '.tsx'],
     modules: [
       'node_modules'
     ],

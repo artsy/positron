@@ -11,8 +11,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es2016"
+    "target": "es2016",
+    "experimentalDecorators": true
   },
-  "files": ["./node_modules/@artsy/reaction/dist"],
   "include": ["./client"]
 }
