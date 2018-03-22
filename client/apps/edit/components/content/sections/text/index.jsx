@@ -135,8 +135,9 @@ export class SectionText extends Component {
 
       this.onChange(currentSectionState)
       newSectionAction('text', index + 1, {body: newSection})
+      return 'handled'
     }
-    return 'handled'
+    return 'not-handled'
   }
 
   isContentStart = () => {
@@ -152,29 +153,37 @@ export class SectionText extends Component {
   }
 
   handleBackspace = () => {
-    // Maybe merge sections
     const { editorState, html } = this.state
     const {
       article: { sections },
       index,
       onChangeSectionAction,
+      onSetEditing,
       removeSectionAction
     } = this.props
-    const beforeIndex = index - 1
-    const sectionBefore = sections[beforeIndex]
-    const hasBlockquote = sectionBefore && sectionBefore.body.includes('<blockquote>') || html.includes('<blockquote>')
-    const newState = KeyBindings.handleBackspace(editorState, html, sectionBefore)
+    const hasSelection = editorState.getSelection().getAnchorOffset() > 0
 
-    if (newState) {
-      if (hasBlockquote) {
-        // remove layout/blockquotes when merging sections together
-        onChangeSectionAction('layout', null)
+    if (!hasSelection && index !== 0) {
+      // Maybe merge sections if no text selected, and not first section
+      const beforeIndex = index - 1
+      const sectionBefore = sections[beforeIndex]
+      const sectionBeforeIsText = sectionBefore && sectionBefore.type === 'text'
+      const hasBlockquote = sectionBeforeIsText && sectionBefore.body.includes('<blockquote>') || html.includes('<blockquote>')
+      const newState = KeyBindings.handleBackspace(editorState, html, sectionBefore)
+
+      if (newState) {
+        if (hasBlockquote) {
+          // remove layout/blockquotes when merging sections together
+          onChangeSectionAction('layout', null)
+        }
+        this.onChange(newState)
+        removeSectionAction(beforeIndex)
+        onSetEditing(beforeIndex)
+        return 'handled'
       }
-      this.onChange(newState)
-      removeSectionAction(beforeIndex)
-      return 'handled'
+    } else {
+      return 'not-handled'
     }
-    return 'not-handled'
   }
 
   // KEYBOARD ACTIONS
