@@ -10,12 +10,7 @@
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "babel-plugin-rewire",
-    "inline-react-svg",
     "@babel/plugin-transform-runtime",
-    "transform-class-properties",
-    "transform-decorators-legacy",
-    "transform-object-rest-spread",
     ["module-resolver", {
       "extensions": [".js", ".jsx", ".ts", ".tsx"],
       "root": ["./src"]
