@@ -6,6 +6,7 @@ import artsyXapp from 'artsy-xapp'
 import compression from 'compression'
 import express from 'express'
 import newrelic from 'artsy-newrelic'
+import path from 'path'
 import { IpFilter } from 'express-ipfilter'
 import { createReloadable, isDevelopment } from '@artsy/express-reloadable'
 
@@ -46,13 +47,13 @@ artsyXapp.init(xappConfig, () => {
     // Enable server-side code hot-swapping on change
     const mountAndReload = createReloadable(app, require)
 
-    app.use('/api', mountAndReload('./api', {
+    app.use('/api', mountAndReload(path.resolve('src/api'), {
       mountPoint: '/api'
     }))
 
     invalidateUserMiddleware(app)
 
-    mountAndReload('./client', {
+    mountAndReload(path.resolve('src/client'), {
       watchModules: [
         '@artsy/reaction'
       ]

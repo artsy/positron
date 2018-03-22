@@ -220,7 +220,7 @@ module.exports = ->
     sov: .25
     start_date: moment(new Date()).subtract(1, 'days').toDate()
     end_date: moment(new Date()).add(1, 'days').toDate()
-  
+
   fixtures.sessions = [
     {
       _id: 123456

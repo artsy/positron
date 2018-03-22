@@ -197,10 +197,10 @@
       "jsx"
     ],
     "setupFiles": [
-      "<rootDir>/test/jest-setup.js"
+      "<rootDir>/test.config.js"
     ],
     "roots": [
-      "<rootDir>/client"
+      "<rootDir>/src/client"
     ]
   },
   "license": "MIT"
