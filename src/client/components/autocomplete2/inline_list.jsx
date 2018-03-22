@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Autocomplete } from '/client/components/autocomplete2/index'
+import { clone } from 'lodash'
 
 export class AutocompleteInlineList extends Component {
   static propTypes = {
@@ -17,7 +18,7 @@ export class AutocompleteInlineList extends Component {
 
   onRemoveItem = (item) => {
     const { items, onSelect } = this.props
-    const newItems = items
+    const newItems = clone(items)
 
     newItems.splice(item, 1)
     onSelect(newItems)
