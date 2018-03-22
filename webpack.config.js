@@ -40,7 +40,7 @@ const config = {
         loader: 'jade-loader'
       },
       {
-        test: /\.jsx?$/,
+        test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -50,11 +50,6 @@ const config = {
             }
           }
         ]
-      },
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader'
       },
       {
         test: /\.json$/,
@@ -86,7 +81,7 @@ const config = {
     //   formatterOptions: 'highlightCode',
     //   tslint: false,
     //   checkSyntacticErrors: true,
-    //   watch: ['./client']
+    //   watch: ['./']
     // }),
     // new ForkTsCheckerNotifierWebpackPlugin({
     //   excludeWarnings: true,

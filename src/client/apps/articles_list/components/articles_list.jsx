@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
+import { hot } from 'react-hot-loader'
 import { viewArticles } from 'client/actions/articlesActions'
 import request from 'superagent'
 import $ from 'jquery'
@@ -208,7 +209,9 @@ const mapDispatchToProps = (dispatch) => ({
   viewArticlesAction: viewArticles
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ArticlesList)
+export default hot(module)( 
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ArticlesList)
+)
