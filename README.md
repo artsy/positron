@@ -20,10 +20,10 @@ Meta
 Set-Up
 ---
 
-- Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
+- Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help:
 
 ```
-heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
+heroku config -s --app=positron-staging > .env
 ```
 
 ### Via Docker Compose
