@@ -11,6 +11,9 @@
   ],
   "plugins": [
     "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-decorators",
+    "inline-react-svg",
     ["module-resolver", {
       "extensions": [".js", ".jsx", ".ts", ".tsx"],
       "root": ["./src"]
@@ -21,7 +24,8 @@
       "plugins": [
         ["styled-components", {
           "ssr": true
-        }]
+        }],
+        "react-hot-loader/babel"
       ]
     }
   }
