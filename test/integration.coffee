@@ -1,5 +1,5 @@
 _ = require 'underscore'
-{ db, fabricate, empty, fixtures } = require '../api/test/helpers/db'
+{ db, fabricate, empty, fixtures } = require '../src/api/test/helpers/db'
 Browser = require "zombie"
 integration = require "./helpers/integration"
 

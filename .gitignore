@@ -11,7 +11,7 @@ logs
 results
 npm-debug.log
 .DS_Store
-client/public/assets
+public/client/assets
 dump.rdb
 .env
 .env.ignore
