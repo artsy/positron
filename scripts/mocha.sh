@@ -3,9 +3,6 @@ set -e -x
 trap "exit" INT
 
 mocha \
-  --require should \
-  --ui bdd \
+  --require test.config.js \
   --timeout 10000 \
-  --require test/config.js \
-  --compilers js:babel-core/register,coffee:coffeescript/register \
    $@ \
