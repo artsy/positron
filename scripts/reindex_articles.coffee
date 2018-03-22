@@ -1,4 +1,4 @@
-require('babel-core/register')
+require('@babel/register')
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
