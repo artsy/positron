@@ -14,6 +14,7 @@
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-decorators",
     "inline-react-svg",
+    "rewire",
     ["module-resolver", {
       "extensions": [".js", ".jsx", ".ts", ".tsx"],
       "root": ["./src"]

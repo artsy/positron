@@ -9,8 +9,6 @@ app = require('express')()
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
 
-rewire = require('rewire')('../../../model/index.js')
-
 describe 'Article Persistence', ->
 
   before (done) ->
@@ -707,8 +705,7 @@ describe 'Article Persistence', ->
         author_id: '5086df098523e60002000018'
         published: false
       }
-      rewire.__set__('onUnpublish', () => sinon.stub().yields(null, article))
-      # Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
+      Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
       fabricate 'articles',
         _id: ObjectId('5086df098523e60002000018')
         id: '5086df098523e60002000018'

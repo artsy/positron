@@ -1,7 +1,5 @@
 import sinon from 'sinon'
-// import {index, __RewireAPI__ as RewiredRoute} from '../routes'
-
-const rewire = require('rewire')('../routes')
+import {index, __RewireAPI__ as RewiredRoute} from '../routes'
 
 describe('Search route', () => {
   const req = {
@@ -14,7 +12,7 @@ describe('Search route', () => {
   const search = sinon.stub()
 
   beforeEach(() => {
-    rewire.__set__('search', {client: { search }})
+    RewiredRoute.__Rewire__('search', {client: {search}})
   })
 
   it('makes a search request', () => {
