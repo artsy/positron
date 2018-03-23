@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import { connect } from 'react-redux'
+import { filter, map } from 'lodash'
 import Verticals from '../../../../../collections/verticals.coffee'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
 import { onChangeArticle } from 'client/actions/editActions'
@@ -25,11 +26,21 @@ export class AdminVerticalsTags extends Component {
   fetchVerticals = () => {
     new Verticals().fetch({
       cache: true,
-      success: (verticals) => {
-        const sortedVerticals = verticals.sortBy('name')
-        this.setState({ verticals: sortedVerticals })
+      success: (res) => {
+        const verticals = map(res.sortBy('name'), 'attributes')
+        this.maybeSetupNews(verticals)
+        this.setState({ verticals })
       }
     })
+  }
+
+  maybeSetupNews = (verticals) => {
+    const { article, onChangeArticleAction } = this.props
+
+    if (article.layout === 'news' && !article.vertical) {
+      const vertical = filter(verticals, ['name', 'News'])[0]
+      onChangeArticleAction('vertical', vertical)
+    }
   }
 
   renderVerticalsList = () => {
@@ -38,7 +49,7 @@ export class AdminVerticalsTags extends Component {
     const name = article.vertical && article.vertical.name
 
     return verticals.map((item, index) => {
-      const isActive = name && item.get('name') === name
+      const isActive = name && item.name === name
       const activeClass = isActive ? 'avant-garde-button-black' : ''
 
       return (
@@ -47,11 +58,11 @@ export class AdminVerticalsTags extends Component {
           className={`avant-garde-button ${activeClass}`}
           data-active={isActive}
           onClick={() => {
-            const vertical = isActive ? null : item.attributes
+            const vertical = isActive ? null : item
             onChangeArticleAction('vertical', vertical)
           }}
         >
-          {item.get('name')}
+          {item.name}
         </button>
       )
     })
