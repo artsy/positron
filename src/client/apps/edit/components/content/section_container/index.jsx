@@ -81,7 +81,7 @@ export class SectionContainer extends Component {
       }
       case 'social_embed': {
         return <SectionSocialEmbed {...this.props} />
-      } 
+      }
       case 'image':
       case 'image_set':
       case 'image_collection': {

@@ -6,7 +6,7 @@ import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { Provider } from 'react-redux'
 import { AdminAppearances } from '../../components/appearances'
-import { AutocompleteListMetaphysics } from '../../components/autocomplete_list_metaphysics'
+import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
 require('typeahead.js')
 
 describe('FeaturingMentioned', () => {

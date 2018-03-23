@@ -5,7 +5,8 @@ import { difference, flatten, pluck } from 'underscore'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { onChangeArticle } from 'client/actions/editActions'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
+import { AutocompleteList } from 'client/components/autocomplete2/list'
+import { AutocompleteSingle } from 'client/components/autocomplete2/single'
 import * as Queries from 'client/queries/metaphysics'
 
 export class AutocompleteListMetaphysics extends Component {
@@ -18,7 +19,12 @@ export class AutocompleteListMetaphysics extends Component {
     model: PropTypes.string,
     onChangeArticleAction: PropTypes.func,
     placeholder: PropTypes.string,
-    user: PropTypes.object
+    user: PropTypes.object,
+    type: PropTypes.string
+  }
+
+  static defaultProps = {
+    type: 'list'
   }
 
   getQuery = () => {
@@ -67,6 +73,7 @@ export class AutocompleteListMetaphysics extends Component {
       model,
       user
     } = this.props
+
     let newItems = clone(fetchedItems)
     const query = this.getQuery(model)
     const idsToFetch = this.idsToFetch(fetchedItems)
@@ -89,6 +96,37 @@ export class AutocompleteListMetaphysics extends Component {
         })
     } else {
       return fetchedItems
+    }
+  }
+
+  fetchItem = (item, cb) => {
+    const {
+      article,
+      field,
+      metaphysicsURL,
+      model,
+      user
+    } = this.props
+
+    const query = this.getQuery(model)
+
+    const idToFetch = article[field]
+
+    if (idToFetch) {
+      request
+        .get(`${metaphysicsURL}`)
+        .set({
+          Accept: 'application/json',
+          'X-Access-Token': user && user.access_token
+        })
+        .query({ query: query(idToFetch) })
+        .end((err, res) => {
+          if (err) {
+            console.error(err)
+          }
+
+          cb(res.body.data[model])
+        })
     }
   }
 
@@ -120,21 +158,31 @@ export class AutocompleteListMetaphysics extends Component {
     }
   }
 
-  render () {
+  renderAutocompleteType = () => {
     const {
       article,
       artsyURL,
       field,
-      label,
       model,
       onChangeArticleAction,
-      placeholder
+      placeholder,
+      type
     } = this.props
 
-    return (
-      <div className='field-group'>
-        <label>{label || model}</label>
-        <AutocompleteList
+    switch (type) {
+      case 'single': {
+        return <AutocompleteSingle
+          fetchItem={(item, cb) => { this.fetchItem(item, cb) }}
+          formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
+          item={article[field] || null}
+          filter={this.getFilter()}
+          onSelect={(result) => onChangeArticleAction(field, result)}
+          placeholder={placeholder || `Search ${model} by name...`}
+          url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+        />
+      }
+      default: {
+        return <AutocompleteList
           fetchItems={(fetchedItems, cb) => this.fetchItems(fetchedItems, cb)}
           formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
           items={article[field] || []}
@@ -143,6 +191,20 @@ export class AutocompleteListMetaphysics extends Component {
           placeholder={placeholder || `Search ${model} by name...`}
           url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
         />
+      }
+    }
+  }
+
+  render () {
+    const {
+      label,
+      model
+    } = this.props
+
+    return (
+      <div className='field-group'>
+        <label>{label || model}</label>
+        {this.renderAutocompleteType()}
       </div>
     )
   }
