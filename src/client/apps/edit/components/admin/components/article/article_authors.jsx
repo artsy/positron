@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import { onChangeArticle } from 'client/actions/editActions'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
+import { AutocompleteList } from 'client/components/autocomplete2/list'
+import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
 import { AuthorsQuery } from 'client/queries/authors'
-import AutocompleteListMetaphysics from '../autocomplete_list_metaphysics'
 
 export class ArticleAuthors extends Component {
   static propTypes = {

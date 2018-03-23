@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Autocomplete } from '/client/components/autocomplete2/index'
 import { ListItem } from './list'
 
-export class AutocompleteSelect extends Component {
+export class AutocompleteSingle extends Component {
   static propTypes = {
     className: PropTypes.string,
     disabled: PropTypes.bool,

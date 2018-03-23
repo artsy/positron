@@ -5,8 +5,8 @@ import { difference, flatten, pluck } from 'underscore'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { onChangeArticle } from 'client/actions/editActions'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { AutocompleteSelect } from '/client/components/autocomplete2/select'
+import { AutocompleteList } from 'client/components/autocomplete2/list'
+import { AutocompleteSingle } from 'client/components/autocomplete2/single'
 import * as Queries from 'client/queries/metaphysics'
 
 export class AutocompleteListMetaphysics extends Component {
@@ -170,8 +170,8 @@ export class AutocompleteListMetaphysics extends Component {
     } = this.props
 
     switch (type) {
-      case 'select': {
-        return <AutocompleteSelect
+      case 'single': {
+        return <AutocompleteSingle
           fetchItem={(item, cb) => { this.fetchItem(item, cb) }}
           formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
           item={article[field] || null}

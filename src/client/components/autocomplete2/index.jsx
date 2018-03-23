@@ -85,11 +85,18 @@ export class Autocomplete extends Component {
 
   onSelect = async (selected) => {
     const { items, onSelect } = this.props
-    let newItems = clone(items)
+    let newItems
+    if (items) {
+      newItems = clone(items)
+    } else {
+      newItems = []
+    }
 
     try {
+      console.log('in the try')
+      console.log(selected)
       const item = await this.formatSelected(selected)
-
+      console.log(newItems)
       newItems.push(item)
       onSelect(newItems)
       this.onBlur()

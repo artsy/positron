@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { ArticleAuthors } from '../../../components/article/article_authors'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { AutocompleteListMetaphysics } from '../../../components/autocomplete_list_metaphysics'
+import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
 require('typeahead.js')
 
 jest.mock('superagent', () => {

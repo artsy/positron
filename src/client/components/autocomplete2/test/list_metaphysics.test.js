@@ -3,8 +3,8 @@ import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { AutocompleteListMetaphysics } from '../../components/autocomplete_list_metaphysics'
+import { AutocompleteList } from 'client/components/autocomplete2/list'
+import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/components/list_metaphysics'
 import * as Queries from 'client/queries/metaphysics'
 require('typeahead.js')
 
