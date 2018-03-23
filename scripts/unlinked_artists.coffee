@@ -3,7 +3,7 @@
 # Currently just run locally to report to the Growth team once and a while.
 #
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-db = require '../api/lib/db'
+db = require '../src/api/lib/db'
 cheerio = require 'cheerio'
 fs = require 'fs'
 _ = require 'underscore'

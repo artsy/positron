@@ -7,7 +7,7 @@ require('coffeescript/register')
 
 const fs = require('fs')
 const path = require('path')
-const { schema } = require('../api/apps/graphql')
+const { schema } = require('../src/api/apps/graphql')
 const { graphql } = require('graphql')
 const { introspectionQuery, printSchema } = require('graphql/utilities')
 

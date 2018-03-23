@@ -16,7 +16,7 @@
     "transform-decorators-legacy",
     "transform-object-rest-spread",
     ["module-resolver", {
-      "root": ["./"]
+      "root": ["./src"]
     }]
   ],
   "env": {

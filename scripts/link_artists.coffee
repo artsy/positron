@@ -8,7 +8,7 @@
 #
 
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-db = require '../api/lib/db'
+db = require '../src/api/lib/db'
 async = require 'async'
 cheerio = require 'cheerio'
 _ = require 'underscore'

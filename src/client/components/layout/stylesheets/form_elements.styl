@@ -1,0 +1,257 @@
+@import '../../../../../node_modules/artsy-ezel-components/spinners'
+@import '../../stylus_lib'
+
+.avant-garde-button, .simple-modal-controls button:not(.simple-modal-close)
+  avant-garde()
+  padding 11px 25px
+  border 1px solid gray-lighter-color
+  background transparent
+  font-size default-avant-garde-font-size - 1
+  outline none
+  transition background-color 0.25s, color 0.25s, border-color 0.25s
+  text-decoration none
+  line-height 1
+  display inline-block
+  cursor pointer
+  margin 0
+  vertical-align top
+  text-align center
+  &:hover, &:active
+    color purple-color
+  &:disabled, &.is-disabled, &[data-disabled=true]
+    background gray-lighter-color
+    color gray-dark-color
+    cursor not-allowed
+  &.avant-garde-button-dark, &.avant-garde-button-dark
+    background gray-darkest-color
+    border-color gray-darkest-color
+    color white
+    &:hover, &:active, &:focus
+      background purple-color
+      border-color purple-color
+  &.avant-garde-button-black
+    background black
+    border-color black
+    color white
+    &:hover, &:active, &:focus
+      background purple-color
+      border-color purple-color
+  &.avant-garde-button-external-link
+    position relative
+    padding-right 30px
+    &::after
+      content '.'
+      color transparent
+      position absolute
+      right 0
+      top 0
+      height calc(100% - 2px)
+      width 20px
+      background-image url(/icons/chevron_right.svg)
+      background-position left center
+      background-repeat no-repeat
+      opacity 0.2
+      transition opacity 0.3s
+    &:hover::after
+      opacity 1
+  &[data-state='loading'], &.is-loading
+    &, &[disabled], &[disabled]:hover
+      background-color purple-color
+      color transparent !important
+      // Note:
+      // Giving the loading state to input[type='submit']
+      // or input[type='button'] will *not* display a spinner.
+      // These elements don't support psuedo-elements.
+      &::before
+        display block
+        content ''
+        spinner(25px, 6px, #fff)
+
+.button-reset
+  margin 0
+  background transparent
+  border 0
+  padding 0
+  outline none
+  avant-garde()
+  font-size default-avant-garde-font-size
+  line-height default-avant-garde-font-size
+
+.invisible-input
+  background transparent
+  garamond()
+  font-size default-garamond-font-size
+  border 0
+  outline none
+  margin 0
+
+input-placeholder()
+  color gray-dark-color
+  transition color 0.3s
+
+.bordered-input, .simple-modal-content input, .autocomplete-select-selected
+  margin 0
+  padding 5px 12px
+  border 2px solid gray-lighter-color
+  border-radius 0
+  box-shadow none
+  garamond()
+  font-size default-garamond-font-size
+  background-color transparent
+  transition border-color 0.3s
+  outline none
+  vertical-align top
+  placeholder(input-placeholder)
+  &.is-active, &:active, &:focus
+    border-color purple-color
+  &.bordered-input-dark
+    border-color white
+    background white
+    &.is-active, &:active, &:focus
+      border-color white
+  &[readonly]
+    background-color gray-lightest-color
+    cursor text
+    &.is-active, &:active, &:focus
+      border-color gray-lighter-color
+
+label.bordered-input-loading
+  position relative
+  &::after
+    display block
+    content ''
+    spinner(15px, 4px, purple-color)
+    left inherit
+    right 12px
+    top 15px
+
+.dashed-file-upload-container
+  position relative
+  border 2px dashed gray-lighter-color
+  cursor pointer
+  transition border-color 0.3s, color 0.3s
+  input
+    width 100%
+    height 100%
+    display block
+    position absolute
+    opacity 0
+    top 0
+    left 0
+    cursor pointer
+  &:hover, &.is-dragover
+    border-color purple-color
+  &.is-dragover
+    .dashed-file-upload-container-drop
+      color purple-color
+  &:hover
+    .dashed-file-upload-container-click
+      color purple-color
+
+.upload-progress-container
+  width 200px
+  height 4px
+  position absolute
+  top "calc(50% - %s / 2)" % @height
+  left "calc(50% - %s / 2)" % @width
+  background white
+  z-index 3
+
+.upload-progress
+  height 100%
+  background purple-color
+  min-width 10%
+  transition width 0.5s
+
+.scribe-plugin-link-tooltip button
+  @extend .avant-garde-button
+
+.scribe-plugin-link-tooltip input
+  @extend .bordered-input
+
+.flat-checkbox, .flat-radio-button
+  avant-garde()
+  font-size default-avant-garde-font-size
+  display inline-block
+  vertical-align top
+  cursor pointer
+  &:hover input::after
+    opacity 1
+  input
+    appearance none
+    border 2px solid gray-lighter-color
+    width 18px
+    height @width
+    position relative
+    outline none
+    z-index -1
+    margin 0 15px 0 0
+    &::after
+      content '.'
+      position absolute
+      display block
+      opacity 0
+      color transparent
+      transition opacity 0.2s
+
+.flat-radio-button
+  input
+    border-radius 10px
+    &::after
+      background gray-lighter-color
+      border-radius 10px
+      width 8px
+      height @width
+      top 3px
+      left @top
+  input:checked::after
+    opacity 1
+    background-color purple-color
+
+.flat-checkbox
+  input
+    width 20px
+    height @width
+  input::after
+    content '.'
+    color transparent
+    background center center no-repeat
+    background-image url('/icons/check_g.svg')
+    background-size container
+    width 13px
+    height @width
+    top 1px
+    left @top
+  input:checked::after
+    opacity 1
+    background-image url('/icons/check_p.svg')
+
+[data-useragent*=Firefox] .flat-checkbox input
+  -moz-appearance checkbox
+[data-useragent*=Firefox] .flat-radio-button input
+  -moz-appearance radio
+
+.fields-left,
+.fields-right
+  width calc(50% \- 15px)
+.field-group
+  margin-bottom 40px
+  &--inline
+    display flex
+    align-items center
+.fields-full
+  min-width 100%
+  display flex
+  justify-content space-between
+.fields-col-3
+  width calc(33% \- 20px)
+
+.admin-form-container .field-group--inline.flat-checkbox
+  display flex
+
+@media (max-width: 414px)
+  .avant-garde-button
+    width 100%
+    text-align center
+    padding 15px
+

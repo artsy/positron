@@ -4,11 +4,12 @@
 # -x: log commands
 set -e -x
 
-rm -rf client/public/assets
-mkdir client/public/assets
+rm -rf public
+mkdir public
+mkdir public/assets
 
 NODE_ENV=production webpack
 stylus \
-  $(find client/assets -name '*.styl') \
+  $(find src/client/assets -name '*.styl') \
   --compress \
-  -o client/public/assets
+  -o public/assets

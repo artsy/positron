@@ -15,13 +15,13 @@ const config = {
   entry: {
     webpack: [
       'webpack-hot-middleware/client?reload=true',
-      './client/apps/webpack/client.js'
+      './src/client/apps/webpack/client.js'
     ],
     ...getEntrypoints()
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'client/public/assets'),
+    path: path.resolve(__dirname, 'public/assets'),
     publicPath: '/assets',
     sourceMapFilename: '[file].map?[contenthash]'
   },
@@ -137,7 +137,7 @@ if (isDevelopment) {
 // Helpers
 
 function getEntrypoints () {
-  return findAssets('client/assets')
+  return findAssets('src/client/assets')
 }
 
 function findAssets (basePath) {
