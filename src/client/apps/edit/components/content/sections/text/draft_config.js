@@ -3,8 +3,6 @@ import { CompositeDecorator, EditorState } from 'draft-js'
 import { getFormattedState } from 'client/components/rich_text/utils/convert_html'
 import { setSelectionToStart } from 'client/components/rich_text/utils/text_selection'
 import {
-  ContentEnd,
-  findContentEndEntities,
   findLinkEntities,
   Link,
   setContentEnd
@@ -129,19 +127,12 @@ export const blockRenderMapArray = (layout, hasFeatures) => {
 
 export const decorators = (layout) => {
   // Return custom text entities based on layout
-  const decorators = [
+  return [
     {
       strategy: findLinkEntities,
       component: Link
     }
   ]
-  if (layout !== 'classic') {
-    decorators.push({
-      strategy: findContentEndEntities,
-      component: ContentEnd
-    })
-  }
-  return decorators
 }
 
 export const composedDecorator = (layout) => {
@@ -158,17 +149,15 @@ export const setEditorStateFromProps = (props) => {
     article,
     editing,
     hasFeatures,
-    isContentEnd,
     section
   } = props
 
   const decorators = composedDecorator(article.layout)
   const emptyState = EditorState.createEmpty(decorators)
-  const hasContentEnd = isContentEnd && ['feature', 'standard'].includes(article.layout)
   let editorState
 
   const formattedData = getFormattedState(emptyState, section.body, article.layout, hasFeatures)
-  const html = setContentEnd(formattedData.html, hasContentEnd)
+  const html = setContentEnd(formattedData.html)
 
   if (editing) {
     editorState = setSelectionToStart(formattedData.editorState)

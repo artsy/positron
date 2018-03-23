@@ -10,9 +10,9 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/reaction@^0.31.0":
-  version "0.31.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.31.1.tgz#79b7f2fb1b9b77d4e249ef802d8695a9baffb945"
+"@artsy/reaction@^0.33.1":
+  version "0.33.1"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.33.1.tgz#44d8d7425ed3551227ded29a9356bc44c6d230ce"
   dependencies:
     history "^4.6.1"
     isomorphic-fetch "^2.2.1"

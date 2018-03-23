@@ -1,7 +1,5 @@
 import { pluck } from 'underscore'
 import {
-  ContentEnd,
-  findContentEndEntities,
   findLinkEntities,
   Link
 } from 'client/components/rich_text/utils/decorators'
@@ -118,11 +116,9 @@ describe('SectionText: Config', () => {
     it('Returns correct decorators for a feature article', () => {
       const { _decorators } = Config.getRichElements('standard', true).decorators
 
-      expect(_decorators.length).toBe(2)
+      expect(_decorators.length).toBe(1)
       expect(_decorators[0].strategy).toBe(findLinkEntities)
       expect(_decorators[0].component).toBe(Link)
-      expect(_decorators[1].strategy).toBe(findContentEndEntities)
-      expect(_decorators[1].component).toBe(ContentEnd)
     })
 
     it('Returns rich elements for a standard article', () => {
@@ -164,7 +160,7 @@ describe('SectionText: Config', () => {
     let props
 
     beforeEach(() => {
-      body = '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a><span class="content-end"> </span></p>'
+      body = '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a></p>'
       section = { body }
       props = {
         section,
@@ -174,25 +170,24 @@ describe('SectionText: Config', () => {
 
     it('Sets up editorState and formatted html for feature articles', () => {
       props.article = {layout: 'feature'}
-      props.isContentEnd = true
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span><span class="content-end"> </span></p>')
+      expect(html).toMatch('<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).not.toMatch('<span class="content-end">')
     })
 
     it('Sets up editorState and formatted html for standard articles', () => {
       props.article = {layout: 'standard'}
-      props.isContentEnd = true
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span><span class="content-end"> </span></p>')
+      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).not.toMatch('<span class="content-end">')
     })
 
     it('Sets up editorState and formatted html for news articles', () => {
       props.article = {layout: 'news'}
-      props.isContentEnd = true
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
       expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
@@ -202,7 +197,6 @@ describe('SectionText: Config', () => {
 
     it('Sets up editorState and formatted html for classic articles with features', () => {
       props.article = {layout: 'classic'}
-      props.isContentEnd = true
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
       expect(html).toMatch('<p>Hello. </p><h3>Hello. </h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
@@ -220,7 +214,7 @@ describe('SectionText: Config', () => {
       expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
     })
 
-    it('Removes contentEnd if not props.isContentEnd', () => {
+    it('Removes contentEnd', () => {
       props.article = {layout: 'standard'}
       const { html } = Config.setEditorStateFromProps(props)
 

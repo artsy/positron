@@ -30,11 +30,6 @@ export const convertToRichHtml = (editorState, layout, hasFeatures) => {
           return <a href={url}>{innerText}</a>
         }
       }
-
-      if (entity.type === 'CONTENT-END') {
-        return <span className={className}>{originalText}</span>
-      }
-
       return originalText
     },
     styleToHTML: (style) => {
@@ -81,18 +76,6 @@ export const convertFromRichHtml = (html) => {
       }
       if ((nodeName === 'p') && (node.innerHTML === '<br>')) {
         node.innerHTML = '' // remove <br>, it renders extra breaks in editor
-      }
-      if ((nodeName === 'span') && node.classList.length) {
-        let spanType
-        data = { className: node.classList.toString() }
-        if (data.className === 'content-end') {
-          spanType = 'CONTENT-END'
-        }
-        return createEntity(
-          spanType,
-          'MUTABLE',
-          data
-        )
       }
     }
   })(html)

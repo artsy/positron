@@ -21,10 +21,6 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
   exports.findEntities('LINK', contentBlock, callback, contentState)
 }
 
-export const findContentEndEntities = (contentBlock, callback, contentState) => {
-  exports.findEntities('CONTENT-END', contentBlock, callback, contentState)
-}
-
 //
 // COMPONENTS
 //
@@ -51,40 +47,20 @@ export const Link = (props) => {
   }
 }
 
-export const ContentEnd = (props) => {
-  const { contentState, entityKey } = props
-  const type = contentState.getEntity(entityKey).getType()
-  return <span className={type.toLowerCase()} />
-}
-
 Link.propTypes = {
   children: PropTypes.any,
   contentState: PropTypes.object,
   entityKey: PropTypes.string
 }
 
-ContentEnd.propTypes = {
-  contentState: PropTypes.object,
-  entityKey: PropTypes.string
-}
-
 //
-// Auto-set custom editorial entities
+// TODO: Backfill out content-end spans and remove
 //
-export const setContentEnd = (html, isEndText) => {
+export const setContentEnd = (html) => {
   const doc = document.createElement('div')
   doc.innerHTML = html
-
   // Remove existing end spans
   $(doc.getElementsByClassName('content-end')).replaceWith('')
-
-  // Insert content-end span if last block is <p>
-  const lastChild = $(doc).children().last()
-
-  if (isEndText && lastChild.is('p')) {
-    const newHtml = `${lastChild.html()}<span class="content-end"> </span>`
-    $(doc).children().last().html(newHtml)
-  }
 
   return doc.innerHTML
 }

@@ -132,35 +132,7 @@ describe('SectionText', () => {
   })
 
   describe('Editorial Features', () => {
-    it('Adds end-marker to a standard article', () => {
-      props.isContentEnd = true
-      props.hasFeatures = true
-      props.section = StandardArticle.sections[0]
-      const component = getWrapper(props)
-
-      expect(component.state().html).toMatch('class="content-end"')
-    })
-
-    it('Adds end-marker to a feature article', () => {
-      props.article.layout = 'feature'
-      props.isContentEnd = true
-      props.section = StandardArticle.sections[0]
-      const component = getWrapper(props)
-
-      expect(component.state().html).toMatch('class="content-end"')
-    })
-
-    it('Does not add end-marker to classic articles', () => {
-      props.article.layout = 'classic'
-      props.isContentEnd = true
-      props.section = StandardArticle.sections[0]
-      const component = getWrapper(props)
-
-      expect(component.state().html).not.toMatch('class="content-end"')
-    })
-
-    it('Does not add end-marker to non-paragraph blocks', () => {
-      props.isContentEnd = true
+    it('Removes end-markers', () => {
       const component = getWrapper(props)
 
       expect(component.state().html).not.toMatch('class="content-end"')
@@ -168,15 +140,6 @@ describe('SectionText', () => {
   })
 
   describe('#componentDidUpdate', () => {
-    it('Calls #setContentEnd if isContentEnd has changed', () => {
-      props.section.body = '<p>A text before.</p>'
-      const prevProps = extend(props, {isContentEnd: !props.isContentEnd})
-      const component = getWrapper(props)
-      component.instance().componentDidUpdate(prevProps)
-
-      expect(component.state().html).toMatch('<span class="content-end">')
-    })
-
     it('Calls #maybeResetEditor', () => {
       const component = getWrapper(props)
       component.instance().maybeResetEditor = jest.fn()
