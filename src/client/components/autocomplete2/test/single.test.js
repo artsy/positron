@@ -1,56 +1,61 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { AutocompleteList } from '../list'
+import { AutocompleteSingle } from '../single'
 import { Autocomplete } from '../index'
 require('typeahead.js')
 
-describe('AutocompleteList', () => {
+describe('AutocompleteSingle', () => {
   let props
   let items
-  let fetchItems
+  let fetchItem
 
   const getWrapper = (props) => {
     return mount(
-      <AutocompleteList {...props} />
+      <AutocompleteSingle {...props} />
     )
   }
 
   beforeEach(() => {
-    items = [
-      { _id: '123', title: 'First Article' },
-      { _id: '234', title: 'Second Article' },
-      { _id: '345', title: 'Third Article' }
-    ]
+    items = [{ _id: '123', title: 'First Article' }]
 
-    fetchItems = jest.fn((fetchedItems, cb) => {
-      const newItems = items
-      return cb(newItems)
+    fetchItem = jest.fn((item, cb) => {
+      return cb(items)
     })
 
     props = {
-      items: ['123', '234', '345'],
-      fetchItems,
+      item: '1234',
+      fetchItem,
       onSelect: jest.fn(),
       placeholder: 'Search by title',
-      url: 'artsy.net'
+      url: 'artsy.net',
+      type: 'single'
     }
   })
 
-  it('Renders an autocomplete input', () => {
+  it('Renders autocomplete input if there is no item', () => {
+    props.item = null
+    props.fetchItem = jest.fn((item, cb) => { return null })
     const component = getWrapper(props)
 
     expect(component.find(Autocomplete).length).toBe(1)
-    expect(component.find(Autocomplete).props().placeholder).toMatch(props.placeholder)
+    expect(component
+      .find(Autocomplete)
+      .props().placeholder).toMatch(props.placeholder)
     expect(component.find(Autocomplete).props().url).toMatch(props.url)
   })
 
-  it('Fetches and renders list items', () => {
+  it('Renders item if there is an item', () => {
     const component = getWrapper(props)
 
-    expect(props.fetchItems.mock.calls.length).toBe(1)
     expect(component.text()).toMatch(items[0].title)
-    expect(component.text()).toMatch(items[1].title)
-    expect(component.text()).toMatch(items[2].title)
+    expect(component.find(Autocomplete).length).toBe(0)
+  })
+
+  it('Fetches and renders item', () => {
+    const component = getWrapper(props)
+
+    expect(props.fetchItem.mock.calls.length).toBe(1)
+    expect(component.text()).toMatch(items[0].title)
   })
 
   it('Can remove list items', () => {
@@ -58,15 +63,15 @@ describe('AutocompleteList', () => {
     const button = component.find('button').at(0)
     button.simulate('click')
 
-    expect(props.onSelect.mock.calls[0][0].length).toBe(2)
-    expect(props.onSelect.mock.calls[0][0][0]).not.toMatch('123')
+    expect(props.onSelect.mock.calls[0][0]).toBeNull()
+    expect(props.onSelect.mock.calls.length).toBe(1)
   })
 
-  it('Calls fetchItems if props have changed', () => {
-    props.items = ['123']
+  it('Calls fetchItem if props have changed', () => {
+    props.item = ['123']
     const component = getWrapper(props)
-    component.instance().componentDidUpdate({ items })
+    component.instance().componentDidUpdate({ item: items[0] })
 
-    expect(props.fetchItems.mock.calls.length).toBe(2)
+    expect(props.fetchItem.mock.calls.length).toBe(2)
   })
 })

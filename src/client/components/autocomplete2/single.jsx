@@ -36,8 +36,8 @@ export class AutocompleteSingle extends Component {
     const { fetchItem } = this.props
     const { item } = this.state
 
-    fetchItem(item, fetchedItem => {
-      this.setState({ item: fetchedItem[0] })
+    fetchItem(item, fetchedItems => {
+      this.setState({ item: fetchedItems[0] })
     })
   }
 

@@ -4,7 +4,7 @@ import { mount } from 'enzyme'
 import React from 'react'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { AutocompleteList } from 'client/components/autocomplete2/list'
-import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/components/list_metaphysics'
+import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
 import * as Queries from 'client/queries/metaphysics'
 require('typeahead.js')
 
@@ -145,6 +145,64 @@ describe('AutocompleteListMetaphysics', () => {
     expect(idsToFetch[0]).toBe('456')
   })
 
+  describe('#fetchItem', () => {
+    it('Calls query with id to fetch', () => {
+      const query = jest.fn()
+      props.article.biography_for_artist_id = '123'
+      props.type = 'single'
+      props.model = 'artists'
+      props.field = 'biography_for_artist_id'
+      const component = getWrapper(props)
+      component.instance().getQuery = jest.fn(() => {
+        return query
+      })
+      component.instance().fetchItem('123', jest.fn())
+
+      expect(component.instance().getQuery.mock.calls[0][0]).toBe('artists')
+      expect(query.mock.calls[0].length).toBe(1)
+      expect(query.mock.calls[0][0]).toBe(props.article.biography_for_artist_id)
+    })
+
+    it('Makes a request to metaphysics', () => {
+      props.article.fair_id = '123'
+      props.type = 'single'
+      props.model = 'fairs'
+      props.field = 'fair_id'
+      request.query().end.mockImplementation(() => {
+        return response.body.data.fairs
+      })
+      const component = getWrapper(props)
+      component.instance().fetchItem('123', jest.fn())
+
+      expect(request.get.mock.calls[0][0]).toBe(props.metaphysicsURL)
+      expect(request.query().end).toBeCalled()
+    })
+
+    it('Does not request if no idToFetch', () => {
+      props.article.biography_for_artist_id = null
+      const component = getWrapper(props)
+      component.instance().fetchItems([], jest.fn())
+
+      expect(request.get).not.toBeCalled()
+    })
+
+    it('Calls the cb with data', () => {
+      const cb = jest.fn()
+      props.article.fair_id = '123'
+      props.type = 'single'
+      props.model = 'fairs'
+      props.field = 'fair_id'
+      request.query().end.mockImplementation(() => {
+        return cb(response.body.data.fairs)
+      })
+      const component = getWrapper(props)
+      component.instance().fetchItem('123', cb)
+
+      expect(cb.mock.calls[0][0][0]._id).toBe('123')
+      expect(cb.mock.calls[0][0][0].name).toBe('NADA New York')
+    })
+  })
+
   describe('#fetchItems', () => {
     it('Calls query with ids to fetch', () => {
       const query = jest.fn()
@@ -163,7 +221,7 @@ describe('AutocompleteListMetaphysics', () => {
     it('Calls #idsToFetch', () => {
       props.article.fair_ids = ['123', '456']
       const component = getWrapper(props)
-      component.instance().idsToFetch = jest.fn(() => (['456']))
+      component.instance().idsToFetch = jest.fn(() => ['456'])
       component.instance().fetchItems(['123'], jest.fn())
 
       expect(component.instance().idsToFetch.mock.calls[0][0][0]).toBe('123')

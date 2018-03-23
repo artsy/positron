@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
+import AutocompleteListMetaphysics from 'client/components/autocomplete2/list_metaphysics'
 
 export const AdminAppearances = (props) => {
   return (

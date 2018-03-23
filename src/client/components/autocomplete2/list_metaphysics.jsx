@@ -124,7 +124,7 @@ export class AutocompleteListMetaphysics extends Component {
           if (err) {
             console.error(err)
           }
-          console.log(res.body.data[model])
+
           cb(res.body.data[model])
         })
     }
