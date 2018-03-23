@@ -72,7 +72,7 @@ artsyXapp.init(xappConfig, () => {
   // Start the server and send a message to IPC for the integration test
   // helper to hook into.
   server.listen(PORT, () => {
-    debug(`Listening on port ${PORT}`)
+    console.log(`\n[Positron] Booting app...\n`)
 
     if (typeof process.send === 'function') {
       process.send('listening')

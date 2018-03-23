@@ -2,17 +2,18 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
+    "baseUrl": "./src",
+    "experimentalDecorators": true,
     "jsx": "react",
     "module": "es2015",
+    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es2016",
-    "experimentalDecorators": true
+    "target": "es2016"
   },
-  "include": ["./client"]
+  "include": ["./src"]
 }
