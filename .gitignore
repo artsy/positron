@@ -10,11 +10,14 @@ pids
 logs
 results
 npm-debug.log
-.DS_Store
-public/client/assets
 dump.rdb
+.DS_Store
 .env
 .env.ignore
-node_modules
 .vscode
+
 data
+
+/public
+/src/client/public/assets
+/node_modules

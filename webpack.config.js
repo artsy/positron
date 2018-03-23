@@ -21,7 +21,7 @@ const config = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'public/client/assets'),
+    path: path.resolve(__dirname, 'public/assets'),
     publicPath: '/assets',
     sourceMapFilename: '[file].map?[contenthash]'
   },
