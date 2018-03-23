@@ -1,0 +1,47 @@
+@import '../../../../node_modules/nib'
+@import '../../../../node_modules/artsy-ezel-components/stylus_lib/typography'
+
+json('../../../../node_modules/artsy-ezel-components/stylus_lib/colors.json')
+
+// Widths
+small-avant-garde-font-size = 10px
+sidebar-width = 110px
+body-width = 580px
+overflow-width = 900px
+mobile-padding = 20px
+
+classic-overflow-width = 900px
+classic-overflow-w-margin = 940px
+classic-body-width = 580px
+classic-body-w-margin = 620px
+
+standard-max-width = 1250px
+standard-overflow-width = 780px
+standard-overflow-w-margin = 820px
+standard-body-width = 680px
+standard-body-w-margin = 720px
+
+feature-overflow-width = 850px
+feature-overflow-w-margin = 890px
+feature-body-width = 680px
+feature-body-w-margin = 720px
+feature-blockquote-width = 940px
+
+news-body-width = 780px
+news-body-width-w-margin = 820px
+
+// Helpers
+fill-color(col, time=0.3s)
+  *
+    transition fill time
+    fill col
+
+fill-container()
+  position absolute
+  width 100%
+  height 100%
+  top 0
+  left 0
+
+filter()
+  vendor('filter', arguments)

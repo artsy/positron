@@ -1,0 +1,155 @@
+@import '../../stylus_lib'
+@import './sidebar'
+@import './form_elements'
+@import './simple_modal'
+@import './typography'
+
+global-reset()
+
+body
+  garamond()
+  min-width 300px
+
+*
+  box-sizing border-box
+
+a
+  color black
+
+strong
+  font-weight bold
+
+em
+  font-style italic
+
+#layout-content
+  padding-left sidebar-width
+
+.page-header
+  avant-garde()
+  font-size default-avant-garde-font-size
+  padding 20px 0
+  border-bottom 1px solid gray-lighter-color
+  &.sticky
+    position fixed
+    top 0
+    left 110px
+    right 0
+    background-color white
+    z-index 100
+  .channel-name
+    garamond l-body
+    text-transform none
+    letter-spacing 0
+    line-height 1em
+  .nav-tabs
+    a
+      padding-right 20px
+      color gray-color
+      &.is-active
+        color black
+      &:hover
+        cursor pointer
+
+.max-width-container
+  max-width overflow-width + 60px
+  padding 0 30px
+  margin auto
+
+#layout-hamburger
+  vertical-align middle
+  font-style normal
+  color #000
+  text-align left
+  text-indent -9999px
+  direction ltr
+  width 20px
+  height 4px
+  box-shadow inset 0 0 0 7px,0 -7px,0 7px
+  margin 24px 0 0 15px
+
+#layout-hamburger-container
+  width 53px
+  position absolute
+  top 0
+  left 0
+  display none
+  height 100%
+  border-right 1px solid gray-lighter-color
+  cursor pointer
+
+::selection
+  background purple-color
+  color white
+
+// Responsive pagination styling. TODO: Move to artsy-ezel-components
+@media (max-width: 414px)
+  .bordered-pagination
+    position relative
+    ul, li
+      border 0 !important
+    li a
+      display none !important
+      &.paginator-previous, &.paginator-next
+        display block !important
+        border 2px solid gray-lighter-color
+        position absolute
+      &.paginator-previous
+        left 0
+      &.paginator-next
+        right 0
+
+@media (max-width: 414px)
+  #layout-hamburger-container
+    display inline-block
+  .page-header
+    padding 20px 20px 20px 55px
+    position relative
+  #layout-content
+    min-width 0
+  .max-width-container
+    padding 0 20px
+
+.remove-button
+  background transparent center center no-repeat url("/icons/remove_g.svg")
+  position absolute
+  right 0
+  border 0
+  height 35px
+  width @height
+  top 0
+  background-size 13px
+  outline none
+  cursor pointer
+  &:hover
+    background transparent center center no-repeat url("/icons/remove_r.svg")
+    position absolute
+    right 0
+    border 0
+    height 35px
+    width @height
+    top 0
+    background-size 13px
+    outline none
+    cursor pointer
+
+.flash-error
+  position fixed
+  display flex
+  justify-content center
+  align-items center
+  garamond 'headline'
+  top 0
+  bottom 0
+  right 0
+  left 0
+  z-index 4
+  background rgba(0,0,0,0.5)
+  color white
+
+.supports-markdown
+  &:after
+    content '* Supports Markdown'
+    font-style italic
+    color gray-color
+    garamond('l-caption')
