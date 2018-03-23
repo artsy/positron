@@ -2,9 +2,9 @@ require('babel-core/register')
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
-{ indexForSearch } = Save = require '../api/apps/articles/model/distribute'
-Article = require '../api/apps/articles/model/index.js'
-search = require '../api/lib/elasticsearch'
+{ indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
+Article = require '../src/api/apps/articles/model/index.js'
+search = require '../src/api/lib/elasticsearch'
 async = require 'async'
 
 # Setup environment variables

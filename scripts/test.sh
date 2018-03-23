@@ -3,7 +3,7 @@
 set -e -x
 
 yarn assets
-yarn mocha $(find api -name '*.test.coffee')
-yarn mocha $(find api -name '*.test.js')
-yarn mocha $(find client -name '*.test.coffee')
-yarn jest -- --runInBand $(find client -name '*.test.js') --forceExit
+yarn mocha $(find src/api -name '*.test.coffee')
+yarn mocha $(find src/api -name '*.test.js')
+yarn mocha $(find src/client -name '*.test.coffee')
+yarn jest --maxWorkers=2 --forceExit

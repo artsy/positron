@@ -1,5 +1,5 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-db = require '../api/lib/db'
+db = require '../src/api/lib/db'
 cheerio = require 'cheerio'
 _ = require 'underscore'
 _s = require 'underscore.string'
