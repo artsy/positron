@@ -12,7 +12,8 @@
     "test:watch": "yarn jest -- --watch --runInBand",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh",
-    "mocha": "sh scripts/mocha.sh"
+    "mocha": "sh scripts/mocha.sh",
+    "task": "node -r coffee-script/register -r babel-core/register -r dotenv/config"
   },
   "resolutions": {
     "relay-compiler": "https://github.com/alloy/relay/releases/download/v1.5.0-plugin.2/relay-compiler-1.5.0-plugin.2.tgz",
