@@ -1,5 +1,5 @@
 import React from 'react'
-import { clone, extend } from 'lodash'
+import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
@@ -302,32 +302,29 @@ describe('SectionText', () => {
   })
 
   describe('#handleBackspace', () => {
-    it('Returns default behavior if cursor anchorOffset is not 0', () => {
+    it('Returns default behavior if text is selected', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection(true))
-      component.instance().focus()
-      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+      const handleBackspace = component.instance().handleBackspace()
 
       expect(handleBackspace).toBe('not-handled')
-      expect(props.onSetEditing.mock.calls.length).toBe(0)
+      expect(props.onSetEditing).not.toBeCalled()
+      expect(props.removeSectionAction).not.toBeCalled()
     })
 
     it('Returns default behavior if section index is 0', () => {
       props.index = 0
       const component = getWrapper(props)
-      component.instance().onChange(getSelection(true))
-      component.instance().focus()
-      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+      const handleBackspace = component.instance().handleBackspace()
 
       expect(handleBackspace).toBe('not-handled')
       expect(props.onSetEditing.mock.calls.length).toBe(0)
+      expect(props.removeSectionAction).not.toBeCalled()
     })
 
     it('Merges section with previous section if at start of block', () => {
       const component = getWrapper(props)
-      component.instance().onChange(getSelection())
-      component.instance().focus()
-      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+      const handleBackspace = component.instance().handleBackspace()
 
       expect(handleBackspace).toBe('handled')
       expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
@@ -335,14 +332,20 @@ describe('SectionText', () => {
       expect(component.state().html).toMatch(article.sections[props.index - 1].body)
     })
 
+    it('Calls #onSetEditing with the index of section before', () => {
+      const component = getWrapper(props)
+      const handleBackspace = component.instance().handleBackspace()
+
+      expect(handleBackspace).toBe('handled')
+      expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index - 1)
+    })
+
     it('Removes blockquotes when merging mixed sections', () => {
       props.hasFeatures = true
       props.section.body = '<blockquote>Hello</blockquote>'
       props.section.layout = 'blockquote'
       const component = getWrapper(props)
-      component.instance().onChange(getSelection())
-      component.instance().focus()
-      const handleBackspace = component.instance().handleBackspace({key: 'backspace'})
+      const handleBackspace = component.instance().handleBackspace()
 
       expect(handleBackspace).toBe('handled')
       expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
