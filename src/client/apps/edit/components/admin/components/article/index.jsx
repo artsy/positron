@@ -109,6 +109,7 @@ export class AdminArticle extends Component {
             </Row>
 
             {channel.type === 'editorial' &&
+             article.layout !== 'news' &&
               <div className='field-group'>
                 <label>Article Layout</label>
                 <ButtonGroup>
