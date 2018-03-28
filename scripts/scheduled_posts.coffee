@@ -1,4 +1,3 @@
-require('babel-core/register')
 path = require 'path'
 debug = require('debug') 'api'
 

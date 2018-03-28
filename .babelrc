@@ -1,21 +1,22 @@
 {
   "presets": [
-    "react",
-    "stage-3",
-    ["env", {
+    ["@babel/env", {
       "targets": {
         "browsers": ["last 2 versions"]
       }
-    }]
+    }],
+    "@babel/react",
+    "@babel/stage-3",
+    "@babel/preset-typescript"
   ],
   "plugins": [
-    "babel-plugin-rewire",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-decorators",
     "inline-react-svg",
-    "transform-runtime",
-    "transform-class-properties",
-    "transform-decorators-legacy",
-    "transform-object-rest-spread",
+    "rewire",
     ["module-resolver", {
+      "extensions": [".js", ".jsx", ".ts", ".tsx"],
       "root": ["./src"]
     }]
   ],
@@ -24,7 +25,8 @@
       "plugins": [
         ["styled-components", {
           "ssr": true
-        }]
+        }],
+        "react-hot-loader/babel"
       ]
     }
   }

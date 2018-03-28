@@ -1,3 +1,5 @@
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const WebpackNotifierPlugin = require('webpack-notifier')
@@ -29,48 +31,34 @@ const config = {
     rules: [
       {
         test: /\.coffee$/,
-        exclude: /node_modules/,
+        include: /src/,
         loader: 'coffee-loader'
       },
       {
         test: /\.jade$/,
-        exclude: /node_modules/,
+        include: /src/,
         loader: 'jade-loader'
       },
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
+        test: /\.(js|ts)x?$/,
+        include: /src/,
         use: [
           {
             loader: 'babel-loader',
             query: {
-              cacheDirectory: true,
-              env: {
-                development: {
-                  presets: ['react-hmre'],
-                  plugins: [
-                    ['react-transform', {
-                      transforms: [{
-                        transform: 'react-transform-hmr',
-                        imports: ['react'],
-                        locals: ['module']
-                      }]
-                    }]
-                  ]
-                }
-              }
+              cacheDirectory: true
             }
           }
         ]
       },
       {
         test: /\.json$/,
-        exclude: /node_modules/,
+        include: /src/,
         loader: 'json-loader'
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
+        include: /src/,
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader' }
@@ -78,7 +66,7 @@ const config = {
       },
       {
         test: /\.styl$/,
-        exclude: /node_modules/,
+        include: /src/,
         use: [
           { loader: 'style-loader' },
           { loader: 'css-loader' },
@@ -88,7 +76,19 @@ const config = {
     ]
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      formatter: 'codeframe',
+      formatterOptions: 'highlightCode',
+      tslint: false,
+      checkSyntacticErrors: true,
+      watch: ['./src']
+    }),
+    new ForkTsCheckerNotifierWebpackPlugin({
+      excludeWarnings: true,
+      skipFirstNotification: true
+    }),
     new FriendlyErrorsWebpackPlugin({
+      clearConsole: false,
       compilationSuccessInfo: {
         messages: [`[Positron] Listening on http://localhost:${PORT} \n`]
       }
@@ -108,9 +108,10 @@ const config = {
     })
   ],
   resolve: {
-    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl'],
+    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl', '.ts', '.tsx'],
     modules: [
-      'node_modules'
+      'node_modules',
+      'src'
     ],
     symlinks: false
   }

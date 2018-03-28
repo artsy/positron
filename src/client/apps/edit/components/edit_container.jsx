@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { once } from 'lodash'
+import { hot } from 'react-hot-loader'
 import {
   startEditingArticle,
   stopEditingArticle,
@@ -205,7 +206,7 @@ const mapDispatchToProps = {
   toggleSpinnerAction: toggleSpinner
 }
 
-export default connect(
+export default hot(module)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditContainer)
+)(EditContainer))

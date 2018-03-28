@@ -1,4 +1,3 @@
-require('babel-core/register')
 require('dotenv').config()
 path = require 'path'
 debug = require('debug') 'api'
