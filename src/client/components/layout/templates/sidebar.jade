@@ -14,8 +14,7 @@
           a( href='/articles/new?layout=feature' ) Feature Article
           a( href='/articles/new?layout=series' ) Series Article
           a( href='/articles/new?layout=video' ) Video Article
-          if sd.DEV_FEATURES
-            a( href='/articles/new?layout=news' ) News Article
+          a( href='/articles/new?layout=news' ) News Article
     else
       a#layout-sidebar-new-article(
         class=(sd.URL == '/articles/new' ? 'is-active' : '')
