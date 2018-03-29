@@ -45,6 +45,14 @@ export class EditNews extends Component {
     )
   }
 
+  saveSource = (source) => {
+    const { article, onChangeArticleAction } = this.props
+    this.setState({isEditSourceOpen: false})
+    if (source) {
+      onChangeArticleAction('news_source', source)
+    }
+  }
+
   render () {
     const { article } = this.props
 
@@ -58,7 +66,7 @@ export class EditNews extends Component {
         <SectionList />
 
         <NewsByline article={article} editSource={this.editSource()}/>
-        { this.state.isEditSourceOpen && <EditSourceControls /> }
+        { this.state.isEditSourceOpen && <EditSourceControls onApply={this.saveSource}/> }
       </EditNewsContainer>
     )
   }

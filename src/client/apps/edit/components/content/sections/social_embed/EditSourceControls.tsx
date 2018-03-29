@@ -3,20 +3,43 @@ import styled from 'styled-components'
 import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
 import Button from "@artsy/reaction/dist/Components/Buttons/Default"
 
+interface Props {
+  onApply: (news_source: { title: string, url: string } | null) => void
+}
 
-export class EditSourceControls extends Component {
+interface State {
+  title?: string 
+  url?: string
+}
+
+export class EditSourceControls extends Component<Props, State> {
+  state = {
+    title: '',
+    url: ''
+  }
+
   render() {
     return (
       <EditSourceContainer>
         <InputContainer>
         <Input
+          name={"title"}
+          value={this.state.title}
           placeholder={"Enter source name"}
+          onChange={(event) => this.setState({title: event.target.value})}
         />
         <ApplyInputContainer>
           <LinkInput
+            name={"url"}
+            value={this.state.url}
             placeholder={"Paste or type a link"}
+            onChange={(event) => this.setState({url: event.target.value})}
           />
-          <ApplyButton>Apply</ApplyButton>
+          <ApplyButton
+            onClick={() => this.props.onApply(this.state)}
+          >
+            {"Apply"}
+          </ApplyButton>
         </ApplyInputContainer>
         </InputContainer>
       </EditSourceContainer>
