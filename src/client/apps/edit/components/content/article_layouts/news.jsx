@@ -4,39 +4,12 @@ import styled from 'styled-components'
 import React, { Component } from 'react'
 import { NewsHeadline } from '@artsy/reaction/dist/Components/Publishing/News/NewsHeadline'
 import { NewsByline } from '@artsy/reaction/dist/Components/Publishing/Byline/NewsByline'
-import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
 import SectionList from '../section_list'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { onChangeArticle } from 'client/actions/editActions'
+import { EditSourceControls } from '../sections/social_embed/EditSourceControls'
+import { hot } from 'react-hot-loader'
 
-class EditSourceControls extends Component {
-  render() {
-    return (
-      <EditSourceContainer>
-        <EditSourceInput
-          placeholder={"Enter source name"}
-        />
-        <EditSourceInput
-          placeholder={"Paste or type a link"}
-        />
-      </EditSourceContainer>
-    )
-  }
-}
-
-const EditSourceContainer = styled.div`
-  background-color: black;
-  width: 300px;
-  margin-left: 20px;
-  margin-top: 20px;
-`
-
-const EditSourceInput = styled.input`
-  margin: 10px;
-  width: 90%;
-  ${borderedInput}
-  height: 30px;
-`
 
 export class EditNews extends Component {
   static propTypes = {
@@ -55,7 +28,7 @@ export class EditNews extends Component {
       <PlainText
         content={article.title}
         onChange={(key, value) => onChangeArticleAction('title', value)}
-      placeholder='Title'
+        placeholder='Title'
         name='title'
       />
     )
@@ -67,7 +40,7 @@ export class EditNews extends Component {
  
     return (
       <AddSource onClick={() => { this.setState({ isEditSourceOpen: !isEditSourceOpen })}}>
-        Add Source
+        {'Add Source'}
       </AddSource>
     )
   }
@@ -99,10 +72,10 @@ const mapDispatchToProps = {
   onChangeArticleAction: onChangeArticle
 }
 
-export default connect(
+export default hot(module)( connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditNews)
+)(EditNews))
 
 const EditNewsContainer = styled.div`
   max-width: 820px;
