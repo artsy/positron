@@ -97,6 +97,15 @@ describe('AdminArticle', () => {
       expect(component.find('button').at(5).text()).toBe('Feature')
     })
 
+    it('if news layout, does not render layout buttons', () => {
+      props.article.layout = 'news'
+      const component = getWrapper(props)
+
+      expect(component.html()).not.toMatch('Article Layout')
+      expect(component.html()).not.toMatch('Standard')
+      expect(component.html()).not.toMatch('Feature')
+    })
+
     it('If not editorial, does not render layout buttons', () => {
       props.channel.type = 'partner'
       const component = getWrapper(props)
