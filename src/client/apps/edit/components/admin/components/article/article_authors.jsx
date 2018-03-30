@@ -101,14 +101,15 @@ export class ArticleAuthors extends Component {
               />
             </div>
           }
-
-          <div className='field-group'>
-            <AutocompleteListMetaphysics
-              field='contributing_authors'
-              label='Contributing Authors'
-              model='users'
-            />
-          </div>
+          {article.layout !== 'news' &&
+            <div className='field-group'>
+              <AutocompleteListMetaphysics
+                field='contributing_authors'
+                label='Contributing Authors'
+                model='users'
+              />
+            </div>
+          }
         </Col>
       </Row>
     )
