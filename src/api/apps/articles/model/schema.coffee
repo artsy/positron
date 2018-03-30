@@ -273,6 +273,7 @@ ImageCollectionSection = (->
   featured: @boolean()
   has_video: @boolean()
   indexable: @boolean()
+  in_editorial_feed: @boolean()
   is_super_article: @boolean()
   layout: @string()
   limit: @number().max(Number API_MAX).default(Number API_PAGE_SIZE)
