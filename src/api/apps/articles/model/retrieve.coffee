@@ -32,6 +32,7 @@ moment = require 'moment'
     'scheduled'
     'access_token'
     'omit'
+    'in_editorial_feed'
   query.fair_ids = input.fair_id if input.fair_id
   if input.fair_programming_id
     query.fair_programming_ids = input.fair_programming_id
@@ -82,6 +83,10 @@ moment = require 'moment'
   # Find articles that contain fair_ids
   if input.fair_ids
     query.fair_ids = { $elemMatch: { $in: input.fair_ids } }
+
+  # Convert query for articles in editorial feed
+  if input.in_editorial_feed
+    query.layout = { $in: ["feature", "standard", "series", "video"] }
 
   # Convert query for articles by vertical
   query["vertical.id"] = input.vertical if input.vertical

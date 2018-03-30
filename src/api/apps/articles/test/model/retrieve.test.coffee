@@ -95,6 +95,16 @@ describe 'Retrieve', ->
       query._id['$in'][0].should.containEql ObjectId '54276766fd4f50996aeca2b8'
       query._id['$in'][1].should.containEql ObjectId '54276766fd4f50996aeca2b7'
 
+    it 'finds articles in editorial feed', ->
+      { query } = Retrieve.toQuery {
+        in_editorial_feed: true
+      }
+      query.layout['$in'].should.be.ok()
+      query.layout['$in'][0].should.containEql 'feature'
+      query.layout['$in'][1].should.containEql 'standard'
+      query.layout['$in'][2].should.containEql 'series'
+      query.layout['$in'][3].should.containEql 'video'
+
     it 'finds scheduled articles', ->
       { query } = Retrieve.toQuery {
         scheduled: true
