@@ -83,6 +83,12 @@ describe('ArticleAuthors', () => {
     expect(component.find(AutocompleteListMetaphysics).length).toBe(1)
   })
 
+  it('Does not render contributing authors if layout is news', () => {
+    props.article.layout = 'news'
+    const component = getWrapper(props)
+    expect(component.find(AutocompleteListMetaphysics).length).toBeFalsy()
+  })
+
   it('#fetchAuthors fetches authors', () => {
     props.article.author_ids = ['123']
     const callback = jest.fn()
