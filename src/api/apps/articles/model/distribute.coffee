@@ -56,7 +56,6 @@ getArticleUrl = (article) ->
 postSailthruAPI = (article, cb) ->
   return cb() if article.scheduled_publish_at
   tags = ['article']
-  tags = tags.concat ['magazine'] if article.featured is true
   tags = tags.concat article.keywords if article.keywords
   tags = tags.concat article.tracking_tags if article.tracking_tags
   tags = tags.concat article.vertical.name if article.vertical
