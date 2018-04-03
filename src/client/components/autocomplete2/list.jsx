@@ -48,10 +48,15 @@ export class AutocompleteList extends Component {
     const { onSelect } = this.props
     const { items } = this.state
     const newItems = clone(items)
+    let newItemsIds
 
     newItems.splice(item, 1)
-    const newItemsIds = uniq(map(newItems, '_id'))
-    onSelect(newItemsIds)
+    if (newItems[0]._id) {
+      newItemsIds = map(newItems, '_id')
+    } else {
+      newItemsIds = map(newItems, 'id')
+    }
+    onSelect(uniq(newItemsIds))
     this.setState({items: newItems})
   }
 
