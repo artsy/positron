@@ -81,12 +81,28 @@ describe('AdminArticle', () => {
       expect(component.find('button').at(1).text()).toBe('Tier 2')
     })
 
+    it('if news layout, does not render tier buttons', () => {
+      props.article.layout = 'news'
+      const component = getWrapper(props)
+
+      expect(component.html()).not.toMatch('Article Tier')
+      expect(component.find('button').length).toBe(1)
+    })
+
     it('Renders featured/magazine buttons', () => {
       const component = getWrapper(props)
 
       expect(component.html()).toMatch('Magazine Feed')
       expect(component.find('button').at(2).text()).toBe('Yes')
       expect(component.find('button').at(3).text()).toBe('No')
+    })
+
+    it('if news layout, does not render featured/magazine buttons', () => {
+      props.article.layout = 'news'
+      const component = getWrapper(props)
+
+      expect(component.html()).not.toMatch('Magazine Feed')
+      expect(component.find('button').length).toBe(1)
     })
 
     it('Renders layout buttons if editorial', () => {

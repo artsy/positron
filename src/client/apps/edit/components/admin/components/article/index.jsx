@@ -66,47 +66,48 @@ export class AdminArticle extends Component {
 
         <Row>
           <Col xs={6}>
-            <Row>
-              <Col xs={6}>
-                <div className='field-group'>
-                  <label>Article Tier</label>
-                  <ButtonGroup>
-                    <Button
-                      active={article.tier === 1}
-                      onClick={() => onChangeArticleAction('tier', 1)}
-                    >
-                      Tier 1
-                    </Button>
-                    <Button
-                      active={article.tier === 2}
-                      onClick={() => onChangeArticleAction('tier', 2)}
-                    >
-                      Tier 2
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </Col>
-
-              <Col xs={6}>
-                <div className='field-group'>
-                  <label>Magazine Feed</label>
-                  <ButtonGroup>
-                    <Button
-                      active={article.featured}
-                      onClick={() => onChangeArticleAction('featured', true)}
-                    >
-                      Yes
-                    </Button>
-                    <Button
-                      active={!article.featured}
-                      onClick={() => onChangeArticleAction('featured', false)}
-                    >
-                      No
-                    </Button>
-                  </ButtonGroup>
-                </div>
-              </Col>
-            </Row>
+            {article.layout !== 'news' &&
+              <Row>
+                <Col xs={6}>
+                  <div className='field-group'>
+                    <label>Article Tier</label>
+                    <ButtonGroup>
+                      <Button
+                        active={article.tier === 1}
+                        onClick={() => onChangeArticleAction('tier', 1)}
+                      >
+                        Tier 1
+                      </Button>
+                      <Button
+                        active={article.tier === 2}
+                        onClick={() => onChangeArticleAction('tier', 2)}
+                      >
+                        Tier 2
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                </Col>
+                <Col xs={6}>
+                  <div className='field-group'>
+                    <label>Magazine Feed</label>
+                    <ButtonGroup>
+                      <Button
+                        active={article.featured}
+                        onClick={() => onChangeArticleAction('featured', true)}
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        active={!article.featured}
+                        onClick={() => onChangeArticleAction('featured', false)}
+                      >
+                        No
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                </Col>
+              </Row>
+            }
 
             {channel.type === 'editorial' &&
              article.layout !== 'news' &&

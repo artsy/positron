@@ -12,30 +12,41 @@ import AdminVerticalsTags from './components/verticals_tags'
 
 export class EditAdmin extends Component {
   static propTypes = {
-    channel: PropTypes.object
+    isNews: PropTypes.bool,
+    isEditorial: PropTypes.bool
   }
 
   getSections = () => {
-    const { channel } = this.props
-    const sections = [
-      {title: 'Tags'},
-      {title: 'Article'},
-      {title: 'Featuring'},
-      {title: 'Additional Appearances'}
-    ]
+    const { isNews, isEditorial } = this.props
 
-    if (channel.type === 'editorial') {
-      sections.push({title: 'Super Article'})
-      sections.push({title: 'Sponsor'})
-      sections[0].title = 'Verticals & Tagging'
+    if (isNews) {
+      return [
+        {title: 'Verticals & Tagging'},
+        {title: 'Article'},
+        {title: 'Featuring'}
+      ]
+    } else if (isEditorial) {
+      return [
+        {title: 'Verticals & Tagging'},
+        {title: 'Article'},
+        {title: 'Featuring'},
+        {title: 'Additional Appearances'},
+        {title: 'Super Article'},
+        {title: 'Sponsor'}
+      ]
+    } else {
+      return [
+        {title: 'Tags'},
+        {title: 'Article'},
+        {title: 'Featuring'},
+        {title: 'Additional Appearances'}
+      ]
     }
-    return sections
   }
 
   render () {
-    const { channel } = this.props
+    const { isNews, isEditorial } = this.props
     const sections = this.getSections()
-    const isEditorial = channel.type === 'editorial'
 
     return (
       <div className='EditAdmin'>
@@ -55,12 +66,13 @@ export class EditAdmin extends Component {
 
           <AdminFeaturing />
 
-          <AdminAppearances />
-
-          {isEditorial &&
+          {!isNews &&
+            <AdminAppearances />
+          }
+          {isEditorial && !isNews &&
             <AdminSuperArticle />
           }
-          {isEditorial &&
+          {isEditorial && !isNews &&
             <AdminSponsor />
           }
         </DropDownList>
@@ -70,7 +82,8 @@ export class EditAdmin extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  channel: state.app.channel
+  isNews: state.edit.article.layout === 'news',
+  isEditorial: state.app.channel.type === 'editorial'
 })
 
 export default connect(

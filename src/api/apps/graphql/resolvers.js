@@ -238,6 +238,7 @@ export const relatedArticlesCanvas = (root) => {
     omit: [ObjectId(root.id)],
     published: true,
     featured: true,
+    in_editorial_feed: true,
     channel_id: ObjectId(root.channel_id),
     vertical,
     limit: 4,
