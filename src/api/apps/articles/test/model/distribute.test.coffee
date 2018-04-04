@@ -1,3 +1,4 @@
+{ EDITORIAL_CHANNEL } = process.env
 _ = require 'underscore'
 rewire = require 'rewire'
 { fabricate, empty } = require '../../../../test/helpers/db'
@@ -91,6 +92,17 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].tags.should.not.containEql 'artsy-editorial'
           done()
 
+      it 'concats the article and artsy-editorial tag for editorial channel', (done) ->
+        Distribute.distributeArticle {
+          author_id: '5086df098523e60002000018'
+          published: true
+          channel_id: EDITORIAL_CHANNEL
+        }, (err, article) =>
+          @sailthru.apiPost.calledOnce.should.be.true()
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'artsy-editorial'
+          done()
+
       it 'does not send if it is scheduled', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
@@ -135,21 +147,10 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].vars.layout.should.equal 'news'
           done()
 
-      it 'concats artsy-editorial for specialized articles', (done) ->
-        Distribute.distributeArticle {
-          author_id: '5086df098523e60002000018'
-          published: true
-          featured: true
-        }, (err, article) =>
-          @sailthru.apiPost.calledOnce.should.be.true()
-          @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
-          done()
-
       it 'concats the keywords at the end', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
           published: true
-          featured: true
           keywords: ['sofa', 'midcentury', 'knoll']
         }, (err, article) =>
           @sailthru.apiPost.calledOnce.should.be.true()

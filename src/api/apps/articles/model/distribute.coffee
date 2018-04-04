@@ -56,6 +56,7 @@ getArticleUrl = (article) ->
 postSailthruAPI = (article, cb) ->
   return cb() if article.scheduled_publish_at
   tags = ['article']
+  tags = tags.concat 'artsy-editorial' if article.channel_id?.toString() is EDITORIAL_CHANNEL
   tags = tags.concat article.keywords if article.keywords
   tags = tags.concat article.tracking_tags if article.tracking_tags
   tags = tags.concat article.vertical.name if article.vertical
