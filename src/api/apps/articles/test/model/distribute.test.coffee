@@ -219,3 +219,43 @@ describe 'Save', ->
       Distribute.deleteArticleFromSailthru 'artsy-editorial-delete-me', (err, article) =>
         @sailthru.apiDelete.args[0][1].url.should.containEql 'artsy-editorial-delete-me'
         done()
+
+  describe '#cleanArticlesInSailthru', ->
+    it 'Calls #deleteArticleFromSailthru on slugs that are not last', (done) ->
+      Distribute.deleteArticleFromSailthru = sinon.stub()
+      Distribute.cleanArticlesInSailthru({
+          author_id: '5086df098523e60002000018'
+          layout: 'video'
+          published: true
+          slugs: [
+            'artsy-editorial-slug-one'
+            'artsy-editorial-slug-two'
+            'artsy-editorial-slug-three'
+          ]
+        })
+      Distribute.deleteArticleFromSailthru.args[0][0].should.containEql '/video/artsy-editorial-slug-one'
+      Distribute.deleteArticleFromSailthru.args[1][0].should.containEql '/video/artsy-editorial-slug-two'
+      done()
+
+  describe '#getArticleUrl', ->
+    it 'constructs the url for an article using the last slug by default', ->
+      article = {
+        layout: 'classic'
+        slugs: [
+          'artsy-editorial-slug-one'
+          'artsy-editorial-slug-two'
+        ]
+      }
+      url = Distribute.getArticleUrl article
+      url.should.containEql('article/artsy-editorial-slug-two')
+
+    it 'Can use a specified slug if provided', ->
+      article = {
+        layout: 'classic'
+        slugs: [
+          'artsy-editorial-slug-one'
+          'artsy-editorial-slug-two'
+        ]
+      }
+      url = Distribute.getArticleUrl article, article.slugs[0]
+      url.should.containEql('article/artsy-editorial-slug-one')

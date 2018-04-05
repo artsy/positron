@@ -118,9 +118,10 @@ describe 'Save', ->
         author: {
           name: 'artsy editorial'
         }
+        layout: 'video'
       }, (err, article) =>
         article.slugs.length.should.equal 1
-        @deleteArticleFromSailthru.args[0][0].should.containEql 'artsy-editorial-delete-title'
+        @deleteArticleFromSailthru.args[0][0].should.containEql 'video/artsy-editorial-delete-title'
         done()
 
     it 'Regenerates the slug with stop words removed', (done) ->
@@ -130,9 +131,10 @@ describe 'Save', ->
         author: {
           name: 'artsy editorial'
         }
+        layout: 'feature'
       }, (err, article) =>
         article.slugs.length.should.equal 1
-        @deleteArticleFromSailthru.args[0][0].should.containEql 'artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold'
+        @deleteArticleFromSailthru.args[0][0].should.containEql 'article/artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold'
         done()
 
 
