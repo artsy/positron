@@ -10,9 +10,9 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/reaction@^0.33.4":
-  version "0.33.4"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.33.4.tgz#3ea57e12a17be4e235d0a48bec14e639f70ebca5"
+"@artsy/reaction@^0.35.1":
+  version "0.35.1"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.35.1.tgz#373142ebdad231a492c5d5b86eb6f5cc17e27c6c"
   dependencies:
     formik "^0.11.11"
     history "^4.6.1"
@@ -9258,25 +9258,20 @@ style-loader@^0.19.0:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
 
-styled-components@^3.1.5:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.2.5.tgz#b5d5d7d618ab240ff10602b5ca5886b8db3d0a0d"
+styled-components@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-2.4.0.tgz#086d0fd483d54638837fca3ea546a030b94adf75"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
-    fbjs "^0.8.16"
-    hoist-non-react-statics "^2.5.0"
+    fbjs "^0.8.9"
+    hoist-non-react-statics "^1.2.0"
     is-plain-object "^2.0.1"
     prop-types "^15.5.4"
-    stylis "^3.5.0"
-    stylis-rule-sheet "^0.0.10"
+    stylis "^3.4.0"
     supports-color "^3.2.3"
 
-stylis-rule-sheet@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/stylis-rule-sheet/-/stylis-rule-sheet-0.0.10.tgz#44e64a2b076643f4b52e5ff71efc04d8c3c4a430"
-
-stylis@^3.0.0, stylis@^3.5.0:
+stylis@^3.0.0, stylis@^3.4.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-3.5.0.tgz#016fa239663d77f868fef5b67cf201c4b7c701e1"
 

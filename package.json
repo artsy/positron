@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.3.0",
-    "@artsy/reaction": "^0.33.4",
+    "@artsy/reaction": "^0.35.1",
     "@babel/cli": "7.0.0-beta.42",
     "@babel/core": "7.0.0-beta.42",
     "@babel/node": "7.0.0-beta.42",
@@ -117,7 +117,7 @@
     "sailthru-client": "^2.0.3",
     "sharify": "^0.1.6",
     "socket.io": "^2.0.4",
-    "styled-components": "^3.1.5",
+    "styled-components": "2.4.0",
     "stylus": "^0.54.5",
     "superagent": "^3.3.1",
     "superagent-bluebird-promise": "^3.0.0",
@@ -200,6 +200,7 @@
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
       ".(ts|tsx)": "typescript-babel-jest"
     },
+    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
       "coffee",
       "js",
