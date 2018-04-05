@@ -1,3 +1,4 @@
+{ EDITORIAL_CHANNEL } = process.env
 _ = require 'underscore'
 rewire = require 'rewire'
 { fabricate, empty } = require '../../../../test/helpers/db'
@@ -32,6 +33,54 @@ describe 'Save', ->
   describe '#distributeArticle', ->
 
     describe 'sends article to sailthru', ->
+      describe 'article url', ->
+        article = {}
+
+        beforeEach ->
+          article = {
+            author_id: '5086df098523e60002000018'
+            published: true
+            slugs: [
+              'artsy-editorial-slug-one'
+              'artsy-editorial-slug-two'
+            ]
+          }
+
+        it 'constructs the url for classic articles', (done) ->
+          article.layout = 'classic'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
+          done()
+
+        it 'constructs the url for standard articles', (done) ->
+          article.layout = 'standard'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
+          done()
+
+        it 'constructs the url for feature articles', (done) ->
+          article.layout = 'feature'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
+          done()
+
+        it 'constructs the url for series articles', (done) ->
+          article.layout = 'series'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('series/artsy-editorial-slug-two')
+          done()
+
+        it 'constructs the url for video articles', (done) ->
+          article.layout = 'video'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('video/artsy-editorial-slug-two')
+          done()
+
+        it 'constructs the url for news articles', (done) ->
+          article.layout = 'news'
+          Distribute.distributeArticle article, (err, article) =>
+          @sailthru.apiPost.args[0][1].url.should.containEql('news/artsy-editorial-slug-two')
+          done()
 
       it 'concats the article tag for a normal article', (done) ->
         Distribute.distributeArticle {
@@ -41,6 +90,17 @@ describe 'Save', ->
           @sailthru.apiPost.calledOnce.should.be.true()
           @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
           @sailthru.apiPost.args[0][1].tags.should.not.containEql 'artsy-editorial'
+          done()
+
+      it 'concats the article and artsy-editorial tag for editorial channel', (done) ->
+        Distribute.distributeArticle {
+          author_id: '5086df098523e60002000018'
+          published: true
+          channel_id: EDITORIAL_CHANNEL
+        }, (err, article) =>
+          @sailthru.apiPost.calledOnce.should.be.true()
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
+          @sailthru.apiPost.args[0][1].tags.should.containEql 'artsy-editorial'
           done()
 
       it 'does not send if it is scheduled', (done) ->
@@ -77,30 +137,27 @@ describe 'Save', ->
           @sailthru.apiPost.args[0][1].vars.vertical.should.equal 'culture'
           done()
 
-      it 'concats the artsy-editorial and magazine tags for specialized articles', (done) ->
+      it 'sends layout as a custom variable', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
           published: true
-          featured: true
+          layout: 'news'
         }, (err, article) =>
           @sailthru.apiPost.calledOnce.should.be.true()
-          @sailthru.apiPost.args[0][1].tags.should.containEql 'article'
-          @sailthru.apiPost.args[0][1].tags.should.containEql 'magazine'
+          @sailthru.apiPost.args[0][1].vars.layout.should.equal 'news'
           done()
 
       it 'concats the keywords at the end', (done) ->
         Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
           published: true
-          featured: true
           keywords: ['sofa', 'midcentury', 'knoll']
         }, (err, article) =>
           @sailthru.apiPost.calledOnce.should.be.true()
           @sailthru.apiPost.args[0][1].tags[0].should.equal 'article'
-          @sailthru.apiPost.args[0][1].tags[1].should.equal 'magazine'
-          @sailthru.apiPost.args[0][1].tags[2].should.equal 'sofa'
-          @sailthru.apiPost.args[0][1].tags[3].should.equal 'midcentury'
-          @sailthru.apiPost.args[0][1].tags[4].should.equal 'knoll'
+          @sailthru.apiPost.args[0][1].tags[1].should.equal 'sofa'
+          @sailthru.apiPost.args[0][1].tags[2].should.equal 'midcentury'
+          @sailthru.apiPost.args[0][1].tags[3].should.equal 'knoll'
           done()
 
       it 'uses email_metadata vars if provided', (done) ->

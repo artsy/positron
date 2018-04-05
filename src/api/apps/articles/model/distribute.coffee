@@ -45,10 +45,18 @@ cleanArticlesInSailthru = (slugs = []) =>
       unless i is slugs.length - 1
         @deleteArticleFromSailthru slug, ->
 
+getArticleUrl = (article) ->
+  switch article.layout
+    when 'classic', 'feature', 'standard'
+      layout = 'article'
+    else
+      layout = article.layout
+  return "#{FORCE_URL}/#{layout}/#{_.last(article.slugs)}"
+
 postSailthruAPI = (article, cb) ->
   return cb() if article.scheduled_publish_at
   tags = ['article']
-  tags = tags.concat ['magazine'] if article.featured is true
+  tags = tags.concat 'artsy-editorial' if article.channel_id?.toString() is EDITORIAL_CHANNEL
   tags = tags.concat article.keywords if article.keywords
   tags = tags.concat article.tracking_tags if article.tracking_tags
   tags = tags.concat article.vertical.name if article.vertical
@@ -58,7 +66,7 @@ postSailthruAPI = (article, cb) ->
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   html = if article.send_body then getTextSections(article) else ''
   sailthru.apiPost 'content',
-  url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
+  url: getArticleUrl article
   date: article.published_at
   title: article.email_metadata?.headline
   author: article.email_metadata?.author
@@ -66,11 +74,12 @@ postSailthruAPI = (article, cb) ->
   images: images
   spider: 0
   vars:
-    html: html
     custom_text: article.email_metadata?.custom_text
     daily_email: article.daily_email
-    weekly_email: article.weekly_email
+    html: html
+    layout: article.layout
     vertical: article.vertical?.name
+    weekly_email: article.weekly_email
   , (err, response) ->
     if err
       debug err
