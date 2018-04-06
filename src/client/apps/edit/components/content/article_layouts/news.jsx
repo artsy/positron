@@ -7,6 +7,9 @@ import { NewsByline } from '@artsy/reaction/dist/Components/Publishing/Byline/Ne
 import SectionList from '../section_list'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { onChangeArticle } from 'client/actions/editActions'
+import { EditSourceControls } from '../sections/news/EditSourceControls.tsx'
+import { hot } from 'react-hot-loader'
+
 
 export class EditNews extends Component {
   static propTypes = {
@@ -14,9 +17,13 @@ export class EditNews extends Component {
     onChangeArticleAction: PropTypes.func.isRequired
   }
 
+  state = {
+    isEditSourceOpen: false
+  }
+
   editTitle = () => {
     const { article, onChangeArticleAction } = this.props
-
+    
     return (
       <PlainText
         content={article.title}
@@ -25,6 +32,26 @@ export class EditNews extends Component {
         name='title'
       />
     )
+  }
+
+  editSource = () => {
+    const { article, onChangeArticleAction } = this.props
+    const { isEditSourceOpen } = this.state
+    const { title } = article.news_source
+
+    return (
+      <AddSource onClick={() => { this.setState({ isEditSourceOpen: !isEditSourceOpen })}}>
+        {title && title.length ? title : 'Add Source'}
+      </AddSource>
+    )
+  }
+
+  saveSource = (source) => {
+    const { article, onChangeArticleAction } = this.props
+    this.setState({isEditSourceOpen: false})
+    if (source) {
+      onChangeArticleAction('news_source', source)
+    }
   }
 
   render () {
@@ -39,8 +66,8 @@ export class EditNews extends Component {
         />
         <SectionList />
 
-        <NewsByline article={article} />
-
+        <NewsByline article={article} editSource={this.editSource()}/>
+        { this.state.isEditSourceOpen && <EditSourceControls source={article.news_source} onApply={this.saveSource}/> }
       </EditNewsContainer>
     )
   }
@@ -54,10 +81,10 @@ const mapDispatchToProps = {
   onChangeArticleAction: onChangeArticle
 }
 
-export default connect(
+export default hot(module)( connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditNews)
+)(EditNews))
 
 const EditNewsContainer = styled.div`
   max-width: 820px;
@@ -69,4 +96,8 @@ const EditNewsContainer = styled.div`
   div[class*='NewsByline__NewsBylineContainer'] {
     padding: 0 20px;
   }
+`
+
+export const AddSource = styled.div`
+  text-decoration: underline;
 `

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.3.0",
-    "@artsy/reaction": "^0.33.1",
+    "@artsy/reaction": "^0.35.1",
     "@babel/cli": "7.0.0-beta.42",
     "@babel/core": "7.0.0-beta.42",
     "@babel/node": "7.0.0-beta.42",
@@ -117,12 +117,14 @@
     "sailthru-client": "^2.0.3",
     "sharify": "^0.1.6",
     "socket.io": "^2.0.4",
-    "styled-components": "^2.1.2",
+    "styled-components": "2.4.0",
     "stylus": "^0.54.5",
     "superagent": "^3.3.1",
     "superagent-bluebird-promise": "^3.0.0",
     "ts-loader": "^4.1.0",
     "typescript": "^2.7.2",
+    "typescript-babel-jest": "^1.0.5",
+    "typescript-styled-plugin": "^0.1.2",
     "ua-parser": "^0.3.5",
     "uglifyify": "^3.0.1",
     "underscore": "^1.8.3",
@@ -195,13 +197,17 @@
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
+      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
+      ".(ts|tsx)": "typescript-babel-jest"
     },
+    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
       "coffee",
       "js",
       "json",
-      "jsx"
+      "jsx",
+      "ts",
+      "tsx"
     ],
     "setupFiles": [
       "<rootDir>/test.config.js"
