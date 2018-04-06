@@ -10,7 +10,7 @@ url = require 'url'
 Q = require 'bluebird-q'
 request = require 'superagent'
 Article = require './index'
-{ distributeArticle, deleteArticleFromSailthru, indexForSearch } = require './distribute'
+{ distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp').token or ''
 
@@ -21,7 +21,7 @@ artsyXapp = require('artsy-xapp').token or ''
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    deleteArticleFromSailthru _.last(article.slugs), =>
+    deleteArticleFromSailthru getArticleUrl(article), =>
       cb null, article
 
 setOnPublishFields = (article) =>

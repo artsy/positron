@@ -120,6 +120,7 @@ describe 'Article Persistence', ->
             thumbnail_title: 'Foo Bar Baz'
             author_id: @user._id.toString()
             published: true
+            layout: 'standard'
             author: name: @user.name
           }, 'foo', {}, (err, article) ->
             return done err if err
