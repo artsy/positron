@@ -53,7 +53,21 @@ describe('AutocompleteList', () => {
     expect(component.text()).toMatch(items[2].title)
   })
 
-  it('Can remove list items', () => {
+  it('Can remove list items with _id', () => {
+    const component = getWrapper(props)
+    const button = component.find('button').at(0)
+    button.simulate('click')
+
+    expect(props.onSelect.mock.calls[0][0].length).toBe(2)
+    expect(props.onSelect.mock.calls[0][0][0]).not.toMatch('123')
+  })
+
+  it('Can remove list items with id', () => {
+    items = [
+      { id: '123', title: 'First Article' },
+      { id: '234', title: 'Second Article' },
+      { id: '345', title: 'Third Article' }
+    ]
     const component = getWrapper(props)
     const button = component.find('button').at(0)
     button.simulate('click')
