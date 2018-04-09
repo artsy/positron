@@ -13,7 +13,12 @@ import moment from 'moment'
 const db = require('../../../lib/db.coffee')
 const { onPublish, generateSlugs, generateKeywords,
   sanitizeAndSave, onUnpublish } = require('./save.coffee')
-const { removeFromSearch, deleteArticleFromSailthru } = require('./distribute.coffee')
+const {
+  removeFromSearch,
+  deleteArticleFromSailthru,
+  distributeArticle,
+  getArticleUrl
+} = require('./distribute.coffee')
 
 //
 // Retrieval
@@ -289,6 +294,18 @@ export const backfill = (callback) => {
         Write backfill logic here. Make sure to callback with cb()
         eg: distributeArticle(article,cb)
       */
+
+      const url = getArticleUrl(article)
+
+      const deleteCb = () => {
+        console.log('article deleted')
+      }
+
+      // remove existing article from sailthru
+      deleteArticleFromSailthru(url, deleteCb)
+
+      // re-send to sailthru with updated tags
+      distributeArticle(article, cb)
     }, (err, results) => {
       console.log(err)
       callback()
