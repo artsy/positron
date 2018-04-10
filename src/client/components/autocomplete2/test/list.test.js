@@ -62,6 +62,17 @@ describe('AutocompleteList', () => {
     expect(props.onSelect.mock.calls[0][0][0]).not.toMatch('123')
   })
 
+  it('Can remove if only one item', () => {
+    items = [
+      { id: '123', title: 'First Article' }
+    ]
+    const component = getWrapper(props)
+    const button = component.find('button').at(0)
+    button.simulate('click')
+
+    expect(props.onSelect.mock.calls[0][0].length).toBe(0)
+  })
+
   it('Can remove list items with id', () => {
     items = [
       { id: '123', title: 'First Article' },
