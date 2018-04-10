@@ -261,6 +261,10 @@ describe 'Article Persistence', ->
             height: '400'
             mobile_height: '300'
           }
+          {
+            type: 'social_embed'
+            url: 'some-link.com'
+          }
         ]
       }, 'foo', {}, (err, article) ->
         article.lead_paragraph.should.equal '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
@@ -272,6 +276,7 @@ describe 'Article Persistence', ->
         article.sections[4].url.should.equal 'http://maps.google.com'
         article.sections[4].height.should.equal '400'
         article.sections[4].mobile_height.should.equal '300'
+        article.sections[5].url.should.equal 'http://some-link.com'
         done()
 
     it 'doesnt escape smart quotes', (done) ->
