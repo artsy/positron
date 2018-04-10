@@ -13,7 +13,7 @@
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh",
     "mocha": "sh scripts/mocha.sh",
-    "task": "node -r coffee-script/register -r babel-core/register -r dotenv/config"
+    "task": "node -r coffee-script/register -r @babel/register -r dotenv/config"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",

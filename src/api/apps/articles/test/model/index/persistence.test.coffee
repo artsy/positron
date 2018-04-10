@@ -257,9 +257,13 @@ describe 'Article Persistence', ->
           }
           {
             type: 'embed'
-            url: 'http://maps.google.com'
+            url: 'maps.google.com'
             height: '400'
             mobile_height: '300'
+          }
+          {
+            type: 'social_embed'
+            url: 'some-link.com'
           }
         ]
       }, 'foo', {}, (err, article) ->
@@ -272,6 +276,7 @@ describe 'Article Persistence', ->
         article.sections[4].url.should.equal 'http://maps.google.com'
         article.sections[4].height.should.equal '400'
         article.sections[4].mobile_height.should.equal '300'
+        article.sections[5].url.should.equal 'http://some-link.com'
         done()
 
     it 'doesnt escape smart quotes', (done) ->

@@ -51,7 +51,7 @@ export class AutocompleteList extends Component {
     let newItemsIds
 
     newItems.splice(item, 1)
-    if (newItems[0]._id) {
+    if (newItems.length && newItems[0]._id) {
       newItemsIds = map(newItems, '_id')
     } else {
       newItemsIds = map(newItems, 'id')
