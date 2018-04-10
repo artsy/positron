@@ -13,7 +13,7 @@ import moment from 'moment'
 const db = require('../../../lib/db.coffee')
 const { onPublish, generateSlugs, generateKeywords,
   sanitizeAndSave, onUnpublish } = require('./save.coffee')
-const { removeFromSearch, deleteArticleFromSailthru } = require('./distribute.coffee')
+const { removeFromSearch, deleteArticleFromSailthru, getArticleUrl } = require('./distribute.coffee')
 
 //
 // Retrieval
@@ -204,7 +204,9 @@ export const destroy = (id, callback) => {
     if (!article) {
       return callback(new Error('Article not found.'))
     }
-    deleteArticleFromSailthru(_.last(article.slugs), () => {
+
+    const url = getArticleUrl(article)
+    deleteArticleFromSailthru(url, () => {
       db.articles.remove({ _id: ObjectId(id) }, (err, res) => {
         if (err) {
           return callback(err)
