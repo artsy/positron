@@ -10,7 +10,6 @@
   SEGMENT_WRITE_KEY_FORCE
 } = process.env
 _ = require 'underscore'
-_s = require 'underscore.string'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
@@ -23,32 +22,43 @@ moment = require 'moment'
 particle = require 'particle'
 { cloneDeep } = require 'lodash'
 
-@distributeArticle = (article, cb) ->
-  cleanArticlesInSailthru article.slugs
+@distributeArticle = (article, cb) =>
+  @cleanArticlesInSailthru article
   async.parallel [
-    (callback) ->
-      postSailthruAPI article, callback
+    (callback) =>
+      @postSailthruAPI article, callback
   ], (err, results) ->
     debug err if err
     cb(article)
 
-@deleteArticleFromSailthru = (slug, cb) ->
+@deleteArticleFromSailthru = (url, cb) ->
   sailthru.apiDelete 'content',
-    url: "#{FORCE_URL}/article/#{slug}"
+    url: url
   , (err, response) ->
     debug err if err
     cb()
 
-cleanArticlesInSailthru = (slugs = []) =>
+@cleanArticlesInSailthru = (article) =>
+  slugs = article.slugs || []
   if slugs.length > 1
     slugs.forEach (slug, i) =>
       unless i is slugs.length - 1
-        @deleteArticleFromSailthru slug, ->
+        urlToDelete = @getArticleUrl(article, slug)
+        @deleteArticleFromSailthru urlToDelete, ->
 
-postSailthruAPI = (article, cb) ->
+@getArticleUrl = (article, slug) ->
+  switch article.layout
+    when 'classic', 'feature', 'standard'
+      layout = 'article'
+    else
+      layout = article.layout
+  articleSlug = if slug then slug else _.last(article.slugs)
+  return "#{FORCE_URL}/#{layout}/#{articleSlug}"
+
+@postSailthruAPI = (article, cb) =>
   return cb() if article.scheduled_publish_at
   tags = ['article']
-  tags = tags.concat ['magazine'] if article.featured is true
+  tags = tags.concat 'artsy-editorial' if article.channel_id?.toString() is EDITORIAL_CHANNEL
   tags = tags.concat article.keywords if article.keywords
   tags = tags.concat article.tracking_tags if article.tracking_tags
   tags = tags.concat article.vertical.name if article.vertical
@@ -58,7 +68,7 @@ postSailthruAPI = (article, cb) ->
     thumb: url: crop(imageSrc, { width: 900, height: 530 } )
   html = if article.send_body then getTextSections(article) else ''
   sailthru.apiPost 'content',
-  url: "#{FORCE_URL}/article/#{_.last(article.slugs)}"
+  url: @getArticleUrl article
   date: article.published_at
   title: article.email_metadata?.headline
   author: article.email_metadata?.author
@@ -66,11 +76,12 @@ postSailthruAPI = (article, cb) ->
   images: images
   spider: 0
   vars:
-    html: html
     custom_text: article.email_metadata?.custom_text
     daily_email: article.daily_email
-    weekly_email: article.weekly_email
+    html: html
+    layout: article.layout
     vertical: article.vertical?.name
+    weekly_email: article.weekly_email
   , (err, response) ->
     if err
       debug err
