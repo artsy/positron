@@ -257,7 +257,7 @@ describe 'Article Persistence', ->
           }
           {
             type: 'embed'
-            url: 'http://maps.google.com'
+            url: 'maps.google.com'
             height: '400'
             mobile_height: '300'
           }

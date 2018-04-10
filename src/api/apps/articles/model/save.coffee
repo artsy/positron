@@ -139,7 +139,7 @@ sanitize = (article) ->
   if article.sections
     sections = for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
-      section.url = sanitizeLink section.url if section.type in ['video', 'social_embed']
+      section.url = sanitizeLink section.url if section.type in ['video', 'social_embed', 'embed']
       if section.type is 'slideshow'
         for item in section.items when item.type is 'image' or item.type is 'video'
           item.caption = sanitizeHtml item.caption if item.type is 'image'
