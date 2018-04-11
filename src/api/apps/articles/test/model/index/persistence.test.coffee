@@ -651,6 +651,28 @@ describe 'Article Persistence', ->
         article.series_description.should.equal '<p>Here is some text describing a series.</p>'
         done()
 
+    it 'saves a series description', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        series: {
+          description: '<p>Here is some text describing a series.</p>'
+        }
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.series.description.should.equal '<p>Here is some text describing a series.</p>'
+        done()
+
+    it 'saves a series sub_title', (done) ->
+      Article.save {
+        author_id: '5086df098523e60002000018'
+        series: {
+          sub_title: 'About this feature'
+        }
+      }, 'foo', {}, (err, article) ->
+        return done err if err
+        article.series.sub_title.should.equal 'About this feature'
+        done()
+
     it 'saves verticals', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
