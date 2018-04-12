@@ -25,6 +25,9 @@ describe 'Article', ->
       index: 'articles_' + process.env.NODE_ENV
 
   beforeEach (done) ->
+    @deleteArticleFromSailthru = sinon.stub().yields()
+    Article.__set__ 'deleteArticleFromSailthru', @deleteArticleFromSailthru
+
     empty ->
       fabricate 'articles', _.times(10, -> {}), ->
         done()
@@ -90,6 +93,16 @@ describe 'Article', ->
       Article.destroy '5086df098523e60002000019', (err) ->
         err.message.should.equal 'Article not found.'
         done()
+
+    it 'removes the article from sailthru', (done) ->
+      fabricate 'articles', {
+        _id: ObjectId('5086df098523e60002000018')
+        layout: 'video'
+        slugs: ['article-slug']
+      }, =>
+        Article.destroy '5086df098523e60002000018', (err) =>
+          @deleteArticleFromSailthru.args[0][0].should.containEql '/video/article-slug'
+          done()
 
     it 'removes the article from elasticsearch', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
