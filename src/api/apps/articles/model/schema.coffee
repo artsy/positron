@@ -117,6 +117,10 @@ ImageCollectionSection = (->
   gravity_id: @string().objectid().allow('', null)
   hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection, seriesSection).allow(null).default(null)
   series_description: @string().allow(null)
+  series: @object().keys(
+    description: @string().allow('')
+    sub_title: @string().allow('')
+  ).allow(null)
   sections: @array().items([
     ImageCollectionSection
     videoSection
