@@ -69,13 +69,14 @@ export class EditSeries extends Component {
   }
 
   editDescription = () => {
-    const { article, onChangeArticleAction } = this.props
+    const { article } = this.props
+    const description = article.series ? article.series.description : ''
 
     return (
       <Paragraph
-        html={article.series_description || ''}
+        html={description}
         linked
-        onChange={(html) => onChangeArticleAction('series_description', html)}
+        onChange={(html) => this.onChangeSeries('description', html)}
         placeholder='Start writing here...'
       />
     )
