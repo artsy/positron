@@ -1,3 +1,4 @@
+import { clone } from 'lodash'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
@@ -43,6 +44,28 @@ export class EditSeries extends Component {
         name='title'
       />
     )
+  }
+
+  editSubTitle = () => {
+    const { article } = this.props
+    const sub_title = article.series ? article.series.sub_title : ''
+
+    return (
+      <PlainText
+        content={sub_title}
+        onChange={this.onChangeSeries}
+        placeholder='About the Series'
+        name='sub_title'
+      />
+    )
+  }
+
+  onChangeSeries = (key, value) => {
+    const { article, onChangeArticleAction } = this.props
+    const series = clone(article.series) || {}
+
+    series[key] = value
+    onChangeArticleAction('series', series)
   }
 
   editDescription = () => {
@@ -98,6 +121,7 @@ export class EditSeries extends Component {
           <SeriesAbout
             article={article}
             editDescription={this.editDescription()}
+            editSubTitle={this.editSubTitle()}
             color='white'
           />
         </SeriesContent>
