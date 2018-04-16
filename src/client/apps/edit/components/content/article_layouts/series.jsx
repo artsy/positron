@@ -47,11 +47,11 @@ export class EditSeries extends Component {
 
   editSubTitle = () => {
     const { article, onChangeArticleAction } = this.props
-    const sub_title = article.series ? article.series.sub_title : ''
+    const sub_title = article.series && article.series.sub_title
 
     return (
       <PlainText
-        content={sub_title}
+        content={sub_title || ''}
         onChange={onChangeArticleAction}
         placeholder='About the Series'
         name='series.sub_title'
@@ -61,11 +61,11 @@ export class EditSeries extends Component {
 
   editDescription = () => {
     const { article, onChangeArticleAction } = this.props
-    const description = article.series ? article.series.description : ''
+    const description = article.series && article.series.description
 
     return (
       <Paragraph
-        html={description}
+        html={description || ''}
         linked
         onChange={(html) => onChangeArticleAction('series.description', html)}
         placeholder='Start writing here...'
