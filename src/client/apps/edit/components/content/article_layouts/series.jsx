@@ -29,7 +29,7 @@ export class EditSeries extends Component {
       type: 'series'
     }
 
-    onChangeArticleAction('hero_section', hero_section)
+    onChangeArticleAction({ hero_section })
   }
 
   editTitle = () => {

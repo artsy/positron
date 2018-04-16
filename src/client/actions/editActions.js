@@ -167,7 +167,7 @@ export const changeArticle = (data) => {
   }
 }
 
-const changeArticleData = (key, value) => {
+export const changeArticleData = (key, value) => {
   return (dispatch, getState) => {
     const { edit: { article } } = getState()
     let data = {}
@@ -175,7 +175,7 @@ const changeArticleData = (key, value) => {
     if (typeof key === 'object') {
     // extend article with an object of keys
       data = key
-    } else if (key.split('.').length) {
+    } else if (key.split('.').length > 1) {
     // change a nested object value
       const parentKey = key.split('.')[0]
       const childKey = key.split('.')[1]

@@ -24,11 +24,8 @@ describe('editActions', () => {
   describe('#onChangeArticle', () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
     beforeEach(() => {
-      setArticleSpy.mockClear()
-      Backbone.sync = jest.fn()
       getState = jest.fn(() => ({
         edit: { article },
         app: { channel: {type: 'editorial'} }
@@ -38,48 +35,86 @@ describe('editActions', () => {
 
     it('calls #changeArticle with new attrs', () => {
       editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
-
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('title')
-      expect(dispatch.mock.calls[0][0].payload.value).toBe('New Title')
+      dispatch.mock.calls[0][0](dispatch, getState)
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.title).toBe('New Title')
     })
 
     it('calls debounced #updateArticle with new attrs', (done) => {
       editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
       setTimeout(() => {
-        expect(dispatch.mock.calls[1][0].type).toBe('UPDATE_ARTICLE')
-        expect(dispatch.mock.calls[1][0].key).toBe('userCurrentlyEditing')
-        expect(dispatch.mock.calls[1][0].payload.article).toBe(article.id)
+        expect(dispatch.mock.calls[2][0].type).toBe('UPDATE_ARTICLE')
+        expect(dispatch.mock.calls[2][0].key).toBe('userCurrentlyEditing')
+        expect(dispatch.mock.calls[2][0].payload.article).toBe(article.id)
         done()
       }, 550)
     })
 
     it('does not call #saveArticle if published', () => {
       editActions.onChangeArticle('title', 'New Title')(dispatch, getState)
-      expect(dispatch.mock.calls.length).toBe(1)
+      dispatch.mock.calls[0][0](dispatch, getState)
+      expect(dispatch.mock.calls.length).toBe(2)
     })
 
     it('calls debounced #saveArticle if draft', (done) => {
       article.published = false
       editActions.onChangeArticle('title', 'N')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
       editActions.onChangeArticle('title', 'Ne')(dispatch, getState)
+      dispatch.mock.calls[2][0](dispatch, getState)
       editActions.onChangeArticle('title', 'New')(dispatch, getState)
+      dispatch.mock.calls[4][0](dispatch, getState)
 
       setTimeout(() => {
-        expect(dispatch.mock.calls.length).toBe(5)
+        expect(dispatch.mock.calls.length).toBe(8)
         done()
       }, 550)
+    })
+  })
+
+  describe('#changeArticleData', () => {
+    let getState
+    let dispatch
+
+    beforeEach(() => {
+      getState = jest.fn(() => ({
+        edit: { article }
+      }))
+      dispatch = jest.fn()
+    })
+
+    it('Calls #changeArticle', () => {
+      editActions.changeArticleData('title', 'Title')(dispatch, getState)
+      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
+    })
+
+    it('Can accept a key/value pair as args', () => {
+      editActions.changeArticleData('title', 'Title')(dispatch, getState)
+      expect(dispatch.mock.calls[0][0].payload.data.title).toBe('Title')
+    })
+
+    it('Can accept a key/value pair with nested object as args', () => {
+      editActions.changeArticleData('series.description', 'Series Description')(dispatch, getState)
+      expect(dispatch.mock.calls[0][0].payload.data.series.description).toBe('Series Description')
+    })
+
+    it('Can accept an object as args', () => {
+      let data = {
+        title: 'Title',
+        series: {description: 'Series Description'}
+      }
+      editActions.changeArticleData(data)(dispatch, getState)
+      expect(dispatch.mock.calls[0][0].payload.data.title).toBe('Title')
+      expect(dispatch.mock.calls[0][0].payload.data.series.description).toBe('Series Description')
     })
   })
 
   describe('#onChangeHero', () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
     beforeEach(() => {
-      setArticleSpy.mockClear()
-      Backbone.sync = jest.fn()
       getState = jest.fn(() => ({
         edit: { article }
       }))
@@ -88,25 +123,30 @@ describe('editActions', () => {
 
     it('calls #changeArticle with new attrs', () => {
       editActions.onChangeHero('type', 'basic')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
-      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('basic')
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.hero_section.type).toBe('basic')
     })
 
     it('does not call #saveArticle if published', () => {
       editActions.onChangeHero('type', 'basic')(dispatch, getState)
-      expect(dispatch.mock.calls.length).toBe(1)
+      dispatch.mock.calls[0][0](dispatch, getState)
+
+      expect(dispatch.mock.calls.length).toBe(2)
     })
 
     it('calls debounced #saveArticle if draft', done => {
       article.published = false
       editActions.onChangeHero('deck', 'De')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
       editActions.onChangeHero('deck', 'Dec')(dispatch, getState)
+      dispatch.mock.calls[2][0](dispatch, getState)
       editActions.onChangeHero('deck', 'Deck')(dispatch, getState)
+      dispatch.mock.calls[4][0](dispatch, getState)
 
       setTimeout(() => {
-        expect(dispatch.mock.calls.length).toBe(4)
+        expect(dispatch.mock.calls.length).toBe(7)
         done()
       }, 550)
     })
@@ -115,10 +155,8 @@ describe('editActions', () => {
   describe('#onChangeSection', () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
     beforeEach(() => {
-      setArticleSpy.mockClear()
       Backbone.sync = jest.fn()
       getState = jest.fn(() => ({
         edit: { article }
@@ -200,10 +238,8 @@ describe('editActions', () => {
   describe('#deleteArticle', () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, 'set')
 
     beforeEach(() => {
-      setArticleSpy.mockClear()
       Backbone.sync = jest.fn()
       getState = jest.fn(() => ({edit: { article }}))
       dispatch = jest.fn()
@@ -416,18 +452,18 @@ describe('editActions', () => {
 
     it('Can create an image_collection section', () => {
       editActions.newHeroSection('image_collection')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
-      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('image_collection')
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.hero_section.type).toBe('image_collection')
     })
 
     it('Can create a video section', () => {
       editActions.newHeroSection('video')(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('hero_section')
-      expect(dispatch.mock.calls[0][0].payload.value.type).toBe('video')
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.hero_section.type).toBe('video')
     })
   })
 
@@ -436,12 +472,12 @@ describe('editActions', () => {
     let getState = jest.fn(() => ({edit: { article }, app: {channel: { type: 'editorial' }}}))
     editActions.removeSection(6)(dispatch, getState)
     dispatch.mock.calls[0][0](dispatch, getState)
+    dispatch.mock.calls[1][0](dispatch, getState)
 
-    expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
-    expect(dispatch.mock.calls[1][0].payload.key).toBe('sections')
-    expect(dispatch.mock.calls[1][0].payload.value[6].body).toBe(article.sections[7].body)
-    expect(dispatch.mock.calls[1][0].payload.value[5].body).toBe(article.sections[5].body)
-    expect(dispatch.mock.calls[1][0].payload.value.length).toBe(article.sections.length - 1)
+    expect(dispatch.mock.calls[2][0].type).toBe('CHANGE_ARTICLE')
+    expect(dispatch.mock.calls[2][0].payload.data.sections[6].body).toBe(article.sections[7].body)
+    expect(dispatch.mock.calls[2][0].payload.data.sections[5].body).toBe(article.sections[5].body)
+    expect(dispatch.mock.calls[2][0].payload.data.sections.length).toBe(article.sections.length - 1)
   })
 
   describe('Editing errors', () => {
@@ -473,18 +509,18 @@ describe('editActions', () => {
 
     it('Can add a featured artist', () => {
       editActions.onAddFeaturedItem('artist', {_id: '123'})(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('primary_featured_artist_ids')
-      expect(dispatch.mock.calls[0][0].payload.value[0]).toBe('123')
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.primary_featured_artist_ids[0]).toBe('123')
     })
 
     it('Can add a featured artwork', () => {
       editActions.onAddFeaturedItem('artwork', {_id: '123'})(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe('CHANGE_ARTICLE')
-      expect(dispatch.mock.calls[0][0].payload.key).toBe('featured_artwork_ids')
-      expect(dispatch.mock.calls[0][0].payload.value[0]).toBe('123')
+      expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
+      expect(dispatch.mock.calls[1][0].payload.data.featured_artwork_ids[0]).toBe('123')
     })
   })
 
