@@ -63,9 +63,8 @@ export function editReducer (state = initialState, action) {
     }
 
     case actions.CHANGE_ARTICLE: {
-      const { key, value } = action.payload
-      const article = cloneDeep(state.article)
-      article[key] = value
+      const { data } = action.payload
+      const article = extend(cloneDeep(state.article), data)
 
       return u({
         article,
