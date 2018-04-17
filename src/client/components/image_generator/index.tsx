@@ -5,12 +5,14 @@ import { connect } from 'react-redux'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import { onChangeArticle } from 'client/actions/editActions'
 import { data as sd } from 'sharify'
+import moment from 'moment'
 
 interface State {
   text: string
 }
 
 interface Props {
+  article: any
   onChangeArticleAction: any
 }
 
@@ -20,16 +22,23 @@ export class ImageGenerator extends Component<Props, State> {
   }
 
   onClick = async () => {
+    const { article } = this.props
     const { text } = this.state
 
     const canvas = document.getElementById('canvas')
     if (canvas) {
       const ctx = canvas.getContext('2d')
-      ctx.font = '30px Helvetica'
+      console.log(article.published_at || "")
+      const date = moment(article.published_at || "").format('MMM DD')
+
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'white'
-      ctx.fillText(text, 10, 50)
+      ctx.font = '32px "Unica77LLWebMedium"'
+      ctx.fillText("News", 200, 50)
+      ctx.fillText(date, 400, 50)
+      ctx.font = '50px "Adobe Garamond W08"'
+      ctx.fillText(text, 200, 200, 840)
       const newImage = canvas.toDataURL('image/png')
 
       // Create blob and upload to s3
