@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import gemup from 'gemup'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from '../../actions/editActions'
 import { data as sd } from 'sharify'
 import moment from 'moment'
 
@@ -33,6 +33,7 @@ export class ImageGenerator extends Component<Props, State> {
     const { text } = this.state
 
     const canvas: any = document.getElementById('canvas')
+
     if (canvas) {
       const ctx = canvas.getContext('2d')
       const dateString = article.published_at || article.scheduled_publish_at
@@ -55,7 +56,7 @@ export class ImageGenerator extends Component<Props, State> {
     }
   }
 
-  // Originallly from https://codepen.io/bramus/pen/eZYqoO
+  // Originally from https://codepen.io/bramus/pen/eZYqoO
   wrapText(ctx, text, x, y, maxWidth, lineHeight) {
     const words = text.split(' ')
     let line = ''
