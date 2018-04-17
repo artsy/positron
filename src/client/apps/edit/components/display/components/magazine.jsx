@@ -6,6 +6,7 @@ import { onChangeArticle } from 'client/actions/editActions'
 import { MagazinePreview } from './preview/magazine_preview'
 import { CharacterLimit } from 'client/components/character_limit'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import ImageGenerator from 'client/components/image_generator/index.tsx'
 
 export class DisplayMagazine extends Component {
   static propTypes = {
@@ -54,6 +55,10 @@ export class DisplayMagazine extends Component {
               defaultValue={article.description}
             />
           </div>
+
+          {article.layout === 'news' &&
+            <ImageGenerator />
+          }
         </Col>
 
         <Col xs={8}>
