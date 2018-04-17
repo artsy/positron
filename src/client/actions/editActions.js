@@ -1,5 +1,5 @@
 
-import { clone, cloneDeep, debounce } from 'lodash'
+import { clone, cloneDeep, debounce, set } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -173,19 +173,19 @@ export const changeArticleData = (key, value) => {
     let data = {}
 
     if (typeof key === 'object') {
-    // extend article with an object of keys
+      // extend article with an object of key
       data = key
-    } else if (key.split('.').length > 1) {
-    // change a nested object value
-      const parentKey = key.split('.')[0]
-      const childKey = key.split('.')[1]
-      const newObject = clone(article[parentKey]) || {}
-
-      newObject[childKey] = value
-      data[parentKey] = newObject
     } else {
-    // change a single key's value
-      data[key] = value
+      let nestedObject = key.split('.')
+
+      if (nestedObject.length > 1) {
+      // change a nested object value
+        const existingValue = clone(article[nestedObject[0]]) || {}
+        data = set(existingValue, key, value)
+      } else {
+      // change a single key's value
+        data[key] = value
+      }
     }
     dispatch(changeArticle(data))
   }
