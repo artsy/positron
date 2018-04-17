@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import gemup from 'gemup'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { Col, Row } from 'react-styled-flexboxgrid'
 import { onChangeArticle } from 'client/actions/editActions'
 import { data as sd } from 'sharify'
 import moment from 'moment'
@@ -17,6 +16,14 @@ interface Props {
 }
 
 export class ImageGenerator extends Component<Props, State> {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      text: props.article.thumbnail_title || ""
+    }
+  }
+
   onChange = (text) => {
     this.setState({ text })
   }
@@ -25,26 +32,48 @@ export class ImageGenerator extends Component<Props, State> {
     const { article } = this.props
     const { text } = this.state
 
-    const canvas = document.getElementById('canvas')
+    const canvas: any = document.getElementById('canvas')
     if (canvas) {
       const ctx = canvas.getContext('2d')
-      console.log(article.published_at || "")
-      const date = moment(article.published_at || "").format('MMM DD')
+      const dateString = article.published_at || article.scheduled_publish_at
+      const date = (dateString ? moment(dateString) : moment()).format('MMM DD')
 
+      // Generate thumbnail on canvas
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'white'
       ctx.font = '32px "Unica77LLWebMedium"'
-      ctx.fillText("News", 200, 50)
-      ctx.fillText(date, 400, 50)
+      ctx.fillText("News", 120, 62)
+      ctx.fillText(date, 490, 62)
       ctx.font = '50px "Adobe Garamond W08"'
-      ctx.fillText(text, 200, 200, 840)
-      const newImage = canvas.toDataURL('image/png')
+      this.wrapText(ctx, text, 120, 130, 840, 50)
 
-      // Create blob and upload to s3
+      // Create image blob and upload to s3
+      const newImage = canvas.toDataURL('image/png')
       const blob = await (await fetch(newImage)).blob()
       this.upload(blob)
     }
+  }
+
+  // Originallly from https://codepen.io/bramus/pen/eZYqoO
+  wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ')
+    let line = ''
+
+    for(var n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' '
+      const metrics = ctx.measureText(testLine)
+      const testWidth = metrics.width
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line, x, y)
+        line = words[n] + ' '
+        y += lineHeight
+      }
+      else {
+        line = testLine
+      }
+    }
+    ctx.fillText(line, x, y)
   }
 
   upload = (image) => {
@@ -60,27 +89,29 @@ export class ImageGenerator extends Component<Props, State> {
   }
 
   render () {
+    const { text } = this.state
+
     return (
-      <Row>
-
-        <Col xs={6} className='field-group'>
-          <label>Image Text</label>
-          <textarea
-            className='bordered-input'
-            onChange={(e) => this.onChange(e.target.value)}
-            placeholder='Custom Headline'
-          />
-          <Canvas
-            id='canvas'
-            width='600px'
-            height='400px'
-          />
-          <button
-            onClick={this.onClick}
-          >Save New Image</button>
-        </Col>
-
-      </Row>
+      <div className='field-group'>
+        <label>Image Text</label>
+        <textarea
+          className='bordered-input'
+          onChange={(e) => this.onChange(e.target.value)}
+          placeholder='Start Typing...'
+          defaultValue={text}
+        />
+        <Canvas
+          id='canvas'
+          width='1080px'
+          height='470px'
+        />
+        <Button
+          className='avant-garde-button'
+          onClick={this.onClick}
+        >
+          Generate New Image
+        </Button>
+      </div>
     )
   }
 }
@@ -88,6 +119,10 @@ export class ImageGenerator extends Component<Props, State> {
 const Canvas = styled.canvas`
   border: 1px solid black;
   display: none;
+`
+
+const Button = styled.button`
+  margin-top: 10px;
 `
 
 const mapStateToProps = (state) => ({
