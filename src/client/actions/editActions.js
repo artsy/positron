@@ -1,5 +1,5 @@
 
-import { clone, cloneDeep, debounce } from 'lodash'
+import { clone, cloneDeep, debounce, set } from 'lodash'
 import keyMirror from 'client/lib/keyMirror'
 import Article from 'client/models/article.coffee'
 import { emitAction } from 'client/apps/websocket/client'
@@ -129,7 +129,7 @@ export const newHeroSection = (type) => {
   const section = setupSection(type)
 
   return (dispatch, getState) => {
-    dispatch(changeArticle('hero_section', section))
+    dispatch(changeArticleData('hero_section', section))
   }
 }
 
@@ -148,7 +148,7 @@ export const onChangeArticle = (key, value) => {
       edit: { article }
     } = getState()
 
-    dispatch(changeArticle(key, value))
+    dispatch(changeArticleData(key, value))
 
     debouncedUpdateDispatch(dispatch, { channel, article: article.id })
 
@@ -158,13 +158,36 @@ export const onChangeArticle = (key, value) => {
   }
 }
 
-export const changeArticle = (key, value) => {
+export const changeArticle = (data) => {
   return {
     type: actions.CHANGE_ARTICLE,
     payload: {
-      key,
-      value
+      data
     }
+  }
+}
+
+export const changeArticleData = (key, value) => {
+  return (dispatch, getState) => {
+    const { edit: { article } } = getState()
+    let data = {}
+
+    if (typeof key === 'object') {
+      // extend article with an object of key
+      data = key
+    } else {
+      let nestedObject = key.split('.')
+
+      if (nestedObject.length > 1) {
+      // change a nested object value
+        const existingValue = clone(article[nestedObject[0]]) || {}
+        data = set(existingValue, key, value)
+      } else {
+      // change a single key's value
+        data[key] = value
+      }
+    }
+    dispatch(changeArticle(data))
   }
 }
 
@@ -174,7 +197,7 @@ export const onChangeHero = (key, value) => {
     const hero_section = clone(article.hero_section) || {}
 
     hero_section[key] = value
-    dispatch(changeArticle('hero_section', hero_section))
+    dispatch(changeArticleData('hero_section', hero_section))
 
     if (!article.published) {
       debouncedSaveDispatch(dispatch)
@@ -298,7 +321,7 @@ export const onAddFeaturedItem = (model, item) => {
     let newFeaturedIds = cloneDeep(article)[key] || []
 
     newFeaturedIds.push(item._id)
-    dispatch(changeArticle(key, newFeaturedIds))
+    dispatch(changeArticleData(key, newFeaturedIds))
   }
 }
 

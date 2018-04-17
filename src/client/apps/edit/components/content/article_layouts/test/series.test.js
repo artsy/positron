@@ -27,7 +27,7 @@ describe('EditSeries', () => {
       <EditSeries {...props} />
     )
     expect(component.find(SeriesTitle).length).toBe(1)
-    expect(component.find(PlainText).length).toBe(1)
+    expect(component.find(PlainText).at(0).props().name).toBe('title')
   })
 
   it('Renders RelatedArticles list', () => {
@@ -43,6 +43,16 @@ describe('EditSeries', () => {
     )
     expect(component.find(SeriesAbout).length).toBe(1)
     expect(component.find(Paragraph).length).toBe(1)
+  })
+
+  it('Renders editable series subTitle', () => {
+    props.article.series = {sub_title: 'This Feature'}
+    const component = mount(
+      <EditSeries {...props} />
+    )
+
+    expect(component.find(PlainText).at(1).props().name).toBe('series.sub_title')
+    expect(component.find(PlainText).at(1).props().content).toBe('This Feature')
   })
 
   it('Renders a file input for background image ', () => {
@@ -61,9 +71,9 @@ describe('EditSeries', () => {
     )
     const input = component.find(FileInput).first().getElement()
     input.props.onUpload('http://new-image.jpg')
-    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('hero_section')
-    expect(props.onChangeArticleAction.mock.calls[0][1].url).toBe('http://new-image.jpg')
-    expect(props.onChangeArticleAction.mock.calls[0][1].type).toBe('series')
+
+    expect(props.onChangeArticleAction.mock.calls[0][0].hero_section.url).toBe('http://new-image.jpg')
+    expect(props.onChangeArticleAction.mock.calls[0][0].hero_section.type).toBe('series')
   })
 
   it('Renders a background image if url', () => {
