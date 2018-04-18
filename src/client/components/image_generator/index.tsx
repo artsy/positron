@@ -114,7 +114,6 @@ export class ImageGenerator extends Component<Props, State> {
 }
 
 const Canvas = styled.canvas`
-  border: 1px solid black;
   display: none;
 `
 
