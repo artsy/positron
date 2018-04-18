@@ -16,12 +16,8 @@ interface Props {
 }
 
 export class ImageGenerator extends Component<Props, State> {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      text: props.article.thumbnail_title || ""
-    }
+  state = {
+    text: this.props.article.thumbnail_title || ""
   }
 
   onChange = (text) => {

@@ -68,7 +68,6 @@ describe('ImageGenerator', () => {
 
   it('handles wrapped text', () => {
     component.find('button').simulate('click')
-    console.log(fillText.mock.calls)
     expect(fillText.mock.calls.length).toBe(4)
     expect(fillText.mock.calls[2][0]).toBe('Some Title that can be ')
     expect(fillText.mock.calls[3][0]).toBe('Wrapped ')  })
