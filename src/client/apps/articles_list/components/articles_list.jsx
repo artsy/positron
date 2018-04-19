@@ -84,6 +84,7 @@ export class ArticlesList extends Component {
   state = {
     articles: this.props.articles || [],
     published: this.props.published,
+    layout: 'feature',
     offset: 0
   }
 
@@ -99,7 +100,12 @@ export class ArticlesList extends Component {
     // TODO: remove jQuery
     if ($('.filter-search__input').val()) { return }
     $('.loading-spinner').fadeIn()
-    this.fetchFeed(this.state.published, this.state.offset + 10, this.appendMore.bind(this))
+    this.fetchFeed(
+      this.state.published,
+      this.state.offset + 10,
+      this.state.layout,
+      this.appendMore.bind(this)
+    )
   }
 
   setResults = (results) => {
@@ -107,8 +113,9 @@ export class ArticlesList extends Component {
   }
 
   setPublished (type) {
+    const { layout } = this.state
     this.setState({published: type, offset: 0})
-    this.fetchFeed(type, 0, this.setResults)
+    this.fetchFeed(type, 0, layout, this.setResults)
   }
 
   appendMore (results) {
@@ -117,9 +124,14 @@ export class ArticlesList extends Component {
     $('.loading-spinner').fadeOut()
   }
 
-  fetchFeed (type, offset, cb) {
+  fetchFeed (type, offset, layout, cb) {
     const { channel, user, apiURL } = this.props
-    const feedQuery = query(`published: ${type}, offset: ${offset}, channel_id: "${channel.id}"`)
+    const feedQuery = query(`
+      published: ${type},
+      offset: ${offset},
+      layout: "${layout}",
+      channel_id: "${channel.id}"
+    `)
     request
       .post(apiURL + '/graphql')
       .set('X-Access-Token', user != null ? user.access_token : undefined)
