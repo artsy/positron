@@ -25,19 +25,36 @@ export class ArticlePublishDate extends Component {
 
   onScheduleChange = () => {
     const { article, onChange } = this.props
+    const { scheduled_publish_at } = article
+    const { hasChanged } = this.state
 
     if (this.date && this.time) {
       const date = this.date.value
       const time = this.time.value
-      const new_published = moment(`${date} ${time}`).local()
+      const new_published = moment(`${date} ${time}`).local().toISOString()
 
-      if (!article.published) {
-        onChange('scheduled_publish_at', new_published.toISOString())
+      if (scheduled_publish_at && !hasChanged) {
+        this.onUnschedule()
+      } else if (!article.published) {
+        onChange('scheduled_publish_at', new_published)
       } else {
-        onChange('published_at', new_published.toISOString())
+        onChange('published_at', new_published)
       }
-      this.setState({hasChanged: false})
+      this.setState({ hasChanged: false })
     }
+  }
+
+  onUnschedule = () => {
+    const { onChange } = this.props
+    let publish_date = null
+    let publish_time = null
+
+    if (this.date && this.time) {
+      this.date.value = publish_date
+      this.time.value = publish_time
+    }
+    onChange('scheduled_publish_at', null)
+    this.setState({hasChanged: false, publish_date, publish_time})
   }
 
   setupPublishDate = () => {
@@ -60,9 +77,12 @@ export class ArticlePublishDate extends Component {
   }
 
   getPublishText = () => {
+    const { hasChanged } = this.state
     const { published, scheduled_publish_at } = this.props.article
 
-    if (published) {
+    if (published ||
+      (scheduled_publish_at && hasChanged)
+    ) {
       return 'Update'
     } else if (scheduled_publish_at) {
       return 'Unschedule'
