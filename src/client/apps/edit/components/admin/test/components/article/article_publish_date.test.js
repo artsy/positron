@@ -66,6 +66,7 @@ describe('ArticlePublishDate', () => {
 
       expect(props.onChange.mock.calls[0][0]).toBe('published_at')
       expect(props.onChange.mock.calls[0][1]).toMatch('2018-05-04')
+      expect(component.state().hasChanged).toBeFalsy()
     })
   })
 

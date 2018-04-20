@@ -36,6 +36,7 @@ export class ArticlePublishDate extends Component {
       } else {
         onChange('published_at', new_published.toISOString())
       }
+      this.setState({hasChanged: false})
     }
   }
 
