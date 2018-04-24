@@ -137,8 +137,6 @@ RavenServer.context(() => {
 
     const finalCSV = csv.join('\n')
 
-    // const finalCSV = attrs.join('\n')
-
     fs.writeFile(dir + filename, finalCSV, (err, res) => {
       if (err) {
         console.log(err)
