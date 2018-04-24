@@ -81,20 +81,25 @@ export class ArticleList extends Component {
 
       return (
         <div style={style} className='article-list__result paginated-list-item' key={article.id}>
-          {checkable && <div
-                className='article-list__checkcircle'
-                ref={article.id}
-                onClick={() => this.props.selected(article)}
-              >
-                <IconCheckCircle name='follow-circle.is-following' />
-          </div>}
-          <a className={`article-list__article ${lockedClass}`}
-            href={`/articles/${article.id}/edit`}>
+          {checkable &&
+            <div
+              className='article-list__checkcircle'
+              ref={article.id}
+              onClick={() => this.props.selected(article)}
+            >
+              <IconCheckCircle name='follow-circle.is-following' />
+            </div>
+          }
+          <a
+            className={`article-list__article ${lockedClass}`}
+            href={`/articles/${article.id}/edit`}
+          >
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
               {!attrs.image ? <div className='missing-img'>Missing thumbnail</div> : null}
             </div>
             <div className='article-list__title paginated-list-text-container'>
+              <h2>{article.layout}</h2>
               {attrs.headline
                 ? <h1>{attrs.headline}</h1>
                 : <h1 className='missing-title'>Missing Title</h1>

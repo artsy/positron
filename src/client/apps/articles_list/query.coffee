@@ -12,6 +12,7 @@ module.exports = (argString) ->
       channel_id
       partner_channel_id
       updated_at
+      layout
     }
   }
   """
