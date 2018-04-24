@@ -99,7 +99,11 @@ export class ArticlesList extends Component {
     // TODO: remove jQuery
     if ($('.filter-search__input').val()) { return }
     $('.loading-spinner').fadeIn()
-    this.fetchFeed(this.state.published, this.state.offset + 10, this.appendMore.bind(this))
+    this.fetchFeed(
+      this.state.published,
+      this.state.offset + 10,
+      this.appendMore.bind(this)
+    )
   }
 
   setResults = (results) => {
@@ -119,7 +123,11 @@ export class ArticlesList extends Component {
 
   fetchFeed (type, offset, cb) {
     const { channel, user, apiURL } = this.props
-    const feedQuery = query(`published: ${type}, offset: ${offset}, channel_id: "${channel.id}"`)
+    const feedQuery = query(`
+      published: ${type},
+      offset: ${offset},
+      channel_id: "${channel.id}"
+    `)
     request
       .post(apiURL + '/graphql')
       .set('X-Access-Token', user != null ? user.access_token : undefined)
