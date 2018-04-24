@@ -84,7 +84,6 @@ export class ArticlesList extends Component {
   state = {
     articles: this.props.articles || [],
     published: this.props.published,
-    layout: 'feature',
     offset: 0
   }
 
@@ -103,7 +102,6 @@ export class ArticlesList extends Component {
     this.fetchFeed(
       this.state.published,
       this.state.offset + 10,
-      this.state.layout,
       this.appendMore.bind(this)
     )
   }
@@ -113,9 +111,8 @@ export class ArticlesList extends Component {
   }
 
   setPublished (type) {
-    const { layout } = this.state
     this.setState({published: type, offset: 0})
-    this.fetchFeed(type, 0, layout, this.setResults)
+    this.fetchFeed(type, 0, this.setResults)
   }
 
   appendMore (results) {
@@ -124,12 +121,11 @@ export class ArticlesList extends Component {
     $('.loading-spinner').fadeOut()
   }
 
-  fetchFeed (type, offset, layout, cb) {
+  fetchFeed (type, offset, cb) {
     const { channel, user, apiURL } = this.props
     const feedQuery = query(`
       published: ${type},
       offset: ${offset},
-      layout: "${layout}",
       channel_id: "${channel.id}"
     `)
     request
