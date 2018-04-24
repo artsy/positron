@@ -216,7 +216,7 @@ ImageCollectionSection = (->
     partner_logo_link: @string().allow('')
   )
   email_metadata: @object().default({}).keys
-    image_url: @string().allow('')
+    image_url: @string().allow('', null)
     headline: @string().allow('')
     author: @string().allow('')
     custom_text: @string().allow('')

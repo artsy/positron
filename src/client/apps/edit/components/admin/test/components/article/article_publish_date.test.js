@@ -66,6 +66,7 @@ describe('ArticlePublishDate', () => {
 
       expect(props.onChange.mock.calls[0][0]).toBe('published_at')
       expect(props.onChange.mock.calls[0][1]).toMatch('2018-05-04')
+      expect(component.state().hasChanged).toBeFalsy()
     })
   })
 
@@ -148,6 +149,16 @@ describe('ArticlePublishDate', () => {
 
       expect(text).toBe('Update')
     })
+
+    it('Returns "Update" if scheduled_publish_at has changed', () => {
+      props.article.scheduled_publish_at = moment().toISOString()
+      const component = getWrapper(props)
+      component.setState({hasChanged: true})
+      const text = component.instance().getPublishText()
+
+      expect(text).toBe('Update')
+    })
+
     it('Returns "Schedule" if unpublished', () => {
       const component = getWrapper(props)
       const text = component.instance().getPublishText()
@@ -187,13 +198,72 @@ describe('ArticlePublishDate', () => {
   })
 
   it('Button calls #onScheduleChange on click', () => {
-    const date = moment().add('1', 'days').toISOString()
-    props.article.scheduled_publish_at = date
-    delete props.article.published_at
     const component = getWrapper(props)
     component.find('button').at(0).simulate('click')
 
     expect(props.onChange.mock.calls[0][0]).toBe('scheduled_publish_at')
-    expect(props.onChange.mock.calls[0][1]).toMatch(moment(date).format('YYYY-MM-'))
+  })
+
+  describe('#onScheduleChange', () => {
+    it('Sets published_at if article is published', () => {
+      props.article.published = true
+      const component = getWrapper(props)
+      component.instance().date.value = '2018-02-02'
+      component.find('button').at(0).simulate('click')
+
+      expect(props.onChange.mock.calls[0][0]).toBe('published_at')
+      expect(props.onChange.mock.calls[0][1]).toMatch('2018-02-02')
+    })
+
+    it('Sets scheduled_publish_at if article is not published', () => {
+      const component = getWrapper(props)
+      component.instance().date.value = '2018-02-02'
+      component.find('button').at(0).simulate('click')
+
+      expect(props.onChange.mock.calls[0][0]).toBe('scheduled_publish_at')
+      expect(props.onChange.mock.calls[0][1]).toMatch('2018-02-02')
+    })
+
+    it('Calls #onUnschedule if scheduled_publish_at exists', () => {
+      delete props.article.published_at
+      props.article.scheduled_publish_at = new Date().toISOString()
+      const component = getWrapper(props)
+      component.find('button').at(0).simulate('click')
+
+      expect(props.onChange.mock.calls[0][0]).toBe('scheduled_publish_at')
+      expect(props.onChange.mock.calls[0][1]).toBe(null)
+    })
+
+    it('Sets state.hasChanged to false', () => {
+      const component = getWrapper(props)
+      component.instance().setState({hasChanged: true})
+      component.find('button').at(0).simulate('click')
+
+      expect(component.state().hasChanged).toBe(false)
+    })
+  })
+
+  describe('#onUnschedule', () => {
+    beforeEach(() => {
+      delete props.article.published_at
+      props.article.scheduled_publish_at = new Date().toISOString()
+    })
+
+    it('Un-sets scheduled_publish_at', () => {
+      const component = getWrapper(props)
+      component.instance().onUnschedule()
+
+      expect(props.onChange.mock.calls[0][0]).toBe('scheduled_publish_at')
+      expect(props.onChange.mock.calls[0][1]).toBe(null)
+    })
+
+    it('Updates the state', () => {
+      const component = getWrapper(props)
+      component.instance().onUnschedule()
+
+      expect(component.state().publish_date).toBe(null)
+      expect(component.state().publish_time).toBe(null)
+      expect(component.state().hasChanged).toBe(false)
+    })
   })
 })
