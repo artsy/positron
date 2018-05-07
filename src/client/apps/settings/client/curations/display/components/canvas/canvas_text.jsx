@@ -50,6 +50,14 @@ export const CanvasText = (props) => {
           onChange={(value) => onChange('canvas.disclaimer', value, index)}
           limit={150} />
       </div>
+      <div className='field-group'>
+        <label>Pixel Tracking Code (optional)</label>
+        <input
+          className='bordered-input'
+          placeholder='Paste 3rd party script here'
+          defaultValue={canvas.pixel_tracking_code || ''}
+          onChange={(e) => onChange('canvas.pixel_tracking_code', e.target.value, index)} />
+      </div>
     </div>
   )
 }

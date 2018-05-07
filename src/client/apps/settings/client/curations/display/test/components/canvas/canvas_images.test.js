@@ -136,7 +136,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        component.find('.image-upload-form-remove').at(0).simulate('click')
+        component.find('.RemoveButton').at(0).simulate('click')
         expect(props.onChange.mock.calls[1][0]).toMatch('canvas.logo')
         expect(props.onChange.mock.calls[1][2]).toBe(props.index)
       })
@@ -176,7 +176,7 @@ describe('Canvas Images', () => {
         const component = mount(
           <CanvasImages {...props} />
         )
-        component.find('.image-upload-form-remove').at(1).simulate('click')
+        component.find('.RemoveButton').at(1).simulate('click')
         const onChangeArgs = props.onChange.mock.calls[4]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
