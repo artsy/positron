@@ -43,10 +43,8 @@ export const keyBindingFnFull = (e) => {
 
 export const keyBindingFnParagraph = (e) => {
   // Custom key commands for paragraph editor
-  if (KeyBindingUtil.hasCommandModifier(e)) {
-    if (e.keyCode === 75) {
-      return 'link-prompt'
-    }
+  if (KeyBindingUtil.hasCommandModifier(e) && e.keyCode === 75) {
+    return 'link-prompt'
   } else {
     return getDefaultKeyBinding(e)
   }
