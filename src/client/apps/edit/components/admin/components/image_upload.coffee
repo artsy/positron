@@ -3,6 +3,7 @@ ReactDOM = require 'react-dom'
 gemup = require 'gemup'
 sd = require('sharify').data
 { crop } = require '../../../../../components/resizer/index.coffee'
+{ RemoveButton } = require '../../../../../components/remove_button/index.jsx'
 { section, h1, h2, span, input, div, video } = React.DOM
 
 module.exports = React.createClass
@@ -81,9 +82,7 @@ module.exports = React.createClass
             style: backgroundImage: 'url(' + crop(@props.src, width: 215, height: 150) + ')', display: 'block'
           }
         unless  @props.disabled
-          div {
-            className: 'image-upload-form-remove'
-            style: display: 'block'
+          RemoveButton {
             onClick: @remove
           }
 

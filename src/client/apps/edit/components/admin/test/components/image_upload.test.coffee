@@ -14,6 +14,9 @@ describe 'ImageUpload', ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       window.jQuery = $
+      window.matchMedia = sinon.stub().returns({
+        matches: sinon.stub()
+      })
       @ImageUpload = benv.require resolve __dirname, '../../components/image_upload.coffee'
       @ImageUpload.__set__ 'gemup', @gemup = sinon.stub()
       @props = {
@@ -102,5 +105,6 @@ describe 'ImageUpload', ->
     it 'removes the state and callsback', ->
       @props.src = 'http://artsy.net/image.jpg'
       component = ReactDOM.render React.createElement(@ImageUpload, @props), (@$el = $ "<div></div>")[0]
-      r.simulate.click r.find(component, 'image-upload-form-remove')[0]
+      button = $(ReactDOM.findDOMNode(component)).find('.RemoveButton')[0]
+      r.simulate.click button
       component.props.onChange.args[0].should.eql [ 'my_image', '' ]

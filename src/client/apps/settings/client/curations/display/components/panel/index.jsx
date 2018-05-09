@@ -41,6 +41,14 @@ export const Panel = (props) => {
                 limit={45}
               />
             </div>
+            <div className='field-group'>
+              <label>Pixel Tracking Code (optional)</label>
+              <input
+                className='bordered-input'
+                placeholder='Paste 3rd party script here'
+                defaultValue={panel.pixel_tracking_code || ''}
+                onChange={(e) => onChange('panel.pixel_tracking_code', e.target.value, index)} />
+            </div>
           </Col>
           <Col lg>
             <PanelImages
