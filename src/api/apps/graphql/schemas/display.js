@@ -20,7 +20,8 @@ const unitSchema = Joi.object().meta({
     url: Joi.string()
   }),
   logo: Joi.string(),
-  name: Joi.string()
+  name: Joi.string(),
+  pixel_tracking_code: Joi.string()
 })
 
 const schema = Joi.object().keys({
