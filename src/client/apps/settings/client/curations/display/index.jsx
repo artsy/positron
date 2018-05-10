@@ -28,7 +28,10 @@ export default class DisplayAdmin extends React.Component {
   save = () => {
     this.state.curation.save({}, {
       success: () => this.setState({ saveStatus: 'Saved' }),
-      error: error => this.setState({ saveStatus: 'Error' })
+      error: error => {
+        console.error(error)
+        this.setState({ saveStatus: 'Error' })
+      }
     })
   }
 

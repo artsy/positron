@@ -60,6 +60,7 @@ describe('Canvas', () => {
       expect(component.text()).toMatch('CTA Text')
       expect(component.text()).toMatch('CTA Link')
       expect(component.text()).toMatch('Disclaimer (optional)')
+      expect(component.text()).toMatch('Pixel Tracking Code (optional)')
       expect(component.text()).toMatch('Background Image')
       expect(component.text()).toMatch('Logo')
     })
@@ -90,11 +91,13 @@ describe('Canvas', () => {
       expect(component.text()).toMatch('CTA Text')
       expect(component.text()).toMatch('CTA Link')
       expect(component.text()).toMatch('Disclaimer (optional)')
+      expect(component.text()).toMatch('Pixel Tracking Code (optional)')
       expect(component.text()).toMatch('Image / Video')
       expect(component.text()).toMatch('Logo')
     })
 
     it('Renders saved data', () => {
+      props.campaign.canvas.pixel_tracking_code = 'pixel tracking script'
       const component = mount(
         <Canvas {...props} />
       )
@@ -102,6 +105,7 @@ describe('Canvas', () => {
       expect(component.html()).toMatch(props.campaign.canvas.link.text)
       expect(component.html()).toMatch(props.campaign.canvas.link.url)
       expect(component.text()).toMatch(props.campaign.canvas.disclaimer)
+      expect(component.html()).toMatch(props.campaign.canvas.pixel_tracking_code)
       expect(component.html()).toMatch('artsy-logo-wide-black.png')
       expect(component.html()).toMatch('Rachel_Rossin_portrait_2.jpg')
     })
@@ -127,12 +131,14 @@ describe('Canvas', () => {
       expect(component.text()).toMatch('CTA Text')
       expect(component.text()).toMatch('CTA Link')
       expect(component.text()).toMatch('Disclaimer (optional)')
+      expect(component.text()).toMatch('Pixel Tracking Code (optional)')
       expect(component.text()).toMatch('Image 1')
       expect(component.text()).toMatch('Image 2')
       expect(component.text()).toMatch('Logo')
     })
 
     it('Renders saved data', () => {
+      props.campaign.canvas.pixel_tracking_code = 'pixel tracking script'
       const component = mount(
         <Canvas {...props} />
       )
@@ -140,6 +146,7 @@ describe('Canvas', () => {
       expect(component.html()).toMatch(props.campaign.canvas.link.text)
       expect(component.html()).toMatch(props.campaign.canvas.link.url)
       expect(component.text()).toMatch(props.campaign.canvas.disclaimer)
+      expect(component.html()).toMatch(props.campaign.canvas.pixel_tracking_code)
       expect(component.html()).toMatch('artsy-logo-wide-black.png')
       expect(component.html()).toMatch('Rachel_Rossin_portrait_2.jpg')
       expect(component.html()).toMatch('larger.jpg')

@@ -27,7 +27,8 @@ export class Canvas extends React.Component {
         </div>
         <CanvasControls
           activeLayout={this.state.activeLayout}
-          setActiveLayout={this.setActiveLayout} />
+          setActiveLayout={this.setActiveLayout}
+        />
         <Row className='display-admin__section--canvas'>
           <Col lg>
             <CanvasText

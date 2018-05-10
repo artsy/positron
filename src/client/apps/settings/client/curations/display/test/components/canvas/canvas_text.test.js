@@ -46,11 +46,10 @@ describe('Canvas Text', () => {
     const component = mount(
       <CanvasText {...props} />
     )
-    const input = component.find('input').at(0)
+    const input = component.find('input').at(1)
     input.simulate('change', { target: { value: 'Read More' } })
 
-    // FIXME TEST: Not sure...
-    // expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.text')
+    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.text')
     expect(props.onChange.mock.calls[0][1]).toMatch('Read More')
     expect(props.onChange.mock.calls[0][2]).toBe(0)
   })
@@ -59,12 +58,23 @@ describe('Canvas Text', () => {
     const component = mount(
       <CanvasText {...props} />
     )
-    const input = component.find('input').at(1)
+    const input = component.find('input').at(2)
     input.simulate('change', { target: { value: 'http://artsy.net' } })
 
-    // FIXME TEST: Not sure...
-    // expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.url')
+    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.link.url')
     expect(props.onChange.mock.calls[0][1]).toMatch('http://artsy.net')
+    expect(props.onChange.mock.calls[0][2]).toBe(0)
+  })
+
+  it('Can save an edited Pixel Tracking Code', () => {
+    const component = mount(
+      <CanvasText {...props} />
+    )
+    const input = component.find('input').at(3)
+    input.simulate('change', { target: { value: 'a pixel tracking script' } })
+
+    expect(props.onChange.mock.calls[0][0]).toMatch('canvas.pixel_tracking_code')
+    expect(props.onChange.mock.calls[0][1]).toMatch('a pixel tracking script')
     expect(props.onChange.mock.calls[0][2]).toBe(0)
   })
 
