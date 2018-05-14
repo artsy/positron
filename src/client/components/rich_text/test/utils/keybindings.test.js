@@ -4,14 +4,24 @@ const Draft = require('draft-js')
 describe('Draft Utils: Keybindings', () => {
   describe('#keyBindingFnParagraph', () => {
     let e
-    Draft.getDefaultKeyBinding = jest.fn()
-    Draft.KeyBindingUtil.hasCommandModifier = jest.fn()
+
+    beforeEach(() => {
+      Draft.getDefaultKeyBinding = jest.fn()
+      Draft.KeyBindingUtil.hasCommandModifier = jest.fn()
+    })
 
     it('Returns the name of a recognized key binding if command modifier', () => {
       Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(true)
       e = { keyCode: 75 }
       expect(keyBindingFnParagraph(e)).toBe('link-prompt')
       expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(0)
+    })
+
+    it('Returns the default key binding if command modifier and not link', () => {
+      Draft.KeyBindingUtil.hasCommandModifier.mockReturnValueOnce(false)
+      e = { keyCode: 73 }
+      keyBindingFnParagraph(e)
+      expect(Draft.getDefaultKeyBinding.mock.calls.length).toBe(1)
     })
 
     it('Returns the default key binding if no command modifier', () => {
