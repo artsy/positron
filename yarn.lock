@@ -10,10 +10,11 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/reaction@^0.39.1":
-  version "0.39.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-0.39.1.tgz#98e8d01c4770e2c7604875b42f5c806a5a751490"
+"@artsy/reaction@^1.8.6":
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-1.8.6.tgz#cbfa3aa8695a27a4a631b6a517f234b7bc9ae2ca"
   dependencies:
+    cheerio "^1.0.0-rc.2"
     formik "^0.11.11"
     history "^4.6.1"
     isomorphic-fetch "^2.2.1"
@@ -24,6 +25,7 @@
     prop-types "^15.5.10"
     qs "^6.5.0"
     react-css-transition-replace "^3.0.2"
+    react-html-parser "^2.0.2"
     react-lines-ellipsis "^0.8.0"
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
@@ -41,6 +43,7 @@
     relay-runtime "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz"
     sharify "^0.1.6"
     superagent "^3.6.3"
+    url "^0.11.0"
     yarn "^1.3.2"
     yup "^0.24.1"
 
@@ -4774,7 +4777,7 @@ html-janitor@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/html-janitor/-/html-janitor-2.0.2.tgz#3f4551d23d1be8554e273f9eada2b617c2b3ab70"
 
-htmlparser2@^3.9.1:
+htmlparser2@^3.9.0, htmlparser2@^3.9.1:
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.9.2.tgz#1bdf87acca0f3f9e53fa4fcceb0f4b4cbb00b338"
   dependencies:
@@ -7938,6 +7941,12 @@ react-hot-loader@^4.0.0:
     hoist-non-react-statics "^2.5.0"
     prop-types "^15.6.0"
     shallowequal "^1.0.2"
+
+react-html-parser@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-html-parser/-/react-html-parser-2.0.2.tgz#6dbe1ddd2cebc1b34ca15215158021db5fc5685e"
+  dependencies:
+    htmlparser2 "^3.9.0"
 
 react-lines-ellipsis@^0.8.0:
   version "0.8.0"
