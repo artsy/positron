@@ -9,7 +9,7 @@ import $ from 'jquery'
 import { debounce } from 'lodash'
 import FilterSearch from 'client/components/filter_search/index.coffee'
 import IconNewArticle from '../../../components/layout/public/icons/layout_new_article.svg'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { garamond } from '@artsy/reaction/dist/Assets/Fonts'
 
 require('jquery-on-infinite-scroll')
 const query = require('../query.coffee')
@@ -35,7 +35,7 @@ const MaxWidthContainer = styled.div`
 `
 
 const Title = styled.div`
-  ${Fonts.garamond('s30')};
+  ${garamond('s30')};
   padding: 20px 0;
 `
 

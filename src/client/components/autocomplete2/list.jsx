@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { clone, map, uniq } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { garamond } from '@artsy/reaction/dist/Assets/Fonts'
 import { Autocomplete } from '/client/components/autocomplete2/index'
 
 export class AutocompleteList extends Component {
@@ -98,7 +98,7 @@ export class AutocompleteList extends Component {
 }
 
 export const ListItem = styled.div`
-  ${Fonts.garamond('s17')}
+  ${garamond('s17')}
   align-items: center;
   border: 2px solid ${colors.grayRegular};
   color: ${props => props.color ? props.color : colors.purpleRegular};

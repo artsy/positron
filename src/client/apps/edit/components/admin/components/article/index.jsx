@@ -7,7 +7,7 @@ import { difference, flatten, pluck } from 'underscore'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
 import { onChangeArticle } from 'client/actions/editActions'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
 import { ArticlePublishDate } from './article_publish_date'
@@ -198,7 +198,7 @@ const Button = styled.button`
   padding: 10px 20px;
   border: 2px solid ${colors.grayMedium};
   color: ${props => props.active ? 'black' : colors.grayMedium};
-  ${Fonts.avantgarde('s11')}
+  ${avantgarde('s11')}
   outline: none;
 `
 

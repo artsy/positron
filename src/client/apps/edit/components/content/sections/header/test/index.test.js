@@ -98,7 +98,7 @@ describe('Header', () => {
 
       expect(component.find(Header).exists()).toBe(true)
       expect(component.html()).toMatch('FeatureHeader__Div')
-      expect(component.html()).toMatch('FeatureHeader__Vertical')
+      expect(component.html()).toMatch('VerticalOrSeriesTitle__Vertical')
       expect(component.html()).toMatch('FeatureHeader__Title')
       expect(component.html()).toMatch('FeatureHeader__Deck')
       expect(component.html()).toMatch('Casey Lesser')
