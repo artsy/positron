@@ -79,7 +79,8 @@ brew services start elasticsearch
 
 - Create a dummy channel
 In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, it might be easier to point your MONGOHQ_URL to the staging database. Otherwise, here are the steps to backfill some required data:
-1. Create a collection called Channels in your mongo database. You can use the mongo shell or a simple UI like Robomongo.
+
+1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
 2. Add a document with the following fields:
 ```
 {
@@ -94,7 +95,9 @@ In order to write articles, you will need to be a member of a channel. If you ar
 ```
 yarn start
 ```
-- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer. If you are an Artsy Admin pointed to the staging database, you should see the default partner gallery channel (David Zwirner). If not, you will see the Test Channel created above.
+- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer. If you are an Artsy Admin pointed to the staging database, you should see the default partner gallery channel (David Zwirner). 
+
+If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
 
 - Run tests
 
