@@ -7,6 +7,7 @@ User = rewire '../model'
 gravity = require('antigravity').server
 gravityFabricate = require('antigravity').fabricate
 express = require 'express'
+request = require 'superagent'
 
 app = express()
 app.get '/__gravity/api/v1/user/563d08e6275b247014000026', (req, res, next) ->
@@ -52,6 +53,29 @@ describe 'User', ->
       db.users.insert user, ->
         User.fromAccessToken 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
+          done()
+
+    it 'returns the user if partner_ids have not changed', (done) ->
+      user = _.extend {}, fixtures().users, {
+        name: 'Kana Abe'
+        partner_ids: ['5086df098523e60002000012']
+        access_token: '$2a$10$PJrPMBadu1NPdmnshBgFbeZG5cyzJHBLK8D73niNWb7bPz5GyKH.u'
+      }
+      db.users.insert user, (err, result) ->
+        User.fromAccessToken 'foobar', (err, user) ->
+          user.name.should.equal 'Kana Abe'
+          done()
+
+    it 'creates a user if there is no user', (done) ->
+      User.fromAccessToken 'foobar', (err, user) ->
+        user.name.should.equal 'Craig Spaeth'
+        done()
+
+    it 'updates a user if partner_ids have changed', (done) ->
+      user = _.extend {}, fixtures().users, partner_ids: []
+      db.users.insert user, ->
+        User.fromAccessToken 'foobar', (err, user) ->
+          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           done()
 
   describe '#present', ->

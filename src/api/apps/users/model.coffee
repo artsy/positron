@@ -26,21 +26,17 @@ jwtDecode = require 'jwt-decode'
     db.users.findOne { access_token: encryptedAccessToken }, (err, user) ->
       return callback err if err
       if user
-        savedPartnerIds = user.partner_ids #TO STRING THIS TO COMPARE
+        savedPartnerIds = user.partner_ids.map((a) => a.toString())
         latestPartnerIds = jwtDecode(accessToken)?.partner_ids or []
-        console.log(jwtDecode(accessToken))
-        console.log(savedPartnerIds)
-        console.log(latestPartnerIds)
-        return callback null, user if savedPartnerIds is latestPartnerIds
+        return callback null, user if _.isEqual(savedPartnerIds, latestPartnerIds)
       # Otherwise fetch data from Gravity and flatten it into a Positron user
-      async.parallel [
-        (cb) ->
-          request.get("#{ARTSY_URL}/api/v1/me")
-            .set('X-Access-Token': accessToken).end cb
-      ], (err, results) ->
-        return callback err if err
-        user = results[0].body
-        save user, accessToken, callback
+      request
+        .get("#{ARTSY_URL}/api/v1/me")
+        .set('X-Access-Token': accessToken)
+        .end (err, results) ->
+          return callback err if err
+          user = results.body
+          save user, accessToken, callback
 
 #
 # Persistance
