@@ -26,6 +26,7 @@ jwtDecode = require 'jwt-decode'
     db.users.findOne { access_token: encryptedAccessToken }, (err, user) ->
       return callback err if err
       if user
+        # Compare the user's partner access from the database vs JWT token to see if it needs a refresh
         savedPartnerIds = user.partner_ids.map((a) => a.toString())
         latestPartnerIds = jwtDecode(accessToken)?.partner_ids or []
         return callback null, user if _.isEqual(savedPartnerIds, latestPartnerIds)
