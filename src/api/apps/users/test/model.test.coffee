@@ -7,7 +7,6 @@ User = rewire '../model'
 gravity = require('antigravity').server
 gravityFabricate = require('antigravity').fabricate
 express = require 'express'
-request = require 'superagent'
 
 app = express()
 app.get '/__gravity/api/v1/user/563d08e6275b247014000026', (req, res, next) ->
