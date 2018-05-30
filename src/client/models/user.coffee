@@ -48,7 +48,6 @@ module.exports = class User extends Backbone.Model
       user.partner_ids = jwtDecode(@get('access_token')).partner_ids
       user.channel_ids = _.pluck results[1], 'id'
 
-
       for attr in ['id', 'type', 'name', 'email']
         return callback true unless _.isEqual user[attr], @get(attr)
       for attr in ['channel_ids', 'partner_ids']
