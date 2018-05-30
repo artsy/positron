@@ -13,7 +13,7 @@ Meta
 * __Staging:__ [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Heroku](https://dashboard.heroku.com/apps/positron-staging/resources)
 * __Github:__ [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 * __CI:__ [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
-* __Point People:__ [@craigspaeth](https://github.com/craigspaeth), [@kanaabe](https://github.com/kanaabe), [@eessex](https://github.com/eessex)
+* __Point People:__  [@kanaabe](https://github.com/kanaabe), [@eessex](https://github.com/eessex)
 
 [![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master)
 
@@ -77,12 +77,27 @@ brew install elasticsearch
 brew services start elasticsearch
 ```
 
+- Create a dummy channel
+In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, it might be easier to point your MONGOHQ_URL to the staging database. Otherwise, here are the steps to backfill some required data:
+
+1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
+2. Add a document with the following fields:
+```
+{
+  name: "Test Channel",
+  type: "team", // this can be either editorial, team, support, or partner
+  user_ids: [ObjectId("<your_user_id>")]
+}
+```
+
 - Start the server
 
 ```
 yarn start
 ```
-- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer with the default partner gallery channel (David Zwirner).
+- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer. If you are an Artsy Admin pointed to the staging database, you should see the default partner gallery channel (David Zwirner). 
+
+If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
 
 - Run tests
 

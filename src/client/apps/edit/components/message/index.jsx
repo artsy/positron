@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import moment from 'moment'
 
 import { ModalTypes } from './modalTypes'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { avantgarde, garamond } from '@artsy/reaction/dist/Assets/Fonts'
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import { IconLock } from '@artsy/reaction/dist/Components/Publishing'
 
@@ -29,7 +29,7 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  ${Fonts.avantgarde('s11')};
+  ${avantgarde('s11')};
   margin-bottom: 10px;
   text-transform: uppercase;
   color: ${p => p.color};
@@ -37,13 +37,13 @@ const Header = styled.div`
 Header.displayName = 'Header'
 
 export const Title = styled.h1`
-  ${Fonts.garamond('s30')};
+  ${garamond('s30')};
   margin-bottom: 15px;
 `
 Title.displayName = 'Title'
 
 const Description = styled.div`
-  ${Fonts.garamond('s19')};
+  ${garamond('s19')};
   max-width: 470px;
   line-height: 1.1;
 `
@@ -65,7 +65,7 @@ const ActionButton = styled.button`
 ActionButton.displayName = 'ActionButton'
 
 const RedirectText = styled.span`
-  ${Fonts.avantgarde('s11')};
+  ${avantgarde('s11')};
   text-transform: uppercase;
   color: ${colors.grayMedium};
 `

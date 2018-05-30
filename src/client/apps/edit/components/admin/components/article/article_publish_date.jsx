@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
 
 export class ArticlePublishDate extends Component {
   static propTypes = {
@@ -177,7 +177,7 @@ export const ButtonMedium = styled.button`
   color: ${props => props.color ? props.color : 'white'};
   cursor: pointer;
   background: ${props => props.background ? props.background : colors.grayMedium};
-  ${Fonts.avantgarde('s11')}
+  ${avantgarde('s11')}
   outline: none;
   border: none;
   width: -moz-available;

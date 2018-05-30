@@ -10,7 +10,7 @@ import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
-import { Fonts } from '@artsy/reaction/dist/Components/Publishing/Fonts'
+import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
 import { onChangeArticle } from 'client/actions/editActions'
 
 export class EditVideo extends Component {
@@ -196,7 +196,7 @@ const EditVideoReleaseDate = styled.div`
   label {
     display: block;
     text-align: right;
-    ${Fonts.avantgarde('s13')}
+    ${avantgarde('s13')}
   }
 `
 

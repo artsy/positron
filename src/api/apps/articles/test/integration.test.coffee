@@ -35,10 +35,11 @@ describe 'articles endpoints', ->
   describe 'as a non-admin', ->
 
     beforeEach (done) ->
+      @normieToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJVc2VyIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwidHlwZSI6IlVzZXIiLCJwYXJ0bmVyX2lkcyI6W10sImlhdCI6MTUxNjIzOTAyMn0.1ONei7j20cbeusjWiUvTt-CTDCdpewnj3mbmIA_-Hbs'
       fabricate 'users', {
         type: 'User'
         name: 'Normie'
-        access_token: 'foobar'
+        access_token: @normieToken
         has_partner_access: false
         _id: undefined
       }, (err, @normie) =>
@@ -47,7 +48,7 @@ describe 'articles endpoints', ->
     it 'does not allow featuring', (done) ->
       request
         .post("http://localhost:5000/articles")
-        .set('X-Access-Token': 'foobar')
+        .set('X-Access-Token': @normieToken)
         .send(featured: true).end (err, res) ->
           err.status.should.equal 401
           res.body.message.should.containEql 'must be an admin'

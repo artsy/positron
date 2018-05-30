@@ -1,7 +1,7 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { Fixtures, IconRemove } from '@artsy/reaction/dist/Components/Publishing'
-import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/Series/ArticleCard'
+import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard'
 import { EditArticleCard } from '../components/edit_article_card'
 
 describe('EditArticleCard', () => {

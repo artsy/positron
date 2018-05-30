@@ -25,16 +25,19 @@ jwtDecode = require 'jwt-decode'
     return callback err if err
     db.users.findOne { access_token: encryptedAccessToken }, (err, user) ->
       return callback err if err
-      return callback null, user if user
+      if user
+        # Compare the user's partner access from the database vs JWT token to see if it needs a refresh
+        savedPartnerIds = user.partner_ids.map((a) => a.toString())
+        latestPartnerIds = jwtDecode(accessToken)?.partner_ids or []
+        return callback null, user if _.isEqual(savedPartnerIds, latestPartnerIds)
       # Otherwise fetch data from Gravity and flatten it into a Positron user
-      async.parallel [
-        (cb) ->
-          request.get("#{ARTSY_URL}/api/v1/me")
-            .set('X-Access-Token': accessToken).end cb
-      ], (err, results) ->
-        return callback err if err
-        user = results[0].body
-        save user, accessToken, callback
+      request
+        .get("#{ARTSY_URL}/api/v1/me")
+        .set('X-Access-Token': accessToken)
+        .end (err, results) ->
+          return callback err if err
+          user = results.body
+          save user, accessToken, callback
 
 #
 # Persistance
