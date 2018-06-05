@@ -4,7 +4,7 @@ import { clean } from 'underscore.string'
 import { connect } from 'react-redux'
 import { uniq } from 'lodash'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class AdminTags extends Component {
   static propTypes = {

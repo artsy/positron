@@ -10,7 +10,7 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { RelatedArticles } from '../sections/related_articles/index'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class EditSeries extends Component {
   static propTypes = {

@@ -9,7 +9,8 @@ import HeaderControls from './controls/index.jsx'
 import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { RemoveButton } from 'client/components/remove_button'
-import { onChangeArticle, onChangeHero } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
+import { onChangeHero } from 'client/actions/edit/sectionActions'
 
 export class SectionHeader extends Component {
   static propTypes = {

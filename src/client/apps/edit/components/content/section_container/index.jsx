@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import { IconDrag } from '@artsy/reaction/dist/Components/Publishing'
 import { RemoveButton } from 'client/components/remove_button'
-import { removeSection } from 'client/actions/editActions'
+import { removeSection } from 'client/actions/edit/sectionActions'
 
 import SectionImages from '../sections/images'
 import SectionSlideshow from '../sections/slideshow'

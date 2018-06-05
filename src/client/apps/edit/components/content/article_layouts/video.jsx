@@ -11,7 +11,7 @@ import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
 import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
 import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class EditVideo extends Component {
   static propTypes = {

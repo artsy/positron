@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
 import SectionControls from '../../section_controls/index'
-import { onChangeSection, removeSection } from 'client/actions/editActions'
+import { onChangeSection, removeSection } from 'client/actions/edit/sectionActions'
 
 export class SocialEmbedControls extends Component {
   static propTypes = {

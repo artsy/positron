@@ -7,12 +7,12 @@ import { Row, Col } from 'react-styled-flexboxgrid'
 import Artwork from '/client/models/artwork.coffee'
 import FileInput from '/client/components/file_input'
 import SectionControls from '../../../section_controls'
+import { logError } from 'client/actions/edit/errorActions'
 import {
-  logError,
   onChangeHero,
   onChangeSection,
   removeSection
-} from 'client/actions/editActions'
+} from 'client/actions/edit/sectionActions'
 import { Autocomplete } from '/client/components/autocomplete2'
 import { InputArtworkUrl } from './input_artwork_url'
 

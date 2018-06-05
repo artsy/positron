@@ -6,7 +6,7 @@ import { NewsHeadline } from '@artsy/reaction/dist/Components/Publishing/News/Ne
 import { NewsByline } from '@artsy/reaction/dist/Components/Publishing/Byline/NewsByline'
 import SectionList from '../section_list'
 import { PlainText } from '/client/components/rich_text/components/plain_text'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { EditSourceControls } from '../sections/news/EditSourceControls.tsx'
 import { hot } from 'react-hot-loader'
 
