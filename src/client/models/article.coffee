@@ -22,10 +22,3 @@ module.exports = class Article extends Backbone.Model
     extended = {}
     extended.sections = @sections.toJSON() if @sections?.length
     extend super, extended
-
-  replaceLink: (taggedText, link) ->
-    @sections.map (section) ->
-      if section.get('type') is 'text'
-        text = section.get('body')
-        if text.includes(taggedText)
-          section.set('body', text.replace(taggedText, link))

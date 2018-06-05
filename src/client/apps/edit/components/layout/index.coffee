@@ -43,6 +43,13 @@ module.exports = class EditLayout extends Backbone.View
     fullText = @getBodyText()
     fullText.match(/==(\S[^==]*\S)==/ig)
 
+  replaceLink: (taggedText, link) =>
+    @article.sections.map (section) ->
+      if section.get('type') is 'text'
+        text = section.get('body')
+        if text.includes(taggedText)
+          section.set('body', text.replace(taggedText, link))
+
   autolinkText: ->
     $('#autolink-status').addClass('searching').html('Linking...')
     $('#edit-content__overlay').addClass('disabled')
@@ -54,14 +61,14 @@ module.exports = class EditLayout extends Backbone.View
         .set('X-Access-Token': sd.USER?.access_token)
         .end (err, res) =>
           if err or res.body.total < 1
-            @article.replaceLink(findText, text)
+            @replaceLink(findText, text)
             return cb()
           valid_results = @findValidResults(res.body.hits)
           if valid_results.length == 0
-            @article.replaceLink(findText, text)
+            @replaceLink(findText, text)
             return cb()
 
-          @article.replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
+          @replaceLink(findText, @getNewLinkFromHits(valid_results) || text)
           return cb()
     ), (err, result) =>
       @article.sections.trigger 'change:autolink'
