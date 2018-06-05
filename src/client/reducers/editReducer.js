@@ -1,7 +1,7 @@
 import u from 'updeep'
 import { data as sd } from 'sharify'
 import { clone, cloneDeep, extend, pick } from 'lodash'
-import { actions } from 'client/actions/editActions'
+import { actions } from 'client/actions/edit'
 
 export const setupArticle = () => {
   const article = sd.ARTICLE
