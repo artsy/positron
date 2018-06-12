@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { resetError } from 'client/actions/editActions'
+import { resetError } from 'client/actions/edit/errorActions'
 
 export class EditError extends Component {
   static propTypes = {

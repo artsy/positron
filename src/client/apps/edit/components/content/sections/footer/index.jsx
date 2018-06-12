@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class SectionFooter extends Component {
   static propTypes = {

@@ -2,7 +2,7 @@ import u from 'updeep'
 import { data as sd } from 'sharify'
 import { omit } from 'lodash'
 import { actions } from 'client/actions/articlesActions'
-import { actions as editActions } from 'client/actions/editActions'
+import { actions as editActions } from 'client/actions/edit'
 
 export const initialState = {
   articles: sd.ARTICLES,

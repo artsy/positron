@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { filter, map } from 'lodash'
 import Verticals from '../../../../../collections/verticals.coffee'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class AdminVerticalsTags extends Component {
   static propTypes = {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ImageUpload from './image_upload.coffee'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class AdminSponsor extends Component {
   static propTypes = {

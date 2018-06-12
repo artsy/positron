@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import gemup from 'gemup'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { onChangeArticle } from '../../actions/editActions'
+import { onChangeArticle } from '../../actions/edit/articleActions'
 import { data as sd } from 'sharify'
 import moment from 'moment'
 

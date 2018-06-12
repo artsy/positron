@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from 'client/actions/editActions'
+import * as Actions from 'client/actions/edit/articleActions'
 import Icon from '@artsy/reaction/dist/Components/Icon'
 import colors from '@artsy/reaction/dist/Assets/Colors'
 

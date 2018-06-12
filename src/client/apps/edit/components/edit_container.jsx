@@ -7,7 +7,7 @@ import {
   startEditingArticle,
   stopEditingArticle,
   toggleSpinner
-} from 'client/actions/editActions'
+} from 'client/actions/edit/editActions'
 
 import { ErrorBoundary } from 'client/components/error/error_boundary'
 import EditAdmin from './admin'
