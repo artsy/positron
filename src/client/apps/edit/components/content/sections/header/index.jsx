@@ -33,7 +33,7 @@ export class SectionHeader extends Component {
       <PlainText
         content={article.title}
         onChange={(content) => onChange('title', content)}
-        placeholder='Title'
+        placeholder='Page Title'
       />
     )
   }

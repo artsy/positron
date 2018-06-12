@@ -157,7 +157,7 @@ export class ArticlesList extends Component {
   showArticlesList () {
     const { channel, apiURL, checkable, selected } = this.props
     const isArtsyChannel = (type) => {
-      return type in ['editorial', 'support', 'team']
+      return ['editorial', 'support', 'team'].indexOf(type) >= 0;
     }
 
     if (this.props.articles && this.props.articles.length) {
