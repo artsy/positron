@@ -64,6 +64,9 @@ describe('PlainText', () => {
     )
     wrapper.instance().refs.editor.focus()
     wrapper.find('.public-DraftEditor-content').simulate('keyUp', { keyCode: 70, which: 70 })
-    expect(wrapper.instance().props.onChange).toHaveBeenCalled()
+    setTimeout(
+      () => expect(wrapper.instance().props().onChange).toHaveBeenCalled(),
+      250
+    )
   })
 })

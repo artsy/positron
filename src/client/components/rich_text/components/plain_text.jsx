@@ -16,6 +16,9 @@ export class PlainText extends React.Component {
 
     const editorState = this.setEditorState()
     this.state = { editorState }
+    this.debouncedOnContentChange = debounce((content) => {
+      this.onContentChange(content)
+    }, 250)
   }
 
   setEditorState () {
@@ -42,10 +45,6 @@ export class PlainText extends React.Component {
     }
     this.setState({ editorState })
   }
-
-  debouncedOnContentChange = debounce((content) => {
-    this.onContentChange(content)
-  }, 500)
 
   onContentChange = (content) => {
     if (this.props.name) {
