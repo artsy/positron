@@ -18,21 +18,19 @@ describe('Edit Header Controls', () => {
 
   beforeEach(() => {
     props = {
-      actions: {
-        changeView: jest.fn(),
-        deleteArticle: jest.fn(),
-        publishArticle: jest.fn(),
-        saveArticle: jest.fn()
-      },
       beforeUnload: jest.fn(),
       article: clone(Fixtures.StandardArticle),
+      changeViewAction: jest.fn(),
       channel: { type: 'partner' },
+      deleteArticleAction: jest.fn(),
       edit: {
         isSaved: true,
         isSaving: false,
         isPublishing: false
       },
-      isAdmin: false
+      isAdmin: false,
+      publishArticleAction: jest.fn(),
+      saveArticleAction: jest.fn()
     }
   })
 
@@ -93,7 +91,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(1)
       button.simulate('click')
 
-      expect(props.actions.changeView.mock.calls[0][0]).toBe('display')
+      expect(props.changeViewAction.mock.calls[0][0]).toBe('display')
     })
 
     it('Publishes an article on button click', () => {
@@ -102,7 +100,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(2)
       button.simulate('click')
 
-      expect(props.actions.publishArticle).toBeCalled()
+      expect(props.publishArticleAction).toBeCalled()
     })
 
     it('Unpublishes an article on button click', () => {
@@ -112,7 +110,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(2)
       button.simulate('click')
 
-      expect(props.actions.publishArticle).toBeCalled()
+      expect(props.publishArticleAction).toBeCalled()
     })
 
     xit('Calls auto-link on button click', () => {
@@ -125,7 +123,7 @@ describe('Edit Header Controls', () => {
       button.simulate('click')
 
       expect(global.confirm.mock.calls.length).toBe(1)
-      expect(props.actions.deleteArticle.mock.calls.length).toBe(1)
+      expect(props.deleteArticleAction.mock.calls.length).toBe(1)
     })
 
     it('Saves an article on button click', () => {
@@ -133,7 +131,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(4)
       button.simulate('click')
 
-      expect(props.actions.saveArticle.mock.calls.length).toBe(1)
+      expect(props.saveArticleAction.mock.calls.length).toBe(1)
     })
 
     it('Saves a published article on button click', () => {
@@ -142,7 +140,7 @@ describe('Edit Header Controls', () => {
       const button = component.find('button').at(4)
       button.simulate('click')
 
-      expect(props.actions.saveArticle.mock.calls.length).toBe(1)
+      expect(props.saveArticleAction.mock.calls.length).toBe(1)
     })
 
     it('Removes beforeUnload listener on click', () => {

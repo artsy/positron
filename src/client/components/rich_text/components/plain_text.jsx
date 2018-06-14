@@ -1,3 +1,4 @@
+import { debounce } from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { ContentState, Editor, EditorState } from 'draft-js'
@@ -15,6 +16,9 @@ export class PlainText extends React.Component {
 
     const editorState = this.setEditorState()
     this.state = { editorState }
+    this.debouncedOnContentChange = debounce((content) => {
+      this.onContentChange(content)
+    }, 250)
   }
 
   setEditorState () {
@@ -37,7 +41,7 @@ export class PlainText extends React.Component {
 
     if (currentContentState !== newContentState) {
       // There was a change in the content
-      this.onContentChange(newContent)
+      this.debouncedOnContentChange(newContent)
     }
     this.setState({ editorState })
   }
