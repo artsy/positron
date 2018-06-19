@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import ModalCover from './ModalCover'
 import { VideoControls } from './VideoControls'
 import { LayoutControls } from './LayoutControls'
-import { onChangeHero } from 'client/actions/editActions'
+import { onChangeHero } from 'client/actions/edit/sectionActions'
 
 export class HeaderControls extends Component {
   static propTypes = {

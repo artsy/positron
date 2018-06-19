@@ -1,7 +1,8 @@
 import { cloneDeep, extend } from 'lodash'
 import { data as sd } from 'sharify'
 import { editReducer, setupArticle } from '../editReducer'
-import { actions, setupSection } from '../../actions/editActions'
+import { actions } from 'client/actions/edit'
+import { setupSection } from 'client/actions/edit/sectionActions'
 import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('editReducer', () => {

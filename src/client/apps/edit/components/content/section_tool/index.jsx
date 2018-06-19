@@ -10,7 +10,7 @@ import {
   IconHeroImage,
   IconHeroVideo
 } from '@artsy/reaction/dist/Components/Publishing'
-import { newHeroSection, newSection } from 'client/actions/editActions'
+import { newHeroSection, newSection } from 'client/actions/edit/sectionActions'
 
 export class SectionTool extends Component {
   static propTypes = {

@@ -5,7 +5,7 @@ import FileInput from 'client/components/file_input'
 import SectionControls from '../../section_controls'
 import { isEmpty } from 'underscore'
 import { isWebUri } from 'valid-url'
-import { removeSection } from 'client/actions/editActions'
+import { removeSection } from 'client/actions/edit/sectionActions'
 
 export class VideoSectionControls extends Component {
   static propTypes = {

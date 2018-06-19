@@ -5,7 +5,7 @@ import { clone, without } from 'lodash'
 import { connect } from 'react-redux'
 import { Artwork, Image } from '@artsy/reaction/dist/Components/Publishing'
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { onChangeHero, onChangeSection } from 'client/actions/editActions'
+import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
 import { RemoveButton } from 'client/components/remove_button'
 
 export class EditImage extends Component {

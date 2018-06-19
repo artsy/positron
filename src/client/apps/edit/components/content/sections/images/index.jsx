@@ -9,7 +9,7 @@ import ImagesControls from './components/controls'
 import EditImage from './components/edit_image'
 import { ImageSet } from './components/image_set'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
-import { onChangeHero, onChangeSection } from 'client/actions/editActions'
+import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
 
 export class SectionImages extends Component {
   static propTypes = {

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Col, Row } from 'react-styled-flexboxgrid'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { CharacterLimit } from 'client/components/character_limit'
 import { SearchPreview } from './preview/search_preview'
 

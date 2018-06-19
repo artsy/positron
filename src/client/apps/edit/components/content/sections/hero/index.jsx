@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import SectionContainer from '../../section_container'
 import SectionTool from '../../section_tool'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class SectionHero extends Component {
   static propTypes = {

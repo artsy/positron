@@ -96,15 +96,18 @@ export class ArticleList extends Component {
           >
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
-              {!attrs.image ? <div className='missing-img'>Missing thumbnail</div> : null}
+              {!attrs.image
+		 ? <div className='missing-img'>
+		     Missing {this.props.isArtsyChannel ? "Magazine Thumbnail" : <span>Thumbnail<br />Image</span>}
+		   </div>
+		 : null}
             </div>
             <div className='article-list__title paginated-list-text-container'>
               <h2>{article.layout}</h2>
               {attrs.headline
                 ? <h1>{attrs.headline}</h1>
-                : <h1 className='missing-title'>Missing Title</h1>
+                : <h1 className='missing-title'>Missing {this.props.isArtsyChannel ? "Magazine" : "Thumbnail"} Title</h1>
               }
-
               {shouldLockEditing
                 ? this.currentSessionText(article)
                 : <h2>{this.publishText(article)}</h2>

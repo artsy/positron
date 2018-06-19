@@ -6,7 +6,7 @@ import { Col, Row } from 'react-styled-flexboxgrid'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { onChangeArticle } from 'client/actions/editActions'
+import { onChangeArticle } from 'client/actions/edit/articleActions'
 import ImageUpload from './image_upload.coffee'
 import { SubArticleQuery } from 'client/queries/sub_articles'
 

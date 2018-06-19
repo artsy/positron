@@ -11,7 +11,7 @@ import * as Config from './draft_config'
 import { convertFromRichHtml, convertToRichHtml } from 'client/components/rich_text/utils/convert_html'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
-import { onChangeSection, newSection, removeSection } from 'client/actions/editActions'
+import { onChangeSection, newSection, removeSection } from 'client/actions/edit/sectionActions'
 import { getContentStartEnd } from 'client/models/article.js'
 
 export class SectionText extends Component {

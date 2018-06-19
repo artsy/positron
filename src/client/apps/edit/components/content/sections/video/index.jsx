@@ -8,7 +8,7 @@ import VideoSectionControls from './controls.jsx'
 import { Video } from '@artsy/reaction/dist/Components/Publishing'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
-import { onChangeHero, onChangeSection } from 'client/actions/editActions'
+import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
 
 export class SectionVideo extends Component {
   static propTypes = {
