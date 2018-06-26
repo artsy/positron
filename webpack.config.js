@@ -108,7 +108,7 @@ const config = {
     })
   ],
   resolve: {
-    extensions: ['.coffee', '.js', '.jsx', '.json', '.styl', '.ts', '.tsx'],
+    extensions: ['.mjs', '.coffee', '.js', '.jsx', '.json', '.styl', '.ts', '.tsx'],
     modules: [
       'node_modules',
       'src'
