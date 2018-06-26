@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
+// import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
 import Button from "@artsy/reaction/dist/Components/Buttons/Default"
 
 interface Props {
@@ -31,23 +31,25 @@ export class EditSourceControls extends Component<Props, State> {
     return (
       <EditSourceContainer>
         <InputContainer>
-        <Input
-          name={"title"}
-          value={this.state.title}
-          placeholder={"Enter source name"}
-          onChange={(event) => this.setState({title: event.target.value})}
-        />
-        <ApplyInputContainer>
-          <LinkInput
-            name={"url"}
-            value={this.state.url}
-            placeholder={"Paste or type a link"}
-            onChange={(event) => this.setState({url: event.target.value})}
+          <Input
+            className='bordered-input'
+            name={"title"}
+            value={this.state.title}
+            placeholder={"Enter source name"}
+            onChange={(event) => this.setState({title: event.target.value})}
           />
-          <ApplyButton onClick={() => this.props.onApply(this.state)}>
-            {"Apply"}
-          </ApplyButton>
-        </ApplyInputContainer>
+          <ApplyInputContainer>
+            <LinkInput
+              className='bordered-input'
+              name={"url"}
+              value={this.state.url}
+              placeholder={"Paste or type a link"}
+              onChange={(event) => this.setState({url: event.target.value})}
+            />
+            <ApplyButton onClick={() => this.props.onApply(this.state)}>
+              {"Apply"}
+            </ApplyButton>
+          </ApplyInputContainer>
         </InputContainer>
       </EditSourceContainer>
     )
@@ -57,6 +59,7 @@ export class EditSourceControls extends Component<Props, State> {
 const EditSourceContainer = styled.div`
   background-color: black;
   margin: 20px;
+  padding: 10px 10px 0 10px;
   width: 300px;
 `
 
@@ -64,21 +67,20 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding-top: 10px;
-  padding-left: 10px;
 `
 
+// TODO: Use Reaction borderedInput mixin
 const Input = styled.input`
-  ${borderedInput}
   height: 30px;
   margin-bottom: 10px;
+  background: white;
 `
 
 const LinkInput = Input.extend`
   margin-right: 0px;
 `
 
-const ApplyButton = styled(Button)`
+const ApplyButton = Button.extend.attrs<{onClick: any}>({})`
   height: 30px;
   margin: 0px;
   padding-right: 35px;
