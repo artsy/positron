@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import Colors from '@artsy/reaction/dist/Assets/Colors'
 // import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
-import Button from "@artsy/reaction/dist/Components/Buttons/Default"
 
 interface Props {
   onApply: (news_source: { title?: string, url?: string } | null) => void
@@ -28,13 +28,15 @@ export class EditSourceControls extends Component<Props, State> {
   }
 
   render() {
+    const { url, title } = this.state
+
     return (
       <EditSourceContainer>
         <InputContainer>
           <Input
             className='bordered-input'
             name={"title"}
-            value={this.state.title}
+            value={title}
             placeholder={"Enter source name"}
             onChange={(event) => this.setState({title: event.target.value})}
           />
@@ -42,11 +44,14 @@ export class EditSourceControls extends Component<Props, State> {
             <LinkInput
               className='bordered-input'
               name={"url"}
-              value={this.state.url}
+              value={url}
               placeholder={"Paste or type a link"}
               onChange={(event) => this.setState({url: event.target.value})}
             />
-            <ApplyButton onClick={() => this.props.onApply(this.state)}>
+            <ApplyButton
+              className='avant-garde-button'
+              onClick={() => this.props.onApply(this.state)}
+            >
               {"Apply"}
             </ApplyButton>
           </ApplyInputContainer>
@@ -80,10 +85,14 @@ const LinkInput = Input.extend`
   margin-right: 0px;
 `
 
-const ApplyButton = Button.extend.attrs<{onClick: any}>({})`
+const ApplyButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex: 1;
+  background: ${Colors.gray};
   height: 30px;
-  margin: 0px;
-  padding-right: 35px;
 `
 
 const ApplyInputContainer = styled.div`

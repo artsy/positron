@@ -1,7 +1,7 @@
-require('@babel/register')({
-  extensions: ['.mjs', '.ts', '.js', '.tsx', '.jsx']
-})
 require('regenerator-runtime/runtime')
+require('@babel/register')({
+  extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx']
+})
 require('coffeescript/register')
 require('raf/polyfill')
 require('should')

@@ -143,9 +143,9 @@ if (isDevelopment) {
         sourceMap: true,
         uglifyOptions: {
           compress: {
-            warnings: false,
-          },
-        },
+            warnings: false
+          }
+        }
       })
     )
   }

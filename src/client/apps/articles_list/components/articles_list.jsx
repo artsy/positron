@@ -217,7 +217,7 @@ const mapDispatchToProps = (dispatch) => ({
   viewArticlesAction: viewArticles
 })
 
-export default hot(module)( 
+export default hot(module)(
   connect(
     mapStateToProps,
     mapDispatchToProps

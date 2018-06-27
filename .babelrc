@@ -16,7 +16,7 @@
     "inline-react-svg",
     "rewire",
     ["module-resolver", {
-      "extensions": [".mjs", ".js", ".jsx", ".ts", ".tsx"],
+      "extensions": [".js", ".jsx", ".mjs", ".ts", ".tsx" ],
       "root": ["./src"]
     }]
   ],
