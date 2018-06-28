@@ -52,7 +52,7 @@ describe('EditContent', () => {
   })
 
   it('Renders EditVideo if article layout is video', () => {
-    props.article.layout = 'video'
+    props.article = Fixtures.VideoArticle
     const component = getWrapper(props)
 
     expect(component.find(EditVideo).exists()).toBe(true)
