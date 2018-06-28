@@ -4,7 +4,7 @@ import { clone } from 'lodash'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { VideoAbout, VideoAboutContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
+import { VideoAbout, VideoAboutContainer, Credits } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover, VideoCoverContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
@@ -218,6 +218,12 @@ export const EditVideoContainer = styled.div`
       color: gray;
     }
   }
+  ${Credits} {
+    div[data-block=true] .public-DraftStyleDefault-block {
+      padding: 0;
+    }
+  }
+
   ${VideoCoverContainer} {
     width: 100%;
     margin-bottom: 40px;
