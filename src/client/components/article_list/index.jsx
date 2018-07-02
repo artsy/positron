@@ -18,13 +18,14 @@ const IconCheckCircle = styled(Icon)`
 
 export class ArticleList extends Component {
   static propTypes = {
-    display: PropTypes.string,
-    checkable: PropTypes.bool,
-    articles: PropTypes.array,
-    selected: PropTypes.func,
     activeSessions: PropTypes.object,
-    user: PropTypes.object,
-    forceURL: PropTypes.string
+    articles: PropTypes.array,
+    checkable: PropTypes.bool,
+    display: PropTypes.string,
+    forceURL: PropTypes.string,
+    isArtsyChannel: PropTypes.bool,
+    selected: PropTypes.func,
+    user: PropTypes.object
   }
 
   static defaultProps = {
@@ -68,7 +69,14 @@ export class ArticleList extends Component {
   }
 
   renderArticles () {
-    const { checkable, articles, activeSessions, user, forceURL } = this.props
+    const {
+      activeSessions,
+      articles,
+      checkable,
+      forceURL,
+      isArtsyChannel,
+      user
+    } = this.props
 
     return articles.map(article => {
       const attrs = this.getDisplayAttrs(article)
@@ -78,6 +86,7 @@ export class ArticleList extends Component {
       const style = isCurrentlyBeingEdited ? {color: colors.grayMedium} : null
       const shouldLockEditing = isCurrentlyBeingEdited && !isCurrentUserEditing
       const lockedClass = shouldLockEditing ? 'locked' : ''
+      const missingData = `Missing ${isArtsyChannel ? 'Magazine' : 'Thumbnail'}`
 
       return (
         <div style={style} className='article-list__result paginated-list-item' key={article.id}>
@@ -96,17 +105,21 @@ export class ArticleList extends Component {
           >
             <div className='article-list__image paginated-list-img'
               style={attrs.image ? {backgroundImage: `url(${attrs.image})`} : {}}>
-              {!attrs.image
-		 ? <div className='missing-img'>
-		     Missing {this.props.isArtsyChannel ? "Magazine Thumbnail" : <span>Thumbnail<br />Image</span>}
-		   </div>
-		 : null}
+              {!attrs.image &&
+                <div className='missing-img'>
+                  {missingData}<br />Image
+                </div>
+              }
             </div>
             <div className='article-list__title paginated-list-text-container'>
-              <h2>{article.layout}</h2>
+              {article.layout !== 'classic' &&
+                <h2>{article.layout}</h2>
+              }
               {attrs.headline
                 ? <h1>{attrs.headline}</h1>
-                : <h1 className='missing-title'>Missing {this.props.isArtsyChannel ? "Magazine" : "Thumbnail"} Title</h1>
+                : <h1 className='missing-title'>
+                    {missingData} Title
+                  </h1>
               }
               {shouldLockEditing
                 ? this.currentSessionText(article)
