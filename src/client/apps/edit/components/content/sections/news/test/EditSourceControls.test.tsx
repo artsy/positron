@@ -30,7 +30,7 @@ describe('EditSourceControls', () => {
 
   it('calls onApply when apply is clicked', () => {
     const component = mount(<EditSourceControls {...props}/>)
-    const button = component.find('Button')
+    const button = component.find('button').at(0)
     button.simulate('click')
 
     expect(props.onApply.mock.calls[0]).toBeTruthy() 

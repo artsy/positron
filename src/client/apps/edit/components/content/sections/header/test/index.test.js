@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures, Header } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureHeader } from '@artsy/reaction/dist/Components/Publishing/Header/FeatureHeader'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
 import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
@@ -97,10 +98,10 @@ describe('Header', () => {
       const component = getWrapper(props)
 
       expect(component.find(Header).exists()).toBe(true)
-      expect(component.html()).toMatch('FeatureHeader__Div')
-      expect(component.html()).toMatch('VerticalOrSeriesTitle__Vertical')
-      expect(component.html()).toMatch('FeatureHeader__Title')
-      expect(component.html()).toMatch('FeatureHeader__Deck')
+      expect(component.find(FeatureHeader)).toHaveLength(1)
+      expect(component.text()).toMatch('Creativity')
+      expect(component.html()).toMatch('What’s the Path to Winning an Art Prize?')
+      expect(component.html()).toMatch('Lorem Ipsum')
       expect(component.html()).toMatch('Casey Lesser')
     })
 

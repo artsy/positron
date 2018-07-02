@@ -6,6 +6,7 @@ When an editor publishes content in Writer, it gets distributed across the web. 
 - [Artsy.net](#artsy.net)
 - [Email](#email-(sailthru))
 - [Google AMP](#google-amp)
+- [Google News (sitemaps)](#google-news)
 - [RSS](#rss)
 - [Analytics](#analytics)
 

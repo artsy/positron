@@ -3,6 +3,7 @@
 # can break this up into self-initializing app-level asset packages like Force.
 #
 
+require('regenerator-runtime/runtime')
 Backbone = require 'backbone'
 window.jQuery = window.$ = $ = require 'jquery'
 window.global = window
