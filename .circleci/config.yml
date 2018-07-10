@@ -41,6 +41,10 @@ jobs:
           name: Deploy to staging
           command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-staging.git master
 
+      - run:
+          name: Update staging git branch
+          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
+
   deploy-production:
     docker:
       - image: buildpack-deps:trusty
