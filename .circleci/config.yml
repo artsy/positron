@@ -11,9 +11,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        keys:
-        - yarn-{{ checksum "yarn.lock" }}
-        - yarn-
+          keys:
+            - yarn-{{ checksum "yarn.lock" }}
+            - yarn-
 
       - run:
           name: Yarn install
