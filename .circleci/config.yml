@@ -61,7 +61,9 @@ workflows:
       - build-and-test:
           filters:
             branches:
-              ignore: release
+              ignore:
+                - staging
+                - release
       - deploy-staging:
           requires:
             - build-and-test
