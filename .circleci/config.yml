@@ -11,12 +11,13 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          name: Restore yarn cache
-          key: yarn-{{ checksum "yarn.lock" }}
+          keys:
+            - yarn-{{ checksum "yarn.lock" }}
+            - yarn-
 
       - run:
           name: Yarn install
-          command: yarn install
+          command: yarn --check-files
 
       - save_cache:
           name: Save yarn cache
@@ -61,7 +62,9 @@ workflows:
       - build-and-test:
           filters:
             branches:
-              ignore: release
+              ignore:
+                - staging
+                - release
       - deploy-staging:
           requires:
             - build-and-test
