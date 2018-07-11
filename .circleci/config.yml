@@ -1,0 +1,74 @@
+version: 2
+
+jobs:
+  build-and-test:
+    working_directory: ~/positron
+    docker:
+      - image: circleci/node:8-stretch-browsers
+      - image: circleci/elasticsearch
+      - image: circleci/mongo:3
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore yarn cache
+          key: yarn-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Yarn install
+          command: yarn install
+
+      - save_cache:
+          name: Save yarn cache
+          key: yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
+
+      - run:
+          name: Poll for Elasticsearch
+          command: sleep 10 && curl --retry 10 --retry-delay 5 -v http://127.0.0.1:9200/
+
+      - run:
+          name: Yarn test
+          command: yarn test
+
+  deploy-staging:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Deploy to staging
+          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-staging.git master
+
+      - run:
+          name: Update staging git branch
+          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
+
+  deploy-production:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - run:
+          name: Deploy to production
+          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              ignore: release
+      - deploy-staging:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
+      - deploy-production:
+          filters:
+            branches:
+              only: release
