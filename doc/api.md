@@ -54,6 +54,9 @@ PUT /articles/:id
 DELETE /articles/:id
 GET /sync\_to\_post?article_id=
 
+#### A note on `gravity_id`
+Before articles existed in Positron, they lived in Gravity's API. All articles have now been moved to Positron's database, but there are a number of legacy articles ported from Gravity that do not belong to a channel, and are therefore not editable via Writer, and sometimes not searchable via the `id` param.  If you are looking for a published article that does not return when searching for the `id`, try searching for it using the `gravity_id`.
+
 ### Users
 
 **params:**
