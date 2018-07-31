@@ -39,7 +39,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderFeatureDeck = (hero) => {
+  renderFeatureDeck = hero => {
     const { onChangeHeroAction } = this.props
 
     return (
@@ -51,7 +51,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderFileUpload (prompt) {
+  renderFileUpload = prompt => {
     const { onChangeHeroAction } = this.props
 
     return (
@@ -65,7 +65,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderImage (hero) {
+  renderImage = hero => {
     const { type, url } = hero
     const { onChangeHeroAction } = this.props
     const { progress } = this.state
@@ -154,12 +154,14 @@ export class SectionHeader extends Component {
             <HeaderControls onProgress={this.onProgress} />
           }
 
-          <Header article={article} date={this.getPublishDate()}>
-            <span>Missing Vertical</span>
-            {this.renderTitle()}
-            {isFeature && this.renderFeatureDeck(hero)}
-            {isFeature && this.renderImage(hero)}
-          </Header>
+          <Header
+            article={article}
+            date={this.getPublishDate()}
+            editDeck={isFeature ? this.renderFeatureDeck(hero) : undefined}
+            editImage={isFeature ? this.renderImage(hero) : undefined}
+            editTitle={this.renderTitle()}
+            editVertical='Missing Vertical'
+          />
         </div>
       )
     }
