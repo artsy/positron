@@ -5,7 +5,7 @@ import {
   TextInputUrl,
   Button,
   BackgroundOverlay
-} from 'client/components/rich_text/components/input_url.jsx'
+} from 'client/components/rich_text/components/input_url'
 
 describe('TextInputUrl', () => {
   let props
@@ -61,7 +61,7 @@ describe('TextInputUrl', () => {
     expect(component.state().url).toBe(value)
   })
 
-  it('Can save a link on click', () => {
+  it('Can save a link on button click', () => {
     const component = getWrapper(props)
     const url = 'http://link.com'
     const button = component.find(Button)
