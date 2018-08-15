@@ -5,58 +5,6 @@ div[class^='Caption__CaptionContainer']
   .rich-text--paragraph a
     border-bottom 1px solid
 
-.TextInputUrl
-  position absolute
-  background-color black
-  height 50px
-  width 400px
-  padding 10px
-  display flex
-  &__input
-    position relative
-    input
-      background-color white
-      width 300px
-      max-width 300px
-      garamond l-caption
-      height 30px
-  &__bg
-    position fixed
-    top 0
-    left 0
-    right 0
-    bottom 0
-  button.add-link
-    background gray-lighter-color
-    border 0
-    padding 0
-    width 80px
-    height 30px
-    text-align center
-    avant-garde s-headline
-    transition color .15s
-    &:hover
-      color purple-color
-  button.add-link::after
-    content ''
-    width 0
-    height 0
-    border-left 7px solid transparent
-    border-right 7px solid transparent
-    border-bottom 7px solid #000
-    position absolute
-    top -7px
-    left 50%
-
-.SectionImages .TextInputUrl,
-.TextInputUrl
-  .RemoveButton
-    position absolute
-    right 10px
-    width 20px
-    height 20px
-    top 5px
-
 .TextNav
   position absolute
   top -40px
@@ -66,7 +14,7 @@ div[class^='Caption__CaptionContainer']
   background black
   justify-content center
   border-radius 5px
-  z-index 6
+  z-index 10
   ::after
     content ''
     width 0
