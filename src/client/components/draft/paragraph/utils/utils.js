@@ -8,6 +8,10 @@ import {
 import Immutable from 'immutable'
 import { getSelectionDetails } from 'client/components/rich_text/utils/text_selection'
 
+/**
+ * Helpers for draft-js Paragraph component setup
+*/
+
 export const blockRenderMap = Immutable.Map({
   /**
    * blockRenderMap determines how HTML blocks are rendered in

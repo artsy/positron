@@ -3,6 +3,10 @@ import { convertFromHTML, convertToHTML } from 'draft-convert'
 import { stripGoogleStyles } from 'client/components/rich_text/utils/text_stripping'
 import { styleNamesFromMap, styleNodesFromMap } from './utils'
 
+/**
+ * Helpers for draft-js Paragraph component data conversion
+*/
+
 export const draftDefaultStyles = [
   'BOLD',
   'CODE',
