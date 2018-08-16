@@ -2,7 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 import { CanvasImages } from '../../../components/canvas/canvas_images'
-import { RemoveButtonContainer } from 'client/components/remove_button'
+import { RemoveButton, RemoveButtonContainer } from 'client/components/remove_button'
 
 describe('Canvas Images', () => {
   let props
@@ -186,17 +186,16 @@ describe('Canvas Images', () => {
       it('Can remove an image', () => {
         props.campaign.canvas.logo = 'http://artsy.net/logo.jpg'
         props.campaign.canvas.assets = [
-          {url: 'http://artsy.net/image1.jpg'},
           {url: 'http://artsy.net/image1.jpg'}
         ]
         const component = mount(
           <CanvasImages {...props} />
         )
-        component.find('.RemoveButton').at(2).simulate('click')
+        component.find(RemoveButtonContainer).at(1).simulate('click')
         const onChangeArgs = props.onChange.mock.calls[0]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
-        expect(onChangeArgs[1].length).toBe(1)
+        expect(onChangeArgs[1].length).toBe(0)
         expect(onChangeArgs[2]).toBe(props.index)
       })
 
