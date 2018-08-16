@@ -14,6 +14,8 @@ describe('Character Limit', () => {
   let props
   beforeEach(() => {
     props = {
+      defaultValue: 'Sample copy lorem ipsum.',
+      html: false,
       label: 'Title',
       limit: 50,
       placeholder: 'Enter a title',
@@ -23,6 +25,7 @@ describe('Character Limit', () => {
 
   describe('Input', () => {
     it('renders an empty input', () => {
+      delete props.defaultValue
       const component = getWrapper(props)
 
       expect(component.text()).toMatch('Title')
@@ -32,7 +35,6 @@ describe('Character Limit', () => {
     })
 
     it('renders an input with saved content', () => {
-      props.defaultValue = 'Sample copy lorem ipsum.'
       const component = getWrapper(props)
 
       expect(component.text()).toMatch('26 Characters')
@@ -49,6 +51,7 @@ describe('Character Limit', () => {
     })
 
     it('calls onChange and resets the remaining characters on input', () => {
+      props.limit = 23
       const component = getWrapper(props)
 
       const input = component.find('input').at(0)
@@ -59,9 +62,11 @@ describe('Character Limit', () => {
   })
 
   describe('Textarea', () => {
-    it('renders a textarea input', () => {
-      props.type = 'textarea'
+    beforeEach(() => {
       props.limit = 25
+      props.type = 'textarea'
+    })
+    it('renders a textarea input', () => {
       const component = getWrapper(props)
 
       expect(component.find(PlainText)).toHaveLength(1)
