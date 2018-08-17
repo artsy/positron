@@ -15,25 +15,25 @@ export const draftDefaultStyles = [
   'UNDERLINE'
 ]
 
+/**
+ * Convert HTML to Draft ContentState
+ */
 export const convertHtmlToDraft = (html, hasLinks, allowedStyles) => {
-  /**
-   * Convert HTML to Draft ContentState
-   */
   let cleanedHtml = stripGoogleStyles(html)
 
   return convertFromHTML({
     htmlToBlock,
     htmlToEntity: hasLinks ? htmlToEntity : undefined,
     htmlToStyle: (nodeName, node, currentStyle) => {
-      return htmlToStyle(nodeName, node, currentStyle, allowedStyles)
+      return htmlToStyle(nodeName, currentStyle, allowedStyles)
     }
   })(cleanedHtml)
 }
 
+/**
+ * Convert Draft ContentState to HTML
+ */
 export const convertDraftToHtml = (currentContent, allowedStyles, stripLinebreaks) => {
-  /**
-   * Convert Draft ContentState to HTML
-   */
   const styles = styleNamesFromMap(allowedStyles)
 
   const html = convertToHTML({
@@ -50,7 +50,7 @@ export const convertDraftToHtml = (currentContent, allowedStyles, stripLinebreak
 }
 
 /**
- * convertHtmlToDraft helpers
+ * convert Html elements to Draft blocks
  */
 export const htmlToBlock = (nodeName, node) => {
   if (['body', 'ul', 'ol', 'tr'].includes(nodeName)) {
@@ -65,6 +65,9 @@ export const htmlToBlock = (nodeName, node) => {
   }
 }
 
+/**
+ * convert Html links to Draft entities
+ */
 export const htmlToEntity = (nodeName, node, createEntity) => {
   if (nodeName === 'a') {
     const data = { url: node.href }
@@ -76,7 +79,10 @@ export const htmlToEntity = (nodeName, node, createEntity) => {
   }
 }
 
-export const htmlToStyle = (nodeName, node, currentStyle, allowedStyles) => {
+/**
+ * convert Html styles to Draft styles
+ */
+export const htmlToStyle = (nodeName, currentStyle, allowedStyles) => {
   const styleNodes = styleNodesFromMap(allowedStyles)
   const styleNames = styleNamesFromMap(allowedStyles)
   const isBlock = ['body', 'p', 'div'].includes(nodeName)
@@ -98,9 +104,8 @@ export const htmlToStyle = (nodeName, node, currentStyle, allowedStyles) => {
 }
 
 /**
- * convertDraftToHtml helpers
+ * convert Draft styles to Html tags
  */
-
 export const styleToHTML = (style, allowedStyles) => {
   const isAllowed = allowedStyles.includes(style)
   const plainText = {start: '', end: ''}
@@ -109,12 +114,15 @@ export const styleToHTML = (style, allowedStyles) => {
     case 'BOLD':
       return isAllowed ? <b /> : plainText
     case 'ITALIC':
-      return isAllowed ? <i /> : plainText
+      return block = isAllowed ? <i /> : plainText
     default:
       return plainText
   }
 }
 
+/**
+ * convert Draft entities to Html links
+ */
 export const entityToHTML = (entity, text) => {
   if (entity.type === 'LINK') {
     return <a href={entity.data.url}>{text}</a>
@@ -122,6 +130,9 @@ export const entityToHTML = (entity, text) => {
   return text
 }
 
+/**
+ * convert Draft blocks to Html elements
+ */
 export const blockToHTML = block => {
   // TODO: Fix type switching from draft-convert to avoid weird if statement
   if (block.type === 'ordered-list-item') {
@@ -147,6 +158,9 @@ export const blockToHTML = block => {
   }
 }
 
+/**
+ * convert multiple paragraphs into one
+ */
 export const stripParagraphLinebreaks = html => {
   return html.replace(/<\/p><p>/g, ' ')
 }

@@ -69,7 +69,7 @@ describe('Paragraph utils', () => {
 
   describe('#keyBindingFn', () => {
     it('Can handle link-prompt', () => {
-      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValueOnce(true)    
+      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValueOnce(true)
       const keybinding = keyBindingFn({keyCode: 75})
 
       expect(keybinding).toBe('link-prompt')

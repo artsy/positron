@@ -4,10 +4,10 @@ import { EditorState, RichUtils } from 'draft-js'
  * Helpers for draft-js Paragraph component link handling
 */
 
+/**
+ * Creates a link entity from url
+ */
 export const confirmLink = (url, editorState) => {
-  /**
-   * Creates a link entity from url
-   */
   const contentState = editorState.getCurrentContent()
   const currentContent = contentState.createEntity(
     'LINK',
@@ -27,10 +27,10 @@ export const confirmLink = (url, editorState) => {
   )
 }
 
+/**
+ * Removes link entities from text selection
+ */
 export const removeLink = editorState => {
-  /**
-   * Removes link entities from text selection
-   */
   const selection = editorState.getSelection()
   const hasTextSelection = !selection.isCollapsed()
 
@@ -39,10 +39,10 @@ export const removeLink = editorState => {
   }
 }
 
+/**
+ * Returns data from an existing link in a text selection
+ */
 export const linkDataFromSelection = editorState => {
-  /**
-   * Returns data from an existing link in a text selection
-   */
   const contentState = editorState.getCurrentContent()
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
