@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { CompositeDecorator } from 'draft-js'
+import React, { ReactChild } from 'react'
+import { CompositeDecorator, ContentBlock, ContentState } from 'draft-js'
+import { Decorator } from './typings'
 
 /**
  * Used when creating an editor, determines
  * which entities are allowed, and how find
  * and render them in the Editor component
  */
-export const decorators = hasLinks => {
+export const decorators = (hasLinks: boolean) => {
   const decorators = getDecorators(hasLinks)
   return new CompositeDecorator(decorators)
 }
@@ -15,8 +15,8 @@ export const decorators = hasLinks => {
 /**
  * Separated from #decorators for testing purposes
  */
-export const getDecorators = hasLinks => {
-  let decorators = []
+export const getDecorators = (hasLinks: boolean) => {
+  let decorators: Decorator = []
 
   if (hasLinks) {
     decorators.push({
@@ -30,7 +30,11 @@ export const getDecorators = hasLinks => {
 /**
  * Used by decorator to find existing link entities from a contentBlock
  */
-export const findLinkEntities = (contentBlock, callback, contentState) => {
+export const findLinkEntities = (
+  contentBlock: ContentBlock,
+  callback: (start: number, end: number) => void,
+  contentState: ContentState
+) => {
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity()
@@ -46,7 +50,7 @@ export const findLinkEntities = (contentBlock, callback, contentState) => {
 /**
  * Used by decorator to render links in draft's Editor component
  */
-export const Link = props => {
+export const Link = (props: LinkProps) => {
   const { children, contentState, entityKey } = props
   const { url } = contentState.getEntity(entityKey).getData()
   // Don't allow links to click through from editor
@@ -59,8 +63,8 @@ export const Link = props => {
   )
 }
 
-Link.propTypes = {
-  children: PropTypes.any,
-  contentState: PropTypes.object,
-  entityKey: PropTypes.string
+export interface LinkProps {
+  children: ReactChild,
+  contentState: ContentState,
+  entityKey: string
 }

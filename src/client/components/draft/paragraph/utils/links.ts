@@ -7,7 +7,7 @@ import { EditorState, RichUtils } from 'draft-js'
 /**
  * Creates a link entity from url
  */
-export const confirmLink = (url, editorState) => {
+export const confirmLink = (url: string, editorState: EditorState) => {
   const contentState = editorState.getCurrentContent()
   const currentContent = contentState.createEntity(
     'LINK',
@@ -30,7 +30,7 @@ export const confirmLink = (url, editorState) => {
 /**
  * Removes link entities from text selection
  */
-export const removeLink = editorState => {
+export const removeLink = (editorState: EditorState) => {
   const selection = editorState.getSelection()
   const hasTextSelection = !selection.isCollapsed()
 
@@ -42,7 +42,7 @@ export const removeLink = editorState => {
 /**
  * Returns data from an existing link in a text selection
  */
-export const linkDataFromSelection = editorState => {
+export const linkDataFromSelection = (editorState: EditorState) => {
   const contentState = editorState.getCurrentContent()
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()

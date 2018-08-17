@@ -1,166 +1,154 @@
-import React from 'react'
-import { convertFromHTML, convertToHTML } from 'draft-convert'
-import { stripGoogleStyles } from 'client/components/rich_text/utils/text_stripping'
-import { styleNamesFromMap, styleNodesFromMap } from './utils'
-
+"use strict";
+exports.__esModule = true;
+var react_1 = require("react");
+var draft_convert_1 = require("draft-convert");
+var text_stripping_1 = require("../../../rich_text/utils/text_stripping");
+var utils_1 = require("./utils");
 /**
  * Helpers for draft-js Paragraph component data conversion
 */
-
-export const draftDefaultStyles = [
-  'BOLD',
-  'CODE',
-  'ITALIC',
-  'STRIKETHROUGH',
-  'UNDERLINE'
-]
-
+exports.draftDefaultStyles = [
+    'BOLD',
+    'CODE',
+    'ITALIC',
+    'STRIKETHROUGH',
+    'UNDERLINE'
+];
 /**
  * Convert HTML to Draft ContentState
  */
-export const convertHtmlToDraft = (html, hasLinks, allowedStyles) => {
-  let cleanedHtml = stripGoogleStyles(html)
-
-  return convertFromHTML({
-    htmlToBlock,
-    htmlToEntity: hasLinks ? htmlToEntity : undefined,
-    htmlToStyle: (nodeName, node, currentStyle) => {
-      return htmlToStyle(nodeName, currentStyle, allowedStyles)
-    }
-  })(cleanedHtml)
-}
-
+exports.convertHtmlToDraft = function (html, hasLinks, allowedStyles) {
+    var cleanedHtml = text_stripping_1.stripGoogleStyles(html);
+    return draft_convert_1.convertFromHTML({
+        htmlToBlock: exports.htmlToBlock,
+        htmlToEntity: hasLinks ? exports.htmlToEntity : undefined,
+        // TODO: type currentStyle OrderedSet
+        htmlToStyle: function (nodeName, _, currentStyle) {
+            return exports.htmlToStyle(nodeName, currentStyle, allowedStyles);
+        }
+    })(cleanedHtml);
+};
 /**
  * Convert Draft ContentState to HTML
  */
-export const convertDraftToHtml = (currentContent, allowedStyles, stripLinebreaks) => {
-  const styles = styleNamesFromMap(allowedStyles)
-
-  const html = convertToHTML({
-    entityToHTML,
-    styleToHTML: style => styleToHTML(style, styles),
-    blockToHTML
-  })(currentContent)
-
-  if (stripLinebreaks) {
-    return stripParagraphLinebreaks(html)
-  } else {
-    return html
-  }
-}
-
+exports.convertDraftToHtml = function (currentContent, allowedStyles, stripLinebreaks) {
+    var styles = utils_1.styleNamesFromMap(allowedStyles);
+    var html = draft_convert_1.convertToHTML({
+        entityToHTML: exports.entityToHTML,
+        styleToHTML: function (style) { return exports.styleToHTML(style, styles); },
+        blockToHTML: exports.blockToHTML
+    })(currentContent);
+    if (stripLinebreaks) {
+        return exports.stripParagraphLinebreaks(html);
+    }
+    else {
+        return html;
+    }
+};
 /**
  * convert Html elements to Draft blocks
  */
-export const htmlToBlock = (nodeName, node) => {
-  if (['body', 'ul', 'ol', 'tr'].includes(nodeName)) {
-    // Nested elements are empty, wrap their children instead
-    return {}
-  } else {
-    // Return all elements as default block
-    return {
-      type: 'unstyled',
-      element: 'div'
+exports.htmlToBlock = function (nodeName, node) {
+    if (['body', 'ul', 'ol', 'tr'].includes(nodeName)) {
+        // Nested elements are empty, wrap their children instead
+        return {};
     }
-  }
-}
-
+    else {
+        // Return all elements as default block
+        return {
+            type: 'unstyled',
+            element: 'div'
+        };
+    }
+};
 /**
  * convert Html links to Draft entities
  */
-export const htmlToEntity = (nodeName, node, createEntity) => {
-  if (nodeName === 'a') {
-    const data = { url: node.href }
-    return createEntity(
-      'LINK',
-      'MUTABLE',
-      data
-    )
-  }
-}
-
+exports.htmlToEntity = function (nodeName, node, createEntity) {
+    if (nodeName === 'a') {
+        var data = { url: node.href };
+        return createEntity('LINK', 'MUTABLE', data);
+    }
+};
 /**
  * convert Html styles to Draft styles
  */
-export const htmlToStyle = (nodeName, currentStyle, allowedStyles) => {
-  const styleNodes = styleNodesFromMap(allowedStyles)
-  const styleNames = styleNamesFromMap(allowedStyles)
-  const isBlock = ['body', 'p', 'div'].includes(nodeName)
-  const isAllowedNode = styleNodes.includes(nodeName.toUpperCase())
-
-  if (isBlock || isAllowedNode) {
-    return currentStyle
-  } else {
-    // Remove draft default styles unless explicitly allowed
-    let style = currentStyle
-    draftDefaultStyles.map(draftStyle => {
-      const isAllowedStyle = styleNames.includes(draftStyle)
-      if (!isAllowedStyle) {
-        style = style.remove(draftStyle)
-      }
-    })
-    return style
-  }
-}
-
+exports.htmlToStyle = function (nodeName, currentStyle, // TODO: type OrderedSet
+allowedStyles) {
+    var styleNodes = utils_1.styleNodesFromMap(allowedStyles);
+    var styleNames = utils_1.styleNamesFromMap(allowedStyles);
+    var isBlock = ['body', 'p', 'div'].includes(nodeName);
+    var isAllowedNode = styleNodes.includes(nodeName.toUpperCase());
+    if (isBlock || isAllowedNode) {
+        return currentStyle;
+    }
+    else {
+        // Remove draft default styles unless explicitly allowed
+        var style_1 = currentStyle;
+        exports.draftDefaultStyles.map(function (draftStyle) {
+            var isAllowedStyle = styleNames.includes(draftStyle);
+            if (!isAllowedStyle) {
+                style_1 = style_1.remove(draftStyle);
+            }
+        });
+        return style_1;
+    }
+};
 /**
  * convert Draft styles to Html tags
  */
-export const styleToHTML = (style, allowedStyles) => {
-  const isAllowed = allowedStyles.includes(style)
-  const plainText = {start: '', end: ''}
-
-  switch (style) {
-    case 'BOLD':
-      return isAllowed ? <b /> : plainText
-    case 'ITALIC':
-      return block = isAllowed ? <i /> : plainText
-    default:
-      return plainText
-  }
-}
-
+exports.styleToHTML = function (style, allowedStyles) {
+    var isAllowed = allowedStyles.includes(style);
+    var plainText = { start: '', end: '' };
+    switch (style) {
+        case 'BOLD':
+            return isAllowed ? <b /> : plainText;
+        case 'ITALIC':
+            return isAllowed ? <i /> : plainText;
+        default:
+            return plainText;
+    }
+};
 /**
  * convert Draft entities to Html links
  */
-export const entityToHTML = (entity, text) => {
-  if (entity.type === 'LINK') {
-    return <a href={entity.data.url}>{text}</a>
-  }
-  return text
-}
-
+exports.entityToHTML = function (entity, text) {
+    if (entity.type === 'LINK') {
+        return <a href={entity.data.url}>{text}</a>;
+    }
+    return text;
+};
 /**
  * convert Draft blocks to Html elements
  */
-export const blockToHTML = block => {
-  // TODO: Fix type switching from draft-convert to avoid weird if statement
-  if (block.type === 'ordered-list-item') {
-    return {
-      start: '<p>',
-      end: '</p>',
-      nestStart: '',
-      nestEnd: ''
+exports.blockToHTML = function (block) {
+    // TODO: Fix type switching from draft-convert to avoid weird if statement
+    if (block.type === 'ordered-list-item') {
+        return {
+            start: '<p>',
+            end: '</p>',
+            nestStart: '',
+            nestEnd: ''
+        };
     }
-  }
-  if (block.type === 'unordered-list-item') {
-    return {
-      start: '<p>',
-      end: '</p>',
-      nestStart: '',
-      nestEnd: ''
+    if (block.type === 'unordered-list-item') {
+        return {
+            start: '<p>',
+            end: '</p>',
+            nestStart: '',
+            nestEnd: ''
+        };
     }
-  } else {
-    return {
-      start: '<p>',
-      end: '</p>'
+    else {
+        return {
+            start: '<p>',
+            end: '</p>'
+        };
     }
-  }
-}
-
+};
 /**
  * convert multiple paragraphs into one
  */
-export const stripParagraphLinebreaks = html => {
-  return html.replace(/<\/p><p>/g, ' ')
-}
+exports.stripParagraphLinebreaks = function (html) {
+    return html.replace(/<\/p><p>/g, ' ');
+};

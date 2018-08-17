@@ -8,9 +8,9 @@ import {
   styleNamesFromMap,
   styleNodesFromMap
 } from '../utils'
-const SelectionUtils = require('../../../../rich_text/utils/text_selection.js')
+const SelectionUtils = require('client/components/rich_text/utils/text_selection')
 
-jest.mock('../../../../rich_text/utils/text_selection.js')
+jest.mock('../../../../rich_text/utils/text_selection')
 
 describe('Paragraph utils', () => {
   describe('#styleMapFromNodes', () => {
