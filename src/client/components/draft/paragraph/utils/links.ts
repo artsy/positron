@@ -36,6 +36,8 @@ export const removeLink = (editorState: EditorState) => {
 
   if (hasTextSelection) {
     return RichUtils.toggleLink(editorState, selection, null)
+  } else {
+    return false
   }
 }
 
@@ -54,5 +56,7 @@ export const linkDataFromSelection = (editorState: EditorState) => {
     // If selected text has a link, return data
     const entity = contentState.getEntity(linkKey)
     return entity.getData()
+  } else {
+    return ''
   }
 }

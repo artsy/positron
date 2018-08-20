@@ -1,11 +1,11 @@
-import { convertFromHTML } from 'draft-convert'
+import { convertFromHTML, convertToHTML } from 'draft-convert'
 import { EditorState } from 'draft-js'
 import {
   confirmLink,
   linkDataFromSelection,
   removeLink
 } from '../links'
-import { htmlToEntity } from '../convert'
+import { htmlToEntity, entityToHTML } from '../convert'
 import { decorators } from '../decorators'
 
 describe('Links', () => {
@@ -58,15 +58,17 @@ describe('Links', () => {
     it('Removes a link at text selection', () => {
       const editorState = getEditorState(htmlWithLink)
       const newState = removeLink(editorState)
+      const newContent = newState && newState.getCurrentContent()
+      const html = convertToHTML({ entityToHTML })(newContent)
 
-      expect(newState.getCurrentContent()).toBeDefined()
+      expect(html).toBe('<p>a link</p>')
     })
 
-    it('Returns nothing if no selection', () => {
+    it('Returns false if no selection', () => {
       const editorState = getEditorState(htmlWithLink, false)
       const newState = removeLink(editorState)
 
-      expect(newState).not.toBeDefined()
+      expect(newState).toBe(false)
     })
   })
 
@@ -78,11 +80,11 @@ describe('Links', () => {
       expect(linkData.url).toBe('https://artsy.net/')
     })
 
-    it('Returns nothing if no link', () => {
+    it('Returns empty string if no link', () => {
       const editorState = getEditorState(html, false)
       const linkData = linkDataFromSelection(editorState)
 
-      expect(linkData).not.toBeDefined()
+      expect(linkData).toBe('')
     })
   })
 })

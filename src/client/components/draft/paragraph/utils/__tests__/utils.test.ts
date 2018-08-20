@@ -8,11 +8,13 @@ import {
   styleNamesFromMap,
   styleNodesFromMap
 } from '../utils'
-const SelectionUtils = require('client/components/rich_text/utils/text_selection')
+const SelectionUtils = require('../../../../rich_text/utils/text_selection')
 
 jest.mock('../../../../rich_text/utils/text_selection')
 
 describe('Paragraph utils', () => {
+  let e: React.KeyboardEvent<{}> = {} as React.KeyboardEvent<{}>
+
   describe('#styleMapFromNodes', () => {
     it('Converts an array of style nodeNames to styleMap', () => {
       const styleMap = styleMapFromNodes(['B'])
@@ -68,9 +70,14 @@ describe('Paragraph utils', () => {
   })
 
   describe('#keyBindingFn', () => {
+    beforeEach(() => {
+      e.key = 'K'
+      e.keyCode = 75
+    })
+
     it('Can handle link-prompt', () => {
       Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValueOnce(true)
-      const keybinding = keyBindingFn({keyCode: 75})
+      const keybinding = keyBindingFn(e)
 
       expect(keybinding).toBe('link-prompt')
     })
@@ -78,23 +85,25 @@ describe('Paragraph utils', () => {
     it('Returns default keybinding if not link-prompt', () => {
       Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValue(false)
       Draft.getDefaultKeyBinding = jest.fn()
-      keyBindingFn({ keyCode: 75 })
+      keyBindingFn(e)
 
       expect(Draft.getDefaultKeyBinding).toBeCalled()
     })
   })
 
   describe('#handleReturn', () => {
-    let e
+    let editorState
     beforeEach(() => {
-      e = { preventDefault: jest.fn() }
+      e.key = 'Enter'
+      editorState = Draft.EditorState.createEmpty()
+      e.preventDefault = jest.fn()
     })
 
     it('Returns not-handled if focus is in first block', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
         isFirstBlock: true
       })
-      const returnHandler = handleReturn(e)
+      const returnHandler = handleReturn(e, editorState)
 
       expect(returnHandler).toBe('not-handled')
       expect(e.preventDefault).not.toBeCalled()
@@ -104,7 +113,7 @@ describe('Paragraph utils', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
         anchorOffset: 2
       })
-      const returnHandler = handleReturn(e)
+      const returnHandler = handleReturn(e, editorState)
 
       expect(returnHandler).toBe('not-handled')
       expect(e.preventDefault).not.toBeCalled()
@@ -114,7 +123,7 @@ describe('Paragraph utils', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
         anchorOffset: 0
       })
-      const returnHandler = handleReturn(e)
+      const returnHandler = handleReturn(e, editorState)
 
       expect(returnHandler).toBe('handled')
       expect(e.preventDefault).toBeCalled()
