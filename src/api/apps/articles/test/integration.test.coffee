@@ -69,6 +69,7 @@ describe 'articles endpoints', ->
           .end (err, res) ->
             err.status.should.equal 404
             done()
+        return
 
   describe 'as a channel member', ->
 

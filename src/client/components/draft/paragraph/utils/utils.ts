@@ -30,7 +30,7 @@ export const blockRenderMap = Immutable.Map({
 /**
  * Default allowedStyles for Paragraph component
  */
-const paragraphStyleMap: StyleMap = [
+export const paragraphStyleMap: StyleMap = [
   {label: 'B', name: 'BOLD'},
   {label: 'I', name: 'ITALIC'}
 ]
