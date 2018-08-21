@@ -23,7 +23,7 @@ describe 'articles endpoints', ->
         { title: 'Flowers on Flowers', published: true }
         { title: 'Flowers on Flowers The Sequel', published: true }
         { published: false }
-      ], (err, articles) =>
+      ], (err, articles) ->
         request
           .get("http://localhost:5000/articles?count=true")
           .end (err, res) ->
@@ -31,6 +31,7 @@ describe 'articles endpoints', ->
             res.body.count.should.equal 2
             res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
             done()
+        return
 
   describe 'as a non-admin', ->
 
@@ -63,7 +64,7 @@ describe 'articles endpoints', ->
           partner_channel_id: ObjectId '5086df098523e60002000012'
           published: false
         }
-      ], (err, articles) =>
+      ], (err, articles) ->
         request
           .get("http://localhost:5000/articles/5086df098523e60002000012")
           .end (err, res) ->
@@ -100,6 +101,7 @@ describe 'articles endpoints', ->
             res.body.count.should.equal 2
             res.body.results[0].title.should.equal 'Flowers on Flowers The Sequel'
             done()
+        return
 
     it 'gets a list of articles by channel', (done) ->
       fabricate 'articles', [
@@ -110,25 +112,27 @@ describe 'articles endpoints', ->
         }
       ], (err, articles) =>
         request
-        .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true")
-        .set('X-Access-Token': @token)
-        .end (err, res) ->
-          res.body.total.should.equal 1
-          res.body.count.should.equal 1
-          res.body.results[0].title.should.equal 'Winter Is Coming'
-          done()
+          .get("http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true")
+          .set('X-Access-Token': @token)
+          .end (err, res) ->
+            res.body.total.should.equal 1
+            res.body.count.should.equal 1
+            res.body.results[0].title.should.equal 'Winter Is Coming'
+            done()
+        return
 
     it 'denies unpublished requests', (done) ->
       fabricate 'articles', [
         { title: 'Flowers on Flowers', published: true }
         { title: 'Flowers on Flowers The Sequel', published: true }
         { published: false }
-      ], (err, articles) =>
+      ], (err, articles) ->
         request
           .get("http://localhost:5000/articles?published=false")
-        .end (err, res) ->
-          res.body.message.should.containEql 'published=true'
-          done()
+          .end (err, res) ->
+            res.body.message.should.containEql 'published=true'
+            done()
+        return
 
     it 'gets a single article', (done) ->
       fabricate 'articles', [
@@ -150,6 +154,7 @@ describe 'articles endpoints', ->
             res.body.sections[0].body.should.equal 'Cows on the lawn'
             res.body.title.should.equal 'Cows on the prarie'
             done()
+        return
 
     it 'gets a single article of a draft', (done) ->
       fabricate 'articles', [
@@ -166,6 +171,7 @@ describe 'articles endpoints', ->
           .end (err, res) ->
             res.body.title.should.equal 'Cows on the prarie'
             done()
+        return
 
     it 'updates an article', (done) ->
       fabricate 'articles', [
@@ -186,6 +192,7 @@ describe 'articles endpoints', ->
           .end (err, res) ->
             res.body.title.should.equal 'Hellow Wrld'
             done()
+        return
 
     it 'deletes an article', (done) ->
       fabricate 'articles', [
@@ -203,3 +210,4 @@ describe 'articles endpoints', ->
             db.articles.count (err, count) ->
               count.should.equal 1
               done()
+        return
