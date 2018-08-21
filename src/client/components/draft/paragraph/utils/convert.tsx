@@ -31,6 +31,7 @@ export const convertHtmlToDraft = (
   allowedStyles: StyleMap
 ) => {
   let cleanedHtml = stripGoogleStyles(html)
+  cleanedHtml = removeEmptyParagraphs(cleanedHtml)
 
   return convertFromHTML({
     htmlToBlock,
@@ -58,10 +59,12 @@ export const convertDraftToHtml = (
     blockToHTML
   })(currentContent)
 
+  const formattedHtml = removeEmptyParagraphs(html)
+
   if (stripLinebreaks) {
-    return stripParagraphLinebreaks(html)
+    return stripParagraphLinebreaks(formattedHtml)
   } else {
-    return html
+    return formattedHtml
   }
 }
 
@@ -191,4 +194,14 @@ export const blockToHTML = (block: RawDraftContentBlock) => {
  */
 export const stripParagraphLinebreaks = (html: string) => {
   return html.replace(/<\/p><p>/g, ' ')
+}
+
+/**
+ * strip empty paragraphs from html
+ */
+export const removeEmptyParagraphs = (html: string) => {
+  return html
+          .replace(/<p><\/p>/g, '')
+          .replace(/<p><br \/><\/p>/g, '')
+          .replace(/<p><br><\/p>/g, '')
 }
