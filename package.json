@@ -136,6 +136,7 @@
     "yoastseo": "artsy/YoastSEO.js#develop"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.10.24",
     "@types/enzyme": "^3.1.6",
     "@types/express": "^4.11.0",
     "@types/jest": "^21.1.9",
