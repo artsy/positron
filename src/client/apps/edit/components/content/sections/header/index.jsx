@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Header } from '@artsy/reaction/dist/Components/Publishing'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import HeaderControls from './controls/index.jsx'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
-import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
+import FileInput from 'client/components/file_input'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import HeaderControls from './controls'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
+import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { onChangeHero } from 'client/actions/edit/sectionActions'
@@ -23,7 +23,7 @@ export class SectionHeader extends Component {
     progress: null
   }
 
-  onProgress = (progress) => {
+  onProgress = progress => {
     this.setState({ progress })
   }
 
@@ -39,7 +39,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderFeatureDeck = (hero) => {
+  renderFeatureDeck = hero => {
     const { onChangeHeroAction } = this.props
 
     return (
@@ -51,7 +51,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderFileUpload (prompt) {
+  renderFileUpload = prompt => {
     const { onChangeHeroAction } = this.props
 
     return (
@@ -65,7 +65,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderImage (hero) {
+  renderImage = hero => {
     const { type, url } = hero
     const { onChangeHeroAction } = this.props
     const { progress } = this.state

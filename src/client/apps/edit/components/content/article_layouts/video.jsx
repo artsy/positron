@@ -6,10 +6,10 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { VideoAbout, VideoAboutContainer, Credits } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover, VideoCoverContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
-import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
+import FileInput from 'client/components/file_input'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
+import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 
@@ -31,7 +31,7 @@ export class EditVideo extends Component {
     onChangeArticleAction('media', media)
   }
 
-  onDateChange = (e) => {
+  onDateChange = e => {
     const date = moment(e.target.value).toISOString()
     this.onMediaChange('release_date', date)
   }
