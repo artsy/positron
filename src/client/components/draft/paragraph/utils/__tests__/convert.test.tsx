@@ -2,7 +2,8 @@ import { convertFromHTML } from 'draft-convert'
 import {
   convertHtmlToDraft,
   convertDraftToHtml,
-  htmlToEntity
+  htmlToEntity,
+  removeEmptyParagraphs
 } from '../convert'
 import { paragraphStyleMap } from '../utils'
 
@@ -158,6 +159,14 @@ describe('#convertHtmlToDraft', () => {
 
       expect(block.getType()).toBe('unstyled')
       expect(block.getText()).toBe('a paragraph')
+    })
+
+    it('Removes empty paragraphs', () => {
+      const html = '<p></p><p><br></p><p><br /></p>'
+      const contentState = getContentState(html)
+      const blocks = contentState.getBlocksAsArray()
+
+      expect(blocks.length).toBe(1)
     })
 
     describe('Disallowed blocks', () => {
