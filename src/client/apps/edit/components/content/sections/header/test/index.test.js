@@ -5,10 +5,11 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Fixtures, Header } from '@artsy/reaction/dist/Components/Publishing'
 import { FeatureHeader } from '@artsy/reaction/dist/Components/Publishing/Header/FeatureHeader'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
-import { SectionHeader } from '../index.jsx'
+import FileInput from 'client/components/file_input'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
+import { RemoveButton } from 'client/components/remove_button'
+import { SectionHeader } from '../index'
 import { HeaderControls } from 'client/apps/edit/components/content/sections/header/controls'
 const {
   ClassicArticle,
@@ -250,7 +251,7 @@ describe('Header', () => {
     it('Can remove a header image', () => {
       props.article.hero_section.type = 'text'
       const component = getWrapper(props)
-      component.find('.RemoveButton').simulate('click')
+      component.find(RemoveButton).simulate('click')
 
       expect(props.onChangeHeroAction.mock.calls[0][0]).toBe('url')
       expect(props.onChangeHeroAction.mock.calls[0][1]).toBe('')

@@ -4,6 +4,7 @@ import React from 'react'
 import { ContentState, Editor, EditorState } from 'draft-js'
 
 export class PlainText extends React.Component {
+  static editor
   static propTypes = {
     content: PropTypes.string,
     name: PropTypes.string,
@@ -34,7 +35,7 @@ export class PlainText extends React.Component {
     return EditorState.createWithContent(content)
   }
 
-  onChange = (editorState) => {
+  onChange = editorState => {
     const currentContentState = this.state.editorState.getCurrentContent()
     const newContentState = editorState.getCurrentContent()
     let newContent = editorState.getCurrentContent().getPlainText()
@@ -46,35 +47,40 @@ export class PlainText extends React.Component {
     this.setState({ editorState })
   }
 
-  onContentChange = (content) => {
-    if (this.props.name) {
-      this.props.onChange(this.props.name, content)
+  onContentChange = content => {
+    const { name, onChange } = this.props
+
+    if (name) {
+      onChange(name, content)
     } else {
-      this.props.onChange(content)
+      onChange(content)
     }
   }
 
   focus = () => {
-    this.refs.editor.focus()
+    this.editor.focus()
   }
 
-  handleReturn = (e) => {
+  handleReturn = e => {
     return 'handled'
   }
 
   render () {
+    const { name, placeholder } = this.props
+    const { editorState } = this.state
+
     return (
       <div
         className='plain-text'
-        name={this.props.name}
+        name={name}
         onClick={this.focus}
       >
         <Editor
-          ref='editor'
-          editorState={this.state.editorState}
-          placeholder={this.props.placeholder || 'Start Typing...'}
+          editorState={editorState}
           handleReturn={this.handleReturn}
           onChange={this.onChange}
+          placeholder={placeholder || 'Start Typing...'}
+          ref={ref => { this.editor = ref }}
           spellcheck
         />
       </div>

@@ -1,5 +1,5 @@
 import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -16,7 +16,7 @@ export class CharacterLimit extends React.Component {
     return isHtml ? $(text).text().length : text.length
   }
 
-  onChange = (e) => {
+  onChange = e => {
     const { html, limit, onChange, type } = this.props
     const input = type === 'textarea' ? e : e.target.value
     const remainingChars = limit - this.getTextLength(input, html)
@@ -25,7 +25,7 @@ export class CharacterLimit extends React.Component {
     onChange(input)
   }
 
-  renderTextArea = (propsForInput) => {
+  renderTextArea = propsForInput => {
     const { defaultValue, html, placeholder } = this.props
 
     if (html) {

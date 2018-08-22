@@ -1,16 +1,18 @@
 import moment from 'moment'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Header } from '@artsy/reaction/dist/Components/Publishing'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import HeaderControls from './controls/index.jsx'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
-import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
+import FileInput from 'client/components/file_input'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import HeaderControls from './controls'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
+import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { onChangeHero } from 'client/actions/edit/sectionActions'
+import { Deck } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent'
 
 export class SectionHeader extends Component {
   static propTypes = {
@@ -23,7 +25,7 @@ export class SectionHeader extends Component {
     progress: null
   }
 
-  onProgress = (progress) => {
+  onProgress = progress => {
     this.setState({ progress })
   }
 
@@ -146,7 +148,7 @@ export class SectionHeader extends Component {
       const headerType = isFeature ? (hero.type || 'text') : ''
 
       return (
-        <div
+        <HeaderContainer
           className={'edit-header ' + headerType}
           data-type={headerType}
         >
@@ -162,7 +164,7 @@ export class SectionHeader extends Component {
             editTitle={this.renderTitle()}
             editVertical='Missing Vertical'
           />
-        </div>
+        </HeaderContainer>
       )
     }
   }
@@ -181,3 +183,9 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionHeader)
+
+const HeaderContainer = styled.div`
+  ${Deck} {
+    width: 100%;
+  }
+`

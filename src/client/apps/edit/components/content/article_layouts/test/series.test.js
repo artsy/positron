@@ -7,14 +7,19 @@ import { SeriesAbout } from '@artsy/reaction/dist/Components/Publishing/Series/S
 import { SeriesTitle } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle'
 import FileInput from '/client/components/file_input/index.jsx'
 import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
+import { PlainText } from '/client/components/draft/plain_text/plain_text'
 import { RelatedArticles } from '/client/apps/edit/components/content/sections/related_articles'
 import { EditSeries } from '../series'
 require('typeahead.js')
 
 describe('EditSeries', () => {
-  let props
+  const getWrapper = props => {
+    return mount(
+      <EditSeries {...props} />
+    )
+  }
 
+  let props
   beforeEach(() => {
     props = {
       article: cloneDeep(Fixtures.SeriesArticle),
@@ -23,33 +28,25 @@ describe('EditSeries', () => {
   })
 
   it('Renders SeriesTitle', () => {
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(SeriesTitle).length).toBe(1)
     expect(component.find(PlainText).at(0).props().name).toBe('title')
   })
 
   it('Renders RelatedArticles list', () => {
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(RelatedArticles).length).toBe(1)
   })
 
   it('Renders SeriesAbout', () => {
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(SeriesAbout).length).toBe(1)
     expect(component.find(Paragraph).length).toBe(1)
   })
 
   it('Renders editable series subTitle', () => {
     props.article.series = {sub_title: 'This Feature'}
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
 
     expect(component.find(PlainText).at(1).props().name).toBe('series.sub_title')
     expect(component.find(PlainText).at(1).props().content).toBe('This Feature')
@@ -57,18 +54,14 @@ describe('EditSeries', () => {
 
   it('Renders a file input for background image ', () => {
     props.article.hero_section = { url: null }
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(FileInput).length).toBe(1)
     expect(component.text()).toMatch('+ Add Background')
   })
 
   it('Can save a hero_section with type', () => {
     delete props.article.hero_section
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     const input = component.find(FileInput).first().getElement()
     input.props.onUpload('http://new-image.jpg')
 
@@ -78,9 +71,7 @@ describe('EditSeries', () => {
 
   it('Renders a background image if url', () => {
     props.article.hero_section = {url: 'http://image.jpg'}
-    const component = mount(
-      <EditSeries {...props} />
-    )
+    const component = getWrapper(props)
     expect(component.find(FixedBackground).length).toBe(1)
     expect(component.find(FixedBackground).props().backgroundUrl).toBe('http://image.jpg')
     expect(component.text()).toMatch('+ Change Background')

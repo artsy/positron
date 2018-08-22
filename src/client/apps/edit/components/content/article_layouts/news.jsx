@@ -5,11 +5,10 @@ import React, { Component } from 'react'
 import { NewsHeadline } from '@artsy/reaction/dist/Components/Publishing/News/NewsHeadline'
 import { NewsByline } from '@artsy/reaction/dist/Components/Publishing/Byline/NewsByline'
 import SectionList from '../section_list'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { EditSourceControls } from '../sections/news/EditSourceControls.tsx'
+import { EditSourceControls } from '../sections/news/EditSourceControls'
 import { hot } from 'react-hot-loader'
-
 
 export class EditNews extends Component {
   static propTypes = {
@@ -23,7 +22,7 @@ export class EditNews extends Component {
 
   editTitle = () => {
     const { article, onChangeArticleAction } = this.props
-    
+
     return (
       <PlainText
         content={article.title}
@@ -35,7 +34,7 @@ export class EditNews extends Component {
   }
 
   editSource = () => {
-    const { article, onChangeArticleAction } = this.props
+    const { article } = this.props
     const { isEditSourceOpen } = this.state
     const { title } = article.news_source
 
@@ -46,8 +45,8 @@ export class EditNews extends Component {
     )
   }
 
-  saveSource = (source) => {
-    const { article, onChangeArticleAction } = this.props
+  saveSource = source => {
+    const { onChangeArticleAction } = this.props
     this.setState({isEditSourceOpen: false})
     if (source) {
       onChangeArticleAction('news_source', source)
@@ -66,14 +65,16 @@ export class EditNews extends Component {
         />
         <SectionList />
 
-        <NewsByline article={article} editSource={this.editSource()}/>
-        { this.state.isEditSourceOpen && <EditSourceControls source={article.news_source} onApply={this.saveSource}/> }
+        <NewsByline article={article} editSource={this.editSource()} />
+        {this.state.isEditSourceOpen && (
+          <EditSourceControls source={article.news_source} onApply={this.saveSource} />
+        )}
       </EditNewsContainer>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article
 })
 
@@ -81,7 +82,7 @@ const mapDispatchToProps = {
   onChangeArticleAction: onChangeArticle
 }
 
-export default hot(module)( connect(
+export default hot(module)(connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditNews))
