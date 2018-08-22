@@ -6,13 +6,12 @@
       }
     }],
     "@babel/react",
-    "@babel/stage-3",
     "@babel/preset-typescript"
   ],
   "plugins": [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-proposal-class-properties",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-transform-runtime",
     "inline-react-svg",
     "rewire",
     ["module-resolver", {
