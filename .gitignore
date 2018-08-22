@@ -15,7 +15,6 @@ dump.rdb
 .DS_Store
 .env
 .env.ignore
-.vscode
 
 data
 
