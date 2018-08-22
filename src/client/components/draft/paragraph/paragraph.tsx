@@ -1,9 +1,7 @@
 import { debounce } from 'lodash'
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { Text } from '@artsy/reaction/dist/Components/Publishing'
 import {
   blockRenderMap,
   handleReturn,
@@ -15,9 +13,10 @@ import {
 import { confirmLink, linkDataFromSelection, removeLink } from './utils/links'
 import { convertDraftToHtml, convertHtmlToDraft } from './utils/convert'
 import { decorators } from './utils/decorators'
-import { stickyControlsBox } from 'client/components/rich_text/utils/text_selection'
-import { TextInputUrl } from 'client/components/rich_text/components/input_url'
-import { TextNav } from 'client/components/rich_text/components/text_nav'
+import { stickyControlsBox } from '../../rich_text/utils/text_selection'
+import { TextInputUrl } from '../../rich_text/components/input_url'
+import { TextNav } from '../../rich_text/components/text_nav'
+import { AllowedStyles, BlockRenderMap, StyleMap } from './utils/typings'
 
 /*
   Supports HTML with bold and italic styles in <p> blocks.
@@ -26,19 +25,34 @@ import { TextNav } from 'client/components/rich_text/components/text_nav'
   or limit commands by passing allowedStyles.
 */
 
-export class Paragraph extends Component {
-  static editor
-  static propTypes = {
-    allowedStyles: PropTypes.array,
-    html: PropTypes.string,
-    layout: PropTypes.string,
-    hasLinks: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
-    placeholder: PropTypes.string,
-    stripLinebreaks: PropTypes.bool
+interface Props {
+  allowedStyles?: AllowedStyles
+  html?: string
+  hasLinks: boolean
+  onChange: (html: string) => void
+  placeholder?: string
+  stripLinebreaks: boolean
+}
+
+interface State {
+  editorState: EditorState
+  html: string
+  selectionTarget: any
+  showNav: boolean
+  showUrlInput: boolean
+  urlValue: string
+}
+
+export class Paragraph extends Component<Props, State> {
+  private editor
+  private allowedStyles: StyleMap
+  private debouncedOnChange
+  static defaultProps = {
+    hasLinks: false,
+    stripLinebreaks: false
   }
 
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
     this.allowedStyles = styleMapFromNodes(props.allowedStyles)
 
@@ -228,7 +242,7 @@ export class Paragraph extends Component {
 
   checkSelection = () => {
     const { hasLinks } = this.props
-    let selectionTarget = null
+    let selectionTarget: any = null
     let showNav = false
 
     const hasSelection = !window.getSelection().isCollapsed
@@ -249,7 +263,7 @@ export class Paragraph extends Component {
   }
 
   render () {
-    const { layout, hasLinks, placeholder } = this.props
+    const { hasLinks, placeholder } = this.props
     const {
       editorState,
       selectionTarget,
@@ -260,7 +274,7 @@ export class Paragraph extends Component {
     const promptForLink = hasLinks ? this.promptForLink : undefined
 
     return (
-      <Text layout={layout || 'classic'}>
+      <div>
         {showNav &&
           <TextNav
             onClickOff={() => this.setState({ showNav: false })}
@@ -285,11 +299,11 @@ export class Paragraph extends Component {
           onKeyUp={this.checkSelection}
         >
           <Editor
-            blockRenderMap={blockRenderMap}
+            blockRenderMap={blockRenderMap as BlockRenderMap}
             editorState={editorState}
             keyBindingFn={keyBindingFn}
-            handleKeyCommand={this.handleKeyCommand}
-            handlePastedText={this.handlePastedText}
+            handleKeyCommand={this.handleKeyCommand as any}
+            handlePastedText={this.handlePastedText as any}
             handleReturn={this.handleReturn}
             onChange={this.onChange}
             placeholder={placeholder || 'Start typing...'}
@@ -297,7 +311,7 @@ export class Paragraph extends Component {
             spellCheck
           />
         </div>
-      </Text>
+      </div>
     )
   }
 }

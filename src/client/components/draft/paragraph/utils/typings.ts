@@ -25,3 +25,8 @@ export interface DecoratorType {
 }
 
 export type Decorator = DecoratorType[]
+
+export type BlockRenderMap = Immutable.Map<
+   'unstyled',
+   { element: string }
+>

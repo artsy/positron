@@ -2,7 +2,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { cloneDeep } from 'lodash'
 import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
+import { Paragraph } from '../../../../../../../components/draft/paragraph/paragraph'
 import { SectionFooter } from '../index.jsx'
 const { FeatureArticle } = Fixtures
 

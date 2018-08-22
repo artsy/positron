@@ -2,8 +2,7 @@ import { convertFromHTML } from 'draft-convert'
 import {
   convertHtmlToDraft,
   convertDraftToHtml,
-  htmlToEntity,
-  removeEmptyParagraphs
+  htmlToEntity
 } from '../convert'
 import { paragraphStyleMap } from '../utils'
 

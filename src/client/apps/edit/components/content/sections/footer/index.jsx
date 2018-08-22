@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
+import { Paragraph } from '../../../../../../components/draft/paragraph/paragraph.tsx'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
+import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
 
 export class SectionFooter extends Component {
   static propTypes = {
@@ -22,14 +23,14 @@ export class SectionFooter extends Component {
             className='SectionFooter__postscript'
             data-layout='column_width'
           >
-            <Paragraph
-              html={article.postscript || ''}
-              layout={article.layout}
-              linked
-              onChange={(html) => onChangeArticleAction('postscript', html)}
-              placeholder='Postscript (optional)'
-              type='postscript'
-            />
+            <Text layout={article.layout} postscript>
+              <Paragraph
+                html={article.postscript || ''}
+                hasLinks
+                onChange={(html) => onChangeArticleAction('postscript', html)}
+                placeholder='Postscript (optional)'
+              />
+            </Text>
           </div>
         }
 
