@@ -1,18 +1,14 @@
 import { convertFromHTML, convertToHTML } from 'draft-convert'
 import { EditorState } from 'draft-js'
-import {
-  confirmLink,
-  linkDataFromSelection,
-  removeLink
-} from '../links'
-import { htmlToEntity, entityToHTML } from '../convert'
+import { entityToHTML, htmlToEntity } from '../convert'
 import { decorators } from '../decorators'
+import { confirmLink, linkDataFromSelection, removeLink } from '../links'
 
 describe('Links', () => {
   const htmlWithLink = '<p><a href="https://artsy.net">a link</a></p>'
-  const html = '<p>a link</p>'
+  const plainHtml = '<p>a link</p>'
 
-  const getEditorState = (html, hasSelection = true) => {
+  const getEditorState = (html: any, hasSelection = true) => {
     const currentContent = convertFromHTML({ htmlToEntity })(html)
 
     const editorState = EditorState.createWithContent(
@@ -36,14 +32,14 @@ describe('Links', () => {
       anchorOffset: 0,
       focusKey: key,
       focusOffset: text.length,
-      hasFocus: true
+      hasFocus: true,
     })
     return EditorState.acceptSelection(editorState, selection)
   }
 
   describe('#confirmLink', () => {
     it('Inserts a link at text selection', () => {
-      const editorState = getEditorState(html)
+      const editorState = getEditorState(plainHtml)
       const newState = confirmLink('https://artsy.net', editorState)
       const newContent = newState.getCurrentContent()
       const entityKey = newContent.getLastCreatedEntityKey()
@@ -59,9 +55,9 @@ describe('Links', () => {
       const editorState = getEditorState(htmlWithLink)
       const newState = removeLink(editorState)
       const newContent = newState && newState.getCurrentContent()
-      const html = convertToHTML({ entityToHTML })(newContent)
+      const newHtml = convertToHTML({ entityToHTML })(newContent)
 
-      expect(html).toBe('<p>a link</p>')
+      expect(newHtml).toBe('<p>a link</p>')
     })
 
     it('Returns false if no selection', () => {
@@ -81,7 +77,7 @@ describe('Links', () => {
     })
 
     it('Returns empty string if no link', () => {
-      const editorState = getEditorState(html, false)
+      const editorState = getEditorState(plainHtml, false)
       const linkData = linkDataFromSelection(editorState)
 
       expect(linkData).toBe('')
