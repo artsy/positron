@@ -20,7 +20,7 @@ export interface DecoratorType {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => void
-  component: Function
+  component: any
   props?: object
 }
 

@@ -213,7 +213,7 @@
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
       ".(ts|tsx|mjs)": "typescript-babel-jest"
     },
-    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js|jsx)$",
+    "testRegex": "/test/.*\\.test\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
       "coffee",
       "js",
@@ -227,7 +227,7 @@
       "<rootDir>/test.config.js"
     ],
     "roots": [
-      "<rootDir>/src/client"
+      "<rootDir>/src"
     ]
   },
   "lint-staged": {
