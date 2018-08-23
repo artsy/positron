@@ -1,7 +1,4 @@
 {
-  "editor.rulers": [80],
-  "editor.tabSize": 2,
-  "javascript.validate.enable": true,
   "search.exclude": {
     "**/node_modules": true,
     "**/graphql": true
@@ -9,8 +6,12 @@
   "files.exclude": {
     "**/.git": true
   },
+  "editor.rulers": [80],
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
   "[json]": {
     "editor.formatOnSave": false
   },
-  "editor.formatOnSave": true
+  "tslint.autoFixOnSave": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }

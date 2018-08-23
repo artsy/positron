@@ -1,22 +1,22 @@
+import { Editor, EditorState, RichUtils } from 'draft-js'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Editor, EditorState, RichUtils } from 'draft-js'
+import { TextInputUrl } from '../../rich_text/components/input_url'
+import { TextNav } from '../../rich_text/components/text_nav'
+import { stickyControlsBox } from '../../rich_text/utils/text_selection'
+import { convertDraftToHtml, convertHtmlToDraft } from './utils/convert'
+import { decorators } from './utils/decorators'
+import { confirmLink, linkDataFromSelection, removeLink } from './utils/links'
 import {
   blockRenderMap,
   handleReturn,
   insertPastedState,
   keyBindingFn,
   styleMapFromNodes,
-  styleNamesFromMap
+  styleNamesFromMap,
 } from './utils/utils'
-import { confirmLink, linkDataFromSelection, removeLink } from './utils/links'
-import { convertDraftToHtml, convertHtmlToDraft } from './utils/convert'
-import { decorators } from './utils/decorators'
-import { stickyControlsBox } from '../../rich_text/utils/text_selection'
-import { TextInputUrl } from '../../rich_text/components/input_url'
-import { TextNav } from '../../rich_text/components/text_nav'
-import { AllowedStyles, BlockRenderMap, StyleMap } from './utils/typings'
+// import { AllowedStyles, StyleMap } from './utils/typings'
 
 /*
   Supports HTML with bold and italic styles in <p> blocks.
@@ -26,7 +26,7 @@ import { AllowedStyles, BlockRenderMap, StyleMap } from './utils/typings'
 */
 
 interface Props {
-  allowedStyles?: AllowedStyles
+  allowedStyles?: any
   html?: string
   hasLinks: boolean
   onChange: (html: string) => void
@@ -45,14 +45,14 @@ interface State {
 
 export class Paragraph extends Component<Props, State> {
   private editor
-  private allowedStyles: StyleMap
+  private allowedStyles: any
   private debouncedOnChange
   static defaultProps = {
     hasLinks: false,
-    stripLinebreaks: false
+    stripLinebreaks: false,
   }
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.allowedStyles = styleMapFromNodes(props.allowedStyles)
 
@@ -62,7 +62,7 @@ export class Paragraph extends Component<Props, State> {
       selectionTarget: null,
       showNav: false,
       showUrlInput: false,
-      urlValue: ''
+      urlValue: '',
     }
 
     this.debouncedOnChange = debounce(html => {
@@ -76,9 +76,7 @@ export class Paragraph extends Component<Props, State> {
     if (html) {
       return this.editorStateFromHTML(html)
     } else {
-      return EditorState.createEmpty(
-        decorators(hasLinks)
-      )
+      return EditorState.createEmpty(decorators(hasLinks))
     }
   }
 
@@ -97,10 +95,7 @@ export class Paragraph extends Component<Props, State> {
     const { hasLinks } = this.props
     const contentBlocks = convertHtmlToDraft(html, hasLinks, this.allowedStyles)
 
-    return EditorState.createWithContent(
-      contentBlocks,
-      decorators(hasLinks)
-    )
+    return EditorState.createWithContent(contentBlocks, decorators(hasLinks))
   }
 
   onChange = editorState => {
@@ -191,7 +186,10 @@ export class Paragraph extends Component<Props, State> {
       html = '<p>' + text + '</p>'
     }
     const stateFromPastedFragment = this.editorStateFromHTML(html)
-    const stateWithPastedText = insertPastedState(stateFromPastedFragment, editorState)
+    const stateWithPastedText = insertPastedState(
+      stateFromPastedFragment,
+      editorState
+    )
 
     this.onChange(stateWithPastedText)
     return true
@@ -202,7 +200,9 @@ export class Paragraph extends Component<Props, State> {
     const { editorState } = this.state
     const linkData = linkDataFromSelection(editorState)
     const urlValue = linkData ? linkData.url : ''
-    const editorPosition = ReactDOM.findDOMNode(this.editor).getBoundingClientRect()
+    const editorPosition = ReactDOM.findDOMNode(
+      this.editor
+    ).getBoundingClientRect()
     // TODO: move position calculation to input component
     const selectionTarget = stickyControlsBox(editorPosition, 25, 200)
 
@@ -210,7 +210,7 @@ export class Paragraph extends Component<Props, State> {
       selectionTarget,
       showUrlInput: true,
       showNav: false,
-      urlValue
+      urlValue,
     })
     return 'handled'
   }
@@ -223,7 +223,7 @@ export class Paragraph extends Component<Props, State> {
       selectionTarget: null,
       showNav: false,
       showUrlInput: false,
-      urlValue: ''
+      urlValue: '',
     })
     this.onChange(newEditorState)
   }
@@ -234,7 +234,7 @@ export class Paragraph extends Component<Props, State> {
     if (editorState) {
       this.setState({
         showUrlInput: false,
-        urlValue: ''
+        urlValue: '',
       })
       this.onChange(editorState)
     }
@@ -255,27 +255,33 @@ export class Paragraph extends Component<Props, State> {
 
     if (hasSelection) {
       showNav = true
-      const editorPosition = ReactDOM.findDOMNode(this.editor).getBoundingClientRect()
+      const editorPosition = ReactDOM.findDOMNode(
+        this.editor
+      ).getBoundingClientRect()
       // TODO: Popup component should determine its own size
-      selectionTarget = stickyControlsBox(editorPosition, menuHeight, selectionTargetLeft)
+      selectionTarget = stickyControlsBox(
+        editorPosition,
+        menuHeight,
+        selectionTargetLeft
+      )
     }
     this.setState({ showNav, selectionTarget })
   }
 
-  render () {
+  render() {
     const { hasLinks, placeholder } = this.props
     const {
       editorState,
       selectionTarget,
       showNav,
       showUrlInput,
-      urlValue
+      urlValue,
     } = this.state
     const promptForLink = hasLinks ? this.promptForLink : undefined
 
     return (
       <div>
-        {showNav &&
+        {showNav && (
           <TextNav
             onClickOff={() => this.setState({ showNav: false })}
             position={selectionTarget}
@@ -283,8 +289,8 @@ export class Paragraph extends Component<Props, State> {
             styles={this.allowedStyles}
             toggleStyle={this.toggleInlineStyle}
           />
-        }
-        {showUrlInput &&
+        )}
+        {showUrlInput && (
           <TextInputUrl
             confirmLink={this.confirmLink}
             onClickOff={() => this.setState({ showUrlInput: false })}
@@ -292,14 +298,14 @@ export class Paragraph extends Component<Props, State> {
             selectionTarget={selectionTarget}
             urlValue={urlValue}
           />
-        }
+        )}
         <div
           onClick={this.focus}
           onMouseUp={this.checkSelection}
           onKeyUp={this.checkSelection}
         >
           <Editor
-            blockRenderMap={blockRenderMap as BlockRenderMap}
+            blockRenderMap={blockRenderMap as any}
             editorState={editorState}
             keyBindingFn={keyBindingFn}
             handleKeyCommand={this.handleKeyCommand as any}
@@ -307,7 +313,9 @@ export class Paragraph extends Component<Props, State> {
             handleReturn={this.handleReturn}
             onChange={this.onChange}
             placeholder={placeholder || 'Start typing...'}
-            ref={ref => { this.editor = ref }}
+            ref={ref => {
+              this.editor = ref
+            }}
             spellCheck
           />
         </div>

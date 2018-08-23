@@ -10,6 +10,7 @@ export interface StyleMapStyle {
 }
 
 export type StyleMap = StyleMapStyle[]
+
 export type StyleMapNames = StyleName[]
 
 export type AllowedStyles = StyleNode[]
@@ -20,13 +21,8 @@ export interface DecoratorType {
     callback: (start: number, end: number) => void,
     contentState: ContentState
   ) => void
-  component: Function
+  component: any
   props?: object
 }
 
 export type Decorator = DecoratorType[]
-
-export type BlockRenderMap = Immutable.Map<
-   'unstyled',
-   { element: string }
->

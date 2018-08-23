@@ -13,7 +13,6 @@
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-transform-runtime",
     "inline-react-svg",
-    "rewire",
     ["module-resolver", {
       "extensions": [".js", ".jsx", ".mjs", ".ts", ".tsx" ],
       "root": ["./src"]
