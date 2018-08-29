@@ -1,11 +1,16 @@
 import React from 'react'
-import { CanvasText } from '../../../components/canvas/canvas_text.jsx'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
+import { CanvasText } from '../../../components/canvas/canvas_text'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { mount } from 'enzyme'
 
 describe('Canvas Text', () => {
-  let props
+  const getWrapper = props => {
+    return mount(
+      <CanvasText {...props} />
+    )
+  }
 
+  let props
   const getProps = () => {
     props = {
       campaign: {
@@ -20,9 +25,7 @@ describe('Canvas Text', () => {
   beforeEach(getProps)
 
   it('Can save an edited headline', () => {
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     const input = component.find('input').at(0)
     input.simulate('change', { target: { value: 'New Headline' } })
 
@@ -33,19 +36,16 @@ describe('Canvas Text', () => {
 
   it('Can save an edited overlay body', () => {
     props.campaign.canvas.layout = 'overlay'
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     component.find(PlainText).at(0).getElement().props.onChange('New Body')
+
     expect(props.onChange.mock.calls[0][0]).toMatch('canvas.headline')
     expect(props.onChange.mock.calls[0][1]).toMatch('New Body')
     expect(props.onChange.mock.calls[0][2]).toBe(0)
   })
 
   it('Can save an edited CTA Text', () => {
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     const input = component.find('input').at(1)
     input.simulate('change', { target: { value: 'Read More' } })
 
@@ -55,9 +55,7 @@ describe('Canvas Text', () => {
   })
 
   it('Can save an edited CTA Link', () => {
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     const input = component.find('input').at(2)
     input.simulate('change', { target: { value: 'http://artsy.net' } })
 
@@ -67,9 +65,7 @@ describe('Canvas Text', () => {
   })
 
   it('Can save an edited Pixel Tracking Code', () => {
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     const input = component.find('input').at(3)
     input.simulate('change', { target: { value: 'a pixel tracking script' } })
 
@@ -79,10 +75,9 @@ describe('Canvas Text', () => {
   })
 
   it('Can save an edited Disclaimer', () => {
-    const component = mount(
-      <CanvasText {...props} />
-    )
+    const component = getWrapper(props)
     component.find(PlainText).instance().props.onChange('New Disclaimer')
+
     expect(props.onChange.mock.calls[0][0]).toMatch('canvas.disclaimer')
     expect(props.onChange.mock.calls[0][1]).toMatch('New Disclaimer')
     expect(props.onChange.mock.calls[0][2]).toBe(0)

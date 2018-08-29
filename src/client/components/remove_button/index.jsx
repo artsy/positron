@@ -1,8 +1,9 @@
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
 
-export const RemoveButton = (props) => {
+export const RemoveButton = props => {
   const {
     background,
     className,
@@ -12,7 +13,7 @@ export const RemoveButton = (props) => {
   } = props
 
   return (
-    <div
+    <RemoveButtonContainer
       className={`RemoveButton ${className || ''}`}
       onClick={onClick}
       onMouseDown={onMouseDown}
@@ -21,7 +22,7 @@ export const RemoveButton = (props) => {
         color={color}
         background={background}
       />
-    </div>
+    </RemoveButtonContainer>
   )
 }
 
@@ -32,3 +33,8 @@ RemoveButton.propTypes = {
   onClick: PropTypes.func,
   onMouseDown: PropTypes.func
 }
+
+export const RemoveButtonContainer = styled.div`
+  cursor: pointer;
+  z-index: 10;
+`

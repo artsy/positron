@@ -10,12 +10,14 @@
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "reaction/*": ["../node_modules/@artsy/reaction/dist/*"]
+    },
     "pretty": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
     "target": "es2016"
   },
-  "files": ["./node_modules/@artsy/reaction/dist"],
   "include": ["./src"]
 }

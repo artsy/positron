@@ -95,7 +95,7 @@ describe('SectionText: Links', () => {
     component.instance().handleKeyCommand('link-prompt')
 
     expect(component.state().showUrlInput).toBe(true)
-    expect(component.html()).toMatch('class="TextInputUrl')
+    expect(component.html()).toMatch('placeholder="Paste or type a link"')
   })
 
   it('Can confirm links', () => {

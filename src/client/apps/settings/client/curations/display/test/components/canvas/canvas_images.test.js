@@ -1,19 +1,24 @@
 import React from 'react'
-import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import { CanvasImages } from '../../../components/canvas/canvas_images.jsx'
 import { mount } from 'enzyme'
+import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
+import { CanvasImages } from '../../../components/canvas/canvas_images'
+import { RemoveButton, RemoveButtonContainer } from 'client/components/remove_button'
 
 describe('Canvas Images', () => {
-  const props = {
-    campaign: {
-      canvas: {
-        layout: 'overlay',
-        assets: []
-      }
-    },
-    index: 0,
-    onChange: jest.fn()
-  }
+  let props
+
+  beforeEach(() => {
+    props = {
+      campaign: {
+        canvas: {
+          layout: 'overlay',
+          assets: []
+        }
+      },
+      index: 0,
+      onChange: jest.fn()
+    }
+  })
 
   describe('Overlay', () => {
     it('renders expected fields', () => {
@@ -92,6 +97,7 @@ describe('Canvas Images', () => {
     })
 
     it('renders saved data', () => {
+      props.campaign.canvas.layout = 'slideshow'
       props.campaign.canvas.logo = 'http://artsy.net/logo.jpg'
       props.campaign.canvas.assets = [
         {url: 'http://artsy.net/image1.jpg'},
@@ -133,12 +139,17 @@ describe('Canvas Images', () => {
       })
 
       it('Can remove an existing file', () => {
+        props.campaign.canvas.logo = 'http://artsy.net/logo.jpg'
+        props.campaign.canvas.assets = [
+          {url: 'http://artsy.net/image1.jpg'}
+        ]
         const component = mount(
           <CanvasImages {...props} />
         )
-        component.find('.RemoveButton').at(0).simulate('click')
-        expect(props.onChange.mock.calls[1][0]).toMatch('canvas.logo')
-        expect(props.onChange.mock.calls[1][2]).toBe(props.index)
+        component.find(RemoveButtonContainer).at(0).simulate('click')
+
+        expect(props.onChange.mock.calls[0][0]).toMatch('canvas.logo')
+        expect(props.onChange.mock.calls[0][2]).toBe(props.index)
       })
     })
 
@@ -151,7 +162,7 @@ describe('Canvas Images', () => {
         )
         const input = component.find(ImageUpload).at(1).getElement()
         input.props.onChange(input.props.name, 'http://new-image.jpg')
-        const onChangeArgs = props.onChange.mock.calls[2]
+        const onChangeArgs = props.onChange.mock.calls[0]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
         expect(onChangeArgs[1][0].url).toMatch('http://new-image.jpg')
@@ -165,7 +176,7 @@ describe('Canvas Images', () => {
         )
         const input = component.find(ImageUpload).at(1).getElement()
         input.props.onChange(input.props.name, 'http://new-image.jpg')
-        const onChangeArgs = props.onChange.mock.calls[3]
+        const onChangeArgs = props.onChange.mock.calls[0]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
         expect(onChangeArgs[1][0].url).toMatch('http://new-image.jpg')
@@ -173,11 +184,15 @@ describe('Canvas Images', () => {
       })
 
       it('Can remove an image', () => {
+        props.campaign.canvas.logo = 'http://artsy.net/logo.jpg'
+        props.campaign.canvas.assets = [
+          {url: 'http://artsy.net/image1.jpg'}
+        ]
         const component = mount(
           <CanvasImages {...props} />
         )
-        component.find('.RemoveButton').at(1).simulate('click')
-        const onChangeArgs = props.onChange.mock.calls[4]
+        component.find(RemoveButtonContainer).at(1).simulate('click')
+        const onChangeArgs = props.onChange.mock.calls[0]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
         expect(onChangeArgs[1].length).toBe(0)
@@ -192,7 +207,7 @@ describe('Canvas Images', () => {
         )
         const input = component.find(ImageUpload).at(2).getElement()
         input.props.onChange(input.props.name, 'http://image2.jpg')
-        const onChangeArgs = props.onChange.mock.calls[5]
+        const onChangeArgs = props.onChange.mock.calls[0]
 
         expect(onChangeArgs[0]).toMatch('canvas.assets')
         expect(onChangeArgs[1][0].url).toMatch('http://image1.jpg')

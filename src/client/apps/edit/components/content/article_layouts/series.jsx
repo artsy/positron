@@ -5,11 +5,11 @@ import { FixedBackground } from '@artsy/reaction/dist/Components/Publishing/Seri
 import { SeriesAbout } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle'
 import { SeriesContent } from '@artsy/reaction/dist/Components/Publishing/Layouts/SeriesLayout'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
-import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
-import { RelatedArticles } from '../sections/related_articles/index'
+import FileInput from 'client/components/file_input'
+import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
+import { ProgressBar } from 'client/components/file_input/progress_bar'
+import { RelatedArticles } from '../sections/related_articles'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 
 export class EditSeries extends Component {

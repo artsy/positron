@@ -6,14 +6,19 @@
     "node": "8.x.x"
   },
   "scripts": {
-    "start": "sh scripts/start.sh",
-    "dev": "sh scripts/dev.sh",
-    "test": "sh scripts/test.sh",
-    "test:watch": "yarn jest -- --watch --runInBand",
     "assets": "sh scripts/assets.sh",
     "deploy": "sh scripts/deploy.sh",
+    "dev": "sh scripts/dev.sh",
+    "precommit": "lint-staged",
+    "prepush": "yarn run type-check",
+    "prettier": "prettier",
+    "prettier-write": "yarn run prettier --write",
     "mocha": "sh scripts/mocha.sh",
-    "task": "node -r coffeescript/register -r @babel/register -r dotenv/config"
+    "start": "sh scripts/start.sh",
+    "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
+    "test:watch": "yarn jest -- --watch --runInBand",
+    "test": "sh scripts/test.sh",
+    "type-check": "tsc --pretty --noEmit"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",
@@ -24,20 +29,19 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "^1.3.0",
+    "@artsy/palette": "^2.9.1",
     "@artsy/reaction": "^1.17.5",
-    "@babel/cli": "7.0.0-beta.42",
-    "@babel/core": "7.0.0-beta.42",
-    "@babel/node": "7.0.0-beta.42",
-    "@babel/plugin-proposal-class-properties": "7.0.0-beta.42",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.42",
-    "@babel/plugin-transform-runtime": "7.0.0-beta.42",
-    "@babel/preset-env": "7.0.0-beta.42",
-    "@babel/preset-es2015": "7.0.0-beta.42",
-    "@babel/preset-react": "7.0.0-beta.42",
-    "@babel/preset-stage-3": "7.0.0-beta.42",
-    "@babel/preset-typescript": "7.0.0-beta.42",
-    "@babel/register": "7.0.0-beta.42",
-    "@babel/runtime": "7.0.0-beta.42",
+    "@babel/cli": "7.0.0-rc.2",
+    "@babel/core": "7.0.0-rc.2",
+    "@babel/node": "7.0.0-rc.2",
+    "@babel/plugin-proposal-class-properties": "7.0.0-rc.2",
+    "@babel/plugin-proposal-decorators": "7.0.0-rc.2",
+    "@babel/plugin-transform-runtime": "7.0.0-rc.2",
+    "@babel/preset-env": "7.0.0-rc.2",
+    "@babel/preset-react": "7.0.0-rc.2",
+    "@babel/preset-typescript": "7.0.0-rc.2",
+    "@babel/register": "7.0.0-rc.2",
+    "@babel/runtime": "7.0.0-rc.2",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
@@ -48,7 +52,6 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-inline-react-svg": "^0.4.0",
     "babel-plugin-module-resolver": "^3.1.0",
-    "babel-plugin-rewire": "1.2.0-rc.1",
     "babel-plugin-styled-components": "^1.5.1",
     "backbone": "^1.2.3",
     "backbone-super-sync": "^1.1.1",
@@ -75,8 +78,6 @@
     "express-ipfilter": "^0.2.3",
     "express-socket.io-session": "^1.3.2",
     "forever": "^0.15.1",
-    "fork-ts-checker-notifier-webpack-plugin": "^0.4.0",
-    "fork-ts-checker-webpack-plugin": "^0.4.1",
     "glossary": "^0.1.1",
     "google-spreadsheet": "^2.0.3",
     "graphql": "^0.7.2",
@@ -98,6 +99,7 @@
     "particle": "artsy/particle",
     "passport": "^0.3.0",
     "passport-oauth2": "craigspaeth/passport-oauth2",
+    "prettier": "^1.14.2",
     "prop-by-string": "^1.0.1",
     "prop-types": "^15.6.0",
     "raven": "^2.0.2",
@@ -122,7 +124,7 @@
     "superagent": "^3.3.1",
     "superagent-bluebird-promise": "^3.0.0",
     "ts-loader": "^4.1.0",
-    "typescript": "^2.9.1",
+    "typescript": "^3.0.1",
     "typescript-babel-jest": "^1.0.5",
     "typescript-styled-plugin": "^0.1.2",
     "ua-parser": "^0.3.5",
@@ -135,6 +137,7 @@
     "yoastseo": "artsy/YoastSEO.js#develop"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.10.24",
     "@types/enzyme": "^3.1.6",
     "@types/express": "^4.11.0",
     "@types/jest": "^21.1.9",
@@ -157,9 +160,12 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.2.1",
     "eslint-plugin-standard": "^3.0.1",
+    "fork-ts-checker-notifier-webpack-plugin": "^0.4.0",
+    "fork-ts-checker-webpack-plugin": "^0.4.3",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "gemup": "artsy/gemup",
     "html-janitor": "^2.0.2",
+    "husky": "^0.14.3",
     "imagesloaded": "^4.1.3",
     "jade-loader": "^0.8.0",
     "jest": "^22.4.3",
@@ -169,6 +175,7 @@
     "jquery-fillwidth-lite": "^1.0.3",
     "jquery-on-infinite-scroll": "^1.0.1",
     "json-loader": "^0.5.7",
+    "lint-staged": "^7.2.2",
     "mocha": "^3.1.2",
     "progress-bar-webpack-plugin": "^1.10.0",
     "raf": "^3.4.0",
@@ -181,6 +188,9 @@
     "sqwish": "^0.2.2",
     "style-loader": "^0.19.0",
     "stylus-loader": "^3.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-react": "^3.6.0",
     "typeahead.js": "0.10.x",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^3.8.1",
@@ -202,7 +212,7 @@
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
       ".(ts|tsx|mjs)": "typescript-babel-jest"
     },
-    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js|jsx)$",
+    "testRegex": "/test/.*\\.test\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
       "coffee",
       "js",
@@ -216,7 +226,17 @@
       "<rootDir>/test.config.js"
     ],
     "roots": [
-      "<rootDir>/src/client"
+      "<rootDir>/src"
+    ]
+  },
+  "lint-staged": {
+    "*.@(ts|tsx)": [
+      "tslint -c tslint.json --fix",
+      "yarn prettier-write",
+      "git add"
+    ],
+    "*.json": [
+      "yarn prettier-write"
     ]
   },
   "license": "MIT"
