@@ -1548,10 +1548,6 @@ babel-plugin-module-resolver@^3.1.0:
     babel-types "^6.24.1"
     graphql "^0.13.0"
 
-babel-plugin-rewire@1.2.0-rc.1:
-  version "1.2.0-rc.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-rewire/-/babel-plugin-rewire-1.2.0-rc.1.tgz#9dfc4f13aaea9adf426738e6713969961446b2db"
-
 babel-plugin-styled-components@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.5.1.tgz#31dbeb696d1354d1585e60d66c7905f5e474afcd"
