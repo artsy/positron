@@ -37,12 +37,11 @@
     "@babel/plugin-proposal-class-properties": "7.0.0-rc.2",
     "@babel/plugin-proposal-decorators": "7.0.0-rc.2",
     "@babel/plugin-transform-runtime": "7.0.0-rc.2",
-    "@babel/polyfill": "7.0.0-rc.2",
     "@babel/preset-env": "7.0.0-rc.2",
     "@babel/preset-react": "7.0.0-rc.2",
     "@babel/preset-typescript": "7.0.0-rc.2",
     "@babel/register": "7.0.0-rc.2",
-    "@babel/runtime": "^7.0.0-rc.2",
+    "@babel/runtime": "7.0.0-rc.2",
     "airtable": "^0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
@@ -53,7 +52,6 @@
     "babel-loader": "8.0.0-beta.0",
     "babel-plugin-inline-react-svg": "^0.4.0",
     "babel-plugin-module-resolver": "^3.1.0",
-    "babel-plugin-rewire": "1.2.0-rc.1",
     "babel-plugin-styled-components": "^1.5.1",
     "backbone": "^1.2.3",
     "backbone-super-sync": "^1.1.1",
@@ -101,7 +99,7 @@
     "particle": "artsy/particle",
     "passport": "^0.3.0",
     "passport-oauth2": "craigspaeth/passport-oauth2",
-    "prettier": "^1.7.4",
+    "prettier": "^1.14.2",
     "prop-by-string": "^1.0.1",
     "prop-types": "^15.6.0",
     "raven": "^2.0.2",
@@ -147,7 +145,7 @@
     "@types/react": "^16.0.31",
     "antigravity": "artsy/antigravity",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^23.4.0",
+    "babel-jest": "^20.0.3",
     "benv": "^3.0.0",
     "chokidar": "^1.7.0",
     "coffee-loader": "^0.9.0",
@@ -170,7 +168,7 @@
     "husky": "^0.14.3",
     "imagesloaded": "^4.1.3",
     "jade-loader": "^0.8.0",
-    "jest": "^23.4.1",
+    "jest": "^22.4.3",
     "jest-coffee-preprocessor": "^1.0.0",
     "jquery": "^2.1.4",
     "jquery-autosize": "^1.18.18",
@@ -209,10 +207,12 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.(ts|tsx|js|jsx)$": "babel-jest",
-      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js"
+      "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.mjs?$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
+      ".(ts|tsx|mjs)": "typescript-babel-jest"
     },
-    "testRegex": "(/test/.*|\\.(test|spec))\\.(ts|tsx|js|jsx)$",
+    "testRegex": "/test/.*\\.test\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
       "coffee",
       "js",
@@ -226,7 +226,7 @@
       "<rootDir>/test.config.js"
     ],
     "roots": [
-      "<rootDir>/src/client"
+      "<rootDir>/src"
     ]
   },
   "lint-staged": {

@@ -726,25 +726,26 @@ describe 'Article Persistence', ->
         article.seo_keyword.should.equal 'focus'
         done()
 
-    # it 'deletes article from sailthru if it is being unpublished', (done) ->
-    #   article = {
-    #     _id: ObjectId('5086df098523e60002000018')
-    #     id: '5086df098523e60002000018'
-    #     author_id: '5086df098523e60002000018'
-    #     published: false
-    #   }
-    #   Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
-    #   fabricate 'articles',
-    #     _id: ObjectId('5086df098523e60002000018')
-    #     id: '5086df098523e60002000018'
-    #     author_id: ObjectId('5086df098523e60002000018')
-    #     published: true
-    #   , =>
-    #     Article.save article, 'foo', {}, (err, article) =>
-    #       article.published.should.be.false()
-    #       @onUnpublish.callCount.should.equal 1
-    #       Article.__ResetDependency__ 'onUnpublish'
-    #       done()
+    xit 'deletes article from sailthru if it is being unpublished', (done) ->
+      # TODO: Refactor to remove Rewire
+      article = {
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: '5086df098523e60002000018'
+        published: false
+      }
+      # Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
+      fabricate 'articles',
+        _id: ObjectId('5086df098523e60002000018')
+        id: '5086df098523e60002000018'
+        author_id: ObjectId('5086df098523e60002000018')
+        published: true
+      , =>
+        Article.save article, 'foo', {}, (err, article) =>
+          article.published.should.be.false()
+          @onUnpublish.callCount.should.equal 1
+          # Article.__ResetDependency__ 'onUnpublish'
+          done()
 
     it 'saves a classic hero_section', (done) ->
       Article.save {

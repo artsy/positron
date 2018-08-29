@@ -1,25 +1,25 @@
-import React from 'react'
 import { convertFromHTML, convertToHTML } from 'draft-convert'
 import {
   ContentState,
   DraftEntityMutability,
+  RawDraftContentBlock,
   RawDraftEntity,
-  RawDraftContentBlock
 } from 'draft-js'
+import React from 'react'
 import { stripGoogleStyles } from '../../../rich_text/utils/text_stripping'
-import { styleNamesFromMap, styleNodesFromMap } from './utils'
 import { StyleMap, StyleMapNames, StyleName } from './typings'
+import { styleNamesFromMap, styleNodesFromMap } from './utils'
 
 /**
  * Helpers for draft-js Paragraph component data conversion
-*/
+ */
 
 export const draftDefaultStyles = [
   'BOLD',
   'CODE',
   'ITALIC',
   'STRIKETHROUGH',
-  'UNDERLINE'
+  'UNDERLINE',
 ]
 
 /**
@@ -39,7 +39,7 @@ export const convertHtmlToDraft = (
     // TODO: type currentStyle OrderedSet
     htmlToStyle: (nodeName: string, _: HTMLElement, currentStyle: any) => {
       return htmlToStyle(nodeName, currentStyle, allowedStyles)
-    }
+    },
   })(cleanedHtml)
 }
 
@@ -56,7 +56,7 @@ export const convertDraftToHtml = (
   const html = convertToHTML({
     entityToHTML,
     styleToHTML: style => styleToHTML(style, styles),
-    blockToHTML
+    blockToHTML,
   })(currentContent)
 
   const formattedHtml = removeEmptyParagraphs(html)
@@ -79,7 +79,7 @@ export const htmlToBlock = (nodeName: string, _: HTMLElement) => {
     // Return all elements as default block
     return {
       type: 'unstyled',
-      element: 'div'
+      element: 'div',
     }
   }
 }
@@ -98,11 +98,7 @@ export const htmlToEntity = (
 ) => {
   if (nodeName === 'a') {
     const data = { url: node.href }
-    return createEntity(
-      'LINK',
-      'MUTABLE',
-      data
-    )
+    return createEntity('LINK', 'MUTABLE', data)
   }
 }
 
@@ -139,7 +135,7 @@ export const htmlToStyle = (
  */
 export const styleToHTML = (style: StyleName, allowedStyles: StyleMapNames) => {
   const isAllowed = allowedStyles.includes(style)
-  const plainText = {start: '', end: ''}
+  const plainText = { start: '', end: '' }
 
   switch (style) {
     case 'BOLD':
@@ -171,7 +167,7 @@ export const blockToHTML = (block: RawDraftContentBlock) => {
       start: '<p>',
       end: '</p>',
       nestStart: '',
-      nestEnd: ''
+      nestEnd: '',
     }
   }
   if (block.type === 'unordered-list-item') {
@@ -179,12 +175,12 @@ export const blockToHTML = (block: RawDraftContentBlock) => {
       start: '<p>',
       end: '</p>',
       nestStart: '',
-      nestEnd: ''
+      nestEnd: '',
     }
   } else {
     return {
       start: '<p>',
-      end: '</p>'
+      end: '</p>',
     }
   }
 }
@@ -201,7 +197,7 @@ export const stripParagraphLinebreaks = (html: string) => {
  */
 export const removeEmptyParagraphs = (html: string) => {
   return html
-          .replace(/<p><\/p>/g, '')
-          .replace(/<p><br \/><\/p>/g, '')
-          .replace(/<p><br><\/p>/g, '')
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p><br \/><\/p>/g, '')
+    .replace(/<p><br><\/p>/g, '')
 }

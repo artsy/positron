@@ -1,4 +1,3 @@
-require('@babel/polyfill')
 require('regenerator-runtime/runtime')
 require('@babel/register')({
   extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx']
@@ -34,14 +33,14 @@ try {
   window.matchMedia = window.matchMedia || function () {
     return {
       matches: false,
-      addListener: function () {},
-      removeListener: function () {}
+      addListener: function () { },
+      removeListener: function () { }
     }
   }
-} catch (error) {}
+} catch (error) { }
 
 sd.data = {
   ARTICLE: FeatureArticle,
   CHANNEL: {},
-  USER: {id: '57b5fc6acd530e65f8000406'}
+  USER: { id: '57b5fc6acd530e65f8000406' }
 }

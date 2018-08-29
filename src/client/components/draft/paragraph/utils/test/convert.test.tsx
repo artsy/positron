@@ -1,18 +1,14 @@
 import { convertFromHTML } from 'draft-convert'
 import {
-  convertHtmlToDraft,
   convertDraftToHtml,
-  htmlToEntity
+  convertHtmlToDraft,
+  htmlToEntity,
 } from '../convert'
 import { paragraphStyleMap } from '../utils'
 
 describe('#convertHtmlToDraft', () => {
   const getContentState = (html, hasLinks = false) => {
-    return convertHtmlToDraft(
-      html,
-      hasLinks,
-      paragraphStyleMap
-    )
+    return convertHtmlToDraft(html, hasLinks, paragraphStyleMap)
   }
 
   describe('Links', () => {
@@ -22,16 +18,13 @@ describe('#convertHtmlToDraft', () => {
       const block = contentState.getFirstBlock()
       const hasLinks = jest.fn()
 
-      block.findEntityRanges(
-        character => {
-          const entityKey = character.getEntity()
-          return (
-            entityKey !== null &&
-            contentState.getEntity(entityKey).getType() === 'LINK'
-          )
-        },
-        hasLinks
-      )
+      block.findEntityRanges(character => {
+        const entityKey = character.getEntity()
+        return (
+          entityKey !== null &&
+          contentState.getEntity(entityKey).getType() === 'LINK'
+        )
+      }, hasLinks)
 
       expect(hasLinks).toBeCalled()
       expect(block.getType()).toBe('unstyled')
@@ -44,16 +37,13 @@ describe('#convertHtmlToDraft', () => {
       const block = contentState.getFirstBlock()
       const hasLinks = jest.fn()
 
-      block.findEntityRanges(
-        character => {
-          const entityKey = character.getEntity()
-          return (
-            entityKey !== null &&
-            contentState.getEntity(entityKey).getType() === 'LINK'
-          )
-        },
-        hasLinks
-      )
+      block.findEntityRanges(character => {
+        const entityKey = character.getEntity()
+        return (
+          entityKey !== null &&
+          contentState.getEntity(entityKey).getType() === 'LINK'
+        )
+      }, hasLinks)
 
       expect(hasLinks).not.toBeCalled()
       expect(block.getType()).toBe('unstyled')
@@ -68,12 +58,9 @@ describe('#convertHtmlToDraft', () => {
       const block = contentState.getFirstBlock()
       const hasStyle = jest.fn()
 
-      block.findStyleRanges(
-        character => {
-          return character.hasStyle('ITALIC')
-        },
-        hasStyle
-      )
+      block.findStyleRanges(character => {
+        return character.hasStyle('ITALIC')
+      }, hasStyle)
       expect(hasStyle).toBeCalled()
       expect(block.getType()).toBe('unstyled')
       expect(block.getText()).toBe('italic')
@@ -85,12 +72,9 @@ describe('#convertHtmlToDraft', () => {
       const block = contentState.getFirstBlock()
       const hasStyle = jest.fn()
 
-      block.findStyleRanges(
-        character => {
-          return character.hasStyle('BOLD')
-        },
-        hasStyle
-      )
+      block.findStyleRanges(character => {
+        return character.hasStyle('BOLD')
+      }, hasStyle)
       expect(hasStyle).toBeCalled()
       expect(block.getType()).toBe('unstyled')
       expect(block.getText()).toBe('bold')
@@ -103,12 +87,9 @@ describe('#convertHtmlToDraft', () => {
         const block = contentState.getFirstBlock()
         const hasStyle = jest.fn()
 
-        block.findStyleRanges(
-          character => {
-            return character.hasStyle('CODE')
-          },
-          hasStyle
-        )
+        block.findStyleRanges(character => {
+          return character.hasStyle('CODE')
+        }, hasStyle)
         expect(hasStyle).not.toBeCalled()
         expect(block.getType()).toBe('unstyled')
         expect(block.getText()).toBe('code')
@@ -120,12 +101,9 @@ describe('#convertHtmlToDraft', () => {
         const block = contentState.getFirstBlock()
         const hasStyle = jest.fn()
 
-        block.findStyleRanges(
-          character => {
-            return character.hasStyle('STRIKETHROUGH')
-          },
-          hasStyle
-        )
+        block.findStyleRanges(character => {
+          return character.hasStyle('STRIKETHROUGH')
+        }, hasStyle)
         expect(hasStyle).not.toBeCalled()
         expect(block.getType()).toBe('unstyled')
         expect(block.getText()).toBe('strikethrough')
@@ -137,12 +115,9 @@ describe('#convertHtmlToDraft', () => {
         const block = contentState.getFirstBlock()
         const hasStyle = jest.fn()
 
-        block.findStyleRanges(
-          character => {
-            return character.hasStyle('UNDERLINE')
-          },
-          hasStyle
-        )
+        block.findStyleRanges(character => {
+          return character.hasStyle('UNDERLINE')
+        }, hasStyle)
         expect(hasStyle).not.toBeCalled()
         expect(block.getType()).toBe('unstyled')
         expect(block.getText()).toBe('underline')
@@ -306,10 +281,14 @@ describe('#convertHtmlToDraft', () => {
 })
 
 describe('#convertDraftToHtml', () => {
-  const getHtmlFromContentState = (html, hasLinks = false, stripLinebreaks = false) => {
+  const getHtmlFromContentState = (
+    html,
+    hasLinks = false,
+    stripLinebreaks = false
+  ) => {
     // Get unstripped content state
     const currentContent = convertFromHTML({
-      htmlToEntity: hasLinks ? htmlToEntity : undefined
+      htmlToEntity: hasLinks ? htmlToEntity : undefined,
     })(html)
     // Convert contentState back to html
     return convertDraftToHtml(
@@ -321,14 +300,18 @@ describe('#convertDraftToHtml', () => {
 
   describe('Links', () => {
     it('Converts entities to links if allowed', () => {
-      const html = '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
+      const html =
+        '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
       const convertedHtml = getHtmlFromContentState(html, true)
 
-      expect(convertedHtml).toBe('<p><a href="https://artsy.net/">a link</a></p>')
+      expect(convertedHtml).toBe(
+        '<p><a href="https://artsy.net/">a link</a></p>'
+      )
     })
 
     it('Strips links to plaintext if not allowed', () => {
-      const html = '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
+      const html =
+        '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
       const convertedHtml = getHtmlFromContentState(html)
 
       expect(convertedHtml).toBe('<p>a link</p>')
@@ -376,7 +359,8 @@ describe('#convertDraftToHtml', () => {
 
   describe('Block handling', () => {
     it('Returns unstyled paragraphs with stripped attrs', () => {
-      const html = '<p id="paragraph" class="paragraph" data-id="paragraph">a paragraph</p>'
+      const html =
+        '<p id="paragraph" class="paragraph" data-id="paragraph">a paragraph</p>'
       const convertedHtml = getHtmlFromContentState(html)
 
       expect(convertedHtml).toBe('<p>a paragraph</p>')
@@ -441,7 +425,9 @@ describe('#convertDraftToHtml', () => {
         `
         const convertedHtml = getHtmlFromContentState(html)
 
-        expect(convertedHtml).toBe('<p>first list item</p><p>second list item</p>')
+        expect(convertedHtml).toBe(
+          '<p>first list item</p><p>second list item</p>'
+        )
       })
 
       it('Converts ol blocks', () => {
@@ -453,7 +439,9 @@ describe('#convertDraftToHtml', () => {
         `
         const convertedHtml = getHtmlFromContentState(html)
 
-        expect(convertedHtml).toBe('<p>first list item</p><p>second list item</p>')
+        expect(convertedHtml).toBe(
+          '<p>first list item</p><p>second list item</p>'
+        )
       })
 
       it('Converts div blocks', () => {

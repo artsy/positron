@@ -1,9 +1,15 @@
-import React from 'react'
 import { convertFromHTML } from 'draft-convert'
-import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
+import { mount } from 'enzyme'
+import React from 'react'
 import { htmlToEntity } from '../convert'
-import { decorators, getDecorators, findLinkEntities, Link } from '../decorators'
+import {
+  decorators,
+  findLinkEntities,
+  getDecorators,
+  Link,
+  LinkProps,
+} from '../decorators'
 
 describe('Decorators', () => {
   const htmlWithLink = '<p><a href="https://artsy.net">a link</a></p>'
@@ -11,10 +17,7 @@ describe('Decorators', () => {
   const getEditorState = html => {
     const currentContent = convertFromHTML({ htmlToEntity })(html)
 
-    return EditorState.createWithContent(
-      currentContent,
-      decorators(true)
-    )
+    return EditorState.createWithContent(currentContent, decorators(true))
   }
 
   describe('#getDecorators', () => {
@@ -42,7 +45,9 @@ describe('Decorators', () => {
     })
 
     it('Returns nothing if no links', () => {
-      const contentState = getEditorState('<p>a paragraph</p>').getCurrentContent()
+      const contentState = getEditorState(
+        '<p>a paragraph</p>'
+      ).getCurrentContent()
       const block = contentState.getFirstBlock()
       const hasLinks = jest.fn()
       findLinkEntities(block, hasLinks, contentState)
@@ -52,24 +57,20 @@ describe('Decorators', () => {
   })
 
   describe('Link', () => {
-    const getWrapper = props => {
-      return mount(
-        <Link {...props} />
-      )
+    const getWrapper = (linkProps: LinkProps) => {
+      return mount(<Link {...linkProps} />)
     }
     const contentState = getEditorState(htmlWithLink).getCurrentContent()
     const entityKey = contentState.getLastCreatedEntityKey()
     const props = {
       children: 'a link',
       contentState,
-      entityKey
+      entityKey,
     }
 
     it('Creates a link with correct entity data', () => {
       const component = getWrapper(props)
-      expect(component.html()).toBe(
-        '<a href="https://artsy.net/">a link</a>'
-      )
+      expect(component.html()).toBe('<a href="https://artsy.net/">a link</a>')
     })
 
     it('Prevents default on link clicks', () => {
