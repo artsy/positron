@@ -2,12 +2,14 @@ import { Editor, EditorState, RichUtils } from 'draft-js'
 import { debounce } from 'lodash'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import styled from 'styled-components'
 import { TextInputUrl } from '../../rich_text/components/input_url'
 import { TextNav } from '../../rich_text/components/text_nav'
 import { stickyControlsBox } from '../../rich_text/utils/text_selection'
 import { convertDraftToHtml, convertHtmlToDraft } from './utils/convert'
 import { decorators } from './utils/decorators'
 import { confirmLink, linkDataFromSelection, removeLink } from './utils/links'
+import { AllowedStyles, StyleMap } from './utils/typings'
 import {
   blockRenderMap,
   handleReturn,
@@ -16,22 +18,21 @@ import {
   styleMapFromNodes,
   styleNamesFromMap,
 } from './utils/utils'
-// import { AllowedStyles, StyleMap } from './utils/typings'
 
-/*
-  Supports HTML with bold and italic styles in <p> blocks.
-  Optionally supports links, and linebreak stripping.
-  Styles are determined by props for article layout,
-  or limit commands by passing allowedStyles.
-*/
+/**
+ * Supports HTML with bold and italic styles in <p> blocks.
+ * Allowed styles can be limited by passing allowedStyles.
+ * Optionally supports links, and linebreak stripping.
+ */
 
 interface Props {
-  allowedStyles?: any
+  allowedStyles?: AllowedStyles
   html?: string
   hasLinks: boolean
   onChange: (html: string) => void
   placeholder?: string
   stripLinebreaks: boolean
+  isDark?: boolean
 }
 
 interface State {
@@ -45,7 +46,7 @@ interface State {
 
 export class Paragraph extends Component<Props, State> {
   private editor
-  private allowedStyles: any
+  private allowedStyles: StyleMap
   private debouncedOnChange
   static defaultProps = {
     hasLinks: false,
@@ -269,7 +270,7 @@ export class Paragraph extends Component<Props, State> {
   }
 
   render() {
-    const { hasLinks, placeholder } = this.props
+    const { hasLinks, isDark, placeholder } = this.props
     const {
       editorState,
       selectionTarget,
@@ -280,7 +281,7 @@ export class Paragraph extends Component<Props, State> {
     const promptForLink = hasLinks ? this.promptForLink : undefined
 
     return (
-      <div>
+      <ParagraphContainer>
         {showNav && (
           <TextNav
             onClickOff={() => this.setState({ showNav: false })}
@@ -292,6 +293,7 @@ export class Paragraph extends Component<Props, State> {
         )}
         {showUrlInput && (
           <TextInputUrl
+            backgroundColor={isDark ? 'white' : undefined}
             confirmLink={this.confirmLink}
             onClickOff={() => this.setState({ showUrlInput: false })}
             removeLink={this.removeLink}
@@ -319,7 +321,11 @@ export class Paragraph extends Component<Props, State> {
             spellCheck
           />
         </div>
-      </div>
+      </ParagraphContainer>
     )
   }
 }
+
+const ParagraphContainer = styled.div`
+  position: relative;
+`

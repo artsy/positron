@@ -1,10 +1,10 @@
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
+import { PlainText } from 'client/components/draft/plain_text/plain_text'
 
 export class CharacterLimit extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -33,8 +33,8 @@ export class CharacterLimit extends React.Component {
         <div className='bordered-input'>
           <Paragraph
             onChange={this.onChange}
+            hasLinks
             html={defaultValue || ''}
-            linked
             stripLinebreaks
             placeholder={placeholder} />
         </div>
@@ -51,7 +51,7 @@ export class CharacterLimit extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { defaultValue, label, limit, placeholder, type } = this.props
     const { remainingChars } = this.state
 
@@ -68,7 +68,7 @@ export class CharacterLimit extends React.Component {
       <div className='CharacterLimit' data-type={type}>
         <label>
           {label}
-          <span style={{color: remainingColor}}>{remainingChars} Characters</span>
+          <span style={{ color: remainingColor }}>{remainingChars} Characters</span>
         </label>
         {type === 'textarea'
           ? this.renderTextArea(propsForInput)

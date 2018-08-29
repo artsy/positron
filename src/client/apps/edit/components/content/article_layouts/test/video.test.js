@@ -5,7 +5,7 @@ import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { VideoAbout } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
 import FileInput from 'client/components/file_input'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { EditVideo, EditVideoPublished } from '../video'
 require('typeahead.js')

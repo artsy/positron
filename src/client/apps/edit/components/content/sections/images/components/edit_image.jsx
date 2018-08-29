@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { clone, without } from 'lodash'
 import { connect } from 'react-redux'
 import { Artwork, Image } from '@artsy/reaction/dist/Components/Publishing'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
 import { RemoveButton } from 'client/components/remove_button'
 
@@ -60,23 +60,23 @@ export class EditImage extends Component {
   }
 
   editCaption = () => {
-    const { article, image, progress } = this.props
+    const { image, progress } = this.props
 
     if (!progress) {
       return (
         <Paragraph
-          type='caption'
-          placeholder='Image Caption'
+          allowedStyles={['i']}
+          hasLinks
           html={image.caption || ''}
           onChange={this.onCaptionChange}
+          placeholder='Image Caption'
           stripLinebreaks
-          layout={article.layout}
         />
       )
     }
   }
 
-  render () {
+  render() {
     const {
       article,
       editing,
@@ -99,20 +99,20 @@ export class EditImage extends Component {
 
         {isArtwork
           ? <Artwork
-              artwork={image}
-              layout={article.layout}
-              linked={false}
-              sectionLayout={section.layout}
-              editing
-            />
+            artwork={image}
+            layout={article.layout}
+            linked={false}
+            sectionLayout={section.layout}
+            editing
+          />
 
-            : <Image
-                editCaption={this.editCaption}
-                image={image}
-                layout={article.layout}
-                linked={false}
-                sectionLayout={section.layout}
-              />
+          : <Image
+            editCaption={this.editCaption}
+            image={image}
+            layout={article.layout}
+            linked={false}
+            sectionLayout={section.layout}
+          />
         }
 
         {editing &&

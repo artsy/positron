@@ -1,7 +1,6 @@
 //  Video section supports links from youtube or vimeo
-
 import PropTypes from 'prop-types'
-import Paragraph from '../../../../../../components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import VideoSectionControls from './controls.jsx'
@@ -43,7 +42,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  renderRemoveButton () {
+  renderRemoveButton() {
     const { section } = this.props
 
     if (section.cover_image_url) {
@@ -61,7 +60,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  renderVideoEmbed () {
+  renderVideoEmbed() {
     const { section, article, editing, hidePreview } = this.props
     const hasUrl = Boolean(section.url)
 
@@ -77,12 +76,12 @@ export class SectionVideo extends Component {
         >
           {editing && this.renderRemoveButton()}
           <Paragraph
-            type='caption'
-            placeholder='Video Caption (required)'
+            allowedStyles={['i']}
+            hasLinks
             html={section.caption}
             onChange={(html) => this.onChange('caption', html)}
+            placeholder='Video Caption (required)'
             stripLinebreaks
-            layout={article.layout}
           />
         </Video>
       )
@@ -95,7 +94,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  render () {
+  render() {
     const {
       editing,
       hidePreview,

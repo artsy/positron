@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
+import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata.jsx'
 
 export const SeriesAdmin = (props) => {
   const { curation, onChange } = props
@@ -16,8 +16,8 @@ export const SeriesAdmin = (props) => {
             <label>About the Series</label>
             <div className='bordered-input'>
               <Paragraph
+                hasLinks
                 html={curation.get('about') || ''}
-                linked
                 onChange={(html) => onChange('about', html)} />
             </div>
           </div>

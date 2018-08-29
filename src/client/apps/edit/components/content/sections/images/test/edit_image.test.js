@@ -5,12 +5,12 @@ import { mount } from 'enzyme'
 import { Artwork, Fixtures, Image } from '@artsy/reaction/dist/Components/Publishing'
 import { EditImage } from '../components/edit_image'
 import { RemoveButton } from 'client/components/remove_button'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 const { StandardArticle } = Fixtures
 
 describe('EditImage', () => {
   let props
-  let artwork = extend(StandardArticle.sections[4].images[2], {date: '2015'})
+  let artwork = extend(StandardArticle.sections[4].images[2], { date: '2015' })
   let image = StandardArticle.sections[4].images[0]
 
   const getWrapper = (props) => {
