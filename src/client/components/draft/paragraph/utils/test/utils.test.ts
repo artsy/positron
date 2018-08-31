@@ -1,19 +1,19 @@
-import Draft from 'draft-js'
 import { convertToHTML } from 'draft-convert'
+import Draft from 'draft-js'
 import {
   handleReturn,
   insertPastedState,
   keyBindingFn,
   styleMapFromNodes,
   styleNamesFromMap,
-  styleNodesFromMap
+  styleNodesFromMap,
 } from '../utils'
 const SelectionUtils = require('../../../../rich_text/utils/text_selection')
 
 jest.mock('../../../../rich_text/utils/text_selection')
 
 describe('Paragraph utils', () => {
-  let e: React.KeyboardEvent<{}> = {} as React.KeyboardEvent<{}>
+  const e: React.KeyboardEvent<{}> = {} as React.KeyboardEvent<{}>
 
   describe('#styleMapFromNodes', () => {
     it('Converts an array of style nodeNames to styleMap', () => {
@@ -76,7 +76,9 @@ describe('Paragraph utils', () => {
     })
 
     it('Can handle link-prompt', () => {
-      Draft.KeyBindingUtil.hasCommandModifier = jest.fn().mockReturnValueOnce(true)
+      Draft.KeyBindingUtil.hasCommandModifier = jest
+        .fn()
+        .mockReturnValueOnce(true)
       const keybinding = keyBindingFn(e)
 
       expect(keybinding).toBe('link-prompt')
@@ -101,7 +103,7 @@ describe('Paragraph utils', () => {
 
     it('Returns not-handled if focus is in first block', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
-        isFirstBlock: true
+        isFirstBlock: true,
       })
       const returnHandler = handleReturn(e, editorState)
 
@@ -111,7 +113,7 @@ describe('Paragraph utils', () => {
 
     it('Returns not-handled if focus has anchor offset', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
-        anchorOffset: 2
+        anchorOffset: 2,
       })
       const returnHandler = handleReturn(e, editorState)
 
@@ -121,7 +123,7 @@ describe('Paragraph utils', () => {
 
     it('Returns handled and prevents default if creating an empty block', () => {
       SelectionUtils.getSelectionDetails.mockReturnValueOnce({
-        anchorOffset: 0
+        anchorOffset: 0,
       })
       const returnHandler = handleReturn(e, editorState)
 
@@ -147,9 +149,7 @@ describe('Paragraph utils', () => {
       const newState = insertPastedState(pastedState, originalState)
       const newHtml = convertToHTML({})(newState.getCurrentContent())
 
-      expect(newHtml).toBe(
-        '<p>Pasted blockOriginal block</p>'
-      )
+      expect(newHtml).toBe('<p>Pasted blockOriginal block</p>')
     })
   })
 })

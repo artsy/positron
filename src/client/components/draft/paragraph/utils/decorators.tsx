@@ -1,5 +1,5 @@
-import React, { ReactChild } from 'react'
 import { CompositeDecorator, ContentBlock, ContentState } from 'draft-js'
+import React, { ReactChild } from 'react'
 import { Decorator } from './typings'
 
 /**
@@ -8,23 +8,23 @@ import { Decorator } from './typings'
  * and render them in the Editor component
  */
 export const decorators = (hasLinks: boolean) => {
-  const decorators = getDecorators(hasLinks)
-  return new CompositeDecorator(decorators)
+  const allowedDecorators = getDecorators(hasLinks)
+  return new CompositeDecorator(allowedDecorators)
 }
 
 /**
  * Separated from #decorators for testing purposes
  */
 export const getDecorators = (hasLinks: boolean) => {
-  let decorators: Decorator = []
+  const allowedDecorators: Decorator = []
 
   if (hasLinks) {
-    decorators.push({
+    allowedDecorators.push({
       strategy: findLinkEntities,
-      component: Link
+      component: Link,
     })
   }
-  return decorators
+  return allowedDecorators
 }
 
 /**
@@ -35,16 +35,13 @@ export const findLinkEntities = (
   callback: (start: number, end: number) => void,
   contentState: ContentState
 ) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity()
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      )
-    },
-    callback
-  )
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity()
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === 'LINK'
+    )
+  }, callback)
 }
 
 /**
@@ -64,7 +61,7 @@ export const Link = (props: LinkProps) => {
 }
 
 export interface LinkProps {
-  children: ReactChild,
-  contentState: ContentState,
+  children: ReactChild
+  contentState: ContentState
   entityKey: string
 }
