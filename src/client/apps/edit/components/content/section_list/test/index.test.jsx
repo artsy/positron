@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { SectionContainer } from '../../section_container'
 import { SectionTool } from '../../section_tool'
@@ -33,7 +33,7 @@ describe('SectionList', () => {
   }
 
   beforeEach(() => {
-    article = clone(Fixtures.StandardArticle)
+    article = clone(StandardArticle)
 
     props = {
       article,
@@ -67,7 +67,7 @@ describe('SectionList', () => {
   })
 
   it('Does not render drag container if 1 section', () => {
-    props.article.sections = [{type: 'embed'}]
+    props.article.sections = [{ type: 'embed' }]
     const component = getWrapper(props)
 
     expect(component.find(DragContainer).exists()).toBe(false)
@@ -76,7 +76,7 @@ describe('SectionList', () => {
 
   it('Listens for a new section and dispatches setSection with index', () => {
     const { sections } = props.article
-    const newSection = {type: 'embed'}
+    const newSection = { type: 'embed' }
     sections.push(newSection)
     const component = getWrapper(props).find(SectionList)
     component.instance().onNewSection(newSection)
@@ -88,8 +88,8 @@ describe('SectionList', () => {
     props.article.layout = 'news'
     const component = getWrapper(props).find(SectionList)
     component.instance().onDragEnd([
-      {type: 'social_embed'},
-      {type: 'text'}
+      { type: 'social_embed' },
+      { type: 'text' }
     ])
 
     expect(props.logErrorAction.mock.calls[0][0].message).toBe(

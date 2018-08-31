@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle, StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import Backbone from 'backbone'
 import { Autocomplete } from '../index.jsx'
 require('typeahead.js')
@@ -18,8 +18,8 @@ describe('Autocomplete', () => {
     }
 
     searchResults = [
-      Fixtures.FeatureArticle,
-      Fixtures.StandardArticle
+      FeatureArticle,
+      StandardArticle
     ]
   })
 
@@ -44,7 +44,7 @@ describe('Autocomplete', () => {
     )
     component.instance().engine.get = jest.fn()
     const input = component.find('input').at(0)
-    input.simulate('change', {target: {value: 'a title'}})
+    input.simulate('change', { target: { value: 'a title' } })
     expect(component.instance().engine.get.mock.calls[0][0]).toBe('a title')
   })
 
@@ -138,7 +138,7 @@ describe('Autocomplete', () => {
       <Autocomplete {...props} />
     )
     component.instance().isFocused = jest.fn().mockReturnValue(true)
-    component.setState({searchResults: []})
+    component.setState({ searchResults: [] })
     expect(component.find('.Autocomplete__item').length).toBe(1)
     expect(component.html()).toMatch('No results')
   })

@@ -3,7 +3,8 @@ import React from 'react'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-import { Fixtures, IconDrag } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { IconDrag } from '@artsy/reaction/dist/Components/Publishing/Icon/IconDrag'
 import { RemoveButton } from 'client/components/remove_button'
 import SectionSlideshow from '../../sections/slideshow'
 import { SectionText } from '../../sections/text/index.jsx'
@@ -11,7 +12,6 @@ import { SectionEmbed } from '../../sections/embed'
 import { SectionImages } from '../../sections/images'
 import { SectionVideo } from '../../sections/video'
 import { SectionContainer } from '../index'
-const { StandardArticle } = Fixtures
 require('typeahead.js')
 
 describe('SectionContainer', () => {
@@ -44,13 +44,13 @@ describe('SectionContainer', () => {
 
     props = {
       article: article,
-      channel: {type: 'editorial'},
+      channel: { type: 'editorial' },
       editing: false,
       index: 1,
       isHero: false,
       onRemoveHero: jest.fn(),
       onSetEditing: jest.fn(),
-      section: {type: 'image_collection', layout: 'overflow_fillwidth'},
+      section: { type: 'image_collection', layout: 'overflow_fillwidth' },
       sections: article.sections,
       sectionIndex: 1,
       removeSectionAction: jest.fn()
@@ -86,44 +86,44 @@ describe('SectionContainer', () => {
 
   describe('Sections', () => {
     it('Can render an embed section', () => {
-      props.section = {type: 'embed'}
+      props.section = { type: 'embed' }
       const component = getWrapper(props)
       expect(component.find(SectionEmbed).length).toBe(1)
     })
 
     it('Can render an image section', () => {
-      props.section = {type: 'image'}
+      props.section = { type: 'image' }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render an image_collection section', () => {
-      props.section = {type: 'image_collection'}
+      props.section = { type: 'image_collection' }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
     it('Can render an image_set section', () => {
-      props.section = {type: 'image_set'}
+      props.section = { type: 'image_set' }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
     xit('Can render a slideshow section', () => {
-      props.section = {type: 'slideshow'}
+      props.section = { type: 'slideshow' }
       const component = getWrapper(props)
       expect(component.find(SectionSlideshow).length).toBe(1)
     })
 
     it('Can render a text section', () => {
       props.sectionIndex = 0
-      props.section = {type: 'text'}
+      props.section = { type: 'text' }
       const component = getWrapper(props)
       expect(component.find(SectionText).length).toBe(1)
     })
 
     it('Can render a video section', () => {
-      props.section = {type: 'video'}
+      props.section = { type: 'video' }
       const component = getWrapper(props)
       expect(component.find(SectionVideo).length).toBe(1)
     })

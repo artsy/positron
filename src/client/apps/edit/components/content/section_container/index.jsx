@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import colors from '@artsy/reaction/dist/Assets/Colors'
-import { IconDrag } from '@artsy/reaction/dist/Components/Publishing'
+import { IconDrag } from '@artsy/reaction/dist/Components/Publishing/Icon/IconDrag'
 import { RemoveButton } from 'client/components/remove_button'
 import { removeSection } from 'client/actions/edit/sectionActions'
 
@@ -90,7 +90,8 @@ export class SectionContainer extends Component {
 
       case 'text': {
         return (
-          <SectionText {...this.props} />
+          <div>hello</div>
+          // <SectionText {...this.props} />
         )
       }
 
@@ -104,7 +105,7 @@ export class SectionContainer extends Component {
     }
   }
 
-  render () {
+  render() {
     const {
       isHero,
       section

@@ -2,10 +2,9 @@ import React from 'react'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { TextNav } from 'client/components/rich_text/components/text_nav'
 import { SectionText } from '../index.jsx'
-const { StandardArticle } = Fixtures
 
 describe('SectionText', () => {
   let props
@@ -155,7 +154,7 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().setEditorStateFromProps = jest.fn()
       const prevProps = {
-        section: {body: '<p>A text before.</p>', type: 'text'},
+        section: { body: '<p>A text before.</p>', type: 'text' },
         editing: false
       }
       component.instance().maybeResetEditor(prevProps)
@@ -268,7 +267,7 @@ describe('SectionText', () => {
     it('Returns default behaviour if in first block', () => {
       const component = getWrapper(props)
       component.instance().focus()
-      const handleReturn = component.instance().handleReturn({key: 'enter'})
+      const handleReturn = component.instance().handleReturn({ key: 'enter' })
 
       expect(handleReturn).toBe('not-handled')
     })
@@ -277,7 +276,7 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection())
       component.instance().focus()
-      const handleReturn = component.instance().handleReturn({key: 'enter'})
+      const handleReturn = component.instance().handleReturn({ key: 'enter' })
 
       expect(handleReturn).toBe('not-handled')
     })
@@ -407,7 +406,7 @@ describe('SectionText', () => {
       props.section.body = '<p>A text before.</p>'
       const component = getWrapper(props)
       component.instance().onChange(getSelection(true))
-      component.instance().handleChangeSection({key: 'ArrowRight'})
+      component.instance().handleChangeSection({ key: 'ArrowRight' })
 
       expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index + 1)
     })
@@ -415,7 +414,7 @@ describe('SectionText', () => {
     it('L-> Moves the cursor to the previous section if at start of block', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection())
-      component.instance().handleChangeSection({key: 'ArrowLeft'})
+      component.instance().handleChangeSection({ key: 'ArrowLeft' })
 
       expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index - 1)
     })
@@ -423,7 +422,7 @@ describe('SectionText', () => {
     it('U-> Moves the cursor to the previous section if at start of block', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection())
-      component.instance().handleChangeSection({key: 'ArrowUp'})
+      component.instance().handleChangeSection({ key: 'ArrowUp' })
 
       expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index - 1)
     })
@@ -432,7 +431,7 @@ describe('SectionText', () => {
       const component = getWrapper(props)
       component.instance().onChange(getSelection(true))
       component.instance().focus()
-      component.instance().handleChangeSection({key: 'ArrowDown'})
+      component.instance().handleChangeSection({ key: 'ArrowDown' })
 
       expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index + 1)
     })

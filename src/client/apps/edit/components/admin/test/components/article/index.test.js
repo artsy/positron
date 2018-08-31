@@ -4,7 +4,7 @@ import { cloneDeep, extend } from 'lodash'
 import { mount, shallow } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { AdminArticle } from '../../../components/article'
 import { ArticleAuthors } from '../../../components/article/article_authors'
 import { ArticlePublishDate } from '../../../components/article/article_publish_date'
@@ -45,8 +45,8 @@ describe('AdminArticle', () => {
 
   beforeEach(() => {
     let article = extend(
-      cloneDeep(Fixtures.StandardArticle),
-      {author: {name: 'Artsy Editorial', id: '123'}}
+      cloneDeep(StandardArticle),
+      { author: { name: 'Artsy Editorial', id: '123' } }
     )
 
     props = {

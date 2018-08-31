@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import Backbone from 'backbone'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { AdminVerticalsTags } from '../../components/verticals_tags.jsx'
 import { AutocompleteInlineList } from '/client/components/autocomplete2/inline_list'
 require('typeahead.js')
@@ -18,14 +18,14 @@ describe('AdminVerticalsTags', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.FeatureArticle),
+      article: cloneDeep(FeatureArticle),
       onChangeArticleAction: jest.fn()
     }
 
     Backbone.Collection.prototype.fetch = jest.fn((res) => {
       const verticals = new Backbone.Collection([
-        {id: '123', name: 'Art'},
-        {id: '456', name: 'News'},
+        { id: '123', name: 'Art' },
+        { id: '456', name: 'News' },
         props.article.vertical
       ])
       return res.success(verticals)
