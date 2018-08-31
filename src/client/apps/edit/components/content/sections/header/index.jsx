@@ -29,25 +29,25 @@ export class SectionHeader extends Component {
     this.setState({ progress })
   }
 
-  renderTitle = () => {
+  editTitle = () => {
     const { article, onChange } = this.props
 
     return (
       <PlainText
         content={article.title}
-        onChange={(content) => onChange('title', content)}
+        onChange={content => onChange('title', content)}
         placeholder='Page Title'
       />
     )
   }
 
-  renderFeatureDeck = hero => {
+  editFeatureDeck = hero => {
     const { onChangeHeroAction } = this.props
 
     return (
       <PlainText
         content={hero.deck}
-        onChange={(content) => onChangeHeroAction('deck', content)}
+        onChange={content => onChangeHeroAction('deck', content)}
         placeholder='Deck (optional)'
       />
     )
@@ -59,7 +59,7 @@ export class SectionHeader extends Component {
     return (
       <FileInput
         type='simple'
-        onUpload={(src) => onChangeHeroAction('url', src)}
+        onUpload={src => onChangeHeroAction('url', src)}
         prompt={prompt}
         video
         onProgress={this.onProgress}
@@ -67,7 +67,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderImage = hero => {
+  editImage = hero => {
     const { type, url } = hero
     const { onChangeHeroAction } = this.props
     const { progress } = this.state
@@ -112,7 +112,7 @@ export class SectionHeader extends Component {
     return moment(date).local().toISOString()
   }
 
-  renderLeadParagraph = () => {
+  editLeadParagraph = () => {
     const { article, onChange } = this.props
 
     return (
@@ -128,9 +128,8 @@ export class SectionHeader extends Component {
     )
   }
 
-  render () {
+  render() {
     const { article } = this.props
-
     const isFeature = article.layout === 'feature'
     const isClassic = article.layout === 'classic'
     const hero = article.hero_section || {}
@@ -138,19 +137,23 @@ export class SectionHeader extends Component {
     if (isClassic) {
       return (
         <div className='edit-header'>
-          <Header article={article} date={this.getPublishDate()}>
-            {this.renderTitle()}
-            {this.renderLeadParagraph()}
-          </Header>
+          <Header
+            article={article}
+            date={this.getPublishDate()}
+            editTitle={this.editTitle()}
+            editLeadParagraph={this.editLeadParagraph()}
+          />
         </div>
       )
     } else {
       const headerType = isFeature ? (hero.type || 'text') : ''
+      const hasVertical = article.vertical ? undefined : 'Missing Vertical'
 
       return (
         <HeaderContainer
           className={'edit-header ' + headerType}
           data-type={headerType}
+          hasVertical
         >
           {isFeature &&
             <HeaderControls onProgress={this.onProgress} />
@@ -159,10 +162,10 @@ export class SectionHeader extends Component {
           <Header
             article={article}
             date={this.getPublishDate()}
-            editDeck={isFeature ? this.renderFeatureDeck(hero) : undefined}
-            editImage={isFeature ? this.renderImage(hero) : undefined}
-            editTitle={this.renderTitle()}
-            editVertical='Missing Vertical'
+            editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
+            editImage={isFeature ? this.editImage(hero) : undefined}
+            editTitle={this.editTitle()}
+            editVertical={hasVertical}
           />
         </HeaderContainer>
       )
@@ -170,7 +173,7 @@ export class SectionHeader extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article
 })
 
