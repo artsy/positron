@@ -90,8 +90,7 @@ export class SectionContainer extends Component {
 
       case 'text': {
         return (
-          <div>hello</div>
-          // <SectionText {...this.props} />
+          <SectionText {...this.props} />
         )
       }
 

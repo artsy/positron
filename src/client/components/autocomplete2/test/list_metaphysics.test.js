@@ -2,7 +2,7 @@ import request from 'superagent'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { AutocompleteList } from 'client/components/autocomplete2/list'
 import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
 import * as Queries from 'client/queries/metaphysics'
@@ -31,7 +31,7 @@ describe('AutocompleteListMetaphysics', () => {
   }
 
   beforeEach(() => {
-    let article = clone(Fixtures.StandardArticle)
+    let article = clone(StandardArticle)
     props = {
       article,
       artsyURL: 'https://artsy.net',
@@ -128,7 +128,7 @@ describe('AutocompleteListMetaphysics', () => {
   it('#idsToFetch returns unfetched ids based on field and fetchedItems', () => {
     props.article.fair_ids = ['123', '456']
     const component = getWrapper(props)
-    const idsToFetch = component.instance().idsToFetch([{_id: '123'}])
+    const idsToFetch = component.instance().idsToFetch([{ _id: '123' }])
 
     expect(idsToFetch.length).toBe(1)
     expect(idsToFetch[0]).toBe('456')
@@ -137,9 +137,9 @@ describe('AutocompleteListMetaphysics', () => {
   it('#idsToFetch returns unfetched ids for users', () => {
     props.model = 'users'
     props.field = 'contributing_authors'
-    props.article.contributing_authors = [{id: '123'}, {id: '456'}]
+    props.article.contributing_authors = [{ id: '123' }, { id: '456' }]
     const component = getWrapper(props)
-    const idsToFetch = component.instance().idsToFetch([{id: '123'}])
+    const idsToFetch = component.instance().idsToFetch([{ id: '123' }])
 
     expect(idsToFetch.length).toBe(1)
     expect(idsToFetch[0]).toBe('456')

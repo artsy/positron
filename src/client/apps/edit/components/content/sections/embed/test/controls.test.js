@@ -38,7 +38,7 @@ describe('EmbedControls', () => {
   }
 
   beforeEach(() => {
-    section = cloneDeep(Fixtures.StandardArticle.sections[10])
+    section = cloneDeep(StandardArticle.sections[10])
 
     props = {
       onChangeSectionAction: jest.fn(),

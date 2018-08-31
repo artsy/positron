@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { StandardArticle, VideoArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { EditArticle } from '../article_layouts/article'
 import { EditSeries } from '../article_layouts/series'
 import { EditVideo } from '../article_layouts/video'
@@ -52,7 +52,7 @@ describe('EditContent', () => {
   })
 
   it('Renders EditVideo if article layout is video', () => {
-    props.article = Fixtures.VideoArticle
+    props.article = VideoArticle
     const component = getWrapper(props)
 
     expect(component.find(EditVideo).exists()).toBe(true)
