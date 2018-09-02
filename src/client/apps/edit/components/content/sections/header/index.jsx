@@ -13,6 +13,8 @@ import { RemoveButton } from 'client/components/remove_button'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { onChangeHero } from 'client/actions/edit/sectionActions'
 import { Deck } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent'
+import { FeatureHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader'
+import { BasicHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader'
 
 export class SectionHeader extends Component {
   static propTypes = {
@@ -148,12 +150,15 @@ export class SectionHeader extends Component {
     } else {
       const headerType = isFeature ? (hero.type || 'text') : ''
       const hasVertical = article.vertical ? undefined : 'Missing Vertical'
+      const hasImageUrl = hero.url && hero.url.length
+      const hasWhiteText = (headerType === 'fullscreen') && hasImageUrl
 
       return (
         <HeaderContainer
           className={'edit-header ' + headerType}
           data-type={headerType}
           hasVertical
+          hasImageUrl={hasImageUrl}
         >
           {isFeature &&
             <HeaderControls onProgress={this.onProgress} />
@@ -166,6 +171,7 @@ export class SectionHeader extends Component {
             editImage={isFeature ? this.editImage(hero) : undefined}
             editTitle={this.editTitle()}
             editVertical={hasVertical}
+            textColor={hasWhiteText ? 'white' : 'black'}
           />
         </HeaderContainer>
       )
@@ -190,5 +196,11 @@ export default connect(
 const HeaderContainer = styled.div`
   ${Deck} {
     width: 100%;
+  }
+  ${FeatureHeaderContainer} {
+    height: calc(100vh - 95px);
+  }
+  ${BasicHeaderContainer} {
+    margin-top: 0;
   }
 `
