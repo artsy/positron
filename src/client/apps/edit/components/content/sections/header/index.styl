@@ -79,10 +79,6 @@
   .edit-header__container
     margin 0
 
-  div[class^='FeatureHeader__TextAsset']
-    position relative
-    min-height 440px
-
   &[data-type=split]
     margin-top 10px
     .edit-header--controls
@@ -93,20 +89,14 @@
     .edit-header__image-container
       height 100%
     div[class^='FeatureHeader__EditImage']
-      top 0
-      left 0
-      right 0
-      bottom 0
+      position relative
       .RemoveButton
         position absolute
         z-index 1
         right 5px
         top 5px
 
-  div[data-type=basic]
-    margin-top 0
-    div[class^="Grid__Grid-"]
-      padding-top 40px
+  &[data-type=basic]
     .public-DraftEditorPlaceholder-inner
       text-align center
       width 100%
@@ -138,14 +128,8 @@
       color white
 
   &[data-type='text']
-    div[class^='FeatureTextHeader__TextHeaderContainer']
-      margin-top 0
-    div[class^='FeatureHeader__EditImage']
-      position relative
-      .RemoveButton
-        position absolute
-        z-index 1
-        right -10px
-        top -10px
-    div[class^='FeatureTextHeader__Asset']
-      position relative
+    .RemoveButton
+      position absolute
+      z-index 1
+      right -10px
+      top -10px
