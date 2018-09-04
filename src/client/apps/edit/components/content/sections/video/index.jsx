@@ -5,7 +5,7 @@ import Paragraph from '../../../../../../components/rich_text/components/paragra
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import VideoSectionControls from './controls.jsx'
-import { Video } from '@artsy/reaction/dist/Components/Publishing'
+import { Video } from '@artsy/reaction/dist/Components/Publishing/Sections/Video'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
 import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
@@ -43,7 +43,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  renderRemoveButton () {
+  renderRemoveButton() {
     const { section } = this.props
 
     if (section.cover_image_url) {
@@ -61,7 +61,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  renderVideoEmbed () {
+  renderVideoEmbed() {
     const { section, article, editing, hidePreview } = this.props
     const hasUrl = Boolean(section.url)
 
@@ -95,7 +95,7 @@ export class SectionVideo extends Component {
     }
   }
 
-  render () {
+  render() {
     const {
       editing,
       hidePreview,

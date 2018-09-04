@@ -30,7 +30,7 @@ Config = require '../utils/config.js'
 { convertToHTML, convertFromHTML } = require 'draft-convert'
 { div, a } = React.DOM
 editor = (props) -> React.createElement Editor, props
-{ Text } = require('@artsy/reaction/dist/Components/Publishing')
+{ Text } = require('@artsy/reaction/dist/Components/Publishing/Sections/Text')
 { TextNav } = require './text_nav.jsx'
 { TextInputUrl } = require './input_url.jsx'
 Text = React.createFactory Text
@@ -274,5 +274,6 @@ module.exports = React.createClass
       Text {
         layout: @props.layout || 'classic'
         postscript: @props.type is 'postscript'
+        showTooltips: false
       },
         @renderEditor()

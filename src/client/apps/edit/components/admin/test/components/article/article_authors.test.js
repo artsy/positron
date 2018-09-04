@@ -4,7 +4,7 @@ import { cloneDeep, extend } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { ArticleAuthors } from '../../../components/article/article_authors'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
 import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
@@ -44,8 +44,8 @@ describe('ArticleAuthors', () => {
 
   beforeEach(() => {
     let article = extend(
-      cloneDeep(Fixtures.StandardArticle),
-      {author: {name: 'Artsy Editorial', id: '123'}}
+      cloneDeep(StandardArticle),
+      { author: { name: 'Artsy Editorial', id: '123' } }
     )
 
     props = {
@@ -104,7 +104,7 @@ describe('ArticleAuthors', () => {
   it('Can change a primary author', () => {
     const component = getWrapper(props)
     const value = 'New Author'
-    component.find('input').at(0).simulate('change', {target: { value }})
+    component.find('input').at(0).simulate('change', { target: { value } })
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('author')
     expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe(value)

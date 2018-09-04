@@ -1,16 +1,17 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { Fixtures, IconRemove } from '@artsy/reaction/dist/Components/Publishing'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing/Icon/IconRemove'
 import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard'
 import { EditArticleCard } from '../components/edit_article_card'
+import { StandardArticle, SeriesArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('EditArticleCard', () => {
   let props
 
   beforeEach(() => {
     props = {
-      article: Fixtures.StandardArticle,
-      series: Fixtures.SeriesArticle,
+      article: StandardArticle,
+      series: SeriesArticle,
       onRemoveArticle: jest.fn()
     }
     props.article.id = '123'

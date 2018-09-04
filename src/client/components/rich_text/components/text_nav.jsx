@@ -2,14 +2,12 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { flatten, map } from 'lodash'
 import colors from '@artsy/reaction/dist/Assets/Colors'
-import {
-  IconArtist,
-  IconBlockquote,
-  IconClearFormatting,
-  IconLink,
-  IconOrderedList,
-  IconUnorderedList
-} from '@artsy/reaction/dist/Components/Publishing'
+import { IconArtist } from '@artsy/reaction/dist/Components/Publishing/Icon/IconArtist'
+import { IconBlockquote } from '@artsy/reaction/dist/Components/Publishing/Icon/IconBlockquote'
+import { IconClearFormatting } from '@artsy/reaction/dist/Components/Publishing/Icon/IconClearFormatting'
+import { IconLink } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLink'
+import { IconOrderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList'
+import { IconUnorderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList'
 
 export class TextNav extends React.Component {
   onToggle = (e, action) => {
@@ -44,7 +42,7 @@ export class TextNav extends React.Component {
     }
   }
 
-  getButtonArray () {
+  getButtonArray() {
     const {
       blocks,
       hasFeatures,
@@ -73,14 +71,14 @@ export class TextNav extends React.Component {
     return flatten(buttons)
   }
 
-  getIcon (type) {
+  getIcon(type) {
     const props = { color: colors.grayDark }
 
     switch (type) {
       case 'artist': {
         return <IconArtist {...props} />
       }
-      case 'blockquote' : {
+      case 'blockquote': {
         return <IconBlockquote {...props} />
       }
       case 'link': {
@@ -109,7 +107,7 @@ export class TextNav extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { top, left } = this.props.position
     const buttons = this.getButtonArray()
 

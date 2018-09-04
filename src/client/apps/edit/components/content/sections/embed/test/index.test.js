@@ -2,11 +2,10 @@ import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
-import { Embed, Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { Embed } from '@artsy/reaction/dist/Components/Publishing/Sections/Embed'
 import { SectionEmbed } from '../index'
 import { EmbedControls } from '../controls'
-
-const { StandardArticle } = Fixtures
 
 describe('Section Embed', () => {
   let props

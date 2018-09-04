@@ -1,7 +1,7 @@
 import React from 'react'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import Icon from '@artsy/reaction/dist/Components/Icon'
 import colors from '@artsy/reaction/dist/Assets/Colors'
 import { EditHeader } from '../index'
@@ -19,7 +19,7 @@ describe('Edit Header Controls', () => {
   beforeEach(() => {
     props = {
       beforeUnload: jest.fn(),
-      article: clone(Fixtures.StandardArticle),
+      article: clone(StandardArticle),
       changeViewAction: jest.fn(),
       channel: { type: 'partner' },
       deleteArticleAction: jest.fn(),

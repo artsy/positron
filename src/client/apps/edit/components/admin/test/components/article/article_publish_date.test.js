@@ -2,7 +2,7 @@ import moment from 'moment'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { ArticlePublishDate } from '../../../components/article/article_publish_date'
 
 describe('ArticlePublishDate', () => {
@@ -15,7 +15,7 @@ describe('ArticlePublishDate', () => {
   }
 
   beforeEach(() => {
-    let article = cloneDeep(Fixtures.StandardArticle)
+    let article = cloneDeep(StandardArticle)
 
     props = {
       article,
@@ -153,7 +153,7 @@ describe('ArticlePublishDate', () => {
     it('Returns "Update" if scheduled_publish_at has changed', () => {
       props.article.scheduled_publish_at = moment().toISOString()
       const component = getWrapper(props)
-      component.setState({hasChanged: true})
+      component.setState({ hasChanged: true })
       const text = component.instance().getPublishText()
 
       expect(text).toBe('Update')
@@ -236,7 +236,7 @@ describe('ArticlePublishDate', () => {
 
     it('Sets state.hasChanged to false', () => {
       const component = getWrapper(props)
-      component.instance().setState({hasChanged: true})
+      component.instance().setState({ hasChanged: true })
       component.find('button').at(0).simulate('click')
 
       expect(component.state().hasChanged).toBe(false)

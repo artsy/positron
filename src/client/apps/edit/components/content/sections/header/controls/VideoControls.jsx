@@ -11,7 +11,7 @@ export class VideoControls extends Component {
     onClick: PropTypes.func.isRequired
   }
 
-  render () {
+  render() {
     const { article, isOpen, onChange, onClick, onProgress } = this.props
 
     return (

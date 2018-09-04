@@ -2,7 +2,7 @@ import configureStore from 'redux-mock-store'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { EditDisplay } from '../index'
 import { DisplayEmail } from '../components/email'
@@ -29,14 +29,14 @@ describe('EditDisplay', () => {
 
     return mount(
       <Provider store={store}>
-       <EditDisplay {...props} />
+        <EditDisplay {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       channel: { type: 'editorial' },
       onChange: jest.fn()
     }

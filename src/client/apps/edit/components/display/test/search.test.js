@@ -2,7 +2,7 @@ import configureStore from 'redux-mock-store'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplaySearch } from '../components/search'
@@ -24,14 +24,14 @@ describe('DisplaySearch', () => {
 
     return mount(
       <Provider store={store}>
-       <DisplaySearch {...props} />
+        <DisplaySearch {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onChangeArticleAction: jest.fn()
     }
     props.article.search_title = 'Virtual Reality Is the Most Powerful Artistic Medium of Our Time'

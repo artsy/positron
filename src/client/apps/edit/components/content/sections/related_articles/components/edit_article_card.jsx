@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing/Icon/IconRemove'
 import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard'
 
 export class EditArticleCard extends Component {
@@ -12,18 +12,18 @@ export class EditArticleCard extends Component {
     onRemoveArticle: PropTypes.func
   }
 
-  render () {
+  render() {
     const { article, color, series, onRemoveArticle } = this.props
 
     return (
       <div className='EditArticleCard'>
-          <EditLink
-            className='EditArticleCard__edit'
-            href={`/articles/${article.id}/edit`}
-            target='_blank'
-            color={color}
-          >
-            Edit Article
+        <EditLink
+          className='EditArticleCard__edit'
+          href={`/articles/${article.id}/edit`}
+          target='_blank'
+          color={color}
+        >
+          Edit Article
           </EditLink>
 
         <div

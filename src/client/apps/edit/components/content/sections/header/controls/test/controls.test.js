@@ -7,17 +7,15 @@ import { VideoSectionControls } from '../../../video/controls'
 import { LayoutControls } from '../LayoutControls'
 import { VideoControls } from '../VideoControls'
 import { HeaderControls } from '../index'
-import {
-  Fixtures,
-  IconLayoutFullscreen,
-  IconLayoutSplit,
-  IconLayoutText
-} from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { IconLayoutFullscreen } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutFullscreen'
+import { IconLayoutSplit } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutSplit'
+import { IconLayoutText } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutText'
 
 describe('Feature Header Controls', () => {
   describe('LayoutControls', () => {
     const props = {
-      article: {layout: 'feature'},
+      article: { layout: 'feature' },
       hero: {},
       onChange: jest.fn(),
       onChangeHeroAction: jest.fn(),
@@ -79,7 +77,7 @@ describe('Feature Header Controls', () => {
 
     beforeEach(() => {
       props = {
-        article: Fixtures.StandardArticle,
+        article: StandardArticle,
         onChange: jest.fn(),
         onChangeHeroAction: jest.fn(),
         onClick: jest.fn(),

@@ -1,17 +1,14 @@
 import React from 'react'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
-import {
-  Fixtures,
-  IconEditEmbed,
-  IconEditImages,
-  IconEditText,
-  IconEditVideo,
-  IconHeroImage,
-  IconHeroVideo
-} from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { IconEditEmbed } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditEmbed'
+import { IconEditImages } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditImages'
+import { IconEditText } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditText'
+import { IconEditVideo } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo'
+import { IconHeroImage } from '@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage'
+import { IconHeroVideo } from '@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo'
 import { SectionTool } from '../index'
-const { FeatureArticle } = Fixtures
 
 describe('SectionTool', () => {
   let props
