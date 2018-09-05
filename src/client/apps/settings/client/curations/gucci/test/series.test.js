@@ -2,7 +2,7 @@ import Backbone from 'backbone'
 import React from 'react'
 import { mount } from 'enzyme'
 import { Paragraph } from 'client/components/draft/paragraph/paragraph'
-import { SeriesAdmin } from '../components/series.jsx'
+import { SeriesAdmin } from '../components/series'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
 describe('Series Admin', () => {

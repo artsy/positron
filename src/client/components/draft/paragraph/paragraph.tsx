@@ -19,12 +19,6 @@ import {
   styleNamesFromMap,
 } from './utils/utils'
 
-/**
- * Supports HTML with bold and italic styles in <p> blocks.
- * Allowed styles can be limited by passing allowedStyles.
- * Optionally supports links, and linebreak stripping.
- */
-
 interface Props {
   allowedStyles?: AllowedStyles
   html?: string
@@ -44,6 +38,11 @@ interface State {
   urlValue: string
 }
 
+/**
+ * Supports HTML with bold and italic styles in <p> blocks.
+ * Allowed styles can be limited by passing allowedStyles.
+ * Optionally supports links, and linebreak stripping.
+ */
 export class Paragraph extends Component<Props, State> {
   private editor
   private allowedStyles: StyleMap

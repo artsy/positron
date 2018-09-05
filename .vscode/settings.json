@@ -7,9 +7,7 @@
   "files.exclude": {
     "**/.git": true
   },
-  "editor.rulers": [
-    80
-  ],
+  "editor.rulers": [80],
   "editor.tabSize": 2,
   "[json]": {
     "editor.formatOnSave": false

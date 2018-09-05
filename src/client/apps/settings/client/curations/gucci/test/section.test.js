@@ -1,6 +1,6 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import { SectionAdmin } from '../components/section.jsx'
+import { SectionAdmin } from '../components/section'
 import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
 
