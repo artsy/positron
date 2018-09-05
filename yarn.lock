@@ -17,9 +17,9 @@
     react "^16.3.2"
     styled-system "^2.2.5"
 
-"@artsy/reaction@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-3.2.0.tgz#2df3201eab0903d1be2680d06c40b3bf1408b27f"
+"@artsy/reaction@^3.3.2":
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-3.3.2.tgz#42c26f76029a9368dc0eab1dd2dbe0c2f287719b"
   dependencies:
     "@artsy/palette" "^2.9.3"
     cheerio "^1.0.0-rc.2"
@@ -8743,7 +8743,7 @@ react-lazy-load-image-component@^1.1.1:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
 
-react-lines-ellipsis@xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a:
+"react-lines-ellipsis@github:xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a":
   version "0.13.0"
   resolved "https://codeload.github.com/xiaody/react-lines-ellipsis/tar.gz/0cd517ad9079aeb5e6710178d93dd6faa65b924a"
 
