@@ -1,7 +1,7 @@
 import React from 'react'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { SeriesArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { FixedBackground } from '@artsy/reaction/dist/Components/Publishing/Series/FixedBackground'
 import { SeriesAbout } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle'
@@ -22,7 +22,7 @@ describe('EditSeries', () => {
   let props
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.SeriesArticle),
+      article: cloneDeep(SeriesArticle),
       onChangeArticleAction: jest.fn()
     }
   })

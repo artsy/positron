@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import { cloneDeep } from 'lodash'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import ImageUpload from '../../components/image_upload.coffee'
 import { AdminSponsor } from '../../components/sponsor.jsx'
 
@@ -10,7 +10,7 @@ describe('EditAdmin', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onChangeArticleAction: jest.fn()
     }
   })

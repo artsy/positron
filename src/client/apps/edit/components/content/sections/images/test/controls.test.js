@@ -4,12 +4,11 @@ import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import Backbone from 'backbone'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import Artwork from '../../../../../../../models/artwork.coffee'
 import { SectionControls } from '../../../section_controls'
 import { Autocomplete } from '/client/components/autocomplete2'
 import { ImagesControls } from '../components/controls'
-const { StandardArticle } = Fixtures
 require('typeahead.js')
 
 describe('ImagesControls', () => {
@@ -42,8 +41,8 @@ describe('ImagesControls', () => {
     type: 'artwork',
     _id: '5698bc71275b2479120000a9',
     _links: {
-      self: {href: 'https://stagingapi.artsy.net/api/artworks/5698bc71275b2479120000a9'},
-      thumbnail: {href: 'https://d32dm0rphc51dk.cloudfront.net/S8Jb9AX0ickx4qyXjxWPkg/square.jpg'}
+      self: { href: 'https://stagingapi.artsy.net/api/artworks/5698bc71275b2479120000a9' },
+      thumbnail: { href: 'https://d32dm0rphc51dk.cloudfront.net/S8Jb9AX0ickx4qyXjxWPkg/square.jpg' }
     }
   }
 
@@ -132,7 +131,7 @@ describe('ImagesControls', () => {
       props.editSection.images = clone(StandardArticle.sections[4].images)
       const component = getWrapper(props)
       const images = clone(props.editSection.images)
-      const newImage = {type: 'image', url: 'http://image.jpg'}
+      const newImage = { type: 'image', url: 'http://image.jpg' }
       images.push(newImage)
 
       component.find(Autocomplete).first().props().onSelect(images)
@@ -143,7 +142,7 @@ describe('ImagesControls', () => {
 
     it('#filterAutocomplete returns formatted artworks', () => {
       const component = getWrapper(props).find(ImagesControls)
-      const items = {_embedded: {results: [rawArtwork]}}
+      const items = { _embedded: { results: [rawArtwork] } }
       const filtered = component.instance().filterAutocomplete(items)[0]
 
       expect(filtered._id).toBe(rawArtwork._id)
@@ -155,7 +154,7 @@ describe('ImagesControls', () => {
 
     it('#filterAutocomplete returns false for non-artwork items', () => {
       const component = getWrapper(props).find(ImagesControls)
-      const items = {_embedded: {results: [rawArtwork, {type: 'artist'}]}}
+      const items = { _embedded: { results: [rawArtwork, { type: 'artist' }] } }
       const filtered = component.instance().filterAutocomplete(items)
 
       expect(filtered[0].type).toBe('artwork')
@@ -185,7 +184,7 @@ describe('ImagesControls', () => {
     it('#onNewImage updates the section images', () => {
       const component = getWrapper(props).find(ImagesControls)
       component.instance().onNewImage(
-        {type: 'artwork', image: 'artwork.jpg'}
+        { type: 'artwork', image: 'artwork.jpg' }
       )
       const newImages = props.onChangeSectionAction.mock.calls[0][1]
       const newImage = props.onChangeSectionAction.mock.calls[0][1][3]
@@ -198,10 +197,10 @@ describe('ImagesControls', () => {
 
     it('#onNewImage can update hero section images', () => {
       props.isHero = true
-      props.section = {type: 'image', images: clone(StandardArticle.sections[4].images)}
+      props.section = { type: 'image', images: clone(StandardArticle.sections[4].images) }
       const component = getWrapper(props).find(ImagesControls)
       component.instance().onNewImage(
-        {type: 'artwork', image: 'artwork.jpg'}
+        { type: 'artwork', image: 'artwork.jpg' }
       )
       const newImages = props.onChangeHeroAction.mock.calls[0][1]
       const newImage = props.onChangeHeroAction.mock.calls[0][1][3]
@@ -214,10 +213,10 @@ describe('ImagesControls', () => {
 
     it('#onNewImage limits images to 1 if layout is news', () => {
       props.article.layout = 'news'
-      props.editSection = {type: 'image', images: clone(StandardArticle.sections[4].images)}
+      props.editSection = { type: 'image', images: clone(StandardArticle.sections[4].images) }
       const component = getWrapper(props).find(ImagesControls)
       component.instance().onNewImage(
-        {type: 'artwork', image: 'artwork.jpg'}
+        { type: 'artwork', image: 'artwork.jpg' }
       )
       const newImages = props.onChangeSectionAction.mock.calls[0][1]
       const newImage = props.onChangeSectionAction.mock.calls[0][1][0]
@@ -260,7 +259,7 @@ describe('ImagesControls', () => {
 
   describe('Image Set inputs', () => {
     beforeEach(() => {
-      extend(props.editSection, {type: 'image_set', layout: 'mini'})
+      extend(props.editSection, { type: 'image_set', layout: 'mini' })
     })
 
     it('Renders the active image_set layout', () => {

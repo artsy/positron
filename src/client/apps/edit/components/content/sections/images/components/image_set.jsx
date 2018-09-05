@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {
-  ImageSetPreview,
-  ImageSetPreviewClassic
-} from '@artsy/reaction/dist/Components/Publishing'
+import { ImageSetPreview } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview'
+import { ImageSetPreviewClassic } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreviewClassic'
 
 export const ImageSet = (props) => {
   const { articleLayout, section } = props

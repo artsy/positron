@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount, shallow } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { EditContainer } from '../edit_container'
 import { EditAdmin } from '../admin'
 import { EditContent } from '../content'
@@ -57,7 +57,7 @@ describe('EditContainer', () => {
   beforeEach(() => {
     props = {
       activeView: 'content',
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       changeSavedStatusAction: jest.fn(),
       channel: {},
       error: {},
@@ -110,7 +110,7 @@ describe('EditContainer', () => {
 
   it('sets up an event listener for #beforeUnload if article is published and changed', () => {
     const component = getShallowWrapper(props)
-    component.instance().componentWillReceiveProps({article: {published: true}})
+    component.instance().componentWillReceiveProps({ article: { published: true } })
 
     expect(window.addEventListener.mock.calls[0][0]).toBe('beforeunload')
   })
@@ -175,7 +175,7 @@ describe('EditContainer', () => {
     })
 
     it('Displays an error message if present', () => {
-      props.error = {message: 'an error'}
+      props.error = { message: 'an error' }
       const component = getWrapper(props).find(EditContainer)
 
       expect(component.text()).toMatch(props.error.message)

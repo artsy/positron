@@ -4,15 +4,14 @@ import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
 import { LayoutControls } from '../layout.jsx'
 import { SectionControls } from '../index'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-const { StandardArticle } = Fixtures
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('Section Controls', () => {
   let props
 
   SectionControls.prototype.isScrollingOver = jest.fn().mockReturnValue(true)
   SectionControls.prototype.isScrolledPast = jest.fn().mockReturnValue(false)
-  $.fn.offset = jest.fn().mockReturnValue({top: 200})
+  $.fn.offset = jest.fn().mockReturnValue({ top: 200 })
   $.fn.height = jest.fn().mockReturnValue(200)
   $.fn.closest = jest.fn().mockReturnThis()
 
@@ -42,7 +41,7 @@ describe('Section Controls', () => {
     props = {
       channel: { type: 'editorial' },
       section: StandardArticle.sections[4],
-      article: {layout: 'standard'},
+      article: { layout: 'standard' },
       onChange: jest.fn(),
       disabledAlert: jest.fn(),
       showLayouts: true
@@ -110,7 +109,7 @@ describe('Section Controls', () => {
     it('when insideComponent, calculates based on window scroll position', () => {
       props.isHero = false
       const component = getWrapper(props).find(SectionControls).instance()
-      component.setState({insideComponent: true})
+      component.setState({ insideComponent: true })
       const bottom = component.getPositionBottom()
 
       expect(bottom).toBe('605px')
@@ -119,7 +118,7 @@ describe('Section Controls', () => {
     it('when outside component, returns 100%', () => {
       const component = getWrapper(props).find(SectionControls).instance()
 
-      component.setState({insideComponent: false})
+      component.setState({ insideComponent: false })
       const bottom = component.getPositionBottom()
       expect(bottom).toBe('100%')
     })

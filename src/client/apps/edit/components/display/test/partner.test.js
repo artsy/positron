@@ -2,7 +2,7 @@ import configureStore from 'redux-mock-store'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { ClassicArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayPartner } from '../components/partner'
@@ -25,14 +25,14 @@ describe('DisplayPartner', () => {
 
     return mount(
       <Provider store={store}>
-       <DisplayPartner {...props} />
+        <DisplayPartner {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.ClassicArticle),
+      article: cloneDeep(ClassicArticle),
       onChangeArticleAction: jest.fn()
     }
     props.article.thumbnail_image = 'https://artsy-media-uploads.s3.amazonaws.com/-El3gm6oiFkOUKhUv79lGQ%2Fd7hftxdivxxvm.cloudfront-6.jpg'

@@ -2,11 +2,12 @@ import React from 'react'
 import { cloneDeep, extend } from 'lodash'
 import { stripTags } from 'underscore.string'
 import { mount } from 'enzyme'
-import { Artwork, Fixtures, Image } from '@artsy/reaction/dist/Components/Publishing'
+import { Artwork } from '@artsy/reaction/dist/Components/Publishing/Sections/Artwork'
+import { Image } from '@artsy/reaction/dist/Components/Publishing/Sections/Image'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { EditImage } from '../components/edit_image'
 import { RemoveButton } from 'client/components/remove_button'
 import { Paragraph } from 'client/components/draft/paragraph/paragraph'
-const { StandardArticle } = Fixtures
 
 describe('EditImage', () => {
   let props

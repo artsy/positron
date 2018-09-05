@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayMagazine } from '../components/magazine'
 import ImageUpload from '../../admin/components/image_upload.coffee'
@@ -25,18 +25,18 @@ describe('DisplayMagazine', () => {
 
     return mount(
       <Provider store={store}>
-       <DisplayMagazine {...props} />
+        <DisplayMagazine {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onChangeArticleAction: jest.fn()
     }
     props.article.thumbnail_image = 'https://artsy-media-uploads.s3.amazonaws.com/-El3gm6oiFkOUKhUv79lGQ%2Fd7hftxdivxxvm.cloudfront-6.jpg'
-    props.article.description = 'To create a total experience that will create a feeling that is qualitatively new' 
+    props.article.description = 'To create a total experience that will create a feeling that is qualitatively new'
   })
 
   it('Renders all form fields', () => {

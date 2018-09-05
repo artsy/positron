@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { SectionControls } from '../../../section_controls'
 import { EmbedControls } from '../controls'
 
@@ -22,7 +22,7 @@ describe('EmbedControls', () => {
         channel: { type: 'editorial' }
       },
       edit: {
-        article: Fixtures.StandardArticle,
+        article: StandardArticle,
         section: props.section,
         sectionIndex: props.sectionIndex
       }
@@ -38,7 +38,7 @@ describe('EmbedControls', () => {
   }
 
   beforeEach(() => {
-    section = cloneDeep(Fixtures.StandardArticle.sections[10])
+    section = cloneDeep(StandardArticle.sections[10])
 
     props = {
       onChangeSectionAction: jest.fn(),
@@ -69,7 +69,7 @@ describe('EmbedControls', () => {
     const input = component.find('input').at(0)
     const value = 'new value'
 
-    input.simulate('change', {target: { value }})
+    input.simulate('change', { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('url')
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
@@ -79,7 +79,7 @@ describe('EmbedControls', () => {
     const input = component.find('input').at(1)
     const value = '500'
 
-    input.simulate('change', {target: { value }})
+    input.simulate('change', { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('height')
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
@@ -89,13 +89,13 @@ describe('EmbedControls', () => {
     const input = component.find('input').at(2)
     const value = '200'
 
-    input.simulate('change', {target: { value }})
+    input.simulate('change', { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe('mobile_height')
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
   })
 
   it('Destroys section on unmount if URL is empty', () => {
-    props.section = {type: 'embed'}
+    props.section = { type: 'embed' }
     const component = getWrapper(props).find(EmbedControls)
 
     component.instance().componentWillUnmount()

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { Text } from '@artsy/reaction/dist/Components/Publishing'
+import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
 import * as KeyBindings from 'client/components/rich_text/utils/keybindings'
 import * as Selection from 'client/components/rich_text/utils/text_selection'
 import * as Strip from 'client/components/rich_text/utils/text_stripping'
@@ -28,7 +28,7 @@ export class SectionText extends Component {
     sectionIndex: PropTypes.number
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -132,7 +132,7 @@ export class SectionText extends Component {
       const { currentSectionState, newSection } = hasDividedState
 
       this.onChange(currentSectionState)
-      newSectionAction('text', index + 1, {body: newSection})
+      newSectionAction('text', index + 1, { body: newSection })
       return 'handled'
     }
     return 'not-handled'
@@ -322,10 +322,10 @@ export class SectionText extends Component {
     onChangeSectionAction('layout', 'blockquote')
     // Add new blocks before/after if applicable
     if (afterBlock) {
-      newSectionAction('text', index + 1, {body: afterBlock})
+      newSectionAction('text', index + 1, { body: afterBlock })
     }
     if (beforeBlock) {
-      newSectionAction('text', index, {body: beforeBlock})
+      newSectionAction('text', index, { body: beforeBlock })
     }
     // Reset focus to block with blockquote
     onSetEditing(index + increment)
@@ -397,7 +397,7 @@ export class SectionText extends Component {
     }
   }
 
-  render () {
+  render() {
     const { article, hasFeatures } = this.props
     const {
       editorState,
@@ -417,63 +417,63 @@ export class SectionText extends Component {
     const showDropCaps = editing ? false : this.isContentStart()
 
     return (
-    <div
-      className='SectionText'
-      data-editing={editing}
-      onClick={this.focus}
-    >
-      <Text
-        layout={article.layout}
-        isContentStart={showDropCaps}
+      <div
+        className='SectionText'
+        data-editing={editing}
+        onClick={this.focus}
       >
-        {showMenu &&
-          <TextNav
-            blocks={blocks}
-            hasFeatures={hasFeatures}
-            makePlainText={this.makePlainText}
-            promptForLink={this.promptForLink}
-            styles={styles}
-            toggleBlock={this.toggleBlock}
-            toggleStyle={this.toggleStyle}
-            position={selectionTarget}
-          />
-        }
-        <div
-          className='SectionText__input'
-          onMouseUp={this.checkSelection}
-          onKeyUp={this.checkSelection}
+        <Text
+          layout={article.layout}
+          isContentStart={showDropCaps}
         >
-          <Editor
-            ref={(ref) => { this.domEditor = ref }}
-            blockRenderMap={blockMap}
-            decorators={decorators}
-            editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            handlePastedText={this.onPaste}
-            handleReturn={this.handleReturn}
-            keyBindingFn={KeyBindings.keyBindingFnFull}
-            onChange={this.onChange}
-            onTab={this.handleTab}
-            onLeftArrow={this.handleChangeSection}
-            onUpArrow={this.handleChangeSection}
-            onRightArrow={this.handleChangeSection}
-            onDownArrow={this.handleChangeSection}
-            spellcheck
-          />
-        </div>
+          {showMenu &&
+            <TextNav
+              blocks={blocks}
+              hasFeatures={hasFeatures}
+              makePlainText={this.makePlainText}
+              promptForLink={this.promptForLink}
+              styles={styles}
+              toggleBlock={this.toggleBlock}
+              toggleStyle={this.toggleStyle}
+              position={selectionTarget}
+            />
+          }
+          <div
+            className='SectionText__input'
+            onMouseUp={this.checkSelection}
+            onKeyUp={this.checkSelection}
+          >
+            <Editor
+              ref={(ref) => { this.domEditor = ref }}
+              blockRenderMap={blockMap}
+              decorators={decorators}
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              handlePastedText={this.onPaste}
+              handleReturn={this.handleReturn}
+              keyBindingFn={KeyBindings.keyBindingFnFull}
+              onChange={this.onChange}
+              onTab={this.handleTab}
+              onLeftArrow={this.handleChangeSection}
+              onUpArrow={this.handleChangeSection}
+              onRightArrow={this.handleChangeSection}
+              onDownArrow={this.handleChangeSection}
+              spellcheck
+            />
+          </div>
 
-        {editing && showUrlInput &&
-          <TextInputUrl
-            onClickOff={() => this.setState({showUrlInput: false})}
-            removeLink={this.removeLink}
-            confirmLink={this.confirmLink}
-            selectionTarget={selectionTarget}
-            pluginType={plugin}
-            urlValue={url}
-          />
-        }
-      </Text>
-    </div>
+          {editing && showUrlInput &&
+            <TextInputUrl
+              onClickOff={() => this.setState({ showUrlInput: false })}
+              removeLink={this.removeLink}
+              confirmLink={this.confirmLink}
+              selectionTarget={selectionTarget}
+              pluginType={plugin}
+              urlValue={url}
+            />
+          }
+        </Text>
+      </div>
     )
   }
 }

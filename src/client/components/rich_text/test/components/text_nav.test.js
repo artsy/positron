@@ -3,14 +3,12 @@ import { mount } from 'enzyme'
 import { extend } from 'lodash'
 import { TextNav } from '../../components/text_nav.jsx'
 import { blockTypes, inlineStyles } from 'client/apps/edit/components/content/sections/text/draft_config.js'
-import {
-  IconArtist,
-  IconBlockquote,
-  IconClearFormatting,
-  IconLink,
-  IconOrderedList,
-  IconUnorderedList
-} from '@artsy/reaction/dist/Components/Publishing'
+import { IconArtist } from '@artsy/reaction/dist/Components/Publishing/Icon/IconArtist'
+import { IconBlockquote } from '@artsy/reaction/dist/Components/Publishing/Icon/IconBlockquote'
+import { IconClearFormatting } from '@artsy/reaction/dist/Components/Publishing/Icon/IconClearFormatting'
+import { IconLink } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLink'
+import { IconOrderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList'
+import { IconUnorderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList'
 
 describe('TextNav', () => {
   let props
@@ -62,7 +60,7 @@ describe('TextNav', () => {
     })
 
     it('renders italic button if props.styles includes it', () => {
-      props.styles = [{name: 'italic', label: 'I'}]
+      props.styles = [{ name: 'italic', label: 'I' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -72,7 +70,7 @@ describe('TextNav', () => {
     })
 
     it('renders bold button if props.styles includes it', () => {
-      props.styles = [{name: 'bold', label: 'B'}]
+      props.styles = [{ name: 'bold', label: 'B' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -82,7 +80,7 @@ describe('TextNav', () => {
     })
 
     it('renders h1 button if props.blocks includes it', () => {
-      props.blocks = [{name: 'header-one', label: 'H1'}]
+      props.blocks = [{ name: 'header-one', label: 'H1' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -92,7 +90,7 @@ describe('TextNav', () => {
     })
 
     it('renders h2 button if props.blocks includes it', () => {
-      props.blocks = [{name: 'header-two', label: 'H2'}]
+      props.blocks = [{ name: 'header-two', label: 'H2' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -102,7 +100,7 @@ describe('TextNav', () => {
     })
 
     it('renders h3 button if props.blocks includes it', () => {
-      props.blocks = [{name: 'header-three', label: 'H3'}]
+      props.blocks = [{ name: 'header-three', label: 'H3' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -112,7 +110,7 @@ describe('TextNav', () => {
     })
 
     it('renders blockquote button if props.blocks includes it', () => {
-      props.blocks = [{name: 'blockquote'}]
+      props.blocks = [{ name: 'blockquote' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -121,7 +119,7 @@ describe('TextNav', () => {
     })
 
     it('renders OL button if props.blocks includes it', () => {
-      props.blocks = [{name: 'ordered-list-item'}]
+      props.blocks = [{ name: 'ordered-list-item' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -130,7 +128,7 @@ describe('TextNav', () => {
     })
 
     it('renders UL button if props.blocks includes it', () => {
-      props.blocks = [{name: 'unordered-list-item'}]
+      props.blocks = [{ name: 'unordered-list-item' }]
       const component = mount(
         <TextNav {...props} />
       )
@@ -203,12 +201,12 @@ describe('TextNav', () => {
   describe('Actions', () => {
     beforeEach(() => {
       props = {
-        blocks: [{name: 'blockquote'}],
+        blocks: [{ name: 'blockquote' }],
         hasFeatures: true,
         makePlainText: jest.fn(),
         position: {},
         promptForLink: jest.fn(),
-        styles: [{name: 'italic'}],
+        styles: [{ name: 'italic' }],
         toggleBlock: jest.fn(),
         toggleStyle: jest.fn()
       }

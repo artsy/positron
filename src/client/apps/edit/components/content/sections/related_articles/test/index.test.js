@@ -2,7 +2,11 @@ import request from 'superagent'
 import React from 'react'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import {
+  FeatureArticle,
+  ShortStandardArticle,
+  StandardArticle
+} from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { ArticleCard } from '@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard'
 import { EditArticleCard } from '../components/edit_article_card'
 import { RelatedArticlesInput } from '../components/related_articles_input'
@@ -27,8 +31,8 @@ describe('RelatedArticles', () => {
         body: {
           data: {
             articles: [
-              Fixtures.FeatureArticle,
-              Fixtures.StandardArticle
+              FeatureArticle,
+              StandardArticle
             ]
           }
         }
@@ -36,7 +40,7 @@ describe('RelatedArticles', () => {
     })
 
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onChange: jest.fn()
     }
   })
@@ -60,7 +64,7 @@ describe('RelatedArticles', () => {
     )
     expect(component.find(EditArticleCard).length).toBe(2)
     expect(component.state().relatedArticles.length).toBe(2)
-    expect(component.text()).toMatch(Fixtures.FeatureArticle.title)
+    expect(component.text()).toMatch(FeatureArticle.title)
   })
 
   it('onAddArticle calls onChange and fetches articles', () => {
@@ -87,9 +91,9 @@ describe('RelatedArticles', () => {
 
   it('onDragEnd calls onChange and resets state', () => {
     let relatedArticles = [
-      Fixtures.FeatureArticle,
-      Fixtures.StandardArticle,
-      Fixtures.ShortStandardArticle
+      FeatureArticle,
+      StandardArticle,
+      ShortStandardArticle
     ]
     const component = mount(
       <RelatedArticles {...props} />
@@ -97,7 +101,7 @@ describe('RelatedArticles', () => {
     component.setState({ relatedArticles })
     component.instance().onDragEnd(relatedArticles.reverse())
     expect(props.onChange.mock.calls[0][0]).toBe('related_article_ids')
-    expect(props.onChange.mock.calls[0][1][2]).toBe(Fixtures.FeatureArticle._id)
-    expect(component.state().relatedArticles[2]).toBe(Fixtures.FeatureArticle)
+    expect(props.onChange.mock.calls[0][1][2]).toBe(FeatureArticle._id)
+    expect(component.state().relatedArticles[2]).toBe(FeatureArticle)
   })
 })

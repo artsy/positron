@@ -3,7 +3,7 @@ import configureStore from 'redux-mock-store'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { AdminAppearances } from '../../components/appearances'
 import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
@@ -32,7 +32,7 @@ describe('FeaturingMentioned', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle)
+      article: cloneDeep(StandardArticle)
     }
   })
 

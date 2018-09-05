@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Embed } from '@artsy/reaction/dist/Components/Publishing'
+import { Embed } from '@artsy/reaction/dist/Components/Publishing/Sections/Embed'
 import EmbedControls from './controls'
 
 // Embed section supports external content via iframes
@@ -18,7 +18,7 @@ export const SectionEmbed = (props) => {
         ? <Embed section={section} />
 
         : <div className='edit-section__placeholder'>
-            Add URL above
+          Add URL above
           </div>
       }
     </section>

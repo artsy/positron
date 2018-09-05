@@ -6,6 +6,9 @@ import { connect } from 'react-redux'
 import { space } from '@artsy/palette'
 import { Header } from '@artsy/reaction/dist/Components/Publishing'
 import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
+import { Deck } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent'
+import { FeatureHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader'
+import { BasicHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader'
 import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
@@ -30,25 +33,25 @@ export class SectionHeader extends Component {
     this.setState({ progress })
   }
 
-  renderTitle = () => {
+  editTitle = () => {
     const { article, onChange } = this.props
 
     return (
       <PlainText
         content={article.title}
-        onChange={(content) => onChange('title', content)}
+        onChange={content => onChange('title', content)}
         placeholder='Page Title'
       />
     )
   }
 
-  renderFeatureDeck = hero => {
+  editFeatureDeck = hero => {
     const { onChangeHeroAction } = this.props
 
     return (
       <PlainText
         content={hero.deck}
-        onChange={(content) => onChangeHeroAction('deck', content)}
+        onChange={content => onChangeHeroAction('deck', content)}
         placeholder='Deck (optional)'
       />
     )
@@ -60,7 +63,7 @@ export class SectionHeader extends Component {
     return (
       <FileInput
         type='simple'
-        onUpload={(src) => onChangeHeroAction('url', src)}
+        onUpload={src => onChangeHeroAction('url', src)}
         prompt={prompt}
         video
         onProgress={this.onProgress}
@@ -68,7 +71,7 @@ export class SectionHeader extends Component {
     )
   }
 
-  renderImage = hero => {
+  editImage = hero => {
     const { type, url } = hero
     const { onChangeHeroAction } = this.props
     const { progress } = this.state
@@ -113,7 +116,7 @@ export class SectionHeader extends Component {
     return moment(date).local().toISOString()
   }
 
-  renderLeadParagraph = () => {
+  editLeadParagraph = () => {
     const { article, onChange } = this.props
 
     return (
@@ -132,7 +135,6 @@ export class SectionHeader extends Component {
 
   render() {
     const { article } = this.props
-
     const isFeature = article.layout === 'feature'
     const isClassic = article.layout === 'classic'
     const hero = article.hero_section || {}
@@ -140,37 +142,47 @@ export class SectionHeader extends Component {
     if (isClassic) {
       return (
         <div className='edit-header'>
-          <Header article={article} date={this.getPublishDate()}>
-            {this.renderTitle()}
-            {this.renderLeadParagraph()}
-          </Header>
+          <Header
+            article={article}
+            date={this.getPublishDate()}
+            editTitle={this.editTitle()}
+            editLeadParagraph={this.editLeadParagraph()}
+          />
         </div>
       )
     } else {
       const headerType = isFeature ? (hero.type || 'text') : ''
+      const hasVertical = article.vertical ? undefined : 'Missing Vertical'
+      const hasImageUrl = hero.url && hero.url.length
+      const hasWhiteText = (headerType === 'fullscreen') && hasImageUrl
 
       return (
-        <div
+        <HeaderContainer
           className={'edit-header ' + headerType}
           data-type={headerType}
+          hasVertical
+          hasImageUrl={hasImageUrl}
         >
           {isFeature &&
             <HeaderControls onProgress={this.onProgress} />
           }
 
-          <Header article={article} date={this.getPublishDate()}>
-            <span>Missing Vertical</span>
-            {this.renderTitle()}
-            {isFeature && this.renderFeatureDeck(hero)}
-            {isFeature && this.renderImage(hero)}
-          </Header>
-        </div>
+          <Header
+            article={article}
+            date={this.getPublishDate()}
+            editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
+            editImage={isFeature ? this.editImage(hero) : undefined}
+            editTitle={this.editTitle()}
+            editVertical={hasVertical}
+            textColor={hasWhiteText ? 'white' : 'black'}
+          />
+        </HeaderContainer>
       )
     }
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article
 })
 
@@ -190,4 +202,16 @@ export const LeadParagraph = styled.div`
   max-width: 580px;
   margin: 0 auto;
   text-align: left;
+`
+
+const HeaderContainer = styled.div`
+  ${Deck} {
+    width: 100%;
+  }
+  ${FeatureHeaderContainer} {
+    height: calc(100vh - 95px);
+  }
+  ${BasicHeaderContainer} {
+    margin-top: 0;
+  }
 `

@@ -6,7 +6,7 @@ export default class ModalCover extends Component {
     onClick: PropTypes.func.isRequired
   }
 
-  render () {
+  render() {
     return (
       <div
         onClick={this.props.onClick}

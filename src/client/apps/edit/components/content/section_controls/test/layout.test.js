@@ -4,8 +4,7 @@ import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
 import { LayoutControls } from '../layout.jsx'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-const { StandardArticle, FeatureArticle } = Fixtures
+import { StandardArticle, FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('Section LayoutControls', () => {
   let props
@@ -36,7 +35,7 @@ describe('Section LayoutControls', () => {
     props = {
       channel: { type: 'editorial' },
       section: clone(StandardArticle.sections[4]),
-      article: {layout: 'standard'},
+      article: { layout: 'standard' },
       onChangeSectionAction: jest.fn(),
       disabledAlert: jest.fn()
     }

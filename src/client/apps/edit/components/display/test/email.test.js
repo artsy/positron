@@ -3,7 +3,7 @@ import React from 'react'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { CharacterLimit } from '../../../../../components/character_limit'
 import { DisplayEmail } from '../components/email'
 import ImageUpload from '../../admin/components/image_upload.coffee'
@@ -27,13 +27,13 @@ describe('DisplayEmail', () => {
 
     return mount(
       <Provider store={store}>
-       <DisplayEmail {...props} />
+        <DisplayEmail {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
-    article = cloneDeep(Fixtures.StandardArticle)
+    article = cloneDeep(StandardArticle)
     email_metadata = {
       author: 'Molly Gottschalk',
       custom_text: 'To create a total experience that will create a feeling that is qualitatively new: That is ultimately the most radical thing.',

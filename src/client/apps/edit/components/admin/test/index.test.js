@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { DropDownList } from 'client/components/drop_down/drop_down_list'
 import { AdminArticle } from '../components/article'
 import { AdminTags } from '../components/tags'
@@ -44,7 +44,7 @@ describe('EditAdmin', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.FeatureArticle),
+      article: cloneDeep(FeatureArticle),
       channel: { type: 'editorial' }
     }
   })

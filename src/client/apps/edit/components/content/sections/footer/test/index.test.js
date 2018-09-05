@@ -1,10 +1,9 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { cloneDeep } from 'lodash'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
 import { Paragraph } from '../../../../../../../components/draft/paragraph/paragraph'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { SectionFooter } from '../index.jsx'
-const { FeatureArticle } = Fixtures
 
 describe('SectionFooter', () => {
   let props

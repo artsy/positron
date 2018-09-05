@@ -3,19 +3,22 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
-import { Fixtures, Header } from '@artsy/reaction/dist/Components/Publishing'
-import { FeatureHeader } from '@artsy/reaction/dist/Components/Publishing/Header/FeatureHeader'
+import {
+  ClassicArticle,
+  FeatureArticle,
+  StandardArticle
+} from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import { ClassicByline } from '@artsy/reaction/dist/Components/Publishing/Byline/ClassicByline'
+import { Header } from '@artsy/reaction/dist/Components/Publishing/Header/Header'
+import { ClassicHeader } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/ClassicHeader'
+import { FeatureHeader } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/FeatureHeader'
+import { StandardHeader } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/StandardHeader'
 import FileInput from 'client/components/file_input'
 import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { RemoveButton } from 'client/components/remove_button'
 import { SectionHeader } from '../index'
 import { HeaderControls } from 'client/apps/edit/components/content/sections/header/controls'
-const {
-  ClassicArticle,
-  FeatureArticle,
-  StandardArticle
-} = Fixtures
 
 jest.mock('react-sizeme', () => jest.fn(c => d => d))
 
@@ -51,11 +54,11 @@ describe('Header', () => {
     it('renders the classic header', () => {
       const component = getWrapper(props)
 
-      expect(component.find(Header).length).toBe(1)
-      expect(component.html()).toMatch('ClassicHeader__ClassicHeaderContainer')
-      expect(component.html()).toMatch('ClassicHeader__Title')
-      expect(component.html()).toMatch('AuthorDateClassic')
-      expect(component.html()).toMatch('Joanne Artman Gallery')
+      expect(component.find(Header).exists()).toBe(true)
+      expect(component.find(ClassicHeader).exists()).toBe(true)
+      expect(component.find(ClassicByline).exists()).toBe(true)
+      expect(component.text()).toMatch('Joanne Artman Gallery')
+      expect(component.text()).toMatch(ClassicArticle.title)
     })
 
     it('renders a saved title', () => {
@@ -129,7 +132,6 @@ describe('Header', () => {
     it('renders a saved file', () => {
       const component = getWrapper(props)
 
-      expect(component.html()).toMatch('<video class="FeatureHeader__FeatureVideo')
       expect(component.find('video').getElement().props.src).toBe(props.article.hero_section.url)
     })
 
@@ -178,12 +180,11 @@ describe('Header', () => {
     it('renders the standard header', () => {
       const component = getWrapper(props)
 
-      expect(component.find(Header).length).toBe(1)
-      expect(component.html()).toMatch('StandardHeader__StandardHeaderContainer')
-      expect(component.html()).toMatch('StandardHeader__Vertical')
+      expect(component.find(Header).exists()).toBe(true)
+      expect(component.find(StandardHeader).exists()).toBe(true)
       expect(component.html()).toMatch('Art Market')
-      expect(component.html()).toMatch('StandardHeader__Title')
-      expect(component.html()).toMatch('Casey Lesser')
+      expect(component.text()).toMatch(StandardArticle.title)
+      expect(component.text()).toMatch('Casey Lesser')
     })
 
     it('renders a saved title', () => {

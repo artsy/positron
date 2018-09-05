@@ -19,11 +19,7 @@
   .upload-progress
     min-width 0
 
-  div[class*='Header__Vertical'] span
-    color gray-dark-color
-
   &__image-container
-    position absolute
     top 20px
     left 20px
     right 20px
@@ -48,9 +44,6 @@
   .RemoveButton
     width 30px
     height 30px
-    position absolute
-    right 8px
-    top 8px
 
     circle
       transition all .3s
@@ -75,47 +68,32 @@
 
 [data-layout='feature'] .edit-header
   margin-bottom 30px
+  .edit-header__container
+    margin 0
 
-  div[class^='FeatureHeader__Deck']
-    min-width 30%
-    max-width 50%
-
-  div[class^='FeatureHeader__TextAsset']
-    position relative
-    min-height 440px
-
-  [data-type=split]
-    max-height calc(100vh \- 115px)
-    padding-top 20px
-
+  &[data-type=split]
+    margin-top 10px
+    .edit-header--controls
+      top -21px
     .file-input.simple
       max-height 100%
       min-height 100%
-
     .edit-header__image-container
-      top 0
-      left 0
-      right 0
-      bottom 0
+      height 100%
+    div[class^='FeatureHeader__EditImage']
+      position relative
+      .RemoveButton
+        position absolute
+        z-index 1
+        right 5px
+        top 5px
 
-    div[class^='FeatureHeader__Deck']
-      max-width 100%
-
-  [data-type=split]
-    .edit-header__remove
-      right -8px
-      top -8px
-
-  [data-type=basic]
-    margin-top 0
-    div[class^="Grid__Grid-"]
-      padding-top 40px
+  &[data-type=basic]
     .public-DraftEditorPlaceholder-inner
       text-align center
       width 100%
 
-  [data-type=fullscreen]
-    height calc(100vh \- 95px)
+  &[data-type=fullscreen]
     .file-input.simple
       height inherit
       min-height 0
@@ -124,26 +102,26 @@
       z-index 1
       padding 0
 
-      h1
-        font-size 13px
-
-      h2
-        display none
+      .file-input__upload-container
+        align-items flex-start
+        background none
+        h1
+          font-size 13px
+        h2
+          display none
 
     .edit-header__image-container
-      top 10px
-      left 0
-
+      padding-top 10px
       &[data-has-image=false]
         .file-input.simple h1
           color black
 
-    .file-input__upload-container
-      align-items flex-start
-      background none
-
     .public-DraftEditorPlaceholder-inner
       color white
 
-    div[class^='VerticalOrSeriesTitle__Vertical'] span
-      color white
+  &[data-type='text']
+    .RemoveButton
+      position absolute
+      z-index 1
+      right -10px
+      top -10px

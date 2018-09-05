@@ -1,15 +1,13 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  IconEditEmbed,
-  IconEditImages,
-  IconEditSection,
-  IconEditText,
-  IconEditVideo,
-  IconHeroImage,
-  IconHeroVideo
-} from '@artsy/reaction/dist/Components/Publishing'
+import { IconEditEmbed } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditEmbed'
+import { IconEditImages } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditImages'
+import { IconEditSection } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditSection'
+import { IconEditText } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditText'
+import { IconEditVideo } from '@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo'
+import { IconHeroImage } from '@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage'
+import { IconHeroVideo } from '@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo'
 import { newHeroSection, newSection } from 'client/actions/edit/sectionActions'
 
 export class SectionTool extends Component {
@@ -31,25 +29,25 @@ export class SectionTool extends Component {
   }
 
   toggleOpen = () => {
-    this.setState({open: !this.state.open})
+    this.setState({ open: !this.state.open })
   }
 
   newSection = (type) => {
     const { index, newSectionAction } = this.props
 
     newSectionAction(type, index + 1)
-    this.setState({open: false})
+    this.setState({ open: false })
   }
 
   setHero = (type) => {
     const { newHeroSectionAction, onSetEditing } = this.props
 
     newHeroSectionAction(type)
-    this.setState({open: false})
+    this.setState({ open: false })
     onSetEditing(true)
   }
 
-  renderHeroMenu () {
+  renderHeroMenu() {
     if (this.state.open) {
       return (
         <ul className='edit-tool__menu'>
@@ -70,7 +68,7 @@ export class SectionTool extends Component {
     }
   }
 
-  renderSectionMenu () {
+  renderSectionMenu() {
     const {
       article: { layout },
       firstSection,
@@ -123,7 +121,7 @@ export class SectionTool extends Component {
     }
   }
 
-  render () {
+  render() {
     const { firstSection, index, isEditing, isHero, sections } = this.props
     const { open } = this.state
 
@@ -149,7 +147,7 @@ export class SectionTool extends Component {
           />
         </div>
 
-        { isHero
+        {isHero
           ? this.renderHeroMenu()
           : this.renderSectionMenu()
         }
