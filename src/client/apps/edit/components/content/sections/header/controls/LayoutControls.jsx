@@ -1,16 +1,13 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-
-import {
-  IconLayoutFullscreen,
-  IconLayoutSplit,
-  IconLayoutText,
-  IconLayoutBasic
-} from '@artsy/reaction/dist/Components/Publishing'
+import { IconLayoutFullscreen } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutFullscreen'
+import { IconLayoutSplit } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutSplit'
+import { IconLayoutText } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutText'
+import { IconLayoutBasic } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutBasic'
 
 export class LayoutControls extends Component {
-  render () {
+  render() {
     const { hero, isOpen, onClick, onChange } = this.props
 
     return (
@@ -73,7 +70,7 @@ export const OpenControlsContainer = styled.div`
   color: ${props => props.color};
 `
 
-const getControlsColor = (hero) => {
+const getControlsColor = hero => {
   const { type, url } = hero
 
   if (hero && type === 'fullscreen' && url && url.length) {

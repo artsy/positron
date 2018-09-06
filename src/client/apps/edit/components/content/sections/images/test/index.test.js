@@ -3,13 +3,11 @@ import { mount, shallow } from 'enzyme'
 import React from 'react'
 import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
-import {
-  Artwork,
-  Fixtures,
-  Image,
-  ImageSetPreview,
-  ImageSetPreviewClassic
-} from '@artsy/reaction/dist/Components/Publishing'
+import { Artwork } from '@artsy/reaction/dist/Components/Publishing/Sections/Artwork'
+import { Image } from '@artsy/reaction/dist/Components/Publishing/Sections/Image'
+import { ImageSetPreview } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview'
+import { ImageSetPreviewClassic } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreviewClassic'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import DragContainer from 'client/components/drag_drop/index.coffee'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { ImagesControls } from '../components/controls'
@@ -49,11 +47,11 @@ describe('SectionImageCollection', () => {
   }
 
   beforeEach(() => {
-    article = clone(Fixtures.StandardArticle)
-    imageSection = clone(Fixtures.StandardArticle.sections[4])
-    imageSetSection = clone(Fixtures.StandardArticle.sections[14])
-    largeImageSetSection = clone(Fixtures.StandardArticle.sections[14])
-    largeImageSetSection.images.push(Fixtures.StandardArticle.sections[16].images[0]) 
+    article = clone(StandardArticle)
+    imageSection = clone(StandardArticle.sections[4])
+    imageSetSection = clone(StandardArticle.sections[14])
+    largeImageSetSection = clone(StandardArticle.sections[14])
+    largeImageSetSection.images.push(StandardArticle.sections[16].images[0])
 
     props = {
       article,
@@ -104,7 +102,7 @@ describe('SectionImageCollection', () => {
     it('Renders progress if state.progress', () => {
       props.editing = true
       const component = getShallowWrapper(props)
-      component.setState({progress: 0.65})
+      component.setState({ progress: 0.65 })
 
       expect(component.find(ProgressBar).exists()).toBe(true)
     })

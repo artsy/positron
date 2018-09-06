@@ -2,7 +2,7 @@ import configureStore from 'redux-mock-store'
 import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { CharacterLimit } from 'client/components/character_limit'
 import { DisplaySocial } from '../components/social'
@@ -25,14 +25,14 @@ describe('DisplaySocial', () => {
 
     return mount(
       <Provider store={store}>
-       <DisplaySocial {...props} />
+        <DisplaySocial {...props} />
       </Provider>
     )
   }
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onChangeArticleAction: jest.fn()
     }
     props.article.social_description = 'To create a total experience that will create a feeling that is qualitatively new'

@@ -2,10 +2,9 @@ import React from 'react'
 import { clone } from 'lodash'
 import { mount } from 'enzyme'
 import { EditorState } from 'draft-js'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { TextInputUrl } from 'client/components/rich_text/components/input_url'
 import { SectionText } from '../index.jsx'
-const { StandardArticle } = Fixtures
 
 describe('SectionText: Links', () => {
   let props

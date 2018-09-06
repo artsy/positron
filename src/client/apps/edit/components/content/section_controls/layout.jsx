@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { IconImageFullscreen } from '@artsy/reaction/dist/Components/Publishing'
+import { IconImageFullscreen } from '@artsy/reaction/dist/Components/Publishing/Icon/IconImageFullscreen'
 import { onChangeSection } from 'client/actions/edit/sectionActions'
 
 export class LayoutControls extends Component {
@@ -65,7 +65,7 @@ export class LayoutControls extends Component {
     return isFeature && hasFullscreen
   }
 
-  render () {
+  render() {
     const { section } = this.props
 
     return (

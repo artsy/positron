@@ -7,8 +7,7 @@ import {
   setSection
 } from 'client/actions/edit/sectionActions'
 import { cloneDeep } from 'lodash'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
-const { FeatureArticle } = Fixtures
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 
 describe('sectionActions', () => {
   let article
@@ -91,7 +90,7 @@ describe('sectionActions', () => {
     let dispatch
 
     beforeEach(() => {
-      getState = jest.fn(() => ({edit: { article }}))
+      getState = jest.fn(() => ({ edit: { article } }))
       dispatch = jest.fn()
     })
 
@@ -193,7 +192,7 @@ describe('sectionActions', () => {
 
   it('#removeSection calls #onChangeArticle with new sections', () => {
     let dispatch = jest.fn()
-    let getState = jest.fn(() => ({edit: { article }, app: {channel: { type: 'editorial' }}}))
+    let getState = jest.fn(() => ({ edit: { article }, app: { channel: { type: 'editorial' } } }))
     removeSection(6)(dispatch, getState)
     dispatch.mock.calls[0][0](dispatch, getState)
     dispatch.mock.calls[1][0](dispatch, getState)

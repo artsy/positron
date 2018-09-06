@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { AutocompleteList } from '/client/components/autocomplete2/list'
 import { AdminFeaturing } from '../../../components/featuring'
 import { FeaturingMentioned } from '../../../components/featuring/featuring_mentioned'
@@ -35,7 +35,7 @@ describe('AdminFeaturing', () => {
   }
 
   beforeEach(() => {
-    let article = cloneDeep(Fixtures.StandardArticle)
+    let article = cloneDeep(StandardArticle)
 
     props = {
       article,
@@ -46,7 +46,7 @@ describe('AdminFeaturing', () => {
         }],
         artwork: []
       },
-      mentioned: {artist: [], artwork: []},
+      mentioned: { artist: [], artwork: [] },
       metaphysicsURL: 'https://metaphysics-staging.artsy.net',
       model: 'artist',
       onChangeArticleAction: jest.fn()

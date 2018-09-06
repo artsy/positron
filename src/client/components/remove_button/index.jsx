@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { IconRemove } from '@artsy/reaction/dist/Components/Publishing'
+import { IconRemove } from '@artsy/reaction/dist/Components/Publishing/Icon/IconRemove'
 
 export const RemoveButton = props => {
   const {

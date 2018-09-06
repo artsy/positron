@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import Backbone from 'backbone'
 import {
   changeArticleData,
@@ -11,10 +11,8 @@ import {
   publishArticle,
   saveArticle,
   setMentionedItems
- } from 'client/actions/edit/articleActions'
+} from 'client/actions/edit/articleActions'
 import Article from 'client/models/article.coffee'
-
-const { FeatureArticle } = Fixtures
 
 describe('articleActions', () => {
   let article
@@ -59,7 +57,7 @@ describe('articleActions', () => {
     it('Can accept an object as args', () => {
       let data = {
         title: 'Title',
-        series: {description: 'Series Description'}
+        series: { description: 'Series Description' }
       }
       changeArticleData(data)(dispatch, getState)
       expect(dispatch.mock.calls[0][0].payload.data.title).toBe('Title')
@@ -82,7 +80,7 @@ describe('articleActions', () => {
 
     beforeEach(() => {
       Backbone.sync = jest.fn()
-      getState = jest.fn(() => ({edit: { article }}))
+      getState = jest.fn(() => ({ edit: { article } }))
       dispatch = jest.fn()
     })
 
@@ -108,7 +106,7 @@ describe('articleActions', () => {
     beforeEach(() => {
       getState = jest.fn(() => ({
         edit: { article },
-        app: { channel: {type: 'editorial'} }
+        app: { channel: { type: 'editorial' } }
       }))
       dispatch = jest.fn()
     })
@@ -161,12 +159,12 @@ describe('articleActions', () => {
     beforeEach(() => {
       setArticleSpy.mockClear()
       Backbone.sync = jest.fn()
-      getState = jest.fn(() => ({edit: { article }}))
+      getState = jest.fn(() => ({ edit: { article } }))
       dispatch = jest.fn()
     })
 
     it('Changes the publish status and saves the article', () => {
-      getState = jest.fn(() => ({edit: {article: {published: false, id: '123'}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false, id: '123' } } }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[0][0].type).toBe('PUBLISH_ARTICLE')
@@ -176,7 +174,7 @@ describe('articleActions', () => {
     })
 
     it('Sets seo_keyword if publishing', () => {
-      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
@@ -184,7 +182,7 @@ describe('articleActions', () => {
     })
 
     it('Does not seo_keyword if unpublishing', () => {
-      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('REDIRECT_TO_LIST')
@@ -192,7 +190,7 @@ describe('articleActions', () => {
     })
 
     it('Redirects to published list if publishing', () => {
-      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[2][0].type).toBe('REDIRECT_TO_LIST')
@@ -200,7 +198,7 @@ describe('articleActions', () => {
     })
 
     it('Redirects to drafts list if unpublishing', () => {
-      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('REDIRECT_TO_LIST')
@@ -217,7 +215,7 @@ describe('articleActions', () => {
       setArticleSpy.mockClear()
       Article.prototype.isNew = jest.fn().mockReturnValue(false)
       Backbone.sync = jest.fn()
-      getState = jest.fn(() => ({edit: { article }}))
+      getState = jest.fn(() => ({ edit: { article } }))
       dispatch = jest.fn()
     })
 
@@ -230,7 +228,7 @@ describe('articleActions', () => {
     })
 
     it('Redirects to list if published', () => {
-      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       saveArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[2][0].type).toBe('REDIRECT_TO_LIST')
@@ -238,21 +236,21 @@ describe('articleActions', () => {
     })
 
     it('Does not redirect if unpublished', () => {
-      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       saveArticle()(dispatch, getState)
 
       expect(window.location.assign.mock.calls.length).toBe(0)
     })
 
     it('Sets seo_keyword if published', () => {
-      getState = jest.fn(() => ({edit: {article: {published: true}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       saveArticle()(dispatch, getState)
       expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
       expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe('ceramics')
     })
 
     it('Does not seo_keyword if unpublished', () => {
-      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       saveArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('SET_SEO_KEYWORD')
@@ -265,7 +263,7 @@ describe('articleActions', () => {
       Backbone.sync = jest.fn(() => {
         onFirstSave('12345')
       })
-      getState = jest.fn(() => ({edit: {article: {published: false}}}))
+      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       saveArticle()(dispatch, getState)
       expect(window.location.assign.mock.calls[0][0]).toBe('/articles/12345/edit')
     })
@@ -276,12 +274,12 @@ describe('articleActions', () => {
     let dispatch
 
     beforeEach(() => {
-      getState = jest.fn(() => ({edit: { article }}))
+      getState = jest.fn(() => ({ edit: { article } }))
       dispatch = jest.fn()
     })
 
     it('Can add a featured artist', () => {
-      onAddFeaturedItem('artist', {_id: '123'})(dispatch, getState)
+      onAddFeaturedItem('artist', { _id: '123' })(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
@@ -289,7 +287,7 @@ describe('articleActions', () => {
     })
 
     it('Can add a featured artwork', () => {
-      onAddFeaturedItem('artwork', {_id: '123'})(dispatch, getState)
+      onAddFeaturedItem('artwork', { _id: '123' })(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe('CHANGE_ARTICLE')
@@ -299,7 +297,7 @@ describe('articleActions', () => {
 
   describe('#setMentionedItems', () => {
     it('Can set mentioned artists', () => {
-      const items = [{name: 'Joseph Beuys', _id: '123'}]
+      const items = [{ name: 'Joseph Beuys', _id: '123' }]
       const action = setMentionedItems('artist', items)
 
       expect(action.type).toBe('SET_MENTIONED_ITEMS')
@@ -308,7 +306,7 @@ describe('articleActions', () => {
     })
 
     it('Can set mentioned artworks', () => {
-      const items = [{title: 'Stripes', _id: '123'}]
+      const items = [{ title: 'Stripes', _id: '123' }]
       const action = setMentionedItems('artwork', items)
 
       expect(action.type).toBe('SET_MENTIONED_ITEMS')

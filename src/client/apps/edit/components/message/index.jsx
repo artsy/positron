@@ -6,7 +6,7 @@ import moment from 'moment'
 import { ModalTypes } from './modalTypes'
 import { avantgarde, garamond } from '@artsy/reaction/dist/Assets/Fonts'
 import colors from '@artsy/reaction/dist/Assets/Colors'
-import { IconLock } from '@artsy/reaction/dist/Components/Publishing'
+import { IconLock } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLock'
 
 const SplashBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
@@ -82,11 +82,11 @@ export class MessageModal extends Component {
     timeLeft: 10
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.timer = setInterval(this.updateTimer, 1000)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.timer)
   }
 
@@ -110,14 +110,14 @@ export class MessageModal extends Component {
     }
   }
 
-  getIconForType (type) {
+  getIconForType(type) {
     switch (type) {
       case 'lock': return <IconLock color={colors.grayMedium} width='10px' height='10px' />
       default: return null
     }
   }
 
-  render () {
+  render() {
     const { type, session } = this.props
     const { header, title, description, actions } = ModalTypes[type]
     const { timestamp, user } = session || { timestamp: null, user: { name: null } }

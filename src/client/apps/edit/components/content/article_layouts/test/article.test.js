@@ -1,6 +1,6 @@
 import React from 'react'
 import configureStore from 'redux-mock-store'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import { SectionFooter } from '../../sections/footer'
@@ -33,7 +33,7 @@ describe('EditArticle', () => {
   beforeEach(() => {
     props = {
       channel: { type: 'editorial' },
-      article: Fixtures.FeatureArticle
+      article: FeatureArticle
     }
   })
 

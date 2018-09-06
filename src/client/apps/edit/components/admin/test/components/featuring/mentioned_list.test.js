@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { mount } from 'enzyme'
 import React from 'react'
 import { Provider } from 'react-redux'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { MentionedList } from '../../../components/featuring/mentioned_list'
 import { ListItem } from 'client/components/autocomplete2/list'
 import Artists from 'client/collections/artists.coffee'
@@ -36,7 +36,7 @@ describe('MentionedList', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(Fixtures.StandardArticle),
+      article: cloneDeep(StandardArticle),
       onAddFeaturedItemAction: jest.fn(),
       mentioned: {
         artist: [{
@@ -143,7 +143,7 @@ describe('MentionedList', () => {
   })
 
   it('#notFeaturedArray returns array of mentioned items that are not featured', () => {
-    const artist = {_id: '234', name: 'Chip Hughes'}
+    const artist = { _id: '234', name: 'Chip Hughes' }
     props.article.primary_featured_artist_ids = ['123']
     props.mentioned.artist.push(artist)
     const component = getWrapper(props).find(MentionedList)

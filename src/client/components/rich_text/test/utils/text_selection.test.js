@@ -8,14 +8,14 @@ import {
 } from '../../utils/text_selection'
 import { decorators } from '../../utils/config'
 import { convertFromRichHtml, convertToRichHtml } from '../../utils/convert_html'
-import { Fixtures } from '@artsy/reaction/dist/Components/Publishing'
+import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import Draft from 'draft-js'
 
 describe('Draft Utils: Text Selection', () => {
   window.pageYOffset = 500
 
   describe('#getSelectionDetails', () => {
-    const editorContent = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const editorContent = convertFromRichHtml(StandardArticle.sections[0].body)
     let editorState = Draft.EditorState.createWithContent(editorContent)
     const lastBlock = editorState.getCurrentContent().getLastBlock()
 
@@ -63,7 +63,7 @@ describe('Draft Utils: Text Selection', () => {
 
   describe('#setSelectionToStart', () => {
     // Create an editor state with content
-    const editorContent = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const editorContent = convertFromRichHtml(StandardArticle.sections[0].body)
     let editorState = Draft.EditorState.createWithContent(editorContent)
     const firstBlock = editorState.getCurrentContent().getFirstBlock()
 
@@ -114,7 +114,7 @@ describe('Draft Utils: Text Selection', () => {
       getRangeAt
     })
 
-    const position = stickyControlsBox({top: 20, left: 50}, 50, 100)
+    const position = stickyControlsBox({ top: 20, left: 50 }, 50, 100)
 
     expect(position.top).toBe(175)
     expect(position.left).toBe(325)
@@ -122,8 +122,8 @@ describe('Draft Utils: Text Selection', () => {
 
   it('#mergeHtmlIntoState Combines two blocks of HTML into one editorState', () => {
     const editorState = Draft.EditorState.createEmpty()
-    const beforeHtml = Fixtures.StandardArticle.sections[0].body
-    const afterHtml = Fixtures.StandardArticle.sections[1].body
+    const beforeHtml = StandardArticle.sections[0].body
+    const afterHtml = StandardArticle.sections[1].body
     const mergedState = mergeHtmlIntoState(editorState, beforeHtml, afterHtml)
     const newText = mergedState.getCurrentContent().getPlainText()
 
@@ -132,7 +132,7 @@ describe('Draft Utils: Text Selection', () => {
   })
 
   it('#divideEditorState Divides an editorState into two, returns html for new section', () => {
-    const blocksFromHTML = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const blocksFromHTML = convertFromRichHtml(StandardArticle.sections[0].body)
     const editorState = Draft.EditorState.createWithContent(blocksFromHTML)
     const anchorKey = editorState.getCurrentContent().getLastBlock().key
 
@@ -161,7 +161,7 @@ describe('Draft Utils: Text Selection', () => {
       return newEditorState
     }
 
-    const blocksFromHTML = convertFromRichHtml(Fixtures.StandardArticle.sections[0].body)
+    const blocksFromHTML = convertFromRichHtml(StandardArticle.sections[0].body)
     const editorState = Draft.EditorState.createWithContent(
       blocksFromHTML,
       new Draft.CompositeDecorator(decorators(true))

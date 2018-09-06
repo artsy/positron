@@ -43,7 +43,7 @@ export class HeaderControls extends Component {
     }
   }
 
-  render () {
+  render() {
     const { isLayoutOpen, isVideoOpen } = this.state
     const { article, onChangeHeroAction, onProgress } = this.props
 
