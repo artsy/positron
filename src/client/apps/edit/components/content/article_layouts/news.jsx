@@ -39,7 +39,7 @@ export class EditNews extends Component {
     const { title } = article.news_source
 
     return (
-      <AddSource onClick={() => { this.setState({ isEditSourceOpen: !isEditSourceOpen })}}>
+      <AddSource onClick={() => { this.setState({ isEditSourceOpen: !isEditSourceOpen }) }}>
         {title && title.length ? title : 'Add Source'}
       </AddSource>
     )

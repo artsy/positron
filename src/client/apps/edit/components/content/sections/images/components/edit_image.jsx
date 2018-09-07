@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { clone, without } from 'lodash'
 import { connect } from 'react-redux'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { Artwork } from '@artsy/reaction/dist/Components/Publishing/Sections/Artwork'
 import { Image } from '@artsy/reaction/dist/Components/Publishing/Sections/Image'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
 import { onChangeHero, onChangeSection } from 'client/actions/edit/sectionActions'
 import { RemoveButton } from 'client/components/remove_button'
 
@@ -61,17 +61,17 @@ export class EditImage extends Component {
   }
 
   editCaption = () => {
-    const { article, image, progress } = this.props
+    const { image, progress } = this.props
 
     if (!progress) {
       return (
         <Paragraph
-          type='caption'
-          placeholder='Image Caption'
+          allowedStyles={['i']}
+          hasLinks
           html={image.caption || ''}
           onChange={this.onCaptionChange}
+          placeholder='Image Caption'
           stripLinebreaks
-          layout={article.layout}
         />
       )
     }

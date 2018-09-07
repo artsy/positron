@@ -7,7 +7,7 @@ import { Image } from '@artsy/reaction/dist/Components/Publishing/Sections/Image
 import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
 import { EditImage } from '../components/edit_image'
 import { RemoveButton } from 'client/components/remove_button'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 
 describe('EditImage', () => {
   let props

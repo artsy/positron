@@ -4,10 +4,11 @@ import { clone } from 'lodash'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
 import { VideoAbout, VideoAboutContainer, Credits } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
 import { VideoCover, VideoCoverContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
 import FileInput from 'client/components/file_input'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
@@ -67,12 +68,14 @@ export class EditVideo extends Component {
     const description = article.media && article.media.description
 
     return (
-      <Paragraph
-        html={description || ''}
-        linked
-        onChange={(html) => this.onMediaChange('description', html)}
-        placeholder='Start writing here...'
-      />
+      <Text layout={article.layout}>
+        <Paragraph
+          html={description || ''}
+          hasLinks
+          onChange={(html) => this.onMediaChange('description', html)}
+          placeholder='Start writing here...'
+        />
+      </Text>
     )
   }
 
@@ -81,16 +84,18 @@ export class EditVideo extends Component {
     const credits = article.media && article.media.credits
 
     return (
-      <Paragraph
-        html={credits || ''}
-        linked
-        onChange={(html) => this.onMediaChange('credits', html)}
-        placeholder='Start writing here...'
-      />
+      <Text layout={article.layout}>
+        <Paragraph
+          html={credits || ''}
+          hasLinks
+          onChange={(html) => this.onMediaChange('credits', html)}
+          placeholder='Start writing here...'
+        />
+      </Text>
     )
   }
 
-  render () {
+  render() {
     const { article } = this.props
     const { uploadProgress } = this.state
     const media = article.media || {}
@@ -148,7 +153,7 @@ export class EditVideo extends Component {
             className='bordered-input bordered-input-dark'
             defaultValue={moment(media.release_date).format('YYYY-MM-DD')}
             onChange={this.onDateChange}
-            />
+          />
         </EditVideoReleaseDate>
 
         <MaxWidthContainer>

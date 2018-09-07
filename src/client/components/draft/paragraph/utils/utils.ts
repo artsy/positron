@@ -1,18 +1,18 @@
-import { map } from 'lodash'
 import {
-  getDefaultKeyBinding,
   EditorState,
+  getDefaultKeyBinding,
   KeyBindingUtil,
-  Modifier
+  Modifier,
 } from 'draft-js'
 import Immutable from 'immutable'
+import { map } from 'lodash'
 import React from 'react'
 import { getSelectionDetails } from '../../../rich_text/utils/text_selection'
 import { AllowedStyles, StyleMap } from './typings'
 
 /**
  * Helpers for draft-js Paragraph component setup
-*/
+ */
 
 /**
  * blockRenderMap determines how HTML blocks are rendered in
@@ -20,42 +20,40 @@ import { AllowedStyles, StyleMap } from './typings'
  *
  * Element is 'div' because draft nests <div> tags with text,
  * and <p> tags cannot have nested children.
-*/
+ */
 export const blockRenderMap = Immutable.Map({
-  'unstyled': {
-    element: 'div'
-  }
+  unstyled: {
+    element: 'div',
+  },
 })
 
 /**
  * Default allowedStyles for Paragraph component
  */
 export const paragraphStyleMap: StyleMap = [
-  {label: 'B', name: 'BOLD'},
-  {label: 'I', name: 'ITALIC'}
+  { label: 'B', name: 'BOLD' },
+  { label: 'I', name: 'ITALIC' },
 ]
 
 /**
  * Returns styleMap from nodeNames
  * Used to attach node-names to props.allowedStyles
  */
-export const styleMapFromNodes = (allowedStyles: AllowedStyles = ['B', 'I']) => {
-  let styleMap: StyleMap = []
+export const styleMapFromNodes = (
+  allowedStyles: AllowedStyles = ['B', 'I']
+) => {
+  const styleMap: StyleMap = []
 
   allowedStyles.map(style => {
     switch (style.toUpperCase()) {
       case 'B':
       case 'BOLD': {
-        styleMap.push(
-          {label: 'B', name: 'BOLD'}
-        )
+        styleMap.push({ label: 'B', name: 'BOLD' })
         break
       }
       case 'I':
       case 'ITALIC': {
-        styleMap.push(
-          {label: 'I', name: 'ITALIC'}
-        )
+        styleMap.push({ label: 'I', name: 'ITALIC' })
         break
       }
     }
@@ -99,10 +97,7 @@ export const handleReturn = (
   e: React.KeyboardEvent<{}>,
   editorState: EditorState
 ) => {
-  const {
-    anchorOffset,
-    isFirstBlock
-  } = getSelectionDetails(editorState)
+  const { anchorOffset, isFirstBlock } = getSelectionDetails(editorState)
 
   if (isFirstBlock || anchorOffset) {
     // If first block, no chance of empty block before
@@ -131,7 +126,5 @@ export const insertPastedState = (
     blockMap
   )
   // Create a new editorState from merged content
-  return EditorState.push(
-    editorState, modifiedContent, 'insert-fragment'
-  )
+  return EditorState.push(editorState, modifiedContent, 'insert-fragment')
 }

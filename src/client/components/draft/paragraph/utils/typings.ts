@@ -10,6 +10,7 @@ export interface StyleMapStyle {
 }
 
 export type StyleMap = StyleMapStyle[]
+
 export type StyleMapNames = StyleName[]
 
 export type AllowedStyles = StyleNode[]

@@ -116,6 +116,7 @@ const TextInputUrlContainer = styled.div`
   background-color: ${props =>
     props.color ? props.color : color('black100')
   };
+  color: ${color('black100')};
   height: 50px;
   width: 400px;
   padding: 10px;
