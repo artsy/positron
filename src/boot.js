@@ -10,7 +10,7 @@ import path from 'path'
 import { IpFilter } from 'express-ipfilter'
 import { createReloadable, isDevelopment } from '@artsy/express-reloadable'
 
-const app = module.exports = express()
+const app = (module.exports = express())
 const debug = require('debug')('app')
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
@@ -20,22 +20,20 @@ const {
   ARTSY_ID,
   ARTSY_SECRET,
   IP_BLACKLIST = '',
-  PORT
+  PORT,
 } = process.env
 
 // Gzip compression
 app.use(compression())
 
 // Blacklist ips
-app.use(
-  IpFilter([IP_BLACKLIST.split(',')], { log: false, mode: 'deny' })
-)
+app.use(IpFilter([IP_BLACKLIST.split(',')], { log: false, mode: 'deny' }))
 
 // Get an xapp token
 const xappConfig = {
   url: ARTSY_URL,
   id: ARTSY_ID,
-  secret: ARTSY_SECRET
+  secret: ARTSY_SECRET,
 }
 
 artsyXapp.init(xappConfig, () => {
@@ -47,16 +45,17 @@ artsyXapp.init(xappConfig, () => {
     // Enable server-side code hot-swapping on change
     const mountAndReload = createReloadable(app, require)
 
-    app.use('/api', mountAndReload(path.resolve('src/api'), {
-      mountPoint: '/api'
-    }))
+    app.use(
+      '/api',
+      mountAndReload(path.resolve('src/api'), {
+        mountPoint: '/api',
+      })
+    )
 
     invalidateUserMiddleware(app)
 
     mountAndReload(path.resolve('src/client'), {
-      watchModules: [
-        '@artsy/reaction'
-      ]
+      watchModules: ['@artsy/reaction'],
     })
 
     // Staging, Prod
@@ -81,12 +80,15 @@ artsyXapp.init(xappConfig, () => {
 })
 
 // Crash if we can't get/refresh an xapp token
-artsyXapp.on('error', (error) => {
+artsyXapp.on('error', error => {
   console.warn(error)
+  console.log(
+    '\nCould not set up the xapp token, likely an issue with ARTSY_ID and ARTSY_SECRET'
+  )
   process.exit(1)
 })
 
-const invalidateUserMiddleware = (app) => {
+const invalidateUserMiddleware = app => {
   app.use((req, rest, next) => {
     req.user = null
     next()
