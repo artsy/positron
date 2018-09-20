@@ -171,7 +171,7 @@ export class SectionHeader extends Component {
             article={article}
             date={this.getPublishDate()}
             editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
-            editImage={isFeature ? this.editImage(hero) : undefined}
+            editImage={isFeature && headerType !== 'basic' ? this.editImage(hero) : undefined}
             editTitle={this.editTitle()}
             editVertical={hasVertical}
             textColor={hasWhiteText ? 'white' : 'black'}
