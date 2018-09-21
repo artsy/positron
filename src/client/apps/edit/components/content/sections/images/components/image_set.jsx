@@ -1,34 +1,30 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { ImageSetPreview } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview'
-import { ImageSetPreviewClassic } from '@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreviewClassic'
+import PropTypes from "prop-types"
+import React from "react"
+import { ImageSetPreview } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
+import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreviewClassic"
 
-export const ImageSet = (props) => {
+export const ImageSet = props => {
   const { articleLayout, section } = props
   const { layout, title } = section
   const images = section.images || []
   let itemProps = {}
 
-  if (articleLayout === 'classic') {
+  if (articleLayout === "classic") {
     itemProps = { images }
 
-    return (
-      <ImageSetPreviewClassic {...itemProps} />
-    )
+    return <ImageSetPreviewClassic {...itemProps} />
   } else {
     itemProps.section = {
       images,
       layout,
-      title
+      title,
     }
 
-    return (
-      <ImageSetPreview {...itemProps} />
-    )
+    return <ImageSetPreview {...itemProps} />
   }
 }
 
 ImageSet.propTypes = {
   articleLayout: PropTypes.string.isRequired,
-  section: PropTypes.object.isRequired
+  section: PropTypes.object.isRequired,
 }

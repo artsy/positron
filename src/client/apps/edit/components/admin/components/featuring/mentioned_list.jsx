@@ -1,13 +1,16 @@
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import { connect } from 'react-redux'
-import { uniq } from 'lodash'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { onAddFeaturedItem, setMentionedItems } from 'client/actions/edit/articleActions'
-import * as ArticleUtils from 'client/models/article.js'
-import Artists from 'client/collections/artists.coffee'
-import Artworks from 'client/collections/artworks.coffee'
-import { ListItem } from 'client/components/autocomplete2/list'
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import { connect } from "react-redux"
+import { uniq } from "lodash"
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import {
+  onAddFeaturedItem,
+  setMentionedItems,
+} from "client/actions/edit/articleActions"
+import * as ArticleUtils from "client/models/article.js"
+import Artists from "client/collections/artists.coffee"
+import Artworks from "client/collections/artworks.coffee"
+import { ListItem } from "client/components/autocomplete2/list"
 
 export class MentionedList extends Component {
   static propTypes = {
@@ -15,13 +18,13 @@ export class MentionedList extends Component {
     mentioned: PropTypes.object,
     model: PropTypes.string,
     onAddFeaturedItemAction: PropTypes.func,
-    setMentionedItemsAction: PropTypes.func
+    setMentionedItemsAction: PropTypes.func,
   }
 
   componentWillMount = () => {
     const { model } = this.props
 
-    if (model === 'artist') {
+    if (model === "artist") {
       this.getMentionedArtists()
     } else {
       this.getMentionedArtworks()
@@ -35,11 +38,11 @@ export class MentionedList extends Component {
 
     artists.getOrFetchIds(ids, {
       success: () => {
-        const denormalizedArtists = artists.models.map((item) => {
-          return { _id: item.get('_id'), name: item.get('name') }
+        const denormalizedArtists = artists.models.map(item => {
+          return { _id: item.get("_id"), name: item.get("name") }
         })
-        setMentionedItemsAction('artist', denormalizedArtists)
-      }
+        setMentionedItemsAction("artist", denormalizedArtists)
+      },
     })
   }
 
@@ -50,11 +53,11 @@ export class MentionedList extends Component {
 
     artworks.getOrFetchIds(ids, {
       success: () => {
-        const denormalizedArtworks = artworks.models.map((item) => {
-          return { _id: item.get('_id'), name: item.get('title') }
+        const denormalizedArtworks = artworks.models.map(item => {
+          return { _id: item.get("_id"), name: item.get("title") }
         })
-        setMentionedItemsAction('artwork', denormalizedArtworks)
-      }
+        setMentionedItemsAction("artwork", denormalizedArtworks)
+      },
     })
   }
 
@@ -62,7 +65,7 @@ export class MentionedList extends Component {
     const { mentioned, model } = this.props
     let canBeFeatured = []
 
-    mentioned[model].map((item) => {
+    mentioned[model].map(item => {
       if (!this.isFeatured(item._id)) {
         canBeFeatured.push(item)
       }
@@ -70,11 +73,11 @@ export class MentionedList extends Component {
     return uniq(canBeFeatured)
   }
 
-  isFeatured = (id) => {
+  isFeatured = id => {
     const { article, model } = this.props
     let ids
 
-    if (model === 'artist') {
+    if (model === "artist") {
       ids = article.primary_featured_artist_ids || []
     } else {
       ids = article.featured_artwork_ids || []
@@ -86,7 +89,7 @@ export class MentionedList extends Component {
   featureAll = () => {
     const { model, onAddFeaturedItemAction } = this.props
 
-    this.notFeaturedArray().map((item) => {
+    this.notFeaturedArray().map(item => {
       onAddFeaturedItemAction(model, item)
     })
   }
@@ -98,13 +101,13 @@ export class MentionedList extends Component {
     if (!this.isFeatured(_id)) {
       return (
         <ListItem
-          className='MentionedList__item'
+          className="MentionedList__item"
           color={colors.grayDark}
           key={_id}
           onClick={() => onAddFeaturedItemAction(model, item)}
         >
           {name}
-          <span className='mention' />
+          <span className="mention" />
         </ListItem>
       )
     }
@@ -117,38 +120,37 @@ export class MentionedList extends Component {
     if (hasMentioned) {
       return (
         <div
-          className='field-group field-group--inline flat-checkbox'
+          className="field-group field-group--inline flat-checkbox"
           onClick={() => this.featureAll()}
         >
-          <input
-            type='checkbox'
-            readOnly
-          />
+          <input type="checkbox" readOnly />
           <label>Feature all mentioned {`${model}s`}</label>
         </div>
       )
     }
   }
 
-  render () {
+  render() {
     return (
-      <div className='MentionedList'>
+      <div className="MentionedList">
         {this.renderFeatureAll()}
-        {this.notFeaturedArray().map((item, index) => this.renderItem(item, index))}
+        {this.notFeaturedArray().map((item, index) =>
+          this.renderItem(item, index)
+        )}
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article,
   mentioned: state.edit.mentioned,
-  user: state.app.user
+  user: state.app.user,
 })
 
 const mapDispatchToProps = {
   onAddFeaturedItemAction: onAddFeaturedItem,
-  setMentionedItemsAction: setMentionedItems
+  setMentionedItemsAction: setMentionedItems,
 }
 
 export default connect(

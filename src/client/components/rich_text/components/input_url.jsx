@@ -1,8 +1,11 @@
-import { color, Sans } from '@artsy/palette'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { RemoveButton, RemoveButtonContainer } from 'client/components/remove_button'
+import { color, Sans } from "@artsy/palette"
+import styled from "styled-components"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import {
+  RemoveButton,
+  RemoveButtonContainer,
+} from "client/components/remove_button"
 
 export class TextInputUrl extends Component {
   static propTypes = {
@@ -12,11 +15,11 @@ export class TextInputUrl extends Component {
     pluginType: PropTypes.string,
     removeLink: PropTypes.func,
     selectionTarget: PropTypes.object,
-    urlValue: PropTypes.string
+    urlValue: PropTypes.string,
   }
 
   state = {
-    url: this.props.urlValue || ''
+    url: this.props.urlValue || "",
   }
 
   confirmLink = e => {
@@ -33,13 +36,13 @@ export class TextInputUrl extends Component {
 
   onKeyDown = e => {
     switch (e.key) {
-      case 'Enter': {
+      case "Enter": {
         return this.confirmLink(e)
       }
-      case 'Escape': {
+      case "Escape": {
         return this.props.onClickOff()
       }
-      case 'Tab': {
+      case "Tab": {
         return this.onExitInput(e)
       }
     }
@@ -60,47 +63,39 @@ export class TextInputUrl extends Component {
     }
   }
 
-  render () {
+  render() {
     const { url } = this.state
     const {
       backgroundColor,
       onClickOff,
       removeLink,
-      selectionTarget: { top, left }
+      selectionTarget: { top, left },
     } = this.props
 
     return (
       <div>
         <BackgroundOverlay onClick={onClickOff} />
 
-        <TextInputUrlContainer
-          color={backgroundColor}
-          top={top}
-          left={left}
-        >
+        <TextInputUrlContainer color={backgroundColor} top={top} left={left}>
           <InputContainer>
             <Input
               autoFocus
-              className='bordered-input'
+              className="bordered-input"
               value={url}
-              onChange={e => this.setState({url: e.target.value})}
-              placeholder='Paste or type a link'
+              onChange={e => this.setState({ url: e.target.value })}
+              placeholder="Paste or type a link"
               onKeyDown={this.onKeyDown}
             />
 
-            {url.length > 0 &&
+            {url.length > 0 && (
               <RemoveButton
                 onMouseDown={removeLink}
-                background={color('black30')}
+                background={color("black30")}
               />
-            }
+            )}
           </InputContainer>
 
-          <Button
-            onMouseDown={this.confirmLink}
-            size={2}
-            weight='medium'
-          >
+          <Button onMouseDown={this.confirmLink} size={2} weight="medium">
             Apply
           </Button>
         </TextInputUrlContainer>
@@ -113,24 +108,21 @@ const TextInputUrlContainer = styled.div`
   top: ${props => `${props.top + 5}px` || 0};
   left: ${props => `${props.left}px` || 0};
   position: absolute;
-  background-color: ${props =>
-    props.color ? props.color : color('black100')
-  };
-  color: ${color('black100')};
+  background-color: ${props => (props.color ? props.color : color("black100"))};
+  color: ${color("black100")};
   height: 50px;
   width: 400px;
   padding: 10px;
   display: flex;
   z-index: 10;
   &::after {
-    content: '';
+    content: "";
     width: 0;
     height: 0;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    border-bottom: 7px solid ${props =>
-      props.color ? props.color : color('black100')
-    };
+    border-bottom: 7px solid
+      ${props => (props.color ? props.color : color("black100"))};
     position: absolute;
     top: -7px;
     left: 50%;
@@ -171,9 +163,9 @@ export const Button = Sans.extend`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color .15s;
-  background: ${color('black10')};
+  transition: color 0.15s;
+  background: ${color("black10")};
   &:hover {
-    color: ${color('purple100')};
+    color: ${color("purple100")};
   }
 `

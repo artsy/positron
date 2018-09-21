@@ -1,22 +1,22 @@
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import moment from 'moment'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import moment from "moment"
+import styled from "styled-components"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import ReactDOM from "react-dom"
+import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 
 export class ArticlePublishDate extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
   }
 
   state = {
     focus: false,
     hasChanged: false,
     publish_date: null,
-    publish_time: null
+    publish_time: null,
   }
 
   componentWillMount = () => {
@@ -31,14 +31,16 @@ export class ArticlePublishDate extends Component {
     if (this.date && this.time) {
       const date = this.date.value
       const time = this.time.value
-      const new_published = moment(`${date} ${time}`).local().toISOString()
+      const new_published = moment(`${date} ${time}`)
+        .local()
+        .toISOString()
 
       if (scheduled_publish_at && !hasChanged) {
         this.onUnschedule()
       } else if (!article.published) {
-        onChange('scheduled_publish_at', new_published)
+        onChange("scheduled_publish_at", new_published)
       } else {
-        onChange('published_at', new_published)
+        onChange("published_at", new_published)
       }
       this.setState({ hasChanged: false })
     }
@@ -53,8 +55,8 @@ export class ArticlePublishDate extends Component {
       this.date.value = publish_date
       this.time.value = publish_time
     }
-    onChange('scheduled_publish_at', null)
-    this.setState({hasChanged: false, publish_date, publish_time})
+    onChange("scheduled_publish_at", null)
+    this.setState({ hasChanged: false, publish_date, publish_time })
   }
 
   setupPublishDate = () => {
@@ -63,14 +65,18 @@ export class ArticlePublishDate extends Component {
     let publish_time
 
     if (scheduled_publish_at) {
-      publish_date = moment(scheduled_publish_at).format('YYYY-MM-DD')
-      publish_time = moment(scheduled_publish_at).format('HH:mm')
+      publish_date = moment(scheduled_publish_at).format("YYYY-MM-DD")
+      publish_time = moment(scheduled_publish_at).format("HH:mm")
     } else if (published_at) {
-      publish_date = moment(published_at).format('YYYY-MM-DD')
-      publish_time = moment(published_at).format('HH:mm')
+      publish_date = moment(published_at).format("YYYY-MM-DD")
+      publish_time = moment(published_at).format("HH:mm")
     } else {
-      publish_date = moment().local().format('YYYY-MM-DD')
-      publish_time = moment().local().format('HH:mm')
+      publish_date = moment()
+        .local()
+        .format("YYYY-MM-DD")
+      publish_time = moment()
+        .local()
+        .format("HH:mm")
     }
 
     return { publish_date, publish_time }
@@ -80,26 +86,26 @@ export class ArticlePublishDate extends Component {
     const { hasChanged } = this.state
     const { published, scheduled_publish_at } = this.props.article
 
-    if (published ||
-      (scheduled_publish_at && hasChanged)
-    ) {
-      return 'Update'
+    if (published || (scheduled_publish_at && hasChanged)) {
+      return "Update"
     } else if (scheduled_publish_at) {
-      return 'Unschedule'
+      return "Unschedule"
     } else {
-      return 'Schedule'
+      return "Schedule"
     }
   }
 
   onChangeFocus = () => {
     if (this.date && this.time) {
-      const dateIsFocused = document.activeElement === ReactDOM.findDOMNode(this.date)
-      const timeIsFocused = document.activeElement === ReactDOM.findDOMNode(this.time)
+      const dateIsFocused =
+        document.activeElement === ReactDOM.findDOMNode(this.date)
+      const timeIsFocused =
+        document.activeElement === ReactDOM.findDOMNode(this.time)
       const hasChanged = this.hasChanged()
 
       this.setState({
         hasChanged,
-        focus: (dateIsFocused || timeIsFocused)
+        focus: dateIsFocused || timeIsFocused,
       })
     }
   }
@@ -115,11 +121,11 @@ export class ArticlePublishDate extends Component {
     }
   }
 
-  render () {
+  render() {
     const { focus, hasChanged, publish_date, publish_time } = this.state
 
     return (
-      <div className='ArticlePublishDate'>
+      <div className="ArticlePublishDate">
         <label>Publish Date/Time</label>
 
         <DateContainer>
@@ -130,17 +136,21 @@ export class ArticlePublishDate extends Component {
             onKeyUp={this.onChangeFocus}
           >
             <input
-              className='bordered-input'
+              className="bordered-input"
               defaultValue={publish_date}
-              type='date'
-              ref={(ref) => { this.date = ref }}
+              type="date"
+              ref={ref => {
+                this.date = ref
+              }}
               onBlur={this.onChangeFocus}
             />
             <input
-              className='bordered-input'
+              className="bordered-input"
               defaultValue={publish_time}
-              type='time'
-              ref={(ref) => { this.time = ref }}
+              type="time"
+              ref={ref => {
+                this.time = ref
+              }}
               onBlur={this.onChangeFocus}
             />
           </InputGroup>
@@ -163,8 +173,9 @@ export const DateContainer = styled.div`
 
 export const InputGroup = styled.div`
   display: flex;
-  border: 2px solid ${props => props.focus ? colors.purpleRegular : colors.grayRegular};
-  transition: border .3s;
+  border: 2px solid
+    ${props => (props.focus ? colors.purpleRegular : colors.grayRegular)};
+  transition: border 0.3s;
   margin-right: 20px;
   .bordered-input {
     border: none;
@@ -174,15 +185,15 @@ export const InputGroup = styled.div`
 
 export const ButtonMedium = styled.button`
   padding: 10px 20px;
-  color: ${props => props.color ? props.color : 'white'};
+  color: ${props => (props.color ? props.color : "white")};
   cursor: pointer;
-  background: ${props => props.background ? props.background : colors.grayMedium};
-  ${avantgarde('s11')}
-  outline: none;
+  background: ${props =>
+    props.background ? props.background : colors.grayMedium};
+  ${avantgarde("s11")} outline: none;
   border: none;
   width: -moz-available;
   width: -webkit-fill-available;
-  transition: background .3s;
+  transition: background 0.3s;
   &:hover {
     background: ${colors.purpleRegular};
   }

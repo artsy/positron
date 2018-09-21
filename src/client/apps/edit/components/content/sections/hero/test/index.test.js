@@ -1,26 +1,26 @@
-import React from 'react'
-import configureStore from 'redux-mock-store'
-import { Provider } from 'react-redux'
-import { clone } from 'lodash'
-import { mount } from 'enzyme'
-import { RemoveButton } from 'client/components/remove_button'
-import { SectionContainer } from '../../../section_container'
-import { SectionTool } from '../../../section_tool'
-import { SectionHero } from '../index'
-import { ClassicArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
+import React from "react"
+import configureStore from "redux-mock-store"
+import { Provider } from "react-redux"
+import { clone } from "lodash"
+import { mount } from "enzyme"
+import { RemoveButton } from "client/components/remove_button"
+import { SectionContainer } from "../../../section_container"
+import { SectionTool } from "../../../section_tool"
+import { SectionHero } from "../index"
+import { ClassicArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 
-describe('SectionHero', () => {
+describe("SectionHero", () => {
   let props
 
-  const getWrapper = (props) => {
+  const getWrapper = props => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: {}
+        channel: {},
       },
       edit: {
-        article: props.article
-      }
+        article: props.article,
+      },
     })
 
     return mount(
@@ -33,11 +33,11 @@ describe('SectionHero', () => {
   beforeEach(() => {
     props = {
       article: clone(ClassicArticle),
-      onChangeArticleAction: jest.fn()
+      onChangeArticleAction: jest.fn(),
     }
   })
 
-  it('Displays a sectionTool if no section', () => {
+  it("Displays a sectionTool if no section", () => {
     props.article.hero_section = null
     const component = getWrapper(props)
 
@@ -45,10 +45,10 @@ describe('SectionHero', () => {
     expect(component.find(SectionContainer).exists()).toBe(false)
   })
 
-  it('Displays a sectionContainer with video section', () => {
+  it("Displays a sectionContainer with video section", () => {
     props.article.hero_section = {
-      url: 'http://youtube.com',
-      type: 'video'
+      url: "http://youtube.com",
+      type: "video",
     }
 
     const component = getWrapper(props)
@@ -57,10 +57,10 @@ describe('SectionHero', () => {
     expect(component.find(SectionContainer).exists()).toBe(true)
   })
 
-  it('Displays a sectionContainer with image section', () => {
+  it("Displays a sectionContainer with image section", () => {
     props.article.hero_section = {
       images: [],
-      type: 'image'
+      type: "image",
     }
 
     const component = getWrapper(props)
@@ -69,15 +69,15 @@ describe('SectionHero', () => {
     expect(component.find(SectionContainer).exists()).toBe(true)
   })
 
-  it('Can remove a hero if empty', () => {
+  it("Can remove a hero if empty", () => {
     props.article.hero_section = {
-      type: 'image'
+      type: "image",
     }
 
     const component = getWrapper(props)
 
-    component.find(RemoveButton).simulate('click')
-    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('hero_section')
+    component.find(RemoveButton).simulate("click")
+    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("hero_section")
     expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(null)
   })
 })

@@ -1,13 +1,13 @@
 /**
  * A container for section inputs
  * Position changes on scroll to stick to section top
-**/
+ **/
 
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import LayoutControls from './layout'
+import styled from "styled-components"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import LayoutControls from "./layout"
 
 export class SectionControls extends Component {
   static propTypes = {
@@ -15,27 +15,21 @@ export class SectionControls extends Component {
     children: PropTypes.any,
     disabledAlert: PropTypes.func,
     isHero: PropTypes.bool,
-    showLayouts: PropTypes.bool
+    showLayouts: PropTypes.bool,
   }
 
   state = {
-    insideComponent: false
+    insideComponent: false,
   }
 
   componentDidMount = () => {
     this.setInsideComponent()
 
-    window.addEventListener(
-      'scroll',
-      this.setInsideComponent
-    )
+    window.addEventListener("scroll", this.setInsideComponent)
   }
 
   componentWillUnmount = () => {
-    window.removeEventListener(
-      'scroll',
-      this.setInsideComponent
-    )
+    window.removeEventListener("scroll", this.setInsideComponent)
   }
 
   setInsideComponent = () => {
@@ -49,7 +43,7 @@ export class SectionControls extends Component {
   getHeaderHeight = () => {
     const { type } = this.props.channel
     // Add extra space for channels with Yoast
-    return type === 'partner' ? 55 : 95
+    return type === "partner" ? 55 : 95
   }
 
   getPositionBottom = () => {
@@ -64,13 +58,13 @@ export class SectionControls extends Component {
       const stickyBottom = windowHeight - controlsHeight - headerHeight
 
       if (insideComponent && !isHero) {
-        return stickyBottom + 'px'
+        return stickyBottom + "px"
       }
     }
-    return '100%'
+    return "100%"
   }
 
-  isScrollingOver = ($section) => {
+  isScrollingOver = $section => {
     if (this.controls) {
       const controlsHeight = $(this.controls).height()
       const offsetTop = $section.offset().top
@@ -82,7 +76,7 @@ export class SectionControls extends Component {
     }
   }
 
-  isScrolledPast = ($section) => {
+  isScrolledPast = $section => {
     if (this.controls) {
       const controlsHeight = $(this.controls).height()
       const sectionHeight = $section.height()
@@ -99,7 +93,7 @@ export class SectionControls extends Component {
   insideComponent = () => {
     const { isHero } = this.props
     if (this.controls) {
-      const $section = $(this.controls).closest('section')
+      const $section = $(this.controls).closest("section")
 
       let insideComponent = false
       const isScrollingOver = this.isScrollingOver($section)
@@ -117,48 +111,35 @@ export class SectionControls extends Component {
     }
   }
 
-  render () {
-    const {
-      children,
-      disabledAlert,
-      isHero,
-      showLayouts
-    } = this.props
+  render() {
+    const { children, disabledAlert, isHero, showLayouts } = this.props
     const { insideComponent } = this.state
 
-    const outsidePosition = isHero ? 'relative' : 'absolute'
-    const position = insideComponent ? 'fixed' : outsidePosition
+    const outsidePosition = isHero ? "relative" : "absolute"
+    const position = insideComponent ? "fixed" : outsidePosition
     const bottom = this.getPositionBottom()
 
     return (
       <SectionControlsContainer
-        innerRef={(node) => { this.controls = node }}
-        className={'SectionControls edit-controls'}
+        innerRef={node => {
+          this.controls = node
+        }}
+        className={"SectionControls edit-controls"}
         position={position}
         bottom={bottom}
       >
+        {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
-        {showLayouts &&
-          <LayoutControls
-            disabledAlert={disabledAlert}
-          />
-        }
-
-        <div className='edit-controls__inputs'>
-          {children}
-        </div>
-
+        <div className="edit-controls__inputs">{children}</div>
       </SectionControlsContainer>
     )
   }
 }
-const mapStateToProps = (state) => ({
-  channel: state.app.channel
+const mapStateToProps = state => ({
+  channel: state.app.channel,
 })
 
-export default connect(
-  mapStateToProps
-)(SectionControls)
+export default connect(mapStateToProps)(SectionControls)
 
 const SectionControlsContainer = styled.div`
   bottom: ${props => props.bottom};

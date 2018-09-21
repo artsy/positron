@@ -1,18 +1,18 @@
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import request from 'superagent'
-import styled from 'styled-components'
-import { clone, uniq } from 'lodash'
-import { connect } from 'react-redux'
-import { difference, flatten, pluck } from 'underscore'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { Col, Row } from 'react-styled-flexboxgrid'
-import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { ArticlePublishDate } from './article_publish_date'
-import { RelatedArticleQuery } from 'client/queries/related_articles'
-import ArticleAuthors from './article_authors'
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import request from "superagent"
+import styled from "styled-components"
+import { clone, uniq } from "lodash"
+import { connect } from "react-redux"
+import { difference, flatten, pluck } from "underscore"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { Col, Row } from "react-styled-flexboxgrid"
+import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { AutocompleteList } from "/client/components/autocomplete2/list"
+import { ArticlePublishDate } from "./article_publish_date"
+import { RelatedArticleQuery } from "client/queries/related_articles"
+import ArticleAuthors from "./article_authors"
 
 export class AdminArticle extends Component {
   static propTypes = {
@@ -20,14 +20,14 @@ export class AdminArticle extends Component {
     apiURL: PropTypes.string,
     channel: PropTypes.object,
     onChangeArticleAction: PropTypes.func,
-    user: PropTypes.object
+    user: PropTypes.object,
   }
 
   fetchArticles = (fetchedItems, cb) => {
     const { apiURL, article, user } = this.props
     const { related_article_ids } = article
 
-    const alreadyFetched = pluck(fetchedItems, 'id')
+    const alreadyFetched = pluck(fetchedItems, "id")
     const idsToFetch = difference(related_article_ids, alreadyFetched)
     let newItems = clone(fetchedItems)
 
@@ -35,8 +35,8 @@ export class AdminArticle extends Component {
       request
         .get(`${apiURL}/graphql`)
         .set({
-          'Accept': 'application/json',
-          'X-Access-Token': (user && user.access_token)
+          Accept: "application/json",
+          "X-Access-Token": user && user.access_token,
         })
         .query({ query: RelatedArticleQuery(idsToFetch) })
         .end((err, res) => {
@@ -52,13 +52,8 @@ export class AdminArticle extends Component {
     }
   }
 
-  render () {
-    const {
-      article,
-      apiURL,
-      channel,
-      onChangeArticleAction
-    } = this.props
+  render() {
+    const { article, apiURL, channel, onChangeArticleAction } = this.props
 
     return (
       <div>
@@ -66,21 +61,21 @@ export class AdminArticle extends Component {
 
         <Row>
           <Col xs={6}>
-            {article.layout !== 'news' &&
+            {article.layout !== "news" && (
               <Row>
                 <Col xs={6}>
-                  <div className='field-group'>
+                  <div className="field-group">
                     <label>Article Tier</label>
                     <ButtonGroup>
                       <Button
                         active={article.tier === 1}
-                        onClick={() => onChangeArticleAction('tier', 1)}
+                        onClick={() => onChangeArticleAction("tier", 1)}
                       >
                         Tier 1
                       </Button>
                       <Button
                         active={article.tier === 2}
-                        onClick={() => onChangeArticleAction('tier', 2)}
+                        onClick={() => onChangeArticleAction("tier", 2)}
                       >
                         Tier 2
                       </Button>
@@ -88,18 +83,18 @@ export class AdminArticle extends Component {
                   </div>
                 </Col>
                 <Col xs={6}>
-                  <div className='field-group'>
+                  <div className="field-group">
                     <label>Magazine Feed</label>
                     <ButtonGroup>
                       <Button
                         active={article.featured}
-                        onClick={() => onChangeArticleAction('featured', true)}
+                        onClick={() => onChangeArticleAction("featured", true)}
                       >
                         Yes
                       </Button>
                       <Button
                         active={!article.featured}
-                        onClick={() => onChangeArticleAction('featured', false)}
+                        onClick={() => onChangeArticleAction("featured", false)}
                       >
                         No
                       </Button>
@@ -107,47 +102,52 @@ export class AdminArticle extends Component {
                   </div>
                 </Col>
               </Row>
-            }
+            )}
 
-            {channel.type === 'editorial' &&
-             article.layout !== 'news' &&
-              <div className='field-group'>
-                <label>Article Layout</label>
-                <ButtonGroup>
-                  <Button
-                    active={article.layout === 'standard'}
-                    onClick={() => onChangeArticleAction('layout', 'standard')}
-                  >
-                    Standard
-                  </Button>
-                  <Button
-                    active={article.layout === 'feature'}
-                    onClick={() => onChangeArticleAction('layout', 'feature')}
-                  >
-                    Feature
-                  </Button>
-                </ButtonGroup>
-              </div>
-            }
+            {channel.type === "editorial" &&
+              article.layout !== "news" && (
+                <div className="field-group">
+                  <label>Article Layout</label>
+                  <ButtonGroup>
+                    <Button
+                      active={article.layout === "standard"}
+                      onClick={() =>
+                        onChangeArticleAction("layout", "standard")
+                      }
+                    >
+                      Standard
+                    </Button>
+                    <Button
+                      active={article.layout === "feature"}
+                      onClick={() => onChangeArticleAction("layout", "feature")}
+                    >
+                      Feature
+                    </Button>
+                  </ButtonGroup>
+                </div>
+              )}
 
             <div
-              className='field-group--inline flat-checkbox'
-              onClick={(e) => onChangeArticleAction('indexable', !article.indexable)}
+              className="field-group--inline flat-checkbox"
+              onClick={e =>
+                onChangeArticleAction("indexable", !article.indexable)
+              }
             >
-              <input
-                type='checkbox'
-                checked={article.indexable}
-                readOnly
-              />
+              <input type="checkbox" checked={article.indexable} readOnly />
               <label>Index for search</label>
             </div>
 
             <div
-              className='field-group field-group--inline flat-checkbox'
-              onClick={() => onChangeArticleAction('exclude_google_news', !article.exclude_google_news)}
+              className="field-group field-group--inline flat-checkbox"
+              onClick={() =>
+                onChangeArticleAction(
+                  "exclude_google_news",
+                  !article.exclude_google_news
+                )
+              }
             >
               <input
-                type='checkbox'
+                type="checkbox"
                 checked={article.exclude_google_news}
                 readOnly
               />
@@ -161,13 +161,15 @@ export class AdminArticle extends Component {
               onChange={onChangeArticleAction}
             />
 
-            <div className='field-group'>
+            <div className="field-group">
               <label>Related Articles</label>
               <AutocompleteList
                 fetchItems={this.fetchArticles}
                 items={article.related_article_ids || []}
-                onSelect={(results) => onChangeArticleAction('related_article_ids', results)}
-                placeholder='Search by title...'
+                onSelect={results =>
+                  onChangeArticleAction("related_article_ids", results)
+                }
+                placeholder="Search by title..."
                 url={`${apiURL}/articles?published=true&q=%QUERY`}
               />
             </div>
@@ -178,15 +180,15 @@ export class AdminArticle extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   apiURL: state.app.apiURL,
   article: state.edit.article,
   channel: state.app.channel,
-  user: state.app.user
+  user: state.app.user,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(
@@ -197,9 +199,8 @@ export default connect(
 const Button = styled.button`
   padding: 10px 20px;
   border: 2px solid ${colors.grayMedium};
-  color: ${props => props.active ? 'black' : colors.grayMedium};
-  ${avantgarde('s11')}
-  outline: none;
+  color: ${props => (props.active ? "black" : colors.grayMedium)};
+  ${avantgarde("s11")} outline: none;
 `
 
 const ButtonGroup = styled.div`

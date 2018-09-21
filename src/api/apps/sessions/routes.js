@@ -1,4 +1,4 @@
-import { destroy, save, where } from './model'
+import { destroy, save, where } from "./model"
 
 export const index = (req, res, next) => {
   where(req.query, (err, results) => {
@@ -10,7 +10,7 @@ export const index = (req, res, next) => {
 }
 
 export const saveSession = (req, res, next) => {
-  save({...req.body, id: req.params.id}, (err, session) => {
+  save({ ...req.body, id: req.params.id }, (err, session) => {
     if (err) {
       return next(err)
     }
@@ -19,10 +19,10 @@ export const saveSession = (req, res, next) => {
 }
 
 export const deleteSession = (req, res, next) => {
-  destroy(req.params.id, (err) => {
+  destroy(req.params.id, err => {
     if (err) {
       return next(err)
     }
-    res.send({id: req.params.id})
+    res.send({ id: req.params.id })
   })
 }

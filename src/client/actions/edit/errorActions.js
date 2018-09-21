@@ -1,19 +1,17 @@
-import keyMirror from 'client/lib/keyMirror'
+import keyMirror from "client/lib/keyMirror"
 
-export const actions = keyMirror(
-  'ERROR'
-)
+export const actions = keyMirror("ERROR")
 
-export const logError = (error) => ({
+export const logError = error => ({
   type: actions.ERROR,
   payload: {
-    error
-  }
+    error,
+  },
 })
 
 export const resetError = () => ({
   type: actions.ERROR,
   payload: {
-    error: null
-  }
+    error: null,
+  },
 })

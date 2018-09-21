@@ -1,18 +1,18 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import { IconDrag } from '@artsy/reaction/dist/Components/Publishing/Icon/IconDrag'
-import { RemoveButton } from 'client/components/remove_button'
-import { removeSection } from 'client/actions/edit/sectionActions'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
+import { RemoveButton } from "client/components/remove_button"
+import { removeSection } from "client/actions/edit/sectionActions"
 
-import SectionImages from '../sections/images'
-import SectionSlideshow from '../sections/slideshow'
-import SectionText from '../sections/text'
-import SectionVideo from '../sections/video'
-import { ErrorBoundary } from 'client/components/error/error_boundary'
-import { SectionEmbed } from '../sections/embed'
-import { SectionSocialEmbed } from '../sections/social_embed'
+import SectionImages from "../sections/images"
+import SectionSlideshow from "../sections/slideshow"
+import SectionText from "../sections/text"
+import SectionVideo from "../sections/video"
+import { ErrorBoundary } from "client/components/error/error_boundary"
+import { SectionEmbed } from "../sections/embed"
+import { SectionSocialEmbed } from "../sections/social_embed"
 
 export class SectionContainer extends Component {
   static propTypes = {
@@ -25,7 +25,7 @@ export class SectionContainer extends Component {
     removeSectionAction: PropTypes.func,
     section: PropTypes.object,
     sections: PropTypes.array,
-    sectionIndex: PropTypes.number
+    sectionIndex: PropTypes.number,
   }
 
   isEditing = () => {
@@ -38,12 +38,7 @@ export class SectionContainer extends Component {
   }
 
   onSetEditing = () => {
-    const {
-      editing,
-      index,
-      isHero,
-      onSetEditing
-    } = this.props
+    const { editing, index, isHero, onSetEditing } = this.props
 
     let setEditing
 
@@ -58,12 +53,7 @@ export class SectionContainer extends Component {
   }
 
   onRemoveSection = () => {
-    const {
-      index,
-      isHero,
-      onRemoveHero,
-      removeSectionAction
-    } = this.props
+    const { index, isHero, onRemoveHero, removeSectionAction } = this.props
 
     if (isHero) {
       onRemoveHero()
@@ -76,57 +66,53 @@ export class SectionContainer extends Component {
     const { section } = this.props
 
     switch (section.type) {
-      case 'embed': {
+      case "embed": {
         return <SectionEmbed {...this.props} />
       }
-      case 'social_embed': {
+      case "social_embed": {
         return <SectionSocialEmbed {...this.props} />
       }
-      case 'image':
-      case 'image_set':
-      case 'image_collection': {
+      case "image":
+      case "image_set":
+      case "image_collection": {
         return <SectionImages {...this.props} />
       }
 
-      case 'text': {
-        return (
-          <SectionText {...this.props} />
-        )
+      case "text": {
+        return <SectionText {...this.props} />
       }
 
-      case 'video': {
+      case "video": {
         return <SectionVideo {...this.props} />
       }
 
-      case 'slideshow': {
+      case "slideshow": {
         return <SectionSlideshow {...this.props} />
       }
     }
   }
 
   render() {
-    const {
-      isHero,
-      section
-    } = this.props
+    const { isHero, section } = this.props
     const { layout, type } = section
 
     return (
       <ErrorBoundary>
-        <div className='SectionContainer'
+        <div
+          className="SectionContainer"
           data-editing={this.isEditing()}
-          data-layout={layout || 'column_width'}
+          data-layout={layout || "column_width"}
           data-type={type}
         >
           <div
-            className='SectionContainer__hover-controls'
+            className="SectionContainer__hover-controls"
             onClick={this.onSetEditing}
           >
-            {!isHero &&
-              <div className='button-drag'>
+            {!isHero && (
+              <div className="button-drag">
                 <IconDrag background={colors.grayMedium} />
               </div>
-            }
+            )}
             <RemoveButton
               onClick={this.onRemoveSection}
               background={colors.grayMedium}
@@ -136,7 +122,7 @@ export class SectionContainer extends Component {
           {this.getSectionComponent()}
 
           <div
-            className='SectionContainer__container-bg'
+            className="SectionContainer__container-bg"
             onClick={this.onSetEditing}
           />
         </div>
@@ -145,13 +131,13 @@ export class SectionContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article,
-  sectionIndex: state.edit.sectionIndex
+  sectionIndex: state.edit.sectionIndex,
 })
 
 const mapDispatchToProps = {
-  removeSectionAction: removeSection
+  removeSectionAction: removeSection,
 }
 
 export default connect(

@@ -1,3 +1,3 @@
-import { init } from '../apps/display/client.jsx'
+import { init } from "../apps/display/client.jsx"
 
 init()

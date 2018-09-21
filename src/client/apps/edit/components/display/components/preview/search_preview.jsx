@@ -1,8 +1,8 @@
-import moment from 'moment'
-import PropTypes from 'prop-types'
-import React from 'react'
+import moment from "moment"
+import PropTypes from "prop-types"
+import React from "react"
 
-export const SearchPreview = (props) => {
+export const SearchPreview = props => {
   const { article, forceURL } = props
   const {
     description,
@@ -11,31 +11,29 @@ export const SearchPreview = (props) => {
     search_description,
     search_title,
     slug,
-    thumbnail_title
+    thumbnail_title,
   } = article
 
   const date = published_at || scheduled_publish_at || new Date()
   const body = description || search_description
 
   return (
-    <div className='edit-display__preview edit-display__prev-search'>
+    <div className="edit-display__preview edit-display__prev-search">
       {searchResult()}
       {searchResult()}
 
-      <div className='edit-display__prev-search--result'>
-        <div className='edit-display__prev-search--headline'>
+      <div className="edit-display__prev-search--result">
+        <div className="edit-display__prev-search--headline">
           {search_title || thumbnail_title}
         </div>
-        <div className='edit-display__prev-search--slug'>
+        <div className="edit-display__prev-search--slug">
           {`${forceURL}/article/${slug}`}
         </div>
-        <div className='edit-display__prev-search--dd'>
-          <span className='edit-display__prev-search--date'>
-            {moment(date).format('ll') + (body ? ' - ' : '')}
+        <div className="edit-display__prev-search--dd">
+          <span className="edit-display__prev-search--date">
+            {moment(date).format("ll") + (body ? " - " : "")}
           </span>
-          <span className='edit-display__prev-search--description'>
-            {body}
-          </span>
+          <span className="edit-display__prev-search--description">{body}</span>
         </div>
       </div>
 
@@ -47,16 +45,16 @@ export const SearchPreview = (props) => {
 
 const searchResult = () => {
   return (
-    <div className='edit-display__prev-search--result'>
-      <div className='edit-display__prev-search--result-headline' />
-      <div className='edit-display__prev-search--result-line' />
-      <div className='edit-display__prev-search--result-line' />
-      <div className='edit-display__prev-search--result-line' />
+    <div className="edit-display__prev-search--result">
+      <div className="edit-display__prev-search--result-headline" />
+      <div className="edit-display__prev-search--result-line" />
+      <div className="edit-display__prev-search--result-line" />
+      <div className="edit-display__prev-search--result-line" />
     </div>
   )
 }
 
 SearchPreview.propTypes = {
   article: PropTypes.object,
-  forceURL: PropTypes.string
+  forceURL: PropTypes.string,
 }

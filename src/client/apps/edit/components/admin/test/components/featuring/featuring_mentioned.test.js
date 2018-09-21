@@ -1,30 +1,30 @@
-import configureStore from 'redux-mock-store'
-import { cloneDeep } from 'lodash'
-import { mount } from 'enzyme'
-import React from 'react'
-import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
-import { Provider } from 'react-redux'
-import { FeaturingMentioned } from '../../../components/featuring/featuring_mentioned'
-import { MentionedList } from '../../../components/featuring/mentioned_list'
-import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
-require('typeahead.js')
+import configureStore from "redux-mock-store"
+import { cloneDeep } from "lodash"
+import { mount } from "enzyme"
+import React from "react"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { Provider } from "react-redux"
+import { FeaturingMentioned } from "../../../components/featuring/featuring_mentioned"
+import { MentionedList } from "../../../components/featuring/mentioned_list"
+import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
+require("typeahead.js")
 
-describe('FeaturingMentioned', () => {
+describe("FeaturingMentioned", () => {
   let props
 
-  const getWrapper = (props) => {
+  const getWrapper = props => {
     const mockStore = configureStore([])
     const { article, featured, mentioned } = props
 
     const store = mockStore({
       app: {
-        channel: { type: 'editorial' }
+        channel: { type: "editorial" },
       },
       edit: {
         article,
         featured,
-        mentioned
-      }
+        mentioned,
+      },
     })
 
     return mount(
@@ -39,17 +39,22 @@ describe('FeaturingMentioned', () => {
       article: cloneDeep(StandardArticle),
       featured: { artist: [], artwork: [] },
       mentioned: { artist: [], artwork: [] },
-      model: 'artist'
+      model: "artist",
     }
   })
 
-  it('Renders a label', () => {
+  it("Renders a label", () => {
     const component = getWrapper(props)
 
-    expect(component.find('label').first().text()).toBe('artists')
+    expect(
+      component
+        .find("label")
+        .first()
+        .text()
+    ).toBe("artists")
   })
 
-  it('Renders expected components', () => {
+  it("Renders expected components", () => {
     const component = getWrapper(props)
 
     expect(component.find(AutocompleteListMetaphysics).exists()).toBe(true)
