@@ -67,9 +67,9 @@ jobs:
           bucket-assets -b positron-production
           heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
 
-          - run:
-          name: Deploy to production
-          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
+      - run:
+        name: Deploy to production
+        command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
 
 workflows:
   version: 2
