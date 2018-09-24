@@ -40,11 +40,11 @@ jobs:
       - checkout
 
       - run:
-        name: Yarn assets
-        command: |
-          yarn assets
-          bucket-assets -b positron-staging
-          heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
+          name: Yarn assets
+          command: |
+            yarn assets
+            bucket-assets -b positron-staging
+            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
 
       - run:
           name: Deploy to staging
@@ -61,15 +61,15 @@ jobs:
       - checkout
 
       - run:
-        name: Yarn assets
-        command: |
-          yarn assets
-          bucket-assets -b positron-production
-          heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
+          name: Yarn assets
+          command: |
+            yarn assets
+            bucket-assets -b positron-production
+            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
 
       - run:
-        name: Deploy to production
-        command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
+          name: Deploy to production
+          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
 
 workflows:
   version: 2
