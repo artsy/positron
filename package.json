@@ -7,7 +7,6 @@
   },
   "scripts": {
     "assets": "sh scripts/assets.sh",
-    "deploy": "sh scripts/deploy.sh",
     "dev": "sh scripts/dev.sh",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
