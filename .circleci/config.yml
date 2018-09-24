@@ -35,7 +35,7 @@ jobs:
 
   deploy-staging:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/node:8-stretch-browsers
     steps:
       - checkout
 
@@ -56,7 +56,7 @@ jobs:
 
   deploy-production:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/node:8-stretch-browsers
     steps:
       - checkout
 
