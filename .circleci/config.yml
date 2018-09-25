@@ -42,6 +42,7 @@ jobs:
       - run:
           name: Yarn assets
           command: |
+            yarn install
             yarn assets
             bucket-assets -b positron-staging
             heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
@@ -63,6 +64,7 @@ jobs:
       - run:
           name: Yarn assets
           command: |
+            yarn install
             yarn assets
             bucket-assets -b positron-production
             heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
