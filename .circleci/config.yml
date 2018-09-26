@@ -36,7 +36,6 @@ jobs:
   deploy-staging:
     docker:
       - image: circleci/node:8-stretch-browsers
-      - image: dickeyxxx/heroku-cli
 
     steps:
       - checkout
@@ -47,6 +46,7 @@ jobs:
             yarn install
             yarn assets
             yarn bucket-assets -b positron-staging
+            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
             heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
 
       - run:
@@ -60,7 +60,6 @@ jobs:
   deploy-production:
     docker:
       - image: circleci/node:8-stretch-browsers
-      - image: dickeyxxx/heroku-cli
 
     steps:
       - checkout
@@ -71,6 +70,7 @@ jobs:
             yarn install
             yarn assets
             yarn bucket-assets -b positron-production
+            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
             heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
 
       - run:
