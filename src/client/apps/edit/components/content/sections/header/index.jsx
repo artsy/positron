@@ -1,20 +1,22 @@
-import moment from 'moment'
 import styled from 'styled-components'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Header } from '@artsy/reaction/dist/Components/Publishing/Header/Header'
-import FileInput from 'client/components/file_input'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import HeaderControls from './controls'
+import { space } from '@artsy/palette'
+import { Header } from '@artsy/reaction/dist/Components/Publishing'
+import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
+import { Deck } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent'
+import { FeatureHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader'
+import { BasicHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
 import { onChangeArticle } from 'client/actions/edit/articleActions'
 import { onChangeHero } from 'client/actions/edit/sectionActions'
-import { Deck } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent'
-import { FeatureHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader'
-import { BasicHeaderContainer } from '@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader'
+import FileInput from 'client/components/file_input'
+import HeaderControls from './controls'
 
 export class SectionHeader extends Component {
   static propTypes = {
@@ -118,15 +120,16 @@ export class SectionHeader extends Component {
     const { article, onChange } = this.props
 
     return (
-      <Paragraph
-        html={article.lead_paragraph}
-        onChange={(input) => onChange('lead_paragraph', input)}
-        placeholder='Lead Paragraph (optional)'
-        type='lead_paragraph'
-        linked={false}
-        stripLinebreaks
-        layout={article.layout}
-      />
+      <LeadParagraph>
+        <Text layout={article.layout}>
+          <Paragraph
+            html={article.lead_paragraph}
+            onChange={(input) => onChange('lead_paragraph', input)}
+            placeholder='Lead Paragraph (optional)'
+            stripLinebreaks
+          />
+        </Text>
+      </LeadParagraph>
     )
   }
 
@@ -168,7 +171,7 @@ export class SectionHeader extends Component {
             article={article}
             date={this.getPublishDate()}
             editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
-            editImage={isFeature ? this.editImage(hero) : undefined}
+            editImage={isFeature && headerType !== 'basic' ? this.editImage(hero) : undefined}
             editTitle={this.editTitle()}
             editVertical={hasVertical}
             textColor={hasWhiteText ? 'white' : 'black'}
@@ -192,6 +195,14 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionHeader)
+
+// TODO: Import from reaction after version bump
+export const LeadParagraph = styled.div`
+  padding-bottom: ${space(3)}px;
+  max-width: 580px;
+  margin: 0 auto;
+  text-align: left;
+`
 
 const HeaderContainer = styled.div`
   ${Deck} {

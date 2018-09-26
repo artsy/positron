@@ -3,10 +3,10 @@ import configureStore from 'redux-mock-store'
 import { Provider } from 'react-redux'
 import { clone, extend } from 'lodash'
 import { mount } from 'enzyme'
-import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RemoveButton } from 'client/components/remove_button'
-import { VideoSectionControls } from '../controls.jsx'
+import { VideoSectionControls } from '../controls'
 import { SectionVideo } from '../index.jsx'
 import { Videos } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Components'
 
@@ -40,7 +40,7 @@ describe('Video', () => {
     })
 
     props = {
-      article: {layout: 'standard'},
+      article: { layout: 'standard' },
       section: video,
       onChangeHeroAction: jest.fn(),
       onChangeSectionAction: jest.fn()

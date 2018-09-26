@@ -1,6 +1,4 @@
 {
-  "editor.rulers": [80],
-  "editor.tabSize": 2,
   "javascript.validate.enable": true,
   "search.exclude": {
     "**/node_modules": true,
@@ -9,6 +7,8 @@
   "files.exclude": {
     "**/.git": true
   },
+  "editor.rulers": [80],
+  "editor.tabSize": 2,
   "[json]": {
     "editor.formatOnSave": false
   },

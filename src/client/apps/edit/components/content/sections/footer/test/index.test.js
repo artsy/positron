@@ -1,8 +1,8 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { cloneDeep } from 'lodash'
+import { Paragraph } from '../../../../../../../components/draft/paragraph/paragraph'
 import { FeatureArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
-import Paragraph from '../../../../../../../components/rich_text/components/paragraph.coffee'
 import { SectionFooter } from '../index.jsx'
 
 describe('SectionFooter', () => {

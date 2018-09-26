@@ -1,12 +1,13 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { Text } from '@artsy/reaction/dist/Components/Publishing/Sections/Text'
 import { FixedBackground } from '@artsy/reaction/dist/Components/Publishing/Series/FixedBackground'
 import { SeriesAbout } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout'
 import { SeriesTitle } from '@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle'
 import { SeriesContent } from '@artsy/reaction/dist/Components/Publishing/Layouts/SeriesLayout'
 import FileInput from 'client/components/file_input'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 import { ProgressBar } from 'client/components/file_input/progress_bar'
 import { RelatedArticles } from '../sections/related_articles'
@@ -64,12 +65,15 @@ export class EditSeries extends Component {
     const description = article.series && article.series.description
 
     return (
-      <Paragraph
-        html={description || ''}
-        linked
-        onChange={(html) => onChangeArticleAction('series.description', html)}
-        placeholder='Start writing here...'
-      />
+      <Text layout={article.layout}>
+        <Paragraph
+          html={description || ''}
+          hasLinks
+          isDark
+          onChange={(html) => onChangeArticleAction('series.description', html)}
+          placeholder='Start writing here...'
+        />
+      </Text>
     )
   }
 

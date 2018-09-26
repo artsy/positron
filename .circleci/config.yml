@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/positron
     docker:
       - image: circleci/node:8-stretch-browsers
-      - image: circleci/elasticsearch
+      - image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
       - image: circleci/mongo:3
 
     steps:
@@ -35,9 +35,21 @@ jobs:
 
   deploy-staging:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/node:8-stretch-browsers
+
     steps:
       - checkout
+
+      - run:
+          name: Yarn assets
+          command: |
+            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            bash .circleci/setup_heroku.sh
+            yarn install
+            yarn assets
+            yarn bucket-assets -b positron-staging
+            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
+
       - run:
           name: Deploy to staging
           command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-staging.git master
@@ -48,9 +60,21 @@ jobs:
 
   deploy-production:
     docker:
-      - image: buildpack-deps:trusty
+      - image: circleci/node:8-stretch-browsers
+
     steps:
       - checkout
+
+      - run:
+          name: Yarn assets
+          command: |
+            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            bash .circleci/setup_heroku.sh
+            yarn install
+            yarn assets
+            yarn bucket-assets -b positron-production
+            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
+
       - run:
           name: Deploy to production
           command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master

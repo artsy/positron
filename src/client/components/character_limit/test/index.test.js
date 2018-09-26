@@ -1,8 +1,7 @@
 import { mount } from 'enzyme'
 import React from 'react'
-
 import { CharacterLimit } from 'client/components/character_limit'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
 import { PlainText } from 'client/components/draft/plain_text/plain_text'
 
 describe('Character Limit', () => {

@@ -8,7 +8,7 @@ rm -rf public
 mkdir public
 mkdir public/assets
 
-NODE_ENV=production webpack
+NODE_ENV=production node_modules/.bin/webpack
 stylus \
   $(find src/client/assets -name '*.styl') \
   --compress \

@@ -38,9 +38,9 @@ describe('Draft Utils: Text Stripping', () => {
       expect(html).toBe('<p><br></p>')
     })
 
-    it('Converts consecutive spaces into nbsp', () => {
-      const html = standardizeSpacing('<p>   </p>')
-      expect(html).toBe('<p> &nbsp; </p>')
+    it('Turns consecutive spaces to one', () => {
+      const html = standardizeSpacing('<p>  </p>')
+      expect(html).toBe('<p> </p>')
     })
   })
 

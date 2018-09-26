@@ -2,11 +2,11 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Col, Row } from 'react-styled-flexboxgrid'
+import { Paragraph } from 'client/components/draft/paragraph/paragraph'
+import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata'
 import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { Metadata } from 'client/apps/settings/client/curations/gucci/components/metadata.jsx'
 
-export const SectionAdmin = (props) => {
+export const SectionAdmin = props => {
   const { section, onChange } = props
 
   return (
@@ -27,7 +27,7 @@ export const SectionAdmin = (props) => {
             <label>About the Film</label>
             <div className='bordered-input'>
               <Paragraph
-                linked
+                hasLinks
                 html={section.about || ''}
                 onChange={(html) => onChange('about', html)} />
             </div>
