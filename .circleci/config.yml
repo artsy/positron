@@ -69,6 +69,7 @@ jobs:
           name: Yarn assets
           command: |
             curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+            bash .circleci/setup_heroku.sh
             yarn install
             yarn assets
             yarn bucket-assets -b positron-production
