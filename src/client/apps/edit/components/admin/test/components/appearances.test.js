@@ -1,26 +1,25 @@
+import configureStore from "redux-mock-store"
+import { cloneDeep } from "lodash"
+import { mount } from "enzyme"
+import React from "react"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { Provider } from "react-redux"
+import { AdminAppearances } from "../../components/appearances"
+import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
+require("typeahead.js")
 
-import configureStore from 'redux-mock-store'
-import { cloneDeep } from 'lodash'
-import { mount } from 'enzyme'
-import React from 'react'
-import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
-import { Provider } from 'react-redux'
-import { AdminAppearances } from '../../components/appearances'
-import { AutocompleteListMetaphysics } from 'client/components/autocomplete2/list_metaphysics'
-require('typeahead.js')
-
-describe('FeaturingMentioned', () => {
+describe("FeaturingMentioned", () => {
   let props
 
-  const getWrapper = (props) => {
+  const getWrapper = props => {
     const mockStore = configureStore([])
     const { article } = props
 
     const store = mockStore({
       app: {
-        channel: { type: 'editorial' }
+        channel: { type: "editorial" },
       },
-      edit: { article }
+      edit: { article },
     })
 
     return mount(
@@ -32,11 +31,11 @@ describe('FeaturingMentioned', () => {
 
   beforeEach(() => {
     props = {
-      article: cloneDeep(StandardArticle)
+      article: cloneDeep(StandardArticle),
     }
   })
 
-  it('Renders autocomplete components', () => {
+  it("Renders autocomplete components", () => {
     const component = getWrapper(props)
     expect(component.find(AutocompleteListMetaphysics).length).toBe(4)
   })

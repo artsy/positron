@@ -1,27 +1,27 @@
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import EditArticle from './article_layouts/article'
-import EditNews from './article_layouts/news'
-import EditSeries from './article_layouts/series'
-import EditVideo from './article_layouts/video'
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import EditArticle from "./article_layouts/article"
+import EditNews from "./article_layouts/news"
+import EditSeries from "./article_layouts/series"
+import EditVideo from "./article_layouts/video"
 
 export class EditContent extends Component {
   static propTypes = {
-    article: PropTypes.object
+    article: PropTypes.object,
   }
 
   getArticleLayout = () => {
     const { article } = this.props
 
     switch (article.layout) {
-      case 'series': {
+      case "series": {
         return <EditSeries />
       }
-      case 'video': {
+      case "video": {
         return <EditVideo />
       }
-      case 'news': {
+      case "news": {
         return <EditNews />
       }
       default: {
@@ -30,24 +30,19 @@ export class EditContent extends Component {
     }
   }
 
-  render () {
+  render() {
     const { article } = this.props
 
     return (
-      <div
-        className={'EditContent'}
-        data-layout={article.layout}
-      >
+      <div className={"EditContent"} data-layout={article.layout}>
         {this.getArticleLayout()}
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  article: state.edit.article
+const mapStateToProps = state => ({
+  article: state.edit.article,
 })
 
-export default connect(
-  mapStateToProps
-)(EditContent)
+export default connect(mapStateToProps)(EditContent)

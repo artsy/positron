@@ -11,6 +11,7 @@
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
     "prettier": "prettier",
+    "prettier-project": "yarn run prettier-write 'src/**/*.{ts,tsx,js,jsx}'",
     "prettier-write": "yarn run prettier --write",
     "mocha": "sh scripts/mocha.sh",
     "start": "sh scripts/start.sh",
@@ -98,7 +99,7 @@
     "particle": "artsy/particle",
     "passport": "^0.3.0",
     "passport-oauth2": "craigspaeth/passport-oauth2",
-    "prettier": "^1.14.2",
+    "prettier": "^1.14.3",
     "prop-by-string": "^1.0.1",
     "prop-types": "^15.6.0",
     "raven": "^2.0.2",
@@ -200,7 +201,7 @@
   },
   "prettier": {
     "semi": false,
-    "singleQuote": true,
+    "singleQuote": false,
     "trailingComma": "es5",
     "bracketSpacing": true
   },

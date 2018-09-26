@@ -1,64 +1,65 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Col, Row } from 'react-styled-flexboxgrid'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { MagazinePreview } from './preview/magazine_preview'
-import { CharacterLimit } from 'client/components/character_limit'
-import ImageUpload from 'client/apps/edit/components/admin/components/image_upload.coffee'
-import ImageGenerator from 'client/components/image_generator/index.tsx'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { Col, Row } from "react-styled-flexboxgrid"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { MagazinePreview } from "./preview/magazine_preview"
+import { CharacterLimit } from "client/components/character_limit"
+import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import ImageGenerator from "client/components/image_generator/index.tsx"
 
 export class DisplayMagazine extends Component {
   static propTypes = {
     article: PropTypes.object,
-    onChangeArticleAction: PropTypes.func
+    onChangeArticleAction: PropTypes.func,
   }
 
-  render () {
+  render() {
     const { article, onChangeArticleAction } = this.props
 
     return (
-      <Row className='DisplayMagazine'>
-
+      <Row className="DisplayMagazine">
         <Col xs={4}>
-          <div className='field-group'>
+          <div className="field-group">
             <label>Magazine Image</label>
             <ImageUpload
-              name='thumbnail_image'
-              src={article.thumbnail_image || ''}
+              name="thumbnail_image"
+              src={article.thumbnail_image || ""}
               onChange={(key, value) => onChangeArticleAction(key, value)}
             />
           </div>
 
-          <div className='field-group'>
+          <div className="field-group">
             <CharacterLimit
-              label='Magazine Headline'
+              label="Magazine Headline"
               limit={97}
-              type='textarea'
-              onChange={(value) => onChangeArticleAction('thumbnail_title', value)}
+              type="textarea"
+              onChange={value =>
+                onChangeArticleAction("thumbnail_title", value)
+              }
               defaultValue={article.thumbnail_title}
             />
             <div
-              className='title-fill'
-              onClick={(value) => onChangeArticleAction('thumbnail_title', article.title)}
+              className="title-fill"
+              onClick={value =>
+                onChangeArticleAction("thumbnail_title", article.title)
+              }
             >
               Use Article Title
             </div>
           </div>
 
-          <div className='field-group'>
+          <div className="field-group">
             <CharacterLimit
-              label='Magazine Description'
+              label="Magazine Description"
               limit={160}
-              type='textarea'
-              onChange={(value) => onChangeArticleAction('description', value)}
+              type="textarea"
+              onChange={value => onChangeArticleAction("description", value)}
               defaultValue={article.description}
             />
           </div>
 
-          {article.layout === 'news' &&
-            <ImageGenerator />
-          }
+          {article.layout === "news" && <ImageGenerator />}
         </Col>
 
         <Col xs={8}>
@@ -69,12 +70,12 @@ export class DisplayMagazine extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  article: state.edit.article
+const mapStateToProps = state => ({
+  article: state.edit.article,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(

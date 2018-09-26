@@ -1,8 +1,8 @@
-import { ContentBlock, ContentState } from 'draft-js'
+import { ContentBlock, ContentState } from "draft-js"
 
-export type StyleNode = 'B' | 'I'
+export type StyleNode = "B" | "I"
 
-export type StyleName = 'BOLD' | 'ITALIC'
+export type StyleName = "BOLD" | "ITALIC"
 
 export interface StyleMapStyle {
   label: StyleNode

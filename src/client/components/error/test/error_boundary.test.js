@@ -1,8 +1,8 @@
-import React from 'react'
-import { ErrorBoundary } from '../error_boundary'
-import { mount } from 'enzyme'
+import React from "react"
+import { ErrorBoundary } from "../error_boundary"
+import { mount } from "enzyme"
 
-describe('EditError', () => {
+describe("EditError", () => {
   const getWrapper = () => {
     return mount(
       <ErrorBoundary>
@@ -11,15 +11,15 @@ describe('EditError', () => {
     )
   }
 
-  it('Displays children', () => {
+  it("Displays children", () => {
     const component = getWrapper()
-    expect(component.text()).toMatch('A child component')
+    expect(component.text()).toMatch("A child component")
   })
 
-  it('Logs an error on #ComponentDidCatch', () => {
+  it("Logs an error on #ComponentDidCatch", () => {
     console.error = jest.fn()
-    const error = 'An Error'
-    const errorInfo = 'The error info'
+    const error = "An Error"
+    const errorInfo = "The error info"
     const component = getWrapper()
 
     component.instance().componentDidCatch(error, errorInfo)

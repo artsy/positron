@@ -1,30 +1,30 @@
-import configureStore from 'redux-mock-store'
-import { cloneDeep } from 'lodash'
-import { mount } from 'enzyme'
-import React from 'react'
-import { Provider } from 'react-redux'
-import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
-import { AutocompleteList } from '/client/components/autocomplete2/list'
-import { AdminFeaturing } from '../../../components/featuring'
-import { FeaturingMentioned } from '../../../components/featuring/featuring_mentioned'
-require('typeahead.js')
+import configureStore from "redux-mock-store"
+import { cloneDeep } from "lodash"
+import { mount } from "enzyme"
+import React from "react"
+import { Provider } from "react-redux"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { AutocompleteList } from "/client/components/autocomplete2/list"
+import { AdminFeaturing } from "../../../components/featuring"
+import { FeaturingMentioned } from "../../../components/featuring/featuring_mentioned"
+require("typeahead.js")
 
-describe('AdminFeaturing', () => {
+describe("AdminFeaturing", () => {
   let props
 
-  const getWrapper = (props) => {
+  const getWrapper = props => {
     const mockStore = configureStore([])
     const { article, featured, mentioned } = props
 
     const store = mockStore({
       app: {
-        channel: { type: 'editorial' }
+        channel: { type: "editorial" },
       },
       edit: {
         article,
         featured,
-        mentioned
-      }
+        mentioned,
+      },
     })
 
     return mount(
@@ -40,25 +40,27 @@ describe('AdminFeaturing', () => {
     props = {
       article,
       featured: {
-        artist: [{
-          _id: '123',
-          name: 'Pablo Picasso'
-        }],
-        artwork: []
+        artist: [
+          {
+            _id: "123",
+            name: "Pablo Picasso",
+          },
+        ],
+        artwork: [],
       },
       mentioned: { artist: [], artwork: [] },
-      metaphysicsURL: 'https://metaphysics-staging.artsy.net',
-      model: 'artist',
-      onChangeArticleAction: jest.fn()
+      metaphysicsURL: "https://metaphysics-staging.artsy.net",
+      model: "artist",
+      onChangeArticleAction: jest.fn(),
     }
   })
 
-  it('Renders autocomplete fields', () => {
+  it("Renders autocomplete fields", () => {
     const component = getWrapper(props)
     expect(component.find(AutocompleteList).length).toBe(6)
   })
 
-  it('Renders feature/mentioned fields', () => {
+  it("Renders feature/mentioned fields", () => {
     const component = getWrapper(props)
     expect(component.find(FeaturingMentioned).length).toBe(2)
   })

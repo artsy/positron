@@ -1,6 +1,6 @@
-import { CompositeDecorator, ContentBlock, ContentState } from 'draft-js'
-import React, { ReactChild } from 'react'
-import { Decorator } from './typings'
+import { CompositeDecorator, ContentBlock, ContentState } from "draft-js"
+import React, { ReactChild } from "react"
+import { Decorator } from "./typings"
 
 /**
  * Used when creating an editor, determines
@@ -39,7 +39,7 @@ export const findLinkEntities = (
     const entityKey = character.getEntity()
     return (
       entityKey !== null &&
-      contentState.getEntity(entityKey).getType() === 'LINK'
+      contentState.getEntity(entityKey).getType() === "LINK"
     )
   }, callback)
 }

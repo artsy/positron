@@ -1,18 +1,18 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import styled from 'styled-components'
-import { connect } from 'react-redux'
-import { hot } from 'react-hot-loader'
-import { viewArticles } from 'client/actions/articlesActions'
-import request from 'superagent'
-import $ from 'jquery'
-import { debounce } from 'lodash'
-import FilterSearch from 'client/components/filter_search/index.coffee'
-import IconNewArticle from '../../../components/layout/public/icons/layout_new_article.svg'
-import { garamond } from '@artsy/reaction/dist/Assets/Fonts'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import styled from "styled-components"
+import { connect } from "react-redux"
+import { hot } from "react-hot-loader"
+import { viewArticles } from "client/actions/articlesActions"
+import request from "superagent"
+import $ from "jquery"
+import { debounce } from "lodash"
+import FilterSearch from "client/components/filter_search/index.coffee"
+import IconNewArticle from "../../../components/layout/public/icons/layout_new_article.svg"
+import { garamond } from "@artsy/reaction/dist/Assets/Fonts"
 
-require('jquery-on-infinite-scroll')
-const query = require('../query.coffee')
+require("jquery-on-infinite-scroll")
+const query = require("../query.coffee")
 
 const Header = styled.h1`
   position: fixed;
@@ -35,7 +35,7 @@ const MaxWidthContainer = styled.div`
 `
 
 const Title = styled.div`
-  ${garamond('s30')};
+  ${garamond("s30")};
   padding: 20px 0;
 `
 
@@ -57,7 +57,7 @@ const EmptyStateTitle = styled.div`
   font-weight: bold;
   position: relative;
   &:after {
-    content: '.';
+    content: ".";
     border-bottom: 3px solid #000;
     width: 50px;
     color: transparent;
@@ -78,16 +78,16 @@ export class ArticlesList extends Component {
     user: PropTypes.object,
     viewArticlesAction: PropTypes.func,
     checkable: PropTypes.bool,
-    selected: PropTypes.func
+    selected: PropTypes.func,
   }
 
   state = {
     articles: this.props.articles || [],
     published: this.props.published,
-    offset: 0
+    offset: 0,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { channel, viewArticlesAction } = this.props
     viewArticlesAction(channel)
 
@@ -97,8 +97,10 @@ export class ArticlesList extends Component {
 
   canLoadMore = () => {
     // TODO: remove jQuery
-    if ($('.filter-search__input').val()) { return }
-    $('.loading-spinner').fadeIn()
+    if ($(".filter-search__input").val()) {
+      return
+    }
+    $(".loading-spinner").fadeIn()
     this.fetchFeed(
       this.state.published,
       this.state.offset + 10,
@@ -106,22 +108,22 @@ export class ArticlesList extends Component {
     )
   }
 
-  setResults = (results) => {
-    this.setState({articles: results})
+  setResults = results => {
+    this.setState({ articles: results })
   }
 
-  setPublished (type) {
-    this.setState({published: type, offset: 0})
+  setPublished(type) {
+    this.setState({ published: type, offset: 0 })
     this.fetchFeed(type, 0, this.setResults)
   }
 
-  appendMore (results) {
+  appendMore(results) {
     const articles = this.state.articles.concat(results)
-    this.setState({articles})
-    $('.loading-spinner').fadeOut()
+    this.setState({ articles })
+    $(".loading-spinner").fadeOut()
   }
 
-  fetchFeed (type, offset, cb) {
+  fetchFeed(type, offset, cb) {
     const { channel, user, apiURL } = this.props
     const feedQuery = query(`
       published: ${type},
@@ -129,48 +131,61 @@ export class ArticlesList extends Component {
       channel_id: "${channel.id}"
     `)
     request
-      .post(apiURL + '/graphql')
-      .set('X-Access-Token', user != null ? user.access_token : undefined)
-      .send({query: feedQuery})
+      .post(apiURL + "/graphql")
+      .set("X-Access-Token", user != null ? user.access_token : undefined)
+      .send({ query: feedQuery })
       .end((err, res) => {
-        if (err || !(res.body != null ? res.body.data : undefined)) { return }
-        this.setState({offset: this.state.offset + 10})
+        if (err || !(res.body != null ? res.body.data : undefined)) {
+          return
+        }
+        this.setState({ offset: this.state.offset + 10 })
         return cb(res.body.data.articles)
       })
   }
 
-  showEmptyMessage () {
+  showEmptyMessage() {
     return (
       <EmptyState>
         <EmptyStateTitle>You haven’t written any articles yet.</EmptyStateTitle>
-        <EmptyStateSection>Artsy Writer is a tool for writing stories about art on Artsy.</EmptyStateSection>
-        <EmptyStateSection>Get started by writing an article or reaching out to your liaison for help.</EmptyStateSection>
+        <EmptyStateSection>
+          Artsy Writer is a tool for writing stories about art on Artsy.
+        </EmptyStateSection>
+        <EmptyStateSection>
+          Get started by writing an article or reaching out to your liaison for
+          help.
+        </EmptyStateSection>
         <a
-          className='avant-garde-button avant-garde-button-black'
-          href='/articles/new'>
+          className="avant-garde-button avant-garde-button-black"
+          href="/articles/new"
+        >
           <IconNewArticle /> Write An Article
         </a>
       </EmptyState>
     )
   }
 
-  showArticlesList () {
+  showArticlesList() {
     const { channel, apiURL, checkable, selected } = this.props
-    const isArtsyChannel = (type) => {
-      return ['editorial', 'support', 'team'].indexOf(type) >= 0;
+    const isArtsyChannel = type => {
+      return ["editorial", "support", "team"].indexOf(type) >= 0
     }
 
     if (this.props.articles && this.props.articles.length) {
       return (
-        <ArticlesContainer className='articles-list'>
+        <ArticlesContainer className="articles-list">
           <Title>Latest Articles</Title>
           <FilterSearch
-            url={apiURL + `/articles?published=${this.state.published}&channel_id=${channel.id}&q=%QUERY`}
-            placeholder='Search Articles...'
+            url={
+              apiURL +
+              `/articles?published=${this.state.published}&channel_id=${
+                channel.id
+              }&q=%QUERY`
+            }
+            placeholder="Search Articles..."
             collection={this.state.articles}
             searchResults={this.setResults}
             selected={selected}
-            contentType='article'
+            contentType="article"
             checkable={checkable || false}
             isArtsyChannel={isArtsyChannel(channel.type)}
           />
@@ -181,24 +196,30 @@ export class ArticlesList extends Component {
     }
   }
 
-  render () {
+  render() {
     return (
       <div>
-        <Header className='page-header'>
-          <MaxWidthContainer className='max-width-container'>
-            <nav className='nav-tabs'>
-              <a className={`${this.state.published === true ? 'is-active' : ''} published`}
-                onClick={() => this.setPublished(true)}>
+        <Header className="page-header">
+          <MaxWidthContainer className="max-width-container">
+            <nav className="nav-tabs">
+              <a
+                className={`${
+                  this.state.published === true ? "is-active" : ""
+                } published`}
+                onClick={() => this.setPublished(true)}
+              >
                 Published
               </a>
-              <a className={`${this.state.published === false ? 'is-active' : ''} drafts`}
-                onClick={() => this.setPublished(false)}>
+              <a
+                className={`${
+                  this.state.published === false ? "is-active" : ""
+                } drafts`}
+                onClick={() => this.setPublished(false)}
+              >
                 Drafts
               </a>
             </nav>
-            <div className='channel-name'>
-              {`${this.props.channel.name}`}
-            </div>
+            <div className="channel-name">{`${this.props.channel.name}`}</div>
           </MaxWidthContainer>
         </Header>
         {this.showArticlesList()}
@@ -207,14 +228,14 @@ export class ArticlesList extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   channel: state.app.channel,
   apiURL: state.app.apiURL,
-  user: state.app.user
+  user: state.app.user,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  viewArticlesAction: viewArticles
+const mapDispatchToProps = dispatch => ({
+  viewArticlesAction: viewArticles,
 })
 
 export default hot(module)(

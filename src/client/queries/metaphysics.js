@@ -1,6 +1,6 @@
-import { stringifyJSONForWeb } from 'client/lib/utils/json'
+import { stringifyJSONForWeb } from "client/lib/utils/json"
 
-export function ArtworkQuery (id) {
+export function ArtworkQuery(id) {
   return `
     {
       artwork(id: ${stringifyJSONForWeb(id)}) {
@@ -11,7 +11,7 @@ export function ArtworkQuery (id) {
   `
 }
 
-export function ArtworksQuery (ids) {
+export function ArtworksQuery(ids) {
   return `
     {
       artworks(ids: ${stringifyJSONForWeb(ids)}) {
@@ -22,7 +22,7 @@ export function ArtworksQuery (ids) {
   `
 }
 
-export function ArtistQuery (id) {
+export function ArtistQuery(id) {
   return `
     {
       artist(id: ${stringifyJSONForWeb(id)}) {
@@ -33,7 +33,7 @@ export function ArtistQuery (id) {
   `
 }
 
-export function ArtistsQuery (ids) {
+export function ArtistsQuery(ids) {
   return `
     {
       artists(ids: ${stringifyJSONForWeb(ids)}) {
@@ -44,7 +44,7 @@ export function ArtistsQuery (ids) {
   `
 }
 
-export function AuctionsQuery (ids) {
+export function AuctionsQuery(ids) {
   return `
     {
       sales(ids: ${stringifyJSONForWeb(ids)}) {
@@ -55,7 +55,7 @@ export function AuctionsQuery (ids) {
   `
 }
 
-export function FairsQuery (ids) {
+export function FairsQuery(ids) {
   return `
     {
       fairs(ids: ${stringifyJSONForWeb(ids)}) {
@@ -66,7 +66,7 @@ export function FairsQuery (ids) {
   `
 }
 
-export function PartnersQuery (ids) {
+export function PartnersQuery(ids) {
   return `
     {
       partners(ids: ${stringifyJSONForWeb(ids)}) {
@@ -77,7 +77,7 @@ export function PartnersQuery (ids) {
   `
 }
 
-export function ShowsQuery (ids) {
+export function ShowsQuery(ids) {
   return `
     {
       partner_shows(ids: ${stringifyJSONForWeb(ids)}) {
@@ -88,7 +88,7 @@ export function ShowsQuery (ids) {
   `
 }
 
-export function UsersQuery (ids) {
+export function UsersQuery(ids) {
   return `
     {
       users(ids: ${stringifyJSONForWeb(ids)}) {

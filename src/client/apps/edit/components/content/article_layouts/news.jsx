@@ -1,23 +1,23 @@
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import React, { Component } from 'react'
-import { NewsHeadline } from '@artsy/reaction/dist/Components/Publishing/News/NewsHeadline'
-import { NewsByline } from '@artsy/reaction/dist/Components/Publishing/Byline/NewsByline'
-import SectionList from '../section_list'
-import { PlainText } from 'client/components/draft/plain_text/plain_text'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { EditSourceControls } from '../sections/news/EditSourceControls'
-import { hot } from 'react-hot-loader'
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
+import styled from "styled-components"
+import React, { Component } from "react"
+import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
+import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
+import SectionList from "../section_list"
+import { PlainText } from "client/components/draft/plain_text/plain_text"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { EditSourceControls } from "../sections/news/EditSourceControls"
+import { hot } from "react-hot-loader"
 
 export class EditNews extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    onChangeArticleAction: PropTypes.func.isRequired
+    onChangeArticleAction: PropTypes.func.isRequired,
   }
 
   state = {
-    isEditSourceOpen: false
+    isEditSourceOpen: false,
   }
 
   editTitle = () => {
@@ -26,9 +26,9 @@ export class EditNews extends Component {
     return (
       <PlainText
         content={article.title}
-        onChange={(key, value) => onChangeArticleAction('title', value)}
-        placeholder='Title'
-        name='title'
+        onChange={(key, value) => onChangeArticleAction("title", value)}
+        placeholder="Title"
+        name="title"
       />
     )
   }
@@ -39,35 +39,38 @@ export class EditNews extends Component {
     const { title } = article.news_source
 
     return (
-      <AddSource onClick={() => { this.setState({ isEditSourceOpen: !isEditSourceOpen }) }}>
-        {title && title.length ? title : 'Add Source'}
+      <AddSource
+        onClick={() => {
+          this.setState({ isEditSourceOpen: !isEditSourceOpen })
+        }}
+      >
+        {title && title.length ? title : "Add Source"}
       </AddSource>
     )
   }
 
   saveSource = source => {
     const { onChangeArticleAction } = this.props
-    this.setState({isEditSourceOpen: false})
+    this.setState({ isEditSourceOpen: false })
     if (source) {
-      onChangeArticleAction('news_source', source)
+      onChangeArticleAction("news_source", source)
     }
   }
 
-  render () {
+  render() {
     const { article } = this.props
 
     return (
       <EditNewsContainer>
-
-        <NewsHeadline
-          article={article}
-          editTitle={this.editTitle()}
-        />
+        <NewsHeadline article={article} editTitle={this.editTitle()} />
         <SectionList />
 
         <NewsByline article={article} editSource={this.editSource()} />
         {this.state.isEditSourceOpen && (
-          <EditSourceControls source={article.news_source} onApply={this.saveSource} />
+          <EditSourceControls
+            source={article.news_source}
+            onApply={this.saveSource}
+          />
         )}
       </EditNewsContainer>
     )
@@ -75,17 +78,19 @@ export class EditNews extends Component {
 }
 
 const mapStateToProps = state => ({
-  article: state.edit.article
+  article: state.edit.article,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
-export default hot(module)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditNews))
+export default hot(module)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditNews)
+)
 
 const EditNewsContainer = styled.div`
   max-width: 820px;
@@ -94,7 +99,7 @@ const EditNewsContainer = styled.div`
   .SectionText {
     max-width: 680px;
   }
-  div[class*='NewsByline__NewsBylineContainer'] {
+  div[class*="NewsByline__NewsBylineContainer"] {
     padding: 0 20px;
   }
 `

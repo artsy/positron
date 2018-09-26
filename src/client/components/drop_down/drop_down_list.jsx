@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { without } from 'lodash'
-import { DropDownItem } from './drop_down_item'
+import PropTypes from "prop-types"
+import React from "react"
+import { without } from "lodash"
+import { DropDownItem } from "./drop_down_item"
 
 export class DropDownList extends React.Component {
   static propTypes = {
@@ -10,20 +10,20 @@ export class DropDownList extends React.Component {
     children: PropTypes.any.isRequired,
     className: PropTypes.string,
     openMany: PropTypes.bool, // open more than one panel simultaneously
-    sections: PropTypes.array.isRequired // array of objects with title or name
+    sections: PropTypes.array.isRequired, // array of objects with title or name
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     const { activeSection, activeSections, openMany } = props
 
     this.state = {
       activeSections: openMany && activeSections ? activeSections : [],
-      activeSection: activeSection || null
+      activeSection: activeSection || null,
     }
   }
 
-  setActiveSections = (index) => {
+  setActiveSections = index => {
     let { activeSections } = this.state
 
     if (activeSections.includes(index)) {
@@ -34,12 +34,12 @@ export class DropDownList extends React.Component {
     this.setState({ activeSections })
   }
 
-  setActiveSection = (index) => {
+  setActiveSection = index => {
     const activeSection = index === this.state.activeSection ? null : index
     this.setState({ activeSection })
   }
 
-  isActive = (index) => {
+  isActive = index => {
     const { openMany } = this.props
     const { activeSection, activeSections } = this.state
 
@@ -50,23 +50,25 @@ export class DropDownList extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { children, className, openMany, sections } = this.props
     const onOpen = openMany ? this.setActiveSections : this.setActiveSection
 
     return (
       <div className={`DropDownList ${className}`}>
-        {children.map((child, i) =>
-          sections[i] &&
-            <DropDownItem
-              key={i}
-              title={sections[i].title || sections[i].name}
-              active={this.isActive(i)}
-              index={i}
-              onClick={() => onOpen(i)}
-            >
-              {child}
-            </DropDownItem>
+        {children.map(
+          (child, i) =>
+            sections[i] && (
+              <DropDownItem
+                key={i}
+                title={sections[i].title || sections[i].name}
+                active={this.isActive(i)}
+                index={i}
+                onClick={() => onOpen(i)}
+              >
+                {child}
+              </DropDownItem>
+            )
         )}
       </div>
     )

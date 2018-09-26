@@ -3,12 +3,12 @@ import {
   getDefaultKeyBinding,
   KeyBindingUtil,
   Modifier,
-} from 'draft-js'
-import Immutable from 'immutable'
-import { map } from 'lodash'
-import React from 'react'
-import { getSelectionDetails } from '../../../rich_text/utils/text_selection'
-import { AllowedStyles, StyleMap } from './typings'
+} from "draft-js"
+import Immutable from "immutable"
+import { map } from "lodash"
+import React from "react"
+import { getSelectionDetails } from "../../../rich_text/utils/text_selection"
+import { AllowedStyles, StyleMap } from "./typings"
 
 /**
  * Helpers for draft-js Paragraph component setup
@@ -23,7 +23,7 @@ import { AllowedStyles, StyleMap } from './typings'
  */
 export const blockRenderMap = Immutable.Map({
   unstyled: {
-    element: 'div',
+    element: "div",
   },
 })
 
@@ -31,8 +31,8 @@ export const blockRenderMap = Immutable.Map({
  * Default allowedStyles for Paragraph component
  */
 export const paragraphStyleMap: StyleMap = [
-  { label: 'B', name: 'BOLD' },
-  { label: 'I', name: 'ITALIC' },
+  { label: "B", name: "BOLD" },
+  { label: "I", name: "ITALIC" },
 ]
 
 /**
@@ -40,20 +40,20 @@ export const paragraphStyleMap: StyleMap = [
  * Used to attach node-names to props.allowedStyles
  */
 export const styleMapFromNodes = (
-  allowedStyles: AllowedStyles = ['B', 'I']
+  allowedStyles: AllowedStyles = ["B", "I"]
 ) => {
   const styleMap: StyleMap = []
 
   allowedStyles.map(style => {
     switch (style.toUpperCase()) {
-      case 'B':
-      case 'BOLD': {
-        styleMap.push({ label: 'B', name: 'BOLD' })
+      case "B":
+      case "BOLD": {
+        styleMap.push({ label: "B", name: "BOLD" })
         break
       }
-      case 'I':
-      case 'ITALIC': {
-        styleMap.push({ label: 'I', name: 'ITALIC' })
+      case "I":
+      case "ITALIC": {
+        styleMap.push({ label: "I", name: "ITALIC" })
         break
       }
     }
@@ -66,7 +66,7 @@ export const styleMapFromNodes = (
  * Used for key commands, TextNav, and draft-convert
  */
 export const styleNamesFromMap = (styles: StyleMap = paragraphStyleMap) => {
-  return map(styles, 'name')
+  return map(styles, "name")
 }
 
 /**
@@ -74,7 +74,7 @@ export const styleNamesFromMap = (styles: StyleMap = paragraphStyleMap) => {
  * Used for draft-convert
  */
 export const styleNodesFromMap = (styles: StyleMap = paragraphStyleMap) => {
-  return map(styles, 'label')
+  return map(styles, "label")
 }
 
 /**
@@ -83,7 +83,7 @@ export const styleNodesFromMap = (styles: StyleMap = paragraphStyleMap) => {
 export const keyBindingFn = (e: React.KeyboardEvent<{}>) => {
   if (KeyBindingUtil.hasCommandModifier(e) && e.keyCode === 75) {
     // command + k
-    return 'link-prompt'
+    return "link-prompt"
   } else {
     // Use draft or browser default handling
     return getDefaultKeyBinding(e)
@@ -102,11 +102,11 @@ export const handleReturn = (
   if (isFirstBlock || anchorOffset) {
     // If first block, no chance of empty block before
     // If anchor offset, the block is not empty
-    return 'not-handled'
+    return "not-handled"
   } else {
     // Return handled to avoid creating empty blocks
     e.preventDefault()
-    return 'handled'
+    return "handled"
   }
 }
 
@@ -126,5 +126,5 @@ export const insertPastedState = (
     blockMap
   )
   // Create a new editorState from merged content
-  return EditorState.push(editorState, modifiedContent, 'insert-fragment')
+  return EditorState.push(editorState, modifiedContent, "insert-fragment")
 }

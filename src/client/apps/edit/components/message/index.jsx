@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import moment from 'moment'
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import styled from "styled-components"
+import moment from "moment"
 
-import { ModalTypes } from './modalTypes'
-import { avantgarde, garamond } from '@artsy/reaction/dist/Assets/Fonts'
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import { IconLock } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLock'
+import { ModalTypes } from "./modalTypes"
+import { avantgarde, garamond } from "@artsy/reaction/dist/Assets/Fonts"
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import { IconLock } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLock"
 
 const SplashBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
@@ -29,21 +29,21 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-  ${avantgarde('s11')};
+  ${avantgarde("s11")};
   margin-bottom: 10px;
   text-transform: uppercase;
   color: ${p => p.color};
 `
-Header.displayName = 'Header'
+Header.displayName = "Header"
 
 export const Title = styled.h1`
-  ${garamond('s30')};
+  ${garamond("s30")};
   margin-bottom: 15px;
 `
-Title.displayName = 'Title'
+Title.displayName = "Title"
 
 const Description = styled.div`
-  ${garamond('s19')};
+  ${garamond("s19")};
   max-width: 470px;
   line-height: 1.1;
 `
@@ -62,24 +62,24 @@ const ActionsContainer = styled.div`
 const ActionButton = styled.button`
   margin-right: 15px;
 `
-ActionButton.displayName = 'ActionButton'
+ActionButton.displayName = "ActionButton"
 
 const RedirectText = styled.span`
-  ${avantgarde('s11')};
+  ${avantgarde("s11")};
   text-transform: uppercase;
   color: ${colors.grayMedium};
 `
 
 export class MessageModal extends Component {
   static propTypes = {
-    type: PropTypes.oneOf(['locked', 'timeout']),
+    type: PropTypes.oneOf(["locked", "timeout"]),
     session: PropTypes.object,
     onClose: PropTypes.func,
-    onTimerEnded: PropTypes.func
+    onTimerEnded: PropTypes.func,
   }
 
   state = {
-    timeLeft: 10
+    timeLeft: 10,
   }
 
   componentDidMount() {
@@ -98,7 +98,7 @@ export class MessageModal extends Component {
     }
 
     this.setState({
-      timeLeft: timeLeft - 1
+      timeLeft: timeLeft - 1,
     })
   }
 
@@ -112,17 +112,22 @@ export class MessageModal extends Component {
 
   getIconForType(type) {
     switch (type) {
-      case 'lock': return <IconLock color={colors.grayMedium} width='10px' height='10px' />
-      default: return null
+      case "lock":
+        return <IconLock color={colors.grayMedium} width="10px" height="10px" />
+      default:
+        return null
     }
   }
 
   render() {
     const { type, session } = this.props
     const { header, title, description, actions } = ModalTypes[type]
-    const { timestamp, user } = session || { timestamp: null, user: { name: null } }
+    const { timestamp, user } = session || {
+      timestamp: null,
+      user: { name: null },
+    }
     const count = this.state.timeLeft
-    const time = `00:${count < 10 ? '0' + count : count}`
+    const time = `00:${count < 10 ? "0" + count : count}`
 
     return (
       <SplashBackground onClick={this.close}>
@@ -132,13 +137,20 @@ export class MessageModal extends Component {
             {header.text}
           </Header>
           <Title>{title}</Title>
-          <Description>{description(moment(timestamp).fromNow(), user.name)}</Description>
+          <Description>
+            {description(moment(timestamp).fromNow(), user.name)}
+          </Description>
           <Footer>
             <ActionsContainer>
-              {actions.map((a, i) => <ActionButton
-                key={i}
-                className='avant-garde-button'
-                onClick={a.action.bind(this)}>{a.title}</ActionButton>)}
+              {actions.map((a, i) => (
+                <ActionButton
+                  key={i}
+                  className="avant-garde-button"
+                  onClick={a.action.bind(this)}
+                >
+                  {a.title}
+                </ActionButton>
+              ))}
             </ActionsContainer>
             <RedirectText>Redirecting in {time}</RedirectText>
           </Footer>

@@ -1,15 +1,15 @@
-import { Editor, EditorState, RichUtils } from 'draft-js'
-import { debounce } from 'lodash'
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import styled from 'styled-components'
-import { TextInputUrl } from '../../rich_text/components/input_url'
-import { TextNav } from '../../rich_text/components/text_nav'
-import { stickyControlsBox } from '../../rich_text/utils/text_selection'
-import { convertDraftToHtml, convertHtmlToDraft } from './utils/convert'
-import { decorators } from './utils/decorators'
-import { confirmLink, linkDataFromSelection, removeLink } from './utils/links'
-import { AllowedStyles, StyleMap } from './utils/typings'
+import { Editor, EditorState, RichUtils } from "draft-js"
+import { debounce } from "lodash"
+import React, { Component } from "react"
+import ReactDOM from "react-dom"
+import styled from "styled-components"
+import { TextInputUrl } from "../../rich_text/components/input_url"
+import { TextNav } from "../../rich_text/components/text_nav"
+import { stickyControlsBox } from "../../rich_text/utils/text_selection"
+import { convertDraftToHtml, convertHtmlToDraft } from "./utils/convert"
+import { decorators } from "./utils/decorators"
+import { confirmLink, linkDataFromSelection, removeLink } from "./utils/links"
+import { AllowedStyles, StyleMap } from "./utils/typings"
 import {
   blockRenderMap,
   handleReturn,
@@ -17,7 +17,7 @@ import {
   keyBindingFn,
   styleMapFromNodes,
   styleNamesFromMap,
-} from './utils/utils'
+} from "./utils/utils"
 
 interface Props {
   allowedStyles?: AllowedStyles
@@ -58,11 +58,11 @@ export class Paragraph extends Component<Props, State> {
 
     this.state = {
       editorState: this.setEditorState(),
-      html: props.html || '',
+      html: props.html || "",
       selectionTarget: null,
       showNav: false,
       showUrlInput: false,
-      urlValue: '',
+      urlValue: "",
     }
 
     this.debouncedOnChange = debounce(html => {
@@ -119,7 +119,7 @@ export class Paragraph extends Component<Props, State> {
 
     if (stripLinebreaks) {
       // Do nothing if linebreaks are disallowed
-      return 'handled'
+      return "handled"
     } else {
       // Maybe split-block, but don't create empty paragraphs
       return handleReturn(e, editorState)
@@ -130,20 +130,20 @@ export class Paragraph extends Component<Props, State> {
     const { hasLinks } = this.props
 
     switch (command) {
-      case 'link-prompt': {
+      case "link-prompt": {
         if (hasLinks) {
           // Open link input if links are supported
           return this.promptForLink()
         }
         break
       }
-      case 'bold':
-      case 'italic': {
+      case "bold":
+      case "italic": {
         return this.keyCommandInlineStyle(command)
       }
     }
     // let draft defaults or browser handle
-    return 'not-handled'
+    return "not-handled"
   }
 
   keyCommandInlineStyle = command => {
@@ -157,10 +157,10 @@ export class Paragraph extends Component<Props, State> {
       // If an updated state is returned, command is handled
       if (newState) {
         this.onChange(newState)
-        return 'handled'
+        return "handled"
       }
     } else {
-      return 'not-handled'
+      return "not-handled"
     }
   }
 
@@ -183,7 +183,7 @@ export class Paragraph extends Component<Props, State> {
 
     if (!html) {
       // Wrap pasted plain text in html
-      html = '<p>' + text + '</p>'
+      html = "<p>" + text + "</p>"
     }
     const stateFromPastedFragment = this.editorStateFromHTML(html)
     const stateWithPastedText = insertPastedState(
@@ -199,7 +199,7 @@ export class Paragraph extends Component<Props, State> {
     // Opens a popup link input populated with selection data if link is selected
     const { editorState } = this.state
     const linkData = linkDataFromSelection(editorState)
-    const urlValue = linkData ? linkData.url : ''
+    const urlValue = linkData ? linkData.url : ""
     const editorPosition = ReactDOM.findDOMNode(
       this.editor
     ).getBoundingClientRect()
@@ -212,7 +212,7 @@ export class Paragraph extends Component<Props, State> {
       showNav: false,
       urlValue,
     })
-    return 'handled'
+    return "handled"
   }
 
   confirmLink = url => {
@@ -223,7 +223,7 @@ export class Paragraph extends Component<Props, State> {
       selectionTarget: null,
       showNav: false,
       showUrlInput: false,
-      urlValue: '',
+      urlValue: "",
     })
     this.onChange(newEditorState)
   }
@@ -234,7 +234,7 @@ export class Paragraph extends Component<Props, State> {
     if (editorState) {
       this.setState({
         showUrlInput: false,
-        urlValue: '',
+        urlValue: "",
       })
       this.onChange(editorState)
     }
@@ -292,7 +292,7 @@ export class Paragraph extends Component<Props, State> {
         )}
         {showUrlInput && (
           <TextInputUrl
-            backgroundColor={isDark ? 'white' : undefined}
+            backgroundColor={isDark ? "white" : undefined}
             confirmLink={this.confirmLink}
             onClickOff={() => this.setState({ showUrlInput: false })}
             removeLink={this.removeLink}
@@ -313,7 +313,7 @@ export class Paragraph extends Component<Props, State> {
             handlePastedText={this.handlePastedText as any}
             handleReturn={this.handleReturn}
             onChange={this.onChange}
-            placeholder={placeholder || 'Start typing...'}
+            placeholder={placeholder || "Start typing..."}
             ref={ref => {
               this.editor = ref
             }}

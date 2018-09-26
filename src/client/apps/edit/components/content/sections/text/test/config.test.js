@@ -1,152 +1,167 @@
-import { pluck } from 'underscore'
+import { pluck } from "underscore"
 import {
   findLinkEntities,
-  Link
-} from 'client/components/rich_text/utils/decorators'
-import * as Config from '../draft_config'
+  Link,
+} from "client/components/rich_text/utils/decorators"
+import * as Config from "../draft_config"
 
-describe('SectionText: Config', () => {
-  describe('#blockRenderMapArray', () => {
-    it('Returns the correct blocks for a feature article', () => {
-      const blocks = Config.blockRenderMapArray('feature', true)
+describe("SectionText: Config", () => {
+  describe("#blockRenderMapArray", () => {
+    it("Returns the correct blocks for a feature article", () => {
+      const blocks = Config.blockRenderMapArray("feature", true)
 
       expect(blocks).toEqual([
-        'header-one',
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
+        "header-one",
+        "header-two",
+        "header-three",
+        "blockquote",
+        "unordered-list-item",
+        "ordered-list-item",
+        "unstyled",
       ])
     })
 
-    it('Returns the correct blocks for a standard article', () => {
-      const blocks = Config.blockRenderMapArray('standard', true)
+    it("Returns the correct blocks for a standard article", () => {
+      const blocks = Config.blockRenderMapArray("standard", true)
 
       expect(blocks).toEqual([
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
+        "header-two",
+        "header-three",
+        "blockquote",
+        "unordered-list-item",
+        "ordered-list-item",
+        "unstyled",
       ])
     })
 
-    it('Returns the correct blocks for a news article', () => {
-      const blocks = Config.blockRenderMapArray('news', true)
+    it("Returns the correct blocks for a news article", () => {
+      const blocks = Config.blockRenderMapArray("news", true)
 
       expect(blocks).toEqual([
-        'header-three',
-        'unordered-list-item',
-        'ordered-list-item',
-        'blockquote',
-        'unstyled'
+        "header-three",
+        "unordered-list-item",
+        "ordered-list-item",
+        "blockquote",
+        "unstyled",
       ])
     })
 
-    it('Returns the correct blocks for a classic article with features', () => {
-      const blocks = Config.blockRenderMapArray('classic', true)
+    it("Returns the correct blocks for a classic article with features", () => {
+      const blocks = Config.blockRenderMapArray("classic", true)
 
       expect(blocks).toEqual([
-        'header-two',
-        'header-three',
-        'blockquote',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
+        "header-two",
+        "header-three",
+        "blockquote",
+        "unordered-list-item",
+        "ordered-list-item",
+        "unstyled",
       ])
     })
 
-    it('Returns the correct blocks for a classic article without features', () => {
-      const blocks = Config.blockRenderMapArray('classic', false)
+    it("Returns the correct blocks for a classic article without features", () => {
+      const blocks = Config.blockRenderMapArray("classic", false)
 
       expect(blocks).toEqual([
-        'header-two',
-        'header-three',
-        'unordered-list-item',
-        'ordered-list-item',
-        'unstyled'
+        "header-two",
+        "header-three",
+        "unordered-list-item",
+        "ordered-list-item",
+        "unstyled",
       ])
     })
   })
 
-  describe('#inlineStyles', () => {
-    it('Returns rich elements for a feature article', () => {
-      const styles = pluck(Config.inlineStyles('feature'), 'name')
+  describe("#inlineStyles", () => {
+    it("Returns rich elements for a feature article", () => {
+      const styles = pluck(Config.inlineStyles("feature"), "name")
 
-      expect(styles[0]).toBe('BOLD')
-      expect(styles[1]).toBe('ITALIC')
+      expect(styles[0]).toBe("BOLD")
+      expect(styles[1]).toBe("ITALIC")
     })
 
-    it('Returns rich elements for a standard article', () => {
-      const styles = pluck(Config.inlineStyles('standard'), 'name')
+    it("Returns rich elements for a standard article", () => {
+      const styles = pluck(Config.inlineStyles("standard"), "name")
 
-      expect(styles[0]).toBe('BOLD')
-      expect(styles[1]).toBe('ITALIC')
-      expect(styles[2]).toBe('STRIKETHROUGH')
+      expect(styles[0]).toBe("BOLD")
+      expect(styles[1]).toBe("ITALIC")
+      expect(styles[2]).toBe("STRIKETHROUGH")
     })
 
-    it('Returns rich elements for a news article', () => {
-      const styles = pluck(Config.inlineStyles('news'), 'name')
+    it("Returns rich elements for a news article", () => {
+      const styles = pluck(Config.inlineStyles("news"), "name")
 
-      expect(styles[0]).toBe('BOLD')
-      expect(styles[1]).toBe('ITALIC')
-      expect(styles[2]).toBe('STRIKETHROUGH')
+      expect(styles[0]).toBe("BOLD")
+      expect(styles[1]).toBe("ITALIC")
+      expect(styles[2]).toBe("STRIKETHROUGH")
     })
 
-    it('Returns rich elements for a classic article', () => {
-      const styles = pluck(Config.inlineStyles('classic'), 'name')
+    it("Returns rich elements for a classic article", () => {
+      const styles = pluck(Config.inlineStyles("classic"), "name")
 
-      expect(styles[0]).toBe('BOLD')
-      expect(styles[1]).toBe('ITALIC')
+      expect(styles[0]).toBe("BOLD")
+      expect(styles[1]).toBe("ITALIC")
     })
   })
 
-  describe('#getRichElements', () => {
-    it('Returns rich elements for a feature article', () => {
-      const { blocks, blockMap, styles } = Config.getRichElements('feature', true)
+  describe("#getRichElements", () => {
+    it("Returns rich elements for a feature article", () => {
+      const { blocks, blockMap, styles } = Config.getRichElements(
+        "feature",
+        true
+      )
 
       expect(blocks.length).toBe(5)
       expect(blockMap.size).toBe(7)
       expect(styles.length).toBe(2)
     })
 
-    it('Returns correct decorators for a feature article', () => {
-      const { _decorators } = Config.getRichElements('standard', true).decorators
+    it("Returns correct decorators for a feature article", () => {
+      const { _decorators } = Config.getRichElements(
+        "standard",
+        true
+      ).decorators
 
       expect(_decorators.length).toBe(1)
       expect(_decorators[0].strategy).toBe(findLinkEntities)
       expect(_decorators[0].component).toBe(Link)
     })
 
-    it('Returns rich elements for a standard article', () => {
-      const { blocks, blockMap, styles } = Config.getRichElements('standard', true)
+    it("Returns rich elements for a standard article", () => {
+      const { blocks, blockMap, styles } = Config.getRichElements(
+        "standard",
+        true
+      )
 
       expect(blocks.length).toBe(4)
       expect(blockMap.size).toBe(6)
       expect(styles.length).toBe(3)
     })
 
-    it('Returns rich elements for a news article', () => {
-      const { blocks, blockMap, styles } = Config.getRichElements('news', true)
+    it("Returns rich elements for a news article", () => {
+      const { blocks, blockMap, styles } = Config.getRichElements("news", true)
 
       expect(blocks.length).toBe(4)
       expect(blockMap.size).toBe(5)
       expect(styles.length).toBe(3)
     })
 
-    it('Returns rich elements for a classic article with features', () => {
-      const { blocks, blockMap, styles } = Config.getRichElements('classic', true)
+    it("Returns rich elements for a classic article with features", () => {
+      const { blocks, blockMap, styles } = Config.getRichElements(
+        "classic",
+        true
+      )
 
       expect(blocks.length).toBe(5)
       expect(blockMap.size).toBe(6)
       expect(styles.length).toBe(2)
     })
 
-    it('Returns rich elements for a classic article without features', () => {
-      const { blocks, blockMap, styles } = Config.getRichElements('classic', false)
+    it("Returns rich elements for a classic article without features", () => {
+      const { blocks, blockMap, styles } = Config.getRichElements(
+        "classic",
+        false
+      )
 
       expect(blocks.length).toBe(4)
       expect(blockMap.size).toBe(5)
@@ -154,76 +169,89 @@ describe('SectionText: Config', () => {
     })
   })
 
-  describe('#setEditorStateFromProps', () => {
+  describe("#setEditorStateFromProps", () => {
     let body
     let section
     let props
 
     beforeEach(() => {
-      body = '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a></p>'
+      body =
+        '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><a href="artsy.net" class="is-follow-link">Hello. </a></p>'
       section = { body }
       props = {
         section,
-        hasFeatures: true
+        hasFeatures: true,
       }
     })
 
-    it('Sets up editorState and formatted html for feature articles', () => {
-      props.article = {layout: 'feature'}
+    it("Sets up editorState and formatted html for feature articles", () => {
+      props.article = { layout: "feature" }
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
-      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).toMatch(
+        '<h1>Hello. </h1><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>'
+      )
+      expect(editorState.getCurrentContent().getPlainText()).toMatch("Hello.")
       expect(html).not.toMatch('<span class="content-end">')
     })
 
-    it('Sets up editorState and formatted html for standard articles', () => {
-      props.article = {layout: 'standard'}
+    it("Sets up editorState and formatted html for standard articles", () => {
+      props.article = { layout: "standard" }
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
-      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).toMatch(
+        '<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>'
+      )
+      expect(editorState.getCurrentContent().getPlainText()).toMatch("Hello.")
       expect(html).not.toMatch('<span class="content-end">')
     })
 
-    it('Sets up editorState and formatted html for news articles', () => {
-      props.article = {layout: 'news'}
+    it("Sets up editorState and formatted html for news articles", () => {
+      props.article = { layout: "news" }
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
-      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(html).toMatch(
+        '<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>'
+      )
+      expect(editorState.getCurrentContent().getPlainText()).toMatch("Hello.")
       expect(html).not.toMatch('<span class="content-end">')
     })
 
-    it('Sets up editorState and formatted html for classic articles with features', () => {
-      props.article = {layout: 'classic'}
+    it("Sets up editorState and formatted html for classic articles with features", () => {
+      props.article = { layout: "classic" }
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3>Hello. </h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
+      expect(html).toMatch(
+        '<p>Hello. </p><h3>Hello. </h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>'
+      )
       expect(html).not.toMatch('<span class="content-end">')
-      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(editorState.getCurrentContent().getPlainText()).toMatch("Hello.")
     })
 
-    it('Sets up editorState and formatted html for classic articles without features', () => {
-      props.article = {layout: 'classic'}
+    it("Sets up editorState and formatted html for classic articles without features", () => {
+      props.article = { layout: "classic" }
       props.hasFeatures = false
       const { editorState, html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3>Hello. </h3><p>Hello. </p><p><a href="artsy.net">Hello. </a></p>')
+      expect(html).toMatch(
+        '<p>Hello. </p><h3>Hello. </h3><p>Hello. </p><p><a href="artsy.net">Hello. </a></p>'
+      )
       expect(html).not.toMatch('<span class="content-end">')
-      expect(editorState.getCurrentContent().getPlainText()).toMatch('Hello.')
+      expect(editorState.getCurrentContent().getPlainText()).toMatch("Hello.")
     })
 
-    it('Removes contentEnd', () => {
-      props.article = {layout: 'standard'}
+    it("Removes contentEnd", () => {
+      props.article = { layout: "standard" }
       const { html } = Config.setEditorStateFromProps(props)
 
-      expect(html).toMatch('<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>')
+      expect(html).toMatch(
+        '<p>Hello. </p><h3><em>Hello. </em></h3><blockquote>Hello. </blockquote><p><span><a href="artsy.net" class="is-follow-link">Hello. </a><a class="entity-follow artist-follow"></a></span></p>'
+      )
       expect(html).not.toMatch('<span class="content-end">')
     })
 
-    it('Sets selection to start if editing', () => {
-      props.article = {layout: 'standard'}
+    it("Sets selection to start if editing", () => {
+      props.article = { layout: "standard" }
       props.editing = true
       const { editorState } = Config.setEditorStateFromProps(props)
       const { anchorOffset, hasFocus } = editorState.getSelection()
@@ -232,8 +260,8 @@ describe('SectionText: Config', () => {
       expect(hasFocus).toBe(true)
     })
 
-    it('Does not set selection if not editing', () => {
-      props.article = {layout: 'standard'}
+    it("Does not set selection if not editing", () => {
+      props.article = { layout: "standard" }
       const { editorState } = Config.setEditorStateFromProps(props)
       const { hasFocus } = editorState.getSelection()
 

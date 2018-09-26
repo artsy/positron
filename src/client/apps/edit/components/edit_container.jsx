@@ -1,22 +1,22 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { once } from 'lodash'
-import { hot } from 'react-hot-loader'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { once } from "lodash"
+import { hot } from "react-hot-loader"
 import {
   startEditingArticle,
   stopEditingArticle,
-  toggleSpinner
-} from 'client/actions/edit/editActions'
+  toggleSpinner,
+} from "client/actions/edit/editActions"
 
-import { ErrorBoundary } from 'client/components/error/error_boundary'
-import EditAdmin from './admin'
-import EditContent from './content'
-import EditDisplay from './display'
-import EditError from './error'
-import EditHeader from './header'
+import { ErrorBoundary } from "client/components/error/error_boundary"
+import EditAdmin from "./admin"
+import EditContent from "./content"
+import EditDisplay from "./display"
+import EditError from "./error"
+import EditHeader from "./header"
 
-import { MessageModal } from './message'
+import { MessageModal } from "./message"
 
 const INACTIVITY_TIMEOUT = 600 * 1000
 
@@ -31,34 +31,35 @@ export class EditContainer extends Component {
     stopEditingArticleAction: PropTypes.func,
     user: PropTypes.object,
     currentSession: PropTypes.object,
-    toggleSpinnerAction: PropTypes.func
+    toggleSpinnerAction: PropTypes.func,
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     const session = props.currentSession
-    const isCurrentUserEditing = props.user && session && props.user.id === session.user.id
+    const isCurrentUserEditing =
+      props.user && session && props.user.id === session.user.id
 
     this.state = {
       isOtherUserInSession: !!props.currentSession && !isCurrentUserEditing,
       inactivityPeriodEntered: false,
       shouldShowModal: true,
-      sentStopEditingEvent: false
+      sentStopEditingEvent: false,
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { article } = this.props
 
     if (article.id) {
-    // wait for new articles to be saved before setup
+      // wait for new articles to be saved before setup
       this.setupLockout()
       this.props.toggleSpinnerAction(false)
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  componentWillReceiveProps = nextProps => {
     if (this.props.article !== nextProps.article) {
       const setupBeforeUnload = once(this.setupBeforeUnload)
 
@@ -69,7 +70,7 @@ export class EditContainer extends Component {
 
   componentWillUnmount = () => {
     this.sendStopEditing()
-    window.removeEventListener('beforeunload', this.sendStopEditing)
+    window.removeEventListener("beforeunload", this.sendStopEditing)
     clearTimeout(this.inactivityTimer)
   }
 
@@ -77,36 +78,31 @@ export class EditContainer extends Component {
     const { article } = this.props
 
     if (article.published) {
-      window.addEventListener('beforeunload', this.beforeUnload)
+      window.addEventListener("beforeunload", this.beforeUnload)
     }
   }
 
   setupLockout = () => {
-    const {
-      article,
-      channel,
-      startEditingArticleAction,
-      user
-    } = this.props
+    const { article, channel, startEditingArticleAction, user } = this.props
 
     startEditingArticleAction({
       channel,
       user,
-      article: article.id
+      article: article.id,
     })
 
     this.resetInactivityCounter()
-    window.addEventListener('beforeunload', this.sendStopEditing)
+    window.addEventListener("beforeunload", this.sendStopEditing)
   }
 
-  beforeUnload = (e) => {
+  beforeUnload = e => {
     const { isSaved } = this.props
     // Custom messages are deprecated in most browsers
     // and will show default browser message instead
     if ($.active > 0) {
-      e.returnValue = 'Your article is not finished saving.'
+      e.returnValue = "Your article is not finished saving."
     } else if (!isSaved) {
-      e.returnValue = 'You have unsaved changes, do you wish to continue?'
+      e.returnValue = "You have unsaved changes, do you wish to continue?"
     } else {
       e.returnValue = undefined
     }
@@ -116,12 +112,15 @@ export class EditContainer extends Component {
     if (this.inactivityTimer) {
       clearTimeout(this.inactivityTimer)
     }
-    this.inactivityTimer = setTimeout(this.setInactivityPeriod, INACTIVITY_TIMEOUT)
+    this.inactivityTimer = setTimeout(
+      this.setInactivityPeriod,
+      INACTIVITY_TIMEOUT
+    )
   }
 
   setInactivityPeriod = () => {
     this.setState({
-      inactivityPeriodEntered: true
+      inactivityPeriodEntered: true,
     })
   }
 
@@ -132,11 +131,11 @@ export class EditContainer extends Component {
     stopEditingArticleAction({
       channel,
       article: article.id,
-      user
+      user,
     })
 
     this.setState({
-      sentStopEditingEvent: true
+      sentStopEditingEvent: true,
     })
   }
 
@@ -144,29 +143,37 @@ export class EditContainer extends Component {
     const { activeView } = this.props
 
     switch (activeView) {
-      case 'admin':
+      case "admin":
         return <EditAdmin />
-      case 'content':
+      case "content":
         return <EditContent />
-      case 'display':
+      case "display":
         return <EditDisplay />
     }
   }
 
   modalDidClose = () => {
     this.setState({
-      shouldShowModal: false
+      shouldShowModal: false,
     })
   }
 
-  render () {
+  render() {
     const { error, currentSession } = this.props
-    const { isOtherUserInSession, inactivityPeriodEntered, shouldShowModal } = this.state
+    const {
+      isOtherUserInSession,
+      inactivityPeriodEntered,
+      shouldShowModal,
+    } = this.state
 
-    let modalType = isOtherUserInSession ? 'locked' : (inactivityPeriodEntered ? 'timeout' : '')
+    let modalType = isOtherUserInSession
+      ? "locked"
+      : inactivityPeriodEntered
+        ? "timeout"
+        : ""
 
     return (
-      <div className='EditContainer'>
+      <div className="EditContainer">
         <ErrorBoundary>
           <EditHeader beforeUnload={this.beforeUnload} />
         </ErrorBoundary>
@@ -176,37 +183,41 @@ export class EditContainer extends Component {
           {this.getActiveView()}
         </ErrorBoundary>
 
-        {shouldShowModal && modalType &&
-          <MessageModal
-            type={modalType}
-            session={currentSession}
-            onClose={this.modalDidClose}
-            onTimerEnded={() => {
-              document.location.assign('/')
-            }}
-          />}
+        {shouldShowModal &&
+          modalType && (
+            <MessageModal
+              type={modalType}
+              session={currentSession}
+              onClose={this.modalDidClose}
+              onTimerEnded={() => {
+                document.location.assign("/")
+              }}
+            />
+          )}
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   activeView: state.edit.activeView,
   article: state.edit.article,
   channel: state.app.channel,
   error: state.edit.error,
   user: state.app.user,
   currentSession: state.edit.currentSession,
-  isSaved: state.edit.isSaved
+  isSaved: state.edit.isSaved,
 })
 
 const mapDispatchToProps = {
   startEditingArticleAction: startEditingArticle,
   stopEditingArticleAction: stopEditingArticle,
-  toggleSpinnerAction: toggleSpinner
+  toggleSpinnerAction: toggleSpinner,
 }
 
-export default hot(module)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditContainer))
+export default hot(module)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditContainer)
+)
