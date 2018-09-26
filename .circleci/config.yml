@@ -36,7 +36,7 @@ jobs:
   deploy-staging:
     docker:
       - image: circleci/node:8-stretch-browsers
-      - image: heroku/heroku:16
+      - image: dickeyxxx/heroku-cli
 
     steps:
       - checkout
@@ -60,7 +60,7 @@ jobs:
   deploy-production:
     docker:
       - image: circleci/node:8-stretch-browsers
-      - image: heroku/heroku:16
+      - image: dickeyxxx/heroku-cli
 
     steps:
       - checkout
