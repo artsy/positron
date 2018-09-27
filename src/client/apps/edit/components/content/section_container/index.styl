@@ -8,57 +8,6 @@
     opacity 1
   }
 
-.SectionContainer
-  animation fadein 0.15s
-  z-index 1
-  transition transform .15s
-  width 100%
-  position relative
-  padding 20px
-
-.SectionContainer__hover-controls
-  position absolute
-  width 100%
-  height 100%
-  border 1px solid rgba(100,100,100,0.33)
-  top 0
-  left 0
-  opacity 0
-  .button-drag,
-  .RemoveButton
-    position absolute
-    right -15px
-    width 30px
-  .RemoveButton
-    top -15px
-    &:hover circle
-      fill red-color
-  .button-drag
-    top 25px
-
-.SectionContainer__container-bg
-  width 100%
-  height 100%
-  position fixed
-  top 0
-  left 0
-  z-index 1
-  display none
-
-.SectionContainer:hover
-  .SectionContainer__hover-controls
-    opacity 1
-.SectionContainer[data-editing=true]
-  .SectionContainer__hover-controls
-    opacity 1
-    border 1px solid rgba(100,100,100,1)
-    .button-drag,
-    .RemoveButton
-      opacity 0
-  .SectionContainer__container-bg
-    display block
-    z-index -1
-
 .edit-section__placeholder
   min-height 150px
   display flex
@@ -71,15 +20,3 @@
       min-width 100%
     a
       background-size 1px 1px
-
-[data-layout='fillwidth']
-  &[data-editing='false']
-     .SectionContainer__hover-controls
-        z-index 100
-  .SectionContainer__hover-controls
-    .RemoveButton
-      right 18px
-      top 20px
-    .button-drag
-      right 18px
-      top 60px
