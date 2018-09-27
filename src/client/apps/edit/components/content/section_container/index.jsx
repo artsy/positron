@@ -1,11 +1,12 @@
 import PropTypes from "prop-types"
 import React, { Component } from "react"
+import styled from "styled-components"
 import { connect } from "react-redux"
 import colors from "@artsy/reaction/dist/Assets/Colors"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
 import { RemoveButton } from "client/components/remove_button"
 import { removeSection } from "client/actions/edit/sectionActions"
-
+import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import SectionImages from "../sections/images"
 import SectionSlideshow from "../sections/slideshow"
 import SectionText from "../sections/text"
@@ -93,16 +94,18 @@ export class SectionContainer extends Component {
   }
 
   render() {
-    const { isHero, section } = this.props
+    const { article, isHero, section } = this.props
     const { layout, type } = section
+    const sectionWidth = getSectionWidth(section, article.layout)
 
     return (
       <ErrorBoundary>
-        <div
+        <SectionWrapper
           className="SectionContainer"
           data-editing={this.isEditing()}
-          data-layout={layout || "column_width"}
           data-type={type}
+          width={sectionWidth}
+          isHero={isHero}
         >
           <div
             className="SectionContainer__hover-controls"
@@ -125,7 +128,7 @@ export class SectionContainer extends Component {
             className="SectionContainer__container-bg"
             onClick={this.onSetEditing}
           />
-        </div>
+        </SectionWrapper>
       </ErrorBoundary>
     )
   }
@@ -144,3 +147,11 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionContainer)
+
+const SectionWrapper = styled.div`
+  width: ${props => props.width};
+  margin: 0 auto;
+  ${props => props.isHero && `
+    margin-top: 20px;
+  `}
+`
