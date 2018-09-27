@@ -182,10 +182,6 @@ export class SectionText extends Component {
       )
 
       if (newState) {
-        if (hasBlockquote) {
-          // remove layout/blockquotes when merging sections together
-          onChangeSectionAction("layout", null)
-        }
         this.onChange(newState)
         removeSectionAction(beforeIndex)
         onSetEditing(beforeIndex)
@@ -346,7 +342,6 @@ export class SectionText extends Component {
       Config.composedDecorator(article.layout)
     )
     this.onChange(stateWithBlockquote)
-    onChangeSectionAction("layout", "blockquote")
     // Add new blocks before/after if applicable
     if (afterBlock) {
       newSectionAction("text", index + 1, { body: afterBlock })
