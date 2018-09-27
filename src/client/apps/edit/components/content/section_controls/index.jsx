@@ -18,6 +18,7 @@ export class SectionControls extends Component {
     disabledAlert: PropTypes.func,
     isHero: PropTypes.bool,
     showLayouts: PropTypes.bool,
+    section: PropTypes.object
   }
 
   state = {
@@ -121,19 +122,20 @@ export class SectionControls extends Component {
     const position = insideComponent ? "fixed" : outsidePosition
     const bottom = this.getPositionBottom()
     const sectionWidth = getSectionWidth(section, article.layout)
-    const isFillwidth = section.layout === "fillwidth"
+    const isFillwidth = !isHero && section.layout === "fillwidth"
 
     return (
       <SectionControlsContainer
         innerRef={node => {
           this.controls = node
         }}
-        className="SectionControls edit-controls"
+        className="edit-controls"
         position={position}
         bottom={bottom}
         isFillwidth={isFillwidth}
         isHero={isHero}
         width={sectionWidth}
+        type={!isHero && section.type}
       >
         {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
@@ -158,6 +160,9 @@ const SectionControlsContainer = styled.div`
   background: ${color("black100")};
   z-index: 5;
   max-width: calc(100vw - 110px);
+  ${props => props.type === "social_embed" && `
+    padding-top: 20px;
+  `}
 
   ${props => props.isHero && `
     width: calc(100% + 40px);

@@ -10,6 +10,7 @@ import { SocialEmbedControls } from "../controls"
 describe("SocialEmbedControls", () => {
   let props
   let section
+  let article
 
   SectionControls.prototype.isScrollingOver = jest.fn()
   SectionControls.prototype.isScrolledPast = jest.fn()
@@ -39,8 +40,10 @@ describe("SocialEmbedControls", () => {
 
   beforeEach(() => {
     section = cloneDeep(NewsArticle.sections[2])
+    article = cloneDeep(NewsArticle)
 
     props = {
+      article,
       onChangeSectionAction: jest.fn(),
       removeSectionAction: jest.fn(),
       section,

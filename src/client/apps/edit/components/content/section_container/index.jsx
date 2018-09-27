@@ -169,7 +169,7 @@ const SectionWrapper = styled.div`
   `}
 `
 
-const HoverControls = styled.div`
+export const HoverControls = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;

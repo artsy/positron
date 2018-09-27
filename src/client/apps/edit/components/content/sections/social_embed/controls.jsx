@@ -28,28 +28,27 @@ export class SocialEmbedControls extends Component {
     const { onChangeSectionAction, section } = this.props
 
     return (
-      <div className="SocialEmbedControls">
-        <SectionControls section={section}>
-          <Row>
-            <Col xs={12}>
-              <h2>Social URL</h2>
-              <input
-                autoFocus
-                className="bordered-input bordered-input-dark"
-                value={section.url || ""}
-                onChange={e => onChangeSectionAction("url", e.target.value)}
-                placeholder="https://www.instagram.com/"
-              />
-            </Col>
-          </Row>
-        </SectionControls>
-      </div>
+      <SectionControls>
+        <Row>
+          <Col xs={12}>
+            <h2>Social URL</h2>
+            <input
+              autoFocus
+              className="bordered-input bordered-input-dark"
+              value={section.url || ""}
+              onChange={e => onChangeSectionAction("url", e.target.value)}
+              placeholder="https://www.instagram.com/"
+            />
+          </Col>
+        </Row>
+      </SectionControls>
     )
   }
 }
 
 const mapStateToProps = state => ({
   sectionIndex: state.edit.sectionIndex,
+  section: state.edit.section
 })
 
 const mapDispatchToProps = {
