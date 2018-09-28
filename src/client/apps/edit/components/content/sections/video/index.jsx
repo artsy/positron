@@ -72,6 +72,7 @@ export class SectionVideo extends Component {
             onChange={html => this.onChange("caption", html)}
             placeholder="Video Caption (required)"
             stripLinebreaks
+            isReadOnly={!editing}
           />
         </Video>
       )

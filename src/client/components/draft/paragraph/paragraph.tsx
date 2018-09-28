@@ -27,6 +27,7 @@ interface Props {
   placeholder?: string
   stripLinebreaks: boolean
   isDark?: boolean
+  isReadOnly?: boolean
 }
 
 interface State {
@@ -269,7 +270,7 @@ export class Paragraph extends Component<Props, State> {
   }
 
   render() {
-    const { hasLinks, isDark, placeholder } = this.props
+    const { hasLinks, isDark, isReadOnly, placeholder } = this.props
     const {
       editorState,
       selectionTarget,
@@ -314,6 +315,7 @@ export class Paragraph extends Component<Props, State> {
             handleReturn={this.handleReturn}
             onChange={this.onChange}
             placeholder={placeholder || "Start typing..."}
+            readOnly={isReadOnly}
             ref={ref => {
               this.editor = ref
             }}

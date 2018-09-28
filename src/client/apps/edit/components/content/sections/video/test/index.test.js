@@ -1,5 +1,6 @@
 import React from "react"
 import configureStore from "redux-mock-store"
+import { Editor } from "draft-js"
 import { Provider } from "react-redux"
 import { clone, extend } from "lodash"
 import { mount } from "enzyme"
@@ -123,6 +124,11 @@ describe("Video", () => {
       )
     })
 
+    it("Sets caption to readOnly if not editing", () => {
+      const component = getWrapper(props)
+      expect(component.find(Editor).props().readOnly).toBe(true)
+    })
+
     it("Renders a saved caption", () => {
       props.editing = true
       const component = getWrapper(props)
@@ -145,6 +151,7 @@ describe("Video", () => {
         .props.onChange(caption)
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("caption")
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(caption)
+      expect(component.find(Editor).props().readOnly).toBe(false)
     })
   })
 
