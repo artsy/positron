@@ -9,16 +9,16 @@ export const SectionSocialEmbed = props => {
   const { editing, section } = props
 
   return (
-    <section className="SectionEmbed">
-      {editing && <SocialEmbedControls section={section} />}
+    <section>
+      {editing && <SocialEmbedControls />}
 
       {section.url ? (
         <SocialEmbed section={section} />
       ) : (
-        <div className="edit-section__placeholder">
-          Add Twitter or Instagram URL above
+          <div className="edit-section__placeholder">
+            Add Twitter or Instagram URL above
         </div>
-      )}
+        )}
     </section>
   )
 }

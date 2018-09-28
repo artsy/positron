@@ -6,8 +6,10 @@
 import styled from "styled-components"
 import PropTypes from "prop-types"
 import React, { Component } from "react"
+import { color } from "@artsy/palette"
 import { connect } from "react-redux"
 import LayoutControls from "./layout"
+import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 
 export class SectionControls extends Component {
   static propTypes = {
@@ -16,6 +18,7 @@ export class SectionControls extends Component {
     disabledAlert: PropTypes.func,
     isHero: PropTypes.bool,
     showLayouts: PropTypes.bool,
+    section: PropTypes.object
   }
 
   state = {
@@ -112,21 +115,27 @@ export class SectionControls extends Component {
   }
 
   render() {
-    const { children, disabledAlert, isHero, showLayouts } = this.props
+    const { article, children, disabledAlert, isHero, section, showLayouts } = this.props
     const { insideComponent } = this.state
 
     const outsidePosition = isHero ? "relative" : "absolute"
     const position = insideComponent ? "fixed" : outsidePosition
     const bottom = this.getPositionBottom()
+    const sectionWidth = getSectionWidth(section, article.layout)
+    const isFillwidth = !isHero && section.layout === "fillwidth"
 
     return (
       <SectionControlsContainer
         innerRef={node => {
           this.controls = node
         }}
-        className={"SectionControls edit-controls"}
+        className="edit-controls"
         position={position}
         bottom={bottom}
+        isFillwidth={isFillwidth}
+        isHero={isHero}
+        width={sectionWidth}
+        type={!isHero && section.type}
       >
         {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
@@ -136,7 +145,9 @@ export class SectionControls extends Component {
   }
 }
 const mapStateToProps = state => ({
+  article: state.edit.article,
   channel: state.app.channel,
+  section: state.edit.section
 })
 
 export default connect(mapStateToProps)(SectionControls)
@@ -144,4 +155,18 @@ export default connect(mapStateToProps)(SectionControls)
 const SectionControlsContainer = styled.div`
   bottom: ${props => props.bottom};
   position: ${props => props.position};
+  width: ${props => props.width};
+  margin-left: ${props => props.isFillwidth ? 0 : "-20px"};
+  background: ${color("black100")};
+  z-index: 5;
+  max-width: calc(100vw - 110px);
+  ${props => props.type === "social_embed" && `
+    padding-top: 20px;
+  `}
+
+  ${props => props.isHero && `
+    width: calc(100% + 40px);
+    padding-top: 20px;
+    margin-top: -20px;
+  `}
 `

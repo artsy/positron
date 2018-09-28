@@ -11,7 +11,7 @@ import { SectionText } from "../../sections/text/index.jsx"
 import { SectionEmbed } from "../../sections/embed"
 import { SectionImages } from "../../sections/images"
 import { SectionVideo } from "../../sections/video"
-import { SectionContainer } from "../index"
+import { SectionContainer, HoverControls } from "../index"
 require("typeahead.js")
 
 describe("SectionContainer", () => {
@@ -58,16 +58,23 @@ describe("SectionContainer", () => {
   })
 
   it("Renders drag and remove icons", () => {
+    props.sectionIndex = 0
     const component = getWrapper(props)
     expect(component.find(RemoveButton).length).toBe(1)
     expect(component.find(IconDrag).length).toBe(1)
+  })
+
+  it("Does not renders drag and remove icons if editing", () => {
+    const component = getWrapper(props)
+    expect(component.find(RemoveButton).length).toBe(0)
+    expect(component.find(IconDrag).length).toBe(0)
   })
 
   it("Calls onSetEditing with index on section click", () => {
     props.sectionIndex = 0
     const component = getWrapper(props)
     component
-      .find(".SectionContainer__hover-controls")
+      .find(HoverControls)
       .at(0)
       .simulate("click")
     expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index)
@@ -77,13 +84,14 @@ describe("SectionContainer", () => {
     const component = getWrapper(props)
 
     component
-      .find(".SectionContainer__hover-controls")
+      .find(HoverControls)
       .at(0)
       .simulate("click")
     expect(props.onSetEditing.mock.calls[0][0]).toBe(null)
   })
 
   it("Can remove a section click", () => {
+    props.sectionIndex = 0
     const component = getWrapper(props)
     component
       .find(RemoveButton)
@@ -125,8 +133,7 @@ describe("SectionContainer", () => {
     })
 
     it("Can render a text section", () => {
-      props.sectionIndex = 0
-      props.section = { type: "text" }
+      props.section = { type: "text", body: "" }
       const component = getWrapper(props)
       expect(component.find(SectionText).length).toBe(1)
     })

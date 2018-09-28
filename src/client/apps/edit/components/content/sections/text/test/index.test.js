@@ -209,8 +209,6 @@ describe("SectionText", () => {
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(
         "<blockquote>A blockquote.</blockquote>"
       )
-      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe("layout")
-      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe("blockquote")
       expect(props.newSectionAction).not.toBeCalled()
     })
 
@@ -226,8 +224,6 @@ describe("SectionText", () => {
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(
         "<blockquote>A blockquote.</blockquote>"
       )
-      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe("layout")
-      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe("blockquote")
       expect(props.newSectionAction.mock.calls[0][0]).toBe("text")
       expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index + 1)
       expect(props.newSectionAction.mock.calls[0][2].body).toBe(
@@ -247,8 +243,6 @@ describe("SectionText", () => {
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(
         "<blockquote>A blockquote.</blockquote>"
       )
-      expect(props.onChangeSectionAction.mock.calls[1][0]).toBe("layout")
-      expect(props.onChangeSectionAction.mock.calls[1][1]).toBe("blockquote")
       expect(props.newSectionAction.mock.calls[0][0]).toBe("text")
       expect(props.newSectionAction.mock.calls[0][1]).toBe(props.index)
       expect(props.newSectionAction.mock.calls[0][2].body).toBe(
@@ -368,8 +362,6 @@ describe("SectionText", () => {
       expect(handleBackspace).toBe("handled")
       expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
       expect(component.state().html).toMatch("<p>Hello</p>")
-      expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("layout")
-      expect(props.onChangeSectionAction.mock.calls[0][1]).toBeFalsy()
       expect(component.state().html).toMatch(
         article.sections[props.index - 1].body
       )

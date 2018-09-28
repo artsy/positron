@@ -1,11 +1,4 @@
 .edit-controls
-  background black
-  z-index 5
-  height auto
-  top inherit
-  width 100%
-  max-width calc(100vw \- 110px)
-  margin-left -20px
   &__layout
     width 100%
     text-align center
@@ -46,42 +39,6 @@
   &[name=image_set]
     background-image url(/icons/edit_image_set_slideshow.svg)
     background-size 22px
-
-[data-layout='standard'] .SectionContainer
-  &[data-layout=column_width] .edit-controls
-    max-width standard-body-w-margin
-  &[data-layout=overflow_fillwidth],
-  &[data-type=image_set]
-    .edit-controls
-      max-width standard-overflow-w-margin
-
-[data-layout='classic']
-  .SectionContainer
-    &[data-layout=column_width] .edit-controls
-      max-width classic-body-w-margin
-    &[data-layout=overflow_fillwidth],
-    &[data-type=image_set]
-      .edit-controls
-        max-width classic-overflow-w-margin
-  .edit-section--hero
-    .SectionContainer
-      &[data-layout=column_width]
-      &[data-layout=overflow_fillwidth]
-        .edit-controls
-          min-width calc(100% + 40px)
-          margin-top -20px
-          margin-bottom 30px
-          padding-top 20px
-
-[data-layout='feature'] .SectionContainer
-  &[data-layout=column_width] .edit-controls
-    max-width feature-body-w-margin
-  &[data-layout=fillwidth] .edit-controls
-    margin-left 0
-  &[data-layout=overflow_fillwidth],
-  &[data-type=image_set]
-    .edit-controls
-      max-width feature-overflow-w-margin
 
 [data-layout='news'] .SectionContainer
   &[data-type=image_collection]
