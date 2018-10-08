@@ -50,10 +50,11 @@ export class SectionControls extends Component {
   }
 
   getPositionBottom = () => {
-    if (this.controls) {
-      const { insideComponent } = this.state
-      const { isHero } = this.props
+    const sectionPadding = 20
+    const { insideComponent } = this.state
+    const { isHero } = this.props
 
+    if (this.controls) {
       const controlsHeight = $(this.controls).height()
       const windowHeight = window.innerHeight
       const headerHeight = this.getHeaderHeight()
@@ -64,7 +65,7 @@ export class SectionControls extends Component {
         return stickyBottom + "px"
       }
     }
-    return "100%"
+    return `calc(100% + ${sectionPadding}px)`
   }
 
   isScrollingOver = $section => {
@@ -135,7 +136,7 @@ export class SectionControls extends Component {
         isFillwidth={isFillwidth}
         isHero={isHero}
         width={sectionWidth}
-        type={!isHero && section.type}
+        type={!isHero ? section.type : undefined}
       >
         {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
