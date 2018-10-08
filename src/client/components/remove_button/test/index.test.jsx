@@ -19,13 +19,6 @@ describe("RemoveButton", () => {
     expect(component.find(IconRemove).props().color).toBe("white")
   })
 
-  it("Renders a className if provided", () => {
-    props.className = "image-remove"
-
-    const component = mount(<RemoveButton {...props} />)
-    expect(component.html()).toMatch(props.className)
-  })
-
   it("Passes a background color to icon if provided", () => {
     props.background = "red"
     const component = mount(<RemoveButton {...props} />)
