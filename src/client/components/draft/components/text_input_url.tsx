@@ -1,36 +1,48 @@
-import { color, Sans } from "@artsy/palette"
-import styled from "styled-components"
-import PropTypes from "prop-types"
+import { Button, color, space } from "@artsy/palette"
+import { getVisibleSelectionRect } from "draft-js"
 import React, { Component } from "react"
-import {
-  RemoveButton,
-  RemoveButtonContainer,
-} from "client/components/remove_button"
+import styled from "styled-components"
+import { RemoveButton, RemoveButtonContainer } from "../../remove_button"
+import { BackgroundOverlay } from "./background_overlay"
 
-export class TextInputUrl extends Component {
-  static propTypes = {
-    backgroundColor: PropTypes.string,
-    confirmLink: PropTypes.func,
-    onClickOff: PropTypes.func,
-    pluginType: PropTypes.string,
-    removeLink: PropTypes.func,
-    selectionTarget: PropTypes.object,
-    urlValue: PropTypes.string,
-  }
+interface Props {
+  backgroundColor?: string
+  editorPosition: ClientRect | null
+  isFollowLink?: boolean
+  onClickOff: () => void
+  onConfirmLink: (url: string, isFollowLink?: boolean) => void
+  onRemoveLink: () => void
+  urlValue: string
+}
 
-  state = {
-    url: this.props.urlValue || "",
+interface State {
+  url: string
+  selectionPosition: ClientRect
+}
+
+/**
+ * A popup UI for adding/removing links from text
+ * Can optionally be used for adding artist-follow links
+ */
+export class TextInputUrl extends Component<Props, State> {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      url: this.props.urlValue || "",
+      selectionPosition: getVisibleSelectionRect(window),
+    }
   }
 
   confirmLink = e => {
-    const { confirmLink, pluginType, removeLink } = this.props
+    const { onConfirmLink, isFollowLink, onRemoveLink } = this.props
     const url = e.target.value || this.state.url
 
     e.preventDefault()
     if (url.length) {
-      confirmLink(url, pluginType)
+      onConfirmLink(url, isFollowLink)
     } else {
-      removeLink()
+      onRemoveLink()
     }
   }
 
@@ -49,31 +61,46 @@ export class TextInputUrl extends Component {
   }
 
   onExitInput = e => {
-    const { onClickOff, removeLink, urlValue } = this.props
+    const { onClickOff, onRemoveLink, urlValue } = this.props
 
     if (e.target.value.length > 0) {
       // Link was edited
       this.confirmLink(e)
     } else if (urlValue) {
       // Link was deleted
-      removeLink()
+      onRemoveLink()
     } else {
       // No change, close the menu
       onClickOff()
     }
   }
 
+  stickyControlsBox = () => {
+    const { editorPosition } = this.props
+    const { selectionPosition } = this.state
+    const textHeight = 17
+    const inputWidth = 350
+    let top
+    let left
+
+    if (editorPosition) {
+      top = selectionPosition.top - editorPosition.top + textHeight
+      left =
+        selectionPosition.left -
+        editorPosition.left +
+        selectionPosition.width / 2 -
+        inputWidth / 2
+    }
+    return { top, left }
+  }
+
   render() {
     const { url } = this.state
-    const {
-      backgroundColor,
-      onClickOff,
-      removeLink,
-      selectionTarget: { top, left },
-    } = this.props
+    const { backgroundColor, onClickOff, onRemoveLink } = this.props
+    const { top, left } = this.stickyControlsBox()
 
     return (
-      <div>
+      <>
         <BackgroundOverlay onClick={onClickOff} />
 
         <TextInputUrlContainer color={backgroundColor} top={top} left={left}>
@@ -89,32 +116,39 @@ export class TextInputUrl extends Component {
 
             {url.length > 0 && (
               <RemoveButton
-                onMouseDown={removeLink}
+                onMouseDown={onRemoveLink}
                 background={color("black30")}
               />
             )}
           </InputContainer>
 
-          <Button onMouseDown={this.confirmLink} size={2} weight="medium">
+          <Button
+            onClick={this.confirmLink}
+            variant="secondaryGray"
+            size="small"
+          >
             Apply
           </Button>
         </TextInputUrlContainer>
-      </div>
+      </>
     )
   }
 }
 
-const TextInputUrlContainer = styled.div`
+const TextInputUrlContainer = styled.div.attrs<{ top: number; left: number }>(
+  {}
+)`
   top: ${props => `${props.top + 5}px` || 0};
   left: ${props => `${props.left}px` || 0};
   position: absolute;
   background-color: ${props => (props.color ? props.color : color("black100"))};
   color: ${color("black100")};
   height: 50px;
-  width: 400px;
+  width: 350px;
   padding: 10px;
   display: flex;
   z-index: 10;
+
   &::after {
     content: "";
     width: 0;
@@ -127,14 +161,21 @@ const TextInputUrlContainer = styled.div`
     top: -7px;
     left: 50%;
   }
+
+  button {
+    height: ${space(3)}px;
+    width: 100%;
+    border-radius: 0;
+  }
 `
 
 const Input = styled.input`
   background-color: white;
-  width: 300px;
-  max-width: 300px;
-  height: 30px;
+  width: 260px;
+  height: ${space(3)}px;
   font-size: 15px;
+  padding-right: 35px;
+  padding-left: 5px;
 `
 
 const InputContainer = styled.div`
@@ -145,27 +186,5 @@ const InputContainer = styled.div`
     width: 20px;
     height: 20px;
     top: 5px;
-  }
-`
-
-export const BackgroundOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 7;
-`
-
-export const Button = styled(Sans)`
-  width: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: color 0.15s;
-  background: ${color("black10")};
-  &:hover {
-    color: ${color("purple100")};
   }
 `
