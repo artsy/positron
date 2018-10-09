@@ -135,7 +135,9 @@ export class TextInputUrl extends Component<Props, State> {
   }
 }
 
-const TextInputUrlContainer = styled.div<{ top: number; left: number }>`
+const TextInputUrlContainer = styled.div.attrs<{ top: number; left: number }>(
+  {}
+)`
   top: ${props => `${props.top + 5}px` || 0};
   left: ${props => `${props.left}px` || 0};
   position: absolute;
