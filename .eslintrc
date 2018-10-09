@@ -2,7 +2,8 @@
   "parser": "babel-eslint",
   "extends": [
     "standard",
-    "standard-react"
+    "standard-react",
+    "prettier"
   ],
   "globals": {
     "__dirname": true
@@ -16,7 +17,8 @@
   "rules": {
     "camelcase": 0,
     "comma-dangle": ["error", "never"],
-    "jsx-quotes": "prefer-double",
+    "quotes": ["error", "double"],
+    "jsx-quotes": ["error", "prefer-double"],
     "no-mixed-operators": 0,
     "no-new": 0,
     "react/jsx-indent": 0,

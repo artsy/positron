@@ -1,7 +1,8 @@
 import Backbone from "backbone"
 import * as routes from "client/apps/display/routes"
 import request from "superagent"
-import StyleSheet from "styled-components/lib/models/StyleSheet"
+import { __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS as scSecrets } from 'styled-components'
+const { StyleSheet } = scSecrets
 
 StyleSheet.reset(true)
 
@@ -67,7 +68,8 @@ describe("Display Routes", () => {
       cb(null, response)
     })
     routes.display(req, res, next)
-    expect(res.render.mock.calls[0][1].css).toMatch('<style type="text/css"')
+
+    expect(res.render.mock.calls[0][1].css).toMatch('<style')
     expect(res.render.mock.calls[0][1].css).toMatch("DisplayPanel")
   })
 
