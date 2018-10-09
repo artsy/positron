@@ -20,14 +20,14 @@ describe("Paragraph utils", () => {
       const styleMap = styleMapFromNodes(["B"])
 
       expect(styleMap.length).toBe(1)
-      expect(styleMap[0]).toEqual({ label: "B", name: "BOLD" })
+      expect(styleMap[0]).toEqual({ element: "B", name: "BOLD" })
     })
 
     it("Returns default styles if no args", () => {
       const styleMap = styleMapFromNodes()
 
-      expect(styleMap[0]).toEqual({ label: "B", name: "BOLD" })
-      expect(styleMap[1]).toEqual({ label: "I", name: "ITALIC" })
+      expect(styleMap[0]).toEqual({ element: "B", name: "BOLD" })
+      expect(styleMap[1]).toEqual({ element: "I", name: "ITALIC" })
     })
   })
 
