@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
-import Colors from '@artsy/reaction/dist/Assets/Colors'
+import Colors from "@artsy/reaction/dist/Assets/Colors"
+import React, { Component } from "react"
+import styled from "styled-components"
 // import { borderedInput } from '@artsy/reaction/dist/Components/Mixins'
 
 interface Props {
-  onApply: (news_source: { title?: string, url?: string } | null) => void
+  onApply: (news_source: { title?: string; url?: string } | null) => void
   source?: {
     title: string
     url: string
@@ -21,9 +21,9 @@ export class EditSourceControls extends Component<Props, State> {
     super(props)
     const source = props.source
 
-    this.state = { 
+    this.state = {
       title: source ? source.title : "",
-      url: source ? source.url : ""
+      url: source ? source.url : "",
     }
   }
 
@@ -34,22 +34,22 @@ export class EditSourceControls extends Component<Props, State> {
       <EditSourceContainer>
         <InputContainer>
           <Input
-            className='bordered-input'
+            className="bordered-input"
             name={"title"}
             value={title}
             placeholder={"Enter source name"}
-            onChange={(event) => this.setState({title: event.target.value})}
+            onChange={event => this.setState({ title: event.target.value })}
           />
           <ApplyInputContainer>
             <LinkInput
-              className='bordered-input'
+              className="bordered-input"
               name={"url"}
               value={url}
               placeholder={"Paste or type a link"}
-              onChange={(event) => this.setState({url: event.target.value})}
+              onChange={event => this.setState({ url: event.target.value })}
             />
             <ApplyButton
-              className='avant-garde-button'
+              className="avant-garde-button"
               onClick={() => this.props.onApply(this.state)}
             >
               {"Apply"}

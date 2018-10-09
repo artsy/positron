@@ -1,18 +1,15 @@
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React from 'react'
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import styled from "styled-components"
+import PropTypes from "prop-types"
+import React from "react"
 
-export const ProgressBar = (props) => {
+export const ProgressBar = props => {
   const { color, cover, progress } = props
 
   return (
-    <ProgressContainer
-      className='ProgressBar'
-      cover={cover}
-    >
+    <ProgressContainer className="ProgressBar" cover={cover}>
       <Progress
-        className='ProgressBar__bar'
+        className="ProgressBar__bar"
         color={color}
         progress={progress}
       />
@@ -23,17 +20,19 @@ export const ProgressBar = (props) => {
 ProgressBar.propTypes = {
   color: PropTypes.string,
   cover: PropTypes.bool,
-  progress: PropTypes.number
+  progress: PropTypes.number,
 }
 
 ProgressBar.defaultProps = {
-  color: colors.purpleRegular
+  color: colors.purpleRegular,
 }
 
 const ProgressContainer = styled.div`
   width: 100%;
   background-color: white;
-  ${(props) => props.cover && `
+  ${props =>
+    props.cover &&
+    `
     height: 100%;
     position: absolute;
     top: 0;
@@ -45,7 +44,7 @@ const ProgressContainer = styled.div`
     z-index: 3;
     background: rgba(255,255,255,.75);
     padding: 20px;
-  `}
+  `};
 `
 
 const Progress = styled.div`

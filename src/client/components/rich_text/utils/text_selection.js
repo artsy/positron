@@ -1,22 +1,22 @@
-import ReactDOM from 'react-dom'
-import { clone } from 'lodash'
+import ReactDOM from "react-dom"
+import { clone } from "lodash"
 import {
   ContentState,
   EditorState,
   getVisibleSelectionRect,
   RichUtils,
-  SelectionState
-} from 'draft-js'
+  SelectionState,
+} from "draft-js"
 import {
   convertFromRichHtml,
-  convertToRichHtml
-} from 'client/components/rich_text/utils/convert_html'
+  convertToRichHtml,
+} from "client/components/rich_text/utils/convert_html"
 
-export const getSelectedLinkData = (editorState) => {
+export const getSelectedLinkData = editorState => {
   // Return attrs of selected link element
   let className
   let key
-  let url = ''
+  let url = ""
 
   const content = editorState.getCurrentContent()
   const selection = editorState.getSelection()
@@ -34,14 +34,17 @@ export const getSelectedLinkData = (editorState) => {
   return { url, key, className }
 }
 
-export const setSelectionToStart = (editorState) => {
+export const setSelectionToStart = editorState => {
   // Move cursor to first character of first block
-  const firstKey = editorState.getCurrentContent().getFirstBlock().getKey()
+  const firstKey = editorState
+    .getCurrentContent()
+    .getFirstBlock()
+    .getKey()
   const newSelection = new SelectionState({
     anchorKey: firstKey,
     anchorOffset: 0,
     focusKey: firstKey,
-    focusOffset: 0
+    focusOffset: 0,
   })
   return EditorState.forceSelection(editorState, newSelection)
 }
@@ -50,12 +53,12 @@ export const stickyControlsBox = (editorPosition, fromTop, fromLeft) => {
   // Get position of pop-up controls from selection and parent location
   const target = getVisibleSelectionRect(window)
   const top = target.top - editorPosition.top + fromTop
-  const left = target.left - editorPosition.left + (target.width / 2) - fromLeft
+  const left = target.left - editorPosition.left + target.width / 2 - fromLeft
 
   return { top, left }
 }
 
-export const getSelectionDetails = (editorState) => {
+export const getSelectionDetails = editorState => {
   // Returns some commonly used selection attrs
   const selection = editorState.getSelection()
   const content = editorState.getCurrentContent()
@@ -80,7 +83,7 @@ export const getSelectionDetails = (editorState) => {
     isFirstBlock,
     isFirstCharacter,
     isLastBlock,
-    isLastCharacter
+    isLastCharacter,
   }
 }
 
@@ -109,17 +112,17 @@ export const divideEditorState = (editorState, anchorKey, layout) => {
   if (beforeBlocks) {
     const beforeContent = ContentState.createFromBlockArray(beforeBlocks)
     const currentSectionState = EditorState.push(
-      editorState, beforeContent, 'remove-range'
+      editorState,
+      beforeContent,
+      "remove-range"
     )
     const afterContent = ContentState.createFromBlockArray(afterBlocks)
-    const afterState = EditorState.push(
-      editorState, afterContent, null
-    )
+    const afterState = EditorState.push(editorState, afterContent, null)
     const newSection = convertToRichHtml(afterState, layout)
 
     return {
       currentSectionState,
-      newSection
+      newSection,
     }
   }
 }
@@ -129,19 +132,14 @@ export const addLinkToState = (editorState, url, plugin) => {
   const linkData = { url }
 
   if (plugin) {
-    linkData.className = 'is-follow-link'
+    linkData.className = "is-follow-link"
   }
 
-  const contentWithLink = contentState.createEntity(
-    'LINK',
-    'MUTABLE',
-    linkData
-  )
+  const contentWithLink = contentState.createEntity("LINK", "MUTABLE", linkData)
   const entityKey = contentWithLink.getLastCreatedEntityKey()
-  const editorStateWithEntity = EditorState.set(
-    editorState,
-    { currentContent: contentWithLink }
-  )
+  const editorStateWithEntity = EditorState.set(editorState, {
+    currentContent: contentWithLink,
+  })
   const editorStateWithLink = RichUtils.toggleLink(
     editorStateWithEntity,
     editorStateWithEntity.getSelection(),
@@ -151,7 +149,7 @@ export const addLinkToState = (editorState, url, plugin) => {
   return editorStateWithLink
 }
 
-export const hasSelection = (editorState) => {
+export const hasSelection = editorState => {
   const windowHasSelection = !window.getSelection().isCollapsed
   const editorHasSelection = !editorState.getSelection().isCollapsed()
 
@@ -163,7 +161,11 @@ export const getMenuSelectionTarget = (editorRef, editorState, hasFeatures) => {
     const editor = ReactDOM.findDOMNode(editorRef)
     const editorPosition = editor.getBoundingClientRect()
     const selectionLeft = hasFeatures ? 125 : 100
-    const selectionTarget = stickyControlsBox(editorPosition, -93, selectionLeft)
+    const selectionTarget = stickyControlsBox(
+      editorPosition,
+      -93,
+      selectionLeft
+    )
 
     return selectionTarget
   }

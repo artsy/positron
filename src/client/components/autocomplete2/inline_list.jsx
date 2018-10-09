@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { Autocomplete } from '/client/components/autocomplete2/index'
-import { clone } from 'lodash'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { Autocomplete } from "/client/components/autocomplete2/index"
+import { clone } from "lodash"
 
 export class AutocompleteInlineList extends Component {
   static propTypes = {
@@ -13,10 +13,10 @@ export class AutocompleteInlineList extends Component {
     items: PropTypes.array,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
-    url: PropTypes.string
+    url: PropTypes.string,
   }
 
-  onRemoveItem = (item) => {
+  onRemoveItem = item => {
     const { items, onSelect } = this.props
     const newItems = clone(items)
 
@@ -24,19 +24,15 @@ export class AutocompleteInlineList extends Component {
     onSelect(newItems)
   }
 
-  render () {
+  render() {
     const { items, className } = this.props
 
     return (
-      <div className={`Autocomplete--inline ${className ? className : ''}`}>
-
-        <div className='Autocomplete__list'>
+      <div className={`Autocomplete--inline ${className ? className : ""}`}>
+        <div className="Autocomplete__list">
           {items.map((item, i) => {
             return (
-              <div
-                className='Autocomplete__list-item'
-                key={i}
-              >
+              <div className="Autocomplete__list-item" key={i}>
                 {item}
                 <button onClick={() => this.onRemoveItem(i)} />
               </div>
@@ -45,7 +41,6 @@ export class AutocompleteInlineList extends Component {
         </div>
 
         <Autocomplete {...this.props} />
-
       </div>
     )
   }

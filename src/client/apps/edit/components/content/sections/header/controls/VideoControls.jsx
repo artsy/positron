@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import VideoSectionControls from '../../video/controls'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import VideoSectionControls from "../../video/controls"
 
 export class VideoControls extends Component {
   static propTypes = {
@@ -8,26 +8,23 @@ export class VideoControls extends Component {
     isOpen: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
     onProgress: PropTypes.func.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
   }
 
   render() {
     const { article, isOpen, onChange, onClick, onProgress } = this.props
 
     return (
-      <div className='edit-header--video'>
-        <div
-          onClick={onClick}
-          className='edit-header--video-open'
-        >
+      <div className="edit-header--video">
+        <div onClick={onClick} className="edit-header--video-open">
           Embed Video
         </div>
         <div>
-          {isOpen &&
+          {isOpen && (
             <div
-              className='edit-section-container'
+              className="edit-section-container"
               data-editing
-              data-type='video'
+              data-type="video"
             >
               <VideoSectionControls
                 section={article.hero_section}
@@ -36,7 +33,7 @@ export class VideoControls extends Component {
                 isHero
               />
             </div>
-          }
+          )}
         </div>
       </div>
     )

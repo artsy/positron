@@ -1,35 +1,35 @@
-import configureStore from 'redux-mock-store'
-import React from 'react'
-import { clone } from 'lodash'
-import { mount } from 'enzyme'
-import { Provider } from 'react-redux'
-import { StandardArticle } from '@artsy/reaction/dist/Components/Publishing/Fixtures/Articles'
-import { IconDrag } from '@artsy/reaction/dist/Components/Publishing/Icon/IconDrag'
-import { RemoveButton } from 'client/components/remove_button'
-import SectionSlideshow from '../../sections/slideshow'
-import { SectionText } from '../../sections/text/index.jsx'
-import { SectionEmbed } from '../../sections/embed'
-import { SectionImages } from '../../sections/images'
-import { SectionVideo } from '../../sections/video'
-import { SectionContainer } from '../index'
-require('typeahead.js')
+import configureStore from "redux-mock-store"
+import React from "react"
+import { clone } from "lodash"
+import { mount } from "enzyme"
+import { Provider } from "react-redux"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
+import { RemoveButton } from "client/components/remove_button"
+import SectionSlideshow from "../../sections/slideshow"
+import { SectionText } from "../../sections/text/index.jsx"
+import { SectionEmbed } from "../../sections/embed"
+import { SectionImages } from "../../sections/images"
+import { SectionVideo } from "../../sections/video"
+import { SectionContainer, HoverControls } from "../index"
+require("typeahead.js")
 
-describe('SectionContainer', () => {
+describe("SectionContainer", () => {
   let props
   window.scrollTo = jest.fn()
 
-  const getWrapper = (props) => {
+  const getWrapper = props => {
     const mockStore = configureStore([])
 
     const store = mockStore({
       app: {
-        channel: props.channel
+        channel: props.channel,
       },
       edit: {
         article: props.article,
         section: props.section,
-        sectionIndex: props.sectionIndex
-      }
+        sectionIndex: props.sectionIndex,
+      },
     })
 
     return mount(
@@ -44,116 +44,135 @@ describe('SectionContainer', () => {
 
     props = {
       article: article,
-      channel: { type: 'editorial' },
+      channel: { type: "editorial" },
       editing: false,
       index: 1,
       isHero: false,
       onRemoveHero: jest.fn(),
       onSetEditing: jest.fn(),
-      section: { type: 'image_collection', layout: 'overflow_fillwidth' },
+      section: { type: "image_collection", layout: "overflow_fillwidth" },
       sections: article.sections,
       sectionIndex: 1,
-      removeSectionAction: jest.fn()
+      removeSectionAction: jest.fn(),
     }
   })
 
-  it('Renders drag and remove icons', () => {
+  it("Renders drag and remove icons", () => {
+    props.sectionIndex = 0
     const component = getWrapper(props)
     expect(component.find(RemoveButton).length).toBe(1)
     expect(component.find(IconDrag).length).toBe(1)
   })
 
-  it('Calls onSetEditing with index on section click', () => {
+  it("Does not renders drag and remove icons if editing", () => {
+    const component = getWrapper(props)
+    expect(component.find(RemoveButton).length).toBe(0)
+    expect(component.find(IconDrag).length).toBe(0)
+  })
+
+  it("Calls onSetEditing with index on section click", () => {
     props.sectionIndex = 0
     const component = getWrapper(props)
-    component.find('.SectionContainer__hover-controls').at(0).simulate('click')
+    component
+      .find(HoverControls)
+      .at(0)
+      .simulate("click")
     expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index)
   })
 
-  it('Calls onSetEditing with null on click off', () => {
+  it("Calls onSetEditing with null on click off", () => {
     const component = getWrapper(props)
 
-    component.find('.SectionContainer__hover-controls').at(0).simulate('click')
+    component
+      .find(HoverControls)
+      .at(0)
+      .simulate("click")
     expect(props.onSetEditing.mock.calls[0][0]).toBe(null)
   })
 
-  it('Can remove a section click', () => {
+  it("Can remove a section click", () => {
+    props.sectionIndex = 0
     const component = getWrapper(props)
-    component.find(RemoveButton).at(0).simulate('click')
+    component
+      .find(RemoveButton)
+      .at(0)
+      .simulate("click")
 
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index)
   })
 
-  describe('Sections', () => {
-    it('Can render an embed section', () => {
-      props.section = { type: 'embed' }
+  describe("Sections", () => {
+    it("Can render an embed section", () => {
+      props.section = { type: "embed" }
       const component = getWrapper(props)
       expect(component.find(SectionEmbed).length).toBe(1)
     })
 
-    it('Can render an image section', () => {
-      props.section = { type: 'image' }
+    it("Can render an image section", () => {
+      props.section = { type: "image" }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
-    it('Can render an image_collection section', () => {
-      props.section = { type: 'image_collection' }
+    it("Can render an image_collection section", () => {
+      props.section = { type: "image_collection" }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
-    it('Can render an image_set section', () => {
-      props.section = { type: 'image_set' }
+    it("Can render an image_set section", () => {
+      props.section = { type: "image_set" }
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
-    xit('Can render a slideshow section', () => {
-      props.section = { type: 'slideshow' }
+    xit("Can render a slideshow section", () => {
+      props.section = { type: "slideshow" }
       const component = getWrapper(props)
       expect(component.find(SectionSlideshow).length).toBe(1)
     })
 
-    it('Can render a text section', () => {
-      props.sectionIndex = 0
-      props.section = { type: 'text' }
+    it("Can render a text section", () => {
+      props.section = { type: "text", body: "" }
       const component = getWrapper(props)
       expect(component.find(SectionText).length).toBe(1)
     })
 
-    it('Can render a video section', () => {
-      props.section = { type: 'video' }
+    it("Can render a video section", () => {
+      props.section = { type: "video" }
       const component = getWrapper(props)
       expect(component.find(SectionVideo).length).toBe(1)
     })
   })
 
-  describe('Hero Section', () => {
+  describe("Hero Section", () => {
     beforeEach(() => {
       props.isHero = true
     })
 
-    it('Can render an image section', () => {
-      props.section.type = 'image_set'
+    it("Can render an image section", () => {
+      props.section.type = "image_set"
       const component = getWrapper(props)
       expect(component.find(SectionImages).length).toBe(1)
     })
 
-    it('Can render a video section', () => {
-      props.section.type = 'video'
+    it("Can render a video section", () => {
+      props.section.type = "video"
       const component = getWrapper(props)
       expect(component.find(SectionVideo).length).toBe(1)
     })
 
-    it('Does not render drag icon', () => {
+    it("Does not render drag icon", () => {
       const component = getWrapper(props)
       expect(component.find(IconDrag).length).toBe(0)
     })
 
-    it('Can remove a hero section', () => {
+    it("Can remove a hero section", () => {
       const component = getWrapper(props)
-      component.find(RemoveButton).at(0).simulate('click')
+      component
+        .find(RemoveButton)
+        .at(0)
+        .simulate("click")
 
       expect(props.onRemoveHero).toBeCalled()
     })

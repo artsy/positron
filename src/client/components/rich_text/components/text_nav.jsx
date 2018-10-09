@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { flatten, map } from 'lodash'
-import colors from '@artsy/reaction/dist/Assets/Colors'
-import { IconArtist } from '@artsy/reaction/dist/Components/Publishing/Icon/IconArtist'
-import { IconBlockquote } from '@artsy/reaction/dist/Components/Publishing/Icon/IconBlockquote'
-import { IconClearFormatting } from '@artsy/reaction/dist/Components/Publishing/Icon/IconClearFormatting'
-import { IconLink } from '@artsy/reaction/dist/Components/Publishing/Icon/IconLink'
-import { IconOrderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList'
-import { IconUnorderedList } from '@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList'
+import PropTypes from "prop-types"
+import React from "react"
+import { flatten, map } from "lodash"
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import { IconArtist } from "@artsy/reaction/dist/Components/Publishing/Icon/IconArtist"
+import { IconBlockquote } from "@artsy/reaction/dist/Components/Publishing/Icon/IconBlockquote"
+import { IconClearFormatting } from "@artsy/reaction/dist/Components/Publishing/Icon/IconClearFormatting"
+import { IconLink } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLink"
+import { IconOrderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList"
+import { IconUnorderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList"
 
 export class TextNav extends React.Component {
   onToggle = (e, action) => {
@@ -19,24 +19,24 @@ export class TextNav extends React.Component {
       promptForLink,
       styles,
       toggleBlock,
-      toggleStyle
+      toggleStyle,
     } = this.props
 
-    if (map(blocks, 'name').includes(action)) {
+    if (map(blocks, "name").includes(action)) {
       return toggleBlock(action)
     }
-    if (map(styles, 'name').includes(action)) {
+    if (map(styles, "name").includes(action)) {
       return toggleStyle(action)
     }
 
     switch (action) {
-      case 'artist': {
+      case "artist": {
         return promptForLink(action)
       }
-      case 'link': {
+      case "link": {
         return promptForLink()
       }
-      case 'clear-formatting': {
+      case "clear-formatting": {
         return makePlainText()
       }
     }
@@ -48,7 +48,7 @@ export class TextNav extends React.Component {
       hasFeatures,
       makePlainText,
       promptForLink,
-      styles
+      styles,
     } = this.props
     const buttons = []
 
@@ -59,13 +59,13 @@ export class TextNav extends React.Component {
       buttons.push(blocks)
     }
     if (promptForLink) {
-      buttons.push({ name: 'link' })
+      buttons.push({ name: "link" })
     }
     if (hasFeatures && promptForLink) {
-      buttons.push({ name: 'artist' })
+      buttons.push({ name: "artist" })
     }
     if (makePlainText) {
-      buttons.push({ name: 'clear-formatting' })
+      buttons.push({ name: "clear-formatting" })
     }
 
     return flatten(buttons)
@@ -75,22 +75,22 @@ export class TextNav extends React.Component {
     const props = { color: colors.grayDark }
 
     switch (type) {
-      case 'artist': {
+      case "artist": {
         return <IconArtist {...props} />
       }
-      case 'blockquote': {
+      case "blockquote": {
         return <IconBlockquote {...props} />
       }
-      case 'link': {
+      case "link": {
         return <IconLink {...props} />
       }
-      case 'ordered-list-item': {
+      case "ordered-list-item": {
         return <IconOrderedList {...props} />
       }
-      case 'clear-formatting': {
+      case "clear-formatting": {
         return <IconClearFormatting {...props} />
       }
-      case 'unordered-list-item': {
+      case "unordered-list-item": {
         return <IconUnorderedList {...props} />
       }
     }
@@ -99,11 +99,11 @@ export class TextNav extends React.Component {
   getNavWidth = () => {
     const buttons = this.getButtonArray()
     if (buttons.length === 8) {
-      return '200px'
+      return "200px"
     } else if (buttons.length > 8) {
-      return '250px'
+      return "250px"
     } else {
-      return (buttons.length * 50) + 'px'
+      return buttons.length * 50 + "px"
     }
   }
 
@@ -113,25 +113,22 @@ export class TextNav extends React.Component {
 
     return (
       <div
-        className='TextNav'
+        className="TextNav"
         style={{
           top: top,
           marginLeft: left,
-          width: this.getNavWidth()
+          width: this.getNavWidth(),
         }}
       >
-        {buttons.map((button, i) =>
+        {buttons.map((button, i) => (
           <button
             key={i}
             className={button.name.toLowerCase()}
-            onMouseDown={(e) => this.onToggle(e, button.name)}
+            onMouseDown={e => this.onToggle(e, button.name)}
           >
-            {button.label
-              ? button.label
-              : this.getIcon(button.name)
-            }
+            {button.label ? button.label : this.getIcon(button.name)}
           </button>
-        )}
+        ))}
       </div>
     )
   }
@@ -145,5 +142,5 @@ TextNav.propTypes = {
   promptForLink: PropTypes.func,
   styles: PropTypes.array,
   toggleBlock: PropTypes.func,
-  toggleStyle: PropTypes.func.isRequired
+  toggleStyle: PropTypes.func.isRequired,
 }

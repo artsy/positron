@@ -1,21 +1,22 @@
-import PropTypes from 'prop-types'
-import React from 'react'
+import PropTypes from "prop-types"
+import React from "react"
 
-export const SaveButton = (props) => {
+export const SaveButton = props => {
   const { onSave, isSaved } = props
-  const saveColor = isSaved ? 'black' : 'rgb(247, 98, 90)'
+  const saveColor = isSaved ? "black" : "rgb(247, 98, 90)"
 
   return (
     <button
-      className='save-curation avant-garde-button'
+      className="save-curation avant-garde-button"
       onClick={onSave}
-      style={{color: saveColor}}>
-      {isSaved ? 'Saved' : 'Save'}
+      style={{ color: saveColor }}
+    >
+      {isSaved ? "Saved" : "Save"}
     </button>
   )
 }
 
 SaveButton.propTypes = {
   isSaved: PropTypes.bool,
-  onSave: PropTypes.func.isRequired
+  onSave: PropTypes.func.isRequired,
 }

@@ -1,23 +1,16 @@
-import { EditorState, RichUtils } from 'draft-js'
+import { EditorState, RichUtils } from "draft-js"
 
 /**
  * Helpers for draft-js Paragraph component link handling
-*/
+ */
 
 /**
  * Creates a link entity from url
  */
 export const confirmLink = (url: string, editorState: EditorState) => {
   const contentState = editorState.getCurrentContent()
-  const currentContent = contentState.createEntity(
-    'LINK',
-    'MUTABLE',
-    { url }
-  )
-  const stateWithEntity = EditorState.set(
-    editorState,
-    { currentContent }
-  )
+  const currentContent = contentState.createEntity("LINK", "MUTABLE", { url })
+  const stateWithEntity = EditorState.set(editorState, { currentContent })
   const entityKey = currentContent.getLastCreatedEntityKey()
   // Insert entity at text selection
   return RichUtils.toggleLink(
@@ -57,6 +50,6 @@ export const linkDataFromSelection = (editorState: EditorState) => {
     const entity = contentState.getEntity(linkKey)
     return entity.getData()
   } else {
-    return ''
+    return ""
   }
 }

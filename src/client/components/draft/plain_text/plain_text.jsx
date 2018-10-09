@@ -1,7 +1,7 @@
-import { debounce } from 'lodash'
-import PropTypes from 'prop-types'
-import React from 'react'
-import { ContentState, Editor, EditorState } from 'draft-js'
+import { debounce } from "lodash"
+import PropTypes from "prop-types"
+import React from "react"
+import { ContentState, Editor, EditorState } from "draft-js"
 
 export class PlainText extends React.Component {
   static editor
@@ -9,20 +9,20 @@ export class PlainText extends React.Component {
     content: PropTypes.string,
     name: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     const editorState = this.setEditorState()
     this.state = { editorState }
-    this.debouncedOnContentChange = debounce((content) => {
+    this.debouncedOnContentChange = debounce(content => {
       this.onContentChange(content)
     }, 250)
   }
 
-  setEditorState () {
+  setEditorState() {
     if (this.props.content) {
       return this.setStateWithContent()
     } else {
@@ -30,7 +30,7 @@ export class PlainText extends React.Component {
     }
   }
 
-  setStateWithContent () {
+  setStateWithContent() {
     const content = ContentState.createFromText(this.props.content)
     return EditorState.createWithContent(content)
   }
@@ -62,25 +62,23 @@ export class PlainText extends React.Component {
   }
 
   handleReturn = e => {
-    return 'handled'
+    return "handled"
   }
 
-  render () {
+  render() {
     const { name, placeholder } = this.props
     const { editorState } = this.state
 
     return (
-      <div
-        className='plain-text'
-        name={name}
-        onClick={this.focus}
-      >
+      <div className="plain-text" name={name} onClick={this.focus}>
         <Editor
           editorState={editorState}
           handleReturn={this.handleReturn}
           onChange={this.onChange}
-          placeholder={placeholder || 'Start Typing...'}
-          ref={ref => { this.editor = ref }}
+          placeholder={placeholder || "Start Typing..."}
+          ref={ref => {
+            this.editor = ref
+          }}
           spellcheck
         />
       </div>

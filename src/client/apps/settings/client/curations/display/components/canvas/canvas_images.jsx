@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { Col, Row } from 'react-styled-flexboxgrid'
-import ImageUpload from '../../../../../../edit/components/admin/components/image_upload.coffee'
+import PropTypes from "prop-types"
+import React from "react"
+import { Col, Row } from "react-styled-flexboxgrid"
+import ImageUpload from "../../../../../../edit/components/admin/components/image_upload.coffee"
 
 export class CanvasImages extends React.Component {
   updateImageUrls = (imgIndex, url) => {
@@ -26,7 +26,7 @@ export class CanvasImages extends React.Component {
 
   isSlideshow = () => {
     const { canvas } = this.props.campaign
-    return canvas && canvas.layout === 'slideshow'
+    return canvas && canvas.layout === "slideshow"
   }
 
   renderAssets = () => {
@@ -36,7 +36,7 @@ export class CanvasImages extends React.Component {
         return false
       } else {
         return (
-          <Col lg key={'slideshow-image-' + imgIndex}>
+          <Col lg key={"slideshow-image-" + imgIndex}>
             <label>{this.renderLabel(imgIndex)}</label>
             {this.renderImageUpload(assets, imgIndex)}
           </Col>
@@ -48,65 +48,69 @@ export class CanvasImages extends React.Component {
 
   renderSlideshowImages = () => {
     const { assets } = this.props.campaign.canvas
-    const newImage = <Col lg className='add-new'>{this.renderImageUpload(assets)}</Col>
+    const newImage = (
+      <Col lg className="add-new">
+        {this.renderImageUpload(assets)}
+      </Col>
+    )
     return (
-      <Row className='slideshow-images'>
+      <Row className="slideshow-images">
         {this.renderAssets()}
-        {assets.length && assets.length < 5
-          ? newImage
-          : false
-        }
+        {assets.length && assets.length < 5 ? newImage : false}
       </Row>
     )
   }
 
   renderLogoUpload = () => {
-    const {campaign, index, onChange} = this.props
+    const { campaign, index, onChange } = this.props
     return (
-      <Col lg className='img-logo'>
+      <Col lg className="img-logo">
         <label>Logo</label>
         <ImageUpload
-          name='canvas.logo'
+          name="canvas.logo"
           src={campaign.canvas && campaign.canvas.logo}
           onChange={(name, url) => onChange(name, url, index)}
-          disabled={false} />
+          disabled={false}
+        />
       </Col>
     )
   }
 
   renderImageUpload = (assets, imgIndex) => {
-    const hasVideo = this.props.campaign.canvas.layout === 'standard'
+    const hasVideo = this.props.campaign.canvas.layout === "standard"
     const hidePreview = !imgIndex && imgIndex !== 0 && !hasVideo
     return (
       <ImageUpload
-        key={'canvas-assets-' + (imgIndex || 0)}
-        name='canvas.assets'
+        key={"canvas-assets-" + (imgIndex || 0)}
+        name="canvas.assets"
         hasVideo={hasVideo}
         hidePreview={hidePreview}
         size={30}
-        src={assets[imgIndex] ? assets[imgIndex].url : ''}
-        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
+        src={assets[imgIndex] ? assets[imgIndex].url : ""}
+        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)}
+      />
     )
   }
 
-  renderLabel = (imgIndex) => {
+  renderLabel = imgIndex => {
     const { campaign } = this.props
-    if (campaign.canvas.layout === 'overlay') {
-      return 'Background Image'
+    if (campaign.canvas.layout === "overlay") {
+      return "Background Image"
     } else if (this.isSlideshow()) {
       const index = imgIndex ? imgIndex + 1 : 1
-      return 'Image ' + index.toString()
+      return "Image " + index.toString()
     } else {
-      return 'Image / Video'
+      return "Image / Video"
     }
   }
 
-  render () {
+  render() {
     const { campaign } = this.props
     return (
       <div
-        className='display-admin--canvas-images'
-        data-layout={campaign.canvas.layout || 'overlay'}>
+        className="display-admin--canvas-images"
+        data-layout={campaign.canvas.layout || "overlay"}
+      >
         <Row>
           {this.renderLogoUpload()}
           <Col lg>
@@ -123,5 +127,5 @@ export class CanvasImages extends React.Component {
 CanvasImages.propTypes = {
   campaign: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 }

@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { compact } from 'lodash'
-import { connect } from 'react-redux'
-import { logError } from 'client/actions/edit/errorActions'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { setSection } from 'client/actions/edit/sectionActions'
-import SectionContainer from '../section_container'
-import SectionTool from '../section_tool'
-import DragContainer from 'client/components/drag_drop/index.coffee'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { compact } from "lodash"
+import { connect } from "react-redux"
+import { logError } from "client/actions/edit/errorActions"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { setSection } from "client/actions/edit/sectionActions"
+import SectionContainer from "../section_container"
+import SectionTool from "../section_tool"
+import DragContainer from "client/components/drag_drop/index.coffee"
 
 export class SectionList extends Component {
   static propTypes = {
@@ -16,43 +16,38 @@ export class SectionList extends Component {
     logErrorAction: PropTypes.func,
     onChangeArticleAction: PropTypes.func,
     sectionIndex: PropTypes.any,
-    setSectionAction: PropTypes.func
+    setSectionAction: PropTypes.func,
   }
 
-  onNewSection = (section) => {
+  onNewSection = section => {
     const { article, setSectionAction } = this.props
     const newSectionIndex = article.sections.indexOf(section)
 
     setSectionAction(newSectionIndex)
   }
 
-  onDragEnd = (newSections) => {
+  onDragEnd = newSections => {
     const {
       article: { layout },
       logErrorAction,
-      onChangeArticleAction
+      onChangeArticleAction,
     } = this.props
 
-    if (newSections[0].type === 'social_embed' && layout === 'news') {
+    if (newSections[0].type === "social_embed" && layout === "news") {
       return logErrorAction({
-        message: 'Embeds are not allowed in the first section.'
+        message: "Embeds are not allowed in the first section.",
       })
     }
-    onChangeArticleAction('sections', compact(newSections))
+    onChangeArticleAction("sections", compact(newSections))
   }
 
   renderSectionList = () => {
-    const {
-      article,
-      editSection,
-      sectionIndex,
-      setSectionAction
-    } = this.props
+    const { article, editSection, sectionIndex, setSectionAction } = this.props
     if (article.sections) {
       return article.sections.map((section, index) => {
         const editing = sectionIndex === index
 
-        if (section.type !== 'callout') {
+        if (section.type !== "callout") {
           return [
             <SectionContainer
               key={`${index}-container`}
@@ -61,7 +56,7 @@ export class SectionList extends Component {
               index={index}
               isDraggable
               editing={editing}
-              onSetEditing={(i) => setSectionAction(i)}
+              onSetEditing={i => setSectionAction(i)}
             />,
             <SectionTool
               key={`${index}-tool`}
@@ -69,21 +64,18 @@ export class SectionList extends Component {
               index={index}
               editing={sectionIndex !== 0}
               isDraggable={false}
-            />
+            />,
           ]
         }
       })
     }
   }
 
-  render () {
-    const {
-      sectionIndex,
-      article
-    } = this.props
+  render() {
+    const { sectionIndex, article } = this.props
 
     return (
-      <div className='SectionList edit-sections__list'>
+      <div className="SectionList edit-sections__list">
         <SectionTool
           sections={article.sections || []}
           index={-1}
@@ -91,34 +83,33 @@ export class SectionList extends Component {
           firstSection
           isDraggable={false}
         />
-        {article.sections && article.sections.length > 1
-          ? <DragContainer
-              items={article.sections}
-              onDragEnd={this.onDragEnd}
-              isDraggable={sectionIndex === null}
-              layout='vertical'
-            >
-              {this.renderSectionList()}
-            </DragContainer>
-          : <div>
-              {this.renderSectionList()}
-            </div>
-        }
+        {article.sections && article.sections.length > 1 ? (
+          <DragContainer
+            items={article.sections}
+            onDragEnd={this.onDragEnd}
+            isDraggable={sectionIndex === null}
+            layout="vertical"
+          >
+            {this.renderSectionList()}
+          </DragContainer>
+        ) : (
+          <div>{this.renderSectionList()}</div>
+        )}
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article,
   sectionIndex: state.edit.sectionIndex,
-  editSection: state.edit.section
+  editSection: state.edit.section,
 })
 
 const mapDispatchToProps = {
   logErrorAction: logError,
   onChangeArticleAction: onChangeArticle,
-  setSectionAction: setSection
+  setSectionAction: setSection,
 }
 
 export default connect(
