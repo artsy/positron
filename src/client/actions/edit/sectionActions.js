@@ -73,6 +73,45 @@ export const onChangeSection = (key, value) => {
   }
 }
 
+export const onSplitTextSection = (sectionIndex, existingSectionBody, newSectionBody) => {
+  return (dispatch, getState) => {
+    const {
+      edit: { article },
+    } = getState()
+
+    dispatch(changeSection("body", existingSectionBody))
+    dispatch(newSection("text", sectionIndex + 1, { body: newSectionBody }))
+
+    if (!article.published) {
+      debouncedSaveDispatch(dispatch)
+    }
+  }
+}
+
+export const onMergeTextSections = (sectionIndex, newHtml) => {
+  return (dispatch, getState) => {
+    dispatch(changeSection("body", newHtml))
+    dispatch(removeSection(sectionIndex - 1))
+    dispatch(setSection(sectionIndex - 1))
+  }
+}
+
+export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
+  return (dispatch, getState) => {
+    const {
+      edit: { sectionIndex },
+    } = getState()
+
+    dispatch(changeSection("body", blockquoteHtml))
+    if (afterHtml) {
+      dispatch(newSection("text", sectionIndex + 1, { body: afterHtml }))
+    }
+    if (beforeHtml) {
+      dispatch(newSection("text", sectionIndex, { body: beforeHtml }))
+    }
+  }
+}
+
 export const removeSection = sectionIndex => {
   return (dispatch, getState) => {
     const {
