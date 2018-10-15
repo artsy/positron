@@ -81,7 +81,7 @@ const Input = styled.input`
   background: white;
 `
 
-const LinkInput = Input.extend`
+const LinkInput = styled(Input)`
   margin-right: 0px;
 `
 

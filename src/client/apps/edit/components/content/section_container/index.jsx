@@ -10,10 +10,13 @@ import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sect
 import SectionImages from "../sections/images"
 import SectionSlideshow from "../sections/slideshow"
 import SectionText from "../sections/text"
+import { SectionText2 } from "../sections/text/index2"
 import SectionVideo from "../sections/video"
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import { SectionEmbed } from "../sections/embed"
 import { SectionSocialEmbed } from "../sections/social_embed"
+// TODO: Remove after text2 is merged
+import { data as sd } from "sharify"
 
 export class SectionContainer extends Component {
   static propTypes = {
@@ -80,7 +83,11 @@ export class SectionContainer extends Component {
       }
 
       case "text": {
-        return <SectionText {...this.props} />
+        if (sd.IS_EDIT_2) {
+          return <SectionText2 {...this.props} />
+        } else {
+          return <SectionText {...this.props} />
+        }
       }
 
       case "video": {

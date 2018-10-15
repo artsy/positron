@@ -93,8 +93,8 @@ export class SectionList extends Component {
             {this.renderSectionList()}
           </DragContainer>
         ) : (
-          <div>{this.renderSectionList()}</div>
-        )}
+            <div>{this.renderSectionList()}</div>
+          )}
       </div>
     )
   }
