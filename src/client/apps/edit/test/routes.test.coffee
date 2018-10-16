@@ -102,3 +102,21 @@ describe 'routes', ->
         channel_id: null
       @res.redirect.calledOnce.should.be.true()
       @res.redirect.args[0][0].should.containEql '/switch_channel/1234?'
+
+  describe 'edit2', ->
+    beforeEach ->
+      @req.originalUrl = '/edit2'
+
+    it 'sets IS_EDIT_2 for editorial channel', ->
+      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b', type: 'editorial'
+      @routes.edit @req, @res
+      Backbone.sync.args[0][2].success a = _.extend fixtures().articles, channel_id: '4d8cd73191a5c50ce200002b'
+
+      @res.locals.sd.IS_EDIT_2.should.be.true()
+
+    it 'does not set IS_EDIT_2 for non-editorial channel', ->
+      @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b', type: 'partner'
+      @routes.edit @req, @res
+      Backbone.sync.args[0][2].success a = _.extend fixtures().articles, channel_id: '4d8cd73191a5c50ce200002b'
+
+      @res.locals.sd.IS_EDIT_2.should.not.be.true()
