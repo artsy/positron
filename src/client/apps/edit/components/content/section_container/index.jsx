@@ -168,6 +168,7 @@ export default connect(
 const SectionWrapper = styled.div`
   position: relative;
   width: ${props => props.width};
+  max-width: 100%;
   margin: 0 auto;
   padding: ${props => props.isFillwidth ? 0 : "20px"};
 

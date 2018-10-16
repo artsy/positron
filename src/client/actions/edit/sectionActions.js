@@ -73,13 +73,11 @@ export const onChangeSection = (key, value) => {
   }
 }
 
-export const onSplitTextSection = (sectionIndex, existingSectionBody, newSectionBody) => {
+export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
   return (dispatch, getState) => {
-    const {
-      edit: { article },
-    } = getState()
-
-    dispatch(changeSection("body", existingSectionBody))
+    const { edit: { article, sectionIndex } } = getState()
+    // update original section with updated content
+    dispatch(onChangeSection("body", existingSectionBody))
     dispatch(newSection("text", sectionIndex + 1, { body: newSectionBody }))
 
     if (!article.published) {
@@ -88,27 +86,51 @@ export const onSplitTextSection = (sectionIndex, existingSectionBody, newSection
   }
 }
 
-export const onMergeTextSections = (sectionIndex, newHtml) => {
+export const onMergeTextSections = newHtml => {
   return (dispatch, getState) => {
-    dispatch(changeSection("body", newHtml))
+    const { edit: { sectionIndex } } = getState()
+    dispatch(onChangeSection("body", newHtml))
     dispatch(removeSection(sectionIndex - 1))
-    dispatch(setSection(sectionIndex - 1))
+  }
+}
+
+export const maybeMergeTextSections = () => {
+  return (dispatch, getState) => {
+    const {
+      edit: {
+        article: { sections },
+        section,
+        sectionIndex
+      },
+    } = getState()
+    const sectionBefore = sections[sectionIndex - 1]
+    const sectionBeforeIsText = sectionBefore && sectionBefore.type === "text"
+
+    if (sectionBeforeIsText) {
+      const newHtml = sectionBefore.body + section.body
+      const strippedHtml = newHtml
+        .replace("<blockquote>", "<p>")
+        .replace("</blockquote>", "</p>")
+      dispatch(onMergeTextSections(strippedHtml))
+    }
   }
 }
 
 export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
   return (dispatch, getState) => {
-    const {
-      edit: { sectionIndex },
-    } = getState()
+    const { edit: { article, sectionIndex } } = getState()
 
-    dispatch(changeSection("body", blockquoteHtml))
+    dispatch(onChangeSection("body", blockquoteHtml))
     if (afterHtml) {
       dispatch(newSection("text", sectionIndex + 1, { body: afterHtml }))
     }
     if (beforeHtml) {
       dispatch(newSection("text", sectionIndex, { body: beforeHtml }))
     }
+    if ((beforeHtml || afterHtml) && !article.published) {
+      debouncedSaveDispatch(dispatch)
+    }
+    dispatch(setSection(null))
   }
 }
 
@@ -164,12 +186,6 @@ export const setupSection = type => {
       return {
         type: "text",
         body: "",
-      }
-    case "blockquote":
-      return {
-        type: "text",
-        body: "",
-        layout: "blockquote",
       }
   }
 }
