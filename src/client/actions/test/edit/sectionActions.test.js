@@ -411,6 +411,19 @@ describe("sectionActions", () => {
       expect(payload.value).toMatch("Land exhibitions, make influential contacts")
     })
 
+    it("Does nothing if sectionIndex is 0", () => {
+      sectionIndex = 0
+      getState = jest.fn(() => ({
+        edit: {
+          article,
+          section,
+          sectionIndex
+        }
+      }))
+      maybeMergeTextSections()(dispatch, getState)
+      expect(dispatch).not.toBeCalled()
+    })
+
     it("Does nothing if section before is not text", () => {
       sectionIndex = 3
       getState = jest.fn(() => ({
