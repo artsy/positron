@@ -8,6 +8,7 @@ import { setSection } from "client/actions/edit/sectionActions"
 import SectionContainer from "../section_container"
 import SectionTool from "../section_tool"
 import DragContainer from "client/components/drag_drop/index.coffee"
+import { data as sd } from "sharify"
 
 export class SectionList extends Component {
   static propTypes = {
@@ -22,7 +23,7 @@ export class SectionList extends Component {
   onNewSection = section => {
     const { article, setSectionAction } = this.props
     const newSectionIndex = article.sections.indexOf(section)
-
+    // TODO: double check against new text
     setSectionAction(newSectionIndex)
   }
 
@@ -46,13 +47,18 @@ export class SectionList extends Component {
     if (article.sections) {
       return article.sections.map((section, index) => {
         const editing = sectionIndex === index
+        // TODO: remove after merging text2
+        let editableSection = editing ? editSection : section
+        if (sd.IS_EDIT_2 && editing && section.type === "text") {
+          editableSection = section
+        }
 
         if (section.type !== "callout") {
           return [
             <SectionContainer
               key={`${index}-container`}
               sections={article.sections}
-              section={editing ? editSection : section}
+              section={editableSection}
               index={index}
               isDraggable
               editing={editing}
