@@ -8,7 +8,7 @@ import { setSection } from "client/actions/edit/sectionActions"
 import SectionContainer from "../section_container"
 import SectionTool from "../section_tool"
 import DragContainer from "client/components/drag_drop/index.coffee"
-// import { data as sd } from "sharify"
+import { data as sd } from "sharify"
 
 export class SectionList extends Component {
   static propTypes = {

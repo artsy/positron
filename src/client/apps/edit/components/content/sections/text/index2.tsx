@@ -1,4 +1,10 @@
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
+import { ContentState, EditorState } from "draft-js"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import _s from "underscore.string"
 import {
   maybeMergeTextSections,
   newSection,
@@ -7,28 +13,21 @@ import {
   onSplitTextSection,
   removeSection,
   setSection,
-} from "client/actions/edit/sectionActions"
+} from "../../../../../../actions/edit/sectionActions"
 import {
   Button,
   TextNavContainer,
-} from "client/components/draft/components/text_nav"
-import { RichText } from "client/components/draft/rich_text/rich_text"
-import { convertDraftToHtml } from "client/components/draft/rich_text/utils/convert"
+} from "../../../../../../components/draft/components/text_nav"
+import { RichText } from "../../../../../../components/draft/rich_text/rich_text"
+import { convertDraftToHtml } from "../../../../../../components/draft/rich_text/utils/convert"
 import {
   richTextBlockElements,
   richTextStyleElements,
-} from "client/components/draft/rich_text/utils/utils"
-import { blockMapFromNodes } from "client/components/draft/rich_text/utils/utils"
-import { getSelectionDetails } from "client/components/draft/shared/selection"
-import { styleMapFromNodes } from "client/components/draft/shared/shared"
-import { BlockElement } from "client/components/draft/typings"
-import { ContentState, EditorState } from "draft-js"
-import { cloneDeep } from "lodash"
-import { connect } from "react-redux"
-import styled from "styled-components"
-import _s from "underscore.string"
-
-import React from "react"
+} from "../../../../../../components/draft/rich_text/utils/utils"
+import { blockMapFromNodes } from "../../../../../../components/draft/rich_text/utils/utils"
+import { getSelectionDetails } from "../../../../../../components/draft/shared/selection"
+import { styleMapFromNodes } from "../../../../../../components/draft/shared/shared"
+import { BlockElement } from "../../../../../../components/draft/typings"
 
 interface Props {
   article: any
