@@ -1,6 +1,6 @@
 import { convertFromHTML, convertToHTML } from "draft-convert"
 import { EditorState } from "draft-js"
-import { entityToHTML, htmlToEntity } from "../convert"
+import { entityToHTML, htmlToEntity } from "../../paragraph/utils/convert"
 import { decorators } from "../decorators"
 import { confirmLink, linkDataFromSelection, removeLink } from "../links"
 
@@ -41,13 +41,18 @@ describe("Links", () => {
     it("Inserts a link at text selection", () => {
       const editorState = getEditorState(plainHtml)
       const newState = confirmLink("https://artsy.net", editorState)
-      const newContent = newState.getCurrentContent()
-      const entityKey = newContent.getLastCreatedEntityKey()
-      const entity = newContent.getEntity(entityKey)
 
-      expect(entity.getType()).toBe("LINK")
-      expect(entity.getData().url).toBe("https://artsy.net")
+      if (newState) {
+        const newContent = newState.getCurrentContent()
+        const entityKey = newContent.getLastCreatedEntityKey()
+        const entity = newContent.getEntity(entityKey)
+
+        expect(entity.getType()).toBe("LINK")
+        expect(entity.getData().url).toBe("https://artsy.net")
+      }
     })
+
+    // it("Can insert a follow button link", () => {})
   })
 
   describe("#removeLink", () => {

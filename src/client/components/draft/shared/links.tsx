@@ -1,15 +1,26 @@
 import { EditorState, RichUtils } from "draft-js"
 
 /**
- * Helpers for draft-js Paragraph component link handling
+ * Helpers for draft-js link handling
  */
 
 /**
- * Creates a link entity from url
+ * Creates a link entity from url, accomodates follow buttons
  */
-export const confirmLink = (url: string, editorState: EditorState) => {
+export const confirmLink = (
+  url: string,
+  editorState: EditorState,
+  isFollowLink: boolean = false
+) => {
+  let className
+  if (isFollowLink) {
+    className = "is-follow-link"
+  }
   const contentState = editorState.getCurrentContent()
-  const currentContent = contentState.createEntity("LINK", "MUTABLE", { url })
+  const currentContent = contentState.createEntity("LINK", "MUTABLE", {
+    url,
+    className,
+  })
   const stateWithEntity = EditorState.set(editorState, { currentContent })
   const entityKey = currentContent.getLastCreatedEntityKey()
   // Insert entity at text selection
@@ -21,7 +32,7 @@ export const confirmLink = (url: string, editorState: EditorState) => {
 }
 
 /**
- * Removes link entities from text selection
+ * Remove link entities from selected text
  */
 export const removeLink = (editorState: EditorState) => {
   const selection = editorState.getSelection()

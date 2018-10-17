@@ -3,8 +3,8 @@ import { EditorState } from "draft-js"
 import Draft from "draft-js"
 import { mount } from "enzyme"
 import React from "react"
+import { decorators } from "../../shared/decorators"
 import { Paragraph } from "../paragraph"
-import { decorators } from "../utils/decorators"
 
 Draft.getVisibleSelectionRect = jest.fn().mockReturnValue({
   bottom: 170,
