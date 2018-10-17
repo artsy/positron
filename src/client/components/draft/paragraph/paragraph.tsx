@@ -8,22 +8,21 @@ import { TextNav } from "../components/text_nav"
 import { decorators } from "../shared/decorators"
 import { confirmLink, linkDataFromSelection, removeLink } from "../shared/links"
 import {
-  AllowedStylesParagraph,
-  StyleMap,
-  StyleNamesParagraph,
-} from "../typings"
-import { convertDraftToHtml, convertHtmlToDraft } from "./utils/convert"
-import {
-  blockRenderMap,
   handleReturn,
   insertPastedState,
-  keyBindingFn,
   styleMapFromNodes,
   styleNamesFromMap,
+} from "../shared/shared"
+import { AllowedStyles, StyleMap, StyleNamesParagraph } from "../typings"
+import { convertDraftToHtml, convertHtmlToDraft } from "./utils/convert"
+import {
+  allowedStylesParagraph,
+  blockRenderMap,
+  keyBindingFn,
 } from "./utils/utils"
 
 interface Props {
-  allowedStyles?: AllowedStylesParagraph
+  allowedStyles?: AllowedStyles
   html?: string
   hasLinks: boolean
   onChange: (html: string) => void
@@ -58,7 +57,9 @@ export class Paragraph extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.allowedStyles = styleMapFromNodes(props.allowedStyles)
+    this.allowedStyles = styleMapFromNodes(
+      props.allowedStyles || allowedStylesParagraph
+    )
 
     this.state = {
       editorPosition: null,

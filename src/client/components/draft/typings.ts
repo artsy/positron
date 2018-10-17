@@ -16,7 +16,6 @@ export type StyleMap = StyleMapStyle[]
 export type StyleMapNamesParagraph = StyleNamesParagraph[]
 export type StyleMapNamesFull = StyleNames[]
 
-export type AllowedStylesParagraph = StyleElementsParagraph[]
 export type AllowedStyles = StyleElements[]
 
 export type BlockElement = "h1" | "h2" | "h3" | "blockquote" | "ul" | "ol" | "p"

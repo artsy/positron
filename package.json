@@ -81,6 +81,7 @@
     "glossary": "^0.1.1",
     "google-spreadsheet": "^2.0.3",
     "graphql": "^0.7.2",
+    "immutable": "^3.8.2",
     "jade": "^1.11.0",
     "joi": "^10.5.0",
     "joiql": "^0.1.4",

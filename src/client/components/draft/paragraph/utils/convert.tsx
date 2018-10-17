@@ -7,24 +7,17 @@ import {
 } from "draft-js"
 import React from "react"
 import { stripGoogleStyles } from "../../../rich_text/utils/text_stripping"
+import { draftDefaultStyles } from "../../shared/shared"
+import { styleNamesFromMap, styleNodesFromMap } from "../../shared/shared"
 import {
   StyleMap,
   StyleMapNamesParagraph,
   StyleNamesParagraph,
 } from "../../typings"
-import { styleNamesFromMap, styleNodesFromMap } from "./utils"
 
 /**
  * Helpers for draft-js Paragraph component data conversion
  */
-
-export const draftDefaultStyles = [
-  "BOLD",
-  "CODE",
-  "ITALIC",
-  "STRIKETHROUGH",
-  "UNDERLINE",
-]
 
 /**
  * Convert HTML to Draft ContentState
