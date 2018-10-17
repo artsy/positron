@@ -1,7 +1,7 @@
 import { convertFromHTML, convertToHTML } from "draft-convert"
 import { EditorState } from "draft-js"
+import { decorators } from "../../../shared/decorators"
 import { entityToHTML, htmlToEntity } from "../convert"
-import { decorators } from "../decorators"
 import { confirmLink, linkDataFromSelection, removeLink } from "../links"
 
 describe("Links", () => {

@@ -2,7 +2,7 @@ import { convertFromHTML } from "draft-convert"
 import { EditorState } from "draft-js"
 import { mount } from "enzyme"
 import React from "react"
-import { htmlToEntity } from "../convert"
+import { htmlToEntity } from "../../paragraph/utils/convert"
 import {
   decorators,
   findLinkEntities,

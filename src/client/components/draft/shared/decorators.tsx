@@ -1,6 +1,6 @@
 import { CompositeDecorator, ContentBlock, ContentState } from "draft-js"
 import React, { ReactChild } from "react"
-import { Decorator } from "../../typings"
+import { Decorator } from "../typings"
 
 /**
  * Used when creating an editor, determines

@@ -5,13 +5,13 @@ import ReactDOM from "react-dom"
 import styled from "styled-components"
 import { TextInputUrl } from "../components/text_input_url"
 import { TextNav } from "../components/text_nav"
+import { decorators } from "../shared/decorators"
 import {
   AllowedStylesParagraph,
   StyleMap,
   StyleNamesParagraph,
 } from "../typings"
 import { convertDraftToHtml, convertHtmlToDraft } from "./utils/convert"
-import { decorators } from "./utils/decorators"
 import { confirmLink, linkDataFromSelection, removeLink } from "./utils/links"
 import {
   blockRenderMap,
