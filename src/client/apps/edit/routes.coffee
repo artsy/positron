@@ -28,7 +28,8 @@ sd = require('sharify').data
       res.locals.sd.CURRENT_CHANNEL = channel
 
       # TODO: Remove after text2
-      isEdit2 = req.originalUrl is "/edit2"
+      url = req.originalUrl.split('/').pop()
+      isEdit2 = url is "/edit2"
       isEditorial = channel.get("type") is "editorial"
       if isEdit2 and isEditorial
         res.locals.sd.IS_EDIT_2 = true
