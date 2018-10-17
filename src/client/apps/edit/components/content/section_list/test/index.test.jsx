@@ -127,7 +127,7 @@ describe("SectionList", () => {
       expect(section).toEqual(article.sections[2])
     })
 
-    xit("if edit2, passes props.sections to text sectionContainer", () => {
+    it("if edit2, passes props.sections to text sectionContainer", () => {
       sharify.data = { IS_EDIT_2: true }
       props.sectionIndex = 0
       props.editSection = clone(article.sections[2])

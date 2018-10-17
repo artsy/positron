@@ -10,7 +10,7 @@ import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sect
 import SectionImages from "../sections/images"
 import SectionSlideshow from "../sections/slideshow"
 import SectionText from "../sections/text"
-import { SectionText2 } from "../sections/text/index2"
+import SectionText2 from "../sections/text/index2"
 import SectionVideo from "../sections/video"
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import { SectionEmbed } from "../sections/embed"
