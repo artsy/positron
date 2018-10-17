@@ -6,7 +6,6 @@ import { IconLink } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLi
 import { IconOrderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList"
 import { IconUnorderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList"
 import { getVisibleSelectionRect } from "draft-js"
-
 import { flatten, map } from "lodash"
 import React, { Component } from "react"
 import styled from "styled-components"
