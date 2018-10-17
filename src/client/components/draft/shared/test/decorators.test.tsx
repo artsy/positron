@@ -80,5 +80,7 @@ describe("Decorators", () => {
 
       expect(preventDefault).toBeCalled()
     })
+
+    // it("Can create a follow button link", () => { })
   })
 })

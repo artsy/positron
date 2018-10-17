@@ -51,6 +51,8 @@ describe("Links", () => {
         expect(entity.getData().url).toBe("https://artsy.net")
       }
     })
+
+    // it("Can insert a follow button link", () => {})
   })
 
   describe("#removeLink", () => {

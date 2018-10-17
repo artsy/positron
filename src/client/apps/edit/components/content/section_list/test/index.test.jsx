@@ -26,7 +26,6 @@ describe("SectionList", () => {
       },
       edit: {
         article: props.article,
-        section: props.section,
         sectionIndex: props.sectionIndex,
       },
     })
