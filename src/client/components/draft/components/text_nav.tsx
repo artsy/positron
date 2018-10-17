@@ -6,6 +6,7 @@ import { IconLink } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLi
 import { IconOrderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconOrderedList"
 import { IconUnorderedList } from "@artsy/reaction/dist/Components/Publishing/Icon/IconUnorderedList"
 import { getVisibleSelectionRect } from "draft-js"
+
 import { flatten, map } from "lodash"
 import React, { Component } from "react"
 import styled from "styled-components"
@@ -207,12 +208,13 @@ export class TextNav extends Component<Props, State> {
   render() {
     const { onClickOff } = this.props
     const { top, left } = this.stickyControlsBox()
+    const { width } = this.getNavDimensions()
     const buttons = this.getButtonArray()
 
     return (
       <>
         <BackgroundOverlay onClick={onClickOff} />
-        <TextNavContainer top={top} left={left}>
+        <TextNavContainer top={top} left={left} width={width}>
           {buttons.map((button, i) => (
             <Button
               key={i}
@@ -228,8 +230,12 @@ export class TextNav extends Component<Props, State> {
   }
 }
 
-const TextNavContainer = styled.div.attrs<{ top: number; left: number }>({})`
-  max-width: 250px;
+export const TextNavContainer = styled.div.attrs<{
+  top: number
+  left: number
+  width: number
+}>({})`
+  max-width: ${props => props.width}px;
   background: ${color("black100")};
   border-radius: 5px;
   display: flex;
