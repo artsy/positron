@@ -105,7 +105,7 @@ describe 'routes', ->
 
   describe 'edit2', ->
     beforeEach ->
-      @req.originalUrl = '/edit2'
+      @req.originalUrl = '4d8cd73191a5c50ce200002b/edit2'
 
     it 'sets IS_EDIT_2 for editorial channel', ->
       @req.user.set current_channel: id: '4d8cd73191a5c50ce200002b', type: 'editorial'
