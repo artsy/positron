@@ -49,9 +49,9 @@ export class SectionList extends Component {
         const editing = sectionIndex === index
         // TODO: remove after merging text2
         let editableSection = editing ? editSection : section
-        // if (sd.IS_EDIT_2 && editing && section.type === "text") {
-        //   editableSection = section
-        // }
+        if (sd.IS_EDIT_2 && editing && section.type === "text") {
+          editableSection = section
+        }
 
         if (section.type !== "callout") {
           return [
