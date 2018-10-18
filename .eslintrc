@@ -6,7 +6,8 @@
     "prettier"
   ],
   "globals": {
-    "__dirname": true
+    "__dirname": true,
+    "$": true
   },
   "env": {
     "browser": true,
@@ -16,9 +17,6 @@
   },
   "rules": {
     "camelcase": 0,
-    "comma-dangle": ["error", "never"],
-    "quotes": ["error", "double"],
-    "jsx-quotes": 0,
     "no-mixed-operators": 0,
     "no-new": 0,
     "react/jsx-indent": 0,

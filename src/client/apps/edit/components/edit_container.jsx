@@ -8,14 +8,12 @@ import {
   stopEditingArticle,
   toggleSpinner,
 } from "client/actions/edit/editActions"
-
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import EditAdmin from "./admin"
 import EditContent from "./content"
 import EditDisplay from "./display"
 import EditError from "./error"
 import EditHeader from "./header"
-
 import { MessageModal } from "./message"
 
 const INACTIVITY_TIMEOUT = 600 * 1000
