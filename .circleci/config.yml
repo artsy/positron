@@ -1,101 +1,56 @@
 version: 2
-
 jobs:
-  build-and-test:
-    working_directory: ~/positron
+  test:
     docker:
-      - image: circleci/node:8-stretch-browsers
-      - image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
-      - image: circleci/mongo:3
-
+      - image: artsy/hokusai
     steps:
+      - add_ssh_keys
       - checkout
-      - restore_cache:
-          keys:
-            - yarn-{{ checksum "yarn.lock" }}
-            - yarn-
-
+      - setup_remote_docker
       - run:
-          name: Yarn install
-          command: yarn --check-files
-
-      - save_cache:
-          name: Save yarn cache
-          key: yarn-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
-
-      - run:
-          name: Poll for Elasticsearch
-          command: sleep 10 && curl --retry 10 --retry-delay 5 -v http://127.0.0.1:9200/
-
-      - run:
-          name: Yarn test
-          command: yarn test
-
-  deploy-staging:
+          name: Test
+          command: hokusai test
+  push:
     docker:
-      - image: circleci/node:8-stretch-browsers
-
+      - image: artsy/hokusai
     steps:
+      - add_ssh_keys
       - checkout
-
+      - setup_remote_docker
       - run:
-          name: Yarn assets
-          command: |
-            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-            bash .circleci/setup_heroku.sh
-            yarn install
-            yarn assets
-            yarn bucket-assets -b positron-staging
-            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-staging
-
-      - run:
-          name: Deploy to staging
-          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-staging.git master
-
-      - run:
-          name: Update staging git branch
-          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
-
-  deploy-production:
+          name: Push
+          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+  deploy:
     docker:
-      - image: circleci/node:8-stretch-browsers
-
+      - image: artsy/hokusai
     steps:
+      - add_ssh_keys
       - checkout
-
       - run:
-          name: Yarn assets
-          command: |
-            curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-            bash .circleci/setup_heroku.sh
-            yarn install
-            yarn assets
-            yarn bucket-assets -b positron-production
-            heroku config:set ASSET_MANIFEST=$(cat manifest.json) --app=positron-production
-
+          name: Configure
+          command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
       - run:
-          name: Deploy to production
-          command: git push --force https://heroku:$HEROKU_TOKEN@git.heroku.com/positron-production.git master
-
+          name: Deploy
+          command: hokusai staging deploy $CIRCLE_SHA1 --git-remote origin
 workflows:
   version: 2
-  build-deploy:
+  default:
     jobs:
-      - build-and-test:
+      - test:
           filters:
             branches:
-              ignore:
-                - staging
-                - release
-      - deploy-staging:
-          requires:
-            - build-and-test
+              only:
+                - master
+      - push:
           filters:
             branches:
               only: master
-      - deploy-production:
+          requires:
+            - test
+      - deploy:
           filters:
             branches:
-              only: release
+              only: master
+          requires:
+            - push
+

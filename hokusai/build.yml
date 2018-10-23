@@ -1,0 +1,6 @@
+---
+version: '2'
+services:
+  positron:
+    build:
+      context: ../

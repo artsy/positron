@@ -1,0 +1,9 @@
+---
+version: '2'
+services:
+  positron:
+    extends:
+      file: build.yml
+      service: positron
+    ports:
+      - 3000:3000

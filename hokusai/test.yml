@@ -1,0 +1,8 @@
+---
+version: '2'
+services:
+  positron:
+    command: ["yarn", "test"]
+    extends:
+      file: build.yml
+      service: positron
