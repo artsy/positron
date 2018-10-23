@@ -1,4 +1,4 @@
-FROM node:8.4.0
+FROM node:8.12.0
 
 # Set up deploy user and working directory
 RUN adduser --disabled-password --gecos '' deploy
@@ -9,7 +9,7 @@ ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_a
 RUN chown deploy:deploy /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 
-RUN npm install -g yarn@1.0.1
+RUN npm install -g yarn@1.9.4
 
 # Set up /app for deploy user
 ADD . /app
@@ -23,12 +23,17 @@ ENV HOME /home/deploy
 
 # Set up node_modules
 RUN yarn install
+# COPY package.json yarn.lock /app/
+# RUN yarn --pure-lockfile
 
 # Run babel compiler
-RUN yarn build
+# RUN yarn build
 
-ENV PORT 3000
-EXPOSE 3000
+# Package assets
+# RUN yarn assets
+
+ENV PORT 3005
+EXPOSE 3005
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
-CMD ["node", "build/index.js"]
+CMD ["yarn", "start"]

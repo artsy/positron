@@ -18,5 +18,6 @@ docs
 log
 tmp
 node_modules
+npm-debug.log
 .vscode
 redis.conf
