@@ -2,8 +2,27 @@
 version: '2'
 services:
   positron:
+    command: ["yarn", "dev"]
     extends:
       file: build.yml
       service: positron
     ports:
-      - 3000:3000
+    - 3005:3005
+    environment:
+    - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
+    - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron
+    env_file: ../.env
+    depends_on:
+    - positron-mongodb
+    - positron-elasticsearch
+    # volumes:
+    # - .:/app
+  positron-elasticsearch:
+    image: elasticsearch:6.4.0
+    ports:
+    - "9200:9200"
+  positron-mongodb:
+    image: mongo:3.0
+    ports:
+    - "27017:27017"
+    command: ["--storageEngine=mmapv1", "--quiet", "--nojournal"]
