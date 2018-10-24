@@ -1,3 +1,4 @@
+import styled from "styled-components"
 import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
@@ -9,6 +10,7 @@ import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/I
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
 import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
+import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 
 export class SectionTool extends Component {
   static propTypes = {
@@ -131,19 +133,22 @@ export class SectionTool extends Component {
   }
 
   render() {
-    const { firstSection, index, isEditing, isHero, sections } = this.props
+    const { article, firstSection, index, isEditing, isHero, sections } = this.props
     const { open } = this.state
 
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
+    const sectionWidth = getSectionWidth(null, article.layout)
 
     return (
-      <div
+      <SectionToolContainer
         className={"edit-tool"}
         data-state-open={open}
         data-editing={isEditing}
         data-visible={isFirstSection || isLastSection}
         data-hero={isHero}
+        isEditing={isEditing}
+        width={sectionWidth}
       >
         <div className="edit-tool__icon" onClick={this.toggleOpen}>
           <IconEditSection
@@ -153,7 +158,7 @@ export class SectionTool extends Component {
         </div>
 
         {isHero ? this.renderHeroMenu() : this.renderSectionMenu()}
-      </div>
+      </SectionToolContainer>
     )
   }
 }
@@ -172,3 +177,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionTool)
+
+const SectionToolContainer = styled.div`
+  z-index: 1;
+  max-height: 0;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: ${props => props.width ? props.width : "100%"};
+  width: 100%;
+  ${props => props.isEditing && `
+    z-index: -1;
+  `}
+`

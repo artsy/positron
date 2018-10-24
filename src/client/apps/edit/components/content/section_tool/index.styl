@@ -3,14 +3,6 @@
 section-btn-height = 130px
 
 .edit-tool
-  z-index 1
-  max-height 0
-  position relative
-  margin-left auto
-  margin-right auto
-  width 100%
-  &[data-editing=true]
-    z-index -1
   &:last-child
     opacity 1
     margin-top 15px
@@ -119,14 +111,3 @@ section-btn-height = 130px
     &:hover::after,
     &[data-state-open="true"]::after
       display none
-
-[data-layout='classic'] .edit-tool
-  max-width classic-body-w-margin
-  &[data-hero=true]
-    max-width 640px
-
-[data-layout='standard'] .edit-tool
-  max-width standard-body-w-margin
-
-[data-layout='feature'] .edit-tool
-  max-width feature-body-w-margin
