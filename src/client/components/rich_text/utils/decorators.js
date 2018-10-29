@@ -14,7 +14,7 @@ export const findEntities = (type, contentBlock, callback, contentState) => {
 }
 
 export const findLinkEntities = (contentBlock, callback, contentState) => {
-  exports.findEntities("LINK", contentBlock, callback, contentState)
+  findEntities("LINK", contentBlock, callback, contentState)
 }
 
 //
