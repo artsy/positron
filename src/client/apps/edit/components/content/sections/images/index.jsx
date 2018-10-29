@@ -6,7 +6,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import DragContainer from "client/components/drag_drop/index.coffee"
 import ImagesControls from "./components/controls"
-import EditImage from "./components/edit_image"
+import EditImage from "./components/edit_image.tsx"
 import { ImageSet } from "./components/image_set"
 import { ProgressBar } from "client/components/file_input/progress_bar"
 import {
@@ -157,13 +157,13 @@ export class SectionImages extends Component {
             ) : images.length > 1 && editing ? (
               this.renderDraggableImages(images)
             ) : (
-              this.renderImages(images)
-            )
+                  this.renderImages(images)
+                )
           ) : (
-            <div className="edit-section__placeholder">
-              Add images and artworks above
+              <div className="edit-section__placeholder">
+                Add images and artworks above
             </div>
-          )}
+            )}
         </div>
       </section>
     )
