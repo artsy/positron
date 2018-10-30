@@ -10058,7 +10058,6 @@ prop-types-extra@^1.0.1:
   resolved "https://registry.yarnpkg.com/prop-types-extra/-/prop-types-extra-1.0.1.tgz#a57bd4810e82d27a3ff4317ecc1b4ad005f79a82"
   integrity sha1-pXvUgQ6C0no/9DF+zBtK0AX3moI=
   dependencies:
-    react-is "^16.3.2"
     warning "^3.0.0"
 
 prop-types-extra@^1.1.0:
@@ -13760,17 +13759,6 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-<<<<<<< HEAD
-ws@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.4.tgz#57f40d036832e5f5055662a397c4de76ed66bf61"
-  integrity sha1-V/QNA2gy5fUFVmKjl8Tedu1mv2E=
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-=======
->>>>>>> bb785d1d94f2e50cf1e2935486921f838806fe25
 ws@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-4.0.0.tgz#bfe1da4c08eeb9780b986e0e4d10eccd7345999f"
