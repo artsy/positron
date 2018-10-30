@@ -157,13 +157,13 @@ export class SectionImages extends Component {
             ) : images.length > 1 && editing ? (
               this.renderDraggableImages(images)
             ) : (
-                  this.renderImages(images)
-                )
+              this.renderImages(images)
+            )
           ) : (
-              <div className="edit-section__placeholder">
-                Add images and artworks above
+            <div className="edit-section__placeholder">
+              Add images and artworks above
             </div>
-            )}
+          )}
         </div>
       </section>
     )

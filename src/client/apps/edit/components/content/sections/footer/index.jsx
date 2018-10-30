@@ -21,7 +21,7 @@ export class SectionFooter extends Component {
           <div className="SectionFooter__postscript" data-layout="column_width">
             <Text layout={article.layout} postscript>
               <Paragraph
-                allowedStyles={["b"]}
+                allowedStyles={["B"]}
                 hasLinks
                 html={article.postscript || ""}
                 onChange={html => onChangeArticleAction("postscript", html)}
