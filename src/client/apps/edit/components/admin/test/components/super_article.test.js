@@ -8,9 +8,9 @@ require("typeahead.js")
 
 jest.mock("superagent", () => {
   return {
-    get: jest.genMockFunction().mockReturnThis(),
-    set: jest.genMockFunction().mockReturnThis(),
-    query: jest.genMockFunction().mockReturnThis(),
+    get: jest.fn().mockReturnThis(),
+    set: jest.fn().mockReturnThis(),
+    query: jest.fn().mockReturnThis(),
     end: jest.fn(),
   }
 })
