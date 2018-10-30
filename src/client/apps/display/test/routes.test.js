@@ -1,16 +1,16 @@
 import Backbone from "backbone"
 import * as routes from "client/apps/display/routes"
 import request from "superagent"
-import { __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS as scSecrets } from 'styled-components'
+import { __DO_NOT_USE_OR_YOU_WILL_BE_HAUNTED_BY_SPOOKY_GHOSTS as scSecrets } from "styled-components"
 const { StyleSheet } = scSecrets
 
 StyleSheet.reset(true)
 
 jest.mock("superagent", () => {
   return {
-    post: jest.genMockFunction().mockReturnThis(),
-    set: jest.genMockFunction().mockReturnThis(),
-    query: jest.genMockFunction().mockReturnThis(),
+    post: jest.fn().mockReturnThis(),
+    set: jest.fn().mockReturnThis(),
+    query: jest.fn().mockReturnThis(),
     end: jest.fn(),
   }
 })
@@ -69,7 +69,7 @@ describe("Display Routes", () => {
     })
     routes.display(req, res, next)
 
-    expect(res.render.mock.calls[0][1].css).toMatch('<style')
+    expect(res.render.mock.calls[0][1].css).toMatch("<style")
     expect(res.render.mock.calls[0][1].css).toMatch("DisplayPanel")
   })
 
