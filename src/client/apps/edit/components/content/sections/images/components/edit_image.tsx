@@ -1,20 +1,20 @@
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import {
-  onChangeHero,
-  onChangeSection,
-} from "client/actions/edit/sectionActions"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import { RemoveButton } from "client/components/remove_button"
 import { clone, without } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
+import {
+  onChangeHero,
+  onChangeSection,
+} from "../../../../../../../actions/edit/sectionActions"
+import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
+import { RemoveButton } from "../../../../../../../components/remove_button"
 
 interface ArticleImage {
-  url?: string
-  caption?: string
+  url?: any
+  caption?: any
   type: "image" | "artwork"
   width?: number
   height?: number
@@ -45,19 +45,22 @@ export class EditImage extends Component<Props> {
   }
 
   removeImage = () => {
-    const { section, image } = this.props
-    const newImages = without(section.images, image)
+    const {
+      section: { images },
+      image,
+    } = this.props
+    const newImages = without(images, image)
 
     this.onChange(newImages)
   }
 
-  onCaptionChange = html => {
+  onCaptionChange = (html: string) => {
     const { image, index, section } = this.props
 
     const newImages = clone(section.images)
     const newImage = Object.assign({}, image)
 
-    newImage.caption = html
+    newImage.caption = html || ""
     newImages[index] = newImage
 
     this.onChange(newImages)
@@ -85,12 +88,12 @@ export class EditImage extends Component<Props> {
 
     const isArtwork = image.type === "artwork"
     const isClassic = article.layout === "classic"
-    const isSingle = section && section.images && section.images.length === 1
+    const isSingle = section.images && section.images.length === 1
 
     const imgWidth = isSingle && !isClassic ? "100%" : `${width}px`
 
     return (
-      <EditImageContainer className="EditImage" width={imgWidth}>
+      <EditImageContainer width={imgWidth}>
         {isArtwork ? (
           <Artwork
             artwork={image}
@@ -128,6 +131,14 @@ export default connect(
   mapDispatchToProps
 )(EditImage)
 
-const EditImageContainer = styled.div<{ width: string }>`
-  width: ${props => props.width};
+export const EditImageContainer = styled.div.attrs<{ width?: any }>({})`
+  width: ${props => props.width || "100%"};
+  position: relative;
+  padding-bottom: 30px;
+  max-width: 100%;
+  margin-right: 30px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 `
