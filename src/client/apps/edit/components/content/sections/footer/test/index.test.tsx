@@ -1,9 +1,9 @@
-import React from "react"
+import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
+import React from "react"
 import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
-import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { SectionFooter } from "../index.jsx"
+import { SectionFooter } from "../index"
 
 describe("SectionFooter", () => {
   let props
@@ -11,13 +11,13 @@ describe("SectionFooter", () => {
   beforeEach(() => {
     props = {
       article: cloneDeep(FeatureArticle),
-      channel: { type: "editorial" },
+      isEditorial: true,
       onChangeArticleAction: jest.fn(),
     }
   })
 
-  const getWrapper = props => {
-    return mount(<SectionFooter {...props} />)
+  const getWrapper = passedProps => {
+    return mount(<SectionFooter {...passedProps} />)
   }
 
   it("Shows a postscript field if channel hasFeature", () => {
@@ -29,7 +29,7 @@ describe("SectionFooter", () => {
   })
 
   it("Does not a postscript field if channel does not hasFeature", () => {
-    props.channel.type = "partner"
+    props.isEditorial = false
     const component = getWrapper(props)
 
     expect(component.find(Paragraph).exists()).toBe(false)
@@ -38,9 +38,8 @@ describe("SectionFooter", () => {
 
   it("Can render a saved postscript", () => {
     const component = getWrapper(props)
-    const expectedPostscript = FeatureArticle.postscript
-      .replace("<p>", "")
-      .replace("</p>", "")
+    const postscript = (FeatureArticle && FeatureArticle.postscript) || ""
+    const expectedPostscript = postscript.replace("<p>", "").replace("</p>", "")
 
     expect(component.html()).toMatch(expectedPostscript)
   })

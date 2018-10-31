@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import styled from "styled-components"
 import { color } from "@artsy/palette"
 import { connect } from "react-redux"
@@ -10,10 +10,13 @@ import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sect
 import SectionImages from "../sections/images"
 import SectionSlideshow from "../sections/slideshow"
 import SectionText from "../sections/text"
+import SectionText2 from "../sections/text/index2"
 import SectionVideo from "../sections/video"
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import { SectionEmbed } from "../sections/embed"
 import { SectionSocialEmbed } from "../sections/social_embed"
+// TODO: Remove after text2 is merged
+import { data as sd } from "sharify"
 
 export class SectionContainer extends Component {
   static propTypes = {
@@ -80,7 +83,11 @@ export class SectionContainer extends Component {
       }
 
       case "text": {
-        return <SectionText {...this.props} />
+        if (sd.IS_EDIT_2) {
+          return <SectionText2 {...this.props} />
+        } else {
+          return <SectionText {...this.props} />
+        }
       }
 
       case "video": {
@@ -95,7 +102,6 @@ export class SectionContainer extends Component {
 
   render() {
     const { article, isHero, section } = this.props
-    const { layout, type } = section
     const sectionWidth = getSectionWidth(section, article.layout)
     const isEditing = this.isEditing()
     const isFillwidth = section.layout === "fillwidth"
@@ -105,18 +111,17 @@ export class SectionContainer extends Component {
         <SectionWrapper
           className="SectionContainer"
           data-editing={isEditing}
-          data-type={type} // TODO: remove css dependent on data-type & editing
+          data-type={section.type} // TODO: remove css dependent on data-type & editing
           width={sectionWidth}
           isHero={isHero}
           isFillwidth={isFillwidth}
         >
           <HoverControls
-            onClick={this.onSetEditing}
             isEditing={isEditing}
-            type={type}
+            type={section.type}
           >
             {!isEditing &&
-              <>
+              <Fragment>
                 {!isHero && (
                   <DragButtonContainer isFillwidth={isFillwidth}>
                     <IconDrag background={color("black30")} />
@@ -129,7 +134,8 @@ export class SectionContainer extends Component {
                     background={color("black30")}
                   />
                 </RemoveButtonContainer>
-              </>
+                <ClickToEdit onClick={this.onSetEditing} />
+              </Fragment>
             }
           </HoverControls>
 
@@ -161,6 +167,7 @@ export default connect(
 const SectionWrapper = styled.div`
   position: relative;
   width: ${props => props.width};
+  max-width: 100%;
   margin: 0 auto;
   padding: ${props => props.isFillwidth ? 0 : "20px"};
 
@@ -186,7 +193,15 @@ export const HoverControls = styled.div`
   `}
 `
 
-const ContainerBackground = styled.div`
+export const ClickToEdit = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+`
+
+export const ContainerBackground = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -200,6 +215,7 @@ const IconContainer = styled.div`
   position: absolute;
   right: -15px;
   cursor: pointer;
+  z-index: 5;
   ${props => props.isFillwidth && `
     right: 18px;
   `}

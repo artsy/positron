@@ -27,6 +27,15 @@ sd = require('sharify').data
       channel = new Channel req.user.get('current_channel')
       res.locals.sd.CURRENT_CHANNEL = channel
 
+      # TODO: Remove after text2
+      url = req.originalUrl.split('/').pop()
+      isEdit2 = url is "edit2"
+      isEditorial = channel.get("type") is "editorial"
+      if isEdit2 and isEditorial
+        res.locals.sd.IS_EDIT_2 = true
+      else
+        res.locals.sd.IS_EDIT_2 = false
+
       if (article.get('channel_id') or article.get('partner_channel_id')) isnt req.user.get('current_channel').id
         res.redirect "/switch_channel/#{article.get('channel_id') or article.get('partner_channel_id')}?redirect-to=#{req.url}"
       else

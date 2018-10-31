@@ -6,7 +6,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import DragContainer from "client/components/drag_drop/index.coffee"
 import ImagesControls from "./components/controls"
-import EditImage from "./components/edit_image"
+import EditImage from "./components/edit_image.tsx"
 import { ImageSet } from "./components/image_set"
 import { ProgressBar } from "client/components/file_input/progress_bar"
 import {

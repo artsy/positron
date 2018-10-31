@@ -8,7 +8,7 @@ import { IconEditText } from "@artsy/reaction/dist/Components/Publishing/Icon/Ic
 import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo"
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
-import { SectionTool } from "../index"
+import { SectionTool, SectionToolIcon } from "../index"
 
 describe("SectionTool", () => {
   let props
@@ -41,14 +41,14 @@ describe("SectionTool", () => {
 
     it("opens on click", () => {
       const component = getWrapper(props)
-      component.find(".edit-tool__icon").simulate("click")
+      component.find(SectionToolIcon).simulate("click")
 
-      expect(component.state().open).toBe(true)
+      expect(component.state().isOpen).toBe(true)
     })
 
     it("renders the section icons when open", () => {
       const component = getWrapper(props)
-      component.find(".edit-tool__icon").simulate("click")
+      component.find(SectionToolIcon).simulate("click")
 
       expect(component.find(IconEditText).exists()).toBe(true)
       expect(component.find(IconEditImages).exists()).toBe(true)
@@ -58,22 +58,25 @@ describe("SectionTool", () => {
 
     it("Adds a data-visible prop to the last section tool", () => {
       const component = getWrapper(props)
-      expect(component.html()).toMatch('data-visible="true"')
+      const isVisible = component.find(SectionToolIcon).props().isVisible
+
+      expect(isVisible).toBe(true)
     })
 
     it("Adds a data-visible prop to the first section tool if no sections", () => {
       props.firstSection = true
       props.sections = []
       const component = getWrapper(props)
+      const isVisible = component.find(SectionToolIcon).props().isVisible
 
-      expect(component.html()).toMatch('data-visible="true"')
+      expect(isVisible).toBe(true)
     })
 
     describe("Section options", () => {
       it("Renders correct icons for Classic layout with internal channel features", () => {
         props.article.layout = "classic"
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -85,7 +88,7 @@ describe("SectionTool", () => {
         props.article.layout = "classic"
         props.isPartnerChannel = true
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -96,7 +99,7 @@ describe("SectionTool", () => {
       it("Renders correct icons for Standard layout", () => {
         props.article.layout = "standard"
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -107,7 +110,7 @@ describe("SectionTool", () => {
       it("Renders correct icons for Feature layout", () => {
         props.article.layout = "feature"
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -118,7 +121,7 @@ describe("SectionTool", () => {
       it("Renders correct icons for News layout", () => {
         props.article.layout = "news"
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -130,7 +133,7 @@ describe("SectionTool", () => {
         props.article.layout = "news"
         props.firstSection = true
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
@@ -143,7 +146,7 @@ describe("SectionTool", () => {
       it("Can create a text section", () => {
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconEditText).simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("text")
@@ -153,7 +156,7 @@ describe("SectionTool", () => {
       it("Can create an image section", () => {
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconEditImages).simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("image_collection")
@@ -163,7 +166,7 @@ describe("SectionTool", () => {
       it("Can create a video section", () => {
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconEditVideo).simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("video")
@@ -173,7 +176,7 @@ describe("SectionTool", () => {
       it("Can create an embed section", () => {
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconEditEmbed).simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("embed")
@@ -184,7 +187,7 @@ describe("SectionTool", () => {
         props.article.layout = "news"
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconEditEmbed).simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("social_embed")
@@ -196,6 +199,9 @@ describe("SectionTool", () => {
   describe("In Hero Section", () => {
     beforeEach(() => {
       props = {
+        article: {
+          layout: "standard",
+        },
         isEditing: false,
         isHero: true,
         index: -1,
@@ -208,14 +214,14 @@ describe("SectionTool", () => {
 
     it("opens on click", () => {
       const component = getWrapper(props)
-      component.find(".edit-tool__icon").simulate("click")
+      component.find(SectionToolIcon).simulate("click")
 
-      expect(component.state().open).toBe(true)
+      expect(component.state().isOpen).toBe(true)
     })
 
     it("renders the section icons when open", () => {
       const component = getWrapper(props)
-      component.find(".edit-tool__icon").simulate("click")
+      component.find(SectionToolIcon).simulate("click")
 
       expect(component.find(IconHeroImage).exists()).toBe(true)
       expect(component.find(IconHeroVideo).exists()).toBe(true)
@@ -224,7 +230,7 @@ describe("SectionTool", () => {
     describe("Section creation", () => {
       it("Can create an image section", () => {
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconHeroImage).simulate("click")
 
         expect(props.newHeroSectionAction.mock.calls[0][0]).toBe(
@@ -235,7 +241,7 @@ describe("SectionTool", () => {
 
       it("Can create a video section", () => {
         const component = getWrapper(props)
-        component.find(".edit-tool__icon").simulate("click")
+        component.find(SectionToolIcon).simulate("click")
         component.find(IconHeroVideo).simulate("click")
 
         expect(props.newHeroSectionAction.mock.calls[0][0]).toBe("video")

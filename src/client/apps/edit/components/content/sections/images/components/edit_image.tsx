@@ -1,32 +1,40 @@
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { clone, without } from "lodash"
-import { connect } from "react-redux"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
+import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { clone, without } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 import {
   onChangeHero,
   onChangeSection,
-} from "client/actions/edit/sectionActions"
-import { RemoveButton } from "client/components/remove_button"
+} from "../../../../../../../actions/edit/sectionActions"
+import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
+import { RemoveButton } from "../../../../../../../components/remove_button"
 
-export class EditImage extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    editing: PropTypes.bool,
-    image: PropTypes.object.isRequired,
-    index: PropTypes.number.isRequired,
-    isHero: PropTypes.bool,
-    onChangeHeroAction: PropTypes.func,
-    onChangeSectionAction: PropTypes.func,
-    progress: PropTypes.number,
-    section: PropTypes.object.isRequired,
-    width: PropTypes.any,
-  }
+interface ArticleImage {
+  url?: string
+  caption?: string
+  type: "image" | "artwork"
+  width?: number
+  height?: number
+}
 
-  onChange = images => {
+interface Props {
+  article: any
+  editing: boolean
+  image: ArticleImage
+  index: number
+  isHero: boolean
+  onChangeHeroAction: (key: string, val: any) => void
+  onChangeSectionAction: (key: string, val: any) => void
+  progress: number
+  section: SectionData
+  width: any
+}
+
+export class EditImage extends Component<Props> {
+  onChange = (images: ArticleImage[]) => {
     const { isHero, onChangeHeroAction, onChangeSectionAction } = this.props
 
     if (isHero) {
@@ -37,19 +45,22 @@ export class EditImage extends Component {
   }
 
   removeImage = () => {
-    const { section, image } = this.props
-    const newImages = without(section.images, image)
+    const {
+      section: { images },
+      image,
+    } = this.props
+    const newImages = without(images, image)
 
     this.onChange(newImages)
   }
 
-  onCaptionChange = html => {
+  onCaptionChange = (html: string) => {
     const { image, index, section } = this.props
 
     const newImages = clone(section.images)
-    let newImage = Object.assign({}, image)
+    const newImage = Object.assign({}, image)
 
-    newImage.caption = html
+    newImage.caption = html || ""
     newImages[index] = newImage
 
     this.onChange(newImages)
@@ -61,7 +72,7 @@ export class EditImage extends Component {
     if (!progress) {
       return (
         <Paragraph
-          allowedStyles={["i"]}
+          allowedStyles={["I"]}
           hasLinks
           html={image.caption || ""}
           onChange={this.onCaptionChange}
@@ -77,12 +88,12 @@ export class EditImage extends Component {
 
     const isArtwork = image.type === "artwork"
     const isClassic = article.layout === "classic"
-    const isSingle = section.images.length === 1
+    const isSingle = section.images && section.images.length === 1
 
     const imgWidth = isSingle && !isClassic ? "100%" : `${width}px`
 
     return (
-      <EditImageContainer className="EditImage" width={imgWidth}>
+      <EditImageContainer width={imgWidth}>
         {isArtwork ? (
           <Artwork
             artwork={image}
@@ -100,7 +111,6 @@ export class EditImage extends Component {
             sectionLayout={section.layout}
           />
         )}
-
         {editing && <RemoveButton onClick={this.removeImage} />}
       </EditImageContainer>
     )
@@ -121,6 +131,14 @@ export default connect(
   mapDispatchToProps
 )(EditImage)
 
-const EditImageContainer = styled.div`
-  width: ${props => props.width};
+export const EditImageContainer = styled.div.attrs<{ width?: any }>({})`
+  width: ${props => props.width || "100%"};
+  position: relative;
+  padding-bottom: 30px;
+  max-width: 100%;
+  margin-right: 30px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 `
