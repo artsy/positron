@@ -1,3 +1,4 @@
+import { garamond } from "@artsy/reaction/dist/Assets/Fonts"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
 import React, { Component } from "react"
@@ -63,4 +64,10 @@ const SectionFooterPostscript = styled.div.attrs<{ width?: string }>({})`
   width: 100%;
   max-width: ${props => props.width || "100%"};
   margin: auto;
+  padding: 20px;
+
+  .public-DraftEditorPlaceholder-root {
+    ${garamond("s23")};
+    font-style: italic;
+  }
 `
