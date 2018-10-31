@@ -13,8 +13,8 @@ import { Paragraph } from "../../../../../../../components/draft/paragraph/parag
 import { RemoveButton } from "../../../../../../../components/remove_button"
 
 interface ArticleImage {
-  url?: any
-  caption?: any
+  url?: string
+  caption?: string
   type: "image" | "artwork"
   width?: number
   height?: number
