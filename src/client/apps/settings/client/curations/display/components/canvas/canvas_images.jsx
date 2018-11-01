@@ -124,7 +124,8 @@ export class CanvasImages extends React.Component {
   render() {
     const { campaign } = this.props
     const videoIsAllowed = campaign.canvas.layout === "standard"
-    const hasAsset = campaign.canvas.assets && campaign.canvas.assets.length
+    const hasAsset =
+      campaign.canvas.assets && campaign.canvas.assets.length !== 0
     const hasVideoAsset =
       hasAsset && campaign.canvas.assets[0].url.includes(".mp4")
 
