@@ -15,7 +15,7 @@ export const DisplayQuery = `
       url
     }
     body
-    cover_image_url
+    cover_img_url
     disclaimer
     headline
     layout

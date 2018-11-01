@@ -82,8 +82,8 @@ export class CanvasImages extends React.Component {
         <SecondaryImageContainer>
           <label>Video Cover Image</label>
           <ImageUpload
-            name="canvas.cover_image_url"
-            src={campaign.canvas && campaign.canvas.cover_image_url}
+            name="canvas.cover_img_url"
+            src={campaign.canvas && campaign.canvas.cover_img_url}
             onChange={(name, url) => onChange(name, url, index)}
             disabled={false}
           />

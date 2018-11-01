@@ -13,7 +13,7 @@ const unitSchema = Joi.object()
       })
     ),
     body: Joi.string(),
-    cover_image_url: Joi.string(),
+    cover_img_url: Joi.string(),
     disclaimer: Joi.string(),
     headline: Joi.string(),
     layout: Joi.string(),
