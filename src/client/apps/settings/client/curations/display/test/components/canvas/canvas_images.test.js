@@ -2,10 +2,7 @@ import React from "react"
 import { mount } from "enzyme"
 import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
 import { CanvasImages } from "../../../components/canvas/canvas_images"
-import {
-  RemoveButton,
-  RemoveButtonContainer,
-} from "client/components/remove_button"
+import { RemoveButtonContainer } from "client/components/remove_button"
 
 describe("Canvas Images", () => {
   let props
@@ -26,7 +23,6 @@ describe("Canvas Images", () => {
   describe("Overlay", () => {
     it("renders expected fields", () => {
       const component = mount(<CanvasImages {...props} />)
-      expect(component.html()).toMatch('data-layout="overlay"')
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component
@@ -83,7 +79,6 @@ describe("Canvas Images", () => {
     it("renders expected fields", () => {
       props.campaign.canvas.layout = "standard"
       const component = mount(<CanvasImages {...props} />)
-      expect(component.html()).toMatch('data-layout="standard"')
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component
@@ -131,6 +126,24 @@ describe("Canvas Images", () => {
         '<video src="http://artsy.net/video.mp4">'
       )
     })
+
+    it("renders a cover image field if has video asset", () => {
+      props.campaign.canvas.layout = "standard"
+      props.campaign.canvas.assets = [{ url: "http://artsy.net/video.mp4" }]
+      const component = mount(<CanvasImages {...props} />)
+
+      expect(component.text()).toMatch("Video Cover Image")
+      expect(component.find(ImageUpload).length).toBe(3)
+    })
+
+    it("can render saved cover image", () => {
+      props.campaign.canvas.layout = "standard"
+      props.campaign.canvas.cover_img_url = "http://artsy.net/cover_img.jpg"
+      props.campaign.canvas.assets = [{ url: "http://artsy.net/video.mp4" }]
+      const component = mount(<CanvasImages {...props} />)
+
+      expect(component.html()).toMatch("cover_img.jpg")
+    })
   })
 
   describe("Slideshow", () => {
@@ -138,7 +151,6 @@ describe("Canvas Images", () => {
       props.campaign.canvas.assets = []
       props.campaign.canvas.layout = "slideshow"
       const component = mount(<CanvasImages {...props} />)
-      expect(component.html()).toMatch('data-layout="slideshow"')
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component

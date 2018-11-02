@@ -1,7 +1,9 @@
+import styled from "styled-components"
 import PropTypes from "prop-types"
 import React from "react"
 import { Col, Row } from "react-styled-flexboxgrid"
 import ImageUpload from "../../../../../../edit/components/admin/components/image_upload.coffee"
+import { RemoveButtonContainer } from "client/components/remove_button"
 
 export class CanvasImages extends React.Component {
   updateImageUrls = (imgIndex, url) => {
@@ -36,10 +38,10 @@ export class CanvasImages extends React.Component {
         return false
       } else {
         return (
-          <Col lg key={"slideshow-image-" + imgIndex}>
+          <SecondaryImageContainer lg key={"slideshow-image-" + imgIndex}>
             <label>{this.renderLabel(imgIndex)}</label>
             {this.renderImageUpload(assets, imgIndex)}
-          </Col>
+          </SecondaryImageContainer>
         )
       }
     })
@@ -48,16 +50,13 @@ export class CanvasImages extends React.Component {
 
   renderSlideshowImages = () => {
     const { assets } = this.props.campaign.canvas
-    const newImage = (
-      <Col lg className="add-new">
-        {this.renderImageUpload(assets)}
-      </Col>
-    )
+    const newImage = <NewUpload>{this.renderImageUpload(assets)}</NewUpload>
+
     return (
-      <Row className="slideshow-images">
+      <SlideshowImages>
         {this.renderAssets()}
         {assets.length && assets.length < 5 ? newImage : false}
-      </Row>
+      </SlideshowImages>
     )
   }
 
@@ -73,6 +72,23 @@ export class CanvasImages extends React.Component {
           disabled={false}
         />
       </Col>
+    )
+  }
+
+  renderVideoCoverUpload = () => {
+    const { campaign, index, onChange } = this.props
+    return (
+      <Row>
+        <SecondaryImageContainer>
+          <label>Video Cover Image</label>
+          <ImageUpload
+            name="canvas.cover_img_url"
+            src={campaign.canvas && campaign.canvas.cover_img_url}
+            onChange={(name, url) => onChange(name, url, index)}
+            disabled={false}
+          />
+        </SecondaryImageContainer>
+      </Row>
     )
   }
 
@@ -94,6 +110,7 @@ export class CanvasImages extends React.Component {
 
   renderLabel = imgIndex => {
     const { campaign } = this.props
+
     if (campaign.canvas.layout === "overlay") {
       return "Background Image"
     } else if (this.isSlideshow()) {
@@ -106,20 +123,25 @@ export class CanvasImages extends React.Component {
 
   render() {
     const { campaign } = this.props
+    const videoIsAllowed = campaign.canvas.layout === "standard"
+    const hasAsset =
+      campaign.canvas.assets && campaign.canvas.assets.length !== 0
+    const hasVideoAsset =
+      hasAsset && campaign.canvas.assets[0].url.includes(".mp4")
+
     return (
-      <div
-        className="display-admin--canvas-images"
-        data-layout={campaign.canvas.layout || "overlay"}
-      >
-        <Row>
+      <CanvasImagesContainer>
+        <PrimaryImageContainer layout={campaign.canvas.layout || "overlay"}>
           {this.renderLogoUpload()}
           <Col lg>
             <label>{this.renderLabel()}</label>
             {this.renderImageUpload(campaign.canvas.assets || [], 0)}
           </Col>
-        </Row>
+        </PrimaryImageContainer>
+
+        {videoIsAllowed && hasVideoAsset && this.renderVideoCoverUpload()}
         {this.isSlideshow() && this.renderSlideshowImages()}
-      </div>
+      </CanvasImagesContainer>
     )
   }
 }
@@ -129,3 +151,31 @@ CanvasImages.propTypes = {
   index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
 }
+
+const CanvasImagesContainer = styled.div`
+  ${RemoveButtonContainer} {
+    z-index: 5;
+  }
+`
+
+const PrimaryImageContainer = styled(Row)`
+  ${props =>
+    (props.layout === "standard" || props.layout === "overlay") &&
+    `
+    flex-direction: row-reverse;
+  `};
+`
+
+const SecondaryImageContainer = styled(Col)`
+  margin-top: 20px;
+  min-width: 50%;
+`
+
+const NewUpload = styled(Col)``
+
+const SlideshowImages = styled(Row)`
+  ${NewUpload} {
+    margin-top: 2em;
+    min-width: 50%;
+  }
+`
