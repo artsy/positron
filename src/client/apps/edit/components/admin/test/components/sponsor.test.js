@@ -79,7 +79,7 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      expect(component.find('input').last().instance().placeholder).toMatch('http://example.com')
+      expect(component.find('input').at(3).instance().placeholder).toMatch('http://example.com')
     })
 
     it('Can render saved data', () => {
@@ -87,17 +87,44 @@ describe('EditAdmin', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      expect(component.find('input').last().instance().value).toMatch('http://partner.com')
+      expect(component.find('input').at(3).instance().value).toMatch('http://partner.com')
     })
 
     it('Calls props.onChangeArticleAction when input changes', () => {
       const component = mount(
         <AdminSponsor {...props} />
       )
-      const input = component.find('input').last()
+      const input = component.find('input').at(3)
       input.simulate('change', { target: { value: 'New URL' } })
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('sponsor')
       expect(props.onChangeArticleAction.mock.calls[0][1].partner_logo_link).toBe('New URL')
+    })
+  })
+
+  describe('Sponsor Pixel Tracking Code', () => {
+    it('Renders input', () => {
+      const component = mount(
+        <AdminSponsor {...props} />
+      )
+      expect(component.find('input').at(4).instance().placeholder).toMatch('Paste pixel tracking code here')
+    })
+
+    it('Can render saved data', () => {
+      props.article.sponsor = { pixel_tracking_code: 'tracking_image.jpg' }
+      const component = mount(
+        <AdminSponsor {...props} />
+      )
+      expect(component.find('input').at(4).instance().value).toMatch('tracking_image.jpg')
+    })
+
+    it('Calls props.onChangeArticleAction when input changes', () => {
+      const component = mount(
+        <AdminSponsor {...props} />
+      )
+      const input = component.find('input').at(4)
+      input.simulate('change', { target: { value: 'some_img.jpg' } })
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe('sponsor')
+      expect(props.onChangeArticleAction.mock.calls[0][1].pixel_tracking_code).toBe('some_img.jpg')
     })
   })
 })
