@@ -1,6 +1,6 @@
-import { stringifyJSONForWeb } from 'client/lib/utils/json'
+import { stringifyJSONForWeb } from "client/lib/utils/json"
 
-export function AuthorsQuery (ids) {
+export function AuthorsQuery(ids) {
   return `
     {
       authors(ids: ${stringifyJSONForWeb(ids)}) {

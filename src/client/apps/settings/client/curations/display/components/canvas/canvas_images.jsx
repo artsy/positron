@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-import { Col, Row } from 'react-styled-flexboxgrid'
-import ImageUpload from '../../../../../../edit/components/admin/components/image_upload.coffee'
+import styled from "styled-components"
+import PropTypes from "prop-types"
+import React from "react"
+import { Col, Row } from "react-styled-flexboxgrid"
+import ImageUpload from "../../../../../../edit/components/admin/components/image_upload.coffee"
+import { RemoveButtonContainer } from "client/components/remove_button"
 
 export class CanvasImages extends React.Component {
   updateImageUrls = (imgIndex, url) => {
@@ -26,7 +28,7 @@ export class CanvasImages extends React.Component {
 
   isSlideshow = () => {
     const { canvas } = this.props.campaign
-    return canvas && canvas.layout === 'slideshow'
+    return canvas && canvas.layout === "slideshow"
   }
 
   renderAssets = () => {
@@ -36,10 +38,10 @@ export class CanvasImages extends React.Component {
         return false
       } else {
         return (
-          <Col lg key={'slideshow-image-' + imgIndex}>
+          <SecondaryImageContainer lg key={"slideshow-image-" + imgIndex}>
             <label>{this.renderLabel(imgIndex)}</label>
             {this.renderImageUpload(assets, imgIndex)}
-          </Col>
+          </SecondaryImageContainer>
         )
       }
     })
@@ -48,74 +50,98 @@ export class CanvasImages extends React.Component {
 
   renderSlideshowImages = () => {
     const { assets } = this.props.campaign.canvas
-    const newImage = <Col lg className='add-new'>{this.renderImageUpload(assets)}</Col>
+    const newImage = <NewUpload>{this.renderImageUpload(assets)}</NewUpload>
+
     return (
-      <Row className='slideshow-images'>
+      <SlideshowImages>
         {this.renderAssets()}
-        {assets.length && assets.length < 5
-          ? newImage
-          : false
-        }
-      </Row>
+        {assets.length && assets.length < 5 ? newImage : false}
+      </SlideshowImages>
     )
   }
 
   renderLogoUpload = () => {
-    const {campaign, index, onChange} = this.props
+    const { campaign, index, onChange } = this.props
     return (
-      <Col lg className='img-logo'>
+      <Col lg className="img-logo">
         <label>Logo</label>
         <ImageUpload
-          name='canvas.logo'
+          name="canvas.logo"
           src={campaign.canvas && campaign.canvas.logo}
           onChange={(name, url) => onChange(name, url, index)}
-          disabled={false} />
+          disabled={false}
+        />
       </Col>
     )
   }
 
-  renderImageUpload = (assets, imgIndex) => {
-    const hasVideo = this.props.campaign.canvas.layout === 'standard'
-    const hidePreview = !imgIndex && imgIndex !== 0 && !hasVideo
+  renderVideoCoverUpload = () => {
+    const { campaign, index, onChange } = this.props
     return (
-      <ImageUpload
-        key={'canvas-assets-' + (imgIndex || 0)}
-        name='canvas.assets'
-        hasVideo={hasVideo}
-        hidePreview={hidePreview}
-        size={30}
-        src={assets[imgIndex] ? assets[imgIndex].url : ''}
-        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)} />
+      <Row>
+        <SecondaryImageContainer>
+          <label>Video Cover Image</label>
+          <ImageUpload
+            name="canvas.cover_img_url"
+            src={campaign.canvas && campaign.canvas.cover_img_url}
+            onChange={(name, url) => onChange(name, url, index)}
+            disabled={false}
+          />
+        </SecondaryImageContainer>
+      </Row>
     )
   }
 
-  renderLabel = (imgIndex) => {
+  renderImageUpload = (assets, imgIndex) => {
+    const hasVideo = this.props.campaign.canvas.layout === "standard"
+    const hidePreview = !imgIndex && imgIndex !== 0 && !hasVideo
+    return (
+      <ImageUpload
+        key={"canvas-assets-" + (imgIndex || 0)}
+        name="canvas.assets"
+        hasVideo={hasVideo}
+        hidePreview={hidePreview}
+        size={30}
+        src={assets[imgIndex] ? assets[imgIndex].url : ""}
+        onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)}
+      />
+    )
+  }
+
+  renderLabel = imgIndex => {
     const { campaign } = this.props
-    if (campaign.canvas.layout === 'overlay') {
-      return 'Background Image'
+
+    if (campaign.canvas.layout === "overlay") {
+      return "Background Image"
     } else if (this.isSlideshow()) {
       const index = imgIndex ? imgIndex + 1 : 1
-      return 'Image ' + index.toString()
+      return "Image " + index.toString()
     } else {
-      return 'Image / Video'
+      return "Image / Video"
     }
   }
 
-  render () {
+  render() {
     const { campaign } = this.props
+    const videoIsAllowed = campaign.canvas.layout === "standard"
+    const hasAsset =
+      campaign.canvas.assets && campaign.canvas.assets.length !== 0
+    const hasVideoAsset =
+      hasAsset && campaign.canvas.assets[0].url.includes(".mp4")
+
     return (
-      <div
-        className='display-admin--canvas-images'
-        data-layout={campaign.canvas.layout || 'overlay'}>
-        <Row>
+      <CanvasImagesContainer>
+        <PrimaryImageContainer layout={campaign.canvas.layout || "overlay"}>
           {this.renderLogoUpload()}
           <Col lg>
             <label>{this.renderLabel()}</label>
             {this.renderImageUpload(campaign.canvas.assets || [], 0)}
           </Col>
-        </Row>
+        </PrimaryImageContainer>
+
+        {videoIsAllowed && hasVideoAsset && this.renderVideoCoverUpload()}
         {this.isSlideshow() && this.renderSlideshowImages()}
-      </div>
+      </CanvasImagesContainer>
     )
   }
 }
@@ -123,5 +149,33 @@ export class CanvasImages extends React.Component {
 CanvasImages.propTypes = {
   campaign: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 }
+
+const CanvasImagesContainer = styled.div`
+  ${RemoveButtonContainer} {
+    z-index: 5;
+  }
+`
+
+const PrimaryImageContainer = styled(Row)`
+  ${props =>
+    (props.layout === "standard" || props.layout === "overlay") &&
+    `
+    flex-direction: row-reverse;
+  `};
+`
+
+const SecondaryImageContainer = styled(Col)`
+  margin-top: 20px;
+  min-width: 50%;
+`
+
+const NewUpload = styled(Col)``
+
+const SlideshowImages = styled(Row)`
+  ${NewUpload} {
+    margin-top: 2em;
+    min-width: 50%;
+  }
+`

@@ -1,34 +1,45 @@
-import sinon from 'sinon'
-import {index, __RewireAPI__ as RewiredRoute} from '../routes'
+import { index } from "../routes"
+const ElasticSearch = require("api/lib/elasticsearch.coffee")
 
-describe('Search route', () => {
+jest.mock("api/lib/elasticsearch.coffee", () => ({
+  client: { search: jest.fn() },
+}))
+
+describe("Search route", () => {
   const req = {
     query: {
-      term: 'apples'
-    }
+      term: "apples",
+    },
   }
-  const res = {send: sinon.stub()}
-  const next = () => {}
-  const search = sinon.stub()
+  const res = { send: jest.fn() }
+  const next = jest.fn()
+  const {
+    client: { search },
+  } = ElasticSearch
 
   beforeEach(() => {
-    RewiredRoute.__Rewire__('search', {client: {search}})
+    search.mockReset()
+    res.send.mockReset()
   })
 
-  it('makes a search request', () => {
+  it("makes a search request", () => {
     index(req, res, next)
-    search.args[0][0].body.query.bool.must.multi_match.query.should.equal('apples')
+    const { query } = search.mock.calls[0][0].body.query.bool.must.multi_match
+
+    expect(query).toBe("apples")
   })
 
-  it('does not send back results if there is an error', () => {
+  it("does not send back results if there is an error", () => {
     index(req, res, next)
-    search.args[0][1]('error')
-    res.send.called.should.be.false()
+    search.mock.calls[0][1]("error")
+
+    expect(res.send).not.toBeCalled()
   })
 
-  it('returns results from search', () => {
+  it("returns results from search", () => {
     index(req, res, next)
-    search.args[0][1](null, {hits: ['Abigail']})
-    res.send.args[0][0][0].should.equal('Abigail')
+    search.mock.calls[0][1](null, { hits: ["Abigail"] })
+
+    expect(res.send.mock.calls[0][0][0]).toBe("Abigail")
   })
 })

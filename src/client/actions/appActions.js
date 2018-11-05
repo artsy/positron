@@ -1,22 +1,18 @@
-import keyMirror from 'client/lib/keyMirror'
+import keyMirror from "client/lib/keyMirror"
 
-export const actions = keyMirror(
-  'HELLO_WORLD',
-  'LOGIN',
-  'LOGOUT'
-)
+export const actions = keyMirror("HELLO_WORLD", "LOGIN", "LOGOUT")
 
 export const helloWorld = ({ status }) => ({
   type: actions.HELLO_WORLD,
   payload: {
-    status
-  }
+    status,
+  },
 })
 
 export const login = () => ({
-  type: actions.LOGIN
+  type: actions.LOGIN,
 })
 
 export const logout = () => ({
-  type: actions.LOGOUT
+  type: actions.LOGOUT,
 })

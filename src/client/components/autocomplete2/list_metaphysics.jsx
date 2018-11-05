@@ -1,13 +1,13 @@
-import request from 'superagent'
-import { clone, compact, dropRight, uniq } from 'lodash'
-import { connect } from 'react-redux'
-import { difference, flatten, pluck } from 'underscore'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { AutocompleteList } from 'client/components/autocomplete2/list'
-import { AutocompleteSingle } from 'client/components/autocomplete2/single'
-import * as Queries from 'client/queries/metaphysics'
+import request from "superagent"
+import { clone, compact, dropRight, uniq } from "lodash"
+import { connect } from "react-redux"
+import { difference, flatten, pluck } from "underscore"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { AutocompleteList } from "client/components/autocomplete2/list"
+import { AutocompleteSingle } from "client/components/autocomplete2/single"
+import * as Queries from "client/queries/metaphysics"
 
 export class AutocompleteListMetaphysics extends Component {
   static propTypes = {
@@ -20,59 +20,55 @@ export class AutocompleteListMetaphysics extends Component {
     onChangeArticleAction: PropTypes.func,
     placeholder: PropTypes.string,
     user: PropTypes.object,
-    type: PropTypes.string
+    type: PropTypes.string,
   }
 
   static defaultProps = {
-    type: 'list'
+    type: "list",
   }
 
   getQuery = () => {
     const { model } = this.props
 
     switch (model) {
-      case 'artists': {
+      case "artists": {
         return Queries.ArtistsQuery
       }
-      case 'artworks': {
+      case "artworks": {
         return Queries.ArtworksQuery
       }
-      case 'fairs': {
+      case "fairs": {
         return Queries.FairsQuery
       }
-      case 'partners': {
+      case "partners": {
         return Queries.PartnersQuery
       }
-      case 'partner_shows': {
+      case "partner_shows": {
         return Queries.ShowsQuery
       }
-      case 'sales': {
+      case "sales": {
         return Queries.AuctionsQuery
       }
-      case 'users': {
+      case "users": {
         return Queries.UsersQuery
       }
     }
   }
 
-  idsToFetch = (fetchedItems) => {
+  idsToFetch = fetchedItems => {
     const { article, field, model } = this.props
-    let alreadyFetched = uniq(pluck(fetchedItems, '_id'))
+    let alreadyFetched = uniq(pluck(fetchedItems, "_id"))
     let allIds = clone(article[field])
 
-    if (model === 'users') {
-      allIds = pluck(allIds, 'id')
-      alreadyFetched = uniq(pluck(fetchedItems, 'id'))
+    if (model === "users") {
+      allIds = pluck(allIds, "id")
+      alreadyFetched = uniq(pluck(fetchedItems, "id"))
     }
     return difference(allIds, alreadyFetched)
   }
 
   fetchItems = (fetchedItems, cb) => {
-    const {
-      metaphysicsURL,
-      model,
-      user
-    } = this.props
+    const { metaphysicsURL, model, user } = this.props
 
     let newItems = clone(fetchedItems)
     const query = this.getQuery(model)
@@ -82,8 +78,8 @@ export class AutocompleteListMetaphysics extends Component {
       request
         .get(`${metaphysicsURL}`)
         .set({
-          'Accept': 'application/json',
-          'X-Access-Token': (user && user.access_token)
+          Accept: "application/json",
+          "X-Access-Token": user && user.access_token,
         })
         .query({ query: query(idsToFetch) })
         .end((err, res) => {
@@ -100,13 +96,7 @@ export class AutocompleteListMetaphysics extends Component {
   }
 
   fetchItem = (item, cb) => {
-    const {
-      article,
-      field,
-      metaphysicsURL,
-      model,
-      user
-    } = this.props
+    const { article, field, metaphysicsURL, model, user } = this.props
 
     const query = this.getQuery(model)
 
@@ -116,8 +106,8 @@ export class AutocompleteListMetaphysics extends Component {
       request
         .get(`${metaphysicsURL}`)
         .set({
-          Accept: 'application/json',
-          'X-Access-Token': user && user.access_token
+          Accept: "application/json",
+          "X-Access-Token": user && user.access_token,
         })
         .query({ query: query(idToFetch) })
         .end((err, res) => {
@@ -133,28 +123,28 @@ export class AutocompleteListMetaphysics extends Component {
   getFilter = () => {
     const { model } = this.props
 
-    const filter = (items) => {
-      return items.map((item) => {
+    const filter = items => {
+      return items.map(item => {
         return { id: item._id, name: item.name }
       })
     }
 
-    const usersFilter = (items) => {
-      return items.map((item) => {
+    const usersFilter = items => {
+      return items.map(item => {
         return {
           id: item.id,
-          name: compact([item.name, item.email]).join(', ')
+          name: compact([item.name, item.email]).join(", "),
         }
       })
     }
 
-    return model === 'users' ? usersFilter : filter
+    return model === "users" ? usersFilter : filter
   }
 
-  formatSelectedUser = (item) => {
+  formatSelectedUser = item => {
     return {
       id: item.id,
-      name: dropRight(item.name.split(',')).join(', ')
+      name: dropRight(item.name.split(",")).join(", "),
     }
   }
 
@@ -166,43 +156,50 @@ export class AutocompleteListMetaphysics extends Component {
       model,
       onChangeArticleAction,
       placeholder,
-      type
+      type,
     } = this.props
 
     switch (type) {
-      case 'single': {
-        return <AutocompleteSingle
-          fetchItem={(item, cb) => { this.fetchItem(item, cb) }}
-          formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
-          item={article[field] || null}
-          filter={this.getFilter()}
-          onSelect={(result) => onChangeArticleAction(field, result)}
-          placeholder={placeholder || `Search ${model} by name...`}
-          url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
-        />
+      case "single": {
+        return (
+          <AutocompleteSingle
+            fetchItem={(item, cb) => {
+              this.fetchItem(item, cb)
+            }}
+            formatSelected={
+              model === "users" ? this.formatSelectedUser : undefined
+            }
+            item={article[field] || null}
+            filter={this.getFilter()}
+            onSelect={result => onChangeArticleAction(field, result)}
+            placeholder={placeholder || `Search ${model} by name...`}
+            url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+          />
+        )
       }
       default: {
-        return <AutocompleteList
-          fetchItems={(fetchedItems, cb) => this.fetchItems(fetchedItems, cb)}
-          formatSelected={model === 'users' ? this.formatSelectedUser : undefined}
-          items={article[field] || []}
-          filter={this.getFilter()}
-          onSelect={(results) => onChangeArticleAction(field, results)}
-          placeholder={placeholder || `Search ${model} by name...`}
-          url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
-        />
+        return (
+          <AutocompleteList
+            fetchItems={(fetchedItems, cb) => this.fetchItems(fetchedItems, cb)}
+            formatSelected={
+              model === "users" ? this.formatSelectedUser : undefined
+            }
+            items={article[field] || []}
+            filter={this.getFilter()}
+            onSelect={results => onChangeArticleAction(field, results)}
+            placeholder={placeholder || `Search ${model} by name...`}
+            url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+          />
+        )
       }
     }
   }
 
-  render () {
-    const {
-      label,
-      model
-    } = this.props
+  render() {
+    const { label, model } = this.props
 
     return (
-      <div className='field-group'>
+      <div className="field-group">
         <label>{label || model}</label>
         {this.renderAutocompleteType()}
       </div>
@@ -210,15 +207,15 @@ export class AutocompleteListMetaphysics extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   artsyURL: state.app.artsyURL,
   article: state.edit.article,
   metaphysicsURL: state.app.metaphysicsURL,
-  user: state.app.user
+  user: state.app.user,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(

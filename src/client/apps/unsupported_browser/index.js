@@ -1,6 +1,6 @@
-import express from 'express'
-import { index } from 'client/apps/unsupported_browser/routes'
+import express from "express"
+import { index } from "client/apps/unsupported_browser/routes"
 
 const app = (module.exports = express())
 
-app.get('/unsupported', index)
+app.get("/unsupported", index)

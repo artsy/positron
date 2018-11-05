@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { Autocomplete } from '/client/components/autocomplete2/index'
-import { ListItem } from './list'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { Autocomplete } from "/client/components/autocomplete2/index"
+import { ListItem } from "./list"
 
 export class AutocompleteSingle extends Component {
   static propTypes = {
@@ -15,18 +15,18 @@ export class AutocompleteSingle extends Component {
     item: PropTypes.string,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
-    url: PropTypes.string
+    url: PropTypes.string,
   }
 
   state = {
-    item: null
+    item: null,
   }
 
   componentWillMount = () => {
     this.fetchItem()
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if (prevProps.item !== this.props.item) {
       this.fetchItem()
     }
@@ -43,48 +43,46 @@ export class AutocompleteSingle extends Component {
 
   onRemoveItem = () => {
     const { onSelect } = this.props
-    this.setState({item: null})
+    this.setState({ item: null })
     onSelect(null)
   }
 
-  onSelect = (items) => {
+  onSelect = items => {
     const { onSelect } = this.props
     this.setState({ item: items[0] })
     onSelect(items[0])
   }
 
-  render () {
+  render() {
     const { className, formatListItem } = this.props
     const { item } = this.state
 
     const props = {
       ...this.props,
       items: item,
-      onSelect: this.onSelect
+      onSelect: this.onSelect,
     }
 
-    const title = item ? item.title || item.name : ''
+    const title = item ? item.title || item.name : ""
     return (
-      <div className={`AutocompleteList ${className || ''}`}>
-        {item
-          ? <div className='Autocomplete__list'>
-              <ListItem
-                className='Autocomplete__list-item'
-              >
-                {formatListItem
-                  ? formatListItem()
-                  : <span className='selected'>
-                      {title}
-                    </span>
-                }
-                <button
-                  className='remove-button'
-                  onClick={() => this.onRemoveItem()}
-                />
-              </ListItem>
-            </div>
-          : <Autocomplete {...props} />
-        }
+      <div className={`AutocompleteList ${className || ""}`}>
+        {item ? (
+          <div className="Autocomplete__list">
+            <ListItem className="Autocomplete__list-item">
+              {formatListItem ? (
+                formatListItem()
+              ) : (
+                <span className="selected">{title}</span>
+              )}
+              <button
+                className="remove-button"
+                onClick={() => this.onRemoveItem()}
+              />
+            </ListItem>
+          </div>
+        ) : (
+          <Autocomplete {...props} />
+        )}
       </div>
     )
   }

@@ -1,0 +1,30 @@
+{
+  "javascript.validate.enable": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/graphql": true
+  },
+  "files.exclude": {
+    "**/.git": true
+  },
+  "editor.rulers": [80],
+  "editor.tabSize": 2,
+  "[json]": {
+    "editor.formatOnSave": false
+  },
+  "editor.formatOnSave": true,
+  "tslint.autoFixOnSave": true,
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "cSpell.diagnosticLevel": "Hint",
+  "cSpell.ignorePaths": [
+    "**/package-lock.json",
+    "**/node_modules/**",
+    "**/vscode-extension/**",
+    "**/.git/**",
+    ".vscode",
+    "typings",
+    "**/*.snap",
+    "**/*.story.tsx"
+  ],
+  "cSpell.words": []
+}

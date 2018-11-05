@@ -1,14 +1,15 @@
-import Paragraph from 'client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text.jsx'
-import PropTypes from 'prop-types'
-import React from 'react'
+import PropTypes from "prop-types"
+import React from "react"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { PlainText } from "client/components/draft/plain_text/plain_text"
 
 export class CharacterLimit extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      remainingChars: props.limit - this.getTextLength(props.defaultValue || '', props.html)
+      remainingChars:
+        props.limit - this.getTextLength(props.defaultValue || "", props.html),
     }
   }
 
@@ -16,64 +17,69 @@ export class CharacterLimit extends React.Component {
     return isHtml ? $(text).text().length : text.length
   }
 
-  onChange = (e) => {
+  onChange = e => {
     const { html, limit, onChange, type } = this.props
-    const input = type === 'textarea' ? e : e.target.value
+    const input = type === "textarea" ? e : e.target.value
     const remainingChars = limit - this.getTextLength(input, html)
 
     this.setState({ remainingChars })
     onChange(input)
   }
 
-  renderTextArea = (propsForInput) => {
+  renderTextArea = propsForInput => {
     const { defaultValue, html, placeholder } = this.props
 
     if (html) {
       return (
-        <div className='bordered-input'>
+        <div className="bordered-input">
           <Paragraph
             onChange={this.onChange}
-            html={defaultValue || ''}
-            linked
+            hasLinks
+            html={defaultValue || ""}
             stripLinebreaks
-            placeholder={placeholder} />
+            placeholder={placeholder}
+          />
         </div>
       )
     } else {
       return (
-        <div className='bordered-input'>
+        <div className="bordered-input">
           <PlainText
-            content={defaultValue || ''}
+            content={defaultValue || ""}
             onChange={this.onChange}
-            placeholder={placeholder} />
+            placeholder={placeholder}
+          />
         </div>
       )
     }
   }
 
-  render () {
+  render() {
     const { defaultValue, label, limit, placeholder, type } = this.props
     const { remainingChars } = this.state
 
     const propsForInput = {
-      className: 'bordered-input',
+      className: "bordered-input",
       placeholder: placeholder,
-      defaultValue: defaultValue || '',
+      defaultValue: defaultValue || "",
       onChange: this.onChange,
-      maxLength: limit
+      maxLength: limit,
     }
-    const remainingColor = remainingChars >= 0 ? '#999' : '#f7625a'
+    const remainingColor = remainingChars >= 0 ? "#999" : "#f7625a"
 
     return (
-      <div className='CharacterLimit' data-type={type}>
+      <div className="CharacterLimit" data-type={type}>
         <label>
           {label}
-          <span style={{color: remainingColor}}>{remainingChars} Characters</span>
+          <span style={{ color: remainingColor }}>
+            {remainingChars} Characters
+          </span>
         </label>
-        {type === 'textarea'
-          ? this.renderTextArea(propsForInput)
-          : <input {...propsForInput} />
-        }
+        {type === "textarea" ? (
+          this.renderTextArea(propsForInput)
+        ) : (
+          <input {...propsForInput} />
+        )}
       </div>
     )
   }
@@ -86,5 +92,5 @@ CharacterLimit.propTypes = {
   limit: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  type: PropTypes.string
+  type: PropTypes.string,
 }

@@ -1,65 +1,63 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Col, Row } from 'react-styled-flexboxgrid'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
-import { CharacterLimit } from 'client/components/character_limit'
-import { SearchPreview } from './preview/search_preview'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { Col, Row } from "react-styled-flexboxgrid"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { CharacterLimit } from "client/components/character_limit"
+import { SearchPreview } from "./preview/search_preview"
 
 export class DisplaySearch extends Component {
   static propTypes = {
     article: PropTypes.object,
     forceURL: PropTypes.string,
-    onChangeArticleAction: PropTypes.func
+    onChangeArticleAction: PropTypes.func,
   }
 
-  render () {
+  render() {
     const { article, forceURL, onChangeArticleAction } = this.props
     const { search_description, search_title } = article
 
     return (
-      <Row className='DisplaySearch'>
-
+      <Row className="DisplaySearch">
         <Col xs={4}>
-          <div className='field-group'>
+          <div className="field-group">
             <CharacterLimit
-              label='Search Headline'
+              label="Search Headline"
               limit={97}
-              type='textarea'
-              onChange={(value) => onChangeArticleAction('search_title', value)}
+              type="textarea"
+              onChange={value => onChangeArticleAction("search_title", value)}
               defaultValue={search_title}
             />
           </div>
 
-          <div className='field-group'>
+          <div className="field-group">
             <CharacterLimit
-              label='Search Description'
+              label="Search Description"
               limit={160}
-              type='textarea'
-              onChange={(value) => onChangeArticleAction('search_description', value)}
+              type="textarea"
+              onChange={value =>
+                onChangeArticleAction("search_description", value)
+              }
               defaultValue={search_description}
             />
           </div>
         </Col>
 
         <Col xs={8}>
-          <SearchPreview
-            article={article}
-            forceURL={forceURL}
-          />
+          <SearchPreview article={article} forceURL={forceURL} />
         </Col>
       </Row>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   article: state.edit.article,
-  forceURL: state.app.forceURL
+  forceURL: state.app.forceURL,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(

@@ -1,7 +1,7 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { clone, compact, uniq } from 'lodash'
-import Icon from '@artsy/reaction/dist/Components/Icon'
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { clone, compact, uniq } from "lodash"
+import Icon from "@artsy/reaction/dist/Components/Icon"
 
 export class Autocomplete extends Component {
   static propTypes = {
@@ -14,12 +14,12 @@ export class Autocomplete extends Component {
     items: PropTypes.array,
     onSelect: PropTypes.func,
     placeholder: PropTypes.string,
-    url: PropTypes.string
+    url: PropTypes.string,
   }
 
   state = {
     searchResults: [],
-    loading: false
+    loading: false,
   }
 
   componentDidMount = () => {
@@ -31,18 +31,18 @@ export class Autocomplete extends Component {
   addAutocomplete = () => {
     const { url, filter } = this.props
 
-    const returnItems = (items) => {
-      return items.results.map((item) => {
+    const returnItems = items => {
+      return items.results.map(item => {
         return {
           _id: item.id,
           title: item.title,
-          thumbnail_image: item.thumbnail_image
+          thumbnail_image: item.thumbnail_image,
         }
       })
     }
 
     this.engine = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace("value"),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       remote: {
         url,
@@ -53,23 +53,23 @@ export class Autocomplete extends Component {
           },
           complete: () => {
             this.setState({ loading: false })
-          }
-        }
-      }
+          },
+        },
+      },
     })
     this.engine.initialize()
   }
 
-  search = (value) => {
+  search = value => {
     if (this.engine.remote.url !== this.props.url) {
       this.engine.remote.url = this.props.url
     }
-    this.engine.get(value, (searchResults) => {
+    this.engine.get(value, searchResults => {
       this.setState({ searchResults })
     })
   }
 
-  formatSelected = async (selected) => {
+  formatSelected = async selected => {
     const { formatSelected } = this.props
 
     try {
@@ -83,7 +83,7 @@ export class Autocomplete extends Component {
     }
   }
 
-  onSelect = async (selected) => {
+  onSelect = async selected => {
     const { items, onSelect } = this.props
     let newItems
     if (items) {
@@ -110,7 +110,7 @@ export class Autocomplete extends Component {
   onBlur = () => {
     if (this.textInput) {
       this.textInput.blur()
-      this.textInput.value = ''
+      this.textInput.value = ""
     }
     this.setState({ searchResults: [] })
   }
@@ -119,15 +119,13 @@ export class Autocomplete extends Component {
     return this.textInput === document.activeElement
   }
 
-  formatResult (item) {
+  formatResult(item) {
     return (
-      <div className='Autocomplete__item'>
-        <div className='Autocomplete__item-img'>
-          {item.thumbnail_image &&
-            <img src={item.thumbnail_image || ''} />
-          }
+      <div className="Autocomplete__item">
+        <div className="Autocomplete__item-img">
+          {item.thumbnail_image && <img src={item.thumbnail_image || ""} />}
         </div>
-        <div className='Autocomplete__item-title'>
+        <div className="Autocomplete__item-title">
           {item.title || item.name}
         </div>
       </div>
@@ -144,27 +142,31 @@ export class Autocomplete extends Component {
         return (
           <div
             key={i}
-            className='Autocomplete__result'
+            className="Autocomplete__result"
             onClick={() => this.onSelect(item)}
           >
-            {formatSearchResult
-              ? <div className='Autocomplete__item'>
-                  {formatSearchResult(item)}
-                </div>
-
-              : this.formatResult(item)
-            }
+            {formatSearchResult ? (
+              <div className="Autocomplete__item">
+                {formatSearchResult(item)}
+              </div>
+            ) : (
+              this.formatResult(item)
+            )}
           </div>
         )
       })
     } else if (loading) {
       return (
-        <div className='Autocomplete__item Autocomplete__item--loading'>
-          <div className='loading-spinner' />
+        <div className="Autocomplete__item Autocomplete__item--loading">
+          <div className="loading-spinner" />
         </div>
       )
     } else {
-      return <div className='Autocomplete__item Autocomplete__item--empty'>No results</div>
+      return (
+        <div className="Autocomplete__item Autocomplete__item--empty">
+          No results
+        </div>
+      )
     }
   }
 
@@ -172,41 +174,29 @@ export class Autocomplete extends Component {
     if (this.isFocused()) {
       // display if input is focused
       return (
-        <div className='Autocomplete__results'>
-          <div className='Autocomplete__results-list'>
+        <div className="Autocomplete__results">
+          <div className="Autocomplete__results-list">
             {this.formatSearchResults()}
           </div>
-          <div
-            className='Autocomplete__results-bg'
-            onClick={this.onBlur}
-          />
+          <div className="Autocomplete__results-bg" onClick={this.onBlur} />
         </div>
       )
     }
   }
 
-  render () {
-    const {
-      autoFocus,
-      className,
-      disabled,
-      placeholder
-    } = this.props
+  render() {
+    const { autoFocus, className, disabled, placeholder } = this.props
 
     return (
-      <div className={`Autocomplete ${className ? className : ''}`}>
-        <Icon
-          name='search'
-          color='black'
-          className='Autocomplete__icon'
-        />
+      <div className={`Autocomplete ${className ? className : ""}`}>
+        <Icon name="search" color="black" className="Autocomplete__icon" />
         <input
           autoFocus={autoFocus}
-          className='Autocomplete__input bordered-input'
+          className="Autocomplete__input bordered-input"
           disabled={disabled}
-          onChange={(e) => this.search(e.target.value)}
+          onChange={e => this.search(e.target.value)}
           placeholder={placeholder}
-          ref={(input) => {
+          ref={input => {
             this.textInput = input
           }}
         />

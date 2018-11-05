@@ -65,17 +65,17 @@ module.exports = React.createClass
     if @props.src and !@state.progress > 0 and !@props.hidePreview
       div { className: 'preview' },
         if @props.src.includes('.mp4')
-            div {
-              className: 'image-upload-form-preview'
-              style: display: 'block'
-            },
-              video {
-                src: @props.src
-              }
-              if !@props.hasVideo
-                div {
-                  className: 'video-error'
-                }, 'Video files are not allowed in this format.'
+          div {
+            className: 'image-upload-form-preview'
+            style: display: 'block'
+          },
+            video {
+              src: @props.src
+            }
+            if !@props.hasVideo
+              div {
+                className: 'video-error'
+              }, 'Video files are not allowed in this format.'
         else
           div {
             className: 'image-upload-form-preview'

@@ -8,8 +8,8 @@ ReactDOMServer = require 'react-dom/server'
 ReactTestUtils = require 'react-dom/test-utils'
 Sections = require '../../../collections/sections.coffee'
 Section = require '../../../models/section.coffee'
-{ Fixtures } = require('@artsy/reaction/dist/Components/Publishing')
-StandardArticle = Fixtures.StandardArticle
+{ StandardArticle } = require('@artsy/reaction/dist/Components/Publishing/Fixtures/Articles')
+
 r =
   find: ReactTestUtils.scryRenderedDOMComponentsWithClass
   simulate: ReactTestUtils.Simulate
@@ -41,7 +41,7 @@ describe 'DragDropContainer Default', ->
       }
 
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.tsx'
       )
       @children = [
         React.createElement(
@@ -168,7 +168,7 @@ describe 'DragDropContainer Vertical', ->
       }
 
       { EditImage } = benv.require(
-        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.jsx'
+        resolve __dirname, '../../../apps/edit/components/content/sections/images/components/edit_image.tsx'
       )
       @children = [
         React.createElement(

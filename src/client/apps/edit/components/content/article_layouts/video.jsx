@@ -1,26 +1,34 @@
-import moment from 'moment'
-import styled from 'styled-components'
-import { clone } from 'lodash'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { VideoAbout, VideoAboutContainer, Credits } from '@artsy/reaction/dist/Components/Publishing/Video/VideoAbout'
-import { VideoCover, VideoCoverContainer } from '@artsy/reaction/dist/Components/Publishing/Video/VideoCover'
-import FileInput from '/client/components/file_input/index.jsx'
-import Paragraph from '/client/components/rich_text/components/paragraph.coffee'
-import { PlainText } from '/client/components/rich_text/components/plain_text'
-import { ProgressBar } from '/client/components/file_input/progress_bar.jsx'
-import { avantgarde } from '@artsy/reaction/dist/Assets/Fonts'
-import { onChangeArticle } from 'client/actions/edit/articleActions'
+import moment from "moment"
+import styled from "styled-components"
+import { clone } from "lodash"
+import { connect } from "react-redux"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
+import {
+  VideoAbout,
+  VideoAboutContainer,
+  Credits,
+} from "@artsy/reaction/dist/Components/Publishing/Video/VideoAbout"
+import {
+  VideoCover,
+  VideoCoverContainer,
+} from "@artsy/reaction/dist/Components/Publishing/Video/VideoCover"
+import FileInput from "client/components/file_input"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { PlainText } from "client/components/draft/plain_text/plain_text"
+import { ProgressBar } from "client/components/file_input/progress_bar"
+import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
+import { onChangeArticle } from "client/actions/edit/articleActions"
 
 export class EditVideo extends Component {
   static propTypes = {
     article: PropTypes.object.isRequired,
-    onChangeArticleAction: PropTypes.func.isRequired
+    onChangeArticleAction: PropTypes.func.isRequired,
   }
 
   state = {
-    uploadProgress: null
+    uploadProgress: null,
   }
 
   onMediaChange = (key, value) => {
@@ -28,12 +36,12 @@ export class EditVideo extends Component {
     const media = clone(article.media) || {}
 
     media[key] = value
-    onChangeArticleAction('media', media)
+    onChangeArticleAction("media", media)
   }
 
-  onDateChange = (e) => {
+  onDateChange = e => {
     const date = moment(e.target.value).toISOString()
-    this.onMediaChange('release_date', date)
+    this.onMediaChange("release_date", date)
   }
 
   editDescription = () => {
@@ -42,9 +50,9 @@ export class EditVideo extends Component {
     return (
       <PlainText
         content={article.description}
-        onChange={(key, value) => onChangeArticleAction('description', value)}
-        placeholder='Description'
-        name='description'
+        onChange={(key, value) => onChangeArticleAction("description", value)}
+        placeholder="Description"
+        name="description"
       />
     )
   }
@@ -55,9 +63,9 @@ export class EditVideo extends Component {
     return (
       <PlainText
         content={article.title}
-        onChange={(key, value) => onChangeArticleAction('title', value)}
-        placeholder='Title'
-        name='title'
+        onChange={(key, value) => onChangeArticleAction("title", value)}
+        placeholder="Title"
+        name="title"
       />
     )
   }
@@ -67,12 +75,14 @@ export class EditVideo extends Component {
     const description = article.media && article.media.description
 
     return (
-      <Paragraph
-        html={description || ''}
-        linked
-        onChange={(html) => this.onMediaChange('description', html)}
-        placeholder='Start writing here...'
-      />
+      <Text layout={article.layout}>
+        <Paragraph
+          html={description || ""}
+          hasLinks
+          onChange={html => this.onMediaChange("description", html)}
+          placeholder="Start writing here..."
+        />
+      </Text>
     )
   }
 
@@ -81,25 +91,25 @@ export class EditVideo extends Component {
     const credits = article.media && article.media.credits
 
     return (
-      <Paragraph
-        html={credits || ''}
-        linked
-        onChange={(html) => this.onMediaChange('credits', html)}
-        placeholder='Start writing here...'
-      />
+      <Text layout={article.layout}>
+        <Paragraph
+          html={credits || ""}
+          hasLinks
+          onChange={html => this.onMediaChange("credits", html)}
+          placeholder="Start writing here..."
+        />
+      </Text>
     )
   }
 
-  render () {
+  render() {
     const { article } = this.props
     const { uploadProgress } = this.state
     const media = article.media || {}
 
     return (
       <EditVideoContainer>
-        {uploadProgress &&
-          <ProgressBar progress={uploadProgress} />
-        }
+        {uploadProgress && <ProgressBar progress={uploadProgress} />}
 
         <VideoCover
           article={article}
@@ -110,45 +120,41 @@ export class EditVideo extends Component {
 
         <EditCoverInput>
           <FileInput
-            type='simple'
-            onUpload={(src) => this.onMediaChange('cover_image_url', src)}
-            prompt={`+ ${media.cover_image_url ? 'Change' : 'Add'} Cover Image`}
-            onProgress={(uploadProgress) => this.setState({ uploadProgress })}
+            type="simple"
+            onUpload={src => this.onMediaChange("cover_image_url", src)}
+            prompt={`+ ${media.cover_image_url ? "Change" : "Add"} Cover Image`}
+            onProgress={uploadProgress => this.setState({ uploadProgress })}
           />
         </EditCoverInput>
 
         <EditVideoInput>
           <FileInput
             video
-            type='simple'
+            type="simple"
             sizeLimit={100}
-            onUpload={(src) => this.onMediaChange('url', src)}
-            prompt={`+ ${media.url ? 'Change' : 'Add'} Video`}
-            onProgress={(uploadProgress) => this.setState({ uploadProgress })}
+            onUpload={src => this.onMediaChange("url", src)}
+            prompt={`+ ${media.url ? "Change" : "Add"} Video`}
+            onProgress={uploadProgress => this.setState({ uploadProgress })}
           />
         </EditVideoInput>
 
         <EditVideoPublished
-          className='field-group--inline flat-checkbox'
-          onClick={(e) => this.onMediaChange('published', !media.published)}
-          name='media.published'
+          className="field-group--inline flat-checkbox"
+          onClick={e => this.onMediaChange("published", !media.published)}
+          name="media.published"
         >
-          <input
-            type='checkbox'
-            checked={media.published}
-            readOnly
-          />
+          <input type="checkbox" checked={media.published} readOnly />
           <label>Video Published</label>
         </EditVideoPublished>
 
         <EditVideoReleaseDate>
           <label>Release Date</label>
           <input
-            type='date'
-            className='bordered-input bordered-input-dark'
-            defaultValue={moment(media.release_date).format('YYYY-MM-DD')}
+            type="date"
+            className="bordered-input bordered-input-dark"
+            defaultValue={moment(media.release_date).format("YYYY-MM-DD")}
             onChange={this.onDateChange}
-            />
+          />
         </EditVideoReleaseDate>
 
         <MaxWidthContainer>
@@ -156,21 +162,20 @@ export class EditVideo extends Component {
             article={article}
             editDescription={this.editMediaDescription()}
             editCredits={this.editMediaCredits()}
-            color='white'
+            color="white"
           />
         </MaxWidthContainer>
-
       </EditVideoContainer>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  article: state.edit.article
+const mapStateToProps = state => ({
+  article: state.edit.article,
 })
 
 const mapDispatchToProps = {
-  onChangeArticleAction: onChangeArticle
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(
@@ -196,7 +201,7 @@ const EditVideoReleaseDate = styled.div`
   label {
     display: block;
     text-align: right;
-    ${avantgarde('s13')}
+    ${avantgarde("s13")};
   }
 `
 
