@@ -214,6 +214,7 @@ ImageCollectionSection = (->
     partner_light_logo: @string().allow('')
     partner_condensed_logo: @string().allow('')
     partner_logo_link: @string().allow('')
+    pixel_tracking_code: @string().allow('')
   )
   email_metadata: @object().default({}).keys
     image_url: @string().allow('', null)
