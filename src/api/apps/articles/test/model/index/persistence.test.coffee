@@ -861,7 +861,7 @@ describe 'Article Persistence', ->
         article.sponsor.partner_light_logo.should.equal 'https://media.artsy.net/partner_light_logo.jpg'
         article.sponsor.partner_condensed_logo.should.equal 'https://media.artsy.net/partner_condensed_logo.jpg'
         article.sponsor.partner_logo_link.should.equal 'https://partner.com'
-        article.sponsor.pixel_tracking_code.equal 'tracking_image.jpg'
+        article.sponsor.pixel_tracking_code.should.equal 'tracking_image.jpg'
         done()
 
     it 'saves a news_source', (done) ->
