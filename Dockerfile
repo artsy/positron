@@ -23,14 +23,6 @@ ENV HOME /home/deploy
 
 # Set up node_modules
 RUN yarn install
-# COPY package.json yarn.lock /app/
-# RUN yarn --pure-lockfile
-
-# Run babel compiler
-# RUN yarn build
-
-# Package assets
-# RUN yarn assets
 
 ENV PORT 3005
 EXPOSE 3005
