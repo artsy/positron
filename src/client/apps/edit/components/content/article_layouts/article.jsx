@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import React, { Component } from "react"
-import SectionFooter from "../sections/footer"
+import SectionFooter from "../sections/footer/index.tsx"
 import SectionHeader from "../sections/header"
 import SectionHero from "../sections/hero"
 import SectionList from "../section_list"

@@ -1,28 +1,40 @@
-import React from "react"
-import { cloneDeep, extend } from "lodash"
-import { stripTags } from "underscore.string"
-import { mount } from "enzyme"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { EditImage } from "../components/edit_image"
-import { RemoveButton } from "client/components/remove_button"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { mount } from "enzyme"
+import { cloneDeep, extend } from "lodash"
+import React from "react"
+import { stripTags } from "underscore.string"
+import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
+import { RemoveButton } from "../../../../../../../components/remove_button"
+import { EditImage, EditImageContainer } from "../components/edit_image"
 
 describe("EditImage", () => {
   let props
-  let artwork = extend(StandardArticle.sections[4].images[2], { date: "2015" })
-  let image = StandardArticle.sections[4].images[0]
+  let imageCollection
+  let image
+  let artwork
 
-  const getWrapper = props => {
-    return mount(<EditImage {...props} />)
+  const getWrapper = passedProps => {
+    return mount(<EditImage {...passedProps} />)
   }
 
   beforeEach(() => {
+    imageCollection =
+      StandardArticle.sections && cloneDeep(StandardArticle.sections[4])
+    artwork =
+      imageCollection &&
+      imageCollection.images &&
+      extend(imageCollection.images[2], {
+        date: "2015",
+      })
+    image =
+      imageCollection && imageCollection.images && imageCollection.images[0]
+
     props = {
       image,
       article: cloneDeep(StandardArticle),
-      section: cloneDeep(StandardArticle.sections[4]),
+      section: imageCollection,
       index: 0,
       width: 200,
       onChangeSectionAction: jest.fn(),
@@ -58,10 +70,7 @@ describe("EditImage", () => {
   describe("Dimensions", () => {
     it("Sets the container width to props.width if multiple images", () => {
       const component = getWrapper(props)
-      const imageContainer = component
-        .find(".EditImage")
-        .first()
-        .getElement().props
+      const imageContainer = component.find(EditImageContainer).props()
 
       expect(imageContainer.width).toBe(props.width + "px")
     })
@@ -69,10 +78,7 @@ describe("EditImage", () => {
     it("Sets the container width to 100% if single image and not classic", () => {
       props.section.images = [props.image]
       const component = getWrapper(props)
-      const imageContainer = component
-        .find(".EditImage")
-        .first()
-        .getElement().props
+      const imageContainer = component.find(EditImageContainer).props()
 
       expect(imageContainer.width).toBe("100%")
     })
@@ -90,10 +96,10 @@ describe("EditImage", () => {
     })
 
     it("#onCaptionChange can change an image caption", () => {
-      const component = getWrapper(props)
+      const component = getWrapper(props).instance() as EditImage
       const newCaption = "<p>New Caption</p>"
 
-      component.instance().onCaptionChange(newCaption)
+      component.onCaptionChange(newCaption)
       expect(
         props.onChangeSectionAction.mock.calls[0][1][props.index].caption
       ).toBe(newCaption)
@@ -121,13 +127,10 @@ describe("EditImage", () => {
       expect(component.find(RemoveButton).exists()).toBe(true)
     })
 
-    xit("calls removeItem when clicking remove icon", () => {
+    it("calls onChangeSectionAction when clicking remove icon", () => {
       props.editing = true
       const component = getWrapper(props)
-      component
-        .find(RemoveButton)
-        .first()
-        .simulate("click")
+      component.find(RemoveButton).simulate("click")
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("images")
       expect(props.onChangeSectionAction.mock.calls[0][1].length).toBe(

@@ -1,5 +1,5 @@
 //  Video section supports links from youtube or vimeo
-import styled from 'styled-components'
+import styled from "styled-components"
 import PropTypes from "prop-types"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import React, { Component } from "react"
@@ -7,7 +7,10 @@ import { connect } from "react-redux"
 import VideoSectionControls from "./controls.jsx"
 import { Video } from "@artsy/reaction/dist/Components/Publishing/Sections/Video"
 import { ProgressBar } from "client/components/file_input/progress_bar"
-import { RemoveButton, RemoveButtonContainer } from "client/components/remove_button"
+import {
+  RemoveButton,
+  RemoveButtonContainer,
+} from "client/components/remove_button"
 import {
   onChangeHero,
   onChangeSection,
@@ -67,7 +70,7 @@ export class SectionVideo extends Component {
         <Video layout={article.layout} section={section}>
           {editing && this.renderRemoveButton()}
           <Paragraph
-            allowedStyles={["i"]}
+            allowedStyles={["I"]}
             hasLinks
             html={section.caption}
             onChange={html => this.onChange("caption", html)}
@@ -124,7 +127,7 @@ export default connect(
 
 const VideoContainer = styled.section`
   position: relative;
-  z-index: ${props => props.editing ? 10 : -1};
+  z-index: ${props => (props.editing ? 10 : -1)};
 
   ${RemoveButtonContainer} {
     width: 30px;

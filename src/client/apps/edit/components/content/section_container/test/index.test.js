@@ -11,7 +11,7 @@ import { SectionText } from "../../sections/text/index.jsx"
 import { SectionEmbed } from "../../sections/embed"
 import { SectionImages } from "../../sections/images"
 import { SectionVideo } from "../../sections/video"
-import { SectionContainer, HoverControls } from "../index"
+import { SectionContainer, ClickToEdit, ContainerBackground } from "../index"
 require("typeahead.js")
 
 describe("SectionContainer", () => {
@@ -74,20 +74,19 @@ describe("SectionContainer", () => {
     props.sectionIndex = 0
     const component = getWrapper(props)
     component
-      .find(HoverControls)
+      .find(ClickToEdit)
       .at(0)
       .simulate("click")
-    expect(props.onSetEditing.mock.calls[0][0]).toBe(props.index)
+    expect(props.onSetEditing).toBeCalledWith(props.index)
   })
 
   it("Calls onSetEditing with null on click off", () => {
     const component = getWrapper(props)
-
     component
-      .find(HoverControls)
+      .find(ContainerBackground)
       .at(0)
       .simulate("click")
-    expect(props.onSetEditing.mock.calls[0][0]).toBe(null)
+    expect(props.onSetEditing).toBeCalledWith(null)
   })
 
   it("Can remove a section click", () => {
@@ -98,7 +97,7 @@ describe("SectionContainer", () => {
       .at(0)
       .simulate("click")
 
-    expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index)
+    expect(props.removeSectionAction).toBeCalledWith(props.index)
   })
 
   describe("Sections", () => {
