@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test:
+  build-and-test:
     docker:
       - image: artsy/hokusai
     steps:
@@ -9,18 +9,8 @@ jobs:
       - setup_remote_docker
       - run:
           name: Test
-          command: hokusai test
-  push:
-    docker:
-      - image: artsy/hokusai
-    steps:
-      - add_ssh_keys
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Push
-          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
-  deploy:
+          command: hokusai test --build
+  deploy-staging:
     docker:
       - image: artsy/hokusai
     steps:
@@ -30,27 +20,56 @@ jobs:
           name: Configure
           command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
       - run:
-          name: Deploy
+          name: Push
+          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+      - run:
+          name: Assets
+          command: |
+            docker-compose -f ./hokusai/build.yml run -e S3_KEY=$S3_KEY -e S3_SECRET=$S3_SECRET -e COMMIT_HASH=$(git rev-parse --short HEAD) positron sh -c 'yarn assets && yarn bucket-assets -b positron-staging'
+            hokusai staging env set COMMIT_HASH=$(git rev-parse --short HEAD)
+      - run:
+          name: Deploy to staging
           command: hokusai staging deploy $CIRCLE_SHA1 --git-remote origin
+      - run:
+          name: Update staging git branch
+          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
+  deploy-production:
+    docker:
+      - image: artsy/hokusai
+    steps:
+      - add_ssh_keys
+      - checkout
+      - run:
+          name: Configure
+          command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
+      - run:
+          name: Push
+          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+      - run:
+          name: Assets
+          command: |
+            docker-compose -f ./hokusai/build.yml run -e S3_KEY=$S3_KEY -e S3_SECRET=$S3_SECRET -e COMMIT_HASH=$(git rev-parse --short HEAD) positron sh -c 'yarn assets && yarn bucket-assets -b positron-production'
+            hokusai production env set COMMIT_HASH=$(git rev-parse --short HEAD)
+      - run:
+          name: Deploy to production
+          command: hokusai production deploy $CIRCLE_SHA1 --git-remote origin
 workflows:
   version: 2
-  default:
+  build-deploy:
     jobs:
-      - test:
+      - build-and-test:
           filters:
             branches:
-              only:
-                - master
-      - push:
+              ignore:
+                - staging
+                - release
+      - deploy-staging:
+          requires:
+            - build-and-test
           filters:
             branches:
               only: master
-          requires:
-            - test
-      - deploy:
+      - deploy-production:
           filters:
             branches:
-              only: master
-          requires:
-            - push
-
+              only: release
