@@ -7,18 +7,18 @@ services:
       file: build.yml
       service: positron
     environment:
-    - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
-    - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
+      - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
+      - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
     env_file: ../.env.test
     depends_on:
-    - positron-mongodb
-    - positron-elasticsearch
+      - positron-mongodb
+      - positron-elasticsearch
   positron-elasticsearch:
     image: artsy/elasticsearch:2.1
     ports:
-    - "9200:9200"
+      - "9200:9200"
   positron-mongodb:
     image: mongo:3.4
     ports:
-    - "27017:27017"
+      - "27017:27017"
     command: ["--storageEngine=mmapv1", "--quiet", "--nojournal"]

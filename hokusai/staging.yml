@@ -20,39 +20,39 @@ spec:
       name: positron-web
     spec:
       containers:
-      - name: positron-web
-        envFrom:
-        - configMapRef:
-            name: positron-environment
-        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 3005
-        resources:
-          requests:
-            cpu: 500m
-            memory: 768Mi
-          limits:
-            memory: 1Gi
-        readinessProbe:
-          httpGet:
-            port: 3005
-            path: /health
-            httpHeaders:
-            - name: X-FORWARDED-PROTO
-              value: https
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: positron-web
+          envFrom:
+            - configMapRef:
+                name: positron-environment
+          image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3005
+          resources:
+            requests:
+              cpu: 500m
+              memory: 768Mi
+            limits:
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              port: 3005
+              path: /health
+              httpHeaders:
+                - name: X-FORWARDED-PROTO
+                  value: https
+            initialDelaySeconds: 5
+            periodSeconds: 5
       dnsPolicy: Default
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: tier
-                operator: In
-                values:
-                - foreground
+              - matchExpressions:
+                - key: tier
+                  operator: In
+                  values:
+                    - foreground
 
 ---
 apiVersion: v1
@@ -73,14 +73,14 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
 spec:
   ports:
-  - port: 443
-    protocol: TCP
-    name: https
-    targetPort: 3005
-  - port: 80
-    protocol: TCP
-    name: http
-    targetPort: 3005
+    - port: 443
+      protocol: TCP
+      name: https
+      targetPort: 3005
+    - port: 80
+      protocol: TCP
+      name: http
+      targetPort: 3005
   selector:
     app: positron
     layer: application
