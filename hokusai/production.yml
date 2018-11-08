@@ -27,7 +27,7 @@ spec:
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
         imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: 3005
         resources:
           requests:
             cpu: 500m
@@ -36,7 +36,7 @@ spec:
             memory: 1Gi
         readinessProbe:
           httpGet:
-            port: 3000
+            port: 3005
             path: /health
             httpHeaders:
             - name: X-FORWARDED-PROTO
@@ -76,11 +76,11 @@ spec:
   - port: 443
     protocol: TCP
     name: https
-    targetPort: 3000
+    targetPort: 3005
   - port: 80
     protocol: TCP
     name: http
-    targetPort: 3000
+    targetPort: 3005
   selector:
     app: positron
     layer: application
