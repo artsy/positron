@@ -18,7 +18,7 @@ services:
     # volumes:
     # - .:/app
   positron-elasticsearch:
-    image: elasticsearch:6.4.0
+    image: artsy/elasticsearch:2.1
     ports:
     - "9200:9200"
   positron-mongodb:
