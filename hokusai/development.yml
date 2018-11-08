@@ -22,7 +22,7 @@ services:
     ports:
     - "9200:9200"
   positron-mongodb:
-    image: mongo:3.0
+    image: mongo:3.4
     ports:
     - "27017:27017"
     command: ["--storageEngine=mmapv1", "--quiet", "--nojournal"]
