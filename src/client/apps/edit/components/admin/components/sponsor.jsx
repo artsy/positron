@@ -62,6 +62,16 @@ export class AdminSponsor extends Component {
             placeholder="http://example.com..."
           />
         </Col>
+
+        <Col xs={6} className='field-group'>
+          <label>Pixel Tracking Code</label>
+          <input
+            className='bordered-input'
+            defaultValue={sponsor.pixel_tracking_code}
+            onChange={(e) => this.onChange('pixel_tracking_code', e.target.value)}
+            placeholder='Paste pixel tracking code here'
+          />
+        </Col>
       </Row>
     )
   }
