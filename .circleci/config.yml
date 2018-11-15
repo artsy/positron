@@ -4,7 +4,7 @@ jobs:
   build-and-test:
     working_directory: ~/positron
     docker:
-      - image: circleci/node:8-stretch-browsers
+      - image: circleci/node:10-stretch-browsers
       - image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
       - image: circleci/mongo:3
 
@@ -35,7 +35,7 @@ jobs:
 
   deploy-staging:
     docker:
-      - image: circleci/node:8-stretch-browsers
+      - image: circleci/node:10-stretch-browsers
 
     steps:
       - checkout
@@ -60,7 +60,7 @@ jobs:
 
   deploy-production:
     docker:
-      - image: circleci/node:8-stretch-browsers
+      - image: circleci/node:10-stretch-browsers
 
     steps:
       - checkout
