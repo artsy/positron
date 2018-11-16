@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@artsy/express-reloadable@^1.3.0":
+"@artsy/express-reloadable@1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@artsy/express-reloadable/-/express-reloadable-1.3.0.tgz#93ba96f42f7c4ae65aa696ed45cc4d663e7ac88b"
   integrity sha1-k7qW9C98SuZappbtRcxNZj56yIs=
@@ -11,7 +11,7 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@^2.19.1", "@artsy/palette@^2.19.6":
+"@artsy/palette@2.19.6", "@artsy/palette@^2.19.1":
   version "2.19.6"
   resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.19.6.tgz#5d2dac141753ef7a866d81d5e691b72212a3234b"
   integrity sha512-R05bhFYpCAgeAFYsEqjf2Ky5MoJBRSEOdPSeyE1owe48hlFRdFIlyUnAsQZ9HeHKOksGK8EmjSW0KM6tHx9sjg==
@@ -21,7 +21,7 @@
     styled-reset "^1.3.7"
     styled-system "^3.0.3"
 
-"@artsy/reaction@^5.9.7":
+"@artsy/reaction@5.9.7":
   version "5.9.7"
   resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-5.9.7.tgz#474ea283958864a787ea894ca8a334d53f4117ee"
   integrity sha512-PVZQL4GTVrDJsqWr0+AKw3N5l1kGO3UBKkUGNX/X6/LQxOW7/4tR7q1uv3DKLFGxxOImvnWz1gNz2hYwT0w9JA==
@@ -48,7 +48,7 @@
     react-head "^3.0.0"
     react-html-parser "^2.0.2"
     react-lazy-load-image-component "^1.1.1"
-    react-lines-ellipsis xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a
+    react-lines-ellipsis "github:xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a"
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
     react-overlays "^0.8.3"
@@ -10496,8 +10496,9 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-lines-ellipsis@xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a:
+"react-lines-ellipsis@github:xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a":
   version "0.13.0"
+  uid "0cd517ad9079aeb5e6710178d93dd6faa65b924a"
   resolved "https://codeload.github.com/xiaody/react-lines-ellipsis/tar.gz/0cd517ad9079aeb5e6710178d93dd6faa65b924a"
 
 react-markdown@^2.5.0:
