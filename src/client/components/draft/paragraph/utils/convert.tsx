@@ -46,7 +46,8 @@ export const convertHtmlToDraft = (
 export const convertDraftToHtml = (
   currentContent: ContentState,
   allowedStyles: StyleMap,
-  stripLinebreaks: boolean
+  stripLinebreaks: boolean = false,
+  allowEmptyLines: boolean = false
 ) => {
   const styles = styleNamesFromMap(allowedStyles)
 
@@ -56,7 +57,9 @@ export const convertDraftToHtml = (
     blockToHTML,
   })(currentContent)
 
-  const formattedHtml = removeEmptyParagraphs(html)
+  const formattedHtml = allowEmptyLines
+    ? preserveEmptyParagraphs(html)
+    : removeEmptyParagraphs(html)
 
   if (stripLinebreaks) {
     return stripParagraphLinebreaks(formattedHtml)
@@ -200,4 +203,11 @@ export const removeEmptyParagraphs = (html: string) => {
     .replace(/<p><\/p>/g, "")
     .replace(/<p><br \/><\/p>/g, "")
     .replace(/<p><br><\/p>/g, "")
+}
+
+/**
+ * insert br to render empty paragraphs
+ */
+export const preserveEmptyParagraphs = (html: string) => {
+  return html.replace(/<p><\/p>/g, "<p><br /></p>")
 }
