@@ -158,6 +158,17 @@ describe("Paragraph", () => {
       expect(component.state().html).toBe("<p>A paragraph</p>")
     })
 
+    it("Preserves empty blocks if props.allowEmptyLines", () => {
+      props.allowEmptyLines = true
+      props.html = "<p>A paragraph</p><p></p><h1></h1><h2></h2>"
+      const component = getWrapper(props)
+      const instance = component.instance() as Paragraph
+      const editorState = instance.editorStateFromHTML(component.props().html)
+      instance.onChange(editorState)
+
+      expect(component.state().html).toBe("<p>A paragraph</p><p><br /></p>")
+    })
+
     it("Removes disallowed styles", () => {
       props.html = htmlWithDisallowedStyles
       const component = getWrapper(props)
@@ -334,6 +345,14 @@ describe("Paragraph", () => {
     })
 
     it("Returns not-handled if linebreaks are allowed", () => {
+      const component = getWrapper(props).instance() as Paragraph
+      const handleReturn = component.handleReturn({})
+
+      expect(handleReturn).toBe("not-handled")
+    })
+
+    it("Returns not-handled if allowEmptyLines", () => {
+      props.allowEmptyLines = true
       const component = getWrapper(props).instance() as Paragraph
       const handleReturn = component.handleReturn({})
 
