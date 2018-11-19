@@ -93,6 +93,7 @@ export class EditVideo extends Component {
     return (
       <Text layout={article.layout}>
         <Paragraph
+          allowEmptyLines
           html={credits || ""}
           hasLinks
           onChange={html => this.onMediaChange("credits", html)}
