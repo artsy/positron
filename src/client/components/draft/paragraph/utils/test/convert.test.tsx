@@ -284,7 +284,8 @@ describe("#convertDraftToHtml", () => {
   const getHtmlFromContentState = (
     html,
     hasLinks = false,
-    stripLinebreaks = false
+    stripLinebreaks = false,
+    allowEmptyLines = false
   ) => {
     // Get unstripped content state
     const currentContent = convertFromHTML({
@@ -294,7 +295,8 @@ describe("#convertDraftToHtml", () => {
     return convertDraftToHtml(
       currentContent,
       paragraphStyleMap,
-      stripLinebreaks
+      stripLinebreaks,
+      allowEmptyLines
     )
   }
 
@@ -371,6 +373,15 @@ describe("#convertDraftToHtml", () => {
       const convertedHtml = getHtmlFromContentState(html, false, true)
 
       expect(convertedHtml).toBe("<p>a paragraph a paragraph</p>")
+    })
+
+    it("Can preserve linebreaks if allowEmptyLines", () => {
+      const html = "<p>a paragraph</p><p></p><p>a paragraph</p>"
+      const convertedHtml = getHtmlFromContentState(html, false, false, true)
+
+      expect(convertedHtml).toBe(
+        "<p>a paragraph</p><p><br /></p><p>a paragraph</p>"
+      )
     })
 
     describe("Disallowed blocks", () => {
