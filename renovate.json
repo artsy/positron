@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "@artsy"
+  ],
+  "assignees": [
+    "eessex",
+    "xtina-starr",
+    "l2succes"
+  ]
+}

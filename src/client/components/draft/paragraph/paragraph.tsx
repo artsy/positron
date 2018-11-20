@@ -23,6 +23,7 @@ import {
 
 interface Props {
   allowedStyles?: AllowedStyles
+  allowEmptyLines?: boolean
   html?: string
   hasLinks: boolean
   onChange: (html: string) => void
@@ -51,6 +52,7 @@ export class Paragraph extends Component<Props, State> {
   private allowedStyles: StyleMap
   private debouncedOnChange
   static defaultProps = {
+    allowEmptyLines: false,
     hasLinks: false,
     stripLinebreaks: false,
   }
@@ -86,13 +88,14 @@ export class Paragraph extends Component<Props, State> {
   }
 
   editorStateToHTML = (editorState: EditorState) => {
-    const { stripLinebreaks } = this.props
+    const { allowEmptyLines, stripLinebreaks } = this.props
     const currentContent = editorState.getCurrentContent()
 
     return convertDraftToHtml(
       currentContent,
       this.allowedStyles,
-      stripLinebreaks
+      stripLinebreaks,
+      allowEmptyLines
     )
   }
 
@@ -120,11 +123,13 @@ export class Paragraph extends Component<Props, State> {
 
   handleReturn = e => {
     const { editorState } = this.state
-    const { stripLinebreaks } = this.props
+    const { stripLinebreaks, allowEmptyLines } = this.props
 
     if (stripLinebreaks) {
       // Do nothing if linebreaks are disallowed
       return "handled"
+    } else if (allowEmptyLines) {
+      return "not-handled"
     } else {
       // Maybe split-block, but don't create empty paragraphs
       return handleReturn(e, editorState)
