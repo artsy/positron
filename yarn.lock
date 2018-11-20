@@ -21,18 +21,18 @@
     react-spring "^5.7.2"
     styled-system "^3.1.11"
 
-"@artsy/react-responsive-media@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-1.0.12.tgz#3a76be54e82d1d658ee1794ecb692ea64468314c"
-  integrity sha512-BU7HUAVBvCjc3H7s117d+FL6Ufodc2hwgQZ2HuPq23jEXSYR6PHS98Kqd0vMthUeI4IdUY4Yc0du75Qu30OLew==
+"@artsy/react-responsive-media@^2.0.0-beta.4":
+  version "2.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.4.tgz#ed70fbee99f6e2b167ad26f599ce4e5b4ea1f4b0"
+  integrity sha512-w0Aa92ENdshUoHoxRvlsgggAIZ5yOc/jDW141Rbl3IjJZuGe03lgaPUlhVZe+ohqEiB/JHIA+Hjmq8RPHc7WDw==
 
-"@artsy/reaction@6.2.5":
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-6.2.5.tgz#cf9c2df1e6cc5cd59199a3b0336baf04f99c4e33"
-  integrity sha512-h76FIpi/4tXmq+NWSII3LMhy2zMS8dQvwwGqPHhT+XQL3VKdBUMgN0hjFtEvoG8ZiGEpxeHCez68XFwUcIGrkw==
+"@artsy/reaction@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-7.1.0.tgz#e05189d170321bbbad2f7ac2027ed5f65675ffbb"
+  integrity sha512-7f8tuIT9KCjG75cKhfou9A8eL7Q+KXYpYRwK3FGE7w10IoTvJEXr4uMO5aAVBmbYN+4glMOfvg1PNWF2vJjiWA==
   dependencies:
     "@artsy/palette" "^2.21.0"
-    "@artsy/react-responsive-media" "^1.0.12"
+    "@artsy/react-responsive-media" "^2.0.0-beta.4"
     "@sentry/browser" "^4.2.3"
     cheerio "^1.0.0-rc.2"
     farce "^0.2.6"
@@ -45,6 +45,7 @@
     jsonp "^0.2.1"
     loadable-components "^2.2.2"
     lodash "^4.17.4"
+    memoize-one "^4.0.3"
     moment-timezone "^0.5.13"
     numeral "^2.0.4"
     openseadragon "^2.3.1"
@@ -8351,6 +8352,11 @@ mem@^1.1.0:
   integrity sha1-Xt1StIXKHZAP5kiVUFOZoN+kX3Y=
   dependencies:
     mimic-fn "^1.0.0"
+
+memoize-one@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-4.0.3.tgz#cdfdd942853f1a1b4c71c5336b8c49da0bf0273c"
+  integrity sha512-QmpUu4KqDmX0plH4u+tf0riMc1KHE1+lw95cMrLlXQAFOx/xnBtwhZ52XJxd9X2O6kwKBqX32kmhbhlobD0cuw==
 
 memory-fs@^0.4.0, memory-fs@~0.4.1:
   version "0.4.1"
