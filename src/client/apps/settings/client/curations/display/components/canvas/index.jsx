@@ -29,16 +29,16 @@ export class Canvas extends React.Component {
           setActiveLayout={this.setActiveLayout}
         />
         {this.state.activeLayout === "overlay" && (
-          <GradientOverlayContainer>
+          <CoverOverlayContainer>
             <input
               type="checkbox"
-              defaultValue={campaign.canvas.has_gradient_overlay}
+              defaultValue={campaign.canvas.has_cover_overlay}
               onClick={e =>
-                onChange("canvas.has_gradient_overlay", e.target.checked, index)
+                onChange("canvas.has_cover_overlay", e.target.checked, index)
               }
             />
             <label>Canvas Gradient Overlay</label>
-          </GradientOverlayContainer>
+          </CoverOverlayContainer>
         )}
         <Row className="display-admin__section--canvas">
           <Col lg>
@@ -64,7 +64,7 @@ Canvas.propTypes = {
   onChange: PropTypes.func.isRequired,
 }
 
-export const GradientOverlayContainer = styled.div`
+export const CoverOverlayContainer = styled.div`
   display: inline-block;
   label {
     display: inline;

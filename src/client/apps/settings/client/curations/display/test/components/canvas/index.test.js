@@ -45,16 +45,14 @@ describe("Canvas", () => {
     ).toBe(true)
   })
 
-  it("Sets the canvas gradient overlay correctly", () => {
+  it("Sets the canvas cover overlay correctly", () => {
     const component = mount(<Canvas {...props} />)
     component
       .find('input[type="checkbox"]')
       .at(0)
       .simulate("click", { target: { checked: true } })
 
-    expect(props.onChange.mock.calls[0][0]).toMatch(
-      "canvas.has_gradient_overlay"
-    )
+    expect(props.onChange.mock.calls[0][0]).toMatch("canvas.has_cover_overlay")
     expect(props.onChange.mock.calls[0][1]).toBe(true)
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)
   })
