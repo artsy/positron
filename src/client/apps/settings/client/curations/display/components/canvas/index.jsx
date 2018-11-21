@@ -32,12 +32,12 @@ export class Canvas extends React.Component {
           <CoverOverlayContainer>
             <input
               type="checkbox"
-              defaultValue={campaign.canvas.has_cover_overlay}
+              defaultChecked={campaign.canvas.has_cover_overlay}
               onClick={e =>
                 onChange("canvas.has_cover_overlay", e.target.checked, index)
               }
             />
-            <label>Canvas Gradient Overlay</label>
+            <label>Canvas Cover Overlay</label>
           </CoverOverlayContainer>
         )}
         <Row className="display-admin__section--canvas">
