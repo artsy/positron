@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import React from "react"
 import { Col, Row } from "react-styled-flexboxgrid"
+import styled from "styled-components"
 import { CanvasControls } from "./canvas_controls.jsx"
 import { CanvasImages } from "./canvas_images.jsx"
 import { CanvasText } from "./canvas_text.jsx"
@@ -27,6 +28,18 @@ export class Canvas extends React.Component {
           activeLayout={this.state.activeLayout}
           setActiveLayout={this.setActiveLayout}
         />
+        {this.state.activeLayout === "overlay" && (
+          <GradientOverlayContainer>
+            <input
+              type="checkbox"
+              defaultValue={campaign.canvas.has_gradient_overlay}
+              onClick={e =>
+                onChange("canvas.has_gradient_overlay", e.target.checked, index)
+              }
+            />
+            <label>Canvas Gradient Overlay</label>
+          </GradientOverlayContainer>
+        )}
         <Row className="display-admin__section--canvas">
           <Col lg>
             <CanvasText campaign={campaign} index={index} onChange={onChange} />
@@ -50,3 +63,11 @@ Canvas.propTypes = {
   index: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
 }
+
+export const GradientOverlayContainer = styled.div`
+  display: inline-block;
+  label {
+    display: inline;
+    margin-left: 20px;
+  }
+`

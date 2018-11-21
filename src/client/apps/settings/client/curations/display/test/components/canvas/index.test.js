@@ -21,6 +21,10 @@ describe("Canvas", () => {
     onChange: jest.fn(),
   }
 
+  afterEach(() => {
+    props.onChange.mockReset()
+  })
+
   it("Renders layout controls and input components", () => {
     const component = mount(<Canvas {...props} />)
     expect(component.find(CanvasControls).length).toBe(1)
@@ -41,6 +45,20 @@ describe("Canvas", () => {
     ).toBe(true)
   })
 
+  it("Sets the canvas gradient overlay correctly", () => {
+    const component = mount(<Canvas {...props} />)
+    component
+      .find('input[type="checkbox"]')
+      .at(0)
+      .simulate("click", { target: { checked: true } })
+
+    expect(props.onChange.mock.calls[0][0]).toMatch(
+      "canvas.has_gradient_overlay"
+    )
+    expect(props.onChange.mock.calls[0][1]).toBe(true)
+    expect(props.onChange.mock.calls[0][2]).toBe(props.index)
+  })
+
   it("Changes the canvas layout on button click", () => {
     const component = mount(<Canvas {...props} />)
     component
@@ -58,6 +76,7 @@ describe("Canvas", () => {
       const component = mount(<Canvas {...props} />)
       expect(component.find(CharacterLimit).length).toBe(3)
       expect(component.find('input[type="file"]').length).toBe(2)
+      expect(component.find('input[type="checkbox"]').length).toBe(1)
       expect(component.text()).toMatch("Body")
       expect(component.text()).toMatch("CTA Text")
       expect(component.text()).toMatch("CTA Link")

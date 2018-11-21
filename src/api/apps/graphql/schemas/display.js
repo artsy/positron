@@ -16,6 +16,7 @@ const unitSchema = Joi.object()
     cover_img_url: Joi.string(),
     disclaimer: Joi.string(),
     headline: Joi.string(),
+    has_gradient_overlay: Joi.boolean(),
     layout: Joi.string(),
     link: Joi.object().keys({
       text: Joi.string(),
