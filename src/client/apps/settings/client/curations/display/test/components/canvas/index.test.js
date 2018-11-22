@@ -21,7 +21,7 @@ describe("Canvas", () => {
     onChange: jest.fn(),
   }
 
-  afterEach(() => {
+  beforeEach(() => {
     props.onChange.mockReset()
   })
 
