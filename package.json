@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "8.12.0"
+    "node": "10"
   },
   "scripts": {
     "assets": "sh scripts/assets.sh",
@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
-    "@artsy/palette": "2.21.0",
-    "@artsy/reaction": "6.2.5",
+    "@artsy/palette": "2.21.1",
+    "@artsy/reaction": "7.1.0",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
