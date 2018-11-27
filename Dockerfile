@@ -1,10 +1,9 @@
-FROM node:10.13
+FROM node:10.13-alpine
 
-RUN apt-get update -qq && apt-get install -y git && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apk add git
 
 # Set up deploy user and working directory
-RUN adduser --disabled-password --gecos '' deploy
+RUN adduser -D -g '' deploy
 RUN mkdir -p /app
 
 # Set up dumb-init
