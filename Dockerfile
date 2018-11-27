@@ -14,6 +14,11 @@ RUN chmod +x /usr/local/bin/dumb-init
 
 RUN npm install -g yarn@1.9.4
 
+# Switch to deploy user
+USER deploy
+ENV USER deploy
+ENV HOME /home/deploy
+
 # Set up node_modules
 WORKDIR /app
 ADD package.json /app
@@ -22,11 +27,6 @@ RUN yarn install
 
 # Add the codebase
 ADD --chown=deploy:deploy . /app
-
-# Switch to deploy user
-USER deploy
-ENV USER deploy
-ENV HOME /home/deploy
 
 # Echo commit hash
 RUN echo $(git rev-parse --short HEAD) > COMMIT_HASH.txt
