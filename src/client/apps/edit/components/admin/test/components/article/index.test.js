@@ -9,6 +9,7 @@ import { AdminArticle } from "../../../components/article"
 import { ArticleAuthors } from "../../../components/article/article_authors"
 import { ArticlePublishDate } from "../../../components/article/article_publish_date"
 import { AutocompleteList } from "/client/components/autocomplete2/list"
+import { ButtonMedium } from '../../../components/article/button_medium'
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -260,6 +261,61 @@ describe("AdminArticle", () => {
         "exclude_google_news"
       )
       expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(false)
+    })
+
+    it("Can change video duration", () => {
+      props.article.layout = "video"
+      props.article.media = { duration: 212 }
+
+      const component = getWrapper(props)
+
+      const inputForMin = component.find("input[type='number']").at(0)
+      const inputForSec = component.find("input[type='number']").at(1)
+
+      expect(inputForMin.props().defaultValue).toEqual(3)
+      expect(inputForSec.props().defaultValue).toEqual(32)
+
+      inputForMin.simulate('change', { target: { value: 10 }})
+      inputForSec.simulate('change', { target: { value: 30 }})
+
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ duration: 632 })
+
+      expect(props.onChangeArticleAction.mock.calls[1][0]).toEqual("media")
+      expect(props.onChangeArticleAction.mock.calls[1][1]).toEqual({ duration: 630 })
+    })
+
+    it("Can change video release date", () => {
+      props.article.layout = "video"
+      props.article.media = { release_date: "2017-02-07" }
+
+      const component = getWrapper(props)
+      component
+        .find('input[type="date"]')
+        .at(1)
+        .simulate("change", { target: { value: "2017-02-07" } })
+
+      component
+        .find(ButtonMedium)
+        .at(1)
+        .simulate("click")
+
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
+      expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch("2017-02-07")
+    })
+
+    it("Can change video published", () => {
+      props.article.layout = "video"
+      props.article.media = { published: false }
+
+      const component = getWrapper(props)
+      component
+        .find(".flat-checkbox")
+        .at(2)
+        .simulate("click")
+
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("media")
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ published: true })
     })
   })
 })
