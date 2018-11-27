@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: positron-web
-          args: ["node", "--max_old_space_size=1024", "./src", "--colors"]
+          args: ["yarn", "production"]
           envFrom:
             - configMapRef:
                 name: positron-environment

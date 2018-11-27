@@ -1,5 +1,8 @@
 FROM node:10.13
 
+RUN apt-get update -qq && apt-get install -y git && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Set up deploy user and working directory
 RUN adduser --disabled-password --gecos '' deploy
 RUN mkdir -p /app
@@ -23,6 +26,10 @@ ENV HOME /home/deploy
 
 # Set up node_modules
 RUN yarn install
+
+# Echo commit hash
+RUN echo $(git rev-parse --short HEAD) > COMMIT_HASH.txt
+RUN rm -rf .git
 
 ENV PORT 3005
 EXPOSE 3005
