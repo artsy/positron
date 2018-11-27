@@ -23,9 +23,6 @@ jobs:
           name: Push
           command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
-          name: Assets
-          command: hokusai staging run --tag $CIRCLE_SHA1 --env S3_KEY=$S3_KEY --env S3_SECRET=$S3_SECRET --env COMMIT_HASH=$(git rev-parse --short HEAD) 'yarn assets && yarn bucket-assets -b positron-staging'
-      - run:
           name: Deploy to staging
           command: hokusai staging deploy $CIRCLE_SHA1 --git-remote origin
       - run:
@@ -43,9 +40,6 @@ jobs:
       - run:
           name: Push
           command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
-      - run:
-          name: Assets
-          command: hokusai production run --tag $CIRCLE_SHA1 --env S3_KEY=$S3_KEY --env S3_SECRET=$S3_SECRET --env COMMIT_HASH=$(git rev-parse --short HEAD) 'yarn assets && yarn bucket-assets -b positron-production'
       - run:
           name: Deploy to production
           command: hokusai production deploy $CIRCLE_SHA1 --git-remote origin

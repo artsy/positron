@@ -1,3 +1,4 @@
 ---
 project-name: positron
 git-remote: git@github.com:artsy/positron.git
+pre-deploy: yarn publish-assets

@@ -16,6 +16,7 @@
     "mocha": "sh scripts/mocha.sh",
     "start": "sh scripts/start.sh",
     "production": "sh scripts/production.sh",
+    "publish-assets": "sh scripts/publish-assets.sh",
     "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
