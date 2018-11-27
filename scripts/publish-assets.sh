@@ -4,7 +4,7 @@ set -e -x
 
 if [ -z "$S3_BUCKET" ]
   then
-    echo "No bucket supplied"
+    echo "Required environment variable S3_BUCKET is unset"
     exit 1
 fi
 

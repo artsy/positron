@@ -1,6 +1,6 @@
 FROM node:10.13-alpine
 
-RUN apk add git
+RUN apk add curl git
 
 # Set up deploy user and working directory
 RUN adduser -D -g '' deploy
