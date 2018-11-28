@@ -9,7 +9,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Test
-          command: hokusai test --build
+          command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai test --build
   deploy-staging:
     docker:
       - image: artsy/hokusai
@@ -21,7 +21,7 @@ jobs:
           command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
       - run:
           name: Push
-          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+          command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to staging
           command: hokusai staging deploy $CIRCLE_SHA1 --git-remote origin
@@ -39,7 +39,7 @@ jobs:
           command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
       - run:
           name: Push
-          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+          command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to production
           command: hokusai production deploy $CIRCLE_SHA1 --git-remote origin

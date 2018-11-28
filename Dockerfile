@@ -1,4 +1,6 @@
 FROM node:10.13-alpine
+ARG COMMIT_HASH
+RUN test -n "$COMMIT_HASH"
 
 RUN apk add curl git
 
@@ -29,8 +31,7 @@ RUN yarn install && yarn cache clean
 ADD --chown=deploy:deploy . /app
 
 # Echo commit hash
-RUN echo $(git rev-parse --short HEAD) > COMMIT_HASH.txt
-RUN rm -rf .git
+RUN echo $COMMIT_HASH > COMMIT_HASH.txt
 
 ENV PORT 3005
 EXPOSE 3005
