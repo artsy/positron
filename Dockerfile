@@ -23,7 +23,7 @@ ENV HOME /home/deploy
 WORKDIR /app
 ADD package.json /app
 ADD yarn.lock /app
-RUN yarn install
+RUN yarn install && yarn cache clean
 
 # Add the codebase
 ADD --chown=deploy:deploy . /app
