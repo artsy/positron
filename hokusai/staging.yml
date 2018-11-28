@@ -1,10 +1,17 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: positron-web
   namespace: default
+  labels:
+    app: positron
+    component: web
+    layer: application
 spec:
+  selector:
+    matchLabels:
+      app: positron
   replicas: 1
   strategy:
     rollingUpdate:
@@ -44,7 +51,62 @@ spec:
                   value: https
             initialDelaySeconds: 5
             periodSeconds: 5
-      dnsPolicy: Default
+        - name: positron-nginx
+          image: artsy/docker-nginx:latest
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+          env:
+            - name: 'NGINX_DEFAULT_CONF'
+              value: >
+                upstream positron {
+                    server 127.0.0.1:3005;
+                }
+
+                server {
+                    listen *:8080 proxy_protocol;
+
+                    location / {
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $proxy_protocol_addr;
+                        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
+                        proxy_set_header X-Forwarded-Proto "http";
+                        proxy_redirect off;
+
+                        proxy_read_timeout 60;
+                        proxy_send_timeout 60;
+
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection "upgrade";
+
+                        proxy_pass http://positron;
+                    }
+                }
+
+                server {
+                    listen *:8443 proxy_protocol;
+
+                    location / {
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $proxy_protocol_addr;
+                        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
+                        proxy_set_header X-Forwarded-Proto "https";
+                        proxy_redirect off;
+
+                        proxy_read_timeout 60;
+                        proxy_send_timeout 60;
+
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection "upgrade";
+
+                        proxy_pass http://positron;
+                    }
+                }
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -67,21 +129,21 @@ metadata:
   namespace: default
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::585031190124:server-certificate/2018-01-17_artsy-net-wildcard"
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
     service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
 spec:
   ports:
-    - port: 443
-      protocol: TCP
-      name: https
-      targetPort: 3005
     - port: 80
       protocol: TCP
       name: http
-      targetPort: 3005
+      targetPort: 8080
+    - port: 443
+      protocol: TCP
+      name: https
+      targetPort: 8443
   selector:
     app: positron
     layer: application
