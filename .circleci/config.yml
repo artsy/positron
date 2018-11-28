@@ -24,7 +24,7 @@ jobs:
           command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to staging
-          command: hokusai staging deploy $CIRCLE_SHA1 --git-remote origin
+          command: hokusai staging deploy $CIRCLE_SHA1
       - run:
           name: Update staging git branch
           command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
@@ -42,7 +42,7 @@ jobs:
           command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to production
-          command: hokusai production deploy $CIRCLE_SHA1 --git-remote origin
+          command: hokusai production deploy $CIRCLE_SHA1
 workflows:
   version: 2
   build-deploy:
