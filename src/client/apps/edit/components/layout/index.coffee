@@ -22,10 +22,10 @@ module.exports = class EditLayout extends Backbone.View
     'click button.autolink' : 'autolinkText'
 
   setupYoast: ->
-    @yoastView = new YoastView
-      el: $('#edit-seo')
-      article: @article
-      contentField: @getBodyText()
+    # @yoastView = new YoastView
+    #   el: $('#edit-seo')
+    #   article: @article
+    #   contentField: @getBodyText()
 
   onYoastKeyup: ->
     return unless @channel?.isArtsyChannel()

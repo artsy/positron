@@ -15,6 +15,8 @@ import EditDisplay from "./display"
 import EditError from "./error"
 import EditHeader from "./header"
 import { MessageModal } from "./message"
+import { Yoast } from "./header/yoast"
+import styled from "styled-components"
 
 const INACTIVITY_TIMEOUT = 600 * 1000
 
@@ -173,7 +175,10 @@ export class EditContainer extends Component {
     return (
       <div className="EditContainer">
         <ErrorBoundary>
-          <EditHeader beforeUnload={this.beforeUnload} />
+          <FixedHeader>
+            <EditHeader beforeUnload={this.beforeUnload} />
+            <Yoast />
+          </FixedHeader>
         </ErrorBoundary>
 
         <ErrorBoundary>
@@ -219,3 +224,12 @@ export default hot(module)(
     mapDispatchToProps
   )(EditContainer)
 )
+
+export const FixedHeader = styled.div`
+  position: fixed;
+  top: 0;
+  left: 110px;
+  right: 0;
+  background: white;
+  z-index: 100;
+`

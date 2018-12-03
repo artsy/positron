@@ -5,14 +5,14 @@ block locals
 
 block content
   #edit-tab-pages
-    if channel.TYPE !== 'partner'
-      #edit-seo
-        .edit-seo__header-container
-          .edit-seo__header
-            | Seo Analysis —
-            span.edit-seo__unresolved-msg
-          .edit-seo__close: include ../../../../components/layout/public/icons/circle_plus.svg
-        include components/yoast/yoast.jade
+    //- if channel.TYPE !== 'partner'
+    //-   #edit-seo
+    //-     .edit-seo__header-container
+    //-       .edit-seo__header
+    //-         | Seo Analysis —
+    //-         span.edit-seo__unresolved-msg
+    //-       .edit-seo__close: include ../../../../components/layout/public/icons/circle_plus.svg
+    //-     include components/yoast/yoast.jade
     include content
     #edit-sections-spinner
       .loading-spinner
