@@ -12,6 +12,7 @@ import {
 
 interface Props {
   article: ArticleData
+  color: "yellow"
 }
 
 interface State {
@@ -129,7 +130,7 @@ export class Yoast extends Component<Props, State> {
     } else if (issueCount && issueCount > 0) {
       return `${issueCount} Unresolved Issue${issueCount > 1 ? "s" : ""}`
     } else {
-      return "WOOOOO"
+      return " Resolved"
     }
   }
 
@@ -139,8 +140,17 @@ export class Yoast extends Component<Props, State> {
       <Box>
         <YoastContainer onClick={this.toggleDrawer}>
           <div>
-            Seo Analysis —{" "}
-            <span id="unresolved-message">{this.generateResolveMessage()}</span>
+            Seo Analysis —
+            <Box
+              id="unresolved-message"
+              color={
+                this.generateResolveMessage().includes("Unresolved")
+                  ? color("red100")
+                  : color("black100")
+              }
+            >
+              {this.generateResolveMessage()}
+            </Box>
           </div>
         </YoastContainer>
         <StaticCollapse open={isOpen}>
