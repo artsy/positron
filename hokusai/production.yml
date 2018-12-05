@@ -56,6 +56,10 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 8443
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
           env:
             - name: 'NGINX_DEFAULT_CONF'
               value: >
