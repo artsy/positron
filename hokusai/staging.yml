@@ -57,6 +57,11 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
+          env:
+            - name: 'DATADOG_AGENT_HOSTNAME'
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:

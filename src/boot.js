@@ -9,6 +9,7 @@ import newrelic from "artsy-newrelic"
 import path from "path"
 import { IpFilter } from "express-ipfilter"
 import { createReloadable, isDevelopment } from "@artsy/express-reloadable"
+import { init as initDataDogTracer } from "tracer"
 
 const app = (module.exports = express())
 const debug = require("debug")("app")
@@ -22,6 +23,8 @@ const {
   IP_BLACKLIST = "",
   PORT,
 } = process.env
+
+initDataDogTracer()
 
 // Gzip compression
 app.use(compression())
