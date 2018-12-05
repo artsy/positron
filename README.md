@@ -36,11 +36,11 @@ This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Pos
 ### Manually
 
 - Install [NVM](https://github.com/creationix/nvm)
-- Install Node 6
+- Install Node 10
 
 ```
-nvm install 8
-nvm alias default 8
+nvm install 10
+nvm alias default 10
 ```
 
 - Fork Positron to your Github account in the Github UI.
