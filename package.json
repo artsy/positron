@@ -47,7 +47,6 @@
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
     "artsy-morgan": "artsy/artsy-morgan",
-    "artsy-newrelic": "artsy/artsy-newrelic",
     "artsy-xapp": "^1.0.4",
     "async": "^1.4.2",
     "babel-loader": "8.0.4",
