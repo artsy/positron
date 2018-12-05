@@ -38,11 +38,11 @@ To shut down, press `ctrl+c` or execute `docker-compose down`.
 ### Manually
 
 - Install [NVM](https://github.com/creationix/nvm)
-- Install Node 6
+- Install Node 10
 
 ```
-nvm install 8
-nvm alias default 8
+nvm install 10
+nvm alias default 10
 ```
 
 - Fork Positron to your Github account in the Github UI.
