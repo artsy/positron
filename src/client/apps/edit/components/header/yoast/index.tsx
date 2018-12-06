@@ -113,11 +113,6 @@ export class Yoast extends Component<Props, State> {
 
   toggleDrawer = () => {
     this.setState({ isOpen: !this.state.isOpen })
-    this.setState({ iconRotation: this.state.isOpen ? 0 : 45 })
-  }
-
-  getRotation = () => {
-    return state.isOpen ? 45 : 0
   }
 
   onKeywordChange = e => {
@@ -151,9 +146,9 @@ export class Yoast extends Component<Props, State> {
           Seo Analysis —
           <ResolveMessage
             color={
-              this.generateResolveMessage() === " Resolved"
-                ? color("green100")
-                : color("red100")
+              this.generateResolveMessage() !== " Resolved"
+                ? color("red100")
+                : color("green100")
             }
           >
             {this.generateResolveMessage()}
