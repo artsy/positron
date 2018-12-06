@@ -36,6 +36,8 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3005
+            - containerPort: 8080
+            - containerPort: 8443
           resources:
             requests:
               cpu: 500m
@@ -51,61 +53,10 @@ spec:
                   value: https
             initialDelaySeconds: 5
             periodSeconds: 5
-        - name: positron-nginx
-          image: artsy/docker-nginx:latest
-          ports:
-            - containerPort: 8080
-            - containerPort: 8443
           lifecycle:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
-          env:
-            - name: 'NGINX_DEFAULT_CONF'
-              value: >
-                upstream positron {
-                    server 127.0.0.1:3005;
-                }
-
-                server {
-                    listen *:8080 proxy_protocol;
-
-                    location / {
-                        proxy_set_header Host $host;
-                        proxy_set_header X-Real-IP $proxy_protocol_addr;
-                        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
-                        proxy_set_header X-Forwarded-Proto "http";
-                        proxy_redirect off;
-
-                        proxy_read_timeout 60;
-                        proxy_send_timeout 60;
-
-                        proxy_set_header Upgrade $http_upgrade;
-                        proxy_set_header Connection "upgrade";
-
-                        proxy_pass http://positron;
-                    }
-                }
-
-                server {
-                    listen *:8443 proxy_protocol;
-
-                    location / {
-                        proxy_set_header Host $host;
-                        proxy_set_header X-Real-IP $proxy_protocol_addr;
-                        proxy_set_header X-Forwarded-For $proxy_protocol_addr;
-                        proxy_set_header X-Forwarded-Proto "https";
-                        proxy_redirect off;
-
-                        proxy_read_timeout 60;
-                        proxy_send_timeout 60;
-
-                        proxy_set_header Upgrade $http_upgrade;
-                        proxy_set_header Connection "upgrade";
-
-                        proxy_pass http://positron;
-                    }
-                }
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:

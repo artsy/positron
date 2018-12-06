@@ -2,7 +2,7 @@ FROM node:10.13-alpine
 ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH"
 
-RUN apk add curl git
+RUN apk add curl git nginx
 
 # Set up deploy user and working directory
 RUN adduser -D -g '' deploy
@@ -13,6 +13,22 @@ RUN chown deploy:deploy /app
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64 /usr/local/bin/dumb-init
 RUN chown deploy:deploy /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
+
+# Setup nginx
+RUN rm -v /etc/nginx/nginx.conf
+RUN rm -v /etc/nginx/conf.d/default.conf
+ADD conf/nginx.conf /etc/nginx/
+ADD conf/positron-backend.conf /etc/nginx/conf.d/
+
+RUN touch /var/run/nginx.pid && \
+  chown -R deploy:deploy /var/run/nginx.pid && \
+  chown -R deploy:deploy /etc/nginx && \
+  chown -R deploy:deploy /var/lib/nginx && \
+  chown -R deploy:deploy /var/tmp/nginx
+
+# Symlink nginx logs to stderr / stdout
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN npm install -g yarn@1.9.4
 
