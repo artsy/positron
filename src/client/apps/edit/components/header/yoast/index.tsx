@@ -1,4 +1,6 @@
-import { Box, color, Flex, Separator, space } from "@artsy/palette"
+import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
+import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
+import Icon from "@artsy/reaction/dist/Components/Icon"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { StaticCollapse } from "@artsy/reaction/dist/Components/StaticCollapse"
@@ -12,13 +14,12 @@ import {
 
 interface Props {
   article: ArticleData
-  color: "yellow"
 }
 
 interface State {
   isOpen: boolean
   focusKeyword: string
-  unresolvedIssues: number
+  issueCount: number
 }
 
 export class Yoast extends Component<Props, State> {
@@ -30,21 +31,19 @@ export class Yoast extends Component<Props, State> {
     this.state = {
       isOpen: false,
       focusKeyword: props.article.seo_keyword || "",
-      unresolvedIssues: 0,
+      issueCount: 0,
     }
   }
 
   componentDidMount() {
     this.snippetPreview = new YoastSnippetPreview({
-      targetElement: document.getElementById("snippet"),
+      targetElement: document.getElementById("yoast-snippet"),
     })
-
-    const message = document.getElementById("unresolved-message")
 
     const app = new YoastApp({
       snippetPreview: this.snippetPreview,
       targets: {
-        output: "output",
+        output: "yoast-output",
       },
       callbacks: {
         getData: () => {
@@ -53,15 +52,16 @@ export class Yoast extends Component<Props, State> {
             text: this.getBodyText(),
           }
         },
-        saveScores: unresolvedIssues => {
-          this.setState({ unresolvedIssues })
+        saveScores: () => {
+          this.setState({
+            issueCount: document.querySelectorAll("#yoast-output .bad").length,
+          })
         },
       },
     })
 
-    this.setSnippetFields()
     app.refresh()
-    this.snippetPreview.changedInput()
+    this.resetSnippet()
   }
 
   setSnippetFields = () => {
@@ -78,7 +78,7 @@ export class Yoast extends Component<Props, State> {
     const seoTitle = search_title || thumbnail_title || title || ""
     const seoDescription = search_description || description || ""
 
-    const formTitle = document.getElementById("snippet-editor_title")
+    const formTitle = document.getElementById("snippet-editor-title")
     const formDescription = document.getElementById(
       "snippet-editor-meta-description"
     )
@@ -113,19 +113,28 @@ export class Yoast extends Component<Props, State> {
 
   toggleDrawer = () => {
     this.setState({ isOpen: !this.state.isOpen })
+    this.setState({ iconRotation: this.state.isOpen ? 0 : 45 })
+  }
+
+  getRotation = () => {
+    return state.isOpen ? 45 : 0
   }
 
   onKeywordChange = e => {
     this.setState({ focusKeyword: e.target.value })
+    this.resetSnippet()
+  }
+
+  resetSnippet = () => {
     this.setSnippetFields()
     this.snippetPreview.changedInput()
   }
 
   generateResolveMessage = () => {
-    const { unresolvedIssues } = this.state
-    const issueCount = document.querySelectorAll("#output .bad").length
+    const { issueCount } = this.state
+    // const issueCount = document.querySelectorAll("#output .bad").length
 
-    if (!this.state.focusKeyword) {
+    if (!this.state.focusKeyword.trim().length) {
       return " Set Target Keyword"
     } else if (issueCount && issueCount > 0) {
       return `${issueCount} Unresolved Issue${issueCount > 1 ? "s" : ""}`
@@ -135,39 +144,46 @@ export class Yoast extends Component<Props, State> {
   }
 
   render() {
-    const { isOpen } = this.state
+    const { isOpen, focusKeyword } = this.state
     return (
       <Box>
         <YoastContainer onClick={this.toggleDrawer}>
-          <div>
-            Seo Analysis —
-            <Box
-              id="unresolved-message"
-              color={
-                this.generateResolveMessage().includes("Unresolved")
-                  ? color("red100")
-                  : color("black100")
-              }
-            >
-              {this.generateResolveMessage()}
-            </Box>
-          </div>
+          Seo Analysis —
+          <ResolveMessage
+            color={
+              this.generateResolveMessage() === " Resolved"
+                ? color("green100")
+                : color("red100")
+            }
+          >
+            {this.generateResolveMessage()}
+          </ResolveMessage>
+          <CloseIcon
+            rotated={isOpen}
+            name="follow-circle"
+            width="10px"
+            height="10px"
+            color="black"
+            title="plus-small"
+          />
         </YoastContainer>
         <StaticCollapse open={isOpen}>
           <Drawer>
-            <Box width={[1, 1 / 3]}>
+            <YoastInput width={[1, 1 / 3]}>
               <Input
                 onChange={this.onKeywordChange}
                 id="focus-keyword"
                 title="Target Keyword"
                 placeholder="A searchable term for this content"
               />
-            </Box>
-            <Flex width={[1, 2 / 3]}>
-              <Separator width={2} />
-              <Snippet id="snippet" />
-              <div id="output" />
-            </Flex>
+            </YoastInput>
+            <YoastOutput
+              hidden={focusKeyword.trim().length < 1}
+              width={[1, 2 / 3]}
+            >
+              <Box hidden id="yoast-snippet" />
+              <div id="yoast-output" />
+            </YoastOutput>
           </Drawer>
         </StaticCollapse>
       </Box>
@@ -175,25 +191,38 @@ export class Yoast extends Component<Props, State> {
   }
 }
 
-export const YoastContainer = styled(Flex)`
+const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
   padding: 0 20px;
   height: ${space(4)}px;
   border-bottom: 1px solid ${color("black10")};
   font-size: 15px;
   align-items: center;
-  div > span {
-    color: ${color("red100")};
-  }
 `
-
-export const Snippet = styled.div`
-  display: none;
-`
-
-export const Drawer = styled(Flex)`
+const Drawer = styled(Flex)`
   background-color: ${color("white100")};
-  padding: 0 20px;
+  padding: 30px;
+  border-bottom: 1px solid ${color("black10")};
+`
+const ResolveMessage = styled(Box)`
+  display: inline;
+  margin-left: 5px;
+`
+const CloseIcon = styled(Icon)<{
+  rotated: boolean
+}>`
+  transform: rotate(${props => (props.rotated ? 45 : 0)}deg);
+  transition: all 0.25s;
+  position: absolute;
+  right: 15px;
+  font-size: 32px;
+`
+const YoastInput = styled(Box)`
+  min-width: 360px;
+`
+const YoastOutput = styled(Box)`
+  border-left: 1px solid ${color("black10")};
+  padding-left: 30px;
 `
 
 const mapStateToProps = state => ({
