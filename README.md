@@ -23,17 +23,15 @@ Set-Up
 - Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. This should help.
 
 ```
-heroku config --app=positron-staging | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
+hokusai staging env get | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
 ```
 
-### Via Docker Compose
-- Install [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
+### Via Hokusai
+- Set up [Hokusai](https://github.com/artsy/README/blob/master/playbooks/hokusai.md#quickstart)
 - `git clone git@github.com:<your username>/positron.git && cd positron`
-- `docker-compose up`
+- `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
 
-This starts a new self-contained Docker instance that boots MongoDB, ElasticSearch and Node. Changes made to source-code located in `api` and `client` is [automatically reloaded](https://github.com/artsy/positron/blob/master/boot.js#L34) on browser-refresh; no need to restart the process.
-
-To shut down, press `ctrl+c` or execute `docker-compose down`.
+This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Positron. Changes made to source-code are _not_ automatically reloaded.  To shut down, press `ctrl+c` or execute `hokusai dev stop`.
 
 ### Manually
 
