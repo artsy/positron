@@ -1,0 +1,107 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: positron-web
+  namespace: default
+  labels:
+    app: positron
+    component: web
+    layer: application
+spec:
+  selector:
+    matchLabels:
+      app: positron
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: positron
+        component: web
+        layer: application
+      name: positron-web
+    spec:
+      containers:
+        - name: positron-web
+          args: ["yarn", "production"]
+          envFrom:
+            - configMapRef:
+                name: positron-environment
+          image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3005
+            - containerPort: 8080
+            - containerPort: 8443
+          resources:
+            requests:
+              cpu: 500m
+              memory: 768Mi
+            limits:
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              port: 3005
+              path: /health
+              httpHeaders:
+                - name: X-FORWARDED-PROTO
+                  value: https
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx","-s","quit"]
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: tier
+                  operator: In
+                  values:
+                    - foreground
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: positron
+    component: web
+    layer: application
+  name: positron-web
+  namespace: default
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:iam::585031190124:server-certificate/2018-01-17_artsy-net-wildcard"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "300"
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      name: http
+      targetPort: 8080
+    - port: 443
+      protocol: TCP
+      name: https
+      targetPort: 8443
+  selector:
+    app: positron
+    layer: application
+    component: web
+  sessionAffinity: None
+  type: LoadBalancer
