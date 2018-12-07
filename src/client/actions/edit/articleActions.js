@@ -212,8 +212,7 @@ export const setMentionedItems = (model, items) => {
 // YOAST
 export const setSeoKeyword = article => {
   if (article.get("published")) {
-    const seo_keyword = $("input#edit-seo__focus-keyword").val() || ""
-
+    const seo_keyword = document.getElementById("focus-keyword").value || ""
     article.set({ seo_keyword })
   }
   return {

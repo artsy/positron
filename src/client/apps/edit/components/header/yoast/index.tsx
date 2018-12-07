@@ -1,7 +1,11 @@
 import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
-import { Input } from "@artsy/reaction/dist/Components/Input"
+import {
+  Input,
+  StyledInput,
+  Title,
+} from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { StaticCollapse } from "@artsy/reaction/dist/Components/StaticCollapse"
 import React, { Component } from "react"
@@ -30,7 +34,7 @@ export class Yoast extends Component<Props, State> {
 
     this.state = {
       isOpen: false,
-      focusKeyword: props.article.seo_keyword || "",
+      focusKeyword: props.article.seo_keyword.toLowerCase() || "",
       issueCount: 0,
     }
   }
@@ -48,7 +52,7 @@ export class Yoast extends Component<Props, State> {
       callbacks: {
         getData: () => {
           return {
-            keyword: this.state.focusKeyword,
+            keyword: this.state.focusKeyword.toLowerCase(),
             text: this.getBodyText(),
           }
         },
@@ -170,6 +174,7 @@ export class Yoast extends Component<Props, State> {
                 id="focus-keyword"
                 title="Target Keyword"
                 placeholder="A searchable term for this content"
+                value={focusKeyword}
               />
             </YoastInput>
             <YoastOutput
@@ -214,6 +219,14 @@ const CloseIcon = styled(Icon)<{
 `
 const YoastInput = styled(Box)`
   min-width: 360px;
+  ${Title} {
+    margin-bottom: 2px;
+    ${avantgarde("s11")};
+  }
+
+  ${StyledInput} {
+    min-width: 300px;
+  }
 `
 const YoastOutput = styled(Box)`
   border-left: 1px solid ${color("black10")};
