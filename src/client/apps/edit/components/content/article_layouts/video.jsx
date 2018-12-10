@@ -39,11 +39,6 @@ export class EditVideo extends Component {
     onChangeArticleAction("media", media)
   }
 
-  onDateChange = e => {
-    const date = moment(e.target.value).toISOString()
-    this.onMediaChange("release_date", date)
-  }
-
   editDescription = () => {
     const { article, onChangeArticleAction } = this.props
 
@@ -139,25 +134,6 @@ export class EditVideo extends Component {
           />
         </EditVideoInput>
 
-        <EditVideoPublished
-          className="field-group--inline flat-checkbox"
-          onClick={e => this.onMediaChange("published", !media.published)}
-          name="media.published"
-        >
-          <input type="checkbox" checked={media.published} readOnly />
-          <label>Video Published</label>
-        </EditVideoPublished>
-
-        <EditVideoReleaseDate>
-          <label>Release Date</label>
-          <input
-            type="date"
-            className="bordered-input bordered-input-dark"
-            defaultValue={moment(media.release_date).format("YYYY-MM-DD")}
-            onChange={this.onDateChange}
-          />
-        </EditVideoReleaseDate>
-
         <MaxWidthContainer>
           <VideoAbout
             article={article}
@@ -194,17 +170,6 @@ const EditVideoInput = styled.div`
 const EditCoverInput = styled.div`
   top: 50px;
 `
-export const EditVideoPublished = styled.div`
-  top: 80px;
-`
-const EditVideoReleaseDate = styled.div`
-  top: 120px;
-  label {
-    display: block;
-    text-align: right;
-    ${avantgarde("s13")};
-  }
-`
 
 export const EditVideoContainer = styled.div`
   position: relative;
@@ -236,9 +201,7 @@ export const EditVideoContainer = styled.div`
     position: relative;
   }
   ${EditVideoInput},
-  ${EditCoverInput},
-  ${EditVideoPublished},
-  ${EditVideoReleaseDate} {
+  ${EditCoverInput} {
     z-index: 10;
     position: absolute;
     right: 20px;

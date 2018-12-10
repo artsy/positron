@@ -55,23 +55,4 @@ describe("EditVideo", () => {
     component.instance().onMediaChange("published", false)
     expect(props.onChangeArticleAction.mock.calls[3][1].published).toBe(false)
   })
-
-  it("toggles published state on media", () => {
-    const component = getWrapper(props)
-    component.find(EditVideoPublished).simulate("click")
-
-    expect(props.onChangeArticleAction.mock.calls[0][1].published).toBe(false)
-    expect(props.onChangeArticleAction.mock.calls[0][1].published).not.toBe(
-      props.article.media.published
-    )
-  })
-
-  it("sets release_date on media", () => {
-    const component = getWrapper(props)
-    const input = component.find('input[type="date"]')
-    input.simulate("change", { target: { value: "2017-02-07" } })
-    expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch(
-      "2017-02-07"
-    )
-  })
 })

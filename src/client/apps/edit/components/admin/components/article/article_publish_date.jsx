@@ -5,6 +5,7 @@ import PropTypes from "prop-types"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
+import { ButtonMedium } from './button_medium'
 
 export class ArticlePublishDate extends Component {
   static propTypes = {
@@ -166,6 +167,7 @@ export class ArticlePublishDate extends Component {
     )
   }
 }
+
 export const DateContainer = styled.div`
   display: flex;
   margin: 5px 0 40px 0;
@@ -180,21 +182,5 @@ export const InputGroup = styled.div`
   .bordered-input {
     border: none;
     margin-top: 0;
-  }
-`
-
-export const ButtonMedium = styled.button`
-  padding: 10px 20px;
-  color: ${props => (props.color ? props.color : "white")};
-  cursor: pointer;
-  background: ${props =>
-    props.background ? props.background : colors.grayMedium};
-  ${avantgarde("s11")} outline: none;
-  border: none;
-  width: -moz-available;
-  width: -webkit-fill-available;
-  transition: background 0.3s;
-  &:hover {
-    background: ${colors.purpleRegular};
   }
 `
