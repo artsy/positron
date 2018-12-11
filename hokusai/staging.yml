@@ -107,7 +107,7 @@ spec:
   type: LoadBalancer
 
 ---
-apiVersion: v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: positron-scheduled-posts-cron
@@ -139,7 +139,7 @@ spec:
                     - background
 
 ---
-apiVersion: v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: positron-unqueue-cron
