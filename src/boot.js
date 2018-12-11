@@ -5,10 +5,10 @@
 import artsyXapp from "artsy-xapp"
 import compression from "compression"
 import express from "express"
-import newrelic from "artsy-newrelic"
 import path from "path"
 import { IpFilter } from "express-ipfilter"
 import { createReloadable, isDevelopment } from "@artsy/express-reloadable"
+import { init as initDataDogTracer } from "tracer"
 
 const app = (module.exports = express())
 const debug = require("debug")("app")
@@ -22,6 +22,10 @@ const {
   IP_BLACKLIST = "",
   PORT,
 } = process.env
+
+if (process.env.DATADOG_AGENT_HOSTNAME) {
+  initDataDogTracer()
+}
 
 // Gzip compression
 app.use(compression())
@@ -37,8 +41,6 @@ const xappConfig = {
 }
 
 artsyXapp.init(xappConfig, () => {
-  app.use(newrelic)
-
   if (isDevelopment) {
     app.use(require("./client/lib/webpack-dev-server"))
 
