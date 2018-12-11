@@ -23,7 +23,9 @@ const {
   PORT,
 } = process.env
 
-initDataDogTracer()
+if (process.env.DATADOG_AGENT_HOSTNAME) {
+  initDataDogTracer()
+}
 
 // Gzip compression
 app.use(compression())
