@@ -169,5 +169,3 @@ spec:
                     operator: In
                     values:
                     - background
-
-
