@@ -57,6 +57,11 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx","-s","quit"]
+          env:
+            - name: 'DATADOG_AGENT_HOSTNAME'
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
@@ -105,3 +110,67 @@ spec:
     component: web
   sessionAffinity: None
   type: LoadBalancer
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: positron-scheduled-posts-cron
+spec:
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: positron-scheduled-posts-cron
+              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
+              command: ["yarn", "task", "scripts/scheduled_posts.js"]
+              imagePullPolicy: Always
+              envFrom:
+              - configMapRef:
+                  name: positron-environment
+          restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 1
+                preference:
+                  matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                    - background
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: positron-unqueue-cron
+spec:
+  schedule: "0 15 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: positron-unqueue-cron
+              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
+              command: ["yarn", "task", "scripts/unqueue.js"]
+              imagePullPolicy: Always
+              envFrom:
+              - configMapRef:
+                  name: positron-environment
+          restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 1
+                preference:
+                  matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                    - background
