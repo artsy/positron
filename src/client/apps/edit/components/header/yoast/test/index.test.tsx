@@ -59,8 +59,11 @@ describe("Yoast", () => {
     it("does not display a yoast output container if no yoast keyword exists", () => {
       props.yoastKeyword = ""
       const component = getWrapper(props)
-      const output = component.find(YoastOutput)
-      const outputStyle = output.get(0).props.style
+      const output = component
+        .find(YoastOutput)
+        .first()
+        .getElement()
+      // expect(output.props.style.display).toBe("none")
       // expect(outputStyle).toHaveProperty("display", "none")
 
       // expect(component.find(YoastOutput).prop("style")).toHaveProperty(
@@ -115,8 +118,23 @@ describe("Yoast", () => {
     })
   })
 
+  describe("#keywordIsBlank", () => {
+    it("returns false if yoast keyword is not blank", () => {
+      const component = getWrapper(props).instance() as Yoast
+      const returnValue = component.keywordIsBlank()
+      expect(returnValue).toBe(false)
+    })
+
+    it("returns true if yoast keyword is blank", () => {
+      props.yoastKeyword = ""
+      const component = getWrapper(props).instance() as Yoast
+      const returnValue = component.keywordIsBlank()
+      expect(returnValue).toBe(true)
+    })
+  })
+
   describe("#toggleDrawer", () => {
-    it("opens the drawer when the yoast header is clicked", () => {
+    it("sets isOpen to true when the yoast header is clicked", () => {
       const component = getWrapper(props)
       expect(component.state("isOpen")).toBe(false)
       component.find(YoastContainer).simulate("click")
