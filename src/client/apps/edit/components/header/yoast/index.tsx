@@ -34,7 +34,8 @@ export class Yoast extends Component<Props, State> {
 
   constructor(props) {
     super(props)
-    this.snippetContainer = React.createRef()
+    // this.snippetContainer = React.createRef()
+    this.snippetContainer = createRef<HTMLDivElement>()
 
     this.state = {
       isOpen: false,
@@ -42,32 +43,31 @@ export class Yoast extends Component<Props, State> {
   }
 
   componentDidMount() {
-    // // console.log("SNIP CON", this.refs.snippetContainer.value)
-    // this.snippetPreview = new YoastSnippetPreview({
-    //   // targetElement: document.getElementById("yoast-snippet"),
-    //   targetElement: this.snippetContainer.current,
-    // })
-    // const app = new YoastApp({
-    //   snippetPreview: this.snippetPreview,
-    //   targets: {
-    //     output: "yoast-output",
-    //   },
-    //   callbacks: {
-    //     getData: () => {
-    //       return {
-    //         keyword: this.props.yoastKeyword.toLowerCase(),
-    //         text: this.getBodyText(),
-    //       }
-    //     },
-    //     saveScores: () => {
-    //       this.setState({
-    //         // issueCount: document.querySelectorAll("#yoast-output .bad").length,
-    //       })
-    //     },
-    //   },
-    // })
-    // app.refresh()
-    // this.resetSnippet()
+    this.snippetPreview = new YoastSnippetPreview({
+      // targetElement: document.getElementById("yoast-snippet"),
+      targetElement: this.snippetContainer.current,
+    })
+    const app = new YoastApp({
+      snippetPreview: this.snippetPreview,
+      targets: {
+        output: "yoast-output",
+      },
+      callbacks: {
+        getData: () => {
+          return {
+            keyword: this.props.yoastKeyword.toLowerCase(),
+            text: this.getBodyText(),
+          }
+        },
+        saveScores: () => {
+          this.setState({
+            // issueCount: document.querySelectorAll("#yoast-output .bad").length,
+          })
+        },
+      },
+    })
+    app.refresh()
+    this.resetSnippet()
   }
 
   setSnippetFields = () => {
@@ -90,11 +90,11 @@ export class Yoast extends Component<Props, State> {
     )
 
     if (formTitle) {
-      formTitle.value = seoTitle
+      formTitle.innerText = seoTitle
     }
 
     if (formDescription) {
-      formDescription.value = seoDescription
+      formDescription.innerText = seoDescription
     }
   }
 
@@ -132,13 +132,22 @@ export class Yoast extends Component<Props, State> {
     this.snippetPreview.changedInput()
   }
 
+  keywordIsBlank = () => {
+    const { yoastKeyword } = this.props
+    if (!yoastKeyword || (yoastKeyword && yoastKeyword.trim().length < 1)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   generateResolveMessage = () => {
     // const { issueCount } = this.state
     const { yoastKeyword } = this.props
     const issueCount: number = document.querySelectorAll("#yoast-output .bad")
       .length
 
-    if (!yoastKeyword || (yoastKeyword && !yoastKeyword.trim().length)) {
+    if (this.keywordIsBlank()) {
       return " Set Target Keyword"
     } else if (issueCount && issueCount > 0) {
       return `${issueCount} Unresolved Issue${issueCount > 1 ? "s" : ""}`
@@ -185,13 +194,7 @@ export class Yoast extends Component<Props, State> {
                 value={yoastKeyword}
               />
             </YoastInput>
-            <YoastOutput
-              hidden={
-                !yoastKeyword ||
-                (yoastKeyword && yoastKeyword.trim().length < 1)
-              }
-              width={[1, 2 / 3]}
-            >
+            <YoastOutput hidden={this.keywordIsBlank()} width={[1, 2 / 3]}>
               <Box hidden id="yoast-snippet" />
               <div id="yoast-snippet" ref={this.snippetContainer} />
               <div id="yoast-output" />
