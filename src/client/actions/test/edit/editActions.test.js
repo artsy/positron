@@ -2,6 +2,7 @@ import {
   changeView,
   redirectToList,
   toggleSpinner,
+  setYoastKeyword,
 } from "client/actions/edit/editActions"
 import $ from "jquery"
 
@@ -21,6 +22,13 @@ describe("editActions", () => {
 
     expect(action.type).toBe("CHANGE_VIEW")
     expect(action.payload.activeView).toBe("display")
+  })
+
+  it("#setYoastKewyword sets the yoast keyword", () => {
+    const action = setYoastKeyword("photography")
+
+    expect(action.type).toBe("SET_YOAST_KEYWORD")
+    expect(action.payload.yoastKeyword).toBe("photography")
   })
 
   it("#redirectToList forwards to the articles list with published arg", () => {

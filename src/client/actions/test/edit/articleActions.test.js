@@ -183,15 +183,19 @@ describe("articleActions", () => {
     })
 
     it("Sets seo_keyword if publishing", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
       publishArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
+      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls[2][0].seo_keyword).toBe("ceramics")
     })
 
-    it("Does not seo_keyword if unpublishing", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
+    it("Does not set seo_keyword if unpublishing", () => {
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
       publishArticle()(dispatch, getState)
 
       expect(dispatch.mock.calls[1][0].type).toBe("REDIRECT_TO_LIST")
@@ -258,17 +262,21 @@ describe("articleActions", () => {
     })
 
     it("Sets seo_keyword if published", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
       saveArticle()(dispatch, getState)
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
+      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
     })
 
     it("Does not seo_keyword if unpublished", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
       saveArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
+      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls.length).toBe(1)
       expect(setArticleSpy.mock.calls[0][0].seo_keyword).toBeFalsy()
     })

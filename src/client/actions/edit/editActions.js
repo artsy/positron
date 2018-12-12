@@ -10,7 +10,8 @@ export const actions = keyMirror(
   "START_EDITING_ARTICLE",
   "STOP_EDITING_ARTICLE",
   "REDIRECT_TO_LIST",
-  "TOGGLE_SPINNER"
+  "TOGGLE_SPINNER",
+  "SET_YOAST_KEYWORD"
 )
 
 // TOGGLE EDIT TABS (Content, Admin, Display)
@@ -65,6 +66,15 @@ export const redirectToList = published => {
 
   return {
     type: actions.REDIRECT_TO_LIST,
+  }
+}
+
+export const setYoastKeyword = yoastKeyword => {
+  return {
+    type: actions.SET_YOAST_KEYWORD,
+    payload: {
+      yoastKeyword,
+    },
   }
 }
 

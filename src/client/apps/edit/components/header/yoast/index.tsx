@@ -1,4 +1,4 @@
-import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
+import { Box, color, Flex, space } from "@artsy/palette"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import {
@@ -8,64 +8,66 @@ import {
 } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { StaticCollapse } from "@artsy/reaction/dist/Components/StaticCollapse"
-import React, { Component } from "react"
+import React, { Component, createRef } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import {
   App as YoastApp,
   SnippetPreview as YoastSnippetPreview,
 } from "yoastseo"
+import { setYoastKeyword } from "../../../../../actions/edit/editActions.js"
 
 interface Props {
   article: ArticleData
+  yoastKeyword: string
+  setYoastKeywordAction: (e: any) => void
 }
 
 interface State {
   isOpen: boolean
-  focusKeyword: string
-  issueCount: number
 }
 
 export class Yoast extends Component<Props, State> {
-  static snippetPreview: any
+  // private snippetContainer = createRef<HTMLDivElement>()
+  private snippetContainer
+  private snippetPreview
 
   constructor(props) {
     super(props)
+    this.snippetContainer = React.createRef()
 
     this.state = {
       isOpen: false,
-      focusKeyword: props.article.seo_keyword.toLowerCase() || "",
-      issueCount: 0,
     }
   }
 
   componentDidMount() {
-    this.snippetPreview = new YoastSnippetPreview({
-      targetElement: document.getElementById("yoast-snippet"),
-    })
-
-    const app = new YoastApp({
-      snippetPreview: this.snippetPreview,
-      targets: {
-        output: "yoast-output",
-      },
-      callbacks: {
-        getData: () => {
-          return {
-            keyword: this.state.focusKeyword.toLowerCase(),
-            text: this.getBodyText(),
-          }
-        },
-        saveScores: () => {
-          this.setState({
-            issueCount: document.querySelectorAll("#yoast-output .bad").length,
-          })
-        },
-      },
-    })
-
-    app.refresh()
-    this.resetSnippet()
+    // // console.log("SNIP CON", this.refs.snippetContainer.value)
+    // this.snippetPreview = new YoastSnippetPreview({
+    //   // targetElement: document.getElementById("yoast-snippet"),
+    //   targetElement: this.snippetContainer.current,
+    // })
+    // const app = new YoastApp({
+    //   snippetPreview: this.snippetPreview,
+    //   targets: {
+    //     output: "yoast-output",
+    //   },
+    //   callbacks: {
+    //     getData: () => {
+    //       return {
+    //         keyword: this.props.yoastKeyword.toLowerCase(),
+    //         text: this.getBodyText(),
+    //       }
+    //     },
+    //     saveScores: () => {
+    //       this.setState({
+    //         // issueCount: document.querySelectorAll("#yoast-output .bad").length,
+    //       })
+    //     },
+    //   },
+    // })
+    // app.refresh()
+    // this.resetSnippet()
   }
 
   setSnippetFields = () => {
@@ -101,12 +103,12 @@ export class Yoast extends Component<Props, State> {
       article: { lead_paragraph, sections },
     } = this.props
     const fullText: string[] = []
-    if (lead_paragraph.length) {
+    if (lead_paragraph && lead_paragraph.length) {
       fullText.push(lead_paragraph)
     }
 
     sections &&
-      sections.map((section, i) => {
+      sections.map(section => {
         if (section.type === "text" && section.body) {
           fullText.push(section.body)
         }
@@ -120,7 +122,8 @@ export class Yoast extends Component<Props, State> {
   }
 
   onKeywordChange = e => {
-    this.setState({ focusKeyword: e.target.value })
+    this.props.setYoastKeywordAction(e.target.value)
+    // this.setState({ focusKeyword: e.target.value })
     this.resetSnippet()
   }
 
@@ -130,10 +133,12 @@ export class Yoast extends Component<Props, State> {
   }
 
   generateResolveMessage = () => {
-    const { issueCount } = this.state
-    // const issueCount = document.querySelectorAll("#output .bad").length
+    // const { issueCount } = this.state
+    const { yoastKeyword } = this.props
+    const issueCount: number = document.querySelectorAll("#yoast-output .bad")
+      .length
 
-    if (!this.state.focusKeyword.trim().length) {
+    if (!yoastKeyword || (yoastKeyword && !yoastKeyword.trim().length)) {
       return " Set Target Keyword"
     } else if (issueCount && issueCount > 0) {
       return `${issueCount} Unresolved Issue${issueCount > 1 ? "s" : ""}`
@@ -143,7 +148,8 @@ export class Yoast extends Component<Props, State> {
   }
 
   render() {
-    const { isOpen, focusKeyword } = this.state
+    const { isOpen } = this.state
+    const { yoastKeyword } = this.props
     return (
       <Box>
         <YoastContainer onClick={this.toggleDrawer}>
@@ -158,7 +164,9 @@ export class Yoast extends Component<Props, State> {
             {this.generateResolveMessage()}
           </ResolveMessage>
           <CloseIcon
-            rotated={isOpen}
+            // rotation={this.state.isOpen ? 45 : 0}
+            // rotated={isOpen}
+            rotation={isOpen ? 45 : 0}
             name="follow-circle"
             width="10px"
             height="10px"
@@ -174,14 +182,18 @@ export class Yoast extends Component<Props, State> {
                 id="focus-keyword"
                 title="Target Keyword"
                 placeholder="A searchable term for this content"
-                value={focusKeyword}
+                value={yoastKeyword}
               />
             </YoastInput>
             <YoastOutput
-              hidden={focusKeyword.trim().length < 1}
+              hidden={
+                !yoastKeyword ||
+                (yoastKeyword && yoastKeyword.trim().length < 1)
+              }
               width={[1, 2 / 3]}
             >
               <Box hidden id="yoast-snippet" />
+              <div id="yoast-snippet" ref={this.snippetContainer} />
               <div id="yoast-output" />
             </YoastOutput>
           </Drawer>
@@ -191,7 +203,7 @@ export class Yoast extends Component<Props, State> {
   }
 }
 
-const YoastContainer = styled(Flex)`
+export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
   padding: 0 20px;
   height: ${space(4)}px;
@@ -208,17 +220,25 @@ const ResolveMessage = styled(Box)`
   display: inline;
   margin-left: 5px;
 `
-const CloseIcon = styled(Icon)<{
-  rotated: boolean
-}>`
-  transform: rotate(${props => (props.rotated ? 45 : 0)}deg);
+
+// const SnippetContainer = styled.div`
+//   display: none;
+// `
+
+export interface IconProps {
+  rotation: number
+}
+
+const CloseIcon = styled(Icon)`
+  transform: rotate(${(props: IconProps) => props.rotation}deg);
   transition: all 0.25s;
   position: absolute;
   right: 15px;
   font-size: 32px;
 `
+
 const YoastInput = styled(Box)`
-  min-width: 360px;
+  max-width: 360px;
   ${Title} {
     margin-bottom: 2px;
     ${avantgarde("s11")};
@@ -228,13 +248,21 @@ const YoastInput = styled(Box)`
     min-width: 300px;
   }
 `
-const YoastOutput = styled(Box)`
+export const YoastOutput = styled(Box)`
   border-left: 1px solid ${color("black10")};
   padding-left: 30px;
 `
 
 const mapStateToProps = state => ({
   article: state.edit.article,
+  yoastKeyword: state.edit.yoastKeyword,
 })
 
-export default connect(mapStateToProps)(Yoast)
+const mapDispatchToProps = {
+  setYoastKeywordAction: setYoastKeyword,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Yoast)

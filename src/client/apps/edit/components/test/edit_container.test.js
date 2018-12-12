@@ -36,6 +36,7 @@ describe("EditContainer", () => {
         activeView: props.activeView,
         article: props.article,
         error: props.error,
+        yoastKeyword: props.yoastKeyword,
       },
     })
 
@@ -63,6 +64,7 @@ describe("EditContainer", () => {
       startEditingArticleAction: jest.fn(),
       stopEditingArticleAction: jest.fn(),
       updateArticleAction: jest.fn(),
+      yoastKeyword: "",
       user: {
         id: "123",
         name: "John Doe",
