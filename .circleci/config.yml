@@ -54,7 +54,6 @@ workflows:
             branches:
               ignore:
                 - staging
-                - release
       - deploy-staging:
           requires:
             - build-and-test
