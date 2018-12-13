@@ -47,7 +47,7 @@ spec:
           readinessProbe:
             httpGet:
               port: 3005
-              path: /health
+              path: /api/health
               httpHeaders:
                 - name: X-FORWARDED-PROTO
                   value: https
