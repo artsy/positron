@@ -1,32 +1,21 @@
-import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { Input, StyledInput } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { mount, shallow } from "enzyme"
+import { mount } from "enzyme"
+// import "jest-styled-components"
 import { clone } from "lodash"
 import React from "react"
-import { Yoast, YoastContainer, YoastOutput } from "../index"
+import { Yoast, YoastContainer, YoastOutput, YoastSnippet } from "../index"
 
 describe("Yoast", () => {
-  let props
-  // let wrapper
-
-  const getWrapper = passedProps => {
-    const g = document.createElement("div")
-    g.setAttribute("id", "yoast-container")
-    const l = document.createElement("div")
-    l.setAttribute("id", "yoast-output")
-    document.body.appendChild(l)
-
-    const s = document.createElement("div")
-    s.setAttribute("id", "yoast-snippet")
-    document.body.appendChild(s)
+  const getWrapper = (passedProps = props) => {
     return mount(<Yoast {...passedProps} />, {
-      attachTo: g,
+      // yoast needs component to be attached to document.body or it breaks
+      attachTo: document.body,
     })
-    // return mount(<Yoast {...passedProps} />)
   }
-  // return mount(<Yoast {...passedProps} />)
+
+  let props
 
   beforeEach(() => {
     props = {
@@ -38,88 +27,42 @@ describe("Yoast", () => {
 
   describe("Rendering", () => {
     it("renders an input field", () => {
-      // const g = document.createElement("div")
-      // g.setAttribute("id", "yoast-output")
-      const component = getWrapper(props)
-      // console.log("COMPONENT HTML", component.html())
-      // console.log("DOC HTML", document.documentElement.innerHTML)
+      const component = getWrapper()
       expect(component.find(Input).length).toBe(1)
     })
 
     it("populates the input field with the yoast keyword", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(Input).props().value).toBe("ceramics")
     })
 
     it("doesn't populate the input field with the yoast keyword if no yoast keyword exists", () => {
       props.yoastKeyword = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(Input).props().value).toBe("")
     })
 
     it("renders a close icon", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(Icon).length).toBe(1)
     })
 
     it("renders a yoast output container", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(YoastOutput).length).toBe(1)
     })
 
-    it("does not display a yoast output container if no yoast keyword exists", () => {
-      props.yoastKeyword = ""
-      const component = getWrapper(props)
-      const output = component
-        .find(YoastOutput)
-        .first()
-        .getElement()
-      // expect(output.props.style.display).toBe("none")
-      // expect(outputStyle).toHaveProperty("display", "none")
-
-      // expect(component.find(YoastOutput).prop("style")).toHaveProperty(
-      //   "display",
-      //   "none"
-      // )
-      // expect(component.find(YoastOutput).style.to.have.property('display', 'none')).toBe(true)
+    it("renders a yoast snippet container", () => {
+      const component = getWrapper()
+      expect(component.find(YoastSnippet).length).toBe(1)
     })
-
-    // it("renders a yoast snippet container", () => {
-    //   const component = getWrapper(props)
-    //   expect(component.find("#yoast-snippet").length).toBe(1)
-    // })
-
-    // it("doesn't render yoast output if there is no yoast keyword", () => {
-    //   props.yoastKeyword = ""
-    //   const component = getWrapper(props)
-    //   expect(component.find("#yoast-output").length).toBe(0)
-    // })
   })
-
-  // describe("generateResolveMessage", () => {
-  //   props = {
-  //     article: clone(StandardArticle),
-  //     yoastKeyword: "",
-  //     setYoastKeywordAction: jest.fn(),
-  //   }
-  //   const component = getWrapper()
-  //   it("returns 'set target keyword' when there is no yoastKeyword", () => {
-  //     console.log(component)
-
-  //     // console.log("COM PONENT", component)
-  //     // expect(
-  //     //   component
-  //     //     .find("snippet-editor-title")
-  //     //     .at(0)
-  //     //     .text()
-  //     // ).toEqual("cats")
-  //   })
-  // })
 
   describe("#getBodyText", () => {
     it("returns body text", () => {
-      const component = getWrapper(props).instance() as Yoast
-      const fullText = component.getBodyText()
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const fullText = instance.getBodyText()
       const firstSection = fullText.slice(
         0,
         props.article.sections[0].body.length
@@ -130,52 +73,58 @@ describe("Yoast", () => {
 
   describe("#keywordIsBlank", () => {
     it("returns false if yoast keyword is not blank", () => {
-      const component = getWrapper(props).instance() as Yoast
-      const returnValue = component.keywordIsBlank()
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const returnValue = instance.keywordIsBlank()
       expect(returnValue).toBe(false)
     })
 
     it("returns true if yoast keyword is blank", () => {
       props.yoastKeyword = ""
-      const component = getWrapper(props).instance() as Yoast
-      const returnValue = component.keywordIsBlank()
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const returnValue = instance.keywordIsBlank()
       expect(returnValue).toBe(true)
     })
   })
 
   describe("#toggleDrawer", () => {
     it("sets isOpen to true when the yoast header is clicked", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.state("isOpen")).toBe(false)
       component.find(YoastContainer).simulate("click")
       expect(component.state("isOpen")).toBe(true)
-      // const instance = component.instance() as Yoast
-      // instance.toggleDrawer = jest.fn()
-      // const { toggleDrawer } = instance
-      // component.find(YoastContainer).prop("onClick")()
-      // expect(toggleDrawer).toHaveBeenCalledTimes(1)
-      // expect(toggleDrawer).toHaveBeenCalledWith("clicked")
+    })
+
+    it("sets isOpen to false when the yoast header is clicked twice", () => {
+      const component = getWrapper()
+      expect(component.state("isOpen")).toBe(false)
+      component.find(YoastContainer).simulate("click")
+      component.find(YoastContainer).simulate("click")
+      expect(component.state("isOpen")).toBe(false)
     })
   })
 
   describe("#generateResolveMessage", () => {
     it("returns 'Set Target Keyword' if there is no yoast keyword", () => {
       props.yoastKeyword = ""
-      const component = getWrapper(props).instance() as Yoast
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
 
-      const resolveMessage = component.generateResolveMessage()
+      const resolveMessage = instance.generateResolveMessage()
       expect(resolveMessage).toBe(" Set Target Keyword")
     })
 
     it("returns 'Resolved' if there is a yoast keyword but no issues", () => {
-      const component = getWrapper(props).instance() as Yoast
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
 
-      const resolveMessage = component.generateResolveMessage()
+      const resolveMessage = instance.generateResolveMessage()
       expect(resolveMessage).toBe(" Resolved")
     })
 
     // it("returns a string reporting the number of unresolved issues if there is a yoast keyword and issues", () => {
-    //   const component = getWrapper(props).instance() as Yoast
+    //   const component = getWrapper().instance() as Yoast
 
     //   const resolveMessage = component.generateResolveMessage()
     //   expect(resolveMessage).toBe(" Resolved")
@@ -183,22 +132,73 @@ describe("Yoast", () => {
   })
 
   describe("#setSnippetFields", () => {
-    // const keywordInput = component.find("focus-keyword").at(0)
-    // keywordInput.value = "Bears"
     it("sets snippet title", () => {
-      // const component = getWrapper(props)
-      // component.setSnippetFields()
-      // component.find("#snippet-editor-title")
-      // console.log(component)
-      // console.log("COM PONENT", component)
-      // expect(
-      //   component
-      //     .find("snippet-editor-title")
-      //     .at(0)
-      //     .text()
-      // ).toEqual("cats")
+      const component = getWrapper()
+      expect(
+        // using document because component.find("#snippet-editor-title") was not finding the element
+        document.getElementById("snippet-editor-title").innerText
+      ).toEqual(
+        props.article.search_title ||
+          props.article.thumbnail_title ||
+          props.article.title ||
+          ""
+      )
+    })
+
+    it("sets snippet description", () => {
+      const component = getWrapper()
+      expect(
+        // using document because component.find("#snippet-editor-title") was not finding the element
+        document.getElementById("snippet-editor-meta-description").innerText
+      ).toEqual(
+        props.article.search_description || props.article.description || ""
+      )
     })
   })
 
-  // describe("generateResolveMessage", () => {})
+  describe("#getSeoTitle", () => {
+    it("returns article's thumbnail title when search title does not exist", () => {
+      // props.article.thumbnail_title = "a thumbnail title"
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const seoTitle = instance.getSeoTitle()
+      expect(seoTitle).toEqual("New York's Next Art District")
+    })
+
+    it("returns article's search title when it exists", () => {
+      props.article.search_title = "a search title"
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const seoTitle = instance.getSeoTitle()
+      expect(seoTitle).toEqual("a search title")
+    })
+
+    it("returns article's title when thumbnail and search title do not exist", () => {
+      props.article.thumbnail_title = null
+      props.article.title = "a title"
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const seoTitle = instance.getSeoTitle()
+      expect(seoTitle).toEqual("a title")
+    })
+  })
+
+  describe("#getSeoDescription", () => {
+    it("returns article's description when search description does not exist", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const seoDescription = instance.getSeoDescription()
+      expect(seoDescription).toEqual(
+        "Land exhibitions, make influential contacts, and gain valuable feedback about your work."
+      )
+    })
+
+    it("returns article's search description when it exists", () => {
+      props.article.search_description = "a search description"
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+      const seoDescription = instance.getSeoDescription()
+      expect(seoDescription).toEqual("a search description")
+    })
+  })
 })

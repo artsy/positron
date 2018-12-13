@@ -8,7 +8,7 @@ import {
 } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { StaticCollapse } from "@artsy/reaction/dist/Components/StaticCollapse"
-import React, { Component, createRef } from "react"
+import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import {
@@ -28,14 +28,10 @@ interface State {
 }
 
 export class Yoast extends Component<Props, State> {
-  // private snippetContainer = createRef<HTMLDivElement>()
-  private snippetContainer
   private snippetPreview
 
   constructor(props) {
     super(props)
-    // this.snippetContainer = React.createRef()
-    this.snippetContainer = createRef<HTMLDivElement>()
 
     this.state = {
       isOpen: false,
@@ -45,7 +41,6 @@ export class Yoast extends Component<Props, State> {
   componentDidMount() {
     this.snippetPreview = new YoastSnippetPreview({
       targetElement: document.getElementById("yoast-snippet"),
-      // targetElement: this.snippetContainer.current,
     })
     const app = new YoastApp({
       snippetPreview: this.snippetPreview,
@@ -59,11 +54,6 @@ export class Yoast extends Component<Props, State> {
             text: this.getBodyText(),
           }
         },
-        saveScores: () => {
-          this.setState({
-            // issueCount: document.querySelectorAll("#yoast-output .bad").length,
-          })
-        },
       },
     })
     app.refresh()
@@ -71,31 +61,32 @@ export class Yoast extends Component<Props, State> {
   }
 
   setSnippetFields = () => {
-    // document.getElementById("content-field").value = this.getBodyText()
-    const {
-      article: {
-        search_title,
-        thumbnail_title,
-        title,
-        description,
-        search_description,
-      },
-    } = this.props
-    const seoTitle = search_title || thumbnail_title || title || ""
-    const seoDescription = search_description || description || ""
-
     const formTitle = document.getElementById("snippet-editor-title")
     const formDescription = document.getElementById(
       "snippet-editor-meta-description"
     )
 
     if (formTitle) {
-      formTitle.innerText = seoTitle
+      formTitle.innerText = this.getSeoTitle()
     }
 
     if (formDescription) {
-      formDescription.innerText = seoDescription
+      formDescription.innerText = this.getSeoDescription()
     }
+  }
+
+  getSeoTitle = () => {
+    const {
+      article: { search_title, thumbnail_title, title },
+    } = this.props
+    return search_title || thumbnail_title || title || ""
+  }
+
+  getSeoDescription = () => {
+    const {
+      article: { description, search_description },
+    } = this.props
+    return search_description || description || ""
   }
 
   getBodyText = () => {
@@ -123,7 +114,6 @@ export class Yoast extends Component<Props, State> {
 
   onKeywordChange = e => {
     this.props.setYoastKeywordAction(e.target.value)
-    // this.setState({ focusKeyword: e.target.value })
     this.resetSnippet()
   }
 
@@ -142,8 +132,6 @@ export class Yoast extends Component<Props, State> {
   }
 
   generateResolveMessage = () => {
-    // const { issueCount } = this.state
-    // const { yoastKeyword } = this.props
     const issueCount: number = document.querySelectorAll("#yoast-output .bad")
       .length
 
@@ -173,8 +161,6 @@ export class Yoast extends Component<Props, State> {
             {this.generateResolveMessage()}
           </ResolveMessage>
           <CloseIcon
-            // rotation={this.state.isOpen ? 45 : 0}
-            // rotated={isOpen}
             rotation={isOpen ? 45 : 0}
             name="follow-circle"
             width="10px"
@@ -195,7 +181,7 @@ export class Yoast extends Component<Props, State> {
               />
             </YoastInput>
             <YoastOutput hidden={this.keywordIsBlank()} width={[1, 2 / 3]}>
-              <div id="yoast-snippet" ref={this.snippetContainer} />
+              <YoastSnippet hidden id="yoast-snippet" />
               <div id="yoast-output" />
             </YoastOutput>
           </Drawer>
@@ -205,7 +191,7 @@ export class Yoast extends Component<Props, State> {
   }
 }
 
-// <Box hidden id="yoast-snippet" />
+export const YoastSnippet = styled(Box)``
 
 export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
@@ -229,12 +215,20 @@ const ResolveMessage = styled(Box)`
 //   display: none;
 // `
 
-export interface IconProps {
-  rotation: number
-}
+// export interface IconProps {
+//   rotation: number
+// }
 
-const CloseIcon = styled(Icon)`
-  transform: rotate(${(props: IconProps) => props.rotation}deg);
+// const CloseIcon = styled(Icon)`
+//   transform: rotate(${(props: IconProps) => props.rotation}deg);
+//   transition: all 0.25s;
+//   position: absolute;
+//   right: 15px;
+//   font-size: 32px;
+// `
+
+const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
+  transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
   position: absolute;
   right: 15px;
