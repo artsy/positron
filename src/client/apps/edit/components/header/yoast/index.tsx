@@ -44,8 +44,8 @@ export class Yoast extends Component<Props, State> {
 
   componentDidMount() {
     this.snippetPreview = new YoastSnippetPreview({
-      // targetElement: document.getElementById("yoast-snippet"),
-      targetElement: this.snippetContainer.current,
+      targetElement: document.getElementById("yoast-snippet"),
+      // targetElement: this.snippetContainer.current,
     })
     const app = new YoastApp({
       snippetPreview: this.snippetPreview,
@@ -143,7 +143,7 @@ export class Yoast extends Component<Props, State> {
 
   generateResolveMessage = () => {
     // const { issueCount } = this.state
-    const { yoastKeyword } = this.props
+    // const { yoastKeyword } = this.props
     const issueCount: number = document.querySelectorAll("#yoast-output .bad")
       .length
 
@@ -195,7 +195,6 @@ export class Yoast extends Component<Props, State> {
               />
             </YoastInput>
             <YoastOutput hidden={this.keywordIsBlank()} width={[1, 2 / 3]}>
-              <Box hidden id="yoast-snippet" />
               <div id="yoast-snippet" ref={this.snippetContainer} />
               <div id="yoast-output" />
             </YoastOutput>
@@ -205,6 +204,8 @@ export class Yoast extends Component<Props, State> {
     )
   }
 }
+
+// <Box hidden id="yoast-snippet" />
 
 export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};

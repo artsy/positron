@@ -12,14 +12,21 @@ describe("Yoast", () => {
   // let wrapper
 
   const getWrapper = passedProps => {
-    return mount(
-      // <React.Fragment>
-      <Yoast {...passedProps} />
-      //   <div id="yoast-snippet" />
-      //   <div id="yoast-output" />
-      // </React.Fragment>
-    )
+    const g = document.createElement("div")
+    g.setAttribute("id", "yoast-container")
+    const l = document.createElement("div")
+    l.setAttribute("id", "yoast-output")
+    document.body.appendChild(l)
+
+    const s = document.createElement("div")
+    s.setAttribute("id", "yoast-snippet")
+    document.body.appendChild(s)
+    return mount(<Yoast {...passedProps} />, {
+      attachTo: g,
+    })
+    // return mount(<Yoast {...passedProps} />)
   }
+  // return mount(<Yoast {...passedProps} />)
 
   beforeEach(() => {
     props = {
@@ -31,7 +38,11 @@ describe("Yoast", () => {
 
   describe("Rendering", () => {
     it("renders an input field", () => {
+      // const g = document.createElement("div")
+      // g.setAttribute("id", "yoast-output")
       const component = getWrapper(props)
+      // console.log("COMPONENT HTML", component.html())
+      // console.log("DOC HTML", document.documentElement.innerHTML)
       expect(component.find(Input).length).toBe(1)
     })
 
@@ -113,7 +124,6 @@ describe("Yoast", () => {
         0,
         props.article.sections[0].body.length
       )
-
       expect(firstSection).toBe(props.article.sections[0].body)
     })
   })
