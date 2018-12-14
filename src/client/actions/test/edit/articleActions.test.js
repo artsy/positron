@@ -188,7 +188,6 @@ describe("articleActions", () => {
       }))
       publishArticle()(dispatch, getState)
 
-      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls[2][0].seo_keyword).toBe("ceramics")
     })
 
@@ -266,7 +265,6 @@ describe("articleActions", () => {
         edit: { article: { published: true }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
-      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
     })
 
@@ -275,8 +273,6 @@ describe("articleActions", () => {
         edit: { article: { published: false }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
-
-      // expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls.length).toBe(1)
       expect(setArticleSpy.mock.calls[0][0].seo_keyword).toBeFalsy()
     })

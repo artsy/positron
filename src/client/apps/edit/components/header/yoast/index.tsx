@@ -28,7 +28,7 @@ interface State {
 }
 
 export class Yoast extends Component<Props, State> {
-  private snippetPreview
+  private snippetPreview: YoastSnippetPreview
 
   constructor(props) {
     super(props)
@@ -50,7 +50,7 @@ export class Yoast extends Component<Props, State> {
       callbacks: {
         getData: () => {
           return {
-            keyword: this.props.yoastKeyword.toLowerCase(),
+            keyword: this.props.yoastKeyword,
             text: this.getBodyText(),
           }
         },
@@ -195,7 +195,7 @@ export const YoastSnippet = styled(Box)``
 
 export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
-  padding: 0 20px;
+  padding: 0 ${space(2)}px;
   height: ${space(4)}px;
   border-bottom: 1px solid ${color("black10")};
   font-size: 15px;

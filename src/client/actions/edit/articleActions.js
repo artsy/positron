@@ -211,19 +211,10 @@ export const setMentionedItems = (model, items) => {
 
 // YOAST
 export const setSeoKeyword = article => {
-  // if (article.get("published")) {
-  //   const seo_keyword = article.set({ seo_keyword })
-  // }
-  // return {
-  //   type: actions.SET_SEO_KEYWORD,
-  // }
-
   return (dispatch, getState) => {
     const {
       edit: { yoastKeyword },
     } = getState()
-
-    console.log("KEYWORD IN ART AC", yoastKeyword)
 
     if (article.get("published")) {
       article.set({ seo_keyword: yoastKeyword })
