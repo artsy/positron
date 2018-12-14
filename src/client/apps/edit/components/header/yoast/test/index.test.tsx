@@ -1,16 +1,21 @@
 import Icon from "@artsy/reaction/dist/Components/Icon"
-import { Input, StyledInput } from "@artsy/reaction/dist/Components/Input"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
-// import "jest-styled-components"
 import { clone } from "lodash"
 import React from "react"
-import { Yoast, YoastContainer, YoastOutput, YoastSnippet } from "../index"
+import {
+  ResolveMessage,
+  Yoast,
+  YoastContainer,
+  YoastOutput,
+  YoastSnippet,
+} from "../index"
 
 describe("Yoast", () => {
   const getWrapper = (passedProps = props) => {
     return mount(<Yoast {...passedProps} />, {
-      // yoast needs component to be attached to document.body or it breaks
+      // yoast needs component to be attached to document.body or it breaks because it can't find #yoast-output and #yoast-snippet
       attachTo: document.body,
     })
   }
@@ -96,12 +101,27 @@ describe("Yoast", () => {
       expect(component.state("isOpen")).toBe(true)
     })
 
-    it("sets isOpen to false when the yoast header is clicked twice", () => {
+    it("sets isOpen to false when the yoast header is clicked a second time", () => {
       const component = getWrapper()
       expect(component.state("isOpen")).toBe(false)
       component.find(YoastContainer).simulate("click")
       component.find(YoastContainer).simulate("click")
       expect(component.state("isOpen")).toBe(false)
+    })
+
+    it("rotates icon when the yoast header is clicked", () => {
+      const component = getWrapper()
+      component.find(YoastContainer).simulate("click")
+      component.find(Icon).prop("rotation")
+      expect(component.find(Icon).prop("rotation")).toBe(45)
+    })
+
+    it("rotates icon back to original position when the yoast header is clicked a second time", () => {
+      const component = getWrapper()
+      component.find(YoastContainer).simulate("click")
+      component.find(YoastContainer).simulate("click")
+      component.find(Icon).prop("rotation")
+      expect(component.find(Icon).prop("rotation")).toBe(0)
     })
   })
 
@@ -115,6 +135,74 @@ describe("Yoast", () => {
       expect(resolveMessage).toBe(" Set Target Keyword")
     })
 
+    it("turns message red when there is no yoast keyword", () => {
+      props.yoastKeyword = ""
+      const component = getWrapper()
+      const color = component.find(ResolveMessage).prop("color")
+      const red = "#F7625A"
+      expect(color).toBe(red)
+    })
+
+    it("turns message red when there is at least 1 issue", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+
+      const firstIssue = document.createElement("div")
+      firstIssue.className += "bad"
+
+      const output = document.getElementById("yoast-output")
+
+      if (output) {
+        output.appendChild(firstIssue)
+      }
+
+      // both need to be updated
+      instance.forceUpdate()
+      component.update()
+
+      const color = component.find(ResolveMessage).prop("color")
+      const red = "#F7625A"
+      expect(color).toBe(red)
+    })
+
+    it("returns '1 Unresolved Issue' message if there is a yoast keyword and one issue", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+
+      const firstIssue = document.createElement("div")
+      firstIssue.className += "bad"
+
+      const output = document.getElementById("yoast-output")
+
+      if (output) {
+        output.appendChild(firstIssue)
+      }
+
+      const resolveMessage = instance.generateResolveMessage()
+      expect(resolveMessage).toBe("1 Unresolved Issue")
+    })
+
+    it("returns '2 Unresolved Issues' message if there is a yoast keyword and two issues", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Yoast
+
+      const firstIssue = document.createElement("div")
+      firstIssue.className += "bad"
+
+      const secondIssue = document.createElement("div")
+      secondIssue.className += "bad"
+
+      const output = document.getElementById("yoast-output")
+
+      if (output) {
+        output.appendChild(firstIssue)
+        output.appendChild(secondIssue)
+      }
+
+      const resolveMessage = instance.generateResolveMessage()
+      expect(resolveMessage).toBe("2 Unresolved Issues")
+    })
+
     it("returns 'Resolved' if there is a yoast keyword but no issues", () => {
       const component = getWrapper()
       const instance = component.instance() as Yoast
@@ -123,21 +211,25 @@ describe("Yoast", () => {
       expect(resolveMessage).toBe(" Resolved")
     })
 
-    // it("returns a string reporting the number of unresolved issues if there is a yoast keyword and issues", () => {
-    //   const component = getWrapper().instance() as Yoast
-
-    //   const resolveMessage = component.generateResolveMessage()
-    //   expect(resolveMessage).toBe(" Resolved")
-    // })
+    it("turns message green when there is a keyword and no issues", () => {
+      const component = getWrapper()
+      const color = component.find(ResolveMessage).prop("color")
+      const green = "#0EDA83"
+      expect(color).toBe(green)
+    })
   })
 
   describe("#setSnippetFields", () => {
     it("sets snippet title", () => {
-      const component = getWrapper()
-      expect(
-        // using document because component.find("#snippet-editor-title") was not finding the element
-        document.getElementById("snippet-editor-title").innerText
-      ).toEqual(
+      getWrapper()
+      let titleText
+
+      // using document because component.find("#snippet-editor-title") was not finding the element
+      const snippetTitle = document.getElementById("snippet-editor-title")
+      if (snippetTitle) {
+        titleText = snippetTitle.innerText
+      }
+      expect(titleText).toEqual(
         props.article.search_title ||
           props.article.thumbnail_title ||
           props.article.title ||
@@ -146,11 +238,17 @@ describe("Yoast", () => {
     })
 
     it("sets snippet description", () => {
-      const component = getWrapper()
-      expect(
-        // using document because component.find("#snippet-editor-title") was not finding the element
-        document.getElementById("snippet-editor-meta-description").innerText
-      ).toEqual(
+      getWrapper()
+      let descriptionText
+
+      // using document because component.find("#snippet-editor-title") was not finding the element
+      const snippetDescription = document.getElementById(
+        "snippet-editor-meta-description"
+      )
+      if (snippetDescription) {
+        descriptionText = snippetDescription.innerText
+      }
+      expect(descriptionText).toEqual(
         props.article.search_description || props.article.description || ""
       )
     })
@@ -158,7 +256,6 @@ describe("Yoast", () => {
 
   describe("#getSeoTitle", () => {
     it("returns article's thumbnail title when search title does not exist", () => {
-      // props.article.thumbnail_title = "a thumbnail title"
       const component = getWrapper()
       const instance = component.instance() as Yoast
       const seoTitle = instance.getSeoTitle()

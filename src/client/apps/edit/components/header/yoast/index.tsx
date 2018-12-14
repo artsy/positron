@@ -206,27 +206,10 @@ const Drawer = styled(Flex)`
   padding: 30px;
   border-bottom: 1px solid ${color("black10")};
 `
-const ResolveMessage = styled(Box)`
+export const ResolveMessage = styled(Box)`
   display: inline;
   margin-left: 5px;
 `
-
-// const SnippetContainer = styled.div`
-//   display: none;
-// `
-
-// export interface IconProps {
-//   rotation: number
-// }
-
-// const CloseIcon = styled(Icon)`
-//   transform: rotate(${(props: IconProps) => props.rotation}deg);
-//   transition: all 0.25s;
-//   position: absolute;
-//   right: 15px;
-//   font-size: 32px;
-// `
-
 const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
   transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
