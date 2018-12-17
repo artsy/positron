@@ -11,6 +11,7 @@ import {
   publishArticle,
   saveArticle,
   setMentionedItems,
+  setSeoKeyword,
 } from "client/actions/edit/articleActions"
 import Article from "client/models/article.coffee"
 
@@ -222,6 +223,39 @@ describe("articleActions", () => {
     })
   })
 
+  describe("#setSeoKeyword", () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, "set")
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      dispatch = jest.fn()
+    })
+
+    it("sets an seo keyword for a published article", () => {
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
+
+      let a = new Article(FeatureArticle)
+      setSeoKeyword(a)(dispatch, getState)
+      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
+    })
+
+    it("doesn't set an seo keyword for an unpublished article", () => {
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
+
+      FeatureArticle.published = false
+      let a = new Article(FeatureArticle)
+      setSeoKeyword(a)(dispatch, getState)
+      expect(setArticleSpy.mock.calls[1]).toBeFalsy()
+    })
+  })
+
   describe("#saveArticle", () => {
     let getState
     let dispatch
@@ -260,15 +294,19 @@ describe("articleActions", () => {
       expect(window.location.assign.mock.calls.length).toBe(0)
     })
 
-    it("Sets seo_keyword if published", () => {
+    it("calls setSeoKeyword if published", () => {
+      let setSeoKeyword = jest.fn()
       getState = jest.fn(() => ({
         edit: { article: { published: true }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
-      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
+      dispatch(dispatch.mock.calls[1][0])
+      console.log("DISPATCH", dispatch.mock.calls)
+      console.log("setArt", setArticleSpy.mock.calls)
+      expect(dispatch.mock.calls[1][0]).toEqual(setSeoKeyword)
     })
 
-    it("Does not seo_keyword if unpublished", () => {
+    it("Does not set seo_keyword if unpublished", () => {
       getState = jest.fn(() => ({
         edit: { article: { published: false }, yoastKeyword: "ceramics" },
       }))

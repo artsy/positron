@@ -1,8 +1,8 @@
-import { debounce } from "lodash"
-import keyMirror from "client/lib/keyMirror"
-import { emitAction } from "client/apps/websocket/client"
-import { messageTypes } from "client/apps/websocket/messageTypes"
 import $ from "jquery"
+import { debounce } from "lodash"
+import { emitAction } from "../../apps/websocket/client"
+import { messageTypes } from "../../apps/websocket/messageTypes"
+import keyMirror from "../../lib/keyMirror"
 
 export const actions = keyMirror(
   "CHANGE_VIEW",

@@ -15,7 +15,7 @@ import {
   App as YoastApp,
   SnippetPreview as YoastSnippetPreview,
 } from "yoastseo"
-import { setYoastKeyword } from "../../../../../actions/edit/editActions.js"
+import { setYoastKeyword } from "../../../../../actions/edit/editActions"
 
 interface Props {
   article: ArticleData
