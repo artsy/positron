@@ -227,7 +227,7 @@ describe("Yoast", () => {
       // using document because component.find("#snippet-editor-title") was not finding the element
       const snippetTitle = document.getElementById("snippet-editor-title")
       if (snippetTitle) {
-        titleText = snippetTitle.innerText
+        titleText = snippetTitle.value
       }
       expect(titleText).toEqual(
         props.article.search_title ||
