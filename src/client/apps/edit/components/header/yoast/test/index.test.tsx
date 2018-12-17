@@ -225,7 +225,9 @@ describe("Yoast", () => {
       let titleText
 
       // using document because component.find("#snippet-editor-title") was not finding the element
-      const snippetTitle = document.getElementById("snippet-editor-title")
+      const snippetTitle = document.getElementById(
+        "snippet-editor-title"
+      ) as HTMLInputElement
       if (snippetTitle) {
         titleText = snippetTitle.value
       }
