@@ -25,6 +25,7 @@ interface Props {
 
 interface State {
   isOpen: boolean
+  issueCount: number
 }
 
 export class Yoast extends Component<Props, State> {
@@ -35,6 +36,7 @@ export class Yoast extends Component<Props, State> {
 
     this.state = {
       isOpen: false,
+      issueCount: 0,
     }
   }
 
@@ -54,6 +56,12 @@ export class Yoast extends Component<Props, State> {
             text: this.getBodyText(),
           }
         },
+
+        saveScores: () => {
+          this.setState({
+            issueCount: document.querySelectorAll("#yoast-output .bad").length,
+          })
+        },
       },
     })
     app.refresh()
@@ -67,7 +75,7 @@ export class Yoast extends Component<Props, State> {
     )
 
     if (formTitle) {
-      formTitle.innerText = this.getSeoTitle()
+      formTitle.value = this.getSeoTitle()
     }
 
     if (formDescription) {
@@ -132,8 +140,9 @@ export class Yoast extends Component<Props, State> {
   }
 
   generateResolveMessage = () => {
-    const issueCount: number = document.querySelectorAll("#yoast-output .bad")
-      .length
+    // const issueCount: number = document.querySelectorAll("#yoast-output .bad")
+    //   .length
+    const { issueCount } = this.state
 
     if (this.keywordIsBlank()) {
       return " Set Target Keyword"

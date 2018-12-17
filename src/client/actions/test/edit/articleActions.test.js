@@ -24,7 +24,7 @@ describe("articleActions", () => {
 
   document.body.innerHTML = `
     <div>
-      <input id="edit-seo__focus-keyword" value="ceramics" />
+      <input id="focus-keyword" value="ceramics" />
     </div>'
   `
 
