@@ -43,7 +43,11 @@ describe("EditContainer", () => {
     return mount(
       <Provider store={store}>
         <EditContainer {...props} />
-      </Provider>
+      </Provider>,
+      {
+        // yoast needs component to be attached to document.body or it breaks because it can't find #yoast-output and #yoast-snippet
+        attachTo: document.body,
+      }
     )
   }
 
