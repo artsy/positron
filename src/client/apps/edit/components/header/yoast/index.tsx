@@ -69,7 +69,9 @@ export class Yoast extends Component<Props, State> {
   }
 
   setSnippetFields = () => {
-    const formTitle = document.getElementById("snippet-editor-title")
+    const formTitle = document.getElementById(
+      "snippet-editor-title"
+    ) as HTMLInputElement
     const formDescription = document.getElementById(
       "snippet-editor-meta-description"
     )
