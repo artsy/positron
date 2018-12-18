@@ -9,8 +9,15 @@ Meta
 ---
 
 * __State:__ production
-* __Production:__ [https://writer.artsy.net/](https://writer.artsy.net/) | [Heroku](https://dashboard.heroku.com/apps/positron-production/resources)
-* __Staging:__ [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Heroku](https://dashboard.heroku.com/apps/positron-staging/resources)
+* __Production:__ [https://writer.artsy.net/](https://writer.artsy.net/) | [Kubernetes](https://kubernetes.artsy.net/#!/deployment/default/positron-web?namespace=default)
+* __Staging:__ [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Kubernetes](https://kubernetes-staging.artsy.net/#!/deployment/default/positron-web?namespace=default)
+* __Logs:__
+    * [Production](https://papertrailapp.com/groups/3675843/events?q=host%3Apositron-web)
+    * [Staging](https://papertrailapp.com/groups/3674473/events?q=host%3Apositron-web)
+* __Monitoring:__
+    * [Production](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136847351&env=production&paused=false&start=1545133247351)
+    * [Staging](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136799180&env=staging&paused=false&start=1545133199180)
+* __MongoDB:__ [Atlas](https://cloud.mongodb.com/v2/5be44a7aff7a254a8327cd3a#clusters)
 * __Github:__ [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 * __CI:__ [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
 * __Point Person:__  [@eessex](https://github.com/eessex)
