@@ -86,38 +86,51 @@ export class SectionTool extends Component {
             Text
           </SectionToolMenuItem>
 
-          <SectionToolMenuItem onClick={() => this.newSection("image_collection")}>
+          <SectionToolMenuItem
+            onClick={() => this.newSection("image_collection")}
+          >
             <IconEditImages />
             {isNews ? "Image" : "Images"}
           </SectionToolMenuItem>
 
-          {!isNews &&
+          {!isNews && (
             <SectionToolMenuItem onClick={() => this.newSection("video")}>
               <IconEditVideo />
               Video
             </SectionToolMenuItem>
-          }
+          )}
 
-          {!isPartnerChannel && !isNews &&
-            <SectionToolMenuItem onClick={() => this.newSection("embed")}>
-              <IconEditEmbed />
-              Embed
-            </SectionToolMenuItem>
-          }
+          {!isPartnerChannel &&
+            !isNews && (
+              <SectionToolMenuItem onClick={() => this.newSection("embed")}>
+                <IconEditEmbed />
+                Embed
+              </SectionToolMenuItem>
+            )}
 
-          {isNews && !firstSection &&
-            <SectionToolMenuItem onClick={() => this.newSection("social_embed")}>
-              <IconEditEmbed />
-              Social Embed
-            </SectionToolMenuItem>
-          }
+          {layout !== "classic" &&
+            !firstSection && (
+              <SectionToolMenuItem
+                onClick={() => this.newSection("social_embed")}
+              >
+                <IconEditEmbed />
+                Social Embed
+              </SectionToolMenuItem>
+            )}
         </SectionToolMenu>
       )
     }
   }
 
   render() {
-    const { article, firstSection, index, isEditing, isHero, sections } = this.props
+    const {
+      article,
+      firstSection,
+      index,
+      isEditing,
+      isHero,
+      sections,
+    } = this.props
     const { isOpen } = this.state
 
     const isFirstSection = sections && firstSection && sections.length === 0
@@ -173,23 +186,28 @@ const SectionToolContainer = styled.div`
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  max-width: ${props => props.width ? props.width : "100%"};
+  max-width: ${props => (props.width ? props.width : "100%")};
   width: 100%;
   transition: max-height 0.15s linear, opacity 0.15s linear;
 
-  ${props => props.isEditing && `
+  ${props =>
+    props.isEditing &&
+    `
     z-index: -1;
-  `}
-  &:last-child {
+  `} &:last-child {
     opacity: 1;
     margin-top: 15px;
   }
-  ${props => props.isOpen && `
+  ${props =>
+    props.isOpen &&
+    `
     max-height: inherit;
-  `}
-  ${props => (props.isVisible && !props.isHero) && `
+  `} ${props =>
+    props.isVisible &&
+    !props.isHero &&
+    `
     padding-bottom: 40px;
-  `}
+  `};
 `
 
 export const SectionToolIcon = styled.div`
@@ -212,7 +230,7 @@ export const SectionToolIcon = styled.div`
     transition: fill 0.1s;
   }
   &::before {
-    content: '.';
+    content: ".";
     border-top: 2px solid black;
     position: absolute;
     top: 6px;
@@ -225,10 +243,15 @@ export const SectionToolIcon = styled.div`
     height: 20px;
     z-index: 2;
   }
-  ${props => (props.isVisible || props.isOpen) && `
+  ${props =>
+    (props.isVisible || props.isOpen) &&
+    `
     opacity: 1;
-  `}
-  ${props => (props.isVisible && !props.isOpen && !props.isHero) && `
+  `} ${props =>
+    props.isVisible &&
+    !props.isOpen &&
+    !props.isHero &&
+    `
     &::after {
       content: 'Add a section';
       width: 150px;

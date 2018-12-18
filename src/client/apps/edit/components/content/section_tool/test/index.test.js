@@ -105,6 +105,7 @@ describe("SectionTool", () => {
         expect(component.find(IconEditImages).exists()).toBe(true)
         expect(component.find(IconEditVideo).exists()).toBe(true)
         expect(component.find(IconEditEmbed).exists()).toBe(true)
+        expect(component.find(IconEditEmbed).length).toBe(2)
       })
 
       it("Renders correct icons for Feature layout", () => {
@@ -115,7 +116,7 @@ describe("SectionTool", () => {
         expect(component.find(IconEditText).exists()).toBe(true)
         expect(component.find(IconEditImages).exists()).toBe(true)
         expect(component.find(IconEditVideo).exists()).toBe(true)
-        expect(component.find(IconEditEmbed).exists()).toBe(true)
+        expect(component.find(IconEditEmbed).length).toBe(2)
       })
 
       it("Renders correct icons for News layout", () => {
@@ -176,8 +177,14 @@ describe("SectionTool", () => {
       it("Can create an embed section", () => {
         const expectedIndex = props.sections.length
         const component = getWrapper(props)
-        component.find(SectionToolIcon).simulate("click")
-        component.find(IconEditEmbed).simulate("click")
+        component
+          .find(SectionToolIcon)
+          .at(0)
+          .simulate("click")
+        component
+          .find(IconEditEmbed)
+          .at(0)
+          .simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("embed")
         expect(props.newSectionAction.mock.calls[0][1]).toBe(expectedIndex)
@@ -192,6 +199,15 @@ describe("SectionTool", () => {
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("social_embed")
         expect(props.newSectionAction.mock.calls[0][1]).toBe(expectedIndex)
+      })
+
+      it("doesn not create a social embed section for classic articles", () => {
+        props.article.layout = "classic"
+        props.isPartnerChannel = true
+        const component = getWrapper(props)
+        component.find(SectionToolIcon).simulate("click")
+
+        expect(component.find(IconEditEmbed).exists()).toBe(false)
       })
     })
   })
