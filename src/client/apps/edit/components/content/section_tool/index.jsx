@@ -247,7 +247,7 @@ export const SectionToolIcon = styled.div`
     (props.isVisible || props.isOpen) &&
     `
     opacity: 1;
-  `} ${props =>
+  `}; ${props =>
     props.isVisible &&
     !props.isOpen &&
     !props.isHero &&
