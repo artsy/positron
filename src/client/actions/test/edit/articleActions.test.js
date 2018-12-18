@@ -23,12 +23,6 @@ describe("articleActions", () => {
     article = cloneDeep(FeatureArticle)
   })
 
-  document.body.innerHTML = `
-    <div>
-      <input id="focus-keyword" value="ceramics" />
-    </div>'
-  `
-
   describe("#changeArticleData", () => {
     let getState
     let dispatch
