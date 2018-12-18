@@ -24,7 +24,7 @@ describe("editActions", () => {
     expect(action.payload.activeView).toBe("display")
   })
 
-  it("#setYoastKewyword sets the yoast keyword", () => {
+  it("#setYoastKeyword sets the yoast keyword", () => {
     const action = setYoastKeyword("photography")
 
     expect(action.type).toBe("SET_YOAST_KEYWORD")

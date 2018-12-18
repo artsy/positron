@@ -144,7 +144,6 @@ export class Yoast extends Component<Props, State> {
   generateResolveMessage = () => {
     const issueCount: number = document.querySelectorAll("#yoast-output .bad")
       .length
-    // const { issueCount } = this.state
 
     if (this.keywordIsBlank()) {
       return " Set Target Keyword"
