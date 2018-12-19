@@ -10,6 +10,7 @@ import { EditContent } from "../content"
 import { EditDisplay } from "../display"
 import { EditHeader } from "../header"
 import { EditError } from "../error"
+import { Yoast } from "../header/yoast"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -155,6 +156,17 @@ describe("EditContainer", () => {
     it("Renders the EditHeader", () => {
       const component = getWrapper(props).find(EditContainer)
       expect(component.find(EditHeader).exists()).toBe(true)
+    })
+
+    it("Renders the Yoast header", () => {
+      const component = getWrapper(props).find(EditContainer)
+      expect(component.find(Yoast).exists()).toBe(true)
+    })
+
+    it("Doesn't render the Yoast header on a partner channel", () => {
+      props.channel = { type: "partner" }
+      const component = getWrapper(props).find(EditContainer)
+      expect(component.find(Yoast).exists()).toBe(false)
     })
 
     describe("activeView", () => {
