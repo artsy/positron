@@ -1,4 +1,4 @@
-import { Box, color, Flex, space } from "@artsy/palette"
+import { Box, color, Flex, Serif, space } from "@artsy/palette"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import {
@@ -160,8 +160,10 @@ export class Yoast extends Component<Props, State> {
     return (
       <Box>
         <YoastContainer onClick={this.toggleDrawer}>
-          Seo Analysis —
+          <Serif size="3">Seo Analysis —</Serif>
           <ResolveMessage
+            size="3"
+            ml="5px"
             color={
               this.generateResolveMessage() !== " Resolved"
                 ? color("red100")
@@ -201,8 +203,6 @@ export class Yoast extends Component<Props, State> {
   }
 }
 
-export const YoastSnippet = styled(Box)``
-
 export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
   padding: 0 ${space(2)}px;
@@ -211,15 +211,13 @@ export const YoastContainer = styled(Flex)`
   font-size: 15px;
   align-items: center;
 `
+
 const Drawer = styled(Flex)`
   background-color: ${color("white100")};
   padding: 30px;
   border-bottom: 1px solid ${color("black10")};
 `
-export const ResolveMessage = styled(Box)`
-  display: inline;
-  margin-left: 5px;
-`
+
 const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
   transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
@@ -281,13 +279,15 @@ export const YoastOutput = styled(Box)`
   }
 
   .wpseo-score-text {
-    /* garamond('l-caption') */
     display: block;
     margin: -22px 10px 0 20px;
     line-height: 19px;
     font-size: 15px;
   }
 `
+// need to be exported styled components with names for testing purposes
+export const YoastSnippet = styled(Box)``
+export const ResolveMessage = styled(Serif)``
 
 const mapStateToProps = state => ({
   article: state.edit.article,
