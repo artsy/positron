@@ -35,6 +35,18 @@ describe("editReducer", () => {
     expect(article.author_id).toBe(sd.USER.id)
   })
 
+  it("SET_YOAST_KEYWORD adds the yoast keyword to state", () => {
+    const yoastKeyword = "test"
+    const updatedState = editReducer(initialState, {
+      type: actions.SET_YOAST_KEYWORD,
+      payload: {
+        yoastKeyword,
+      },
+    })
+
+    expect(updatedState.yoastKeyword).toBe(yoastKeyword)
+  })
+
   describe("Sections", () => {
     it("SET_SECTION adds editing section and sectionIndex to state", () => {
       const sectionIndex = 2
