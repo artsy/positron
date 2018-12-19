@@ -4,7 +4,7 @@ import Article from "client/models/article.coffee"
 import {
   redirectToList,
   debouncedUpdateDispatch,
-} from "client/actions/edit/editActions"
+} from "../../../client/actions/edit/editActions"
 import $ from "jquery"
 
 export const actions = keyMirror(

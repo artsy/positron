@@ -229,7 +229,7 @@ const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
 `
 
 const YoastInput = styled(Box)`
-  max-width: 360px;
+  min-width: 360px;
   ${Title} {
     margin-bottom: 2px;
     ${avantgarde("s11")};
@@ -242,6 +242,51 @@ const YoastInput = styled(Box)`
 export const YoastOutput = styled(Box)`
   border-left: 1px solid ${color("black10")};
   padding-left: 30px;
+
+  .screen-reader-text {
+    display: none;
+  }
+
+  .wpseo-score-icon {
+    &.bad,
+    &.ok,
+    &.good,
+    &.na {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 8px 10px 0 0;
+      border-radius: 50%;
+      vertical-align: top;
+    }
+    &.na {
+      background: gray-dark-color;
+    }
+    &.bad {
+      background: #dc3232;
+    }
+    &.ok {
+      background: #ee7c1b;
+    }
+    &.good {
+      background: #7ad03a;
+    }
+  }
+
+  .wpseoanalysis li {
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+    padding-bottom: 10px;
+  }
+
+  .wpseo-score-text {
+    /* garamond('l-caption') */
+    display: block;
+    margin: -22px 10px 0 20px;
+    line-height: 19px;
+    font-size: 15px;
+  }
 `
 
 const mapStateToProps = state => ({

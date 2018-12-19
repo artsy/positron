@@ -159,7 +159,7 @@ export class EditContainer extends Component {
   }
 
   render() {
-    const { error, currentSession } = this.props
+    const { error, currentSession, channel } = this.props
     const {
       isOtherUserInSession,
       inactivityPeriodEntered,
@@ -177,7 +177,7 @@ export class EditContainer extends Component {
         <ErrorBoundary>
           <FixedHeader>
             <EditHeader beforeUnload={this.beforeUnload} />
-            <Yoast />
+            {channel.type != "partner" && <Yoast />}
           </FixedHeader>
         </ErrorBoundary>
 

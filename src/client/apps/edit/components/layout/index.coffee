@@ -3,7 +3,6 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 Channel = require '../../../../models/channel.coffee'
 User = require '../../../../models/user.coffee'
-YoastView = require './components/yoast/index.coffee'
 async = require 'async'
 request = require 'superagent'
 
@@ -13,23 +12,8 @@ module.exports = class EditLayout extends Backbone.View
     { @article } = options
     @channel = new Channel sd.CURRENT_CHANNEL
 
-    if @channel?.isArtsyChannel()
-      @setupYoast()
-      @article.on 'change', @onYoastKeyup
-
   events:
-    'keyup #edit-seo__focus-keyword': 'onYoastKeyup'
     'click button.autolink' : 'autolinkText'
-
-  setupYoast: ->
-    # @yoastView = new YoastView
-    #   el: $('#edit-seo')
-    #   article: @article
-    #   contentField: @getBodyText()
-
-  onYoastKeyup: ->
-    return unless @channel?.isArtsyChannel()
-    @yoastView.onKeyup @getBodyText()
 
   getBodyText: =>
     @fullText = []
