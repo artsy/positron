@@ -177,7 +177,7 @@ export class EditContainer extends Component {
         <ErrorBoundary>
           <FixedHeader>
             <EditHeader beforeUnload={this.beforeUnload} />
-            {channel.type != "partner" && <Yoast />}
+            {channel.type !== "partner" && <Yoast />}
           </FixedHeader>
         </ErrorBoundary>
 

@@ -159,7 +159,12 @@ export class Yoast extends Component<Props, State> {
     const { yoastKeyword } = this.props
     return (
       <Box>
-        <YoastContainer onClick={this.toggleDrawer}>
+        <YoastContainer
+          height={40}
+          px={20}
+          alignItems="center"
+          onClick={this.toggleDrawer}
+        >
           <Serif size="3">Seo Analysis —</Serif>
           <ResolveMessage
             size="3"
@@ -173,16 +178,16 @@ export class Yoast extends Component<Props, State> {
             {this.generateResolveMessage()}
           </ResolveMessage>
           <CloseIcon
+            right={15}
+            fontSize="32px"
             rotation={isOpen ? 45 : 0}
             name="follow-circle"
-            width="10px"
-            height="10px"
-            color="black"
+            color={color("black100")}
             title="plus-small"
           />
         </YoastContainer>
         <StaticCollapse open={isOpen}>
-          <Drawer>
+          <Drawer p={30}>
             <YoastInput width={[1, 1 / 3]}>
               <Input
                 onChange={this.onKeywordChange}
@@ -192,7 +197,11 @@ export class Yoast extends Component<Props, State> {
                 value={yoastKeyword}
               />
             </YoastInput>
-            <YoastOutput hidden={this.keywordIsBlank()} width={[1, 2 / 3]}>
+            <YoastOutput
+              hidden={this.keywordIsBlank()}
+              pl={30}
+              width={[1, 2 / 3]}
+            >
               <YoastSnippet hidden id="yoast-snippet" />
               <div id="yoast-output" />
             </YoastOutput>
@@ -205,16 +214,11 @@ export class Yoast extends Component<Props, State> {
 
 export const YoastContainer = styled(Flex)`
   background-color: ${color("black5")};
-  padding: 0 ${space(2)}px;
-  height: ${space(4)}px;
   border-bottom: 1px solid ${color("black10")};
-  font-size: 15px;
-  align-items: center;
 `
 
 const Drawer = styled(Flex)`
   background-color: ${color("white100")};
-  padding: 30px;
   border-bottom: 1px solid ${color("black10")};
 `
 
@@ -222,8 +226,6 @@ const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
   transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
   position: absolute;
-  right: 15px;
-  font-size: 32px;
 `
 
 const YoastInput = styled(Box)`
@@ -239,7 +241,6 @@ const YoastInput = styled(Box)`
 `
 export const YoastOutput = styled(Box)`
   border-left: 1px solid ${color("black10")};
-  padding-left: 30px;
 
   .screen-reader-text {
     display: none;
@@ -251,9 +252,9 @@ export const YoastOutput = styled(Box)`
     &.good,
     &.na {
       display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 8px 10px 0 0;
+      width: ${space(1)}px;
+      height: ${space(1)}px;
+      margin: 8px ${space(1)}px 0 0;
       border-radius: 50%;
       vertical-align: top;
     }
@@ -275,12 +276,12 @@ export const YoastOutput = styled(Box)`
     display: inline-block;
     width: 49%;
     vertical-align: top;
-    padding-bottom: 10px;
+    padding-bottom: ${space(1)}px;
   }
 
   .wpseo-score-text {
     display: block;
-    margin: -22px 10px 0 20px;
+    margin: -22px ${space(1)}px 0 ${space(2)}px;
     line-height: 19px;
     font-size: 15px;
   }
