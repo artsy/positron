@@ -259,7 +259,7 @@ export const YoastOutput = styled(Box)`
       vertical-align: top;
     }
     &.na {
-      background: gray-dark-color;
+      background: ${color("black60")};
     }
     &.bad {
       background: ${color("red100")};
