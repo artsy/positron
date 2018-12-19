@@ -262,13 +262,13 @@ export const YoastOutput = styled(Box)`
       background: gray-dark-color;
     }
     &.bad {
-      background: #dc3232;
+      background: ${color("red100")};
     }
     &.ok {
-      background: #ee7c1b;
+      background: ${color("yellow100")};
     }
     &.good {
-      background: #7ad03a;
+      background: ${color("green100")};
     }
   }
 
