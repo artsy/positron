@@ -2,15 +2,15 @@ import { color, Flex, space } from "@artsy/palette"
 import colors from "@artsy/reaction/dist/Assets/Colors"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import {
-  deleteArticle,
-  publishArticle,
-  saveArticle,
-} from "client/actions/edit/articleActions"
 import { changeView } from "client/actions/edit/editActions"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
+import {
+  deleteArticle,
+  publishArticle,
+  saveArticle,
+} from "../../../../../client/actions/edit/articleActions"
 
 interface Props {
   article: ArticleData
