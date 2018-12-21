@@ -11,6 +11,7 @@ import {
   publishArticle,
   saveArticle,
   setMentionedItems,
+  setSeoKeyword,
 } from "client/actions/edit/articleActions"
 import Article from "client/models/article.coffee"
 
@@ -21,12 +22,6 @@ describe("articleActions", () => {
     window.location.assign = jest.fn()
     article = cloneDeep(FeatureArticle)
   })
-
-  document.body.innerHTML = `
-    <div>
-      <input id="edit-seo__focus-keyword" value="ceramics" />
-    </div>'
-  `
 
   describe("#changeArticleData", () => {
     let getState
@@ -182,20 +177,22 @@ describe("articleActions", () => {
       expect(Backbone.sync.mock.calls[0][1].get("published")).toBe(true)
     })
 
-    it("Sets seo_keyword if publishing", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
-      publishArticle()(dispatch, getState)
-
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
-      expect(setArticleSpy.mock.calls[2][0].seo_keyword).toBe("ceramics")
+    it("calls setSeoKeyword if publishing", () => {
+      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
+      saveArticle()(dispatch, getState)
+      expect(dispatch.mock.calls.length).toEqual(3)
     })
 
-    it("Does not seo_keyword if unpublishing", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
-      publishArticle()(dispatch, getState)
-
-      expect(dispatch.mock.calls[1][0].type).toBe("REDIRECT_TO_LIST")
-      expect(Backbone.sync.mock.calls[0][1].get("seo_keyword")).toBeFalsy()
+    it("Does not call setSeoKeyword if unpublishing", () => {
+      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
+      saveArticle()(dispatch, getState)
+      expect(setArticleSpy.mock.calls.length).toBe(1)
     })
 
     it("Redirects to published list if publishing", () => {
@@ -216,6 +213,39 @@ describe("articleActions", () => {
       expect(window.location.assign.mock.calls[0][0]).toBe(
         "/articles?published=false"
       )
+    })
+  })
+
+  describe("#setSeoKeyword", () => {
+    let getState
+    let dispatch
+    let setArticleSpy = jest.spyOn(Article.prototype, "set")
+
+    beforeEach(() => {
+      setArticleSpy.mockClear()
+      Backbone.sync = jest.fn()
+      dispatch = jest.fn()
+    })
+
+    it("sets an seo keyword for a published article", () => {
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
+
+      let a = new Article(FeatureArticle)
+      setSeoKeyword(a)(dispatch, getState)
+      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
+    })
+
+    it("doesn't set an seo keyword for an unpublished article", () => {
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
+
+      FeatureArticle.published = false
+      let a = new Article(FeatureArticle)
+      setSeoKeyword(a)(dispatch, getState)
+      expect(setArticleSpy.mock.calls[1]).toBeFalsy()
     })
   })
 
@@ -257,20 +287,22 @@ describe("articleActions", () => {
       expect(window.location.assign.mock.calls.length).toBe(0)
     })
 
-    it("Sets seo_keyword if published", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: true } } }))
+    it("calls setSeoKeyword if published", () => {
+      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
+      getState = jest.fn(() => ({
+        edit: { article: { published: true }, yoastKeyword: "ceramics" },
+      }))
       saveArticle()(dispatch, getState)
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
-      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
+      expect(dispatch.mock.calls.length).toEqual(3)
     })
 
-    it("Does not seo_keyword if unpublished", () => {
-      getState = jest.fn(() => ({ edit: { article: { published: false } } }))
+    it("Does not call setSeoKeyword if unpublished", () => {
+      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
+      getState = jest.fn(() => ({
+        edit: { article: { published: false }, yoastKeyword: "ceramics" },
+      }))
       saveArticle()(dispatch, getState)
-
-      expect(dispatch.mock.calls[1][0].type).toBe("SET_SEO_KEYWORD")
       expect(setArticleSpy.mock.calls.length).toBe(1)
-      expect(setArticleSpy.mock.calls[0][0].seo_keyword).toBeFalsy()
     })
 
     it("Redirects to article if new", () => {

@@ -16,6 +16,15 @@ export const setupArticle = () => {
   return extend(article, { author, author_id })
 }
 
+export const setupYoastKeyword = () => {
+  const article = sd.ARTICLE
+  if (!article) {
+    return ""
+  }
+  const yoastKeyword = article.seo_keyword || ""
+  return yoastKeyword
+}
+
 export const initialState = {
   activeView: "content",
   article: setupArticle(),
@@ -31,6 +40,7 @@ export const initialState = {
   },
   section: null,
   sectionIndex: null,
+  yoastKeyword: setupYoastKeyword(),
 }
 
 export function editReducer(state = initialState, action) {
@@ -154,6 +164,16 @@ export function editReducer(state = initialState, action) {
       return u(
         {
           isSaving: true,
+        },
+        state
+      )
+    }
+
+    case actions.SET_YOAST_KEYWORD: {
+      const { yoastKeyword } = action.payload
+      return u(
+        {
+          yoastKeyword,
         },
         state
       )

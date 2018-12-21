@@ -4,7 +4,7 @@ import Article from "client/models/article.coffee"
 import {
   redirectToList,
   debouncedUpdateDispatch,
-} from "client/actions/edit/editActions"
+} from "../../../client/actions/edit/editActions"
 import $ from "jquery"
 
 export const actions = keyMirror(
@@ -211,12 +211,13 @@ export const setMentionedItems = (model, items) => {
 
 // YOAST
 export const setSeoKeyword = article => {
-  if (article.get("published")) {
-    const seo_keyword = $("input#edit-seo__focus-keyword").val() || ""
+  return (dispatch, getState) => {
+    const {
+      edit: { yoastKeyword },
+    } = getState()
 
-    article.set({ seo_keyword })
-  }
-  return {
-    type: actions.SET_SEO_KEYWORD,
+    if (article.get("published")) {
+      article.set({ seo_keyword: yoastKeyword })
+    }
   }
 }

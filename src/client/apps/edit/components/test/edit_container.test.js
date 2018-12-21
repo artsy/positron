@@ -10,6 +10,7 @@ import { EditContent } from "../content"
 import { EditDisplay } from "../display"
 import { EditHeader } from "../header"
 import { EditError } from "../error"
+import { Yoast } from "../header/yoast"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -36,13 +37,18 @@ describe("EditContainer", () => {
         activeView: props.activeView,
         article: props.article,
         error: props.error,
+        yoastKeyword: props.yoastKeyword,
       },
     })
 
     return mount(
       <Provider store={store}>
         <EditContainer {...props} />
-      </Provider>
+      </Provider>,
+      {
+        // yoast needs component to be attached to document.body or it breaks because it can't find #yoast-output and #yoast-snippet
+        attachTo: document.body,
+      }
     )
   }
 
@@ -63,6 +69,7 @@ describe("EditContainer", () => {
       startEditingArticleAction: jest.fn(),
       stopEditingArticleAction: jest.fn(),
       updateArticleAction: jest.fn(),
+      yoastKeyword: "",
       user: {
         id: "123",
         name: "John Doe",
@@ -149,6 +156,17 @@ describe("EditContainer", () => {
     it("Renders the EditHeader", () => {
       const component = getWrapper(props).find(EditContainer)
       expect(component.find(EditHeader).exists()).toBe(true)
+    })
+
+    it("Renders the Yoast header", () => {
+      const component = getWrapper(props).find(EditContainer)
+      expect(component.find(Yoast).exists()).toBe(true)
+    })
+
+    it("Doesn't render the Yoast header on a partner channel", () => {
+      props.channel = { type: "partner" }
+      const component = getWrapper(props).find(EditContainer)
+      expect(component.find(Yoast).exists()).toBe(false)
     })
 
     describe("activeView", () => {
