@@ -1,4 +1,4 @@
-import { Box, Button, color, Flex, Serif, space } from "@artsy/palette"
+import { color, Flex, space } from "@artsy/palette"
 import colors from "@artsy/reaction/dist/Assets/Colors"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
