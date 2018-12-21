@@ -8,7 +8,6 @@ import {
   saveArticle,
 } from "client/actions/edit/articleActions"
 import { changeView } from "client/actions/edit/editActions"
-import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -27,19 +26,6 @@ interface Props {
 }
 
 export class EditHeader extends Component<Props> {
-  // static propTypes = {
-  //   article: PropTypes.object,
-  //   beforeUnload: PropTypes.func,
-  //   changeViewAction: PropTypes.func,
-  //   channel: PropTypes.object,
-  //   deleteArticleAction: PropTypes.func,
-  //   edit: PropTypes.object,
-  //   forceURL: PropTypes.string,
-  //   isAdmin: PropTypes.bool,
-  //   publishArticleAction: PropTypes.func,
-  //   saveArticleAction: PropTypes.func,
-  // }
-
   isPublishable = () => {
     return this.finishedContent() && this.finishedDisplay()
   }
@@ -143,64 +129,71 @@ export class EditHeader extends Component<Props> {
 
     return (
       <EditHeaderContainer>
-        <div className="EditHeader__left">
-          <div className="EditHeader__tabs">
-            <HeaderButton
+        <Flex>
+          <div>
+            <LeftHeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("content")}
               data-active={activeView === "content"}
             >
               <span>Content</span>
-              <Icon
+              <CheckIcon
+                fontSize="10px"
                 className="icon"
                 name="check"
                 color={this.finishedContent() ? greenRegular : grayMedium}
               />
-            </HeaderButton>
+            </LeftHeaderButton>
 
-            <HeaderButton
+            <LeftHeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("display")}
               data-active={activeView === "display"}
             >
               <span>Display</span>
-              <Icon
+              <CheckIcon
+                fontSize="10px"
                 className="icon"
                 name="check"
                 color={this.finishedDisplay() ? greenRegular : grayMedium}
               />
-            </HeaderButton>
+            </LeftHeaderButton>
 
             {isAdmin && (
-              <HeaderButton
+              <LeftHeaderButton
                 className="avant-garde-button"
                 onClick={() => changeViewAction("admin")}
                 data-active={activeView === "admin"}
               >
                 Admin
-              </HeaderButton>
+              </LeftHeaderButton>
             )}
           </div>
 
           <div>
-            <button
+            <LeftHeaderButton
               className="avant-garde-button publish"
               data-disabled={!this.isPublishable()}
               onClick={this.onPublish}
             >
               {this.getPublishText()}
-            </button>
+            </LeftHeaderButton>
 
             {channel.type === "editorial" && (
-              <button className="avant-garde-button autolink">Auto-link</button>
+              <LeftHeaderButton className="avant-garde-button autolink">
+                Auto-link
+              </LeftHeaderButton>
             )}
           </div>
-        </div>
+        </Flex>
 
-        <div className="EditHeader__right">
-          <button className="avant-garde-button delete" onClick={this.onDelete}>
+        <Flex>
+          <RightHeaderButton
+            className="avant-garde-button delete"
+            onClick={this.onDelete}
+          >
             {isDeleting ? "Deleting..." : "Delete"}
-          </button>
+          </RightHeaderButton>
 
           <SaveButton
             className="avant-garde-button"
@@ -210,12 +203,12 @@ export class EditHeader extends Component<Props> {
             {this.getSaveText()}
           </SaveButton>
 
-          <a href={`${forceURL}/article/${article.slug}`} target="_blank">
-            <button className="avant-garde-button">
+          <Link href={`${forceURL}/article/${article.slug}`} target="_blank">
+            <RightHeaderButton className="avant-garde-button">
               {article.published ? "View" : "Preview"}
-            </button>
-          </a>
-        </div>
+            </RightHeaderButton>
+          </Link>
+        </Flex>
       </EditHeaderContainer>
     )
   }
@@ -245,15 +238,30 @@ const HeaderButton = styled.button`
   }
 `
 
-// color: ${color("black100")};
-
 const LeftHeaderButton = styled(HeaderButton)`
-  margin-right: ${space(1)};
+  margin-right: ${space(1)}px;
   color: ${color("black30")};
 
   &:hover {
     color: ${color("black100")};
   }
+
+  &.check {
+    margin: 0;
+    border-right: 0;
+  }
+`
+
+const RightHeaderButton = styled(HeaderButton)`
+  margin-left: ${space(1)}px;
+`
+
+const CheckIcon = styled(Icon)`
+  margin-right: 0;
+  margin-left: ${space(1)}px;
+`
+const Link = styled.a`
+  background-image: none;
 `
 
 const mapStateToProps = state => ({
