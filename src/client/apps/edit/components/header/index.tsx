@@ -1,29 +1,44 @@
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import { Box, Button, color, Flex, Serif, space } from "@artsy/palette"
+import colors from "@artsy/reaction/dist/Assets/Colors"
+import Icon from "@artsy/reaction/dist/Components/Icon"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   deleteArticle,
   publishArticle,
   saveArticle,
 } from "client/actions/edit/articleActions"
 import { changeView } from "client/actions/edit/editActions"
-import Icon from "@artsy/reaction/dist/Components/Icon"
-import colors from "@artsy/reaction/dist/Assets/Colors"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
-export class EditHeader extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    beforeUnload: PropTypes.func,
-    changeViewAction: PropTypes.func,
-    channel: PropTypes.object,
-    deleteArticleAction: PropTypes.func,
-    edit: PropTypes.object,
-    forceURL: PropTypes.string,
-    isAdmin: PropTypes.bool,
-    publishArticleAction: PropTypes.func,
-    saveArticleAction: PropTypes.func,
-  }
+interface Props {
+  article: ArticleData
+  beforeUnload: () => void
+  changeViewAction: (e) => void
+  channel: any
+  deleteArticleAction: () => void
+  edit: any
+  forceURL: string
+  isAdmin: boolean
+  publishArticleAction: () => void
+  saveArticleAction: () => void
+}
+
+export class EditHeader extends Component<Props> {
+  // static propTypes = {
+  //   article: PropTypes.object,
+  //   beforeUnload: PropTypes.func,
+  //   changeViewAction: PropTypes.func,
+  //   channel: PropTypes.object,
+  //   deleteArticleAction: PropTypes.func,
+  //   edit: PropTypes.object,
+  //   forceURL: PropTypes.string,
+  //   isAdmin: PropTypes.bool,
+  //   publishArticleAction: PropTypes.func,
+  //   saveArticleAction: PropTypes.func,
+  // }
 
   isPublishable = () => {
     return this.finishedContent() && this.finishedDisplay()
@@ -127,10 +142,10 @@ export class EditHeader extends Component {
     const { grayMedium, greenRegular } = colors
 
     return (
-      <div className="EditHeader">
+      <EditHeaderContainer>
         <div className="EditHeader__left">
           <div className="EditHeader__tabs">
-            <button
+            <HeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("content")}
               data-active={activeView === "content"}
@@ -141,9 +156,9 @@ export class EditHeader extends Component {
                 name="check"
                 color={this.finishedContent() ? greenRegular : grayMedium}
               />
-            </button>
+            </HeaderButton>
 
-            <button
+            <HeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("display")}
               data-active={activeView === "display"}
@@ -154,16 +169,16 @@ export class EditHeader extends Component {
                 name="check"
                 color={this.finishedDisplay() ? greenRegular : grayMedium}
               />
-            </button>
+            </HeaderButton>
 
             {isAdmin && (
-              <button
+              <HeaderButton
                 className="avant-garde-button"
                 onClick={() => changeViewAction("admin")}
                 data-active={activeView === "admin"}
               >
                 Admin
-              </button>
+              </HeaderButton>
             )}
           </div>
 
@@ -201,10 +216,45 @@ export class EditHeader extends Component {
             </button>
           </a>
         </div>
-      </div>
+      </EditHeaderContainer>
     )
   }
 }
+
+const EditHeaderContainer = styled(Flex)`
+  justify-content: space-between;
+  padding: ${space(1)}px;
+`
+
+const HeaderButton = styled.button`
+  border-radius: 0;
+  padding: 11px 18px;
+
+  &[data-disabled="true"] {
+    background: ${color("black10")};
+    color: ${color("black60")};
+  }
+
+  &[data-disabled="false"],
+  &[data-active="true"] {
+    color: ${color("black100")};
+  }
+
+  &.delete {
+    border: none;
+  }
+`
+
+// color: ${color("black100")};
+
+const LeftHeaderButton = styled(HeaderButton)`
+  margin-right: ${space(1)};
+  color: ${color("black30")};
+
+  &:hover {
+    color: ${color("black100")};
+  }
+`
 
 const mapStateToProps = state => ({
   article: state.edit.article,
