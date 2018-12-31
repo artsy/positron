@@ -116,7 +116,7 @@ particle = require 'particle'
       image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
       search_boost: new Article(cloneDeep article).searchBoost()
     , (error, response) ->
-      console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
+      #console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
       cb()
   )
 
@@ -126,7 +126,7 @@ particle = require 'particle'
     type: 'article'
     id: id
   , (error, response) ->
-    console.log(error) if error
+     #console.log(error) if error
   )
 
 stripHtmlTags = (str) ->
