@@ -35,14 +35,14 @@ describe("Edit Header Controls", () => {
   })
 
   it("renders all buttons for standard user", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find("button").length).toBe(6)
   })
 
   it("renders admin button for admin users", () => {
     props.isAdmin = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find("button").length).toBe(7)
     expect(component.text()).toMatch("Admin")
@@ -50,7 +50,7 @@ describe("Edit Header Controls", () => {
 
   it("renders auto-link button for editorial channel", () => {
     props.channel.type = "editorial"
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find("button").length).toBe(7)
     expect(component.text()).toMatch("Auto-link")
@@ -58,7 +58,7 @@ describe("Edit Header Controls", () => {
 
   describe("Checkmarks", () => {
     it("Content indicates completion if complete", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -70,7 +70,7 @@ describe("Edit Header Controls", () => {
 
     it("Content indicates non-completion", () => {
       delete props.article.title
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -82,7 +82,7 @@ describe("Edit Header Controls", () => {
 
     it("Display indicates completion if complete", () => {
       props.article.thumbnail_image = "image.jpg"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -94,7 +94,7 @@ describe("Edit Header Controls", () => {
 
     it("Display indicates non-completion", () => {
       delete props.article.thumbnail_image
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -107,7 +107,7 @@ describe("Edit Header Controls", () => {
 
   describe("Actions", () => {
     it("Changes activeView on edit-tab click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(1)
       button.simulate("click")
 
@@ -116,7 +116,7 @@ describe("Edit Header Controls", () => {
 
     it("Publishes an article on button click", () => {
       props.article.thumbnail_image = "image.jpg"
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(2)
       button.simulate("click")
 
@@ -126,7 +126,7 @@ describe("Edit Header Controls", () => {
     it("Unpublishes an article on button click", () => {
       props.article.thumbnail_image = "image.jpg"
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(2)
       button.simulate("click")
 
@@ -138,16 +138,16 @@ describe("Edit Header Controls", () => {
     })
 
     it("Deletes an article on button click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(3)
       button.simulate("click")
 
-      expect(global.confirm.mock.calls.length).toBe(1)
+      expect(globalAny.confirm.mock.calls.length).toBe(1)
       expect(props.deleteArticleAction.mock.calls.length).toBe(1)
     })
 
     it("Saves an article on button click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(4)
       button.simulate("click")
 
@@ -156,7 +156,7 @@ describe("Edit Header Controls", () => {
 
     it("Saves a published article on button click", () => {
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(4)
       button.simulate("click")
 
@@ -166,7 +166,7 @@ describe("Edit Header Controls", () => {
     it("Removes beforeUnload listener on click", () => {
       window.removeEventListener = jest.fn()
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const button = component.find("button").at(4)
       button.simulate("click")
 
@@ -184,13 +184,13 @@ describe("Edit Header Controls", () => {
 
     it("Is disabled if content is not complete", () => {
       delete props.article.thumbnail_image
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch('data-disabled="true"')
     })
 
     it('Renders "Publish" if unpublished', () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch('data-disabled="false"')
       expect(component.text()).toMatch("Publish")
@@ -199,14 +199,14 @@ describe("Edit Header Controls", () => {
     it('Renders "Publishing..." if publishing and isPublishing', () => {
       props.edit.isPublishing = true
       // set article published because isPublished is set after save
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Publishing...")
     })
 
     it('Renders "Unpublish" if published', () => {
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Unpublish")
     })
@@ -215,7 +215,7 @@ describe("Edit Header Controls", () => {
       props.edit.isPublishing = true
       props.article.published = true
       // set article published because isPublished is set after save
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Unpublishing...")
     })
@@ -223,42 +223,42 @@ describe("Edit Header Controls", () => {
 
   describe("Save button", () => {
     it('Renders "Save Draft" if unpublished', () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Save Draft")
     })
 
     it('Renders "Save Article" if published', () => {
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Save Article")
     })
 
     it('Renders "Saving..." if isSaving', () => {
       props.edit.isSaving = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Saving...")
     })
 
     it("Color is red unless isSaved", () => {
       props.edit.isSaved = false
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.instance().getSaveColor()).toBe(colors.redMedium)
     })
 
     it("Color is green if isSaving", () => {
       props.edit.isSaving = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.instance().getSaveColor()).toBe(colors.greenRegular)
     })
 
     it("Color is black if isSaved", () => {
       props.edit.isSaved = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.instance().getSaveColor()).toBe("black")
     })
@@ -266,7 +266,7 @@ describe("Edit Header Controls", () => {
 
   describe("Preview button", () => {
     it('Renders "Preview" if unpublished', () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch(props.article.slug)
       expect(component.html()).toMatch("Preview")
@@ -274,7 +274,7 @@ describe("Edit Header Controls", () => {
 
     it('Renders "View" if published', () => {
       props.article.published = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).not.toMatch("Preview")
       expect(component.html()).toMatch("View")
