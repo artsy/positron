@@ -164,6 +164,7 @@ describe("Edit Header Controls", () => {
     })
 
     it("Removes beforeUnload listener on click", () => {
+      const window: any = {}
       window.removeEventListener = jest.fn()
       props.article.published = true
       const component = getWrapper()
@@ -245,22 +246,25 @@ describe("Edit Header Controls", () => {
     it("Color is red unless isSaved", () => {
       props.edit.isSaved = false
       const component = getWrapper()
+      const instance = component.instance() as EditHeader
 
-      expect(component.instance().getSaveColor()).toBe(colors.redMedium)
+      expect(instance.getSaveColor()).toBe(colors.redMedium)
     })
 
     it("Color is green if isSaving", () => {
       props.edit.isSaving = true
       const component = getWrapper()
+      const instance = component.instance() as EditHeader
 
-      expect(component.instance().getSaveColor()).toBe(colors.greenRegular)
+      expect(instance.getSaveColor()).toBe(colors.greenRegular)
     })
 
     it("Color is black if isSaved", () => {
       props.edit.isSaved = true
       const component = getWrapper()
+      const instance = component.instance() as EditHeader
 
-      expect(component.instance().getSaveColor()).toBe("black")
+      expect(instance.getSaveColor()).toBe("black")
     })
   })
 
