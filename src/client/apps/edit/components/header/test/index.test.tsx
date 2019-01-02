@@ -1,18 +1,20 @@
-import React from "react"
-import { clone } from "lodash"
-import { mount } from "enzyme"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import Icon from "@artsy/reaction/dist/Components/Icon"
 import colors from "@artsy/reaction/dist/Assets/Colors"
+import Icon from "@artsy/reaction/dist/Components/Icon"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
 import { EditHeader } from "../index"
 
 describe("Edit Header Controls", () => {
-  let props
-  global.confirm = jest.fn(() => true)
+  const globalAny: any = global
+  globalAny.confirm = jest.fn(() => true)
 
-  const getWrapper = props => {
-    return mount(<EditHeader {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<EditHeader {...passedProps} />)
   }
+
+  let props
 
   beforeEach(() => {
     props = {
