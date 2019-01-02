@@ -164,15 +164,16 @@ describe("Edit Header Controls", () => {
     })
 
     it("Removes beforeUnload listener on click", () => {
-      const window: any = {}
       window.removeEventListener = jest.fn()
       props.article.published = true
       const component = getWrapper()
       const button = component.find("button").at(4)
       button.simulate("click")
 
-      expect(window.removeEventListener.mock.calls[3][0]).toBe("beforeunload")
-      expect(window.removeEventListener.mock.calls[3][1]).toBe(
+      expect((window.removeEventListener as any).mock.calls[3][0]).toBe(
+        "beforeunload"
+      )
+      expect((window.removeEventListener as any).mock.calls[3][1]).toBe(
         props.beforeUnload
       )
     })
