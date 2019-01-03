@@ -16,13 +16,34 @@ interface Props {
   article: ArticleData
   beforeUnload: () => void
   changeViewAction: (e) => void
-  channel: any
+  channel: Channel
   deleteArticleAction: () => void
-  edit: any
+  edit: Edit
   forceURL: string
   isAdmin: boolean
   publishArticleAction: () => void
   saveArticleAction: () => void
+}
+
+interface Channel {
+  id: string
+  name: string
+  type: string
+}
+
+interface Edit {
+  activeView: string
+  article: ArticleData
+  currentSession: object
+  error: object
+  isDeleting: boolean
+  isPublishing: boolean
+  isSaved: true
+  isSaving: false
+  mentioned: object
+  section: object
+  sectionIndex: number
+  setYoastKeyword: string
 }
 
 export class EditHeader extends Component<Props> {
@@ -124,6 +145,7 @@ export class EditHeader extends Component<Props> {
       forceURL,
       isAdmin,
     } = this.props
+
     const { activeView, isDeleting } = edit
     const { grayMedium, greenRegular } = colors
 
