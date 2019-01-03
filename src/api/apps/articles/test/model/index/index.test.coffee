@@ -155,10 +155,10 @@ describe 'Article', ->
           related_articles: [ObjectId('5086df098523e60002000018')]
         }
       , ->
-      id = '5086df098523e60002000018'
-      Article.getSuperArticleCount(id)
-      .then (count) =>
-        count.should.equal 1
+        id = '5086df098523e60002000018'
+        Article.getSuperArticleCount(id)
+        .then (count) =>
+          count.should.equal 1
 
   describe '#promisedMongoFetch', ->
     it 'returns results, counts, and totals', ->
