@@ -156,7 +156,7 @@ export class EditHeader extends Component<Props> {
             <LeftHeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("content")}
-              data-active={activeView === "content"}
+              isActive={activeView === "content"}
             >
               <span>Content</span>
               <CheckIcon
@@ -170,7 +170,7 @@ export class EditHeader extends Component<Props> {
             <LeftHeaderButton
               className="avant-garde-button check"
               onClick={() => changeViewAction("display")}
-              data-active={activeView === "display"}
+              isActive={activeView === "display"}
             >
               <span>Display</span>
               <CheckIcon
@@ -185,7 +185,7 @@ export class EditHeader extends Component<Props> {
               <LeftHeaderButton
                 className="avant-garde-button"
                 onClick={() => changeViewAction("admin")}
-                data-active={activeView === "admin"}
+                isActive={activeView === "admin"}
               >
                 Admin
               </LeftHeaderButton>
@@ -195,7 +195,8 @@ export class EditHeader extends Component<Props> {
           <div>
             <LeftHeaderButton
               className="avant-garde-button publish"
-              data-disabled={!this.isPublishable()}
+              disabled={!this.isPublishable()}
+              isDisabled={!this.isPublishable()}
               onClick={this.onPublish}
             >
               {this.getPublishText()}
@@ -244,25 +245,17 @@ const EditHeaderContainer = styled(Flex)`
 const HeaderButton = styled.button`
   border-radius: 0;
   padding: 11px 18px;
-
-  &[data-disabled="true"] {
-    background: ${color("black10")};
-    color: ${color("black60")};
-  }
-
-  &[data-disabled="false"],
-  &[data-active="true"] {
-    color: ${color("black100")};
-  }
-
-  &.delete {
-    border: none;
-  }
 `
-
-const LeftHeaderButton = styled(HeaderButton)`
+const LeftHeaderButton = styled(HeaderButton).attrs<{
+  isDisabled?: boolean
+  isActive?: boolean
+}>({})`
+  color: ${props =>
+    props.isActive === true || props.isDisabled === false
+      ? color("black100")
+      : color("black30")};
+  background: ${props => (props.isDisabled ? color("black10") : "transparent")};
   margin-right: ${space(1)}px;
-  color: ${color("black30")};
 
   &:hover {
     color: ${color("black100")};
@@ -276,6 +269,10 @@ const LeftHeaderButton = styled(HeaderButton)`
 
 const RightHeaderButton = styled(HeaderButton)`
   margin-left: ${space(1)}px;
+
+  &.delete {
+    border: none;
+  }
 `
 
 const CheckIcon = styled(Icon)`
