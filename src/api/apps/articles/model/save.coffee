@@ -64,7 +64,16 @@ removeStopWords = (title) ->
     return cb(err) if err
     if count
       format = if article.published then 'MM-DD-YY' else 'X'
-      slug = slug + '-' + moment(article.published_at).format(format)
+      published_date = new Date(article.published_at)
+      if moment(published_date).isValid()
+        formatted_date = moment(published_date).format(format)
+      else
+        formatted_date = moment().format(format)
+
+      slug = slug + '-' + formatted_date
+
+      return cb null, article if slug is _.last(article.slugs)
+
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 

@@ -71,7 +71,7 @@ describe 'Save', ->
         article.slugs[0].should.equal 'molly-clockwork'
         done()
 
-    it 'appends a date to the slug if it exists already', (done) ->
+    it 'appends a date to the slug if it exists in the database already', (done) ->
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
@@ -79,6 +79,67 @@ describe 'Save', ->
           author: name: 'Molly'
           published_at: '2017-07-26T17:37:03.065Z'
         }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-07-26-17'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'does not append a date to the slug if it exists in the slugs array for that article already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          slugs: ['molly-clockwork']
+          author: name: 'Molly'
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 1
+          article.slugs[0].should.equal 'molly-clockwork'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends the current date to the slug if the slug exists in the database already but the date is invalid', (done) ->
+      todays_date = moment().format('MM-DD-YY')
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          published_at: '2017-07-dsdfdf26T17:37:03.065Zsdfdf'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends the current date to the slug if the slug exists in the database already but there is no publish date', (done) ->
+      todays_date = moment().format('MM-DD-YY')
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork-07-26-17']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 1
           article.slugs[0].should.equal 'molly-clockwork-07-26-17'
           done()
       )(null, {
@@ -94,6 +155,20 @@ describe 'Save', ->
           published_at: '2017-07-26T17:37:03.065Z'
         }, (err, article) =>
           article.slugs[0].should.equal 'molly-clockwork-1501090623'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
+      todays_date = moment().format('X')
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: false
+          author: name: 'Molly'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
           done()
       )(null, {
         slugs: ['molly-clockwork']
