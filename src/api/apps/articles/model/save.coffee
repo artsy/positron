@@ -66,18 +66,18 @@ removeStopWords = (title) ->
     article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
     return cb null, article  
 
-  # Appends published_at to slug if that slug already exists
+  # # Appends published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
     if count
       format = if article.published then 'MM-DD-YY' else 'X'
-      published_date = new Date(article.published_at)
-      if moment(published_date).isValid()
-        formatted_date = moment(published_date).format(format)
+      publishedDate = new Date(article.published_at)
+      if moment(publishedDate).isValid()
+        formattedDate = moment(publishedDate).format(format)
       else
-        formatted_date = moment().format(format)
+        formattedDate = moment().format(format)
 
-      slug = slug + '-' + formatted_date
+      slug = slug + '-' + formattedDate
 
       # Does not add date with appended slug if the last slug has the same date appended
       return cb null, article if slug is _.last(article.slugs)

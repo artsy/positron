@@ -162,7 +162,7 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
-    it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already, instead it moves the slug with the appended date to the end of the slugs array', (done) ->
+    it 'it moves the slug with the appended date to the end of the slugs array if a slug with that date exists in the slugs array for that article already', (done) ->
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
