@@ -1,4 +1,4 @@
-import { Button, color, Flex, space } from "@artsy/palette"
+import { color, Flex, space } from "@artsy/palette"
 import colors from "@artsy/reaction/dist/Assets/Colors"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
@@ -232,7 +232,7 @@ const EditHeaderContainer = styled(Flex)`
   padding: ${space(1)}px;
 `
 
-const HeaderButton = styled(Button)`
+const HeaderButton = styled.button`
   border-radius: 0;
   padding: 11px 18px;
   ${avantgarde("s11")};
