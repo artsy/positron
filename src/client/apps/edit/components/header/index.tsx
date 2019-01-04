@@ -250,6 +250,10 @@ const HeaderButton = styled.button`
   margin: 0;
   vertical-align: top;
   text-align: center;
+
+  &:hover {
+    color: ${color("purple100")};
+  }
 `
 const LeftHeaderButton = styled(HeaderButton).attrs<{
   isDisabled?: boolean
