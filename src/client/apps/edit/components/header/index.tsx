@@ -1,5 +1,4 @@
 import { color, Flex, space } from "@artsy/palette"
-import colors from "@artsy/reaction/dist/Assets/Colors"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
@@ -100,11 +99,11 @@ export class EditHeader extends Component<Props> {
     const { isSaving, isSaved } = this.props.edit
 
     if (isSaving) {
-      return colors.greenRegular
+      return color("green100")
     } else if (isSaved) {
-      return "black"
+      return color("black100")
     } else {
-      return colors.redMedium
+      return color("red100")
     }
   }
 
@@ -148,7 +147,6 @@ export class EditHeader extends Component<Props> {
     } = this.props
 
     const { activeView, isDeleting } = edit
-    const { grayMedium, greenRegular } = colors
 
     return (
       <EditHeaderContainer>
@@ -164,7 +162,9 @@ export class EditHeader extends Component<Props> {
                 fontSize="10px"
                 className="icon"
                 name="check"
-                color={this.finishedContent() ? greenRegular : grayMedium}
+                color={
+                  this.finishedContent() ? color("green100") : color("black30")
+                }
               />
             </LeftHeaderButton>
 
@@ -178,7 +178,9 @@ export class EditHeader extends Component<Props> {
                 fontSize="10px"
                 className="icon"
                 name="check"
-                color={this.finishedDisplay() ? greenRegular : grayMedium}
+                color={
+                  this.finishedDisplay() ? color("green100") : color("black30")
+                }
               />
             </LeftHeaderButton>
 
