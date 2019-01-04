@@ -255,7 +255,7 @@ const HeaderButton = styled.button`
     color: ${color("purple100")};
   }
 `
-const LeftHeaderButton = styled(HeaderButton).attrs<{
+export const LeftHeaderButton = styled(HeaderButton).attrs<{
   isDisabled?: boolean
   isActive?: boolean
   hasCheck?: boolean
@@ -267,6 +267,7 @@ const LeftHeaderButton = styled(HeaderButton).attrs<{
   background: ${props => (props.isDisabled ? color("black10") : "transparent")};
   margin-right: ${props => (props.hasCheck ? 0 : space(1))}px;
   ${props => props.hasCheck && "border-right: none"};
+  ${props => props.isDisabled && "cursor: not-allowed"};
 
   &:hover {
     color: ${color("black100")};

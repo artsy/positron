@@ -1,10 +1,9 @@
-import colors from "@artsy/reaction/dist/Assets/Colors"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
-import { EditHeader } from "../index"
+import { EditHeader, LeftHeaderButton } from "../index"
 
 describe("Edit Header Controls", () => {
   const globalAny: any = global
@@ -65,7 +64,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .first()
           .props().color
-      ).toBe(colors.greenRegular)
+      ).toBe(color("green100"))
     })
 
     it("Content indicates non-completion", () => {
@@ -77,7 +76,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .first()
           .props().color
-      ).toBe(colors.grayMedium)
+      ).toBe(color("black30"))
     })
 
     it("Display indicates completion if complete", () => {
@@ -89,7 +88,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .last()
           .props().color
-      ).toBe(colors.greenRegular)
+      ).toBe(color("green100"))
     })
 
     it("Display indicates non-completion", () => {
@@ -101,7 +100,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .last()
           .props().color
-      ).toBe(colors.grayMedium)
+      ).toBe(color("black30"))
     })
   })
 
@@ -187,14 +186,16 @@ describe("Edit Header Controls", () => {
     it("Is disabled if content is not complete", () => {
       delete props.article.thumbnail_image
       const component = getWrapper()
-
-      expect(component.html()).toMatch('data-disabled="true"')
+      expect(
+        component
+          .find(LeftHeaderButton)
+          .at(2)
+          .prop("disabled")
+      ).toBe(true)
     })
 
     it('Renders "Publish" if unpublished', () => {
       const component = getWrapper()
-
-      expect(component.html()).toMatch('data-disabled="false"')
       expect(component.text()).toMatch("Publish")
     })
 
@@ -249,7 +250,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe(colors.redMedium)
+      expect(instance.getSaveColor()).toBe(color("red100"))
     })
 
     it("Color is green if isSaving", () => {
@@ -257,7 +258,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe(colors.greenRegular)
+      expect(instance.getSaveColor()).toBe(color("green100"))
     })
 
     it("Color is black if isSaved", () => {
@@ -265,7 +266,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe("black")
+      expect(instance.getSaveColor()).toBe(color("black100"))
     })
   })
 
