@@ -130,6 +130,22 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
+    it 'moves the slug to the end of the slugs array and does not append a date if the slug is present elsewhere in the array', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork', 'molly-clockwork-2', 'molly-clockwork-3']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 3
+          article.slugs[article.slugs.length-1].should.equal 'molly-clockwork'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
     it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already', (done) ->
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
@@ -141,6 +157,22 @@ describe 'Save', ->
         }, (err, article) =>
           article.slugs.length.should.equal 1
           article.slugs[0].should.equal 'molly-clockwork-07-26-17'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already, instead it moves the slug with the appended date to the end of the slugs array', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork-2','molly-clockwork-07-26-17', 'molly-clockwork-3']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 3
+          article.slugs[article.slugs.length-1].should.equal 'molly-clockwork-07-26-17'
           done()
       )(null, {
         slugs: ['molly-clockwork']
