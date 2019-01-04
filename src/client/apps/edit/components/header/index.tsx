@@ -1,4 +1,4 @@
-import { Button, color, Flex, space } from "@artsy/palette"
+import { color, Flex, space } from "@artsy/palette"
 import colors from "@artsy/reaction/dist/Assets/Colors"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
@@ -155,7 +155,6 @@ export class EditHeader extends Component<Props> {
         <Flex>
           <div>
             <LeftHeaderButton
-              variant="secondaryOutline"
               hasCheck
               onClick={() => changeViewAction("content")}
               isActive={activeView === "content"}
@@ -170,7 +169,6 @@ export class EditHeader extends Component<Props> {
             </LeftHeaderButton>
 
             <LeftHeaderButton
-              variant="secondaryOutline"
               hasCheck
               onClick={() => changeViewAction("display")}
               isActive={activeView === "display"}
@@ -186,7 +184,6 @@ export class EditHeader extends Component<Props> {
 
             {isAdmin && (
               <LeftHeaderButton
-                variant="secondaryOutline"
                 onClick={() => changeViewAction("admin")}
                 isActive={activeView === "admin"}
               >
@@ -197,7 +194,6 @@ export class EditHeader extends Component<Props> {
 
           <div>
             <LeftHeaderButton
-              variant="secondaryOutline"
               disabled={!this.isPublishable()}
               isDisabled={!this.isPublishable()}
               onClick={this.onPublish}
@@ -206,32 +202,22 @@ export class EditHeader extends Component<Props> {
             </LeftHeaderButton>
 
             {channel.type === "editorial" && (
-              <LeftHeaderButton variant="secondaryOutline">
-                Auto-link
-              </LeftHeaderButton>
+              <LeftHeaderButton>Auto-link</LeftHeaderButton>
             )}
           </div>
         </Flex>
 
         <Flex>
-          <RightHeaderButton
-            variant="secondaryOutline"
-            onClick={this.onDelete}
-            isDelete
-          >
+          <RightHeaderButton onClick={this.onDelete} isDelete>
             {isDeleting ? "Deleting..." : "Delete"}
           </RightHeaderButton>
 
-          <SaveButton
-            variant="secondaryOutline"
-            color={this.getSaveColor()}
-            onClick={this.onSave}
-          >
+          <SaveButton color={this.getSaveColor()} onClick={this.onSave}>
             {this.getSaveText()}
           </SaveButton>
 
           <Link href={`${forceURL}/article/${article.slug}`} target="_blank">
-            <RightHeaderButton variant="secondaryOutline">
+            <RightHeaderButton>
               {article.published ? "View" : "Preview"}
             </RightHeaderButton>
           </Link>
@@ -246,7 +232,7 @@ const EditHeaderContainer = styled(Flex)`
   padding: ${space(1)}px;
 `
 
-const HeaderButton = styled(Button)`
+const HeaderButton = styled.button`
   border-radius: 0;
   padding: 11px 18px;
   ${avantgarde("s11")};
@@ -295,9 +281,7 @@ const CheckIcon = styled(Icon)`
 const Link = styled.a`
   background-image: none;
 `
-const SaveButton = styled(HeaderButton).attrs<{
-  color: string
-}>({})`
+const SaveButton = styled(HeaderButton)`
   color: ${props => props.color};
 `
 const mapStateToProps = state => ({
