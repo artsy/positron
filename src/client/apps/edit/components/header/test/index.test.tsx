@@ -1,3 +1,4 @@
+import { color } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
