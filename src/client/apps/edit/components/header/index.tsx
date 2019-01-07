@@ -1,10 +1,11 @@
-import { color, Flex, space } from "@artsy/palette"
+import { Button, color, Flex, space } from "@artsy/palette"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
+import { borderRight } from "styled-system"
 import {
   deleteArticle,
   publishArticle,
@@ -152,10 +153,14 @@ export class EditHeader extends Component<Props> {
       <EditHeaderContainer>
         <Flex>
           <div>
-            <LeftHeaderButton
-              hasCheck
+            <HeaderButton
+              borderRadius={0}
+              variant="secondaryOutline"
+              color={
+                activeView === "content" ? color("black100") : color("black30")
+              }
+              borderRight="none"
               onClick={() => changeViewAction("content")}
-              isActive={activeView === "content"}
             >
               <span>Content</span>
               <CheckIcon
@@ -166,12 +171,16 @@ export class EditHeader extends Component<Props> {
                   this.finishedContent() ? color("green100") : color("black30")
                 }
               />
-            </LeftHeaderButton>
+            </HeaderButton>
 
-            <LeftHeaderButton
-              hasCheck
+            <HeaderButton
+              color={
+                activeView === "display" ? color("black100") : color("black30")
+              }
+              borderRadius={0}
+              variant="secondaryOutline"
+              borderRight="none"
               onClick={() => changeViewAction("display")}
-              isActive={activeView === "display"}
             >
               <span>Display</span>
               <CheckIcon
@@ -182,46 +191,71 @@ export class EditHeader extends Component<Props> {
                   this.finishedDisplay() ? color("green100") : color("black30")
                 }
               />
-            </LeftHeaderButton>
+            </HeaderButton>
 
             {isAdmin && (
-              <LeftHeaderButton
+              <HeaderButton
+                color={
+                  activeView === "admin" ? color("black100") : color("black30")
+                }
+                borderRadius={0}
+                mr={1}
+                variant="secondaryOutline"
                 onClick={() => changeViewAction("admin")}
-                isActive={activeView === "admin"}
               >
                 Admin
-              </LeftHeaderButton>
+              </HeaderButton>
             )}
           </div>
 
           <div>
-            <LeftHeaderButton
+            <HeaderButton
+              color={color("black100")}
+              borderRadius={0}
+              variant="secondaryOutline"
               disabled={!this.isPublishable()}
-              isDisabled={!this.isPublishable()}
               onClick={this.onPublish}
             >
               {this.getPublishText()}
-            </LeftHeaderButton>
+            </HeaderButton>
 
             {channel.type === "editorial" && (
-              <LeftHeaderButton>Auto-link</LeftHeaderButton>
+              <HeaderButton borderRadius={0} ml={1} variant="secondaryOutline">
+                Auto-link
+              </HeaderButton>
             )}
           </div>
         </Flex>
 
         <Flex>
-          <RightHeaderButton onClick={this.onDelete} isDelete>
+          <HeaderButton
+            color={color("black100")}
+            borderRadius={0}
+            variant="noOutline"
+            onClick={this.onDelete}
+          >
             {isDeleting ? "Deleting..." : "Delete"}
-          </RightHeaderButton>
+          </HeaderButton>
 
-          <SaveButton color={this.getSaveColor()} onClick={this.onSave}>
+          <HeaderButton
+            ml={1}
+            borderRadius={0}
+            variant="secondaryOutline"
+            color={this.getSaveColor()}
+            onClick={this.onSave}
+          >
             {this.getSaveText()}
-          </SaveButton>
+          </HeaderButton>
 
           <Link href={`${forceURL}/article/${article.slug}`} target="_blank">
-            <RightHeaderButton>
+            <HeaderButton
+              ml={1}
+              color={color("black100")}
+              variant="secondaryOutline"
+              borderRadius={0}
+            >
               {article.published ? "View" : "Preview"}
-            </RightHeaderButton>
+            </HeaderButton>
           </Link>
         </Flex>
       </EditHeaderContainer>
@@ -234,51 +268,10 @@ const EditHeaderContainer = styled(Flex)`
   padding: ${space(1)}px;
 `
 
-const HeaderButton = styled.button`
-  border-radius: 0;
-  padding: 11px 18px;
-  ${avantgarde("s11")};
-  border: 1px solid ${color("black10")};
-  background: transparent;
-  font-size: 12px;
-  outline: none;
-  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
-  text-decoration: none;
-  line-height: 1;
-  display: inline-block;
-  cursor: pointer;
-  margin: 0;
-  vertical-align: top;
-  text-align: center;
-
-  &:hover {
-    color: ${color("purple100")};
-  }
-`
-export const LeftHeaderButton = styled(HeaderButton).attrs<{
-  isDisabled?: boolean
-  isActive?: boolean
-  hasCheck?: boolean
+export const HeaderButton = styled(Button).attrs<{
+  color?: string
 }>({})`
-  color: ${props =>
-    props.isActive === true || props.isDisabled === false
-      ? color("black100")
-      : color("black30")};
-  background: ${props => (props.isDisabled ? color("black10") : "transparent")};
-  margin-right: ${props => (props.hasCheck ? 0 : space(1))}px;
-  ${props => props.hasCheck && "border-right: none"};
-  ${props => props.isDisabled && "cursor: not-allowed"};
-
-  &:hover {
-    color: ${color("black100")};
-  }
-`
-
-const RightHeaderButton = styled(HeaderButton).attrs<{
-  isDelete?: boolean
-}>({})`
-  margin-left: ${space(1)}px;
-  ${props => props.isDelete && "border: none"};
+  color: ${props => props.color};
 `
 
 const CheckIcon = styled(Icon)`
@@ -288,9 +281,7 @@ const CheckIcon = styled(Icon)`
 const Link = styled.a`
   background-image: none;
 `
-const SaveButton = styled(HeaderButton)`
-  color: ${props => props.color};
-`
+
 const mapStateToProps = state => ({
   article: state.edit.article,
   channel: state.app.channel,

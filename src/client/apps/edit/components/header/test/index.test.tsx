@@ -4,7 +4,7 @@ import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixt
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
-import { EditHeader, LeftHeaderButton } from "../index"
+import { EditHeader, HeaderButton } from "../index"
 
 describe("Edit Header Controls", () => {
   const globalAny: any = global
@@ -189,7 +189,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       expect(
         component
-          .find(LeftHeaderButton)
+          .find(HeaderButton)
           .at(2)
           .prop("disabled")
       ).toBe(true)
