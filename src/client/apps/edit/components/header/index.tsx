@@ -1,11 +1,10 @@
-import { Button, color, Flex, space } from "@artsy/palette"
-import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
+import { Button, Flex, space } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import Tabs from "@artsy/reaction/dist/Styleguide/Components/Tabs"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
-import { borderRight } from "styled-system"
 import {
   deleteArticle,
   publishArticle,
@@ -100,11 +99,11 @@ export class EditHeader extends Component<Props> {
     const { isSaving, isSaved } = this.props.edit
 
     if (isSaving) {
-      return color("green100")
+      return "green100"
     } else if (isSaved) {
-      return color("black100")
+      return "black100"
     } else {
-      return color("red100")
+      return "red100"
     }
   }
 
@@ -150,16 +149,13 @@ export class EditHeader extends Component<Props> {
     const { activeView, isDeleting } = edit
 
     return (
-      <EditHeaderContainer>
+      <Flex justifyContent="space-between" p={1}>
         <Flex>
           <div>
             <HeaderButton
               borderRadius={0}
               variant="secondaryOutline"
-              color={
-                activeView === "content" ? color("black100") : color("black30")
-              }
-              borderRight="none"
+              color={activeView === "content" ? "black100" : "black30"}
               onClick={() => changeViewAction("content")}
             >
               <span>Content</span>
@@ -167,19 +163,18 @@ export class EditHeader extends Component<Props> {
                 fontSize="10px"
                 className="icon"
                 name="check"
-                color={
-                  this.finishedContent() ? color("green100") : color("black30")
-                }
+                color={this.finishedContent() ? "green100" : "black30"}
               />
             </HeaderButton>
 
             <HeaderButton
-              color={
-                activeView === "display" ? color("black100") : color("black30")
-              }
+              color={activeView === "display" ? "black100" : "black30"}
               borderRadius={0}
-              variant="secondaryOutline"
-              borderRight="none"
+              variant="noOutline"
+              borderLeft="none"
+              borderBottom={
+                activeView === "display" ? "2px solid black" : "none"
+              }
               onClick={() => changeViewAction("display")}
             >
               <span>Display</span>
@@ -187,20 +182,20 @@ export class EditHeader extends Component<Props> {
                 fontSize="10px"
                 className="icon"
                 name="check"
-                color={
-                  this.finishedDisplay() ? color("green100") : color("black30")
-                }
+                color={this.finishedDisplay() ? "green100" : "black30"}
               />
             </HeaderButton>
 
             {isAdmin && (
               <HeaderButton
-                color={
-                  activeView === "admin" ? color("black100") : color("black30")
-                }
+                color={activeView === "admin" ? "black100" : "black30"}
                 borderRadius={0}
+                borderLeft="none"
                 mr={1}
-                variant="secondaryOutline"
+                variant="noOutline"
+                borderBottom={
+                  activeView === "admin" ? "2px solid black" : "none"
+                }
                 onClick={() => changeViewAction("admin")}
               >
                 Admin
@@ -210,7 +205,6 @@ export class EditHeader extends Component<Props> {
 
           <div>
             <HeaderButton
-              color={color("black100")}
               borderRadius={0}
               variant="secondaryOutline"
               disabled={!this.isPublishable()}
@@ -229,7 +223,6 @@ export class EditHeader extends Component<Props> {
 
         <Flex>
           <HeaderButton
-            color={color("black100")}
             borderRadius={0}
             variant="noOutline"
             onClick={this.onDelete}
@@ -247,39 +240,29 @@ export class EditHeader extends Component<Props> {
             {this.getSaveText()}
           </HeaderButton>
 
-          <Link href={`${forceURL}/article/${article.slug}`} target="_blank">
-            <HeaderButton
-              ml={1}
-              color={color("black100")}
-              variant="secondaryOutline"
-              borderRadius={0}
-            >
+          <a href={`${forceURL}/article/${article.slug}`} target="_blank">
+            <HeaderButton ml={1} variant="secondaryOutline" borderRadius={0}>
               {article.published ? "View" : "Preview"}
             </HeaderButton>
-          </Link>
+          </a>
         </Flex>
-      </EditHeaderContainer>
+      </Flex>
     )
   }
 }
 
-const EditHeaderContainer = styled(Flex)`
-  justify-content: space-between;
-  padding: ${space(1)}px;
-`
-
-export const HeaderButton = styled(Button).attrs<{
+export interface HeaderButtonProps {
   color?: string
-}>({})`
-  color: ${props => props.color};
+  borderLeft?: string
+  borderBottom?: string
+}
+export const HeaderButton = styled(Button).attrs<HeaderButtonProps>({})`
+  background: pink;
 `
 
 const CheckIcon = styled(Icon)`
   margin-right: 0;
   margin-left: ${space(1)}px;
-`
-const Link = styled.a`
-  background-image: none;
 `
 
 const mapStateToProps = state => ({

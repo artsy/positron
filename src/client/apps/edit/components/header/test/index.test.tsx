@@ -1,4 +1,3 @@
-import { color } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
@@ -65,7 +64,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .first()
           .props().color
-      ).toBe(color("green100"))
+      ).toBe("green100")
     })
 
     it("Content indicates non-completion", () => {
@@ -77,7 +76,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .first()
           .props().color
-      ).toBe(color("black30"))
+      ).toBe("black30")
     })
 
     it("Display indicates completion if complete", () => {
@@ -89,7 +88,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .last()
           .props().color
-      ).toBe(color("green100"))
+      ).toBe("green100")
     })
 
     it("Display indicates non-completion", () => {
@@ -101,7 +100,7 @@ describe("Edit Header Controls", () => {
           .find(Icon)
           .last()
           .props().color
-      ).toBe(color("black30"))
+      ).toBe("black30")
     })
   })
 
@@ -251,7 +250,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe(color("red100"))
+      expect(instance.getSaveColor()).toBe("red100")
     })
 
     it("Color is green if isSaving", () => {
@@ -259,7 +258,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe(color("green100"))
+      expect(instance.getSaveColor()).toBe("green100")
     })
 
     it("Color is black if isSaved", () => {
@@ -267,7 +266,7 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const instance = component.instance() as EditHeader
 
-      expect(instance.getSaveColor()).toBe(color("black100"))
+      expect(instance.getSaveColor()).toBe("black100")
     })
   })
 
