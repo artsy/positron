@@ -1,7 +1,7 @@
-import { Button, Flex, space } from "@artsy/palette"
+import { Box, Button, color, Flex, space } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import Tabs from "@artsy/reaction/dist/Styleguide/Components/Tabs"
+import { Tab, Tabs } from "@artsy/reaction/dist/Styleguide/Components/Tabs"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -46,6 +46,11 @@ interface Edit {
   setYoastKeyword: string
 }
 
+const tabs = [
+  { name: "Content", type: "content" },
+  { name: "Display", type: "display" },
+  { name: "Admin", type: "admin" },
+]
 export class EditHeader extends Component<Props> {
   isPublishable = () => {
     return this.finishedContent() && this.finishedDisplay()
@@ -135,6 +140,37 @@ export class EditHeader extends Component<Props> {
       return "Publish"
     }
   }
+  handleTabChange = tab => {
+    this.props.changeViewAction(tab)
+  }
+
+  addTabIcon = tab => {
+    if (tab.props.children === "Content") {
+      return React.cloneElement(tab, tab.props, [
+        "Content",
+        <CheckIcon
+          key="content-check"
+          fontSize="10px"
+          className="icon"
+          name="check"
+          color={this.finishedContent() ? "green100" : "black30"}
+        />,
+      ])
+    } else if (tab.props.children === "Display") {
+      return React.cloneElement(tab, tab.props, [
+        "Display",
+        <CheckIcon
+          key="display-check"
+          fontSize="10px"
+          className="icon"
+          name="check"
+          color={this.finishedDisplay() ? "green100" : "black30"}
+        />,
+      ])
+    } else {
+      return tab
+    }
+  }
 
   render() {
     const {
@@ -146,106 +182,63 @@ export class EditHeader extends Component<Props> {
       isAdmin,
     } = this.props
 
-    const { activeView, isDeleting } = edit
+    const { isDeleting } = edit
 
     return (
-      <Flex justifyContent="space-between" p={1}>
-        <Flex>
-          <div>
-            <HeaderButton
-              borderRadius={0}
-              variant="secondaryOutline"
-              color={activeView === "content" ? "black100" : "black30"}
-              onClick={() => changeViewAction("content")}
-            >
-              <span>Content</span>
-              <CheckIcon
-                fontSize="10px"
-                className="icon"
-                name="check"
-                color={this.finishedContent() ? "green100" : "black30"}
-              />
-            </HeaderButton>
+      <Flex justifyContent="space-between" height={50}>
+        <Box pt="15px" width="100%">
+          <EditTabs
+            initialTabIndex={0}
+            onChange={activeTab => {
+              changeViewAction(activeTab.name.toLowerCase())
+            }}
+            transformTabBtn={this.addTabIcon}
+          >
+            <Tab name="Content" />
+            <Tab name="Display" />
+            {isAdmin && <Tab name="Admin" />}
+          </EditTabs>
+        </Box>
 
-            <HeaderButton
-              color={activeView === "display" ? "black100" : "black30"}
-              borderRadius={0}
-              variant="noOutline"
-              borderLeft="none"
-              borderBottom={
-                activeView === "display" ? "2px solid black" : "none"
-              }
-              onClick={() => changeViewAction("display")}
-            >
-              <span>Display</span>
-              <CheckIcon
-                fontSize="10px"
-                className="icon"
-                name="check"
-                color={this.finishedDisplay() ? "green100" : "black30"}
-              />
-            </HeaderButton>
-
-            {isAdmin && (
-              <HeaderButton
-                color={activeView === "admin" ? "black100" : "black30"}
-                borderRadius={0}
-                borderLeft="none"
-                mr={1}
-                variant="noOutline"
-                borderBottom={
-                  activeView === "admin" ? "2px solid black" : "none"
-                }
-                onClick={() => changeViewAction("admin")}
-              >
-                Admin
-              </HeaderButton>
-            )}
-          </div>
-
-          <div>
-            <HeaderButton
-              borderRadius={0}
-              variant="secondaryOutline"
-              disabled={!this.isPublishable()}
-              onClick={this.onPublish}
-            >
-              {this.getPublishText()}
-            </HeaderButton>
-
-            {channel.type === "editorial" && (
-              <HeaderButton borderRadius={0} ml={1} variant="secondaryOutline">
-                Auto-link
-              </HeaderButton>
-            )}
-          </div>
-        </Flex>
-
-        <Flex>
+        <ButtonContainer pr={2}>
           <HeaderButton
-            borderRadius={0}
-            variant="noOutline"
             onClick={this.onDelete}
+            variant="noOutline"
+            size="small"
           >
             {isDeleting ? "Deleting..." : "Delete"}
           </HeaderButton>
-
+          {channel.type === "editorial" && (
+            <HeaderButton variant="secondaryOutline" ml={1} size="small">
+              Auto-link
+            </HeaderButton>
+          )}
           <HeaderButton
             ml={1}
-            borderRadius={0}
             variant="secondaryOutline"
             color={this.getSaveColor()}
             onClick={this.onSave}
+            size="small"
           >
             {this.getSaveText()}
           </HeaderButton>
 
           <a href={`${forceURL}/article/${article.slug}`} target="_blank">
-            <HeaderButton ml={1} variant="secondaryOutline" borderRadius={0}>
+            <HeaderButton ml={1} variant="secondaryOutline" size="small">
               {article.published ? "View" : "Preview"}
             </HeaderButton>
           </a>
-        </Flex>
+
+          <HeaderButton
+            ml={1}
+            size="small"
+            variant="primaryBlack"
+            disabled={!this.isPublishable()}
+            onClick={this.onPublish}
+          >
+            {this.getPublishText()}
+          </HeaderButton>
+        </ButtonContainer>
       </Flex>
     )
   }
@@ -263,6 +256,15 @@ export const HeaderButton = styled(Button).attrs<HeaderButtonProps>({})`
 const CheckIcon = styled(Icon)`
   margin-right: 0;
   margin-left: ${space(1)}px;
+`
+
+const EditTabs = styled(Tabs)``
+
+const ButtonContainer = styled(Flex)`
+  align-items: center;
+  height: 100%;
+  margin-top: -1px;
+  border-bottom: 1px solid ${color("black10")};
 `
 
 const mapStateToProps = state => ({
