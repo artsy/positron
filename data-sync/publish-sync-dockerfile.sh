@@ -1,4 +1,6 @@
 #!/bin/sh
+# Build and publish the data-sync/Dockerfile for consumption by K8s.
+# See data-sync/README.md for more information.
 
 set -e
 

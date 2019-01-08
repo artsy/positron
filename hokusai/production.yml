@@ -161,7 +161,7 @@ spec:
               command: ["yarn", "task", "scripts/unqueue.js"]
               imagePullPolicy: Always
               envFrom:
-                - configMapRef:
+              - configMapRef:
                   name: positron-environment
           restartPolicy: Never
           affinity:
