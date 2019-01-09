@@ -3,8 +3,8 @@ import { mount } from "enzyme"
 import Backbone from "backbone"
 import React from "react"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AdminVerticalsTags } from "../../components/verticals_tags.jsx"
-import { AutocompleteInlineList } from "/client/components/autocomplete2/inline_list"
+import { AdminVerticalsTags } from "../../components/verticals_tags"
+import { AutocompleteInlineList } from "../../../../../../components/autocomplete2/inline_list"
 require("typeahead.js")
 
 describe("AdminVerticalsTags", () => {

@@ -1,7 +1,7 @@
 import { mount } from "enzyme"
 import React from "react"
-import { AutocompleteInlineList } from "../inline_list.jsx"
-import { Autocomplete } from "../index.jsx"
+import { Autocomplete } from "../index"
+import { AutocompleteInlineList } from "../inline_list"
 require("typeahead.js")
 
 describe("AutocompleteInlineList", () => {
