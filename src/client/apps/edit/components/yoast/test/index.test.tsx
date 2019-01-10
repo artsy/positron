@@ -139,7 +139,7 @@ describe("Yoast", () => {
       props.yoastKeyword = ""
       const component = getWrapper()
       const color = component.find(ResolveMessage).prop("color")
-      const red = "#F7625A"
+      const red = "red100"
       expect(color).toBe(red)
     })
 
@@ -161,7 +161,7 @@ describe("Yoast", () => {
       component.update()
 
       const color = component.find(ResolveMessage).prop("color")
-      const red = "#F7625A"
+      const red = "red100"
       expect(color).toBe(red)
     })
 
@@ -214,7 +214,7 @@ describe("Yoast", () => {
     it("turns message green when there is a keyword and no issues", () => {
       const component = getWrapper()
       const color = component.find(ResolveMessage).prop("color")
-      const green = "#0EDA83"
+      const green = "green100"
       expect(color).toBe(green)
     })
   })
