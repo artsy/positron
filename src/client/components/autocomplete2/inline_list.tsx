@@ -91,7 +91,7 @@ const List = styled(Flex)`
   }
 `
 
-const ListItem = styled.div`
+export const ListItem = styled.div`
   ${Sans} {
     text-transform: capitalize;
   }
