@@ -17,7 +17,7 @@ describe 'Save', ->
     app.use '/__gravity', gravity
     @server = app.listen 5000, ->
       done()
-    sandbox.useFakeTimers(new Date(2019,0,1))
+    sandbox.useFakeTimers(new Date(2019,0,1,0,0,0))
 
   after ->
     @server.close()
