@@ -5,7 +5,7 @@ import {
 import Backbone from "backbone"
 import { mount } from "enzyme"
 import React from "react"
-import { Autocomplete } from "../index"
+import { Autocomplete, AutocompleteResult } from "../index"
 require("typeahead.js")
 
 describe("Autocomplete", () => {
@@ -40,8 +40,7 @@ describe("Autocomplete", () => {
     const component = mount(<Autocomplete {...props} />)
     const instance = component.instance() as Autocomplete
     instance.engine.get = jest.fn()
-    const input = component.find("input").at(0)
-    input.simulate("change", { target: { value: "a title" } })
+    instance.search("a title")
     expect(instance.engine.get.mock.calls[0][0]).toBe("a title")
   })
 
@@ -124,9 +123,7 @@ describe("Autocomplete", () => {
     const component = mount(<Autocomplete {...props} />)
     component.state().hasFocus = jest.fn().mockReturnValue(true)
     component.setState({ searchResults })
-    expect(component.find(".Autocomplete__item").length).toBe(
-      searchResults.length
-    )
+    expect(component.find(AutocompleteResult).length).toBe(searchResults.length)
     expect(component.html()).toMatch(searchResults[0].title)
   })
 
@@ -134,7 +131,7 @@ describe("Autocomplete", () => {
     const component = mount(<Autocomplete {...props} />)
     component.state().hasFocus = jest.fn().mockReturnValue(true)
     component.setState({ searchResults: [] })
-    expect(component.find(".Autocomplete__item").length).toBe(1)
+    expect(component.find(AutocompleteResult).length).toBe(1)
     expect(component.html()).toMatch("No results")
   })
 

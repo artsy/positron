@@ -3,6 +3,7 @@ import React from "react"
 import { Autocomplete } from "../index"
 import { AutocompleteInlineList } from "../inline_list"
 require("typeahead.js")
+import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
 
 describe("AutocompleteInlineList", () => {
   let props
@@ -34,7 +35,7 @@ describe("AutocompleteInlineList", () => {
 
   it("Can remove list items", () => {
     const component = mount(<AutocompleteInlineList {...props} />)
-    const button = component.find("button").at(0)
+    const button = component.find(IconRemove).at(0)
     button.simulate("click")
 
     expect(props.onSelect.mock.calls[0][0].length).toBe(2)

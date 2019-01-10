@@ -1,16 +1,16 @@
 import { Box } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import { onChangeArticle } from "client/actions/edit/articleActions"
-import { AutocompleteList } from "client/components/autocomplete2/list"
-import { AutocompleteSingle } from "client/components/autocomplete2/single"
-import * as Queries from "client/queries/metaphysics"
 import { clone, compact, dropRight, uniq } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import request from "superagent"
 import { difference, flatten, pluck } from "underscore"
 import { capitalize } from "underscore.string"
+import { onChangeArticle } from "../../../client/actions/edit/articleActions"
+import * as Queries from "../../../client/queries/metaphysics"
 import { AutocompleteProps } from "./index"
+import { AutocompleteList } from "./list"
+import { AutocompleteSingle } from "./single"
 
 export interface AutocompleteListProps extends AutocompleteProps {
   article: ArticleData

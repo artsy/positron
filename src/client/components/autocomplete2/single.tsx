@@ -1,6 +1,6 @@
 import { Box, color, Sans, Serif } from "@artsy/palette"
-import { Autocomplete, Item } from "client/components/autocomplete2/index"
 import React, { Component, ReactNode } from "react"
+import { Autocomplete, Item } from "./index"
 import { ListItem } from "./list"
 import { AutocompleteListProps } from "./list_metaphysics"
 

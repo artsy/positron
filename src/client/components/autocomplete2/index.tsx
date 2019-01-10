@@ -36,7 +36,7 @@ export class Autocomplete extends Component<
   AutocompleteProps,
   AutocompleteState
 > {
-  private textInput: React.RefObject<HTMLInputElement>
+  public textInput: React.RefObject<HTMLInputElement>
   public engine
 
   constructor(props) {
@@ -155,31 +155,31 @@ export class Autocomplete extends Component<
   formatSearchResults = () => {
     const { formatSearchResult } = this.props
     const { loading } = this.state
-    const searchResults = compact(this.state.searchResults)
-    return null
-    // if (searchResults.length) {
-    //   return searchResults.map((searchResult, i) => {
-    //     return (
-    //       <div key={i} onClick={() => this.onSelect(searchResult)}>
-    //         {formatSearchResult ? (
-    //           <AutocompleteResult>
-    //             {formatSearchResult(searchResult)}
-    //           </AutocompleteResult>
-    //         ) : (
-    //           this.formatResult(searchResult)
-    //         )}
-    //       </div>
-    //     )
-    //   })
-    // } else if (loading) {
-    //   return (
-    //     <AutocompleteResult>
-    //       <div className="loading-spinner" />
-    //     </AutocompleteResult>
-    //   )
-    // } else {
-    //   return <AutocompleteResult isEmpty>No results</AutocompleteResult>
-    // }
+    const searchResults: SearchResultItem[] = compact(this.state.searchResults)
+
+    if (searchResults.length) {
+      return searchResults.map((searchResult, i) => {
+        return (
+          <div key={i} onClick={() => this.onSelect(searchResult)}>
+            {formatSearchResult ? (
+              <AutocompleteResult>
+                {formatSearchResult(searchResult)}
+              </AutocompleteResult>
+            ) : (
+              this.formatResult(searchResult)
+            )}
+          </div>
+        )
+      })
+    } else if (loading) {
+      return (
+        <AutocompleteResult>
+          <div className="loading-spinner" />
+        </AutocompleteResult>
+      )
+    } else {
+      return <AutocompleteResult isEmpty>No results</AutocompleteResult>
+    }
   }
 
   renderSearchResults = () => {
@@ -203,7 +203,9 @@ export class Autocomplete extends Component<
           block
           disabled={disabled}
           innerRef={this.textInput}
-          onChange={e => this.search(e.currentTarget.value)}
+          onChange={({ currentTarget }) => {
+            this.search(currentTarget.value)
+          }}
           onFocus={() => this.setState({ hasFocus: true })}
           placeholder={placeholder}
           type="text"
@@ -247,7 +249,10 @@ const AutocompleteResultsBackground = styled.div`
   z-index: -1;
 `
 
-const AutocompleteResult = styled(Flex)<{ isEmpty?: boolean; children: any }>`
+export const AutocompleteResult = styled(Flex).attrs<{
+  isEmpty?: boolean
+  children: any
+}>({})`
   padding: 10px;
   background: white;
   color: ${color("black100")};
