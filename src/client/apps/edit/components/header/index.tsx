@@ -46,11 +46,6 @@ interface Edit {
   setYoastKeyword: string
 }
 
-const tabs = [
-  { name: "Content", type: "content" },
-  { name: "Display", type: "display" },
-  { name: "Admin", type: "admin" },
-]
 export class EditHeader extends Component<Props> {
   isPublishable = () => {
     return this.finishedContent() && this.finishedDisplay()
@@ -186,21 +181,22 @@ export class EditHeader extends Component<Props> {
 
     return (
       <Flex justifyContent="space-between" height={50}>
-        <Box pt="15px" width="100%">
-          <EditTabs
+        <TabContainer pt="15px" width="100%" mb="1px" pl={3}>
+          <Tabs
             initialTabIndex={0}
             onChange={activeTab => {
-              changeViewAction(activeTab.name.toLowerCase())
+              activeTab &&
+                changeViewAction((activeTab.name as string).toLowerCase())
             }}
             transformTabBtn={this.addTabIcon}
           >
             <Tab name="Content" />
             <Tab name="Display" />
-            {isAdmin && <Tab name="Admin" />}
-          </EditTabs>
-        </Box>
+            {isAdmin && (<Tab name="Admin" /> as any)}
+          </Tabs>
+        </TabContainer>
 
-        <ButtonContainer pr={2}>
+        <ButtonContainer pr={3}>
           <HeaderButton
             onClick={this.onDelete}
             variant="noOutline"
@@ -249,21 +245,21 @@ export interface HeaderButtonProps {
   borderLeft?: string
   borderBottom?: string
 }
-export const HeaderButton = styled(Button).attrs<HeaderButtonProps>({})`
-  background: pink;
-`
+export const HeaderButton = styled(Button).attrs<HeaderButtonProps>({})``
 
 const CheckIcon = styled(Icon)`
   margin-right: 0;
   margin-left: ${space(1)}px;
 `
 
-const EditTabs = styled(Tabs)``
-
 const ButtonContainer = styled(Flex)`
   align-items: center;
   height: 100%;
   margin-top: -1px;
+  border-bottom: 1px solid ${color("black10")};
+`
+
+export const TabContainer = styled(Box)`
   border-bottom: 1px solid ${color("black10")};
 `
 

@@ -36,14 +36,14 @@ describe("Edit Header Controls", () => {
   it("renders all buttons for standard user", () => {
     const component = getWrapper()
 
-    expect(component.find("button").length).toBe(6)
+    expect(component.find("button").length).toBe(4)
   })
 
   it("renders admin button for admin users", () => {
     props.isAdmin = true
     const component = getWrapper()
 
-    expect(component.find("button").length).toBe(7)
+    expect(component.find("TabButton").length).toBe(2)
     expect(component.text()).toMatch("Admin")
   })
 
@@ -51,7 +51,7 @@ describe("Edit Header Controls", () => {
     props.channel.type = "editorial"
     const component = getWrapper()
 
-    expect(component.find("button").length).toBe(7)
+    expect(component.find("button").length).toBe(5)
     expect(component.text()).toMatch("Auto-link")
   })
 
@@ -107,16 +107,14 @@ describe("Edit Header Controls", () => {
   describe("Actions", () => {
     it("Changes activeView on edit-tab click", () => {
       const component = getWrapper()
-      const button = component.find("button").at(1)
-      button.simulate("click")
-
+      component.find("TabButton").simulate("click")
       expect(props.changeViewAction.mock.calls[0][0]).toBe("display")
     })
 
     it("Publishes an article on button click", () => {
       props.article.thumbnail_image = "image.jpg"
       const component = getWrapper()
-      const button = component.find("button").at(2)
+      const button = component.find("button").at(3)
       button.simulate("click")
 
       expect(props.publishArticleAction).toBeCalled()
@@ -126,7 +124,7 @@ describe("Edit Header Controls", () => {
       props.article.thumbnail_image = "image.jpg"
       props.article.published = true
       const component = getWrapper()
-      const button = component.find("button").at(2)
+      const button = component.find("button").at(3)
       button.simulate("click")
 
       expect(props.publishArticleAction).toBeCalled()
@@ -138,7 +136,7 @@ describe("Edit Header Controls", () => {
 
     it("Deletes an article on button click", () => {
       const component = getWrapper()
-      const button = component.find("button").at(3)
+      const button = component.find("button").at(0)
       button.simulate("click")
 
       expect(globalAny.confirm.mock.calls.length).toBe(1)
@@ -147,7 +145,7 @@ describe("Edit Header Controls", () => {
 
     it("Saves an article on button click", () => {
       const component = getWrapper()
-      const button = component.find("button").at(4)
+      const button = component.find("button").at(1)
       button.simulate("click")
 
       expect(props.saveArticleAction.mock.calls.length).toBe(1)
@@ -156,7 +154,7 @@ describe("Edit Header Controls", () => {
     it("Saves a published article on button click", () => {
       props.article.published = true
       const component = getWrapper()
-      const button = component.find("button").at(4)
+      const button = component.find("button").at(1)
       button.simulate("click")
 
       expect(props.saveArticleAction.mock.calls.length).toBe(1)
@@ -166,9 +164,8 @@ describe("Edit Header Controls", () => {
       window.removeEventListener = jest.fn()
       props.article.published = true
       const component = getWrapper()
-      const button = component.find("button").at(4)
+      const button = component.find(HeaderButton).at(0)
       button.simulate("click")
-
       expect((window.removeEventListener as any).mock.calls[3][0]).toBe(
         "beforeunload"
       )
@@ -189,7 +186,7 @@ describe("Edit Header Controls", () => {
       expect(
         component
           .find(HeaderButton)
-          .at(2)
+          .at(3)
           .prop("disabled")
       ).toBe(true)
     })
