@@ -77,7 +77,7 @@ describe("AutocompleteListMetaphysics", () => {
 
   describe("#getQuery", () => {
     it("Returns the correct query for fairs", () => {
-      props.label = "Fairs"
+      props.model = "fairs"
       const component = getWrapper(
         props
       ).instance() as AutocompleteListMetaphysics
@@ -162,7 +162,7 @@ describe("AutocompleteListMetaphysics", () => {
   })
 
   describe("#fetchItem", () => {
-    xit("Calls query with id to fetch", () => {
+    it("Calls query with id to fetch", () => {
       const query = jest.fn()
       props.article.biography_for_artist_id = "123"
       props.type = "single"
