@@ -231,5 +231,5 @@ export const FixedHeader = styled.div`
   left: 110px;
   right: 0;
   background: white;
-  z-index: 1;
+  z-index: 7;
 `
