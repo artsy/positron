@@ -16,20 +16,10 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@2.23.0":
-  version "2.23.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.23.0.tgz#1b1231f0f17b1022a6b663091a959ffd383aa2f2"
-  integrity sha512-cVgnr7PhPm0kF1BRJfYX+Eb1Woiv8krpOTPYxojppliW9fusi3MgHda6EH2ga0RL+d7mRUJSQbgR1LxMEphjGA==
-  dependencies:
-    rc-slider "^8.6.2"
-    react "^16.5.0"
-    react-spring "^5.7.2"
-    styled-system "^3.1.11"
-
-"@artsy/palette@^2.22.0":
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.22.0.tgz#3f9a6b203e301cf82a63781cc861e77387997670"
-  integrity sha512-0hp+FwqMTL9aeZGzC3rYAPSLLEaQQV99klqP9HA+b+9lxfAZZEDSHtOWqNUk3dyXH1x/Hut4qekHti261XX3JA==
+"@artsy/palette@2.23.3":
+  version "2.23.3"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.23.3.tgz#cf9e99075db104822dbe69e85658bbb95a4cf66a"
+  integrity sha512-7ulJ7ZPKRvOWLX+XhFnxvnetXjFurA0B9Wsv3KiZBTnCPqcHZjhJ+CIOFCc5/k0KD7cX+SzQmBdSLliqoLz4bQ==
   dependencies:
     rc-slider "^8.6.2"
     react "^16.5.0"
@@ -41,13 +31,12 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-9.1.1.tgz#a4e9d7f4b79392328effd6b6e84754f81a2e81f3"
-  integrity sha512-E8CJ4q4SQspTqzGwDL4twlZRCFe0jzZvnfXfjBHJ75jH8+cTI5eQabnbU3/3V1MH557afwsf3sW9kGHhlzx3qw==
+"@artsy/reaction@9.5.4":
+  version "9.5.4"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-9.5.4.tgz#ccf75b2dcc1c33814176a09d78fd994c546dcb06"
+  integrity sha512-Bmi5Hes1lpSgR0ZvUMZIj1MJXjDZ7eyp1x4hBkDmEVy4PmVvsFrC9o980nyDznoLIoe5GNkWAcfl8ApgLi3SfQ==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.1"
-    "@artsy/palette" "^2.22.0"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     "@sentry/browser" "^4.2.3"
     cheerio "^1.0.0-rc.2"
@@ -77,9 +66,8 @@
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
     react-overlays "^0.8.3"
-    react-popover "^0.5.10"
     react-relay "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz"
-    react-relay-network-modern "^2.4.0"
+    react-relay-network-modern "^2.5.1"
     react-relay-network-modern-ssr "^1.2.2"
     react-responsive-decorator "^0.0.1"
     react-router "^4.2.0"
@@ -1300,7 +1288,6 @@ antigravity@artsy/antigravity:
   version "0.1.3"
   resolved "https://codeload.github.com/artsy/antigravity/tar.gz/e6a20591a6be418facca1b4670db24f11208cfdd"
   dependencies:
-    coffeescript "1.11.1"
     express "*"
 
 any-observable@^0.3.0:
@@ -3739,13 +3726,6 @@ css-to-react-native@^2.0.3:
     css-color-keywords "^1.0.0"
     fbjs "^0.8.5"
     postcss-value-parser "^3.3.0"
-
-css-vendor@^0.3.1:
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/css-vendor/-/css-vendor-0.3.8.tgz#6421cfd3034ce664fe7673972fd0119fc28941fa"
-  integrity sha1-ZCHP0wNM5mT+dnOXL9ARn8KJQfo=
-  dependencies:
-    is-in-browser "^1.0.2"
 
 css-what@1.0:
   version "1.0.0"
@@ -6701,11 +6681,6 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
-is-in-browser@^1.0.2:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
-  integrity sha1-Vv9NtoOgeMYILrldrX3GLh0E+DU=
-
 is-my-json-valid@^2.10.0, is-my-json-valid@^2.12.4:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.16.0.tgz#f079dd9bfdae65ee2038aae8acbc86ab109e3693"
@@ -8128,13 +8103,6 @@ lodash.create@3.1.1:
     lodash._basecreate "^3.0.0"
     lodash._isiterateecall "^3.0.0"
 
-lodash.debounce@^3.0.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-3.1.1.tgz#812211c378a94cc29d5aa4e3346cf0bfce3a7df5"
-  integrity sha1-gSIRw3ipTMKdWqTjNGzwv846ffU=
-  dependencies:
-    lodash._getnative "^3.0.0"
-
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -8233,13 +8201,6 @@ lodash.startswith@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/lodash.startswith/-/lodash.startswith-4.2.1.tgz#c598c4adce188a27e53145731cdc6c0e7177600c"
   integrity sha1-xZjErc4YiiflMUVzHNxsDnF3YAw=
-
-lodash.throttle@^3.0.3:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-3.0.4.tgz#bc4f471fb328e4d6fdc6df2b3d3caf113f0f89c9"
-  integrity sha1-vE9HH7Mo5Nb9xt8rPTyvET8Pick=
-  dependencies:
-    lodash.debounce "^3.0.0"
 
 lodash.throttle@^4.1.1:
   version "4.1.1"
@@ -10721,16 +10682,6 @@ react-overlays@^0.8.3:
     react-transition-group "^2.2.0"
     warning "^3.0.0"
 
-react-popover@^0.5.10:
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/react-popover/-/react-popover-0.5.10.tgz#40d5e854300a96722ffc1620e49d840cb1ad5db6"
-  integrity sha512-5SYDTfncywSH00I70oHd4gFRUR8V0rJ4sRADSI/P6G0RVXp9jUgaWloJ0Bk+SFnjpLPuipTKuzQNNd2CTs5Hrw==
-  dependencies:
-    css-vendor "^0.3.1"
-    debug "^2.6.8"
-    lodash.throttle "^3.0.3"
-    prop-types "^15.5.10"
-
 react-proxy@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-1.1.8.tgz#9dbfd9d927528c3aa9f444e4558c37830ab8c26a"
@@ -10768,10 +10719,10 @@ react-relay-network-modern-ssr@^1.2.2:
   resolved "https://registry.yarnpkg.com/react-relay-network-modern-ssr/-/react-relay-network-modern-ssr-1.2.2.tgz#9f611872113cc91839600939b0d4edf97a4f8adc"
   integrity sha512-35SHsvHS6IhZ7Sh9qXwjMhC5nZHhv5P9ERS5oti9u/B6GsQEC3cTwVCeSKIJNs+SxWkwQ6Z7DmzhPMWu1sNI0Q==
 
-react-relay-network-modern@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/react-relay-network-modern/-/react-relay-network-modern-2.4.0.tgz#639ea0745545ab148d0c78714330e93dca7e031c"
-  integrity sha512-LR/RhHcJclDCVEiwRhlRtf1iltSnbGSxS2rag+bAljMFJ0kOVSYUK3+NDPRbcHLRqbha1FuQXBVfHjjPE6jhMA==
+react-relay-network-modern@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-relay-network-modern/-/react-relay-network-modern-2.5.1.tgz#a081ae2691dbf2cfa53129cd6eb41a1e91a071aa"
+  integrity sha512-Edp9XWAWLiAntrtNmfeLZMPMcwUmTpBhAoxHCaSKcet7gWN5RS0Z2OhKpVhKg3p1qZz+VLMMvWg8eQghBe0auQ==
 
 "react-relay@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz", "react-relay@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
