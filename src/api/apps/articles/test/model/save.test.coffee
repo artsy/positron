@@ -11,14 +11,17 @@ moment = require 'moment'
 { ObjectId } = require 'mongojs'
 
 describe 'Save', ->
+  sandbox = sinon.sandbox.create();
 
   before (done) ->
     app.use '/__gravity', gravity
     @server = app.listen 5000, ->
       done()
+    sandbox.useFakeTimers(new Date(2019,0,1))
 
   after ->
     @server.close()
+    sandbox.restore()
 
   beforeEach (done) ->
     @removeStopWords = Save.__get__ 'removeStopWords'
@@ -102,7 +105,6 @@ describe 'Save', ->
       })
 
     it 'appends the current date to the slug if the slug exists in the database already but the date is invalid', (done) ->
-      todays_date = moment().format('MM-DD-YY')
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
@@ -110,21 +112,20 @@ describe 'Save', ->
           author: name: 'Molly'
           published_at: '2017-07-dsdfdf26T17:37:03.065Zsdfdf'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
         slugs: ['molly-clockwork']
       })
 
     it 'appends the current date to the slug if the slug exists in the database already but there is no publish date', (done) ->
-      todays_date = moment().format('MM-DD-YY')
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
         slugs: ['molly-clockwork']
@@ -193,14 +194,13 @@ describe 'Save', ->
       })
 
     it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
-      todays_date = moment().format('X')
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: false
           author: name: 'Molly'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork' + '-' + todays_date
+          article.slugs[0].should.equal 'molly-clockwork-1546318800'
           done()
       )(null, {
         slugs: ['molly-clockwork']
