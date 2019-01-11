@@ -19,8 +19,6 @@ describe 'Save', ->
       done()
 
     date = new Date("Tue Jan 01 2019 00:00:00")
-    # offset = date.getTimezoneOffset()
-    # dateWithOffset = moment(date).add(offset, 'm').toDate();
     sandbox.useFakeTimers(date)
     
 
@@ -199,13 +197,9 @@ describe 'Save', ->
       })
 
     it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
-      x = new Date()
-      console.log("date now",x)
-      os = x.getTimezoneOffset()
-      
+      now = new Date()
+      os = now.getTimezoneOffset()      
       sandbox.clock.tick(os * -60000)
-      y = new Date()
-      console.log("date now",y) 
       
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
