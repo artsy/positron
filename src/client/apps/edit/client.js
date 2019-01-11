@@ -10,6 +10,7 @@ import { createReduxStore } from "client/lib/createReduxStore"
 import { init as initWebsocket } from "client/apps/websocket/client"
 import { saveArticle } from "client/actions/edit/articleActions"
 import { data as sd } from "sharify"
+import { Theme } from "@artsy/palette"
 
 export function init() {
   const article = new Article(sd.ARTICLE)
@@ -26,7 +27,9 @@ export function init() {
 
   ReactDOM.render(
     <Provider store={store}>
-      <EditContainer />
+      <Theme>
+        <EditContainer />
+      </Theme>
     </Provider>,
     $("#edit-content")[0]
   )
