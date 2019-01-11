@@ -17,7 +17,11 @@ describe 'Save', ->
     app.use '/__gravity', gravity
     @server = app.listen 5000, ->
       done()
-    sandbox.useFakeTimers(new Date("Tue Jan 01 2019 00:00:00 GMT-0000").getTime())
+
+    date = new Date("Tue Jan 01 2019 00:00:00 GMT")
+    offset = date.getTimezoneOffset()
+    dateWithOffset = moment(date).add(offset, 'm').toDate();
+    sandbox.useFakeTimers(dateWithOffset)
 
   after ->
     @server.close()
@@ -112,7 +116,7 @@ describe 'Save', ->
           author: name: 'Molly'
           published_at: '2017-07-dsdfdf26T17:37:03.065Zsdfdf'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork-12-31-18'
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
         slugs: ['molly-clockwork']
@@ -125,7 +129,7 @@ describe 'Save', ->
           published: true
           author: name: 'Molly'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork-12-31-18'
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
         slugs: ['molly-clockwork']
@@ -200,7 +204,7 @@ describe 'Save', ->
           published: false
           author: name: 'Molly'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork-1546300800'
+          article.slugs[0].should.equal 'molly-clockwork-1546318800'
           done()
       )(null, {
         slugs: ['molly-clockwork']
