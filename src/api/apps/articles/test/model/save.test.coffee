@@ -22,6 +22,7 @@ describe 'Save', ->
     # offset = date.getTimezoneOffset()
     # dateWithOffset = moment(date).add(offset, 'm').toDate();
     sandbox.useFakeTimers(date)
+    
 
   after ->
     @server.close()
@@ -197,7 +198,7 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
-    it.only 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
+    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
       x = new Date()
       console.log("date now",x)
       os = x.getTimezoneOffset()
