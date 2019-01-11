@@ -196,7 +196,8 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
-    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
+    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->     
+      # removing date offset to account for different timezones
       now = new Date()
       os = now.getTimezoneOffset()      
       sandbox.clock.tick(os * -60000)
