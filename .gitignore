@@ -21,3 +21,6 @@ data
 /public
 /src/client/public/assets
 /node_modules
+
+coverage.lcov
+.nyc_output/
