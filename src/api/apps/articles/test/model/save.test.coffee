@@ -18,10 +18,10 @@ describe 'Save', ->
     @server = app.listen 5000, ->
       done()
 
-    date = new Date("Tue Jan 01 2019 00:00:00 GMT")
-    offset = date.getTimezoneOffset()
-    dateWithOffset = moment(date).add(offset, 'm').toDate();
-    sandbox.useFakeTimers(dateWithOffset)
+    date = new Date("Tue Jan 01 2019 00:00:00")
+    # offset = date.getTimezoneOffset()
+    # dateWithOffset = moment(date).add(offset, 'm').toDate();
+    sandbox.useFakeTimers(date)
 
   after ->
     @server.close()
@@ -197,14 +197,22 @@ describe 'Save', ->
         slugs: ['molly-clockwork']
       })
 
-    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
+    it.only 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
+      x = new Date()
+      console.log("date now",x)
+      os = x.getTimezoneOffset()
+      
+      sandbox.clock.tick(os * -60000)
+      y = new Date()
+      console.log("date now",y) 
+      
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: false
           author: name: 'Molly'
         }, (err, article) =>
-          article.slugs[0].should.equal 'molly-clockwork-1546318800'
+          article.slugs[0].should.equal 'molly-clockwork-1546300800'
           done()
       )(null, {
         slugs: ['molly-clockwork']
