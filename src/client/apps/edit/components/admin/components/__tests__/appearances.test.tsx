@@ -1,19 +1,19 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
+import { AutocompleteListMetaphysics } from "../../../../../../components/autocomplete2/list_metaphysics.js"
 import { AdminAppearances } from "../../components/appearances"
-import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
 require("typeahead.js")
 
 describe("FeaturingMentioned", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = passedProps => {
     const mockStore = configureStore([])
-    const { article } = props
+    const { article } = passedProps
 
     const store = mockStore({
       app: {
@@ -24,7 +24,7 @@ describe("FeaturingMentioned", () => {
 
     return mount(
       <Provider store={store}>
-        <AdminAppearances {...props} />
+        <AdminAppearances {...passedProps} />
       </Provider>
     )
   }

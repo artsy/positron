@@ -1,15 +1,15 @@
-import configureStore from "redux-mock-store"
-import request from "superagent"
-import { cloneDeep, extend } from "lodash"
+import { Button } from "@artsy/palette"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { AutocompleteList } from "client/components/autocomplete2/list"
 import { mount, shallow } from "enzyme"
+import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AdminArticle } from "../../../components/article"
-import { ArticleAuthors } from "../../../components/article/article_authors"
-import { ArticlePublishDate } from "../../../components/article/article_publish_date"
-import { AutocompleteList } from "/client/components/autocomplete2/list"
-import { ButtonMedium } from '../../../components/article/button_medium'
+import configureStore from "redux-mock-store"
+import request from "superagent"
+import { ArticleAuthors } from "../article_authors"
+import { ArticlePublishDate } from "../article_publish_date"
+import { AdminArticle } from "../index"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -26,9 +26,9 @@ describe("AdminArticle", () => {
   let props
   let response
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
-    const { article, channel } = props
+    const { article, channel } = passedProps
 
     const store = mockStore({
       app: { channel },
@@ -37,13 +37,13 @@ describe("AdminArticle", () => {
 
     return mount(
       <Provider store={store}>
-        <AdminArticle {...props} />
+        <AdminArticle {...passedProps} />
       </Provider>
     )
   }
 
   beforeEach(() => {
-    let article = extend(cloneDeep(StandardArticle), {
+    const article = extend(cloneDeep(StandardArticle), {
       author: { name: "Artsy Editorial", id: "123" },
     })
 
@@ -196,8 +196,10 @@ describe("AdminArticle", () => {
     })
     props.article.related_article_ids = ["123"]
 
-    const component = shallow(<AdminArticle {...props} />)
-    component.instance().fetchArticles()
+    const component = shallow(
+      <AdminArticle {...props} />
+    ).instance() as AdminArticle
+    component.fetchArticles([], jest.fn())
     expect(callback).toBeCalled()
   })
 
@@ -275,14 +277,18 @@ describe("AdminArticle", () => {
       expect(inputForMin.props().defaultValue).toEqual(3)
       expect(inputForSec.props().defaultValue).toEqual(32)
 
-      inputForMin.simulate('change', { target: { value: 10 }})
-      inputForSec.simulate('change', { target: { value: 30 }})
+      inputForMin.simulate("change", { target: { value: 10 } })
+      inputForSec.simulate("change", { target: { value: 30 } })
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ duration: 632 })
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({
+        duration: 632,
+      })
 
       expect(props.onChangeArticleAction.mock.calls[1][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[1][1]).toEqual({ duration: 630 })
+      expect(props.onChangeArticleAction.mock.calls[1][1]).toEqual({
+        duration: 630,
+      })
     })
 
     it("Can change video release date", () => {
@@ -296,12 +302,14 @@ describe("AdminArticle", () => {
         .simulate("change", { target: { value: "2017-02-07" } })
 
       component
-        .find(ButtonMedium)
+        .find(Button)
         .at(1)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch("2017-02-07")
+      expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch(
+        "2017-02-07"
+      )
     })
 
     it("Can change video published", () => {
@@ -315,7 +323,9 @@ describe("AdminArticle", () => {
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ published: true })
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({
+        published: true,
+      })
     })
   })
 })

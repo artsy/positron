@@ -1,20 +1,19 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AutocompleteList } from "/client/components/autocomplete2/list"
-import { AdminFeaturing } from "../../../components/featuring"
-import { FeaturingMentioned } from "../../../components/featuring/featuring_mentioned"
+import configureStore from "redux-mock-store"
+import { AutocompleteList } from "../../../../../../../components/autocomplete2/list"
+import { FeaturingMentioned } from "../featuring_mentioned"
+import { AdminFeaturing } from "../index"
 require("typeahead.js")
 
 describe("AdminFeaturing", () => {
   let props
-
-  const getWrapper = props => {
+  const getWrapper = passedProps => {
     const mockStore = configureStore([])
-    const { article, featured, mentioned } = props
+    const { article, featured, mentioned } = passedProps
 
     const store = mockStore({
       app: {
@@ -29,13 +28,13 @@ describe("AdminFeaturing", () => {
 
     return mount(
       <Provider store={store}>
-        <AdminFeaturing {...props} />
+        <AdminFeaturing {...passedProps} />
       </Provider>
     )
   }
 
   beforeEach(() => {
-    let article = cloneDeep(StandardArticle)
+    const article = cloneDeep(StandardArticle)
 
     props = {
       article,

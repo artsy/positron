@@ -1,17 +1,19 @@
-import colors from "@artsy/reaction/dist/Assets/Colors"
+import { Button, color, Flex, Sans } from "@artsy/palette"
+import { SansLabelProps } from "client/apps/edit/components/admin/components/article/index"
 import moment from "moment"
-import styled from "styled-components"
-import PropTypes from "prop-types"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
-import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
-import { ButtonMedium } from './button_medium'
+import { ArticleData } from "reaction/Components/Publishing/Typings"
+import styled from "styled-components"
 
-export class ArticlePublishDate extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    onChange: PropTypes.func,
-  }
+interface ArticlePublishDateProps {
+  article: ArticleData
+  onChange: (key: string, value: any) => void
+}
+
+export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
+  private date
+  private time
 
   state = {
     focus: false,
@@ -49,8 +51,8 @@ export class ArticlePublishDate extends Component {
 
   onUnschedule = () => {
     const { onChange } = this.props
-    let publish_date = null
-    let publish_time = null
+    const publish_date = null
+    const publish_time = null
 
     if (this.date && this.time) {
       this.date.value = publish_date
@@ -127,18 +129,19 @@ export class ArticlePublishDate extends Component {
 
     return (
       <div className="ArticlePublishDate">
-        <label>Publish Date/Time</label>
+        <Sans {...SansLabelProps}>Publish Date/Time</Sans>
 
-        <DateContainer>
+        <Flex mt={1} mb={40}>
           <InputGroup
-            focus={focus}
+            hasFocus={focus}
+            mr={20}
             onClick={this.onChangeFocus}
             onMouseUp={this.onChangeFocus}
             onKeyUp={this.onChangeFocus}
           >
             <input
               className="bordered-input"
-              defaultValue={publish_date}
+              defaultValue={publish_date || ""}
               type="date"
               ref={ref => {
                 this.date = ref
@@ -147,7 +150,7 @@ export class ArticlePublishDate extends Component {
             />
             <input
               className="bordered-input"
-              defaultValue={publish_time}
+              defaultValue={publish_time || ""}
               type="time"
               ref={ref => {
                 this.time = ref
@@ -156,31 +159,33 @@ export class ArticlePublishDate extends Component {
             />
           </InputGroup>
 
-          <ButtonMedium
-            background={hasChanged ? colors.redMedium : undefined}
+          <Button
+            disabled={!hasChanged}
             onClick={this.onScheduleChange}
+            width="100%"
+            height="auto"
           >
             {this.getPublishText()}
-          </ButtonMedium>
-        </DateContainer>
+          </Button>
+        </Flex>
       </div>
     )
   }
 }
 
-export const DateContainer = styled.div`
-  display: flex;
-  margin: 5px 0 40px 0;
-`
+export const InputGroup = styled(Flex).attrs<{ hasFocus?: boolean }>({})`
+  min-width: 70%;
+  border: 1px solid
+    ${props => (props.hasFocus ? color("purple100") : color("black10"))};
+  transition: border 0.25s;
 
-export const InputGroup = styled.div`
-  display: flex;
-  border: 2px solid
-    ${props => (props.focus ? colors.purpleRegular : colors.grayRegular)};
-  transition: border 0.3s;
-  margin-right: 20px;
+  &:hover {
+    border: 1px solid ${color("purple100")};
+  }
+
+  input,
   .bordered-input {
     border: none;
-    margin-top: 0;
+    margin-top: 3px;
   }
 `

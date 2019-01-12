@@ -1,11 +1,10 @@
-import { Flex } from "@artsy/palette"
-import colors from "@artsy/reaction/dist/Assets/Colors"
+import { Box, Button, Flex, Sans } from "@artsy/palette"
+import { SansLabelProps } from "client/apps/edit/components/admin/components/article/index"
 import { clone } from "lodash"
 import moment from "moment"
 import React, { Component } from "react"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
-import { ButtonMedium } from "./button_medium"
 
 interface ArticleReleaseDateProps {
   article: ArticleData
@@ -59,10 +58,10 @@ export class ArticleVideoReleaseDate extends Component<
     const { hasChanged, releaseDate } = this.state
 
     return (
-      <div className="field-group">
-        <label>Video Release Date</label>
+      <Box pb={40}>
+        <Sans {...SansLabelProps}>Video Release Date</Sans>
 
-        <Container>
+        <Flex mt={1}>
           <Input
             type="date"
             className="bordered-input"
@@ -70,28 +69,22 @@ export class ArticleVideoReleaseDate extends Component<
             onChange={this.onDateChange}
           />
 
-          <ButtonMedium
-            background={hasChanged ? colors.redMedium : undefined}
+          <Button
+            disabled={!hasChanged}
             onClick={this.onMediaReleaseChange}
+            width="100%"
+            height="auto"
           >
             Update
-          </ButtonMedium>
-        </Container>
-      </div>
+          </Button>
+        </Flex>
+      </Box>
     )
   }
 }
 
-const Container = styled(Flex)`
-  margin-top: 5px;
-
-  button {
-    flex: 1;
-  }
-`
-
 const Input = styled.input`
-  width: 326px !important;
+  min-width: 70%;
   margin-right: 20px;
   margin-top: 0 !important;
 `

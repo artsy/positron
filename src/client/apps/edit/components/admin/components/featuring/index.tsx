@@ -1,60 +1,60 @@
+import { Box, Flex } from "@artsy/palette"
 import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import AutocompleteListMetaphysics from "../../../../../../components/autocomplete2/list_metaphysics"
 import { FeaturingMentioned } from "./featuring_mentioned"
-import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
 
-export const AdminFeaturing = props => {
+export const AdminFeaturing = () => {
   return (
     <div>
-      <Row>
-        <Col xs={6}>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 20]}>
           <AutocompleteListMetaphysics
             field="partner_ids"
             label="Partners"
             model="partners"
             placeholder="Search by partner name..."
           />
-        </Col>
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 20]}>
           <AutocompleteListMetaphysics
             field="fair_ids"
             label="Fairs"
             model="fairs"
             placeholder="Search by fair name..."
           />
-        </Col>
-      </Row>
+        </Box>
+      </Flex>
 
-      <Row>
-        <Col xs={6}>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 20]}>
           <AutocompleteListMetaphysics
             field="show_ids"
             label="Shows"
             model="partner_shows"
             placeholder="Search by show name..."
           />
-        </Col>
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 20]}>
           <AutocompleteListMetaphysics
             field="auction_ids"
             label="Auctions"
             model="sales"
             placeholder="Search by auction name..."
           />
-        </Col>
-      </Row>
+        </Box>
+      </Flex>
 
-      <Row>
-        <Col xs={6}>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 20]}>
           <FeaturingMentioned model="artist" />
-        </Col>
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 20]}>
           <FeaturingMentioned model="artwork" />
-        </Col>
-      </Row>
+        </Box>
+      </Flex>
     </div>
   )
 }
