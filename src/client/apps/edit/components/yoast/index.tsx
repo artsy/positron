@@ -1,5 +1,4 @@
 import { Box, color, Flex, Serif, space } from "@artsy/palette"
-import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import {
   Input,
@@ -15,7 +14,7 @@ import {
   App as YoastApp,
   SnippetPreview as YoastSnippetPreview,
 } from "yoastseo"
-import { setYoastKeyword } from "../../../../../actions/edit/editActions"
+import { setYoastKeyword } from "../../../../../client/actions/edit/editActions"
 
 interface Props {
   article: ArticleData
@@ -160,8 +159,9 @@ export class Yoast extends Component<Props, State> {
     return (
       <Box>
         <YoastContainer
+          mt="-1px"
           height={40}
-          px={20}
+          px={30}
           alignItems="center"
           onClick={this.toggleDrawer}
         >
@@ -171,18 +171,18 @@ export class Yoast extends Component<Props, State> {
             ml="5px"
             color={
               this.generateResolveMessage() !== " Resolved"
-                ? color("red100")
-                : color("green100")
+                ? "red100"
+                : "green100"
             }
           >
             {this.generateResolveMessage()}
           </ResolveMessage>
           <CloseIcon
-            right={15}
+            right={18}
             fontSize="32px"
             rotation={isOpen ? 45 : 0}
             name="follow-circle"
-            color={color("black100")}
+            color={"black100"}
             title="plus-small"
           />
         </YoastContainer>
@@ -213,7 +213,7 @@ export class Yoast extends Component<Props, State> {
 }
 
 export const YoastContainer = styled(Flex)`
-  background-color: ${color("black5")};
+  background-color: ${color("white100")};
   border-bottom: 1px solid ${color("black10")};
 `
 
@@ -228,17 +228,18 @@ const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
   position: absolute;
 `
 
-const YoastInput = styled(Box)`
+const YoastInput = styled(Flex)`
+  align-items: center;
   min-width: 360px;
   ${Title} {
-    margin-bottom: 2px;
-    ${avantgarde("s11")};
+    margin-bottom: 5px;
   }
-
   ${StyledInput} {
     min-width: 300px;
+    margin-bottom: ${space(2)}px;
   }
 `
+
 export const YoastOutput = styled(Box)`
   border-left: 1px solid ${color("black10")};
 

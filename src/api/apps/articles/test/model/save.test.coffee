@@ -11,14 +11,20 @@ moment = require 'moment'
 { ObjectId } = require 'mongojs'
 
 describe 'Save', ->
+  sandbox = sinon.sandbox.create();
 
   before (done) ->
     app.use '/__gravity', gravity
     @server = app.listen 5000, ->
       done()
 
+    date = new Date("Tue Jan 01 2019 00:00:00")
+    sandbox.useFakeTimers(date)
+    
+
   after ->
     @server.close()
+    sandbox.restore()
 
   beforeEach (done) ->
     @removeStopWords = Save.__get__ 'removeStopWords'
@@ -71,7 +77,7 @@ describe 'Save', ->
         article.slugs[0].should.equal 'molly-clockwork'
         done()
 
-    it 'appends a date to the slug if it exists already', (done) ->
+    it 'appends a date to the slug if it exists in the database already', (done) ->
       Save.sanitizeAndSave( =>
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
@@ -80,6 +86,97 @@ describe 'Save', ->
           published_at: '2017-07-26T17:37:03.065Z'
         }, (err, article) =>
           article.slugs[0].should.equal 'molly-clockwork-07-26-17'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'does not append a date to the slug if it exists in the slugs array for that article already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          slugs: ['molly-clockwork']
+          author: name: 'Molly'
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 1
+          article.slugs[0].should.equal 'molly-clockwork'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends the current date to the slug if the slug exists in the database already but the date is invalid', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          published_at: '2017-07-dsdfdf26T17:37:03.065Zsdfdf'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends the current date to the slug if the slug exists in the database already but there is no publish date', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-01-01-19'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'moves the slug to the end of the slugs array and does not append a date if the slug is present elsewhere in the array', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork', 'molly-clockwork-2', 'molly-clockwork-3']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 3
+          article.slugs[article.slugs.length-1].should.equal 'molly-clockwork'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork-07-26-17']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 1
+          article.slugs[0].should.equal 'molly-clockwork-07-26-17'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'it moves the slug with the appended date to the end of the slugs array if a slug with that date exists in the slugs array for that article already', (done) ->
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: true
+          author: name: 'Molly'
+          slugs: ['molly-clockwork-2','molly-clockwork-07-26-17', 'molly-clockwork-3']
+          published_at: '2017-07-26T17:37:03.065Z'
+        }, (err, article) =>
+          article.slugs.length.should.equal 3
+          article.slugs[article.slugs.length-1].should.equal 'molly-clockwork-07-26-17'
           done()
       )(null, {
         slugs: ['molly-clockwork']
@@ -94,6 +191,24 @@ describe 'Save', ->
           published_at: '2017-07-26T17:37:03.065Z'
         }, (err, article) =>
           article.slugs[0].should.equal 'molly-clockwork-1501090623'
+          done()
+      )(null, {
+        slugs: ['molly-clockwork']
+      })
+
+    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->     
+      # removing date offset to account for different timezones
+      now = new Date()
+      os = now.getTimezoneOffset()      
+      sandbox.clock.tick(os * -60000)
+      
+      Save.sanitizeAndSave( =>
+        Save.generateSlugs {
+          thumbnail_title: 'Clockwork'
+          published: false
+          author: name: 'Molly'
+        }, (err, article) =>
+          article.slugs[0].should.equal 'molly-clockwork-1546300800'
           done()
       )(null, {
         slugs: ['molly-clockwork']

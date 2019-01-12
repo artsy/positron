@@ -57,14 +57,36 @@ removeStopWords = (title) ->
     slug = _s.slugify stoppedTitle
   else
     slug = _s.slugify article.author?.name + ' ' + stoppedTitle
+
+  # Does not add the slug to the array if the same slug is already the last item in the slugs array
   return cb null, article if slug is _.last(article.slugs)
 
-  # Append published_at to slug if that slug already exists
+  # Moves the slug to the end of the slugs array if it already exists in the array
+  if article.slugs && article.slugs.includes(slug)
+    article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
+    return cb null, article  
+
+  # # Appends published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
     return cb(err) if err
     if count
       format = if article.published then 'MM-DD-YY' else 'X'
-      slug = slug + '-' + moment(article.published_at).format(format)
+      publishedDate = new Date(article.published_at)
+      if moment(publishedDate).isValid()
+        formattedDate = moment(publishedDate).format(format)
+      else
+        formattedDate = moment().format(format)
+
+      slug = slug + '-' + formattedDate
+
+      # Does not add date with appended slug if the last slug has the same date appended
+      return cb null, article if slug is _.last(article.slugs)
+
+      # If the slug with the appended date already exists in the array it moves it to the end
+      if article.slugs && article.slugs.includes(slug)
+        article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
+        return cb null, article 
+
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
 

@@ -10,7 +10,7 @@ import { EditContent } from "../content"
 import { EditDisplay } from "../display"
 import { EditHeader } from "../header"
 import { EditError } from "../error"
-import { Yoast } from "../header/yoast"
+import { Yoast } from "../yoast"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
