@@ -1,7 +1,7 @@
 import { Box, Button, color, Flex, space } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import { Tab, Tabs } from "@artsy/reaction/dist/Styleguide/Components/Tabs"
+import { Tab, Tabs } from "@artsy/reaction/dist/Components/v2/Tabs"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
