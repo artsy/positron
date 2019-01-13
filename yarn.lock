@@ -31,10 +31,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@9.5.6":
-  version "9.5.6"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-9.5.6.tgz#b0d0cc9c4d792db58503418e51243e0ccb7467a5"
-  integrity sha512-vPdT80GPrvhrvJ1AYtK87UB+Hz1Ui1S1jACLl2VbJuvSDPOOB0L5TMrfh2veoZrj9vaO87R1AO4q6rT+BxYhiA==
+"@artsy/reaction@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-10.0.0.tgz#571777b28c637a2e4318ce4bdab0bc67bcbdf13a"
+  integrity sha512-8HIOsJ8Pc4AY62EMVoc7Z6QV+EAaQzoqv9YreKSwWvQHTTPcijahNOqWFv2lCUqyn+qqr1OpTiBgwZYiq0+xNg==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.1"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
@@ -84,7 +84,6 @@
     relay-runtime "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz"
     serialize-javascript "^1.5.0"
     sharify "^0.1.6"
-    styled-bootstrap-grid "1.0.4"
     styled-system "^3.1.11"
     superagent "^3.6.3"
     trunc-html "^1.1.2"
@@ -12514,11 +12513,6 @@ style-loader@^0.19.0:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
-
-styled-bootstrap-grid@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/styled-bootstrap-grid/-/styled-bootstrap-grid-1.0.4.tgz#43417a43097ab00a8f644829f0d11ca226f16455"
-  integrity sha512-4zky8nfXzxzJ9laPTd6kpdYgfdffzk+N5kTjeDCCvnIb4qfSjJ3QfWa9Qf+UdHMA0EPAl4fFjA6keLEq8M2yhA==
 
 styled-components@3.4.5:
   version "3.4.5"
