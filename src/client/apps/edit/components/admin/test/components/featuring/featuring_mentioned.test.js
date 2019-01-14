@@ -7,6 +7,7 @@ import { Provider } from "react-redux"
 import { FeaturingMentioned } from "../../../components/featuring/featuring_mentioned"
 import { MentionedList } from "../../../components/featuring/mentioned_list"
 import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
+import { Sans } from "@artsy/palette"
 require("typeahead.js")
 
 describe("FeaturingMentioned", () => {
@@ -48,10 +49,10 @@ describe("FeaturingMentioned", () => {
 
     expect(
       component
-        .find("label")
+        .find(Sans)
         .first()
         .text()
-    ).toBe("artists")
+    ).toBe("Artists")
   })
 
   it("Renders expected components", () => {

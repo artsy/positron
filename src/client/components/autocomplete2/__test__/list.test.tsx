@@ -1,7 +1,7 @@
 import { mount } from "enzyme"
 import React from "react"
-import { AutocompleteList } from "../list"
 import { Autocomplete } from "../index"
+import { AutocompleteList } from "../list"
 require("typeahead.js")
 
 describe("AutocompleteList", () => {
@@ -9,8 +9,8 @@ describe("AutocompleteList", () => {
   let items
   let fetchItems
 
-  const getWrapper = props => {
-    return mount(<AutocompleteList {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<AutocompleteList {...passedProps} />)
   }
 
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe("AutocompleteList", () => {
       { _id: "345", title: "Third Article" },
     ]
 
-    fetchItems = jest.fn((fetchedItems, cb) => {
+    fetchItems = jest.fn((_fetchedItems, cb) => {
       const newItems = items
       return cb(newItems)
     })
@@ -87,8 +87,8 @@ describe("AutocompleteList", () => {
 
   it("Calls fetchItems if props have changed", () => {
     props.items = ["123"]
-    const component = getWrapper(props)
-    component.instance().componentDidUpdate({ items })
+    const component = getWrapper(props).instance() as AutocompleteList
+    component.componentDidUpdate({ items })
 
     expect(props.fetchItems.mock.calls.length).toBe(2)
   })

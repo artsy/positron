@@ -35,8 +35,7 @@ export class RelatedArticlesInput extends Component {
 
 const RelatedArticlesInputContainer = styled.div`
   color: ${props => props.color || "black"};
-  input,
-  .Autocomplete__icon {
-    color: ${props => props.color || "black"};
+  input {
+    color: "black";
   }
 `

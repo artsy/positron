@@ -1,11 +1,11 @@
-import React from "react"
-import { mount } from "enzyme"
 import {
   FeatureArticle,
   StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import Backbone from "backbone"
-import { Autocomplete } from "../index.jsx"
+import { mount } from "enzyme"
+import React from "react"
+import { Autocomplete, AutocompleteResult } from "../index"
 require("typeahead.js")
 
 describe("Autocomplete", () => {
@@ -30,21 +30,25 @@ describe("Autocomplete", () => {
   })
 
   it("Sets up Bloodhound", () => {
-    const component = mount(<Autocomplete {...props} />)
-    expect(component.instance().engine.remote.url).toBe(props.url)
+    const component = mount(
+      <Autocomplete {...props} />
+    ).instance() as Autocomplete
+    expect(component.engine.remote.url).toBe(props.url)
   })
 
   it("Searches with Bloodhound on input", () => {
     const component = mount(<Autocomplete {...props} />)
-    component.instance().engine.get = jest.fn()
-    const input = component.find("input").at(0)
-    input.simulate("change", { target: { value: "a title" } })
-    expect(component.instance().engine.get.mock.calls[0][0]).toBe("a title")
+    const instance = component.instance() as Autocomplete
+    instance.engine.get = jest.fn()
+    instance.search("a title")
+    expect(instance.engine.get.mock.calls[0][0]).toBe("a title")
   })
 
   it("OnSelect calls props.onSelect with selected id", async () => {
-    const component = mount(<Autocomplete {...props} />)
-    await component.instance().onSelect(searchResults[0])
+    const component = mount(
+      <Autocomplete {...props} />
+    ).instance() as Autocomplete
+    await component.onSelect(searchResults[0])
     expect(props.onSelect.mock.calls[0][0][0]).toBe(searchResults[0].id)
   })
 
@@ -57,10 +61,12 @@ describe("Autocomplete", () => {
       const article = new Backbone.Model(item)
       return article.fetch()
     }
-
     props.formatSelected = formatSelected
-    const component = mount(<Autocomplete {...props} />)
-    await component.instance().onSelect(searchResults[0])
+
+    const component = mount(
+      <Autocomplete {...props} />
+    ).instance() as Autocomplete
+    await component.onSelect(searchResults[0])
     expect(props.onSelect.mock.calls[0][0][0].get("id")).toBe(
       searchResults[0].id
     )
@@ -76,10 +82,12 @@ describe("Autocomplete", () => {
       const article = new Backbone.Model(item)
       return article.fetch()
     }
-
     props.formatSelected = formatSelected
-    const component = mount(<Autocomplete {...props} />)
-    await component.instance().onSelect(searchResults[0])
+
+    const component = mount(
+      <Autocomplete {...props} />
+    ).instance() as Autocomplete
+    await component.onSelect(searchResults[0])
     expect(props.onSelect.mock.calls[0][0][0].message).toBe("an error")
   })
 
@@ -102,29 +110,28 @@ describe("Autocomplete", () => {
     }
 
     props.filter = filter
-    const component = mount(<Autocomplete {...props} />)
-    expect(component.instance().engine.remote.filter).toBe(props.filter)
+    const component = mount(
+      <Autocomplete {...props} />
+    ).instance() as Autocomplete
+    expect(component.engine.remote.filter).toBe(props.filter)
     expect(
-      component.instance().engine.remote.filter({ results: searchResults })[0]
-        .slug
+      component.engine.remote.filter({ results: searchResults })[0].slug
     ).toBe(searchResults[0].slug)
   })
 
   it("Displays a list of results if present", () => {
     const component = mount(<Autocomplete {...props} />)
-    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.state().hasFocus = jest.fn().mockReturnValue(true)
     component.setState({ searchResults })
-    expect(component.find(".Autocomplete__item").length).toBe(
-      searchResults.length
-    )
+    expect(component.find(AutocompleteResult).length).toBe(searchResults.length)
     expect(component.html()).toMatch(searchResults[0].title)
   })
 
   it('Displays "No Results" if focused and no results', () => {
     const component = mount(<Autocomplete {...props} />)
-    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.state().hasFocus = jest.fn().mockReturnValue(true)
     component.setState({ searchResults: [] })
-    expect(component.find(".Autocomplete__item").length).toBe(1)
+    expect(component.find(AutocompleteResult).length).toBe(1)
     expect(component.html()).toMatch("No results")
   })
 
@@ -134,7 +141,7 @@ describe("Autocomplete", () => {
     }
     props.formatSearchResult = formatSearchResult
     const component = mount(<Autocomplete {...props} />)
-    component.instance().isFocused = jest.fn().mockReturnValue(true)
+    component.state().hasFocus = jest.fn().mockReturnValue(true)
     component.setState({ searchResults })
     expect(component.text()).toMatch(`Child: ${searchResults[0].title}`)
   })
