@@ -73,11 +73,12 @@ export class AutocompleteListMetaphysics extends Component<
 
   fetchItems = (fetchedItems, cb) => {
     const { metaphysicsURL, model, user } = this.props
-
     const newItems = clone(fetchedItems)
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
-
+    // TODO: Metaphysics only returns shows with "displayable: true"
+    // and sales with "live: true", meaning shows and sales
+    // will not display in UI once they have closed
     if (idsToFetch.length) {
       request
         .get(`${metaphysicsURL}`)
@@ -123,12 +124,34 @@ export class AutocompleteListMetaphysics extends Component<
     }
   }
 
+  getSearchResultImage = item => {
+    switch (this.props.model) {
+      case "artworks": {
+        return (
+          (item.images && item.images[0] && item.images[0].image_urls.small) ||
+          item.images[0].image_urls.square
+        )
+      }
+      default: {
+        return (
+          item.image_urls && (item.image_urls.small || item.image_urls.square)
+        )
+      }
+    }
+  }
+
   getFilter = () => {
     const { model } = this.props
 
     const filter = items => {
       return items.map(item => {
-        return { id: item._id, name: item.name }
+        const thumbnail_image = this.getSearchResultImage(item)
+        return {
+          id: item._id,
+          name: item.name,
+          title: item.title,
+          thumbnail_image,
+        }
       })
     }
 
