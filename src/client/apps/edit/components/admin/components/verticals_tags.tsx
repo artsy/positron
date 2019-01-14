@@ -7,7 +7,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
-// import Verticals from "../../../../../collections/verticals.coffee"
+const Verticals = require("client/collections/verticals.coffee")
 
 interface TagsProps {
   article: ArticleData
@@ -26,14 +26,14 @@ export class AdminVerticalsTags extends Component<TagsProps> {
   }
 
   fetchVerticals = () => {
-    // new Verticals().fetch({
-    //   cache: true,
-    //   success: res => {
-    //     const verticals = map(res.sortBy("name"), "attributes")
-    //     this.maybeSetupNews(verticals)
-    //     this.setState({ verticals })
-    //   },
-    // })
+    new Verticals().fetch({
+      cache: true,
+      success: res => {
+        const verticals = map(res.sortBy("name"), "attributes")
+        this.maybeSetupNews(verticals)
+        this.setState({ verticals })
+      },
+    })
   }
 
   maybeSetupNews = verticals => {
