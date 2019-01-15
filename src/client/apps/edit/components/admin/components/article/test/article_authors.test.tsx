@@ -1,13 +1,13 @@
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { AutocompleteList } from "client/components/autocomplete2/list"
+import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
 import request from "superagent"
-import { AutocompleteList } from "../../../../../../../components/autocomplete2/list"
-import { AutocompleteListMetaphysics } from "../../../../../../../components/autocomplete2/list_metaphysics"
 import { ArticleAuthors } from "../article_authors"
 require("typeahead.js")
 

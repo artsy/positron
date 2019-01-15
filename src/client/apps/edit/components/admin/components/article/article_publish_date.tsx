@@ -1,10 +1,10 @@
 import { Button, color, Flex } from "@artsy/palette"
+import { FormLabel } from "client/components/form_label"
 import moment from "moment"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
-import { FormLabel } from "../../../../../../components/form_label"
 
 interface ArticlePublishDateProps {
   article: ArticleData

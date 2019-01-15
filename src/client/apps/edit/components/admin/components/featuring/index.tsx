@@ -1,6 +1,6 @@
 import { Box, Flex } from "@artsy/palette"
+import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
 import React from "react"
-import AutocompleteListMetaphysics from "../../../../../../components/autocomplete2/list_metaphysics"
 import { FeaturingMentioned } from "./featuring_mentioned"
 
 export const AdminFeaturing = () => {

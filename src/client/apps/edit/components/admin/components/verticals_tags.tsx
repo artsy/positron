@@ -1,13 +1,13 @@
 import { Box, Button, Flex } from "@artsy/palette"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { AutocompleteInlineList } from "client/components/autocomplete2/inline_list"
+import { FormLabel } from "client/components/form_label"
 import { filter, map } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
-import { onChangeArticle } from "../../../../../actions/edit/articleActions"
-import { AutocompleteInlineList } from "../../../../../components/autocomplete2/inline_list"
-import { FormLabel } from "../../../../../components/form_label"
-const Verticals = require("../../../../../collections/verticals.coffee")
+const Verticals = require("client/collections/verticals.coffee")
 
 interface VerticalsTagsProps {
   article: ArticleData

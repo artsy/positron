@@ -1,12 +1,12 @@
 import { Box, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { FormLabel } from "client/components/form_label"
 import { uniq } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { clean } from "underscore.string"
-import { onChangeArticle } from "../../../../../actions/edit/articleActions"
-import { FormLabel } from "../../../../../components/form_label"
 
 interface TagsProps {
   article: ArticleData

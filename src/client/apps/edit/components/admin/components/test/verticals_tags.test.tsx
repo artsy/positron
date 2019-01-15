@@ -2,13 +2,13 @@ import { Button } from "@artsy/palette"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
 import Backbone from "backbone"
-import { mount } from "enzyme"
-import { cloneDeep } from "lodash"
-import React from "react"
 import {
   AutocompleteInlineList,
   ListItem,
-} from "../../../../../../components/autocomplete2/inline_list"
+} from "client/components/autocomplete2/inline_list"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { AdminVerticalsTags } from "../verticals_tags"
 require("typeahead.js")
 

@@ -1,8 +1,8 @@
 import { Input } from "@artsy/reaction/dist/Components/Input"
+import { AutocompleteList } from "client/components/autocomplete2/list"
 import { mount } from "enzyme"
 import React from "react"
 import request from "superagent"
-import { AutocompleteList } from "../../../../../../components/autocomplete2/list"
 import { AdminSuperArticle } from "../super_article"
 const ImageUpload = require("../image_upload.coffee")
 require("typeahead.js")

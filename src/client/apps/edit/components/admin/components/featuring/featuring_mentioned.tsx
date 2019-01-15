@@ -1,5 +1,5 @@
+import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
 import React from "react"
-import AutocompleteListMetaphysics from "../../../../../../components/autocomplete2/list_metaphysics"
 import MentionedList from "./mentioned_list"
 
 export const FeaturingMentioned: React.SFC<{ model: string }> = props => {

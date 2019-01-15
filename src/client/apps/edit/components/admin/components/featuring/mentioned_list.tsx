@@ -1,18 +1,18 @@
 import { Box, Checkbox, color, Flex, Sans } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import {
+  onAddFeaturedItem,
+  setMentionedItems,
+} from "client/actions/edit/articleActions"
+import { ListItem } from "client/components/autocomplete2/list"
+import { FormLabel } from "client/components/form_label"
+import * as ArticleUtils from "client/models/article.js"
 import { uniq } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
-import { ListItem } from "../../../../../..//components/autocomplete2/list"
-import {
-  onAddFeaturedItem,
-  setMentionedItems,
-} from "../../../../../../actions/edit/articleActions"
-import { FormLabel } from "../../../../../../components/form_label"
-import * as ArticleUtils from "../../../../../../models/article.js"
-const Artists = require("../../../../../../collections/artists.coffee")
-const Artworks = require("../../../../../../collections/artworks.coffee")
+const Artists = require("client/collections/artists.coffee")
+const Artworks = require("client/collections/artworks.coffee")
 
 interface MentionedListProps {
   article: ArticleData

@@ -1,14 +1,14 @@
 import { Checkbox } from "@artsy/palette"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { ListItem } from "client/components/autocomplete2/list"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
-import { ListItem } from "../../../../../../../components/autocomplete2/list"
 import { MentionedList } from "../mentioned_list"
-const Artists = require("../../../../../../../collections/artists.coffee")
-const Artworks = require("../../../../../../../collections/artworks.coffee")
+const Artists = require("client/collections/artists.coffee")
+const Artworks = require("client/collections/artworks.coffee")
 
 describe("MentionedList", () => {
   let props
