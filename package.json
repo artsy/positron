@@ -128,7 +128,6 @@
     "superagent-bluebird-promise": "^3.0.0",
     "ts-loader": "^4.1.0",
     "typescript": "^3.0.1",
-    "typescript-babel-jest": "^1.0.5",
     "typescript-styled-plugin": "^0.1.2",
     "ua-parser": "^0.3.5",
     "uglifyify": "^3.0.1",
@@ -215,7 +214,7 @@
       "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.mjs?$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.coffee$": "<rootDir>/node_modules/jest-coffee-preprocessor/index.js",
-      ".(ts|tsx|mjs)": "typescript-babel-jest"
+      ".(ts|tsx|mjs)": "<rootDir>/node_modules/babel-jest"
     },
     "testRegex": "/test/.*\\.test\\.(ts|tsx|js|jsx)$",
     "moduleFileExtensions": [
