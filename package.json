@@ -14,7 +14,6 @@
     "prettier-project": "yarn run prettier-write 'src/**/*.{ts,tsx,js,jsx}'",
     "prettier-write": "yarn run prettier --write",
     "mocha": "sh scripts/mocha.sh",
-    "jest": "sh scripts/jest.sh",
     "start": "sh scripts/start.sh",
     "production": "sh scripts/production.sh",
     "publish-assets": "sh scripts/publish-assets.sh",
