@@ -79,7 +79,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
 
     return (
       <div className="AdminSuperArticle">
-        <Box pb={40}>
+        <Box pb={4}>
           <Checkbox
             onSelect={() =>
               onChangeArticleAction(
@@ -94,7 +94,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
         </Box>
 
         <Flex justifyContent="space-between" flexDirection={["column", "row"]}>
-          <Box width={["100%", "31%"]} pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
             <Box pb={40}>
               <FormLabel>Partner Link Title</FormLabel>
               <Input
@@ -107,7 +107,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Partner Link</FormLabel>
               <Input
                 block
@@ -119,7 +119,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Partner Logo Link</FormLabel>
               <Input
                 block
@@ -131,7 +131,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Secondary Logo Text</FormLabel>
               <Input
                 block
@@ -143,7 +143,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Secondary Logo Link</FormLabel>
               <Input
                 block
@@ -155,7 +155,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Footer Title</FormLabel>
               <Input
                 block
@@ -167,7 +167,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Footer Blurb</FormLabel>
               <TextArea
                 block
@@ -179,8 +179,8 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
             </Box>
           </Box>
 
-          <Box width={["100%", "31%"]} pb={40}>
-            <Box pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
+            <Box pb={4}>
               <FormLabel>Partner Logo</FormLabel>
               <ImageUpload
                 disabled={isDisabled}
@@ -190,7 +190,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Partner Fullscreen</FormLabel>
               <ImageUpload
                 disabled={isDisabled}
@@ -200,7 +200,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
               />
             </Box>
 
-            <Box pb={40}>
+            <Box pb={4}>
               <FormLabel>Secondary Logo</FormLabel>
               <ImageUpload
                 disabled={isDisabled}
@@ -211,7 +211,7 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
             </Box>
           </Box>
 
-          <Box width={["100%", "31%"]} pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
             <FormLabel>SubArticles</FormLabel>
             <AutocompleteList
               disabled={isDisabled}

@@ -7,7 +7,7 @@ export const AdminFeaturing = () => {
   return (
     <div>
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="partner_ids"
             label="Partners"
@@ -16,7 +16,7 @@ export const AdminFeaturing = () => {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_ids"
             label="Fairs"
@@ -27,7 +27,7 @@ export const AdminFeaturing = () => {
       </Flex>
 
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="show_ids"
             label="Shows"
@@ -36,7 +36,7 @@ export const AdminFeaturing = () => {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="auction_ids"
             label="Auctions"
@@ -47,11 +47,11 @@ export const AdminFeaturing = () => {
       </Flex>
 
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <FeaturingMentioned model="artist" />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <FeaturingMentioned model="artwork" />
         </Box>
       </Flex>

@@ -29,7 +29,7 @@ export class AdminSponsor extends Component<AdminSponsorProps> {
     return (
       <Box>
         <Flex justifyContent="space-between" flexDirection={["column", "row"]}>
-          <Box width={["100%", "31%"]} pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
             <FormLabel>Partner Logo Light</FormLabel>
             <ImageUpload
               onChange={this.onChange}
@@ -38,7 +38,7 @@ export class AdminSponsor extends Component<AdminSponsorProps> {
             />
           </Box>
 
-          <Box width={["100%", "31%"]} pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
             <FormLabel>Partner Logo Dark</FormLabel>
             <ImageUpload
               onChange={this.onChange}
@@ -47,7 +47,7 @@ export class AdminSponsor extends Component<AdminSponsorProps> {
             />
           </Box>
 
-          <Box width={["100%", "31%"]} pb={40}>
+          <Box width={["100%", "31%"]} pb={4}>
             <FormLabel>Partner Logo Condensed</FormLabel>
             <ImageUpload
               onChange={this.onChange}
@@ -58,7 +58,7 @@ export class AdminSponsor extends Component<AdminSponsorProps> {
         </Flex>
 
         <Flex flexDirection={["column", "row"]}>
-          <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
+          <Box width={["100%", "50%"]} pb={4} pr={[0, 2]}>
             <FormLabel>Partner Link</FormLabel>
             <Input
               block
@@ -70,7 +70,7 @@ export class AdminSponsor extends Component<AdminSponsorProps> {
             />
           </Box>
 
-          <Box width={["100%", "50%"]} pb={40} pl={[0, 20]}>
+          <Box width={["100%", "50%"]} pb={4} pl={[0, 2]}>
             <FormLabel>Pixel Tracking Code</FormLabel>
             <Input
               block

@@ -56,7 +56,7 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
 
     return (
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pb={4} pr={[0, 2]}>
           <FormLabel>Primary Author</FormLabel>
           <Input
             defaultValue={name}
@@ -66,9 +66,9 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           {isEditorial && (
-            <Box pb={40}>
+            <Box pb={4}>
               <AutocompleteList
                 label="Authors"
                 fetchItems={this.fetchAuthors}

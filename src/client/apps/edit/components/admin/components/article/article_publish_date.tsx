@@ -51,15 +51,11 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
 
   onUnschedule = () => {
     const { onChange } = this.props
-    const publish_date = null
-    const publish_time = null
+    this.date.value = null
+    this.time.value = null
 
-    if (this.date && this.time) {
-      this.date.value = publish_date
-      this.time.value = publish_time
-    }
     onChange("scheduled_publish_at", null)
-    this.setState({ hasChanged: false, publish_date, publish_time })
+    this.setState({ hasChanged: false, publish_date: null, publish_time: null })
   }
 
   setupPublishDate = () => {
@@ -126,15 +122,18 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
 
   render() {
     const { focus, hasChanged, publish_date, publish_time } = this.state
+    const {
+      article: { scheduled_publish_at },
+    } = this.props
 
     return (
       <div className="ArticlePublishDate">
         <FormLabel>Publish Date/Time</FormLabel>
 
-        <Flex mt={1} mb={40}>
+        <Flex mt={1} mb={4}>
           <InputGroup
             hasFocus={focus}
-            mr={20}
+            mr={1}
             onClick={this.onChangeFocus}
             onMouseUp={this.onChangeFocus}
             onKeyUp={this.onChangeFocus}
@@ -160,7 +159,7 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
           </InputGroup>
 
           <Button
-            disabled={!hasChanged}
+            disabled={!hasChanged && !scheduled_publish_at}
             onClick={this.onScheduleChange}
             width="100%"
             height="auto"

@@ -50,42 +50,42 @@ export class EditAdmin extends Component<EditAdminProps> {
     const sections = this.getSections()
 
     return (
-      <EditAdminContainer pb={95} pt={135} maxWidth={960} px={30} mx="auto">
+      <EditAdminContainer pb={95} pt={135} maxWidth={960} px={3} mx="auto">
         <DropDownList activeSections={[0, 1]} openMany sections={sections}>
           {isEditorial ? (
-            <Box pt={40}>
+            <Box pt={4}>
               <AdminVerticalsTags />
             </Box>
           ) : (
-            <Box pt={40}>
+            <Box pt={4}>
               <AdminTags />
             </Box>
           )}
 
-          <Box pt={40}>
+          <Box pt={4}>
             <AdminArticle />
           </Box>
 
-          <Box pt={40}>
+          <Box pt={4}>
             <AdminFeaturing />
           </Box>
 
           {!isNews && (
-            <Box pt={40}>
+            <Box pt={4}>
               <AdminAppearances />
             </Box>
           )}
 
           {isEditorial &&
             !isNews && (
-              <Box pt={40}>
+              <Box pt={4}>
                 <AdminSuperArticle />
               </Box>
             )}
 
           {isEditorial &&
             !isNews && (
-              <Box pt={40}>
+              <Box pt={4}>
                 <AdminSponsor />
               </Box>
             )}

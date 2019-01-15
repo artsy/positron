@@ -115,11 +115,11 @@ export class AdminArticle extends Component<
           <ArticleAuthors />
 
           <Flex flexDirection={["column", "row"]}>
-            <Box width={["100%", "50%"]} pr={[0, 20]} pb={40}>
+            <Box width={["100%", "50%"]} pr={[0, 2]} pb={4}>
               {article.layout !== "news" &&
                 isEditorial && (
                   <Flex flexDirection={["column", "row"]}>
-                    <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
+                    <Box width={["100%", "50%"]} pb={4} pr={[0, 2]}>
                       <FormLabel>Article Tier</FormLabel>
                       <ButtonGroup>
                         <Button
@@ -139,7 +139,7 @@ export class AdminArticle extends Component<
                       </ButtonGroup>
                     </Box>
 
-                    <Box width={["100%", "50%"]} pb={40} pl={[0, 20]}>
+                    <Box width={["100%", "50%"]} pb={4} pl={[0, 2]}>
                       <FormLabel>Magazine Feed</FormLabel>
                       <ButtonGroup>
                         <Button
@@ -167,9 +167,9 @@ export class AdminArticle extends Component<
 
               <Flex pb={40}>
                 {isEditorial && (
-                  <React.Fragment>
+                  <>
                     {canToggleLayout && (
-                      <Box width={["100%", "50%"]} pr={[0, 20]}>
+                      <Box width={["100%", "50%"]} pr={[0, 2]}>
                         <FormLabel>Article Layout</FormLabel>
                         <ButtonGroup>
                           <Button
@@ -248,11 +248,11 @@ export class AdminArticle extends Component<
                         </InputGroup>
                       </Box>
                     )}
-                  </React.Fragment>
+                  </>
                 )}
               </Flex>
               {isEditorial && (
-                <React.Fragment>
+                <>
                   <Checkbox
                     selected={article.indexable}
                     onSelect={() =>
@@ -287,11 +287,11 @@ export class AdminArticle extends Component<
                       <FormLabel>Video Published</FormLabel>
                     </Checkbox>
                   )}
-                </React.Fragment>
+                </>
               )}
             </Box>
 
-            <Box width={["100%", "50%"]} pb={40} pl={[0, 20]}>
+            <Box width={["100%", "50%"]} pb={4} pl={[0, 2]}>
               <ArticlePublishDate
                 article={article}
                 onChange={onChangeArticleAction}
@@ -351,6 +351,7 @@ const ButtonGroup = styled(Flex)`
   margin-top: 10px;
   border: 1px solid ${color("black10")};
   border-radius: 3px;
+  min-width: fit-content;
 
   button {
     width: 100%;

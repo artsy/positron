@@ -2,7 +2,9 @@ import AutocompleteListMetaphysics from "client/components/autocomplete2/list_me
 import React from "react"
 import MentionedList from "./mentioned_list"
 
-export const FeaturingMentioned: React.SFC<{ model: string }> = props => {
+export const FeaturingMentioned: React.SFC<{
+  model: "artist" | "artwork"
+}> = props => {
   const { model } = props
 
   const field =

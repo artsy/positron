@@ -75,13 +75,13 @@ export class AdminVerticalsTags extends Component<VerticalsTagsProps> {
 
     return (
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]} pb={40}>
+        <Box width={["100%", "50%"]} pr={[0, 2]} pb={4}>
           <FormLabel>Editorial Vertical</FormLabel>
           <VerticalsList mt={0.5}>{this.renderVerticalsList()}</VerticalsList>
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]} pb={40}>
-          <Box pb={40}>
+        <Box width={["100%", "50%"]} pl={[0, 2]} pb={4}>
+          <Box pb={4}>
             <FormLabel>Topic Tags</FormLabel>
             <AutocompleteInlineList
               items={article.tags}

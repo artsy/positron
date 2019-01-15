@@ -29,7 +29,7 @@ export class AdminTags extends Component<TagsProps> {
 
     return (
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]} pb={40}>
+        <Box width={["100%", "50%"]} pr={[0, 2]} pb={4}>
           <FormLabel>Topic Tags</FormLabel>
           <Input
             block
@@ -39,7 +39,7 @@ export class AdminTags extends Component<TagsProps> {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]} pb={40}>
+        <Box width={["100%", "50%"]} pl={[0, 2]} pb={4}>
           <FormLabel>Tracking Tags</FormLabel>
           <Input
             block

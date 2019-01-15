@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from "@artsy/palette"
+import { Box, Button, Flex, space } from "@artsy/palette"
 import { FormLabel } from "client/components/form_label"
 import { clone } from "lodash"
 import moment from "moment"
@@ -58,7 +58,7 @@ export class ArticleVideoReleaseDate extends Component<
     const { hasChanged, releaseDate } = this.state
 
     return (
-      <Box pb={40}>
+      <Box pb={4}>
         <FormLabel>Video Release Date</FormLabel>
 
         <Flex mt={1}>
@@ -70,7 +70,7 @@ export class ArticleVideoReleaseDate extends Component<
           />
 
           <Button
-            disabled={!hasChanged}
+            disabled={!hasChanged && !releaseDate}
             onClick={this.onMediaReleaseChange}
             width="100%"
             height="auto"
@@ -85,6 +85,6 @@ export class ArticleVideoReleaseDate extends Component<
 
 const Input = styled.input`
   min-width: 70%;
-  margin-right: 20px;
+  margin-right: ${space(1)}px;
   margin-top: 0 !important;
 `

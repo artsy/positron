@@ -4,9 +4,9 @@ import React from "react"
 
 export const AdminAppearances = () => {
   return (
-    <React.Fragment>
+    <>
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_programming_ids"
             label="Fair Programming"
@@ -15,7 +15,7 @@ export const AdminAppearances = () => {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_artsy_ids"
             label="Artsy at the Fair"
@@ -26,7 +26,7 @@ export const AdminAppearances = () => {
       </Flex>
 
       <Flex flexDirection={["column", "row"]}>
-        <Box width={["100%", "50%"]} pr={[0, 20]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_about_ids"
             label="About the Fair"
@@ -35,7 +35,7 @@ export const AdminAppearances = () => {
           />
         </Box>
 
-        <Box width={["100%", "50%"]} pl={[0, 20]}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="biography_for_artist_id"
             label="Extended Artist Biography"
@@ -45,6 +45,6 @@ export const AdminAppearances = () => {
           />
         </Box>
       </Flex>
-    </React.Fragment>
+    </>
   )
 }
