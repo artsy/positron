@@ -1,10 +1,10 @@
-import { Button, color, Flex, Sans } from "@artsy/palette"
-import { SansLabelProps } from "client/apps/edit/components/admin/components/article/index"
+import { Button, color, Flex } from "@artsy/palette"
 import moment from "moment"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
+import { FormLabel } from "../../../../../../components/form_label"
 
 interface ArticlePublishDateProps {
   article: ArticleData
@@ -12,8 +12,8 @@ interface ArticlePublishDateProps {
 }
 
 export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
-  private date
-  private time
+  public date
+  public time
 
   state = {
     focus: false,
@@ -129,7 +129,7 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
 
     return (
       <div className="ArticlePublishDate">
-        <Sans {...SansLabelProps}>Publish Date/Time</Sans>
+        <FormLabel>Publish Date/Time</FormLabel>
 
         <Flex mt={1} mb={40}>
           <InputGroup

@@ -200,7 +200,7 @@ export class Autocomplete extends Component<
       <AutocompleteWrapper>
         <SearchIcon name="search" color="black" />
         <Input
-          // block -- TODO: reenable when admin page is converted to tsx
+          block
           disabled={disabled}
           innerRef={this.textInput}
           onChange={({ currentTarget }) => {

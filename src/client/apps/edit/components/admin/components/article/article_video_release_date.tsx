@@ -1,10 +1,10 @@
-import { Box, Button, Flex, Sans } from "@artsy/palette"
-import { SansLabelProps } from "client/apps/edit/components/admin/components/article/index"
+import { Box, Button, Flex } from "@artsy/palette"
 import { clone } from "lodash"
 import moment from "moment"
 import React, { Component } from "react"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
+import { FormLabel } from "../../../../../../components/form_label"
 
 interface ArticleReleaseDateProps {
   article: ArticleData
@@ -59,7 +59,7 @@ export class ArticleVideoReleaseDate extends Component<
 
     return (
       <Box pb={40}>
-        <Sans {...SansLabelProps}>Video Release Date</Sans>
+        <FormLabel>Video Release Date</FormLabel>
 
         <Flex mt={1}>
           <Input

@@ -1,21 +1,21 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { Provider } from "react-redux"
-import { FeaturingMentioned } from "../../../components/featuring/featuring_mentioned"
-import { MentionedList } from "../../../components/featuring/mentioned_list"
-import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
 import { Sans } from "@artsy/palette"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
+import { AutocompleteListMetaphysics } from "../../../../../../../components/autocomplete2/list_metaphysics"
+import { FeaturingMentioned } from "../featuring_mentioned"
+import { MentionedList } from "../mentioned_list"
 require("typeahead.js")
 
 describe("FeaturingMentioned", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
-    const { article, featured, mentioned } = props
+    const { article, featured, mentioned } = passedProps
 
     const store = mockStore({
       app: {

@@ -1,4 +1,4 @@
-import { Box, Flex, Sans } from "@artsy/palette"
+import { Box, Flex } from "@artsy/palette"
 import Input from "@artsy/reaction/dist/Components/Input"
 import { clone, uniq } from "lodash"
 import React, { Component } from "react"
@@ -8,6 +8,7 @@ import { difference, flatten, pluck } from "underscore"
 import { onChangeArticle } from "../../../../../../actions/edit/articleActions"
 import { AutocompleteList } from "../../../../../../components/autocomplete2/list"
 import AutocompleteListMetaphysics from "../../../../../../components/autocomplete2/list_metaphysics"
+import { FormLabel } from "../../../../../../components/form_label"
 import { AuthorsQuery } from "../../../../../../queries/authors"
 import { AdminArticleProps } from "./index"
 
@@ -56,9 +57,7 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
     return (
       <Flex flexDirection={["column", "row"]}>
         <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
-          <Sans size="3t" weight="medium">
-            Primary Author
-          </Sans>
+          <FormLabel>Primary Author</FormLabel>
           <Input
             defaultValue={name}
             type="text"

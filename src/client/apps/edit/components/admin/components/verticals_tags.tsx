@@ -1,21 +1,21 @@
-import { Box, Button, Flex, Sans } from "@artsy/palette"
-import { onChangeArticle } from "client/actions/edit/articleActions"
-import { SansLabelProps } from "client/apps/edit/components/admin/components/article/index"
-import { AutocompleteInlineList } from "client/components/autocomplete2/inline_list"
+import { Box, Button, Flex } from "@artsy/palette"
 import { filter, map } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
-const Verticals = require("client/collections/verticals.coffee")
+import { onChangeArticle } from "../../../../../actions/edit/articleActions"
+import { AutocompleteInlineList } from "../../../../../components/autocomplete2/inline_list"
+import { FormLabel } from "../../../../../components/form_label"
+const Verticals = require("../../../../../collections/verticals.coffee")
 
-interface TagsProps {
+interface VerticalsTagsProps {
   article: ArticleData
   apiURL: string
   onChangeArticleAction: (key: string, value: any) => void
 }
 
-export class AdminVerticalsTags extends Component<TagsProps> {
+export class AdminVerticalsTags extends Component<VerticalsTagsProps> {
   state = {
     vertical: this.props.article.vertical || null,
     verticals: [],
@@ -76,13 +76,13 @@ export class AdminVerticalsTags extends Component<TagsProps> {
     return (
       <Flex flexDirection={["column", "row"]}>
         <Box width={["100%", "50%"]} pr={[0, 20]} pb={40}>
-          <Sans {...SansLabelProps}>Editorial Vertical</Sans>
+          <FormLabel>Editorial Vertical</FormLabel>
           <VerticalsList mt={0.5}>{this.renderVerticalsList()}</VerticalsList>
         </Box>
 
         <Box width={["100%", "50%"]} pl={[0, 20]} pb={40}>
           <Box pb={40}>
-            <Sans {...SansLabelProps}>Topic Tags</Sans>
+            <FormLabel>Topic Tags</FormLabel>
             <AutocompleteInlineList
               items={article.tags}
               filter={tags => {
@@ -98,7 +98,7 @@ export class AdminVerticalsTags extends Component<TagsProps> {
           </Box>
 
           <Box>
-            <Sans {...SansLabelProps}>Tracking Tags</Sans>
+            <FormLabel>Tracking Tags</FormLabel>
             <AutocompleteInlineList
               items={article.tracking_tags}
               filter={tags => {

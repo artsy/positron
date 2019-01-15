@@ -4,8 +4,6 @@ import {
   Checkbox,
   color,
   Flex,
-  Sans,
-  SansProps,
   Theme,
 } from "@artsy/palette"
 import { clone, uniq } from "lodash"
@@ -15,10 +13,10 @@ import { ArticleData } from "reaction/Components/Publishing/Typings"
 import styled from "styled-components"
 import request from "superagent"
 import { difference, flatten, pluck } from "underscore"
-
-import { onChangeArticle } from "client/actions/edit/articleActions"
-import { AutocompleteList } from "client/components/autocomplete2/list"
-import { RelatedArticleQuery } from "client/queries/related_articles"
+import { onChangeArticle } from "../../../../../../actions/edit/articleActions"
+import { AutocompleteList } from "../../../../../../components/autocomplete2/list"
+import { FormLabel } from "../../../../../../components/form_label"
+import { RelatedArticleQuery } from "../../../../../../queries/related_articles"
 import ArticleAuthors from "./article_authors"
 import { ArticlePublishDate, InputGroup } from "./article_publish_date"
 import { ArticleVideoReleaseDate } from "./article_video_release_date"
@@ -35,11 +33,6 @@ interface AdminArticleState {
   min: number
   sec: number
   videoDurationHasFocus: boolean
-}
-
-export const SansLabelProps: SansProps = {
-  size: "3t",
-  weight: "medium",
 }
 
 export class AdminArticle extends Component<
@@ -123,164 +116,178 @@ export class AdminArticle extends Component<
 
           <Flex flexDirection={["column", "row"]}>
             <Box width={["100%", "50%"]} pr={[0, 20]} pb={40}>
-              {article.layout !== "news" && (
-                <Flex flexDirection={["column", "row"]}>
-                  <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
-                    <Sans {...SansLabelProps}>Article Tier</Sans>
-                    <ButtonGroup>
-                      <Button
-                        color={article.tier === 1 ? "black100" : "black10"}
-                        onClick={() => onChangeArticleAction("tier", 1)}
-                        variant="noOutline"
-                      >
-                        Tier 1
-                      </Button>
-                      <Button
-                        color={article.tier === 2 ? "black100" : "black10"}
-                        onClick={() => onChangeArticleAction("tier", 2)}
-                        variant="noOutline"
-                      >
-                        Tier 2
-                      </Button>
-                    </ButtonGroup>
-                  </Box>
-
-                  <Box width={["100%", "50%"]} pb={40} pl={[0, 20]}>
-                    <Sans {...SansLabelProps}>Magazine Feed</Sans>
-                    <ButtonGroup>
-                      <Button
-                        color={article.featured ? "black100" : "black10"}
-                        onClick={() => onChangeArticleAction("featured", true)}
-                        variant="noOutline"
-                      >
-                        Yes
-                      </Button>
-                      <Button
-                        color={!article.featured ? "black100" : "black10"}
-                        onClick={() => onChangeArticleAction("featured", false)}
-                        variant="noOutline"
-                      >
-                        No
-                      </Button>
-                    </ButtonGroup>
-                  </Box>
-                </Flex>
-              )}
-
-              <Flex pb={40}>
-                {isEditorial &&
-                  canToggleLayout && (
-                    <Box width={["100%", "50%"]} pr={[0, 20]}>
-                      <Sans {...SansLabelProps}>Article Layout</Sans>
+              {article.layout !== "news" &&
+                isEditorial && (
+                  <Flex flexDirection={["column", "row"]}>
+                    <Box width={["100%", "50%"]} pb={40} pr={[0, 20]}>
+                      <FormLabel>Article Tier</FormLabel>
                       <ButtonGroup>
                         <Button
+                          color={article.tier === 1 ? "black100" : "black10"}
+                          onClick={() => onChangeArticleAction("tier", 1)}
                           variant="noOutline"
-                          onClick={() =>
-                            onChangeArticleAction("layout", "standard")
-                          }
-                          color={
-                            article.layout === "standard"
-                              ? "black100"
-                              : "black10"
-                          }
                         >
-                          Standard
+                          Tier 1
                         </Button>
                         <Button
+                          color={article.tier === 2 ? "black100" : "black10"}
+                          onClick={() => onChangeArticleAction("tier", 2)}
                           variant="noOutline"
-                          color={
-                            article.layout === "feature"
-                              ? "black100"
-                              : "black10"
-                          }
-                          onClick={() =>
-                            onChangeArticleAction("layout", "feature")
-                          }
                         >
-                          Feature
+                          Tier 2
                         </Button>
                       </ButtonGroup>
                     </Box>
-                  )}
 
-                {article.layout === "video" && (
-                  <Box width={["100%", "50%"]}>
-                    <Sans {...SansLabelProps}>Video duration</Sans>
+                    <Box width={["100%", "50%"]} pb={40} pl={[0, 20]}>
+                      <FormLabel>Magazine Feed</FormLabel>
+                      <ButtonGroup>
+                        <Button
+                          color={article.featured ? "black100" : "black10"}
+                          onClick={() =>
+                            onChangeArticleAction("featured", true)
+                          }
+                          variant="noOutline"
+                        >
+                          Yes
+                        </Button>
+                        <Button
+                          color={!article.featured ? "black100" : "black10"}
+                          onClick={() =>
+                            onChangeArticleAction("featured", false)
+                          }
+                          variant="noOutline"
+                        >
+                          No
+                        </Button>
+                      </ButtonGroup>
+                    </Box>
+                  </Flex>
+                )}
 
-                    <InputGroup
-                      mt={0.5}
-                      mr={4}
-                      pr={2}
-                      flexDirection="row"
-                      alignItems="center"
-                      hasFocus={videoDurationHasFocus}
-                      onClick={() =>
-                        this.setState({ videoDurationHasFocus: true })
-                      }
-                    >
-                      <input
-                        className="bordered-input"
-                        type="number"
-                        min="00"
-                        max="99"
-                        step="1"
-                        placeholder="00"
-                        defaultValue={min.toString()}
-                        onChange={this.onVideoDurationMinUpdated}
-                        onBlur={() =>
-                          this.setState({ videoDurationHasFocus: false })
-                        }
-                      />
-                      min
-                      <input
-                        className="bordered-input"
-                        type="number"
-                        min="00"
-                        max="60"
-                        step="1"
-                        placeholder="00"
-                        defaultValue={sec.toString()}
-                        onChange={this.onVideoDurationSecondUpdated}
-                        onBlur={() =>
-                          this.setState({ videoDurationHasFocus: false })
-                        }
-                      />
-                      sec
-                    </InputGroup>
-                  </Box>
+              <Flex pb={40}>
+                {isEditorial && (
+                  <React.Fragment>
+                    {canToggleLayout && (
+                      <Box width={["100%", "50%"]} pr={[0, 20]}>
+                        <FormLabel>Article Layout</FormLabel>
+                        <ButtonGroup>
+                          <Button
+                            variant="noOutline"
+                            onClick={() =>
+                              onChangeArticleAction("layout", "standard")
+                            }
+                            color={
+                              article.layout === "standard"
+                                ? "black100"
+                                : "black10"
+                            }
+                          >
+                            Standard
+                          </Button>
+                          <Button
+                            variant="noOutline"
+                            color={
+                              article.layout === "feature"
+                                ? "black100"
+                                : "black10"
+                            }
+                            onClick={() =>
+                              onChangeArticleAction("layout", "feature")
+                            }
+                          >
+                            Feature
+                          </Button>
+                        </ButtonGroup>
+                      </Box>
+                    )}
+
+                    {article.layout === "video" && (
+                      <Box width={["100%", "50%"]}>
+                        <FormLabel>Video duration</FormLabel>
+
+                        <InputGroup
+                          mt={0.5}
+                          mr={4}
+                          pr={2}
+                          flexDirection="row"
+                          alignItems="center"
+                          hasFocus={videoDurationHasFocus}
+                          onClick={() =>
+                            this.setState({ videoDurationHasFocus: true })
+                          }
+                        >
+                          <input
+                            className="bordered-input"
+                            type="number"
+                            min="00"
+                            max="99"
+                            step="1"
+                            placeholder="00"
+                            defaultValue={min.toString()}
+                            onChange={this.onVideoDurationMinUpdated}
+                            onBlur={() =>
+                              this.setState({ videoDurationHasFocus: false })
+                            }
+                          />
+                          min
+                          <input
+                            className="bordered-input"
+                            type="number"
+                            min="00"
+                            max="60"
+                            step="1"
+                            placeholder="00"
+                            defaultValue={sec.toString()}
+                            onChange={this.onVideoDurationSecondUpdated}
+                            onBlur={() =>
+                              this.setState({ videoDurationHasFocus: false })
+                            }
+                          />
+                          sec
+                        </InputGroup>
+                      </Box>
+                    )}
+                  </React.Fragment>
                 )}
               </Flex>
+              {isEditorial && (
+                <React.Fragment>
+                  <Checkbox
+                    selected={article.indexable}
+                    onSelect={() =>
+                      onChangeArticleAction("indexable", !article.indexable)
+                    }
+                  >
+                    <FormLabel>Index for search</FormLabel>
+                  </Checkbox>
 
-              <Checkbox
-                selected={article.indexable}
-                onSelect={() =>
-                  onChangeArticleAction("indexable", !article.indexable)
-                }
-              >
-                <Sans {...SansLabelProps}>Index for search</Sans>
-              </Checkbox>
+                  <Checkbox
+                    selected={article.exclude_google_news}
+                    onSelect={() =>
+                      onChangeArticleAction(
+                        "exclude_google_news",
+                        !article.exclude_google_news
+                      )
+                    }
+                  >
+                    <FormLabel>Exclude from Google News</FormLabel>
+                  </Checkbox>
 
-              <Checkbox
-                selected={article.exclude_google_news}
-                onSelect={() =>
-                  onChangeArticleAction(
-                    "exclude_google_news",
-                    !article.exclude_google_news
-                  )
-                }
-              >
-                <Sans {...SansLabelProps}>Exclude from Google News</Sans>
-              </Checkbox>
-
-              {article.layout === "video" && (
-                <Checkbox
-                  selected={article.media.published}
-                  onSelect={() =>
-                    this.onMediaChange("published", !article.media.published)
-                  }
-                >
-                  <Sans {...SansLabelProps}>Video Published</Sans>
-                </Checkbox>
+                  {article.layout === "video" && (
+                    <Checkbox
+                      selected={article.media.published}
+                      onSelect={() =>
+                        this.onMediaChange(
+                          "published",
+                          !article.media.published
+                        )
+                      }
+                    >
+                      <FormLabel>Video Published</FormLabel>
+                    </Checkbox>
+                  )}
+                </React.Fragment>
               )}
             </Box>
 
@@ -296,19 +303,20 @@ export class AdminArticle extends Component<
                   onChangeArticleAction={onChangeArticleAction}
                 />
               )}
-
-              <Box pb={40}>
-                <AutocompleteList
-                  label="Related Articles"
-                  fetchItems={this.fetchArticles}
-                  items={article.related_article_ids || []}
-                  onSelect={results =>
-                    onChangeArticleAction("related_article_ids", results)
-                  }
-                  placeholder="Search by title..."
-                  url={`${apiURL}/articles?q=%QUERY`}
-                />
-              </Box>
+              {isEditorial && (
+                <Box pb={40}>
+                  <AutocompleteList
+                    label="Related Articles"
+                    fetchItems={this.fetchArticles}
+                    items={article.related_article_ids || []}
+                    onSelect={results =>
+                      onChangeArticleAction("related_article_ids", results)
+                    }
+                    placeholder="Search by title..."
+                    url={`${apiURL}/articles?q=%QUERY`}
+                  />
+                </Box>
+              )}
             </Box>
           </Flex>
         </div>

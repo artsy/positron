@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
-import { AutocompleteListMetaphysics } from "../../../../../../components/autocomplete2/list_metaphysics.js"
+import { AutocompleteListMetaphysics } from "../../../../../../components/autocomplete2/list_metaphysics"
 import { AdminAppearances } from "../../components/appearances"
 require("typeahead.js")
 

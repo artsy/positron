@@ -1,3 +1,4 @@
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
@@ -107,13 +108,19 @@ describe("ArticleAuthors", () => {
 
   it("Can change a primary author", () => {
     const component = getWrapper(props)
-    const value = "New Author"
-    component
-      .find("input")
+    const input = component
+      .find(Input)
       .at(0)
-      .simulate("change", { currentTarget: { value } })
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "New Author",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("author")
-    expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe(value)
+    expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe("New Author")
   })
 })

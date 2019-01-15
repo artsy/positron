@@ -1,12 +1,12 @@
-import { Button } from "@artsy/palette"
+import { Button, Checkbox } from "@artsy/palette"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AutocompleteList } from "client/components/autocomplete2/list"
 import { mount, shallow } from "enzyme"
 import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
 import request from "superagent"
+import { AutocompleteList } from "../../../../../../../components/autocomplete2/list"
 import { ArticleAuthors } from "../article_authors"
 import { ArticlePublishDate } from "../article_publish_date"
 import { AdminArticle } from "../index"
@@ -51,6 +51,7 @@ describe("AdminArticle", () => {
       article,
       channel: { type: "editorial" },
       onChangeArticleAction: jest.fn(),
+      isEditorial: true,
     }
 
     response = {
@@ -70,17 +71,17 @@ describe("AdminArticle", () => {
 
   describe("Rendering", () => {
     it("Renders authors component", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(ArticleAuthors).exists()).toBe(true)
     })
 
     it("Renders tier buttons", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Article Tier")
       expect(
         component
-          .find("button")
+          .find(Button)
           .at(0)
           .text()
       ).toBe("Tier 1")
@@ -100,8 +101,8 @@ describe("AdminArticle", () => {
       expect(component.find("button").length).toBe(1)
     })
 
-    it("Renders featured/magazine buttons", () => {
-      const component = getWrapper(props)
+    it("Renders featured/magazine buttons if editorial", () => {
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Magazine Feed")
       expect(
@@ -127,7 +128,7 @@ describe("AdminArticle", () => {
     })
 
     it("Renders layout buttons if editorial", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Article Layout")
       expect(
@@ -154,7 +155,7 @@ describe("AdminArticle", () => {
     })
 
     it("If not editorial, does not render layout buttons", () => {
-      props.channel.type = "partner"
+      props.isEditorial = false
       const component = getWrapper(props)
 
       expect(component.html()).not.toMatch("Article Layout")
@@ -162,23 +163,23 @@ describe("AdminArticle", () => {
       expect(component.html()).not.toMatch("Feature")
     })
 
-    it("Renders indexable checkbox", () => {
+    it("Renders indexable checkbox for editorial", () => {
       const component = getWrapper(props)
       expect(component.html()).toMatch("Index for search")
     })
 
-    it("Renders Google news checkbox", () => {
-      const component = getWrapper(props)
+    it("Renders Google news checkbox for editorial", () => {
+      const component = getWrapper()
       expect(component.html()).toMatch("Exclude from Google News")
     })
 
     it("Renders publish date component", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(ArticlePublishDate).exists()).toBe(true)
     })
 
-    it("Renders related articles autocomplete", () => {
-      const component = getWrapper(props)
+    it("Renders related articles autocomplete if channel is editorial", () => {
+      const component = getWrapper()
       expect(component.html()).toMatch("Related Articles")
       expect(
         component
@@ -243,7 +244,7 @@ describe("AdminArticle", () => {
       props.article.indexable = true
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(0)
         .simulate("click")
 
@@ -255,7 +256,7 @@ describe("AdminArticle", () => {
       props.article.exclude_google_news = true
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(1)
         .simulate("click")
 
@@ -274,8 +275,8 @@ describe("AdminArticle", () => {
       const inputForMin = component.find("input[type='number']").at(0)
       const inputForSec = component.find("input[type='number']").at(1)
 
-      expect(inputForMin.props().defaultValue).toEqual(3)
-      expect(inputForSec.props().defaultValue).toEqual(32)
+      expect(inputForMin.props().defaultValue).toEqual("3")
+      expect(inputForSec.props().defaultValue).toEqual("32")
 
       inputForMin.simulate("change", { target: { value: 10 } })
       inputForSec.simulate("change", { target: { value: 30 } })
@@ -303,7 +304,7 @@ describe("AdminArticle", () => {
 
       component
         .find(Button)
-        .at(1)
+        .at(5)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
@@ -318,7 +319,7 @@ describe("AdminArticle", () => {
 
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(2)
         .simulate("click")
 
