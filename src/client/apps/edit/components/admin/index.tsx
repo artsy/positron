@@ -51,12 +51,7 @@ export class EditAdmin extends Component<EditAdminProps> {
 
     return (
       <EditAdminContainer pb={95} pt={135} maxWidth={960} px={30} mx="auto">
-        <DropDownList
-          className="admin-form-container"
-          activeSections={[0, 1]}
-          openMany
-          sections={sections}
-        >
+        <DropDownList activeSections={[0, 1]} openMany sections={sections}>
           {isEditorial ? (
             <Box pt={40}>
               <AdminVerticalsTags />
@@ -112,6 +107,9 @@ export const EditAdminContainer = styled(Box)`
   textarea[disabled] {
     background-color: ${color("black10")};
     cursor: no-drop;
+  }
+  .image-upload-form {
+    margin-top: 10px;
   }
   .image-upload-form.disabled {
     background-color: ${color("black10")};

@@ -11,7 +11,7 @@ require("typeahead.js")
 
 describe("AdminFeaturing", () => {
   let props
-  const getWrapper = passedProps => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const { article, featured, mentioned } = passedProps
 
@@ -55,12 +55,12 @@ describe("AdminFeaturing", () => {
   })
 
   it("Renders autocomplete fields", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(AutocompleteList).length).toBe(6)
   })
 
   it("Renders feature/mentioned fields", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(FeaturingMentioned).length).toBe(2)
   })
 })

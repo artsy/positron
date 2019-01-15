@@ -1,5 +1,4 @@
-import { Box, Checkbox, Flex, Sans } from "@artsy/palette"
-import colors from "@artsy/reaction/dist/Assets/Colors"
+import { Box, Checkbox, color, Flex, Sans } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { uniq } from "lodash"
 import React, { Component } from "react"
@@ -157,7 +156,7 @@ export default connect(
 
 const MentionedItem = styled(ListItem)`
   ${Sans} {
-    color: ${colors.grayDark};
+    color: ${color("black80")};
     &:after {
       content: "Mentioned";
     }
@@ -165,7 +164,7 @@ const MentionedItem = styled(ListItem)`
   &:hover {
     ${Sans} {
       &:after {
-        color: ${colors.purpleRegular};
+        color: ${color("purple100")};
         content: "Feature";
         background: url(/icons/check_p.svg) 99% top no-repeat;
         background-size: 13px;

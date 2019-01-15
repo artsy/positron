@@ -1,9 +1,10 @@
-import request from "superagent"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { mount } from "enzyme"
 import React from "react"
-import { AutocompleteList } from "client/components/autocomplete2/list"
-import { AdminSuperArticle } from "../../components/super_article"
-import ImageUpload from "../../components/image_upload.coffee"
+import request from "superagent"
+import { AutocompleteList } from "../../../../../../components/autocomplete2/list"
+import { AdminSuperArticle } from "../super_article"
+const ImageUpload = require("../image_upload.coffee")
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -51,13 +52,13 @@ describe("AdminSuperArticle", () => {
     }
   })
 
-  const getWrapper = props => {
-    return mount(<AdminSuperArticle {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<AdminSuperArticle {...passedProps} />)
   }
 
   it("Renders input fields", () => {
-    const component = getWrapper(props)
-    expect(component.find("input").length).toBe(11)
+    const component = getWrapper()
+    expect(component.find("input").length).toBe(10)
     expect(component.find(ImageUpload).length).toBe(3)
     expect(component.find("textarea").length).toBe(1)
   })
@@ -80,7 +81,7 @@ describe("AdminSuperArticle", () => {
   })
 
   it("Disables inputs when is_super_article is false", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find("input[disabled=true]").length).toBe(10)
     expect(component.find("textarea[disabled]").length).toBe(1)
@@ -103,14 +104,23 @@ describe("AdminSuperArticle", () => {
   it("Can change text inputs", () => {
     props.article.is_super_article = true
     const component = getWrapper(props)
-    const input = component.find("input").at(1)
-    const value = "new text"
-    input.simulate("change", { target: { value } })
+
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "new text",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("super_article")
     expect(
       props.onChangeArticleAction.mock.calls[0][1].partner_link_title
-    ).toBe(value)
+    ).toBe("new text")
   })
 
   it("Can change file inputs", () => {
@@ -131,9 +141,9 @@ describe("AdminSuperArticle", () => {
 
   it("#fetchArticles calls callback with list of fetched articles", () => {
     props.article.super_article = { related_articles: ["123"] }
-    const component = getWrapper(props)
+    const component = getWrapper(props).instance() as AdminSuperArticle
     const cb = jest.fn()
-    component.instance().fetchArticles([], cb)
+    component.fetchArticles([], cb)
 
     expect(cb.mock.calls[0][0][0].title).toBe("Related Article")
   })
