@@ -9,7 +9,7 @@ import {
   toggleSpinner,
 } from "client/actions/edit/editActions"
 import { ErrorBoundary } from "client/components/error/error_boundary"
-import EditAdmin from "./admin"
+import EditAdmin from "./admin/index.tsx"
 import EditContent from "./content"
 import EditDisplay from "./display"
 import EditError from "./error"

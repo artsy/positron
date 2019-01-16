@@ -1,24 +1,18 @@
-import request from "superagent"
-import { clone, uniq } from "lodash"
-import { connect } from "react-redux"
-import { difference, flatten, pluck } from "underscore"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import { Box, Flex } from "@artsy/palette"
+import Input from "@artsy/reaction/dist/Components/Input"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { AutocompleteList } from "client/components/autocomplete2/list"
 import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
+import { FormLabel } from "client/components/form_label"
 import { AuthorsQuery } from "client/queries/authors"
+import { clone, uniq } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import request from "superagent"
+import { difference, flatten, pluck } from "underscore"
+import { AdminArticleProps } from "./index"
 
-export class ArticleAuthors extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    apiURL: PropTypes.string,
-    isEditorial: PropTypes.bool,
-    onChangeArticleAction: PropTypes.func,
-    user: PropTypes.object,
-  }
-
+export class ArticleAuthors extends Component<AdminArticleProps> {
   onChangeAuthor = name => {
     const { article, onChangeArticleAction } = this.props
     const author = clone(article.author) || {}
@@ -33,7 +27,7 @@ export class ArticleAuthors extends Component {
 
     const alreadyFetched = pluck(fetchedItems, "id")
     const idsToFetch = difference(author_ids, alreadyFetched)
-    let newItems = clone(fetchedItems)
+    const newItems = clone(fetchedItems)
 
     if (idsToFetch.length) {
       request
@@ -45,7 +39,7 @@ export class ArticleAuthors extends Component {
         .query({ query: AuthorsQuery(idsToFetch) })
         .end((err, res) => {
           if (err) {
-            console.error(err)
+            new Error(err)
           }
           newItems.push(res.body.data.authors)
           const uniqItems = uniq(flatten(newItems))
@@ -61,32 +55,31 @@ export class ArticleAuthors extends Component {
     const name = article.author ? article.author.name : ""
 
     return (
-      <Row>
-        <Col xs={6}>
-          <div className="field-group">
-            <label>Primary Author</label>
-            <input
-              className="bordered-input"
-              defaultValue={name}
-              onChange={e => this.onChangeAuthor(e.target.value)}
-            />
-          </div>
-        </Col>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pb={4} pr={[0, 2]}>
+          <FormLabel>Primary Author</FormLabel>
+          <Input
+            defaultValue={name}
+            type="text"
+            onChange={e => this.onChangeAuthor(e.currentTarget.value)}
+            block
+          />
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           {isEditorial && (
-            <div className="field-group">
-              <label>Authors</label>
+            <Box pb={4}>
               <AutocompleteList
+                label="Authors"
                 fetchItems={this.fetchAuthors}
                 items={article.author_ids || []}
                 filter={items => {
                   return items.results.map(item => {
-                    const { id, image_url, name } = item
+                    const { id, image_url } = item
                     return {
                       id,
                       thumbnail_image: image_url,
-                      name,
+                      name: item.name,
                     }
                   })
                 }}
@@ -96,19 +89,17 @@ export class ArticleAuthors extends Component {
                 placeholder="Search by author name..."
                 url={`${apiURL}/authors?q=%QUERY`}
               />
-            </div>
+            </Box>
           )}
           {article.layout !== "news" && (
-            <div className="field-group">
-              <AutocompleteListMetaphysics
-                field="contributing_authors"
-                label="Contributing Authors"
-                model="users"
-              />
-            </div>
+            <AutocompleteListMetaphysics
+              field="contributing_authors"
+              label="Contributing Authors"
+              model="users"
+            />
           )}
-        </Col>
-      </Row>
+        </Box>
+      </Flex>
     )
   }
 }

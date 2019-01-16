@@ -1,41 +1,41 @@
-import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import { Box, Flex } from "@artsy/palette"
 import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
+import React from "react"
 
-export const AdminAppearances = props => {
+export const AdminAppearances = () => {
   return (
-    <div>
-      <Row>
-        <Col xs={6}>
+    <>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_programming_ids"
             label="Fair Programming"
             model="fairs"
             placeholder="Search by fair name..."
           />
-        </Col>
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_artsy_ids"
             label="Artsy at the Fair"
             model="fairs"
             placeholder="Search by fair name..."
           />
-        </Col>
-      </Row>
+        </Box>
+      </Flex>
 
-      <Row>
-        <Col xs={6}>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="fair_about_ids"
             label="About the Fair"
             model="fairs"
             placeholder="Search by fair name..."
           />
-        </Col>
+        </Box>
 
-        <Col xs={6}>
+        <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="biography_for_artist_id"
             label="Extended Artist Biography"
@@ -43,8 +43,8 @@ export const AdminAppearances = props => {
             placeholder="Search by artist name..."
             type="single"
           />
-        </Col>
-      </Row>
-    </div>
+        </Box>
+      </Flex>
+    </>
   )
 }

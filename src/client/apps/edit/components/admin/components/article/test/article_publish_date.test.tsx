@@ -1,19 +1,19 @@
-import moment from "moment"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ArticlePublishDate } from "../../../components/article/article_publish_date"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import moment from "moment"
+import React from "react"
+import { ArticlePublishDate } from "../article_publish_date"
 
 describe("ArticlePublishDate", () => {
   let props
 
-  const getWrapper = props => {
-    return mount(<ArticlePublishDate {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<ArticlePublishDate {...passedProps} />)
   }
 
   beforeEach(() => {
-    let article = cloneDeep(StandardArticle)
+    const article = cloneDeep(StandardArticle)
 
     props = {
       article,
@@ -22,7 +22,7 @@ describe("ArticlePublishDate", () => {
   })
 
   it("Renders a label", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.text()).toMatch("Publish Date/Time")
   })
 
@@ -42,7 +42,7 @@ describe("ArticlePublishDate", () => {
     })
 
     it("Can render a date input with saved published_at", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component.find('input[type="date"]').getElement().props.defaultValue
@@ -65,8 +65,9 @@ describe("ArticlePublishDate", () => {
     it("Can change the date", () => {
       props.article.published = true
       const component = getWrapper(props)
-      component.instance().date.value = "2018-05-04"
-      component.instance().onScheduleChange()
+      const instance = component.instance() as ArticlePublishDate
+      instance.date.value = "2018-05-04"
+      instance.onScheduleChange()
 
       expect(props.onChange.mock.calls[0][0]).toBe("published_at")
       expect(props.onChange.mock.calls[0][1]).toMatch("2018-05-04")
@@ -90,7 +91,7 @@ describe("ArticlePublishDate", () => {
     })
 
     it("Can render a time input with saved published_at", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component.find('input[type="time"]').getElement().props.defaultValue
@@ -112,9 +113,9 @@ describe("ArticlePublishDate", () => {
 
     it("Can change the time", () => {
       props.article.published = true
-      const component = getWrapper(props)
-      component.instance().time.value = "02:34"
-      component.instance().onScheduleChange()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      component.time.value = "02:34"
+      component.onScheduleChange()
 
       expect(props.onChange.mock.calls[0][0]).toBe("published_at")
       expect(props.onChange.mock.calls[0][1]).toMatch("02:34")
@@ -123,8 +124,8 @@ describe("ArticlePublishDate", () => {
 
   describe("#setupPublishDate", () => {
     it("Returns expected date and time if published_at", () => {
-      const component = getWrapper(props)
-      const setupDate = component.instance().setupPublishDate()
+      const component = getWrapper().instance() as ArticlePublishDate
+      const setupDate = component.setupPublishDate()
 
       expect(setupDate.publish_date).toBe(
         moment(props.article.published_at).format("YYYY-MM-DD")
@@ -140,8 +141,8 @@ describe("ArticlePublishDate", () => {
         .toISOString()
       props.article.scheduled_publish_at = date
       delete props.article.published_at
-      const component = getWrapper(props)
-      const setupDate = component.instance().setupPublishDate()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      const setupDate = component.setupPublishDate()
 
       expect(setupDate.publish_date).toBe(moment(date).format("YYYY-MM-DD"))
       expect(setupDate.publish_time).toBe(moment(date).format("HH:mm"))
@@ -150,8 +151,8 @@ describe("ArticlePublishDate", () => {
     it("Returns current date if no saved dates", () => {
       props.article.published = false
       delete props.article.published_at
-      const component = getWrapper(props)
-      const setupDate = component.instance().setupPublishDate()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      const setupDate = component.setupPublishDate()
 
       expect(setupDate.publish_date).toBe(
         moment()
@@ -164,24 +165,24 @@ describe("ArticlePublishDate", () => {
   describe("#getPublishText", () => {
     it('Returns "Update" if published', () => {
       props.article.published = true
-      const component = getWrapper(props)
-      const text = component.instance().getPublishText()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      const text = component.getPublishText()
 
       expect(text).toBe("Update")
     })
 
     it('Returns "Update" if scheduled_publish_at has changed', () => {
       props.article.scheduled_publish_at = moment().toISOString()
-      const component = getWrapper(props)
+      const component = getWrapper(props).instance() as ArticlePublishDate
       component.setState({ hasChanged: true })
-      const text = component.instance().getPublishText()
+      const text = component.getPublishText()
 
       expect(text).toBe("Update")
     })
 
     it('Returns "Schedule" if unpublished', () => {
-      const component = getWrapper(props)
-      const text = component.instance().getPublishText()
+      const component = getWrapper().instance() as ArticlePublishDate
+      const text = component.getPublishText()
 
       expect(text).toBe("Schedule")
     })
@@ -191,32 +192,33 @@ describe("ArticlePublishDate", () => {
         .add("1", "days")
         .toISOString()
       props.article.scheduled_publish_at = date
-      const component = getWrapper(props)
-      const text = component.instance().getPublishText()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      const text = component.getPublishText()
 
       expect(text).toBe("Unschedule")
     })
   })
 
   it("#hasChanged returns true if state date and time do not match inputs", () => {
-    const component = getWrapper(props)
-    component.instance().date.value = "2018-02-02"
-    component.instance().time.value = "02:34"
-    const hasChanged = component.instance().hasChanged()
+    const component = getWrapper(props).instance() as ArticlePublishDate
+    component.date.value = "2018-02-02"
+    component.time.value = "02:34"
+    const hasChanged = component.hasChanged()
 
     expect(hasChanged).toBe(true)
   })
 
   it("#onChangeFocus sets state if focus has changed", () => {
     const component = getWrapper(props)
-    component.instance().setState = jest.fn()
-    component.update()
-    component.instance().date.value = "2018-02-02"
-    component.instance().time.value = "02:34"
-    component.instance().onChangeFocus()
+    const instance = component.instance() as ArticlePublishDate
 
-    expect(component.instance().setState.mock.calls[0][0].hasChanged).toBe(true)
-    expect(component.instance().setState.mock.calls[0][0].focus).toBe(false)
+    instance.setState = jest.fn()
+    component.update()
+    instance.date.value = "2018-02-02"
+    instance.time.value = "02:34"
+    instance.onChangeFocus()
+
+    expect(instance.setState).toBeCalledWith({ hasChanged: true, focus: false })
   })
 
   it("Button calls #onScheduleChange on click", () => {
@@ -233,7 +235,8 @@ describe("ArticlePublishDate", () => {
     it("Sets published_at if article is published", () => {
       props.article.published = true
       const component = getWrapper(props)
-      component.instance().date.value = "2018-02-02"
+      const instance = component.instance() as ArticlePublishDate
+      instance.date.value = "2018-02-02"
       component
         .find("button")
         .at(0)
@@ -245,7 +248,8 @@ describe("ArticlePublishDate", () => {
 
     it("Sets scheduled_publish_at if article is not published", () => {
       const component = getWrapper(props)
-      component.instance().date.value = "2018-02-02"
+      const instance = component.instance() as ArticlePublishDate
+      instance.date.value = "2018-02-02"
       component
         .find("button")
         .at(0)
@@ -287,8 +291,8 @@ describe("ArticlePublishDate", () => {
     })
 
     it("Un-sets scheduled_publish_at", () => {
-      const component = getWrapper(props)
-      component.instance().onUnschedule()
+      const component = getWrapper(props).instance() as ArticlePublishDate
+      component.onUnschedule()
 
       expect(props.onChange.mock.calls[0][0]).toBe("scheduled_publish_at")
       expect(props.onChange.mock.calls[0][1]).toBe(null)
@@ -296,7 +300,8 @@ describe("ArticlePublishDate", () => {
 
     it("Updates the state", () => {
       const component = getWrapper(props)
-      component.instance().onUnschedule()
+      const instance = component.instance() as ArticlePublishDate
+      instance.onUnschedule()
 
       expect(component.state().publish_date).toBe(null)
       expect(component.state().publish_time).toBe(null)

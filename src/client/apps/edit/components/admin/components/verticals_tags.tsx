@@ -1,19 +1,21 @@
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
-import { connect } from "react-redux"
-import { filter, map } from "lodash"
-import Verticals from "../../../../../collections/verticals.coffee"
-import { AutocompleteInlineList } from "../../../../../components/autocomplete2/inline_list"
+import { Box, Button, Flex } from "@artsy/palette"
 import { onChangeArticle } from "client/actions/edit/articleActions"
+import { AutocompleteInlineList } from "client/components/autocomplete2/inline_list"
+import { FormLabel } from "client/components/form_label"
+import { filter, map } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { ArticleData } from "reaction/Components/Publishing/Typings"
+import styled from "styled-components"
+const Verticals = require("client/collections/verticals.coffee")
 
-export class AdminVerticalsTags extends Component {
-  static propTypes = {
-    apiURL: PropTypes.string,
-    article: PropTypes.object,
-    onChangeArticleAction: PropTypes.func,
-  }
+interface VerticalsTagsProps {
+  article: ArticleData
+  apiURL: string
+  onChangeArticleAction: (key: string, value: any) => void
+}
 
+export class AdminVerticalsTags extends Component<VerticalsTagsProps> {
   state = {
     vertical: this.props.article.vertical || null,
     verticals: [],
@@ -48,22 +50,22 @@ export class AdminVerticalsTags extends Component {
     const { article, onChangeArticleAction } = this.props
     const name = article.vertical && article.vertical.name
 
-    return verticals.map((item, index) => {
+    return verticals.map((item: { name: string; _id: string }, index) => {
       const isActive = name && item.name === name
-      const activeClass = isActive ? "avant-garde-button-black" : ""
 
       return (
-        <button
+        <Button
           key={index}
-          className={`avant-garde-button ${activeClass}`}
-          data-active={isActive}
+          variant={isActive ? "primaryBlack" : "secondaryOutline"}
           onClick={() => {
             const vertical = isActive ? null : item
             onChangeArticleAction("vertical", vertical)
           }}
+          mr={1}
+          mt={1}
         >
           {item.name}
-        </button>
+        </Button>
       )
     })
   }
@@ -72,15 +74,15 @@ export class AdminVerticalsTags extends Component {
     const { apiURL, article, onChangeArticleAction } = this.props
 
     return (
-      <Row className="AdminVerticalsTags">
-        <Col xs={6} className="field-group verticals">
-          <label>Editorial Vertical</label>
-          {this.renderVerticalsList()}
-        </Col>
+      <Flex flexDirection={["column", "row"]}>
+        <Box width={["100%", "50%"]} pr={[0, 2]} pb={4}>
+          <FormLabel>Editorial Vertical</FormLabel>
+          <VerticalsList mt={0.5}>{this.renderVerticalsList()}</VerticalsList>
+        </Box>
 
-        <Col xs={6} className="field-group">
-          <div className="field-group tags">
-            <label>Topic Tags</label>
+        <Box width={["100%", "50%"]} pl={[0, 2]} pb={4}>
+          <Box pb={4}>
+            <FormLabel>Topic Tags</FormLabel>
             <AutocompleteInlineList
               items={article.tags}
               filter={tags => {
@@ -93,10 +95,10 @@ export class AdminVerticalsTags extends Component {
               placeholder="Start typing a topic tag..."
               url={`${apiURL}/tags?public=true&q=%QUERY`}
             />
-          </div>
+          </Box>
 
-          <div className="field-group tracking-tags">
-            <label>Tracking Tags</label>
+          <Box>
+            <FormLabel>Tracking Tags</FormLabel>
             <AutocompleteInlineList
               items={article.tracking_tags}
               filter={tags => {
@@ -109,9 +111,9 @@ export class AdminVerticalsTags extends Component {
               placeholder="Start typing a tracking tag..."
               url={`${apiURL}/tags?public=false&q=%QUERY`}
             />
-          </div>
-        </Col>
-      </Row>
+          </Box>
+        </Box>
+      </Flex>
     )
   }
 }
@@ -129,3 +131,9 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(AdminVerticalsTags)
+
+const VerticalsList = styled(Box)`
+  button {
+    outline: none;
+  }
+`
