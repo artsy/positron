@@ -15,7 +15,7 @@ import EditDisplay from "./display"
 import EditError from "./error"
 import EditHeader from "./header"
 import { MessageModal } from "./message"
-import Yoast from "./header/yoast"
+import Yoast from "./yoast"
 import styled from "styled-components"
 
 const INACTIVITY_TIMEOUT = 600 * 1000
@@ -231,5 +231,5 @@ export const FixedHeader = styled.div`
   left: 110px;
   right: 0;
   background: white;
-  z-index: 100;
+  z-index: 7;
 `

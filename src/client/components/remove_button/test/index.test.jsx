@@ -12,13 +12,6 @@ describe("RemoveButton", () => {
     }
   })
 
-  it("Renders the remove icon with default colors", () => {
-    const component = mount(<RemoveButton {...props} />)
-    expect(component.find(IconRemove).length).toBe(1)
-    expect(component.find(IconRemove).props().background).toBe("black")
-    expect(component.find(IconRemove).props().color).toBe("white")
-  })
-
   it("Passes a background color to icon if provided", () => {
     props.background = "red"
     const component = mount(<RemoveButton {...props} />)

@@ -3,15 +3,19 @@ import { mount } from "enzyme"
 import Backbone from "backbone"
 import React from "react"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AdminVerticalsTags } from "../../components/verticals_tags.jsx"
-import { AutocompleteInlineList } from "/client/components/autocomplete2/inline_list"
+import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
+import { AdminVerticalsTags } from "../../components/verticals_tags"
+import {
+  AutocompleteInlineList,
+  ListItem,
+} from "../../../../../../components/autocomplete2/inline_list"
 require("typeahead.js")
 
 describe("AdminVerticalsTags", () => {
   let props
 
-  const getWrapper = props => {
-    return mount(<AdminVerticalsTags {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<AdminVerticalsTags {...passedProps} />)
   }
 
   beforeEach(() => {
@@ -32,14 +36,14 @@ describe("AdminVerticalsTags", () => {
 
   describe("Verticals", () => {
     it("Renders buttons for verticals", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(".verticals button").length).toBe(3)
       expect(component.text()).toMatch(props.article.vertical.name)
     })
 
     it("Knows which vertical is active", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -50,7 +54,7 @@ describe("AdminVerticalsTags", () => {
     })
 
     it("Can change the vertical on click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       const button = component.find(".verticals button").last()
       button.simulate("click")
@@ -60,7 +64,7 @@ describe("AdminVerticalsTags", () => {
     })
 
     it("Unsets vertical when clicking active vertical", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       const button = component.find("button[data-active=true]").at(0)
       button.simulate("click")
@@ -81,7 +85,7 @@ describe("AdminVerticalsTags", () => {
 
   describe("Topic Tags", () => {
     it("Renders inputs for topic tags", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const input = component.find(AutocompleteInlineList).first()
 
       expect(input.props().placeholder).toMatch("Start typing a topic tag...")
@@ -89,19 +93,21 @@ describe("AdminVerticalsTags", () => {
     })
 
     it("Renders a list of saved topic tags", () => {
-      const component = getWrapper(props)
-      const tagsList = component.find(".tags .Autocomplete__list-item")
-
-      expect(tagsList.length).toBe(props.article.tags.length)
-      expect(tagsList.at(0).text()).toMatch(props.article.tags[0])
+      const component = getWrapper()
+      expect(
+        component
+          .find(ListItem)
+          .at(0)
+          .text()
+      ).toMatch(props.article.tags[0])
     })
 
     it("Can remove a saved topic tag", () => {
-      const component = getWrapper(props)
-      const button = component
-        .find(".tags .Autocomplete__list-item button")
+      const component = getWrapper()
+      component
+        .find(IconRemove)
         .at(0)
-      button.simulate("click")
+        .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("tags")
       expect(props.onChangeArticleAction.mock.calls[0][1].length).toBe(0)
@@ -121,18 +127,20 @@ describe("AdminVerticalsTags", () => {
 
     it("Renders a list of saved tracking tags", () => {
       const component = getWrapper(props)
-      const tagsList = component.find(".tracking-tags .Autocomplete__list-item")
-
-      expect(tagsList.length).toBe(props.article.tracking_tags.length)
-      expect(tagsList.at(0).text()).toMatch(props.article.tracking_tags[0])
+      expect(
+        component
+          .find(ListItem)
+          .at(1)
+          .text()
+      ).toMatch(props.article.tracking_tags[0])
     })
 
     it("Can remove a saved tracking tag", () => {
       const component = getWrapper(props)
-      const button = component
-        .find(".tracking-tags .Autocomplete__list-item button")
-        .at(0)
-      button.simulate("click")
+      component
+        .find(IconRemove)
+        .at(1)
+        .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("tracking_tags")
       expect(props.onChangeArticleAction.mock.calls[0][1].length).toBe(0)
