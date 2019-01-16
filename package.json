@@ -21,7 +21,8 @@
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
     "type-check": "tsc --pretty --noEmit",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "install-codecov": "curl -s https://codecov.io/bash > .codecov && chmod +x ./.codecov",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && ./codecov --commit $(cat COMMIT_HASH.txt) -f coverage.lcov"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",

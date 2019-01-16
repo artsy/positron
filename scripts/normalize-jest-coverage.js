@@ -19,5 +19,11 @@ const jestCoverage = require('../.nyc_output/coverage-final.json');
 map.merge(normalizeJestCoverage(jestCoverage));
 
 const reporter = createReporter();
-reporter.addAll(['json', 'lcov', 'text']);
+reporter.addAll(['json']);
 reporter.write(map);
+
+fs.copyFile(
+  './coverage/coverage-final.json',
+  './.nyc_output/coverage-final.json',
+  (error) => { if (error) console.log(error) }
+)
