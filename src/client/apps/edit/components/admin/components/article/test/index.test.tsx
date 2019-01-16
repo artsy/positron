@@ -1,15 +1,15 @@
-import configureStore from "redux-mock-store"
-import request from "superagent"
-import { cloneDeep, extend } from "lodash"
+import { Button, Checkbox } from "@artsy/palette"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { AutocompleteList } from "client/components/autocomplete2/list"
 import { mount, shallow } from "enzyme"
+import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { AdminArticle } from "../../../components/article"
-import { ArticleAuthors } from "../../../components/article/article_authors"
-import { ArticlePublishDate } from "../../../components/article/article_publish_date"
-import { AutocompleteList } from "/client/components/autocomplete2/list"
-import { ButtonMedium } from '../../../components/article/button_medium'
+import configureStore from "redux-mock-store"
+import request from "superagent"
+import { ArticleAuthors } from "../article_authors"
+import { ArticlePublishDate } from "../article_publish_date"
+import { AdminArticle } from "../index"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -26,9 +26,9 @@ describe("AdminArticle", () => {
   let props
   let response
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
-    const { article, channel } = props
+    const { article, channel } = passedProps
 
     const store = mockStore({
       app: { channel },
@@ -37,13 +37,13 @@ describe("AdminArticle", () => {
 
     return mount(
       <Provider store={store}>
-        <AdminArticle {...props} />
+        <AdminArticle {...passedProps} />
       </Provider>
     )
   }
 
   beforeEach(() => {
-    let article = extend(cloneDeep(StandardArticle), {
+    const article = extend(cloneDeep(StandardArticle), {
       author: { name: "Artsy Editorial", id: "123" },
     })
 
@@ -51,6 +51,7 @@ describe("AdminArticle", () => {
       article,
       channel: { type: "editorial" },
       onChangeArticleAction: jest.fn(),
+      isEditorial: true,
     }
 
     response = {
@@ -70,17 +71,17 @@ describe("AdminArticle", () => {
 
   describe("Rendering", () => {
     it("Renders authors component", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(ArticleAuthors).exists()).toBe(true)
     })
 
     it("Renders tier buttons", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Article Tier")
       expect(
         component
-          .find("button")
+          .find(Button)
           .at(0)
           .text()
       ).toBe("Tier 1")
@@ -100,8 +101,8 @@ describe("AdminArticle", () => {
       expect(component.find("button").length).toBe(1)
     })
 
-    it("Renders featured/magazine buttons", () => {
-      const component = getWrapper(props)
+    it("Renders featured/magazine buttons if editorial", () => {
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Magazine Feed")
       expect(
@@ -127,7 +128,7 @@ describe("AdminArticle", () => {
     })
 
     it("Renders layout buttons if editorial", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.html()).toMatch("Article Layout")
       expect(
@@ -154,7 +155,7 @@ describe("AdminArticle", () => {
     })
 
     it("If not editorial, does not render layout buttons", () => {
-      props.channel.type = "partner"
+      props.isEditorial = false
       const component = getWrapper(props)
 
       expect(component.html()).not.toMatch("Article Layout")
@@ -162,23 +163,23 @@ describe("AdminArticle", () => {
       expect(component.html()).not.toMatch("Feature")
     })
 
-    it("Renders indexable checkbox", () => {
+    it("Renders indexable checkbox for editorial", () => {
       const component = getWrapper(props)
       expect(component.html()).toMatch("Index for search")
     })
 
-    it("Renders Google news checkbox", () => {
-      const component = getWrapper(props)
+    it("Renders Google news checkbox for editorial", () => {
+      const component = getWrapper()
       expect(component.html()).toMatch("Exclude from Google News")
     })
 
     it("Renders publish date component", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(ArticlePublishDate).exists()).toBe(true)
     })
 
-    it("Renders related articles autocomplete", () => {
-      const component = getWrapper(props)
+    it("Renders related articles autocomplete if channel is editorial", () => {
+      const component = getWrapper()
       expect(component.html()).toMatch("Related Articles")
       expect(
         component
@@ -196,8 +197,10 @@ describe("AdminArticle", () => {
     })
     props.article.related_article_ids = ["123"]
 
-    const component = shallow(<AdminArticle {...props} />)
-    component.instance().fetchArticles()
+    const component = shallow(
+      <AdminArticle {...props} />
+    ).instance() as AdminArticle
+    component.fetchArticles([], jest.fn())
     expect(callback).toBeCalled()
   })
 
@@ -241,7 +244,7 @@ describe("AdminArticle", () => {
       props.article.indexable = true
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(0)
         .simulate("click")
 
@@ -253,7 +256,7 @@ describe("AdminArticle", () => {
       props.article.exclude_google_news = true
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(1)
         .simulate("click")
 
@@ -272,17 +275,21 @@ describe("AdminArticle", () => {
       const inputForMin = component.find("input[type='number']").at(0)
       const inputForSec = component.find("input[type='number']").at(1)
 
-      expect(inputForMin.props().defaultValue).toEqual(3)
-      expect(inputForSec.props().defaultValue).toEqual(32)
+      expect(inputForMin.props().defaultValue).toEqual("3")
+      expect(inputForSec.props().defaultValue).toEqual("32")
 
-      inputForMin.simulate('change', { target: { value: 10 }})
-      inputForSec.simulate('change', { target: { value: 30 }})
+      inputForMin.simulate("change", { target: { value: 10 } })
+      inputForSec.simulate("change", { target: { value: 30 } })
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ duration: 632 })
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({
+        duration: 632,
+      })
 
       expect(props.onChangeArticleAction.mock.calls[1][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[1][1]).toEqual({ duration: 630 })
+      expect(props.onChangeArticleAction.mock.calls[1][1]).toEqual({
+        duration: 630,
+      })
     })
 
     it("Can change video release date", () => {
@@ -296,12 +303,14 @@ describe("AdminArticle", () => {
         .simulate("change", { target: { value: "2017-02-07" } })
 
       component
-        .find(ButtonMedium)
-        .at(1)
+        .find(Button)
+        .at(5)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toEqual("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch("2017-02-07")
+      expect(props.onChangeArticleAction.mock.calls[0][1].release_date).toMatch(
+        "2017-02-07"
+      )
     })
 
     it("Can change video published", () => {
@@ -310,12 +319,14 @@ describe("AdminArticle", () => {
 
       const component = getWrapper(props)
       component
-        .find(".flat-checkbox")
+        .find(Checkbox)
         .at(2)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("media")
-      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({ published: true })
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toEqual({
+        published: true,
+      })
     })
   })
 })

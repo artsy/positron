@@ -1,14 +1,14 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
+import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
-import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { DropDownList } from "client/components/drop_down/drop_down_list"
+import configureStore from "redux-mock-store"
+import { DropDownList } from "../../../../../components/drop_down/drop_down_list"
 import { AdminArticle } from "../components/article"
 import { AdminTags } from "../components/tags"
 import { AdminVerticalsTags } from "../components/verticals_tags"
-import { EditAdmin } from "../index.jsx"
+import { EditAdmin } from "../index"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -24,9 +24,9 @@ jest.mock("superagent", () => {
 describe("EditAdmin", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
-    const { article, channel } = props
+    const { article, channel } = passedProps
 
     const store = mockStore({
       app: { channel },
@@ -35,7 +35,7 @@ describe("EditAdmin", () => {
 
     return mount(
       <Provider store={store}>
-        <EditAdmin {...props} />
+        <EditAdmin {...passedProps} />
       </Provider>
     )
   }

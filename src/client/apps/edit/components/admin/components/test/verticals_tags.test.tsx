@@ -1,14 +1,15 @@
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import Backbone from "backbone"
-import React from "react"
+import { Button } from "@artsy/palette"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
-import { AdminVerticalsTags } from "../../components/verticals_tags"
+import Backbone from "backbone"
 import {
   AutocompleteInlineList,
   ListItem,
-} from "../../../../../../components/autocomplete2/inline_list"
+} from "client/components/autocomplete2/inline_list"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { AdminVerticalsTags } from "../verticals_tags"
 require("typeahead.js")
 
 describe("AdminVerticalsTags", () => {
@@ -35,28 +36,31 @@ describe("AdminVerticalsTags", () => {
   })
 
   describe("Verticals", () => {
+    beforeEach(() => {
+      delete props.article.tags
+      delete props.article.tracking_tags
+    })
+
     it("Renders buttons for verticals", () => {
       const component = getWrapper()
 
-      expect(component.find(".verticals button").length).toBe(3)
+      expect(component.find(Button).length).toBe(3)
       expect(component.text()).toMatch(props.article.vertical.name)
     })
 
     it("Knows which vertical is active", () => {
       const component = getWrapper()
+      const activeButton = component.find(Button).at(1)
 
-      expect(
-        component
-          .find(".verticals button[data-active=true]")
-          .at(0)
-          .text()
-      ).toMatch(component.props().article.vertical.name)
+      expect(activeButton.text()).toMatch(
+        component.props().article.vertical.name
+      )
+      expect(activeButton.props().variant).toBe("primaryBlack")
     })
 
     it("Can change the vertical on click", () => {
       const component = getWrapper()
-
-      const button = component.find(".verticals button").last()
+      const button = component.find(Button).last()
       button.simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("vertical")
@@ -65,8 +69,7 @@ describe("AdminVerticalsTags", () => {
 
     it("Unsets vertical when clicking active vertical", () => {
       const component = getWrapper()
-
-      const button = component.find("button[data-active=true]").at(0)
+      const button = component.find(Button).at(1)
       button.simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("vertical")
@@ -116,7 +119,7 @@ describe("AdminVerticalsTags", () => {
 
   describe("Tracking Tags", () => {
     it("Renders inputs for tracking tags", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const input = component.find(AutocompleteInlineList).last()
 
       expect(input.props().placeholder).toMatch(
@@ -126,7 +129,7 @@ describe("AdminVerticalsTags", () => {
     })
 
     it("Renders a list of saved tracking tags", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(
         component
           .find(ListItem)
@@ -136,7 +139,7 @@ describe("AdminVerticalsTags", () => {
     })
 
     it("Can remove a saved tracking tag", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       component
         .find(IconRemove)
         .at(1)

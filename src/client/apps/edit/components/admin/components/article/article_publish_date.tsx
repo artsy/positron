@@ -1,17 +1,19 @@
-import colors from "@artsy/reaction/dist/Assets/Colors"
+import { Button, color, Flex } from "@artsy/palette"
+import { FormLabel } from "client/components/form_label"
 import moment from "moment"
-import styled from "styled-components"
-import PropTypes from "prop-types"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
-import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
-import { ButtonMedium } from './button_medium'
+import { ArticleData } from "reaction/Components/Publishing/Typings"
+import styled from "styled-components"
 
-export class ArticlePublishDate extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    onChange: PropTypes.func,
-  }
+interface ArticlePublishDateProps {
+  article: ArticleData
+  onChange: (key: string, value: any) => void
+}
+
+export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
+  public date
+  public time
 
   state = {
     focus: false,
@@ -49,15 +51,11 @@ export class ArticlePublishDate extends Component {
 
   onUnschedule = () => {
     const { onChange } = this.props
-    let publish_date = null
-    let publish_time = null
+    this.date.value = null
+    this.time.value = null
 
-    if (this.date && this.time) {
-      this.date.value = publish_date
-      this.time.value = publish_time
-    }
     onChange("scheduled_publish_at", null)
-    this.setState({ hasChanged: false, publish_date, publish_time })
+    this.setState({ hasChanged: false, publish_date: null, publish_time: null })
   }
 
   setupPublishDate = () => {
@@ -124,21 +122,25 @@ export class ArticlePublishDate extends Component {
 
   render() {
     const { focus, hasChanged, publish_date, publish_time } = this.state
+    const {
+      article: { scheduled_publish_at },
+    } = this.props
 
     return (
       <div className="ArticlePublishDate">
-        <label>Publish Date/Time</label>
+        <FormLabel>Publish Date/Time</FormLabel>
 
-        <DateContainer>
+        <Flex mt={1} mb={4}>
           <InputGroup
-            focus={focus}
+            hasFocus={focus}
+            mr={1}
             onClick={this.onChangeFocus}
             onMouseUp={this.onChangeFocus}
             onKeyUp={this.onChangeFocus}
           >
             <input
               className="bordered-input"
-              defaultValue={publish_date}
+              defaultValue={publish_date || ""}
               type="date"
               ref={ref => {
                 this.date = ref
@@ -147,7 +149,7 @@ export class ArticlePublishDate extends Component {
             />
             <input
               className="bordered-input"
-              defaultValue={publish_time}
+              defaultValue={publish_time || ""}
               type="time"
               ref={ref => {
                 this.time = ref
@@ -156,31 +158,33 @@ export class ArticlePublishDate extends Component {
             />
           </InputGroup>
 
-          <ButtonMedium
-            background={hasChanged ? colors.redMedium : undefined}
+          <Button
+            disabled={!hasChanged && !scheduled_publish_at}
             onClick={this.onScheduleChange}
+            width="100%"
+            height="auto"
           >
             {this.getPublishText()}
-          </ButtonMedium>
-        </DateContainer>
+          </Button>
+        </Flex>
       </div>
     )
   }
 }
 
-export const DateContainer = styled.div`
-  display: flex;
-  margin: 5px 0 40px 0;
-`
+export const InputGroup = styled(Flex).attrs<{ hasFocus?: boolean }>({})`
+  min-width: 70%;
+  border: 1px solid
+    ${props => (props.hasFocus ? color("purple100") : color("black10"))};
+  transition: border 0.25s;
 
-export const InputGroup = styled.div`
-  display: flex;
-  border: 2px solid
-    ${props => (props.focus ? colors.purpleRegular : colors.grayRegular)};
-  transition: border 0.3s;
-  margin-right: 20px;
+  &:hover {
+    border: 1px solid ${color("purple100")};
+  }
+
+  input,
   .bordered-input {
     border: none;
-    margin-top: 0;
+    margin-top: 3px;
   }
 `

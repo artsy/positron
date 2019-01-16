@@ -1,13 +1,14 @@
-import configureStore from "redux-mock-store"
-import request from "superagent"
-import { cloneDeep, extend } from "lodash"
+import { Input } from "@artsy/reaction/dist/Components/Input"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { AutocompleteList } from "client/components/autocomplete2/list"
+import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
 import { mount } from "enzyme"
+import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ArticleAuthors } from "../../../components/article/article_authors"
-import { AutocompleteList } from "/client/components/autocomplete2/list"
-import { AutocompleteListMetaphysics } from "client/components/autocomplete2/list_metaphysics"
+import configureStore from "redux-mock-store"
+import request from "superagent"
+import { ArticleAuthors } from "../article_authors"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -24,9 +25,9 @@ describe("ArticleAuthors", () => {
   let props
   let response
 
-  const getWrapper = props => {
+  const getWrapper = passedProps => {
     const mockStore = configureStore([])
-    const { article, channel } = props
+    const { article, channel } = passedProps
 
     const store = mockStore({
       app: { channel },
@@ -35,13 +36,13 @@ describe("ArticleAuthors", () => {
 
     return mount(
       <Provider store={store}>
-        <ArticleAuthors {...props} />
+        <ArticleAuthors {...passedProps} />
       </Provider>
     )
   }
 
   beforeEach(() => {
-    let article = extend(cloneDeep(StandardArticle), {
+    const article = extend(cloneDeep(StandardArticle), {
       author: { name: "Artsy Editorial", id: "123" },
     })
 
@@ -97,21 +98,29 @@ describe("ArticleAuthors", () => {
     request.query().end.mockImplementation(() => {
       callback(response.body.data.authors)
     })
-    const component = getWrapper(props).find(ArticleAuthors)
+    const component = getWrapper(props)
+      .find(ArticleAuthors)
+      .instance() as ArticleAuthors
 
-    component.instance().fetchAuthors()
+    component.fetchAuthors([], callback)
     expect(callback).toBeCalled()
   })
 
   it("Can change a primary author", () => {
     const component = getWrapper(props)
-    const value = "New Author"
-    component
-      .find("input")
+    const input = component
+      .find(Input)
       .at(0)
-      .simulate("change", { target: { value } })
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "New Author",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("author")
-    expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe(value)
+    expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe("New Author")
   })
 })
