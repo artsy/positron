@@ -182,6 +182,7 @@ export const relatedArticles = root => {
       const relatedArticleResults = await promisedMongoFetch({
         ids: root.related_article_ids,
         published: true,
+        has_published_media: true,
       }).catch(e => reject(e))
 
       relatedArticles = presentCollection(relatedArticleResults).results

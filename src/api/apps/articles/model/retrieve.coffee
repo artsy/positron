@@ -80,6 +80,11 @@ moment = require 'moment'
     { 'hero_section.type': 'video' }
   ) if input.has_video
 
+  # Convert query for video layout articles with published media
+  if input.has_published_media
+    query.layout = 'video'
+    query['media.published'] = true
+
   # Find articles that contain fair_ids
   if input.fair_ids
     query.fair_ids = { $elemMatch: { $in: input.fair_ids } }

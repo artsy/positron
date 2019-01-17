@@ -77,6 +77,15 @@ describe 'Retrieve', ->
       query['$or'][0].sections['$elemMatch'].should.be.ok()
       query['$or'][0].sections['$elemMatch'].type.should.equal 'video'
 
+    it 'aggregates the query for has_published_media', ->
+      { query } = Retrieve.toQuery {
+        ids: [ '5530e72f7261696238050000' ]
+        has_published_media: true
+        published: true
+      }
+      query['media.published'].should.be.ok()
+      query['media.published'].should.equal true
+    
     it 'finds articles by multiple fair ids', ->
       { query } = Retrieve.toQuery {
         fair_ids: ['5086df098523e60002000016','5086df098523e60002000015']
