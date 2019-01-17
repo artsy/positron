@@ -1,16 +1,16 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { CharacterLimit } from "client/components/character_limit"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { Provider } from "react-redux"
-import { CharacterLimit } from "../../../../../components/character_limit"
-import { DisplaySearch } from "../components/search"
+import configureStore from "redux-mock-store"
+import { DisplaySearch } from "../search"
 
 describe("DisplaySearch", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
 
     const store = mockStore({
@@ -18,13 +18,13 @@ describe("DisplaySearch", () => {
         channel: { type: "editorial" },
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <DisplaySearch {...props} />
+        <DisplaySearch {...passedProps} />
       </Provider>
     )
   }

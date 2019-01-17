@@ -1,17 +1,17 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
 import { ClassicArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { CharacterLimit } from "client/components/character_limit"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { Provider } from "react-redux"
-import { CharacterLimit } from "../../../../../components/character_limit"
-import { DisplayPartner } from "../components/partner"
-import ImageUpload from "../../admin/components/image_upload.coffee"
+import configureStore from "redux-mock-store"
+import { DisplayPartner } from "../partner"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 describe("DisplayPartner", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
 
     const store = mockStore({
@@ -19,13 +19,13 @@ describe("DisplayPartner", () => {
         channel: { type: "editorial" },
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <DisplayPartner {...props} />
+        <DisplayPartner {...passedProps} />
       </Provider>
     )
   }

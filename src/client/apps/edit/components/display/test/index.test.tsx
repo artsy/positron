@@ -1,35 +1,35 @@
-import configureStore from "redux-mock-store"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
-import React from "react"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { DropDownList } from "client/components/drop_down/drop_down_list"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { Provider } from "react-redux"
-import { EditDisplay } from "../index"
+import configureStore from "redux-mock-store"
 import { DisplayEmail } from "../components/email"
 import { DisplayMagazine } from "../components/magazine"
 import { DisplayPartner } from "../components/partner"
 import { DisplaySearch } from "../components/search"
 import { DisplaySocial } from "../components/social"
-import { DropDownList } from "client/components/drop_down/drop_down_list"
+import EditDisplay from "../index"
 
 describe("EditDisplay", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
 
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <EditDisplay {...props} />
+        <EditDisplay {...passedProps} />
       </Provider>
     )
   }
