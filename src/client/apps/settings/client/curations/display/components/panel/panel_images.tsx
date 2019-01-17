@@ -1,9 +1,10 @@
-import PropTypes from "prop-types"
+import { Col, Row } from "@artsy/palette"
+import { FormLabel } from "client/components/form_label"
 import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import { CampaignProps } from "./index"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-export const PanelImages = props => {
+export const PanelImages: React.SFC<CampaignProps> = props => {
   const { campaign, index, onChange } = props
   const assets = campaign.panel.assets || []
   const imgUrl = assets.length ? assets[0].url : ""
@@ -12,7 +13,7 @@ export const PanelImages = props => {
   return (
     <Row>
       <Col lg>
-        <label>Image / Video</label>
+        <FormLabel>Image / Video</FormLabel>
         <ImageUpload
           name="panel.assets"
           hasVideo
@@ -24,8 +25,8 @@ export const PanelImages = props => {
         />
       </Col>
       {isVideo ? (
-        <Col lg className="img-cover">
-          <label>Cover Image</label>
+        <Col lg>
+          <FormLabel>Cover Image</FormLabel>
           <ImageUpload
             name="panel.cover_img_url"
             src={campaign.panel.cover_img_url || ""}
@@ -35,8 +36,8 @@ export const PanelImages = props => {
           />
         </Col>
       ) : (
-        <Col lg className="img-logo">
-          <label>Logo</label>
+        <Col lg>
+          <FormLabel>Logo</FormLabel>
           <ImageUpload
             name="panel.logo"
             src={campaign.panel.logo || ""}
@@ -56,11 +57,3 @@ const onImageInputChange = (key, value, i, onChange) => {
   }
   onChange(key, value, i)
 }
-
-PanelImages.propTypes = {
-  campaign: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
-}
-
-export default PanelImages

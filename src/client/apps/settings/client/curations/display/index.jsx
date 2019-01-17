@@ -4,7 +4,8 @@ import React from "react"
 import { DropDownList } from "client/components/drop_down/drop_down_list"
 import { Campaign } from "./components/campaign"
 import { Canvas } from "./components/canvas"
-import { Panel } from "./components/panel"
+import { Panel } from "./components/panel/index.tsx"
+import { Separator } from "@artsy/palette"
 
 export default class DisplayAdmin extends React.Component {
   constructor(props) {
@@ -92,11 +93,13 @@ export default class DisplayAdmin extends React.Component {
                   index={index}
                   onChange={this.onChange}
                 />
+                <Separator />
                 <Panel
                   campaign={campaign}
                   index={index}
                   onChange={this.onChange}
                 />
+                <Separator />
                 <Canvas
                   campaign={campaign}
                   index={index}
