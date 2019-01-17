@@ -1,7 +1,7 @@
 import { Col, Row } from "@artsy/palette"
 import { FormLabel } from "client/components/form_label"
 import React from "react"
-import { CampaignProps } from "./index"
+import { CampaignProps } from "../campaign"
 const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 export const PanelImages: React.SFC<CampaignProps> = props => {

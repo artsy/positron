@@ -3,13 +3,8 @@ import { Input } from "@artsy/reaction/dist/Components/Input"
 import { CharacterLimit } from "client/components/character_limit"
 import { FormLabel } from "client/components/form_label"
 import React from "react"
+import { CampaignProps } from "../campaign"
 import { PanelImages } from "./panel_images"
-
-export interface CampaignProps {
-  campaign: any
-  index: number
-  onChange: (key: string, val: any, index: number) => void
-}
 
 export const Panel: React.SFC<CampaignProps> = props => {
   const { campaign, index, onChange } = props
