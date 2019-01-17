@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import React from "react"
-import { CharacterLimit } from "client/components/character_limit/index.jsx"
+import { CharacterLimit } from "client/components/character_limit"
 
 export const CanvasText = props => {
   const { campaign, index, onChange } = props
