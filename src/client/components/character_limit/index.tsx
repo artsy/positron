@@ -9,7 +9,8 @@ import { stripTags } from "underscore.string"
 
 interface CharacterLimitProps {
   defaultValue?: string
-  html: boolean
+  html?: boolean
+  isRequired?: boolean
   label?: string
   limit: number
   onChange: (text: string) => void
@@ -75,19 +76,26 @@ export class CharacterLimit extends React.Component<
   }
 
   render() {
-    const { defaultValue, label, limit, placeholder, type } = this.props
+    const {
+      defaultValue,
+      isRequired,
+      label,
+      limit,
+      placeholder,
+      type,
+    } = this.props
     const { remainingChars } = this.state
 
     return (
       <CharacterLimitContainer type={type}>
-        <FormLabel>
-          <Flex justifyContent="space-between">
-            {label}
+        <Flex justifyContent="space-between">
+          <FormLabel isRequired={isRequired}>{label}</FormLabel>
+          <FormLabel>
             <RemainingChars isOverLimit={remainingChars < 0}>
               {remainingChars} Characters
             </RemainingChars>
-          </Flex>
-        </FormLabel>
+          </FormLabel>
+        </Flex>
 
         {type === "textarea" ? (
           this.renderTextArea()
