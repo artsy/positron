@@ -2,6 +2,7 @@
 
 [Positron](https://github.com/artsy/positron) is Artsy Writer or the editorial tool for Artsy.
 
+[![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 ![ArtsyWriter](/doc/images/ArtsyWriter.png)
 
 ## Meta
