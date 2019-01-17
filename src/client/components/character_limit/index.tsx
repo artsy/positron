@@ -101,6 +101,7 @@ export class CharacterLimit extends React.Component<
           this.renderTextArea()
         ) : (
           <Input
+            block
             placeholder={placeholder}
             defaultValue={defaultValue || ""}
             onChange={e => this.onChange(e.currentTarget.value)}

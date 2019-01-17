@@ -1,11 +1,14 @@
-import React from "react"
-import { Panel } from "../../../components/panel"
-import { mount } from "enzyme"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { CharacterLimit } from "client/components/character_limit"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import { FormLabel } from "client/components/form_label"
+import { mount } from "enzyme"
+import React from "react"
+import { Panel } from "../index"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-global.window.getSelection = jest.fn(() => {
+const globalAny: any = global
+globalAny.window.getSelection = jest.fn(() => {
   return {
     isCollapsed: true,
     getRangeAt: jest.fn(),
@@ -13,7 +16,7 @@ global.window.getSelection = jest.fn(() => {
 })
 
 describe("Panel", () => {
-  let props = {}
+  let props
 
   beforeEach(() => {
     props = {
@@ -26,39 +29,43 @@ describe("Panel", () => {
     }
   })
 
+  const getWrapper = (passedProps = props) => {
+    return mount(<Panel {...passedProps} />)
+  }
+
   it("renders all fields", () => {
-    const component = mount(<Panel {...props} />)
+    const component = getWrapper()
     expect(component.find("input").length).toBe(5)
     expect(component.find(CharacterLimit).length).toBe(2)
     expect(component.find(ImageUpload).length).toBe(2)
     expect(
       component
-        .find("label")
+        .find(FormLabel)
         .at(0)
         .text()
     ).toMatch("Headline")
     expect(
       component
-        .find("label")
-        .at(0)
+        .find(FormLabel)
+        .at(1)
         .text()
     ).toMatch("25 Characters")
     expect(
       component
-        .find("label")
+        .find(FormLabel)
         .at(2)
         .text()
     ).toMatch("Body")
     expect(
       component
-        .find("label")
-        .at(2)
+        .find(FormLabel)
+        .at(3)
         .text()
     ).toMatch("45 Characters")
     expect(
       component
         .find("label")
-        .at(3)
+        .at(1)
         .text()
     ).toMatch("Pixel Tracking Code (optional)")
   })
@@ -72,65 +79,49 @@ describe("Panel", () => {
       logo: "http://artsy.net/logo.jpg",
       pixel_tracking_code: "pixel tracking code",
     }
-    const component = mount(<Panel {...props} />)
+    const component = getWrapper(props)
 
-    expect(
-      component
-        .find("label")
-        .at(0)
-        .text()
-    ).toMatch("10 Characters")
-    expect(
-      component
-        .find("input")
-        .at(0)
-        .instance().value
-    ).toMatch(props.campaign.panel.headline)
-    expect(
-      component
-        .find("input")
-        .at(1)
-        .instance().value
-    ).toMatch(props.campaign.panel.link.url)
-    expect(
-      component
-        .find(Paragraph)
-        .at(0)
-        .text()
-    ).toMatch("Sample body text.")
-    expect(
-      component
-        .find(Paragraph)
-        .at(0)
-        .text()
-    ).toMatch("Example link")
-    expect(
-      component
-        .find(Paragraph)
-        .at(0)
-        .html()
-    ).toMatch('<a href="http://artsy.net/">')
-    expect(
-      component
-        .find("input")
-        .at(2)
-        .instance().value
-    ).toMatch(props.campaign.panel.pixel_tracking_code)
+    const headlineLabel = component.find(FormLabel).at(1)
+    expect(headlineLabel.text()).toMatch("10 Characters")
+
+    const headline = component.find("input").at(0)
+    expect(headline.props().defaultValue).toMatch(props.campaign.panel.headline)
+
+    const linkUrl = component.find("input").at(1)
+    expect(linkUrl.props().defaultValue).toMatch(props.campaign.panel.link.url)
+
+    const body = component.find(Paragraph).at(0)
+    expect(body.text()).toMatch("Sample body text.")
+    expect(body.text()).toMatch("Example link")
+    expect(body.html()).toMatch('<a href="http://artsy.net/">')
+
+    const trackingCode = component.find("input").at(2)
+    expect(trackingCode.props().defaultValue).toMatch(
+      props.campaign.panel.pixel_tracking_code
+    )
   })
 
   it("Calls props.onChange on headline change", () => {
-    const component = mount(<Panel {...props} />)
-    component
-      .find("input")
+    const component = getWrapper()
+    const input = component
+      .find(Input)
       .at(0)
-      .simulate("change", { target: { value: "New Headline" } })
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "New Headline",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
+
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.headline")
     expect(props.onChange.mock.calls[0][1]).toMatch("New Headline")
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)
   })
 
   it("Calls props.onChange on CTA link change", () => {
-    const component = mount(<Panel {...props} />)
+    const component = getWrapper()
     component
       .find("input")
       .at(1)
@@ -141,7 +132,7 @@ describe("Panel", () => {
   })
 
   it("Calls props.onChange on pixel_tracking_code change", () => {
-    const component = mount(<Panel {...props} />)
+    const component = getWrapper()
     component
       .find("input")
       .at(2)
@@ -152,12 +143,12 @@ describe("Panel", () => {
   })
 
   it("Calls props.onChange on body change", () => {
-    const component = mount(<Panel {...props} />)
-    component
+    const component = getWrapper()
+    const characterLimit = component
       .find(CharacterLimit)
       .at(1)
-      .instance()
-      .onChange("new value")
+      .instance() as CharacterLimit
+    characterLimit.onChange("new value")
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.body")
     expect(props.onChange.mock.calls[0][1]).toMatch("new value")
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)

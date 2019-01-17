@@ -1,15 +1,16 @@
-import React from "react"
-import { CanvasText } from "../../../components/canvas/canvas_text"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
 import { mount } from "enzyme"
+import React from "react"
+import { CanvasText } from "../canvas_text"
 
 describe("Canvas Text", () => {
-  const getWrapper = props => {
-    return mount(<CanvasText {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<CanvasText {...passedProps} />)
   }
 
   let props
-  const getProps = () => {
+  beforeEach(() => {
     props = {
       campaign: {
         canvas: { assets: [] },
@@ -18,14 +19,21 @@ describe("Canvas Text", () => {
       index: 0,
       onChange: jest.fn(),
     }
-  }
-
-  beforeEach(getProps)
+  })
 
   it("Can save an edited headline", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(0)
-    input.simulate("change", { target: { value: "New Headline" } })
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "New Headline",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.headline")
     expect(props.onChange.mock.calls[0][1]).toMatch("New Headline")
@@ -48,8 +56,17 @@ describe("Canvas Text", () => {
 
   it("Can save an edited CTA Text", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(1)
-    input.simulate("change", { target: { value: "Read More" } })
+    const input = component
+      .find(Input)
+      .at(1)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "Read More",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.link.text")
     expect(props.onChange.mock.calls[0][1]).toMatch("Read More")
