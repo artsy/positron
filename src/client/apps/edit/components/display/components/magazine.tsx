@@ -86,6 +86,6 @@ export default connect(
   mapDispatchToProps
 )(DisplayMagazine)
 
-const FillTitlePrompt = styled(Serif).attrs<{ onClick: () => void }>({})`
+export const FillTitlePrompt = styled(Serif).attrs<{ onClick: () => void }>({})`
   cursor: pointer;
 `

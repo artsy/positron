@@ -24,25 +24,20 @@ export const EditDisplay: React.SFC<{ isPartner: boolean }> = props => {
   ]
 
   return (
-    <EditAdminContainer
-      pb={95}
-      pt={isPartner ? 95 : 135}
-      maxWidth={960}
-      px={3}
-      mx="auto"
-      className="EditDisplay"
-    >
+    <div>
       {isPartner ? (
         <DisplayPartner />
       ) : (
-        <DropDownList activeSections={[0]} openMany sections={sections}>
-          <DisplayMagazine />
-          <DisplaySocial />
-          <DisplaySearch />
-          <DisplayEmail />
-        </DropDownList>
+        <EditAdminContainer pb={95} pt={135} maxWidth={960} px={3} mx="auto">
+          <DropDownList activeSections={[0]} openMany sections={sections}>
+            <DisplayMagazine />
+            <DisplaySocial />
+            <DisplaySearch />
+            <DisplayEmail />
+          </DropDownList>
+        </EditAdminContainer>
       )}
-    </EditAdminContainer>
+    </div>
   )
 }
 
