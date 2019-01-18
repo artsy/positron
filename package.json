@@ -22,11 +22,10 @@
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
     "type-check": "tsc --pretty --noEmit",
-    "install-codecov": "curl -s https://codecov.io/bash > .codecov && chmod +x ./.codecov",
     "normalize-jest-coverage": "node scripts/normalize-jest-coverage.js",
     "create-merged-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
-    "report-coverage": "./.codecov -C $(cat COMMIT_HASH.txt) -p app/ -f coverage.lcov",
-    "publish-coverage": "yarn install-codecov && yarn normalize-jest-coverage && yarn create-merged-coverage && yarn report-coverage"
+    "report-coverage": "./scripts/codecov -C $(cat COMMIT_HASH.txt) -p app/ -f coverage.lcov",
+    "publish-coverage": "yarn normalize-jest-coverage && yarn create-merged-coverage && yarn report-coverage"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",
