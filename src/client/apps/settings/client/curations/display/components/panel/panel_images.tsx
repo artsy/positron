@@ -1,4 +1,4 @@
-import { Col, Row } from "@artsy/palette"
+import { Box, Col, Row } from "@artsy/palette"
 import { FormLabel } from "client/components/form_label"
 import React from "react"
 import { CampaignProps } from "../campaign"
@@ -12,39 +12,45 @@ export const PanelImages: React.SFC<CampaignProps> = props => {
 
   return (
     <Row>
-      <Col lg>
+      <Col lg pr={[0, 1]} pb={4}>
         <FormLabel>Image / Video</FormLabel>
-        <ImageUpload
-          name="panel.assets"
-          hasVideo
-          src={imgUrl}
-          size={30}
-          onChange={(name, url) =>
-            onImageInputChange(name, url, index, onChange)
-          }
-        />
+        <Box pt={1}>
+          <ImageUpload
+            name="panel.assets"
+            hasVideo
+            src={imgUrl}
+            size={30}
+            onChange={(name, url) =>
+              onImageInputChange(name, url, index, onChange)
+            }
+          />
+        </Box>
       </Col>
       {isVideo ? (
-        <Col lg>
+        <Col lg pr={[0, 1]} pb={4}>
           <FormLabel>Cover Image</FormLabel>
-          <ImageUpload
-            name="panel.cover_img_url"
-            src={campaign.panel.cover_img_url || ""}
-            onChange={(name, url) =>
-              onImageInputChange(name, url, index, onChange)
-            }
-          />
+          <Box pt={1}>
+            <ImageUpload
+              name="panel.cover_img_url"
+              src={campaign.panel.cover_img_url || ""}
+              onChange={(name, url) =>
+                onImageInputChange(name, url, index, onChange)
+              }
+            />
+          </Box>
         </Col>
       ) : (
-        <Col lg>
+        <Col lg pl={[0, 1]} pb={4}>
           <FormLabel>Logo</FormLabel>
-          <ImageUpload
-            name="panel.logo"
-            src={campaign.panel.logo || ""}
-            onChange={(name, url) =>
-              onImageInputChange(name, url, index, onChange)
-            }
-          />
+          <Box pt={1}>
+            <ImageUpload
+              name="panel.logo"
+              src={campaign.panel.logo || ""}
+              onChange={(name, url) =>
+                onImageInputChange(name, url, index, onChange)
+              }
+            />
+          </Box>
         </Col>
       )}
     </Row>

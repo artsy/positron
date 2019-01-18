@@ -17,7 +17,7 @@ export const Panel: React.SFC<CampaignProps> = props => {
       </Serif>
 
       <Row key={index}>
-        <Col lg>
+        <Col lg pr={[0, 2]}>
           <Box pb={4}>
             <CharacterLimit
               label="Headline"
@@ -65,7 +65,7 @@ export const Panel: React.SFC<CampaignProps> = props => {
             />
           </Box>
         </Col>
-        <Col lg>
+        <Col lg pl={[0, 2]}>
           <PanelImages campaign={campaign} index={index} onChange={onChange} />
         </Col>
       </Row>

@@ -1,14 +1,17 @@
-import PropTypes from "prop-types"
-import React from "react"
+import { Box } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { CharacterLimit } from "client/components/character_limit"
+import { FormLabel } from "client/components/form_label"
+import React from "react"
+import { CampaignProps } from "../campaign"
 
-export const CanvasText = props => {
+export const CanvasText: React.SFC<CampaignProps> = props => {
   const { campaign, index, onChange } = props
   const { canvas } = campaign
 
   return (
-    <div className="display-admin--canvas-text">
-      <div className="field-group">
+    <div>
+      <Box pb={4}>
         {campaign.canvas.layout === "overlay" ? (
           <CharacterLimit
             type="textarea"
@@ -27,8 +30,8 @@ export const CanvasText = props => {
             limit={45}
           />
         )}
-      </div>
-      <div className="field-group">
+      </Box>
+      <Box pb={4}>
         <CharacterLimit
           label="CTA Text"
           placeholder="Find Out More"
@@ -36,17 +39,19 @@ export const CanvasText = props => {
           onChange={value => onChange("canvas.link.text", value, index)}
           limit={25}
         />
-      </div>
-      <div className="field-group">
-        <label>CTA Link</label>
-        <input
-          className="bordered-input"
+      </Box>
+      <Box pb={4}>
+        <FormLabel>CTA Link</FormLabel>
+        <Input
+          block
           placeholder="http://example.com"
           defaultValue={canvas.link ? campaign.canvas.link.url : ""}
-          onChange={e => onChange("canvas.link.url", e.target.value, index)}
+          onChange={e =>
+            onChange("canvas.link.url", e.currentTarget.value, index)
+          }
         />
-      </div>
-      <div className="field-group">
+      </Box>
+      <Box pb={4}>
         <CharacterLimit
           type="textarea"
           label="Disclaimer (optional)"
@@ -55,24 +60,18 @@ export const CanvasText = props => {
           onChange={value => onChange("canvas.disclaimer", value, index)}
           limit={150}
         />
-      </div>
-      <div className="field-group">
-        <label>Pixel Tracking Code (optional)</label>
-        <input
-          className="bordered-input"
+      </Box>
+      <Box pb={4}>
+        <FormLabel>Pixel Tracking Code (optional)</FormLabel>
+        <Input
+          block
           placeholder="Paste 3rd party script here"
           defaultValue={canvas.pixel_tracking_code || ""}
           onChange={e =>
-            onChange("canvas.pixel_tracking_code", e.target.value, index)
+            onChange("canvas.pixel_tracking_code", e.currentTarget.value, index)
           }
         />
-      </div>
+      </Box>
     </div>
   )
-}
-
-CanvasText.propTypes = {
-  campaign: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
 }

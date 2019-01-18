@@ -1,11 +1,12 @@
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
-import ImageUpload from "../../../../../../edit/components/admin/components/image_upload.coffee"
+import { Box, Col, Flex, Row, space } from "@artsy/palette"
+import { FormLabel as Label } from "client/components/form_label"
 import { RemoveButtonContainer } from "client/components/remove_button"
+import React from "react"
+import styled from "styled-components"
+import { CampaignProps } from "../campaign"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-export class CanvasImages extends React.Component {
+export class CanvasImages extends React.Component<CampaignProps> {
   updateImageUrls = (imgIndex, url) => {
     const { assets } = this.props.campaign.canvas
     if (assets.length && Number.isInteger(imgIndex)) {
@@ -33,15 +34,23 @@ export class CanvasImages extends React.Component {
 
   renderAssets = () => {
     const { assets } = this.props.campaign.canvas
-    const uploads = assets.map((asset, imgIndex) => {
+
+    const uploads = assets.map((_asset, imgIndex) => {
       if (imgIndex === 0) {
         return false
       } else {
+        const indexIsEven = imgIndex % 2 === 0
         return (
-          <SecondaryImageContainer lg key={"slideshow-image-" + imgIndex}>
-            <label>{this.renderLabel(imgIndex)}</label>
+          <Box
+            width="50%"
+            key={"slideshow-image-" + imgIndex}
+            pl={indexIsEven ? [0, 1] : 0}
+            pr={!indexIsEven ? [0, 1] : 0}
+            pb={4}
+          >
+            <FormLabel>{this.renderLabel(imgIndex)}</FormLabel>
             {this.renderImageUpload(assets, imgIndex)}
-          </SecondaryImageContainer>
+          </Box>
         )
       }
     })
@@ -50,21 +59,28 @@ export class CanvasImages extends React.Component {
 
   renderSlideshowImages = () => {
     const { assets } = this.props.campaign.canvas
-    const newImage = <NewUpload>{this.renderImageUpload(assets)}</NewUpload>
+    const imagesAreEven = assets.length && assets.length % 2 === 0
+
+    const newImage = (
+      <Col lg pl={imagesAreEven ? [0, 1] : 0} pt={imagesAreEven ? 2 : 0}>
+        {this.renderImageUpload(assets)}
+      </Col>
+    )
 
     return (
-      <SlideshowImages>
+      <Row>
         {this.renderAssets()}
         {assets.length && assets.length < 5 ? newImage : false}
-      </SlideshowImages>
+      </Row>
     )
   }
 
   renderLogoUpload = () => {
     const { campaign, index, onChange } = this.props
+    const isSlideshow = this.isSlideshow()
     return (
-      <Col lg className="img-logo">
-        <label>Logo</label>
+      <Col lg pr={isSlideshow ? [0, 1] : 0} pl={!isSlideshow ? [0, 1] : 0}>
+        <FormLabel>Logo</FormLabel>
         <ImageUpload
           name="canvas.logo"
           src={campaign.canvas && campaign.canvas.logo}
@@ -79,22 +95,23 @@ export class CanvasImages extends React.Component {
     const { campaign, index, onChange } = this.props
     return (
       <Row>
-        <SecondaryImageContainer>
-          <label>Video Cover Image</label>
+        <Col lg pl={[0, 1]}>
+          <FormLabel>Video Cover Image</FormLabel>
           <ImageUpload
             name="canvas.cover_img_url"
             src={campaign.canvas && campaign.canvas.cover_img_url}
             onChange={(name, url) => onChange(name, url, index)}
             disabled={false}
           />
-        </SecondaryImageContainer>
+        </Col>
       </Row>
     )
   }
 
-  renderImageUpload = (assets, imgIndex) => {
+  renderImageUpload = (assets, imgIndex?: number) => {
     const hasVideo = this.props.campaign.canvas.layout === "standard"
     const hidePreview = !imgIndex && imgIndex !== 0 && !hasVideo
+
     return (
       <ImageUpload
         key={"canvas-assets-" + (imgIndex || 0)}
@@ -102,13 +119,17 @@ export class CanvasImages extends React.Component {
         hasVideo={hasVideo}
         hidePreview={hidePreview}
         size={30}
-        src={assets[imgIndex] ? assets[imgIndex].url : ""}
+        src={
+          imgIndex || imgIndex === 0
+            ? assets[imgIndex] && assets[imgIndex].url
+            : ""
+        }
         onChange={(name, url) => this.onImageInputChange(name, url, imgIndex)}
       />
     )
   }
 
-  renderLabel = imgIndex => {
+  renderLabel = (imgIndex?: string) => {
     const { campaign } = this.props
 
     if (campaign.canvas.layout === "overlay") {
@@ -123,21 +144,28 @@ export class CanvasImages extends React.Component {
 
   render() {
     const { campaign } = this.props
-    const videoIsAllowed = campaign.canvas.layout === "standard"
+    const layout = campaign.canvas.layout || "overlay"
+    const videoIsAllowed = layout === "standard"
     const hasAsset =
       campaign.canvas.assets && campaign.canvas.assets.length !== 0
     const hasVideoAsset =
       hasAsset && campaign.canvas.assets[0].url.includes(".mp4")
+    const isSlideshow = this.isSlideshow()
 
     return (
       <CanvasImagesContainer>
-        <PrimaryImageContainer layout={campaign.canvas.layout || "overlay"}>
+        <Flex flexDirection={isSlideshow ? "row" : "row-reverse"}>
           {this.renderLogoUpload()}
-          <Col lg>
-            <label>{this.renderLabel()}</label>
+          <Col
+            lg
+            pl={isSlideshow ? [0, 1] : 0}
+            pr={!isSlideshow ? [0, 1] : 0}
+            pb={4}
+          >
+            <FormLabel>{this.renderLabel()}</FormLabel>
             {this.renderImageUpload(campaign.canvas.assets || [], 0)}
           </Col>
-        </PrimaryImageContainer>
+        </Flex>
 
         {videoIsAllowed && hasVideoAsset && this.renderVideoCoverUpload()}
         {this.isSlideshow() && this.renderSlideshowImages()}
@@ -146,36 +174,12 @@ export class CanvasImages extends React.Component {
   }
 }
 
-CanvasImages.propTypes = {
-  campaign: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
-}
-
 const CanvasImagesContainer = styled.div`
   ${RemoveButtonContainer} {
     z-index: 5;
   }
 `
 
-const PrimaryImageContainer = styled(Row)`
-  ${props =>
-    (props.layout === "standard" || props.layout === "overlay") &&
-    `
-    flex-direction: row-reverse;
-  `};
-`
-
-const SecondaryImageContainer = styled(Col)`
-  margin-top: 20px;
-  min-width: 50%;
-`
-
-const NewUpload = styled(Col)``
-
-const SlideshowImages = styled(Row)`
-  ${NewUpload} {
-    margin-top: 2em;
-    min-width: 50%;
-  }
+const FormLabel = styled(Label)`
+  padding-bottom: ${space(1)}px;
 `

@@ -1,4 +1,4 @@
-import { Col, LargeSelect, Row } from "@artsy/palette"
+import { Box, Col, LargeSelect, Row } from "@artsy/palette"
 import { garamond } from "@artsy/reaction/dist/Assets/Fonts"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { FormLabel } from "client/components/form_label"
@@ -23,7 +23,7 @@ export const Campaign: React.SFC<CampaignProps> = props => {
   return (
     <CampaignWrapper>
       <Row>
-        <Col lg>
+        <Col lg pb={4} pr={[0, 0.5]}>
           <FormLabel>Title</FormLabel>
           <Input
             block
@@ -32,7 +32,7 @@ export const Campaign: React.SFC<CampaignProps> = props => {
             onChange={e => onChange("name", e.currentTarget.value, index)}
           />
         </Col>
-        <Col lg>
+        <Col lg pb={4} px={[0, 0.5]}>
           <FormLabel>Start Date</FormLabel>
           <Input
             block
@@ -46,7 +46,7 @@ export const Campaign: React.SFC<CampaignProps> = props => {
             }
           />
         </Col>
-        <Col lg>
+        <Col lg pb={4} px={[0, 0.5]}>
           <FormLabel>End Date</FormLabel>
           <Input
             block
@@ -60,22 +60,24 @@ export const Campaign: React.SFC<CampaignProps> = props => {
             }
           />
         </Col>
-        <Col lg>
+        <Col lg pb={4} pl={[0, 0.5]}>
           <FormLabel>Traffic Quantity</FormLabel>
-          <LargeSelect
-            selected={campaign.sov && campaign.sov.toString()}
-            onSelect={val => onChange("sov", parseFloat(val), index)}
-            options={[
-              {
-                text: "0",
-                value: "0",
-              },
-              {
-                text: "20%",
-                value: "0.2",
-              },
-            ]}
-          />
+          <Box py={1}>
+            <LargeSelect
+              selected={campaign.sov && campaign.sov.toString()}
+              onSelect={val => onChange("sov", parseFloat(val), index)}
+              options={[
+                {
+                  text: "0",
+                  value: "0",
+                },
+                {
+                  text: "20%",
+                  value: "0.2",
+                },
+              ]}
+            />
+          </Box>
         </Col>
       </Row>
     </CampaignWrapper>
