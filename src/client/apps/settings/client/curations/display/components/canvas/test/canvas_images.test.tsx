@@ -1,11 +1,15 @@
-import React from "react"
-import { mount } from "enzyme"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
-import { CanvasImages } from "../../../components/canvas/canvas_images"
+import { FormLabel } from "client/components/form_label"
 import { RemoveButtonContainer } from "client/components/remove_button"
+import { mount } from "enzyme"
+import React from "react"
+import { CanvasImages } from "../canvas_images"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 describe("Canvas Images", () => {
   let props
+  const getWrapper = (passedProps = props) => {
+    return mount(<CanvasImages {...passedProps} />)
+  }
 
   beforeEach(() => {
     props = {
@@ -22,17 +26,17 @@ describe("Canvas Images", () => {
 
   describe("Overlay", () => {
     it("renders expected fields", () => {
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(0)
           .text()
       ).toMatch("Logo")
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(1)
           .text()
       ).toMatch("Background Image")
@@ -47,48 +51,49 @@ describe("Canvas Images", () => {
     it("renders saved data", () => {
       props.campaign.canvas.logo = "http://artsy.net/logo.jpg"
       props.campaign.canvas.assets.push({ url: "http://artsy.net/image.jpg" })
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
+      const imgPreviewFirst = component.find(".image-upload-form-preview").at(0)
+      const imgPreviewSecond = component
+        .find(".image-upload-form-preview")
+        .at(1)
+
       expect(
         component
           .find(ImageUpload)
           .at(0)
+          // @ts-ignore
           .props().src
       ).toMatch(props.campaign.canvas.logo)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(0)
-          .props().style.backgroundImage
-      ).toMatch("logo.jpg")
+      // @ts-ignore
+      expect(imgPreviewFirst.props().style.backgroundImage).toMatch("logo.jpg")
       expect(
         component
           .find(ImageUpload)
           .at(1)
+          // @ts-ignore
           .props().src
       ).toMatch(props.campaign.canvas.assets[0].url)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(1)
-          .props().style.backgroundImage
-      ).toMatch("image.jpg")
+      // @ts-ignore
+      expect(imgPreviewSecond.props().style.backgroundImage).toMatch(
+        "image.jpg"
+      )
     })
   })
 
   describe("Standard", () => {
     it("renders expected fields", () => {
       props.campaign.canvas.layout = "standard"
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(0)
           .text()
       ).toMatch("Logo")
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(1)
           .text()
       ).toMatch("Image / Video")
@@ -103,23 +108,22 @@ describe("Canvas Images", () => {
     it("renders saved data", () => {
       props.campaign.canvas.logo = "http://artsy.net/logo.jpg"
       props.campaign.canvas.assets = [{ url: "http://artsy.net/video.mp4" }]
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
+      const imgPreview = component.find(".image-upload-form-preview").at(0)
       expect(
         component
           .find(ImageUpload)
           .at(0)
+          // @ts-ignore
           .props().src
       ).toMatch(props.campaign.canvas.logo)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(0)
-          .props().style.backgroundImage
-      ).toMatch("logo.jpg")
+      // @ts-ignore
+      expect(imgPreview.props().style.backgroundImage).toMatch("logo.jpg")
       expect(
         component
           .find(ImageUpload)
           .at(1)
+          // @ts-ignore
           .props().src
       ).toMatch(props.campaign.canvas.assets[0].url)
       expect(component.html()).toMatch(
@@ -130,7 +134,7 @@ describe("Canvas Images", () => {
     it("renders a cover image field if has video asset", () => {
       props.campaign.canvas.layout = "standard"
       props.campaign.canvas.assets = [{ url: "http://artsy.net/video.mp4" }]
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Video Cover Image")
       expect(component.find(ImageUpload).length).toBe(3)
@@ -140,7 +144,7 @@ describe("Canvas Images", () => {
       props.campaign.canvas.layout = "standard"
       props.campaign.canvas.cover_img_url = "http://artsy.net/cover_img.jpg"
       props.campaign.canvas.assets = [{ url: "http://artsy.net/video.mp4" }]
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
 
       expect(component.html()).toMatch("cover_img.jpg")
     })
@@ -150,17 +154,17 @@ describe("Canvas Images", () => {
     it("renders expected fields", () => {
       props.campaign.canvas.assets = []
       props.campaign.canvas.layout = "slideshow"
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
       expect(component.find(ImageUpload).length).toBe(2)
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(0)
           .text()
       ).toMatch("Logo")
       expect(
         component
-          .find("label")
+          .find(FormLabel)
           .at(1)
           .text()
       ).toMatch("Image 1")
@@ -179,56 +183,46 @@ describe("Canvas Images", () => {
         { url: "http://artsy.net/image1.jpg" },
         { url: "http://artsy.net/image2.jpg" },
       ]
-      const component = mount(<CanvasImages {...props} />)
+      const component = getWrapper()
+      const logoInput = component.find(ImageUpload).at(0)
+      const logoPreview = component.find(".image-upload-form-preview").at(0)
+      // @ts-ignore
+      expect(logoInput.props().src).toMatch(props.campaign.canvas.logo)
+      // @ts-ignore
+      expect(logoPreview.props().style.backgroundImage).toMatch("logo.jpg")
+
+      const imgFirst = component.find(ImageUpload).at(1)
+      const imgFirstPreview = component.find(".image-upload-form-preview").at(1)
+      // @ts-ignore
+      expect(imgFirst.props().src).toMatch(props.campaign.canvas.assets[0].url)
+      // @ts-ignore
+      expect(imgFirstPreview.props().style.backgroundImage).toMatch(
+        "image1.jpg"
+      )
+
+      const imgSecond = component.find(ImageUpload).at(2)
+      const imgSecondPreview = component
+        .find(".image-upload-form-preview")
+        .at(2)
+      // @ts-ignore
+      expect(imgSecond.props().src).toMatch(props.campaign.canvas.assets[1].url)
+      // @ts-ignore
+      expect(imgSecondPreview.props().style.backgroundImage).toMatch(
+        "image2.jpg"
+      )
       expect(
         component
-          .find(ImageUpload)
-          .at(0)
-          .props().src
-      ).toMatch(props.campaign.canvas.logo)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(0)
-          .props().style.backgroundImage
-      ).toMatch("logo.jpg")
-      expect(
-        component
-          .find(ImageUpload)
-          .at(1)
-          .props().src
-      ).toMatch(props.campaign.canvas.assets[0].url)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(1)
-          .props().style.backgroundImage
-      ).toMatch("image1.jpg")
-      expect(
-        component
-          .find("label")
+          .find(FormLabel)
           .at(2)
           .text()
       ).toMatch("Image 2")
-      expect(
-        component
-          .find(ImageUpload)
-          .at(2)
-          .props().src
-      ).toMatch(props.campaign.canvas.assets[1].url)
-      expect(
-        component
-          .find(".image-upload-form-preview")
-          .at(2)
-          .props().style.backgroundImage
-      ).toMatch("image2.jpg")
     })
   })
 
   describe("Uploads", () => {
     describe("Logo", () => {
       it("Calls props.onChange on input change", () => {
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         const input = component
           .find(ImageUpload)
           .at(0)
@@ -244,7 +238,7 @@ describe("Canvas Images", () => {
       it("Can remove an existing file", () => {
         props.campaign.canvas.logo = "http://artsy.net/logo.jpg"
         props.campaign.canvas.assets = [{ url: "http://artsy.net/image1.jpg" }]
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         component
           .find(RemoveButtonContainer)
           .at(0)
@@ -259,7 +253,7 @@ describe("Canvas Images", () => {
       it("Calls props.onChange on image change", () => {
         props.campaign.canvas.assets = []
         props.campaign.canvas.layout = "standard"
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         const input = component
           .find(ImageUpload)
           .at(1)
@@ -274,7 +268,7 @@ describe("Canvas Images", () => {
 
       it("Replaces an existing image on change", () => {
         props.campaign.canvas.assets = [{ url: "http://image.jpg" }]
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         const input = component
           .find(ImageUpload)
           .at(1)
@@ -290,7 +284,7 @@ describe("Canvas Images", () => {
       it("Can remove an image", () => {
         props.campaign.canvas.logo = "http://artsy.net/logo.jpg"
         props.campaign.canvas.assets = [{ url: "http://artsy.net/image1.jpg" }]
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         component
           .find(RemoveButtonContainer)
           .at(1)
@@ -305,7 +299,7 @@ describe("Canvas Images", () => {
       it("Can add additional images if slideshow", () => {
         props.campaign.canvas.layout = "slideshow"
         props.campaign.canvas.assets = [{ url: "http://image1.jpg" }]
-        const component = mount(<CanvasImages {...props} />)
+        const component = getWrapper()
         const input = component
           .find(ImageUpload)
           .at(2)

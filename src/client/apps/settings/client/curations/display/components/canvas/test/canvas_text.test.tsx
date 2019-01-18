@@ -75,8 +75,17 @@ describe("Canvas Text", () => {
 
   it("Can save an edited CTA Link", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(2)
-    input.simulate("change", { target: { value: "http://artsy.net" } })
+    const input = component
+      .find(Input)
+      .at(2)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "http://artsy.net",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.link.url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://artsy.net")
@@ -85,8 +94,17 @@ describe("Canvas Text", () => {
 
   it("Can save an edited Pixel Tracking Code", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(3)
-    input.simulate("change", { target: { value: "a pixel tracking script" } })
+    const input = component
+      .find(Input)
+      .at(3)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "a pixel tracking script",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch(
       "canvas.pixel_tracking_code"

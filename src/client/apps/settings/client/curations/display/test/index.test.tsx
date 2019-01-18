@@ -1,38 +1,44 @@
 import Backbone from "backbone"
-import React from "react"
-import DisplayAdmin from "../index.jsx"
+import { DropDownItem } from "client/components/drop_down/drop_down_item"
 import { mount } from "enzyme"
+import React from "react"
+import { Campaign } from "../components/campaign"
+import { Canvas } from "../components/canvas"
+import { Panel } from "../components/panel"
+import DisplayAdmin from "../index"
 
-import { DropDownItem } from "client/components/drop_down/drop_down_item.jsx"
-import { Canvas } from "../components/canvas/index.jsx"
-import { Campaign } from "../components/campaign.jsx"
-import { Panel } from "../components/panel/index.jsx"
+const globalAny: any = global
+globalAny.confirm = jest.fn(() => true)
 
 describe("Display Admin", () => {
-  global.confirm = jest.fn(() => true)
-
-  const curation = new Backbone.Model({
-    name: "Display Admin",
-    type: "display-admin",
-    campaigns: [
-      {
-        name: "Sample Campaign 1",
-        canvas: {},
-        panel: {},
-      },
-      {
-        name: "Sample Campaign 2",
-        canvas: {},
-        panel: {},
-      },
-    ],
-  })
-  const props = {
-    curation,
+  let props
+  const getWrapper = (passedProps = props) => {
+    return mount(<DisplayAdmin {...passedProps} />)
   }
 
+  beforeEach(() => {
+    props = {
+      curation: new Backbone.Model({
+        name: "Display Admin",
+        type: "display-admin",
+        campaigns: [
+          {
+            name: "Sample Campaign 1",
+            canvas: {},
+            panel: {},
+          },
+          {
+            name: "Sample Campaign 2",
+            canvas: {},
+            panel: {},
+          },
+        ],
+      }),
+    }
+  })
+
   it("renders correct buttons and components", () => {
-    const component = mount(<DisplayAdmin {...props} />)
+    const component = getWrapper()
     expect(component.find(DropDownItem).length).toBe(2)
     expect(
       component
@@ -49,7 +55,7 @@ describe("Display Admin", () => {
   })
 
   it("opens a campaign admin panel on click", () => {
-    const component = mount(<DisplayAdmin {...props} />)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(1)
@@ -66,8 +72,9 @@ describe("Display Admin", () => {
   })
 
   it("#onChange updates state.campaign and changes the save button text/color", () => {
-    const component = mount(<DisplayAdmin {...props} />)
-    component.instance().onChange("canvas.name", "New Title", 0)
+    const component = getWrapper()
+    const instance = component.instance() as DisplayAdmin
+    instance.onChange("canvas.name", "New Title", 0)
     expect(component.state().curation.get("campaigns")[0].canvas.name).toMatch(
       "New Title"
     )
@@ -77,18 +84,20 @@ describe("Display Admin", () => {
   })
 
   it("Save button saves the curation", () => {
-    const component = mount(<DisplayAdmin {...props} />)
-    component.instance().save = jest.fn()
-    component.instance().onChange("canvas.name", "New Title", 0)
+    const component = getWrapper()
+    const instance = component.instance() as DisplayAdmin
+
+    instance.save = jest.fn()
+    instance.onChange("canvas.name", "New Title", 0)
     component
       .find("button")
       .at(0)
       .simulate("click")
-    expect(component.instance().save).toHaveBeenCalled()
+    expect(instance.save).toHaveBeenCalled()
   })
 
   it("Add Campaign button adds a campaign and opens new panel on click", () => {
-    const component = mount(<DisplayAdmin {...props} />)
+    const component = getWrapper()
     component
       .find("button")
       .at(1)
@@ -99,7 +108,7 @@ describe("Display Admin", () => {
   })
 
   it("Delete Campaign button prompts alert and removes campaign if confirmed", () => {
-    const component = mount(<DisplayAdmin {...props} />)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(1)
@@ -108,7 +117,8 @@ describe("Display Admin", () => {
       .find("button")
       .at(0)
       .simulate("click")
-    expect(global.confirm.mock.calls[0][0]).toMatch("Are you sure?")
-    expect(component.state().curation.get("campaigns").length).toBe(2)
+
+    expect(globalAny.confirm.mock.calls[0][0]).toMatch("Are you sure?")
+    expect(component.state().curation.get("campaigns").length).toBe(1)
   })
 })

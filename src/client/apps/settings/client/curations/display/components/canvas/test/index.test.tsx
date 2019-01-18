@@ -1,54 +1,58 @@
-import React from "react"
-import { Canvas } from "../../../components/canvas/index.jsx"
-import { CanvasControls } from "../../../components/canvas/canvas_controls.jsx"
-import { CanvasImages } from "../../../components/canvas/canvas_images.jsx"
-import { CanvasText } from "../../../components/canvas/canvas_text.jsx"
-import { CharacterLimit } from "/client/components/character_limit"
-import { mount } from "enzyme"
+import { Checkbox } from "@artsy/palette"
+import { Button as ButtonGroupButton } from "client/apps/edit/components/admin/components/article/index"
+
 import {
   UnitCanvasImage,
   UnitCanvasOverlay,
   UnitCanvasSlideshow,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
+import { CharacterLimit } from "client/components/character_limit"
+import { mount } from "enzyme"
+import React from "react"
+import { CanvasControls } from "../canvas_controls"
+import { CanvasImages } from "../canvas_images"
+import { CanvasText } from "../canvas_text"
+import { Canvas } from "../index"
 
 describe("Canvas", () => {
-  const props = {
-    campaign: {
-      canvas: { assets: [] },
-      panel: { assets: [] },
-    },
-    index: 0,
-    onChange: jest.fn(),
+  let props
+  const getWrapper = (passedProps = props) => {
+    return mount(<Canvas {...passedProps} />)
   }
 
   beforeEach(() => {
-    props.onChange.mockReset()
+    props = {
+      campaign: {
+        canvas: { assets: [] },
+        panel: { assets: [] },
+      },
+      index: 0,
+      onChange: jest.fn(),
+    }
   })
 
   it("Renders layout controls and input components", () => {
-    const component = mount(<Canvas {...props} />)
+    const component = getWrapper()
     expect(component.find(CanvasControls).length).toBe(1)
-    expect(
-      component.find(".display-admin--canvas__layouts button").length
-    ).toBe(3)
+    expect(component.find(ButtonGroupButton).length).toBe(3)
     expect(component.find(CanvasText).length).toBe(1)
     expect(component.find(CanvasImages).length).toBe(1)
   })
 
   it("Sets the canvas layout to overlay by default", () => {
-    const component = mount(<Canvas {...props} />)
+    const component = getWrapper()
     expect(
       component
-        .find(".display-admin--canvas__layouts button")
+        .find(ButtonGroupButton)
         .at(0)
-        .props()["data-active"]
-    ).toBe(true)
+        .props().color
+    ).toBe("black100")
   })
 
   it("Sets the canvas cover overlay correctly", () => {
-    const component = mount(<Canvas {...props} />)
+    const component = getWrapper()
     component
-      .find('input[type="checkbox"]')
+      .find(Checkbox)
       .at(0)
       .simulate("click", { target: { checked: true } })
 
@@ -58,9 +62,9 @@ describe("Canvas", () => {
   })
 
   it("Changes the canvas layout on button click", () => {
-    const component = mount(<Canvas {...props} />)
+    const component = getWrapper()
     component
-      .find(".display-admin--canvas__layouts button")
+      .find(ButtonGroupButton)
       .at(2)
       .simulate("click")
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.layout")
@@ -69,12 +73,15 @@ describe("Canvas", () => {
   })
 
   describe("Overlay", () => {
-    it("Renders all fields", () => {
+    beforeEach(() => {
       props.campaign.canvas = UnitCanvasOverlay
-      const component = mount(<Canvas {...props} />)
+    })
+
+    it("Renders all fields", () => {
+      const component = getWrapper()
       expect(component.find(CharacterLimit).length).toBe(3)
       expect(component.find('input[type="file"]').length).toBe(2)
-      expect(component.find('input[type="checkbox"]').length).toBe(1)
+      expect(component.find(Checkbox).length).toBe(1)
       expect(component.text()).toMatch("Body")
       expect(component.text()).toMatch("CTA Text")
       expect(component.text()).toMatch("CTA Link")
@@ -85,7 +92,7 @@ describe("Canvas", () => {
     })
 
     it("Renders saved data", () => {
-      const component = mount(<Canvas {...props} />)
+      const component = getWrapper()
       expect(component.text()).toMatch(props.campaign.canvas.headline)
       expect(component.html()).toMatch(props.campaign.canvas.link.text)
       expect(component.html()).toMatch(props.campaign.canvas.link.url)
@@ -98,9 +105,13 @@ describe("Canvas", () => {
   })
 
   describe("Standard", () => {
-    it("Renders all fields", () => {
+    beforeEach(() => {
       props.campaign.canvas = UnitCanvasImage
-      const component = mount(<Canvas {...props} />)
+      props.campaign.canvas.pixel_tracking_code = "pixel tracking script"
+    })
+
+    it("Renders all fields", () => {
+      const component = getWrapper()
       expect(component.find(CharacterLimit).length).toBe(3)
       expect(component.find('input[type="file"]').length).toBe(2)
       expect(component.html()).toMatch(
@@ -116,8 +127,7 @@ describe("Canvas", () => {
     })
 
     it("Renders saved data", () => {
-      props.campaign.canvas.pixel_tracking_code = "pixel tracking script"
-      const component = mount(<Canvas {...props} />)
+      const component = getWrapper()
       expect(component.html()).toMatch(props.campaign.canvas.headline)
       expect(component.html()).toMatch(props.campaign.canvas.link.text)
       expect(component.html()).toMatch(props.campaign.canvas.link.url)
@@ -131,15 +141,19 @@ describe("Canvas", () => {
 
     it("Can render a video file", () => {
       props.campaign.canvas.assets[0].url = "http://video.mp4"
-      const component = mount(<Canvas {...props} />)
+      const component = getWrapper()
       expect(component.html()).toMatch('<video src="http://video.mp4">')
     })
   })
 
   describe("Slideshow", () => {
-    it("Renders all fields", () => {
+    beforeEach(() => {
       props.campaign.canvas = UnitCanvasSlideshow
-      const component = mount(<Canvas {...props} />)
+      props.campaign.canvas.pixel_tracking_code = "pixel tracking script"
+    })
+
+    it("Renders all fields", () => {
+      const component = getWrapper()
       expect(component.find(CharacterLimit).length).toBe(3)
       expect(component.find('input[type="file"]').length).toBe(6)
       expect(component.text()).toMatch("Headline")
@@ -153,8 +167,7 @@ describe("Canvas", () => {
     })
 
     it("Renders saved data", () => {
-      props.campaign.canvas.pixel_tracking_code = "pixel tracking script"
-      const component = mount(<Canvas {...props} />)
+      const component = getWrapper()
       expect(component.html()).toMatch(props.campaign.canvas.headline)
       expect(component.html()).toMatch(props.campaign.canvas.link.text)
       expect(component.html()).toMatch(props.campaign.canvas.link.url)
