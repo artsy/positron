@@ -181,7 +181,7 @@ kind: CronJob
 metadata:
   name: positron-data-sync
 spec:
-  schedule: "*/10 * * * *"
+  schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
