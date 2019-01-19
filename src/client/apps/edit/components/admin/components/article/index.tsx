@@ -341,13 +341,13 @@ export default connect(
   mapDispatchToProps
 )(AdminArticle)
 
-const Button = styled(SystemButton).attrs<{
+export const Button = styled(SystemButton).attrs<{
   color?: string
 }>({})`
   color: ${props => props.color};
 `
 
-const ButtonGroup = styled(Flex)`
+export const ButtonGroup = styled(Flex)`
   margin-top: 10px;
   border: 1px solid ${color("black10")};
   border-radius: 3px;
@@ -356,8 +356,10 @@ const ButtonGroup = styled(Flex)`
   button {
     width: 100%;
     outline: none;
-    &:first-child {
-      border-right: 1px solid ${color("black10")};
+    border-right: 1px solid ${color("black10")};
+
+    &:last-child {
+      border-right: none;
     }
   }
 `

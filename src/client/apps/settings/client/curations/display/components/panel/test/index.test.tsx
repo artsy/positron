@@ -35,39 +35,9 @@ describe("Panel", () => {
 
   it("renders all fields", () => {
     const component = getWrapper()
-    expect(component.find("input").length).toBe(5)
+    expect(component.find(Input).length).toBe(3)
     expect(component.find(CharacterLimit).length).toBe(2)
     expect(component.find(ImageUpload).length).toBe(2)
-    expect(
-      component
-        .find(FormLabel)
-        .at(0)
-        .text()
-    ).toMatch("Headline")
-    expect(
-      component
-        .find(FormLabel)
-        .at(1)
-        .text()
-    ).toMatch("25 Characters")
-    expect(
-      component
-        .find(FormLabel)
-        .at(2)
-        .text()
-    ).toMatch("Body")
-    expect(
-      component
-        .find(FormLabel)
-        .at(3)
-        .text()
-    ).toMatch("45 Characters")
-    expect(
-      component
-        .find("label")
-        .at(1)
-        .text()
-    ).toMatch("Pixel Tracking Code (optional)")
   })
 
   it("renders saved text data", () => {
@@ -122,10 +92,17 @@ describe("Panel", () => {
 
   it("Calls props.onChange on CTA link change", () => {
     const component = getWrapper()
-    component
-      .find("input")
+    const input = component
+      .find(Input)
       .at(1)
-      .simulate("change", { target: { value: "http://new-link.com" } })
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "http://new-link.com",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
+
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.link.url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://new-link.com")
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)
@@ -133,10 +110,17 @@ describe("Panel", () => {
 
   it("Calls props.onChange on pixel_tracking_code change", () => {
     const component = getWrapper()
-    component
-      .find("input")
+    const input = component
+      .find(Input)
       .at(2)
-      .simulate("change", { target: { value: "new tracking code" } })
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "new tracking code",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
+
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.pixel_tracking_code")
     expect(props.onChange.mock.calls[0][1]).toMatch("new tracking code")
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)
@@ -149,6 +133,7 @@ describe("Panel", () => {
       .at(1)
       .instance() as CharacterLimit
     characterLimit.onChange("new value")
+
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.body")
     expect(props.onChange.mock.calls[0][1]).toMatch("new value")
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)

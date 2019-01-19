@@ -1,10 +1,11 @@
-import React from "react"
-import { PanelImages } from "../../../components/panel/panel_images.jsx"
+import { FormLabel } from "client/components/form_label"
 import { mount } from "enzyme"
+import React from "react"
+import { PanelImages } from "../panel_images"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
-
-global.window.getSelection = jest.fn(() => {
+const globalAny: any = global
+globalAny.window.getSelection = jest.fn(() => {
   return {
     isCollapsed: true,
     getRangeAt: jest.fn(),
@@ -12,27 +13,34 @@ global.window.getSelection = jest.fn(() => {
 })
 
 describe("PanelImages", () => {
-  const props = {
-    campaign: {
-      canvas: {},
-      panel: {},
-    },
-    index: 0,
-    onChange: jest.fn(),
+  let props
+  const getWrapper = (passedProps = props) => {
+    return mount(<PanelImages {...passedProps} />)
   }
 
+  beforeEach(() => {
+    props = {
+      campaign: {
+        canvas: {},
+        panel: {},
+      },
+      index: 0,
+      onChange: jest.fn(),
+    }
+  })
+
   it("renders all fields", () => {
-    const component = mount(<PanelImages {...props} />)
+    const component = getWrapper()
     expect(component.find(ImageUpload).length).toBe(2)
     expect(
       component
-        .find("label")
+        .find(FormLabel)
         .at(0)
         .text()
     ).toMatch("Image / Video")
     expect(
       component
-        .find("label")
+        .find(FormLabel)
         .at(1)
         .text()
     ).toMatch("Logo")
@@ -46,41 +54,31 @@ describe("PanelImages", () => {
       link: { url: "http://artsy.net" },
       logo: "http://artsy.net/logo.jpg",
     }
-    const component = mount(<PanelImages {...props} />)
-    expect(
-      component
-        .find(ImageUpload)
-        .at(0)
-        .props().src
-    ).toMatch(props.campaign.panel.assets[0].url)
-    expect(
-      component
-        .find(".image-upload-form-preview")
-        .at(0)
-        .props().style.backgroundImage
-    ).toMatch("image.jpg")
-    expect(
-      component
-        .find(ImageUpload)
-        .at(1)
-        .props().src
-    ).toMatch(props.campaign.panel.logo)
-    expect(
-      component
-        .find(".image-upload-form-preview")
-        .at(1)
-        .props().style.backgroundImage
-    ).toMatch("logo.jpg")
+    const component = getWrapper()
+    const imageUpload = component.find(ImageUpload).at(0)
+    const imagePreview = component.find(".image-upload-form-preview").at(0)
+    const logoUpload = component.find(ImageUpload).at(1)
+    const logoPreview = component.find(".image-upload-form-preview").at(1)
+
+    // TODO: convert ImageUpload to ts
+    // @ts-ignore
+    expect(imageUpload.props().src).toMatch(props.campaign.panel.assets[0].url)
+    // @ts-ignore
+    expect(imagePreview.props().style.backgroundImage).toMatch("image.jpg")
+    // @ts-ignore
+    expect(logoUpload.props().src).toMatch(props.campaign.panel.logo)
+    // @ts-ignore
+    expect(logoPreview.props().style.backgroundImage).toMatch("logo.jpg")
   })
 
   it("renders cover image field if asset is video", () => {
     props.campaign.panel = {
       assets: [{ url: "http://artsy.net/video.mp4" }],
     }
-    const component = mount(<PanelImages {...props} />)
+    const component = getWrapper()
     expect(
       component
-        .find("label")
+        .find(FormLabel)
         .at(1)
         .text()
     ).toMatch("Cover Image")
@@ -88,12 +86,13 @@ describe("PanelImages", () => {
       component
         .find(ImageUpload)
         .at(1)
+        // @ts-ignore
         .props().name
     ).toMatch("panel.cover_img_url")
   })
 
   it("Calls props.onChange on image change", () => {
-    const component = mount(<PanelImages {...props} />)
+    const component = getWrapper()
     const input = component
       .find(ImageUpload)
       .at(0)

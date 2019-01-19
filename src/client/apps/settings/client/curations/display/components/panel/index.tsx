@@ -1,18 +1,24 @@
-import PropTypes from "prop-types"
-import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import { Box, Col, Row, Serif } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { CharacterLimit } from "client/components/character_limit"
-import { PanelImages } from "./panel_images.jsx"
+import { FormLabel } from "client/components/form_label"
+import React from "react"
+import { CampaignProps } from "../campaign"
+import { PanelImages } from "./panel_images"
 
-export const Panel = props => {
+export const Panel: React.SFC<CampaignProps> = props => {
   const { campaign, index, onChange } = props
   const { panel } = campaign
+
   return (
-    <div className="display-admin__section--panel">
-      <div className="display-admin__section-title">Panel</div>
+    <div>
+      <Serif size="6" py={4}>
+        Panel
+      </Serif>
+
       <Row key={index}>
-        <Col lg>
-          <div className="field-group">
+        <Col lg pr={[0, 2]}>
+          <Box pb={4}>
             <CharacterLimit
               label="Headline"
               placeholder="Headline"
@@ -20,17 +26,19 @@ export const Panel = props => {
               onChange={value => onChange("panel.headline", value, index)}
               limit={25}
             />
-          </div>
-          <div className="field-group">
-            <label>CTA link</label>
-            <input
-              className="bordered-input"
+          </Box>
+          <Box pb={4}>
+            <FormLabel>CTA link</FormLabel>
+            <Input
+              block
               placeholder="Find Out More"
               defaultValue={panel.link ? panel.link.url : ""}
-              onChange={e => onChange("panel.link.url", e.target.value, index)}
+              onChange={e =>
+                onChange("panel.link.url", e.currentTarget.value, index)
+              }
             />
-          </div>
-          <div className="field-group">
+          </Box>
+          <Box pb={50}>
             <CharacterLimit
               type="textarea"
               label="Body"
@@ -40,29 +48,27 @@ export const Panel = props => {
               html
               limit={45}
             />
-          </div>
-          <div className="field-group">
-            <label>Pixel Tracking Code (optional)</label>
-            <input
-              className="bordered-input"
+          </Box>
+          <Box pb={4}>
+            <FormLabel>Pixel Tracking Code (optional)</FormLabel>
+            <Input
+              block
               placeholder="Paste 3rd party script here"
               defaultValue={panel.pixel_tracking_code || ""}
               onChange={e =>
-                onChange("panel.pixel_tracking_code", e.target.value, index)
+                onChange(
+                  "panel.pixel_tracking_code",
+                  e.currentTarget.value,
+                  index
+                )
               }
             />
-          </div>
+          </Box>
         </Col>
-        <Col lg>
+        <Col lg pl={[0, 2]}>
           <PanelImages campaign={campaign} index={index} onChange={onChange} />
         </Col>
       </Row>
     </div>
   )
-}
-
-Panel.propTypes = {
-  campaign: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
 }

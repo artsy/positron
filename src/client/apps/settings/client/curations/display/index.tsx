@@ -1,12 +1,32 @@
-import { set } from "lodash"
-import PropTypes from "prop-types"
-import React from "react"
+import {
+  Box,
+  Button as SystemButton,
+  color,
+  Separator,
+  Theme,
+} from "@artsy/palette"
 import { DropDownList } from "client/components/drop_down/drop_down_list"
+import { set } from "lodash"
+import React from "react"
+import styled from "styled-components"
 import { Campaign } from "./components/campaign"
 import { Canvas } from "./components/canvas"
 import { Panel } from "./components/panel"
 
-export default class DisplayAdmin extends React.Component {
+interface DisplayAdminProps {
+  curation: any
+}
+
+interface DisplayAdminState {
+  activeSection?: number
+  curation: any
+  saveStatus: string
+}
+
+export default class DisplayAdmin extends React.Component<
+  DisplayAdminProps,
+  DisplayAdminState
+> {
   constructor(props) {
     super(props)
     this.state = {
@@ -30,8 +50,8 @@ export default class DisplayAdmin extends React.Component {
       {},
       {
         success: () => this.setState({ saveStatus: "Saved" }),
-        error: error => {
-          console.error(error)
+        error: _error => {
+          // console.error(error)
           this.setState({ saveStatus: "Error" })
         },
       }
@@ -67,64 +87,68 @@ export default class DisplayAdmin extends React.Component {
 
   render() {
     const { curation, saveStatus } = this.state
-    const saveColor = saveStatus !== "Saved" ? "rgb(247, 98, 90)" : "black"
+    const saveColor = saveStatus !== "Saved" ? color("red100") : "black"
 
     return (
-      <div className="display-admin">
-        <DropDownList sections={curation.get("campaigns")}>
-          {curation.get("campaigns").map((campaign, index) => (
-            <div
-              className="admin-form-container"
-              key={`display-admin-${index}`}
-            >
-              <div className="display-admin__section--actions">
-                <button
-                  className="avant-garde-button"
-                  onClick={() => this.deleteCampaign(index)}
-                >
-                  Delete
-                </button>
-              </div>
-
-              <div className="display-admin__section-inner">
+      <Theme>
+        <Box py={80}>
+          <DropDownList sections={curation.get("campaigns")}>
+            {curation.get("campaigns").map((campaign, index) => (
+              <Box position="relative" pt={40} key={index}>
+                <Box position="absolute" top="-50px" right={0}>
+                  <Button
+                    variant="secondaryOutline"
+                    size="small"
+                    onClick={() => this.deleteCampaign(index)}
+                  >
+                    Delete Campaign
+                  </Button>
+                </Box>
                 <Campaign
                   campaign={campaign}
                   index={index}
                   onChange={this.onChange}
                 />
+                <Separator />
                 <Panel
                   campaign={campaign}
                   index={index}
                   onChange={this.onChange}
                 />
+                <Separator />
                 <Canvas
                   campaign={campaign}
                   index={index}
                   onChange={this.onChange}
                 />
-              </div>
-            </div>
-          ))}
-        </DropDownList>
+              </Box>
+            ))}
+          </DropDownList>
 
-        <button
-          className="save-campaign avant-garde-button"
-          onClick={this.save}
-          style={{ color: saveColor }}
-        >
-          {this.state.saveStatus}
-        </button>
-        <button
-          className="new-campaign avant-garde-button avant-garde-button-dark"
-          onClick={this.newCampaign}
-        >
-          Add New Campaign
-        </button>
-      </div>
+          <Box
+            position="fixed"
+            top={8}
+            zIndex={100}
+            right={"calc(50vw + 55px - (1120px / 2))"}
+          >
+            <Button
+              onClick={this.save}
+              variant="secondaryOutline"
+              color={saveColor}
+            >
+              {saveStatus}
+            </Button>
+          </Box>
+
+          <Button width="100%" mt={3} size="large" onClick={this.newCampaign}>
+            Add New Campaign
+          </Button>
+        </Box>
+      </Theme>
     )
   }
 }
 
-DisplayAdmin.propTypes = {
-  curation: PropTypes.object.isRequired,
-}
+const Button = styled(SystemButton).attrs<{ color?: string }>({})`
+  ${props => props.color && `color: ${props.color}`};
+`
