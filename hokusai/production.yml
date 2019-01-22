@@ -173,4 +173,35 @@ spec:
                   - key: tier
                     operator: In
                     values:
-                    - background
+                      - background
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: positron-data-sync
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: positron-data-sync-cron
+              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:data-sync
+              imagePullPolicy: Always
+              envFrom:
+                - configMapRef:
+                    name: positron-environment
+          restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 1
+                preference:
+                  matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - background

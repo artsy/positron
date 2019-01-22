@@ -129,8 +129,8 @@ spec:
               command: ["yarn", "task", "scripts/scheduled_posts.js"]
               imagePullPolicy: Always
               envFrom:
-              - configMapRef:
-                  name: positron-environment
+                - configMapRef:
+                    name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
@@ -141,7 +141,7 @@ spec:
                   - key: tier
                     operator: In
                     values:
-                    - background
+                      - background
 
 ---
 apiVersion: batch/v1beta1
@@ -161,8 +161,8 @@ spec:
               command: ["yarn", "task", "scripts/unqueue.js"]
               imagePullPolicy: Always
               envFrom:
-              - configMapRef:
-                  name: positron-environment
+                - configMapRef:
+                    name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
@@ -173,4 +173,4 @@ spec:
                   - key: tier
                     operator: In
                     values:
-                    - background
+                      - background
