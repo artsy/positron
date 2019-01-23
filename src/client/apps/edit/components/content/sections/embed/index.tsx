@@ -1,15 +1,19 @@
-import PropTypes from "prop-types"
-import React from "react"
 import { Embed } from "@artsy/reaction/dist/Components/Publishing/Sections/Embed"
+import React from "react"
 import EmbedControls from "./controls"
 
+interface SectionEmbedProps {
+  editing: boolean
+  section: any
+}
+
 // Embed section supports external content via iframes
-
-export const SectionEmbed = props => {
-  const { editing, section } = props
-
+export const SectionEmbed: React.SFC<SectionEmbedProps> = ({
+  editing,
+  section,
+}) => {
   return (
-    <section className="SectionEmbed">
+    <section>
       {editing && <EmbedControls section={section} />}
 
       {section.url ? (
@@ -19,9 +23,4 @@ export const SectionEmbed = props => {
       )}
     </section>
   )
-}
-
-SectionEmbed.propTypes = {
-  editing: PropTypes.bool,
-  section: PropTypes.object,
 }

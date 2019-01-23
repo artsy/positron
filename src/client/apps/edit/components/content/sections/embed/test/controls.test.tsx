@@ -1,9 +1,10 @@
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionControls } from "../../../section_controls"
 import { EmbedControls } from "../controls"
 
@@ -14,7 +15,7 @@ describe("EmbedControls", () => {
   SectionControls.prototype.isScrollingOver = jest.fn()
   SectionControls.prototype.isScrolledPast = jest.fn()
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
 
     const store = mockStore({
@@ -23,22 +24,23 @@ describe("EmbedControls", () => {
       },
       edit: {
         article: StandardArticle,
-        section: props.section,
-        sectionIndex: props.sectionIndex,
+        section: passedProps.section,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
     return mount(
       <Provider store={store}>
         <section>
-          <EmbedControls {...props} />
+          <EmbedControls {...passedProps} />
         </section>
       </Provider>
     )
   }
 
   beforeEach(() => {
-    section = cloneDeep(StandardArticle.sections[10])
+    const sections = cloneDeep(StandardArticle.sections)
+    section = sections[10]
 
     props = {
       onChangeSectionAction: jest.fn(),
@@ -66,39 +68,62 @@ describe("EmbedControls", () => {
 
   it("Can change URL", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(0)
-    const value = "new value"
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "new value",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
-    input.simulate("change", { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("url")
-    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("new value")
   })
 
   it("Can change height", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(1)
-    const value = "500"
+    const input = component
+      .find(Input)
+      .at(1)
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "500",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
-    input.simulate("change", { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("height")
-    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("500")
   })
 
   it("Can change mobile height", () => {
     const component = getWrapper(props)
-    const input = component.find("input").at(2)
-    const value = "200"
+    const input = component
+      .find(Input)
+      .at(2)
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "200",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
-    input.simulate("change", { target: { value } })
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("mobile_height")
-    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(value)
+    expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("200")
   })
 
   it("Destroys section on unmount if URL is empty", () => {
     props.section = { type: "embed" }
-    const component = getWrapper(props).find(EmbedControls)
+    const component = getWrapper(props)
+      .find(EmbedControls)
+      .instance() as EmbedControls
 
-    component.instance().componentWillUnmount()
+    component.componentWillUnmount()
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.sectionIndex)
   })
 })
