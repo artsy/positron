@@ -1,7 +1,9 @@
 import PropTypes from "prop-types"
 import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import { Box, Col, Row } from "@artsy/palette"
+import { FormLabel } from "client/components/form_label"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { Metadata } from "client/apps/settings/client/curations/gucci/components/metadata"
 import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
 
@@ -9,56 +11,58 @@ export const SeriesAdmin = props => {
   const { curation, onChange } = props
 
   return (
-    <div className="admin-form-container series">
+    <Box pb={95} maxWidth={960} px={3} mx="auto">
       <Row>
-        <Col lg={8}>
-          <div className="field-group">
-            <label>About the Series</label>
-            <div className="bordered-input">
+        <Col lg={8} pl={0}>
+          <Box pb={4}>
+            <FormLabel>About the Series</FormLabel>
+            <Box className="bordered-input">
               <Paragraph
                 hasLinks
                 html={curation.get("about") || ""}
                 onChange={html => onChange("about", html)}
               />
-            </div>
-          </div>
+            </Box>
+          </Box>
         </Col>
 
         <Col lg={4}>
-          <div className="field-group">
-            <label>Partner Logo: Header</label>
+          <Box pb={4}>
+            <FormLabel>Partner Logo: Header</FormLabel>
             <ImageUpload
               name="partner_logo_primary"
               src={curation.get("partner_logo_primary") || ""}
               onChange={(key, value) => onChange(key, value)}
             />
-          </div>
+          </Box>
 
-          <div className="field-group">
-            <label>Partner Logo: Footer</label>
+          <Box pb={4}>
+            <FormLabel>Partner Logo: Footer</FormLabel>
             <ImageUpload
               name="partner_logo_secondary"
               src={curation.get("partner_logo_secondary") || ""}
               onChange={(key, value) => onChange(key, value)}
             />
-          </div>
+          </Box>
 
-          <div className="field-group">
-            <label>Partner Link Url</label>
-            <input
-              className="bordered-input"
+          <Box pb={4}>
+            <FormLabel>Partner Link Url</FormLabel>
+            <Input
+              block
               placeholder="http://example.com"
               defaultValue={curation.get("partner_link_url") || ""}
-              onChange={e => onChange("partner_link_url", e.target.value)}
+              onChange={e =>
+                onChange("partner_link_url", e.currentTarget.value)
+              }
             />
-          </div>
+          </Box>
         </Col>
       </Row>
       <Metadata
         section={curation.toJSON()}
         onChange={(key, value) => onChange(key, value)}
       />
-    </div>
+    </Box>
   )
 }
 

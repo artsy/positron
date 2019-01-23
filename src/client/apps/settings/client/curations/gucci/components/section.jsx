@@ -1,90 +1,94 @@
 import moment from "moment"
 import PropTypes from "prop-types"
 import React from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
+import { Box, Checkbox, Col, Flex, Row } from "@artsy/palette"
+import { FormLabel } from "client/components/form_label"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { Metadata } from "client/apps/settings/client/curations/gucci/components/metadata"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import { Input } from "@artsy/reaction/dist/Components/Input"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 export const SectionAdmin = props => {
   const { section, onChange } = props
 
   return (
-    <div className="admin-form-container section">
+    <Box pb={95} maxWidth={960} px={3} mx="auto">
       <Row>
-        <Col lg={8}>
-          <div className="field-group">
-            <label>Featuring</label>
-            <input
-              className="bordered-input"
+        <Col lg={8} pl={0}>
+          <Box pb={3}>
+            <FormLabel>Featuring</FormLabel>
+            <Input
+              block
               placeholder="Start typing..."
               defaultValue={section.featuring || ""}
-              onChange={e => onChange("featuring", e.target.value)}
+              onChange={e => onChange("featuring", e.currentTarget.value)}
             />
-          </div>
+          </Box>
 
-          <div className="field-group">
-            <label>About the Film</label>
-            <div className="bordered-input">
+          <Box pb={4}>
+            <FormLabel>About the Film</FormLabel>
+            <Box className="bordered-input">
               <Paragraph
                 hasLinks
                 html={section.about || ""}
                 onChange={html => onChange("about", html)}
               />
-            </div>
-          </div>
+            </Box>
+          </Box>
 
-          <label>Release Date</label>
-          <div className="field-group--inline">
-            <div className="field-group">
-              <input
-                className="bordered-input"
+          <Flex pb={3}>
+            <Box pr={3}>
+              <FormLabel>Release Date</FormLabel>
+              <Input
+                block
                 type="date"
                 defaultValue={
                   section.release_date &&
                   moment(section.release_date).format("YYYY-MM-DD")
                 }
                 onChange={e =>
-                  onChange("release_date", moment(e.target.value).toISOString())
+                  onChange(
+                    "release_date",
+                    moment(e.currentTarget.value).toISOString()
+                  )
                 }
               />
-            </div>
+            </Box>
 
-            <div
-              className="field-group flat-checkbox"
-              onClick={() => onChange("published", !section.published)}
+            <Checkbox
+              onSelect={() => onChange("published", !section.published)}
+              selected={section.published}
             >
-              <input readOnly type="checkbox" checked={section.published} />
-              <label>Published</label>
-            </div>
-          </div>
+              <FormLabel>Published</FormLabel>
+            </Checkbox>
+          </Flex>
         </Col>
 
         <Col lg={4}>
-          <div className="field-group">
-            <label>Video Embed Url</label>
-            <input
-              className="bordered-input"
+          <Box pb={3}>
+            <FormLabel>Video Embed Url</FormLabel>
+            <Input
+              block
               placeholder="http://youtube.com/xxx"
               defaultValue={section.video_url || ""}
-              onChange={e => onChange("video_url", e.target.value)}
+              onChange={e => onChange("video_url", e.currentTarget.value)}
             />
-          </div>
-          <div className="field-group">
-            <label>Video Cover Image</label>
+          </Box>
+          <Box pb={3}>
+            <FormLabel>Video Cover Image</FormLabel>
             <ImageUpload
               name="cover_image_url"
               src={section.cover_image_url || ""}
               onChange={(key, value) => onChange(key, value)}
             />
-          </div>
+          </Box>
         </Col>
       </Row>
       <Metadata
         section={section}
         onChange={(key, value) => onChange(key, value)}
       />
-    </div>
+    </Box>
   )
 }
 
