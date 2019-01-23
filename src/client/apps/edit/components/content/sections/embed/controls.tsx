@@ -1,5 +1,6 @@
 import { Col, Flex, Row } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
+import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   onChangeSection,
   removeSection,
@@ -12,7 +13,7 @@ import SectionControls from "../../section_controls"
 interface EmbedControlsProps {
   onChangeSectionAction: (key: string, val: any) => void
   removeSectionAction: (i: number) => void
-  section: any
+  section: SectionData
   sectionIndex: number
 }
 

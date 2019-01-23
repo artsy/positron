@@ -1,10 +1,11 @@
 import { Embed } from "@artsy/reaction/dist/Components/Publishing/Sections/Embed"
+import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import React from "react"
 import EmbedControls from "./controls"
 
 interface SectionEmbedProps {
   editing: boolean
-  section: any
+  section: SectionData
 }
 
 // Embed section supports external content via iframes
