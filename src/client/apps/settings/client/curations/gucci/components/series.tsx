@@ -1,32 +1,37 @@
-import PropTypes from "prop-types"
-import React from "react"
 import { Box, Col, Row } from "@artsy/palette"
-import { FormLabel } from "client/components/form_label"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { Metadata } from "client/apps/settings/client/curations/gucci/components/metadata"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { FormLabel } from "client/components/form_label"
+import React from "react"
+import { RichTextAreaContainer } from "./section"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-export const SeriesAdmin = props => {
+export interface SeriesAdminProps {
+  curation: any
+  onChange: (key: string, val: any) => void
+}
+
+export const SeriesAdmin: React.SFC<SeriesAdminProps> = props => {
   const { curation, onChange } = props
 
   return (
-    <Box pb={95} maxWidth={960} px={3} mx="auto">
+    <>
       <Row>
-        <Col lg={8} pl={0}>
+        <Col lg={8} pr={2}>
           <Box pb={4}>
             <FormLabel>About the Series</FormLabel>
-            <Box className="bordered-input">
+            <RichTextAreaContainer>
               <Paragraph
                 hasLinks
                 html={curation.get("about") || ""}
                 onChange={html => onChange("about", html)}
               />
-            </Box>
+            </RichTextAreaContainer>
           </Box>
         </Col>
 
-        <Col lg={4}>
+        <Col lg={4} pl={2}>
           <Box pb={4}>
             <FormLabel>Partner Logo: Header</FormLabel>
             <ImageUpload
@@ -62,11 +67,6 @@ export const SeriesAdmin = props => {
         section={curation.toJSON()}
         onChange={(key, value) => onChange(key, value)}
       />
-    </Box>
+    </>
   )
-}
-
-SeriesAdmin.propTypes = {
-  curation: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
 }

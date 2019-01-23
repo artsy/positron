@@ -1,20 +1,26 @@
-import moment from "moment"
-import PropTypes from "prop-types"
-import React from "react"
-import { Box, Checkbox, Col, Flex, Row } from "@artsy/palette"
-import { FormLabel } from "client/components/form_label"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import { Metadata } from "client/apps/settings/client/curations/gucci/components/metadata"
+import { Box, Checkbox, Col, color, Flex, Row } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
+import { Metadata } from "client/apps/settings/client/curations/gucci/components/metadata"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { FormLabel } from "client/components/form_label"
+import moment from "moment"
+import React from "react"
+import styled from "styled-components"
 const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-export const SectionAdmin = props => {
-  const { section, onChange } = props
+export interface SectionAdminProps {
+  section: any
+  onChange: (key: string, val: any) => void
+}
 
+export const SectionAdmin: React.SFC<SectionAdminProps> = ({
+  section,
+  onChange,
+}) => {
   return (
-    <Box pb={95} maxWidth={960} px={3} mx="auto">
+    <Box pb={95}>
       <Row>
-        <Col lg={8} pl={0}>
+        <Col lg={8} pr={2}>
           <Box pb={3}>
             <FormLabel>Featuring</FormLabel>
             <Input
@@ -27,13 +33,13 @@ export const SectionAdmin = props => {
 
           <Box pb={4}>
             <FormLabel>About the Film</FormLabel>
-            <Box className="bordered-input">
+            <RichTextAreaContainer>
               <Paragraph
                 hasLinks
                 html={section.about || ""}
                 onChange={html => onChange("about", html)}
               />
-            </Box>
+            </RichTextAreaContainer>
           </Box>
 
           <Flex pb={3}>
@@ -64,7 +70,7 @@ export const SectionAdmin = props => {
           </Flex>
         </Col>
 
-        <Col lg={4}>
+        <Col lg={4} pl={2}>
           <Box pb={3}>
             <FormLabel>Video Embed Url</FormLabel>
             <Input
@@ -92,7 +98,9 @@ export const SectionAdmin = props => {
   )
 }
 
-SectionAdmin.propTypes = {
-  section: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
-}
+export const RichTextAreaContainer = styled.div`
+  border: 1px solid ${color("black10")};
+  padding: 10px;
+  margin-top: 10px;
+  min-height: 8em;
+`

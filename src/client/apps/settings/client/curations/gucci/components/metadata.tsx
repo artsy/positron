@@ -1,22 +1,24 @@
-import PropTypes from "prop-types"
-import React from "react"
 import { Box, Col, Row } from "@artsy/palette"
-import { FormLabel } from "client/components/form_label"
 import { Input } from "@artsy/reaction/dist/Components/Input"
+import TextArea from "@artsy/reaction/dist/Components/TextArea"
+import { FormLabel } from "client/components/form_label"
+import React from "react"
+import { SectionAdminProps } from "./section"
 const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
-export const Metadata = props => {
-  const { section, onChange } = props
-
+export const Metadata: React.SFC<SectionAdminProps> = ({
+  section,
+  onChange,
+}) => {
   return (
-    <Row justifyContent="space-between">
-      <Col lg={8} pl={0}>
+    <Row>
+      <Col lg={8} pr={2}>
         <Box pb={4}>
           <FormLabel>Description</FormLabel>
-          <textarea
-            className="bordered-input"
+          <TextArea
+            block
             defaultValue={section.description || ""}
-            onChange={e => onChange("description", e.target.value)}
+            onChange={e => onChange("description", e.currentTarget.value)}
           />
         </Box>
         <Box pb={3}>
@@ -29,10 +31,12 @@ export const Metadata = props => {
         </Box>
         <Box pb={3}>
           <FormLabel>Social Description</FormLabel>
-          <textarea
-            className="bordered-input"
+          <TextArea
+            block
             defaultValue={section.social_description || ""}
-            onChange={e => onChange("social_description", e.target.value)}
+            onChange={e =>
+              onChange("social_description", e.currentTarget.value)
+            }
           />
         </Box>
         <Box pb={3}>
@@ -68,7 +72,7 @@ export const Metadata = props => {
           />
         </Box>
       </Col>
-      <Col lg={4}>
+      <Col lg={4} pl={2}>
         <Box pb={3}>
           <FormLabel>Thumbnail Image</FormLabel>
           <ImageUpload
@@ -96,9 +100,4 @@ export const Metadata = props => {
       </Col>
     </Row>
   )
-}
-
-Metadata.propTypes = {
-  section: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
 }
