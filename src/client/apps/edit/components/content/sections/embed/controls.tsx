@@ -1,23 +1,22 @@
-import PropTypes from "prop-types"
-import { connect } from "react-redux"
-import React, { Component } from "react"
 import { Col, Flex, Row } from "@artsy/palette"
-import SectionControls from "../../section_controls"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import {
   onChangeSection,
   removeSection,
 } from "client/actions/edit/sectionActions"
 import { FormLabel } from "client/components/form_label"
-import { Input } from "@artsy/reaction/dist/Components/Input"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import SectionControls from "../../section_controls"
 
-export class EmbedControls extends Component {
-  static propTypes = {
-    onChangeSectionAction: PropTypes.func.isRequired,
-    removeSectionAction: PropTypes.func.isRequired,
-    section: PropTypes.object.isRequired,
-    sectionIndex: PropTypes.number,
-  }
+interface EmbedControlsProps {
+  onChangeSectionAction: (key: string, val: any) => void
+  removeSectionAction: (i: number) => void
+  section: any
+  sectionIndex: number
+}
 
+export class EmbedControls extends Component<EmbedControlsProps> {
   componentWillUnmount = () => {
     const { removeSectionAction, section, sectionIndex } = this.props
 
