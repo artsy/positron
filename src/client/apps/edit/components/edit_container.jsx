@@ -11,7 +11,7 @@ import {
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import EditAdmin from "./admin/index.tsx"
 import EditContent from "./content"
-import EditDisplay from "./display"
+import EditDisplay from "./display/index.tsx"
 import EditError from "./error"
 import EditHeader from "./header"
 import { MessageModal } from "./message"

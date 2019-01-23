@@ -14,6 +14,7 @@ import AdminVerticalsTags from "./components/verticals_tags"
 interface EditAdminProps {
   isNews: boolean
   isEditorial: boolean
+  isPartner: boolean
 }
 
 export class EditAdmin extends Component<EditAdminProps> {
@@ -46,11 +47,17 @@ export class EditAdmin extends Component<EditAdminProps> {
   }
 
   render() {
-    const { isNews, isEditorial } = this.props
+    const { isNews, isEditorial, isPartner } = this.props
     const sections = this.getSections()
 
     return (
-      <EditAdminContainer pb={95} pt={135} maxWidth={960} px={3} mx="auto">
+      <EditAdminContainer
+        pb={95}
+        pt={isPartner ? 95 : 135}
+        maxWidth={960}
+        px={3}
+        mx="auto"
+      >
         <DropDownList activeSections={[0, 1]} openMany sections={sections}>
           {isEditorial ? (
             <Box pt={4}>
@@ -98,6 +105,7 @@ export class EditAdmin extends Component<EditAdminProps> {
 const mapStateToProps = state => ({
   isNews: state.edit.article.layout === "news",
   isEditorial: state.app.channel.type === "editorial",
+  isPartner: state.app.channel.type === "partner",
 })
 
 export default connect(mapStateToProps)(EditAdmin)
