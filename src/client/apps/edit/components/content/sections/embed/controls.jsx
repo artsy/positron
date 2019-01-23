@@ -1,12 +1,14 @@
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import React, { Component } from "react"
-import { Col, Row } from "react-styled-flexboxgrid"
-import SectionControls from "../../section_controls/index"
+import { Col, Flex, Row } from "@artsy/palette"
+import SectionControls from "../../section_controls"
 import {
   onChangeSection,
   removeSection,
 } from "client/actions/edit/sectionActions"
+import { FormLabel } from "client/components/form_label"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 
 export class EmbedControls extends Component {
   static propTypes = {
@@ -32,38 +34,42 @@ export class EmbedControls extends Component {
         <SectionControls section={section} showLayouts>
           <Row>
             <Col xs={12}>
-              <h2>iFrame URL</h2>
-              <input
+              <FormLabel color="white">iFrame URL</FormLabel>
+              <Input
                 autoFocus
-                className="bordered-input bordered-input-dark"
+                block
                 value={section.url || ""}
-                onChange={e => onChangeSectionAction("url", e.target.value)}
+                onChange={e =>
+                  onChangeSectionAction("url", e.currentTarget.value)
+                }
                 placeholder="https://files.artsy.net"
               />
             </Col>
           </Row>
-          <Row>
-            <Col xs={6}>
-              <h2>Height (optional)</h2>
-              <input
-                className="bordered-input bordered-input-dark"
+          <Flex>
+            <Col xs={6} pr={2}>
+              <FormLabel color="white">Height (optional)</FormLabel>
+              <Input
+                block
                 value={section.height || ""}
-                onChange={e => onChangeSectionAction("height", e.target.value)}
+                onChange={e =>
+                  onChangeSectionAction("height", e.currentTarget.value)
+                }
                 placeholder="400"
               />
             </Col>
-            <Col xs={6}>
-              <h2>Mobile Height (optional)</h2>
-              <input
-                className="bordered-input bordered-input-dark"
+            <Col xs={6} pl={2}>
+              <FormLabel color="white">Mobile Height (optional)</FormLabel>
+              <Input
+                block
                 value={section.mobile_height || ""}
                 onChange={e =>
-                  onChangeSectionAction("mobile_height", e.target.value)
+                  onChangeSectionAction("mobile_height", e.currentTarget.value)
                 }
                 placeholder="300"
               />
             </Col>
-          </Row>
+          </Flex>
         </SectionControls>
       </div>
     )
