@@ -1,32 +1,34 @@
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
 import { NewsArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { SocialEmbed } from "@artsy/reaction/dist/Components/Publishing/Sections/SocialEmbed"
-import { SectionSocialEmbed } from "../index"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SocialEmbedControls } from "../controls"
+import { SectionSocialEmbed } from "../index"
 
 describe("Section Social Embed", () => {
   let props
+  let article
 
   beforeEach(() => {
+    article = cloneDeep(NewsArticle)
     props = {
-      article: cloneDeep(NewsArticle),
-      section: NewsArticle.sections[2],
+      article,
+      section: article.sections[2],
     }
   })
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: {},
       },
       edit: {
-        article: props.article,
-        section: NewsArticle.sections[2],
+        article: passedProps.article,
+        section: article.sections[2],
       },
     })
 
