@@ -1,35 +1,41 @@
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { clone, difference } from "lodash"
-import { connect } from "react-redux"
-import { data as sd } from "sharify"
-import { Row, Col } from "react-styled-flexboxgrid"
-import Artwork from "/client/models/artwork.coffee"
-import FileInput from "/client/components/file_input"
-import SectionControls from "../../../section_controls"
+import { Col, Flex } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { logError } from "client/actions/edit/errorActions"
 import {
   onChangeHero,
   onChangeSection,
   removeSection,
 } from "client/actions/edit/sectionActions"
-import { Autocomplete } from "/client/components/autocomplete2"
+import { Autocomplete } from "client/components/autocomplete2"
+import FileInput from "client/components/file_input"
+import { FormLabel } from "client/components/form_label"
+import { clone, difference } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { data as sd } from "sharify"
+import styled from "styled-components"
+import SectionControls from "../../../section_controls"
 import { InputArtworkUrl } from "./input_artwork_url"
+const Artwork = require("client/models/artwork.coffee")
 
-export class ImagesControls extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    isHero: PropTypes.bool,
-    logErrorAction: PropTypes.func,
-    onChangeHeroAction: PropTypes.func,
-    onChangeSectionAction: PropTypes.func,
-    removeSectionAction: PropTypes.func,
-    editSection: PropTypes.object,
-    section: PropTypes.object,
-    sectionIndex: PropTypes.number,
-    setProgress: PropTypes.func,
-  }
+interface ImagesControlsProps {
+  article: ArticleData
+  isHero: boolean
+  logErrorAction: (e: any) => void
+  onChangeHeroAction: (key: string, val: any) => void
+  onChangeSectionAction: (key: string, val: any) => void
+  removeSectionAction: (i: number) => void
+  editSection: any
+  section: SectionData
+  sectionIndex: number
+  setProgress: (progress: number) => void
+}
 
+export class ImagesControls extends Component<ImagesControlsProps> {
   componentWillUnmount = () => {
     const {
       removeSectionAction,
@@ -105,8 +111,8 @@ export class ImagesControls extends Component {
     this.onNewImage({
       url: image,
       type: "image",
-      width: width,
-      height: height,
+      width,
+      height,
       caption: "",
     })
   }
@@ -121,6 +127,8 @@ export class ImagesControls extends Component {
     if (layout === "news") {
       const existingImages = clone(editSection.images) || []
       const newImages = difference(images, existingImages)
+      console.log("existing", existingImages)
+      console.log("newImages", newImages)
       onChangeSectionAction("images", newImages)
     } else {
       onChangeSectionAction("images", images)
@@ -173,11 +181,11 @@ export class ImagesControls extends Component {
         </div>
 
         {!isHero && (
-          <Row
-            className="edit-controls__artwork-inputs"
+          <ArtworkInputs
+            pt={1}
             onClick={inputsAreDisabled ? this.fillWidthAlert : undefined}
           >
-            <Col xs={6}>
+            <Col xs={6} pr={1}>
               <Autocomplete
                 disabled={inputsAreDisabled}
                 filter={this.filterAutocomplete}
@@ -188,51 +196,49 @@ export class ImagesControls extends Component {
                 url={`${sd.ARTSY_URL}/api/search?q=%QUERY`}
               />
             </Col>
-            <Col xs={6}>
+            <Col xs={6} pl={1} pt={1}>
               <InputArtworkUrl
                 addArtwork={this.onNewImage}
                 fetchArtwork={this.fetchDenormalizedArtwork}
               />
             </Col>
-          </Row>
+          </ArtworkInputs>
         )}
 
         {!isHero &&
           section.type === "image_set" && (
-            <Row className="edit-controls__image-set-inputs">
-              <Col xs={6}>
-                <input
-                  ref="title"
-                  className="bordered-input bordered-input-dark"
+            <ArtworkInputs pt={1}>
+              <Col xs={6} pr={1}>
+                <Input
                   defaultValue={section.title}
                   onChange={e => {
-                    onChangeSectionAction("title", e.target.value)
+                    onChangeSectionAction("title", e.currentTarget.value)
                   }}
                   placeholder="Image Set Title (optional)"
                 />
               </Col>
-              <Col xs={6} className="inputs">
-                <label>Entry Point:</label>
-                <div className="layout-inputs">
-                  <div className="input-group">
-                    <div
-                      className="radio-input"
-                      onClick={() => onChangeSectionAction("layout", "mini")}
-                      data-active={section.layout !== "full"}
-                    />
-                    Mini
-                  </div>
-                  <div className="input-group">
-                    <div
-                      className="radio-input"
-                      onClick={() => onChangeSectionAction("layout", "full")}
-                      data-active={section.layout === "full"}
-                    />
-                    Full
-                  </div>
-                </div>
+              <Col xs={6} pl={1}>
+                <Flex height="100%" alignItems="center">
+                  <FormLabel color="white">Entry Point:</FormLabel>
+                  <Flex pl={2}>
+                    <Flex alignItems="center" pr={2}>
+                      <RadioInput
+                        onClick={() => onChangeSectionAction("layout", "mini")}
+                        isActive={section.layout !== "full"}
+                      />
+                      <FormLabel color="white">Mini</FormLabel>
+                    </Flex>
+                    <Flex alignItems="center" pr={2}>
+                      <RadioInput
+                        onClick={() => onChangeSectionAction("layout", "full")}
+                        isActive={section.layout === "full"}
+                      />
+                      <FormLabel color="white">Full</FormLabel>
+                    </Flex>
+                  </Flex>
+                </Flex>
               </Col>
-            </Row>
+            </ArtworkInputs>
           )}
       </SectionControls>
     )
@@ -256,3 +262,35 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ImagesControls)
+
+export const ArtworkInputs = styled(Flex)`
+  input {
+    margin-bottom: 0;
+  }
+`
+
+// TODO: Use palette radios
+export const RadioInput = styled.div.attrs<{ isActive: boolean }>({})`
+  border: 2px solid white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+
+  ${props =>
+    props.isActive &&
+    `
+    &::after {
+      content: "";
+      background: white;
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 50%;
+      border: 1px solid black;
+      position: absolute;
+      left: 1px;
+      top: 1px;
+    }
+  `};
+`

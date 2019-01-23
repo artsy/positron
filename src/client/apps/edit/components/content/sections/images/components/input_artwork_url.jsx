@@ -1,6 +1,8 @@
 import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { last } from "lodash"
+import { Button } from "@artsy/palette"
+import styled from "styled-components"
 
 export class InputArtworkUrl extends Component {
   static propTypes = {
@@ -41,7 +43,7 @@ export class InputArtworkUrl extends Component {
     const { isLoading, url } = this.state
 
     return (
-      <div className="InputArtworkUrl">
+      <InputArtworkUrlContainer>
         <input
           className="bordered-input bordered-input-dark"
           disabled={disabled}
@@ -54,13 +56,24 @@ export class InputArtworkUrl extends Component {
             }
           }}
         />
-        <button
-          className={`avant-garde-button ${isLoading ? "is-loading" : ""}`}
+        <Button
+          variant="secondaryGray"
+          loading={isLoading}
+          borderRadius={0}
           onClick={() => this.getIdFromSlug(url)}
         >
           Add
-        </button>
-      </div>
+        </Button>
+      </InputArtworkUrlContainer>
     )
   }
 }
+
+const InputArtworkUrlContainer = styled.div`
+  button {
+    height: 40px;
+  }
+  input {
+    width: calc(100% - 75px);
+  }
+`

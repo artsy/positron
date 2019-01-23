@@ -1,29 +1,40 @@
 // Images section supports a mix of uploaded images and artworks
-
+import { Flex } from "@artsy/palette"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import FillWidth from "@artsy/reaction/dist/Utils/fillwidth"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import DragContainer from "client/components/drag_drop/index.coffee"
-import ImagesControls from "./components/controls"
-import EditImage from "./components/edit_image.tsx"
-import { ImageSet } from "./components/image_set"
-import { ProgressBar } from "client/components/file_input/progress_bar"
 import {
   onChangeHero,
   onChangeSection,
 } from "client/actions/edit/sectionActions"
+import { ProgressBar } from "client/components/file_input/progress_bar"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import ImagesControls from "./components/controls"
+import EditImage from "./components/edit_image"
+import { ImageSet } from "./components/image_set"
+const DragContainer = require("client/components/drag_drop/index.coffee")
 
-export class SectionImages extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    editing: PropTypes.bool,
-    isHero: PropTypes.bool,
-    onChangeHeroAction: PropTypes.func,
-    onChangeSectionAction: PropTypes.func,
-    section: PropTypes.object.isRequired,
-  }
+interface SectionImagesProps {
+  article: ArticleData
+  editing: boolean
+  isHero: boolean
+  onChangeHeroAction: (key: string, val: any) => void
+  onChangeSectionAction: (key: string, val: any) => void
+  section: SectionData
+}
 
+interface SectionImagesState {
+  progress: number | null
+}
+
+export class SectionImages extends Component<
+  SectionImagesProps,
+  SectionImagesState
+> {
   state = {
     progress: null,
   }
@@ -134,20 +145,21 @@ export class SectionImages extends Component {
     const images = section.images || []
 
     return (
-      <section className="SectionImages">
+      <SectionImagesContainer>
         {editing && (
           <ImagesControls
             section={section}
             editing={editing}
             images={images}
             isHero={isHero}
-            setProgress={progress => this.setState({ progress })}
+            setProgress={val => this.setState({ progress: val })}
           />
         )}
 
         {progress && <ProgressBar progress={progress} cover />}
 
-        <div
+        <SectionImagesList
+          justifyContent="center"
           className="SectionImages__list"
           data-overflow={this.isImageSetWrapping()}
         >
@@ -164,8 +176,8 @@ export class SectionImages extends Component {
               Add images and artworks above
             </div>
           )}
-        </div>
-      </section>
+        </SectionImagesList>
+      </SectionImagesContainer>
     )
   }
 }
@@ -183,3 +195,47 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionImages)
+
+const SectionImagesContainer = styled.section`
+  .RemoveButton {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    height: 30px;
+    width: 30px;
+  }
+
+  [data-target="true"] .RemoveButton {
+    display: none;
+  }
+`
+
+const SectionImagesList = styled(Flex)`
+  position: relative;
+  z-index: -1;
+
+  .drag-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .drag-target {
+    max-width: 100%;
+    margin-right: 30px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &[data-overflow="true"] {
+    .drag-container {
+      flex-wrap: wrap;
+    }
+
+    .drag-target {
+      margin-right: 30px;
+      margin-left: 0;
+    }
+  }
+`
