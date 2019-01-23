@@ -2,7 +2,7 @@ FROM node:10.13-alpine
 ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH"
 
-RUN apk add curl git nginx
+RUN apk add curl git nginx bash
 
 # Set up deploy user and working directory
 RUN adduser -D -g '' deploy

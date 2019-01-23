@@ -1,8 +1,10 @@
+#!/bin/sh
+
 set -e -x
 
 trap "exit" INT
 
-mocha \
+nyc mocha \
   --require test.config.js \
   --timeout 10000 \
    $@ \
