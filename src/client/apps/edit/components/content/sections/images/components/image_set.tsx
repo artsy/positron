@@ -12,21 +12,11 @@ export interface ImageSetProps extends ImageSetPreviewProps {
 
 export const ImageSet: React.SFC<ImageSetProps> = props => {
   const { articleLayout, section } = props
-  const { layout, title, type } = section
   const images = section.images || []
 
   if (articleLayout === "classic") {
     return <ImageSetPreviewClassic images={images} />
   } else {
-    return (
-      <ImageSetPreview
-        section={{
-          images,
-          layout,
-          title,
-          type,
-        }}
-      />
-    )
+    return <ImageSetPreview section={section} />
   }
 }

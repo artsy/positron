@@ -18,7 +18,7 @@ describe("InputArtworkUrl", () => {
   }
 
   it("Renders input and button", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find("input").length).toBe(1)
     expect(component.find("button").length).toBe(1)
@@ -26,7 +26,7 @@ describe("InputArtworkUrl", () => {
 
   it("Input can be disabled with props", () => {
     props.disabled = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(
       component
@@ -37,7 +37,7 @@ describe("InputArtworkUrl", () => {
   })
 
   it("Sets input value to state.url on change", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(Input)
       .at(0)
@@ -52,7 +52,7 @@ describe("InputArtworkUrl", () => {
   })
 
   it("Calls getIdFromSlug on button click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const instance = component.instance() as InputArtworkUrl
     instance.setState({
       url: artworkUrl,
@@ -65,7 +65,7 @@ describe("InputArtworkUrl", () => {
   })
 
   it("Calls getIdFromSlug on enter", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const instance = component.instance() as InputArtworkUrl
     instance.setState({
       url: artworkUrl,
@@ -78,7 +78,7 @@ describe("InputArtworkUrl", () => {
   })
 
   it("#getIdFromSlug returns an id and calls addArtwork", () => {
-    const component = getWrapper(props).instance() as InputArtworkUrl
+    const component = getWrapper().instance() as InputArtworkUrl
     component.addArtwork = jest.fn()
     component.getIdFromSlug(artworkUrl)
 
@@ -86,7 +86,7 @@ describe("InputArtworkUrl", () => {
   })
 
   it("#addArtwork fetches an artwork and calls props.addArtwork", async () => {
-    const component = getWrapper(props).instance() as InputArtworkUrl
+    const component = getWrapper().instance() as InputArtworkUrl
     await component.getIdFromSlug(artworkUrl)
 
     expect(props.fetchArtwork.mock.calls[0][0]).toBe("chip-hughes-stripes")

@@ -40,13 +40,13 @@ describe("Section Social Embed", () => {
   }
 
   it("Renders saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(SocialEmbed).exists()).toBe(true)
   })
 
   it("Renders placeholder if empty", () => {
     props.section = {}
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(SocialEmbed).exists()).toBe(false)
     expect(component.text()).toBe("Add Twitter or Instagram URL above")
@@ -54,7 +54,7 @@ describe("Section Social Embed", () => {
 
   it("Renders controls if editing", () => {
     props.editing = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(SocialEmbedControls).exists()).toBe(true)
   })

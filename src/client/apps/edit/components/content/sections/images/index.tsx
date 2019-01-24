@@ -154,11 +154,11 @@ export class SectionImages extends Component<
             editing={editing}
             images={images}
             isHero={isHero}
-            setProgress={val => this.setState({ progress: val })}
+            setProgress={(val: number) => this.setState({ progress: val })}
           />
         )}
 
-        {progress && <ProgressBar progress={progress} cover />}
+        {progress !== null && <ProgressBar progress={progress} cover />}
 
         <SectionImagesList
           justifyContent="center"

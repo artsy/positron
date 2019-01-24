@@ -127,8 +127,6 @@ export class ImagesControls extends Component<ImagesControlsProps> {
     if (layout === "news") {
       const existingImages = clone(editSection.images) || []
       const newImages = difference(images, existingImages)
-      console.log("existing", existingImages)
-      console.log("newImages", newImages)
       onChangeSectionAction("images", newImages)
     } else {
       onChangeSectionAction("images", images)

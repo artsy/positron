@@ -51,14 +51,14 @@ describe("EmbedControls", () => {
   })
 
   it("Renders the inputs", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(SectionControls).length).toBe(1)
     expect(component.find("input").length).toBe(3)
   })
 
   it("Renders saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const inputs = component.find("input")
 
     expect(inputs.at(0).props().value).toBe(props.section.url)
@@ -67,7 +67,7 @@ describe("EmbedControls", () => {
   })
 
   it("Can change URL", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(Input)
       .at(0)
@@ -84,7 +84,7 @@ describe("EmbedControls", () => {
   })
 
   it("Can change height", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(Input)
       .at(1)
@@ -101,7 +101,7 @@ describe("EmbedControls", () => {
   })
 
   it("Can change mobile height", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(Input)
       .at(2)
@@ -119,7 +119,7 @@ describe("EmbedControls", () => {
 
   it("Destroys section on unmount if URL is empty", () => {
     props.section = { type: "embed" }
-    const component = getWrapper(props)
+    const component = getWrapper()
       .find(EmbedControls)
       .instance() as EmbedControls
 

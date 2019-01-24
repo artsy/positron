@@ -4,7 +4,6 @@ import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/S
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { ImageSetPreview } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
 import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview/ImageSetPreviewClassic"
-import { ProgressBar } from "client/components/file_input/progress_bar"
 import { mount, shallow } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
@@ -65,7 +64,7 @@ describe("SectionImageCollection", () => {
 
   describe("Rendering", () => {
     it("Renders a preview for images/artworks", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Image).length).toBe(2)
       expect(component.find(Artwork).exists()).toBe(true)
@@ -73,7 +72,7 @@ describe("SectionImageCollection", () => {
 
     it("Renders a preview for standard/feature image_set", () => {
       props.section = imageSetSection
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(ImageSetPreview).exists()).toBe(true)
     })
@@ -81,37 +80,38 @@ describe("SectionImageCollection", () => {
     it("Renders a preview for classic image_set", () => {
       props.article.layout = "classic"
       props.section = imageSetSection
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(ImageSetPreviewClassic).exists()).toBe(true)
     })
 
     it("Renders controls if editing", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(ImagesControls).exists()).toBe(true)
     })
 
     it("Renders a placeholder if editing and no images", () => {
       props.section.images = []
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toBe("Add images and artworks above")
     })
 
     it("Renders progress if state.progress", () => {
       props.editing = true
-      const component = getShallowWrapper(props)
-      component.setState({ progress: 0.65 })
+      const component = getWrapper()
+      const instance = component.find(SectionImages).instance()
+      instance.setState({ progress: 0.65 })
 
-      expect(component.find(ProgressBar).exists()).toBe(true)
+      expect(component.html()).toMatch("ProgressBar__bar")
     })
   })
 
   describe("Drag/drop", () => {
     it("Does not render draggable components if not editing", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(DragContainer).exists()).toBe(false)
     })
@@ -119,20 +119,20 @@ describe("SectionImageCollection", () => {
     it("Does not render draggable components if single image", () => {
       props.editing = true
       props.section.images = [imageSection.images[0]]
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(DragContainer).exists()).toBe(false)
     })
 
     it("Renders draggable components if more than one image and editing", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(DragContainer).exists()).toBe(true)
     })
 
     it("#onDragEnd calls onChange with reset section images", () => {
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const newImages = props.section.images.reverse()
       component.onDragEnd(newImages)
 
@@ -143,7 +143,7 @@ describe("SectionImageCollection", () => {
 
   describe("Container sizes", () => {
     it("#getContainerSizes returns sizes for overflow section in standard/feature articles", () => {
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(780)
@@ -152,7 +152,7 @@ describe("SectionImageCollection", () => {
 
     it("#getContainerSizes returns sizes for column section in standard/feature articles", () => {
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(680)
@@ -161,7 +161,7 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns sizes for overflow section in classic articles", () => {
       props.article.layout = "classic"
       props.section.layout = "overflow_fillwidth"
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(900)
@@ -171,7 +171,7 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns sizes for column section in classic articles", () => {
       props.article.layout = "classic"
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(580)
@@ -179,7 +179,7 @@ describe("SectionImageCollection", () => {
 
     it("#getContainerSizes returns correct sizes for large image_sets in standard/feature articles", () => {
       props.section = largeImageSetSection
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(680)
@@ -189,7 +189,7 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns correct sizes for large image_sets in classic articles", () => {
       props.article.layout = "classic"
       props.section = largeImageSetSection
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(580)
@@ -199,7 +199,7 @@ describe("SectionImageCollection", () => {
 
   describe("Fillwidth", () => {
     it("#setFillWidthDimensions returns an array of image sizes", () => {
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.setFillWidthDimensions()
 
       expect(sizes.length).toBe(props.section.images.length)
@@ -208,7 +208,7 @@ describe("SectionImageCollection", () => {
     })
 
     it("#getFillWidthDimensions returns state.dimensions", () => {
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getFillWidthDimensions()
 
       expect(sizes.length).toBe(props.section.images.length)
@@ -218,7 +218,7 @@ describe("SectionImageCollection", () => {
 
     it("#getFillWidthDimensions returns false if section layout is column", () => {
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props).instance() as SectionImages
+      const component = getShallowWrapper().instance() as SectionImages
       const sizes = component.getFillWidthDimensions()
 
       expect(sizes).toBe(false)

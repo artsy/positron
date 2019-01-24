@@ -1,3 +1,4 @@
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import Backbone from "backbone"
 import { SectionControls } from "client/apps/edit/components/content/section_controls"
@@ -165,7 +166,7 @@ describe("ImagesControls", () => {
         .props()
         .onSelect(newImages)
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("images")
-      // expect(props.onChangeSectionAction.mock.calls[0][1].length).toBe(1)
+      expect(props.onChangeSectionAction.mock.calls[0][1].length).toBe(1)
       expect(props.onChangeSectionAction.mock.calls[0][1][0]).toBe(newImage)
     })
 
@@ -332,16 +333,23 @@ describe("ImagesControls", () => {
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("full")
     })
 
-    xit("changes image_set title on input", () => {
-      const component = getWrapper(props)
+    it("changes image_set title on input", () => {
+      const component = getWrapper()
       const input = component
-        .find(".edit-controls__image-set-inputs")
-        .find("input")
-      const newTitle = "A title for the Image Set"
-      input.simulate("change", { target: { value: newTitle } })
+        .find(Input)
+        .at(2)
+        .instance() as Input
+      const event = ({
+        currentTarget: {
+          value: "A title for the Image Set",
+        },
+      } as unknown) as React.FormEvent<HTMLInputElement>
+      input.onChange(event)
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("title")
-      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(newTitle)
+      expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(
+        "A title for the Image Set"
+      )
     })
   })
 })

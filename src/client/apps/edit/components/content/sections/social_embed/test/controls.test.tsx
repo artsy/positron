@@ -55,21 +55,21 @@ describe("SocialEmbedControls", () => {
   })
 
   it("Renders the input", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(SectionControls).length).toBe(1)
     expect(component.find(Input).length).toBe(1)
   })
 
   it("Renders saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const inputs = component.find(Input)
 
     expect(inputs.at(0).props().value).toBe(props.section.url)
   })
 
   it("Can change URL", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(Input)
       .at(0)
@@ -87,7 +87,7 @@ describe("SocialEmbedControls", () => {
 
   it("Destroys section on unmount if URL is empty", () => {
     props.section = { type: "embed" }
-    const component = getWrapper(props)
+    const component = getWrapper()
       .find(SocialEmbedControls)
       .instance() as SocialEmbedControls
 
