@@ -2,7 +2,7 @@ import { Input } from "@artsy/reaction/dist/Components/Input"
 import { Artworks } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
 import { mount } from "enzyme"
 import React from "react"
-import { InputArtworkUrl } from "../components/input_artwork_url"
+import { InputArtworkUrl } from "../input_artwork_url"
 
 describe("InputArtworkUrl", () => {
   const props = {

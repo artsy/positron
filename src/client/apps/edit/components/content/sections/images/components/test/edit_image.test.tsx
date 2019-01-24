@@ -1,13 +1,13 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { RemoveButton } from "client/components/remove_button"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { stripTags } from "underscore.string"
-import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
-import { RemoveButton } from "../../../../../../../components/remove_button"
-import { EditImage, EditImageContainer } from "../components/edit_image"
+import { EditImage, EditImageContainer } from "../edit_image"
 
 describe("EditImage", () => {
   let props

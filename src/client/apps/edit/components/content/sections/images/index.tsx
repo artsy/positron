@@ -167,7 +167,10 @@ export class SectionImages extends Component<
         >
           {images.length > 0 ? (
             section.type === "image_set" && !editing ? (
-              <ImageSet articleLayout={article.layout} section={section} />
+              <ImageSet
+                articleLayout={article.layout || "standard"}
+                section={section as any}
+              />
             ) : images.length > 1 && editing ? (
               this.renderDraggableImages(images)
             ) : (

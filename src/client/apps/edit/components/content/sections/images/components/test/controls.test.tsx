@@ -1,17 +1,13 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import Backbone from "backbone"
+import { SectionControls } from "client/apps/edit/components/content/section_controls"
 import { Autocomplete } from "client/components/autocomplete2"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
-import { SectionControls } from "../../../section_controls"
-import {
-  ArtworkInputs,
-  ImagesControls,
-  RadioInput,
-} from "../components/controls"
+import { ArtworkInputs, ImagesControls, RadioInput } from "../controls"
 const Artwork = require("client/models/artwork.coffee")
 require("typeahead.js")
 
