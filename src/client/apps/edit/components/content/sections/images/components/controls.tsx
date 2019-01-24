@@ -1,4 +1,4 @@
-import { Col, Flex } from "@artsy/palette"
+import { Box, Col, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import {
   ArticleData,
@@ -172,13 +172,16 @@ export class ImagesControls extends Component<ImagesControlsProps> {
         isHero={isHero}
         disabledAlert={this.fillWidthAlert}
       >
-        <div onClick={inputsAreDisabled ? this.fillWidthAlert : undefined}>
+        <Box
+          onClick={inputsAreDisabled ? this.fillWidthAlert : undefined}
+          pt={isNews || isHero ? 1 : 0}
+        >
           <FileInput
             disabled={inputsAreDisabled}
             onProgress={setProgress}
             onUpload={this.onUpload}
           />
-        </div>
+        </Box>
 
         {!isHero && (
           <ArtworkInputs
@@ -200,6 +203,7 @@ export class ImagesControls extends Component<ImagesControlsProps> {
               <InputArtworkUrl
                 addArtwork={this.onNewImage}
                 fetchArtwork={this.fetchDenormalizedArtwork}
+                disabled={inputsAreDisabled}
               />
             </Col>
           </ArtworkInputs>

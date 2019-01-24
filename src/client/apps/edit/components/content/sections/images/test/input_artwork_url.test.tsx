@@ -1,10 +1,11 @@
+import { Input } from "@artsy/reaction/dist/Components/Input"
+import { Artworks } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
 import { mount } from "enzyme"
 import React from "react"
 import { InputArtworkUrl } from "../components/input_artwork_url"
-import { Artworks } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
 
 describe("InputArtworkUrl", () => {
-  let props = {
+  const props = {
     addArtwork: jest.fn(),
     disabled: false,
     fetchArtwork: jest.fn().mockReturnValue(Artworks[0]),
@@ -12,8 +13,8 @@ describe("InputArtworkUrl", () => {
 
   const artworkUrl = "https://www.artsy.net/artwork/chip-hughes-stripes"
 
-  const getWrapper = props => {
-    return mount(<InputArtworkUrl {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<InputArtworkUrl {...passedProps} />)
   }
 
   it("Renders input and button", () => {
@@ -37,44 +38,57 @@ describe("InputArtworkUrl", () => {
 
   it("Sets input value to state.url on change", () => {
     const component = getWrapper(props)
-    const input = component.find("input").first()
-
-    input.simulate("change", { target: { value: artworkUrl } })
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: artworkUrl,
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
     expect(component.state().url).toBe(artworkUrl)
   })
 
   it("Calls getIdFromSlug on button click", () => {
     const component = getWrapper(props)
+    const instance = component.instance() as InputArtworkUrl
+    instance.setState({
+      url: artworkUrl,
+    })
     const button = component.find("button").first()
-    component.instance().getIdFromSlug = jest.fn()
+    instance.getIdFromSlug = jest.fn()
 
     button.simulate("click")
-    expect(component.instance().getIdFromSlug.mock.calls.length).toBe(1)
+    expect(instance.getIdFromSlug).toBeCalledWith(artworkUrl)
   })
 
   it("Calls getIdFromSlug on enter", () => {
     const component = getWrapper(props)
+    const instance = component.instance() as InputArtworkUrl
+    instance.setState({
+      url: artworkUrl,
+    })
     const input = component.find("input").first()
-    component.instance().getIdFromSlug = jest.fn()
+    instance.getIdFromSlug = jest.fn()
 
     input.simulate("keyup", { key: "Enter" })
-    expect(component.instance().getIdFromSlug.mock.calls.length).toBe(1)
+    expect(instance.getIdFromSlug).toBeCalledWith(artworkUrl)
   })
 
   it("#getIdFromSlug returns an id and calls addArtwork", () => {
-    const component = getWrapper(props)
-    component.instance().addArtwork = jest.fn()
+    const component = getWrapper(props).instance() as InputArtworkUrl
+    component.addArtwork = jest.fn()
+    component.getIdFromSlug(artworkUrl)
 
-    component.instance().getIdFromSlug(artworkUrl)
-    expect(component.instance().addArtwork.mock.calls[0][0]).toBe(
-      "chip-hughes-stripes"
-    )
+    expect(component.addArtwork).toBeCalledWith("chip-hughes-stripes")
   })
 
   it("#addArtwork fetches an artwork and calls props.addArtwork", async () => {
-    const component = getWrapper(props)
+    const component = getWrapper(props).instance() as InputArtworkUrl
+    await component.getIdFromSlug(artworkUrl)
 
-    await component.instance().getIdFromSlug(artworkUrl)
     expect(props.fetchArtwork.mock.calls[0][0]).toBe("chip-hughes-stripes")
     expect(props.addArtwork.mock.calls[0][0]).toBe(Artworks[0])
   })

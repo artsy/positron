@@ -10,6 +10,7 @@ import { RemoveButton } from "client/components/remove_button"
 import { VideoSectionControls } from "../controls"
 import { SectionVideo } from "../index.jsx"
 import { Videos } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
+import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 
 describe("Video", () => {
   let props
@@ -52,7 +53,7 @@ describe("Video", () => {
     props.section.url = null
     const component = getWrapper(props)
 
-    expect(component.html()).toMatch("edit-section__placeholder")
+    expect(component.find(EditSectionPlaceholder)).toHaveLength(1)
     expect(component.text()).toMatch("Add a video above")
   })
 
@@ -63,7 +64,7 @@ describe("Video", () => {
     expect(
       component.find(SectionVideo).props().section.cover_image_url
     ).toMatch(video.cover_image_url)
-    expect(component.html()).not.toMatch("edit-section__placeholder")
+    expect(component.find(EditSectionPlaceholder)).toHaveLength(0)
     expect(component.text()).not.toMatch("Add a video above")
   })
 

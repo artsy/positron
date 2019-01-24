@@ -1,14 +1,16 @@
 // Images section supports a mix of uploaded images and artworks
-import { Flex } from "@artsy/palette"
+import { color, Flex } from "@artsy/palette"
 import {
   ArticleData,
   SectionData,
+  SectionLayout,
 } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import FillWidth from "@artsy/reaction/dist/Utils/fillwidth"
 import {
   onChangeHero,
   onChangeSection,
 } from "client/actions/edit/sectionActions"
+import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import { ProgressBar } from "client/components/file_input/progress_bar"
 import React, { Component } from "react"
 import { connect } from "react-redux"
@@ -145,7 +147,7 @@ export class SectionImages extends Component<
     const images = section.images || []
 
     return (
-      <SectionImagesContainer>
+      <SectionImagesContainer sectionLayout={section.layout || "column_width"}>
         {editing && (
           <ImagesControls
             section={section}
@@ -172,9 +174,9 @@ export class SectionImages extends Component<
               this.renderImages(images)
             )
           ) : (
-            <div className="edit-section__placeholder">
+            <EditSectionPlaceholder>
               Add images and artworks above
-            </div>
+            </EditSectionPlaceholder>
           )}
         </SectionImagesList>
       </SectionImagesContainer>
@@ -196,7 +198,9 @@ export default connect(
   mapDispatchToProps
 )(SectionImages)
 
-const SectionImagesContainer = styled.section`
+const SectionImagesContainer = styled.section.attrs<{
+  sectionLayout: SectionLayout
+}>({})`
   .RemoveButton {
     position: absolute;
     top: -12px;
@@ -208,6 +212,21 @@ const SectionImagesContainer = styled.section`
   [data-target="true"] .RemoveButton {
     display: none;
   }
+
+  ${props =>
+    props.sectionLayout === "fillwidth" &&
+    `
+    .RemoveButton {
+      top: 20px;
+      right: 20px;
+      circle {
+        fill: ${color("black30")}
+      }
+      &:hover circle {
+        fill: ${color("red100")};
+      }
+    }
+  `};
 `
 
 const SectionImagesList = styled(Flex)`

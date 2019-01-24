@@ -1,5 +1,6 @@
 import { Embed } from "@artsy/reaction/dist/Components/Publishing/Sections/Embed"
 import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import React from "react"
 import EmbedControls from "./controls"
 
@@ -20,7 +21,7 @@ export const SectionEmbed: React.SFC<SectionEmbedProps> = ({
       {section.url ? (
         <Embed section={section} />
       ) : (
-        <div className="edit-section__placeholder">Add URL above</div>
+        <EditSectionPlaceholder>Add URL above</EditSectionPlaceholder>
       )}
     </section>
   )

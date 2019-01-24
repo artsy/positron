@@ -1,17 +1,18 @@
-import { clone } from "lodash"
-import { mount, shallow } from "enzyme"
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
+import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
+import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { ImageSetPreview } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
 import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview/ImageSetPreviewClassic"
-import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import DragContainer from "client/components/drag_drop/index.coffee"
 import { ProgressBar } from "client/components/file_input/progress_bar"
+import { mount, shallow } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { ImagesControls } from "../components/controls"
 import { SectionImages } from "../index"
+const DragContainer = require("client/components/drag_drop/index.coffee")
 require("typeahead.js")
 
 describe("SectionImageCollection", () => {
@@ -21,35 +22,37 @@ describe("SectionImageCollection", () => {
   let imageSetSection
   let largeImageSetSection
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: {},
       },
       edit: {
-        article: props.article,
-        section: props.section,
+        article: passedProps.article,
+        section: passedProps.section,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <SectionImages {...props} />
+        <FullScreenProvider>
+          <SectionImages {...passedProps} />
+        </FullScreenProvider>
       </Provider>
     )
   }
 
-  const getShallowWrapper = props => {
-    return shallow(<SectionImages {...props} />)
+  const getShallowWrapper = (passedProps = props) => {
+    return shallow(<SectionImages {...passedProps} />)
   }
 
   beforeEach(() => {
     article = clone(StandardArticle)
-    imageSection = clone(StandardArticle.sections[4])
-    imageSetSection = clone(StandardArticle.sections[14])
-    largeImageSetSection = clone(StandardArticle.sections[14])
-    largeImageSetSection.images.push(StandardArticle.sections[16].images[0])
+    imageSection = clone(article.sections[4])
+    imageSetSection = clone(article.sections[14])
+    largeImageSetSection = clone(article.sections[14])
+    largeImageSetSection.images.push(article.sections[16].images[0])
 
     props = {
       article,
@@ -129,10 +132,9 @@ describe("SectionImageCollection", () => {
     })
 
     it("#onDragEnd calls onChange with reset section images", () => {
-      const component = getShallowWrapper(props)
+      const component = getShallowWrapper(props).instance() as SectionImages
       const newImages = props.section.images.reverse()
-
-      component.instance().onDragEnd(newImages)
+      component.onDragEnd(newImages)
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("images")
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(newImages)
@@ -141,8 +143,8 @@ describe("SectionImageCollection", () => {
 
   describe("Container sizes", () => {
     it("#getContainerSizes returns sizes for overflow section in standard/feature articles", () => {
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(780)
       expect(sizes.targetHeight).toBe(630)
@@ -150,8 +152,8 @@ describe("SectionImageCollection", () => {
 
     it("#getContainerSizes returns sizes for column section in standard/feature articles", () => {
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(680)
     })
@@ -159,8 +161,8 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns sizes for overflow section in classic articles", () => {
       props.article.layout = "classic"
       props.section.layout = "overflow_fillwidth"
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(900)
       expect(sizes.targetHeight).toBe(630)
@@ -169,16 +171,16 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns sizes for column section in classic articles", () => {
       props.article.layout = "classic"
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(580)
     })
 
     it("#getContainerSizes returns correct sizes for large image_sets in standard/feature articles", () => {
       props.section = largeImageSetSection
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(680)
       expect(sizes.targetHeight).toBe(400)
@@ -187,8 +189,8 @@ describe("SectionImageCollection", () => {
     it("#getContainerSizes returns correct sizes for large image_sets in classic articles", () => {
       props.article.layout = "classic"
       props.section = largeImageSetSection
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getContainerSizes()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getContainerSizes()
 
       expect(sizes.containerSize).toBe(580)
       expect(sizes.targetHeight).toBe(400)
@@ -197,8 +199,8 @@ describe("SectionImageCollection", () => {
 
   describe("Fillwidth", () => {
     it("#setFillWidthDimensions returns an array of image sizes", () => {
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().setFillWidthDimensions()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.setFillWidthDimensions()
 
       expect(sizes.length).toBe(props.section.images.length)
       expect(sizes[0].width).toBe(287)
@@ -206,8 +208,8 @@ describe("SectionImageCollection", () => {
     })
 
     it("#getFillWidthDimensions returns state.dimensions", () => {
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getFillWidthDimensions()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getFillWidthDimensions()
 
       expect(sizes.length).toBe(props.section.images.length)
       expect(sizes[0].width).toBe(287)
@@ -216,8 +218,8 @@ describe("SectionImageCollection", () => {
 
     it("#getFillWidthDimensions returns false if section layout is column", () => {
       props.section.layout = "column_width"
-      const component = getShallowWrapper(props)
-      const sizes = component.instance().getFillWidthDimensions()
+      const component = getShallowWrapper(props).instance() as SectionImages
+      const sizes = component.getFillWidthDimensions()
 
       expect(sizes).toBe(false)
     })
