@@ -5,10 +5,10 @@ import {
   onChangeSection,
   removeSection,
 } from "client/actions/edit/sectionActions"
+import SectionControls from "client/apps/edit/components/content/section_controls"
 import { FormLabel } from "client/components/form_label"
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import SectionControls from "../../section_controls"
 
 interface EmbedControlsProps {
   onChangeSectionAction: (key: string, val: any) => void

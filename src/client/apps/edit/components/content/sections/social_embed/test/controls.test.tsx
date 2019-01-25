@@ -1,11 +1,11 @@
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { NewsArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { SectionControls } from "client/apps/edit/components/content/section_controls"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
-import { SectionControls } from "../../../section_controls"
 import { SocialEmbedControls } from "../controls"
 
 describe("SocialEmbedControls", () => {
