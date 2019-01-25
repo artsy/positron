@@ -7,6 +7,7 @@ import { connect } from "react-redux"
 import VideoSectionControls from "./controls.jsx"
 import { Video } from "@artsy/reaction/dist/Components/Publishing/Sections/Video"
 import { ProgressBar } from "client/components/file_input/progress_bar"
+import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import {
   RemoveButton,
   RemoveButtonContainer,
@@ -81,7 +82,7 @@ export class SectionVideo extends Component {
         </Video>
       )
     } else {
-      return <div className="edit-section__placeholder">Add a video above</div>
+      return <EditSectionPlaceholder>Add a video above</EditSectionPlaceholder>
     }
   }
 

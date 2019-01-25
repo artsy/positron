@@ -1,11 +1,10 @@
 import Backbone from "backbone"
-import React from "react"
-import { GucciAdmin } from "../index.jsx"
-import { mount } from "enzyme"
-
 import { DropDownItem } from "client/components/drop_down/drop_down_item.jsx"
-import { SectionAdmin } from "../components/section.jsx"
-import { SeriesAdmin } from "../components/series.jsx"
+import { mount } from "enzyme"
+import React from "react"
+import { SectionAdmin } from "../components/section"
+import { SeriesAdmin } from "../components/series"
+import { GucciAdmin } from "../index"
 
 describe("Gucci Admin", () => {
   const curation = new Backbone.Model({
@@ -27,8 +26,12 @@ describe("Gucci Admin", () => {
     curation,
   }
 
+  const getWrapper = (passedProps = props) => {
+    return mount(<GucciAdmin {...passedProps} />)
+  }
+
   it("renders sections and save buttons", () => {
-    const component = mount(<GucciAdmin {...props} />)
+    const component = getWrapper()
     expect(component.find(DropDownItem).length).toBe(3)
     expect(component.find(SeriesAdmin).length).toBe(1)
     expect(
@@ -40,7 +43,7 @@ describe("Gucci Admin", () => {
   })
 
   it("opens a section admin panel on click", () => {
-    const component = mount(<GucciAdmin {...props} />)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(1)
@@ -55,8 +58,9 @@ describe("Gucci Admin", () => {
   })
 
   it("#onChange updates state.campaign and changes the save button text/color", () => {
-    const component = mount(<GucciAdmin {...props} />)
-    component.instance().onChange("name", "New Title")
+    const component = getWrapper()
+    const instance = component.instance() as GucciAdmin
+    instance.onChange("name", "New Title")
     expect(component.state().curation.get("name")).toMatch("New Title")
     expect(component.state().isSaved).toBe(false)
     // FIXME TEST: Received: "black"
@@ -70,10 +74,9 @@ describe("Gucci Admin", () => {
   })
 
   it("#onChangeSection updates state.campaign", () => {
-    const component = mount(<GucciAdmin {...props} />)
-    component
-      .instance()
-      .onChangeSection("featuring", "Many feminist artists", 0)
+    const component = getWrapper()
+    const instance = component.instance() as GucciAdmin
+    instance.onChangeSection("featuring", "Many feminist artists", 0)
     expect(component.state().curation.get("sections")[0].featuring).toMatch(
       "Many feminist artists"
     )
@@ -89,13 +92,14 @@ describe("Gucci Admin", () => {
   })
 
   it("Save button saves the curation", () => {
-    const component = mount(<GucciAdmin {...props} />)
-    component.instance().save = jest.fn()
-    component.instance().onChange("name", "New Title")
+    const component = getWrapper()
+    const instance = component.instance() as GucciAdmin
+    instance.save = jest.fn()
+    instance.onChange("name", "New Title")
     component
       .find("button")
       .at(0)
       .simulate("click")
-    expect(component.instance().save).toHaveBeenCalled()
+    expect(instance.save).toHaveBeenCalled()
   })
 })

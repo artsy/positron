@@ -7,7 +7,7 @@ React = require 'react'
 ReactDOM = require 'react-dom'
 VeniceAdmin = React.createFactory require './curations/venice/venice_admin.coffee'
 DisplayAdmin = require './curations/display/index.tsx'
-{ GucciAdmin } = require './curations/gucci/index.jsx'
+{ GucciAdmin } = require './curations/gucci/index.tsx'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
 

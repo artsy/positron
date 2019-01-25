@@ -37,7 +37,7 @@
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
     "@artsy/palette": "2.27.3",
-    "@artsy/reaction": "11.2.5",
+    "@artsy/reaction": "11.2.19",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
@@ -118,7 +118,6 @@
     "react-hot-loader": "^4.0.0",
     "react-redux": "^5.0.6",
     "react-sizeme": "^2.3.6",
-    "react-styled-flexboxgrid": "^2.0.3",
     "react-tracking": "^5.4.1",
     "react-waypoint": "^7.3.1",
     "redux": "^3.7.2",

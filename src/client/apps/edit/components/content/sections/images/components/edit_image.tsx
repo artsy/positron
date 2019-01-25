@@ -1,16 +1,16 @@
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import {
+  onChangeHero,
+  onChangeSection,
+} from "client/actions/edit/sectionActions"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { RemoveButton } from "client/components/remove_button"
 import { clone, without } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
-import {
-  onChangeHero,
-  onChangeSection,
-} from "../../../../../../../actions/edit/sectionActions"
-import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
-import { RemoveButton } from "../../../../../../../components/remove_button"
 
 interface ArticleImage {
   url?: string

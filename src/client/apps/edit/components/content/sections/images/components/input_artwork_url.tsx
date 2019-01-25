@@ -1,14 +1,24 @@
-import PropTypes from "prop-types"
-import React, { Component } from "react"
+import { Button, Flex } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import { last } from "lodash"
+import React, { Component } from "react"
+import styled from "styled-components"
 
-export class InputArtworkUrl extends Component {
-  static propTypes = {
-    addArtwork: PropTypes.func.isRequired,
-    disabled: PropTypes.bool,
-    fetchArtwork: PropTypes.func.isRequired,
-  }
+interface InputArtworkUrlProps {
+  addArtwork: (artwork: any) => void
+  disabled: boolean
+  fetchArtwork: (id: string) => void
+}
 
+interface InputArtworkUrlState {
+  isLoading: boolean
+  url: string
+}
+
+export class InputArtworkUrl extends Component<
+  InputArtworkUrlProps,
+  InputArtworkUrlState
+> {
   state = {
     isLoading: false,
     url: "",
@@ -25,7 +35,7 @@ export class InputArtworkUrl extends Component {
 
   addArtwork = async id => {
     const { addArtwork, fetchArtwork } = this.props
-    let isLoading = false
+    const isLoading = false
 
     try {
       const artwork = await fetchArtwork(id)
@@ -41,26 +51,37 @@ export class InputArtworkUrl extends Component {
     const { isLoading, url } = this.state
 
     return (
-      <div className="InputArtworkUrl">
-        <input
+      <InputArtworkUrlContainer>
+        <Input
           className="bordered-input bordered-input-dark"
           disabled={disabled}
           placeholder="Add artwork url"
-          value={url}
-          onChange={e => this.setState({ url: e.target.value })}
+          defaultValue={url}
+          onChange={e => this.setState({ url: e.currentTarget.value })}
           onKeyUp={e => {
             if (e.key === "Enter") {
               this.getIdFromSlug(url)
             }
           }}
         />
-        <button
-          className={`avant-garde-button ${isLoading ? "is-loading" : ""}`}
+        <Button
+          variant="secondaryGray"
+          loading={isLoading}
+          borderRadius={0}
           onClick={() => this.getIdFromSlug(url)}
         >
           Add
-        </button>
-      </div>
+        </Button>
+      </InputArtworkUrlContainer>
     )
   }
 }
+
+const InputArtworkUrlContainer = styled(Flex)`
+  button {
+    height: 40px;
+  }
+  div[class^="Input__Container"] {
+    width: calc(100% - 75px);
+  }
+`
