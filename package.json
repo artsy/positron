@@ -32,7 +32,8 @@
     "babel-plugin-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz",
     "relay-compiler": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz",
     "relay-runtime": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz",
-    "react-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz"
+    "react-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz",
+    "fsevents": "~1.2.4"
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
@@ -129,7 +130,7 @@
     "socket.io": "^2.0.4",
     "styled-components": "3.4.5",
     "stylus": "^0.54.5",
-    "superagent": "^3.3.1",
+    "superagent": "^3.7.0",
     "superagent-bluebird-promise": "^3.0.0",
     "ts-loader": "^4.1.0",
     "typescript": "^3.0.1",
@@ -179,7 +180,7 @@
     "jade-loader": "^0.8.0",
     "jest": "^23.4.1",
     "jest-coffee-preprocessor": "^1.0.0",
-    "jquery": "^2.1.4",
+    "jquery": "^3.0.0",
     "jquery-autosize": "^1.18.18",
     "jquery-fillwidth-lite": "^1.0.3",
     "jquery-on-infinite-scroll": "^1.0.1",
