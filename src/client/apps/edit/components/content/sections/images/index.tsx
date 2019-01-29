@@ -63,7 +63,10 @@ export class SectionImages extends Component<
     const articleLayout = article.layout
     const sectionLayout = section.layout
 
-    let containerSize = sectionLayout === "column_width" ? 680 : 780
+    let containerSize =
+      sectionLayout === "column_width" || section.type === "image_set"
+        ? 680
+        : 780
     let targetHeight = window.innerHeight * 0.7
 
     if (articleLayout === "classic") {
@@ -143,7 +146,10 @@ export class SectionImages extends Component<
     const images = section.images || []
 
     return (
-      <SectionImagesContainer sectionLayout={section.layout || "column_width"}>
+      <SectionImagesContainer
+        sectionLayout={section.layout || "column_width"}
+        isWrapping={editing && this.isImageSetWrapping()}
+      >
         {editing && (
           <ImagesControls
             section={section}
@@ -159,7 +165,7 @@ export class SectionImages extends Component<
         <SectionImagesList
           justifyContent="center"
           className="SectionImages__list"
-          data-overflow={this.isImageSetWrapping()}
+          isWrapping={editing && this.isImageSetWrapping()}
           isEditing={editing}
         >
           {images.length > 0 ? (
@@ -200,6 +206,7 @@ export default connect(
 
 const SectionImagesContainer = styled.section.attrs<{
   sectionLayout: SectionLayout
+  isWrapping?: boolean
 }>({})`
   .RemoveButton {
     position: absolute;
@@ -229,13 +236,22 @@ const SectionImagesContainer = styled.section.attrs<{
   `};
 `
 
-const SectionImagesList = styled(Flex).attrs<{ isEditing?: boolean }>({})`
+const SectionImagesList = styled(Flex).attrs<{
+  isEditing?: boolean
+  isWrapping?: boolean
+}>({})`
   position: relative;
   z-index: ${props => (props.isEditing ? "2" : "-1")};
 
   ${DragContainer} {
     flex-direction: row;
     justify-content: space-between;
+
+    ${props =>
+      props.isWrapping &&
+      `
+      flex-wrap: wrap;
+    `};
   }
 
   ${DragTargetContainer} {

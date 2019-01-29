@@ -4,6 +4,7 @@ import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/S
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { ImageSetPreview } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
 import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview/ImageSetPreviewClassic"
+import { DragDropList } from "client/components/drag_drop2"
 import { mount, shallow } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
@@ -11,7 +12,6 @@ import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
 import { ImagesControls } from "../components/controls"
 import { SectionImages } from "../index"
-const DragContainer = require("client/components/drag_drop/index.coffee")
 require("typeahead.js")
 
 describe("SectionImageCollection", () => {
@@ -113,7 +113,7 @@ describe("SectionImageCollection", () => {
     it("Does not render draggable components if not editing", () => {
       const component = getWrapper()
 
-      expect(component.find(DragContainer).exists()).toBe(false)
+      expect(component.find(DragDropList).exists()).toBe(false)
     })
 
     it("Does not render draggable components if single image", () => {
@@ -121,14 +121,14 @@ describe("SectionImageCollection", () => {
       props.section.images = [imageSection.images[0]]
       const component = getWrapper()
 
-      expect(component.find(DragContainer).exists()).toBe(false)
+      expect(component.find(DragDropList).exists()).toBe(false)
     })
 
     it("Renders draggable components if more than one image and editing", () => {
       props.editing = true
       const component = getWrapper()
 
-      expect(component.find(DragContainer).exists()).toBe(true)
+      expect(component.find(DragDropList).exists()).toBe(true)
     })
 
     it("#onDragEnd calls onChange with reset section images", () => {
