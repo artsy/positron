@@ -22,6 +22,8 @@ export interface AutocompleteListProps extends AutocompleteProps {
   onChangeArticleAction?: any
   type?: any
   user?: any
+  isDraggable?: boolean
+  onDragEnd?: (items: any[]) => void
 }
 
 export class AutocompleteListMetaphysics extends Component<
@@ -179,9 +181,11 @@ export class AutocompleteListMetaphysics extends Component<
       article,
       artsyURL,
       field,
+      isDraggable,
       label,
       model,
       onChangeArticleAction,
+      onDragEnd,
       placeholder,
       type,
     } = this.props
@@ -214,6 +218,8 @@ export class AutocompleteListMetaphysics extends Component<
             formatSelected={
               model === "users" ? this.formatSelectedUser : undefined
             }
+            isDraggable={isDraggable}
+            onDragEnd={onDragEnd}
             items={idToFetch || []}
             filter={this.getFilter()}
             label={capitalize(label || model)}

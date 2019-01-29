@@ -4,10 +4,14 @@ import React, { Component } from "react"
 import styled from "styled-components"
 import { Autocomplete, AutocompleteProps, Item } from "./index"
 
+import { DragDropList } from "client/components/drag_drop2"
+
 interface AutocompleteListProps extends AutocompleteProps {
   fetchItems: (fetchedItems: Item[], cb: (Items: Item[]) => void) => void
   formatListItem?: any
   label?: string
+  isDraggable?: boolean
+  onDragEnd?: (items: any[]) => void
 }
 
 interface AutocompleteListState {
@@ -57,8 +61,39 @@ export class AutocompleteList extends Component<
     this.setState({ items: newItems })
   }
 
+  onDragEnd = newItems => {
+    const { onDragEnd } = this.props
+    this.setState({ items: newItems })
+    // TODO: save items in new order
+    onDragEnd && onDragEnd(newItems)
+  }
+
+  renderListItems = () => {
+    const { formatListItem, isDraggable } = this.props
+    const { items } = this.state
+
+    return items.map((item, i) => {
+      const title = item ? item.title || item.name : ""
+      return (
+        <ListItem key={i} isDraggable={isDraggable}>
+          {formatListItem ? (
+            formatListItem()
+          ) : (
+            <Serif size="4t" color={color("purple100")}>
+              {title}
+            </Serif>
+          )}
+          <button
+            className="remove-button"
+            onClick={() => this.onRemoveItem(i)}
+          />
+        </ListItem>
+      )
+    })
+  }
+
   render() {
-    const { formatListItem, label } = this.props
+    const { isDraggable, label } = this.props
     const { items } = this.state
 
     return (
@@ -68,26 +103,16 @@ export class AutocompleteList extends Component<
             {label}
           </Sans>
         )}
+
         {items.length > 0 && (
           <Box mt={1}>
-            {items.map((item, i) => {
-              const title = item ? item.title || item.name : ""
-              return (
-                <ListItem key={i}>
-                  {formatListItem ? (
-                    formatListItem()
-                  ) : (
-                    <Serif size="4t" color={color("purple100")}>
-                      {title}
-                    </Serif>
-                  )}
-                  <button
-                    className="remove-button"
-                    onClick={() => this.onRemoveItem(i)}
-                  />
-                </ListItem>
-              )
-            })}
+            {isDraggable ? (
+              <DragDropList items={items} onDragEnd={this.onDragEnd}>
+                {this.renderListItems()}
+              </DragDropList>
+            ) : (
+              this.renderListItems()
+            )}
           </Box>
         )}
         <Autocomplete {...this.props} />
@@ -96,7 +121,7 @@ export class AutocompleteList extends Component<
   }
 }
 
-export const ListItem = styled(Flex)`
+export const ListItem = styled(Flex).attrs<{ isDraggable?: boolean }>({})`
   border: 1px solid ${color("black10")};
   position: relative;
   padding: 10px 10px 10px;
@@ -109,3 +134,11 @@ export const ListItem = styled(Flex)`
     top: 3px;
   }
 `
+
+// ${props =>
+//   props.isDraggable &&
+//   `
+//   ${Sans} {
+//     user-select: none;
+//   }
+// `};

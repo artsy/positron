@@ -10,6 +10,9 @@ import {
   onChangeHero,
   onChangeSection,
 } from "client/actions/edit/sectionActions"
+// const DragContainer = require("client/components/drag_drop/index.coffee")
+import { DragContainer, DragDropList } from "client/components/drag_drop2"
+import { DragTargetContainer } from "client/components/drag_drop2/drag_target"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import { ProgressBar } from "client/components/file_input/progress_bar"
 import React, { Component } from "react"
@@ -18,7 +21,6 @@ import styled from "styled-components"
 import ImagesControls from "./components/controls"
 import EditImage from "./components/edit_image"
 import { ImageSet } from "./components/image_set"
-const DragContainer = require("client/components/drag_drop/index.coffee")
 
 interface SectionImagesProps {
   article: ArticleData
@@ -129,15 +131,15 @@ export class SectionImages extends Component<
     const { editing } = this.props
 
     return (
-      <DragContainer
+      <DragDropList
         items={images}
         onDragEnd={this.onDragEnd}
-        isDraggable={editing}
+        isDraggable={!editing}
         dimensions={this.getFillWidthDimensions()}
         isWrapping={this.isImageSetWrapping()}
       >
         {this.renderImages(images)}
-      </DragContainer>
+      </DragDropList>
     )
   }
 
@@ -236,12 +238,12 @@ const SectionImagesList = styled(Flex)`
   position: relative;
   z-index: -1;
 
-  .drag-container {
-    display: flex;
-    justify-content: center;
+  ${DragContainer} {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  .drag-target {
+  ${DragTargetContainer} {
     max-width: 100%;
     margin-right: 30px;
 
