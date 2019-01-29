@@ -18,7 +18,7 @@ export class DragSource extends React.Component<DragSourceProps> {
     if (isDraggable) {
       const dragStartY =
         clientY - ($(currentTarget).position().top - window.scrollY)
-      const dragHeight = $(currentTarget).height()
+      const dragHeight = $(currentTarget).height() || 0
       console.log("in source, setting drag source")
       setDragSource(index, dragHeight, dragStartY)
     }

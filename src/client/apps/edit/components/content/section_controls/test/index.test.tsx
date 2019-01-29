@@ -1,5 +1,6 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { cloneDeep, mount } from "enzyme"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
