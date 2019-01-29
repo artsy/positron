@@ -92,10 +92,10 @@ export class DragDropList extends React.Component<
     const { items, onDragEnd } = this.props
     const { dragSource, dragTarget } = this.state
     const newItems = cloneDeep(items)
-    debugger
+
     if (
       (dragSource || dragSource === 0) &&
-      dragTarget &&
+      (dragTarget || dragTarget === 0) &&
       dragSource !== dragTarget
     ) {
       const movedItem = newItems.splice(dragSource, 1)

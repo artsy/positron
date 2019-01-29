@@ -10,7 +10,6 @@ import {
   onChangeHero,
   onChangeSection,
 } from "client/actions/edit/sectionActions"
-// const DragContainer = require("client/components/drag_drop/index.coffee")
 import { DragContainer, DragDropList } from "client/components/drag_drop2"
 import { DragTargetContainer } from "client/components/drag_drop2/drag_target"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
@@ -44,23 +43,19 @@ export class SectionImages extends Component<
   }
 
   setFillWidthDimensions = () => {
-    const { section } = this.props
+    const { editing, section } = this.props
     const sizes = this.getContainerSizes()
+    let containerSize = sizes.containerSize
 
+    if (editing) {
+      containerSize = sizes.containerSize - 38 // container padding - border
+    }
     return FillWidth(
       section.images || [],
-      sizes.containerSize,
+      containerSize,
       30,
       sizes.targetHeight
     )
-  }
-
-  getFillWidthDimensions = () => {
-    const { section } = this.props
-
-    return section.layout !== "column_width"
-      ? this.setFillWidthDimensions()
-      : false
   }
 
   getContainerSizes = () => {
@@ -78,6 +73,7 @@ export class SectionImages extends Component<
       targetHeight = 400
       containerSize = articleLayout === "classic" ? 580 : 680
     }
+
     return { containerSize, targetHeight }
   }
 
@@ -99,7 +95,7 @@ export class SectionImages extends Component<
   }
 
   getImageWidth = index => {
-    const dimensions = this.getFillWidthDimensions()
+    const dimensions = this.setFillWidthDimensions()
 
     if (dimensions[index]) {
       const { width } = dimensions[index]
@@ -109,9 +105,9 @@ export class SectionImages extends Component<
     }
   }
 
-  renderImages = images => {
+  renderImages = (images, editing = false) => {
     return images.map((image, index) => {
-      const { editing, isHero, section } = this.props
+      const { isHero, section } = this.props
       const width = this.getImageWidth(index)
 
       const props = {
@@ -123,22 +119,20 @@ export class SectionImages extends Component<
         width,
       }
 
-      return <EditImage key={index} {...props} />
+      return <EditImage key={index} {...props} isDraggable={editing} />
     })
   }
 
   renderDraggableImages = images => {
-    const { editing } = this.props
-
     return (
       <DragDropList
         items={images}
         onDragEnd={this.onDragEnd}
-        isDraggable={!editing}
-        dimensions={this.getFillWidthDimensions()}
+        isDraggable
+        dimensions={this.setFillWidthDimensions()}
         isWrapping={this.isImageSetWrapping()}
       >
-        {this.renderImages(images)}
+        {this.renderImages(images, true)}
       </DragDropList>
     )
   }
@@ -166,6 +160,7 @@ export class SectionImages extends Component<
           justifyContent="center"
           className="SectionImages__list"
           data-overflow={this.isImageSetWrapping()}
+          isEditing={editing}
         >
           {images.length > 0 ? (
             section.type === "image_set" && !editing ? (
@@ -234,9 +229,9 @@ const SectionImagesContainer = styled.section.attrs<{
   `};
 `
 
-const SectionImagesList = styled(Flex)`
+const SectionImagesList = styled(Flex).attrs<{ isEditing?: boolean }>({})`
   position: relative;
-  z-index: -1;
+  z-index: ${props => (props.isEditing ? "2" : "-1")};
 
   ${DragContainer} {
     flex-direction: row;
@@ -249,17 +244,6 @@ const SectionImagesList = styled(Flex)`
 
     &:last-child {
       margin-right: 0;
-    }
-  }
-
-  &[data-overflow="true"] {
-    .drag-container {
-      flex-wrap: wrap;
-    }
-
-    .drag-target {
-      margin-right: 30px;
-      margin-left: 0;
     }
   }
 `

@@ -134,7 +134,6 @@ export default connect(
 export const EditImageContainer = styled.div.attrs<{ width?: any }>({})`
   width: ${props => props.width || "100%"};
   position: relative;
-  padding-bottom: 30px;
   max-width: 100%;
   margin-right: 30px;
 

@@ -1,18 +1,5 @@
 @import '../../../stylus_lib'
 
-.SectionContainer[data-type=image_collection],
-.SectionContainer[data-type=image_set]
-  padding-bottom 0
-  &[data-editing=true]
-    // override section drag list to allow image dragging
-    .SectionImages__list
-      z-index 2 !important
-
-.SectionContainer[data-layout=column_width]
-  .SectionImages__list,
-  .SectionImages__list .drag-container
-    flex-direction column
-
 [data-layout='feature']
   .SectionContainer[data-type=image_collection][data-layout=fillwidth]
     .drag-container
