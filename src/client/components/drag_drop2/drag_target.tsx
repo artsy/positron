@@ -1,5 +1,6 @@
 import { debounce } from "lodash"
 import React from "react"
+import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 
 interface DragTargetProps {
@@ -23,9 +24,9 @@ export class DragTarget extends React.Component<DragTargetProps> {
   componentWillMount() {
     const { setDragTarget, index } = this.props
 
-    this.debouncedDragTarget = debounce(($dragTarget, mouseY) => {
-      $dragTarget = $(this.target)
-      setDragTarget(index, $dragTarget, mouseY)
+    this.debouncedDragTarget = debounce(mouseY => {
+      const dragTarget = findDOMNode(this.target).getBoundingClientRect()
+      setDragTarget(index, dragTarget, mouseY)
     }, 3)
   }
 

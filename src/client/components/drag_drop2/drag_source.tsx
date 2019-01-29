@@ -1,4 +1,5 @@
 import React from "react"
+import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 
 interface DragSourceProps {
@@ -11,16 +12,18 @@ interface DragSourceProps {
 }
 
 export class DragSource extends React.Component<DragSourceProps> {
+  public source
+
   setDragSource = e => {
     const { isDraggable, index, setDragSource } = this.props
-    const { clientY, currentTarget } = e
     console.log("in source")
+    const dragSource = findDOMNode(this.source).getBoundingClientRect()
+
     if (isDraggable) {
-      const dragStartY =
-        clientY - ($(currentTarget).position().top - window.scrollY)
-      const dragHeight = $(currentTarget).height() || 0
+      const dragStartY = e.clientY - (dragSource.top - window.scrollY)
+      const dragSourceHeight = dragSource.bottom - dragSource.top
       console.log("in source, setting drag source")
-      setDragSource(index, dragHeight, dragStartY)
+      setDragSource(index, dragSourceHeight, dragStartY)
     }
   }
 
@@ -29,6 +32,7 @@ export class DragSource extends React.Component<DragSourceProps> {
 
     return (
       <DragSourceContainer
+        innerRef={ref => (this.source = ref)}
         isActiveSource={isActiveSource}
         isDraggable={isDraggable}
         onDragEnd={onDragEnd}
