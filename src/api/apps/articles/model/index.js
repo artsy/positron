@@ -4,11 +4,18 @@
 //
 import _ from "underscore"
 import async from "async"
-import { cloneDeep } from "lodash"
+import {
+  cloneDeep,
+  remove,
+  reverse,
+  uniq
+} from "lodash"
 import schema from "./schema.coffee"
 import Joi from "../../../lib/joi.coffee"
 import retrieve from "./retrieve.coffee"
-import { ObjectId } from "mongojs"
+import {
+  ObjectId
+} from "mongojs"
 import moment from "moment"
 const db = require("../../../lib/db.coffee")
 const {
@@ -30,8 +37,9 @@ const {
 export const where = (input, callback) => {
   return Joi.validate(
     input,
-    schema.querySchema,
-    { stripUnknown: true },
+    schema.querySchema, {
+      stripUnknown: true
+    },
     (err, input) => {
       if (err) {
         return callback(err)
@@ -42,7 +50,13 @@ export const where = (input, callback) => {
 }
 
 export const mongoFetch = (input, callback) => {
-  const { query, limit, offset, sort, count } = retrieve.toQuery(input)
+  const {
+    query,
+    limit,
+    offset,
+    sort,
+    count
+  } = retrieve.toQuery(input)
   const cursor = db.articles
     .find(query)
     .skip(offset || 0)
@@ -79,7 +93,13 @@ export const mongoFetch = (input, callback) => {
 }
 
 export const promisedMongoFetch = input => {
-  const { query, limit, offset, sort, count } = retrieve.toQuery(input)
+  const {
+    query,
+    limit,
+    offset,
+    sort,
+    count
+  } = retrieve.toQuery(input)
   const cursor = db.articles
     .find(query)
     .skip(offset || 0)
@@ -118,7 +138,11 @@ export const promisedMongoFetch = input => {
 }
 
 export const find = (id, callback) => {
-  const query = ObjectId.isValid(id) ? { _id: ObjectId(id) } : { slugs: id }
+  const query = ObjectId.isValid(id) ? {
+    _id: ObjectId(id)
+  } : {
+    slugs: id
+  }
   db.articles.findOne(query, callback)
 }
 
@@ -127,7 +151,9 @@ export const find = (id, callback) => {
 //
 export const save = (input, accessToken, options, callback) => {
   // Validate the input with Joi
-  const validationOptions = _.extend({ stripUnknown: true }, options.validation)
+  const validationOptions = _.extend({
+    stripUnknown: true
+  }, options.validation)
   Joi.validate(input, schema.inputSchema, validationOptions, (err, input) => {
     if (err) {
       return callback(err)
@@ -181,8 +207,11 @@ export const save = (input, accessToken, options, callback) => {
 }
 
 export const publishScheduledArticles = callback => {
-  db.articles.find(
-    { scheduled_publish_at: { $lt: new Date() } },
+  db.articles.find({
+      scheduled_publish_at: {
+        $lt: new Date()
+      }
+    },
     (err, articles) => {
       if (err) {
         return callback(err, [])
@@ -212,8 +241,13 @@ export const publishScheduledArticles = callback => {
 }
 
 export const unqueue = callback => {
-  db.articles.find(
-    { $or: [{ weekly_email: true }, { daily_email: true }] },
+  db.articles.find({
+      $or: [{
+        weekly_email: true
+      }, {
+        daily_email: true
+      }]
+    },
     (err, articles) => {
       if (err) {
         return callback(err, [])
@@ -255,7 +289,9 @@ export const destroy = (id, callback) => {
 
     const url = getArticleUrl(article)
     deleteArticleFromSailthru(url, () => {
-      db.articles.remove({ _id: ObjectId(id) }, (err, res) => {
+      db.articles.remove({
+        _id: ObjectId(id)
+      }, (err, res) => {
         if (err) {
           return callback(err)
         }
@@ -283,15 +319,15 @@ export const present = article => {
     return {}
   }
   const id = article._id ? article._id.toString() : null
-  const scheduled_publish_at = article.scheduled_publish_at
-    ? moment(article.scheduled_publish_at).toISOString()
-    : null
-  const published_at = article.published_at
-    ? moment(article.published_at).toISOString()
-    : null
-  const updated_at = article.updated_at
-    ? moment(article.updated_at).toISOString()
-    : null
+  const scheduled_publish_at = article.scheduled_publish_at ?
+    moment(article.scheduled_publish_at).toISOString() :
+    null
+  const published_at = article.published_at ?
+    moment(article.published_at).toISOString() :
+    null
+  const updated_at = article.updated_at ?
+    moment(article.updated_at).toISOString() :
+    null
   return _.extend(article, {
     id,
     _id: id,
@@ -309,7 +345,9 @@ export const getSuperArticleCount = id => {
       return resolve(0)
     }
     db.articles
-      .find({ "super_article.related_articles": ObjectId(id) })
+      .find({
+        "super_article.related_articles": ObjectId(id)
+      })
       .count((err, count) => {
         if (err) {
           return reject(err)
@@ -321,9 +359,7 @@ export const getSuperArticleCount = id => {
 
 export const backfill = callback => {
   // Modify the query to match the articles that need backfilling
-  const query = {
-    published: true,
-  }
+  const query = {}
 
   db.articles.find(query).toArray((err, articles) => {
     if (err) {
@@ -349,6 +385,10 @@ export const backfill = callback => {
           `Backfilling article: ${article.slugs[article.slugs.length - 1]}`
         )
 
+        foo(article)
+        bar(article)
+        db.articles.save(article, cb)
+
         /*
         Write backfill logic here. Make sure to callback with cb()
         eg: distributeArticle(article,cb)
@@ -359,5 +399,15 @@ export const backfill = callback => {
         callback()
       }
     )
+  })
+}
+
+export const foo = (article) => {
+  article.slugs = reverse(uniq(reverse(article.slugs)))
+}
+
+export const bar = (article) => {
+  remove(article.slugs, (slug) => {
+    return slug.includes("Invalid date")
   })
 }
