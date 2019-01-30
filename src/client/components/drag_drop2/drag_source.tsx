@@ -26,13 +26,12 @@ export class DragSource extends React.Component<DragSourceProps> {
   }
 
   render() {
-    const { isActiveSource, children, isDraggable, onDragEnd } = this.props
+    const { isActiveSource, children, onDragEnd } = this.props
 
     return (
       <DragSourceContainer
         innerRef={ref => (this.source = ref)}
         isActiveSource={isActiveSource}
-        isDraggable={isDraggable}
         onDragEnd={onDragEnd}
         onDragStart={this.setDragSource}
       >
@@ -46,8 +45,7 @@ export class DragSource extends React.Component<DragSourceProps> {
   }
 }
 
-const DragSourceContainer = styled.div.attrs<{
-  isDraggable?: boolean
+export const DragSourceContainer = styled.div.attrs<{
   isActiveSource?: boolean
 }>({})`
   z-index: 1;
