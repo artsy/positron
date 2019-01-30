@@ -1,10 +1,10 @@
-import { Box, color, Flex, Sans, Serif } from "@artsy/palette"
+import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
+import { DragDropList } from "client/components/drag_drop2"
+import { DragPlaceholder } from "client/components/drag_drop2/drag_target"
 import { clone, map, uniq } from "lodash"
 import React, { Component } from "react"
 import styled from "styled-components"
 import { Autocomplete, AutocompleteProps, Item } from "./index"
-
-import { DragDropList } from "client/components/drag_drop2"
 
 interface AutocompleteListProps extends AutocompleteProps {
   fetchItems: (fetchedItems: Item[], cb: (Items: Item[]) => void) => void
@@ -64,7 +64,6 @@ export class AutocompleteList extends Component<
   onDragEnd = newItems => {
     const { onDragEnd } = this.props
     this.setState({ items: newItems })
-    // TODO: save items in new order
     onDragEnd && onDragEnd(newItems)
   }
 
@@ -97,7 +96,7 @@ export class AutocompleteList extends Component<
     const { items } = this.state
 
     return (
-      <div>
+      <AutocompleteListContainer>
         {label && (
           <Sans size="3t" weight="medium">
             {label}
@@ -116,7 +115,7 @@ export class AutocompleteList extends Component<
           </Box>
         )}
         <Autocomplete {...this.props} />
-      </div>
+      </AutocompleteListContainer>
     )
   }
 }
@@ -125,7 +124,7 @@ export const ListItem = styled(Flex).attrs<{ isDraggable?: boolean }>({})`
   border: 1px solid ${color("black10")};
   position: relative;
   padding: 10px 10px 10px;
-  margin-bottom: 10px;
+  margin-bottom: ${space(1)}px;
   align-items: center;
   justify-content: space-between;
 
@@ -133,12 +132,22 @@ export const ListItem = styled(Flex).attrs<{ isDraggable?: boolean }>({})`
   button:hover {
     top: 3px;
   }
+
+  ${props =>
+    props.isDraggable &&
+    `
+    ${Sans} {
+      user-select: none;
+    }
+
+    button {
+      z-index: 10;
+    }
+  `};
 `
 
-// ${props =>
-//   props.isDraggable &&
-//   `
-//   ${Sans} {
-//     user-select: none;
-//   }
-// `};
+const AutocompleteListContainer = styled.div`
+  ${DragPlaceholder} {
+    max-height: calc(100% - ${space(1)}px);
+  }
+`

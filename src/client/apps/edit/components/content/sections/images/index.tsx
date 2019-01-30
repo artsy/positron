@@ -11,6 +11,7 @@ import {
   onChangeSection,
 } from "client/actions/edit/sectionActions"
 import { DragContainer, DragDropList } from "client/components/drag_drop2"
+import { DraggableCover } from "client/components/drag_drop2/drag_source"
 import { DragTargetContainer } from "client/components/drag_drop2/drag_target"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import { ProgressBar } from "client/components/file_input/progress_bar"
@@ -18,7 +19,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import ImagesControls from "./components/controls"
-import EditImage from "./components/edit_image"
+import EditImage, { EditImageContainer } from "./components/edit_image"
 import { ImageSet } from "./components/image_set"
 
 interface SectionImagesProps {
@@ -261,5 +262,13 @@ const SectionImagesList = styled(Flex).attrs<{
     &:last-child {
       margin-right: 0;
     }
+
+    ${EditImageContainer} {
+      margin-right: 0;
+    }
+  }
+
+  ${DraggableCover} {
+    display: none;
   }
 `

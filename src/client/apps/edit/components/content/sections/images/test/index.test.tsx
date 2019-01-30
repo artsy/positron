@@ -206,22 +206,5 @@ describe("SectionImageCollection", () => {
       expect(sizes[0].width).toBe(287)
       expect(sizes[0].height).toBe(383)
     })
-
-    // xit("#getFillWidthDimensions returns state.dimensions", () => {
-    //   const component = getShallowWrapper().instance() as SectionImages
-    //   const sizes = component.getFillWidthDimensions()
-
-    //   expect(sizes.length).toBe(props.section.images.length)
-    //   expect(sizes[0].width).toBe(287)
-    //   expect(sizes[0].height).toBe(383)
-    // })
-
-    // xit("#getFillWidthDimensions returns false if section layout is column", () => {
-    //   props.section.layout = "column_width"
-    //   const component = getShallowWrapper().instance() as SectionImages
-    //   const sizes = component.getFillWidthDimensions()
-
-    //   expect(sizes).toBe(false)
-    // })
   })
 })

@@ -99,7 +99,6 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
               model="users"
               isDraggable
               onDragEnd={items => {
-                console.log("drag ended", items)
                 onChangeArticleAction("contributing_authors", items)
               }}
             />

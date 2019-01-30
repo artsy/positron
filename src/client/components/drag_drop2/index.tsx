@@ -45,7 +45,6 @@ export class DragDropList extends React.Component<
   }
 
   setDragSource = (index, draggingHeight, dragStartY) => {
-    console.log("started dragging", index)
     this.setState({
       dragSource: index,
       dragStartY,
@@ -57,7 +56,7 @@ export class DragDropList extends React.Component<
     const { dragSource } = this.state
     if (dragSource || dragSource === 0) {
       const dropPosition = this.setDropZonePosition(dragTarget, index, mouseY)
-      console.log("dragging over", index)
+
       this.setState({
         dragTarget: index,
         dropPosition,

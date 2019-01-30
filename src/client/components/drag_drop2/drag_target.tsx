@@ -1,11 +1,13 @@
+import { color } from "@artsy/palette"
+import { RemoveButtonContainer } from "client/components/remove_button"
 import { debounce } from "lodash"
 import React from "react"
 import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 
 interface DragTargetProps {
-  isActiveTarget?: boolean
-  isActiveSource?: boolean
+  isActiveTarget: boolean
+  isActiveSource: boolean
   children?: any
   dragStartY: number
   dropPosition?: "top" | "bottom"
@@ -75,15 +77,16 @@ export class DragTarget extends React.Component<DragTargetProps> {
   }
 }
 
-const DragPlaceholder = styled.div.attrs<{
+export const DragPlaceholder = styled.div.attrs<{
   height?: number
   isVertical?: boolean
 }>({})`
-  border: 2px dashed gray;
+  border: 2px dashed ${color("black10")};
   height: ${props => (props.height ? `${props.height}px` : "auto")};
-  min-height: 2em;
+  min-height: 1em;
   background-color: white;
   width: 100%;
+
   ${props =>
     !props.isVertical &&
     `
@@ -97,11 +100,20 @@ const DragPlaceholder = styled.div.attrs<{
 `
 
 export const DragTargetContainer = styled.div.attrs<{
-  isActiveSource?: boolean
-  isActiveTarget?: boolean
+  isActiveSource: boolean
+  isActiveTarget: boolean
   isVertical?: boolean
   width?: number
 }>({})`
   position: relative;
   width: ${props => (props.width ? props.width : "100%")};
+
+  ${RemoveButtonContainer} {
+    ${props =>
+      (props.isActiveSource || props.isActiveTarget) &&
+      `
+
+      display: none;
+  `};
+  }
 `

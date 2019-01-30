@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom"
 import styled from "styled-components"
 
 interface DragSourceProps {
-  isActiveSource?: boolean
+  isActiveSource: boolean
   children: any
   isDraggable?: boolean
   index: number
@@ -16,13 +16,11 @@ export class DragSource extends React.Component<DragSourceProps> {
 
   setDragSource = e => {
     const { isDraggable, index, setDragSource } = this.props
-    console.log("in source")
     const dragSource = findDOMNode(this.source).getBoundingClientRect()
 
     if (isDraggable) {
       const dragStartY = e.clientY - (dragSource.top - window.scrollY)
       const dragSourceHeight = dragSource.bottom - dragSource.top
-      console.log("in source, setting drag source")
       setDragSource(index, dragSourceHeight, dragStartY)
     }
   }
@@ -38,7 +36,11 @@ export class DragSource extends React.Component<DragSourceProps> {
         onDragEnd={onDragEnd}
         onDragStart={this.setDragSource}
       >
-        <ChildContainer>{children}</ChildContainer>
+        {children}
+        <DraggableCover
+          onDragEnd={onDragEnd}
+          onDragStart={this.setDragSource}
+        />
       </DragSourceContainer>
     )
   }
@@ -50,17 +52,20 @@ const DragSourceContainer = styled.div.attrs<{
 }>({})`
   z-index: 1;
   position: relative;
-  background: orange;
+  background: white;
 
   ${props =>
     props.isActiveSource &&
     `
-    cursor: ns-resize;
+    cursor: grab;
   `};
 `
 
-const ChildContainer = styled.div`
-  opacity: 0.99;
-  z-index: -1;
-  position: relative;
+export const DraggableCover = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
 `
