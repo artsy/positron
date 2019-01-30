@@ -1,8 +1,11 @@
-import React from "react"
-import { mount } from "enzyme"
-import { SectionAdmin } from "../components/section"
+import { Checkbox } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
+import TextArea from "@artsy/reaction/dist/Components/TextArea"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+import { mount } from "enzyme"
+import React from "react"
+import { SectionAdmin } from "../components/section"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 describe("Section Admin", () => {
   let props
@@ -25,6 +28,10 @@ describe("Section Admin", () => {
     social_image: "http://socialimage.jpg",
   }
 
+  const getWrapper = (passedProps = props) => {
+    return mount(<SectionAdmin {...passedProps} />)
+  }
+
   beforeEach(() => {
     props = {
       section,
@@ -33,20 +40,21 @@ describe("Section Admin", () => {
   })
 
   it("renders all fields", () => {
-    const component = mount(<SectionAdmin {...props} />)
+    const component = getWrapper()
     expect(component.find(ImageUpload).length).toBe(4)
     expect(component.find(Paragraph).length).toBe(1)
-    expect(component.find("input").length).toBe(13)
-    expect(component.find("textarea").length).toBe(2)
+    expect(component.find(Input).length).toBe(8)
+    expect(component.find(TextArea).length).toBe(2)
+    expect(component.find(Checkbox).length).toBe(1)
     expect(component.find('input[type="date"]').length).toBe(1)
   })
 
   it("renders saved data", () => {
-    const component = mount(<SectionAdmin {...props} />)
+    const component = getWrapper()
     const html = component.html()
     expect(
       component
-        .find("input")
+        .find(Input)
         .first()
         .props().defaultValue
     ).toMatch("Rachel Uffner, Petra Collins, Narcissiter, Genevieve Gaignard")
@@ -57,14 +65,14 @@ describe("Section Admin", () => {
     expect(html).toMatch("socialimage.jpg")
     expect(
       component
-        .find("input")
-        .at(2)
-        .props().checked
+        .find(Checkbox)
+        .at(0)
+        .props().selected
     ).toBe(true)
     expect(
       component
-        .find("input")
-        .at(3)
+        .find(Input)
+        .at(2)
         .props().defaultValue
     ).toMatch("http://youtube.com/movie")
     // FIXME TEST: Fragile date
@@ -72,14 +80,19 @@ describe("Section Admin", () => {
   })
 
   it("Updates featuring section on input", () => {
-    const component = mount(<SectionAdmin {...props} />)
-    const input = component.find("input").first()
-    input.simulate("change", {
-      target: {
+    const component = getWrapper()
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
         value:
           "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum.",
       },
-    })
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("featuring")
     expect(props.onChange.mock.calls[0][1]).toMatch(
@@ -88,7 +101,7 @@ describe("Section Admin", () => {
   })
 
   it("Updates about section on input", () => {
-    const component = mount(<SectionAdmin {...props} />)
+    const component = getWrapper()
     component
       .find(Paragraph)
       .getElement()
@@ -99,25 +112,43 @@ describe("Section Admin", () => {
   })
 
   it("Updates release date and saves as iso", () => {
-    const component = mount(<SectionAdmin {...props} />)
-    const input = component.find("input").at(1)
-    input.simulate("change", { target: { value: "2017-11-15" } })
+    const component = getWrapper()
+    const input = component
+      .find(Input)
+      .at(1)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "2017-11-15",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("release_date")
     expect(props.onChange.mock.calls[0][1]).toMatch("2017-11-15T")
   })
 
   it("Updates video url on input", () => {
-    const component = mount(<SectionAdmin {...props} />)
-    const input = component.find("input").at(3)
-    input.simulate("change", { target: { value: "http://vimeo.com/video" } })
+    const component = getWrapper()
+    const input = component
+      .find(Input)
+      .at(2)
+      .instance() as Input
+
+    const event = ({
+      currentTarget: {
+        value: "http://vimeo.com/video",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("video_url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://vimeo.com/video")
   })
 
   it("Updates cover image on upload", () => {
-    const component = mount(<SectionAdmin {...props} />)
+    const component = getWrapper()
     const input = component
       .find(ImageUpload)
       .at(0)
@@ -129,9 +160,9 @@ describe("Section Admin", () => {
   })
 
   it("Updates published on checkbox click", () => {
-    const component = mount(<SectionAdmin {...props} />)
+    const component = getWrapper()
     component
-      .find(".flat-checkbox")
+      .find(Checkbox)
       .first()
       .simulate("click")
     expect(props.onChange.mock.calls[0][0]).toMatch("published")

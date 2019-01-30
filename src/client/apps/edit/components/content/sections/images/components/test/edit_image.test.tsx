@@ -1,13 +1,13 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { Artwork } from "@artsy/reaction/dist/Components/Publishing/Sections/Artwork"
 import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { RemoveButton } from "client/components/remove_button"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
 import React from "react"
 import { stripTags } from "underscore.string"
-import { Paragraph } from "../../../../../../../components/draft/paragraph/paragraph"
-import { RemoveButton } from "../../../../../../../components/remove_button"
-import { EditImage, EditImageContainer } from "../components/edit_image"
+import { EditImage, EditImageContainer } from "../edit_image"
 
 describe("EditImage", () => {
   let props
@@ -15,7 +15,7 @@ describe("EditImage", () => {
   let image
   let artwork
 
-  const getWrapper = passedProps => {
+  const getWrapper = (passedProps = props) => {
     return mount(<EditImage {...passedProps} />)
   }
 
@@ -43,7 +43,7 @@ describe("EditImage", () => {
 
   describe("Rendering", () => {
     it("renders an image", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const srcToArray = props.image.url.split("%2F")
       const fileName = srcToArray[srcToArray.length - 1]
       const caption = stripTags(props.image.caption)
@@ -55,7 +55,7 @@ describe("EditImage", () => {
 
     it("renders an artwork", () => {
       props.image = artwork
-      const component = getWrapper(props)
+      const component = getWrapper()
       const srcToArray = artwork.image.split("/")
       const fileName = srcToArray[srcToArray.length - 1]
 
@@ -69,7 +69,7 @@ describe("EditImage", () => {
 
   describe("Dimensions", () => {
     it("Sets the container width to props.width if multiple images", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const imageContainer = component.find(EditImageContainer).props()
 
       expect(imageContainer.width).toBe(props.width + "px")
@@ -77,7 +77,7 @@ describe("EditImage", () => {
 
     it("Sets the container width to 100% if single image and not classic", () => {
       props.section.images = [props.image]
-      const component = getWrapper(props)
+      const component = getWrapper()
       const imageContainer = component.find(EditImageContainer).props()
 
       expect(imageContainer.width).toBe("100%")
@@ -87,7 +87,7 @@ describe("EditImage", () => {
   describe("Caption", () => {
     it("if image, renders an editable caption with placeholder", () => {
       props.image.caption = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Paragraph).exists()).toBe(true)
       expect(component.html()).toMatch(
@@ -96,7 +96,7 @@ describe("EditImage", () => {
     })
 
     it("#onCaptionChange can change an image caption", () => {
-      const component = getWrapper(props).instance() as EditImage
+      const component = getWrapper().instance() as EditImage
       const newCaption = "<p>New Caption</p>"
 
       component.onCaptionChange(newCaption)
@@ -107,7 +107,7 @@ describe("EditImage", () => {
 
     it("if artwork, does not render editable caption", () => {
       props.image = artwork
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Paragraph).exists()).toBe(false)
     })
@@ -115,21 +115,21 @@ describe("EditImage", () => {
 
   describe("Remove Image", () => {
     it("hides the remove button when not editing", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(RemoveButton).exists()).toBe(false)
     })
 
     it("renders the remove button if editing and props.removeItem", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(RemoveButton).exists()).toBe(true)
     })
 
     it("calls onChangeSectionAction when clicking remove icon", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       component.find(RemoveButton).simulate("click")
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("images")

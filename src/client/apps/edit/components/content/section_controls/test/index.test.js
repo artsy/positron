@@ -127,14 +127,14 @@ describe("Section Controls", () => {
       expect(bottom).toBe("605px")
     })
 
-    it("when outside component, returns 100% + section padding", () => {
+    it("when outside component, returns 100%", () => {
       const component = getWrapper(props)
         .find(SectionControls)
         .instance()
 
       component.setState({ insideComponent: false })
       const bottom = component.getPositionBottom()
-      expect(bottom).toBe("calc(100% + 20px)")
+      expect(bottom).toBe("100%")
     })
   })
 })

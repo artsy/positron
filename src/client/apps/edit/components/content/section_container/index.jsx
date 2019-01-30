@@ -7,7 +7,7 @@ import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDr
 import { RemoveButton } from "client/components/remove_button"
 import { removeSection } from "client/actions/edit/sectionActions"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import SectionImages from "../sections/images"
+import SectionImages from "../sections/images/index.tsx"
 import SectionSlideshow from "../sections/slideshow"
 import SectionText from "../sections/text"
 import SectionText2 from "../sections/text/index2"
@@ -116,11 +116,8 @@ export class SectionContainer extends Component {
           isHero={isHero}
           isFillwidth={isFillwidth}
         >
-          <HoverControls
-            isEditing={isEditing}
-            type={section.type}
-          >
-            {!isEditing &&
+          <HoverControls isEditing={isEditing} type={section.type}>
+            {!isEditing && (
               <Fragment>
                 {!isHero && (
                   <DragButtonContainer isFillwidth={isFillwidth}>
@@ -136,14 +133,12 @@ export class SectionContainer extends Component {
                 </RemoveButtonContainer>
                 <ClickToEdit onClick={this.onSetEditing} />
               </Fragment>
-            }
+            )}
           </HoverControls>
 
           {this.getSectionComponent()}
 
-          {isEditing &&
-            <ContainerBackground onClick={this.onSetEditing} />
-          }
+          {isEditing && <ContainerBackground onClick={this.onSetEditing} />}
         </SectionWrapper>
       </ErrorBoundary>
     )
@@ -169,11 +164,13 @@ const SectionWrapper = styled.div`
   width: ${props => props.width};
   max-width: 100%;
   margin: 0 auto;
-  padding: ${props => props.isFillwidth ? 0 : "20px"};
+  padding: ${props => (props.isFillwidth ? 0 : "20px")};
 
-  ${props => props.isHero && `
+  ${props =>
+    props.isHero &&
+    `
     margin-top: 20px;
-  `}
+  `};
 `
 
 export const HoverControls = styled.div`
@@ -187,10 +184,14 @@ export const HoverControls = styled.div`
   &:hover {
     opacity: 1;
   }
-  ${props => props.isEditing && `
+  ${props =>
+    props.isEditing &&
+    `
     opacity: 1;
-    border-color: ${props.type === "text" ? color("white100") : color("black100")};
-  `}
+    border-color: ${
+      props.type === "text" ? color("white100") : color("black100")
+    };
+  `};
 `
 
 export const ClickToEdit = styled.div`
@@ -216,24 +217,30 @@ const IconContainer = styled.div`
   right: -15px;
   cursor: pointer;
   z-index: 5;
-  ${props => props.isFillwidth && `
+  ${props =>
+    props.isFillwidth &&
+    `
     right: 18px;
-  `}
+  `};
 `
 
 const RemoveButtonContainer = styled(IconContainer)`
   top: -15px;
   &:hover circle {
-    fill: ${color("red100")}
+    fill: ${color("red100")};
   }
-  ${props => props.isFillwidth && `
+  ${props =>
+    props.isFillwidth &&
+    `
     top: 20px;
-  `}
+  `};
 `
 
 const DragButtonContainer = styled(IconContainer)`
   top: 25px;
-  ${props => props.isFillwidth && `
+  ${props =>
+    props.isFillwidth &&
+    `
     top: 60px;
-  `}
+  `};
 `

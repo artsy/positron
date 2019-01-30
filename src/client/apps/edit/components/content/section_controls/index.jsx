@@ -18,7 +18,7 @@ export class SectionControls extends Component {
     disabledAlert: PropTypes.func,
     isHero: PropTypes.bool,
     showLayouts: PropTypes.bool,
-    section: PropTypes.object
+    section: PropTypes.object,
   }
 
   state = {
@@ -50,7 +50,6 @@ export class SectionControls extends Component {
   }
 
   getPositionBottom = () => {
-    const sectionPadding = 20
     const { insideComponent } = this.state
     const { isHero } = this.props
 
@@ -65,7 +64,7 @@ export class SectionControls extends Component {
         return stickyBottom + "px"
       }
     }
-    return `calc(100% + ${sectionPadding}px)`
+    return "100%"
   }
 
   isScrollingOver = $section => {
@@ -116,7 +115,14 @@ export class SectionControls extends Component {
   }
 
   render() {
-    const { article, children, disabledAlert, isHero, section, showLayouts } = this.props
+    const {
+      article,
+      children,
+      disabledAlert,
+      isHero,
+      section,
+      showLayouts,
+    } = this.props
     const { insideComponent } = this.state
 
     const outsidePosition = isHero ? "relative" : "absolute"
@@ -148,7 +154,7 @@ export class SectionControls extends Component {
 const mapStateToProps = state => ({
   article: state.edit.article,
   channel: state.app.channel,
-  section: state.edit.section
+  section: state.edit.section,
 })
 
 export default connect(mapStateToProps)(SectionControls)
@@ -157,17 +163,22 @@ const SectionControlsContainer = styled.div`
   bottom: ${props => props.bottom};
   position: ${props => props.position};
   width: ${props => props.width};
-  margin-left: ${props => props.isFillwidth ? 0 : "-20px"};
+  margin-left: ${props => (props.isFillwidth ? 0 : "-20px")};
   background: ${color("black100")};
   z-index: 5;
   max-width: calc(100vw - 110px);
-  ${props => props.type === "social_embed" && `
-    padding-top: 20px;
-  `}
 
-  ${props => props.isHero && `
+  ${props =>
+    props.type === "social_embed" &&
+    `
+    padding-top: 20px;
+  `};
+
+  ${props =>
+    props.isHero &&
+    `
     width: calc(100% + 40px);
     padding-top: 20px;
     margin-top: -20px;
-  `}
+  `};
 `

@@ -19,7 +19,6 @@ request = require 'superagent'
 jade = require 'jade'
 Article = require '../../../models/article.coffee'
 moment = require 'moment'
-particle = require 'particle'
 { cloneDeep } = require 'lodash'
 
 @distributeArticle = (article, cb) =>

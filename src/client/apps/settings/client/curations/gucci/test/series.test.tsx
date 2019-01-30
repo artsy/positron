@@ -1,9 +1,10 @@
+import { Input } from "@artsy/reaction/dist/Components/Input"
 import Backbone from "backbone"
-import React from "react"
-import { mount } from "enzyme"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { mount } from "enzyme"
+import React from "react"
 import { SeriesAdmin } from "../components/series"
-import ImageUpload from "client/apps/edit/components/admin/components/image_upload.coffee"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
 
 describe("Series Admin", () => {
   let props
@@ -22,6 +23,10 @@ describe("Series Admin", () => {
     social_image: "http://socialimage.jpg",
   })
 
+  const getWrapper = (passedProps = props) => {
+    return mount(<SeriesAdmin {...passedProps} />)
+  }
+
   beforeEach(() => {
     props = {
       curation,
@@ -30,15 +35,10 @@ describe("Series Admin", () => {
   })
 
   it("renders all fields", () => {
-    const component = mount(<SeriesAdmin {...props} />)
+    const component = getWrapper()
     expect(component.find(ImageUpload).length).toBe(5)
     expect(component.find(Paragraph).length).toBe(1)
-    expect(
-      component
-        .find("input")
-        .at(2)
-        .props().placeholder
-    ).toMatch("http://example.com")
+    expect(component.find(Input).length).toBe(6)
   })
 
   it("renders saved data", () => {
@@ -48,20 +48,29 @@ describe("Series Admin", () => {
       partner_logo_primary: "http://gucci-logo-header.jpg",
       partner_logo_secondary: "http://gucci-logo-footer.jpg",
     })
-    const component = mount(<SeriesAdmin {...props} />)
-    expect(component.text()).toMatch("Sample about text")
-    expect(component.html()).toMatch("gucci-logo-header.jpg")
-    expect(component.html()).toMatch("gucci-logo-footer.jpg")
+    const component = getWrapper()
+    const logoHeader = component.find(ImageUpload).at(0)
+    const logoFooter = component.find(ImageUpload).at(1)
+    // @ts-ignore
+    expect(logoHeader.props().src).toMatch("gucci-logo-header.jpg")
+    // @ts-ignore
+    expect(logoFooter.props().src).toMatch("gucci-logo-footer.jpg")
     expect(
       component
-        .find("input")
-        .at(2)
+        .find(Paragraph)
+        .at(0)
+        .props().html
+    ).toBe("<p>Sample about text</p>")
+    expect(
+      component
+        .find(Input)
+        .at(0)
         .props().defaultValue
     ).toMatch("http://gucci.com")
   })
 
   it("Updates about section on input", () => {
-    const component = mount(<SeriesAdmin {...props} />)
+    const component = getWrapper()
     component
       .find(Paragraph)
       .getElement()
@@ -71,16 +80,24 @@ describe("Series Admin", () => {
   })
 
   it("Updates partner link on input", () => {
-    const component = mount(<SeriesAdmin {...props} />)
-    const input = component.find("input").at(2)
-    input.simulate("change", { target: { value: "http://link.com" } })
+    const component = getWrapper()
+    const input = component
+      .find(Input)
+      .at(0)
+      .instance() as Input
+    const event = ({
+      currentTarget: {
+        value: "http://link.com",
+      },
+    } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("partner_link_url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://link.com")
   })
 
   it("Updates primary logo on upload", () => {
-    const component = mount(<SeriesAdmin {...props} />)
+    const component = getWrapper()
     const input = component
       .find(ImageUpload)
       .at(0)
@@ -92,7 +109,7 @@ describe("Series Admin", () => {
   })
 
   it("Updates secondary logo on upload", () => {
-    const component = mount(<SeriesAdmin {...props} />)
+    const component = getWrapper()
     const input = component
       .find(ImageUpload)
       .at(1)
