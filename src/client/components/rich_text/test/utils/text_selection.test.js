@@ -80,7 +80,7 @@ describe("Draft Utils: Text Selection", () => {
     editorState = Draft.EditorState.acceptSelection(editorState, selection)
 
     it("Moves cursor to first character of first block", () => {
-      expect(editorState.getSelection().anchorOffset).toBe(65)
+      expect(editorState.getSelection().anchorOffset).toBe(67)
       editorState = setSelectionToStart(editorState)
       expect(editorState.getSelection().anchorOffset).toBe(0)
     })
@@ -133,7 +133,7 @@ describe("Draft Utils: Text Selection", () => {
     const newText = mergedState.getCurrentContent().getPlainText()
 
     expect(newText).toMatch(
-      "What would Antoine Court de Gébelin think of the Happy Squirrel?"
+      "What would Antoine Court’s de Gébelin think of the Happy Squirrel?"
     )
     expect(newText).toMatch(
       "With works by Franz Ackermann, Ai Weiwei, Pawel Althamer, Billy Childish"
@@ -151,10 +151,10 @@ describe("Draft Utils: Text Selection", () => {
       .getPlainText()
 
     expect(newStateToHtml).toMatch(
-      "What would Antoine Court de Gébelin think of the Happy Squirrel?"
+      "What would Antoine Court’s de Gébelin think of the Happy Squirrel?"
     )
     expect(dividedState.newSection).not.toMatch(
-      "What would Antoine Court de Gébelin think of the Happy Squirrel?"
+      "What would Antoine Court's de Gébelin think of the Happy Squirrel?"
     )
 
     expect(newStateToHtml).not.toMatch(
