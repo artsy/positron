@@ -54,6 +54,7 @@ describe("DragSource", () => {
     component.find(DragSourceContainer).simulate("dragStart")
     expect(props.setDragSource).toBeCalled()
   })
+
   it("Calls props.onDragEnd onDragEnd", () => {
     const component = getWrapper()
     component.find(DragSourceContainer).simulate("dragEnd")

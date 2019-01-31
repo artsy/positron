@@ -23,8 +23,9 @@ export class DragTarget extends React.Component<DragTargetProps> {
   public debouncedDragTarget
   public target
 
-  componentWillMount() {
-    const { setDragTarget, index } = this.props
+  constructor(props) {
+    super(props)
+    const { setDragTarget, index } = props
 
     this.debouncedDragTarget = debounce(mouseY => {
       const dragTarget = findDOMNode(this.target).getBoundingClientRect()
@@ -55,19 +56,15 @@ export class DragTarget extends React.Component<DragTargetProps> {
   }
 
   render() {
-    const {
-      isActiveSource,
-      isActiveTarget,
-      dropPosition,
-      isVertical,
-    } = this.props
+    const { isActiveSource, isActiveTarget } = this.props
+    const dropPosition = this.props.dropPosition || "top"
+
     return (
       <DragTargetContainer
         innerRef={ref => (this.target = ref)}
         isActiveSource={isActiveSource}
         isActiveTarget={isActiveTarget}
         onDragOver={this.setDragTarget}
-        isVertical={isVertical}
       >
         {dropPosition === "top" && this.renderDropZone()}
         {this.props.children}
@@ -102,7 +99,6 @@ export const DragPlaceholder = styled.div.attrs<{
 export const DragTargetContainer = styled.div.attrs<{
   isActiveSource: boolean
   isActiveTarget: boolean
-  isVertical?: boolean
   width?: number
 }>({})`
   position: relative;
