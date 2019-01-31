@@ -16,10 +16,10 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@2.36.3":
-  version "2.36.3"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.36.3.tgz#9f56dcf4b4f37db70b204d6719f3845cc2da8879"
-  integrity sha512-rdA65MvpejlTL6yi7DeDh2DCxBa+kVCjzFd0fDLHhPUHbXZMxUt5SW4oZwNEbqhhojO+mPoR3Y7Zh/iAYQC37w==
+"@artsy/palette@2.37.0":
+  version "2.37.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.37.0.tgz#f9bb094ef2c961dd6a9892edd825f9f634abca80"
+  integrity sha512-ncY7hww4F/eLfbbTlWn2TGhzbBovMg6koO7uOVuISKcE3Ih9i5D/BOtXuiK77KDCUXKmnOCUsA7obcQrawtJNA==
   dependencies:
     moment "^2.23.0"
     moment-timezone "^0.5.23"
