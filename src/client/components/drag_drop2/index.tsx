@@ -64,7 +64,7 @@ export class DragDropList extends React.Component<
     }
   }
 
-  setDropZonePosition = (dragTarget, dragTargetId, mouseY) => {
+  setDropZonePosition = (dragTarget, dragTargetIndex, mouseY) => {
     const { children, isVertical } = this.props
     const { dragSource } = this.state
     let dropZonePosition: DropPosition = "top"
@@ -76,8 +76,9 @@ export class DragDropList extends React.Component<
     const dragTargetTop = dragTarget.top + 20 - window.scrollY
     const dragTargetCenter = dragTargetTop + dragTargetHeight / 2
     const mouseBelowCenter = mouseY > dragTargetCenter
-    const dragTargetIsNext = dragSource && dragTargetId === dragSource + 1
-    const dragTargetNotFirst = dragTargetId !== 0
+    const dragTargetIsNext =
+      dragSource !== null && dragTargetIndex === dragSource + 1
+    const dragTargetNotFirst = dragTargetIndex !== 0
     const dragSourceNotLast = dragSource !== children.length - 1
     const isBelow = dragTargetNotFirst && dragSourceNotLast && mouseBelowCenter
 

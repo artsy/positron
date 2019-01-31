@@ -25,6 +25,7 @@ interface Props {
   editing: boolean
   image: ArticleImage
   index: number
+  isDraggable?: boolean
   isHero: boolean
   onChangeHeroAction: (key: string, val: any) => void
   onChangeSectionAction: (key: string, val: any) => void
