@@ -26,6 +26,7 @@ moment = require 'moment'
     'all_by_author'
     'artist_id'
     'has_video'
+    'has_published_media'
     'fair_ids'
     'vertical'
     'q'
@@ -53,7 +54,7 @@ moment = require 'moment'
 
   # Only add the $or array for queries that require it (blank $or array causes problems)
   query.$or ?= [] if input.artist_id or input.all_by_author or
-    input.has_video or input.channel_id
+    input.has_video or input.channel_id or input.has_published_media
 
   # Convert query for channel_id to include partner_channel_id
   query.$or.push(
@@ -81,9 +82,11 @@ moment = require 'moment'
   ) if input.has_video
 
   # Convert query for video layout articles with published media
-  if input.has_published_media
-    query.layout = 'video'
-    query['media.published'] = true
+
+  query.$or.push(
+    {layout: 'video', 'media.published': true}
+    {layout: {$in: ["feature", "standard", "series"]}}
+  ) if input.has_published_media
 
   # Find articles that contain fair_ids
   if input.fair_ids

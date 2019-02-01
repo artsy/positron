@@ -80,11 +80,12 @@ describe 'Retrieve', ->
     it 'aggregates the query for has_published_media', ->
       { query } = Retrieve.toQuery {
         ids: [ '5530e72f7261696238050000' ]
-        has_published_media: true
         published: true
+        has_published_media: true
       }
-      query['media.published'].should.be.ok()
-      query['media.published'].should.equal true
+      query['$or'][0].layout.should.be.ok()
+      query['$or'][0].layout.should.equal 'video'
+      query['$or'][0]['media.published'].should.equal true
     
     it 'finds articles by multiple fair ids', ->
       { query } = Retrieve.toQuery {

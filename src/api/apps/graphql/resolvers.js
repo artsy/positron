@@ -182,7 +182,6 @@ export const relatedArticles = root => {
       const relatedArticleResults = await promisedMongoFetch({
         ids: root.related_article_ids,
         published: true,
-        has_published_media: true,
       }).catch(e => reject(e))
 
       relatedArticles = presentCollection(relatedArticleResults).results
@@ -217,6 +216,7 @@ export const relatedArticlesPanel = root => {
     ids: root.related_article_ids,
     limit: 3,
     published: true,
+    has_published_media: true,
   }
 
   return new Promise(async (resolve, reject) => {
@@ -261,6 +261,7 @@ export const relatedArticlesCanvas = root => {
     vertical,
     limit: 4,
     sort: "-published_at",
+    has_published_media: true,
   }
 
   return new Promise(async (resolve, reject) => {
