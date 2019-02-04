@@ -74,10 +74,10 @@ export class DragTarget extends React.Component<DragTargetProps> {
   }
 }
 
-export const DragPlaceholder = styled.div.attrs<{
+export const DragPlaceholder = styled.div<{
   height?: number
   isVertical?: boolean
-}>({})`
+}>`
   border: 2px dashed ${color("black10")};
   height: ${props => (props.height ? `${props.height}px` : "auto")};
   min-height: 1em;
@@ -96,11 +96,11 @@ export const DragPlaceholder = styled.div.attrs<{
   `};
 `
 
-export const DragTargetContainer = styled.div.attrs<{
+export const DragTargetContainer = styled.div<{
   isActiveSource: boolean
   isActiveTarget: boolean
   width?: number
-}>({})`
+}>`
   position: relative;
   width: ${props => (props.width ? props.width : "100%")};
 

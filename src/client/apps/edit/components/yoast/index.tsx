@@ -222,7 +222,7 @@ const Drawer = styled(Flex)`
   border-bottom: 1px solid ${color("black10")};
 `
 
-const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
+const CloseIcon = styled(Icon)<{ rotation: number }>`
   transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
   position: absolute;

@@ -272,7 +272,7 @@ export const ArtworkInputs = styled(Flex)`
 `
 
 // TODO: Use palette radios
-export const RadioInput = styled.div.attrs<{ isActive: boolean }>({})`
+export const RadioInput = styled.div<{ isActive: boolean }>`
   border: 2px solid white;
   width: 16px;
   height: 16px;

@@ -341,9 +341,9 @@ export default connect(
   mapDispatchToProps
 )(AdminArticle)
 
-export const Button = styled(SystemButton).attrs<{
+export const Button = styled(SystemButton)<{
   color?: string
-}>({})`
+}>`
   color: ${props => props.color};
 `
 

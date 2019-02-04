@@ -132,7 +132,7 @@ export default connect(
   mapDispatchToProps
 )(EditImage)
 
-export const EditImageContainer = styled.div.attrs<{ width?: any }>({})`
+export const EditImageContainer = styled.div<{ width?: any }>`
   width: ${props => props.width || "100%"};
   position: relative;
   max-width: 100%;

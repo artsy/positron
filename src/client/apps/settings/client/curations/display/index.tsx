@@ -149,6 +149,6 @@ export default class DisplayAdmin extends React.Component<
   }
 }
 
-const Button = styled(SystemButton).attrs<{ color?: string }>({})`
+const Button = styled(SystemButton)<{ color?: string }>`
   ${props => props.color && `color: ${props.color}`};
 `
