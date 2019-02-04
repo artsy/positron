@@ -165,9 +165,8 @@ export class SectionImages extends Component<
 
         <SectionImagesList
           justifyContent="center"
-          className="SectionImages__list"
           isWrapping={editing && this.isImageSetWrapping()}
-          isEditing={editing}
+          zIndex={editing ? 2 : -1}
         >
           {images.length > 0 ? (
             section.type === "image_set" && !editing ? (
@@ -238,11 +237,9 @@ const SectionImagesContainer = styled.section.attrs<{
 `
 
 const SectionImagesList = styled(Flex).attrs<{
-  isEditing?: boolean
   isWrapping?: boolean
 }>({})`
   position: relative;
-  z-index: ${props => (props.isEditing ? "2" : "-1")};
 
   ${DragContainer} {
     flex-direction: row;
