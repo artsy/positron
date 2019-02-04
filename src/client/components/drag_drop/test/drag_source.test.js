@@ -37,7 +37,7 @@ describe("DragSource", () => {
     component.simulate("dragStart", { clientY: 200, currentTarget: component })
     expect(props.setDragSource.mock.calls[0][0]).toBe(props.index)
     expect(props.setDragSource.mock.calls[0][1]).toBe(0)
-    expect(props.setDragSource.mock.calls[0][2]).toBe(200)
+    expect(props.setDragSource.mock.calls[0][2]).toBe(400)
   })
 
   it("Does not call setDragSource unless isDraggable", () => {

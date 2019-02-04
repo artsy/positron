@@ -12,7 +12,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 
-interface ArticleImage {
+export interface ArticleImage {
   url?: string
   caption?: string
   type: "image" | "artwork"
@@ -25,6 +25,7 @@ interface Props {
   editing: boolean
   image: ArticleImage
   index: number
+  isDraggable?: boolean
   isHero: boolean
   onChangeHeroAction: (key: string, val: any) => void
   onChangeSectionAction: (key: string, val: any) => void
@@ -134,7 +135,6 @@ export default connect(
 export const EditImageContainer = styled.div.attrs<{ width?: any }>({})`
   width: ${props => props.width || "100%"};
   position: relative;
-  padding-bottom: 30px;
   max-width: 100%;
   margin-right: 30px;
 

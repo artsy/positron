@@ -1,13 +1,15 @@
-import configureStore from "redux-mock-store"
-import React from "react"
-import { mount } from "enzyme"
-import { Provider } from "react-redux"
-import { LayoutControls } from "../layout.jsx"
-import { SectionControls } from "../index"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
+import { SectionControls } from "../index"
+import { LayoutControls } from "../layout.jsx"
 
 describe("Section Controls", () => {
   let props
+  let article
 
   SectionControls.prototype.isScrollingOver = jest.fn().mockReturnValue(true)
   SectionControls.prototype.isScrolledPast = jest.fn().mockReturnValue(false)
@@ -15,33 +17,34 @@ describe("Section Controls", () => {
   $.fn.height = jest.fn().mockReturnValue(200)
   $.fn.closest = jest.fn().mockReturnThis()
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
-        section: props.section,
-        sectionIndex: props.sectionIndex,
+        article: passedProps.article,
+        section: passedProps.section,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
     return mount(
       <Provider store={store}>
         <section>
-          <SectionControls {...props} />
+          <SectionControls {...passedProps} />
         </section>
       </Provider>
     )
   }
 
   beforeEach(() => {
+    article = cloneDeep(StandardArticle)
     props = {
       channel: { type: "editorial" },
-      section: StandardArticle.sections[4],
-      article: { layout: "standard" },
+      section: article.sections && article.sections[4],
+      article,
       onChange: jest.fn(),
       disabledAlert: jest.fn(),
       showLayouts: true,
@@ -67,7 +70,7 @@ describe("Section Controls", () => {
     it("returns true if item is scrolled over and not scrolled past", () => {
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
       component.setInsideComponent()
 
       expect(component.state.insideComponent).toBe(true)
@@ -76,7 +79,7 @@ describe("Section Controls", () => {
     it("returns false if item is scrolled past", () => {
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
       component.isScrolledPast = jest.fn().mockReturnValue(true)
       component.setInsideComponent()
 
@@ -87,7 +90,7 @@ describe("Section Controls", () => {
       props.isHero = true
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
 
       component.setInsideComponent()
       expect(component.state.insideComponent).toBe(false)
@@ -99,7 +102,7 @@ describe("Section Controls", () => {
       props.channel.type = "partner"
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
       const header = component.getHeaderHeight()
 
       expect(header).toBe(55)
@@ -108,10 +111,10 @@ describe("Section Controls", () => {
     it("returns 95 when channel is artsy channel", () => {
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
       const header = component.getHeaderHeight()
 
-      expect(header).toBe(95)
+      expect(header).toBe(89)
     })
   })
 
@@ -120,20 +123,20 @@ describe("Section Controls", () => {
       props.isHero = false
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
+        .instance() as SectionControls
       component.setState({ insideComponent: true })
       const bottom = component.getPositionBottom()
 
-      expect(bottom).toBe("605px")
+      expect(bottom).toBe("611px")
     })
 
     it("when outside component, returns 100%", () => {
       const component = getWrapper(props)
         .find(SectionControls)
-        .instance()
-
+        .instance() as SectionControls
       component.setState({ insideComponent: false })
       const bottom = component.getPositionBottom()
+
       expect(bottom).toBe("100%")
     })
   })

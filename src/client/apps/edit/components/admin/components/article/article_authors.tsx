@@ -72,6 +72,7 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
               <AutocompleteList
                 label="Authors"
                 fetchItems={this.fetchAuthors}
+                isDraggable
                 items={article.author_ids || []}
                 filter={items => {
                   return items.results.map(item => {
@@ -96,6 +97,10 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
               field="contributing_authors"
               label="Contributing Authors"
               model="users"
+              isDraggable
+              onDragEnd={items => {
+                onChangeArticleAction("contributing_authors", items)
+              }}
             />
           )}
         </Box>

@@ -46,7 +46,7 @@ export class SectionControls extends Component {
   getHeaderHeight = () => {
     const { type } = this.props.channel
     // Add extra space for channels with Yoast
-    return type === "partner" ? 55 : 95
+    return type === "partner" ? 55 : 89
   }
 
   getPositionBottom = () => {
