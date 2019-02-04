@@ -5,7 +5,10 @@ import { color } from "@artsy/palette"
 import { connect } from "react-redux"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
 import { RemoveButton } from "client/components/remove_button"
-import { removeSection } from "client/actions/edit/sectionActions"
+import {
+  removeSection,
+  maybeRemoveEmptyText,
+} from "client/actions/edit/sectionActions"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import SectionImages from "../sections/images/index.tsx"
 import SectionSlideshow from "../sections/slideshow"
@@ -24,6 +27,7 @@ export class SectionContainer extends Component {
     editing: PropTypes.bool,
     index: PropTypes.number,
     isHero: PropTypes.bool,
+    maybeRemoveEmptyTextAction: PropTypes.func,
     onRemoveHero: PropTypes.func,
     onSetEditing: PropTypes.func,
     removeSectionAction: PropTypes.func,
@@ -42,7 +46,13 @@ export class SectionContainer extends Component {
   }
 
   onSetEditing = () => {
-    const { editing, index, isHero, onSetEditing } = this.props
+    const {
+      editing,
+      index,
+      isHero,
+      onSetEditing,
+      maybeRemoveEmptyTextAction,
+    } = this.props
 
     let setEditing
 
@@ -52,6 +62,10 @@ export class SectionContainer extends Component {
     } else {
       // use the section index if article.section
       setEditing = this.isEditing() ? null : index
+    }
+    if (this.isEditing()) {
+      // check if text section is empty, remove section if so
+      maybeRemoveEmptyTextAction(index)
     }
     onSetEditing(setEditing)
   }
@@ -152,6 +166,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   removeSectionAction: removeSection,
+  maybeRemoveEmptyTextAction: maybeRemoveEmptyText,
 }
 
 export default connect(

@@ -75,7 +75,9 @@ export const onChangeSection = (key, value) => {
 
 export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
   return (dispatch, getState) => {
-    const { edit: { article, sectionIndex } } = getState()
+    const {
+      edit: { article, sectionIndex },
+    } = getState()
     // update original section with updated content
     dispatch(onChangeSection("body", existingSectionBody))
     dispatch(newSection("text", sectionIndex + 1, { body: newSectionBody }))
@@ -88,7 +90,9 @@ export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
 
 export const onMergeTextSections = newHtml => {
   return (dispatch, getState) => {
-    const { edit: { sectionIndex } } = getState()
+    const {
+      edit: { sectionIndex },
+    } = getState()
     dispatch(onChangeSection("body", newHtml))
     dispatch(removeSection(sectionIndex - 1))
   }
@@ -100,7 +104,7 @@ export const maybeMergeTextSections = () => {
       edit: {
         article: { sections },
         section,
-        sectionIndex
+        sectionIndex,
       },
     } = getState()
     if (sections.length && sectionIndex !== 0) {
@@ -120,7 +124,9 @@ export const maybeMergeTextSections = () => {
 
 export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
   return (dispatch, getState) => {
-    const { edit: { article, sectionIndex } } = getState()
+    const {
+      edit: { article, sectionIndex },
+    } = getState()
 
     dispatch(onChangeSection("body", blockquoteHtml))
     if (afterHtml) {
@@ -133,6 +139,26 @@ export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
       debouncedSaveDispatch(dispatch)
     }
     dispatch(setSection(null))
+  }
+}
+
+export const maybeRemoveEmptyText = sectionIndex => {
+  return (dispatch, getState) => {
+    const {
+      edit: { article },
+    } = getState()
+    const newArticle = cloneDeep(article)
+    const activeSection = newArticle.sections[sectionIndex]
+    const isText = activeSection.type === "text"
+
+    if (isText) {
+      if (activeSection.body.length) {
+        return
+      } else {
+        // Remove text sections with empty body
+        dispatch(removeSection(sectionIndex))
+      }
+    }
   }
 }
 
