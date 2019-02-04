@@ -397,7 +397,7 @@ describe("SectionText", () => {
         "Here is a</p><ul><li><strong>caption</strong></li><li>about an image</li></ul><p>yep."
       )
       expect(component.state().html).toMatch(
-        "What would Antoine Court de Gébelin think of the Happy Squirrel?"
+        "What would Antoine Court</a>’s de Gébelin think of the Happy Squirrel?"
       )
     })
 
