@@ -172,7 +172,7 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
   }
 }
 
-export const InputGroup = styled(Flex).attrs<{ hasFocus?: boolean }>({})`
+export const InputGroup = styled(Flex)<{ hasFocus?: boolean }>`
   min-width: 70%;
   border: 1px solid
     ${props => (props.hasFocus ? color("purple100") : color("black10"))};

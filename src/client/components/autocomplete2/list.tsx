@@ -1,4 +1,6 @@
-import { Box, color, Flex, Sans, Serif } from "@artsy/palette"
+import { Box, color, Flex, Sans, Serif, space } from "@artsy/palette"
+import { DragDropList } from "client/components/drag_drop2"
+import { DragPlaceholder } from "client/components/drag_drop2/drag_target"
 import { clone, map, uniq } from "lodash"
 import React, { Component } from "react"
 import styled from "styled-components"
@@ -8,6 +10,8 @@ interface AutocompleteListProps extends AutocompleteProps {
   fetchItems: (fetchedItems: Item[], cb: (Items: Item[]) => void) => void
   formatListItem?: any
   label?: string
+  isDraggable?: boolean
+  onDragEnd?: (items: any[]) => void
 }
 
 interface AutocompleteListState {
@@ -57,55 +61,93 @@ export class AutocompleteList extends Component<
     this.setState({ items: newItems })
   }
 
+  onDragEnd = newItems => {
+    const { onDragEnd } = this.props
+    this.setState({ items: newItems })
+    onDragEnd && onDragEnd(newItems)
+  }
+
+  renderListItems = () => {
+    const { formatListItem, isDraggable } = this.props
+    const { items } = this.state
+
+    return items.map((item, i) => {
+      const title = item ? item.title || item.name : ""
+      return (
+        <ListItem key={i} isDraggable={isDraggable}>
+          {formatListItem ? (
+            formatListItem()
+          ) : (
+            <Serif size="4t" color={color("purple100")}>
+              {title}
+            </Serif>
+          )}
+          <button
+            className="remove-button"
+            onClick={() => this.onRemoveItem(i)}
+          />
+        </ListItem>
+      )
+    })
+  }
+
   render() {
-    const { formatListItem, label } = this.props
+    const { isDraggable, label } = this.props
     const { items } = this.state
 
     return (
-      <div>
+      <AutocompleteListContainer>
         {label && (
           <Sans size="3t" weight="medium">
             {label}
           </Sans>
         )}
+
         {items.length > 0 && (
           <Box mt={1}>
-            {items.map((item, i) => {
-              const title = item ? item.title || item.name : ""
-              return (
-                <ListItem key={i}>
-                  {formatListItem ? (
-                    formatListItem()
-                  ) : (
-                    <Serif size="4t" color={color("purple100")}>
-                      {title}
-                    </Serif>
-                  )}
-                  <button
-                    className="remove-button"
-                    onClick={() => this.onRemoveItem(i)}
-                  />
-                </ListItem>
-              )
-            })}
+            {isDraggable ? (
+              <DragDropList items={items} onDragEnd={this.onDragEnd}>
+                {this.renderListItems()}
+              </DragDropList>
+            ) : (
+              this.renderListItems()
+            )}
           </Box>
         )}
         <Autocomplete {...this.props} />
-      </div>
+      </AutocompleteListContainer>
     )
   }
 }
 
-export const ListItem = styled(Flex)`
+export const ListItem = styled(Flex)<{ isDraggable?: boolean }>`
   border: 1px solid ${color("black10")};
   position: relative;
   padding: 10px 10px 10px;
-  margin-bottom: 10px;
+  margin-bottom: ${space(1)}px;
   align-items: center;
   justify-content: space-between;
 
   button,
   button:hover {
     top: 3px;
+  }
+
+  ${props =>
+    props.isDraggable &&
+    `
+    ${Sans} {
+      user-select: none;
+    }
+
+    button {
+      z-index: 10;
+    }
+  `};
+`
+
+const AutocompleteListContainer = styled.div`
+  ${DragPlaceholder} {
+    max-height: calc(100% - ${space(1)}px);
   }
 `

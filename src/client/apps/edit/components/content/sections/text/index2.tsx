@@ -263,10 +263,10 @@ export default connect(
   mapDispatchToProps
 )(SectionText2)
 
-const SectionTextContainer = styled.div.attrs<{
+const SectionTextContainer = styled.div<{
   isEditing?: boolean
   layout: string
-}>({})`
+}>`
   position: relative;
   z-index: ${props => (props.isEditing ? 2 : -1)};
 

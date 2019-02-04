@@ -1,10 +1,12 @@
+import { Box, Button, TextArea } from "@artsy/palette"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { FormLabel } from "client/components/form_label"
 import gemup from "gemup"
 import moment from "moment"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { data as sd } from "sharify"
 import styled from "styled-components"
-import { onChangeArticle } from "../../actions/edit/articleActions"
 
 interface State {
   text: string
@@ -88,29 +90,26 @@ export class ImageGenerator extends Component<Props, State> {
     const { text } = this.state
 
     return (
-      <div className="field-group">
-        <label>Image Text</label>
-        <textarea
-          className="bordered-input"
-          onChange={e => this.onChange(e.target.value)}
-          placeholder="Start Typing..."
-          defaultValue={text}
-        />
-        <Canvas id="canvas" width="1080px" height="470px" />
-        <Button className="avant-garde-button" onClick={this.onClick}>
-          Generate New Image
-        </Button>
-      </div>
+      <Box>
+        <FormLabel>Image Text</FormLabel>
+        <Box mt={1}>
+          <TextArea
+            onChange={e => this.onChange(e.value)}
+            placeholder="Start Typing..."
+            defaultValue={text}
+          />
+          <Canvas id="canvas" width="1080px" height="470px" />
+          <Button variant="secondaryOutline" onClick={this.onClick}>
+            Generate New Image
+          </Button>
+        </Box>
+      </Box>
     )
   }
 }
 
 const Canvas = styled.canvas`
   display: none;
-`
-
-const Button = styled.button`
-  margin-top: 10px;
 `
 
 const mapStateToProps = state => ({

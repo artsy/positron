@@ -1,4 +1,4 @@
-import { Box, color, Flex, Serif, space } from "@artsy/palette"
+import { Box, Collapse, color, Flex, Serif, space } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import {
   Input,
@@ -6,7 +6,6 @@ import {
   Title,
 } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import { StaticCollapse } from "@artsy/reaction/dist/Components/StaticCollapse"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -30,13 +29,9 @@ interface State {
 export class Yoast extends Component<Props, State> {
   private snippetPreview: YoastSnippetPreview
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isOpen: false,
-      issueCount: 0,
-    }
+  state = {
+    isOpen: false,
+    issueCount: 0,
   }
 
   componentDidMount() {
@@ -186,7 +181,7 @@ export class Yoast extends Component<Props, State> {
             title="plus-small"
           />
         </YoastContainer>
-        <StaticCollapse open={isOpen}>
+        <Collapse open={isOpen}>
           <Drawer p={30}>
             <YoastInput width={[1, 1 / 3]}>
               <Input
@@ -206,7 +201,7 @@ export class Yoast extends Component<Props, State> {
               <div id="yoast-output" />
             </YoastOutput>
           </Drawer>
-        </StaticCollapse>
+        </Collapse>
       </Box>
     )
   }
@@ -222,7 +217,7 @@ const Drawer = styled(Flex)`
   border-bottom: 1px solid ${color("black10")};
 `
 
-const CloseIcon = styled(Icon).attrs<{ rotation: number }>({})`
+const CloseIcon = styled(Icon)<{ rotation: number }>`
   transform: rotate(${props => props.rotation}deg);
   transition: all 0.25s;
   position: absolute;
