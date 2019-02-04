@@ -204,10 +204,10 @@ export default connect(
   mapDispatchToProps
 )(SectionImages)
 
-const SectionImagesContainer = styled.section.attrs<{
+const SectionImagesContainer = styled.section<{
   sectionLayout: SectionLayout
   isWrapping?: boolean
-}>({})`
+}>`
   .RemoveButton {
     position: absolute;
     top: -12px;
@@ -236,9 +236,9 @@ const SectionImagesContainer = styled.section.attrs<{
   `};
 `
 
-const SectionImagesList = styled(Flex).attrs<{
+const SectionImagesList = styled(Flex)<{
   isWrapping?: boolean
-}>({})`
+}>`
   position: relative;
 
   ${DragContainer} {

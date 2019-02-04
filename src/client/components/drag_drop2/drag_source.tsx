@@ -45,9 +45,9 @@ export class DragSource extends React.Component<DragSourceProps> {
   }
 }
 
-export const DragSourceContainer = styled.div.attrs<{
+export const DragSourceContainer = styled.div<{
   isActiveSource?: boolean
-}>({})`
+}>`
   z-index: 1;
   position: relative;
   background: white;

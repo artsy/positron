@@ -251,10 +251,10 @@ const AutocompleteResultsBackground = styled.div`
   z-index: -1;
 `
 
-export const AutocompleteResult = styled(Flex).attrs<{
+export const AutocompleteResult = styled(Flex)<{
   isEmpty?: boolean
   children: any
-}>({})`
+}>`
   padding: 10px;
   background: white;
   color: ${color("black100")};

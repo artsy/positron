@@ -113,7 +113,7 @@ export class CharacterLimit extends React.Component<
   }
 }
 
-const CharacterLimitContainer = styled.div.attrs<{ type?: string }>({})`
+const CharacterLimitContainer = styled.div<{ type?: string }>`
   ${props =>
     props.type === "textarea" &&
     `
@@ -127,6 +127,6 @@ const CharacterLimitContainer = styled.div.attrs<{ type?: string }>({})`
   }
 `
 
-export const RemainingChars = styled.div.attrs<{ isOverLimit: boolean }>({})`
+export const RemainingChars = styled.div<{ isOverLimit: boolean }>`
   color: ${props => (props.isOverLimit ? color("red100") : color("black30"))};
 `

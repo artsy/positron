@@ -52,7 +52,7 @@ export default connect(
   mapDispatchToProps
 )(SectionFooter)
 
-const FooterContainer = styled.div.attrs<{ layout?: string }>({})`
+const FooterContainer = styled.div<{ layout?: string }>`
   ${props =>
     props.layout === "standard" &&
     `
@@ -60,7 +60,7 @@ const FooterContainer = styled.div.attrs<{ layout?: string }>({})`
   `};
 `
 
-const SectionFooterPostscript = styled.div.attrs<{ width?: string }>({})`
+const SectionFooterPostscript = styled.div<{ width?: string }>`
   width: 100%;
   max-width: ${props => props.width || "100%"};
   margin: auto;

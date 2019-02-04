@@ -120,7 +120,7 @@ export class AutocompleteList extends Component<
   }
 }
 
-export const ListItem = styled(Flex).attrs<{ isDraggable?: boolean }>({})`
+export const ListItem = styled(Flex)<{ isDraggable?: boolean }>`
   border: 1px solid ${color("black10")};
   position: relative;
   padding: 10px 10px 10px;

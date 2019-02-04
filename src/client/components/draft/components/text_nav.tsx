@@ -229,11 +229,11 @@ export class TextNav extends Component<Props, State> {
   }
 }
 
-export const TextNavContainer = styled.div.attrs<{
+export const TextNavContainer = styled.div<{
   top: number
   left: number
   width: number
-}>({})`
+}>`
   max-width: ${props => props.width}px;
   background: ${color("black100")};
   border-radius: 5px;
@@ -258,7 +258,7 @@ export const TextNavContainer = styled.div.attrs<{
   }
 `
 
-export const Button = styled.div.attrs<{ styleType: string }>({})`
+export const Button = styled.div<{ styleType: string }>`
   color: ${color("black30")};
   height: ${BUTTON_HEIGHT}px;
   width: ${BUTTON_WIDTH}px;
