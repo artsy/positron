@@ -1,5 +1,6 @@
 import {
   maybeMergeTextSections,
+  maybeRemoveEmptyText,
   newSection,
   newHeroSection,
   onChangeSection,
@@ -12,6 +13,15 @@ import {
 } from "client/actions/edit/sectionActions"
 import { cloneDeep } from "lodash"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import Article from "client/models/article.coffee"
+
+jest.mock("client/models/article.coffee", () => jest.fn())
+
+Article.mockImplementation(() => ({
+  on: jest.fn(),
+  isNew: jest.fn(),
+  save: jest.fn(),
+}))
 
 describe("sectionActions", () => {
   let article
@@ -310,10 +320,13 @@ describe("sectionActions", () => {
 
     it("Moves text before blockquote to new section", () => {
       getState = jest.fn(() => ({
-        edit: { article, sectionIndex: 0 }
+        edit: { article, sectionIndex: 0 },
       }))
       onInsertBlockquote(blockquoteHtml, beforeHtml, "")(dispatch, getState)
-      const { type, payload: { section, sectionIndex } } = dispatch.mock.calls[1][0]
+      const {
+        type,
+        payload: { section, sectionIndex },
+      } = dispatch.mock.calls[1][0]
 
       expect(type).toBe("NEW_SECTION")
       expect(sectionIndex).toBe(0)
@@ -323,10 +336,13 @@ describe("sectionActions", () => {
 
     it("Moves text after blockquote to new section", () => {
       getState = jest.fn(() => ({
-        edit: { article, sectionIndex: 0 }
+        edit: { article, sectionIndex: 0 },
       }))
       onInsertBlockquote(blockquoteHtml, "", afterHtml)(dispatch, getState)
-      const { type, payload: { section, sectionIndex } } = dispatch.mock.calls[1][0]
+      const {
+        type,
+        payload: { section, sectionIndex },
+      } = dispatch.mock.calls[1][0]
 
       expect(type).toBe("NEW_SECTION")
       expect(sectionIndex).toBe(1)
@@ -336,9 +352,12 @@ describe("sectionActions", () => {
 
     it("Can handle blockquotes with before and after sections", () => {
       getState = jest.fn(() => ({
-        edit: { article, sectionIndex: 0 }
+        edit: { article, sectionIndex: 0 },
       }))
-      onInsertBlockquote(blockquoteHtml, beforeHtml, afterHtml)(dispatch, getState)
+      onInsertBlockquote(blockquoteHtml, beforeHtml, afterHtml)(
+        dispatch,
+        getState
+      )
       dispatch.mock.calls[0][0](dispatch, getState)
 
       const afterSection = dispatch.mock.calls[1][0]
@@ -366,7 +385,7 @@ describe("sectionActions", () => {
     it("Calls save if a new section is added and unpublished", done => {
       article.published = false
       getState = jest.fn(() => ({
-        edit: { article, },
+        edit: { article },
         app: { channel: { type: "editorial" } },
       }))
       onInsertBlockquote(blockquoteHtml, beforeHtml, "")(dispatch, getState)
@@ -398,8 +417,8 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
-        }
+          sectionIndex,
+        },
       }))
       maybeMergeTextSections()(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
@@ -408,7 +427,9 @@ describe("sectionActions", () => {
       const { type, payload } = dispatch.mock.calls[3][0]
       expect(type).toBe("CHANGE_SECTION")
       expect(payload.value).toMatch("Around two years ago")
-      expect(payload.value).toMatch("Land exhibitions, make influential contacts")
+      expect(payload.value).toMatch(
+        "Land exhibitions, make influential contacts"
+      )
     })
 
     it("Does nothing if sectionIndex is 0", () => {
@@ -417,8 +438,8 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
-        }
+          sectionIndex,
+        },
       }))
       maybeMergeTextSections()(dispatch, getState)
       expect(dispatch).not.toBeCalled()
@@ -430,8 +451,8 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
-        }
+          sectionIndex,
+        },
       }))
       maybeMergeTextSections()(dispatch, getState)
       expect(dispatch).not.toBeCalled()
@@ -442,8 +463,8 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
-        }
+          sectionIndex,
+        },
       }))
       maybeMergeTextSections()(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
@@ -472,8 +493,8 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
-        }
+          sectionIndex,
+        },
       }))
       onMergeTextSections("<p>New html</p>")(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
@@ -489,19 +510,114 @@ describe("sectionActions", () => {
         edit: {
           article,
           section,
-          sectionIndex
+          sectionIndex,
         },
-        app: { channel: { type: "editorial" } }
+        app: { channel: { type: "editorial" } },
       }))
       onMergeTextSections("<p>New html</p>")(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
       dispatch.mock.calls[1][0](dispatch, getState)
       dispatch.mock.calls[3][0](dispatch, getState)
       dispatch.mock.calls[4][0](dispatch, getState)
-      const { type, payload: { data } } = dispatch.mock.calls[5][0]
+      const {
+        type,
+        payload: { data },
+      } = dispatch.mock.calls[5][0]
 
       expect(type).toBe("CHANGE_ARTICLE")
       expect(data.sections.length).toBe(article.sections.length - 1)
+    })
+  })
+
+  describe("#maybeRemoveEmptyText", () => {
+    let dispatch
+    let getState
+
+    beforeEach(() => {
+      dispatch = jest.fn()
+      getState = jest.fn(() => ({
+        edit: {
+          article,
+        },
+        app: { channel: { type: "editorial" } },
+      }))
+    })
+
+    it("Deletes text sections with empty body", () => {
+      article = { sections: [{ type: "text", body: "" }] }
+      getState = jest.fn(() => ({
+        edit: {
+          article,
+        },
+        app: { channel: { type: "editorial" } },
+      }))
+
+      maybeRemoveEmptyText(0)(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
+      dispatch.mock.calls[1][0](dispatch, getState)
+      dispatch.mock.calls[2][0](dispatch, getState)
+      const {
+        type,
+        payload: { data },
+      } = dispatch.mock.calls[3][0]
+
+      expect(type).toBe("CHANGE_ARTICLE")
+      expect(data.sections.length).toBe(article.sections.length - 1)
+    })
+
+    it("Deletes text sections with empty html for body", () => {
+      article = {
+        sections: [{ type: "text", body: "<p>  </p><h2></h2><h3></h3>" }],
+      }
+      getState = jest.fn(() => ({
+        edit: {
+          article,
+        },
+        app: { channel: { type: "editorial" } },
+      }))
+      maybeRemoveEmptyText(0)(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
+      dispatch.mock.calls[1][0](dispatch, getState)
+      dispatch.mock.calls[2][0](dispatch, getState)
+      const {
+        type,
+        payload: { data },
+      } = dispatch.mock.calls[3][0]
+
+      expect(type).toBe("CHANGE_ARTICLE")
+      expect(data.sections.length).toBe(article.sections.length - 1)
+    })
+
+    it("Sanitizes text sections that are empty and include h1", () => {
+      article = {
+        sections: [{ type: "text", body: "<h1>  </h1><p></p>" }],
+      }
+      getState = jest.fn(() => ({
+        edit: {
+          article,
+        },
+        app: { channel: { type: "editorial" } },
+      }))
+      maybeRemoveEmptyText(0)(dispatch, getState)
+      dispatch.mock.calls[0][0](dispatch, getState)
+      dispatch.mock.calls[1][0](dispatch, getState)
+      const {
+        type,
+        payload: { data },
+      } = dispatch.mock.calls[2][0]
+
+      expect(type).toBe("CHANGE_ARTICLE")
+      expect(data.sections[0].body).toBe("<h1></h1>")
+    })
+
+    it("Does nothing for text sections with body", () => {
+      maybeRemoveEmptyText(1)(dispatch, getState)
+      expect(dispatch).not.toBeCalled()
+    })
+
+    it("Does nothing for non-text sections", () => {
+      maybeRemoveEmptyText(2)(dispatch, getState)
+      expect(dispatch).not.toBeCalled()
     })
   })
 })

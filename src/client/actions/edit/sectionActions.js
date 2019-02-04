@@ -5,7 +5,7 @@ import {
   debouncedSaveDispatch,
   onChangeArticle,
 } from "client/actions/edit/articleActions"
-
+import { clean, stripTags } from "underscore.string"
 export const actions = keyMirror(
   "CHANGE_SECTION",
   "NEW_SECTION",
@@ -151,9 +151,20 @@ export const maybeRemoveEmptyText = sectionIndex => {
     const activeSection = newArticle.sections[sectionIndex]
     const isText = activeSection.type === "text"
 
-    if (isText) {
-      if (activeSection.body.length) {
+    if (!isText) {
+      // No action necessary if section is not text
+      return
+    } else {
+      const isEmptyHtml = !clean(stripTags(activeSection.body)).length
+      const isEmptyH1 = isEmptyHtml && activeSection.body.includes("<h1>")
+
+      if (!isEmptyHtml) {
+        // No action necessary if text is present
         return
+      } else if (isEmptyH1) {
+        // Preserve empty H1 as section divider
+        newArticle.sections[sectionIndex].body = "<h1></h1>"
+        dispatch(onChangeArticle("sections", newArticle.sections))
       } else {
         // Remove text sections with empty body
         dispatch(removeSection(sectionIndex))
