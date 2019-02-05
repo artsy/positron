@@ -196,7 +196,7 @@ export const removeSection = (sectionIndex: number) => {
   }
 }
 
-export const setSection = (sectionIndex: number) => ({
+export const setSection = (sectionIndex: number | null) => ({
   // Index of article section currently editing
   type: actions.SET_SECTION,
   payload: {
