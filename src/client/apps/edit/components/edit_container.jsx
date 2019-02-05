@@ -173,7 +173,7 @@ export class EditContainer extends Component {
         : ""
 
     return (
-      <div className="EditContainer">
+      <EditWrapper className="EditContainer">
         <ErrorBoundary>
           <FixedHeader>
             <EditHeader beforeUnload={this.beforeUnload} />
@@ -197,7 +197,7 @@ export class EditContainer extends Component {
               }}
             />
           )}
-      </div>
+      </EditWrapper>
     )
   }
 }
@@ -232,4 +232,15 @@ export const FixedHeader = styled.div`
   right: 0;
   background: white;
   z-index: 7;
+`
+
+export const EditWrapper = styled.div`
+  div[class*="caption__CaptionContainer-"] {
+    > div {
+      min-width: 100%;
+    }
+    a {
+      background-size: 1px 1px;
+    }
+  }
 `

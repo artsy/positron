@@ -1,10 +1,14 @@
-import { clone, cloneDeep } from "lodash"
-import keyMirror from "client/lib/keyMirror"
+import {
+  SectionData,
+  SectionType,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   changeArticleData,
   debouncedSaveDispatch,
   onChangeArticle,
 } from "client/actions/edit/articleActions"
+import keyMirror from "client/lib/keyMirror"
+import { clone, cloneDeep } from "lodash"
 import { clean, stripTags } from "underscore.string"
 export const actions = keyMirror(
   "CHANGE_SECTION",
@@ -26,13 +30,13 @@ export const changeSection = (key, value) => {
 export const newHeroSection = type => {
   const section = setupSection(type)
 
-  return (dispatch, getState) => {
+  return (dispatch, _getState) => {
     dispatch(changeArticleData("hero_section", section))
   }
 }
 
-export const newSection = (type, sectionIndex, attrs = {}) => {
-  const section = { ...setupSection(type), ...attrs }
+export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
+  const section = { ...setupSection(type), ...attrs } as SectionData
 
   return {
     type: actions.NEW_SECTION,
@@ -193,7 +197,7 @@ export const setSection = sectionIndex => ({
   },
 })
 
-export const setupSection = type => {
+export const setupSection = (type: SectionType) => {
   // set initial state of new section
   switch (type) {
     case "video":
@@ -201,30 +205,30 @@ export const setupSection = type => {
         type: "video",
         url: "",
         layout: "column_width",
-      }
+      } as SectionData
     case "image_collection":
       return {
         type: "image_collection",
         layout: "overflow_fillwidth",
         images: [],
-      }
+      } as SectionData
     case "embed":
       return {
         type: "embed",
         url: "",
         layout: "column_width",
-        height: "",
-      }
+        height: 0,
+      } as SectionData
     case "social_embed":
       return {
         type: "social_embed",
         url: "",
         layout: "column_width",
-      }
+      } as SectionData
     case "text":
       return {
         type: "text",
         body: "",
-      }
+      } as SectionData
   }
 }

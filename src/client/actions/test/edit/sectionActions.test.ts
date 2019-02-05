@@ -1,19 +1,19 @@
+import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import {
   maybeMergeTextSections,
   maybeRemoveEmptyText,
-  newSection,
   newHeroSection,
-  onChangeSection,
+  newSection,
   onChangeHero,
+  onChangeSection,
   onInsertBlockquote,
   onMergeTextSections,
   onSplitTextSection,
   removeSection,
   setSection,
 } from "client/actions/edit/sectionActions"
+const Article = require("client/models/article.coffee")
 import { cloneDeep } from "lodash"
-import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import Article from "client/models/article.coffee"
 
 jest.mock("client/models/article.coffee", () => jest.fn())
 
@@ -46,7 +46,7 @@ describe("sectionActions", () => {
       expect(section.type).toBe("embed")
       expect(section.url).toBe("")
       expect(section.layout).toBe("column_width")
-      expect(section.height).toBe("")
+      expect(section.height).toBe(0)
       expect(sectionIndex).toBe(3)
     })
 
@@ -67,7 +67,7 @@ describe("sectionActions", () => {
 
       expect(action.type).toBe("NEW_SECTION")
       expect(section.type).toBe("image_collection")
-      expect(section.images.length).toBe(0)
+      expect(section.images && section.images.length).toBe(0)
       expect(section.layout).toBe("overflow_fillwidth")
       expect(sectionIndex).toBe(3)
     })
@@ -218,8 +218,8 @@ describe("sectionActions", () => {
   })
 
   it("#removeSection calls #onChangeArticle with new sections", () => {
-    let dispatch = jest.fn()
-    let getState = jest.fn(() => ({
+    const dispatch = jest.fn()
+    const getState = jest.fn(() => ({
       edit: { article },
       app: { channel: { type: "editorial" } },
     }))
@@ -293,6 +293,8 @@ describe("sectionActions", () => {
   describe("#onInsertBlockquote", () => {
     let dispatch
     let getState
+    let sectionOnSet
+
     beforeEach(() => {
       dispatch = jest.fn()
     })
@@ -308,9 +310,9 @@ describe("sectionActions", () => {
       onInsertBlockquote(blockquoteHtml, "", "")(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
 
-      const setSection = dispatch.mock.calls[1][0]
-      expect(setSection.type).toBe("SET_SECTION")
-      expect(setSection.payload.sectionIndex).toBe(null)
+      sectionOnSet = dispatch.mock.calls[1][0]
+      expect(sectionOnSet.type).toBe("SET_SECTION")
+      expect(sectionOnSet.payload.sectionIndex).toBe(null)
 
       const changeSection = dispatch.mock.calls[2][0]
       expect(changeSection.type).toBe("CHANGE_SECTION")
@@ -372,9 +374,9 @@ describe("sectionActions", () => {
       expect(beforeSection.payload.section.type).toBe("text")
       expect(beforeSection.payload.section.body).toBe(beforeHtml)
 
-      const setSection = dispatch.mock.calls[3][0]
-      expect(setSection.type).toBe("SET_SECTION")
-      expect(setSection.payload.sectionIndex).toBe(null)
+      sectionOnSet = dispatch.mock.calls[3][0]
+      expect(sectionOnSet.type).toBe("SET_SECTION")
+      expect(sectionOnSet.payload.sectionIndex).toBe(null)
 
       const changeSection = dispatch.mock.calls[4][0]
       expect(changeSection.type).toBe("CHANGE_SECTION")

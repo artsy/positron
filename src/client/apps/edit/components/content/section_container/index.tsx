@@ -1,41 +1,44 @@
-import PropTypes from "prop-types"
-import React, { Component, Fragment } from "react"
-import styled from "styled-components"
 import { color } from "@artsy/palette"
-import { connect } from "react-redux"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
-import { RemoveButton } from "client/components/remove_button"
-import {
-  removeSection,
-  maybeRemoveEmptyText,
-} from "client/actions/edit/sectionActions"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import SectionImages from "../sections/images/index.tsx"
-import SectionSlideshow from "../sections/slideshow"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import {
+  maybeRemoveEmptyText,
+  removeSection,
+} from "client/actions/edit/sectionActions"
+import { ErrorBoundary } from "client/components/error/error_boundary"
+import { RemoveButton } from "client/components/remove_button"
+import React, { Component, Fragment } from "react"
+import { connect } from "react-redux"
+// TODO: Remove sd after text2 is merged
+import { data as sd } from "sharify"
+import styled from "styled-components"
+import { SectionEmbed } from "../sections/embed"
+import SectionImages from "../sections/images"
+import { SectionSocialEmbed } from "../sections/social_embed"
 import SectionText from "../sections/text"
 import SectionText2 from "../sections/text/index2"
 import SectionVideo from "../sections/video"
-import { ErrorBoundary } from "client/components/error/error_boundary"
-import { SectionEmbed } from "../sections/embed"
-import { SectionSocialEmbed } from "../sections/social_embed"
-// TODO: Remove after text2 is merged
-import { data as sd } from "sharify"
+const SectionSlideshow = require("../sections/slideshow/index.coffee")
 
-export class SectionContainer extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    editing: PropTypes.bool,
-    index: PropTypes.number,
-    isHero: PropTypes.bool,
-    maybeRemoveEmptyTextAction: PropTypes.func,
-    onRemoveHero: PropTypes.func,
-    onSetEditing: PropTypes.func,
-    removeSectionAction: PropTypes.func,
-    section: PropTypes.object,
-    sections: PropTypes.array,
-    sectionIndex: PropTypes.number,
-  }
+interface SectionContainerProps {
+  article: ArticleData
+  editing: boolean
+  index: number
+  isHero?: boolean
+  maybeRemoveEmptyTextAction: (i: number) => void
+  onRemoveHero: () => void
+  onSetEditing: (edit: boolean | number | null) => void
+  removeSectionAction: (i: number) => void
+  section: SectionData
+  sections: SectionData[]
+  sectionIndex: number
+}
 
+export class SectionContainer extends Component<SectionContainerProps> {
   isEditing = () => {
     const { index, editing, isHero, sectionIndex } = this.props
     if (isHero) {
@@ -123,11 +126,8 @@ export class SectionContainer extends Component {
     return (
       <ErrorBoundary>
         <SectionWrapper
-          className="SectionContainer"
-          data-editing={isEditing}
-          data-type={section.type} // TODO: remove css dependent on data-type & editing
           width={sectionWidth}
-          isHero={isHero}
+          isHero={isHero || false}
           isFillwidth={isFillwidth}
         >
           <HoverControls isEditing={isEditing} type={section.type}>
@@ -174,7 +174,11 @@ export default connect(
   mapDispatchToProps
 )(SectionContainer)
 
-const SectionWrapper = styled.div`
+const SectionWrapper = styled.div<{
+  isFillwidth: boolean
+  width: string
+  isHero: boolean
+}>`
   position: relative;
   width: ${props => props.width};
   max-width: 100%;
@@ -188,7 +192,7 @@ const SectionWrapper = styled.div`
   `};
 `
 
-export const HoverControls = styled.div`
+export const HoverControls = styled.div<{ isEditing: boolean; type: string }>`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -226,7 +230,7 @@ export const ContainerBackground = styled.div`
   z-index: 1;
 `
 
-const IconContainer = styled.div`
+const IconContainer = styled.div<{ isFillwidth: boolean }>`
   width: 30px;
   position: absolute;
   right: -15px;
@@ -239,7 +243,7 @@ const IconContainer = styled.div`
   `};
 `
 
-const RemoveButtonContainer = styled(IconContainer)`
+const RemoveButtonContainer = styled(IconContainer)<{ isFillwidth: boolean }>`
   top: -15px;
   &:hover circle {
     fill: ${color("red100")};
@@ -251,7 +255,7 @@ const RemoveButtonContainer = styled(IconContainer)`
   `};
 `
 
-const DragButtonContainer = styled(IconContainer)`
+const DragButtonContainer = styled(IconContainer)<{ isFillwidth: boolean }>`
   top: 25px;
   ${props =>
     props.isFillwidth &&
