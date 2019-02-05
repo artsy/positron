@@ -17,7 +17,7 @@ export const actions = keyMirror(
   "SET_SECTION"
 )
 
-export const changeSection = (key, value) => {
+export const changeSection = (key: string, value: any) => {
   return {
     type: actions.CHANGE_SECTION,
     payload: {
@@ -27,7 +27,7 @@ export const changeSection = (key, value) => {
   }
 }
 
-export const newHeroSection = type => {
+export const newHeroSection = (type: SectionType) => {
   const section = setupSection(type)
 
   return (dispatch, _getState) => {
@@ -47,7 +47,7 @@ export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
   }
 }
 
-export const onChangeHero = (key, value) => {
+export const onChangeHero = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -63,7 +63,7 @@ export const onChangeHero = (key, value) => {
   }
 }
 
-export const onChangeSection = (key, value) => {
+export const onChangeSection = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -77,7 +77,10 @@ export const onChangeSection = (key, value) => {
   }
 }
 
-export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
+export const onSplitTextSection = (
+  existingSectionBody: string,
+  newSectionBody: string
+) => {
   return (dispatch, getState) => {
     const {
       edit: { article, sectionIndex },
@@ -92,7 +95,7 @@ export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
   }
 }
 
-export const onMergeTextSections = newHtml => {
+export const onMergeTextSections = (newHtml: string) => {
   return (dispatch, getState) => {
     const {
       edit: { sectionIndex },
@@ -126,7 +129,11 @@ export const maybeMergeTextSections = () => {
   }
 }
 
-export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
+export const onInsertBlockquote = (
+  blockquoteHtml: string,
+  beforeHtml: string,
+  afterHtml: string
+) => {
   return (dispatch, getState) => {
     const {
       edit: { article, sectionIndex },
@@ -146,7 +153,7 @@ export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
   }
 }
 
-export const maybeRemoveEmptyText = sectionIndex => {
+export const maybeRemoveEmptyText = (sectionIndex: number) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -177,7 +184,7 @@ export const maybeRemoveEmptyText = sectionIndex => {
   }
 }
 
-export const removeSection = sectionIndex => {
+export const removeSection = (sectionIndex: number) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -189,7 +196,7 @@ export const removeSection = sectionIndex => {
   }
 }
 
-export const setSection = sectionIndex => ({
+export const setSection = (sectionIndex: number) => ({
   // Index of article section currently editing
   type: actions.SET_SECTION,
   payload: {

@@ -173,7 +173,7 @@ export class EditContainer extends Component {
         : ""
 
     return (
-      <EditWrapper className="EditContainer">
+      <EditWrapper>
         <ErrorBoundary>
           <FixedHeader>
             <EditHeader beforeUnload={this.beforeUnload} />
