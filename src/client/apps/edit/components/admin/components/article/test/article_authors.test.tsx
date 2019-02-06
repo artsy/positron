@@ -111,7 +111,7 @@ describe("ArticleAuthors", () => {
     const input = component
       .find(Input)
       .at(0)
-      .instance() as Input
+      .props()
 
     const event = ({
       currentTarget: {

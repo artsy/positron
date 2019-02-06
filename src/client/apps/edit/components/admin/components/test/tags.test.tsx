@@ -41,7 +41,7 @@ describe("AdminTags", () => {
       const input = component
         .find(Input)
         .at(0)
-        .instance() as Input
+        .props()
 
       const event = ({
         currentTarget: {
@@ -81,7 +81,7 @@ describe("AdminTags", () => {
       const input = component
         .find(Input)
         .at(1)
-        .instance() as Input
+        .props()
 
       const event = ({
         currentTarget: {
