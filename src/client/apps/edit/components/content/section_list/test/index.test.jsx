@@ -5,7 +5,7 @@ import { clone } from "lodash"
 import { mount } from "enzyme"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import DragContainer from "client/components/drag_drop/index.coffee"
-import { SectionContainer } from "../../section_container"
+import { SectionContainer } from "../../section_container/index.tsx"
 import { SectionTool } from "../../section_tool"
 import { SectionList } from "../index"
 import sharify from "sharify"
@@ -46,7 +46,7 @@ describe("SectionList", () => {
       onChangeArticleAction: jest.fn(),
       sectionIndex: null,
       setSectionAction: jest.fn(),
-      section: clone(article.sections[0])
+      section: clone(article.sections[0]),
     }
   })
 
@@ -113,7 +113,10 @@ describe("SectionList", () => {
     it("Uses props.sections for sectionContainer if not editing", () => {
       props.editSection = clone(article.sections[2])
       const component = getWrapper(props).find(SectionList)
-      const section = component.find(SectionContainer).at(0).props().section
+      const section = component
+        .find(SectionContainer)
+        .at(0)
+        .props().section
 
       expect(section).toEqual(article.sections[0])
     })
@@ -122,7 +125,10 @@ describe("SectionList", () => {
       props.sectionIndex = 0
       props.editSection = clone(article.sections[2])
       const component = getWrapper(props).find(SectionList)
-      const section = component.find(SectionContainer).at(0).props().section
+      const section = component
+        .find(SectionContainer)
+        .at(0)
+        .props().section
 
       expect(section).toEqual(article.sections[2])
     })
@@ -132,7 +138,10 @@ describe("SectionList", () => {
       props.sectionIndex = 0
       props.editSection = clone(article.sections[2])
       const component = getWrapper(props).find(SectionList)
-      const section = component.find(SectionContainer).at(0).props().section
+      const section = component
+        .find(SectionContainer)
+        .at(0)
+        .props().section
 
       expect(section).toEqual(article.sections[0])
     })

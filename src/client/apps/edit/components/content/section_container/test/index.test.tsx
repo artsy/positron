@@ -1,40 +1,40 @@
-import configureStore from "redux-mock-store"
-import React from "react"
-import { clone } from "lodash"
-import { mount } from "enzyme"
-import { Provider } from "react-redux"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
 import { RemoveButton } from "client/components/remove_button"
-import SectionSlideshow from "../../sections/slideshow"
-import { SectionText } from "../../sections/text/index.jsx"
+import { mount } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionEmbed } from "../../sections/embed"
 import { SectionImages } from "../../sections/images"
+const SectionSlideshow = require("../../sections/slideshow/index.coffee")
+import { SectionText } from "../../sections/text"
 import { SectionVideo } from "../../sections/video"
-import { SectionContainer, ClickToEdit, ContainerBackground } from "../index"
+import { ClickToEdit, ContainerBackground, SectionContainer } from "../index"
 require("typeahead.js")
 
 describe("SectionContainer", () => {
   let props
   window.scrollTo = jest.fn()
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
 
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
-        section: props.section,
-        sectionIndex: props.sectionIndex,
+        article: passedProps.article,
+        section: passedProps.section,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <SectionContainer {...props} />
+        <SectionContainer {...passedProps} />
       </Provider>
     )
   }
@@ -43,7 +43,7 @@ describe("SectionContainer", () => {
     const article = clone(StandardArticle)
 
     props = {
-      article: article,
+      article,
       channel: { type: "editorial" },
       editing: false,
       index: 1,
@@ -54,6 +54,7 @@ describe("SectionContainer", () => {
       sections: article.sections,
       sectionIndex: 1,
       removeSectionAction: jest.fn(),
+      maybeRemoveEmptyTextAction: jest.fn(),
     }
   })
 
@@ -78,6 +79,15 @@ describe("SectionContainer", () => {
       .at(0)
       .simulate("click")
     expect(props.onSetEditing).toBeCalledWith(props.index)
+  })
+
+  it("Calls maybeRemoveEmptyTextAction with sectionIndex on click off", () => {
+    const component = getWrapper(props)
+    component
+      .find(ContainerBackground)
+      .at(0)
+      .simulate("click")
+    expect(props.maybeRemoveEmptyTextAction).toBeCalledWith(props.index)
   })
 
   it("Calls onSetEditing with null on click off", () => {

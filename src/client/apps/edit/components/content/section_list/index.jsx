@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import { logError } from "client/actions/edit/errorActions"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { setSection } from "client/actions/edit/sectionActions"
-import SectionContainer from "../section_container"
+import SectionContainer from "../section_container/index.tsx"
 import SectionTool from "../section_tool"
 import DragContainer from "client/components/drag_drop/index.coffee"
 import { data as sd } from "sharify"
@@ -99,8 +99,8 @@ export class SectionList extends Component {
             {this.renderSectionList()}
           </DragContainer>
         ) : (
-            <div>{this.renderSectionList()}</div>
-          )}
+          <div>{this.renderSectionList()}</div>
+        )}
       </div>
     )
   }
