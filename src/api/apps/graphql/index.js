@@ -3,7 +3,7 @@ import graphqlHTTP from "express-graphql"
 import joiql from "joiql"
 import { object, array, string, boolean } from "joi"
 import { getSuperArticleCount } from "api/apps/articles/model"
-import Article from "api/apps/articles/model/schema.coffee"
+import { inputSchema, querySchema } from "api/apps/articles/model/schema.ts"
 import Author from "api/apps/authors/model.coffee"
 import Channel from "api/apps/channels/model.coffee"
 import Curation from "api/apps/curations/model.coffee"
@@ -20,7 +20,7 @@ const metaFields = {
   }),
   relatedArticlesCanvas: array()
     .items(
-      object(Article.inputSchema).concat(
+      object(inputSchema).concat(
         object({
           authors: array()
             .items(object(Author.schema))
@@ -35,13 +35,13 @@ const metaFields = {
       resolve: resolvers.relatedArticlesCanvas,
     }),
   relatedArticlesPanel: array()
-    .items(object(Article.inputSchema))
+    .items(object(inputSchema))
     .meta({
       name: "RelatedArticlesPanel",
       resolve: resolvers.relatedArticlesPanel,
     }),
   relatedArticles: array()
-    .items(object(Article.inputSchema))
+    .items(object(inputSchema))
     .meta({
       name: "RelatedArticles",
       resolve: resolvers.relatedArticles,
@@ -55,20 +55,20 @@ const metaFields = {
     .meta({
       resolve: resolvers.relatedAuthors,
     }),
-  seriesArticle: object(Article.inputSchema).meta({
+  seriesArticle: object(inputSchema).meta({
     name: "SeriesArticle",
     resolve: resolvers.seriesArticle,
   }),
 }
 
-const ArticleSchema = object(Article.inputSchema).concat(object(metaFields))
+const ArticleSchema = object(inputSchema).concat(object(metaFields))
 
 const schema = joiql({
   query: {
     articles: array()
       .items(ArticleSchema)
       .meta({
-        args: Article.querySchema,
+        args: querySchema,
         resolve: resolvers.articles,
       }),
     article: ArticleSchema.meta({
