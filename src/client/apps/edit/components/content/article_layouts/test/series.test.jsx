@@ -1,20 +1,20 @@
-import React from "react"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
 import { SeriesArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { FixedBackground } from "@artsy/reaction/dist/Components/Publishing/Series/FixedBackground"
 import { SeriesAbout } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout"
 import { SeriesTitle } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle"
-import FileInput from "client/components/file_input"
+import { RelatedArticles } from "client/apps/edit/components/content/sections/related_articles"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
-import { RelatedArticles } from "client/apps/edit/components/content/sections/related_articles"
+import FileInput from "client/components/file_input"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
 import { EditSeries } from "../series"
 require("typeahead.js")
 
 describe("EditSeries", () => {
-  const getWrapper = props => {
-    return mount(<EditSeries {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<EditSeries {...passedProps} />)
   }
 
   let props
@@ -81,12 +81,11 @@ describe("EditSeries", () => {
       .getElement()
     input.props.onUpload("http://new-image.jpg")
 
-    expect(props.onChangeArticleAction.mock.calls[0][0].hero_section.url).toBe(
+    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("hero_section")
+    expect(props.onChangeArticleAction.mock.calls[0][1].url).toBe(
       "http://new-image.jpg"
     )
-    expect(props.onChangeArticleAction.mock.calls[0][0].hero_section.type).toBe(
-      "series"
-    )
+    expect(props.onChangeArticleAction.mock.calls[0][1].type).toBe("series")
   })
 
   it("Renders a background image if url", () => {

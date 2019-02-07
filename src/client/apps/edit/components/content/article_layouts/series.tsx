@@ -1,29 +1,32 @@
-import { connect } from "react-redux"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
+import { Box, color } from "@artsy/palette"
+import { SeriesContent } from "@artsy/reaction/dist/Components/Publishing/Layouts/SeriesLayout"
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
 import { FixedBackground } from "@artsy/reaction/dist/Components/Publishing/Series/FixedBackground"
 import { SeriesAbout } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesAbout"
-import { SeriesTitle } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle"
-import { SeriesContent } from "@artsy/reaction/dist/Components/Publishing/Layouts/SeriesLayout"
-import FileInput from "client/components/file_input"
+import {
+  SeriesTitle,
+  SeriesTitleContainer,
+} from "@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { onChangeArticle } from "client/actions/edit/articleActions"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
+import FileInput from "client/components/file_input"
 import {
   ProgressBar,
   ProgressContainer,
 } from "client/components/file_input/progress_bar"
-import { RelatedArticles } from "../sections/related_articles"
-import { onChangeArticle } from "client/actions/edit/articleActions"
-import { Box, color } from "@artsy/palette"
+import React, { Component } from "react"
+import { connect } from "react-redux"
 import styled from "styled-components"
+import { RelatedArticles } from "../sections/related_articles"
 
-export class EditSeries extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    onChangeArticleAction: PropTypes.func.isRequired,
-  }
+interface EditSeriesProps {
+  article: ArticleData
+  onChangeArticleAction: (key: string, val: any) => void
+}
 
+export class EditSeries extends Component<EditSeriesProps> {
   state = {
     uploadProgress: null,
   }
@@ -35,7 +38,7 @@ export class EditSeries extends Component {
       type: "series",
     }
 
-    onChangeArticleAction({ hero_section })
+    onChangeArticleAction("hero_section", hero_section)
   }
 
   editTitle = () => {
@@ -44,7 +47,7 @@ export class EditSeries extends Component {
     return (
       <PlainText
         content={article.title}
-        onChange={(key, value) => onChangeArticleAction("title", value)}
+        onChange={(_key, value) => onChangeArticleAction("title", value)}
         placeholder="Title"
         name="title"
       />
@@ -72,7 +75,7 @@ export class EditSeries extends Component {
     const description = article.series && article.series.description
 
     return (
-      <Text layout={article.layout} color="white">
+      <Text layout={article.layout || "series"} color="white">
         <Paragraph
           html={description || ""}
           hasLinks
@@ -87,7 +90,7 @@ export class EditSeries extends Component {
   render() {
     const { article, onChangeArticleAction } = this.props
     const { uploadProgress } = this.state
-    const { url } = article.hero_section || {}
+    const { url } = article.hero_section || ""
 
     return (
       <EditSeriesContainer>
@@ -99,7 +102,7 @@ export class EditSeries extends Component {
             type="simple"
             onUpload={src => this.onChangeHero(src)}
             prompt={`+ ${url ? "Change" : "Add"} Background`}
-            onProgress={uploadProgress => this.setState({ uploadProgress })}
+            onProgress={progress => this.setState({ uploadProgress: progress })}
           />
         </BackgroundInput>
 
@@ -153,8 +156,7 @@ const EditSeriesContainer = styled.div`
     z-index: 1;
   }
 
-  .SeriesTitle,
-  .SeriesAbout {
+  ${SeriesTitleContainer}, .SeriesAbout {
     .public-DraftEditorPlaceholder-root {
       position: absolute;
       left: 0;
