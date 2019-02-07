@@ -5,7 +5,7 @@
 import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
-import schema, { inputSchema, querySchema } from "./schema.ts"
+import schema from "./schema.coffee"
 import Joi from "../../../lib/joi.coffee"
 import retrieve from "./retrieve.coffee"
 import { ObjectId } from "mongojs"
@@ -30,7 +30,7 @@ const {
 export const where = (input, callback) => {
   return Joi.validate(
     input,
-    querySchema,
+    schema.querySchema,
     { stripUnknown: true },
     (err, input) => {
       if (err) {
@@ -128,7 +128,7 @@ export const find = (id, callback) => {
 export const save = (input, accessToken, options, callback) => {
   // Validate the input with Joi
   const validationOptions = _.extend({ stripUnknown: true }, options.validation)
-  Joi.validate(input, inputSchema, validationOptions, (err, input) => {
+  Joi.validate(input, schema.inputSchema, validationOptions, (err, input) => {
     if (err) {
       return callback(err)
     }
