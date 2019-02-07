@@ -209,6 +209,8 @@ ImageCollectionSection = (->
       name: @string().allow('', null)
   ]).default([])
   sponsor: @object().default({}).keys(
+    description: @string().allow('')
+    sub_title: @string().allow('')
     partner_dark_logo: @string().allow('')
     partner_light_logo: @string().allow('')
     partner_condensed_logo: @string().allow('')
