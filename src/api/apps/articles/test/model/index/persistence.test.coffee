@@ -642,15 +642,6 @@ describe 'Article Persistence', ->
         article.media.duration.should.equal 1000
         done()
 
-    it 'saves a series_description', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        series_description: '<p>Here is some text describing a series.</p>'
-      }, 'foo', {}, (err, article) ->
-        return done err if err
-        article.series_description.should.equal '<p>Here is some text describing a series.</p>'
-        done()
-
     it 'saves a series description', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
