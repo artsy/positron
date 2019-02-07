@@ -1,10 +1,4 @@
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
-import { ContentState, EditorState } from "draft-js"
-import { cloneDeep } from "lodash"
-import React from "react"
-import { connect } from "react-redux"
-import styled from "styled-components"
-import _s from "underscore.string"
 import {
   maybeMergeTextSections,
   newSection,
@@ -13,7 +7,13 @@ import {
   onSplitTextSection,
   removeSection,
   setSection,
-} from "../../../../../../actions/edit/sectionActions"
+} from "client/actions/edit/sectionActions"
+import { ContentState, EditorState } from "draft-js"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import _s from "underscore.string"
 import {
   Button,
   TextNavContainer,

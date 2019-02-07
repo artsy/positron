@@ -338,7 +338,7 @@ describe("ImagesControls", () => {
       const input = component
         .find(Input)
         .at(2)
-        .instance() as Input
+        .props()
       const event = ({
         currentTarget: {
           value: "A title for the Image Set",

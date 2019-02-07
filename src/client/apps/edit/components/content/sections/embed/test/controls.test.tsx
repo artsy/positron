@@ -71,7 +71,7 @@ describe("EmbedControls", () => {
     const input = component
       .find(Input)
       .at(0)
-      .instance() as Input
+      .props()
     const event = ({
       currentTarget: {
         value: "new value",
@@ -88,7 +88,7 @@ describe("EmbedControls", () => {
     const input = component
       .find(Input)
       .at(1)
-      .instance() as Input
+      .props()
     const event = ({
       currentTarget: {
         value: "500",
@@ -105,7 +105,7 @@ describe("EmbedControls", () => {
     const input = component
       .find(Input)
       .at(2)
-      .instance() as Input
+      .props()
     const event = ({
       currentTarget: {
         value: "200",

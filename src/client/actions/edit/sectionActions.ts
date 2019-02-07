@@ -1,11 +1,15 @@
-import { clone, cloneDeep } from "lodash"
-import keyMirror from "client/lib/keyMirror"
+import {
+  SectionData,
+  SectionType,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   changeArticleData,
   debouncedSaveDispatch,
   onChangeArticle,
 } from "client/actions/edit/articleActions"
-
+import keyMirror from "client/lib/keyMirror"
+import { clone, cloneDeep } from "lodash"
+import { clean, stripTags } from "underscore.string"
 export const actions = keyMirror(
   "CHANGE_SECTION",
   "NEW_SECTION",
@@ -13,7 +17,7 @@ export const actions = keyMirror(
   "SET_SECTION"
 )
 
-export const changeSection = (key, value) => {
+export const changeSection = (key: string, value: any) => {
   return {
     type: actions.CHANGE_SECTION,
     payload: {
@@ -23,16 +27,16 @@ export const changeSection = (key, value) => {
   }
 }
 
-export const newHeroSection = type => {
+export const newHeroSection = (type: SectionType) => {
   const section = setupSection(type)
 
-  return (dispatch, getState) => {
+  return (dispatch, _getState) => {
     dispatch(changeArticleData("hero_section", section))
   }
 }
 
-export const newSection = (type, sectionIndex, attrs = {}) => {
-  const section = { ...setupSection(type), ...attrs }
+export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
+  const section = { ...setupSection(type), ...attrs } as SectionData
 
   return {
     type: actions.NEW_SECTION,
@@ -43,7 +47,7 @@ export const newSection = (type, sectionIndex, attrs = {}) => {
   }
 }
 
-export const onChangeHero = (key, value) => {
+export const onChangeHero = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -59,7 +63,7 @@ export const onChangeHero = (key, value) => {
   }
 }
 
-export const onChangeSection = (key, value) => {
+export const onChangeSection = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -73,9 +77,14 @@ export const onChangeSection = (key, value) => {
   }
 }
 
-export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
+export const onSplitTextSection = (
+  existingSectionBody: string,
+  newSectionBody: string
+) => {
   return (dispatch, getState) => {
-    const { edit: { article, sectionIndex } } = getState()
+    const {
+      edit: { article, sectionIndex },
+    } = getState()
     // update original section with updated content
     dispatch(onChangeSection("body", existingSectionBody))
     dispatch(newSection("text", sectionIndex + 1, { body: newSectionBody }))
@@ -86,9 +95,11 @@ export const onSplitTextSection = (existingSectionBody, newSectionBody) => {
   }
 }
 
-export const onMergeTextSections = newHtml => {
+export const onMergeTextSections = (newHtml: string) => {
   return (dispatch, getState) => {
-    const { edit: { sectionIndex } } = getState()
+    const {
+      edit: { sectionIndex },
+    } = getState()
     dispatch(onChangeSection("body", newHtml))
     dispatch(removeSection(sectionIndex - 1))
   }
@@ -100,7 +111,7 @@ export const maybeMergeTextSections = () => {
       edit: {
         article: { sections },
         section,
-        sectionIndex
+        sectionIndex,
       },
     } = getState()
     if (sections.length && sectionIndex !== 0) {
@@ -118,9 +129,15 @@ export const maybeMergeTextSections = () => {
   }
 }
 
-export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
+export const onInsertBlockquote = (
+  blockquoteHtml: string,
+  beforeHtml: string,
+  afterHtml: string
+) => {
   return (dispatch, getState) => {
-    const { edit: { article, sectionIndex } } = getState()
+    const {
+      edit: { article, sectionIndex },
+    } = getState()
 
     dispatch(onChangeSection("body", blockquoteHtml))
     if (afterHtml) {
@@ -136,7 +153,38 @@ export const onInsertBlockquote = (blockquoteHtml, beforeHtml, afterHtml) => {
   }
 }
 
-export const removeSection = sectionIndex => {
+export const maybeRemoveEmptyText = (sectionIndex: number) => {
+  return (dispatch, getState) => {
+    const {
+      edit: { article },
+    } = getState()
+    const newArticle = cloneDeep(article)
+    const activeSection = newArticle.sections[sectionIndex]
+    const isText = activeSection.type === "text"
+
+    if (!isText) {
+      // No action necessary if section is not text
+      return
+    } else {
+      const isEmptyHtml = !clean(stripTags(activeSection.body)).length
+      const isEmptyH1 = isEmptyHtml && activeSection.body.includes("<h1>")
+
+      if (!isEmptyHtml) {
+        // No action necessary if text is present
+        return
+      } else if (isEmptyH1) {
+        // Preserve empty H1 as section divider
+        newArticle.sections[sectionIndex].body = "<h1></h1>"
+        dispatch(onChangeArticle("sections", newArticle.sections))
+      } else {
+        // Remove text sections with empty body
+        dispatch(removeSection(sectionIndex))
+      }
+    }
+  }
+}
+
+export const removeSection = (sectionIndex: number) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -148,7 +196,7 @@ export const removeSection = sectionIndex => {
   }
 }
 
-export const setSection = sectionIndex => ({
+export const setSection = (sectionIndex: number | null) => ({
   // Index of article section currently editing
   type: actions.SET_SECTION,
   payload: {
@@ -156,7 +204,7 @@ export const setSection = sectionIndex => ({
   },
 })
 
-export const setupSection = type => {
+export const setupSection = (type: SectionType) => {
   // set initial state of new section
   switch (type) {
     case "video":
@@ -164,30 +212,30 @@ export const setupSection = type => {
         type: "video",
         url: "",
         layout: "column_width",
-      }
+      } as SectionData
     case "image_collection":
       return {
         type: "image_collection",
         layout: "overflow_fillwidth",
         images: [],
-      }
+      } as SectionData
     case "embed":
       return {
         type: "embed",
         url: "",
         layout: "column_width",
-        height: "",
-      }
+        height: 0,
+      } as SectionData
     case "social_embed":
       return {
         type: "social_embed",
         url: "",
         layout: "column_width",
-      }
+      } as SectionData
     case "text":
       return {
         type: "text",
         body: "",
-      }
+      } as SectionData
   }
 }
