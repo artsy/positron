@@ -27,7 +27,7 @@ ProgressBar.defaultProps = {
   color: colors.purpleRegular,
 }
 
-const ProgressContainer = styled.div`
+export const ProgressContainer = styled.div`
   width: 100%;
   background-color: white;
   ${props =>

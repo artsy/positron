@@ -9,9 +9,14 @@ import { SeriesContent } from "@artsy/reaction/dist/Components/Publishing/Layout
 import FileInput from "client/components/file_input"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
-import { ProgressBar } from "client/components/file_input/progress_bar"
+import {
+  ProgressBar,
+  ProgressContainer,
+} from "client/components/file_input/progress_bar"
 import { RelatedArticles } from "../sections/related_articles"
 import { onChangeArticle } from "client/actions/edit/articleActions"
+import { Box, color } from "@artsy/palette"
+import styled from "styled-components"
 
 export class EditSeries extends Component {
   static propTypes = {
@@ -51,12 +56,14 @@ export class EditSeries extends Component {
     const sub_title = article.series && article.series.sub_title
 
     return (
-      <PlainText
-        content={sub_title || ""}
-        onChange={onChangeArticleAction}
-        placeholder="About the Series"
-        name="series.sub_title"
-      />
+      <Box color="white">
+        <PlainText
+          content={sub_title || ""}
+          onChange={onChangeArticleAction}
+          placeholder="About the Series"
+          name="series.sub_title"
+        />
+      </Box>
     )
   }
 
@@ -65,7 +72,7 @@ export class EditSeries extends Component {
     const description = article.series && article.series.description
 
     return (
-      <Text layout={article.layout}>
+      <Text layout={article.layout} color="white">
         <Paragraph
           html={description || ""}
           hasLinks
@@ -83,18 +90,18 @@ export class EditSeries extends Component {
     const { url } = article.hero_section || {}
 
     return (
-      <div className="EditSeries">
+      <EditSeriesContainer>
         {uploadProgress && <ProgressBar progress={uploadProgress} />}
         <FixedBackground backgroundColor="black" backgroundUrl={url} />
 
-        <div className="EditSeries__bg-input">
+        <BackgroundInput>
           <FileInput
             type="simple"
             onUpload={src => this.onChangeHero(src)}
             prompt={`+ ${url ? "Change" : "Add"} Background`}
             onProgress={uploadProgress => this.setState({ uploadProgress })}
           />
-        </div>
+        </BackgroundInput>
 
         <SeriesContent>
           <SeriesTitle
@@ -116,7 +123,7 @@ export class EditSeries extends Component {
             color="white"
           />
         </SeriesContent>
-      </div>
+      </EditSeriesContainer>
     )
   }
 }
@@ -133,3 +140,53 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditSeries)
+
+const EditSeriesContainer = styled.div`
+  position: relative;
+  padding: 100px 20px 200px;
+
+  ${ProgressContainer} {
+    position: fixed;
+    top: 95px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  .SeriesTitle,
+  .SeriesAbout {
+    .public-DraftEditorPlaceholder-root {
+      position: absolute;
+      left: 0;
+      right: 0;
+      color: ${color("black30")};
+    }
+    .public-DraftEditorPlaceholder-inner:after {
+      content: " *";
+      color: ${color("red100")};
+      position: absolute;
+    }
+  }
+`
+
+const BackgroundInput = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  .file-input.simple .file-input__upload-container {
+    height: inherit;
+    min-height: 0;
+    max-height: 100%;
+    width: 235px;
+    z-index: 1;
+    padding: 0;
+    background: none;
+    text-align: right;
+    h1 {
+      font-size: 13px;
+    }
+    h2 {
+      display: none;
+    }
+  }
+`
