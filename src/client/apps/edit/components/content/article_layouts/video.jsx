@@ -17,7 +17,10 @@ import {
 import FileInput from "client/components/file_input"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
-import { ProgressBar } from "client/components/file_input/progress_bar"
+import {
+  ProgressBar,
+  ProgressContainer,
+} from "client/components/file_input/progress_bar"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 
@@ -70,7 +73,7 @@ export class EditVideo extends Component {
     const description = article.media && article.media.description
 
     return (
-      <Text layout={article.layout}>
+      <Text layout={article.layout} color="white">
         <Paragraph
           html={description || ""}
           hasLinks
@@ -86,7 +89,7 @@ export class EditVideo extends Component {
     const credits = article.media && article.media.credits
 
     return (
-      <Text layout={article.layout}>
+      <Text layout={article.layout} color="white">
         <Paragraph
           allowEmptyLines
           html={credits || ""}
@@ -134,14 +137,12 @@ export class EditVideo extends Component {
           />
         </EditVideoInput>
 
-        <MaxWidthContainer>
-          <VideoAbout
-            article={article}
-            editDescription={this.editMediaDescription()}
-            editCredits={this.editMediaCredits()}
-            color="white"
-          />
-        </MaxWidthContainer>
+        <VideoAbout
+          article={article}
+          editDescription={this.editMediaDescription()}
+          editCredits={this.editMediaCredits()}
+          color="white"
+        />
       </EditVideoContainer>
     )
   }
@@ -160,10 +161,6 @@ export default connect(
   mapDispatchToProps
 )(EditVideo)
 
-const MaxWidthContainer = styled.div`
-  max-width: 1200px;
-  margin: auto;
-`
 const EditVideoInput = styled.div`
   top: 20px;
 `
@@ -175,8 +172,9 @@ export const EditVideoContainer = styled.div`
   position: relative;
   background-color: black;
   color: white;
+  padding-bottom: 100px;
 
-  .ProgressBar {
+  ${ProgressContainer} {
     position: fixed;
     top: 95px;
     left: 0;
@@ -189,8 +187,9 @@ export const EditVideoContainer = styled.div`
       color: gray;
     }
   }
+
   ${Credits} {
-    div[data-block=true] .public-DraftStyleDefault-block {
+    div[data-block="true"] .public-DraftStyleDefault-block {
       padding: 0;
     }
   }
@@ -200,8 +199,8 @@ export const EditVideoContainer = styled.div`
     margin-bottom: 40px;
     position: relative;
   }
-  ${EditVideoInput},
-  ${EditCoverInput} {
+
+  ${EditVideoInput}, ${EditCoverInput} {
     z-index: 10;
     position: absolute;
     right: 20px;
