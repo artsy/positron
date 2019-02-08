@@ -156,7 +156,7 @@ const EditSeriesContainer = styled.div`
     z-index: 1;
   }
 
-  ${SeriesTitleContainer}, .SeriesAbout {
+  ${SeriesTitleContainer} {
     .public-DraftEditorPlaceholder-root {
       position: absolute;
       left: 0;
