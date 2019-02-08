@@ -116,7 +116,6 @@ ImageCollectionSection = (->
   lead_paragraph: @string().allow('', null)
   gravity_id: @string().objectid().allow('', null)
   hero_section: @alternatives().try(videoSection, ImageCollectionSection, imageSection, featureSection, seriesSection).allow(null).default(null)
-  series_description: @string().allow(null)
   series: @object().keys(
     description: @string().allow('')
     sub_title: @string().allow('')
@@ -210,6 +209,8 @@ ImageCollectionSection = (->
       name: @string().allow('', null)
   ]).default([])
   sponsor: @object().default({}).keys(
+    description: @string().allow('')
+    sub_title: @string().allow('')
     partner_dark_logo: @string().allow('')
     partner_light_logo: @string().allow('')
     partner_condensed_logo: @string().allow('')
