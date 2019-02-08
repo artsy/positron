@@ -1,18 +1,21 @@
-import { connect } from "react-redux"
-import PropTypes from "prop-types"
+import { color } from "@artsy/palette"
+import {
+  ArticleData,
+  ArticleLayout,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 import EditArticle from "./article_layouts/article"
 import EditNews from "./article_layouts/news"
 import EditSeries from "./article_layouts/series"
 import EditVideo from "./article_layouts/video"
-import styled from "styled-components"
-import { color } from "@artsy/palette"
 
-export class EditContent extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-  }
+interface EditContentProps {
+  article: ArticleData
+}
 
+export class EditContent extends Component<EditContentProps> {
   getArticleLayout = () => {
     const { article } = this.props
 
@@ -36,7 +39,7 @@ export class EditContent extends Component {
     const { article } = this.props
 
     return (
-      <EditContentContainer layout={article.layout}>
+      <EditContentContainer layout={article.layout || "standard"}>
         {this.getArticleLayout()}
       </EditContentContainer>
     )
@@ -49,7 +52,7 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps)(EditContent)
 
-const EditContentContainer = styled.div`
+const EditContentContainer = styled.div<{ layout: ArticleLayout }>`
   padding: 95px 0;
   min-height: 100vh;
 
