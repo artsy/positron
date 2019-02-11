@@ -65,7 +65,9 @@ There are many reasons [why](https://medium.com/@cramforce/why-amp-is-fast-7d2ff
 
 ## Google News
 
-We use sitemaps to manage distribution of Artsy's editorial content to Google News. Articles can be excluded from this process on a case-by-case basis when the `exclude_google_news` field is marked `true`.
+### Articles sitemap
+
+We use sitemaps to manage distribution of Artsy's editorial content to Google Search.
 
 The [articles sitemap](https://www.artsy.net/sitemap-articles-2018.xml) is generated daily. It is housed by S3, served by Force, and configured via Cinder and Fulcrum, with the help of a few external services.
 
@@ -77,6 +79,21 @@ After the above changes, the following steps are required for production:
 - Deploy cinder via Jenkins (this job also deploys Fulcrum automatically)
 - If the schema has changed, update it in Hive (can be done via CLI or [UI here](http://spark.artsy.net:8888/beeswax))
 - Run [Oozie import job](http://spark.artsy.net:8888/oozie/editor/workflow/edit/?workflow=31) to pull new data
+
+### News sitemap
+
+In addition to Google Search, [a different version of sitemap](https://www.artsy.net/sitemap-news.xml) is generated to distribute editorial content to Google News, which is a distinct service from Search. News sitemaps must satisfy certain requirements, most notably:
+
+ * Include URLs for articles published in the last 2 days
+ * Update your News sitemap with fresh articles as they're published.
+
+Because of these requirements, unlike the rest of the sitemaps, we generate our [news sitemap dynamically in Force](https://github.com/artsy/force/blob/0ea515a8af942b6513a02d0d952f176340f9539e/src/desktop/apps/sitemaps/routes.coffee#L16-L29). The guideline for creating a news sitemap can be found at [Google's Publisher Center Help](https://support.google.com/news/publisher-center/answer/74288?hl=en).
+
+Once crawled, news articles should appear on search results as Top stories (results may vary depending on the query.) They should also appear on [https://news.google.com](https://news.google.com) as well.
+
+![queue](https://raw.githubusercontent.com/artsy/positron/blob/master/doc/images/google-news.png)
+
+Articles can be excluded from this process on a case-by-case basis when the `exclude_google_news` field is marked `true`.
 
 ## RSS
 
