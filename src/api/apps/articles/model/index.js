@@ -7,7 +7,7 @@ import async from "async"
 import { cloneDeep } from "lodash"
 import schema from "./schema.coffee"
 import Joi from "../../../lib/joi.coffee"
-import retrieve from "./retrieve.coffee"
+import { toQuery } from "./retrieve.js"
 import { ObjectId } from "mongojs"
 import moment from "moment"
 const db = require("../../../lib/db.coffee")
@@ -42,7 +42,7 @@ export const where = (input, callback) => {
 }
 
 export const mongoFetch = (input, callback) => {
-  const { query, limit, offset, sort, count } = retrieve.toQuery(input)
+  const { query, limit, offset, sort, count } = toQuery(input)
   const cursor = db.articles
     .find(query)
     .skip(offset || 0)
@@ -79,7 +79,7 @@ export const mongoFetch = (input, callback) => {
 }
 
 export const promisedMongoFetch = input => {
-  const { query, limit, offset, sort, count } = retrieve.toQuery(input)
+  const { query, limit, offset, sort, count } = toQuery(input)
   const cursor = db.articles
     .find(query)
     .skip(offset || 0)
