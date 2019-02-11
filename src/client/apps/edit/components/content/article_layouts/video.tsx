@@ -1,30 +1,34 @@
-import moment from "moment"
-import styled from "styled-components"
-import { clone } from "lodash"
-import { connect } from "react-redux"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
+  Credits,
   VideoAbout,
   VideoAboutContainer,
-  Credits,
 } from "@artsy/reaction/dist/Components/Publishing/Video/VideoAbout"
 import {
   VideoCover,
   VideoCoverContainer,
 } from "@artsy/reaction/dist/Components/Publishing/Video/VideoCover"
-import FileInput from "client/components/file_input"
+import { onChangeArticle } from "client/actions/edit/articleActions"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
+import FileInput from "client/components/file_input"
 import {
   ProgressBar,
   ProgressContainer,
 } from "client/components/file_input/progress_bar"
-import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
-import { onChangeArticle } from "client/actions/edit/articleActions"
+import { clone } from "lodash"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
-export class EditVideo extends Component {
+interface EditVideoProps {
+  article: ArticleData
+  onChangeArticleAction: (key: string, val: any) => void
+}
+
+export class EditVideo extends Component<EditVideoProps> {
   static propTypes = {
     article: PropTypes.object.isRequired,
     onChangeArticleAction: PropTypes.func.isRequired,
@@ -48,7 +52,7 @@ export class EditVideo extends Component {
     return (
       <PlainText
         content={article.description}
-        onChange={(key, value) => onChangeArticleAction("description", value)}
+        onChange={(_key, value) => onChangeArticleAction("description", value)}
         placeholder="Description"
         name="description"
       />
@@ -61,7 +65,7 @@ export class EditVideo extends Component {
     return (
       <PlainText
         content={article.title}
-        onChange={(key, value) => onChangeArticleAction("title", value)}
+        onChange={(_key, value) => onChangeArticleAction("title", value)}
         placeholder="Title"
         name="title"
       />
@@ -73,7 +77,7 @@ export class EditVideo extends Component {
     const description = article.media && article.media.description
 
     return (
-      <Text layout={article.layout} color="white">
+      <Text layout={article.layout || "video"} color="white">
         <Paragraph
           html={description || ""}
           hasLinks
@@ -89,7 +93,7 @@ export class EditVideo extends Component {
     const credits = article.media && article.media.credits
 
     return (
-      <Text layout={article.layout} color="white">
+      <Text layout={article.layout || "video"} color="white">
         <Paragraph
           allowEmptyLines
           html={credits || ""}
@@ -122,7 +126,7 @@ export class EditVideo extends Component {
             type="simple"
             onUpload={src => this.onMediaChange("cover_image_url", src)}
             prompt={`+ ${media.cover_image_url ? "Change" : "Add"} Cover Image`}
-            onProgress={uploadProgress => this.setState({ uploadProgress })}
+            onProgress={progress => this.setState({ uploadProgress: progress })}
           />
         </EditCoverInput>
 
@@ -133,7 +137,7 @@ export class EditVideo extends Component {
             sizeLimit={100}
             onUpload={src => this.onMediaChange("url", src)}
             prompt={`+ ${media.url ? "Change" : "Add"} Video`}
-            onProgress={uploadProgress => this.setState({ uploadProgress })}
+            onProgress={progress => this.setState({ uploadProgress: progress })}
           />
         </EditVideoInput>
 

@@ -1,12 +1,12 @@
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
 import {
   StandardArticle,
   VideoArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { EditArticle } from "../article_layouts/article"
 import { EditSeries } from "../article_layouts/series"
 import { EditVideo } from "../article_layouts/video"
@@ -16,19 +16,19 @@ require("typeahead.js")
 describe("EditContent", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: { hasFeature: jest.fn().mockReturnThis() },
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
     return mount(
       <Provider store={store}>
-        <EditContent {...props} />
+        <EditContent {...passedProps} />
       </Provider>
     )
   }

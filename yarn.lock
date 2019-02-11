@@ -16,10 +16,10 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@2.37.22":
-  version "2.37.22"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.37.22.tgz#399c4e96e59d6386cd98dabf2648a738c33350f8"
-  integrity sha512-4E2DxovQ6AZHJvrJ3F0S0bBveWSJw0oRXITDCq/ccmZwERozIkzyQRqwQZIj7IGQXSxU35/M8xIxm/tTDjyh7Q==
+"@artsy/palette@2.37.24":
+  version "2.37.24"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.37.24.tgz#e10547e4989bb81ed376c1ab4fe5a71e6d2ad830"
+  integrity sha512-CV5NL0HQAAtF7jvYG+0jWYnA0BO59Af/EstJFhFXoTjvyz271vzDEc9V/tMHoJbkbtKoxnH8UUs/Xh65PUdeVw==
   dependencies:
     moment "^2.23.0"
     moment-timezone "^0.5.23"
@@ -37,10 +37,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@12.1.23":
-  version "12.1.23"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-12.1.23.tgz#fa1c0f723306fdec5a558adf8bc5db375ab7cdd9"
-  integrity sha512-TSjSg62Oym9znt7X4N3tW/aEh7rBvLe0YGWJtGANZ6FYcOFTjsJJH31Vz/JlTJeEAhJ9jNa3nWOzhTvJbjUYgg==
+"@artsy/reaction@12.1.27":
+  version "12.1.27"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-12.1.27.tgz#561973bc09961a5b050e4d641fb4e596c6f26f3d"
+  integrity sha512-0BVhCQ3ZRJfYCMe4NWNjWP51uXeFTllTYTZPDdJpZZ7xie/chU+mggqdN8msUR6V1gZAtFq7c3+BHzyFgubLuQ==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.1"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
@@ -68,7 +68,7 @@
     react-head "^3.0.0"
     react-html-parser "^2.0.2"
     react-lazy-load-image-component "^1.1.1"
-    react-lines-ellipsis "github:xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a"
+    react-lines-ellipsis xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
     react-overlays "^0.8.3"
@@ -10961,9 +10961,8 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-"react-lines-ellipsis@github:xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a":
+react-lines-ellipsis@xiaody/react-lines-ellipsis#0cd517ad9079aeb5e6710178d93dd6faa65b924a:
   version "0.13.0"
-  uid "0cd517ad9079aeb5e6710178d93dd6faa65b924a"
   resolved "https://codeload.github.com/xiaody/react-lines-ellipsis/tar.gz/0cd517ad9079aeb5e6710178d93dd6faa65b924a"
 
 react-live@^1.12.0:

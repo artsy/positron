@@ -642,15 +642,6 @@ describe 'Article Persistence', ->
         article.media.duration.should.equal 1000
         done()
 
-    it 'saves a series_description', (done) ->
-      Article.save {
-        author_id: '5086df098523e60002000018'
-        series_description: '<p>Here is some text describing a series.</p>'
-      }, 'foo', {}, (err, article) ->
-        return done err if err
-        article.series_description.should.equal '<p>Here is some text describing a series.</p>'
-        done()
-
     it 'saves a series description', (done) ->
       Article.save {
         author_id: '5086df098523e60002000018'
@@ -850,6 +841,8 @@ describe 'Article Persistence', ->
     it 'saves a sponsor', (done) ->
       Article.save {
         sponsor:
+          description: '<p>Here is some text describing a sponsor.</p>'
+          sub_title: 'About this sponsor'
           partner_dark_logo: 'https://media.artsy.net/partner_dark_logo.jpg'
           partner_light_logo: 'https://media.artsy.net/partner_light_logo.jpg'
           partner_condensed_logo: 'https://media.artsy.net/partner_condensed_logo.jpg'
@@ -857,6 +850,8 @@ describe 'Article Persistence', ->
           pixel_tracking_code: 'tracking_image.jpg'
       }, 'foo', {}, (err, article) ->
         return done err if err
+        article.sponsor.description.should.equal '<p>Here is some text describing a sponsor.</p>'
+        article.sponsor.sub_title.should.equal 'About this sponsor'
         article.sponsor.partner_dark_logo.should.equal 'https://media.artsy.net/partner_dark_logo.jpg'
         article.sponsor.partner_light_logo.should.equal 'https://media.artsy.net/partner_light_logo.jpg'
         article.sponsor.partner_condensed_logo.should.equal 'https://media.artsy.net/partner_condensed_logo.jpg'
