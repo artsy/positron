@@ -1,11 +1,10 @@
 import { toQuery } from "../../model/retrieve"
+import { times } from "lodash"
+import { fabricate, empty } from "../../../../test/helpers/db"
+import { ObjectId } from "mongojs"
 
-let _ = require("underscore")
-const { fabricate, empty } = require("../../../../test/helpers/db")
 const gravity = require("antigravity").server
 const app = require("express")()
-_ = require("underscore")
-const { ObjectId } = require("mongojs")
 
 describe("Retrieve", function() {
   let server
@@ -20,7 +19,7 @@ describe("Retrieve", function() {
   })
 
   beforeEach(done =>
-    empty(() => fabricate("articles", _.times(10, () => ({})), () => done())))
+    empty(() => fabricate("articles", times(10, () => ({})), () => done())))
 
   describe("#toQuery", function() {
     it("aggregates the query for all_by_author", function() {

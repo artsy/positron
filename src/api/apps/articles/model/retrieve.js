@@ -1,9 +1,9 @@
-const _ = require("underscore")
-const { ObjectId } = require("mongojs")
+import { each, omit } from "lodash"
+import { ObjectId } from "mongojs"
 
-export const toQuery = function(input, callback) {
+export const toQuery = (input, callback) => {
   const { limit, offset, sort, count } = input
-  const query = _.omit(
+  const query = omit(
     input,
     "limit",
     "offset",
@@ -161,7 +161,7 @@ export const toQuery = function(input, callback) {
   if (input.omit) {
     const objectids = []
     const slugs = []
-    _.each(input.omit, function(id) {
+    each(input.omit, function(id) {
       if (ObjectId.isValid(id)) {
         return objectids.push(ObjectId(id))
       } else {
