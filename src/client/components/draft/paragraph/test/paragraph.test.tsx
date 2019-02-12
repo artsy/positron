@@ -25,7 +25,7 @@ jest.mock("../../../rich_text/utils/text_selection", () => ({
 describe("Paragraph", () => {
   let getSelection
 
-  const getWrapper = passedProps => {
+  const getWrapper = (passedProps = props) => {
     return mount(<Paragraph {...passedProps} />)
   }
 

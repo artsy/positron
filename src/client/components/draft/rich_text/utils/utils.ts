@@ -7,7 +7,7 @@ import {
 } from "draft-js"
 import Immutable from "immutable"
 import React from "react"
-import { styleNamesFromMap } from "../../shared/shared"
+import { draftDefaultStyles } from "../../shared/shared"
 import { AllowedBlocks, AllowedStyles, StyleMap } from "../../typings"
 
 /**
@@ -68,7 +68,7 @@ export const richTextStyleElements: AllowedStyles = ["B", "I", "S"]
  * Returns blockMap from element names
  * Used to generate blockMap from props.allowedBlocks
  */
-export const blockMapFromNodes = (allowedBlocks: AllowedBlocks) => {
+export const blockMapFromNodes = (allowedBlocks: AllowedBlocks = ["p"]) => {
   const blockMap: any = []
 
   allowedBlocks.map(block => {
@@ -156,17 +156,11 @@ export const keyBindingFn = (e: React.KeyboardEvent<{}>) => {
   return getDefaultKeyBinding(e)
 }
 
-export const makePlainText = (
-  editorState: EditorState,
-  allowedBlockMap: any
-) => {
+export const makePlainText = (editorState: EditorState) => {
   // Remove links
   const editorStateWithoutLinks = removeLinks(editorState)
   // Remove inline styles
-  const editorStateWithoutStyles = removeInlineStyles(
-    editorStateWithoutLinks,
-    allowedBlockMap
-  )
+  const editorStateWithoutStyles = removeInlineStyles(editorStateWithoutLinks)
   // Remove blocks from selection
   const contentStateWithoutBlocks = removeBlocks(editorStateWithoutStyles)
   // Merge existing and stripped states
@@ -180,13 +174,9 @@ export const makePlainText = (
 /**
  * Strips all inline styles from selected text
  */
-export const removeInlineStyles = (
-  editorState: EditorState,
-  allowedBlockMap: any
-) => {
+export const removeInlineStyles = (editorState: EditorState) => {
   let contentState = editorState.getCurrentContent()
-
-  styleNamesFromMap(allowedBlockMap).forEach((style: string) => {
+  draftDefaultStyles.forEach((style: string) => {
     contentState = Modifier.removeInlineStyle(
       contentState,
       editorState.getSelection(),

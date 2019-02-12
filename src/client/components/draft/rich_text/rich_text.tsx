@@ -1,4 +1,4 @@
-import { Editor, EditorState, RichUtils } from "draft-js"
+import { DraftHandleValue, Editor, EditorState, RichUtils } from "draft-js"
 import { debounce } from "lodash"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
@@ -36,8 +36,8 @@ interface Props {
   allowedStyles?: StyleElements[]
   editIndex?: number | null
   html?: string
-  hasLinks: boolean
-  hasFollowButton: boolean
+  hasLinks?: boolean
+  hasFollowButton?: boolean
   isDark?: boolean
   isReadonly?: boolean
   onChange: (html: string) => void
@@ -102,7 +102,7 @@ export class RichText extends Component<Props, State> {
     if (html) {
       return this.editorStateFromHTML(html)
     } else {
-      return EditorState.createEmpty(decorators(hasLinks))
+      return EditorState.createEmpty(decorators(hasLinks || false))
     }
   }
 
@@ -123,11 +123,14 @@ export class RichText extends Component<Props, State> {
 
     const contentBlocks = convertHtmlToDraft(
       html,
-      hasLinks,
+      hasLinks || false,
       this.allowedBlocks,
       this.allowedStyles
     )
-    return EditorState.createWithContent(contentBlocks, decorators(hasLinks))
+    return EditorState.createWithContent(
+      contentBlocks,
+      decorators(hasLinks || false)
+    )
   }
 
   onChange = (editorState: EditorState) => {
@@ -182,9 +185,9 @@ export class RichText extends Component<Props, State> {
     if (onHandleBackspace && isStartOfBlock && !textIsSelected) {
       this.blur()
       onHandleBackspace()
-      return "handled"
+      return "handled" as DraftHandleValue
     } else {
-      return "not-handled"
+      return "not-handled" as DraftHandleValue
     }
   }
 
@@ -195,9 +198,12 @@ export class RichText extends Component<Props, State> {
 
     if (onHandleReturn && handledValue === "handled") {
       onHandleReturn(editorState, this.resetEditorState)
+      return handledValue
     }
-    return handledValue
+    return "not-handled" as DraftHandleValue
   }
+
+  // TODO: handleTab
 
   handleKeyCommand = command => {
     const { hasLinks } = this.props
@@ -227,15 +233,15 @@ export class RichText extends Component<Props, State> {
       case "strikethrough": {
         // Not handled by draft's handleKeyCommand, use toggleBlockType instead
         this.toggleInlineStyle(command)
-        return "handled"
+        return "handled" as DraftHandleValue
       }
       case "plain-text": {
         this.makePlainText()
-        return "handled"
+        return "handled" as DraftHandleValue
       }
     }
     // let draft defaults or browser handle
-    return "not-handled"
+    return "not-handled" as DraftHandleValue
   }
 
   keyCommandBlockType = (command: string) => {
@@ -252,7 +258,7 @@ export class RichText extends Component<Props, State> {
         if (command === "blockquote" && onHandleBlockQuote) {
           const html = this.editorStateToHTML(newState)
           if (html.includes("<blockquote>")) {
-            return onHandleBlockQuote(html, this.resetEditorState)
+            onHandleBlockQuote(html, this.resetEditorState)
           }
         }
         this.onChange(newState)
@@ -291,7 +297,6 @@ export class RichText extends Component<Props, State> {
 
     if (styles.includes(command.toUpperCase())) {
       const newState = RichUtils.handleKeyCommand(editorState, command)
-
       // If an updated state is returned, command is handled
       if (newState) {
         this.onChange(newState)
@@ -318,11 +323,12 @@ export class RichText extends Component<Props, State> {
 
   makePlainText = () => {
     const { editorState } = this.state
-    const newState = makePlainText(editorState, this.allowedBlocks)
+    const newState = makePlainText(editorState)
+
     this.onChange(newState)
   }
 
-  handlePastedText = (text, html) => {
+  handlePastedText = (text: string, html?: string) => {
     const { editorState } = this.state
 
     if (!html) {
@@ -358,7 +364,7 @@ export class RichText extends Component<Props, State> {
     return "handled"
   }
 
-  confirmLink = (url: string, urlIsFollow: boolean) => {
+  confirmLink = (url: string, urlIsFollow: boolean = false) => {
     const { editorState } = this.state
     const newEditorState = confirmLink(url, editorState, urlIsFollow)
 
@@ -436,6 +442,7 @@ export class RichText extends Component<Props, State> {
         <div
           onClick={this.focus}
           onMouseUp={this.checkSelection}
+          onMouseDown={this.checkSelection}
           onKeyUp={this.checkSelection}
         >
           <Editor
