@@ -1,28 +1,28 @@
-import { toQuery } from "../../model/retrieve"
 import { times } from "lodash"
-import { fabricate, empty } from "../../../../test/helpers/db"
 import { ObjectId } from "mongojs"
+import { toQuery } from "../../model/retrieve"
 
+const { empty, fabricate } = require("../../../../test/helpers/db.coffee")
 const gravity = require("antigravity").server
 const app = require("express")()
 
-describe("Retrieve", function() {
+describe("Retrieve", () => {
   let server
-  before(function(done) {
+  before(done => {
     app.use("/__gravity", gravity)
     server = app.listen(5000, () => done())
     return server
   })
 
-  after(function() {
+  after(() => {
     return server.close()
   })
 
   beforeEach(done =>
     empty(() => fabricate("articles", times(10, () => ({})), () => done())))
 
-  describe("#toQuery", function() {
-    it("aggregates the query for all_by_author", function() {
+  describe("#toQuery", () => {
+    it("aggregates the query for all_by_author", () => {
       const { query } = toQuery({
         all_by_author: ObjectId("5086df098523e60002000017"),
         published: true,
@@ -36,7 +36,7 @@ describe("Retrieve", function() {
       )
     })
 
-    it("aggregates the query for vertical", function() {
+    it("aggregates the query for vertical", () => {
       const { query } = toQuery({
         vertical: "55356a9deca560a0137bb4a7",
         published: true,
@@ -46,7 +46,7 @@ describe("Retrieve", function() {
       )
     })
 
-    it("aggregates the query for artist_id", function() {
+    it("aggregates the query for artist_id", () => {
       const { query } = toQuery({
         artist_id: "5086df098523e60002000016",
         published: true,
@@ -62,7 +62,7 @@ describe("Retrieve", function() {
       )
     })
 
-    it("uses Regex in thumbnail_title for q", function() {
+    it("uses Regex in thumbnail_title for q", () => {
       const { query } = toQuery({
         q: "Thumbnail Title 101",
         published: true,
@@ -71,7 +71,7 @@ describe("Retrieve", function() {
       query.thumbnail_title["$regex"].should.be.ok()
     })
 
-    it("ignores q if it is empty", function() {
+    it("ignores q if it is empty", () => {
       const { query } = toQuery({
         q: "",
         published: true,
@@ -79,7 +79,7 @@ describe("Retrieve", function() {
       query.hasOwnProperty("thumbnail_title").should.be.false()
     })
 
-    it("aggregates the query for has_video", function() {
+    it("aggregates the query for has_video", () => {
       const { query } = toQuery({
         has_video: true,
         published: true,
@@ -90,7 +90,7 @@ describe("Retrieve", function() {
       query["$or"][0].sections["$elemMatch"].type.should.equal("video")
     })
 
-    it("aggregates the query for has_published_media", function() {
+    it("aggregates the query for has_published_media", () => {
       const { query } = toQuery({
         ids: ["5530e72f7261696238050000"],
         published: true,
@@ -101,7 +101,7 @@ describe("Retrieve", function() {
       query["$or"][0]["media.published"].should.equal(true)
     })
 
-    it("finds articles by multiple fair ids", function() {
+    it("finds articles by multiple fair ids", () => {
       const { query } = toQuery({
         fair_ids: ["5086df098523e60002000016", "5086df098523e60002000015"],
         published: true,
@@ -115,7 +115,7 @@ describe("Retrieve", function() {
       )
     })
 
-    it("finds articles by multiple ids", function() {
+    it("finds articles by multiple ids", () => {
       const { query } = toQuery({
         ids: ["54276766fd4f50996aeca2b8", "54276766fd4f50996aeca2b7"],
         published: true,
@@ -129,7 +129,7 @@ describe("Retrieve", function() {
       )
     })
 
-    it("finds articles in editorial feed", function() {
+    it("finds articles in editorial feed", () => {
       const { query } = toQuery({
         in_editorial_feed: true,
       })
@@ -140,14 +140,14 @@ describe("Retrieve", function() {
       query.layout["$in"][3].should.containEql("video")
     })
 
-    it("finds scheduled articles", function() {
+    it("finds scheduled articles", () => {
       const { query } = toQuery({
         scheduled: true,
       })
       query.scheduled_publish_at.should.have.keys("$ne")
     })
 
-    it("omits articles", function() {
+    it("omits articles", () => {
       const { query } = toQuery({
         omit: ["54276766fd4f50996aeca2b7"],
       })

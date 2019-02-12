@@ -1,7 +1,7 @@
 import { each, omit } from "lodash"
 import { ObjectId } from "mongojs"
 
-export const toQuery = (input, callback) => {
+export const toQuery = input => {
   const { limit, offset, sort, count } = input
   const query = omit(
     input,
@@ -185,7 +185,7 @@ export const toQuery = (input, callback) => {
   }
 }
 
-var sortParamToQuery = function(input) {
+const sortParamToQuery = input => {
   if (!input) {
     return { updated_at: -1 }
   }
