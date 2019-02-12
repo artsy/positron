@@ -8,20 +8,21 @@ _ = require("underscore")
 const { ObjectId } = require("mongojs")
 
 describe("Retrieve", function() {
+  let server
   before(function(done) {
     app.use("/__gravity", gravity)
-    this.server = app.listen(5000, () => done())
-    return this.server
+    server = app.listen(5000, () => done())
+    return server
   })
 
   after(function() {
-    return this.server.close()
+    return server.close()
   })
 
   beforeEach(done =>
     empty(() => fabricate("articles", _.times(10, () => ({})), () => done())))
 
-  return describe("#toQuery", function() {
+  describe("#toQuery", function() {
     it("aggregates the query for all_by_author", function() {
       const { query } = toQuery({
         all_by_author: ObjectId("5086df098523e60002000017"),
@@ -31,9 +32,9 @@ describe("Retrieve", function() {
         ObjectId("5086df098523e60002000017")
       )
       query["$or"][1].contributing_authors["$elemMatch"].should.be.ok()
-      return query["$or"][1].contributing_authors[
-        "$elemMatch"
-      ].id.should.containEql(ObjectId("5086df098523e60002000017"))
+      query["$or"][1].contributing_authors["$elemMatch"].id.should.containEql(
+        ObjectId("5086df098523e60002000017")
+      )
     })
 
     it("aggregates the query for vertical", function() {
@@ -41,7 +42,7 @@ describe("Retrieve", function() {
         vertical: "55356a9deca560a0137bb4a7",
         published: true,
       })
-      return query["vertical.id"].should.containEql(
+      query["vertical.id"].should.containEql(
         ObjectId("55356a9deca560a0137bb4a7")
       )
     })
@@ -57,7 +58,7 @@ describe("Retrieve", function() {
       query["$or"][1].featured_artist_ids.should.containEql(
         ObjectId("5086df098523e60002000016")
       )
-      return query["$or"][2].biography_for_artist_id.should.containEql(
+      query["$or"][2].biography_for_artist_id.should.containEql(
         ObjectId("5086df098523e60002000016")
       )
     })
@@ -68,7 +69,7 @@ describe("Retrieve", function() {
         published: true,
       })
       query.hasOwnProperty("thumbnail_title").should.be.true()
-      return query.thumbnail_title["$regex"].should.be.ok()
+      query.thumbnail_title["$regex"].should.be.ok()
     })
 
     it("ignores q if it is empty", function() {
@@ -76,7 +77,7 @@ describe("Retrieve", function() {
         q: "",
         published: true,
       })
-      return query.hasOwnProperty("thumbnail_title").should.be.false()
+      query.hasOwnProperty("thumbnail_title").should.be.false()
     })
 
     it("aggregates the query for has_video", function() {
@@ -87,7 +88,7 @@ describe("Retrieve", function() {
       query["$or"][1]["hero_section.type"].should.be.ok()
       query["$or"][1]["hero_section.type"].should.equal("video")
       query["$or"][0].sections["$elemMatch"].should.be.ok()
-      return query["$or"][0].sections["$elemMatch"].type.should.equal("video")
+      query["$or"][0].sections["$elemMatch"].type.should.equal("video")
     })
 
     it("aggregates the query for has_published_media", function() {
@@ -98,7 +99,7 @@ describe("Retrieve", function() {
       })
       query["$or"][0].layout.should.be.ok()
       query["$or"][0].layout.should.equal("video")
-      return query["$or"][0]["media.published"].should.equal(true)
+      query["$or"][0]["media.published"].should.equal(true)
     })
 
     it("finds articles by multiple fair ids", function() {
@@ -110,7 +111,7 @@ describe("Retrieve", function() {
       query.fair_ids["$elemMatch"]["$in"][0].should.containEql(
         ObjectId("5086df098523e60002000016")
       )
-      return query.fair_ids["$elemMatch"]["$in"][1].should.containEql(
+      query.fair_ids["$elemMatch"]["$in"][1].should.containEql(
         ObjectId("5086df098523e60002000015")
       )
     })
@@ -124,7 +125,7 @@ describe("Retrieve", function() {
       query._id["$in"][0].should.containEql(
         ObjectId("54276766fd4f50996aeca2b8")
       )
-      return query._id["$in"][1].should.containEql(
+      query._id["$in"][1].should.containEql(
         ObjectId("54276766fd4f50996aeca2b7")
       )
     })
@@ -137,21 +138,21 @@ describe("Retrieve", function() {
       query.layout["$in"][0].should.containEql("feature")
       query.layout["$in"][1].should.containEql("standard")
       query.layout["$in"][2].should.containEql("series")
-      return query.layout["$in"][3].should.containEql("video")
+      query.layout["$in"][3].should.containEql("video")
     })
 
     it("finds scheduled articles", function() {
       const { query } = toQuery({
         scheduled: true,
       })
-      return query.scheduled_publish_at.should.have.keys("$ne")
+      query.scheduled_publish_at.should.have.keys("$ne")
     })
 
-    return it("omits articles", function() {
+    it("omits articles", function() {
       const { query } = toQuery({
         omit: ["54276766fd4f50996aeca2b7"],
       })
-      return query._id.should.have.keys("$nin")
+      query._id.should.have.keys("$nin")
     })
   })
 })
