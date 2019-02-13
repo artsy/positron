@@ -380,6 +380,48 @@ describe("resolvers", () => {
       })
       _.isNull(results).should.be.true()
     })
+
+    it("omits related articles and root article from fetch", () => {
+      article.related_article_ids = [
+        ObjectId("5c40890f521d075876214805"),
+        ObjectId("5c472ea015f1e22de4eef4b0"),
+      ]
+      article.channel_id = "f78859586db1ce9913107e1b"
+
+      resolvers.relatedArticlesCanvas(article)
+
+      promisedMongoFetch.getCall(0).args[0].omit.length.should.equal(3)
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[0].should.containEql(ObjectId(article.id))
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[1].should.containEql(ObjectId("5c40890f521d075876214805"))
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[2].should.containEql(ObjectId("5c472ea015f1e22de4eef4b0"))
+    })
+  })
+
+  it("makes fetch with relatedArticleArgs", async () => {
+    article.related_article_ids = [
+      ObjectId("5c40890f521d075876214805"),
+      ObjectId("5c472ea015f1e22de4eef4b0"),
+    ]
+    article.channel_id = "f78859586db1ce9913107e1b"
+    promisedMongoFetch.onFirstCall().resolves(articles)
+    promisedMongoFetch.onSecondCall().resolves(articles)
+
+    await resolvers.relatedArticlesCanvas(article)
+
+    sinon.assert.calledTwice(promisedMongoFetch)
+
+    promisedMongoFetch.calledWith({
+      ids: article.related_article_ids,
+      limit: 4,
+      published: true,
+      has_published_media: true,
+    })
   })
 
   describe("relatedArticlesPanel", () => {
@@ -465,6 +507,49 @@ describe("resolvers", () => {
       results[0].slug.should.equal("artsy-editorial-slug")
       results[1].slug.should.equal("slug-1")
       results[0].updated_at.should.containEql("2017-01-01")
+    })
+
+    it("omits related articles and root article from fetch", () => {
+      article.related_article_ids = [
+        ObjectId("5c40890f521d075876214805"),
+        ObjectId("5c472ea015f1e22de4eef4b0"),
+      ]
+      article.channel_id = "f78859586db1ce9913107e1b"
+
+      resolvers.relatedArticlesPanel(article)
+
+      promisedMongoFetch.getCall(0).args[0].omit.length.should.equal(3)
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[0].should.containEql(ObjectId(article.id))
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[1].should.containEql(ObjectId("5c40890f521d075876214805"))
+      promisedMongoFetch
+        .getCall(0)
+        .args[0].omit[2].should.containEql(ObjectId("5c472ea015f1e22de4eef4b0"))
+    })
+
+    it("makes fetch with relatedArticleargs", async () => {
+      article.related_article_ids = [
+        ObjectId("5c40890f521d075876214805"),
+        ObjectId("5c472ea015f1e22de4eef4b0"),
+      ]
+      article.channel_id = "f78859586db1ce9913107e1b"
+
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      promisedMongoFetch.onSecondCall().resolves(articles)
+
+      await resolvers.relatedArticlesCanvas(article)
+
+      sinon.assert.calledTwice(promisedMongoFetch)
+
+      promisedMongoFetch.calledWith({
+        ids: article.related_article_ids,
+        limit: 4,
+        published: true,
+        has_published_media: true,
+      })
     })
   })
 

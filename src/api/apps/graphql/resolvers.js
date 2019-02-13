@@ -196,9 +196,9 @@ export const relatedArticles = root => {
 }
 
 export const relatedArticlesPanel = root => {
-  const omittedIds = [ObjectId(root.id)]
+  let omittedIds = [ObjectId(root.id)]
   if (root.related_article_ids) {
-    omittedIds.concat(root.related_article_ids)
+    omittedIds = omittedIds.concat(root.related_article_ids)
   }
   const tags = root.tags && root.tags.length > 0 ? root.tags : null
 
@@ -216,6 +216,7 @@ export const relatedArticlesPanel = root => {
     ids: root.related_article_ids,
     limit: 3,
     published: true,
+    has_published_media: true,
   }
 
   return new Promise(async (resolve, reject) => {
@@ -248,11 +249,16 @@ export const relatedArticlesPanel = root => {
 }
 
 export const relatedArticlesCanvas = root => {
+  let omittedIds = [ObjectId(root.id)]
+  if (root.related_article_ids) {
+    omittedIds = omittedIds.concat(root.related_article_ids)
+  }
+
   const vertical =
     root.vertical && root.vertical.id ? ObjectId(root.vertical.id) : null
 
   const args = {
-    omit: [ObjectId(root.id)],
+    omit: omittedIds,
     published: true,
     featured: true,
     in_editorial_feed: true,
@@ -260,15 +266,38 @@ export const relatedArticlesCanvas = root => {
     vertical,
     limit: 4,
     sort: "-published_at",
+    has_published_media: true,
+  }
+
+  const relatedArticleArgs = {
+    ids: root.related_article_ids,
+    limit: 4,
+    published: true,
+    has_published_media: true,
   }
 
   return new Promise(async (resolve, reject) => {
-    const relatedArticles = await promisedMongoFetch(
+    let relatedArticles = []
+    const articleFeed = await promisedMongoFetch(
       _.pick(args, _.identity)
     ).catch(e => reject(e))
 
-    if (relatedArticles.results.length) {
-      resolve(presentCollection(relatedArticles).results)
+    if (root.related_article_ids && root.related_article_ids.length) {
+      const relatedArticleResults = await promisedMongoFetch(
+        relatedArticleArgs
+      ).catch(e => reject(e))
+
+      const mergedArticles = {
+        results: relatedArticleResults.results.concat(articleFeed.results),
+      }
+
+      relatedArticles = presentCollection(mergedArticles).results
+    } else {
+      relatedArticles = presentCollection(articleFeed).results
+    }
+
+    if (relatedArticles.length) {
+      resolve(_.first(relatedArticles, 4))
     } else {
       resolve(null)
     }
