@@ -1,9 +1,6 @@
+import { getContentState } from "client/components/draft/shared/test_helpers"
 import { convertFromHTML } from "draft-convert"
-import {
-  convertDraftToHtml,
-  convertHtmlToDraft,
-  htmlToEntity,
-} from "../convert"
+import { convertDraftToHtml, htmlToEntity } from "../convert"
 import {
   blockMapFromNodes,
   richTextBlockRenderMap,
@@ -11,14 +8,6 @@ import {
 } from "../utils"
 
 describe("#convertHtmlToDraft", () => {
-  const getContentState = (
-    html,
-    hasLinks,
-    blockMap = richTextBlockRenderMap
-  ) => {
-    return convertHtmlToDraft(html, hasLinks, blockMap, richTextStyleMap)
-  }
-
   describe("Links", () => {
     it("Converts links to entities if allowed", () => {
       const html = '<p><a href="https://artsy.net">a link</a></p>'

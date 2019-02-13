@@ -86,6 +86,7 @@ export const handleReturn = (
   editorState: EditorState
 ) => {
   const { anchorOffset, isFirstBlock } = getSelectionDetails(editorState)
+
   if (isFirstBlock || anchorOffset) {
     // If first block, no chance of empty block before
     // If anchor offset, the block is not empty
