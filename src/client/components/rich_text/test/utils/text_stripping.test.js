@@ -93,9 +93,9 @@ describe("Draft Utils: Text Stripping", () => {
       )
     })
 
-    it("Can replace unicode spaces", () => {
+    it("Can remove unicode spaces", () => {
       const html = stripGoogleStyles("<p>\u2028hello</p>")
-      expect(html).toBe("<p><br></p><p>hello</p>")
+      expect(html).toBe("<p>hello</p>")
     })
 
     it("Replaces italic spans with <em> tags", () => {

@@ -1,6 +1,10 @@
 import { decorators } from "client/components/draft/shared/decorators"
+import {
+  applySelectionToEditorState,
+  getEditorState,
+  getStateAsHtml,
+} from "client/components/draft/shared/test_helpers"
 import Draft, { EditorState } from "draft-js"
-import { convertDraftToHtml, convertHtmlToDraft } from "../convert"
 import {
   blockMapFromNodes,
   keyBindingFn,
@@ -9,51 +13,9 @@ import {
   removeInlineStyles,
   removeLinks,
 } from "../utils"
-import { richTextBlockRenderMap, richTextStyleMap } from "../utils"
 
 describe("RichText utils", () => {
   const e: React.KeyboardEvent<{}> = {} as React.KeyboardEvent<{}>
-  const getContentState = (
-    html,
-    hasLinks = true,
-    blockMap = richTextBlockRenderMap
-  ) => {
-    return convertHtmlToDraft(html, hasLinks, blockMap, richTextStyleMap)
-  }
-
-  const getEditorState = (
-    html,
-    hasLinks = true,
-    blockMap = richTextBlockRenderMap
-  ) => {
-    const contentState = getContentState(html, hasLinks, blockMap)
-    return EditorState.createWithContent(contentState, decorators(hasLinks))
-  }
-
-  const getStateAsHtml = editorState => {
-    return convertDraftToHtml(
-      editorState.getCurrentContent(),
-      richTextBlockRenderMap,
-      richTextStyleMap
-    )
-  }
-
-  const applySelectionToEditorState = editorState => {
-    const startSelection = editorState.getSelection()
-    const startEditorState = editorState.getCurrentContent()
-    const { key, text } = startEditorState.getFirstBlock()
-    const selection = startSelection.merge({
-      anchorKey: key,
-      anchorOffset: 0,
-      focusKey: key,
-      focusOffset: text.length,
-    })
-    const newEditorState = Draft.EditorState.acceptSelection(
-      editorState,
-      selection
-    )
-    return newEditorState
-  }
 
   describe("#blockMapFromNodes", () => {
     it("Constructs an immutable map from blocktype args", () => {

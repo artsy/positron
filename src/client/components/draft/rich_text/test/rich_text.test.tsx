@@ -3,7 +3,7 @@ import {
   applySelectionToEditorState,
   htmlWithDisallowedStyles,
   htmlWithRichBlocks,
-} from "client/components/draft/test_helpers"
+} from "client/components/draft/shared/test_helpers"
 import { convertFromHTML } from "draft-convert"
 import Draft, { EditorState } from "draft-js"
 import { mount } from "enzyme"
