@@ -1,3 +1,7 @@
+import {
+  htmlWithDisallowedStyles,
+  htmlWithRichBlocks,
+} from "client/components/draft/shared/test_helpers"
 import { convertFromHTML } from "draft-convert"
 import { EditorState } from "draft-js"
 import Draft from "draft-js"
@@ -71,35 +75,12 @@ describe("Paragraph", () => {
 
   const getRangeAt = jest.fn().mockReturnValue({ getClientRects })
 
-  const htmlWithRichBlocks = `
-    <meta><title>Page Title</title></meta>
-    <script>do a bad thing</script>
-    <p><a href="https://artsy.net">a link</a></p>
-    <p></p>
-    <h1>an h1</h1>
-    <h2>an h2</h2>
-    <h3>an h3</h3>
-    <h4>an h4</h4>
-    <h5>an h5</h5>
-    <h6>an h6</h6>
-    <ul><li>unordered list</li><li>second list item</li></ul>
-    <ol><li>ordered list</li></ol>
-    <blockquote>a blockquote</blockquote>`
-
-  const htmlWithDisallowedStyles = `
-    <p><del>Strikethrough text</del>
-    <u>Underline text</u>
-    <em>Italic text</em>
-    <i>Italic text</i>
-    <strong>Bold text</strong>
-    <b>Bold text</b></p>`
-
   describe("#setEditorState", () => {
     describe("Create from empty", () => {
       it("Can initialize an empty state", () => {
         props.html = null
         props.placeholder = "Write something..."
-        const component = getWrapper(props)
+        const component = getWrapper()
 
         expect(component.text()).toBe("Write something...")
       })
@@ -107,14 +88,14 @@ describe("Paragraph", () => {
 
     describe("Create with content", () => {
       it("Can initialize with existing content", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         expect(component.text()).toBe("A piece of text")
       })
 
       it("Can initialize existing content with decorators", () => {
         props.hasLinks = true
         props.html = '<p>A <a href="https://artsy.net">piece</a> of text</p>'
-        const component = getWrapper(props)
+        const component = getWrapper()
 
         expect(component.text()).toBe("A piece of text")
         expect(component.html()).toMatch('<a href="https://artsy.net/">')
@@ -126,7 +107,7 @@ describe("Paragraph", () => {
     it("Removes disallowed blocks", () => {
       props.html = htmlWithRichBlocks
       props.hasLinks = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -138,7 +119,7 @@ describe("Paragraph", () => {
 
     it("Removes links if props.hasLinks is false", () => {
       props.html = htmlWithRichBlocks
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -150,7 +131,7 @@ describe("Paragraph", () => {
 
     it("Removes empty blocks", () => {
       props.html = "<p>A paragraph</p><p></p><h1></h1><h2></h2>"
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -161,7 +142,7 @@ describe("Paragraph", () => {
     it("Preserves empty blocks if props.allowEmptyLines", () => {
       props.allowEmptyLines = true
       props.html = "<p>A paragraph</p><p></p><h1></h1><h2></h2>"
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -171,20 +152,20 @@ describe("Paragraph", () => {
 
     it("Removes disallowed styles", () => {
       props.html = htmlWithDisallowedStyles
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
       expect(component.state().html).toBe(
-        "<p>Strikethrough text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
+        "<p>Strikethrough text Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
       )
     })
 
     it("Calls #stripGoogleStyles", () => {
       props.html =
         '<b style="font-weight:normal;" id="docs-internal-guid-ce2bb19a-cddb-9e53-cb18-18e71847df4e"><p><span style="font-size:11pt;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;">Available at: <em>Espacio Valverde</em> • Galleries Sector, Booth 9F01</span></p>'
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -198,7 +179,7 @@ describe("Paragraph", () => {
       props.stripLinebreaks = true
       props.hasLinks = true
       props.html = htmlWithRichBlocks
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
@@ -216,7 +197,7 @@ describe("Paragraph", () => {
         disallowedBlocks,
         decorators(false)
       )
-      const component = getWrapper(props).instance() as Paragraph
+      const component = getWrapper().instance() as Paragraph
       const html = component.editorStateToHTML(editorState)
 
       expect(html).toBe(
@@ -227,11 +208,11 @@ describe("Paragraph", () => {
     it("Removes disallowed styles from existing content", () => {
       const disallowedStyles = convertFromHTML({})(htmlWithDisallowedStyles)
       const editorState = EditorState.createWithContent(disallowedStyles)
-      const component = getWrapper(props).instance() as Paragraph
+      const component = getWrapper().instance() as Paragraph
       const html = component.editorStateToHTML(editorState)
 
       expect(html).toBe(
-        "<p>Strikethrough text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
+        "<p>Strikethrough text Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
       )
     })
   })
@@ -240,7 +221,7 @@ describe("Paragraph", () => {
     it("Sets state with new editorState and html", () => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
-      const component = getWrapper(props)
+      const component = getWrapper()
       const originalState = component.state().editorState
       const instance = component.instance() as Paragraph
       instance.onChange(editorState)
@@ -252,7 +233,7 @@ describe("Paragraph", () => {
     it("Calls props.onChange if html is changed", done => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.onChange(editorState)
 
@@ -267,7 +248,7 @@ describe("Paragraph", () => {
     it("Does not call props.onChange if html is unchanged", done => {
       const editorContent = convertFromHTML({})(props.html)
       const editorState = EditorState.createWithContent(editorContent)
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.setState = jest.fn()
       component.update()
@@ -284,7 +265,7 @@ describe("Paragraph", () => {
   describe("#handleKeyCommand", () => {
     it("Calls #promptForLink if link-prompt and props.hasLinks", () => {
       props.hasLinks = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.promptForLink = jest.fn()
       component.update()
@@ -294,7 +275,7 @@ describe("Paragraph", () => {
     })
 
     it("Returns not-handled if link-prompt and props.hasLinks is false", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.promptForLink = jest.fn()
       component.update()
@@ -305,7 +286,7 @@ describe("Paragraph", () => {
     })
 
     it("Calls #keyCommandInlineStyle if bold", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.keyCommandInlineStyle = jest.fn()
       component.update()
@@ -315,7 +296,7 @@ describe("Paragraph", () => {
     })
 
     it("Calls #keyCommandInlineStyle if italic", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.keyCommandInlineStyle = jest.fn()
       component.update()
@@ -325,7 +306,7 @@ describe("Paragraph", () => {
     })
 
     it("Returns not-handled from anything else", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.keyCommandInlineStyle = jest.fn()
       component.update()
@@ -338,14 +319,14 @@ describe("Paragraph", () => {
   describe("#handleReturn", () => {
     it("Returns handled if props.stripLinebreaks", () => {
       props.stripLinebreaks = true
-      const component = getWrapper(props).instance() as Paragraph
+      const component = getWrapper().instance() as Paragraph
       const handleReturn = component.handleReturn({})
 
       expect(handleReturn).toBe("handled")
     })
 
     it("Returns not-handled if linebreaks are allowed", () => {
-      const component = getWrapper(props).instance() as Paragraph
+      const component = getWrapper().instance() as Paragraph
       const handleReturn = component.handleReturn({})
 
       expect(handleReturn).toBe("not-handled")
@@ -353,7 +334,7 @@ describe("Paragraph", () => {
 
     it("Returns not-handled if allowEmptyLines", () => {
       props.allowEmptyLines = true
-      const component = getWrapper(props).instance() as Paragraph
+      const component = getWrapper().instance() as Paragraph
       const handleReturn = component.handleReturn({})
 
       expect(handleReturn).toBe("not-handled")
@@ -363,7 +344,7 @@ describe("Paragraph", () => {
   describe("#keyCommandInlineStyle", () => {
     describe("Bold", () => {
       it("Applies bold styles if allowed", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         // Set text selection
         instance.onChange(getSelection())
@@ -381,7 +362,7 @@ describe("Paragraph", () => {
 
       it("Does not apply bold styles if not allowed", done => {
         props.allowedStyles = ["i"]
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -397,7 +378,7 @@ describe("Paragraph", () => {
 
       it("Can remove existing bold styles", done => {
         props.html = "<p><b>A piece of text</b></p>"
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -414,7 +395,7 @@ describe("Paragraph", () => {
 
     describe("Italic", () => {
       it("Applies italic styles if allowed", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -430,7 +411,7 @@ describe("Paragraph", () => {
 
       it("Does not apply italic styles if not allowed", done => {
         props.allowedStyles = ["b"]
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -446,7 +427,7 @@ describe("Paragraph", () => {
 
       it("Can remove existing italic styles", done => {
         props.html = "<p><i>A piece of text</i></p>"
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -465,7 +446,7 @@ describe("Paragraph", () => {
   describe("#toggleInlineStyle", () => {
     describe("Bold", () => {
       it("Applies bold styles if allowed", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -481,7 +462,7 @@ describe("Paragraph", () => {
 
       it("Does not apply bold styles if not allowed", done => {
         props.allowedStyles = ["i"]
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -497,7 +478,7 @@ describe("Paragraph", () => {
 
       it("Can remove existing bold styles", done => {
         props.html = "<p><b>A piece of text</b></p>"
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -514,7 +495,7 @@ describe("Paragraph", () => {
 
     describe("Italic", () => {
       it("Applies italic styles if allowed", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -530,7 +511,7 @@ describe("Paragraph", () => {
 
       it("Does not apply italic styles if not allowed", done => {
         props.allowedStyles = ["b"]
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -546,7 +527,7 @@ describe("Paragraph", () => {
 
       it("Can remove existing italic styles", done => {
         props.html = "<p><i>A piece of text</i></p>"
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -564,7 +545,7 @@ describe("Paragraph", () => {
 
   describe("#handlePastedText", () => {
     it("Can paste plain text", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.handlePastedText("Some pasted text...")
 
@@ -574,7 +555,7 @@ describe("Paragraph", () => {
     })
 
     it("Can paste html", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", "<p>Some pasted text...</p>")
 
@@ -584,7 +565,7 @@ describe("Paragraph", () => {
     })
 
     it("Removes disallowed blocks from pasted content", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithRichBlocks)
 
@@ -594,18 +575,18 @@ describe("Paragraph", () => {
     })
 
     it("Removes disallowed styles from pasted content", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithDisallowedStyles)
 
       expect(component.state().html).toBe(
-        "<p>Strikethrough text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b>A piece of text</p>"
+        "<p>Strikethrough text Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b>A piece of text</p>"
       )
     })
 
     it("Strips linebreaks from pasted content", () => {
       props.stripLinebreaks = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithRichBlocks)
 
@@ -625,7 +606,7 @@ describe("Paragraph", () => {
       })
 
       it("Sets editorPosition if has selection", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.checkSelection()
 
@@ -640,7 +621,7 @@ describe("Paragraph", () => {
       })
 
       it("Shows nav if has selection", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.checkSelection()
 
@@ -656,7 +637,7 @@ describe("Paragraph", () => {
       })
 
       it("Resets editorPosition to null if no selection", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         component.setState({ editorPosition: { top: 50, left: 100 } })
         instance.checkSelection()
@@ -665,7 +646,7 @@ describe("Paragraph", () => {
       })
 
       it("Hides nav if no selection", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         component.setState({
           showNav: true,
@@ -690,7 +671,7 @@ describe("Paragraph", () => {
 
     describe("#promptForLink", () => {
       it("Sets editorPosition", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.promptForLink()
 
@@ -706,7 +687,7 @@ describe("Paragraph", () => {
 
       it("Sets urlValue with data", done => {
         props.html = '<p><a href="https://artsy.net">A link</a></p>'
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -718,7 +699,7 @@ describe("Paragraph", () => {
       })
 
       it("Sets urlValue without data", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -730,7 +711,7 @@ describe("Paragraph", () => {
       })
 
       it("Hides nav", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
         instance.checkSelection()
@@ -744,7 +725,7 @@ describe("Paragraph", () => {
       })
 
       it("Shows url input", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -758,7 +739,7 @@ describe("Paragraph", () => {
 
     describe("#confirmLink", () => {
       it("Sets editorPosition to null", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -770,7 +751,7 @@ describe("Paragraph", () => {
       })
 
       it("Sets urlValue to empty string", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -782,7 +763,7 @@ describe("Paragraph", () => {
       })
 
       it("Hides nav and url input", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -795,7 +776,7 @@ describe("Paragraph", () => {
       })
 
       it("Adds a link to selected text", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -815,7 +796,7 @@ describe("Paragraph", () => {
       })
 
       it("Removes a link from selected entity", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -827,7 +808,7 @@ describe("Paragraph", () => {
       })
 
       it("Hides url input", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
@@ -839,7 +820,7 @@ describe("Paragraph", () => {
       })
 
       it("Sets urlValue to empty string", done => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
 
