@@ -5,11 +5,12 @@
 import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
-import schema from "./schema.coffee"
-import Joi from "../../../lib/joi.coffee"
-import { toQuery } from "./retrieve.js"
+import { toQuery } from "./retrieve"
 import { ObjectId } from "mongojs"
 import moment from "moment"
+
+const schema = require("./schema.coffee")
+const Joi = require("../../../lib/joi.coffee")
 const db = require("../../../lib/db.coffee")
 const {
   onPublish,
