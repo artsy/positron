@@ -36,7 +36,7 @@ interface Props {
   allowedStyles?: StyleElements[]
   editIndex?: number | null
   html?: string
-  hasLinks?: boolean
+  hasLinks: boolean
   hasFollowButton?: boolean
   isDark?: boolean
   isReadonly?: boolean
@@ -102,7 +102,7 @@ export class RichText extends Component<Props, State> {
     if (html) {
       return this.editorStateFromHTML(html)
     } else {
-      return EditorState.createEmpty(decorators(hasLinks || false))
+      return EditorState.createEmpty(decorators(hasLinks))
     }
   }
 
@@ -123,14 +123,11 @@ export class RichText extends Component<Props, State> {
 
     const contentBlocks = convertHtmlToDraft(
       html,
-      hasLinks || false,
+      hasLinks,
       this.allowedBlocks,
       this.allowedStyles
     )
-    return EditorState.createWithContent(
-      contentBlocks,
-      decorators(hasLinks || false)
-    )
+    return EditorState.createWithContent(contentBlocks, decorators(hasLinks))
   }
 
   onChange = (editorState: EditorState) => {
