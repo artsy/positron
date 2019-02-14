@@ -23,12 +23,12 @@ import {
 
 interface Props {
   allowedStyles?: AllowedStyles
-  allowEmptyLines?: boolean
+  allowEmptyLines?: boolean // Users can insert br tags
   html?: string
   hasLinks: boolean
   onChange: (html: string) => void
   placeholder?: string
-  stripLinebreaks: boolean
+  stripLinebreaks: boolean // Return a single p block
   isDark?: boolean
   isReadOnly?: boolean
 }
@@ -100,8 +100,13 @@ export class Paragraph extends Component<Props, State> {
   }
 
   editorStateFromHTML = (html: string) => {
-    const { hasLinks } = this.props
-    const contentBlocks = convertHtmlToDraft(html, hasLinks, this.allowedStyles)
+    const { hasLinks, allowEmptyLines } = this.props
+    const contentBlocks = convertHtmlToDraft(
+      html,
+      hasLinks,
+      this.allowedStyles,
+      allowEmptyLines
+    )
 
     return EditorState.createWithContent(contentBlocks, decorators(hasLinks))
   }
