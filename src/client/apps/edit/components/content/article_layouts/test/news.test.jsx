@@ -12,20 +12,20 @@ import { EditSourceControls } from "../../sections/news/EditSourceControls"
 describe("EditNews", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <EditNews {...props} onChangeArticleAction={() => {}} />
+        <EditNews {...props} />
       </Provider>
     )
   }
@@ -34,39 +34,37 @@ describe("EditNews", () => {
     props = {
       channel: { type: "editorial" },
       article: NewsArticle,
+      onChangeArticleAction: jest.fn(),
     }
   })
 
   it("Renders NewsHeadline", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(NewsHeadline).exists()).toBe(true)
   })
 
   it("Renders SectionList", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(SectionList).exists()).toBe(true)
   })
 
   it("Renders NewsByline", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(NewsByline).exists()).toBe(true)
   })
 
   it("Renders AddSource if article has no source", () => {
     const article = Object.assign({}, NewsArticle)
     article.news_source = { title: null, url: null }
-
-    const newProps = {
-      channel: { type: "editorial" },
-      article,
-    }
-    const component = getWrapper(newProps)
+    props.channel = { type: "editorial" }
+    props.article = article
+    const component = getWrapper()
 
     expect(component.text()).toMatch("Add Source")
   })
 
   it("Renders source in byline if article has a source", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.text()).toMatch("The New York Times")
   })
 

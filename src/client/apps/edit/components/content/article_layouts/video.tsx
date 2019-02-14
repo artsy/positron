@@ -52,9 +52,8 @@ export class EditVideo extends Component<EditVideoProps> {
     return (
       <PlainText
         content={article.description}
-        onChange={(_key, value) => onChangeArticleAction("description", value)}
+        onChange={val => onChangeArticleAction("description", val)}
         placeholder="Description"
-        name="description"
       />
     )
   }
@@ -65,9 +64,8 @@ export class EditVideo extends Component<EditVideoProps> {
     return (
       <PlainText
         content={article.title}
-        onChange={(_key, value) => onChangeArticleAction("title", value)}
+        onChange={val => onChangeArticleAction("title", val)}
         placeholder="Title"
-        name="title"
       />
     )
   }

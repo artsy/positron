@@ -47,9 +47,8 @@ export class EditSeries extends Component<EditSeriesProps> {
     return (
       <PlainText
         content={article.title}
-        onChange={(_key, value) => onChangeArticleAction("title", value)}
+        onChange={val => onChangeArticleAction("title", val)}
         placeholder="Title"
-        name="title"
       />
     )
   }
@@ -61,10 +60,9 @@ export class EditSeries extends Component<EditSeriesProps> {
     return (
       <Box color="white">
         <PlainText
-          content={sub_title || ""}
-          onChange={onChangeArticleAction}
+          content={sub_title}
+          onChange={val => onChangeArticleAction("series.sub_title", val)}
           placeholder="About the Series"
-          name="series.sub_title"
         />
       </Box>
     )

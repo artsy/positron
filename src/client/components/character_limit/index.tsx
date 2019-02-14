@@ -66,7 +66,7 @@ export class CharacterLimit extends React.Component<
       return (
         <BorderBox p={1} mt={label && 1}>
           <PlainText
-            content={defaultValue || ""}
+            content={defaultValue}
             onChange={this.onChange}
             placeholder={placeholder}
           />

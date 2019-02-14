@@ -26,55 +26,74 @@ describe("EditSeries", () => {
   })
 
   it("Renders SeriesTitle", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
+    const title = component
+      .find(PlainText)
+      .at(0)
+      .props()
+
     expect(component.find(SeriesTitle).length).toBe(1)
-    expect(
-      component
-        .find(PlainText)
-        .at(0)
-        .props().name
-    ).toBe("title")
+    expect(title.content).toBe("The Future of Art")
+    expect(title.placeholder).toBe("Title")
+  })
+
+  it("Can change a SeriesTitle", () => {
+    const component = getWrapper()
+    const title = component
+      .find(PlainText)
+      .at(0)
+      .props()
+      .onChange("New title")
+    expect(props.onChangeArticleAction).toBeCalledWith("title", "New title")
   })
 
   it("Renders RelatedArticles list", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(RelatedArticles).length).toBe(1)
   })
 
   it("Renders SeriesAbout", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(SeriesAbout).length).toBe(1)
     expect(component.find(Paragraph).length).toBe(1)
   })
 
   it("Renders editable series subTitle", () => {
     props.article.series = { sub_title: "This Feature" }
-    const component = getWrapper(props)
+    const component = getWrapper()
+    const subTitle = component
+      .find(PlainText)
+      .at(1)
+      .props()
 
-    expect(
-      component
-        .find(PlainText)
-        .at(1)
-        .props().name
-    ).toBe("series.sub_title")
-    expect(
-      component
-        .find(PlainText)
-        .at(1)
-        .props().content
-    ).toBe("This Feature")
+    expect(subTitle.placeholder).toBe("About the Series")
+    expect(subTitle.content).toBe("This Feature")
+  })
+
+  it("Can change a series subTitle", () => {
+    const component = getWrapper()
+    const title = component
+      .find(PlainText)
+      .at(1)
+      .props()
+      .onChange("New subTitle")
+
+    expect(props.onChangeArticleAction).toBeCalledWith(
+      "series.sub_title",
+      "New subTitle"
+    )
   })
 
   it("Renders a file input for background image ", () => {
     props.article.hero_section = { url: null }
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(FileInput).length).toBe(1)
     expect(component.text()).toMatch("+ Add Background")
   })
 
   it("Can save a hero_section with type", () => {
     delete props.article.hero_section
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(FileInput)
       .first()
@@ -90,7 +109,7 @@ describe("EditSeries", () => {
 
   it("Renders a background image if url", () => {
     props.article.hero_section = { url: "http://image.jpg" }
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(FixedBackground).length).toBe(1)
     expect(component.find(FixedBackground).props().backgroundUrl).toBe(
       "http://image.jpg"
