@@ -39,7 +39,7 @@ describe("EditSeries", () => {
 
   it("Can change a SeriesTitle", () => {
     const component = getWrapper()
-    const title = component
+    component
       .find(PlainText)
       .at(0)
       .props()
@@ -72,7 +72,7 @@ describe("EditSeries", () => {
 
   it("Can change a series subTitle", () => {
     const component = getWrapper()
-    const title = component
+    component
       .find(PlainText)
       .at(1)
       .props()

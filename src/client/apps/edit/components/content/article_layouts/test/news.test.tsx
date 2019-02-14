@@ -1,13 +1,13 @@
-import React from "react"
-import configureStore from "redux-mock-store"
+import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
 import { NewsArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
-import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
-import { Provider } from "react-redux"
+import { EditSourceControls } from "client/apps/edit/components/content/sections/news/EditSourceControls"
 import { mount } from "enzyme"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionList } from "../../section_list"
 import { AddSource, EditNews } from "../news"
-import { EditSourceControls } from "../../sections/news/EditSourceControls"
 
 describe("EditNews", () => {
   let props
@@ -55,7 +55,7 @@ describe("EditNews", () => {
 
   it("Renders AddSource if article has no source", () => {
     const article = Object.assign({}, NewsArticle)
-    article.news_source = { title: null, url: null }
+    article.news_source = { title: "", url: "" }
     props.channel = { type: "editorial" }
     props.article = article
     const component = getWrapper()
