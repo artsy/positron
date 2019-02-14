@@ -91,7 +91,7 @@ Because of these requirements, unlike the rest of the sitemaps, we generate our 
 
 Once crawled, news articles should appear on search results as Top stories (results may vary depending on the query.) They should also appear on [https://news.google.com](https://news.google.com) as well.
 
-![queue](https://raw.githubusercontent.com/artsy/positron/blob/master/doc/images/google-news.png)
+![google-news](https://raw.githubusercontent.com/artsy/positron/master/doc/images/google-news.png)
 
 Articles can be excluded from this process on a case-by-case basis when the `exclude_google_news` field is marked `true`.
 

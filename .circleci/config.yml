@@ -28,7 +28,7 @@ jobs:
           command: hokusai staging deploy $CIRCLE_SHA1
       - run:
           name: Update staging git branch
-          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:staging --force
+          command: git push git@github.com:artsy/positron.git $CIRCLE_SHA1:refs/heads/staging --force
   deploy-production:
     docker:
       - image: artsy/hokusai

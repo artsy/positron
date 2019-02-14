@@ -185,6 +185,9 @@ export const stripGoogleStyles = html => {
   // 5. Strip non-style guide spaces
   strippedHtml = standardizeSpacing(strippedHtml)
 
+  // 6. Remove empty paragraphs
+  strippedHtml = removeEmptyParagraphs(strippedHtml)
+
   return strippedHtml
 }
 
@@ -217,5 +220,10 @@ export const stripBlockquote = html => {
   let newHtml = html
     .replace("<blockquote>", "<p>")
     .replace("</blockquote>", "</p>")
+  return newHtml
+}
+
+export const removeEmptyParagraphs = html => {
+  let newHtml = html.replace(/<p><br><\/p>/g, "")
   return newHtml
 }
