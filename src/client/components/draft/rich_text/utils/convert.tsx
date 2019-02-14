@@ -30,8 +30,9 @@ export const convertHtmlToDraft = (
   allowedBlocks: any,
   allowedStyles: StyleMap
 ) => {
-  const cleanedHtml = stripGoogleStyles(html)
-  // TODO: REMOVE ILLEGAL LINEBREAKS
+  let cleanedHtml = stripGoogleStyles(html)
+  cleanedHtml = removeEmptyParagraphs(cleanedHtml)
+
   return convertFromHTML({
     htmlToBlock: (nodeName: string, node: HTMLElement) => {
       return htmlToBlock(nodeName, node, allowedBlocks)
@@ -292,4 +293,8 @@ export const blockToHTML = (
     start: "<p>",
     end: "</p>",
   }
+}
+
+export const removeEmptyParagraphs = (html: string) => {
+  return html.replace(/<p><br><\/p>/g, "")
 }

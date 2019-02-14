@@ -25,10 +25,14 @@ import {
 export const convertHtmlToDraft = (
   html: string,
   hasLinks: boolean,
-  allowedStyles: StyleMap
+  allowedStyles: StyleMap,
+  allowEmptyLines: boolean = false
 ) => {
   let cleanedHtml = stripGoogleStyles(html)
-  cleanedHtml = removeEmptyParagraphs(cleanedHtml)
+
+  cleanedHtml = allowEmptyLines
+    ? removeBreakingSpaces(cleanedHtml)
+    : removeEmptyParagraphs(cleanedHtml)
 
   return convertFromHTML({
     htmlToBlock,
@@ -210,4 +214,13 @@ export const removeEmptyParagraphs = (html: string) => {
  */
 export const preserveEmptyParagraphs = (html: string) => {
   return html.replace(/<p><\/p>/g, "<p><br /></p>")
+}
+
+/**
+ * Removes br tags during editing
+ * These cause extra spaces to appear in draft content state
+ * br tags are restored when converted back to html
+ */
+export const removeBreakingSpaces = (html: string) => {
+  return html.replace(/<br \/>/g, "").replace(/<br>/g, "")
 }

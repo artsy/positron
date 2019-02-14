@@ -147,7 +147,9 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A paragraph</p><p><br /></p>")
+      expect(component.state().html).toBe(
+        "<p>A paragraph</p><p><br /></p><p><br /></p><p><br /></p>"
+      )
     })
 
     it("Removes disallowed styles", () => {

@@ -1,11 +1,6 @@
 import { getContentState } from "client/components/draft/shared/test_helpers"
-import { convertFromHTML } from "draft-convert"
-import { convertDraftToHtml, htmlToEntity } from "../convert"
-import {
-  blockMapFromNodes,
-  richTextBlockRenderMap,
-  richTextStyleMap,
-} from "../utils"
+import { getHtmlViaContentState } from "client/components/draft/shared/test_helpers"
+import { blockMapFromNodes } from "../utils"
 
 describe("#convertHtmlToDraft", () => {
   describe("Links", () => {
@@ -310,34 +305,23 @@ describe("#convertHtmlToDraft", () => {
         expect(block.getType()).toBe("unstyled")
         expect(block.getText()).toBe("a paragraph")
       })
+
+      it("Removes empty paragraphs", () => {
+        const html = "<p>a paragraph</p><p></p><p><br></p><p><br /></p>"
+        const newHtml = getHtmlViaContentState(html)
+
+        expect(newHtml).toBe("<p>a paragraph</p>")
+      })
     })
   })
 })
 
 describe("#convertDraftToHtml", () => {
-  const getHtmlFromContentState = (
-    html,
-    hasLinks = false,
-    hasFollowButton = false
-  ) => {
-    // Get unstripped content state
-    const currentContent = convertFromHTML({
-      htmlToEntity: hasLinks ? htmlToEntity : undefined,
-    })(html)
-    // Convert contentState back to html
-    return convertDraftToHtml(
-      currentContent,
-      richTextBlockRenderMap,
-      richTextStyleMap,
-      hasFollowButton
-    )
-  }
-
   describe("Links", () => {
     it("Converts entities to links if allowed", () => {
       const html =
         '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
-      const convertedHtml = getHtmlFromContentState(html, true)
+      const convertedHtml = getHtmlViaContentState(html, true)
 
       expect(convertedHtml).toBe(
         '<p><a href="https://artsy.net/">a link</a></p>'
@@ -346,12 +330,8 @@ describe("#convertDraftToHtml", () => {
 
     it("Converts artist-follow entities to links if allowed", () => {
       const html = `
-        <span>
-          <a href="https://www.artsy.net/artist/claes-oldenburg" class="is-follow-link">Claes Oldenburg</a>
-          <a data-id="claes-oldenburg" class="entity-follow artist-follow" />
-        </span>
-      `
-      const convertedHtml = getHtmlFromContentState(html, true, true)
+        <span><a href="https://www.artsy.net/artist/claes-oldenburg" class="is-follow-link">Claes Oldenburg</a><a data-id="claes-oldenburg" class="entity-follow artist-follow" /></span>`
+      const convertedHtml = getHtmlViaContentState(html, true, true)
 
       expect(convertedHtml).toBe(
         '<p><span><a href="https://www.artsy.net/artist/claes-oldenburg" class="is-follow-link">Claes Oldenburg</a><a data-id="claes-oldenburg" class="entity-follow artist-follow"></a></span></p>'
@@ -361,19 +341,15 @@ describe("#convertDraftToHtml", () => {
     it("Strips links to plaintext if not allowed", () => {
       const html =
         '<p><a href="https://artsy.net" target="_blank">a link</a></p>'
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p>a link</p>")
     })
 
     it("Strips artist follow links to plaintext if not allowed", () => {
       const html = `
-        <span>
-          <a href="https://www.artsy.net/artist/claes-oldenburg" class="is-follow-link">Claes Oldenburg</a>
-          <a data-id="claes-oldenburg" class="entity-follow artist-follow" />
-        </span>
-      `
-      const convertedHtml = getHtmlFromContentState(html)
+        <span><a href="https://www.artsy.net/artist/claes-oldenburg" class="is-follow-link">Claes Oldenburg</a><a data-id="claes-oldenburg" class="entity-follow artist-follow" /></span>`
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p>Claes Oldenburg</p>")
     })
@@ -382,28 +358,28 @@ describe("#convertDraftToHtml", () => {
   describe("Style handling", () => {
     it("Preserves italic styles", () => {
       const html = "<p><em>italic</em></p>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p><i>italic</i></p>")
     })
 
     it("Preserves bold styles", () => {
       const html = "<p><strong>bold</strong></p>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p><b>bold</b></p>")
     })
 
     it("Preserves strikethrough styles", () => {
       const html = "<p><s>strikethrough</s></p>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p><s>strikethrough</s></p>")
     })
 
     it("Preserves underline styles", () => {
       const html = "<p><u>underline</u></p>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p><u>underline</u></p>")
     })
@@ -411,7 +387,7 @@ describe("#convertDraftToHtml", () => {
     describe("Disallowed style handling", () => {
       it("Removes code styles", () => {
         const html = "<p><code>code</code></p>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>code</p>")
       })
@@ -422,28 +398,28 @@ describe("#convertDraftToHtml", () => {
     it("Returns unstyled paragraphs with stripped attrs", () => {
       const html =
         '<p id="paragraph" class="paragraph" data-id="paragraph">a paragraph</p>'
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<p>a paragraph</p>")
     })
 
     it("Converts h2 blocks", () => {
       const html = "<h2>header two</h2>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<h2>header two</h2>")
     })
 
     it("Converts h3 blocks", () => {
       const html = "<h3>header three</h3>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<h3>header three</h3>")
     })
 
     it("Converts blockquote blocks", () => {
       const html = "<blockquote>a blockquote</blockquote>"
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe("<blockquote>a blockquote</blockquote>")
     })
@@ -455,7 +431,7 @@ describe("#convertDraftToHtml", () => {
         <li>second list item</li>
         </ul>
       `
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe(
         "<ul><li>first list item</li><li>second list item</li></ul>"
@@ -469,7 +445,7 @@ describe("#convertDraftToHtml", () => {
         <li>second list item</li>
         </ol>
       `
-      const convertedHtml = getHtmlFromContentState(html)
+      const convertedHtml = getHtmlViaContentState(html)
 
       expect(convertedHtml).toBe(
         "<ol><li>first list item</li><li>second list item</li></ol>"
@@ -479,63 +455,63 @@ describe("#convertDraftToHtml", () => {
     describe("Disallowed blocks", () => {
       it("Converts h1 blocks", () => {
         const html = "<h1>an h1</h1>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>an h1</p>")
       })
 
       it("Converts h4 blocks", () => {
         const html = "<h4>an h4</h4>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>an h4</p>")
       })
 
       it("Converts h5 blocks", () => {
         const html = "<h5>an h5</h5>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>an h5</p>")
       })
 
       it("Converts h6 blocks", () => {
         const html = "<h6>an h6</h6>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>an h6</p>")
       })
 
       it("Converts div blocks", () => {
         const html = "<div>a div</div>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>a div</p>")
       })
 
       it("Converts table blocks", () => {
         const html = "<tr><th>table header</th><td>table cell</td></tr>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>table headertable cell</p>")
       })
 
       it("Removes body blocks", () => {
         const html = "<body><p>a nested paragraph</p></body>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>a nested paragraph</p>")
       })
 
       it("Removes meta tags", () => {
         const html = "<meta><title>Page Title</title></meta><p>a paragraph</p>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>a paragraph</p>")
       })
 
       it("Removes script tags", () => {
         const html = "<script>do a bad thing</script><p>a paragraph</p>"
-        const convertedHtml = getHtmlFromContentState(html)
+        const convertedHtml = getHtmlViaContentState(html)
 
         expect(convertedHtml).toBe("<p>a paragraph</p>")
       })
