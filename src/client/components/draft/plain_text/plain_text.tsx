@@ -1,6 +1,7 @@
 import { ContentState, DraftHandleValue, Editor, EditorState } from "draft-js"
 import { debounce } from "lodash"
 import React from "react"
+import styled from "styled-components"
 
 interface PlainTextProps {
   content?: string
@@ -63,7 +64,7 @@ export class PlainText extends React.Component<PlainTextProps, PlainTextState> {
     const { editorState } = this.state
 
     return (
-      <div className="plain-text" onClick={this.focus}>
+      <PlainTextContainer onClick={this.focus}>
         <Editor
           editorState={editorState}
           handleReturn={this.handleReturn}
@@ -74,7 +75,11 @@ export class PlainText extends React.Component<PlainTextProps, PlainTextState> {
           }}
           spellCheck
         />
-      </div>
+      </PlainTextContainer>
     )
   }
 }
+
+export const PlainTextContainer = styled.div`
+  position: relative;
+`

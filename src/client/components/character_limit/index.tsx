@@ -1,7 +1,10 @@
 import { BorderBox, color, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import { PlainText } from "client/components/draft/plain_text/plain_text"
+import {
+  PlainText,
+  PlainTextContainer,
+} from "client/components/draft/plain_text/plain_text"
 import { FormLabel } from "client/components/form_label"
 import React from "react"
 import styled from "styled-components"
@@ -122,7 +125,7 @@ const CharacterLimitContainer = styled.div<{ type?: string }>`
     }
   `};
 
-  .plain-text {
+  ${PlainTextContainer} {
     width: 100%;
   }
 `

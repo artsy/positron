@@ -3,19 +3,6 @@
 .edit-header
   position relative
 
-  .DraftEditor-root
-    position relative
-
-  .public-DraftEditorPlaceholder-inner
-    position absolute
-    top 0
-    color gray-dark-color
-
-  .plain-text[name='title']
-    .public-DraftEditorPlaceholder-inner:after
-      content ' *'
-      color red-color
-
   .upload-progress
     min-width 0
 
@@ -58,10 +45,6 @@
 
 [data-layout='classic'] .edit-header
   padding-top 10px
-
-  .plain-text .public-DraftEditorPlaceholder-inner
-    left 0
-    right 0
 
 [data-layout='standard'] .edit-header
   padding-top 10px

@@ -3,7 +3,7 @@ import moment from "moment"
 import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { space } from "@artsy/palette"
+import { color, space } from "@artsy/palette"
 import { Header } from "@artsy/reaction/dist/Components/Publishing"
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
 import { Deck } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent"
@@ -37,11 +37,13 @@ export class SectionHeader extends Component {
     const { article, onChange } = this.props
 
     return (
-      <PlainText
-        content={article.title}
-        onChange={content => onChange("title", content)}
-        placeholder="Page Title"
-      />
+      <Title>
+        <PlainText
+          content={article.title}
+          onChange={content => onChange("title", content)}
+          placeholder="Page Title"
+        />
+      </Title>
     )
   }
 
@@ -211,5 +213,13 @@ const HeaderContainer = styled.div`
   }
   ${BasicHeaderContainer} {
     margin-top: 0;
+  }
+`
+
+const Title = styled.div`
+  .public-DraftEditorPlaceholder-inner:after {
+    content: " *";
+    color: ${color("red100")};
+    position: absolute;
   }
 `
