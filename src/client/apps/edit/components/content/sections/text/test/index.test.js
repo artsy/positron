@@ -5,7 +5,6 @@ import { EditorState } from "draft-js"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { TextNav } from "client/components/rich_text/components/text_nav"
 import { SectionText } from "../index.jsx"
-import { removeEmptyParagraphs } from "client/components/rich_text/utils/text_stripping"
 
 describe("SectionText", () => {
   let props
@@ -339,9 +338,7 @@ describe("SectionText", () => {
 
       expect(handleBackspace).toBe("handled")
       expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.index - 1)
-      expect(component.state().html).toMatch(
-        removeEmptyParagraphs(props.section.body)
-      )
+      expect(component.state().html).toMatch(props.section.body)
       expect(component.state().html).toMatch(
         article.sections[props.index - 1].body
       )

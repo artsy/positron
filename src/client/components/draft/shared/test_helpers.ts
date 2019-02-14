@@ -43,6 +43,22 @@ export const getContentState = (
   return convertHtmlToDraft(html, hasLinks, blockMap, richTextStyleMap)
 }
 
+export const getHtmlViaContentState = (
+  html: string,
+  hasLinks = false,
+  hasFollowButton = false
+) => {
+  // Get unstripped content state
+  const contentState = getContentState(html, hasLinks, richTextBlockRenderMap)
+  // Convert contentState back to html
+  return convertDraftToHtml(
+    contentState,
+    richTextBlockRenderMap,
+    richTextStyleMap,
+    hasFollowButton
+  )
+}
+
 export const getEditorState = (
   html,
   hasLinks = true,
