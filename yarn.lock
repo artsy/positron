@@ -37,14 +37,15 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@12.1.34":
-  version "12.1.34"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-12.1.34.tgz#09afab470f9be5eb40269ae4bbd39a4903351f8c"
-  integrity sha512-ZF21idJZa1+lwNI7eli+ipQzYkZ5zwl3yYZAC+yz6uhJjhQ1Jw9+vNS7dRCTT+D/mvrHF3E7wlwST4CkF91csg==
+"@artsy/reaction@13.0.10":
+  version "13.0.10"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-13.0.10.tgz#a4f1111d89113733e34151d16c4cbc9ee7792bb1"
+  integrity sha512-6B3KGIaVzm8cP0Lx3rA2RXCuXhDVtkFX1XDwNOx2f6nqohpe9jbkKa2SDOQVzUQR7ES4Q8x9y+K0YzuoLpKBMw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.1"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     "@sentry/browser" "^4.2.3"
+    autosuggest-highlight "^3.1.1"
     cheerio "^1.0.0-rc.2"
     currency.js "^1.2.1"
     farce "^0.2.6"
@@ -1633,6 +1634,13 @@ autoprefixer@^6.3.1:
     num2fraction "^1.2.2"
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
+
+autosuggest-highlight@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/autosuggest-highlight/-/autosuggest-highlight-3.1.1.tgz#70bb4f9125fe8a849e85f825f7bb2a1a4806743d"
+  integrity sha512-MQ6GNIGMMZbeA5FlBLXXgkZEthysCdYNkMV4MahB2/qB/9cwBnVsePUPnIqkMuzjzclTtDa67xln7cgLDu2f/g==
+  dependencies:
+    diacritic "0.0.2"
 
 aws-sign2@~0.6.0:
   version "0.6.0"
@@ -4208,6 +4216,11 @@ detect-newline@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
   integrity sha1-9B8cEL5LAOh7XxPaaAdZ8sW/0+I=
+
+diacritic@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/diacritic/-/diacritic-0.0.2.tgz#fc2a887b5a5bc0a0a854fb614c7c2f209061ee04"
+  integrity sha1-/CqIe1pbwKCoVPthTHwvIJBh7gQ=
 
 diff@1.4.0:
   version "1.4.0"
