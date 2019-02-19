@@ -1,21 +1,25 @@
-import { connect } from "react-redux"
-import PropTypes from "prop-types"
-import styled from "styled-components"
-import React, { Component } from "react"
-import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
 import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
-import SectionList from "../section_list"
-import { PlainText } from "client/components/draft/plain_text/plain_text"
+import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
-import { EditSourceControls } from "../sections/news/EditSourceControls"
+import { EditSourceControls } from "client/apps/edit/components/content/sections/news/EditSourceControls"
+import { PlainText } from "client/components/draft/plain_text/plain_text"
+import React, { Component } from "react"
 import { hot } from "react-hot-loader"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import SectionList from "../section_list"
 
-export class EditNews extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    onChangeArticleAction: PropTypes.func.isRequired,
-  }
+interface EditNewsProps {
+  article: ArticleData
+  onChangeArticleAction: (key: string, val: any) => void
+}
 
+interface EditNewsState {
+  isEditSourceOpen: boolean
+}
+
+export class EditNews extends Component<EditNewsProps, EditNewsState> {
   state = {
     isEditSourceOpen: false,
   }
@@ -26,9 +30,8 @@ export class EditNews extends Component {
     return (
       <PlainText
         content={article.title}
-        onChange={(key, value) => onChangeArticleAction("title", value)}
+        onChange={val => onChangeArticleAction("title", val)}
         placeholder="Title"
-        name="title"
       />
     )
   }
@@ -36,7 +39,7 @@ export class EditNews extends Component {
   editSource = () => {
     const { article } = this.props
     const { isEditSourceOpen } = this.state
-    const { title } = article.news_source
+    const title = article.news_source && article.news_source.title
 
     return (
       <AddSource
@@ -68,7 +71,7 @@ export class EditNews extends Component {
         <NewsByline article={article} editSource={this.editSource()} />
         {this.state.isEditSourceOpen && (
           <EditSourceControls
-            source={article.news_source}
+            source={article.news_source as any}
             onApply={this.saveSource}
           />
         )}

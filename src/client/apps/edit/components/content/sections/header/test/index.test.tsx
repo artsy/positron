@@ -1,44 +1,44 @@
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
-import { cloneDeep } from "lodash"
-import { mount } from "enzyme"
+import { ClassicByline } from "@artsy/reaction/dist/Components/Publishing/Byline/ClassicByline"
 import {
   ClassicArticle,
   FeatureArticle,
   StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ClassicByline } from "@artsy/reaction/dist/Components/Publishing/Byline/ClassicByline"
 import { Header } from "@artsy/reaction/dist/Components/Publishing/Header/Header"
 import { ClassicHeader } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/ClassicHeader"
 import { FeatureHeader } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/FeatureHeader"
 import { StandardHeader } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/StandardHeader"
-import FileInput from "client/components/file_input"
+import { HeaderControls } from "client/apps/edit/components/content/sections/header/controls"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
+import FileInput from "client/components/file_input"
 import { RemoveButton } from "client/components/remove_button"
+import { mount } from "enzyme"
+import { cloneDeep } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionHeader } from "../index"
-import { HeaderControls } from "client/apps/edit/components/content/sections/header/controls"
 
-jest.mock("react-sizeme", () => jest.fn(c => d => d))
+jest.mock("react-sizeme", () => jest.fn(_c => d => d))
 
 describe("Header", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: {},
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <SectionHeader {...props} />
+        <SectionHeader {...passedProps} />
       </Provider>
     )
   }
@@ -47,12 +47,12 @@ describe("Header", () => {
     beforeEach(() => {
       props = {
         article: cloneDeep(ClassicArticle),
-        onChange: jest.fn(),
+        onChangeArticleAction: jest.fn(),
       }
     })
 
     it("renders the classic header", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Header).exists()).toBe(true)
       expect(component.find(ClassicHeader).exists()).toBe(true)
@@ -62,20 +62,20 @@ describe("Header", () => {
     })
 
     it("renders a saved title", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(PlainText).text()).toMatch(ClassicArticle.title)
     })
 
     it("renders a title input", () => {
       props.article.title = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(PlainText).props().placeholder).toMatch("Title")
     })
 
     it("renders a leadParagraph input", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Paragraph).exists()).toBe(true)
       expect(component.find(Paragraph).text()).toMatch(
@@ -90,7 +90,7 @@ describe("Header", () => {
     beforeEach(() => {
       props = {
         article: cloneDeep(FeatureArticle),
-        onChange: jest.fn(),
+        onChangeArticleAction: jest.fn(),
         onChangeHeroAction: jest.fn(),
       }
       hero_section = cloneDeep(FeatureArticle.hero_section)
@@ -99,7 +99,7 @@ describe("Header", () => {
     it("renders the feature header", () => {
       hero_section.type = "split"
       props.article.hero_section = hero_section
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Header).exists()).toBe(true)
       expect(component.find(FeatureHeader)).toHaveLength(1)
@@ -112,14 +112,14 @@ describe("Header", () => {
     })
 
     it("renders feature layout controls", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(HeaderControls).exists()).toBe(true)
       expect(component.find(HeaderControls).text()).toMatch("Change Header")
     })
 
     it("renders a saved title", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -131,7 +131,7 @@ describe("Header", () => {
 
     it("renders a title input", () => {
       props.article.title = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -142,7 +142,7 @@ describe("Header", () => {
     })
 
     it("renders a saved file", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find("video").getElement().props.src).toBe(
         props.article.hero_section.url
@@ -153,7 +153,7 @@ describe("Header", () => {
       hero_section.type = "split"
       delete hero_section.url
       props.article.hero_section = hero_section
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Add Image or Video")
       expect(component.find(FileInput).exists()).toBe(true)
@@ -167,7 +167,7 @@ describe("Header", () => {
           "https://artsy-media-uploads.s3.amazonaws.com/z9w_n6UxxoZ_u1lzt4vwrw%2FHero+Loop+02.mp4"
         props.article.hero_section = hero_section
 
-        const component = getWrapper(props)
+        const component = getWrapper()
 
         expect(component.find(FileInput).exists()).toBe(true)
         expect(component.find(FileInput).getElement().props.prompt).toBe(
@@ -179,7 +179,7 @@ describe("Header", () => {
         delete hero_section.url
         hero_section.type = "fullscreen"
         props.article.hero_section = hero_section
-        const component = getWrapper(props)
+        const component = getWrapper()
 
         expect(component.find(FileInput).getElement().props.prompt).toBe(
           "Add Background"
@@ -192,12 +192,12 @@ describe("Header", () => {
     beforeEach(() => {
       props = {
         article: cloneDeep(StandardArticle),
-        onChange: jest.fn(),
+        onChangeArticleAction: jest.fn(),
       }
     })
 
     it("renders the standard header", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Header).exists()).toBe(true)
       expect(component.find(StandardHeader).exists()).toBe(true)
@@ -207,7 +207,7 @@ describe("Header", () => {
     })
 
     it("renders a saved title", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -219,7 +219,7 @@ describe("Header", () => {
 
     it("renders a title input", () => {
       props.article.title = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -234,13 +234,13 @@ describe("Header", () => {
     beforeEach(() => {
       props = {
         article: cloneDeep(FeatureArticle),
-        onChange: jest.fn(),
+        onChangeArticleAction: jest.fn(),
         onChangeHeroAction: jest.fn(),
       }
     })
 
     it("Can change a title", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const title = "New Title"
       component
         .find(PlainText)
@@ -248,12 +248,12 @@ describe("Header", () => {
         .getElement()
         .props.onChange(title)
 
-      expect(props.onChange.mock.calls[0][0]).toBe("title")
-      expect(props.onChange.mock.calls[0][1]).toBe(title)
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("title")
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(title)
     })
 
     it("Can change a deck", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const deck = "New deck"
       component
         .find(PlainText)
@@ -267,19 +267,21 @@ describe("Header", () => {
 
     it("Can change a leadParagraph", () => {
       props.article.layout = "classic"
-      const component = getWrapper(props)
+      const component = getWrapper()
       const lead_paragraph = "New Lead Paragraph"
       component
         .find(Paragraph)
         .getElement()
         .props.onChange(lead_paragraph)
 
-      expect(props.onChange.mock.calls[0][0]).toBe("lead_paragraph")
-      expect(props.onChange.mock.calls[0][1]).toBe(lead_paragraph)
+      expect(props.onChangeArticleAction.mock.calls[0][0]).toBe(
+        "lead_paragraph"
+      )
+      expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(lead_paragraph)
     })
 
     it("Can upload a header image", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const src = "http://image.jpg"
       component
         .find(FileInput)
@@ -292,7 +294,7 @@ describe("Header", () => {
 
     it("Can remove a header image", () => {
       props.article.hero_section.type = "text"
-      const component = getWrapper(props)
+      const component = getWrapper()
       component.find(RemoveButton).simulate("click")
 
       expect(props.onChangeHeroAction.mock.calls[0][0]).toBe("url")
