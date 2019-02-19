@@ -61,7 +61,7 @@ export class DragTarget extends React.Component<DragTargetProps> {
 
     return (
       <DragTargetContainer
-        innerRef={ref => (this.target = ref)}
+        ref={ref => (this.target = ref)}
         isActiveSource={isActiveSource}
         isActiveTarget={isActiveTarget}
         onDragOver={this.setDragTarget}

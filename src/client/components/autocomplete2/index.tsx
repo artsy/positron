@@ -202,7 +202,7 @@ export class Autocomplete extends Component<
         <Input
           block
           disabled={disabled}
-          innerRef={this.textInput}
+          ref={this.textInput}
           onChange={({ currentTarget }) => {
             this.search(currentTarget.value)
           }}

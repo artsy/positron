@@ -30,7 +30,7 @@ export class DragSource extends React.Component<DragSourceProps> {
 
     return (
       <DragSourceContainer
-        innerRef={ref => (this.source = ref)}
+        ref={ref => (this.source = ref)}
         isActiveSource={isActiveSource}
         onDragEnd={onDragEnd}
         onDragStart={this.setDragSource}

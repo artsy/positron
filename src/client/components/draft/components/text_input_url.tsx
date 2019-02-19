@@ -100,7 +100,7 @@ export class TextInputUrl extends Component<Props, State> {
     const { top, left } = this.stickyControlsBox()
 
     return (
-      <>
+      <div>
         <BackgroundOverlay onClick={onClickOff} />
 
         <TextInputUrlContainer color={backgroundColor} top={top} left={left}>
@@ -130,7 +130,7 @@ export class TextInputUrl extends Component<Props, State> {
             Apply
           </Button>
         </TextInputUrlContainer>
-      </>
+      </div>
     )
   }
 }
