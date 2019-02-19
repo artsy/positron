@@ -1,30 +1,37 @@
-import styled from "styled-components"
-import moment from "moment"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import { space } from "@artsy/palette"
+import { color } from "@artsy/palette"
 import { Header } from "@artsy/reaction/dist/Components/Publishing"
-import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
-import { Deck } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent"
-import { FeatureHeaderContainer } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader"
+import { LeadParagraph } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/ClassicHeader"
 import { BasicHeaderContainer } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader"
-import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import { PlainText } from "client/components/draft/plain_text/plain_text"
-import { ProgressBar } from "client/components/file_input/progress_bar"
-import { RemoveButton } from "client/components/remove_button"
+import { FeatureHeaderContainer } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader"
+import { Deck } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { onChangeHero } from "client/actions/edit/sectionActions"
+import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { PlainText } from "client/components/draft/plain_text/plain_text"
 import FileInput from "client/components/file_input"
+import { ProgressBar } from "client/components/file_input/progress_bar"
+import { RemoveButton } from "client/components/remove_button"
+import moment from "moment"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 import HeaderControls from "./controls"
 
-export class SectionHeader extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    onChange: PropTypes.func,
-    onChangeHeroAction: PropTypes.func,
-  }
+interface SectionHeaderProps {
+  article: ArticleData
+  onChangeArticleAction: (key: string, val: any) => void
+  onChangeHeroAction: (key: string, val: any) => void
+}
 
+interface SectionHeaderState {
+  progress: number | null
+}
+
+export class SectionHeader extends Component<
+  SectionHeaderProps,
+  SectionHeaderState
+> {
   state = {
     progress: null,
   }
@@ -34,14 +41,16 @@ export class SectionHeader extends Component {
   }
 
   editTitle = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
-      <PlainText
-        content={article.title}
-        onChange={content => onChange("title", content)}
-        placeholder="Page Title"
-      />
+      <Title>
+        <PlainText
+          content={article.title}
+          onChange={content => onChangeArticleAction("title", content)}
+          placeholder="Page Title"
+        />
+      </Title>
     )
   }
 
@@ -102,8 +111,8 @@ export class SectionHeader extends Component {
   getPublishDate = () => {
     const { article } = this.props
     let date = new Date()
-    if (article.published) {
-      date = article.published_at
+    if (article.published && article.published_at) {
+      date = new Date(article.published_at)
     } else if (article.scheduled_publish_at) {
       date = article.scheduled_publish_at
     }
@@ -113,18 +122,16 @@ export class SectionHeader extends Component {
   }
 
   editLeadParagraph = () => {
-    const { article, onChange } = this.props
+    const { article, onChangeArticleAction } = this.props
 
     return (
       <LeadParagraph>
-        <Text layout={article.layout}>
-          <Paragraph
-            html={article.lead_paragraph}
-            onChange={input => onChange("lead_paragraph", input)}
-            placeholder="Lead Paragraph (optional)"
-            stripLinebreaks
-          />
-        </Text>
+        <Paragraph
+          html={article.lead_paragraph}
+          onChange={input => onChangeArticleAction("lead_paragraph", input)}
+          placeholder="Lead Paragraph (optional)"
+          stripLinebreaks
+        />
       </LeadParagraph>
     )
   }
@@ -148,7 +155,7 @@ export class SectionHeader extends Component {
       )
     } else {
       const headerType = isFeature ? hero.type || "text" : ""
-      const hasVertical = article.vertical ? undefined : "Missing Vertical"
+      const verticalPlaceholder = article.vertical ? "" : "Missing Vertical"
       const hasImageUrl = hero.url && hero.url.length
       const hasWhiteText = headerType === "fullscreen" && hasImageUrl
 
@@ -156,8 +163,6 @@ export class SectionHeader extends Component {
         <HeaderContainer
           className={"edit-header " + headerType}
           data-type={headerType}
-          hasVertical
-          hasImageUrl={hasImageUrl}
         >
           {isFeature && <HeaderControls onProgress={this.onProgress} />}
 
@@ -171,7 +176,7 @@ export class SectionHeader extends Component {
                 : undefined
             }
             editTitle={this.editTitle()}
-            editVertical={hasVertical}
+            editVertical={verticalPlaceholder as any} // TODO: Type editVertical as string
             textColor={hasWhiteText ? "white" : "black"}
           />
         </HeaderContainer>
@@ -186,21 +191,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onChangeHeroAction: onChangeHero,
-  onChange: onChangeArticle,
+  onChangeArticleAction: onChangeArticle,
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SectionHeader)
-
-// TODO: Import from reaction after version bump
-export const LeadParagraph = styled.div`
-  padding-bottom: ${space(3)}px;
-  max-width: 580px;
-  margin: 0 auto;
-  text-align: left;
-`
 
 const HeaderContainer = styled.div`
   ${Deck} {
@@ -211,5 +208,13 @@ const HeaderContainer = styled.div`
   }
   ${BasicHeaderContainer} {
     margin-top: 0;
+  }
+`
+
+const Title = styled.div`
+  .public-DraftEditorPlaceholder-inner:after {
+    content: " *";
+    color: ${color("red100")};
+    position: absolute;
   }
 `

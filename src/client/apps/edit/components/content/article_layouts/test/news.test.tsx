@@ -1,31 +1,31 @@
-import React from "react"
-import configureStore from "redux-mock-store"
+import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
 import { NewsArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
-import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
-import { Provider } from "react-redux"
+import { EditSourceControls } from "client/apps/edit/components/content/sections/news/EditSourceControls"
 import { mount } from "enzyme"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionList } from "../../section_list"
 import { AddSource, EditNews } from "../news"
-import { EditSourceControls } from "../../sections/news/EditSourceControls"
 
 describe("EditNews", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
+        article: passedProps.article,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <EditNews {...props} onChangeArticleAction={() => {}} />
+        <EditNews {...props} />
       </Provider>
     )
   }
@@ -34,39 +34,37 @@ describe("EditNews", () => {
     props = {
       channel: { type: "editorial" },
       article: NewsArticle,
+      onChangeArticleAction: jest.fn(),
     }
   })
 
   it("Renders NewsHeadline", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(NewsHeadline).exists()).toBe(true)
   })
 
   it("Renders SectionList", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(SectionList).exists()).toBe(true)
   })
 
   it("Renders NewsByline", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(NewsByline).exists()).toBe(true)
   })
 
   it("Renders AddSource if article has no source", () => {
     const article = Object.assign({}, NewsArticle)
-    article.news_source = { title: null, url: null }
-
-    const newProps = {
-      channel: { type: "editorial" },
-      article,
-    }
-    const component = getWrapper(newProps)
+    article.news_source = { title: "", url: "" }
+    props.channel = { type: "editorial" }
+    props.article = article
+    const component = getWrapper()
 
     expect(component.text()).toMatch("Add Source")
   })
 
   it("Renders source in byline if article has a source", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.text()).toMatch("The New York Times")
   })
 
