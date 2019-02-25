@@ -28,7 +28,8 @@ export class DragTarget extends React.Component<DragTargetProps> {
     const { setDragTarget, index } = props
 
     this.debouncedDragTarget = debounce(mouseY => {
-      const dragTarget = findDOMNode(this.target).getBoundingClientRect()
+      const target = findDOMNode(this.target) as Element
+      const dragTarget: ClientRect = target.getBoundingClientRect()
       setDragTarget(index, dragTarget, mouseY)
     }, 3)
   }
