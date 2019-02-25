@@ -16,7 +16,8 @@ export class DragSource extends React.Component<DragSourceProps> {
 
   setDragSource = e => {
     const { isDraggable, index, setDragSource } = this.props
-    const dragSource = findDOMNode(this.source).getBoundingClientRect()
+    const source = findDOMNode(this.source) as Element
+    const dragSource: ClientRect = source.getBoundingClientRect()
 
     if (isDraggable) {
       const dragStartY = e.clientY - (dragSource.top - window.scrollY)
