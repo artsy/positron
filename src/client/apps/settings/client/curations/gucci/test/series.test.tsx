@@ -90,7 +90,7 @@ describe("Series Admin", () => {
         value: "http://link.com",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("partner_link_url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://link.com")

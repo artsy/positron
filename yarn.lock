@@ -970,10 +970,10 @@
     "@types/react" "*"
     immutable "^3.8.1"
 
-"@types/enzyme@^3.1.6":
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.1.6.tgz#5b6fd8c5d23d2e1d06eca528b54df81c3ee4cbbf"
-  integrity sha512-imJWo8csH+hYDqO4fPDGiztA7wlkP3uTdTH0Wp0kzYCMIU6IaHI1lKy8eMSK9kjyLzvf2W6+PKv9ZfIpc/z88w==
+"@types/enzyme@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-3.9.0.tgz#a81c91e2dfd2d70e67f013f2c0e5efed6df05489"
+  integrity sha512-o0C7ooyBtj9NKyMzn2BWN53W4J21KPhO+/v+qqQX28Pcz0Z1B3DjL9bq2ZR4TN70PVw8O7gkhuFtC7VN3tausg==
   dependencies:
     "@types/cheerio" "*"
     "@types/react" "*"

@@ -35,7 +35,7 @@ describe("EditAdmin", () => {
         partner_dark_logo: "http://partner_dark_logo.jpg",
         partner_condensed_logo: "http://partner_condensed_logo.jpg",
       }
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.html()).toMatch("partner_light_logo.jpg")
       expect(component.html()).toMatch("partner_dark_logo.jpg")
       expect(component.html()).toMatch("partner_condensed_logo.jpg")
@@ -97,7 +97,7 @@ describe("EditAdmin", () => {
 
     it("Can render saved data", () => {
       props.article.sponsor = { partner_logo_link: "http://partner.com" }
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(
         component
           .find(Input)
@@ -118,7 +118,7 @@ describe("EditAdmin", () => {
           value: "New URL",
         },
       } as unknown) as React.FormEvent<HTMLInputElement>
-      input.onChange(event)
+      input.onChange && input.onChange(event)
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("sponsor")
       expect(
@@ -140,7 +140,7 @@ describe("EditAdmin", () => {
 
     it("Can render saved data", () => {
       props.article.sponsor = { pixel_tracking_code: "tracking_image.jpg" }
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(
         component
@@ -162,7 +162,7 @@ describe("EditAdmin", () => {
           value: "some_img.jpg",
         },
       } as unknown) as React.FormEvent<HTMLInputElement>
-      input.onChange(event)
+      input.onChange && input.onChange(event)
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("sponsor")
       expect(

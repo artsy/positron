@@ -115,7 +115,7 @@ describe("AdminSuperArticle", () => {
         value: "new text",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("super_article")
     expect(

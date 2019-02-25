@@ -61,8 +61,8 @@ describe("Gucci Admin", () => {
     const component = getWrapper()
     const instance = component.instance() as GucciAdmin
     instance.onChange("name", "New Title")
-    expect(component.state().curation.get("name")).toMatch("New Title")
-    expect(component.state().isSaved).toBe(false)
+    expect(instance.state.curation.get("name")).toMatch("New Title")
+    expect(instance.state.isSaved).toBe(false)
     // FIXME TEST: Received: "black"
     // expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
     expect(
@@ -77,10 +77,10 @@ describe("Gucci Admin", () => {
     const component = getWrapper()
     const instance = component.instance() as GucciAdmin
     instance.onChangeSection("featuring", "Many feminist artists", 0)
-    expect(component.state().curation.get("sections")[0].featuring).toMatch(
+    expect(instance.state.curation.get("sections")[0].featuring).toMatch(
       "Many feminist artists"
     )
-    expect(component.state().isSaved).toBe(false)
+    expect(instance.state.isSaved).toBe(false)
     // FIXME TEST: Received: "black"
     // expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
     expect(

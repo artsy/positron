@@ -1,6 +1,5 @@
 import { Checkbox } from "@artsy/palette"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ListItem } from "client/components/autocomplete2/list"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
@@ -76,7 +75,7 @@ describe("MentionedList", () => {
   it("Renders mentioned artists", () => {
     const component = getWrapper()
 
-    expect(component.find(ListItem).exists()).toBe(true)
+    expect(component.find("MentionedItem").exists()).toBe(true)
     expect(component.text()).toMatch(props.mentioned.artist[0].name)
   })
 
@@ -85,7 +84,7 @@ describe("MentionedList", () => {
     props.model = "artwork"
     const component = getWrapper()
 
-    expect(component.find(ListItem).exists()).toBe(true)
+    expect(component.find("MentionedItem").exists()).toBe(true)
     expect(component.text()).toMatch(props.mentioned.artwork[0].name)
   })
 

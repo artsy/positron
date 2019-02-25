@@ -83,7 +83,7 @@ describe("Panel", () => {
         value: "New Headline",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.headline")
     expect(props.onChange.mock.calls[0][1]).toMatch("New Headline")
@@ -101,7 +101,7 @@ describe("Panel", () => {
         value: "http://new-link.com",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.link.url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://new-link.com")
@@ -119,7 +119,7 @@ describe("Panel", () => {
         value: "new tracking code",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("panel.pixel_tracking_code")
     expect(props.onChange.mock.calls[0][1]).toMatch("new tracking code")

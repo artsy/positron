@@ -44,7 +44,7 @@ describe("EditDisplay", () => {
   })
 
   it("Renders section-list for non-partners, opens magazine panel by default", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(DropDownList).exists()).toBe(true)
     expect(component.find(DisplayMagazine).exists()).toBe(true)
@@ -52,47 +52,44 @@ describe("EditDisplay", () => {
   })
 
   it("Can dispay the social panel on click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(1)
       .simulate("click")
+    const dropDownList = component.find(DropDownList).instance() as DropDownList
 
-    expect(
-      component.find(DropDownList).instance().state.activeSections[1]
-    ).toBe(1)
+    expect(dropDownList.state.activeSections[1]).toBe(1)
     expect(component.find(DisplaySocial).exists()).toBe(true)
   })
 
   it("Can dispay the search panel on click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(2)
       .simulate("click")
+    const dropDownList = component.find(DropDownList).instance() as DropDownList
 
-    expect(
-      component.find(DropDownList).instance().state.activeSections[1]
-    ).toBe(2)
+    expect(dropDownList.state.activeSections[1]).toBe(2)
     expect(component.find(DisplaySearch).exists()).toBe(true)
   })
 
   it("Can dispay the email panel on click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     component
       .find(".DropDownItem__title")
       .at(3)
       .simulate("click")
+    const dropDownList = component.find(DropDownList).instance() as DropDownList
 
-    expect(
-      component.find(DropDownList).instance().state.activeSections[1]
-    ).toBe(3)
+    expect(dropDownList.state.activeSections[1]).toBe(3)
     expect(component.find(DisplayEmail).exists()).toBe(true)
   })
 
   it("Renders partner panel for partners", () => {
     props.channel.type = "partner"
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(DisplayPartner).exists()).toBe(true)
     expect(component.find(DropDownList).exists()).toBe(false)

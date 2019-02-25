@@ -344,7 +344,7 @@ describe("ImagesControls", () => {
           value: "A title for the Image Set",
         },
       } as unknown) as React.FormEvent<HTMLInputElement>
-      input.onChange(event)
+      input.onChange && input.onChange(event)
 
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("title")
       expect(props.onChangeSectionAction.mock.calls[0][1]).toBe(

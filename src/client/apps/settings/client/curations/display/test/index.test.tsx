@@ -75,10 +75,10 @@ describe("Display Admin", () => {
     const component = getWrapper()
     const instance = component.instance() as DisplayAdmin
     instance.onChange("canvas.name", "New Title", 0)
-    expect(component.state().curation.get("campaigns")[0].canvas.name).toMatch(
+    expect(instance.state.curation.get("campaigns")[0].canvas.name).toMatch(
       "New Title"
     )
-    expect(component.state().saveStatus).toMatch("Save")
+    expect(instance.state.saveStatus).toMatch("Save")
     // FIXME TEST: Not sure...
     // expect(component.find('button').at(0).props().style.color).toMatch('rgb(247, 98, 90)')
   })
@@ -98,17 +98,20 @@ describe("Display Admin", () => {
 
   it("Add Campaign button adds a campaign and opens new panel on click", () => {
     const component = getWrapper()
+    const instance = component.instance() as DisplayAdmin
     component
       .find("button")
       .at(1)
       .simulate("click")
+
     expect(component.find(DropDownItem).length).toBe(3)
-    expect(component.state().curation.get("campaigns").length).toBe(3)
-    expect(component.state().curation.get("campaigns")[2].sov).toBe(0.2)
+    expect(instance.state.curation.get("campaigns").length).toBe(3)
+    expect(instance.state.curation.get("campaigns")[2].sov).toBe(0.2)
   })
 
   it("Delete Campaign button prompts alert and removes campaign if confirmed", () => {
     const component = getWrapper()
+    const instance = component.instance() as DisplayAdmin
     component
       .find(".DropDownItem__title")
       .at(1)
@@ -119,6 +122,6 @@ describe("Display Admin", () => {
       .simulate("click")
 
     expect(globalAny.confirm.mock.calls[0][0]).toMatch("Are you sure?")
-    expect(component.state().curation.get("campaigns").length).toBe(1)
+    expect(instance.state.curation.get("campaigns").length).toBe(1)
   })
 })

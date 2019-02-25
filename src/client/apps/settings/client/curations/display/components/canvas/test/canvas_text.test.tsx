@@ -33,7 +33,7 @@ describe("Canvas Text", () => {
         value: "New Headline",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.headline")
     expect(props.onChange.mock.calls[0][1]).toMatch("New Headline")
@@ -66,7 +66,7 @@ describe("Canvas Text", () => {
         value: "Read More",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.link.text")
     expect(props.onChange.mock.calls[0][1]).toMatch("Read More")
@@ -85,7 +85,7 @@ describe("Canvas Text", () => {
         value: "http://artsy.net",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.link.url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://artsy.net")
@@ -104,7 +104,7 @@ describe("Canvas Text", () => {
         value: "a pixel tracking script",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch(
       "canvas.pixel_tracking_code"
@@ -115,10 +115,8 @@ describe("Canvas Text", () => {
 
   it("Can save an edited Disclaimer", () => {
     const component = getWrapper(props)
-    component
-      .find(PlainText)
-      .instance()
-      .props.onChange("New Disclaimer")
+    const plainText = component.find(PlainText).instance() as PlainText
+    plainText.props.onChange("New Disclaimer")
 
     expect(props.onChange.mock.calls[0][0]).toMatch("canvas.disclaimer")
     expect(props.onChange.mock.calls[0][1]).toMatch("New Disclaimer")
