@@ -32,7 +32,9 @@
     "babel-plugin-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz",
     "relay-compiler": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz",
     "relay-runtime": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz",
-    "react-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz"
+    "react": "^16.8.2",
+    "react-relay": "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz",
+    "react-test-renderer": "^16.8.2"
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
@@ -191,6 +193,7 @@
     "progress-bar-webpack-plugin": "^1.10.0",
     "raf": "^3.4.0",
     "react-addons-test-utils": "^15.4.2",
+    "react-test-renderer": "^16.8.2",
     "react-transform-hmr": "^1.0.4",
     "redux-mock-store": "^1.4.0",
     "rewire": "2.2.0",
