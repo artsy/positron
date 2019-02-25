@@ -246,7 +246,7 @@ export interface HeaderButtonProps {
 }
 export const HeaderButton = styled(Button)<HeaderButtonProps>``
 
-const CheckIcon = styled(Icon)`
+export const CheckIcon = styled(Icon)`
   margin-right: 0;
   margin-left: ${space(1)}px;
 `
