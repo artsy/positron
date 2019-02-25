@@ -16,15 +16,16 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@2.37.24":
-  version "2.37.24"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-2.37.24.tgz#e10547e4989bb81ed376c1ab4fe5a71e6d2ad830"
-  integrity sha512-CV5NL0HQAAtF7jvYG+0jWYnA0BO59Af/EstJFhFXoTjvyz271vzDEc9V/tMHoJbkbtKoxnH8UUs/Xh65PUdeVw==
+"@artsy/palette@3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-3.0.8.tgz#f047460c18d344220e8cd067f0c2747258922693"
+  integrity sha512-PnVYf0UkKMUVt8/EyIPKAKN8pyQASomQ3gmRgVd3u6md+Lgsqye5F0J4BdFSNbZDAy8Me/EYs0+DQXD5ZvS4oQ==
   dependencies:
+    babel-plugin-styled-components "^1.10.0"
     moment "^2.23.0"
     moment-timezone "^0.5.23"
     rc-slider "^8.6.2"
-    react "^16.5.0"
+    react "^16.8.2"
     react-live "^1.12.0"
     react-powerplug "^1.0.0"
     react-spring "^5.7.2"
@@ -37,14 +38,15 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@12.1.34":
-  version "12.1.34"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-12.1.34.tgz#09afab470f9be5eb40269ae4bbd39a4903351f8c"
-  integrity sha512-ZF21idJZa1+lwNI7eli+ipQzYkZ5zwl3yYZAC+yz6uhJjhQ1Jw9+vNS7dRCTT+D/mvrHF3E7wlwST4CkF91csg==
+"@artsy/reaction@14.1.1":
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-14.1.1.tgz#b0db7d5463f081adf2894aa4e08ecbc0c63a104c"
+  integrity sha512-BSNfJtVV3TU3NY51TfpUXYdevdkV8/bt7EjnMG9+j9YxS8TqcMC4pO8ujiA5xMa2pqSyRWZFkUwhpPdMD+QRUQ==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.1"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     "@sentry/browser" "^4.2.3"
+    autosuggest-highlight "^3.1.1"
     cheerio "^1.0.0-rc.2"
     currency.js "^1.2.1"
     farce "^0.2.6"
@@ -55,7 +57,6 @@
     history "^4.6.1"
     isomorphic-fetch "^2.2.1"
     jsonp "^0.2.1"
-    loadable-components "^2.2.2"
     lodash "^4.17.4"
     memoize-one "^4.0.3"
     moment-timezone "^0.5.13"
@@ -1678,6 +1679,13 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
+autosuggest-highlight@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/autosuggest-highlight/-/autosuggest-highlight-3.1.1.tgz#70bb4f9125fe8a849e85f825f7bb2a1a4806743d"
+  integrity sha512-MQ6GNIGMMZbeA5FlBLXXgkZEthysCdYNkMV4MahB2/qB/9cwBnVsePUPnIqkMuzjzclTtDa67xln7cgLDu2f/g==
+  dependencies:
+    diacritic "0.0.2"
+
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -1938,11 +1946,6 @@ babel-plugin-syntax-class-properties@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-class-properties/-/babel-plugin-syntax-class-properties-6.13.0.tgz#d7eb23b79a317f8543962c505b827c7d6cac27de"
   integrity sha1-1+sjt5oxf4VDlixQW4J8fWysJ94=
-
-babel-plugin-syntax-dynamic-import@^6.18.0:
-  version "6.18.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-dynamic-import/-/babel-plugin-syntax-dynamic-import-6.18.0.tgz#8d6a26229c83745a9982a441051572caa179b1da"
-  integrity sha1-jWomIpyDdFqZgqRBBRVyyqF5sdo=
 
 babel-plugin-syntax-flow@^6.18.0, babel-plugin-syntax-flow@^6.8.0:
   version "6.18.0"
@@ -4268,6 +4271,11 @@ detect-newline@^2.1.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
   integrity sha1-9B8cEL5LAOh7XxPaaAdZ8sW/0+I=
 
+diacritic@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/diacritic/-/diacritic-0.0.2.tgz#fc2a887b5a5bc0a0a854fb614c7c2f209061ee04"
+  integrity sha1-/CqIe1pbwKCoVPthTHwvIJBh7gQ=
+
 diff@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-1.4.0.tgz#7f28d2eb9ee7b15a97efd89ce63dcfdaa3ccbabf"
@@ -4615,7 +4623,7 @@ enzyme-adapter-utils@^1.10.0:
     prop-types "^15.6.2"
     semver "^5.6.0"
 
-enzyme@^3.8.0:
+enzyme@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/enzyme/-/enzyme-3.9.0.tgz#2b491f06ca966eb56b6510068c7894a7e0be3909"
   integrity sha512-JqxI2BRFHbmiP7/UFqvsjxTirWoM1HfeaJrmVSZ9a1EADKkZgdPcAuISPMpoUiHlac9J4dYt81MC5BBIrbJGMg==
@@ -8261,14 +8269,6 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
-loadable-components@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/loadable-components/-/loadable-components-2.2.2.tgz#0362f5d6d0607f5d9bcc7932c7cdba6f256cbd46"
-  integrity sha512-5dS8C/YjenD4qrc8OqlPDkse0nu+fYhMUsYXbAs07gvudbpLKZSStdifbsm3jMSQ0/a1RC3gJ3b0ivuTSJCh/Q==
-  dependencies:
-    babel-plugin-syntax-dynamic-import "^6.18.0"
-    hoist-non-react-statics "^2.5.0"
-
 loader-runner@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
@@ -11408,7 +11408,7 @@ react-waypoint@^7.3.3:
     consolidated-events "^1.1.0"
     prop-types "^15.0.0"
 
-react@^16.5.0, react@^16.8.2:
+react@^16.8.2:
   version "16.8.3"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.3.tgz#c6f988a2ce895375de216edcfaedd6b9a76451d9"
   integrity sha512-3UoSIsEq8yTJuSu0luO1QQWYbgGEILm+eJl2QN/VLDi7hL+EN18M3q3oVZwmVzzBJ3DkM7RMdRwBmZZ+b4IzSA==

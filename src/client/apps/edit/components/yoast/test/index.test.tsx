@@ -112,7 +112,7 @@ describe("Yoast", () => {
     it("rotates icon when the yoast header is clicked", () => {
       const component = getWrapper()
       component.find(YoastContainer).simulate("click")
-      component.find(Icon).prop("rotation")
+
       expect(component.find(Icon).prop("rotation")).toBe(45)
     })
 
@@ -120,7 +120,7 @@ describe("Yoast", () => {
       const component = getWrapper()
       component.find(YoastContainer).simulate("click")
       component.find(YoastContainer).simulate("click")
-      component.find(Icon).prop("rotation")
+
       expect(component.find(Icon).prop("rotation")).toBe(0)
     })
   })
