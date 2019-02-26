@@ -239,6 +239,7 @@ export class EditHeader extends Component<Props> {
   }
 }
 
+// TODO: Wrapping component but should wrap styled compenent
 export interface HeaderButtonProps {
   color?: string
   borderLeft?: string
@@ -250,6 +251,7 @@ const CheckIcon = styled(Icon)`
   margin-right: 0;
   margin-left: ${space(1)}px;
 `
+CheckIcon.displayName = "CheckIcon"
 
 const ButtonContainer = styled(Flex)`
   align-items: center;

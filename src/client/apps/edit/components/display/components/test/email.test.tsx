@@ -55,7 +55,7 @@ describe("DisplayEmail", () => {
 
   it("Renders all form fields", () => {
     delete props.article.email_metadata
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(CharacterLimit).length).toBe(2)
     expect(component.find("input").length).toBe(2)
@@ -64,7 +64,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can display saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.html()).toMatch(email_metadata.author)
     expect(component.html()).toMatch(email_metadata.custom_text)
@@ -76,7 +76,7 @@ describe("DisplayEmail", () => {
 
   it("Can save with empty email_metadata", () => {
     delete props.article.email_metadata
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(CharacterLimit)
@@ -87,7 +87,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can change the email image", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(ImageUpload)
@@ -102,7 +102,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can change the email headline", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(CharacterLimit)
@@ -117,7 +117,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can change the custom text", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(CharacterLimit)
@@ -132,7 +132,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can change the author", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(Input)
@@ -144,7 +144,7 @@ describe("DisplayEmail", () => {
         value: "New Author",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("email_metadata")
     expect(props.onChangeArticleAction.mock.calls[0][1].author).toBe(
@@ -153,7 +153,7 @@ describe("DisplayEmail", () => {
   })
 
   it("Can change the send to sailthru checkbox", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component.find(Checkbox).at(0)
     input.simulate("click")

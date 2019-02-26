@@ -3,7 +3,7 @@ import {
   htmlWithRichBlocks,
 } from "client/components/draft/shared/test_helpers"
 import { convertFromHTML } from "draft-convert"
-import { EditorState } from "draft-js"
+import { EditorState, SelectionState } from "draft-js"
 import Draft from "draft-js"
 import { mount } from "enzyme"
 import React from "react"
@@ -46,8 +46,11 @@ describe("Paragraph", () => {
 
   getSelection = getLast => {
     const component = getWrapper(props)
-    const startSelection = component.state().editorState.getSelection()
-    const startEditorState = component.state().editorState.getCurrentContent()
+    const instance = component.instance() as Paragraph
+    const startSelection = instance.state.editorState.getSelection()
+    const startEditorState = instance.state.editorState.getCurrentContent()
+    // TODO: update to work with new enzyme types
+    // @ts-ignore
     const { key, text } = getLast
       ? startEditorState.getLastBlock()
       : startEditorState.getFirstBlock()
@@ -59,7 +62,10 @@ describe("Paragraph", () => {
       focusKey: key,
       focusOffset: text.length,
     })
-    return EditorState.acceptSelection(component.state().editorState, selection)
+    return EditorState.acceptSelection(
+      instance.state.editorState,
+      selection as SelectionState
+    )
   }
 
   const getClientRects = jest.fn().mockReturnValue([
@@ -112,7 +118,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         '<p><a href="https://artsy.net/">a link</a></p><p>an h1</p><p>an h2</p><p>an h3</p><p>an h4</p><p>an h5</p><p>an h6</p><p>unordered list</p><p>second list item</p><p>ordered list</p><p>a blockquote</p>'
       )
     })
@@ -124,7 +130,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>a link</p><p>an h1</p><p>an h2</p><p>an h3</p><p>an h4</p><p>an h5</p><p>an h6</p><p>unordered list</p><p>second list item</p><p>ordered list</p><p>a blockquote</p>"
       )
     })
@@ -136,7 +142,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A paragraph</p>")
+      expect(instance.state.html).toBe("<p>A paragraph</p>")
     })
 
     it("Preserves empty blocks if props.allowEmptyLines", () => {
@@ -147,7 +153,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>A paragraph</p><p><br /></p><p><br /></p><p><br /></p>"
       )
     })
@@ -159,7 +165,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Strikethrough text Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
       )
     })
@@ -172,7 +178,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Available at: <i>Espacio Valverde</i> • Galleries Sector, Booth 9F01</p>"
       )
     })
@@ -186,7 +192,7 @@ describe("Paragraph", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         '<p><a href="https://artsy.net/">a link</a> an h1 an h2 an h3 an h4 an h5 an h6 unordered list second list item ordered list a blockquote</p>'
       )
     })
@@ -224,12 +230,12 @@ describe("Paragraph", () => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
       const component = getWrapper()
-      const originalState = component.state().editorState
       const instance = component.instance() as Paragraph
+      const originalState = instance.state.editorState
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A new piece of text.</p>")
-      expect(component.state().editorState).not.toBe(originalState)
+      expect(instance.state.html).toBe("<p>A new piece of text.</p>")
+      expect(instance.state.editorState).not.toBe(originalState)
     })
 
     it("Calls props.onChange if html is changed", done => {
@@ -239,10 +245,10 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A new piece of text.</p>")
+      expect(instance.state.html).toBe("<p>A new piece of text.</p>")
       // Wait for debounced onChange
       setTimeout(() => {
-        expect(component.instance().props.onChange).toHaveBeenCalled()
+        expect(instance.props.onChange).toHaveBeenCalled()
         done()
       }, 250)
     })
@@ -258,7 +264,7 @@ describe("Paragraph", () => {
 
       setTimeout(() => {
         expect(component.instance().setState).toBeCalled()
-        expect(component.instance().props.onChange).not.toHaveBeenCalled()
+        expect(instance.props.onChange).not.toHaveBeenCalled()
         done()
       }, 250)
     })
@@ -353,7 +359,7 @@ describe("Paragraph", () => {
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p><b>A piece of text</b></p>")
+          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -370,7 +376,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -386,7 +392,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -403,7 +409,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p><i>A piece of text</i></p>")
+          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -419,7 +425,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -435,7 +441,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -454,7 +460,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p><b>A piece of text</b></p>")
+          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -470,7 +476,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -486,7 +492,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -503,7 +509,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p><i>A piece of text</i></p>")
+          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -519,7 +525,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -535,7 +541,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -551,7 +557,7 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.handlePastedText("Some pasted text...")
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Some pasted text...A piece of text</p>"
       )
     })
@@ -561,7 +567,7 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", "<p>Some pasted text...</p>")
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Some pasted text...A piece of text</p>"
       )
     })
@@ -571,7 +577,7 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithRichBlocks)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>a link</p><p>an h1</p><p>an h2</p><p>an h3</p><p>an h4</p><p>an h5</p><p>an h6</p><p>unordered list</p><p>second list item</p><p>ordered list</p><p>a blockquoteA piece of text</p>"
       )
     })
@@ -581,7 +587,7 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithDisallowedStyles)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Strikethrough text Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b>A piece of text</p>"
       )
     })
@@ -592,7 +598,7 @@ describe("Paragraph", () => {
       const instance = component.instance() as Paragraph
       instance.handlePastedText("", htmlWithRichBlocks)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>a link an h1 an h2 an h3 an h4 an h5 an h6 unordered list second list item ordered list a blockquoteA piece of text</p>"
       )
     })
@@ -612,7 +618,7 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.checkSelection()
 
-        expect(component.state().editorPosition).toEqual({
+        expect(instance.state.editorPosition).toEqual({
           bottom: 0,
           height: 0,
           left: 0,
@@ -627,7 +633,7 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.checkSelection()
 
-        expect(component.state().showNav).toBe(true)
+        expect(instance.state.showNav).toBe(true)
       })
     })
 
@@ -644,7 +650,7 @@ describe("Paragraph", () => {
         component.setState({ editorPosition: { top: 50, left: 100 } })
         instance.checkSelection()
 
-        expect(component.state().editorPosition).toBe(null)
+        expect(instance.state.editorPosition).toBe(null)
       })
 
       it("Hides nav if no selection", () => {
@@ -656,7 +662,7 @@ describe("Paragraph", () => {
         })
         instance.checkSelection()
 
-        expect(component.state().showNav).toBe(false)
+        expect(instance.state.showNav).toBe(false)
       })
     })
   })
@@ -677,7 +683,7 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.promptForLink()
 
-        expect(component.state().editorPosition).toEqual({
+        expect(instance.state.editorPosition).toEqual({
           bottom: 0,
           height: 0,
           left: 0,
@@ -695,7 +701,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().urlValue).toBe("https://artsy.net/")
+          expect(instance.state.urlValue).toBe("https://artsy.net/")
           done()
         }, 250)
       })
@@ -707,7 +713,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })
@@ -717,11 +723,11 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
         instance.checkSelection()
-        expect(component.state().showNav).toBe(true)
+        expect(instance.state.showNav).toBe(true)
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().showNav).toBe(false)
+          expect(instance.state.showNav).toBe(false)
           done()
         }, 250)
       })
@@ -733,7 +739,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().showUrlInput).toBe(true)
+          expect(instance.state.showUrlInput).toBe(true)
           done()
         }, 250)
       })
@@ -747,7 +753,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().editorPosition).toBe(null)
+          expect(instance.state.editorPosition).toBe(null)
           done()
         }, 250)
       })
@@ -759,7 +765,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })
@@ -771,8 +777,8 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().showNav).toBe(false)
-          expect(component.state().showUrlInput).toBe(false)
+          expect(instance.state.showNav).toBe(false)
+          expect(instance.state.showUrlInput).toBe(false)
           done()
         }, 250)
       })
@@ -784,7 +790,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().html).toBe(
+          expect(instance.state.html).toBe(
             '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
           )
           done()
@@ -804,7 +810,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().html).toBe("<p>A link</p>")
+          expect(instance.state.html).toBe("<p>A link</p>")
           done()
         }, 250)
       })
@@ -816,7 +822,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().showUrlInput).toBe(false)
+          expect(instance.state.showUrlInput).toBe(false)
           done()
         }, 250)
       })
@@ -828,7 +834,7 @@ describe("Paragraph", () => {
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })

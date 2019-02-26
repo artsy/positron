@@ -80,7 +80,7 @@ describe("Campaign Admin", () => {
         value: "Campaign Sample",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("name")
     expect(props.onChange.mock.calls[0][1]).toMatch("Campaign Sample")
@@ -101,7 +101,7 @@ describe("Campaign Admin", () => {
         value: newDate,
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("start_date")
     expect(props.onChange.mock.calls[0][1]).toMatch(newDate)
@@ -122,8 +122,8 @@ describe("Campaign Admin", () => {
         value: newDate,
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
+    input.onChange && input.onChange(event)
 
-    input.onChange(event)
     expect(props.onChange.mock.calls[0][0]).toMatch("end_date")
     expect(props.onChange.mock.calls[0][1]).toMatch(newDate)
     expect(props.onChange.mock.calls[0][2]).toBe(props.index)
@@ -131,11 +131,11 @@ describe("Campaign Admin", () => {
 
   it("Changes the sov on select", () => {
     const component = getWrapper()
-    component
+    const select = component
       .find(LargeSelect)
       .at(0)
       .props()
-      .onSelect("0.2")
+    select && select.onSelect && select.onSelect("0.2")
 
     expect(props.onChange.mock.calls[0][0]).toMatch("sov")
     expect(props.onChange.mock.calls[0][1]).toBe(0.2)

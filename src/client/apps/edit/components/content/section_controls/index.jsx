@@ -133,7 +133,7 @@ export class SectionControls extends Component {
 
     return (
       <SectionControlsContainer
-        innerRef={node => {
+        ref={node => {
           this.controls = node
         }}
         className="edit-controls"

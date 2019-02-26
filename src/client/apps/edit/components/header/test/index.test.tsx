@@ -1,4 +1,3 @@
-import Icon from "@artsy/reaction/dist/Components/Icon"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { clone } from "lodash"
@@ -61,7 +60,7 @@ describe("Edit Header Controls", () => {
 
       expect(
         component
-          .find(Icon)
+          .find("CheckIcon")
           .first()
           .props().color
       ).toBe("green100")
@@ -73,7 +72,7 @@ describe("Edit Header Controls", () => {
 
       expect(
         component
-          .find(Icon)
+          .find("CheckIcon")
           .first()
           .props().color
       ).toBe("black30")
@@ -85,7 +84,7 @@ describe("Edit Header Controls", () => {
 
       expect(
         component
-          .find(Icon)
+          .find("CheckIcon")
           .last()
           .props().color
       ).toBe("green100")
@@ -97,7 +96,7 @@ describe("Edit Header Controls", () => {
 
       expect(
         component
-          .find(Icon)
+          .find("CheckIcon")
           .last()
           .props().color
       ).toBe("black30")

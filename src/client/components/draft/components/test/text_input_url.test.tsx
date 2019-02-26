@@ -17,7 +17,9 @@ jest.mock("draft-js", () => ({
 }))
 
 describe("TextInputUrl", () => {
-  const getWrapper = passedProps => {
+  let props
+
+  const getWrapper = (passedProps = props) => {
     return mount(<TextInputUrl {...passedProps} />)
   }
   const getClientRects = jest.fn().mockReturnValue([
@@ -36,7 +38,6 @@ describe("TextInputUrl", () => {
     getRangeAt,
   })
 
-  let props
   beforeEach(() => {
     props = {
       editorPosition: {
@@ -52,7 +53,7 @@ describe("TextInputUrl", () => {
   })
 
   it("Renders input and appy button", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component.find("input").getElement()
     const button = component.find(Button).getElement()
 
@@ -63,7 +64,7 @@ describe("TextInputUrl", () => {
 
   it("Can render an existing link", () => {
     props.urlValue = "http://artsy.net"
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component.find("input").getElement()
 
     expect(input.props.value).toBe("http://artsy.net")
@@ -71,22 +72,23 @@ describe("TextInputUrl", () => {
 
   it("Renders remove button if has url", () => {
     props.urlValue = "http://artsy.net"
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(RemoveButton).exists()).toBe(true)
   })
 
   it("Can input a url", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
+    const instance = component.instance() as TextInputUrl
     const input = component.find("input")
     const value = "http://link.com"
 
     input.simulate("change", { target: { value } })
-    expect(component.state().url).toBe(value)
+    expect(instance.state.url).toBe(value)
   })
 
   it("Can save a link on button click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const url = "http://link.com"
     const button = component.find(Button)
     component.setState({ url })
@@ -97,7 +99,7 @@ describe("TextInputUrl", () => {
 
   it("Can save a link with plugins", () => {
     props.isFollowLink = true
-    const component = getWrapper(props)
+    const component = getWrapper()
     const url = "http://link.com"
     const button = component.find(Button)
     component.setState({ url })
@@ -107,7 +109,7 @@ describe("TextInputUrl", () => {
   })
 
   it("Does not save empty links", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const url = ""
     const button = component.find(Button)
     component.setState({ url })
@@ -119,21 +121,21 @@ describe("TextInputUrl", () => {
 
   it("Can remove a link", () => {
     props.urlValue = "http://artsy.net"
-    const component = getWrapper(props)
+    const component = getWrapper()
     component.find(RemoveButton).simulate("mouseDown")
 
     expect(props.onRemoveLink.mock.calls.length).toBe(1)
   })
 
   it("Calls #onClickOff on background click", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     component.find(BackgroundOverlay).simulate("click")
 
     expect(props.onClickOff).toBeCalled()
   })
 
   it("#stickyControlsBox calculates position based on selection and editorPosition", () => {
-    const component = getWrapper(props).instance() as TextInputUrl
+    const component = getWrapper().instance() as TextInputUrl
     const stickyControlsBox = component.stickyControlsBox()
 
     expect(stickyControlsBox.top).toBe(42)
@@ -148,7 +150,7 @@ describe("TextInputUrl", () => {
         preventDefault: jest.fn(),
         target: { value: "http://artsy.net/articles" },
       }
-      const component = getWrapper(props).instance() as TextInputUrl
+      const component = getWrapper().instance() as TextInputUrl
       component.onKeyDown(e)
 
       expect(e.preventDefault).toBeCalled()
@@ -160,7 +162,7 @@ describe("TextInputUrl", () => {
 
     it("Calls #onClickOff on esc", () => {
       const e = { key: "Escape", preventDefault: jest.fn() }
-      const component = getWrapper(props).instance() as TextInputUrl
+      const component = getWrapper().instance() as TextInputUrl
       component.onKeyDown(e)
 
       expect(props.onClickOff).toBeCalled()
@@ -168,7 +170,7 @@ describe("TextInputUrl", () => {
 
     it("Calls #onExitInput on tab", () => {
       const e = { key: "Tab", preventDefault: jest.fn() }
-      const component = getWrapper(props)
+      const component = getWrapper()
       const instance = component.instance() as TextInputUrl
       instance.onExitInput = jest.fn()
       component.update()
@@ -186,7 +188,7 @@ describe("TextInputUrl", () => {
         preventDefault: jest.fn(),
         target: { value: "http://artsy.net/articles" },
       }
-      const component = getWrapper(props).instance() as TextInputUrl
+      const component = getWrapper().instance() as TextInputUrl
       component.onExitInput(e)
 
       expect(props.onConfirmLink.mock.calls[0][0]).toBe(
@@ -201,7 +203,7 @@ describe("TextInputUrl", () => {
         preventDefault: jest.fn(),
         target: { value: "" },
       }
-      const component = getWrapper(props).instance() as TextInputUrl
+      const component = getWrapper().instance() as TextInputUrl
       component.onExitInput(e)
 
       expect(props.onRemoveLink).toBeCalled()
@@ -213,7 +215,7 @@ describe("TextInputUrl", () => {
         preventDefault: jest.fn(),
         target: { value: "" },
       }
-      const component = getWrapper(props).instance() as TextInputUrl
+      const component = getWrapper().instance() as TextInputUrl
       component.onExitInput(e)
 
       expect(props.onClickOff).toBeCalled()

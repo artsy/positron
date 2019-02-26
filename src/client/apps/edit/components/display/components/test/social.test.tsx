@@ -44,14 +44,14 @@ describe("DisplaySocial", () => {
   })
 
   it("Renders all form fields", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(CharacterLimit).length).toBe(2)
     expect(component.find(ImageUpload).length).toBe(1)
   })
 
   it("Can display saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.html()).toMatch(props.article.social_title)
     expect(component.html()).toMatch(props.article.social_description)
@@ -61,7 +61,7 @@ describe("DisplaySocial", () => {
   })
 
   it("Can change the thumbnail image", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(ImageUpload)
@@ -76,7 +76,7 @@ describe("DisplaySocial", () => {
   })
 
   it("Can change the thumbnail title", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(CharacterLimit)
@@ -89,7 +89,7 @@ describe("DisplaySocial", () => {
   })
 
   it("Can change the description", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component
       .find(CharacterLimit)

@@ -1,10 +1,10 @@
-import Icon from "@artsy/reaction/dist/Components/Icon"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
 import {
+  CloseIcon,
   ResolveMessage,
   Yoast,
   YoastContainer,
@@ -49,7 +49,7 @@ describe("Yoast", () => {
 
     it("renders a close icon", () => {
       const component = getWrapper()
-      expect(component.find(Icon).length).toBe(1)
+      expect(component.find(CloseIcon).length).toBe(1)
     })
 
     it("renders a yoast output container", () => {
@@ -112,16 +112,15 @@ describe("Yoast", () => {
     it("rotates icon when the yoast header is clicked", () => {
       const component = getWrapper()
       component.find(YoastContainer).simulate("click")
-      component.find(Icon).prop("rotation")
-      expect(component.find(Icon).prop("rotation")).toBe(45)
+      expect(component.find(CloseIcon).prop("rotation")).toBe(45)
     })
 
     it("rotates icon back to original position when the yoast header is clicked a second time", () => {
       const component = getWrapper()
       component.find(YoastContainer).simulate("click")
       component.find(YoastContainer).simulate("click")
-      component.find(Icon).prop("rotation")
-      expect(component.find(Icon).prop("rotation")).toBe(0)
+
+      expect(component.find(CloseIcon).prop("rotation")).toBe(0)
     })
   })
 

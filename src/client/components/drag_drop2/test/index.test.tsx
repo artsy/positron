@@ -82,8 +82,8 @@ describe("DragDropList", () => {
     const instance = component.instance() as DragDropList
     instance.setDragTarget(1, { top: 300, bottom: 400 }, 200)
 
-    expect(component.state().dragTarget).toBe(1)
-    expect(component.state().dropPosition).toBe("top")
+    expect(instance.state.dragTarget).toBe(1)
+    expect(instance.state.dropPosition).toBe("top")
   })
 
   describe("#setDropZonePosition", () => {
@@ -119,7 +119,7 @@ describe("DragDropList", () => {
       instance.onDragEnd()
 
       expect(props.onDragEnd).not.toBeCalled()
-      expect(component.state().dragSource).toBe(1)
+      expect(instance.state.dragSource).toBe(1)
     })
 
     it("Calls props.onDragEnd with new array order", () => {

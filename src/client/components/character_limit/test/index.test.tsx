@@ -27,7 +27,7 @@ describe("Character Limit", () => {
   describe("Input", () => {
     it("renders an empty input", () => {
       delete props.defaultValue
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("Title")
       expect(component.text()).toMatch("50 Characters")
@@ -45,7 +45,7 @@ describe("Character Limit", () => {
 
     it("changes the color of remaining text if over limit", () => {
       props.limit = 23
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.text()).toMatch("-1 Characters")
       expect(component.find(RemainingChars).props().isOverLimit).toBeTruthy()
@@ -53,7 +53,8 @@ describe("Character Limit", () => {
 
     it("calls onChange and resets the remaining characters on input", () => {
       props.limit = 23
-      const component = getWrapper(props)
+      const component = getWrapper()
+      const instance = component.instance() as CharacterLimit
       const input = component
         .find(Input)
         .at(0)
@@ -64,10 +65,10 @@ describe("Character Limit", () => {
           value: "Sample copy lorem ipsumz.",
         },
       } as unknown) as React.FormEvent<HTMLInputElement>
-      input.onChange(event)
+      input.onChange && input.onChange(event)
 
       expect(props.onChange).toBeCalledWith("Sample copy lorem ipsumz.")
-      expect(component.state().remainingChars).toBe(-2)
+      expect(instance.state.remainingChars).toBe(-2)
     })
   })
 
@@ -77,7 +78,7 @@ describe("Character Limit", () => {
       props.type = "textarea"
     })
     it("renders a textarea input", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(PlainText)).toHaveLength(1)
       expect(component.text()).toMatch("Sample copy lorem ipsum.")
@@ -88,7 +89,7 @@ describe("Character Limit", () => {
       props.html = true
       props.defaultValue =
         '<p>Sample copy lorem ipsum. <a href="http://artsy.net">Link</a></p>'
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Paragraph)).toHaveLength(1)
       expect(component.text()).toMatch("-4 Characters")

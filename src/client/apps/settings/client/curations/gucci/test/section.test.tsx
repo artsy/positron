@@ -92,7 +92,7 @@ describe("Section Admin", () => {
           "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum.",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("featuring")
     expect(props.onChange.mock.calls[0][1]).toMatch(
@@ -123,7 +123,7 @@ describe("Section Admin", () => {
         value: "2017-11-15",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("release_date")
     expect(props.onChange.mock.calls[0][1]).toMatch("2017-11-15T")
@@ -141,7 +141,7 @@ describe("Section Admin", () => {
         value: "http://vimeo.com/video",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("video_url")
     expect(props.onChange.mock.calls[0][1]).toMatch("http://vimeo.com/video")
