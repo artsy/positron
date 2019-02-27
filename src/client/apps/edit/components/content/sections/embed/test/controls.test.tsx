@@ -77,7 +77,7 @@ describe("EmbedControls", () => {
         value: "new value",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("url")
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("new value")
@@ -94,7 +94,7 @@ describe("EmbedControls", () => {
         value: "500",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("height")
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("500")
@@ -111,7 +111,7 @@ describe("EmbedControls", () => {
         value: "200",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("mobile_height")
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("200")

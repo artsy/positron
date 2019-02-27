@@ -79,7 +79,7 @@ describe("AdminVerticalsTags", () => {
     it("#maybeSetupNews sets a news article vertical to News if no vertical present", () => {
       props.article.layout = "news"
       props.article.vertical = null
-      getWrapper(props)
+      getWrapper()
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("vertical")
       expect(props.onChangeArticleAction.mock.calls[0][1].name).toBe("News")

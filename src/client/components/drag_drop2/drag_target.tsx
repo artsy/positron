@@ -28,7 +28,8 @@ export class DragTarget extends React.Component<DragTargetProps> {
     const { setDragTarget, index } = props
 
     this.debouncedDragTarget = debounce(mouseY => {
-      const dragTarget = findDOMNode(this.target).getBoundingClientRect()
+      const target = findDOMNode(this.target) as Element
+      const dragTarget: ClientRect = target.getBoundingClientRect()
       setDragTarget(index, dragTarget, mouseY)
     }, 3)
   }
@@ -61,7 +62,7 @@ export class DragTarget extends React.Component<DragTargetProps> {
 
     return (
       <DragTargetContainer
-        innerRef={ref => (this.target = ref)}
+        ref={ref => (this.target = ref)}
         isActiveSource={isActiveSource}
         isActiveTarget={isActiveTarget}
         onDragOver={this.setDragTarget}

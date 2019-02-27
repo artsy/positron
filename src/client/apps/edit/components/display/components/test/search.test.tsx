@@ -41,18 +41,18 @@ describe("DisplaySearch", () => {
   })
 
   it("Renders all form fields", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.find(CharacterLimit).length).toBe(2)
   })
 
   it("Can display saved data", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     expect(component.html()).toMatch(props.article.search_title)
     expect(component.html()).toMatch(props.article.search_description)
   })
 
   it("Can change the thumbnail title", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(CharacterLimit)
       .at(0)
@@ -64,7 +64,7 @@ describe("DisplaySearch", () => {
   })
 
   it("Can change the description", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component
       .find(CharacterLimit)
       .at(1)

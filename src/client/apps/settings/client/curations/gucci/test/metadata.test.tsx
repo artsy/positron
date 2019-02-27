@@ -101,7 +101,7 @@ describe("Metadata", () => {
         value: "Social Title",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("social_title")
     expect(props.onChange.mock.calls[0][1]).toMatch("Social Title")
@@ -119,7 +119,7 @@ describe("Metadata", () => {
         value: "Email Title",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("email_title")
     expect(props.onChange.mock.calls[0][1]).toMatch("Email Title")
@@ -137,7 +137,7 @@ describe("Metadata", () => {
         value: "Email Author",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("email_author")
     expect(props.onChange.mock.calls[0][1]).toMatch("Email Author")
@@ -155,7 +155,7 @@ describe("Metadata", () => {
         value: "Email Tags",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("email_tags")
     expect(props.onChange.mock.calls[0][1]).toMatch("Email Tags")
@@ -173,7 +173,7 @@ describe("Metadata", () => {
         value: "Keywords",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("keywords")
     expect(props.onChange.mock.calls[0][1]).toMatch("Keywords")
@@ -191,6 +191,7 @@ describe("Metadata", () => {
       .find(TextArea)
       .at(0)
       .props()
+      // @ts-ignore - FIXME
       .onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("description")
@@ -209,6 +210,7 @@ describe("Metadata", () => {
       .find(TextArea)
       .at(1)
       .props()
+      // @ts-ignore - FIXME
       .onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("social_description")

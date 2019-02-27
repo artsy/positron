@@ -122,7 +122,7 @@ describe("RichText", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         '<p><a href="https://artsy.net/">a link</a></p><h1>an h1</h1><h2>an h2</h2><h3>an h3</h3><p>an h4</p><p>an h5</p><p>an h6</p><ul><li>unordered list</li><li>second list item</li></ul><ol><li>ordered list</li></ol><blockquote>a blockquote</blockquote>'
       )
     })
@@ -135,7 +135,7 @@ describe("RichText", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>a link</p><h1>an h1</h1><h2>an h2</h2><h3>an h3</h3><p>an h4</p><p>an h5</p><p>an h6</p><ul><li>unordered list</li><li>second list item</li></ul><ol><li>ordered list</li></ol><blockquote>a blockquote</blockquote>"
       )
     })
@@ -147,7 +147,7 @@ describe("RichText", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A paragraph</p><h1></h1>")
+      expect(instance.state.html).toBe("<p>A paragraph</p><h1></h1>")
     })
 
     it("Removes disallowed styles", () => {
@@ -157,7 +157,7 @@ describe("RichText", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p><s>Strikethrough text</s> Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b></p>"
       )
     })
@@ -170,7 +170,7 @@ describe("RichText", () => {
       const editorState = instance.editorStateFromHTML(component.props().html)
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Available at: <i>Espacio Valverde</i> • Galleries Sector, Booth 9F01</p>"
       )
     })
@@ -181,12 +181,12 @@ describe("RichText", () => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
       const component = getWrapper(props)
-      const originalState = component.state().editorState
       const instance = component.instance() as RichText
+      const originalState = instance.state.editorState
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A new piece of text.</p>")
-      expect(component.state().editorState).not.toBe(originalState)
+      expect(instance.state.html).toBe("<p>A new piece of text.</p>")
+      expect(instance.state.editorState).not.toBe(originalState)
     })
 
     it("Calls props.onChange if html is changed", done => {
@@ -196,10 +196,10 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.onChange(editorState)
 
-      expect(component.state().html).toBe("<p>A new piece of text.</p>")
+      expect(instance.state.html).toBe("<p>A new piece of text.</p>")
       // Wait for debounced onChange
       setTimeout(() => {
-        expect(component.instance().props.onChange).toHaveBeenCalled()
+        expect(instance.props.onChange).toHaveBeenCalled()
         done()
       }, 250)
     })
@@ -215,8 +215,8 @@ describe("RichText", () => {
       instance.onChange(editorState)
 
       setTimeout(() => {
-        expect(component.instance().setState).toBeCalled()
-        expect(component.instance().props.onChange).not.toHaveBeenCalled()
+        expect(instance.setState).toBeCalled()
+        expect(instance.props.onChange).not.toHaveBeenCalled()
         done()
       }, 250)
     })
@@ -234,7 +234,9 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       instance.focus()
-      const { hasFocus } = component.state().editorState.getSelection()
+      // TODO: update to work with new enzyme types
+      // @ts-ignore
+      const { hasFocus } = instance.state.editorState.getSelection()
 
       expect(hasFocus).toBeTruthy()
     })
@@ -254,11 +256,13 @@ describe("RichText", () => {
     const component = getWrapper()
     const instance = component.instance() as RichText
     const selectedState = applySelectionToEditorState(
-      component.state().editorState
+      instance.state.editorState
     )
     instance.onChange(selectedState)
     instance.blur()
-    const { hasFocus } = component.state().editorState.getSelection()
+    // TODO: update to work with new enzyme types
+    // @ts-ignore
+    const { hasFocus } = instance.state.editorState.getSelection()
 
     expect(hasFocus).toBeFalsy()
   })
@@ -272,7 +276,7 @@ describe("RichText", () => {
       instance.resetEditorState()
 
       setTimeout(() => {
-        expect(component.state().html).toBe("<p>A piece of text</p>")
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
         done()
       }, 10)
     })
@@ -295,7 +299,7 @@ describe("RichText", () => {
       instance.blur = jest.fn()
       component.update()
       const selectedState = applySelectionToEditorState(
-        component.state().editorState,
+        instance.state.editorState,
         20
       )
       instance.onChange(selectedState)
@@ -316,7 +320,7 @@ describe("RichText", () => {
       instance.blur = jest.fn()
       component.update()
       const selectedState = applySelectionToEditorState(
-        component.state().editorState,
+        instance.state.editorState,
         20
       )
       instance.onChange(selectedState)
@@ -557,13 +561,13 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       const selectedState = applySelectionToEditorState(
-        component.state().editorState
+        instance.state.editorState
       )
       instance.onChange(selectedState)
 
       setTimeout(() => {
         instance.keyCommandBlockType("header-one")
-        expect(component.state().html).toBe("<p>A piece of text</p>")
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
         setTimeout(() => {
           expect(instance.props.onChange).not.toHaveBeenCalled()
           done()
@@ -577,13 +581,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-one")
-          expect(component.state().html).toBe("<h1>A piece of text</h1>")
+          expect(instance.state.html).toBe("<h1>A piece of text</h1>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -598,13 +602,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-one")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -620,13 +624,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-two")
-          expect(component.state().html).toBe("<h2>A piece of text</h2>")
+          expect(instance.state.html).toBe("<h2>A piece of text</h2>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -641,13 +645,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-two")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -663,13 +667,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-three")
-          expect(component.state().html).toBe("<h3>A piece of text</h3>")
+          expect(instance.state.html).toBe("<h3>A piece of text</h3>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -684,13 +688,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("header-three")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -706,15 +710,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("ordered-list-item")
-          expect(component.state().html).toBe(
-            "<ol><li>A piece of text</li></ol>"
-          )
+          expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -729,13 +731,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("ordered-list-item")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -751,15 +753,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("unordered-list-item")
-          expect(component.state().html).toBe(
-            "<ul><li>A piece of text</li></ul>"
-          )
+          expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -774,13 +774,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("unordered-list-item")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -796,13 +796,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("blockquote")
-          expect(component.state().html).toBe(
+          expect(instance.state.html).toBe(
             "<blockquote>A piece of text</blockquote>"
           )
           // Wait for second debounced onChange
@@ -820,13 +820,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandBlockType("blockquote")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -848,13 +848,13 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       const selectedState = applySelectionToEditorState(
-        component.state().editorState
+        instance.state.editorState
       )
       instance.onChange(selectedState)
 
       setTimeout(() => {
         instance.toggleBlockType("header-one")
-        expect(component.state().html).toBe("<p>A piece of text</p>")
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
         setTimeout(() => {
           expect(instance.props.onChange).not.toHaveBeenCalled()
           done()
@@ -868,13 +868,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-one")
-          expect(component.state().html).toBe("<h1>A piece of text</h1>")
+          expect(instance.state.html).toBe("<h1>A piece of text</h1>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -889,13 +889,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-one")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -911,13 +911,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-two")
-          expect(component.state().html).toBe("<h2>A piece of text</h2>")
+          expect(instance.state.html).toBe("<h2>A piece of text</h2>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -932,13 +932,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-two")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -954,13 +954,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-three")
-          expect(component.state().html).toBe("<h3>A piece of text</h3>")
+          expect(instance.state.html).toBe("<h3>A piece of text</h3>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -975,13 +975,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("header-three")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -997,15 +997,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("ordered-list-item")
-          expect(component.state().html).toBe(
-            "<ol><li>A piece of text</li></ol>"
-          )
+          expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1020,13 +1018,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("ordered-list-item")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1042,15 +1040,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("unordered-list-item")
-          expect(component.state().html).toBe(
-            "<ul><li>A piece of text</li></ul>"
-          )
+          expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1065,13 +1061,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("unordered-list-item")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1087,13 +1083,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("blockquote")
-          expect(component.state().html).toBe(
+          expect(instance.state.html).toBe(
             "<blockquote>A piece of text</blockquote>"
           )
           // Wait for second debounced onChange
@@ -1111,13 +1107,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.toggleBlockType("blockquote")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1140,13 +1136,13 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         // Set text selection
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         // Wait for debounced onChange
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p><b>A piece of text</b></p>")
+          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
           // Wait for second debounced onChange
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
@@ -1160,13 +1156,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1179,13 +1175,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("bold")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1199,13 +1195,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p><i>A piece of text</i></p>")
+          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1218,13 +1214,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1237,13 +1233,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("italic")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1258,13 +1254,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("underline")
-          expect(component.state().html).toBe("<p><u>A piece of text</u></p>")
+          expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1277,13 +1273,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("underline")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1297,13 +1293,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.keyCommandInlineStyle("underline")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1323,13 +1319,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p><b>A piece of text</b></p>")
+          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1342,13 +1338,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1361,13 +1357,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("BOLD")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1381,13 +1377,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p><i>A piece of text</i></p>")
+          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1400,13 +1396,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1419,13 +1415,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("ITALIC")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1443,13 +1439,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("UNDERLINE")
-          expect(component.state().html).toBe("<p><u>A piece of text</u></p>")
+          expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1462,13 +1458,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("UNDERLINE")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1481,13 +1477,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("UNDERLINE")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1505,13 +1501,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(component.state().html).toBe("<p><s>A piece of text</s></p>")
+          expect(instance.state.html).toBe("<p><s>A piece of text</s></p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1524,13 +1520,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).not.toHaveBeenCalled()
             done()
@@ -1543,13 +1539,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(component.state().html).toBe("<p>A piece of text</p>")
+          expect(instance.state.html).toBe("<p>A piece of text</p>")
           setTimeout(() => {
             expect(instance.props.onChange).toHaveBeenCalled()
             done()
@@ -1565,13 +1561,13 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       const selectedState = applySelectionToEditorState(
-        component.state().editorState
+        instance.state.editorState
       )
       instance.onChange(selectedState)
       instance.makePlainText()
 
       setTimeout(() => {
-        expect(component.state().html).toBe("<p>A link</p>")
+        expect(instance.state.html).toBe("<p>A link</p>")
         done()
       }, 250)
     })
@@ -1581,13 +1577,13 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       const selectedState = applySelectionToEditorState(
-        component.state().editorState
+        instance.state.editorState
       )
       instance.onChange(selectedState)
       instance.makePlainText()
 
       setTimeout(() => {
-        expect(component.state().html).toBe("<p>A linked h1</p>")
+        expect(instance.state.html).toBe("<p>A linked h1</p>")
         done()
       }, 250)
     })
@@ -1598,13 +1594,13 @@ describe("RichText", () => {
       const component = getWrapper()
       const instance = component.instance() as RichText
       const selectedState = applySelectionToEditorState(
-        component.state().editorState
+        instance.state.editorState
       )
       instance.onChange(selectedState)
       instance.makePlainText()
 
       setTimeout(() => {
-        expect(component.state().html).toBe("<p>A strong italic linked h1</p>")
+        expect(instance.state.html).toBe("<p>A strong italic linked h1</p>")
         done()
       }, 250)
     })
@@ -1620,7 +1616,7 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.handlePastedText("Some pasted text...")
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Some pasted text...A piece of text</p>"
       )
     })
@@ -1630,7 +1626,7 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.handlePastedText("", "<p>Some pasted text...</p>")
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p>Some pasted text...A piece of text</p>"
       )
     })
@@ -1640,7 +1636,7 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.handlePastedText("", htmlWithRichBlocks)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         '<p><a href="https://artsy.net/">a link</a></p><h1>an h1</h1><h2>an h2</h2><h3>an h3</h3><p>an h4</p><p>an h5</p><p>an h6</p><ul><li>unordered list</li><li>second list item</li></ul><ol><li>ordered list</li></ol><blockquote>a blockquoteA piece of text</blockquote>'
       )
     })
@@ -1650,7 +1646,7 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.handlePastedText("", htmlWithDisallowedStyles)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         "<p><s>Strikethrough text</s> Code text Underline text <i>Italic text</i> <i>Italic text</i> <b>Bold text</b> <b>Bold text</b>A piece of text</p>"
       )
     })
@@ -1661,7 +1657,7 @@ describe("RichText", () => {
       const instance = component.instance() as RichText
       instance.handlePastedText("", htmlWithRichBlocks)
 
-      expect(component.state().html).toBe(
+      expect(instance.state.html).toBe(
         '<p><a href="https://artsy.net/">a link</a></p><h1>an h1</h1><h2>an h2</h2><h3>an h3</h3><p>an h4</p><p>an h5</p><p>an h6</p><ul><li>unordered list</li><li>second list item</li></ul><ol><li>ordered list</li></ol><blockquote>a blockquoteA piece of text</blockquote>'
       )
     })
@@ -1683,7 +1679,7 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         instance.promptForLink()
 
-        expect(component.state().editorPosition).toEqual({
+        expect(instance.state.editorPosition).toEqual({
           bottom: 0,
           height: 0,
           left: 0,
@@ -1698,13 +1694,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().urlValue).toBe("https://artsy.net/")
+          expect(instance.state.urlValue).toBe("https://artsy.net/")
           done()
         }, 250)
       })
@@ -1714,13 +1710,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })
@@ -1729,15 +1725,15 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
         instance.checkSelection()
-        expect(component.state().showNav).toBe(true)
+        expect(instance.state.showNav).toBe(true)
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().showNav).toBe(false)
+          expect(instance.state.showNav).toBe(false)
           done()
         }, 250)
       })
@@ -1746,13 +1742,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.promptForLink()
-          expect(component.state().showUrlInput).toBe(true)
+          expect(instance.state.showUrlInput).toBe(true)
           done()
         }, 250)
       })
@@ -1763,13 +1759,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().editorPosition).toBe(null)
+          expect(instance.state.editorPosition).toBe(null)
           done()
         }, 250)
       })
@@ -1778,13 +1774,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })
@@ -1793,14 +1789,14 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().showNav).toBe(false)
-          expect(component.state().showUrlInput).toBe(false)
+          expect(instance.state.showNav).toBe(false)
+          expect(instance.state.showUrlInput).toBe(false)
           done()
         }, 250)
       })
@@ -1810,13 +1806,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.confirmLink("https://artsy.net/articles")
-          expect(component.state().html).toBe(
+          expect(instance.state.html).toBe(
             '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
           )
           done()
@@ -1833,13 +1829,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().html).toBe("<p>A link</p>")
+          expect(instance.state.html).toBe("<p>A link</p>")
           done()
         }, 250)
       })
@@ -1848,13 +1844,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().showUrlInput).toBe(false)
+          expect(instance.state.showUrlInput).toBe(false)
           done()
         }, 250)
       })
@@ -1863,13 +1859,13 @@ describe("RichText", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
-          component.state().editorState
+          instance.state.editorState
         )
         instance.onChange(selectedState)
 
         setTimeout(() => {
           instance.removeLink()
-          expect(component.state().urlValue).toBe("")
+          expect(instance.state.urlValue).toBe("")
           done()
         }, 250)
       })
@@ -1890,7 +1886,7 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         instance.checkSelection()
 
-        expect(component.state().editorPosition).toEqual({
+        expect(instance.state.editorPosition).toEqual({
           bottom: 0,
           height: 0,
           left: 0,
@@ -1905,7 +1901,7 @@ describe("RichText", () => {
         const instance = component.instance() as RichText
         instance.checkSelection()
 
-        expect(component.state().showNav).toBe(true)
+        expect(instance.state.showNav).toBe(true)
       })
     })
 
@@ -1922,7 +1918,7 @@ describe("RichText", () => {
         component.setState({ editorPosition: { top: 50, left: 100 } })
         instance.checkSelection()
 
-        expect(component.state().editorPosition).toBe(null)
+        expect(instance.state.editorPosition).toBe(null)
       })
 
       it("Hides nav if no selection", () => {
@@ -1934,7 +1930,7 @@ describe("RichText", () => {
         })
         instance.checkSelection()
 
-        expect(component.state().showNav).toBe(false)
+        expect(instance.state.showNav).toBe(false)
       })
     })
   })

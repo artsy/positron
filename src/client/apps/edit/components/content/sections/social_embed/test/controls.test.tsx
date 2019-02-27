@@ -79,7 +79,7 @@ describe("SocialEmbedControls", () => {
         value: "New value",
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
+    input.onChange && input.onChange(event)
 
     expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("url")
     expect(props.onChangeSectionAction.mock.calls[0][1]).toBe("New value")

@@ -38,6 +38,7 @@ describe("InputArtworkUrl", () => {
 
   it("Sets input value to state.url on change", () => {
     const component = getWrapper()
+    const instance = component.instance() as InputArtworkUrl
     const input = component
       .find(Input)
       .at(0)
@@ -47,8 +48,8 @@ describe("InputArtworkUrl", () => {
         value: artworkUrl,
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
-    input.onChange(event)
-    expect(component.state().url).toBe(artworkUrl)
+    input.onChange && input.onChange(event)
+    expect(instance.state.url).toBe(artworkUrl)
   })
 
   it("Calls getIdFromSlug on button click", () => {

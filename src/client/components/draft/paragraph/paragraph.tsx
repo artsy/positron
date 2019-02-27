@@ -215,9 +215,8 @@ export class Paragraph extends Component<Props, State> {
     const { editorState } = this.state
     const linkData = linkDataFromSelection(editorState)
     const urlValue = linkData ? linkData.url : ""
-    const editorPosition = ReactDOM.findDOMNode(
-      this.editor
-    ).getBoundingClientRect()
+    const editor = ReactDOM.findDOMNode(this.editor) as Element
+    const editorPosition: ClientRect = editor.getBoundingClientRect()
 
     this.setState({
       editorPosition,
@@ -256,12 +255,13 @@ export class Paragraph extends Component<Props, State> {
 
   checkSelection = () => {
     let showNav = false
-    let editorPosition = null
+    let editorPosition: ClientRect | null = null
     const hasSelection = !window.getSelection().isCollapsed
 
     if (hasSelection) {
       showNav = true
-      editorPosition = ReactDOM.findDOMNode(this.editor).getBoundingClientRect()
+      const editor = ReactDOM.findDOMNode(this.editor) as Element
+      editorPosition = editor.getBoundingClientRect()
     }
     this.setState({ showNav, editorPosition })
   }

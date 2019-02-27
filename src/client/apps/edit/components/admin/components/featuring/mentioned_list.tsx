@@ -173,3 +173,4 @@ const MentionedItem = styled(ListItem)`
     }
   }
 `
+MentionedItem.displayName = "MentionedItem"

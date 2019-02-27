@@ -1,76 +1,23 @@
-import React, { Component } from "react"
-import PropTypes from "prop-types"
-import styled from "styled-components"
 import moment from "moment"
+import PropTypes from "prop-types"
+import React, { Component } from "react"
+import styled from "styled-components"
 
-import { ModalTypes } from "./modalTypes"
-import { avantgarde, garamond } from "@artsy/reaction/dist/Assets/Fonts"
 import colors from "@artsy/reaction/dist/Assets/Colors"
+import { avantgarde, garamond } from "@artsy/reaction/dist/Assets/Fonts"
 import { IconLock } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLock"
+import { ModalTypes } from "./modalTypes"
 
-const SplashBackground = styled.div`
-  background-color: rgba(0, 0, 0, 0.6);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 999;
-`
+interface MessageModalProps {
+  type: "locked" | "timeout"
+  session: any
+  onClose: (isClosed: boolean) => void
+  onTimerEnded?: () => void
+}
 
-const Container = styled.div`
-  background-color: white;
-  max-width: 600px;
-  align-self: center;
-  padding: 20px 30px;
-`
+export class MessageModal extends Component<MessageModalProps> {
+  private timer
 
-const Header = styled.div`
-  ${avantgarde("s11")};
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  color: ${p => p.color};
-`
-Header.displayName = "Header"
-
-export const Title = styled.h1`
-  ${garamond("s30")};
-  margin-bottom: 15px;
-`
-Title.displayName = "Title"
-
-const Description = styled.div`
-  ${garamond("s19")};
-  max-width: 470px;
-  line-height: 1.1;
-`
-
-const Footer = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 50px;
-  align-items: center;
-`
-
-const ActionsContainer = styled.div`
-  margin-right: 20px;
-`
-
-const ActionButton = styled.button`
-  margin-right: 15px;
-`
-ActionButton.displayName = "ActionButton"
-
-const RedirectText = styled.span`
-  ${avantgarde("s11")};
-  text-transform: uppercase;
-  color: ${colors.grayMedium};
-`
-
-export class MessageModal extends Component {
   static propTypes = {
     type: PropTypes.oneOf(["locked", "timeout"]),
     session: PropTypes.object,
@@ -159,3 +106,65 @@ export class MessageModal extends Component {
     )
   }
 }
+
+const SplashBackground = styled.div`
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+`
+
+const Container = styled.div`
+  background-color: white;
+  max-width: 600px;
+  align-self: center;
+  padding: 20px 30px;
+`
+
+const Header = styled.div`
+  ${avantgarde("s11")};
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: ${p => p.color};
+`
+Header.displayName = "Header"
+
+export const Title = styled.h1`
+  ${garamond("s30")};
+  margin-bottom: 15px;
+`
+Title.displayName = "Title"
+
+const Description = styled.div`
+  ${garamond("s19")};
+  max-width: 470px;
+  line-height: 1.1;
+`
+
+const Footer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+  align-items: center;
+`
+
+const ActionsContainer = styled.div`
+  margin-right: 20px;
+`
+
+const ActionButton = styled.button`
+  margin-right: 15px;
+`
+ActionButton.displayName = "ActionButton"
+
+const RedirectText = styled.span`
+  ${avantgarde("s11")};
+  text-transform: uppercase;
+  color: ${colors.grayMedium};
+`
