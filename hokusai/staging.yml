@@ -11,7 +11,6 @@ spec:
   selector:
     matchLabels:
       app: positron
-  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -76,6 +75,21 @@ spec:
                     operator: In
                     values:
                       - foreground
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: positron-web
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: positron-web
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
 
 ---
 apiVersion: v1
