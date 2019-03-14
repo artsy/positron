@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,14 +50,15 @@ spec:
               httpHeaders:
                 - name: X-FORWARDED-PROTO
                   value: https
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/sbin/nginx","-s","quit"]
+                command: ["/usr/sbin/nginx", "-s", "quit"]
           env:
-            - name: 'DATADOG_AGENT_HOSTNAME'
+            - name: "DATADOG_AGENT_HOSTNAME"
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
@@ -72,10 +72,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                - key: tier
-                  operator: In
-                  values:
-                    - foreground
+                  - key: tier
+                    operator: In
+                    values:
+                      - foreground
 
 ---
 apiVersion: v1
@@ -129,19 +129,19 @@ spec:
               command: ["yarn", "task", "scripts/scheduled_posts.js"]
               imagePullPolicy: Always
               envFrom:
-              - configMapRef:
-                  name: positron-environment
+                - configMapRef:
+                    name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 1
-                preference:
-                  matchExpressions:
-                  - key: tier
-                    operator: In
-                    values:
-                    - background
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                      - key: tier
+                        operator: In
+                        values:
+                          - background
 
 ---
 apiVersion: batch/v1beta1
@@ -161,19 +161,19 @@ spec:
               command: ["yarn", "task", "scripts/unqueue.js"]
               imagePullPolicy: Always
               envFrom:
-              - configMapRef:
-                  name: positron-environment
+                - configMapRef:
+                    name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 1
-                preference:
-                  matchExpressions:
-                  - key: tier
-                    operator: In
-                    values:
-                      - background
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                      - key: tier
+                        operator: In
+                        values:
+                          - background
 
 ---
 apiVersion: batch/v1beta1
@@ -198,10 +198,10 @@ spec:
           affinity:
             nodeAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 1
-                preference:
-                  matchExpressions:
-                  - key: tier
-                    operator: In
-                    values:
-                      - background
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                      - key: tier
+                        operator: In
+                        values:
+                          - background
