@@ -88,7 +88,7 @@ spec:
     kind: Deployment
     name: positron-web
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 6
   targetCPUUtilizationPercentage: 70
 
 ---
