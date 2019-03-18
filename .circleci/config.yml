@@ -21,6 +21,10 @@ jobs:
           name: Configure
           command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
       - run:
+          name: Validate Kubernetes Yaml
+          command: |
+            kubectl --context staging apply -f ./hokusai/staging.yml --dry-run
+      - run:
           name: Push
           command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
@@ -39,6 +43,10 @@ jobs:
       - run:
           name: Configure
           command: hokusai configure --kubectl-version 1.10.7 --s3-bucket artsy-citadel --s3-key k8s/config --platform linux
+      - run:
+          name: Validate Kubernetes Yaml
+          command: |
+            kubectl --context production apply -f ./hokusai/production.yml --dry-run
       - run:
           name: Push
           command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
