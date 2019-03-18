@@ -26,7 +26,7 @@ jobs:
             kubectl --context staging apply -f ./hokusai/staging.yml --dry-run
       - run:
           name: Push
-          command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to staging
           command: hokusai staging deploy $CIRCLE_SHA1
@@ -49,7 +49,7 @@ jobs:
             kubectl --context production apply -f ./hokusai/production.yml --dry-run
       - run:
           name: Push
-          command: COMMIT_HASH=$(git rev-parse --short HEAD) hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
+          command: hokusai registry push --tag $CIRCLE_SHA1 --force --overwrite
       - run:
           name: Deploy to production
           command: hokusai production deploy $CIRCLE_SHA1
