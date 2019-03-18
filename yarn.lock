@@ -16,16 +16,15 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.0.3.tgz#6b8f463fbe3a20f3496a79c1d2439103f52e2879"
-  integrity sha512-pGBCN+pV2GWLT7Ay1IS3tiENNXpABHS9IcCCSEmjP8z/dNCNYHI53RRCRe1BDEz8DkTFrgp4/qnCnaVkSWM8WA==
+"@artsy/palette@4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.1.2.tgz#d6f3b957b3895e492723c8ec1d9c7d0cdbca7fcf"
+  integrity sha512-o3XjXCP6fZ+or/sQ59skSZ2lIvvDkktqd4lTGUnoYEGp/nPvrmFXrtMndgBv/nXKla0NFIG7kB+Rrqp1/27FkA==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     moment "^2.23.0"
     moment-timezone "^0.5.23"
     rc-slider "^8.6.2"
-    react "^16.8.2"
     react-live "^1.12.0"
     react-powerplug "^1.0.0"
     react-spring "^5.7.2"
