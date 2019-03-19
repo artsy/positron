@@ -3,6 +3,8 @@ import { mount } from "enzyme"
 import React from "react"
 import { PlainText } from "../plain_text"
 
+jest.mock("lodash/debounce", () => jest.fn(e => e))
+
 describe("PlainText", () => {
   let props
   window.scrollTo = jest.fn()
@@ -23,6 +25,11 @@ describe("PlainText", () => {
     const editor = component.find(Editor).getElement()
 
     expect(editor.props.placeholder).toBe("Start Typing...")
+  })
+
+  it("sets up debounced change event", () => {
+    const component = getWrapper().instance() as PlainText
+    expect(component.debouncedOnContentChange).toBeInstanceOf(Function)
   })
 
   it("can accept a placeholder as props", () => {
@@ -78,12 +85,15 @@ describe("PlainText", () => {
   })
 
   it("calls props.onChange when content changes", () => {
+    props.content = "hello"
     const component = getWrapper()
     const instance = component.instance() as PlainText
     instance.editor.focus()
+
     component
       .find(".public-DraftEditor-content")
-      .simulate("keyUp", { keyCode: 70, which: 70 })
-    setTimeout(() => expect(props.onChange).toHaveBeenCalled(), 250)
+      .simulate("beforeInput", { data: "why " })
+
+    expect(props.onChange).toHaveBeenCalledWith("why hello")
   })
 })
