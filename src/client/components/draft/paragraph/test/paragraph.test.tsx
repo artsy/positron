@@ -1,3 +1,5 @@
+import { TextInputUrl } from "client/components/draft/components/text_input_url"
+import { TextNav } from "client/components/draft/components/text_nav"
 import {
   htmlWithDisallowedStyles,
   htmlWithRichBlocks,
@@ -46,21 +48,15 @@ describe("Paragraph", () => {
     delete props.allowedStyles
   })
 
-  getSelection = getLast => {
+  getSelection = () => {
     const component = getWrapper(props)
     const instance = component.instance() as Paragraph
     const startSelection = instance.state.editorState.getSelection()
     const startEditorState = instance.state.editorState.getCurrentContent()
-    // TODO: update to work with new enzyme types
-    // @ts-ignore
-    const { key, text } = getLast
-      ? startEditorState.getLastBlock()
-      : startEditorState.getFirstBlock()
-    const anchorOffset = getLast ? text.length : 0
-
+    const { key, text } = startEditorState.getFirstBlock() as any
     const selection = startSelection.merge({
       anchorKey: key,
-      anchorOffset,
+      anchorOffset: 0,
       focusKey: key,
       focusOffset: text.length,
     })
@@ -262,6 +258,35 @@ describe("Paragraph", () => {
 
       expect(component.instance().setState).toBeCalled()
       expect(instance.props.onChange).not.toHaveBeenCalled()
+    })
+  })
+
+  describe("#focus", () => {
+    beforeEach(() => {
+      window.getSelection = jest.fn().mockReturnValue({
+        isCollapsed: false,
+        getRangeAt,
+      }) as jest.Mock
+    })
+
+    afterEach(() => {
+      // @ts-ignore -- FIXME, not typed as mock
+      window.getSelection.mockRestore()
+    })
+
+    it("focuses the editor", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Paragraph
+      instance.focus()
+      expect(instance.state.editorState.getSelection().getHasFocus()).toBe(true)
+    })
+
+    it("calls #checkSelection", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Paragraph
+      instance.checkSelection = jest.fn()
+      instance.focus()
+      expect(instance.checkSelection).toBeCalled()
     })
   })
 
@@ -565,8 +590,10 @@ describe("Paragraph", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.checkSelection()
+        component.update()
 
         expect(instance.state.showNav).toBe(true)
+        expect(component.find(TextNav).length).toBe(1)
       })
     })
 
@@ -594,8 +621,10 @@ describe("Paragraph", () => {
           editorPosition: { top: 50, left: 100 },
         })
         instance.checkSelection()
+        component.update()
 
         expect(instance.state.showNav).toBe(false)
+        expect(component.find(TextNav).length).toBe(0)
       })
     })
   })
@@ -650,10 +679,14 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
         instance.checkSelection()
+        component.update()
         expect(instance.state.showNav).toBe(true)
+        expect(component.find(TextNav).length).toBe(1)
 
         instance.promptForLink()
+        component.update()
         expect(instance.state.showNav).toBe(false)
+        expect(component.find(TextNav).length).toBe(0)
       })
 
       it("Shows url input", () => {
@@ -661,8 +694,10 @@ describe("Paragraph", () => {
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
         instance.promptForLink()
+        component.update()
 
         expect(instance.state.showUrlInput).toBe(true)
+        expect(component.find(TextInputUrl).length).toBe(1)
       })
     })
 
@@ -738,6 +773,42 @@ describe("Paragraph", () => {
 
         expect(instance.state.urlValue).toBe("")
       })
+    })
+  })
+
+  describe("Popup controls", () => {
+    it("Hides TextNav on clickOff", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Paragraph
+      instance.setState({ showNav: true })
+      component.update()
+      expect(component.find(TextNav).length).toBe(1)
+
+      component
+        .find(TextNav)
+        .props()
+        .onClickOff()
+      component.update()
+
+      expect(instance.state.showNav).toBe(false)
+      expect(component.find(TextNav).length).toBe(0)
+    })
+
+    it("Hides TextInputUrl on clickOff", () => {
+      const component = getWrapper()
+      const instance = component.instance() as Paragraph
+      instance.setState({ showUrlInput: true })
+      component.update()
+      expect(component.find(TextInputUrl).length).toBe(1)
+
+      component
+        .find(TextInputUrl)
+        .props()
+        .onClickOff()
+      component.update()
+
+      expect(instance.state.showUrlInput).toBe(false)
+      expect(component.find(TextInputUrl).length).toBe(0)
     })
   })
 })

@@ -33,6 +33,7 @@ try {
   window.innerHeight = 900
   window.innerWidth = 1400
   window.scrollY = 200
+  window.scrollTo = () => {}
   window.matchMedia =
     window.matchMedia ||
     function() {
