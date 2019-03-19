@@ -10,6 +10,8 @@ import React from "react"
 import { decorators } from "../../shared/decorators"
 import { Paragraph } from "../paragraph"
 
+jest.mock("lodash/debounce", () => jest.fn(e => e))
+
 Draft.getVisibleSelectionRect = jest.fn().mockReturnValue({
   bottom: 170,
   height: 25,
@@ -238,7 +240,7 @@ describe("Paragraph", () => {
       expect(instance.state.editorState).not.toBe(originalState)
     })
 
-    it("Calls props.onChange if html is changed", done => {
+    it("Calls props.onChange if html is changed", () => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
       const component = getWrapper()
@@ -246,14 +248,10 @@ describe("Paragraph", () => {
       instance.onChange(editorState)
 
       expect(instance.state.html).toBe("<p>A new piece of text.</p>")
-      // Wait for debounced onChange
-      setTimeout(() => {
-        expect(instance.props.onChange).toHaveBeenCalled()
-        done()
-      }, 250)
+      expect(instance.props.onChange).toHaveBeenCalled()
     })
 
-    it("Does not call props.onChange if html is unchanged", done => {
+    it("Does not call props.onChange if html is unchanged", () => {
       const editorContent = convertFromHTML({})(props.html)
       const editorState = EditorState.createWithContent(editorContent)
       const component = getWrapper()
@@ -262,11 +260,8 @@ describe("Paragraph", () => {
       component.update()
       instance.onChange(editorState)
 
-      setTimeout(() => {
-        expect(component.instance().setState).toBeCalled()
-        expect(instance.props.onChange).not.toHaveBeenCalled()
-        done()
-      }, 250)
+      expect(component.instance().setState).toBeCalled()
+      expect(instance.props.onChange).not.toHaveBeenCalled()
     })
   })
 
@@ -351,202 +346,140 @@ describe("Paragraph", () => {
 
   describe("#keyCommandInlineStyle", () => {
     describe("Bold", () => {
-      it("Applies bold styles if allowed", done => {
+      it("Applies bold styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
-        // Set text selection
         instance.onChange(getSelection())
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandInlineStyle("bold")
+
+        expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply bold styles if not allowed", done => {
+      it("Does not apply bold styles if not allowed", () => {
         props.allowedStyles = ["i"]
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.keyCommandInlineStyle("bold")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing bold styles", done => {
+      it("Can remove existing bold styles", () => {
         props.html = "<p><b>A piece of text</b></p>"
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.keyCommandInlineStyle("bold")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Italic", () => {
-      it("Applies italic styles if allowed", done => {
+      it("Applies italic styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply italic styles if not allowed", done => {
+      it("Does not apply italic styles if not allowed", () => {
         props.allowedStyles = ["b"]
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing italic styles", done => {
+      it("Can remove existing italic styles", () => {
         props.html = "<p><i>A piece of text</i></p>"
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
   })
 
   describe("#toggleInlineStyle", () => {
     describe("Bold", () => {
-      it("Applies bold styles if allowed", done => {
+      it("Applies bold styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply bold styles if not allowed", done => {
+      it("Does not apply bold styles if not allowed", () => {
         props.allowedStyles = ["i"]
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing bold styles", done => {
+      it("Can remove existing bold styles", () => {
         props.html = "<p><b>A piece of text</b></p>"
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Italic", () => {
-      it("Applies italic styles if allowed", done => {
+      it("Applies italic styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply italic styles if not allowed", done => {
+      it("Does not apply italic styles if not allowed", () => {
         props.allowedStyles = ["b"]
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing italic styles", done => {
+      it("Can remove existing italic styles", () => {
         props.html = "<p><i>A piece of text</i></p>"
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
   })
@@ -693,108 +626,84 @@ describe("Paragraph", () => {
         })
       })
 
-      it("Sets urlValue with data", done => {
+      it("Sets urlValue with data", () => {
         props.html = '<p><a href="https://artsy.net">A link</a></p>'
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.promptForLink()
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.urlValue).toBe("https://artsy.net/")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("https://artsy.net/")
       })
 
-      it("Sets urlValue without data", done => {
+      it("Sets urlValue without data", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.promptForLink()
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
 
-      it("Hides nav", done => {
+      it("Hides nav", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
         instance.checkSelection()
         expect(instance.state.showNav).toBe(true)
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.showNav).toBe(false)
-          done()
-        }, 250)
+        instance.promptForLink()
+        expect(instance.state.showNav).toBe(false)
       })
 
-      it("Shows url input", done => {
+      it("Shows url input", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.promptForLink()
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.showUrlInput).toBe(true)
-          done()
-        }, 250)
+        expect(instance.state.showUrlInput).toBe(true)
       })
     })
 
     describe("#confirmLink", () => {
-      it("Sets editorPosition to null", done => {
+      it("Sets editorPosition to null", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.editorPosition).toBe(null)
-          done()
-        }, 250)
+        expect(instance.state.editorPosition).toBe(null)
       })
 
-      it("Sets urlValue to empty string", done => {
+      it("Sets urlValue to empty string", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
 
-      it("Hides nav and url input", done => {
+      it("Hides nav and url input", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.showNav).toBe(false)
-          expect(instance.state.showUrlInput).toBe(false)
-          done()
-        }, 250)
+        expect(instance.state.showNav).toBe(false)
+        expect(instance.state.showUrlInput).toBe(false)
       })
 
-      it("Adds a link to selected text", done => {
+      it("Adds a link to selected text", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.html).toBe(
-            '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
-          )
-          done()
-        }, 250)
+        expect(instance.state.html).toBe(
+          '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
+        )
       })
     })
 
@@ -803,40 +712,31 @@ describe("Paragraph", () => {
         props.html = '<p><a href="https://artsy.net">A link</a></p>'
       })
 
-      it("Removes a link from selected entity", done => {
+      it("Removes a link from selected entity", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.html).toBe("<p>A link</p>")
-          done()
-        }, 250)
+        expect(instance.state.html).toBe("<p>A link</p>")
       })
 
-      it("Hides url input", done => {
+      it("Hides url input", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.showUrlInput).toBe(false)
-          done()
-        }, 250)
+        expect(instance.state.showUrlInput).toBe(false)
       })
 
-      it("Sets urlValue to empty string", done => {
+      it("Sets urlValue to empty string", () => {
         const component = getWrapper()
         const instance = component.instance() as Paragraph
         instance.onChange(getSelection())
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
     })
   })
