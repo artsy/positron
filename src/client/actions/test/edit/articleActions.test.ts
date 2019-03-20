@@ -104,7 +104,7 @@ describe("articleActions", () => {
     beforeEach(() => {
       Backbone.sync = jest.fn()
       getState = jest.fn(() => ({ edit: { article } }))
-      dispatch = jest.fn(e => e)
+      dispatch = jest.fn()
     })
 
     it("#deleteArticle destroys the article and sets isDeleting", () => {

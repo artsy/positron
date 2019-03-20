@@ -20,21 +20,28 @@ export const actions = keyMirror(
  * and loading indicators
  */
 
-/**
- * Toggle between content, admin and display tabs in edit UI
- */
-export const changeView = (activeView: "content" | "display" | "admin") => ({
-  type: actions.CHANGE_VIEW,
-  payload: {
-    activeView,
-  },
-})
+interface LockoutDataUser {
+  id: string
+  name: string
+}
+
+interface LockoutDataChannel {
+  id: string
+  name: string
+  type: string
+}
+
+interface LockoutData {
+  channel: LockoutDataChannel
+  user: LockoutDataUser
+  article: string // _id
+}
 
 /**
  * Article Lockout: user has started editing an article
  * TODO: rename to indicate lockout/disambiguate from changes to article data
  */
-export const startEditingArticle = emitAction(data => {
+export const startEditingArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.START_EDITING_ARTICLE,
     key: messageTypes.userStartedEditing,
@@ -49,7 +56,7 @@ export const startEditingArticle = emitAction(data => {
  * Article Lockout: user has made a change to an article
  * TODO: rename to indicate lockout/disambiguate from changes to article data
  */
-export const updateArticle = emitAction(data => {
+export const updateArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.UPDATE_ARTICLE,
     key: messageTypes.userCurrentlyEditing,
@@ -61,10 +68,20 @@ export const updateArticle = emitAction(data => {
 })
 
 /**
+ * Debounce updateArticle to avoid flooding API with requests
+ */
+export const debouncedUpdateDispatch = debounce(
+  (dispatch, options: LockoutData) => {
+    dispatch(updateArticle(options))
+  },
+  500
+)
+
+/**
  * Article Lockout: user has stopped editing an article
  * TODO: rename to indicate lockout/disambiguate from changes to article data
  */
-export const stopEditingArticle = emitAction(data => {
+export const stopEditingArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.STOP_EDITING_ARTICLE,
     key: messageTypes.userStoppedEditing,
@@ -76,16 +93,19 @@ export const stopEditingArticle = emitAction(data => {
 })
 
 /**
- * Debounce updateArticle to avoid flooding API with requests
+ * Toggle between content, admin and display tabs in edit UI
  */
-export const debouncedUpdateDispatch = debounce((dispatch, options) => {
-  dispatch(updateArticle(options))
-}, 500)
+export const changeView = (activeView: "content" | "display" | "admin") => ({
+  type: actions.CHANGE_VIEW,
+  payload: {
+    activeView,
+  },
+})
 
 /**
  * Redirect to /articles when publishing, deleting or saving a published article
  */
-export const redirectToList = published => {
+export const redirectToList = (published: boolean) => {
   window.location.assign(`/articles?published=${published}`)
 
   return {
@@ -96,7 +116,7 @@ export const redirectToList = published => {
 /**
  * Store data entered into the Yoast UI input
  */
-export const setYoastKeyword = yoastKeyword => {
+export const setYoastKeyword = (yoastKeyword: string) => {
   return {
     type: actions.SET_YOAST_KEYWORD,
     payload: {
@@ -109,7 +129,7 @@ export const setYoastKeyword = yoastKeyword => {
  * Show/hide loading spinner (when loading an article)
  * TODO: Use palette spinner
  */
-export const toggleSpinner = isVisible => {
+export const toggleSpinner = (isVisible: boolean) => {
   if (isVisible) {
     $("#edit-sections-spinner").show()
   } else {
