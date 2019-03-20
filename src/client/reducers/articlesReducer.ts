@@ -1,15 +1,20 @@
-import u from "updeep"
-import { data as sd } from "sharify"
-import { omit } from "lodash"
 import { actions } from "client/actions/articlesActions"
 import { actions as editActions } from "client/actions/edit"
+import { omit } from "lodash"
+import { data as sd } from "sharify"
+import u from "updeep"
 
-export const initialState = {
+export interface ArticlesState {
+  articles: any[]
+  articlesInSession: any // TODO: confirm typing
+}
+
+export const initialState: ArticlesState = {
   articles: sd.ARTICLES,
   articlesInSession: sd.ARTICLES_IN_SESSION || {},
 }
 
-export function articlesReducer(state = initialState, action) {
+export const articlesReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.EDITED_ARTICLES_RECEIVED: {
       return u(

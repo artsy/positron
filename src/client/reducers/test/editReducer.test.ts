@@ -1,9 +1,9 @@
+import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { actions } from "client/actions/edit"
+import { setupSection } from "client/actions/edit/sectionActions"
 import { cloneDeep, extend } from "lodash"
 import { data as sd } from "sharify"
 import { editReducer, setupArticle } from "../editReducer"
-import { actions } from "client/actions/edit"
-import { setupSection } from "client/actions/edit/sectionActions"
-import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 
 describe("editReducer", () => {
   let initialState
@@ -62,7 +62,8 @@ describe("editReducer", () => {
     })
 
     it("NEW_SECTION should insert a section into article.sections", () => {
-      const section = setupSection("text")
+      // TODO: remove or toggle after actions converted to redux
+      const section = setupSection("text") || { type: "", body: "" }
       const sectionIndex = 2
 
       const updatedState = editReducer(initialState, {
@@ -87,7 +88,8 @@ describe("editReducer", () => {
       initialState.article = extend(cloneDeep(initialState.article), {
         sections: null,
       })
-      const section = setupSection("text")
+      // TODO: remove or toggle after actions converted to redux
+      const section = setupSection("text") || { type: "", body: "" }
       const sectionIndex = 0
 
       const updatedState = editReducer(initialState, {
