@@ -15,7 +15,7 @@ export const actions = keyMirror(
 )
 
 /**
- * Actions related to general article editing including
+ * Actions related to the article edit app including
  * navigating edit tabs, article lockout actions, redirects,
  * and loading indicators
  */
@@ -25,7 +25,7 @@ interface LockoutDataUser {
   name: string
 }
 
-interface LockoutDataChannel {
+export interface LockoutDataChannel {
   id: string
   name: string
   type: string

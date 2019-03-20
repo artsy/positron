@@ -18,6 +18,11 @@ export const actions = keyMirror(
 )
 
 /**
+ * Actions related to saving, publishing, deleting an individual article
+ * functions in this file apply to all edit sub-apps (content, display, admin)
+ */
+
+/**
  * Update isSaved, used to change colors of the the main UI save button
  * which renders in red (unsaved changes) or green (saved)
  */
