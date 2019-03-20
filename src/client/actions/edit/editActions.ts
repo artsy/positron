@@ -14,15 +14,26 @@ export const actions = keyMirror(
   "SET_YOAST_KEYWORD"
 )
 
-// TOGGLE EDIT TABS (Content, Admin, Display)
-export const changeView = activeView => ({
+/**
+ * Actions related to general article editing including
+ * navigating edit tabs, article lockout actions, redirects,
+ * and loading indicators
+ */
+
+/**
+ * Toggle between content, admin and display tabs in edit UI
+ */
+export const changeView = (activeView: "content" | "display" | "admin") => ({
   type: actions.CHANGE_VIEW,
   payload: {
     activeView,
   },
 })
 
-// ARTICLE LOCKOUT ACTIONS
+/**
+ * Article Lockout: user has started editing an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
 export const startEditingArticle = emitAction(data => {
   return {
     type: actions.START_EDITING_ARTICLE,
@@ -34,6 +45,10 @@ export const startEditingArticle = emitAction(data => {
   }
 })
 
+/**
+ * Article Lockout: user has made a change to an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
 export const updateArticle = emitAction(data => {
   return {
     type: actions.UPDATE_ARTICLE,
@@ -45,6 +60,10 @@ export const updateArticle = emitAction(data => {
   }
 })
 
+/**
+ * Article Lockout: user has stopped editing an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
 export const stopEditingArticle = emitAction(data => {
   return {
     type: actions.STOP_EDITING_ARTICLE,
@@ -56,11 +75,16 @@ export const stopEditingArticle = emitAction(data => {
   }
 })
 
+/**
+ * Debounce updateArticle to avoid flooding API with requests
+ */
 export const debouncedUpdateDispatch = debounce((dispatch, options) => {
   dispatch(updateArticle(options))
 }, 500)
 
-// TRIGGERED ON SAVE + PUBLISH
+/**
+ * Redirect to /articles when publishing, deleting or saving a published article
+ */
 export const redirectToList = published => {
   window.location.assign(`/articles?published=${published}`)
 
@@ -69,6 +93,9 @@ export const redirectToList = published => {
   }
 }
 
+/**
+ * Store data entered into the Yoast UI input
+ */
 export const setYoastKeyword = yoastKeyword => {
   return {
     type: actions.SET_YOAST_KEYWORD,
@@ -78,7 +105,10 @@ export const setYoastKeyword = yoastKeyword => {
   }
 }
 
-// LOADING SPINNER
+/**
+ * Show/hide loading spinner (when loading an article)
+ * TODO: Use palette spinner
+ */
 export const toggleSpinner = isVisible => {
   if (isVisible) {
     $("#edit-sections-spinner").show()
