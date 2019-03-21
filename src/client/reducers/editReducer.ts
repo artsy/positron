@@ -71,6 +71,9 @@ export const initialState: EditState = {
   yoastKeyword: setupYoastKeyword(),
 }
 
+/**
+ * Data related to editing an individual article via /article/:id/edit
+ */
 export const editReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.CHANGE_SAVED_STATUS: {

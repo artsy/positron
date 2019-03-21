@@ -20,6 +20,11 @@ export interface AppState {
   user: UserState
 }
 
+/**
+ * App-wide vars - contains info we previously referenced via SD
+ * including user/channel and booleans based on user/channel types,
+ * as well as commonly referenced app URLs
+ */
 export const initialState: AppState = {
   apiURL: sd.API_URL,
   appURL: sd.APP_URL,

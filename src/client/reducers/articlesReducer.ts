@@ -14,6 +14,9 @@ export const initialState: ArticlesState = {
   articlesInSession: sd.ARTICLES_IN_SESSION || {},
 }
 
+/**
+ * Data relevant to Article Lockout features, used on /articles
+ */
 export const articlesReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.EDITED_ARTICLES_RECEIVED: {
