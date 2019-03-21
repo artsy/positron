@@ -10,6 +10,8 @@ import { mount } from "enzyme"
 import React from "react"
 import { RichText } from "../rich_text"
 
+jest.mock("lodash/debounce", () => jest.fn(e => e))
+
 Draft.getVisibleSelectionRect = jest.fn().mockReturnValue({
   bottom: 170,
   height: 25,
@@ -189,7 +191,7 @@ describe("RichText", () => {
       expect(instance.state.editorState).not.toBe(originalState)
     })
 
-    it("Calls props.onChange if html is changed", done => {
+    it("Calls props.onChange if html is changed", () => {
       const editorContent = convertFromHTML({})("<p>A new piece of text.</p>")
       const editorState = EditorState.createWithContent(editorContent)
       const component = getWrapper()
@@ -197,14 +199,10 @@ describe("RichText", () => {
       instance.onChange(editorState)
 
       expect(instance.state.html).toBe("<p>A new piece of text.</p>")
-      // Wait for debounced onChange
-      setTimeout(() => {
-        expect(instance.props.onChange).toHaveBeenCalled()
-        done()
-      }, 250)
+      expect(instance.props.onChange).toHaveBeenCalled()
     })
 
-    it("Does not call props.onChange if html is unchanged", done => {
+    it("Does not call props.onChange if html is unchanged", () => {
       props.html = "<p>A new piece of text.</p>"
       const editorContent = convertFromHTML({})(props.html)
       const editorState = EditorState.createWithContent(editorContent)
@@ -214,11 +212,8 @@ describe("RichText", () => {
       component.update()
       instance.onChange(editorState)
 
-      setTimeout(() => {
-        expect(instance.setState).toBeCalled()
-        expect(instance.props.onChange).not.toHaveBeenCalled()
-        done()
-      }, 250)
+      expect(instance.setState).toBeCalled()
+      expect(instance.props.onChange).not.toHaveBeenCalled()
     })
   })
 
@@ -283,7 +278,7 @@ describe("RichText", () => {
   })
 
   xdescribe("#componentWillReceiveProps", () => {
-    it("does a thing", () => {
+    xit("does a thing", () => {
       expect(true).toBeTruthy()
     })
   })
@@ -556,7 +551,7 @@ describe("RichText", () => {
       props.html = "<p>A piece of text</p>"
     })
 
-    it("Returns not-handled for disallowed blocks", done => {
+    it("Returns not-handled for disallowed blocks", () => {
       props.allowedBlocks = ["p"]
       const component = getWrapper()
       const instance = component.instance() as RichText
@@ -564,19 +559,14 @@ describe("RichText", () => {
         instance.state.editorState
       )
       instance.onChange(selectedState)
+      instance.keyCommandBlockType("header-one")
 
-      setTimeout(() => {
-        instance.keyCommandBlockType("header-one")
-        expect(instance.state.html).toBe("<p>A piece of text</p>")
-        setTimeout(() => {
-          expect(instance.props.onChange).not.toHaveBeenCalled()
-          done()
-        }, 250)
-      }, 250)
+      expect(instance.state.html).toBe("<p>A piece of text</p>")
+      expect(instance.props.onChange).not.toHaveBeenCalled()
     })
 
     describe("H1", () => {
-      it("Can create h1 blocks", done => {
+      it("Can create h1 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -584,19 +574,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-one")
-          expect(instance.state.html).toBe("<h1>A piece of text</h1>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-one")
+
+        expect(instance.state.html).toBe("<h1>A piece of text</h1>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h1 blocks", done => {
+      it("Can remove existing h1 blocks", () => {
         props.html = "<h1>A piece of text</h1>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -605,21 +589,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-one")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-one")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("H2", () => {
-      it("Can create h2 blocks", done => {
+      it("Can create h2 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -627,19 +605,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-two")
-          expect(instance.state.html).toBe("<h2>A piece of text</h2>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-two")
+
+        expect(instance.state.html).toBe("<h2>A piece of text</h2>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h2 blocks", done => {
+      it("Can remove existing h2 blocks", () => {
         props.html = "<h2>A piece of text</h2>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -648,21 +620,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-two")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-two")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("H3", () => {
-      it("Can create h3 blocks", done => {
+      it("Can create h3 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -670,19 +636,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-three")
-          expect(instance.state.html).toBe("<h3>A piece of text</h3>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-three")
+
+        expect(instance.state.html).toBe("<h3>A piece of text</h3>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h3 blocks", done => {
+      it("Can remove existing h3 blocks", () => {
         props.html = "<h3>A piece of text</h3>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -691,21 +651,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("header-three")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("header-three")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("OL", () => {
-      it("Can create OL blocks", done => {
+      it("Can create OL blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -713,19 +667,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("ordered-list-item")
-          expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("ordered-list-item")
+
+        expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing OL blocks", done => {
+      it("Can remove existing OL blocks", () => {
         props.html = "<ol><li>A piece of text</li></ol>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -734,21 +682,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("ordered-list-item")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("ordered-list-item")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("UL", () => {
-      it("Can create UL blocks", done => {
+      it("Can create UL blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -756,19 +698,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("unordered-list-item")
-          expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("unordered-list-item")
+
+        expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing UL blocks", done => {
+      it("Can remove existing UL blocks", () => {
         props.html = "<ul><li>A piece of text</li></ul>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -777,21 +713,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("unordered-list-item")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("unordered-list-item")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Blockquote", () => {
-      it("Can create blockquote blocks", done => {
+      it("Can create blockquote blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -799,22 +729,16 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("blockquote")
-          expect(instance.state.html).toBe(
-            "<blockquote>A piece of text</blockquote>"
-          )
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            expect(props.onHandleBlockQuote).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("blockquote")
+
+        expect(instance.state.html).toBe(
+          "<blockquote>A piece of text</blockquote>"
+        )
+        expect(instance.props.onChange).toHaveBeenCalled()
+        expect(props.onHandleBlockQuote).toHaveBeenCalled()
       })
 
-      it("Can remove existing blockquote blocks", done => {
+      it("Can remove existing blockquote blocks", () => {
         props.html = "<blockquote>A piece of text</blockquote>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -823,17 +747,11 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandBlockType("blockquote")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            expect(props.onHandleBlockQuote).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandBlockType("blockquote")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
+        expect(props.onHandleBlockQuote).not.toHaveBeenCalled()
       })
     })
   })
@@ -843,7 +761,7 @@ describe("RichText", () => {
       props.html = "<p>A piece of text</p>"
     })
 
-    it("Does nothing for disallowed blocks", done => {
+    it("Does nothing for disallowed blocks", () => {
       props.allowedBlocks = ["p"]
       const component = getWrapper()
       const instance = component.instance() as RichText
@@ -851,19 +769,14 @@ describe("RichText", () => {
         instance.state.editorState
       )
       instance.onChange(selectedState)
+      instance.toggleBlockType("header-one")
 
-      setTimeout(() => {
-        instance.toggleBlockType("header-one")
-        expect(instance.state.html).toBe("<p>A piece of text</p>")
-        setTimeout(() => {
-          expect(instance.props.onChange).not.toHaveBeenCalled()
-          done()
-        }, 250)
-      }, 250)
+      expect(instance.state.html).toBe("<p>A piece of text</p>")
+      expect(instance.props.onChange).not.toHaveBeenCalled()
     })
 
     describe("H1", () => {
-      it("Can create h1 blocks", done => {
+      it("Can create h1 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -871,19 +784,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-one")
-          expect(instance.state.html).toBe("<h1>A piece of text</h1>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-one")
+
+        expect(instance.state.html).toBe("<h1>A piece of text</h1>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h1 blocks", done => {
+      it("Can remove existing h1 blocks", () => {
         props.html = "<h1>A piece of text</h1>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -892,21 +799,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-one")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-one")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("H2", () => {
-      it("Can create h2 blocks", done => {
+      it("Can create h2 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -914,19 +815,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-two")
-          expect(instance.state.html).toBe("<h2>A piece of text</h2>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-two")
+
+        expect(instance.state.html).toBe("<h2>A piece of text</h2>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h2 blocks", done => {
+      it("Can remove existing h2 blocks", () => {
         props.html = "<h2>A piece of text</h2>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -935,21 +830,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-two")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-two")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("H3", () => {
-      it("Can create h3 blocks", done => {
+      it("Can create h3 blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -957,19 +846,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-three")
-          expect(instance.state.html).toBe("<h3>A piece of text</h3>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-three")
+
+        expect(instance.state.html).toBe("<h3>A piece of text</h3>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing h2 blocks", done => {
+      it("Can remove existing h2 blocks", () => {
         props.html = "<h3>A piece of text</h3>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -978,21 +861,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("header-three")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("header-three")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("OL", () => {
-      it("Can create ol blocks", done => {
+      it("Can create ol blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -1000,19 +877,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("ordered-list-item")
-          expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("ordered-list-item")
+
+        expect(instance.state.html).toBe("<ol><li>A piece of text</li></ol>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing ol blocks", done => {
+      it("Can remove existing ol blocks", () => {
         props.html = "<ol><li>A piece of text</li></ol>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1021,21 +892,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("ordered-list-item")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("ordered-list-item")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("UL", () => {
-      it("Can create ul blocks", done => {
+      it("Can create ul blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -1043,19 +908,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("unordered-list-item")
-          expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("unordered-list-item")
+
+        expect(instance.state.html).toBe("<ul><li>A piece of text</li></ul>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Can remove existing ul blocks", done => {
+      it("Can remove existing ul blocks", () => {
         props.html = "<ul><li>A piece of text</li></ul>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1064,21 +923,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("unordered-list-item")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("unordered-list-item")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Blockquote", () => {
-      it("Can create blockquote blocks", done => {
+      it("Can create blockquote blocks", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -1086,22 +939,16 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("blockquote")
-          expect(instance.state.html).toBe(
-            "<blockquote>A piece of text</blockquote>"
-          )
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            expect(props.onHandleBlockQuote).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("blockquote")
+
+        expect(instance.state.html).toBe(
+          "<blockquote>A piece of text</blockquote>"
+        )
+        expect(instance.props.onChange).toHaveBeenCalled()
+        expect(props.onHandleBlockQuote).toHaveBeenCalled()
       })
 
-      it("Can remove existing blockquote blocks", done => {
+      it("Can remove existing blockquote blocks", () => {
         props.html = "<blockquote>A piece of text</blockquote>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1110,17 +957,11 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.toggleBlockType("blockquote")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            expect(props.onHandleBlockQuote).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.toggleBlockType("blockquote")
+
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
+        expect(props.onHandleBlockQuote).not.toHaveBeenCalled()
       })
     })
   })
@@ -1131,7 +972,7 @@ describe("RichText", () => {
     })
 
     describe("Bold", () => {
-      it("Applies bold styles if allowed", done => {
+      it("Applies bold styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         // Set text selection
@@ -1139,19 +980,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
-        // Wait for debounced onChange
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
-          // Wait for second debounced onChange
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        instance.keyCommandInlineStyle("bold")
+
+        expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply bold styles if not allowed", done => {
+      it("Does not apply bold styles if not allowed", () => {
         props.allowedStyles = ["I"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1159,18 +994,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("bold")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing bold styles", done => {
+      it("Can remove existing bold styles", () => {
         props.html = "<p><b>A piece of text</b></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1178,38 +1008,28 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("bold")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("bold")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Italic", () => {
-      it("Applies italic styles if allowed", done => {
+      it("Applies italic styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply italic styles if not allowed", done => {
+      it("Does not apply italic styles if not allowed", () => {
         props.allowedStyles = ["B"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1217,18 +1037,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing italic styles", done => {
+      it("Can remove existing italic styles", () => {
         props.html = "<p><i>A piece of text</i></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1236,20 +1051,15 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("italic")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("italic")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Underline", () => {
-      it("Applies underline styles if allowed", done => {
+      it("Applies underline styles if allowed", () => {
         props.allowedStyles = ["U"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1257,18 +1067,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("underline")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("underline")
-          expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply underline styles if not allowed", done => {
+      it("Does not apply underline styles if not allowed", () => {
         props.allowedStyles = ["B"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1276,18 +1081,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("underline")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("underline")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing underline styles", done => {
+      it("Can remove existing underline styles", () => {
         props.allowedStyles = ["U"]
         props.html = "<p><u>A piece of text</u></p>"
         const component = getWrapper()
@@ -1296,15 +1096,10 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.keyCommandInlineStyle("underline")
 
-        setTimeout(() => {
-          instance.keyCommandInlineStyle("underline")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
   })
@@ -1315,25 +1110,20 @@ describe("RichText", () => {
     })
 
     describe("Bold", () => {
-      it("Applies bold styles if allowed", done => {
+      it("Applies bold styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><b>A piece of text</b></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply bold styles if not allowed", done => {
+      it("Does not apply bold styles if not allowed", () => {
         props.allowedStyles = ["I"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1341,18 +1131,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing bold styles", done => {
+      it("Can remove existing bold styles", () => {
         props.html = "<p><b>A piece of text</b></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1360,38 +1145,28 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("BOLD")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("BOLD")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
     describe("Italic", () => {
-      it("Applies italic styles if allowed", done => {
+      it("Applies italic styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><i>A piece of text</i></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply italic styles if not allowed", done => {
+      it("Does not apply italic styles if not allowed", () => {
         props.allowedStyles = ["B"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1399,18 +1174,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing italic styles", done => {
+      it("Can remove existing italic styles", () => {
         props.html = "<p><i>A piece of text</i></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1418,15 +1188,10 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("ITALIC")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("ITALIC")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
@@ -1435,25 +1200,20 @@ describe("RichText", () => {
         props.allowedStyles = ["U"]
       })
 
-      it("Applies underline styles if allowed", done => {
+      it("Applies underline styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("UNDERLINE")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("UNDERLINE")
-          expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><u>A piece of text</u></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply underline styles if not allowed", done => {
+      it("Does not apply underline styles if not allowed", () => {
         props.allowedStyles = ["B"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1461,18 +1221,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("UNDERLINE")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("UNDERLINE")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing underline styles", done => {
+      it("Can remove existing underline styles", () => {
         props.html = "<p><u>A piece of text</u></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1480,15 +1235,10 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("UNDERLINE")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("UNDERLINE")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
 
@@ -1497,25 +1247,20 @@ describe("RichText", () => {
         props.allowedStyles = ["S"]
       })
 
-      it("Applies strikethrough styles if allowed", done => {
+      it("Applies strikethrough styles if allowed", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("STRIKETHROUGH")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(instance.state.html).toBe("<p><s>A piece of text</s></p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p><s>A piece of text</s></p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
 
-      it("Does not apply strikethrough styles if not allowed", done => {
+      it("Does not apply strikethrough styles if not allowed", () => {
         props.allowedStyles = ["B"]
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1523,18 +1268,13 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("STRIKETHROUGH")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).not.toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).not.toHaveBeenCalled()
       })
 
-      it("Can remove existing strikethrough styles", done => {
+      it("Can remove existing strikethrough styles", () => {
         props.html = "<p><s>A piece of text</s></p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1542,21 +1282,16 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.toggleInlineStyle("STRIKETHROUGH")
 
-        setTimeout(() => {
-          instance.toggleInlineStyle("STRIKETHROUGH")
-          expect(instance.state.html).toBe("<p>A piece of text</p>")
-          setTimeout(() => {
-            expect(instance.props.onChange).toHaveBeenCalled()
-            done()
-          }, 250)
-        }, 250)
+        expect(instance.state.html).toBe("<p>A piece of text</p>")
+        expect(instance.props.onChange).toHaveBeenCalled()
       })
     })
   })
 
   describe("#makePlainText", () => {
-    it("strips links from text", done => {
+    it("strips links from text", () => {
       props.html = "<p><a href='artsy.net'>A link</a></p>"
       const component = getWrapper()
       const instance = component.instance() as RichText
@@ -1566,13 +1301,10 @@ describe("RichText", () => {
       instance.onChange(selectedState)
       instance.makePlainText()
 
-      setTimeout(() => {
-        expect(instance.state.html).toBe("<p>A link</p>")
-        done()
-      }, 250)
+      expect(instance.state.html).toBe("<p>A link</p>")
     })
 
-    it("strips blocks from text", done => {
+    it("strips blocks from text", () => {
       props.html = "<h1><a href='artsy.net'>A linked h1</a></h1>"
       const component = getWrapper()
       const instance = component.instance() as RichText
@@ -1582,13 +1314,10 @@ describe("RichText", () => {
       instance.onChange(selectedState)
       instance.makePlainText()
 
-      setTimeout(() => {
-        expect(instance.state.html).toBe("<p>A linked h1</p>")
-        done()
-      }, 250)
+      expect(instance.state.html).toBe("<p>A linked h1</p>")
     })
 
-    it("strips styles from text", done => {
+    it("strips styles from text", () => {
       props.html =
         "<h1><a href='artsy.net'><b>A strong <em>italic linked h1</em></b></a></h1>"
       const component = getWrapper()
@@ -1599,10 +1328,7 @@ describe("RichText", () => {
       instance.onChange(selectedState)
       instance.makePlainText()
 
-      setTimeout(() => {
-        expect(instance.state.html).toBe("<p>A strong italic linked h1</p>")
-        done()
-      }, 250)
+      expect(instance.state.html).toBe("<p>A strong italic linked h1</p>")
     })
   })
 
@@ -1689,7 +1415,7 @@ describe("RichText", () => {
         })
       })
 
-      it("Sets urlValue with data", done => {
+      it("Sets urlValue with data", () => {
         props.html = '<p><a href="https://artsy.net">A link</a></p>'
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1698,14 +1424,11 @@ describe("RichText", () => {
         )
         instance.onChange(selectedState)
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.urlValue).toBe("https://artsy.net/")
-          done()
-        }, 250)
+        instance.promptForLink()
+        expect(instance.state.urlValue).toBe("https://artsy.net/")
       })
 
-      it("Sets urlValue without data", done => {
+      it("Sets urlValue without data", () => {
         props.html = "<p>A piece of text</p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1713,15 +1436,12 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.promptForLink()
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
 
-      it("Hides nav", done => {
+      it("Hides nav", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
@@ -1731,31 +1451,25 @@ describe("RichText", () => {
         instance.checkSelection()
         expect(instance.state.showNav).toBe(true)
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.showNav).toBe(false)
-          done()
-        }, 250)
+        instance.promptForLink()
+        expect(instance.state.showNav).toBe(false)
       })
 
-      it("Shows url input", done => {
+      it("Shows url input", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.promptForLink()
 
-        setTimeout(() => {
-          instance.promptForLink()
-          expect(instance.state.showUrlInput).toBe(true)
-          done()
-        }, 250)
+        expect(instance.state.showUrlInput).toBe(true)
       })
     })
 
     describe("#confirmLink", () => {
-      it("Sets editorPosition to null", done => {
+      it("Sets editorPosition to null", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
@@ -1763,45 +1477,36 @@ describe("RichText", () => {
         )
         instance.onChange(selectedState)
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.editorPosition).toBe(null)
-          done()
-        }, 250)
+        instance.confirmLink("https://artsy.net/articles")
+        expect(instance.state.editorPosition).toBe(null)
       })
 
-      it("Sets urlValue to empty string", done => {
+      it("Sets urlValue to empty string", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
 
-      it("Hides nav and url input", done => {
+      it("Hides nav and url input", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.showNav).toBe(false)
-          expect(instance.state.showUrlInput).toBe(false)
-          done()
-        }, 250)
+        expect(instance.state.showNav).toBe(false)
+        expect(instance.state.showUrlInput).toBe(false)
       })
 
-      it("Adds a link to selected text", done => {
+      it("Adds a link to selected text", () => {
         props.html = "<p>A piece of text</p>"
         const component = getWrapper()
         const instance = component.instance() as RichText
@@ -1809,14 +1514,11 @@ describe("RichText", () => {
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.confirmLink("https://artsy.net/articles")
 
-        setTimeout(() => {
-          instance.confirmLink("https://artsy.net/articles")
-          expect(instance.state.html).toBe(
-            '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
-          )
-          done()
-        }, 250)
+        expect(instance.state.html).toBe(
+          '<p><a href="https://artsy.net/articles">A piece of text</a></p>'
+        )
       })
     })
 
@@ -1825,49 +1527,40 @@ describe("RichText", () => {
         props.html = '<p><a href="https://artsy.net">A link</a></p>'
       })
 
-      it("Removes a link from selected entity", done => {
+      it("Removes a link from selected entity", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.html).toBe("<p>A link</p>")
-          done()
-        }, 250)
+        expect(instance.state.html).toBe("<p>A link</p>")
       })
 
-      it("Hides url input", done => {
+      it("Hides url input", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.showUrlInput).toBe(false)
-          done()
-        }, 250)
+        expect(instance.state.showUrlInput).toBe(false)
       })
 
-      it("Sets urlValue to empty string", done => {
+      it("Sets urlValue to empty string", () => {
         const component = getWrapper()
         const instance = component.instance() as RichText
         const selectedState = applySelectionToEditorState(
           instance.state.editorState
         )
         instance.onChange(selectedState)
+        instance.removeLink()
 
-        setTimeout(() => {
-          instance.removeLink()
-          expect(instance.state.urlValue).toBe("")
-          done()
-        }, 250)
+        expect(instance.state.urlValue).toBe("")
       })
     })
   })
