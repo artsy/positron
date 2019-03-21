@@ -1,11 +1,10 @@
-import { clone, cloneDeep, debounce, set } from "lodash"
 import keyMirror from "client/lib/keyMirror"
-import Article from "client/models/article.coffee"
+const Article = require("client/models/article.coffee")
+import { clone, cloneDeep, debounce, set } from "lodash"
 import {
-  redirectToList,
   debouncedUpdateDispatch,
+  redirectToList,
 } from "../../../client/actions/edit/editActions"
-import $ from "jquery"
 
 export const actions = keyMirror(
   "CHANGE_SAVED_STATUS",
@@ -18,17 +17,33 @@ export const actions = keyMirror(
   "SET_SEO_KEYWORD"
 )
 
-export const changeSavedStatus = (article, isSaved) => {
+/**
+ * Actions related to saving, publishing, deleting an individual article
+ * functions in this file apply to all edit sub-apps (content, display, admin)
+ */
+
+/**
+ * Update isSaved, used to change colors of the the main UI save button
+ * which renders in red (unsaved changes) or green (saved)
+ */
+export const changeSavedStatus = (article, isSaved: boolean) => {
   return {
     type: actions.CHANGE_SAVED_STATUS,
     payload: {
-      article,
+      article, // TODO: maybe not needed
       isSaved,
     },
   }
 }
 
-export const deleteArticle = (key, value) => {
+/**
+ * Delete an article:
+ * Converts article to Backbone article
+ * Calls deleteArticlePending to indicate deletion in UI
+ * Use Backbone's destroy to remove article
+ * Redirects to /articles when deletion is complete
+ */
+export const deleteArticle = () => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -44,6 +59,10 @@ export const deleteArticle = (key, value) => {
   }
 }
 
+/**
+ * A call has been made to the API to delete, when isDeleting is true
+ * the main UI delete button renders 'Deleting...' as the button text
+ */
 export const deleteArticlePending = () => {
   return {
     type: actions.DELETE_ARTICLE,
@@ -53,10 +72,16 @@ export const deleteArticlePending = () => {
   }
 }
 
+/**
+ * Debounces saveArticle to prevent overloading API requests
+ */
 export const debouncedSaveDispatch = debounce(dispatch => {
   dispatch(saveArticle())
 }, 500)
 
+/**
+ * Replace existing article with a new article
+ */
 export const changeArticle = data => {
   return {
     type: actions.CHANGE_ARTICLE,
@@ -66,7 +91,13 @@ export const changeArticle = data => {
   }
 }
 
-export const changeArticleData = (key, value) => {
+/**
+ * Mutates article data
+ * Data can be passed as a key/value pair or an object
+ * Can also accept a nested object like 'hero_section.deck'
+ * Nested objects can use only one level of depth
+ */
+export const changeArticleData = (key: any, value?: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -77,7 +108,7 @@ export const changeArticleData = (key, value) => {
       // extend article with an object of key
       data = key
     } else {
-      let nestedObject = key.split(".")
+      const nestedObject = key.split(".")
 
       if (nestedObject.length > 1) {
         // change a nested object value
@@ -92,7 +123,13 @@ export const changeArticleData = (key, value) => {
   }
 }
 
-export const onChangeArticle = (key, value) => {
+/**
+ * Actions for when article data is changed:
+ * Calls changeArticleData to update the article
+ * Calls debouncedUpdateDispatch to update article lockout status
+ * If unpublished, call debouncedSaveDispatch to auto-save
+ */
+export const onChangeArticle = (key: any, value?: any) => {
   return (dispatch, getState) => {
     const {
       app: { channel },
@@ -109,7 +146,11 @@ export const onChangeArticle = (key, value) => {
   }
 }
 
-export const onFirstSave = id => {
+/**
+ * Redirects to the correct article route from /article/new
+ * Called the first time saved data is present on the article
+ */
+export const onFirstSave = (id: string) => {
   window.location.assign(`/articles/${id}/edit`)
 
   return {
@@ -117,6 +158,15 @@ export const onFirstSave = id => {
   }
 }
 
+/**
+ * Publish/unpublish the article:
+ * Calls publishArticlePending to indicate publishing has started in UI
+ * Reverses published status of article
+ * Create a new Backbone article with article data
+ * Sets SEO keyword (Yoast) if new status is 'published'
+ * Save the article
+ * Maybe redirect to /articles
+ */
 export const publishArticle = () => {
   return (dispatch, getState) => {
     dispatch(publishArticlePending())
@@ -136,6 +186,10 @@ export const publishArticle = () => {
   }
 }
 
+/**
+ * A call has been made to the API to publish, when isPublishing is true
+ * the main UI publish button renders 'Publishing...' as the button text
+ */
 export const publishArticlePending = () => {
   return {
     type: actions.PUBLISH_ARTICLE,
@@ -145,13 +199,21 @@ export const publishArticlePending = () => {
   }
 }
 
+/**
+ * Save the article:
+ * Convert to backbone and call save
+ * Calls saveArticlePending to indicate save status in UI
+ * Changes saved status to indicate save is completed in UI
+ * Calls onFirstSave to FWD to new route if article is new
+ * Sets SEO keyword (Yoast)
+ * Redirect to /articles if the article is published
+ */
 export const saveArticle = () => {
   return (dispatch, getState) => {
     const {
       edit: { article },
     } = getState()
     const newArticle = new Article(article)
-
     dispatch(saveArticlePending())
 
     newArticle.on("sync", () => {
@@ -173,6 +235,10 @@ export const saveArticle = () => {
   }
 }
 
+/**
+ * A call has been made to the API to save, when isSaving is true
+ * the main UI save button renders 'Saving...' as the button text
+ */
 export const saveArticlePending = () => {
   return {
     type: actions.SAVE_ARTICLE,
@@ -182,8 +248,14 @@ export const saveArticlePending = () => {
   }
 }
 
-// FEATURED + MENTIONED
-export const onAddFeaturedItem = (model, item) => {
+/**
+ * Adds the id of a gravity artist or artwork to the appropriate
+ * array on the article model, used in the Admin Panel UI
+ *
+ * Featuring an artist/artwork means that the article will be displayed
+ * on the corresponding artist or artwork page.
+ */
+export const onAddFeaturedItem = (model: "artist" | "artwork", item: any) => {
   return (dispatch, getState) => {
     const {
       edit: { article },
@@ -192,14 +264,21 @@ export const onAddFeaturedItem = (model, item) => {
       model === "artist"
         ? "primary_featured_artist_ids"
         : "featured_artwork_ids"
-    let newFeaturedIds = cloneDeep(article)[key] || []
+    const newFeaturedIds = cloneDeep(article)[key] || []
 
     newFeaturedIds.push(item._id)
     dispatch(changeArticleData(key, newFeaturedIds))
   }
 }
 
-export const setMentionedItems = (model, items) => {
+/**
+ * Stores gravity artists and artworks mentioned in the article
+ * to display their names/titles in the Admin Panel UI
+ */
+export const setMentionedItems = (
+  model: "artist" | "artwork",
+  items: any[]
+) => {
   return {
     type: actions.SET_MENTIONED_ITEMS,
     payload: {
@@ -209,9 +288,11 @@ export const setMentionedItems = (model, items) => {
   }
 }
 
-// YOAST
+/**
+ * If a Yoast SEO Keyword is set, attach it to the article
+ */
 export const setSeoKeyword = article => {
-  return (dispatch, getState) => {
+  return (_dispatch, getState) => {
     const {
       edit: { yoastKeyword },
     } = getState()
