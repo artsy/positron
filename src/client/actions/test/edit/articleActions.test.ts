@@ -36,16 +36,7 @@ describe("articleActions", () => {
       dispatch = jest.fn()
     })
 
-    it("Calls #changeArticle", () => {
-      changeArticleData("title", "Title")(dispatch, getState)
-
-      expect(dispatch).toBeCalledWith({
-        type: "CHANGE_ARTICLE",
-        payload: { data: { title: "Title" } },
-      })
-    })
-
-    it("Can accept a key/value pair as args", () => {
+    it("Calls #changeArticle with key/val pair", () => {
       changeArticleData("title", "Title")(dispatch, getState)
 
       expect(dispatch).toBeCalledWith({
