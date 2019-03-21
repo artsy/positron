@@ -51,6 +51,7 @@ export const newHeroSection = (type: SectionType) => {
  * Add a new section to article.sections array based on type
  * optionally pass attrs to include data in the new section
  * setupSection applies default section data based on arg type
+ * returns text section by default
  */
 export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
   const section = { ...setupSection(type), ...attrs } as SectionData
@@ -264,7 +265,7 @@ export const setSection = (sectionIndex: number | null) => ({
 /**
  * Sets up default data for an empty section based on arg type
  */
-export const setupSection = (type: SectionType) => {
+export const setupSection = (type: SectionType = "text") => {
   // set initial state of new section
   switch (type) {
     case "video":
@@ -292,7 +293,7 @@ export const setupSection = (type: SectionType) => {
         url: "",
         layout: "column_width",
       } as SectionData
-    case "text":
+    default:
       return {
         type: "text",
         body: "",

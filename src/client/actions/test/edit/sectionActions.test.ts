@@ -11,6 +11,7 @@ import {
   onSplitTextSection,
   removeSection,
   setSection,
+  setupSection,
 } from "client/actions/edit/sectionActions"
 const Article = require("client/models/article.coffee")
 import { cloneDeep } from "lodash"
@@ -36,6 +37,49 @@ describe("sectionActions", () => {
 
     expect(action.type).toBe("SET_SECTION")
     expect(action.payload.sectionIndex).toBe(6)
+  })
+
+  describe("#setupSection", () => {
+    it("Creates a text section by default", () => {
+      expect(setupSection()).toEqual({ type: "text", body: "" })
+    })
+
+    it("Can create a text section with arg", () => {
+      expect(setupSection("text")).toEqual({ type: "text", body: "" })
+    })
+
+    it("Can create an embed section", () => {
+      expect(setupSection("embed")).toEqual({
+        type: "embed",
+        url: "",
+        layout: "column_width",
+        height: 0,
+      })
+    })
+
+    it("Can create a social_embed section", () => {
+      expect(setupSection("social_embed")).toEqual({
+        type: "social_embed",
+        url: "",
+        layout: "column_width",
+      })
+    })
+
+    it("Can create an image_collection section", () => {
+      expect(setupSection("image_collection")).toEqual({
+        type: "image_collection",
+        layout: "overflow_fillwidth",
+        images: [],
+      })
+    })
+
+    it("Can create a video section", () => {
+      expect(setupSection("video")).toEqual({
+        type: "video",
+        url: "",
+        layout: "column_width",
+      })
+    })
   })
 
   describe("#newSection", () => {
@@ -166,14 +210,13 @@ describe("sectionActions", () => {
       dispatch = jest.fn()
     })
 
-    it("calls #changeArticle with new attrs", () => {
+    it("calls #changeSection with new attrs", () => {
       onChangeSection("body", "New Text")(dispatch, getState)
 
       expect(dispatch).toBeCalledWith({
         type: "CHANGE_SECTION",
         payload: { key: "body", value: "New Text" },
       })
-      // TODO: more here???
     })
 
     it("does not call #saveArticle if published", () => {

@@ -62,8 +62,7 @@ describe("editReducer", () => {
     })
 
     it("NEW_SECTION should insert a section into article.sections", () => {
-      // TODO: remove or toggle after actions converted to redux
-      const section = setupSection("text") || { type: "", body: "" }
+      const section = setupSection("text")
       const sectionIndex = 2
 
       const updatedState = editReducer(initialState, {
@@ -88,8 +87,7 @@ describe("editReducer", () => {
       initialState.article = extend(cloneDeep(initialState.article), {
         sections: null,
       })
-      // TODO: remove or toggle after actions converted to redux
-      const section = setupSection("text") || { type: "", body: "" }
+      const section = setupSection("text")
       const sectionIndex = 0
 
       const updatedState = editReducer(initialState, {
