@@ -14,16 +14,34 @@ export const actions = keyMirror(
   "SET_YOAST_KEYWORD"
 )
 
-// TOGGLE EDIT TABS (Content, Admin, Display)
-export const changeView = activeView => ({
-  type: actions.CHANGE_VIEW,
-  payload: {
-    activeView,
-  },
-})
+/**
+ * Actions related to the article edit app including
+ * navigating edit tabs, article lockout actions, redirects,
+ * and loading indicators
+ */
 
-// ARTICLE LOCKOUT ACTIONS
-export const startEditingArticle = emitAction(data => {
+interface LockoutDataUser {
+  id: string
+  name: string
+}
+
+export interface LockoutDataChannel {
+  id: string
+  name: string
+  type: string
+}
+
+interface LockoutData {
+  channel: LockoutDataChannel
+  user: LockoutDataUser
+  article: string // _id
+}
+
+/**
+ * Article Lockout: user has started editing an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
+export const startEditingArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.START_EDITING_ARTICLE,
     key: messageTypes.userStartedEditing,
@@ -34,7 +52,11 @@ export const startEditingArticle = emitAction(data => {
   }
 })
 
-export const updateArticle = emitAction(data => {
+/**
+ * Article Lockout: user has made a change to an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
+export const updateArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.UPDATE_ARTICLE,
     key: messageTypes.userCurrentlyEditing,
@@ -45,7 +67,21 @@ export const updateArticle = emitAction(data => {
   }
 })
 
-export const stopEditingArticle = emitAction(data => {
+/**
+ * Debounce updateArticle to avoid flooding API with requests
+ */
+export const debouncedUpdateDispatch = debounce(
+  (dispatch, options: LockoutData) => {
+    dispatch(updateArticle(options))
+  },
+  500
+)
+
+/**
+ * Article Lockout: user has stopped editing an article
+ * TODO: rename to indicate lockout/disambiguate from changes to article data
+ */
+export const stopEditingArticle = emitAction((data: LockoutData) => {
   return {
     type: actions.STOP_EDITING_ARTICLE,
     key: messageTypes.userStoppedEditing,
@@ -56,12 +92,20 @@ export const stopEditingArticle = emitAction(data => {
   }
 })
 
-export const debouncedUpdateDispatch = debounce((dispatch, options) => {
-  dispatch(updateArticle(options))
-}, 500)
+/**
+ * Toggle between content, admin and display tabs in edit UI
+ */
+export const changeView = (activeView: "content" | "display" | "admin") => ({
+  type: actions.CHANGE_VIEW,
+  payload: {
+    activeView,
+  },
+})
 
-// TRIGGERED ON SAVE + PUBLISH
-export const redirectToList = published => {
+/**
+ * Redirect to /articles when publishing, deleting or saving a published article
+ */
+export const redirectToList = (published: boolean) => {
   window.location.assign(`/articles?published=${published}`)
 
   return {
@@ -69,7 +113,10 @@ export const redirectToList = published => {
   }
 }
 
-export const setYoastKeyword = yoastKeyword => {
+/**
+ * Store data entered into the Yoast UI input
+ */
+export const setYoastKeyword = (yoastKeyword: string) => {
   return {
     type: actions.SET_YOAST_KEYWORD,
     payload: {
@@ -78,8 +125,11 @@ export const setYoastKeyword = yoastKeyword => {
   }
 }
 
-// LOADING SPINNER
-export const toggleSpinner = isVisible => {
+/**
+ * Show/hide loading spinner (when loading an article)
+ * TODO: Use palette spinner
+ */
+export const toggleSpinner = (isVisible: boolean) => {
   if (isVisible) {
     $("#edit-sections-spinner").show()
   } else {
