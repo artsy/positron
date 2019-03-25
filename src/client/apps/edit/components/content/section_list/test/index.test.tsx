@@ -1,14 +1,15 @@
-import React from "react"
-import configureStore from "redux-mock-store"
-import { Provider } from "react-redux"
-import { clone } from "lodash"
-import { mount } from "enzyme"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import DragContainer from "client/components/drag_drop/index.coffee"
-import { SectionContainer } from "../../section_container/index.tsx"
+import { SectionType } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { mount } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
+import sharify from "sharify"
+import { SectionContainer } from "../../section_container"
 import { SectionTool } from "../../section_tool"
 import { SectionList } from "../index"
-import sharify from "sharify"
+const DragContainer = require("client/components/drag_drop/index.coffee")
 
 window.scrollTo = jest.fn()
 
@@ -18,21 +19,21 @@ describe("SectionList", () => {
   let props
   let article
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: {},
       },
       edit: {
-        article: props.article,
-        sectionIndex: props.sectionIndex,
+        article: passedProps.article,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <SectionList {...props} />
+        <SectionList {...passedProps} />
       </Provider>
     )
   }
@@ -88,20 +89,20 @@ describe("SectionList", () => {
 
   it("Listens for a new section and dispatches setSection with index", () => {
     const { sections } = props.article
-    const newSection = { type: "embed" }
+    const newSection = { type: "embed" as SectionType }
     sections.push(newSection)
     const component = getWrapper(props).find(SectionList)
-    component.instance().onNewSection(newSection)
+    const instance = component.instance() as SectionList
+    instance.onNewSection(newSection)
 
-    expect(component.props().setSectionAction.mock.calls[0][0]).toBe(
-      sections.length - 1
-    )
+    expect(props.setSectionAction.mock.calls[0][0]).toBe(sections.length - 1)
   })
 
   it("Shows an error if attempting to drag a news social_embed to first section", () => {
     props.article.layout = "news"
     const component = getWrapper(props).find(SectionList)
-    component.instance().onDragEnd([{ type: "social_embed" }, { type: "text" }])
+    const instance = component.instance() as SectionList
+    instance.onDragEnd([{ type: "social_embed" }, { type: "text" }])
 
     expect(props.logErrorAction.mock.calls[0][0].message).toBe(
       "Embeds are not allowed in the first section."

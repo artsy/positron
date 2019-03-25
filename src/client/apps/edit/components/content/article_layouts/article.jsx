@@ -4,7 +4,7 @@ import React, { Component } from "react"
 import SectionFooter from "../sections/footer/index.tsx"
 import SectionHeader from "../sections/header/index.tsx"
 import SectionHero from "../sections/hero"
-import SectionList from "../section_list"
+import SectionList from "../section_list/index.tsx"
 
 export class EditArticle extends Component {
   static propTypes = {
