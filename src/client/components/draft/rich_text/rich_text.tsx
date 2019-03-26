@@ -164,10 +164,19 @@ export class RichText extends Component<Props, State> {
     const listPositionHasChanged = editIndex !== nextProps.editIndex
     const bodyHasChanged = html && isReadonly && html !== nextProps.html
 
+    const readOnlyHasChanged = isReadonly !== nextProps.isReadonly
+
     if (listPositionHasChanged || bodyHasChanged) {
       this.resetEditorState()
       if (!isReadonly) {
         this.focus()
+      }
+    }
+    if (readOnlyHasChanged) {
+      if (!nextProps.isReadonly) {
+        this.focus()
+      } else {
+        this.blur()
       }
     }
   }
@@ -411,7 +420,7 @@ export class RichText extends Component<Props, State> {
     const promptForLink = hasLinks ? this.promptForLink : undefined
 
     return (
-      <RichTextContainer onDragEnd={this.resetEditorState}>
+      <RichTextContainer onDragEnd={this.resetEditorState} onBlur={this.blur}>
         {showNav && (
           <TextNav
             allowedBlocks={this.allowedBlocks}

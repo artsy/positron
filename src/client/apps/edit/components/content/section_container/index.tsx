@@ -151,8 +151,10 @@ export class SectionContainer extends Component<SectionContainerProps> {
           </HoverControls>
 
           {this.getSectionComponent()}
-
-          {isEditing && <ContainerBackground onClick={this.onSetEditing} />}
+          {isEditing &&
+            section.type !== "text" && (
+              <ContainerBackground onClick={this.onSetEditing} />
+            )}
         </SectionWrapper>
       </ErrorBoundary>
     )
@@ -221,6 +223,7 @@ export const ClickToEdit = styled.div`
   left: 0;
 `
 
+// TODO: Replace with ModalBackground
 export const ContainerBackground = styled.div`
   width: 100%;
   height: 100%;

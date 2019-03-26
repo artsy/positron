@@ -105,6 +105,9 @@ export class SectionText2 extends React.Component<Props> {
     }
   }
 
+  /**
+   * Change to next section when tabbing, reset editor state
+   */
   onHandleTab = (e: any, resetEditorState: () => void) => {
     const { index, setSectionAction } = this.props
 
@@ -268,7 +271,7 @@ const SectionTextContainer = styled.div<{
   layout: string
 }>`
   position: relative;
-  z-index: ${props => (props.isEditing ? 2 : -1)};
+  z-index: ${props => (props.isEditing ? 10 : -1)};
 
   ol li,
   ul li,
