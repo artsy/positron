@@ -27,8 +27,7 @@ import {
 } from "client/components/draft/rich_text/utils/utils"
 import { getSelectionDetails } from "client/components/draft/shared/selection"
 import { BlockElement } from "client/components/draft/typings"
-import { EditorState } from "draft-js"
-import { ContentState } from "draft-js"
+import { ContentState, EditorState } from "draft-js"
 import { cloneDeep } from "lodash"
 import React from "react"
 import { connect } from "react-redux"
@@ -86,11 +85,7 @@ export class SectionText2 extends React.Component<Props> {
   /**
    * If section should be divided on return, divide it
    */
-  onHandleReturn = (
-    editorState: EditorState,
-    _resetEditorState: () => void
-  ) => {
-    // TODO: maybe move to redux text actions
+  onHandleReturn = (editorState: EditorState) => {
     const { onSplitTextSectionAction } = this.props
     const newBlocks = this.divideEditorState(editorState)
 
@@ -102,7 +97,7 @@ export class SectionText2 extends React.Component<Props> {
   /**
    * Change to next section when tabbing, reset editor state
    */
-  onHandleTab = (e: any, resetEditorState: () => void) => {
+  onHandleTab = (e: any) => {
     const { index, setSectionAction } = this.props
 
     if (e.shiftKey) {
@@ -110,7 +105,6 @@ export class SectionText2 extends React.Component<Props> {
     } else {
       setSectionAction(index + 1)
     }
-    resetEditorState()
   }
 
   /**

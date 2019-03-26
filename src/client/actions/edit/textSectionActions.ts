@@ -108,10 +108,12 @@ export const onInsertBlockquote = (
       // insert a section before if html is provided
       dispatch(newSection("text", sectionIndex, { body: beforeHtml }))
     }
-    if ((beforeHtml || afterHtml) && !article.published) {
-      debouncedSaveDispatch(dispatch)
+    if (beforeHtml || afterHtml) {
+      if (!article.published) {
+        debouncedSaveDispatch(dispatch)
+      }
+      dispatch(setSection(null))
     }
-    dispatch(setSection(null))
   }
 }
 

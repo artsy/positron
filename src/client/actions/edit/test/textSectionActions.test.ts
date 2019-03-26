@@ -18,7 +18,7 @@ Article.mockImplementation(() => ({
   save: jest.fn(),
 }))
 
-describe("sectionActions", () => {
+describe("textSectionActions", () => {
   let article
   let dispatch
   let getState
@@ -104,10 +104,6 @@ describe("sectionActions", () => {
       const changeSection = dispatch.mock.calls[0][0]
       changeSection(dispatch, getState)
 
-      expect(dispatch).toHaveBeenCalledWith({
-        type: "SET_SECTION",
-        payload: { sectionIndex: null },
-      })
       expect(dispatch).toHaveBeenCalledWith({
         type: "CHANGE_SECTION",
         payload: {
