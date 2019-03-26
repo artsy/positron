@@ -27,6 +27,14 @@ export class HeaderControls extends Component<
     isVideoOpen: false,
   }
 
+  componentWillMount() {
+    const { article, onChangeHeroAction } = this.props
+
+    if (!article.hero_section) {
+      onChangeHeroAction("type", "text")
+    }
+  }
+
   toggleControls = (controlType: "layout" | "video" | "close") => {
     const { isLayoutOpen, isVideoOpen } = this.state
 
