@@ -8,7 +8,7 @@ interface VideoControlsProps {
   article: ArticleData
   isOpen: boolean
   onChange: (key: any, val?: any) => void
-  onProgress: (progress: number) => void
+  onProgress: (progress: number | null) => void
   onClick: () => void
 }
 

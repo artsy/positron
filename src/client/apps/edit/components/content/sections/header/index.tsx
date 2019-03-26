@@ -6,7 +6,10 @@ import { FeatureHeaderContainer } from "@artsy/reaction/dist/Components/Publishi
 import { Deck } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent"
 import { FeatureTextAsset } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureTextHeader"
 import { EditImage } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/FeatureHeader"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import {
+  ArticleData,
+  ArticleLayout,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { onChangeHero } from "client/actions/edit/sectionActions"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
@@ -154,7 +157,7 @@ export class SectionHeader extends Component<
 
     if (isClassic) {
       return (
-        <HeaderContainer className="edit-header" layout={article.layout}>
+        <HeaderContainer layout={article.layout}>
           <Header
             article={article}
             date={this.getPublishDate()}
@@ -170,11 +173,7 @@ export class SectionHeader extends Component<
       const hasWhiteText = heroType === "fullscreen" && hasImageUrl
 
       return (
-        <HeaderContainer
-          className="edit-header"
-          layout={article.layout}
-          heroType={heroType}
-        >
+        <HeaderContainer layout={article.layout} heroType={heroType}>
           {isFeature && <HeaderControls onProgress={this.onProgress} />}
 
           <Header
@@ -210,7 +209,10 @@ export default connect(
   mapDispatchToProps
 )(SectionHeader)
 
-const HeaderContainer = styled.div<{ layout: string; heroType?: string }>`
+const HeaderContainer = styled.div<{
+  layout: ArticleLayout
+  heroType?: string
+}>`
   position: relative;
 
   a {

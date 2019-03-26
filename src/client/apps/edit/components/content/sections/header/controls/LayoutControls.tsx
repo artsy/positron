@@ -8,7 +8,7 @@ import styled from "styled-components"
 
 interface LayoutControlsProps {
   isOpen: boolean
-  hero: any // heroSectionData
+  hero: any // TODO: type hero_section
   onChange: (key: any, val?: any) => void
   onClick: () => void
 }
