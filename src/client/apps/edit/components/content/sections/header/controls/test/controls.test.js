@@ -2,10 +2,10 @@ import configureStore from "redux-mock-store"
 import React from "react"
 import { mount } from "enzyme"
 import { Provider } from "react-redux"
-import ModalCover from "../ModalCover"
+import { ModalCover } from "../ModalCover"
 import { VideoSectionControls } from "../../../video/controls"
 import { LayoutControls } from "../LayoutControls"
-import { VideoControls } from "../VideoControls"
+import { VideoControls, EmbedVideoControls } from "../VideoControls"
 import { HeaderControls } from "../index"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconLayoutFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutFullscreen"
@@ -113,7 +113,7 @@ describe("Feature Header Controls", () => {
     it("opens the embed menu on click", () => {
       const component = getWrapper(props)
       component
-        .find(".edit-header--video-open")
+        .find(EmbedVideoControls)
         .at(0)
         .simulate("click")
 

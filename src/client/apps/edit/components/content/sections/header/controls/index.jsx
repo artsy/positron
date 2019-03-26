@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import ModalCover from "./ModalCover"
+import { ModalCover } from "./ModalCover"
 import { VideoControls } from "./VideoControls"
 import { LayoutControls } from "./LayoutControls"
 import { onChangeHero } from "client/actions/edit/sectionActions"
