@@ -20,18 +20,17 @@ export const VideoControls: React.SFC<VideoControlsProps> = props => {
       <EmbedVideoControls size="4" weight="medium" onClick={onClick}>
         Embed Video +
       </EmbedVideoControls>
-      <div>
-        {isOpen && (
-          <ControlsContainer>
-            <VideoSectionControls
-              section={article.hero_section}
-              onChange={onChange}
-              onProgress={onProgress}
-              isHero
-            />
-          </ControlsContainer>
-        )}
-      </div>
+
+      {isOpen && (
+        <ControlsContainer>
+          <VideoSectionControls
+            section={article.hero_section}
+            onChange={onChange}
+            onProgress={onProgress}
+            isHero
+          />
+        </ControlsContainer>
+      )}
     </VideoControlsContainer>
   )
 }
