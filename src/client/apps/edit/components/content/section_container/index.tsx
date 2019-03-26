@@ -5,10 +5,8 @@ import {
   ArticleData,
   SectionData,
 } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import {
-  maybeRemoveEmptyText,
-  removeSection,
-} from "client/actions/edit/sectionActions"
+import { removeSection } from "client/actions/edit/sectionActions"
+import { maybeRemoveEmptyText } from "client/actions/edit/textSectionActions"
 import { ErrorBoundary } from "client/components/error/error_boundary"
 import { RemoveButton } from "client/components/remove_button"
 import React, { Component, Fragment } from "react"
