@@ -1,10 +1,10 @@
 import { Box } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeHero } from "client/actions/edit/sectionActions"
+import { ModalBackground } from "client/components/ModalBackground"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { LayoutControls } from "./LayoutControls"
-import { ModalCover } from "./ModalCover"
 import { VideoControls } from "./VideoControls"
 
 interface HeaderControlsProps {
@@ -63,7 +63,7 @@ export class HeaderControls extends Component<
     return (
       <Box mb={1}>
         {isModalOpen && (
-          <ModalCover onClick={() => this.toggleControls("close")} />
+          <ModalBackground onClick={() => this.toggleControls("close")} />
         )}
         {isBasicHero && (
           <VideoControls
