@@ -73,14 +73,14 @@ export const OpenControlsContainer = styled.div<{ color: string }>`
   cursor: pointer;
 `
 
-const ControlsContainer = styled.div`
+export const ControlsContainer = styled.div`
   border: 2px solid;
   display: flex;
   margin-top: 5px;
   text-align: center;
 `
 
-const LayoutButton = styled(Flex)`
+export const LayoutButton = styled(Flex)`
   padding: 15px 20px 10px;
   border-right: 1px solid ${color("black30")};
   background: ${color("white100")};
