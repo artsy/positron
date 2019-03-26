@@ -54,6 +54,7 @@ export const richTextStyleMap: StyleMap = [
 export const richTextBlockElements: AllowedBlocks = [
   "h2",
   "h3",
+  "blockquote",
   "ul",
   "ol",
   "p",

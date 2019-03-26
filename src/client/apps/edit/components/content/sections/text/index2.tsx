@@ -51,7 +51,6 @@ interface Props {
 export class SectionText2 extends React.Component<Props> {
   getAllowedBlocks = () => {
     const {
-      isInternalChannel,
       article: { layout },
     } = this.props
     const blocks: BlockElement[] = richTextBlockElements
@@ -74,14 +73,10 @@ export class SectionText2 extends React.Component<Props> {
       case "news": {
         return ["h3", "blockquote", "ol", "ul", "p"] as BlockElement[]
       }
-      case "classic": {
-        if (isInternalChannel) {
-          return ["h2", "h3", "blockquote", "ol", "ul", "p"] as BlockElement[]
-        }
+      default: {
+        return blocks
       }
     }
-
-    return blocks
   }
 
   onHandleReturn = (
