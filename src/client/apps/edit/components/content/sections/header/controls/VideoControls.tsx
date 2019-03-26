@@ -1,4 +1,4 @@
-import { color, space } from "@artsy/palette"
+import { color, Sans, space } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import React from "react"
 import styled from "styled-components"
@@ -17,7 +17,9 @@ export const VideoControls: React.SFC<VideoControlsProps> = props => {
 
   return (
     <VideoControlsContainer>
-      <EmbedVideoControls onClick={onClick}>Embed Video</EmbedVideoControls>
+      <EmbedVideoControls size="4" weight="medium" onClick={onClick}>
+        Embed Video +
+      </EmbedVideoControls>
       <div>
         {isOpen && (
           <ControlsContainer>
@@ -35,7 +37,7 @@ export const VideoControls: React.SFC<VideoControlsProps> = props => {
 }
 
 // Exported for tests
-export const EmbedVideoControls = styled.div``
+export const EmbedVideoControls = styled(Sans)``
 
 const VideoControlsContainer = styled.div`
   position: absolute;
