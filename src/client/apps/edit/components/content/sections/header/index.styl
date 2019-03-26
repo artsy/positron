@@ -1,46 +1,3 @@
-.edit-header
-  position relative
-
-  .upload-progress
-    min-width 0
-
-  &__image-container
-    top 20px
-    left 20px
-    right 20px
-    bottom 20px
-
-  .file-input.simple
-    height 100%
-    max-height 400px
-    min-height 400px
-
-    .file-input__upload-container
-      position absolute
-      top 0
-      left 0
-      right 0
-      bottom 0
-
-      h1:before
-        content '+ '
-        font-size 1.5em
-
-  .RemoveButton
-    width 30px
-    height 30px
-
-    circle
-      transition all .3s
-
-    &:hover
-      cursor pointer
-      circle
-        fill red-color
-
-#edit-content .edit-header a
-  background-image none
-
 [data-layout='classic'] .edit-header
   padding-top 10px
 
@@ -56,56 +13,9 @@
     margin-top 10px
     .edit-header--controls
       top -21px
-    .file-input.simple
-      max-height 100%
-      min-height 100%
-    .edit-header__image-container
-      height 100%
     div[class^='FeatureHeader__EditImage']
       left 0
       right 0
       top 0
       bottom 0
-      .RemoveButton
-        position absolute
-        z-index 1
-        right 5px
-        top 5px
 
-  &[data-type=basic]
-    .public-DraftEditorPlaceholder-inner
-      text-align center
-      width 100%
-
-  &[data-type=fullscreen]
-    .file-input.simple
-      height inherit
-      min-height 0
-      max-height 100%
-      width 235px
-      z-index 1
-      padding 0
-
-      .file-input__upload-container
-        align-items flex-start
-        background none
-        h1
-          font-size 13px
-        h2
-          display none
-
-    .edit-header__image-container
-      padding-top 10px
-      &[data-has-image=false]
-        .file-input.simple h1
-          color black
-
-    .public-DraftEditorPlaceholder-inner
-      color white
-
-  &[data-type='text']
-    .RemoveButton
-      position absolute
-      z-index 1
-      right -10px
-      top -10px

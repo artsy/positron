@@ -69,7 +69,7 @@ export class HeaderControls extends Component<
     const isBasicHero = hero.type === "basic"
 
     return (
-      <Box mb={1}>
+      <Box>
         {isModalOpen && (
           <ModalBackground onClick={() => this.toggleControls("close")} />
         )}

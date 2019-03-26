@@ -11,7 +11,10 @@ import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
 import FileInput from "client/components/file_input"
 import { ProgressBar } from "client/components/file_input/progress_bar"
-import { RemoveButton } from "client/components/remove_button"
+import {
+  RemoveButton,
+  RemoveButtonContainer,
+} from "client/components/remove_button"
 import moment from "moment"
 import React, { Component } from "react"
 import { connect } from "react-redux"
@@ -66,7 +69,7 @@ export class SectionHeader extends Component<
     )
   }
 
-  renderFileUpload = prompt => {
+  renderFileUpload = (prompt: string) => {
     const { onChangeHeroAction } = this.props
 
     return (
@@ -91,19 +94,23 @@ export class SectionHeader extends Component<
 
     if (isFullscreen && hasUrl) {
       return (
-        <div className="edit-header__image-container has-image">
-          {this.renderFileUpload("Change Background")}
-        </div>
+        <ImageContainter hasImage={hasUrl} heroType={type}>
+          {this.renderFileUpload("Change Background +")}
+        </ImageContainter>
       )
     } else if (hasUrl) {
       return <RemoveButton onClick={() => onChangeHeroAction("url", "")} />
     } else {
       return (
-        <div className="edit-header__image-container" data-has-image={false}>
+        <ImageContainter
+          className="edit-header__image-container"
+          hasImage={hasUrl}
+          heroType={type}
+        >
           {this.renderFileUpload(prompt)}
 
           {progress && <ProgressBar progress={progress} cover />}
-        </div>
+        </ImageContainter>
       )
     }
   }
@@ -162,7 +169,7 @@ export class SectionHeader extends Component<
       return (
         <HeaderContainer
           className={"edit-header " + headerType}
-          data-type={headerType}
+          layout={article.layout}
         >
           {isFeature && <HeaderControls onProgress={this.onProgress} />}
 
@@ -199,15 +206,34 @@ export default connect(
   mapDispatchToProps
 )(SectionHeader)
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.div<{ layout: string }>`
+  position: relative;
+
+  a {
+    background-image: none;
+  }
+
   ${Deck} {
     width: 100%;
   }
   ${FeatureHeaderContainer} {
-    height: calc(100vh - 95px);
+    height: calc(100vh - 90px);
   }
   ${BasicHeaderContainer} {
     margin-top: 0;
+  }
+
+  .upload-progress {
+    min-width: 0;
+  }
+
+  ${RemoveButtonContainer} {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
   }
 `
 
@@ -217,4 +243,79 @@ const Title = styled.div`
     color: ${color("red100")};
     position: absolute;
   }
+`
+
+const ImageContainter = styled.div<{ hasImage: boolean; heroType: string }>`
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+
+  .find-input.simple {
+    height: 100%;
+    max-height: 400px;
+    min-height: 400px;
+  }
+
+  .file-input__upload-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    h1:after {
+      content: " +";
+      font-size: 1.5em;
+    }
+  }
+
+  ${props =>
+    props.heroType === "split" &&
+    `
+    height: 100%;
+
+    .file-input.simple {
+      max-height: 100%;
+      min-height: 100%;
+    }
+  `};
+
+  ${props =>
+    props.heroType === "fullscreen" &&
+    `
+      padding-top: 10px;
+      padding-left: 10px;
+
+      .file-input.simple {
+        height: inherit;
+        min-height: 0;
+        max-height: 100%;
+        width: 235px;
+        z-index: 1;
+        padding: 0;
+
+        .file-input__upload-container {
+          background: none transparent;
+        }
+      }
+
+      .file-input__upload-container {
+        h1 {
+          text-align: left;
+        }
+        h2 {
+          display: none;
+        }
+      }
+  `};
+
+  ${props =>
+    !props.hasImage &&
+    props.heroType === "fullscreen" &&
+    `
+    .file-input__upload-container h1 {
+      color: black;
+    }
+  `};
 `
