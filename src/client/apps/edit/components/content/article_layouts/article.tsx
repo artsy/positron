@@ -1,22 +1,29 @@
-import { connect } from "react-redux"
-import PropTypes from "prop-types"
 import React, { Component } from "react"
-import SectionFooter from "../sections/footer/index.tsx"
+import { connect } from "react-redux"
+import SectionList from "../section_list"
+import SectionFooter from "../sections/footer"
+// @ts-ignore - TODO: Remove index.styl
 import SectionHeader from "../sections/header/index.tsx"
 import SectionHero from "../sections/hero"
-import SectionList from "../section_list/index.tsx"
 
-export class EditArticle extends Component {
-  static propTypes = {
-    channel: PropTypes.object.isRequired,
-  }
+interface ChannelState {
+  // TODO: replace with appState ChannelState when merged https://github.com/artsy/positron/pull/1945
+  name?: string
+  id: string
+  type?: string
+}
 
+interface EditArticleProps {
+  channel: ChannelState
+}
+
+export class EditArticle extends Component<EditArticleProps> {
   render() {
     const { channel } = this.props
     const hasHero = channel.type === "support" || channel.type === "team"
 
     return (
-      <div className="EditArticle">
+      <div>
         {hasHero && <SectionHero />}
         <SectionHeader />
         <SectionList />
@@ -25,6 +32,7 @@ export class EditArticle extends Component {
     )
   }
 }
+
 const mapStateToProps = state => ({
   channel: state.app.channel,
 })
