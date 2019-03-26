@@ -1,9 +1,11 @@
-import { color } from "@artsy/palette"
+import { color, space } from "@artsy/palette"
 import { Header } from "@artsy/reaction/dist/Components/Publishing"
 import { LeadParagraph } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/ClassicHeader"
 import { BasicHeaderContainer } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureBasicHeader"
 import { FeatureHeaderContainer } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureFullscreenHeader"
 import { Deck } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureInnerContent"
+import { FeatureTextAsset } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/Components/FeatureTextHeader"
+import { EditImage } from "@artsy/reaction/dist/Components/Publishing/Header/Layouts/FeatureHeader"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { onChangeHero } from "client/actions/edit/sectionActions"
@@ -20,6 +22,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import HeaderControls from "./controls"
+import { LayoutControlsContainer } from "./controls/LayoutControls"
 
 interface SectionHeaderProps {
   article: ArticleData
@@ -151,25 +154,26 @@ export class SectionHeader extends Component<
 
     if (isClassic) {
       return (
-        <div className="edit-header">
+        <HeaderContainer className="edit-header" layout={article.layout}>
           <Header
             article={article}
             date={this.getPublishDate()}
             editTitle={this.editTitle()}
             editLeadParagraph={this.editLeadParagraph()}
           />
-        </div>
+        </HeaderContainer>
       )
     } else {
-      const headerType = isFeature ? hero.type || "text" : ""
+      const heroType = isFeature ? hero.type || "text" : ""
       const verticalPlaceholder = article.vertical ? "" : "Missing Vertical"
       const hasImageUrl = hero.url && hero.url.length
-      const hasWhiteText = headerType === "fullscreen" && hasImageUrl
+      const hasWhiteText = heroType === "fullscreen" && hasImageUrl
 
       return (
         <HeaderContainer
-          className={"edit-header " + headerType}
+          className="edit-header"
           layout={article.layout}
+          heroType={heroType}
         >
           {isFeature && <HeaderControls onProgress={this.onProgress} />}
 
@@ -178,7 +182,7 @@ export class SectionHeader extends Component<
             date={this.getPublishDate()}
             editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
             editImage={
-              isFeature && headerType !== "basic"
+              isFeature && heroType !== "basic"
                 ? this.editImage(hero)
                 : undefined
             }
@@ -206,7 +210,7 @@ export default connect(
   mapDispatchToProps
 )(SectionHeader)
 
-const HeaderContainer = styled.div<{ layout: string }>`
+const HeaderContainer = styled.div<{ layout: string; heroType?: string }>`
   position: relative;
 
   a {
@@ -228,12 +232,50 @@ const HeaderContainer = styled.div<{ layout: string }>`
   }
 
   ${RemoveButtonContainer} {
-    width: 30px;
-    height: 30px;
+    width: ${space(3)}px;
+    height: ${space(3)}px;
     position: absolute;
-    top: -10px;
-    right: -10px;
-    z-index: 10;
+    top: -${space(1)}px;
+    right: -${space(1)}px;
+    z-index: 2;
+  }
+
+  ${props =>
+    props.layout === "feature" &&
+    `
+    margin-bottom: ${space(3)}px;
+  `};
+
+  ${props =>
+    (props.layout !== "feature" || props.heroType === "split") &&
+    `
+    padding-top: ${space(1)}px;
+  `};
+
+  ${LayoutControlsContainer} {
+    ${props =>
+      props.heroType === "split" &&
+      `
+      padding-top: 0;
+      margin-top: -8px;
+    `};
+  }
+
+  ${FeatureTextAsset} {
+    min-height: 400px;
+  }
+
+  ${EditImage} {
+    position: absolute;
+
+    ${props =>
+      props.heroType === "text" &&
+      `
+      left: 0;
+      right: 5px;
+      top: ${space(2)}px;
+      bottom: 0;
+    `};
   }
 `
 
@@ -246,10 +288,10 @@ const Title = styled.div`
 `
 
 const ImageContainter = styled.div<{ hasImage: boolean; heroType: string }>`
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
+  top: ${space(2)}px;
+  left: ${space(2)}px;
+  right: ${space(2)}px;
+  bottom: ${space(2)}px;
 
   .find-input.simple {
     height: 100%;
@@ -263,11 +305,6 @@ const ImageContainter = styled.div<{ hasImage: boolean; heroType: string }>`
     left: 0;
     right: 0;
     bottom: 0;
-
-    h1:after {
-      content: " +";
-      font-size: 1.5em;
-    }
   }
 
   ${props =>
@@ -282,10 +319,19 @@ const ImageContainter = styled.div<{ hasImage: boolean; heroType: string }>`
   `};
 
   ${props =>
+    props.heroType === "text" &&
+    `
+
+    .file-input.simple {
+      min-height: 400px;
+    }
+  `};
+
+  ${props =>
     props.heroType === "fullscreen" &&
     `
-      padding-top: 10px;
-      padding-left: 10px;
+      padding-top: ${space(1)}px;
+      padding-left: ${space(1)}px;
 
       .file-input.simple {
         height: inherit;

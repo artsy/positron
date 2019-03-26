@@ -1,4 +1,4 @@
-import { color, Flex, Sans } from "@artsy/palette"
+import { color, Flex, Sans, space } from "@artsy/palette"
 import { IconLayoutBasic } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutBasic"
 import { IconLayoutFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutFullscreen"
 import { IconLayoutSplit } from "@artsy/reaction/dist/Components/Publishing/Icon/IconLayoutSplit"
@@ -59,13 +59,13 @@ export const LayoutControls: React.SFC<LayoutControlsProps> = props => {
   )
 }
 
-const LayoutControlsContainer = styled.div`
+export const LayoutControlsContainer = styled.div`
   position: absolute;
-  right: 20px;
+  right: ${space(2)}px;
   z-index: 3;
   text-align: right;
   user-select: none;
-  padding: 20px 10px;
+  padding: ${space(2)}px ${space(1)}px;
 `
 
 export const OpenControlsContainer = styled.div<{ color: string }>`
@@ -81,7 +81,7 @@ export const ControlsContainer = styled.div`
 `
 
 export const LayoutButton = styled(Flex)`
-  padding: 15px 20px 10px;
+  padding: 15px ${space(2)}px ${space(1)}px;
   border-right: 1px solid ${color("black30")};
   background: ${color("white100")};
   cursor: pointer;
@@ -93,7 +93,7 @@ export const LayoutButton = styled(Flex)`
   }
 
   svg {
-    margin: 0 10px 10px 10px;
+    margin: 0 ${space(1)}px ${space(1)}px;
   }
 `
 
