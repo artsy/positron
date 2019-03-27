@@ -1,6 +1,7 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { RichText } from "client/components/draft/rich_text/rich_text"
-import { EditorState } from "draft-js"
+import { getEditorState } from "client/components/draft/shared/test_helpers"
+import { EditorState, SelectionState } from "draft-js"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
@@ -127,11 +128,37 @@ describe("SectionText", () => {
   })
 
   describe("#divideEditorState", () => {
-    // xit("Returns html for two blocks if state can be divided", () => {})
+    it("Returns html for two blocks if state can be divided", () => {
+      const editorState = getEditorState(
+        "<p>First block.</p><p>Second block.</p>"
+      )
+      const startSelection = editorState.getSelection()
+      const startEditorState = editorState.getCurrentContent()
+      // @ts-ignore
+      const { key } = startEditorState.getLastBlock()
+      const selection = startSelection.merge({
+        anchorKey: key,
+        anchorOffset: 12,
+        focusKey: key,
+        focusOffset: 0,
+      }) as SelectionState
+      const newEditorState = EditorState.acceptSelection(editorState, selection)
 
-    xit("does nothing if section should not be split", () => {
       const instance = getWrapper().instance() as SectionText2
-      const newBlocks = instance.divideEditorState(EditorState.createEmpty())
+      const newBlocks = instance.divideEditorState(newEditorState)
+
+      expect(newBlocks).toEqual({
+        beforeHtml: "<p>First block.</p>",
+        afterHtml: "<p>Second block.</p>",
+      })
+    })
+
+    it("does nothing if section should not be split", () => {
+      const editorState = getEditorState(
+        "<p>First block.</p><p>Second block.</p>"
+      )
+      const instance = getWrapper().instance() as SectionText2
+      const newBlocks = instance.divideEditorState(editorState)
 
       expect(newBlocks).toBeUndefined()
     })

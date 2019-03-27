@@ -457,9 +457,7 @@ export class RichText extends Component<Props, State> {
   }
 
   onFocus = () => {
-    const { isReadonly } = this.props
-    // Editor has focused, call setSection
-    if (isReadonly) {
+    if (this.props.isReadonly) {
       return "handled"
     }
   }

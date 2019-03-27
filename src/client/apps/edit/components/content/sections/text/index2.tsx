@@ -28,7 +28,6 @@ import {
 import { getSelectionDetails } from "client/components/draft/shared/selection"
 import { BlockElement } from "client/components/draft/typings"
 import { ContentState, EditorState } from "draft-js"
-import { cloneDeep } from "lodash"
 import React from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -134,11 +133,11 @@ export class SectionText2 extends React.Component<Props> {
       if (block.getKey() === anchorKey) {
         // split blocks from end of selected block
         beforeBlocks = blockArray.splice(0, index)
-        afterBlocks = cloneDeep(blockArray)
+        afterBlocks = blockArray
       }
     })
 
-    if (beforeBlocks) {
+    if (beforeBlocks.length) {
       const beforeContent = ContentState.createFromBlockArray(beforeBlocks)
       const afterContent = ContentState.createFromBlockArray(afterBlocks)
 
