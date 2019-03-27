@@ -1,19 +1,28 @@
 import {
   appReducer,
-  initialState as appInitialState,
+  AppState,
+  getInitialState as appInitialState,
 } from "client/reducers/appReducer"
 import {
-  editReducer,
-  initialState as editInitialState,
-} from "client/reducers/editReducer"
-import {
   articlesReducer,
+  ArticlesState,
   initialState as articlesInitialState,
 } from "client/reducers/articlesReducer"
+import {
+  editReducer,
+  EditState,
+  initialState as editInitialState,
+} from "client/reducers/editReducer"
 import { combineReducers } from "redux"
 
-export const initialState = {
-  app: appInitialState,
+interface GlobalState {
+  app: AppState
+  edit: EditState
+  articlesList: ArticlesState
+}
+
+export const initialState: GlobalState = {
+  app: appInitialState(),
   edit: editInitialState,
   articlesList: articlesInitialState,
 }

@@ -30,7 +30,7 @@ RUN touch /var/run/nginx.pid && \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN npm install -g yarn@1.9.4
+RUN npm install -g yarn@1.15.2
 
 # Switch to deploy user
 USER deploy

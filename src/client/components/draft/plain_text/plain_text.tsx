@@ -15,12 +15,13 @@ interface PlainTextState {
 
 export class PlainText extends React.Component<PlainTextProps, PlainTextState> {
   public editor
-  private debouncedOnContentChange
+  public debouncedOnContentChange
 
   constructor(props) {
     super(props)
 
     const editorState = this.setEditorState()
+
     this.state = { editorState }
     this.debouncedOnContentChange = debounce(content => {
       props.onChange(content)

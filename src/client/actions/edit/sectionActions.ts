@@ -10,6 +10,7 @@ import {
 import keyMirror from "client/lib/keyMirror"
 import { clone, cloneDeep } from "lodash"
 import { clean, stripTags } from "underscore.string"
+
 export const actions = keyMirror(
   "CHANGE_SECTION",
   "NEW_SECTION",
@@ -17,6 +18,13 @@ export const actions = keyMirror(
   "SET_SECTION"
 )
 
+/**
+ * Actions related to changing data in an article section via the edit/content app
+ */
+
+/**
+ * Mutate section data based on key/val pair
+ */
 export const changeSection = (key: string, value: any) => {
   return {
     type: actions.CHANGE_SECTION,
@@ -27,6 +35,10 @@ export const changeSection = (key: string, value: any) => {
   }
 }
 
+/**
+ * Adds a new hero (header) section, setupSection applies
+ * default section data based on arg type
+ */
 export const newHeroSection = (type: SectionType) => {
   const section = setupSection(type)
 
@@ -35,6 +47,12 @@ export const newHeroSection = (type: SectionType) => {
   }
 }
 
+/**
+ * Add a new section to article.sections array based on type
+ * optionally pass attrs to include data in the new section
+ * setupSection applies default section data based on arg type
+ * returns text section by default
+ */
 export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
   const section = { ...setupSection(type), ...attrs } as SectionData
 
@@ -47,6 +65,9 @@ export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
   }
 }
 
+/**
+ * Change data in article.hero_section
+ */
 export const onChangeHero = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
@@ -63,6 +84,9 @@ export const onChangeHero = (key: string, value: any) => {
   }
 }
 
+/**
+ * Change data for an individual section from the article.sections array
+ */
 export const onChangeSection = (key: string, value: any) => {
   return (dispatch, getState) => {
     const {
@@ -77,6 +101,10 @@ export const onChangeSection = (key: string, value: any) => {
   }
 }
 
+/**
+ * Accepts two strings of html, replaces the section currently
+ * being edited with two text sections
+ */
 export const onSplitTextSection = (
   existingSectionBody: string,
   newSectionBody: string
@@ -95,6 +123,10 @@ export const onSplitTextSection = (
   }
 }
 
+/**
+ * Replaces current section html with newHtml arg and deletes previous section
+ * Called only from inside #maybeMergeTextSections to ensure that action is allowed
+ */
 export const onMergeTextSections = (newHtml: string) => {
   return (dispatch, getState) => {
     const {
@@ -105,6 +137,14 @@ export const onMergeTextSections = (newHtml: string) => {
   }
 }
 
+/**
+ * Checks if section before currently edited section is of type text and
+ * if so, merges content of sections together
+ *
+ * Also removes blockquotes to ensure that new section does not combine
+ * disallowed block types (all blockquotes must exist in their own section
+ * because they are rendered at a wider width than other text blocks)
+ */
 export const maybeMergeTextSections = () => {
   return (dispatch, getState) => {
     const {
@@ -129,6 +169,12 @@ export const maybeMergeTextSections = () => {
   }
 }
 
+/**
+ * To ensure that all blockquotes are confined to their own section,
+ * insert new sections before or after changed text block when necessary
+ *
+ * sets currently editing section to null to ensure all draftjs states are refreshed
+ */
 export const onInsertBlockquote = (
   blockquoteHtml: string,
   beforeHtml: string,
@@ -141,9 +187,11 @@ export const onInsertBlockquote = (
 
     dispatch(onChangeSection("body", blockquoteHtml))
     if (afterHtml) {
+      // insert a section after if html is provided
       dispatch(newSection("text", sectionIndex + 1, { body: afterHtml }))
     }
     if (beforeHtml) {
+      // insert a section before if html is provided
       dispatch(newSection("text", sectionIndex, { body: beforeHtml }))
     }
     if ((beforeHtml || afterHtml) && !article.published) {
@@ -153,6 +201,10 @@ export const onInsertBlockquote = (
   }
 }
 
+/**
+ * Check section.body to ensure that html will render text. If html is empty or
+ * blocktype is h1 (an allowed placeholder), will strip spaces from h1
+ */
 export const maybeRemoveEmptyText = (sectionIndex: number) => {
   return (dispatch, getState) => {
     const {
@@ -184,6 +236,9 @@ export const maybeRemoveEmptyText = (sectionIndex: number) => {
   }
 }
 
+/**
+ * Removes a section from the article.sections array
+ */
 export const removeSection = (sectionIndex: number) => {
   return (dispatch, getState) => {
     const {
@@ -196,15 +251,21 @@ export const removeSection = (sectionIndex: number) => {
   }
 }
 
+/**
+ * Sets the index of the section a user is currently editing to app state
+ * When null, no section is being edited
+ */
 export const setSection = (sectionIndex: number | null) => ({
-  // Index of article section currently editing
   type: actions.SET_SECTION,
   payload: {
     sectionIndex,
   },
 })
 
-export const setupSection = (type: SectionType) => {
+/**
+ * Sets up default data for an empty section based on arg type
+ */
+export const setupSection = (type: SectionType = "text") => {
   // set initial state of new section
   switch (type) {
     case "video":
@@ -232,7 +293,7 @@ export const setupSection = (type: SectionType) => {
         url: "",
         layout: "column_width",
       } as SectionData
-    case "text":
+    default:
       return {
         type: "text",
         body: "",

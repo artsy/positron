@@ -1,7 +1,11 @@
-import u from "updeep"
-import { data as sd } from "sharify"
-import { clone, cloneDeep, extend, pick } from "lodash"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { actions } from "client/actions/edit"
+import { clone, cloneDeep, extend, pick } from "lodash"
+import { data as sd } from "sharify"
+import u from "updeep"
 
 export const setupArticle = () => {
   const article = sd.ARTICLE
@@ -25,7 +29,31 @@ export const setupYoastKeyword = () => {
   return yoastKeyword
 }
 
-export const initialState = {
+interface ErrorState {
+  message: string
+}
+
+interface MentionedState {
+  artist: any[]
+  artwork: any[]
+}
+
+export interface EditState {
+  activeView: "content" | "display" | "admin"
+  article: ArticleData
+  currentSession: any // TODO: type lockout session
+  error: ErrorState | null
+  isDeleting: boolean
+  isPublishing: boolean
+  isSaving: boolean
+  isSaved: boolean
+  mentioned: MentionedState
+  section: SectionData | null
+  sectionIndex: number | null
+  yoastKeyword: string
+}
+
+export const initialState: EditState = {
   activeView: "content",
   article: setupArticle(),
   currentSession: sd.CURRENT_SESSION,
@@ -43,7 +71,10 @@ export const initialState = {
   yoastKeyword: setupYoastKeyword(),
 }
 
-export function editReducer(state = initialState, action) {
+/**
+ * Data related to editing an individual article via /article/:id/edit
+ */
+export const editReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.CHANGE_SAVED_STATUS: {
       const article = extend(state.article, action.payload.article)
@@ -61,7 +92,7 @@ export function editReducer(state = initialState, action) {
     case actions.SET_SECTION: {
       const { sectionIndex } = action.payload
       const { sections } = state.article
-      const section = clone(sections[sectionIndex]) || null
+      const section = sections ? clone(sections[sectionIndex]) : null
 
       return u(
         {

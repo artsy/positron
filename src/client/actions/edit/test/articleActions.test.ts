@@ -1,4 +1,3 @@
-import { cloneDeep } from "lodash"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import Backbone from "backbone"
 import {
@@ -6,14 +5,17 @@ import {
   changeSavedStatus,
   deleteArticle,
   onAddFeaturedItem,
-  onFirstSave,
   onChangeArticle,
+  onFirstSave,
   publishArticle,
   saveArticle,
   setMentionedItems,
   setSeoKeyword,
 } from "client/actions/edit/articleActions"
-import Article from "client/models/article.coffee"
+import { cloneDeep } from "lodash"
+const Article = require("client/models/article.coffee")
+
+jest.mock("lodash/debounce", () => jest.fn(e => e))
 
 describe("articleActions", () => {
   let article
@@ -34,14 +36,13 @@ describe("articleActions", () => {
       dispatch = jest.fn()
     })
 
-    it("Calls #changeArticle", () => {
+    it("Calls #changeArticle with key/val pair", () => {
       changeArticleData("title", "Title")(dispatch, getState)
-      expect(dispatch.mock.calls[0][0].type).toBe("CHANGE_ARTICLE")
-    })
 
-    it("Can accept a key/value pair as args", () => {
-      changeArticleData("title", "Title")(dispatch, getState)
-      expect(dispatch.mock.calls[0][0].payload.data.title).toBe("Title")
+      expect(dispatch).toBeCalledWith({
+        type: "CHANGE_ARTICLE",
+        payload: { data: { title: "Title" } },
+      })
     })
 
     it("Can accept a key/value pair with nested object as args", () => {
@@ -49,31 +50,42 @@ describe("articleActions", () => {
         dispatch,
         getState
       )
-      expect(dispatch.mock.calls[0][0].payload.data.series.description).toBe(
-        "Series Description"
-      )
+
+      expect(dispatch).toBeCalledWith({
+        type: "CHANGE_ARTICLE",
+        payload: { data: { series: { description: "Series Description" } } },
+      })
     })
 
     it("Can accept an object as args", () => {
-      let data = {
+      const data = {
         title: "Title",
         series: { description: "Series Description" },
       }
       changeArticleData(data)(dispatch, getState)
-      expect(dispatch.mock.calls[0][0].payload.data.title).toBe("Title")
-      expect(dispatch.mock.calls[0][0].payload.data.series.description).toBe(
-        "Series Description"
-      )
+
+      expect(dispatch).toBeCalledWith({
+        type: "CHANGE_ARTICLE",
+        payload: {
+          data: {
+            title: "Title",
+            series: { description: "Series Description" },
+          },
+        },
+      })
     })
   })
 
   it("#changeSavedStatus updates article and sets isSaved to arg", () => {
-    article.title = "Cool article"
     const action = changeSavedStatus(article, true)
 
-    expect(action.type).toBe("CHANGE_SAVED_STATUS")
-    expect(action.payload.isSaved).toBe(true)
-    expect(action.payload.article.title).toBe("Cool article")
+    expect(action).toEqual({
+      type: "CHANGE_SAVED_STATUS",
+      payload: {
+        isSaved: true,
+        article,
+      },
+    })
   })
 
   describe("#deleteArticle", () => {
@@ -89,8 +101,10 @@ describe("articleActions", () => {
     it("#deleteArticle destroys the article and sets isDeleting", () => {
       deleteArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe("DELETE_ARTICLE")
-      expect(dispatch.mock.calls[0][0].payload.isDeleting).toBe(true)
+      expect(dispatch).toBeCalledWith({
+        type: "DELETE_ARTICLE",
+        payload: { isDeleting: true },
+      })
       expect(Backbone.sync.mock.calls[0][0]).toBe("delete")
     })
   })
@@ -98,7 +112,7 @@ describe("articleActions", () => {
   it("#onFirstSave forwards to the article url", () => {
     onFirstSave("12345")
 
-    expect(window.location.assign.mock.calls[0][0]).toBe("/articles/12345/edit")
+    expect(window.location.assign).toBeCalledWith("/articles/12345/edit")
   })
 
   describe("#onChangeArticle", () => {
@@ -111,52 +125,69 @@ describe("articleActions", () => {
         app: { channel: { type: "editorial" } },
       }))
       dispatch = jest.fn()
+      Backbone.sync = jest.fn()
     })
 
-    it("calls #changeArticle with new attrs", () => {
+    it("calls #changeArticleData with new attrs", () => {
       onChangeArticle("title", "New Title")(dispatch, getState)
-      dispatch.mock.calls[0][0](dispatch, getState)
-      expect(dispatch.mock.calls[1][0].type).toBe("CHANGE_ARTICLE")
-      expect(dispatch.mock.calls[1][0].payload.data.title).toBe("New Title")
+      const dispatchedChangeArticleData = dispatch.mock.calls[0][0]
+      dispatch.mockClear()
+      dispatchedChangeArticleData(dispatch, getState)
+
+      expect(dispatch).toBeCalledWith({
+        payload: { data: { title: "New Title" } },
+        type: "CHANGE_ARTICLE",
+      })
     })
 
-    it("calls debounced #updateArticle with new attrs", done => {
+    it("calls debounced #updateArticle with new attrs", () => {
+      global.Date = jest.fn(() => ({
+        toISOString: () => "2019-03-19T20:33:06.821Z",
+      })) as any
       onChangeArticle("title", "New Title")(dispatch, getState)
-      dispatch.mock.calls[0][0](dispatch, getState)
-      setTimeout(() => {
-        expect(dispatch.mock.calls[2][0].type).toBe("UPDATE_ARTICLE")
-        expect(dispatch.mock.calls[2][0].key).toBe("userCurrentlyEditing")
-        expect(dispatch.mock.calls[2][0].payload.article).toBe(article.id)
-        done()
-      }, 550)
+
+      expect(dispatch).toBeCalledWith({
+        type: "UPDATE_ARTICLE",
+        key: "userCurrentlyEditing",
+        payload: {
+          article: "594a7e2254c37f00177c0ea9",
+          channel: {
+            type: "editorial",
+          },
+          timestamp: "2019-03-19T20:33:06.821Z",
+        },
+      })
     })
 
     it("does not call #saveArticle if published", () => {
       onChangeArticle("title", "New Title")(dispatch, getState)
-      dispatch.mock.calls[0][0](dispatch, getState)
-      expect(dispatch.mock.calls.length).toBe(2)
+      const dispatchedChangeArticleData = dispatch.mock.calls[0][0]
+      dispatch.mockClear()
+      dispatchedChangeArticleData(dispatch, getState)
+
+      expect(dispatch).toBeCalledWith({
+        payload: { data: { title: "New Title" } },
+        type: "CHANGE_ARTICLE",
+      })
+      expect(Backbone.sync).not.toBeCalled()
     })
 
-    it("calls debounced #saveArticle if draft", done => {
+    it("calls debounced #saveArticle if draft", async () => {
       article.published = false
-      onChangeArticle("title", "N")(dispatch, getState)
-      dispatch.mock.calls[0][0](dispatch, getState)
-      onChangeArticle("title", "Ne")(dispatch, getState)
-      dispatch.mock.calls[2][0](dispatch, getState)
-      onChangeArticle("title", "New")(dispatch, getState)
-      dispatch.mock.calls[4][0](dispatch, getState)
+      onChangeArticle("title", "New title")(dispatch, getState)
+      const dispatchedChangeArticleData = dispatch.mock.calls[0][0]
+      dispatchedChangeArticleData(dispatch, getState)
+      const dispatchedSaveArticle = dispatch.mock.calls[2][0]
+      dispatchedSaveArticle(dispatch, getState)
 
-      setTimeout(() => {
-        expect(dispatch.mock.calls.length).toBe(8)
-        done()
-      }, 550)
+      expect(Backbone.sync.mock.calls[0][0]).toBe("update")
     })
   })
 
   describe("#publishArticle", () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, "set")
+    const setArticleSpy = jest.spyOn(Article.prototype, "set")
 
     beforeEach(() => {
       setArticleSpy.mockClear()
@@ -171,55 +202,64 @@ describe("articleActions", () => {
       }))
       publishArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe("PUBLISH_ARTICLE")
-      expect(dispatch.mock.calls[0][0].payload.isPublishing).toBe(true)
+      expect(dispatch).toBeCalledWith({
+        type: "PUBLISH_ARTICLE",
+        payload: { isPublishing: true },
+      })
       expect(Backbone.sync.mock.calls[0][0]).toBe("update")
       expect(Backbone.sync.mock.calls[0][1].get("published")).toBe(true)
     })
 
     it("calls setSeoKeyword if publishing", () => {
-      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
       getState = jest.fn(() => ({
         edit: { article: { published: true }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
-      expect(dispatch.mock.calls.length).toEqual(3)
+      dispatch.mock.calls[1][0](dispatch, getState)
+
+      expect(setArticleSpy.mock.calls.length).toBe(2)
+      expect(setArticleSpy).toHaveBeenLastCalledWith({
+        seo_keyword: "ceramics",
+      })
     })
 
     it("Does not call setSeoKeyword if unpublishing", () => {
-      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
       getState = jest.fn(() => ({
         edit: { article: { published: false }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
+      dispatch.mock.calls[1][0](dispatch, getState)
+
       expect(setArticleSpy.mock.calls.length).toBe(1)
+      expect(setArticleSpy).toBeCalledWith(
+        {
+          published: false,
+        },
+        {}
+      )
     })
 
     it("Redirects to published list if publishing", () => {
       getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       publishArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[2][0].type).toBe("REDIRECT_TO_LIST")
-      expect(window.location.assign.mock.calls[0][0]).toBe(
-        "/articles?published=true"
-      )
+      expect(dispatch).toHaveBeenLastCalledWith({ type: "REDIRECT_TO_LIST" })
+      expect(window.location.assign).toBeCalledWith("/articles?published=true")
     })
 
     it("Redirects to drafts list if unpublishing", () => {
       getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       publishArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[1][0].type).toBe("REDIRECT_TO_LIST")
-      expect(window.location.assign.mock.calls[0][0]).toBe(
-        "/articles?published=false"
-      )
+      expect(dispatch).toHaveBeenLastCalledWith({ type: "REDIRECT_TO_LIST" })
+      expect(window.location.assign).toBeCalledWith("/articles?published=false")
     })
   })
 
   describe("#setSeoKeyword", () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, "set")
+    const setArticleSpy = jest.spyOn(Article.prototype, "set")
 
     beforeEach(() => {
       setArticleSpy.mockClear()
@@ -232,9 +272,12 @@ describe("articleActions", () => {
         edit: { article: { published: true }, yoastKeyword: "ceramics" },
       }))
 
-      let a = new Article(FeatureArticle)
-      setSeoKeyword(a)(dispatch, getState)
-      expect(setArticleSpy.mock.calls[1][0].seo_keyword).toBe("ceramics")
+      setSeoKeyword(new Article(article))(dispatch, getState)
+
+      expect(setArticleSpy.mock.calls.length).toBe(2)
+      expect(setArticleSpy).toHaveBeenLastCalledWith({
+        seo_keyword: "ceramics",
+      })
     })
 
     it("doesn't set an seo keyword for an unpublished article", () => {
@@ -242,17 +285,17 @@ describe("articleActions", () => {
         edit: { article: { published: false }, yoastKeyword: "ceramics" },
       }))
 
-      FeatureArticle.published = false
-      let a = new Article(FeatureArticle)
-      setSeoKeyword(a)(dispatch, getState)
-      expect(setArticleSpy.mock.calls[1]).toBeFalsy()
+      article.published = false
+      setSeoKeyword(new Article(article))(dispatch, getState)
+
+      expect(setArticleSpy.mock.calls.length).toBe(1)
     })
   })
 
   describe("#saveArticle", () => {
     let getState
     let dispatch
-    let setArticleSpy = jest.spyOn(Article.prototype, "set")
+    const setArticleSpy = jest.spyOn(Article.prototype, "set")
 
     beforeEach(() => {
       setArticleSpy.mockClear()
@@ -265,8 +308,10 @@ describe("articleActions", () => {
     it("Sets isSaving to true and saves the article", () => {
       saveArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[0][0].type).toBe("SAVE_ARTICLE")
-      expect(dispatch.mock.calls[0][0].payload.isSaving).toBe(true)
+      expect(dispatch).toBeCalledWith({
+        type: "SAVE_ARTICLE",
+        payload: { isSaving: true },
+      })
       expect(Backbone.sync.mock.calls[0][0]).toBe("update")
     })
 
@@ -274,35 +319,40 @@ describe("articleActions", () => {
       getState = jest.fn(() => ({ edit: { article: { published: true } } }))
       saveArticle()(dispatch, getState)
 
-      expect(dispatch.mock.calls[2][0].type).toBe("REDIRECT_TO_LIST")
-      expect(window.location.assign.mock.calls[0][0]).toBe(
-        "/articles?published=true"
-      )
+      expect(dispatch).toHaveBeenLastCalledWith({ type: "REDIRECT_TO_LIST" })
+      expect(window.location.assign).toBeCalledWith("/articles?published=true")
     })
 
     it("Does not redirect if unpublished", () => {
       getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       saveArticle()(dispatch, getState)
 
-      expect(window.location.assign.mock.calls.length).toBe(0)
+      expect(window.location.assign).not.toBeCalled()
     })
 
     it("calls setSeoKeyword if published", () => {
-      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
       getState = jest.fn(() => ({
         edit: { article: { published: true }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
-      expect(dispatch.mock.calls.length).toEqual(3)
+      dispatch.mock.calls[1][0](dispatch, getState)
+
+      expect(setArticleSpy).toHaveBeenLastCalledWith({
+        seo_keyword: "ceramics",
+      })
+      expect(setArticleSpy.mock.calls.length).toBe(2)
+      expect(dispatch.mock.calls.length).toBe(3)
     })
 
     it("Does not call setSeoKeyword if unpublished", () => {
-      // thunk returns anonymous function so using length to ensure that dispatch is called the correct number of times
       getState = jest.fn(() => ({
         edit: { article: { published: false }, yoastKeyword: "ceramics" },
       }))
       saveArticle()(dispatch, getState)
+      dispatch.mock.calls[1][0](dispatch, getState)
+
       expect(setArticleSpy.mock.calls.length).toBe(1)
+      expect(dispatch.mock.calls.length).toBe(2)
     })
 
     it("Redirects to article if new", () => {
@@ -312,9 +362,7 @@ describe("articleActions", () => {
       })
       getState = jest.fn(() => ({ edit: { article: { published: false } } }))
       saveArticle()(dispatch, getState)
-      expect(window.location.assign.mock.calls[0][0]).toBe(
-        "/articles/12345/edit"
-      )
+      expect(window.location.assign).toBeCalledWith("/articles/12345/edit")
     })
   })
 
@@ -331,20 +379,24 @@ describe("articleActions", () => {
       onAddFeaturedItem("artist", { _id: "123" })(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[1][0].type).toBe("CHANGE_ARTICLE")
-      expect(
-        dispatch.mock.calls[1][0].payload.data.primary_featured_artist_ids[0]
-      ).toBe("123")
+      expect(dispatch).toHaveBeenLastCalledWith({
+        type: "CHANGE_ARTICLE",
+        payload: {
+          data: { primary_featured_artist_ids: ["123"] },
+        },
+      })
     })
 
     it("Can add a featured artwork", () => {
       onAddFeaturedItem("artwork", { _id: "123" })(dispatch, getState)
       dispatch.mock.calls[0][0](dispatch, getState)
 
-      expect(dispatch.mock.calls[1][0].type).toBe("CHANGE_ARTICLE")
-      expect(
-        dispatch.mock.calls[1][0].payload.data.featured_artwork_ids[0]
-      ).toBe("123")
+      expect(dispatch).toHaveBeenLastCalledWith({
+        type: "CHANGE_ARTICLE",
+        payload: {
+          data: { featured_artwork_ids: ["123"] },
+        },
+      })
     })
   })
 
@@ -353,18 +405,26 @@ describe("articleActions", () => {
       const items = [{ name: "Joseph Beuys", _id: "123" }]
       const action = setMentionedItems("artist", items)
 
-      expect(action.type).toBe("SET_MENTIONED_ITEMS")
-      expect(action.payload.model).toBe("artist")
-      expect(action.payload.items[0]).toBe(items[0])
+      expect(action).toEqual({
+        type: "SET_MENTIONED_ITEMS",
+        payload: {
+          model: "artist",
+          items: [{ _id: "123", name: "Joseph Beuys" }],
+        },
+      })
     })
 
     it("Can set mentioned artworks", () => {
       const items = [{ title: "Stripes", _id: "123" }]
       const action = setMentionedItems("artwork", items)
 
-      expect(action.type).toBe("SET_MENTIONED_ITEMS")
-      expect(action.payload.model).toBe("artwork")
-      expect(action.payload.items[0]).toBe(items[0])
+      expect(action).toEqual({
+        type: "SET_MENTIONED_ITEMS",
+        payload: {
+          model: "artwork",
+          items: [{ _id: "123", title: "Stripes" }],
+        },
+      })
     })
   })
 })
