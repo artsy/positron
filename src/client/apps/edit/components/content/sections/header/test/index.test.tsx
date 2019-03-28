@@ -171,7 +171,7 @@ describe("Header", () => {
 
         expect(component.find(FileInput).exists()).toBe(true)
         expect(component.find(FileInput).getElement().props.prompt).toBe(
-          "Change Background"
+          "Change Background +"
         )
       })
 
