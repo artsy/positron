@@ -1,7 +1,7 @@
 import {
   appReducer,
   AppState,
-  initialState as appInitialState,
+  getInitialState as appInitialState,
 } from "client/reducers/appReducer"
 import {
   articlesReducer,
@@ -22,7 +22,7 @@ interface GlobalState {
 }
 
 export const initialState: GlobalState = {
-  app: appInitialState,
+  app: appInitialState(),
   edit: editInitialState,
   articlesList: articlesInitialState,
 }
