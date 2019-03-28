@@ -8,6 +8,9 @@ export function RelatedArticleQuery(ids) {
           name
           id
         }
+        author {
+          name
+        }
         description
         id
         media {
