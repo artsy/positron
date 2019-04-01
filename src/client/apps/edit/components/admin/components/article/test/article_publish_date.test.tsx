@@ -114,11 +114,11 @@ describe("ArticlePublishDate", () => {
     it("Can change the time", () => {
       props.article.published = true
       const component = getWrapper().instance() as ArticlePublishDate
-      component.time.value = "06:34"
+      component.time.value = "02:34"
       component.onScheduleChange()
 
       expect(props.onChange.mock.calls[0][0]).toBe("published_at")
-      expect(props.onChange.mock.calls[0][1]).toMatch("10:34")
+      expect(props.onChange.mock.calls[0][1]).toMatch("06:34")
     })
   })
 

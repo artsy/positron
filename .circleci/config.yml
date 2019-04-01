@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: artsy/hokusai
         environment:
-          TZ: "America/Los_Angeles"
+          TZ: "America/New_York"
     environment:
       TZ: "America/New_York"
     steps:
