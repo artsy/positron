@@ -4,9 +4,9 @@ jobs:
     docker:
       - image: artsy/hokusai
         environment:
-          TZ: "America/New_York"
+          TZ: "Europe/London"
     environment:
-      TZ: "America/New_York"
+      TZ: "Europe/London"
     steps:
       - add_ssh_keys
       - checkout
@@ -18,7 +18,7 @@ jobs:
     docker:
       - image: artsy/hokusai
     environment:
-      TZ: "America/New_York"
+      TZ: "Europe/London"
     steps:
       - add_ssh_keys
       - checkout
@@ -43,7 +43,7 @@ jobs:
     docker:
       - image: artsy/hokusai
     environment:
-      TZ: "America/New_York"
+      TZ: "Europe/London"
     steps:
       - add_ssh_keys
       - checkout
