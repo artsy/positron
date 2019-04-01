@@ -3,6 +3,8 @@ jobs:
   build-and-test:
     docker:
       - image: artsy/hokusai
+        environment:
+          TZ: "America/Los_Angeles"
     environment:
       TZ: "America/New_York"
     steps:
