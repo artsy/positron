@@ -3,6 +3,8 @@ jobs:
   build-and-test:
     docker:
       - image: artsy/hokusai
+    environment:
+      TZ: "America/New_York"
     steps:
       - add_ssh_keys
       - checkout
@@ -13,6 +15,8 @@ jobs:
   deploy-staging:
     docker:
       - image: artsy/hokusai
+    environment:
+      TZ: "America/New_York"
     steps:
       - add_ssh_keys
       - checkout
@@ -36,6 +40,8 @@ jobs:
   deploy-production:
     docker:
       - image: artsy/hokusai
+    environment:
+      TZ: "America/New_York"
     steps:
       - add_ssh_keys
       - checkout
