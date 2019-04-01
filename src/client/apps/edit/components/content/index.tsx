@@ -53,7 +53,7 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps)(EditContent)
 
 const EditContentContainer = styled.div<{ layout: ArticleLayout }>`
-  padding: 95px 0;
+  padding: 90px 0;
   min-height: 100vh;
 
   ${props =>

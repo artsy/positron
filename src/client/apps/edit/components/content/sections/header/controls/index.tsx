@@ -1,24 +1,41 @@
-import PropTypes from "prop-types"
+import { Box } from "@artsy/palette"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { onChangeHero } from "client/actions/edit/sectionActions"
+import { ModalBackground } from "client/components/ModalBackground"
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import ModalCover from "./ModalCover"
-import { VideoControls } from "./VideoControls"
 import { LayoutControls } from "./LayoutControls"
-import { onChangeHero } from "client/actions/edit/sectionActions"
+import { VideoControls } from "./VideoControls"
 
-export class HeaderControls extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    onChangeHeroAction: PropTypes.func.isRequired,
-    onProgress: PropTypes.func.isRequired,
-  }
+interface HeaderControlsProps {
+  article: ArticleData
+  onChangeHeroAction: (key: any, val?: any) => void
+  onProgress: (progress: number) => void
+}
 
+interface HeaderControlsState {
+  isLayoutOpen: boolean
+  isVideoOpen: boolean
+}
+
+export class HeaderControls extends Component<
+  HeaderControlsProps,
+  HeaderControlsState
+> {
   state = {
     isLayoutOpen: false,
     isVideoOpen: false,
   }
 
-  toggleControls = controlType => {
+  componentWillMount() {
+    const { article, onChangeHeroAction } = this.props
+
+    if (!article.hero_section) {
+      onChangeHeroAction("type", "text")
+    }
+  }
+
+  toggleControls = (controlType: "layout" | "video" | "close") => {
     const { isLayoutOpen, isVideoOpen } = this.state
 
     switch (controlType) {
@@ -52,9 +69,9 @@ export class HeaderControls extends Component {
     const isBasicHero = hero.type === "basic"
 
     return (
-      <div className="edit-header__container">
+      <Box>
         {isModalOpen && (
-          <ModalCover onClick={() => this.toggleControls("close")} />
+          <ModalBackground onClick={() => this.toggleControls("close")} />
         )}
         {isBasicHero && (
           <VideoControls
@@ -71,7 +88,7 @@ export class HeaderControls extends Component {
           onChange={onChangeHeroAction}
           onClick={() => this.toggleControls("layout")}
         />
-      </div>
+      </Box>
     )
   }
 }
