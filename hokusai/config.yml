@@ -1,4 +1,4 @@
 project-name: positron
-pre-build: export COMMIT_HASH=$(git rev-parse --short HEAD)
+pre-build: export COMMIT_HASH=$(git rev-parse --short HEAD) COMMIT_HASH_FULL=$(git rev-parse HEAD)
 pre-deploy: yarn publish-assets
 hokusai-required-version: ">=0.5.3"
