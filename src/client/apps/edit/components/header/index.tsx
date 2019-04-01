@@ -1,20 +1,21 @@
 import { Box, Button, color, Flex, space, Tab, Tabs } from "@artsy/palette"
 import Icon from "@artsy/reaction/dist/Components/Icon"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import styled from "styled-components"
 import {
   deleteArticle,
   publishArticle,
   saveArticle,
-} from "../../../../../client/actions/edit/articleActions"
-import { changeView } from "../../../../../client/actions/edit/editActions"
+} from "client/actions/edit/articleActions"
+import { changeView } from "client/actions/edit/editActions"
+import { Channel } from "client/typings"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
 interface Props {
   article: ArticleData
   beforeUnload: () => void
-  changeViewAction: (e) => void
+  changeViewAction: (e: any) => void
   channel: Channel
   deleteArticleAction: () => void
   edit: Edit
@@ -22,12 +23,6 @@ interface Props {
   isAdmin: boolean
   publishArticleAction: () => void
   saveArticleAction: () => void
-}
-
-interface Channel {
-  id: string
-  name: string
-  type: string
 }
 
 interface Edit {

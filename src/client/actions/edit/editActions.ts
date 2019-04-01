@@ -1,3 +1,4 @@
+import { LockoutData } from "client/typings"
 import $ from "jquery"
 import { debounce } from "lodash"
 import { emitAction } from "../../apps/websocket/client"
@@ -19,23 +20,6 @@ export const actions = keyMirror(
  * navigating edit tabs, article lockout actions, redirects,
  * and loading indicators
  */
-
-interface LockoutDataUser {
-  id: string
-  name: string
-}
-
-export interface LockoutDataChannel {
-  id: string
-  name: string
-  type: string
-}
-
-interface LockoutData {
-  channel: LockoutDataChannel
-  user: LockoutDataUser
-  article: string // _id
-}
 
 /**
  * Article Lockout: user has started editing an article
