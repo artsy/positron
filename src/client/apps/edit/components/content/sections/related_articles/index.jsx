@@ -116,7 +116,7 @@ export class RelatedArticles extends Component {
           editTitle="Title"
           editDescription="Article or video description..."
           editImage={() => <div />}
-          editDate="Publish Date"
+          editDate={!article.published && "Publish Date"}
           article={{}}
           series={article}
           color={color}
