@@ -1,6 +1,7 @@
 import { Box, color, Serif, space, Spinner } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { viewArticles } from "client/actions/articlesActions"
+import { Channel } from "client/typings"
 import $ from "jquery"
 import { debounce } from "lodash"
 import React, { Component } from "react"
@@ -11,19 +12,18 @@ import request from "superagent"
 import { ArticlesListQuery as query } from "../query"
 import { ArticlesListEmpty } from "./articles_list_empty"
 import ArticlesListHeader from "./articles_list_header"
-
 const FilterSearch = require("client/components/filter_search/index.coffee")
 require("jquery-on-infinite-scroll")
 
 interface ArticlesListProps {
   apiURL: string
   articles: ArticleData[]
-  channel: any
+  channel: Channel
   checkable: boolean
   isPartnerChannel: boolean
   published: boolean
   user: any
-  viewArticlesAction: (channel: any) => void
+  viewArticlesAction: (channel: Channel) => void
   selected: () => void
 }
 

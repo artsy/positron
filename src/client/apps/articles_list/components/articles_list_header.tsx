@@ -1,4 +1,5 @@
 import { Box, color, Flex, Sans, Tab, Tabs } from "@artsy/palette"
+import { Channel } from "client/typings"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -21,7 +22,7 @@ const HeaderInner = styled(Flex)`
 `
 
 interface ArticlesListProps {
-  channel: any
+  channel: Channel
   isPublished: boolean
   onChangeTabs: (isPublished: boolean) => void
 }
