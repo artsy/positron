@@ -4,6 +4,13 @@ export function RelatedArticleQuery(ids) {
   return `
     {
       articles(ids: ${stringifyJSONForWeb(ids)}) {
+        authors {
+          name
+          id
+        }
+        author {
+          name
+        }
         description
         id
         media {

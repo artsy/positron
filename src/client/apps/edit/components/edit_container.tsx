@@ -1,38 +1,57 @@
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import { once } from "lodash"
-import { hot } from "react-hot-loader"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   startEditingArticle,
   stopEditingArticle,
   toggleSpinner,
 } from "client/actions/edit/editActions"
 import { ErrorBoundary } from "client/components/error/error_boundary"
-import EditAdmin from "./admin/index.tsx"
+import {
+  Channel,
+  EditActiveView,
+  ErrorMessage,
+  LockoutData,
+  LockoutDataUser,
+} from "client/typings"
+import { once } from "lodash"
+import React, { Component } from "react"
+import { hot } from "react-hot-loader"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import EditAdmin from "./admin"
 import EditContent from "./content"
-import EditDisplay from "./display/index.tsx"
+import EditDisplay from "./display"
 import EditError from "./error"
 import EditHeader from "./header"
 import { MessageModal } from "./message"
 import Yoast from "./yoast"
-import styled from "styled-components"
 
 const INACTIVITY_TIMEOUT = 600 * 1000
 
-export class EditContainer extends Component {
-  static propTypes = {
-    activeView: PropTypes.string,
-    article: PropTypes.object,
-    channel: PropTypes.object,
-    error: PropTypes.object,
-    isSaved: PropTypes.bool,
-    startEditingArticleAction: PropTypes.func,
-    stopEditingArticleAction: PropTypes.func,
-    user: PropTypes.object,
-    currentSession: PropTypes.object,
-    toggleSpinnerAction: PropTypes.func,
-  }
+interface EditContainerProps {
+  activeView: EditActiveView
+  article: ArticleData
+  channel: Channel
+  error: ErrorMessage
+  isSaved: boolean
+  startEditingArticleAction: (args: LockoutData) => void
+  stopEditingArticleAction: (args: LockoutData) => void
+  user: LockoutDataUser
+  currentSession: any // TODO: type lockout sessions
+  toggleSpinnerAction: (isActive: boolean) => void
+}
+
+interface EditContainerState {
+  isOtherUserInSession: boolean
+  inactivityPeriodEntered: boolean
+  shouldShowModal: boolean
+  sentStopEditingEvent: boolean
+}
+
+export class EditContainer extends Component<
+  EditContainerProps,
+  EditContainerState
+> {
+  private inactivityTimer
 
   constructor(props) {
     super(props)
@@ -99,6 +118,7 @@ export class EditContainer extends Component {
     const { isSaved } = this.props
     // Custom messages are deprecated in most browsers
     // and will show default browser message instead
+    // @ts-ignore
     if ($.active > 0) {
       e.returnValue = "Your article is not finished saving."
     } else if (!isSaved) {
@@ -166,7 +186,7 @@ export class EditContainer extends Component {
       shouldShowModal,
     } = this.state
 
-    let modalType = isOtherUserInSession
+    const modalType = isOtherUserInSession
       ? "locked"
       : inactivityPeriodEntered
         ? "timeout"
@@ -231,7 +251,7 @@ export const FixedHeader = styled.div`
   left: 110px;
   right: 0;
   background: white;
-  z-index: 7;
+  z-index: 100;
 `
 
 export const EditWrapper = styled.div`

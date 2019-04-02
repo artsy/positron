@@ -99,3 +99,23 @@ export const RelatedArticlesCanvasQuery = `
     }
   }
 `
+
+export const RelatedArticlesQuery = `
+  {
+    articles(published: true) {
+      title
+      id
+      channel_id
+      vertical {
+        id
+        name
+      }
+      relatedArticles {
+        title
+        authors {
+          name
+        }
+      }
+    }
+  }
+`

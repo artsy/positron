@@ -42,12 +42,10 @@ interface Props {
   isReadonly?: boolean
   onChange: (html: string) => void
   onHandleBackspace: () => void
-  onHandleBlockQuote?: (html: string, resetEditorState: () => void) => void
-  onHandleReturn?: (
-    editorState: EditorState,
-    resetEditorState: () => void
-  ) => void
-  onHandleTab: (e: any, resetEditorState: () => void) => void
+  onHandleBlockQuote?: (html: string) => void
+  onHandleFocus?: () => void
+  onHandleReturn?: (editorState: EditorState) => void
+  onHandleTab: (e: any) => void
   placeholder?: string
 }
 
@@ -142,7 +140,10 @@ export class RichText extends Component<Props, State> {
   }
 
   focus = () => {
-    this.editor.focus()
+    const { isReadonly } = this.props
+    if (!isReadonly) {
+      this.editor.focus()
+    }
     this.checkSelection()
   }
 
@@ -159,19 +160,41 @@ export class RichText extends Component<Props, State> {
   }
 
   componentWillReceiveProps = nextProps => {
-    // Update if editor has changed position
     const { isReadonly, editIndex, html } = this.props
+
+    // Update if editor is divided/merged/changed position
     const listPositionHasChanged = editIndex !== nextProps.editIndex
     const bodyHasChanged = html && isReadonly && html !== nextProps.html
-
     if (listPositionHasChanged || bodyHasChanged) {
       this.resetEditorState()
-      if (!isReadonly) {
+    }
+
+    // Focus or blur when tabbing in/out
+    const readOnlyHasChanged = isReadonly !== nextProps.isReadonly
+    if (readOnlyHasChanged) {
+      if (!nextProps.isReadonly) {
         this.focus()
+      } else {
+        this.blur()
       }
     }
   }
 
+  /**
+   * Optionally call props.onHandleTab if present
+   */
+  handleTab = e => {
+    const { onHandleTab } = this.props
+
+    if (onHandleTab) {
+      onHandleTab(e)
+    }
+  }
+
+  /**
+   * Optionally call props.onHandleBackspace if
+   * calling backspace from beginning of editor
+   */
   handleBackspace = () => {
     const { editorState } = this.state
     const { onHandleBackspace } = this.props
@@ -188,20 +211,25 @@ export class RichText extends Component<Props, State> {
     }
   }
 
+  /**
+   * Optionally call props.onHandleReturn if
+   * return-ley handling is not allowed
+   */
   handleReturn = e => {
     const { editorState } = this.state
     const { onHandleReturn } = this.props
     const handledValue = handleReturn(e, editorState)
 
     if (onHandleReturn && handledValue === "handled") {
-      onHandleReturn(editorState, this.resetEditorState)
+      onHandleReturn(editorState)
       return handledValue
     }
     return "not-handled" as DraftHandleValue
   }
 
-  // TODO: handleTab
-
+  /**
+   * Route a key-command to expected outcome
+   */
   handleKeyCommand = command => {
     const { hasLinks } = this.props
 
@@ -241,8 +269,10 @@ export class RichText extends Component<Props, State> {
     return "not-handled" as DraftHandleValue
   }
 
+  /**
+   * Handle block changes from key command
+   */
   keyCommandBlockType = (command: string) => {
-    // Handle block changes from key command
     const { onHandleBlockQuote } = this.props
     const { editorState } = this.state
     const blocks = blockNamesFromMap(this.allowedBlocks)
@@ -255,7 +285,7 @@ export class RichText extends Component<Props, State> {
         if (command === "blockquote" && onHandleBlockQuote) {
           const html = this.editorStateToHTML(newState)
           if (html.includes("<blockquote>")) {
-            onHandleBlockQuote(html, this.resetEditorState)
+            onHandleBlockQuote(html)
           }
         }
         this.onChange(newState)
@@ -266,8 +296,10 @@ export class RichText extends Component<Props, State> {
     }
   }
 
+  /**
+   * Handle block type changes from menu click
+   */
   toggleBlockType = (command: string) => {
-    // Handle block type changes from menu click
     const { editorState } = this.state
     const { onHandleBlockQuote } = this.props
     const blocks = blockNamesFromMap(this.allowedBlocks)
@@ -281,14 +313,16 @@ export class RichText extends Component<Props, State> {
       if (command === "blockquote" && onHandleBlockQuote) {
         const html = this.editorStateToHTML(newState)
         if (html.includes("<blockquote>")) {
-          return onHandleBlockQuote(html, this.resetEditorState)
+          return onHandleBlockQuote(html)
         }
       }
     }
   }
 
+  /**
+   * Handle style changes from key command
+   */
   keyCommandInlineStyle = (command: string) => {
-    // Handle style changes from key command
     const { editorState } = this.state
     const styles = styleNamesFromMap(this.allowedStyles)
 
@@ -304,8 +338,10 @@ export class RichText extends Component<Props, State> {
     }
   }
 
+  /**
+   * Handle style changes from menu click
+   */
   toggleInlineStyle = (command: string) => {
-    // Handle style changes from menu click
     const { editorState } = this.state
     const styles = styleNamesFromMap(this.allowedStyles)
     let newState
@@ -318,6 +354,9 @@ export class RichText extends Component<Props, State> {
     }
   }
 
+  /**
+   * Remove links/blocks/styles
+   */
   makePlainText = () => {
     const { editorState } = this.state
     const newState = makePlainText(editorState)
@@ -325,6 +364,9 @@ export class RichText extends Component<Props, State> {
     this.onChange(newState)
   }
 
+  /**
+   * Merge an existing editorState with pasted html
+   */
   handlePastedText = (text: string, html?: string) => {
     const { editorState } = this.state
 
@@ -342,8 +384,12 @@ export class RichText extends Component<Props, State> {
     return true
   }
 
+  /**
+   * Open a dialog for editing links
+   * Optionally open dialog for artist FollowButton links
+   * Populates with selection link data if present
+   */
   promptForLink = (urlIsFollow: boolean = false) => {
-    // Opens a popup link input populated with selection data if link is selected
     const { editorState } = this.state
     const linkData = linkDataFromSelection(editorState)
     const urlValue = linkData ? linkData.url : ""
@@ -360,6 +406,10 @@ export class RichText extends Component<Props, State> {
     return "handled"
   }
 
+  /**
+   * Called when closing link dialog
+   * adds a link to selected text and closes popups
+   */
   confirmLink = (url: string, urlIsFollow: boolean = false) => {
     const { editorState } = this.state
     const newEditorState = confirmLink(url, editorState, urlIsFollow)
@@ -373,6 +423,10 @@ export class RichText extends Component<Props, State> {
     this.onChange(newEditorState)
   }
 
+  /**
+   * Called from closing link dialog
+   * Removes a link to selected text and closes popups
+   */
   removeLink = () => {
     const editorState = removeLink(this.state.editorState)
 
@@ -385,6 +439,10 @@ export class RichText extends Component<Props, State> {
     }
   }
 
+  /**
+   * When changing focus, check to see if a block of text is selected
+   * If selection is present, open popup menu
+   */
   checkSelection = () => {
     let editorPosition: ClientRect | null = null
     let showNav = false
@@ -396,6 +454,12 @@ export class RichText extends Component<Props, State> {
       editorPosition = editor.getBoundingClientRect()
     }
     this.setState({ editorPosition, showNav })
+  }
+
+  onFocus = () => {
+    if (this.props.isReadonly) {
+      return "handled"
+    }
   }
 
   render() {
@@ -411,7 +475,7 @@ export class RichText extends Component<Props, State> {
     const promptForLink = hasLinks ? this.promptForLink : undefined
 
     return (
-      <RichTextContainer onDragEnd={this.resetEditorState}>
+      <RichTextContainer onDragEnd={this.resetEditorState} onBlur={this.blur}>
         {showNav && (
           <TextNav
             allowedBlocks={this.allowedBlocks}
@@ -449,7 +513,8 @@ export class RichText extends Component<Props, State> {
             handleKeyCommand={this.handleKeyCommand as any}
             handlePastedText={this.handlePastedText as any}
             handleReturn={this.handleReturn}
-            onTab={e => this.props.onHandleTab(e, this.resetEditorState)}
+            onFocus={this.onFocus.bind(this)}
+            onTab={this.handleTab}
             onChange={this.onChange}
             placeholder={placeholder}
             ref={ref => {
