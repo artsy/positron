@@ -41,7 +41,17 @@ const metaFields = {
       resolve: resolvers.relatedArticlesPanel,
     }),
   relatedArticles: array()
-    .items(object(Article.inputSchema))
+    .items(
+      object(Article.inputSchema).concat(
+        object({
+          authors: array()
+            .items(object(Author.schema))
+            .meta({
+              resolve: resolvers.relatedAuthors,
+            }),
+        })
+      )
+    )
     .meta({
       name: "RelatedArticles",
       resolve: resolvers.relatedArticles,
