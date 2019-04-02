@@ -43,7 +43,7 @@ class Router extends Backbone.Router
     require('../apps/queue/client').init()
 
   articlesListView: ->
-    require('../apps/articles_list/client').init()
+    require('../apps/articles_list/client.tsx').init()
 
   tagsEdit: ->
     require('../apps/settings/client/tags.coffee').init()
