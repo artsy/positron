@@ -36,7 +36,7 @@ export const ArticlesListHeader: React.SFC<ArticlesListProps> = props => {
         </Tabs>
 
         <Sans size="3" weight="medium" display="block">
-          {`${channel.name}`}
+          {channel.name}
         </Sans>
       </HeaderInner>
     </Header>

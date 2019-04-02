@@ -39,7 +39,7 @@ export class ArticlesList extends Component<
   ArticlesListState
 > {
   state = {
-    articles: this.props.articles || [],
+    articles: this.props.articles,
     isLoading: true,
     isPublished: this.props.published,
     offset: 0,
@@ -55,13 +55,12 @@ export class ArticlesList extends Component<
   }
 
   canLoadMore = () => {
-    const { isPublished, offset } = this.state
+    const { offset } = this.state
     // TODO: remove jQuery
     if ($(".filter-search__input").val()) {
       return
     }
-    this.setState({ isLoading: true })
-    this.fetchFeed(isPublished, offset + 10, this.appendMore.bind(this))
+    this.setState({ isLoading: true, offset: offset + 10 }, this.fetchFeed)
   }
 
   setResults = (results: ArticleData[]) => {
@@ -70,35 +69,32 @@ export class ArticlesList extends Component<
 
   setPublished = (isPublished: boolean) => {
     this.setState({ isPublished, offset: 0, isLoading: true })
-    this.fetchFeed(isPublished, 0, this.setResults)
+    this.fetchFeed()
   }
 
-  appendMore(results: ArticleData[]) {
+  appendMore = (results: ArticleData[]) => {
     const articles = this.state.articles.concat(results)
     this.setState({ articles, isLoading: false })
   }
 
-  fetchFeed = (
-    published: boolean,
-    offset: number,
-    cb: (data: ArticleData[]) => void
-  ) => {
+  fetchFeed = () => {
     const { channel, user, apiURL } = this.props
+    const { isPublished, offset } = this.state
+
     const feedQuery = query(`
-      published: ${published},
+      published: ${isPublished},
       offset: ${offset},
       channel_id: "${channel.id}"
     `)
     request
       .post(apiURL + "/graphql")
-      .set("X-Access-Token", user != null ? user.access_token : undefined)
+      .set("X-Access-Token", user ? user.access_token : undefined)
       .send({ query: feedQuery })
       .end((err, res) => {
-        if (err || !(res.body != null ? res.body.data : undefined)) {
-          return
+        if (err) {
+          return new Error(err)
         }
-        this.setState({ offset: this.state.offset + 10 })
-        return cb(res.body.data.articles)
+        this.appendMore(res.body.data.articles)
       })
   }
 
@@ -134,7 +130,7 @@ export class ArticlesList extends Component<
               searchResults={this.setResults}
               selected={selected}
               contentType="article"
-              checkable={checkable || false}
+              checkable={checkable}
               isArtsyChannel={!isPartnerChannel}
             />
             {isLoading && (

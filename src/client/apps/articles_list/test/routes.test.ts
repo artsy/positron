@@ -164,10 +164,4 @@ describe("routes", () => {
       })
     })
   })
-
-  describe("renderArticles", () => {
-    it("does a thing", () => {
-      expect(true).toBeTruthy()
-    })
-  })
 })

@@ -43,7 +43,8 @@ export const articles_list = (req, res, next) => {
 }
 
 export const renderArticles = (res, req, result, published) => {
-  res.locals.sd.ARTICLES = result.articles
+  const articles = result.articles || []
+  res.locals.sd.ARTICLES = articles
   res.locals.sd.CURRENT_CHANNEL = req.user.get("current_channel")
   const channel = res.locals.sd.CURRENT_CHANNEL
 
@@ -52,7 +53,7 @@ export const renderArticles = (res, req, result, published) => {
     res.locals.sd.HAS_PUBLISHED = published
 
     return res.render("index", {
-      articles: result.articles || [],
+      articles,
       current_channel: channel,
     })
   })
