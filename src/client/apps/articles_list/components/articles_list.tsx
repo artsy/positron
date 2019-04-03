@@ -44,9 +44,9 @@ export class ArticlesList extends Component<
     super(props)
 
     this.state = {
-      articles: this.props.articles,
+      articles: props.articles,
       isLoading: false,
-      isPublished: this.props.published,
+      isPublished: props.published,
       offset: 0,
     }
 
@@ -114,7 +114,8 @@ export class ArticlesList extends Component<
       selected,
     } = this.props
     const { isLoading, isPublished } = this.state
-
+    const hasResultsForView =
+      articles.length && articles[0].published === isPublished
     return (
       <Box maxWidth={960} mx="auto" px={3} mt={105}>
         <ArticlesListHeader
@@ -147,7 +148,7 @@ export class ArticlesList extends Component<
             <Spinner />
           </SpinnerContainer>
         ) : (
-          <Waypoint onEnter={this.debouncedCanLoadMore} />
+          hasResultsForView && <Waypoint onEnter={this.debouncedCanLoadMore} />
         )}
       </Box>
     )

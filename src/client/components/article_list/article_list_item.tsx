@@ -25,35 +25,54 @@ export class ArticleListItem extends Component<ArticleListProps> {
     activeSessions: {},
   }
 
-  getDisplayAttrs(article) {
-    if (this.props.display === "email" && article.email_metadata) {
+  getDisplayAttrs = () => {
+    const {
+      article: { email_metadata, thumbnail_title, thumbnail_image },
+      display,
+    } = this.props
+
+    if (display === "email" && email_metadata) {
       return {
-        headline: article.email_metadata.headline,
-        image: article.email_metadata.image_url,
+        headline: email_metadata.headline,
+        image: email_metadata.image_url,
       }
     } else {
       return {
-        headline: article.thumbnail_title,
-        image: article.thumbnail_image,
+        headline: thumbnail_title,
+        image: thumbnail_image,
       }
     }
   }
 
-  publishText(result) {
-    if (result.published_at && result.published) {
-      return `Published ${moment(result.published_at).fromNow()}`
-    } else if (result.scheduled_publish_at) {
-      return (
-        "Scheduled to publish " +
-        `${moment(result.scheduled_publish_at).fromNow()}`
-      )
+  publishText = isLocked => {
+    const {
+      published,
+      published_at,
+      scheduled_publish_at,
+      updated_at,
+    } = this.props.article
+    let publishedText
+
+    if (published && published_at) {
+      publishedText = `Published ${moment(published_at).fromNow()}`
+    } else if (scheduled_publish_at) {
+      publishedText = `Scheduled to publish ${moment(
+        scheduled_publish_at
+      ).fromNow()}`
     } else {
-      return "Last saved " + `${moment(result.updated_at).fromNow()}`
+      publishedText = `Last saved ${moment(updated_at).fromNow()}`
     }
+
+    return (
+      <Sans size="3t" weight="medium" color={isLocked ? "black30" : "black100"}>
+        {publishedText}
+      </Sans>
+    )
   }
 
-  currentSessionText(article) {
-    const session = this.props.activeSessions[article.id]
+  currentSessionText() {
+    const { article, activeSessions } = this.props
+    const session = activeSessions[article.id]
 
     return (
       <Sans size="3t" weight="medium" color="black30">
@@ -73,12 +92,10 @@ export class ArticleListItem extends Component<ArticleListProps> {
       user,
     } = this.props
 
-    const attrs = this.getDisplayAttrs(article)
-    const session = activeSessions[article.id]
-    const isCurrentlyBeingEdited = session
+    const attrs = this.getDisplayAttrs()
+    const session = activeSessions[article.id] || false
     const isCurrentUserEditing = user && session && user.id === session.user.id
-    const isLocked = isCurrentlyBeingEdited && !isCurrentUserEditing
-    const lockedClass = isLocked ? "locked" : ""
+    const isLocked = session && !isCurrentUserEditing
     const missingData = isArtsyChannel ? "Magazine" : "Thumbnail"
 
     return (
@@ -88,29 +105,22 @@ export class ArticleListItem extends Component<ArticleListProps> {
             <IconCheckCircle name="follow-circle.is-following" />
           </CheckCircleContainer>
         )}
-        <ArticleLink
-          className={`article-list__article ${lockedClass}`}
-          href={`/articles/${article.id}/edit`}
-        >
+        <ArticleLink href={`/articles/${article.id}/edit`}>
           <Flex alignItems="center">
-            <ArticleImage imageUrl={attrs.image}>
+            <ArticleImage imageUrl={attrs.image} justifyContent="center">
               {!attrs.image && (
-                <Flex
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                  height="100%"
-                >
-                  <Sans size="3t" color="black30">
-                    Missing
-                  </Sans>
-                  <Sans size="3t" color="black30">
-                    {missingData}
-                  </Sans>
-                  <Sans size="3t" color="black30">
-                    Image
-                  </Sans>
-                </Flex>
+                <Sans size="3t" color="black30">
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                    height="100%"
+                  >
+                    <span>Missing</span>
+                    <span>{missingData}</span>
+                    <span>Image</span>
+                  </Flex>
+                </Sans>
               )}
             </ArticleImage>
 
@@ -119,31 +129,23 @@ export class ArticleListItem extends Component<ArticleListProps> {
                 <Sans
                   size="3t"
                   weight="medium"
-                  color={isLocked ? "black30" : "black10"}
+                  color={isLocked ? "black30" : "black100"}
                 >
                   {capitalize(article.layout)}
                 </Sans>
               )}
-              {attrs.headline ? (
-                <Serif
-                  size="4t"
-                  py={0.5}
-                  color={isLocked ? "black30" : "black10"}
-                >
-                  {attrs.headline}
-                </Serif>
-              ) : (
-                <Serif size="4t" color="black30" py={1}>
-                  Missing {missingData} Title
-                </Serif>
-              )}
-              {isLocked ? (
-                this.currentSessionText(article)
-              ) : (
-                <Sans size="3t" weight="medium">
-                  {this.publishText(article)}
-                </Sans>
-              )}
+
+              <Serif
+                size="4t"
+                py={0.5}
+                color={isLocked ? "black30" : "black100"}
+              >
+                {attrs.headline || `Missing ${missingData} Title`}
+              </Serif>
+
+              {isLocked
+                ? this.currentSessionText()
+                : this.publishText(isLocked)}
             </div>
           </Flex>
         </ArticleLink>
@@ -165,8 +167,6 @@ export class ArticleListItem extends Component<ArticleListProps> {
   }
 }
 
-export const ArticleListContainer = styled.div``
-
 const ArticleLink = styled.a`
   flex: 1;
   padding-right: ${space(2)}px;
@@ -185,7 +185,7 @@ const ItemContainer = styled(Flex)`
   }
 `
 
-const ArticleImage = styled.div<{ imageUrl?: string }>`
+const ArticleImage = styled(Flex)<{ imageUrl?: string }>`
   background-color: ${color("black10")};
   margin-right: ${space(2)}px;
   width: 145px;

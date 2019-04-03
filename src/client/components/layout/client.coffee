@@ -19,6 +19,7 @@ require 'typeahead.js'
 require('jquery-fillwidth-lite') $, _, imagesLoaded
 
 module.exports.init = ->
+  console.log('init client app')
   Backbone.$ = $
   $.ajaxSettings.headers = 'X-Access-Token': sd.USER.access_token
   window[key] = helper for key, helper of viewHelpers

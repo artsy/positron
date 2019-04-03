@@ -18,6 +18,7 @@ request = require 'superagent'
 # Schemas
 #
 @schema = (->
+
   id: @string().objectid()
   name: @string().allow('', null)
   user_ids: @array().items(@string().objectid()).default([])
