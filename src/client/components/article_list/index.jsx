@@ -24,6 +24,7 @@ export class ArticleList extends Component {
     display: PropTypes.string,
     forceURL: PropTypes.string,
     isArtsyChannel: PropTypes.bool,
+    isLoading: PropTypes.bool,
     selected: PropTypes.func,
     user: PropTypes.object,
   }
@@ -81,7 +82,7 @@ export class ArticleList extends Component {
       user,
     } = this.props
 
-    return articles.map(article => {
+    return articles.map((article, i) => {
       const attrs = this.getDisplayAttrs(article)
       const session = activeSessions[article.id]
       const isCurrentlyBeingEdited = session
@@ -96,7 +97,7 @@ export class ArticleList extends Component {
         <div
           style={style}
           className="article-list__result paginated-list-item"
-          key={article.id}
+          key={i}
         >
           {checkable && (
             <div
@@ -163,11 +164,12 @@ export class ArticleList extends Component {
   }
 
   render() {
+    const { isLoading } = this.props
     const articles = this.props.articles || {}
 
     return (
       <div className="article-list__results">
-        {!articles.length ? (
+        {!articles.length && !isLoading ? (
           <div className="article-list__no-results">No Results Found</div>
         ) : (
           this.renderArticles()

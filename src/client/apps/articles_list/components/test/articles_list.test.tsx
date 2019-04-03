@@ -1,13 +1,16 @@
+import { Spinner } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { mount } from "enzyme"
 import React from "react"
 import { Provider } from "react-redux"
+import Waypoint from "react-waypoint"
 import configureStore from "redux-mock-store"
 import ArticleList, { ArticlesList } from "../articles_list"
 import { ArticlesListEmpty } from "../articles_list_empty"
 import { ArticlesListHeader } from "../articles_list_header"
-
 require("typeahead.js")
+
+jest.mock("lodash/debounce", () => jest.fn(e => e))
 jest.mock("superagent", () => {
   return {
     post: jest.fn().mockReturnThis(),
@@ -138,6 +141,25 @@ describe("ArticleList", () => {
     expect(component.childAt(0).props().user).toEqual(props.user)
   })
 
+  it("renders loading state", () => {
+    const component = getWrapper()
+    const instance = component.find(ArticlesList).instance() as ArticlesList
+    instance.setState({ isLoading: true })
+    component.update()
+
+    expect(component.find(Spinner).length).toBe(1)
+  })
+
+  it("calls #fetchArticles when entering waypoint", () => {
+    const component = getWrapper()
+    const instance = component.find(ArticlesList).instance() as ArticlesList
+    instance.fetchFeed = jest.fn()
+    const waypoint = component.find(Waypoint).at(0)
+    waypoint.getElement().props.onEnter()
+
+    expect(instance.fetchFeed).toBeCalled()
+  })
+
   describe("#canLoadMore", () => {
     it("sets state.isLoading", () => {
       const instance = getWrapper()
@@ -183,13 +205,17 @@ describe("ArticleList", () => {
       const instance = getWrapper()
         .find(ArticlesList)
         .instance() as ArticlesList
-      instance.setState = jest.fn()
+      instance.setState = jest.fn((args, cb) => cb(args))
       instance.setPublished(false)
-      expect(instance.setState).toBeCalledWith({
-        isPublished: false,
-        offset: 0,
-        isLoading: true,
-      })
+      expect(instance.setState).toBeCalledWith(
+        {
+          articles: [],
+          isLoading: true,
+          isPublished: false,
+          offset: 0,
+        },
+        instance.fetchFeed
+      )
     })
 
     it("calls #fetchFeed", () => {

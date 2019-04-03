@@ -7,13 +7,13 @@ import { debounce } from "lodash"
 import React, { Component } from "react"
 import { hot } from "react-hot-loader"
 import { connect } from "react-redux"
+import Waypoint from "react-waypoint"
 import styled from "styled-components"
 import request from "superagent"
-import { ArticlesListQuery as query } from "../query"
+import { ArticlesListQuery } from "../query"
 import { ArticlesListEmpty } from "./articles_list_empty"
 import ArticlesListHeader from "./articles_list_header"
 const FilterSearch = require("client/components/filter_search/index.coffee")
-require("jquery-on-infinite-scroll")
 
 interface ArticlesListProps {
   apiURL: string
@@ -38,20 +38,24 @@ export class ArticlesList extends Component<
   ArticlesListProps,
   ArticlesListState
 > {
-  state = {
-    articles: this.props.articles,
-    isLoading: true,
-    isPublished: this.props.published,
-    offset: 0,
+  public debouncedCanLoadMore
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      articles: this.props.articles,
+      isLoading: false,
+      isPublished: this.props.published,
+      offset: 0,
+    }
+
+    this.debouncedCanLoadMore = debounce(this.canLoadMore, 300)
   }
 
   componentDidMount() {
     const { channel, viewArticlesAction } = this.props
     viewArticlesAction(channel)
-
-    const canLoadMore = debounce(this.canLoadMore, 300)
-    // @ts-ignore
-    $.onInfiniteScroll(canLoadMore)
   }
 
   canLoadMore = () => {
@@ -68,8 +72,10 @@ export class ArticlesList extends Component<
   }
 
   setPublished = (isPublished: boolean) => {
-    this.setState({ isPublished, offset: 0, isLoading: true })
-    this.fetchFeed()
+    this.setState(
+      { isPublished, offset: 0, isLoading: true, articles: [] },
+      this.fetchFeed
+    )
   }
 
   appendMore = (results: ArticleData[]) => {
@@ -80,16 +86,16 @@ export class ArticlesList extends Component<
   fetchFeed = () => {
     const { channel, user, apiURL } = this.props
     const { isPublished, offset } = this.state
-
-    const feedQuery = query(`
+    const query = ArticlesListQuery(`
       published: ${isPublished},
       offset: ${offset},
       channel_id: "${channel.id}"
     `)
+
     request
       .post(apiURL + "/graphql")
       .set("X-Access-Token", user ? user.access_token : undefined)
-      .send({ query: feedQuery })
+      .send({ query })
       .end((err, res) => {
         if (err) {
           return new Error(err)
@@ -115,7 +121,7 @@ export class ArticlesList extends Component<
           isPublished={isPublished}
           onChangeTabs={this.setPublished}
         />
-        {articles && articles.length ? (
+        {articles.length ? (
           <ArticlesListContainer mt={105} className="articles-list">
             <Serif size="8" py={2}>
               Latest Articles
@@ -132,15 +138,19 @@ export class ArticlesList extends Component<
               contentType="article"
               checkable={checkable}
               isArtsyChannel={!isPartnerChannel}
+              isLoading={isLoading}
             />
-            {isLoading && (
-              <SpinnerContainer>
-                <Spinner />
-              </SpinnerContainer>
-            )}
           </ArticlesListContainer>
         ) : (
           <ArticlesListEmpty />
+        )}
+
+        {isLoading ? (
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
+        ) : (
+          <Waypoint onEnter={this.debouncedCanLoadMore} />
         )}
       </Box>
     )
@@ -167,7 +177,7 @@ const ArticlesListContainer = styled(Box)`
 `
 const SpinnerContainer = styled.div`
   width: 100%;
-  padding: ${space(2)}px;
+  padding: ${space(4)}px;
   position: relative;
 `
 
