@@ -5,6 +5,7 @@ import { Provider } from "react-redux"
 import { createReduxStore } from "client/lib/createReduxStore"
 import { reducers, initialState } from "client/reducers"
 import { QueueView } from "./client.coffee"
+import { Theme } from "@artsy/palette"
 
 const store = createReduxStore(reducers, initialState)
 
@@ -16,7 +17,9 @@ export const init = () => {
   }
   return render(
     <Provider store={store}>
-      <QueueView {...props} />
+      <Theme>
+        <QueueView {...props} />
+      </Theme>
     </Provider>,
     document.getElementById("queue-root")
   )

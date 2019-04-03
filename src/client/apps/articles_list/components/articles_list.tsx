@@ -1,4 +1,4 @@
-import { Box, color, Serif, space, Spinner } from "@artsy/palette"
+import { Box, color, space, Spinner } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { viewArticles } from "client/actions/articlesActions"
 import { Channel } from "client/typings"
@@ -116,17 +116,13 @@ export class ArticlesList extends Component<
     const { isLoading, isPublished } = this.state
 
     return (
-      <Box maxWidth={960} mx="auto" px={3}>
+      <Box maxWidth={960} mx="auto" px={3} mt={105}>
         <ArticlesListHeader
           isPublished={isPublished}
           onChangeTabs={this.setPublished}
         />
         {articles.length ? (
-          <ArticlesListContainer mt={105} className="articles-list">
-            <Serif size="8" py={2}>
-              Latest Articles
-            </Serif>
-
+          <ArticlesListContainer className="articles-list">
             <FilterSearch
               url={`${apiURL}/articles?published=${isPublished}&channel_id=${
                 channel.id
@@ -139,6 +135,7 @@ export class ArticlesList extends Component<
               checkable={checkable}
               isArtsyChannel={!isPartnerChannel}
               isLoading={isLoading}
+              headerText="Latest Articles"
             />
           </ArticlesListContainer>
         ) : (
@@ -158,19 +155,6 @@ export class ArticlesList extends Component<
 }
 
 const ArticlesListContainer = styled(Box)`
-  position: relative;
-
-  .filter-search__header-container {
-    position: absolute;
-    top: ${space(2)}px;
-    right: 0;
-    border: none;
-  }
-
-  .article-list__results {
-    border-top: 3px solid ${color("black10")};
-  }
-
   .article-list-scheduled {
     color: ${color("green100")};
   }

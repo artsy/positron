@@ -34,7 +34,7 @@ describe 'FilterSearch Article', ->
         []
       )
       ArticleList = benv.requireWithJadeify(
-        resolve(__dirname, '../../article_list/index')
+        resolve(__dirname, '../../article_list/index.tsx')
         []
       )
       FilterSearch.__set__ 'sd', { FORCE_URL: 'http://artsy.net' }
