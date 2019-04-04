@@ -188,3 +188,35 @@ spec:
                         operator: In
                         values:
                           - background
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: positron-data-import
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: positron-data-import-cron
+              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:data-sync
+              imagePullPolicy: Always
+              envFrom:
+                - configMapRef:
+                    name: positron-environment
+              args: ["sh", "./import-mongo.sh"]
+          restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 1
+                  preference:
+                    matchExpressions:
+                      - key: tier
+                        operator: In
+                        values:
+                          - background
