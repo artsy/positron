@@ -193,7 +193,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: positron-data-sync
+  name: positron-data-export
 spec:
   schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
@@ -202,12 +202,13 @@ spec:
       template:
         spec:
           containers:
-            - name: positron-data-sync-cron
+            - name: positron-data-export-cron
               image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:data-sync
               imagePullPolicy: Always
               envFrom:
                 - configMapRef:
                     name: positron-environment
+              args: ["sh", "./export-mongo.sh"]
           restartPolicy: Never
           affinity:
             nodeAffinity:
