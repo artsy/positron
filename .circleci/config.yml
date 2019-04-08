@@ -58,6 +58,7 @@ workflows:
   build-deploy:
     jobs:
       - build-and-test:
+          context: hokusai
           filters:
             branches:
               ignore:
