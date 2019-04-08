@@ -64,12 +64,14 @@ workflows:
               ignore:
                 - staging
       - deploy-staging:
+          context: hokusai
           requires:
             - build-and-test
           filters:
             branches:
               only: master
       - deploy-production:
+          context: hokusai
           requires:
             - build-and-test
           filters:
