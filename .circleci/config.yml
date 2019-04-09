@@ -58,17 +58,20 @@ workflows:
   build-deploy:
     jobs:
       - build-and-test:
+          context: hokusai
           filters:
             branches:
               ignore:
                 - staging
       - deploy-staging:
+          context: hokusai
           requires:
             - build-and-test
           filters:
             branches:
               only: master
       - deploy-production:
+          context: hokusai
           requires:
             - build-and-test
           filters:
