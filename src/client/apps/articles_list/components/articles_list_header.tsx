@@ -53,6 +53,7 @@ const Header = styled(Box)`
   border-bottom: 1px solid ${color("black10")};
 `
 
+// Flex targets Palette Tab component
 const HeaderInner = styled(Flex)`
   ${Flex} {
     width: fit-content;
