@@ -1,7 +1,7 @@
 import { Lokka } from "lokka"
 import { Transport } from "lokka-transport-http"
-import query from "./query.coffee"
 import { getSessionsForChannel } from "../websocket"
+import { ArticlesListQuery as query } from "./query"
 
 const { API_URL } = process.env
 
@@ -32,8 +32,8 @@ export const articles_list = (req, res, next) => {
         const unpublishedQuery = query(
           `published: false, channel_id: "${channel_id}"`
         )
-        return client.query(unpublishedQuery).then(result => {
-          return renderArticles(res, req, result, false)
+        return client.query(unpublishedQuery).then(results => {
+          return renderArticles(res, req, results, false)
         })
       }
     })
@@ -43,7 +43,8 @@ export const articles_list = (req, res, next) => {
 }
 
 export const renderArticles = (res, req, result, published) => {
-  res.locals.sd.ARTICLES = result.articles
+  const articles = result.articles || []
+  res.locals.sd.ARTICLES = articles
   res.locals.sd.CURRENT_CHANNEL = req.user.get("current_channel")
   const channel = res.locals.sd.CURRENT_CHANNEL
 
@@ -52,7 +53,7 @@ export const renderArticles = (res, req, result, published) => {
     res.locals.sd.HAS_PUBLISHED = published
 
     return res.render("index", {
-      articles: result.articles || [],
+      articles,
       current_channel: channel,
     })
   })
