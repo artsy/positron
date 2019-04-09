@@ -31,11 +31,13 @@ describe("ArticleList", () => {
     end = jest.fn()
     requestMock.send.mockReturnValue({ end })
     articles = [
+      // TODO: Replace with Reaction fixtures
       {
         id: "123",
         thumbnail_title: "Game of Thrones",
         thumbnail_image: "http://artsy.net/thumbnail_image.jpg",
         slug: "artsy-editorial-game-of-thrones",
+        published: true,
       },
       {
         id: "124",
@@ -46,11 +48,13 @@ describe("ArticleList", () => {
           image_url: "http://artsy.net/image_url.jpg",
         },
         slug: "artsy-editorial-email-of-thrones",
+        published: true,
       },
       {
         id: "125",
         thumbnail_title: "[Draft] Draft Title",
         slug: "artsy-editorial-email-of-thrones",
+        published: true,
       },
     ] as ArticleData[]
 
