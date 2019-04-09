@@ -56,6 +56,7 @@ module.exports = React.createClass
           selected: @selected
           display: @props.display
           isArtsyChannel: @props.isArtsyChannel
+          isLoading: @props.isLoading
         }
       else if @props.contentType is 'tag'
         TagList {
