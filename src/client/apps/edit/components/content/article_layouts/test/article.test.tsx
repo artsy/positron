@@ -1,4 +1,5 @@
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
 import { mount } from "enzyme"
 import React from "react"
 import { Provider } from "react-redux"
@@ -25,7 +26,9 @@ describe("EditArticle", () => {
 
     return mount(
       <Provider store={store}>
-        <EditArticle {...passedProps} />
+        <FullScreenProvider>
+          <EditArticle {...passedProps} />
+        </FullScreenProvider>
       </Provider>
     )
   }

@@ -245,6 +245,12 @@
     ],
     "roots": [
       "<rootDir>/src"
+    ],
+    "coverageDirectory": "./.nyc_output/",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text",
+      "json"
     ]
   },
   "lint-staged": {
