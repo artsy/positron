@@ -2,6 +2,7 @@ import {
   StandardArticle,
   VideoArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
@@ -28,7 +29,9 @@ describe("EditContent", () => {
     })
     return mount(
       <Provider store={store}>
-        <EditContent {...passedProps} />
+        <FullScreenProvider>
+          <EditContent {...passedProps} />
+        </FullScreenProvider>
       </Provider>
     )
   }

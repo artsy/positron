@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
-    "@artsy/palette": "4.7.4",
-    "@artsy/reaction": "15.13.7",
+    "@artsy/palette": "4.8.0",
+    "@artsy/reaction": "15.14.0",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
@@ -245,6 +245,12 @@
     ],
     "roots": [
       "<rootDir>/src"
+    ],
+    "coverageDirectory": "./.nyc_output/",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text",
+      "json"
     ]
   },
   "lint-staged": {

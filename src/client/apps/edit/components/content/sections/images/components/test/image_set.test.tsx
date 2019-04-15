@@ -1,4 +1,5 @@
 import { ImageSetFull } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
+import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
 import { ImageSetPreview } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
 import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview/ImageSetPreviewClassic"
 import { mount } from "enzyme"
@@ -12,7 +13,11 @@ describe("ImageSet", () => {
   }
 
   const getWrapper = (passedProps = props) => {
-    return mount(<ImageSet {...passedProps} />)
+    return mount(
+      <FullScreenProvider>
+        <ImageSet {...passedProps} />
+      </FullScreenProvider>
+    )
   }
 
   it("renders an image set for standard/feature articles", () => {
