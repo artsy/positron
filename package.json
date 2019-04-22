@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.0",
-    "@artsy/palette": "4.9.0",
-    "@artsy/reaction": "16.0.0",
+    "@artsy/palette": "4.9.5",
+    "@artsy/reaction": "16.2.3",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
