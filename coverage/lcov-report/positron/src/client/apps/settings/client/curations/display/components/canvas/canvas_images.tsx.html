@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/apps/settings/client/curations/display/components/canvas/canvas_images.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/apps/settings/client/curations/display/components/canvas</a> canvas_images.tsx
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">98.04% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>50/51</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>68/68</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">92.86% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>13/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">98.04% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>50/51</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box, Col, Flex, Row, space } from "@artsy/palette"
+import { FormLabel as Label } from "client/components/form_label"
+import { RemoveButtonContainer } from "client/components/remove_button"
+import React from "react"
+import styled from "styled-components"
+import { CampaignProps } from "../campaign"
+const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")
+&nbsp;
+export class CanvasImages extends React.Component&lt;CampaignProps&gt; {
+  updateImageUrls = (imgIndex, url) =&gt; {
+    const { assets } = this.props.campaign.canvas
+    if (assets.length &amp;&amp; Number.isInteger(imgIndex)) {
+      if (url.length) {
+        assets[imgIndex].url = url
+      } else {
+        assets.splice(imgIndex, 1)
+      }
+    } else {
+      assets.push({ url })
+    }
+    return assets
+  }
+&nbsp;
+  onImageInputChange = (key, value, imgIndex) =&gt; {
+    const { index, onChange } = this.props
+    const assets = this.updateImageUrls(imgIndex, value)
+    onChange(key, assets, index)
+  }
+&nbsp;
+  isSlideshow = () =&gt; {
+    const { canvas } = this.props.campaign
+    return canvas &amp;&amp; canvas.layout === "slideshow"
+  }
+&nbsp;
+  renderAssets = () =&gt; {
+    const { assets } = this.props.campaign.canvas
+&nbsp;
+    const uploads = assets.map((_asset, imgIndex) =&gt; {
+      if (imgIndex === 0) {
+        return false
+      } else {
+        const indexIsEven = imgIndex % 2 === 0
+        return (
+          &lt;Box
+            width="50%"
+            key={"slideshow-image-" + imgIndex}
+            pl={indexIsEven ? [0, 1] : 0}
+            pr={!indexIsEven ? [0, 1] : 0}
+            pb={4}
+          &gt;
+            &lt;FormLabel&gt;{this.renderLabel(imgIndex)}&lt;/FormLabel&gt;
+            {this.renderImageUpload(assets, imgIndex)}
+          &lt;/Box&gt;
+        )
+      }
+    })
+    return uploads
+  }
+&nbsp;
+  renderSlideshowImages = () =&gt; {
+    const { assets } = this.props.campaign.canvas
+    const imagesAreEven = assets.length &amp;&amp; assets.length % 2 === 0
+&nbsp;
+    const newImage = (
+      &lt;Col lg pl={imagesAreEven ? [0, 1] : 0} pt={imagesAreEven ? 2 : 0}&gt;
+        {this.renderImageUpload(assets)}
+      &lt;/Col&gt;
+    )
+&nbsp;
+    return (
+      &lt;Row&gt;
+        {this.renderAssets()}
+        {assets.length &amp;&amp; assets.length &lt; 5 ? newImage : false}
+      &lt;/Row&gt;
+    )
+  }
+&nbsp;
+  renderLogoUpload = () =&gt; {
+    const { campaign, index, onChange } = this.props
+    const isSlideshow = this.isSlideshow()
+    return (
+      &lt;Col lg pr={isSlideshow ? [0, 1] : 0} pl={!isSlideshow ? [0, 1] : 0}&gt;
+        &lt;FormLabel&gt;Logo&lt;/FormLabel&gt;
+        &lt;ImageUpload
+          name="canvas.logo"
+          src={campaign.canvas &amp;&amp; campaign.canvas.logo}
+          onChange={(name, url) =&gt; onChange(name, url, index)}
+          disabled={false}
+        /&gt;
+      &lt;/Col&gt;
+    )
+  }
+&nbsp;
+  renderVideoCoverUpload = () =&gt; {
+    const { campaign, index, onChange } = this.props
+    return (
+      &lt;Row&gt;
+        &lt;Col lg pl={[0, 1]}&gt;
+          &lt;FormLabel&gt;Video Cover Image&lt;/FormLabel&gt;
+          &lt;ImageUpload
+            name="canvas.cover_img_url"
+            src={campaign.canvas &amp;&amp; campaign.canvas.cover_img_url}
+            onChange={<span class="fstat-no" title="function not covered" >(n</span>ame, url) =&gt; <span class="cstat-no" title="statement not covered" >onChange(name, url, index)}</span>
+            disabled={false}
+          /&gt;
+        &lt;/Col&gt;
+      &lt;/Row&gt;
+    )
+  }
+&nbsp;
+  renderImageUpload = (assets, imgIndex?: number) =&gt; {
+    const hasVideo = this.props.campaign.canvas.layout === "standard"
+    const hidePreview = !imgIndex &amp;&amp; imgIndex !== 0 &amp;&amp; !hasVideo
+&nbsp;
+    return (
+      &lt;ImageUpload
+        key={"canvas-assets-" + (imgIndex || 0)}
+        name="canvas.assets"
+        hasVideo={hasVideo}
+        hidePreview={hidePreview}
+        size={30}
+        src={
+          imgIndex || imgIndex === 0
+            ? assets[imgIndex] &amp;&amp; assets[imgIndex].url
+            : ""
+        }
+        onChange={(name, url) =&gt; this.onImageInputChange(name, url, imgIndex)}
+      /&gt;
+    )
+  }
+&nbsp;
+  renderLabel = (imgIndex?: string) =&gt; {
+    const { campaign } = this.props
+&nbsp;
+    if (campaign.canvas.layout === "overlay") {
+      return "Background Image"
+    } else if (this.isSlideshow()) {
+      const index = imgIndex ? imgIndex + 1 : 1
+      return "Image " + index.toString()
+    } else {
+      return "Image / Video"
+    }
+  }
+&nbsp;
+  render() {
+    const { campaign } = this.props
+    const layout = campaign.canvas.layout || "overlay"
+    const videoIsAllowed = layout === "standard"
+    const hasAsset =
+      campaign.canvas.assets &amp;&amp; campaign.canvas.assets.length !== 0
+    const hasVideoAsset =
+      hasAsset &amp;&amp; campaign.canvas.assets[0].url.includes(".mp4")
+    const isSlideshow = this.isSlideshow()
+&nbsp;
+    return (
+      &lt;CanvasImagesContainer&gt;
+        &lt;Flex flexDirection={isSlideshow ? "row" : "row-reverse"}&gt;
+          {this.renderLogoUpload()}
+          &lt;Col
+            lg
+            pl={isSlideshow ? [0, 1] : 0}
+            pr={!isSlideshow ? [0, 1] : 0}
+            pb={4}
+          &gt;
+            &lt;FormLabel&gt;{this.renderLabel()}&lt;/FormLabel&gt;
+            {this.renderImageUpload(campaign.canvas.assets || [], 0)}
+          &lt;/Col&gt;
+        &lt;/Flex&gt;
+&nbsp;
+        {videoIsAllowed &amp;&amp; hasVideoAsset &amp;&amp; this.renderVideoCoverUpload()}
+        {this.isSlideshow() &amp;&amp; this.renderSlideshowImages()}
+      &lt;/CanvasImagesContainer&gt;
+    )
+  }
+}
+&nbsp;
+const CanvasImagesContainer = styled.div`
+  ${RemoveButtonContainer} {
+    z-index: 5;
+  }
+`
+&nbsp;
+const FormLabel = styled(Label)`
+  padding-bottom: ${space(1)}px;
+`
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../../../../../sorter.js"></script>
+</body>
+</html>

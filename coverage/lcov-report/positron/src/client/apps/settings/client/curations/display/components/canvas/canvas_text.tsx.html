@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/apps/settings/client/curations/display/components/canvas/canvas_text.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/apps/settings/client/curations/display/components/canvas</a> canvas_text.tsx
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>10/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>14/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>7/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>10/10</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box } from "@artsy/palette"
+import { Input } from "@artsy/reaction/dist/Components/Input"
+import { CharacterLimit } from "client/components/character_limit"
+import { FormLabel } from "client/components/form_label"
+import React from "react"
+import { CampaignProps } from "../campaign"
+&nbsp;
+export const CanvasText: React.SFC&lt;CampaignProps&gt; = props =&gt; {
+  const { campaign, index, onChange } = props
+  const { canvas } = campaign
+&nbsp;
+  return (
+    &lt;div&gt;
+      &lt;Box pb={4}&gt;
+        {campaign.canvas.layout === "overlay" ? (
+          &lt;CharacterLimit
+            type="textarea"
+            label="Body"
+            placeholder="Body"
+            defaultValue={canvas.headline || ""}
+            onChange={html =&gt; onChange("canvas.headline", html, index)}
+            limit={70}
+          /&gt;
+        ) : (
+          &lt;CharacterLimit
+            label="Headline"
+            placeholder="Headline"
+            defaultValue={canvas.headline || ""}
+            onChange={value =&gt; onChange("canvas.headline", value, index)}
+            limit={45}
+          /&gt;
+        )}
+      &lt;/Box&gt;
+      &lt;Box pb={4}&gt;
+        &lt;CharacterLimit
+          label="CTA Text"
+          placeholder="Find Out More"
+          defaultValue={canvas.link ? canvas.link.text : ""}
+          onChange={value =&gt; onChange("canvas.link.text", value, index)}
+          limit={25}
+        /&gt;
+      &lt;/Box&gt;
+      &lt;Box pb={4}&gt;
+        &lt;FormLabel&gt;CTA Link&lt;/FormLabel&gt;
+        &lt;Input
+          block
+          placeholder="http://example.com"
+          defaultValue={canvas.link ? campaign.canvas.link.url : ""}
+          onChange={e =&gt;
+            onChange("canvas.link.url", e.currentTarget.value, index)
+          }
+        /&gt;
+      &lt;/Box&gt;
+      &lt;Box pb={4}&gt;
+        &lt;CharacterLimit
+          type="textarea"
+          label="Disclaimer (optional)"
+          placeholder="Enter legal disclaimer here"
+          defaultValue={canvas.disclaimer || ""}
+          onChange={value =&gt; onChange("canvas.disclaimer", value, index)}
+          limit={150}
+        /&gt;
+      &lt;/Box&gt;
+      &lt;Box pb={4}&gt;
+        &lt;FormLabel&gt;Pixel Tracking Code (optional)&lt;/FormLabel&gt;
+        &lt;Input
+          block
+          placeholder="Paste 3rd party script here"
+          defaultValue={canvas.pixel_tracking_code || ""}
+          onChange={e =&gt;
+            onChange("canvas.pixel_tracking_code", e.currentTarget.value, index)
+          }
+        /&gt;
+      &lt;/Box&gt;
+    &lt;/div&gt;
+  )
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../../../../../sorter.js"></script>
+</body>
+</html>

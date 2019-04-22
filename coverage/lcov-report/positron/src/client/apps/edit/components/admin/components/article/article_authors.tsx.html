@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/apps/edit/components/admin/components/article/article_authors.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/apps/edit/components/admin/components/article</a> article_authors.tsx
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">62.07% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>18/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">60.71% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>17/28</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box, Flex } from "@artsy/palette"
+import Input from "@artsy/reaction/dist/Components/Input"
+import { onChangeArticle } from "client/actions/edit/articleActions"
+import { AutocompleteList } from "client/components/autocomplete2/list"
+import AutocompleteListMetaphysics from "client/components/autocomplete2/list_metaphysics"
+import { FormLabel } from "client/components/form_label"
+import { AuthorsQuery } from "client/queries/authors"
+import { clone, uniq } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import request from "superagent"
+import { difference, flatten, pluck } from "underscore"
+import { AdminArticleProps } from "./index"
+&nbsp;
+export class ArticleAuthors extends Component&lt;AdminArticleProps&gt; {
+  onChangeAuthor = name =&gt; {
+    const { article, onChangeArticleAction } = this.props
+    const author = clone(article.author) || <span class="branch-1 cbranch-no" title="branch not covered" >{}</span>
+&nbsp;
+    author.name = name
+    onChangeArticleAction("author", author)
+  }
+&nbsp;
+  fetchAuthors = (fetchedItems, cb) =&gt; {
+    const { apiURL, article, user } = this.props
+    const { author_ids } = article
+&nbsp;
+    const alreadyFetched = pluck(fetchedItems, "id")
+    const idsToFetch = difference(author_ids, alreadyFetched)
+    const newItems = clone(fetchedItems)
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (idsToFetch.length) {
+      request
+        .get(`${apiURL}/graphql`)
+        .set({
+          Accept: "application/json",
+          "X-Access-Token": user &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >user.access_token,</span>
+        })
+        .query({ query: AuthorsQuery(idsToFetch) })
+        .end(<span class="fstat-no" title="function not covered" >(e</span>rr, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >          if (err) {</span>
+<span class="cstat-no" title="statement not covered" >            new Error(err)</span>
+          }
+<span class="cstat-no" title="statement not covered" >          newItems.push(res.body.data.authors)</span>
+          const uniqItems = <span class="cstat-no" title="statement not covered" >uniq(flatten(newItems))</span>
+<span class="cstat-no" title="statement not covered" >          cb(uniqItems)</span>
+        })
+    } else {
+<span class="cstat-no" title="statement not covered" >      return fetchedItems</span>
+    }
+  }
+&nbsp;
+  render() {
+    const { article, apiURL, isEditorial, onChangeArticleAction } = this.props
+    const name = article.author ? article.author.name : ""
+&nbsp;
+    return (
+      &lt;Flex flexDirection={["column", "row"]}&gt;
+        &lt;Box width={["100%", "50%"]} pb={4} pr={[0, 2]}&gt;
+          &lt;FormLabel&gt;Primary Author&lt;/FormLabel&gt;
+          &lt;Input
+            defaultValue={name}
+            type="text"
+            onChange={e =&gt; this.onChangeAuthor(e.currentTarget.value)}
+            block
+          /&gt;
+        &lt;/Box&gt;
+&nbsp;
+        &lt;Box width={["100%", "50%"]} pl={[0, 2]}&gt;
+          {isEditorial &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;Box pb={4}&gt;</span>
+              &lt;AutocompleteList
+                label="Authors"
+                fetchItems={this.fetchAuthors}
+                isDraggable
+                items={article.author_ids || []}
+                filter={<span class="fstat-no" title="function not covered" >it</span>ems =&gt; {
+<span class="cstat-no" title="statement not covered" >                  return items.results.map(<span class="fstat-no" title="function not covered" >it</span>em =&gt; {</span>
+                    const { id, image_url } = <span class="cstat-no" title="statement not covered" >item</span>
+<span class="cstat-no" title="statement not covered" >                    return {</span>
+                      id,
+                      thumbnail_image: image_url,
+                      name: item.name,
+                    }
+                  })
+                }}
+                onSelect={<span class="fstat-no" title="function not covered" >re</span>sults =&gt;
+<span class="cstat-no" title="statement not covered" >                  onChangeArticleAction("author_ids", results)</span>
+                }
+                placeholder="Search by author name..."
+                url={`${apiURL}/authors?q=%QUERY`}
+              /&gt;
+            &lt;/Box&gt;
+          )}
+          {article.layout !== "news" &amp;&amp; (
+            &lt;AutocompleteListMetaphysics
+              field="contributing_authors"
+              label="Contributing Authors"
+              model="users"
+              isDraggable
+              onDragEnd={<span class="fstat-no" title="function not covered" >it</span>ems =&gt; {
+<span class="cstat-no" title="statement not covered" >                onChangeArticleAction("contributing_authors", items)</span>
+              }}
+            /&gt;
+          )}
+        &lt;/Box&gt;
+      &lt;/Flex&gt;
+    )
+  }
+}
+&nbsp;
+const mapStateToProps = state =&gt; ({
+  apiURL: state.app.apiURL,
+  article: state.edit.article,
+  isEditorial: state.app.isEditorial,
+  user: state.app.user,
+})
+&nbsp;
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle,
+}
+&nbsp;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ArticleAuthors)
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../../../../sorter.js"></script>
+</body>
+</html>

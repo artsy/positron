@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/components/draft/shared/test_helpers.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/components/draft/shared</a> test_helpers.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>19/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">85.71% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>6/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>19/19</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">78x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+  convertDraftToHtml,
+  convertHtmlToDraft,
+} from "client/components/draft/rich_text/utils/convert"
+import {
+  richTextBlockRenderMap,
+  richTextStyleMap,
+} from "client/components/draft/rich_text/utils/utils"
+import { decorators } from "client/components/draft/shared/decorators"
+import Draft, { EditorState } from "draft-js"
+&nbsp;
+export const htmlWithRichBlocks = `
+  &lt;meta&gt;&lt;title&gt;Page Title&lt;/title&gt;&lt;/meta&gt;
+  &lt;script&gt;do a bad thing&lt;/script&gt;
+  &lt;p&gt;&lt;a href="https://artsy.net"&gt;a link&lt;/a&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;/p&gt;
+  &lt;h1&gt;an h1&lt;/h1&gt;
+  &lt;h2&gt;an h2&lt;/h2&gt;
+  &lt;h3&gt;an h3&lt;/h3&gt;
+  &lt;h4&gt;an h4&lt;/h4&gt;
+  &lt;h5&gt;an h5&lt;/h5&gt;
+  &lt;h6&gt;an h6&lt;/h6&gt;
+  &lt;ul&gt;&lt;li&gt;unordered list&lt;/li&gt;&lt;li&gt;second list item&lt;/li&gt;&lt;/ul&gt;
+  &lt;ol&gt;&lt;li&gt;ordered list&lt;/li&gt;&lt;/ol&gt;
+  &lt;blockquote&gt;a blockquote&lt;/blockquote&gt;
+`
+&nbsp;
+export const htmlWithDisallowedStyles = `
+  &lt;p&gt;&lt;del&gt;Strikethrough text&lt;/del&gt;
+  &lt;code&gt;Code text&lt;/code&gt;
+  &lt;u&gt;Underline text&lt;/u&gt;
+  &lt;em&gt;Italic text&lt;/em&gt;
+  &lt;i&gt;Italic text&lt;/i&gt;
+  &lt;strong&gt;Bold text&lt;/strong&gt;
+  &lt;b&gt;Bold text&lt;/b&gt;&lt;/p&gt;
+`
+&nbsp;
+export const getContentState = (
+  html,
+  hasLinks = <span class="branch-0 cbranch-no" title="branch not covered" >true,</span>
+  blockMap = richTextBlockRenderMap
+) =&gt; {
+  return convertHtmlToDraft(html, hasLinks, blockMap, richTextStyleMap)
+}
+&nbsp;
+export const getHtmlViaContentState = (
+  html: string,
+  hasLinks = false,
+  hasFollowButton = false
+) =&gt; {
+  // Get unstripped content state
+  const contentState = getContentState(html, hasLinks, richTextBlockRenderMap)
+  // Convert contentState back to html
+  return convertDraftToHtml(
+    contentState,
+    richTextBlockRenderMap,
+    richTextStyleMap,
+    hasFollowButton
+  )
+}
+&nbsp;
+export const getEditorState = (
+  html,
+  hasLinks = true,
+  blockMap = richTextBlockRenderMap
+) =&gt; {
+  const contentState = getContentState(html, hasLinks, blockMap)
+  return EditorState.createWithContent(contentState, decorators(hasLinks))
+}
+&nbsp;
+export const getStateAsHtml = editorState =&gt; {
+  return convertDraftToHtml(
+    editorState.getCurrentContent(),
+    richTextBlockRenderMap,
+    richTextStyleMap
+  )
+}
+&nbsp;
+export const applySelectionToEditorState = (
+  editorState,
+  anchorOffset: number = 0
+) =&gt; {
+  const startSelection = editorState.getSelection()
+  const startEditorState = editorState.getCurrentContent()
+  const { key, text } = startEditorState.getFirstBlock()
+  const selection = startSelection.merge({
+    anchorKey: key,
+    anchorOffset,
+    focusKey: key,
+    focusOffset: text.length,
+  })
+  const newEditorState = Draft.EditorState.acceptSelection(
+    editorState,
+    selection
+  )
+  return newEditorState
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../sorter.js"></script>
+</body>
+</html>

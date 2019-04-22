@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/components/rich_text/utils/text_stripping.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/components/rich_text/utils</a> text_stripping.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>101/101</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>39/39</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>16/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>101/101</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">1416x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1416x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">953x</span>
+<span class="cline-any cline-yes">953x</span>
+<span class="cline-any cline-yes">953x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">953x</span>
+<span class="cline-any cline-yes">1652x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1652x</span>
+<span class="cline-any cline-yes">1652x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">953x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1142x</span>
+<span class="cline-any cline-yes">321362x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">321304x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2465x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">318897x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1142x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-yes">1138x</span>
+<span class="cline-any cline-yes">1138x</span>
+<span class="cline-any cline-yes">1138x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1138x</span>
+<span class="cline-any cline-yes">1118x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">358x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">362x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">952x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import _s from "underscore.string"
+import { ContentState, EditorState, Modifier, RichUtils } from "draft-js"
+import { blockRenderMapArray } from "client/apps/edit/components/content/sections/text/draft_config.js"
+&nbsp;
+export const standardizeSpacing = html =&gt; {
+  const newHtml = html
+    .replace(/&lt;br&gt;/g, "")
+    .replace(/&lt;br\/&gt;/g, "")
+    .replace(/&lt;span&gt;&lt;\/span&gt;/g, "")
+    .replace(/&lt;h2&gt;&lt;\/h2&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/&lt;h3&gt;&lt;\/h3&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/&lt;p&gt;&lt;\/p&gt;&lt;p&gt;&lt;\/p&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/&lt;p&gt;&lt;\/p&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/&lt;p&gt; &lt;\/p&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/&lt;p&gt;&lt;br&gt;&lt;\/p&gt;&lt;p&gt;&lt;br&gt;&lt;\/p&gt;/g, "&lt;p&gt;&lt;br&gt;&lt;/p&gt;")
+    .replace(/  /g, " ")
+&nbsp;
+  return newHtml
+}
+&nbsp;
+export const replaceUnicodeSpaces = html =&gt; {
+  // Replace unicode linebreaks with html breaks
+  const doc = document.createElement("div")
+  doc.innerHTML = html
+  const ps = doc.getElementsByTagName("p")
+&nbsp;
+  for (let i = 0; i &lt; ps.length; i++) {
+    const innerP = doc
+      .getElementsByTagName("p")
+      [i].innerHTML.replace(/[\u{2028}-\u{2029}]/gu, "&lt;/p&gt;&lt;p&gt;")
+    const newP = `&lt;p&gt;${innerP}&lt;/p&gt;`
+    $(doc.getElementsByTagName("p")[i]).replaceWith(newP)
+  }
+  return doc.innerHTML
+}
+&nbsp;
+export const stripCharacterStyles = (contentBlock, keepAllowed) =&gt; {
+  // TODO - use selection, not content block
+  const characterList = contentBlock.getCharacterList().map(character =&gt; {
+    if (keepAllowed &amp;&amp; !character.hasStyle("UNDERLINE")) {
+      // if keepAllowed (used on paste)
+      // strip only styles not allowed in editor
+      if (
+        character.hasStyle("BOLD") ||
+        character.hasStyle("ITALIC") ||
+        character.hasStyle("STRIKETHROUGH")
+      ) {
+        return character
+      }
+    }
+    return character.set("style", character.get("style").clear())
+  })
+  return contentBlock.set("characterList", characterList)
+}
+&nbsp;
+export const stripH3Tags = html =&gt; {
+  // replace style tags inside h3 for classic layouts
+  const doc = document.createElement("div")
+  doc.innerHTML = html
+  const h3s = doc.getElementsByTagName("h3")
+  for (let i = 0; i &lt; h3s.length; i++) {
+    const innerH3 = doc
+      .getElementsByTagName("h3")
+      [i].innerHTML.replace(/&lt;em&gt;/g, "")
+      .replace(/&lt;\/em&gt;/g, "")
+      .replace(/&lt;strong&gt;/g, "")
+      .replace(/&lt;\/strong&gt;/g, "")
+    const newH3 = `&lt;h3&gt;${innerH3}&lt;/h3&gt;`
+    $(doc.getElementsByTagName("h3")[i]).replaceWith(newH3)
+  }
+  return doc.innerHTML
+}
+export const removeDisallowedBlocks = (
+  editorState,
+  blocks,
+  layout,
+  hasFeatures,
+  keepExisting
+) =&gt; {
+  const allowedBlocks = blockRenderMapArray(layout, hasFeatures)
+  const currentContent = editorState.getCurrentContent()
+  const selection = editorState.getSelection()
+  let newState
+&nbsp;
+  const cleanedBlocks = blocks.map(contentBlock =&gt; {
+    const unstyled = stripCharacterStyles(contentBlock, true)
+    const isAllowedBlock = allowedBlocks.includes(unstyled.getType())
+    const isLink = unstyled.getType() === "LINK"
+&nbsp;
+    if (isAllowedBlock || isLink) {
+      return unstyled
+    } else {
+      return unstyled.set("type", "unstyled")
+    }
+  })
+&nbsp;
+  const newBlocks = ContentState.createFromBlockArray(cleanedBlocks, blocks)
+&nbsp;
+  if (keepExisting) {
+    const newContent = Modifier.replaceWithFragment(
+      currentContent,
+      selection,
+      newBlocks.blockMap
+    )
+    newState = EditorState.push(editorState, newContent, null)
+  } else {
+    newState = EditorState.push(editorState, newBlocks, null)
+  }
+&nbsp;
+  return newState
+}
+&nbsp;
+export const makePlainText = editorState =&gt; {
+  const selection = editorState.getSelection()
+&nbsp;
+  const noLinks = RichUtils.toggleLink(editorState, selection, null)
+  const unstyled = RichUtils.toggleBlockType(noLinks, "unstyled")
+&nbsp;
+  const currentBlocks = unstyled.getCurrentContent().getBlocksAsArray()
+  const plainBlocks = currentBlocks.map(contentBlock =&gt; {
+    return stripCharacterStyles(contentBlock)
+  })
+&nbsp;
+  const newContent = ContentState.createFromBlockArray(plainBlocks)
+  const newState = EditorState.push(editorState, newContent, null)
+&nbsp;
+  return newState
+}
+&nbsp;
+const replaceGoogleFalseTags = html =&gt; {
+  let doc = document.createElement("div")
+  doc.innerHTML = html
+&nbsp;
+  var spanBlocks = Array.from(doc.getElementsByTagName("SPAN"))
+&nbsp;
+  spanBlocks.map((block, i) =&gt; {
+    const { style } = block
+    const isItalic = style &amp;&amp; style.fontStyle === "italic"
+    const isBold = style &amp;&amp; style.fontWeight === "700"
+&nbsp;
+    if (isItalic &amp;&amp; isBold) {
+      block = "&lt;span&gt;&lt;strong&gt;&lt;em&gt;" + block.innerHTML + "&lt;/em&gt;&lt;/strong&gt;&lt;/span&gt;"
+    } else if (isItalic) {
+      block = "&lt;span&gt;&lt;em&gt;" + block.innerHTML + "&lt;/em&gt;&lt;/span&gt;"
+    } else if (isBold) {
+      block = "&lt;span&gt;&lt;strong&gt;" + block.innerHTML + "&lt;/strong&gt;&lt;/span&gt;"
+    }
+    $(doc.getElementsByTagName("SPAN")[i]).replaceWith(block)
+  })
+  return doc.innerHTML
+}
+&nbsp;
+const removeGoogleFalseBoldTags = html =&gt; {
+  let doc = document.createElement("div")
+  doc.innerHTML = html
+&nbsp;
+  var boldBlocks = Array.from(doc.getElementsByTagName("B"))
+&nbsp;
+  boldBlocks.map((block, i) =&gt; {
+    const { style } = block
+&nbsp;
+    if (style &amp;&amp; style.fontWeight === "normal") {
+      $(doc.getElementsByTagName("B")[i]).replaceWith(block.innerHTML)
+    }
+  })
+  return doc.innerHTML
+}
+&nbsp;
+export const stripGoogleStyles = html =&gt; {
+  // Applied on paste
+  // 1. Remove non-breaking spaces between paragraphs
+  let strippedHtml = html
+    .replace(/&lt;\/p&gt;&lt;br&gt;/g, "&lt;/p&gt;")
+    .replace('&lt;br class="Apple-interchange-newline"&gt;', "")
+&nbsp;
+  // 2. Remove dummy &lt;b&gt; tags google docs wraps document in
+  strippedHtml = removeGoogleFalseBoldTags(strippedHtml)
+&nbsp;
+  // 3. Replace bold/italic spans with actual strong/em tags
+  strippedHtml = replaceGoogleFalseTags(strippedHtml)
+&nbsp;
+  // 4. Replace illegally pasted unicode spaces
+  strippedHtml = replaceUnicodeSpaces(strippedHtml)
+&nbsp;
+  // 5. Strip non-style guide spaces
+  strippedHtml = standardizeSpacing(strippedHtml)
+&nbsp;
+  return strippedHtml
+}
+&nbsp;
+export const makeBlockQuote = html =&gt; {
+  let increment = 0
+  let blockquote = html
+  const beforeBlock = _s(blockquote).strLeft("&lt;blockquote&gt;")._wrapped
+  const afterBlock = _s(blockquote).strRight("&lt;/blockquote&gt;")._wrapped
+&nbsp;
+  if (afterBlock.length) {
+    // add text before blockquote to new text section
+    blockquote = blockquote.replace(afterBlock, "")
+  }
+  if (beforeBlock.length) {
+    // add text after blockquote to new text section
+    blockquote = blockquote.replace(beforeBlock, "")
+    // TODO: redux newSectionAction
+    increment = 1
+  }
+&nbsp;
+  return {
+    blockquote,
+    beforeBlock: beforeBlock.length &amp;&amp; beforeBlock,
+    afterBlock: afterBlock.length &amp;&amp; afterBlock,
+    increment,
+  }
+}
+&nbsp;
+export const stripBlockquote = html =&gt; {
+  let newHtml = html
+    .replace("&lt;blockquote&gt;", "&lt;p&gt;")
+    .replace("&lt;/blockquote&gt;", "&lt;/p&gt;")
+  return newHtml
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../sorter.js"></script>
+</body>
+</html>

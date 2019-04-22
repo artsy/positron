@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/components/autocomplete2/list_metaphysics.tsx</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../index.html">All files</a> / <a href="index.html">positron/src/client/components/autocomplete2</a> list_metaphysics.tsx
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">82.26% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>51/62</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">67.74% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>42/62</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>16/20</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">81.97% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>50/61</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">81x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">81x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">72x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">71x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Box } from "@artsy/palette"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { clone, compact, dropRight, uniq } from "lodash"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import request from "superagent"
+import { difference, flatten, pluck } from "underscore"
+import { capitalize } from "underscore.string"
+import { onChangeArticle } from "../../../client/actions/edit/articleActions"
+import * as Queries from "../../../client/queries/metaphysics"
+import { AutocompleteProps } from "./index"
+import { AutocompleteList } from "./list"
+import { AutocompleteSingle } from "./single"
+&nbsp;
+export interface AutocompleteListProps extends AutocompleteProps {
+  article: ArticleData
+  artsyURL?: string
+  field?: string
+  label?: string
+  model?: string
+  metaphysicsURL?: string
+  onChangeArticleAction?: any
+  type?: any
+  user?: any
+  isDraggable?: boolean
+  onDragEnd?: (items: any[]) =&gt; void
+}
+&nbsp;
+export class AutocompleteListMetaphysics extends Component&lt;
+  AutocompleteListProps
+&gt; {
+  static defaultProps = {
+    type: "list",
+  }
+&nbsp;
+  getQuery = () =&gt; {
+    const { model } = this.props
+&nbsp;
+    switch (model) {
+      case "artists": {
+        return Queries.ArtistsQuery
+      }
+      case "artworks": {
+        return Queries.ArtworksQuery
+      }
+      case "fairs": {
+        return Queries.FairsQuery
+      }
+      case "partners": {
+        return Queries.PartnersQuery
+      }
+      case "partner_shows": {
+        return Queries.ShowsQuery
+      }
+      case "sales": {
+        return Queries.AuctionsQuery
+      }
+      case "users": {
+        return Queries.UsersQuery
+      }
+    }
+  }
+&nbsp;
+  idsToFetch = fetchedItems =&gt; {
+    const { article, field, model } = this.props
+    let alreadyFetched = uniq(pluck(fetchedItems, "_id"))
+    let allIds = field &amp;&amp; clone(article[field])
+&nbsp;
+    if (model === "users") {
+      allIds = pluck(allIds, "id")
+      alreadyFetched = uniq(pluck(fetchedItems, "id"))
+    }
+    return difference(allIds, alreadyFetched)
+  }
+&nbsp;
+  fetchItems = (fetchedItems, cb) =&gt; {
+    const { metaphysicsURL, model, user } = this.props
+    const newItems = clone(fetchedItems)
+    const query: any = this.getQuery()
+    const idsToFetch = this.idsToFetch(fetchedItems)
+    // TODO: Metaphysics only returns shows with "displayable: true"
+    // and sales with "live: true", meaning shows and sales
+    // will not display in UI once they have closed
+    if (idsToFetch.length) {
+      request
+        .get(`${metaphysicsURL}`)
+        .set({
+          Accept: "application/json",
+          "X-Access-Token": user &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >user.access_token,</span>
+        })
+        .query({ query: query(idsToFetch) })
+        .end(<span class="fstat-no" title="function not covered" >(e</span>rr, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >          if (err) {</span>
+<span class="cstat-no" title="statement not covered" >            new Error(err)</span>
+          }
+<span class="cstat-no" title="statement not covered" >          model &amp;&amp; newItems.push(res.body.data[model])</span>
+          const uniqItems = <span class="cstat-no" title="statement not covered" >uniq(flatten(newItems))</span>
+<span class="cstat-no" title="statement not covered" >          cb(uniqItems)</span>
+        })
+    } else {
+      return fetchedItems
+    }
+  }
+&nbsp;
+  fetchItem = (_item, cb) =&gt; {
+    const { article, field, metaphysicsURL, model, user } = this.props
+&nbsp;
+    const query: any = this.getQuery()
+&nbsp;
+    const idToFetch = article &amp;&amp; field &amp;&amp; article[field]
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (idToFetch) {
+      request
+        .get(`${metaphysicsURL}`)
+        .set({
+          Accept: "application/json",
+          "X-Access-Token": user &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >user.access_token,</span>
+        })
+        .query({ query: query(idToFetch) })
+        .end(<span class="fstat-no" title="function not covered" >(e</span>rr, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >          if (err) {</span>
+<span class="cstat-no" title="statement not covered" >            new Error(err)</span>
+          }
+<span class="cstat-no" title="statement not covered" >          model &amp;&amp; cb(res.body.data[model])</span>
+        })
+    }
+  }
+&nbsp;
+  getSearchResultImage = item =&gt; {
+    switch (this.props.model) {
+<span class="branch-0 cbranch-no" title="branch not covered" >      case "artworks": {</span>
+<span class="cstat-no" title="statement not covered" >        return (</span>
+          (item.images &amp;&amp; item.images[0] &amp;&amp; item.images[0].image_urls.small) ||
+          item.images[0].image_urls.square
+        )
+      }
+      default: {
+        return (
+          item.image_urls &amp;&amp; (<span class="branch-1 cbranch-no" title="branch not covered" >item.image_urls.small </span>|| <span class="branch-2 cbranch-no" title="branch not covered" >item.image_urls.square)</span>
+        )
+      }
+    }
+  }
+&nbsp;
+  getFilter = () =&gt; {
+    const { model } = this.props
+&nbsp;
+    const filter = items =&gt; {
+      return items.map(item =&gt; {
+        const thumbnail_image = this.getSearchResultImage(item)
+        return {
+          id: item._id,
+          name: item.name,
+          title: item.title,
+          thumbnail_image,
+        }
+      })
+    }
+&nbsp;
+    const usersFilter = items =&gt; {
+      return items.map(item =&gt; {
+        return {
+          id: item.id,
+          name: compact([item.name, item.email]).join(", "),
+        }
+      })
+    }
+&nbsp;
+    return model === "users" ? usersFilter : filter
+  }
+&nbsp;
+  formatSelectedUser = item =&gt; {
+    return {
+      id: item.id,
+      name: dropRight(item.name.split(",")).join(", "),
+    }
+  }
+&nbsp;
+  renderAutocompleteType = () =&gt; {
+    const {
+      article,
+      artsyURL,
+      field,
+      isDraggable,
+      label,
+      model,
+      onChangeArticleAction,
+      onDragEnd,
+      placeholder,
+      type,
+    } = this.props
+    const idToFetch = article &amp;&amp; field &amp;&amp; article[field]
+&nbsp;
+    switch (type) {
+      case "single": {
+        return (
+          &lt;AutocompleteSingle
+            article={article}
+            fetchItem={(item, cb) =&gt; {
+              this.fetchItem(item, cb)
+            }}
+            filter={this.getFilter()}
+            formatSelected={
+              model === "users" ? <span class="branch-0 cbranch-no" title="branch not covered" >this.formatSelectedUser </span>: undefined
+            }
+            idToFetch={idToFetch || null}
+            label={capitalize(label || model)}
+            onSelect={<span class="fstat-no" title="function not covered" >re</span>sult =&gt; <span class="cstat-no" title="statement not covered" >onChangeArticleAction(field, result)}</span>
+            placeholder={placeholder || <span class="branch-1 cbranch-no" title="branch not covered" >`Search ${model} by name...`}</span>
+            url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+          /&gt;
+        )
+      }
+      default: {
+        return (
+          &lt;AutocompleteList
+            fetchItems={(fetchedItems, cb) =&gt; this.fetchItems(fetchedItems, cb)}
+            formatSelected={
+              model === "users" ? this.formatSelectedUser : undefined
+            }
+            isDraggable={isDraggable}
+            onDragEnd={onDragEnd}
+            items={idToFetch || []}
+            filter={this.getFilter()}
+            label={capitalize(label || model)}
+            onSelect={<span class="fstat-no" title="function not covered" >re</span>sults =&gt; <span class="cstat-no" title="statement not covered" >onChangeArticleAction(field, results)}</span>
+            placeholder={placeholder || `Search ${model} by name...`}
+            url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+          /&gt;
+        )
+      }
+    }
+  }
+&nbsp;
+  render() {
+    return &lt;Box pb={40}&gt;{this.renderAutocompleteType()}&lt;/Box&gt;
+  }
+}
+&nbsp;
+const mapStateToProps = state =&gt; ({
+  artsyURL: state.app.artsyURL,
+  article: state.edit.article,
+  metaphysicsURL: state.app.metaphysicsURL,
+  user: state.app.user,
+})
+&nbsp;
+const mapDispatchToProps = {
+  onChangeArticleAction: onChangeArticle,
+}
+&nbsp;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AutocompleteListMetaphysics)
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../sorter.js"></script>
+</body>
+</html>

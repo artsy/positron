@@ -1,7 +1,3 @@
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { connect } from "react-redux"
 import { color } from "@artsy/palette"
 import { avantgarde } from "@artsy/reaction/dist/Assets/Fonts"
 import { IconEditEmbed } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditEmbed"
@@ -11,23 +7,30 @@ import { IconEditText } from "@artsy/reaction/dist/Components/Publishing/Icon/Ic
 import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo"
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
-import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
-export class SectionTool extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    firstSection: PropTypes.bool,
-    index: PropTypes.number,
-    isEditing: PropTypes.bool,
-    isHero: PropTypes.bool,
-    isPartnerChannel: PropTypes.bool,
-    newHeroSectionAction: PropTypes.func,
-    newSectionAction: PropTypes.func,
-    onSetEditing: PropTypes.func,
-    sections: PropTypes.array,
-  }
+interface Props {
+  article: ArticleData
+  firstSection?: boolean
+  index: number
+  isEditing?: boolean
+  isHero?: boolean
+  isPartnerChannel: boolean
+  newHeroSectionAction: (type: string) => void
+  newSectionAction: (type: string, index: number) => void
+  onSetEditing: (editing: boolean | number) => void
+  sections: SectionData[]
+}
 
+export class SectionTool extends Component<Props> {
   state = {
     isOpen: false,
   }
@@ -135,7 +138,7 @@ export class SectionTool extends Component {
 
     const isFirstSection = sections && firstSection && sections.length === 0
     const isLastSection = sections && index === sections.length - 1
-    const sectionWidth = getSectionWidth(null, article.layout)
+    const sectionWidth = getSectionWidth(undefined, article.layout)
     const isVisible = isFirstSection || isLastSection || isHero
 
     return (
@@ -202,7 +205,9 @@ const SectionToolContainer = styled.div`
     props.isOpen &&
     `
     max-height: inherit;
-  `} ${props =>
+  `};
+
+  ${props =>
     props.isVisible &&
     !props.isHero &&
     `
@@ -247,7 +252,8 @@ export const SectionToolIcon = styled.div`
     (props.isVisible || props.isOpen) &&
     `
     opacity: 1;
-  `}; ${props =>
+  `};
+  ${props =>
     props.isVisible &&
     !props.isOpen &&
     !props.isHero &&
@@ -261,8 +267,7 @@ export const SectionToolIcon = styled.div`
       top: -3px;
       left: 35px;
     }
-  `}
-  &:hover {
+  `} &:hover {
     opacity: 1;
     path {
       fill: black;

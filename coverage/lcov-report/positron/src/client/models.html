@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for positron/src/client/models</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">All files</a> / <a href="index.html">positron/src/client</a> models
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">51.56% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>33/64</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">5% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/40</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">14.29% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/35</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">32.56% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>14/43</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1620x</span>
+<span class="cline-any cline-yes">176x</span>
+<span class="cline-any cline-yes">120x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">504x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="missing-if-branch" title="else path not taken" >E</span>_  = require 'underscore'
+Backbone = require 'backbone'
+sd = require('sharify').data
+async = require 'async'
+request = require 'superagent'
+jwtDecode = require 'jwt-decode'
+&nbsp;
+<span class="missing-if-branch" title="else path not taken" >E</span>module.exports = class User extends Backbone.Model
+&nbsp;
+  urlRoot: "#{sd.API_URL}/users/me"
+&nbsp;
+  isAdmin: -&gt;
+    @get('type') i<span class="fstat-no" title="function not covered" >s 'Admin'</span>
+<span class="cstat-no" title="statement not covered" ></span>
+  re<span class="cstat-no" title="statement not covered" >fresh: <span class="fstat-no" title="function not covered" >(</span>c</span>b) -<span class="fstat-no" title="function not covered" >&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    reque</span>st.get("#{sd.API_URL}/users/me/refresh")</span>
+      .set('X-Access-Token<span class="fstat-no" title="function not covered" >': @get('access_token'))</span>
+<span class="cstat-no" title="statement not covered" >      .end <span class="fstat-no" title="function not covered" >(</span>er</span>r, res) -&gt;
+        cb()<span class="fstat-no" title="function not covered" ></span>
+<span class="cstat-no" title="statement not covered" ></span>
+  hasCha<span class="cstat-no" title="statement not covered" >nn<span class="fstat-no" title="function not covered" >el: <span class="fstat-no" title="function not covered" >(</span>id) -&gt;</span></span>
+<span class="cstat-no" title="statement not covered" >    _.contains @<span class="fstat-no" title="function not covered" ></span>get('channel_ids'), id</span>
+<span class="cstat-no" title="statement not covered" ></span>
+  hasPartner: <span class="fstat-no" title="function not covered" >(</span>id) -&gt;
+    @isAdmin() or _.contains @get('partner_ids'), id
+&nbsp;
+  hasArticleAccess: <span class="fstat-no" title="function not covered" >(</span>article) -&gt;
+    if article.get('channe<span class="fstat-no" title="function not covered" >l</span>_id')
+      @hasC<span class="cstat-no" title="statement not covered" >hannel article.get('channel_id')</span>
+<span class="cstat-no" title="statement not covered" >    else</span>
+      @hasP<span class="cstat-no" title="statement not covered" >artner article.get('partner_channel_id')</span>
+&nbsp;
+  isOutdated: <span class="fstat-no" title="function not covered" >(</span>callback) -&gt;
+    async.water<span class="fstat-no" title="function not covered" >fall [</span>
+<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >      (</span>cb) =&gt;</span>
+        request.g<span class="fstat-no" title="function not covered" >e</span>t("#{sd.ARTSY_URL}/api/v1/me")
+          .set('X-Access-Token': @get('access_token'))
+<span class="cstat-no" title="statement not covered" >          .e</span>nd<span class="fstat-no" title="function not covered" > <span class="fstat-no" title="function not covered" >(</span>err, result) -&gt;</span>
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >            cb </span>null, result?.body</span>
+<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >      (</span>user, cb) =&gt;</span>
+<span class="cstat-no" title="statement not covered" >        request.get("#{sd.API_<span class="fstat-no" title="function not covered" >U</span>RL}/channels?user_id=#{@get('id')}&amp;limit=50")</span>
+<span class="cstat-no" title="statement not covered" >          .s</span>et('X-Access-Token': @get('access_token'))
+          .end <span class="fstat-no" title="function not covered" >(</span>err, results) -&gt;
+<span class="cstat-no" title="statement not covered" >            cb null, [ user, results?.body?.results ]</span>
+    ], <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span>er<span class="fstat-no" title="function not covered" >r, results) =&gt;</span></span>
+<span class="cstat-no" title="statement not covered" >      return callback true if err</span>
+<span class="cstat-no" title="statement not covered" >      user = resul<span class="fstat-no" title="function not covered" >ts[0</span>]</span>
+<span class="cstat-no" title="statement not covered" >      user.partner_ids = jwtDecode(@get('access_token')).p</span>artner_ids
+<span class="cstat-no" title="statement not covered" >      user.channel_ids = _</span>.pluck results[1], 'id'
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      for attr in ['id', 'type', 'name', 'email']</span>
+<span class="cstat-no" title="statement not covered" >        return callback true unless _.isEqual user[attr], @get(attr)</span>
+<span class="cstat-no" title="statement not covered" >      for attr in ['channel_ids', 'partner_ids']</span>
+<span class="cstat-no" title="statement not covered" >        return callback true unless _.isEqual(</span>
+          _.clone(<span class="fstat-no" title="function not covered" >user[attr]).sort(),</span>
+<span class="cstat-no" title="statement not covered" >          _.clo</span>ne(@get(attr)).sort()
+<span class="cstat-no" title="statement not covered" >        )</span>
+      callback false
+<span class="cstat-no" title="statement not covered" ></span>
+  fetchPartners: <span class="fstat-no" title="function not covered" >(</span>cb) -&gt;
+<span class="cstat-no" title="statement not covered" >    return cb [] unless @get('partner_ids')?.length &gt; 0</span>
+    request
+      .get("#{sd.ARTSY_URL}/api/v1/me/partners")
+      .set('X-Access-Token': @get('access_token'))
+      .end <span class="fstat-no" title="function not covered" >(</span>err, results) -&gt;
+<span class="cstat-no" title="statement not covered" >        return cb [] if err</span>
+        cb results.body
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Apr 22 2019 16:20:54 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
