@@ -2,7 +2,6 @@
 
 [Positron](https://github.com/artsy/positron) is Artsy Writer or the editorial tool for Artsy.
 
-[![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 ![ArtsyWriter](/doc/images/ArtsyWriter.png)
 
 ## Meta
@@ -11,17 +10,18 @@
 - **Production:** [https://writer.artsy.net/](https://writer.artsy.net/) | [Kubernetes](https://kubernetes.artsy.net/#!/deployment/default/positron-web?namespace=default)
 - **Staging:** [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Kubernetes](https://kubernetes-staging.artsy.net/#!/deployment/default/positron-web?namespace=default)
 - **Logs:**
-    * [Production](https://papertrailapp.com/groups/3675843/events?q=host%3Apositron-web)
-    * [Staging](https://papertrailapp.com/groups/3674473/events?q=host%3Apositron-web)
+  - [Production](https://papertrailapp.com/groups/3675843/events?q=host%3Apositron-web)
+  - [Staging](https://papertrailapp.com/groups/3674473/events?q=host%3Apositron-web)
 - **Monitoring:**
-    * [Production](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136847351&env=production&paused=false&start=1545133247351)
-    * [Staging](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136799180&env=staging&paused=false&start=1545133199180)
+  - [Production](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136847351&env=production&paused=false&start=1545133247351)
+  - [Staging](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136799180&env=staging&paused=false&start=1545133199180)
 - **MongoDB:** [Atlas](https://cloud.mongodb.com/v2/5be44a7aff7a254a8327cd3a#clusters)
 - **Github:** [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 - **CI:** [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
-- **Point Person:**  [@eessex](https://github.com/eessex)
+- **Point Person:** [@eessex](https://github.com/eessex)
 
 [![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master)
+[![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 
 ## Set-Up
 

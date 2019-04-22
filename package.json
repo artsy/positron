@@ -18,14 +18,11 @@
     "start": "sh scripts/start.sh",
     "production": "sh scripts/production.sh",
     "publish-assets": "sh scripts/publish-assets.sh",
+    "report-coverage": "./node_modules/.bin/codecov -c $COMMIT_HASH_FULL -b $BRANCH_NAME",
     "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
-    "type-check": "tsc --pretty --noEmit",
-    "normalize-jest-coverage": "node scripts/normalize-jest-coverage.js",
-    "create-merged-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
-    "report-coverage": "./scripts/codecov -C $COMMIT_HASH_FULL -p app/ -B $BRANCH_NAME -f coverage.lcov",
-    "publish-coverage": "yarn normalize-jest-coverage && yarn create-merged-coverage && yarn report-coverage"
+    "type-check": "tsc --pretty --noEmit"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",
@@ -70,6 +67,7 @@
     "body-parser": "^1.14.1",
     "bucket-assets": "^1.0.2",
     "cheerio": "^0.19.0",
+    "codecov": "^3.3.0",
     "coffeescript": "1.11.1",
     "compression": "^1.7.2",
     "cookie-parser": "^1.4.0",
@@ -246,12 +244,26 @@
     "roots": [
       "<rootDir>/src"
     ],
-    "coverageDirectory": "./.nyc_output/",
+    "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "coverageReporters": [
-      "text",
-      "json"
+      "lcov",
+      "text-summary"
     ]
+  },
+  "nyc": {
+    "check-coverage": true,
+    "temp-dir": "./.nyc_output/",
+    "report-dir": "./coverage/",
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "extension": [
+      ".coffee",
+      ".js"
+    ],
+    "lines": 0
   },
   "lint-staged": {
     "*.@(ts|tsx)": [
