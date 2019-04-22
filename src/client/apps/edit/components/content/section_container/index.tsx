@@ -149,10 +149,7 @@ export class SectionContainer extends Component<SectionContainerProps> {
           </HoverControls>
 
           {this.getSectionComponent()}
-          {isEditing &&
-            section.type !== "text" && (
-              <ContainerBackground onClick={this.onSetEditing} />
-            )}
+          {isEditing && <ContainerBackground onClick={this.onSetEditing} />}
         </SectionWrapper>
       </ErrorBoundary>
     )
