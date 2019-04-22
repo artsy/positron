@@ -1,6 +1,3 @@
-import React from "react"
-import { clone } from "lodash"
-import { mount } from "enzyme"
 import { FeatureArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconEditEmbed } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditEmbed"
 import { IconEditImages } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditImages"
@@ -8,14 +5,17 @@ import { IconEditText } from "@artsy/reaction/dist/Components/Publishing/Icon/Ic
 import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo"
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
+import { mount } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
 import { SectionTool, SectionToolIcon } from "../index"
 
 describe("SectionTool", () => {
   let props
   let sections
 
-  const getWrapper = props => {
-    return mount(<SectionTool {...props} />)
+  const getWrapper = (passedProps = props) => {
+    return mount(<SectionTool {...passedProps} />)
   }
 
   describe("In SectionList", () => {
@@ -40,14 +40,15 @@ describe("SectionTool", () => {
     })
 
     it("opens on click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
+      const instance = component.instance() as SectionTool
       component.find(SectionToolIcon).simulate("click")
 
-      expect(component.state().isOpen).toBe(true)
+      expect(instance.state.isOpen).toBe(true)
     })
 
     it("renders the section icons when open", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       component.find(SectionToolIcon).simulate("click")
 
       expect(component.find(IconEditText).exists()).toBe(true)
@@ -57,7 +58,7 @@ describe("SectionTool", () => {
     })
 
     it("Adds a data-visible prop to the last section tool", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       const isVisible = component.find(SectionToolIcon).props().isVisible
 
       expect(isVisible).toBe(true)
@@ -66,7 +67,7 @@ describe("SectionTool", () => {
     it("Adds a data-visible prop to the first section tool if no sections", () => {
       props.firstSection = true
       props.sections = []
-      const component = getWrapper(props)
+      const component = getWrapper()
       const isVisible = component.find(SectionToolIcon).props().isVisible
 
       expect(isVisible).toBe(true)
@@ -75,7 +76,7 @@ describe("SectionTool", () => {
     describe("Section options", () => {
       it("Renders correct icons for Classic layout with internal channel features", () => {
         props.article.layout = "classic"
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -87,7 +88,7 @@ describe("SectionTool", () => {
       it("Renders correct icons for Classic layout in partner channel", () => {
         props.article.layout = "classic"
         props.isPartnerChannel = true
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -98,7 +99,7 @@ describe("SectionTool", () => {
 
       it("Renders correct icons for Standard layout", () => {
         props.article.layout = "standard"
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -110,7 +111,7 @@ describe("SectionTool", () => {
 
       it("Renders correct icons for Feature layout", () => {
         props.article.layout = "feature"
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -121,7 +122,7 @@ describe("SectionTool", () => {
 
       it("Renders correct icons for News layout", () => {
         props.article.layout = "news"
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -133,7 +134,7 @@ describe("SectionTool", () => {
       it("Renders correct icons for first tool in News layout", () => {
         props.article.layout = "news"
         props.firstSection = true
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditText).exists()).toBe(true)
@@ -146,7 +147,7 @@ describe("SectionTool", () => {
     describe("Section creation", () => {
       it("Can create a text section", () => {
         const expectedIndex = props.sections.length
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconEditText).simulate("click")
 
@@ -156,7 +157,7 @@ describe("SectionTool", () => {
 
       it("Can create an image section", () => {
         const expectedIndex = props.sections.length
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconEditImages).simulate("click")
 
@@ -166,7 +167,7 @@ describe("SectionTool", () => {
 
       it("Can create a video section", () => {
         const expectedIndex = props.sections.length
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconEditVideo).simulate("click")
 
@@ -176,7 +177,7 @@ describe("SectionTool", () => {
 
       it("Can create an embed section", () => {
         const expectedIndex = props.sections.length
-        const component = getWrapper(props)
+        const component = getWrapper()
         component
           .find(SectionToolIcon)
           .at(0)
@@ -193,7 +194,7 @@ describe("SectionTool", () => {
       it("Can create a social embed section", () => {
         props.article.layout = "news"
         const expectedIndex = props.sections.length
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconEditEmbed).simulate("click")
 
@@ -204,7 +205,7 @@ describe("SectionTool", () => {
       it("doesn not create a social embed section for classic articles", () => {
         props.article.layout = "classic"
         props.isPartnerChannel = true
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
 
         expect(component.find(IconEditEmbed).exists()).toBe(false)
@@ -229,14 +230,15 @@ describe("SectionTool", () => {
     })
 
     it("opens on click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
+      const instance = component.instance() as SectionTool
       component.find(SectionToolIcon).simulate("click")
 
-      expect(component.state().isOpen).toBe(true)
+      expect(instance.state.isOpen).toBe(true)
     })
 
     it("renders the section icons when open", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       component.find(SectionToolIcon).simulate("click")
 
       expect(component.find(IconHeroImage).exists()).toBe(true)
@@ -245,7 +247,7 @@ describe("SectionTool", () => {
 
     describe("Section creation", () => {
       it("Can create an image section", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconHeroImage).simulate("click")
 
@@ -256,7 +258,7 @@ describe("SectionTool", () => {
       })
 
       it("Can create a video section", () => {
-        const component = getWrapper(props)
+        const component = getWrapper()
         component.find(SectionToolIcon).simulate("click")
         component.find(IconHeroVideo).simulate("click")
 
