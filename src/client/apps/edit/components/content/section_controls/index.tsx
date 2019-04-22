@@ -1,25 +1,31 @@
-/**
+import { color } from "@artsy/palette"
+import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { Channel } from "client/typings"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import LayoutControls from "./layout"
+
+interface Props {
+  article: ArticleData
+  channel: Channel
+  children: React.ReactElement
+  disabledAlert: () => void
+  isHero: boolean
+  showLayouts: boolean
+  section: SectionData
+}
+
+/*
  * A container for section inputs
  * Position changes on scroll to stick to section top
- **/
-
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { color } from "@artsy/palette"
-import { connect } from "react-redux"
-import LayoutControls from "./layout"
-import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-
-export class SectionControls extends Component {
-  static propTypes = {
-    channel: PropTypes.object,
-    children: PropTypes.any,
-    disabledAlert: PropTypes.func,
-    isHero: PropTypes.bool,
-    showLayouts: PropTypes.bool,
-    section: PropTypes.object,
-  }
+ */
+export class SectionControls extends Component<Props> {
+  private controls
 
   state = {
     insideComponent: false,
@@ -54,7 +60,7 @@ export class SectionControls extends Component {
     const { isHero } = this.props
 
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const windowHeight = window.innerHeight
       const headerHeight = this.getHeaderHeight()
 
@@ -69,7 +75,7 @@ export class SectionControls extends Component {
 
   isScrollingOver = $section => {
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const offsetTop = $section.offset().top
 
       const scrollPlusHeader = window.scrollY + this.getHeaderHeight()
@@ -81,7 +87,7 @@ export class SectionControls extends Component {
 
   isScrolledPast = $section => {
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const sectionHeight = $section.height()
       const offsetTop = $section.offset().top
       const scrollPosition = window.scrollY
@@ -182,3 +188,45 @@ const SectionControlsContainer = styled.div`
     margin-top: -20px;
   `};
 `
+
+// .edit-controls
+//   &__layout
+//     width 100%
+//     text-align center
+//     height 45px
+//   &__inputs
+//     padding 0 20px 20px
+//     h2
+//       color white
+//       avant-garde()
+//       font-size 11px
+//       margin-bottom 10px
+//     input
+//       width 100%
+//       margin-bottom 20px
+
+// #edit-content .edit-controls a
+//   display inline-block
+//   height 40px
+//   width @height + 20px
+//   background-repeat no-repeat
+//   background-position 50%
+//   transition opacity 0.3s
+//   opacity 0.5
+//   cursor pointer
+//   &:hover
+//     opacity 1
+//   &[data-active=true]
+//     opacity 1
+//   &[name=fillwidth]
+//     svg
+//       margin-bottom 9px
+//   &[name=overflow_fillwidth]
+//     background-image url(/icons/edit_artworks_overflow_fillwidth.svg)
+//     background-size 38px
+//   &[name=column_width]
+//     background-image url(/icons/edit_artworks_column_width.svg)
+//     background-size 22px
+//   &[name=image_set]
+//     background-image url(/icons/edit_image_set_slideshow.svg)
+//     background-size 22px
