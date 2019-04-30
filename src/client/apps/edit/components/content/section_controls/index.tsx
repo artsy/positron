@@ -1,5 +1,4 @@
 import { Box, color } from "@artsy/palette"
-import { unica } from "@artsy/reaction/dist/Assets/Fonts"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import {
   ArticleData,
@@ -133,7 +132,7 @@ export class SectionControls extends Component<Props> {
     const { insideComponent } = this.state
 
     const outsidePosition = isHero ? "relative" : "absolute"
-    const renderedPosition = insideComponent ? "fixed" : outsidePosition
+    const position = insideComponent ? "fixed" : outsidePosition
     const bottom = this.getPositionBottom()
     const sectionWidth = getSectionWidth(section, article.layout)
     const isFillwidth = !isHero && section.layout === "fillwidth"
@@ -143,7 +142,7 @@ export class SectionControls extends Component<Props> {
         ref={node => {
           this.controls = node
         }}
-        position={renderedPosition}
+        position={position}
         bottom={bottom}
         isFillwidth={isFillwidth}
         isHero={isHero}
