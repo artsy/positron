@@ -5,7 +5,7 @@ import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
 import { SectionControls } from "../index"
-import { LayoutControls } from "../layout.jsx"
+import { LayoutControls } from "../layout"
 
 describe("Section Controls", () => {
   let props

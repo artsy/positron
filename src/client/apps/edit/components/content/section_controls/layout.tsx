@@ -132,7 +132,7 @@ export default connect(
   mapDispatchToProps
 )(LayoutControls)
 
-const LayoutButton = styled.a<{ isActive?: boolean; type: string }>`
+export const LayoutButton = styled.a<{ isActive?: boolean; type: string }>`
   height: 40px;
   width: 60px;
   background-repeat: no-repeat;

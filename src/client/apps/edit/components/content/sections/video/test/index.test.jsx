@@ -1,5 +1,6 @@
 import React from "react"
 import configureStore from "redux-mock-store"
+import { LayoutButton } from "client/apps/edit/components/content/section_controls/layout"
 import { Editor } from "draft-js"
 import { Provider } from "react-redux"
 import { clone, extend } from "lodash"
@@ -16,21 +17,21 @@ describe("Video", () => {
   let props
   let video
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: { type: "editorial" },
       },
       edit: {
-        article: props.article,
-        section: props.section,
+        article: passedProps.article,
+        section: passedProps.section,
       },
     })
 
     return mount(
       <Provider store={store}>
-        <SectionVideo {...props} />
+        <SectionVideo {...passedProps} />
       </Provider>
     )
   }
@@ -51,14 +52,14 @@ describe("Video", () => {
 
   it("Renders a placeholder", () => {
     props.section.url = null
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(EditSectionPlaceholder)).toHaveLength(1)
     expect(component.text()).toMatch("Add a video above")
   })
 
   it("Renders a saved video and cover image", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(SectionVideo).props().section.url).toMatch(video.url)
     expect(
@@ -70,16 +71,16 @@ describe("Video", () => {
 
   it("Renders the section controls when editing", () => {
     props.editing = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(VideoSectionControls).exists()).toBe(true)
-    expect(component.find("a.layout").exists()).toBe(true)
+    expect(component.find(LayoutButton).exists()).toBe(true)
   })
 
   it("Does not render layout controls for hero sections", () => {
     props.editing = true
     props.isHero = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(VideoSectionControls).exists()).toBe(true)
     expect(component.find("a.layout").exists()).toBe(false)
@@ -88,7 +89,7 @@ describe("Video", () => {
   it("Does not render layout controls if props.hidePreview", () => {
     props.editing = true
     props.hidePreview = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(VideoSectionControls).exists()).toBe(true)
     expect(component.find("a.layout").exists()).toBe(false)
@@ -97,7 +98,7 @@ describe("Video", () => {
   it("#onProgress sets state.progress, renders progress bar if state.progress exists", () => {
     props.editing = true
     const progress = 0.5
-    const component = getWrapper(props)
+    const component = getWrapper()
     component
       .find(SectionVideo)
       .instance()
@@ -117,7 +118,7 @@ describe("Video", () => {
     it("Renders a caption field with placeholder", () => {
       props.editing = true
       props.section.caption = ""
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(Paragraph).exists()).toBe(true)
       expect(component.html()).toMatch(
@@ -126,13 +127,13 @@ describe("Video", () => {
     })
 
     it("Sets caption to readOnly if not editing", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
       expect(component.find(Editor).props().readOnly).toBe(true)
     })
 
     it("Renders a saved caption", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const caption = props.section.caption
         .replace("<p>", "")
         .replace("</p>", "")
@@ -143,7 +144,7 @@ describe("Video", () => {
 
     it("Can edit a caption", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const caption = "<p>New Caption</p>"
 
       component
@@ -160,7 +161,7 @@ describe("Video", () => {
     it("Renders video remove button if editing and has url", () => {
       props.section.cover_image_url = null
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(RemoveButton).exists()).toEqual(true)
     })
@@ -168,7 +169,7 @@ describe("Video", () => {
     it("Can remove the video url", () => {
       props.section.cover_image_url = null
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component.find(RemoveButton).simulate("click")
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("url")
@@ -177,14 +178,14 @@ describe("Video", () => {
 
     it("Renders cover remove button if editing and has cover_image_url", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       expect(component.find(RemoveButton).exists()).toEqual(true)
     })
 
     it("Can remove the cover_image_url", () => {
       props.editing = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component.find(RemoveButton).simulate("click")
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe(
@@ -198,7 +199,7 @@ describe("Video", () => {
     it("Can change a hero section caption", () => {
       props.editing = true
       props.isHero = true
-      const component = getWrapper(props)
+      const component = getWrapper()
       const caption = "<p>New Caption</p>"
 
       component
@@ -212,7 +213,7 @@ describe("Video", () => {
     it("Can remove Hero cover_image_url", () => {
       props.editing = true
       props.isHero = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component.find(RemoveButton).simulate("click")
       expect(props.onChangeHeroAction.mock.calls[0][0]).toBe("cover_image_url")
@@ -223,7 +224,7 @@ describe("Video", () => {
       props.section.cover_image_url = null
       props.editing = true
       props.isHero = true
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component.find(RemoveButton).simulate("click")
       expect(props.onChangeHeroAction.mock.calls[0][0]).toBe("url")
