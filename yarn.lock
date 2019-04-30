@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@artsy/detect-responsive-traits@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.1.tgz#3d83384bf3323fbd4679a2d73155ab85dc73e850"
-  integrity sha512-jqrC40t1P6w9zIvsJJhWe8pxLWdEC/kJQmDc4/b3vAnGy1EsJpcIJGUys37kwut7tDYPiypUF06SImtZVLGQnQ==
+"@artsy/detect-responsive-traits@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.4.tgz#933c66db24e70186c20e83017af39794a920ef0e"
+  integrity sha512-3LfmVWQdTQLjorlNv02y+qdD3h3RS57M46P/PBlG+nHjzUFtNk2B9NAKPurTzDubjlPYx1FUTH+EPm3ZaoTipg==
 
 "@artsy/express-reloadable@1.4.0":
   version "1.4.0"
@@ -16,14 +16,14 @@
     chokidar "^1.7.0"
     decache "^4.4.0"
 
-"@artsy/palette@4.9.0":
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.9.0.tgz#668279a49e40dd71f63de7fc6ebd5a7981ef8b52"
-  integrity sha512-TwJeG91SQeO9SC4xaCfzPpmN1NEpHdhYccSUuZ7q7iXv+IpBIe+k1WkXzt4rvtwDQYsaZwt9qZUpbXoYJhU5JQ==
+"@artsy/palette@4.10.0":
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.10.0.tgz#6be123e982b7dea856e44feae56097d114130dad"
+  integrity sha512-TJaxyTcw4t/0SfLAcO4JxvUWUzs1Nez/nH6aCsJohNWdI5raMWrymD4ctO2IJ2LGd2h7jFGqh1FGqoBgfBMBiA==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     moment "^2.23.0"
-    moment-timezone "^0.5.23"
+    moment-timezone "^0.5.25"
     rc-slider "^8.6.2"
     react-lazy-load-image-component "^1.3.2"
     react-live "^1.12.0"
@@ -38,12 +38,12 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@16.0.0":
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.0.0.tgz#8b0484ac85f7772621e7f10f6b4724f548ae3417"
-  integrity sha512-6FwIZG2YhCrBKL1T+/VyLJay3brUOT7TfwUVdV0SpNyCdSUwgK4LsGaMX1RFXQtCFde6qe8ipGojlwKfgrNDAQ==
+"@artsy/reaction@16.3.0":
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.3.0.tgz#4412e8d780f7f1d76dc527d6db729774262a6f6b"
+  integrity sha512-lEaXCgfjije0xx3jzdfoIc5ZlSBbETTUWGKab8ByCOA0c3p5JIysIK/XlhISGrix2HeTcVU4NSdlUTZ/dsw7eA==
   dependencies:
-    "@artsy/detect-responsive-traits" "^0.0.1"
+    "@artsy/detect-responsive-traits" "^0.0.4"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     autosuggest-highlight "^3.1.1"
     cheerio "^1.0.0-rc.2"
@@ -58,7 +58,7 @@
     jsonp "^0.2.1"
     lodash "^4.17.4"
     memoize-one "^4.0.3"
-    moment-timezone "^0.5.13"
+    moment-timezone "^0.5.25"
     numeral "^2.0.4"
     openseadragon "^2.3.1"
     prop-types "^15.5.10"
@@ -9064,17 +9064,10 @@ module-details-from-path@^1.0.3:
   resolved "https://registry.yarnpkg.com/module-details-from-path/-/module-details-from-path-1.0.3.tgz#114c949673e2a8a35e9d35788527aa37b679da2b"
   integrity sha1-EUyUlnPiqKNenTV4hSeqN7Z52is=
 
-moment-timezone@^0.5.13:
-  version "0.5.13"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.13.tgz#99ce5c7d827262eb0f1f702044177f60745d7b90"
-  integrity sha1-mc5cfYJyYusPH3AgRBd/YHRde5A=
-  dependencies:
-    moment ">= 2.9.0"
-
-moment-timezone@^0.5.23:
-  version "0.5.23"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.23.tgz#7cbb00db2c14c71b19303cb47b0fb0a6d8651463"
-  integrity sha512-WHFH85DkCfiNMDX5D3X7hpNH3/PUhjTGcD0U1SgfBGZxJ3qUmJh5FdvaFjcClxOvB3rzdfj4oRffbI38jEnC1w==
+moment-timezone@^0.5.25:
+  version "0.5.25"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.25.tgz#a11bfa2f74e088327f2cd4c08b3e7bdf55957810"
+  integrity sha512-DgEaTyN/z0HFaVcVbSyVCUU6HeFdnNC3vE4c9cgu2dgMTvjBUBdBzWfasTBmAW45u5OIMeCJtU8yNjM22DHucw==
   dependencies:
     moment ">= 2.9.0"
 
