@@ -2,10 +2,11 @@ import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import FileInput from "client/components/file_input"
-import SectionControls from "../../section_controls"
+import SectionControls from "../../section_controls/index.tsx"
 import { isEmpty } from "underscore"
 import { isWebUri } from "valid-url"
 import { removeSection } from "client/actions/edit/sectionActions"
+import { FormLabel } from "client/components/form_label"
 
 export class VideoSectionControls extends Component {
   static propTypes = {
@@ -61,7 +62,7 @@ export class VideoSectionControls extends Component {
         isHero={isHero}
         showLayouts={showLayouts}
       >
-        <h2>Video</h2>
+        <FormLabel color="white">Video</FormLabel>
         <input
           className="bordered-input bordered-input-dark"
           onChange={e => this.onVideoUrlChange(e.target.value)}
@@ -69,11 +70,12 @@ export class VideoSectionControls extends Component {
           placeholder="Paste a youtube or vimeo url (e.g. http://youtube.com/watch?v=id)"
           autoFocus
         />
+
+        <FormLabel color="white">Cover Image</FormLabel>
         <FileInput
           onUpload={this.onCoverImageChange}
           onProgress={onProgress}
           hasImage={section.cover_image_url}
-          label="Cover Image"
         />
       </SectionControls>
     )

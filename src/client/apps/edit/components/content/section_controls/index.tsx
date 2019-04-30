@@ -1,25 +1,31 @@
-/**
+import { Box, color } from "@artsy/palette"
+import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { Channel } from "client/typings"
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
+import LayoutControls from "./layout"
+
+interface Props {
+  article: ArticleData
+  channel: Channel
+  children: React.ReactElement
+  disabledAlert: () => void
+  isHero: boolean
+  showLayouts: boolean
+  section: SectionData
+}
+
+/*
  * A container for section inputs
  * Position changes on scroll to stick to section top
- **/
-
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { color } from "@artsy/palette"
-import { connect } from "react-redux"
-import LayoutControls from "./layout"
-import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-
-export class SectionControls extends Component {
-  static propTypes = {
-    channel: PropTypes.object,
-    children: PropTypes.any,
-    disabledAlert: PropTypes.func,
-    isHero: PropTypes.bool,
-    showLayouts: PropTypes.bool,
-    section: PropTypes.object,
-  }
+ */
+export class SectionControls extends Component<Props> {
+  private controls
 
   state = {
     insideComponent: false,
@@ -54,7 +60,7 @@ export class SectionControls extends Component {
     const { isHero } = this.props
 
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const windowHeight = window.innerHeight
       const headerHeight = this.getHeaderHeight()
 
@@ -69,7 +75,7 @@ export class SectionControls extends Component {
 
   isScrollingOver = $section => {
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const offsetTop = $section.offset().top
 
       const scrollPlusHeader = window.scrollY + this.getHeaderHeight()
@@ -81,7 +87,7 @@ export class SectionControls extends Component {
 
   isScrolledPast = $section => {
     if (this.controls) {
-      const controlsHeight = $(this.controls).height()
+      const controlsHeight = $(this.controls).height() || 0
       const sectionHeight = $section.height()
       const offsetTop = $section.offset().top
       const scrollPosition = window.scrollY
@@ -136,7 +142,6 @@ export class SectionControls extends Component {
         ref={node => {
           this.controls = node
         }}
-        className="edit-controls"
         position={position}
         bottom={bottom}
         isFillwidth={isFillwidth}
@@ -146,7 +151,7 @@ export class SectionControls extends Component {
       >
         {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
-        <div className="edit-controls__inputs">{children}</div>
+        <Inputs p="0 20px 20px">{children}</Inputs>
       </SectionControlsContainer>
     )
   }
@@ -159,7 +164,14 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps)(SectionControls)
 
-const SectionControlsContainer = styled.div`
+const SectionControlsContainer = styled.div<{
+  bottom: string
+  position: string
+  width: string
+  isFillwidth?: boolean
+  isHero?: boolean
+  type?: string
+}>`
   bottom: ${props => props.bottom};
   position: ${props => props.position};
   width: ${props => props.width};
@@ -181,4 +193,15 @@ const SectionControlsContainer = styled.div`
     padding-top: 20px;
     margin-top: -20px;
   `};
+`
+
+const Inputs = styled(Box)`
+  input {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .file-input__upload-container h2 {
+    margin: 0;
+  }
 `

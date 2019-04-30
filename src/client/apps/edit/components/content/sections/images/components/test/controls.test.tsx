@@ -2,6 +2,7 @@ import { Input } from "@artsy/reaction/dist/Components/Input"
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import Backbone from "backbone"
 import { SectionControls } from "client/apps/edit/components/content/section_controls"
+import { LayoutButton } from "client/apps/edit/components/content/section_controls/layout"
 import { Autocomplete } from "client/components/autocomplete2"
 import { mount } from "enzyme"
 import { cloneDeep, extend } from "lodash"
@@ -81,9 +82,7 @@ describe("ImagesControls", () => {
 
     expect(component.find(SectionControls).length).toBe(1)
     expect(component.html()).toMatch("overflow_fillwidth")
-    expect(component.html()).toMatch(
-      '<a name="overflow_fillwidth" class="layout" data-active="true">'
-    )
+    expect(component.find(LayoutButton).length).toBe(3)
     expect(component.html()).toMatch("column_width")
     expect(component.html()).toMatch("fillwidth")
     expect(component.html()).toMatch("image_set")

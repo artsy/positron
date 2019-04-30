@@ -1,27 +1,28 @@
-import configureStore from "redux-mock-store"
-import React from "react"
-import { clone, extend } from "lodash"
-import { mount } from "enzyme"
-import { Provider } from "react-redux"
+import { Videos } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
+import { LayoutButton } from "client/apps/edit/components/content/section_controls/layout"
 import FileInput from "client/components/file_input"
+import { mount } from "enzyme"
+import { clone, extend } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { SectionControls } from "../../../section_controls"
 import { VideoSectionControls } from "../controls"
-import { Videos } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
 
 describe("Video", () => {
   let props
   let video
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
         channel: { type: "editorial" },
       },
       edit: {
-        article: props.article,
-        section: props.editSection,
-        sectionIndex: props.sectionIndex,
+        article: passedProps.article,
+        section: passedProps.editSection,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
@@ -55,7 +56,7 @@ describe("Video", () => {
   })
 
   it("Renders input fields", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     expect(component.find(FileInput).exists()).toBe(true)
     expect(component.find("input").length).toBe(2)
@@ -68,27 +69,27 @@ describe("Video", () => {
   })
 
   it("Hides layout controls by default", () => {
-    const component = getWrapper(props)
-    expect(component.find("a.layout").exists()).toBeFalsy()
+    const component = getWrapper()
+    expect(component.find(LayoutButton).exists()).toBeFalsy()
   })
 
   it("Renders layout controls if props.showLayouts", () => {
     props.showLayouts = true
-    const component = getWrapper(props)
+    const component = getWrapper()
 
-    expect(component.find("a.layout").length).toBe(2)
+    expect(component.find(LayoutButton).length).toBe(2)
   })
 
   it("Renders fullscreen controls if article is feature", () => {
     props.showLayouts = true
     props.article.layout = "feature"
-    const component = getWrapper(props)
+    const component = getWrapper()
 
-    expect(component.find("a.layout").length).toEqual(3)
+    expect(component.find(LayoutButton).length).toEqual(3)
   })
 
   it("Can update a video url", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component.find(".bordered-input")
     const validUrl = "http://hello.com"
 
@@ -99,7 +100,7 @@ describe("Video", () => {
   })
 
   it("Does not update video url if invalid", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const input = component.find(".bordered-input")
     const value = "invalid url"
 
@@ -108,7 +109,7 @@ describe("Video", () => {
   })
 
   it("Resets the cover url if video url is empty", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
 
     const input = component.find(".bordered-input")
     input.instance().value = ""
@@ -121,7 +122,7 @@ describe("Video", () => {
   })
 
   it("Can update a cover image", () => {
-    const component = getWrapper(props)
+    const component = getWrapper()
     const src = "http://image.jpg"
     component
       .find(FileInput)
@@ -133,7 +134,7 @@ describe("Video", () => {
 
   it("Removes the section on unmount if no url", () => {
     props.section.url = ""
-    const component = getWrapper(props).find(VideoSectionControls)
+    const component = getWrapper().find(VideoSectionControls)
 
     component.instance().componentWillUnmount()
     expect(props.removeSectionAction.mock.calls[0][0]).toBe(props.sectionIndex)
