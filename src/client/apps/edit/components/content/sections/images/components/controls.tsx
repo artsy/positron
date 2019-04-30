@@ -10,7 +10,7 @@ import {
   onChangeSection,
   removeSection,
 } from "client/actions/edit/sectionActions"
-import SectionControls from "client/apps/edit/components/content/section_controls"
+// import SectionControls from "client/apps/edit/components/content/section_controls"
 import { Autocomplete } from "client/components/autocomplete2"
 import FileInput from "client/components/file_input"
 import { FormLabel } from "client/components/form_label"
@@ -19,6 +19,7 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { data as sd } from "sharify"
 import styled from "styled-components"
+import SectionControls from "../../../section_controls/index.tsx"
 import { InputArtworkUrl } from "./input_artwork_url"
 const Artwork = require("client/models/artwork.coffee")
 

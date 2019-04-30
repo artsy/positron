@@ -1,4 +1,5 @@
-import { color } from "@artsy/palette"
+import { Box, color } from "@artsy/palette"
+import { unica } from "@artsy/reaction/dist/Assets/Fonts"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import {
   ArticleData,
@@ -132,7 +133,7 @@ export class SectionControls extends Component<Props> {
     const { insideComponent } = this.state
 
     const outsidePosition = isHero ? "relative" : "absolute"
-    const position = insideComponent ? "fixed" : outsidePosition
+    const renderedPosition = insideComponent ? "fixed" : outsidePosition
     const bottom = this.getPositionBottom()
     const sectionWidth = getSectionWidth(section, article.layout)
     const isFillwidth = !isHero && section.layout === "fillwidth"
@@ -142,8 +143,7 @@ export class SectionControls extends Component<Props> {
         ref={node => {
           this.controls = node
         }}
-        className="edit-controls"
-        position={position}
+        position={renderedPosition}
         bottom={bottom}
         isFillwidth={isFillwidth}
         isHero={isHero}
@@ -152,7 +152,7 @@ export class SectionControls extends Component<Props> {
       >
         {showLayouts && <LayoutControls disabledAlert={disabledAlert} />}
 
-        <div className="edit-controls__inputs">{children}</div>
+        <Inputs p="0 20px 20px">{children}</Inputs>
       </SectionControlsContainer>
     )
   }
@@ -165,7 +165,14 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps)(SectionControls)
 
-const SectionControlsContainer = styled.div`
+const SectionControlsContainer = styled.div<{
+  bottom: string
+  position: string
+  width: string
+  isFillwidth?: boolean
+  isHero?: boolean
+  type?: string
+}>`
   bottom: ${props => props.bottom};
   position: ${props => props.position};
   width: ${props => props.width};
@@ -189,44 +196,13 @@ const SectionControlsContainer = styled.div`
   `};
 `
 
-// .edit-controls
-//   &__layout
-//     width 100%
-//     text-align center
-//     height 45px
-//   &__inputs
-//     padding 0 20px 20px
-//     h2
-//       color white
-//       avant-garde()
-//       font-size 11px
-//       margin-bottom 10px
-//     input
-//       width 100%
-//       margin-bottom 20px
+const Inputs = styled(Box)`
+  input {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
-// #edit-content .edit-controls a
-//   display inline-block
-//   height 40px
-//   width @height + 20px
-//   background-repeat no-repeat
-//   background-position 50%
-//   transition opacity 0.3s
-//   opacity 0.5
-//   cursor pointer
-//   &:hover
-//     opacity 1
-//   &[data-active=true]
-//     opacity 1
-//   &[name=fillwidth]
-//     svg
-//       margin-bottom 9px
-//   &[name=overflow_fillwidth]
-//     background-image url(/icons/edit_artworks_overflow_fillwidth.svg)
-//     background-size 38px
-//   &[name=column_width]
-//     background-image url(/icons/edit_artworks_column_width.svg)
-//     background-size 22px
-//   &[name=image_set]
-//     background-image url(/icons/edit_image_set_slideshow.svg)
-//     background-size 22px
+  .file-input__upload-container h2 {
+    margin: 0;
+  }
+`

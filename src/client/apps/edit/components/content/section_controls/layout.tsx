@@ -1,18 +1,25 @@
-import PropTypes from "prop-types"
+import { Flex } from "@artsy/palette"
+import { IconImageFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageFullscreen"
+import { IconImageSet } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageSet"
+import {
+  ArticleData,
+  SectionData,
+} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { onChangeSection } from "client/actions/edit/sectionActions"
+import { Channel } from "client/typings"
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { IconImageFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageFullscreen"
-import { onChangeSection } from "client/actions/edit/sectionActions"
+import styled from "styled-components"
 
-export class LayoutControls extends Component {
-  static propTypes = {
-    article: PropTypes.object,
-    channel: PropTypes.object,
-    disabledAlert: PropTypes.func,
-    section: PropTypes.object,
-    onChangeSectionAction: PropTypes.func,
-  }
+interface LayoutControlsProps {
+  article: ArticleData
+  channel: Channel
+  disabledAlert: () => void
+  section: SectionData
+  onChangeSectionAction: (key: any, val?: any) => void
+}
 
+export class LayoutControls extends Component<LayoutControlsProps> {
   changeLayout = layout => {
     const { section, disabledAlert, onChangeSectionAction } = this.props
     const { images, type } = section
@@ -20,7 +27,7 @@ export class LayoutControls extends Component {
     const isFillwidth = layout === "fillwidth"
     const isImage = this.sectionIsImage()
 
-    if (isFillwidth && isImage && images.length > 1) {
+    if (isFillwidth && isImage && images && images.length > 1) {
       return disabledAlert()
     }
     if (type === "image_set") {
@@ -69,40 +76,43 @@ export class LayoutControls extends Component {
     const { section } = this.props
 
     return (
-      <nav className="edit-controls__layout">
-        <a
-          name="overflow_fillwidth"
-          className="layout"
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        height={45}
+        textAlign="center"
+      >
+        <LayoutButton
+          type="overflow_fillwidth"
           onClick={() => this.changeLayout("overflow_fillwidth")}
-          data-active={section.layout === "overflow_fillwidth"}
+          isActive={section.layout === "overflow_fillwidth"}
         />
-        <a
-          name="column_width"
-          className="layout"
+        <LayoutButton
+          type="column_width"
           onClick={() => this.changeLayout("column_width")}
-          data-active={section.layout === "column_width"}
+          isActive={section.layout === "column_width"}
         />
 
         {this.sectionHasFullscreen() && (
-          <a
-            name="fillwidth"
-            className="layout"
+          <LayoutButton
+            type="fillwidth"
             onClick={() => this.changeLayout("fillwidth")}
-            data-active={section.layout === "fillwidth"}
+            isActive={section.layout === "fillwidth"}
           >
             <IconImageFullscreen fill={"white"} />
-          </a>
+          </LayoutButton>
         )}
 
         {this.hasImageSet() && (
-          <a
-            name="image_set"
-            className="layout"
+          <LayoutButton
+            type="image_set"
             onClick={this.toggleImageSet}
-            data-active={section.type === "image_set"}
-          />
+            isActive={section.type === "image_set"}
+          >
+            <IconImageSet color="white" />
+          </LayoutButton>
         )}
-      </nav>
+      </Flex>
     )
   }
 }
@@ -121,3 +131,54 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LayoutControls)
+
+const LayoutButton = styled.a<{ isActive?: boolean; type: string }>`
+  height: 40px;
+  width: 60px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transition: opacity 0.3s;
+  opacity: 0.5;
+  text-align: center;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  ${props =>
+    props.isActive &&
+    `
+    opacity: 1;
+  `};
+
+  ${props =>
+    props.type === "overflow_fillwidth" &&
+    `
+    background-image: url(/icons/edit_artworks_overflow_fillwidth.svg);
+    background-size: 38px;
+  `};
+
+  ${props =>
+    props.type === "column_width" &&
+    `
+    background-image: url(/icons/edit_artworks_column_width.svg);
+    background-size: 22px;
+  `};
+
+  ${props =>
+    props.type === "image_set" &&
+    `
+    svg {
+      width: 24px;
+      height: 38px;
+    }
+  `};
+
+  ${props =>
+    props.type === "fillwidth" &&
+    `
+    svg {
+      margin-top: 9px;
+    }
+  `};
+`
