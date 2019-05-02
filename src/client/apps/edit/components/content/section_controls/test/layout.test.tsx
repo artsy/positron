@@ -1,34 +1,36 @@
-import configureStore from "redux-mock-store"
-import React from "react"
-import { clone } from "lodash"
-import { mount } from "enzyme"
-import { Provider } from "react-redux"
-import { LayoutControls } from "../layout.jsx"
 import {
-  StandardArticle,
   FeatureArticle,
+  StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import { IconImageFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageFullscreen"
+import { IconImageSet } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageSet"
+import { mount } from "enzyme"
+import { clone } from "lodash"
+import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
+import { LayoutButton, LayoutControls } from "../layout"
 
 describe("Section LayoutControls", () => {
   let props
 
-  const getWrapper = props => {
+  const getWrapper = (passedProps = props) => {
     const mockStore = configureStore([])
     const store = mockStore({
       app: {
-        channel: props.channel,
+        channel: passedProps.channel,
       },
       edit: {
-        article: props.article,
-        section: props.section,
-        sectionIndex: props.sectionIndex,
+        article: passedProps.article,
+        section: passedProps.section,
+        sectionIndex: passedProps.sectionIndex,
       },
     })
 
     return mount(
       <Provider store={store}>
         <section>
-          <LayoutControls {...props} />
+          <LayoutControls {...passedProps} />
         </section>
       </Provider>
     )
@@ -37,7 +39,7 @@ describe("Section LayoutControls", () => {
   beforeEach(() => {
     props = {
       channel: { type: "editorial" },
-      section: clone(StandardArticle.sections[4]),
+      section: StandardArticle.sections && clone(StandardArticle.sections[4]),
       article: { layout: "standard" },
       onChangeSectionAction: jest.fn(),
       disabledAlert: jest.fn(),
@@ -45,67 +47,62 @@ describe("Section LayoutControls", () => {
   })
 
   describe("Section Layouts", () => {
-    it("adds a data-active attr to the current section layout icon", () => {
-      const component = getWrapper(props)
-
-      expect(component.html()).toMatch(
-        '<a name="overflow_fillwidth" class="layout" data-active="true">'
-      )
-    })
-
     it("does not render image_set icon for support or partner channels", () => {
       props.channel.type = "partner"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
-      expect(component.html()).not.toMatch('<a name="image_set"')
+      expect(component.find(LayoutButton).length).toBe(2)
+      expect(component.find(IconImageSet).length).toBe(0)
     })
 
     it("renders image_set icon if channel has features and section is images", () => {
       props.channel.type = "team"
-      props.section = StandardArticle.sections[4]
-      const component = getWrapper(props)
+      const component = getWrapper()
 
-      expect(component.html()).toMatch('<a name="image_set"')
+      expect(component.find(LayoutButton).length).toBe(3)
+      expect(component.find(IconImageSet).length).toBe(1)
     })
 
     it("does not render image_set icon if section is not images", () => {
-      props.section = StandardArticle.sections[0]
-      const component = getWrapper(props)
+      props.section = StandardArticle.sections && StandardArticle.sections[0]
+      const component = getWrapper()
 
-      expect(component.html()).not.toMatch('<a name="image_set"')
+      expect(component.find(LayoutButton).length).toBe(2)
+      expect(component.find(IconImageSet).length).toBe(0)
     })
 
     it("shows a fullscreen icon if layout is feature and section has images", () => {
-      props.section = StandardArticle.sections[4]
       props.article.layout = "feature"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
-      expect(component.html()).toMatch('<a name="fillwidth')
+      expect(component.find(LayoutButton).length).toBe(4)
+      expect(component.find(IconImageFullscreen).length).toBe(1)
     })
 
     it("shows a fullscreen icon if layout is feature and section is embed", () => {
-      props.section = StandardArticle.sections[10]
+      props.section = StandardArticle.sections && StandardArticle.sections[10]
       props.article.layout = "feature"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
-      expect(component.html()).toMatch('<a name="fillwidth')
+      expect(component.find(LayoutButton).length).toBe(3)
+      expect(component.find(IconImageFullscreen).length).toBe(1)
     })
 
     it("shows a fullscreen icon if layout is feature and section is video", () => {
-      props.section = FeatureArticle.sections[6]
+      props.section = FeatureArticle.sections && FeatureArticle.sections[6]
       props.article.layout = "feature"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
-      expect(component.html()).toMatch('<a name="fillwidth')
+      expect(component.find(IconImageFullscreen).length).toBe(1)
     })
   })
 
   describe("#changeLayout", () => {
     it("changes the layout on click", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component
-        .find(".layout")
+        .find(LayoutButton)
         .at(1)
         .simulate("click")
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("layout")
@@ -117,7 +114,7 @@ describe("Section LayoutControls", () => {
       const component = getWrapper(props)
 
       component
-        .find(".layout")
+        .find(LayoutButton)
         .at(2)
         .simulate("click")
       expect(props.disabledAlert.mock.calls.length).toBe(1)
@@ -128,10 +125,10 @@ describe("Section LayoutControls", () => {
       props.section.type = "image_set"
       delete props.section.layout
 
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component
-        .find(".layout")
+        .find(LayoutButton)
         .at(1)
         .simulate("click")
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("type")
@@ -145,10 +142,10 @@ describe("Section LayoutControls", () => {
 
   describe("#toggleImageSet", () => {
     it("converts an image_collection to an image_set", () => {
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component
-        .find(".layout")
+        .find(LayoutButton)
         .at(2)
         .simulate("click")
       expect(props.onChangeSectionAction.mock.calls[0][0]).toBe("type")
@@ -160,10 +157,10 @@ describe("Section LayoutControls", () => {
     it("does nothing if section is already an image_set", () => {
       props.section.type = "image_set"
       props.section.layout = "mini"
-      const component = getWrapper(props)
+      const component = getWrapper()
 
       component
-        .find(".layout")
+        .find(LayoutButton)
         .at(2)
         .simulate("click")
       expect(props.onChangeSectionAction).not.toBeCalled()
