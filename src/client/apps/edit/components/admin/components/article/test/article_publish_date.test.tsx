@@ -223,6 +223,7 @@ describe("ArticlePublishDate", () => {
 
   it("Button calls #onScheduleChange on click", () => {
     const component = getWrapper()
+    component.setState({ hasChanged: true })
     component
       .find("button")
       .at(0)
@@ -237,6 +238,7 @@ describe("ArticlePublishDate", () => {
       const component = getWrapper()
       const instance = component.instance() as ArticlePublishDate
       instance.date.value = "2018-02-02"
+      instance.setState({ hasChanged: true })
       component
         .find("button")
         .at(0)
@@ -250,6 +252,7 @@ describe("ArticlePublishDate", () => {
       const component = getWrapper()
       const instance = component.instance() as ArticlePublishDate
       instance.date.value = "2018-02-02"
+      instance.setState({ hasChanged: true })
       component
         .find("button")
         .at(0)
