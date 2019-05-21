@@ -100,7 +100,8 @@ export class AdminVerticalsTags extends Component<VerticalsTagsProps> {
           <Box>
             <FormLabel>Tracking Tags</FormLabel>
             <AutocompleteInlineList
-              items={article.tracking_tags}
+              // FIXME: expects Item[] instead of string[]
+              items={article.tracking_tags as any}
               filter={tags => {
                 return tags.results.map(tag => {
                   return { id: tag.id, name: tag.name }
