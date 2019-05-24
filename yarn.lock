@@ -40,17 +40,16 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@16.12.0":
-  version "16.12.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.12.0.tgz#118ef36188ce23001b0acf7eb4396b9cdbfc032b"
-  integrity sha512-5Bej0JJ49F0mhZvNl/mdC6Kz3WFs3vEtu2A+j6gnE9jhQTL/aSbCB23RWbD5+SH/0p0bJ2bnSY0wP1V7OQog7g==
+"@artsy/reaction@16.12.15":
+  version "16.12.15"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.12.15.tgz#ae93d8d183d6020ff676826bc54f5d39a5647843"
+  integrity sha512-Ym7gOyjw2xmEkwYrZ3vGoE+M3zIqqxPXashoaSIawb1tUwsYbcbvzPBQrXX9eR069hR3cBrWGbUiIopVCw3TaA==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.4"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     autosuggest-highlight "^3.1.1"
     cheerio "^1.0.0-rc.2"
     currency.js "^1.2.1"
-    deepmerge "^3.2.0"
     farce "^0.2.6"
     formik "^0.11.11"
     found "^0.3.14"
@@ -70,6 +69,7 @@
     react-autosuggest "^9.4.3"
     react-css-transition-replace "^3.0.2"
     react-flickity-component "^3.3.0"
+    react-gpt "^2.0.1"
     react-head "^3.0.0"
     react-html-parser "^2.0.2"
     react-lazy-load-image-component "^1.1.1"
@@ -86,7 +86,7 @@
     react-slick "^0.23.2"
     react-spring "^5.7.2"
     react-stripe-elements "^2.0.1"
-    react-tracking "^6.0.0"
+    react-tracking "^7.0.1"
     react-transition-group "^2.3.0"
     react-url-query "^1.1.4"
     react-waypoint "^7.3.3"
@@ -3681,6 +3681,11 @@ core-js@^2.4.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.2.tgz#267988d7268323b349e20b4588211655f0e83944"
   integrity sha512-NdBPF/RVwPW6jr0NCILuyN9RiqLo2b1mddWHkUL+VnvcB7dzlnBJ1bXYntjpTGOgkZiiLWj2JxmOr7eGE3qK6g==
 
+core-js@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.1.2.tgz#2549a2cfb3ca1a5d851c9f7838e8b282cef2f3ba"
+  integrity sha512-3poRGjbu56leCtZCZCzCgQ7GcKOflDFnjWIepaPFUsM0IXUBrne10sl3aa2Bkcz3+FjRdIxBe9dAMhIJmEnQNA==
+
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -4181,7 +4186,7 @@ deep-diff@^0.3.5:
   resolved "https://registry.yarnpkg.com/deep-diff/-/deep-diff-0.3.8.tgz#c01de63efb0eec9798801d40c7e0dae25b582c84"
   integrity sha1-wB3mPvsO7JeYgB1Ax+Da4ltYLIQ=
 
-deep-equal@*:
+deep-equal@*, deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
   integrity sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
@@ -5157,6 +5162,11 @@ eventemitter2@0.4.14, eventemitter2@~0.4.14:
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-0.4.14.tgz#8f61b75cde012b2e9eb284d4545583b5643b61ab"
   integrity sha1-j2G3XN4BKy6esoTUVFWDtWQ7Yas=
 
+eventemitter3@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
+  integrity sha1-teEHm1n7XhuidxwKmTvgYKWMmbo=
+
 events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
@@ -5208,6 +5218,11 @@ execa@^0.9.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+exenv@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
 
 exit-hook@^1.0.0:
   version "1.1.1"
@@ -6525,6 +6540,11 @@ hoek@4.x.x:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.1.0.tgz#4a4557460f69842ed463aa00628cc26d2683afa7"
   integrity sha1-SkVXRg9phC7UY6oAYozCbSaDr6c=
+
+hoist-non-react-statics@^1.0.5:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+  integrity sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
 
 hoist-non-react-statics@^2.2.1:
   version "2.3.1"
@@ -11310,6 +11330,18 @@ react-flickity-component@^3.3.0:
     imagesloaded "^4.1.4"
     prop-types "^15.7.2"
 
+react-gpt@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-gpt/-/react-gpt-2.0.1.tgz#faab7d7b650ea7f0b14f16de0bc701fa81fb35f7"
+  integrity sha512-MpN3H9aXY2Ywq7lzfBUQPAdfYVZen0BbNKDRn7brk5My3RRfIN9vetj4IRHMZmq9RKCs45xXj9cqkpOMXqhj0w==
+  dependencies:
+    deep-equal "^1.0.1"
+    eventemitter3 "^2.0.2"
+    exenv "^1.2.2"
+    hoist-non-react-statics "^1.0.5"
+    invariant "^2.2.2"
+    throttle-debounce "^1.0.1"
+
 react-head@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-head/-/react-head-3.0.1.tgz#c7a3583c77328b9a5f9172100f8446f4b4778f05"
@@ -11575,11 +11607,12 @@ react-tracking@^5.4.1:
     deepmerge "^2.2.1"
     hoist-non-react-statics "^3.0.1"
 
-react-tracking@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-6.0.0.tgz#9ed5dd7f8b64d40fcd1cc0160f449d909e6a58a0"
-  integrity sha512-wYOg9s54CV4/joO3gYJ9YpphGbbyHHhzI9priZk2QTqC3/ygQ8mHM2LK22vE7ILBun8LcGiPWCRUuGV/gtvlgA==
+react-tracking@^7.0.1:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-7.0.2.tgz#59d14fea7d279e1e6b25865a7de7943aac9782ea"
+  integrity sha512-7jxXv0UvPBAoiO6E7CCkRb/Hfykg6vVQf1yiGIo/Qj348uZxwPSJ4xlwIw04n1Hc2f3/r/Jvpm6kN+GAOy5Yuw==
   dependencies:
+    core-js "^3.1.1"
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
@@ -13640,6 +13673,11 @@ throat@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
   integrity sha1-iQN8vJLFarGJJua6TLsgDhVnKmo=
+
+throttle-debounce@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-1.1.0.tgz#51853da37be68a155cb6e827b3514a3c422e89cd"
+  integrity sha512-XH8UiPCQcWNuk2LYePibW/4qL97+ZQ1AN3FNXwZRBNPPowo/NRU5fAlDCSNBJIYCKbioZfuYtMhG4quqoJhVzg==
 
 through2@^2.0.0:
   version "2.0.3"
