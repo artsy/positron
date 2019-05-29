@@ -185,7 +185,7 @@
     "jest": "^23.4.1",
     "jest-coffee-preprocessor": "^1.0.0",
     "jest-styled-components": "^6.3.1",
-    "jquery": "^2.1.4",
+    "jquery": "^3.0.0",
     "jquery-autosize": "^1.18.18",
     "jquery-fillwidth-lite": "^1.0.3",
     "jquery-on-infinite-scroll": "^1.0.1",
