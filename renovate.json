@@ -1,6 +1,9 @@
 {
   "extends": [
-    "@artsy"
+    "@artsy:app"
+  ],
+  "reviewers": [
+    "zephraph"
   ],
   "assignees": [
     "eessex"
