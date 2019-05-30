@@ -1,6 +1,6 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
-gemup = require 'gemup'
+gemup = require '@artsy/gemup'
 sd = require('sharify').data
 formTemplate = -> require('./form.jade') arguments...
 
@@ -31,7 +31,6 @@ module.exports = class ImageVideoUploadForm extends Backbone.View
     @$('.image-upload-form').attr 'data-error', null
     gemup e.target.files[0],
       app: sd.GEMINI_APP
-      key: sd.GEMINI_KEY
       progress: (percent) =>
         @$('.image-upload-form').attr 'data-state', 'uploading'
         @$('.image-upload-form-preview source').attr('src', '')

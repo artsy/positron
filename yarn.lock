@@ -16,6 +16,11 @@
     chokidar "^3.0.0"
     decache "^4.4.0"
 
+"@artsy/gemup@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
+  integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
+
 "@artsy/palette@4.13.2":
   version "4.13.2"
   resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.13.2.tgz#c1c5d51d3a9140f19ee9fe916b5eaf2342631fd0"
@@ -6030,10 +6035,6 @@ gauge@~2.7.1:
     string-width "^1.0.1"
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
-
-gemup@artsy/gemup:
-  version "0.0.2"
-  resolved "https://codeload.github.com/artsy/gemup/tar.gz/82fd78f1e9e8f72a41d6a78fbc1b21bd78474229"
 
 generate-function@^2.0.0:
   version "2.0.0"
