@@ -16,12 +16,14 @@
     chokidar "^3.0.0"
     decache "^4.4.0"
 
-"@artsy/palette@4.12.0":
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.12.0.tgz#def46cf10d729848b35e42c1f6b00d3f4129de67"
-  integrity sha512-muc5SQEDPXWZKSXoPtt+2KjTsuJKLuVgE8k++vnnX8G5K/Riegm5zm+lbB3mlrWTvKpaa5SCk4Vpm0vAaoaBEQ==
+"@artsy/palette@4.14.0":
+  version "4.14.0"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.0.tgz#2e8eb4d1145dbd162d8a791f2f75a73c8c60a9f3"
+  integrity sha512-bTUyaSYINKKu2/NwowSCZjuv03VfX9GKG4u8qW9askz6AYZBPLvvZ//3+3TNwbOC4Ow6kEH6foBXbcJHTibOGg==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
+    d3-interpolate "^1.3.2"
+    d3-shape "^1.3.5"
     moment "^2.23.0"
     moment-timezone "^0.5.25"
     rc-slider "^8.6.2"
@@ -38,18 +40,18 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@16.12.0":
-  version "16.12.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.12.0.tgz#118ef36188ce23001b0acf7eb4396b9cdbfc032b"
-  integrity sha512-5Bej0JJ49F0mhZvNl/mdC6Kz3WFs3vEtu2A+j6gnE9jhQTL/aSbCB23RWbD5+SH/0p0bJ2bnSY0wP1V7OQog7g==
+"@artsy/reaction@16.13.3":
+  version "16.13.3"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.13.3.tgz#b3c085fb8404a8dfdeccda52e17f73baa2eacb35"
+  integrity sha512-nLIFcNFN486UOPQ4mVm3Xn3q3W4STzpMMsdVQbe4PoB8jH774etvbD56+BQeb8pRlZmU9zyiRn4omjnHHZZbDw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.4"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
     autosuggest-highlight "^3.1.1"
     cheerio "^1.0.0-rc.2"
     currency.js "^1.2.1"
-    deepmerge "^3.2.0"
     farce "^0.2.6"
+    flickity "^2.2.0"
     formik "^0.11.11"
     found "^0.3.14"
     found-relay "^0.3.1"
@@ -68,6 +70,7 @@
     react-autosuggest "^9.4.3"
     react-css-transition-replace "^3.0.2"
     react-flickity-component "^3.3.0"
+    react-gpt "^2.0.1"
     react-head "^3.0.0"
     react-html-parser "^2.0.2"
     react-lazy-load-image-component "^1.1.1"
@@ -75,7 +78,7 @@
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
     react-overlays "^0.8.3"
-    react-relay "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz"
+    react-relay "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz"
     react-relay-network-modern "^2.5.1"
     react-relay-network-modern-ssr "^1.2.2"
     react-responsive-decorator "^0.0.1"
@@ -84,12 +87,12 @@
     react-slick "^0.23.2"
     react-spring "^5.7.2"
     react-stripe-elements "^2.0.1"
-    react-tracking "^6.0.0"
+    react-tracking "^7.0.1"
     react-transition-group "^2.3.0"
     react-url-query "^1.1.4"
     react-waypoint "^7.3.3"
     relay-mock-network-layer "^2.0.0"
-    relay-runtime "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz"
+    relay-runtime "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz"
     serialize-javascript "^1.5.0"
     sharify "^0.1.6"
     styled-system "^3.1.11"
@@ -1944,9 +1947,9 @@ babel-plugin-module-resolver@^3.1.0:
     reselect "^3.0.1"
     resolve "^1.4.0"
 
-"babel-plugin-relay@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz":
+"babel-plugin-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
-  resolved "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz#690d531191f8b4838141eda455116078a0f734de"
+  resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/babel-plugin-relay-1.5.0-artsy.5.tgz#690d531191f8b4838141eda455116078a0f734de"
   dependencies:
     babel-runtime "^6.23.0"
     babel-types "^6.24.1"
@@ -3679,6 +3682,11 @@ core-js@^2.4.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.2.tgz#267988d7268323b349e20b4588211655f0e83944"
   integrity sha512-NdBPF/RVwPW6jr0NCILuyN9RiqLo2b1mddWHkUL+VnvcB7dzlnBJ1bXYntjpTGOgkZiiLWj2JxmOr7eGE3qK6g==
 
+core-js@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.1.2.tgz#2549a2cfb3ca1a5d851c9f7838e8b282cef2f3ba"
+  integrity sha512-3poRGjbu56leCtZCZCzCgQ7GcKOflDFnjWIepaPFUsM0IXUBrne10sl3aa2Bkcz3+FjRdIxBe9dAMhIJmEnQNA==
+
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -4015,6 +4023,30 @@ cyclist@~0.2.2:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
   integrity sha1-GzN5LhHpFKL9bW7WRHRkRE5fpkA=
 
+d3-color@1:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.2.3.tgz#6c67bb2af6df3cc8d79efcc4d3a3e83e28c8048f"
+  integrity sha512-x37qq3ChOTLd26hnps36lexMRhNXEtVxZ4B25rL0DVdDsGQIJGB18S7y9XDwlDD6MD/ZBzITCf4JjGMM10TZkw==
+
+d3-interpolate@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.3.2.tgz#417d3ebdeb4bc4efcc8fd4361c55e4040211fd68"
+  integrity sha512-NlNKGopqaz9qM1PXh9gBF1KSCVh+jSFErrSlD/4hybwoNX/gt1d8CDbDW+3i+5UOHhjC6s6nMvRxcuoMVNgL2w==
+  dependencies:
+    d3-color "1"
+
+d3-path@1:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.7.tgz#8de7cd693a75ac0b5480d3abaccd94793e58aae8"
+  integrity sha512-q0cW1RpvA5c5ma2rch62mX8AYaiLX0+bdaSM2wxSU9tXjU4DNvkx9qiUvjkuWCj3p22UO/hlPivujqMiR9PDzA==
+
+d3-shape@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.3.5.tgz#e81aea5940f59f0a79cfccac012232a8987c6033"
+  integrity sha512-VKazVR3phgD+MUCldapHD7P9kcrvPcexeX/PkMJmkUov4JM8IxsSg1DvbYoYich9AtdTsa5nNk2++ImPiDiSxg==
+  dependencies:
+    d3-path "1"
+
 d@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.0.tgz#754bb5bfe55451da69a58b94d45f4c5b0462d58f"
@@ -4155,7 +4187,7 @@ deep-diff@^0.3.5:
   resolved "https://registry.yarnpkg.com/deep-diff/-/deep-diff-0.3.8.tgz#c01de63efb0eec9798801d40c7e0dae25b582c84"
   integrity sha1-wB3mPvsO7JeYgB1Ax+Da4ltYLIQ=
 
-deep-equal@*:
+deep-equal@*, deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
   integrity sha1-9dJgKStmDghO/0zbyfCK0yR0SLU=
@@ -5131,6 +5163,11 @@ eventemitter2@0.4.14, eventemitter2@~0.4.14:
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-0.4.14.tgz#8f61b75cde012b2e9eb284d4545583b5643b61ab"
   integrity sha1-j2G3XN4BKy6esoTUVFWDtWQ7Yas=
 
+eventemitter3@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
+  integrity sha1-teEHm1n7XhuidxwKmTvgYKWMmbo=
+
 events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
@@ -5182,6 +5219,11 @@ execa@^0.9.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+exenv@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
 
 exit-hook@^1.0.0:
   version "1.1.1"
@@ -6499,6 +6541,11 @@ hoek@4.x.x:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.1.0.tgz#4a4557460f69842ed463aa00628cc26d2683afa7"
   integrity sha1-SkVXRg9phC7UY6oAYozCbSaDr6c=
+
+hoist-non-react-statics@^1.0.5:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
+  integrity sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
 
 hoist-non-react-statics@^2.2.1:
   version "2.3.1"
@@ -11284,6 +11331,18 @@ react-flickity-component@^3.3.0:
     imagesloaded "^4.1.4"
     prop-types "^15.7.2"
 
+react-gpt@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-gpt/-/react-gpt-2.0.1.tgz#faab7d7b650ea7f0b14f16de0bc701fa81fb35f7"
+  integrity sha512-MpN3H9aXY2Ywq7lzfBUQPAdfYVZen0BbNKDRn7brk5My3RRfIN9vetj4IRHMZmq9RKCs45xXj9cqkpOMXqhj0w==
+  dependencies:
+    deep-equal "^1.0.1"
+    eventemitter3 "^2.0.2"
+    exenv "^1.2.2"
+    hoist-non-react-statics "^1.0.5"
+    invariant "^2.2.2"
+    throttle-debounce "^1.0.1"
+
 react-head@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-head/-/react-head-3.0.1.tgz#c7a3583c77328b9a5f9172100f8446f4b4778f05"
@@ -11442,9 +11501,9 @@ react-relay-network-modern@^2.5.1:
   resolved "https://registry.yarnpkg.com/react-relay-network-modern/-/react-relay-network-modern-2.5.1.tgz#a081ae2691dbf2cfa53129cd6eb41a1e91a071aa"
   integrity sha512-Edp9XWAWLiAntrtNmfeLZMPMcwUmTpBhAoxHCaSKcet7gWN5RS0Z2OhKpVhKg3p1qZz+VLMMvWg8eQghBe0auQ==
 
-"react-relay@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz", "react-relay@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz":
+"react-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz", "react-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
-  resolved "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz#956280da8d941af7f6f65f3831b01051ee2c32c7"
+  resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz#956280da8d941af7f6f65f3831b01051ee2c32c7"
   dependencies:
     babel-runtime "^6.23.0"
     fbjs "^0.8.14"
@@ -11549,11 +11608,12 @@ react-tracking@^5.4.1:
     deepmerge "^2.2.1"
     hoist-non-react-statics "^3.0.1"
 
-react-tracking@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-6.0.0.tgz#9ed5dd7f8b64d40fcd1cc0160f449d909e6a58a0"
-  integrity sha512-wYOg9s54CV4/joO3gYJ9YpphGbbyHHhzI9priZk2QTqC3/ygQ8mHM2LK22vE7ILBun8LcGiPWCRUuGV/gtvlgA==
+react-tracking@^7.0.1:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-tracking/-/react-tracking-7.0.2.tgz#59d14fea7d279e1e6b25865a7de7943aac9782ea"
+  integrity sha512-7jxXv0UvPBAoiO6E7CCkRb/Hfykg6vVQf1yiGIo/Qj348uZxwPSJ4xlwIw04n1Hc2f3/r/Jvpm6kN+GAOy5Yuw==
   dependencies:
+    core-js "^3.1.1"
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
@@ -12010,9 +12070,9 @@ regjsparser@^0.3.0:
   dependencies:
     jsesc "~0.5.0"
 
-"relay-compiler@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz":
+"relay-compiler@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
-  resolved "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz#171e0716d30f2c3e8ee61b5af5aa893f366a1d2c"
+  resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-compiler-1.5.0-artsy.5.tgz#171e0716d30f2c3e8ee61b5af5aa893f366a1d2c"
   dependencies:
     babel-generator "^6.26.0"
     babel-polyfill "^6.20.0"
@@ -12038,9 +12098,9 @@ relay-mock-network-layer@^2.0.0:
   dependencies:
     graphql-tools "^4.0.2"
 
-relay-runtime@1.5.0-artsy.5, "relay-runtime@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz", "relay-runtime@https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz":
+relay-runtime@1.5.0-artsy.5, "relay-runtime@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz", "relay-runtime@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
-  resolved "https://github.com/alloy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz#6f24fa3cd7dcfc58164ee1b21b059c535e6419bf"
+  resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz#6f24fa3cd7dcfc58164ee1b21b059c535e6419bf"
   dependencies:
     babel-runtime "^6.23.0"
     fbjs "^0.8.14"
@@ -13614,6 +13674,11 @@ throat@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
   integrity sha1-iQN8vJLFarGJJua6TLsgDhVnKmo=
+
+throttle-debounce@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-1.1.0.tgz#51853da37be68a155cb6e827b3514a3c422e89cd"
+  integrity sha512-XH8UiPCQcWNuk2LYePibW/4qL97+ZQ1AN3FNXwZRBNPPowo/NRU5fAlDCSNBJIYCKbioZfuYtMhG4quqoJhVzg==
 
 through2@^2.0.0:
   version "2.0.3"
