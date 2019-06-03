@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@artsy/express-reloadable": "1.4.6",
+    "@artsy/gemup": "0.0.3",
     "@artsy/palette": "4.14.0",
     "@artsy/reaction": "16.13.4",
     "@babel/cli": "7.0.0",
@@ -177,7 +178,6 @@
     "fork-ts-checker-notifier-webpack-plugin": "^0.4.0",
     "fork-ts-checker-webpack-plugin": "^0.4.3",
     "friendly-errors-webpack-plugin": "^1.6.1",
-    "gemup": "artsy/gemup",
     "html-janitor": "^2.0.2",
     "husky": "^0.14.3",
     "imagesloaded": "^4.1.3",
