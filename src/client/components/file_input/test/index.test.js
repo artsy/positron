@@ -1,9 +1,9 @@
 import FileInput from "../index.jsx"
-import gemup from "gemup"
+import gemup from "@artsy/gemup"
 import React from "react"
 import { mount } from "enzyme"
 
-jest.mock("gemup")
+jest.mock("@artsy/gemup")
 
 describe("FileInput", () => {
   beforeAll(() => {

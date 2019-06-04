@@ -1,7 +1,7 @@
+import gemup from "@artsy/gemup"
 import { Box, Button, TextArea } from "@artsy/palette"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { FormLabel } from "client/components/form_label"
-import gemup from "gemup"
 import moment from "moment"
 import React, { Component } from "react"
 import { connect } from "react-redux"
@@ -79,7 +79,6 @@ export class ImageGenerator extends Component<Props, State> {
 
     gemup(image, {
       app: sd.GEMINI_APP,
-      key: sd.GEMINI_KEY,
       done: src => {
         onChangeArticleAction("thumbnail_image", src)
       },

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import React, { Component } from "react"
-const gemup = require("gemup")
+const gemup = require("@artsy/gemup")
 const sd = require("sharify").data
 
 export default class FileInput extends Component {
@@ -37,7 +37,6 @@ export default class FileInput extends Component {
     }
     gemup(e.target.files[0], {
       app: sd.GEMINI_APP,
-      key: sd.GEMINI_KEY,
       progress: percent => {
         onProgress(percent)
       },
