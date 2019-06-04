@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-gemup = require 'gemup'
+gemup = require '@artsy/gemup'
 sd = require('sharify').data
 { input, div, label, img } = React.DOM
 icons = -> require('../../templates/authors/authors_icons.jade') arguments...
@@ -27,7 +27,6 @@ module.exports = AuthorImage = React.createClass
       return
     gemup e.target.files[0],
       app: sd.GEMINI_APP
-      key: sd.GEMINI_KEY
       done: (src) =>
         @setState src: src, error: false, errorType: null
         @props.onChange src

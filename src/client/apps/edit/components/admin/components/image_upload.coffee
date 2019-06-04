@@ -1,6 +1,6 @@
 React = require 'react'
 ReactDOM = require 'react-dom'
-gemup = require 'gemup'
+gemup = require '@artsy/gemup'
 sd = require('sharify').data
 { crop } = require '../../../../../components/resizer/index.coffee'
 { RemoveButton } = require '../../../../../components/remove_button/index.jsx'
@@ -31,7 +31,6 @@ module.exports = React.createClass
       return
     gemup e.target.files[0],
       app: sd.GEMINI_APP
-      key: sd.GEMINI_KEY
       progress: (percent) =>
         @setState progress: percent
       add: (src) =>
