@@ -78,7 +78,7 @@
     "cors": "2.8.4",
     "create-react-class": "15.6.2",
     "dd-trace": "0.7.1",
-    "debug": "2.6.3",
+    "debug": "2.6.9",
     "dotenv": "4.0.0",
     "draft-convert": "2.0.0",
     "draft-js": "0.10.4",
