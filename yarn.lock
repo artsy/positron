@@ -6549,11 +6549,6 @@ html-entities@^1.2.0:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
   integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
 
-html-janitor@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/html-janitor/-/html-janitor-2.0.2.tgz#3f4551d23d1be8554e273f9eada2b617c2b3ab70"
-  integrity sha1-P0VR0j0b6FVOJz+eraK2F8Kzq3A=
-
 htmlparser2@^3.9.0, htmlparser2@^3.9.1:
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.9.2.tgz#1bdf87acca0f3f9e53fa4fcceb0f4b4cbb00b338"
