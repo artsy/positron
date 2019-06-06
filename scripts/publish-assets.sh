@@ -10,4 +10,4 @@ fi
 
 export COMMIT_HASH=`cat COMMIT_HASH.txt`
 
-yarn assets && yarn bucket-assets -b $S3_BUCKET
+yarn assets && ./node_modules/.bin/bucket-assets -b $S3_BUCKET
