@@ -61,6 +61,27 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+        - name: positron-nginx
+          image: artsy/docker-nginx:1.14.2
+          ports:
+            - containerPort: 80
+            - containerPort: 8443
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
+          env:
+            - name: "NGINX_DEFAULT_CONF"
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: default-websockets
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
