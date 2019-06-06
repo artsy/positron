@@ -1,9 +1,9 @@
+import gemup from "@artsy/gemup"
 import { mount } from "enzyme"
-import gemup from "gemup"
 import React from "react"
 import { ImageGenerator } from ".."
 
-jest.mock("gemup")
+jest.mock("@artsy/gemup")
 
 describe("ImageGenerator", () => {
   let props

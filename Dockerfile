@@ -2,7 +2,7 @@ FROM node:10.13-alpine
 ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH"
 
-RUN apk add curl git nginx bash
+RUN apk add curl git nginx bash mercurial
 
 # Set up deploy user and working directory
 RUN adduser -D -g '' deploy
@@ -28,7 +28,7 @@ RUN touch /var/run/nginx.pid && \
 
 # Symlink nginx logs to stderr / stdout
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+  && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN npm install -g yarn@1.15.2
 
