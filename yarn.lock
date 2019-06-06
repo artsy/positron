@@ -21,16 +21,15 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@4.14.4":
-  version "4.14.4"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.4.tgz#1adb6c3303c3835d6265f5e3f47ce3be2e9d630d"
-  integrity sha512-grZuLmTu56oaFjRYtRXKgk4Br0DJumj3jpuNxZ5i2QZejoRwWoxF/QeSLwB90cJuAJDTh2FxFI0/jqTTdu1ahA==
+"@artsy/palette@4.14.5":
+  version "4.14.5"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.5.tgz#1c6d36ab4ed7a7d0a27dbf96e824421b71964b02"
+  integrity sha512-AQUa2hojG1uadINqePpwiT/og8dFoELTIHKCvQXqbGlYy/bS6tm+atKEU8XauVJgMIVWBr3OiA0glpFIEVpvGA==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
-    moment "^2.23.0"
-    moment-timezone "^0.5.25"
+    luxon "^1.15.0"
     rc-slider "^8.6.2"
     react-lazy-load-image-component "^1.3.2"
     react-live "^1.12.0"
@@ -8815,6 +8814,11 @@ lsmod@1.0.0:
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
   integrity sha1-mgD3bco26yP6BTUK/htYXUKZ5ks=
 
+luxon@^1.15.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.16.0.tgz#93c915cfc3dff4bb806656595018fddc47cc96ec"
+  integrity sha512-qaqB+JwpGwtl7UbIXng3A/l4W/ySBr8drQvwtMLZBMiLD2V+0fEnPWMrs+UjnIy9PsktazQaKvwDUCLzoWz0Hw==
+
 macaddress@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.2.8.tgz#5904dc537c39ec6dbefeae902327135fa8511f12"
@@ -9217,7 +9221,7 @@ moment@2.19.3:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.3.tgz#bdb99d270d6d7fda78cc0fbace855e27fe7da69f"
   integrity sha1-vbmdJw1tf9p4zA+6zoVeJ/59pp8=
 
-"moment@>= 2.9.0", moment@^2.11.1, moment@^2.23.0:
+"moment@>= 2.9.0", moment@^2.11.1:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
