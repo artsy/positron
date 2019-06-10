@@ -87,6 +87,11 @@ spec:
           volumeMounts:
             - name: nginx-secrets
               mountPath: /etc/nginx/ssl
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:

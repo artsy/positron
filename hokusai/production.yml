@@ -84,6 +84,11 @@ spec:
                 configMapKeyRef:
                   name: nginx-config
                   key: default-websockets
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
