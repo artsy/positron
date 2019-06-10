@@ -30,10 +30,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: positron-environment
+          env:
+            - name: PORT
+              value: 8080
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
           imagePullPolicy: Always
           ports:
-            - containerPort: 3005
             - containerPort: 8080
             - containerPort: 8443
           resources:
@@ -44,7 +46,7 @@ spec:
               memory: 1Gi
           readinessProbe:
             httpGet:
-              port: 3005
+              port: 8080
               path: /api/health
               httpHeaders:
                 - name: X-FORWARDED-PROTO
