@@ -21,20 +21,20 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@4.14.3":
-  version "4.14.3"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.3.tgz#83a4fa1615858f60d3b492948044881eb05ec117"
-  integrity sha512-a/dpKW9xCNCn3vQNOCx8ROKr9K+CA6mEsMd9yfdf87ucOY0Ji+adBbv6r9MHfmCJUUtr4RGfqPrW8TJIkNg2ww==
+"@artsy/palette@4.14.11":
+  version "4.14.11"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.11.tgz#d0e974a8ff75c001a0e91dbf54ec456b485bb65d"
+  integrity sha512-Eo6SxdV8Ze06M+rTq+zSDz9rCgSWlr1s4Ts51yyHNqzpDF+9kd1eKr0+YN9O74EXNtwj7+Ux+5wqHrZGB9lXCw==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
+    luxon "^1.15.0"
     moment "^2.23.0"
     moment-timezone "^0.5.25"
     rc-slider "^8.6.2"
     react-lazy-load-image-component "^1.3.2"
     react-live "^1.12.0"
-    react-native-svg "^9.4.0"
     react-powerplug "^1.0.0"
     react-spring "^5.7.2"
     styled-bootstrap-grid "1.0.4"
@@ -46,10 +46,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@16.13.9":
-  version "16.13.9"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.13.9.tgz#180756a8c65f316be1ed848091f882d6ae2f701f"
-  integrity sha512-V6UbaMv3QyjQGhEw42wWLCgO1Qn8pPsGWZE6F8MMEvLp5J0tHMjGIDDYfwvdz0GB/r63Z3P+NdrDf1DYyNA24g==
+"@artsy/reaction@16.14.6":
+  version "16.14.6"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.14.6.tgz#79f12d3745a894f29fb94934fa34f2a3fcdcde44"
+  integrity sha512-2N1YapIdG6EQwMQU0acZjM2I3QDRUYPJ+btsIVJboKUA4BDQgoncaYKkBsynEedy4qCbnW2R1aNi99+8kj9qlA==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.4"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
@@ -6564,11 +6564,6 @@ html-entities@^1.2.0:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
   integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
 
-html-janitor@2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/html-janitor/-/html-janitor-2.0.2.tgz#3f4551d23d1be8554e273f9eada2b617c2b3ab70"
-  integrity sha1-P0VR0j0b6FVOJz+eraK2F8Kzq3A=
-
 htmlparser2@^3.9.0, htmlparser2@^3.9.1:
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-3.9.2.tgz#1bdf87acca0f3f9e53fa4fcceb0f4b4cbb00b338"
@@ -8792,6 +8787,14 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3
   dependencies:
     js-tokens "^3.0.0"
 
+lru-cache@4.1.x:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.5.tgz#8bbe50ea85bed59bc9e33dcab8235ee9bcf443cd"
+  integrity sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==
+  dependencies:
+    pseudomap "^1.0.2"
+    yallist "^2.1.2"
+
 lru-cache@^4.0.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.1.tgz#622e32e82488b49279114a4f9ecf45e7cd6bba55"
@@ -8812,6 +8815,11 @@ lsmod@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lsmod/-/lsmod-1.0.0.tgz#9a00f76dca36eb23fa05350afe1b585d4299e64b"
   integrity sha1-mgD3bco26yP6BTUK/htYXUKZ5ks=
+
+luxon@^1.15.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.16.0.tgz#93c915cfc3dff4bb806656595018fddc47cc96ec"
+  integrity sha512-qaqB+JwpGwtl7UbIXng3A/l4W/ySBr8drQvwtMLZBMiLD2V+0fEnPWMrs+UjnIy9PsktazQaKvwDUCLzoWz0Hw==
 
 macaddress@^0.2.8:
   version "0.2.8"
@@ -10008,7 +10016,7 @@ os-locale@^2.0.0:
     lcid "^1.0.0"
     mem "^1.1.0"
 
-os-tmpdir@^1.0.0:
+os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
@@ -11344,11 +11352,6 @@ react-markdown@^2.5.0:
     commonmark-react-renderer "^4.2.4"
     in-publish "^2.0.0"
     prop-types "^15.5.1"
-
-react-native-svg@^9.4.0:
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-9.4.0.tgz#e428e0eae55aebd2355f1ff4f22675dad4611960"
-  integrity sha512-IVJlVbS2dAPerPr927fEi4uXzrPXzlra5ddgyJXZZ2IKA2ZygyYWFZDM+vsQs+Vj20CfL8nOWszQQV57vdQgFg==
 
 react-oembed-container@^0.3.0:
   version "0.3.0"
@@ -13647,6 +13650,13 @@ tiny-invariant@^1.0.0:
   resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.0.tgz#03f96fef4d3ba911f97ed467e1b88bca3d4d9d9f"
   integrity sha512-bCLTQ14OaNO7tSXKy3mXMd/odOvisOAhF/TFzhbH4SdtHPMSS64KvBhWawAHwYTy7dtEKbXo9QGw8LBO/suOIw==
 
+tmp@0.0.x:
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
+  integrity sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==
+  dependencies:
+    os-tmpdir "~1.0.2"
+
 tmpl@1.0.x:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
@@ -13931,13 +13941,6 @@ ua-parser-js@^0.7.9:
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
   integrity sha1-BMgamb3V3FImPqKdJMa/jUgYpLs=
-
-ua-parser@0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/ua-parser/-/ua-parser-0.3.5.tgz#2ff4f9c9e6e2d64d711461f17beb2c9c697f2f1a"
-  integrity sha1-L/T5yebi1k1xFGHxe+ssnGl/Lxo=
-  dependencies:
-    yamlparser ">=0.0.2"
 
 uglify-es@^3.3.4:
   version "3.3.9"
@@ -14232,6 +14235,14 @@ user-home@^2.0.0:
   integrity sha1-nHC/2Babwdy/SGBODwS4tJzenp8=
   dependencies:
     os-homedir "^1.0.0"
+
+useragent@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/useragent/-/useragent-2.3.0.tgz#217f943ad540cb2128658ab23fc960f6a88c9972"
+  integrity sha512-4AoH4pxuSvHCjqLO04sU6U/uE65BYza8l/KKBS0b0hnUPWi+cQ2BpeTEwejCSx9SPV5/U03nniDTrWx5NrmKdw==
+  dependencies:
+    lru-cache "4.1.x"
+    tmp "0.0.x"
 
 util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
@@ -14829,11 +14840,6 @@ yaml@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-0.2.3.tgz#b5450e92e76ef36b5dd24e3660091ebaeef3e5c7"
   integrity sha1-tUUOkudu82td0k42YAkeuu7z5cc=
-
-yamlparser@>=0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/yamlparser/-/yamlparser-0.0.2.tgz#32393e6afc70c8ca066b6650ac6738b481678ebc"
-  integrity sha1-Mjk+avxwyMoGa2ZQrGc4tIFnjrw=
 
 yargs-parser@^7.0.0:
   version "7.0.0"
