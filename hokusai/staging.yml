@@ -137,11 +137,11 @@ spec:
     - port: 80
       protocol: TCP
       name: http
-      targetPort: 8080
+      targetPort: 80
     - port: 443
       protocol: TCP
       name: https
-      targetPort: 8443
+      targetPort: 443
   selector:
     app: positron
     layer: application
