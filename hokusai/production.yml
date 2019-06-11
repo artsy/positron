@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,6 +33,10 @@ spec:
           env:
             - name: PORT
               value: 8080
+            - name: "DATADOG_AGENT_HOSTNAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
           imagePullPolicy: Always
           ports:
@@ -59,11 +62,6 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx", "-s", "quit"]
-          env:
-            - name: "DATADOG_AGENT_HOSTNAME"
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
         - name: positron-nginx
           image: artsy/docker-nginx:1.14.2
           ports:
