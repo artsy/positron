@@ -13,8 +13,6 @@ RUN adduser -D -g '' deploy
 RUN mkdir -p /app
 RUN chown deploy:deploy /app
 
-RUN npm install -g yarn@1.15.2
-
 # Switch to deploy user
 USER deploy
 ENV USER deploy
