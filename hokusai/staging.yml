@@ -30,15 +30,14 @@ spec:
           envFrom:
             - configMapRef:
                 name: positron-environment
+          env:
+            - name: PORT
+              value: 8080
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
           imagePullPolicy: Always
           ports:
             - name: positron-http
-              containerPort: 3005
-            - name: nginx-http
               containerPort: 8080
-            - name: nginx-https
-              containerPort: 8443
           resources:
             requests:
               cpu: 500m
@@ -64,6 +63,37 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+        - name: positron-nginx
+          image: artsy/docker-nginx:1.14.2
+          ports:
+            - name: nginx-http
+              containerPort: 80
+            - name: nginx-https
+              containerPort: 443
+          readinessProbe:
+            tcpSocket:
+              port: nginx-http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
+          env:
+            - name: "NGINX_DEFAULT_CONF"
+              valueFrom:
+                configMapKeyRef:
+                  name: nginx-config
+                  key: default-websockets
+          volumeMounts:
+            - name: nginx-secrets
+              mountPath: /etc/nginx/ssl
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
