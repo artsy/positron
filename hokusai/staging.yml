@@ -33,9 +33,12 @@ spec:
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
           imagePullPolicy: Always
           ports:
-            - containerPort: 3005
-            - containerPort: 8080
-            - containerPort: 8443
+            - name: positron-http
+              containerPort: 3005
+            - name: nginx-http
+              containerPort: 8080
+            - name: nginx-https
+              containerPort: 8443
           resources:
             requests:
               cpu: 500m
@@ -44,7 +47,7 @@ spec:
               memory: 1Gi
           readinessProbe:
             httpGet:
-              port: 3005
+              port: positron-http
               path: /api/health
               httpHeaders:
                 - name: X-FORWARDED-PROTO
@@ -113,11 +116,11 @@ spec:
     - port: 80
       protocol: TCP
       name: http
-      targetPort: 8080
+      targetPort: nginx-http
     - port: 443
       protocol: TCP
       name: https
-      targetPort: 8443
+      targetPort: nginx-https
   selector:
     app: positron
     layer: application
