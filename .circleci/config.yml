@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hokusai: artsy/hokusai@0.1.0
+  hokusai: artsy/hokusai@dev:0.2.0.43
 
 jobs:
   build-and-test:
