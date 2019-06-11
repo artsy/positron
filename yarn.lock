@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@artsy/bucket-assets@^1.0.3":
+"@artsy/bucket-assets@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@artsy/bucket-assets/-/bucket-assets-1.0.3.tgz#0b3139b736b19845fffb741d86926483a900f653"
   integrity sha512-fH2waIkV/v/ypMHt+lZTnRFG8tV8DRO5wSkmQhSYqiQgqCqdzfCFia0hCU7x9b2o90eez4hgfPtIuS3jlmqDjg==
