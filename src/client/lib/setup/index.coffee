@@ -7,7 +7,7 @@
 # Dependencies
 require './sharify'
 sharify = require 'sharify'
-bucketAssets = require 'bucket-assets'
+bucketAssets = require '@artsy/bucket-assets'
 express = require 'express'
 bodyParser = require 'body-parser'
 cookieParser = require 'cookie-parser'
