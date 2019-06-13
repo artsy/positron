@@ -1,13 +1,9 @@
 FROM node:10.13-alpine
 
-WORKDIR /app
-
+ARG COMMIT_HASH
 ENV PORT 3005
 EXPOSE 3005
-
-# Ensure COMMIT_HASH is present
-ARG COMMIT_HASH
-RUN test -n "$COMMIT_HASH"
+WORKDIR /app
 
 # Install system dependencies
 RUN apk add --no-cache --quiet \
@@ -20,15 +16,16 @@ RUN apk add --no-cache --quiet \
 
 # Install the packages
 COPY package.json yarn.lock ./
-RUN yarn install && \
-  # Save COMMIT_HASH as txt
-  echo $COMMIT_HASH > COMMIT_HASH.txt
+RUN yarn install
 
 # Copy application code
 COPY . ./
 
-# Update file/directory permissions
-RUN chown -R deploy:deploy ./
+# Ensure COMMIT_HASH is present
+RUN test -n "$COMMIT_HASH" && \
+  echo $COMMIT_HASH > COMMIT_HASH.txt && \
+  # Update file/directory permissions
+  chown -R deploy:deploy ./
 
 # Switch to less-privileged user
 USER deploy
