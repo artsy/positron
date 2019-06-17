@@ -34,10 +34,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@4.14.16":
-  version "4.14.16"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.16.tgz#5b2e510e83bd8ed4733896f72df9ede0cef529c7"
-  integrity sha512-Ynx51XfxshhTEWDt72DKh2RpQ2tLcogtSy0oALEkepcUzgnEzpOFEZVRV488u/57TcuJFj1JcKBfvr7E3N5MTg==
+"@artsy/palette@4.14.17":
+  version "4.14.17"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-4.14.17.tgz#84720bbcfebb52c7d0a0b53699148b5a9f06ce46"
+  integrity sha512-fnovF/imWR3mY/3cE/wpFjV6neVXsXbPgrbDMDZ+QtPtGrxSOINVRe8p3GVSIdkunaPBxKc5uohRc7KMHK+rgA==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
@@ -57,10 +57,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@16.17.8":
-  version "16.17.8"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.17.8.tgz#3dfb271f07870e61467d551c6ba54f9d823203e7"
-  integrity sha512-SNgPDQaO3MH9I1nVERJSeErjWBfrnJdU0XeVPDAWehIfrzNX8ezAdXdakPyMWOWlq5FfswlSb1vRSSMWj3G1lQ==
+"@artsy/reaction@16.17.10":
+  version "16.17.10"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-16.17.10.tgz#f81fc01cc9b7ff65961d150dea13154c7fe0eea4"
+  integrity sha512-Z9FblYQ35ni2TN7R9mVbm4oAyBlPxMNsQLdkqFJWvEdof4+fiKDvGzBzBQMqbA0s0v3hrzIYNARq5pvIMkAFHg==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.4"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
@@ -14055,15 +14055,7 @@ ultron@~1.1.0:
   resolved "https://registry.yarnpkg.com/ultron/-/ultron-1.1.1.tgz#9fe1536a10a664a65266a1e3ccf85fd36302bc9c"
   integrity sha512-UIEXBNeYmKptWH6z8ZnqTeS8fV74zG0/eRU9VGkpzz+LIJNs8W/zM/L+7ctCkRrgbNnnR0xxw4bKOr0cW0N0Og==
 
-underscore.string@3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-3.3.4.tgz#2c2a3f9f83e64762fdc45e6ceac65142864213db"
-  integrity sha1-LCo/n4PmR2L9xF5s6sZRQoZCE9s=
-  dependencies:
-    sprintf-js "^1.0.3"
-    util-deprecate "^1.0.2"
-
-underscore.string@^3.3.5:
+underscore.string@3.3.5, underscore.string@^3.3.5:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-3.3.5.tgz#fc2ad255b8bd309e239cbc5816fd23a9b7ea4023"
   integrity sha512-g+dpmgn+XBneLmXXo+sGlW5xQEt4ErkS3mgeN2GFbremYeMBSJKr9Wf2KJplQVaiPY/f7FN6atosWYNm9ovrYg==
