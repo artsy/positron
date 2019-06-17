@@ -67,7 +67,6 @@ export class InputArtworkUrl extends Component<
         <Button
           variant="secondaryGray"
           loading={isLoading}
-          borderRadius={0}
           onClick={() => this.getIdFromSlug(url)}
         >
           Add
