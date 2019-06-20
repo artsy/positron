@@ -3,7 +3,7 @@ Backbone = require 'backbone'
 sd = require('sharify').data
 async = require 'async'
 request = require 'superagent'
-artsyXapp = require('artsy-xapp').token or ''
+artsyXapp = require('artsy-xapp')
 
 module.exports = class Channel extends Backbone.Model
 
@@ -102,7 +102,7 @@ module.exports = class Channel extends Backbone.Model
     async.parallel [
       (cb) =>
         request.get("#{sd.API_URL}/channels/#{@get('id')}")
-          .set('X-Xapp-Token': artsyXapp)
+          .set('X-Xapp-Token': artsyXapp.token)
           .end (err, res) ->
             if err
               cb null, {}
@@ -110,7 +110,7 @@ module.exports = class Channel extends Backbone.Model
               cb null, res
       (cb) =>
         request.get("#{sd.ARTSY_URL}/api/v1/partner/#{@get('id')}")
-          .set('X-Xapp-Token': artsyXapp)
+          .set('X-Xapp-Token': artsyXapp.token)
           .end (err, res) ->
             if err
               cb null, {}
