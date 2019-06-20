@@ -30,12 +30,18 @@ spec:
           envFrom:
             - configMapRef:
                 name: positron-environment
+          env:
+            - name: PORT
+              value: '8080'
+            - name: "DATADOG_AGENT_HOSTNAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
           imagePullPolicy: Always
           ports:
-            - containerPort: 3005
-            - containerPort: 8080
-            - containerPort: 8443
+            - name: positron-http
+              containerPort: 8080
           resources:
             requests:
               cpu: 500m
@@ -44,7 +50,7 @@ spec:
               memory: 1Gi
           readinessProbe:
             httpGet:
-              port: 3005
+              port: positron-http
               path: /api/health
               httpHeaders:
                 - name: X-FORWARDED-PROTO
@@ -56,11 +62,37 @@ spec:
             preStop:
               exec:
                 command: ["/usr/sbin/nginx", "-s", "quit"]
+        - name: positron-nginx
+          image: artsy/docker-nginx:1.14.2
+          ports:
+            - name: nginx-http
+              containerPort: 80
+            - name: nginx-https
+              containerPort: 443
+          readinessProbe:
+            tcpSocket:
+              port: nginx-http
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/sbin/nginx", "-s", "quit"]
           env:
-            - name: "DATADOG_AGENT_HOSTNAME"
+            - name: "NGINX_DEFAULT_CONF"
               valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+                configMapKeyRef:
+                  name: nginx-config
+                  key: default-websockets
+          volumeMounts:
+            - name: nginx-secrets
+              mountPath: /etc/nginx/ssl
+      volumes:
+        - name: nginx-secrets
+          secret:
+            secretName: nginx-secrets
+            defaultMode: 420
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
@@ -113,11 +145,11 @@ spec:
     - port: 80
       protocol: TCP
       name: http
-      targetPort: 8080
+      targetPort: nginx-http
     - port: 443
       protocol: TCP
       name: https
-      targetPort: 8443
+      targetPort: nginx-https
   selector:
     app: positron
     layer: application
