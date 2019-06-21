@@ -41,7 +41,7 @@
     "@artsy/bucket-assets": "1.0.3",
     "@artsy/express-reloadable": "1.4.6",
     "@artsy/gemup": "0.0.3",
-    "@artsy/palette": "4.14.20",
+    "@artsy/palette": "4.14.21",
     "@artsy/reaction": "16.17.24",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
