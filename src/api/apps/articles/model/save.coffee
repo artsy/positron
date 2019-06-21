@@ -12,7 +12,7 @@ request = require 'superagent'
 Article = require './index'
 { distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
-artsyXapp = require('artsy-xapp').token or ''
+artsyXapp = require('artsy-xapp')
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -102,13 +102,14 @@ removeStopWords = (title) ->
     return cb null, article
   keywords = []
   callbacks = []
+  token = artsyXapp.token or ''
   if input.primary_featured_artist_ids
     for artistId in input.primary_featured_artist_ids
       do (artistId) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': artsyXapp)
+            .set('X-Xapp-Token': token)
             .end callback
   if input.featured_artist_ids
     for artistId in input.featured_artist_ids
@@ -116,7 +117,7 @@ removeStopWords = (title) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/artist/#{artistId}")
-            .set('X-Xapp-Token': artsyXapp)
+            .set('X-Xapp-Token': token)
             .end callback
   if input.fair_ids
     for fairId in input.fair_ids
@@ -124,7 +125,7 @@ removeStopWords = (title) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/fair/#{fairId}")
-            .set('X-Xapp-Token': artsyXapp)
+            .set('X-Xapp-Token': token)
             .end callback
   if input.partner_ids
     for partnerId in input.partner_ids
@@ -132,7 +133,7 @@ removeStopWords = (title) ->
         callbacks.push (callback) ->
           request
             .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
-            .set('X-Xapp-Token': artsyXapp)
+            .set('X-Xapp-Token': token)
             .end callback
   async.parallel callbacks, (err, results) =>
     return cb(err) if err

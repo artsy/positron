@@ -28,7 +28,6 @@ describe 'Save', ->
 
   beforeEach (done) ->
     @removeStopWords = Save.__get__ 'removeStopWords'
-    Save.__set__ 'artsyXapp', { token: 'foo' }
     Save.__set__ 'request', post: (@post = sinon.stub()).returns
       send: (@send = sinon.stub()).returns
         end: sinon.stub().yields()
