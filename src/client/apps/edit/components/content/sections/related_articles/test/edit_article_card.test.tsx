@@ -1,12 +1,12 @@
-import React from "react"
-import { mount } from "enzyme"
+import {
+  SeriesArticle,
+  StandardArticle,
+} from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
+import { mount } from "enzyme"
+import React from "react"
 import { EditArticleCard } from "../components/edit_article_card"
-import {
-  StandardArticle,
-  SeriesArticle,
-} from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 
 describe("EditArticleCard", () => {
   let props

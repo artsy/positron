@@ -1,17 +1,17 @@
-import styled from "styled-components"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
 import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import React, { Component } from "react"
+import styled from "styled-components"
 
-export class EditArticleCard extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    color: PropTypes.string,
-    series: PropTypes.object,
-    onRemoveArticle: PropTypes.func,
-  }
+interface EditArticleCardProps {
+  article: ArticleData
+  color?: string
+  series: any
+  onRemoveArticle: (id: string) => void
+}
 
+export class EditArticleCard extends Component<EditArticleCardProps> {
   render() {
     const { article, color, series, onRemoveArticle } = this.props
 
