@@ -25,7 +25,8 @@
     "normalize-jest-coverage": "node scripts/normalize-jest-coverage.js",
     "create-merged-coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "report-coverage": "./scripts/codecov -C $COMMIT_HASH_FULL -p app/ -B $BRANCH_NAME -f coverage.lcov",
-    "publish-coverage": "yarn normalize-jest-coverage && yarn create-merged-coverage && yarn report-coverage"
+    "publish-coverage": "yarn normalize-jest-coverage && yarn create-merged-coverage && yarn report-coverage",
+    "webpack": "node --max_old_space_size=2048 -r dotenv/config -r @babel/register node_modules/.bin/webpack --config ./webpack"
   },
   "resolutions": {
     "babel-core": "^7.0.0-0",
@@ -70,6 +71,7 @@
     "bluebird": "3.5.0",
     "bluebird-q": "1.0.3",
     "body-parser": "1.17.1",
+    "chalk": "^2.4.2",
     "cheerio": "0.19.0",
     "coffeescript": "1.11.1",
     "compression": "1.7.2",
