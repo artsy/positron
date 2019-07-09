@@ -56,10 +56,8 @@ module.exports = (app) ->
   app.use locals
   app.use helpers
   app.use sameOrigin
-
-  # Mount display
-  app.use require '../../apps/display'
   app.use require '../../apps/unsupported_browser'
+
   # Mount and authorize apps
   app.use ua
   app.use requireLogin
