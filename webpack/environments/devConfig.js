@@ -1,16 +1,16 @@
-const ProgressBarPlugin = require("progress-bar-webpack-plugin")
 const chalk = require("chalk")
 // @ts-check
 const webpack = require("webpack")
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
+const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
-const { NODE_ENV } = require("../src/lib/environment")
+const { NODE_ENV } = require("../../src/lib/environment")
 const { PORT, WEBPACK_DEVTOOL } = process.env
 const path = require("path")
 const fs = require("fs")
-const { basePath, isCI } = require("../src/lib/environment")
+const { basePath, isCI } = require("../../src/lib/environment")
 
 const cacheDirectory = path.resolve(basePath, ".cache")
 
@@ -25,8 +25,29 @@ if (!isCI && !fs.existsSync(cacheDirectory)) {
 
 module.exports.devConfig = {
   devtool: WEBPACK_DEVTOOL,
+  mode: NODE_ENV,
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        include: path.resolve(basePath, "src"),
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+      },
+      {
+        test: /\.styl$/,
+        include: path.resolve(basePath, "src"),
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" },
+          { loader: "stylus-loader" },
+        ],
+      },
+    ],
+  },
   plugins: [
-    new ProgressBarPlugin(),
+    new SimpleProgressWebpackPlugin({
+      format: "compact",
+    }),
     new ForkTsCheckerWebpackPlugin({
       formatter: "codeframe",
       formatterOptions: "highlightCode",
