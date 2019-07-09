@@ -13,11 +13,13 @@ export function RelatedArticleQuery(ids) {
         }
         description
         id
+        layout
         media {
           duration
           published
           release_date
         }
+        published_at
         thumbnail_title
         thumbnail_image
         title
