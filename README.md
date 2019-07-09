@@ -2,7 +2,6 @@
 
 [Positron](https://github.com/artsy/positron) is Artsy Writer or the editorial tool for Artsy.
 
-[![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 ![ArtsyWriter](/doc/images/ArtsyWriter.png)
 
 ## Meta
@@ -21,7 +20,7 @@
 - **CI:** [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
 - **Point Person:**  [@eessex](https://github.com/eessex)
 
-[![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master)
+[![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master) [![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 
 ## Set-Up
 
@@ -82,7 +81,9 @@ brew services start elasticsearch
 ```
 
 - Create a dummy channel
-  In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, it might be easier to point your MONGOHQ_URL to the staging database. Otherwise, here are the steps to backfill some required data:
+  In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you will likely want to point your MONGOHQ_URL to the staging database. Because staging/production databases are protected on our VPC, it is required that you give user permissions to your AWS account and run the [Tunnelblick VPN](https://tunnelblick.net/) while connecting to the database. See details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).  
+  
+  If using a local database, use these steps to backfill required data:
 
 1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
 2. Add a document with the following fields:
