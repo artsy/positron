@@ -1,13 +1,9 @@
-const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin")
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
-const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
+// @ts-check
 const ProgressBarPlugin = require("progress-bar-webpack-plugin")
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
-const WebpackNotifierPlugin = require("webpack-notifier")
 const fs = require("fs")
 const path = require("path")
 const webpack = require("webpack")
-const { PORT } = process.env
 const {
   NODE_ENV,
   basePath,
@@ -78,25 +74,7 @@ const baseConfig = {
     ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({
-      formatter: "codeframe",
-      formatterOptions: "highlightCode",
-      tslint: false,
-      checkSyntacticErrors: true,
-      watch: ["./src"],
-    }),
-    new ForkTsCheckerNotifierWebpackPlugin({
-      excludeWarnings: true,
-      skipFirstNotification: true,
-    }),
-    new FriendlyErrorsWebpackPlugin({
-      clearConsole: false,
-      compilationSuccessInfo: {
-        messages: [`[Positron] Listening on http://localhost:${PORT} \n`],
-      },
-    }),
     new ProgressBarPlugin(),
-    new WebpackNotifierPlugin(),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify(NODE_ENV),
@@ -125,12 +103,7 @@ const baseConfig = {
   },
 }
 
-// Development
-if (isDevelopment) {
-  baseConfig.plugins.push(new webpack.HotModuleReplacementPlugin())
-
-  // Staging
-} else if (isDeploy) {
+if (isDeploy) {
   baseConfig.devtool = "source-map"
 
   // Prod
