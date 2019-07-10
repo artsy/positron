@@ -1,8 +1,10 @@
+import { color as Color, Flex } from "@artsy/palette"
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { RelatedArticleQuery } from "client/queries/related_articles"
 import React, { Component } from "react"
 import { data as sd } from "sharify"
+import styled from "styled-components"
 import request from "superagent"
 import { difference, flatten, pluck, uniq, without } from "underscore"
 import { EditArticleCard } from "./components/edit_article_card"
@@ -25,7 +27,7 @@ export class RelatedArticles extends Component<
   RelatedArticlesState
 > {
   state = {
-    relatedArticles: [],
+    relatedArticles: [] as any[],
     loading: true,
   }
 
@@ -123,7 +125,7 @@ export class RelatedArticles extends Component<
     const { article, color } = this.props
 
     return (
-      <div className="RelatedArticles__preview">
+      <RelatedArticlePreview>
         <ArticleCard
           editTitle="Title"
           editDescription="Article or video description..."
@@ -133,7 +135,7 @@ export class RelatedArticles extends Component<
           series={article}
           color={color}
         />
-      </div>
+      </RelatedArticlePreview>
     )
   }
 
@@ -142,8 +144,8 @@ export class RelatedArticles extends Component<
     const { article, color } = this.props
 
     return (
-      <div className="RelatedArticles">
-        <div className="RelatedArticles__list">
+      <Flex flexDirection="column">
+        <div>
           {loading ? (
             <div className="loading-spinner" />
           ) : relatedArticles.length ? (
@@ -158,7 +160,17 @@ export class RelatedArticles extends Component<
           color={color}
           onChange={this.onAddArticle}
         />
-      </div>
+      </Flex>
     )
   }
 }
+
+const RelatedArticlePreview = styled.div`
+  div[class^="ArticleCard__ImageContainer"] {
+    min-height: 300px;
+    background: ${Color("black30")};
+  }
+  a {
+    cursor: default;
+  }
+`

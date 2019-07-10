@@ -1,3 +1,4 @@
+import { Box, Sans } from "@artsy/palette"
 import { Autocomplete } from "client/components/autocomplete2"
 import React from "react"
 import { data as sd } from "sharify"
@@ -11,11 +12,8 @@ export const RelatedArticlesInput: React.SFC<RelatedArticlesProps> = ({
 }) => {
   const related = article.related_article_ids || []
   return (
-    <RelatedArticlesInputContainer
-      className="RelatedArticlesInput"
-      color={color}
-    >
-      <label>Add an article</label>
+    <RelatedArticlesInputContainer width="50%" pt={2} pb={100} color={color}>
+      <Sans size="4">Add an article</Sans>
 
       <Autocomplete
         items={related}
@@ -27,8 +25,9 @@ export const RelatedArticlesInput: React.SFC<RelatedArticlesProps> = ({
   )
 }
 
-const RelatedArticlesInputContainer = styled.div`
+const RelatedArticlesInputContainer = styled(Box)`
   color: ${props => props.color || "black"};
+  align-self: flex-end;
 
   input {
     color: "black";

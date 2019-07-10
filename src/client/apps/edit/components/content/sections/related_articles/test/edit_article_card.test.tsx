@@ -6,7 +6,7 @@ import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/Icon
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
 import { mount } from "enzyme"
 import React from "react"
-import { EditArticleCard } from "../components/edit_article_card"
+import { EditArticleCard, RemoveButton } from "../components/edit_article_card"
 
 describe("EditArticleCard", () => {
   let props
@@ -31,7 +31,7 @@ describe("EditArticleCard", () => {
   it("Can remove an article on click", () => {
     const component = mount(<EditArticleCard {...props} />)
     component
-      .find(".EditArticleCard__remove")
+      .find(RemoveButton)
       .at(0)
       .simulate("click")
     expect(props.onRemoveArticle.mock.calls[0][0]).toBe(props.article.id)
