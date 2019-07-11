@@ -31,25 +31,60 @@ class Router extends Backbone.Router
     'settings/authors': 'authorsEdit'
 
   articleEdit: ->
-    require('../apps/edit/client').init()
+    require.ensure(
+      ['../apps/edit/client'],
+      (require) -> require('../apps/edit/client').init(),
+      (err) -> console.warn(err),
+      'articleEdit'
+    )
 
   curationsEdit: ->
-    require('../apps/settings/client/curations.coffee').init()
+    require.ensure(
+      ['../apps/settings/client/curations.coffee'],
+      (require) -> require('../apps/settings/client/curations.coffee').init(),
+      (err) -> console.warn(err),
+      'curationsEdit'
+    )
 
   channelsEdit: ->
-    require('../apps/settings/client/channels.coffee').init()
+    require.ensure(
+      ['../apps/settings/client/channels.coffee'],
+      (require) -> require('../apps/settings/client/channels.coffee').init(),
+      (err) -> console.warn(err),
+      'channelsEdit'
+    )
 
   queueEdit: ->
-    require('../apps/queue/client').init()
+    require.ensure(
+      ['../apps/queue/client'],
+      (require) -> require('../apps/queue/client').init(),
+      (err) -> console.warn(err),
+      'queueEdit'
+    )
 
   articlesListView: ->
-    require('../apps/articles_list/client.tsx').init()
+    require.ensure(
+      ['../apps/articles_list/client.tsx'],
+      (require) -> require('../apps/articles_list/client.tsx').init(),
+      (err) -> console.warn(err),
+      'articlesListView'
+    )
 
   tagsEdit: ->
-    require('../apps/settings/client/tags.coffee').init()
+    require.ensure(
+      ['../apps/settings/client/tags.coffee'],
+      (require) -> require('../apps/settings/client/tags.coffee').init(),
+      (err) -> console.warn(err),
+      'tagsEdit'
+    )
 
   authorsEdit: ->
-    require('../apps/settings/client/authors/index.coffee').init()
+    require.ensure(
+      ['../apps/settings/client/authors/index.coffee'],
+      (require) -> require('../apps/settings/client/authors/index.coffee').init(),
+      (err) -> console.warn(err),
+      'authorsEdit'
+    )
 
 new Router()
 $ ->

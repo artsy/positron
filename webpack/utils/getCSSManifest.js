@@ -21,7 +21,6 @@ function compile() {
   const files = glob.sync("./src/client/assets/*.styl", {
     nodir: true,
   })
-  console.log("css to compress", files.join(" "))
   execSync(`yarn stylus ${files.join(" ")} --compress -o ${DEST}`)
 }
 

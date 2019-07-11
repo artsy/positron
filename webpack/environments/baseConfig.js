@@ -53,6 +53,20 @@ const baseConfig = {
         include: path.resolve(basePath, "src"),
         loader: "json-loader",
       },
+      {
+        test: /\.css$/,
+        include: path.resolve(basePath, "src"),
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+      },
+      {
+        test: /\.styl$/,
+        include: path.resolve(basePath, "src"),
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" },
+          { loader: "stylus-loader" },
+        ],
+      },
     ],
   },
   plugins: [

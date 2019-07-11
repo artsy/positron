@@ -26,24 +26,6 @@ if (!isCI && !fs.existsSync(cacheDirectory)) {
 module.exports.devConfig = {
   devtool: WEBPACK_DEVTOOL,
   mode: NODE_ENV,
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        include: path.resolve(basePath, "src"),
-        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
-      },
-      {
-        test: /\.styl$/,
-        include: path.resolve(basePath, "src"),
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" },
-          { loader: "stylus-loader" },
-        ],
-      },
-    ],
-  },
   plugins: [
     new SimpleProgressWebpackPlugin({
       format: "compact",
