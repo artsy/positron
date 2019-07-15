@@ -1,5 +1,8 @@
 import { color as Color, Flex } from "@artsy/palette"
-import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
+import {
+  ArticleCard,
+  ArticleCardImageContainer,
+} from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { RelatedArticleQuery } from "client/queries/related_articles"
 import { difference, flatten, get, map, uniq, without } from "lodash"
@@ -166,10 +169,11 @@ export class RelatedArticles extends Component<
 }
 
 const RelatedArticlePreview = styled.div`
-  div[class^="ArticleCard__ImageContainer"] {
+  ${ArticleCardImageContainer} {
     min-height: 300px;
     background: ${Color("black30")};
   }
+
   a {
     cursor: default;
   }
