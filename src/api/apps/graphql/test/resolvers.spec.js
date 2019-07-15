@@ -1,5 +1,4 @@
 import _ from "underscore"
-import moment from "moment"
 import rewire from "rewire"
 import sinon from "sinon"
 const app = require("api/index.coffee")
