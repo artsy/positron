@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hokusai: artsy/hokusai@0.3.0
+  hokusai: artsy/hokusai@0.4.0
 
 jobs:
   build-and-test:
@@ -54,10 +54,5 @@ workflows:
             - push-staging-image
 
       # Release
-      - hokusai/push:
-          name: push-production-image
-          <<: *only_release
       - hokusai/deploy-production:
           <<: *only_release
-          requires:
-            - push-production-image
