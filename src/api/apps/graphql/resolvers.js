@@ -1,6 +1,4 @@
 import _ from "underscore"
-import moment from "moment"
-import { get } from "lodash"
 const Author = require("api/apps/authors/model.coffee")
 const Channel = require("api/apps/channels/model.coffee")
 const Curation = require("api/apps/curations/model.coffee")
@@ -14,9 +12,6 @@ const {
   find,
 } = require("api/apps/articles/model/index.js")
 const { ObjectId } = require("mongojs")
-const { DISPLAY_ID } = process.env
-
-let DISPLAY_COUNTER = 0
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -122,53 +117,6 @@ export const channels = (root, args, req, ast) => {
       }
       resolve(results.results)
     })
-  })
-}
-
-export const display = (root, args, req, ast) => {
-  return new Promise((resolve, reject) => {
-    Curation.mongoFetch(
-      {
-        _id: ObjectId(DISPLAY_ID),
-      },
-      (err, { results }) => {
-        if (err) {
-          reject(new Error(err))
-        }
-        if (!results.length) {
-          resolve(null)
-        }
-
-        const firstResultCampaigns = get(results, "0.campaigns", [])
-
-        // Filter for campaigns that are available based on date
-        const now = moment(new Date())
-        const liveCampaigns = _.filter(firstResultCampaigns, campaign => {
-          const { start_date, end_date } = campaign
-
-          const startsAfterNow = moment(start_date).isAfter(now)
-          const endsBeforeNow = moment(end_date).isBefore(now)
-          return !(startsAfterNow || endsBeforeNow)
-        })
-
-        if (liveCampaigns.length > 5) {
-          reject(new Error("Share of voice sum cannot be greater than 100"))
-        } else {
-          const emptyCampaigns = _.times(5 - liveCampaigns.length, () => null)
-          liveCampaigns.push(...emptyCampaigns)
-
-          const result = liveCampaigns[DISPLAY_COUNTER]
-
-          if (DISPLAY_COUNTER === 4) {
-            DISPLAY_COUNTER = 0
-          } else {
-            DISPLAY_COUNTER = DISPLAY_COUNTER + 1
-          }
-
-          resolve(result)
-        }
-      }
-    )
   })
 }
 
