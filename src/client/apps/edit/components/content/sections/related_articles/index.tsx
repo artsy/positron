@@ -2,11 +2,11 @@ import { color as Color, Flex } from "@artsy/palette"
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { RelatedArticleQuery } from "client/queries/related_articles"
+import { difference, flatten, get, map, uniq, without } from "lodash"
 import React, { Component } from "react"
 import { data as sd } from "sharify"
 import styled from "styled-components"
 import request from "superagent"
-import { difference, flatten, pluck, uniq, without } from "underscore"
 import { EditArticleCard } from "./components/edit_article_card"
 import { RelatedArticlesInput } from "./components/related_articles_input"
 const DraggableList = require("client/components/drag_drop/index.coffee")
@@ -38,7 +38,7 @@ export class RelatedArticles extends Component<
   fetchArticles = () => {
     const { related_article_ids } = this.props.article
     const { relatedArticles } = this.state
-    const alreadyFetched = pluck(relatedArticles, "id")
+    const alreadyFetched = map(relatedArticles, "id")
     const idsToFetch = difference(related_article_ids, alreadyFetched)
 
     if (idsToFetch.length) {
@@ -53,8 +53,8 @@ export class RelatedArticles extends Component<
           if (err) {
             new Error(err)
           }
-          const articles =
-            res && res.body && res.body.data && res.body.data.articles
+          const articles = res && get(res, "body.data.articles")
+
           if (articles) {
             relatedArticles.push(articles)
           }
@@ -91,7 +91,7 @@ export class RelatedArticles extends Component<
 
   onDragEnd = relatedArticles => {
     const { onChange } = this.props
-    const newRelatedIds = pluck(relatedArticles, "id")
+    const newRelatedIds = map(relatedArticles, "id")
 
     this.setState({ relatedArticles })
     onChange("related_article_ids", newRelatedIds)
@@ -129,7 +129,7 @@ export class RelatedArticles extends Component<
         <ArticleCard
           editTitle="Title"
           editDescription="Article or video description..."
-          editImage={() => <div />}
+          editImage={<div />}
           editDate={!article.published && "Publish Date"}
           article={{}}
           series={article}
