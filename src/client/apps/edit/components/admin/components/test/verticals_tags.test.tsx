@@ -142,7 +142,7 @@ describe("AdminVerticalsTags", () => {
       const component = getWrapper()
       component
         .find(IconRemove)
-        .at(1)
+        .at(2)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("tracking_tags")
