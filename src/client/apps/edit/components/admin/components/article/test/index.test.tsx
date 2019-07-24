@@ -84,13 +84,13 @@ describe("AdminArticle", () => {
           .find(Button)
           .at(0)
           .text()
-      ).toBe("Tier 1")
+      ).toMatch("Tier 1")
       expect(
         component
           .find("button")
           .at(1)
           .text()
-      ).toBe("Tier 2")
+      ).toMatch("Tier 2")
     })
 
     it("if news layout, does not render tier buttons", () => {
@@ -110,13 +110,13 @@ describe("AdminArticle", () => {
           .find("button")
           .at(2)
           .text()
-      ).toBe("Yes")
+      ).toMatch("Yes")
       expect(
         component
           .find("button")
           .at(3)
           .text()
-      ).toBe("No")
+      ).toMatch("No")
     })
 
     it("if news layout, does not render featured/magazine buttons", () => {
@@ -136,13 +136,13 @@ describe("AdminArticle", () => {
           .find("button")
           .at(4)
           .text()
-      ).toBe("Standard")
+      ).toMatch("Standard")
       expect(
         component
           .find("button")
           .at(5)
           .text()
-      ).toBe("Feature")
+      ).toMatch("Feature")
     })
 
     it("if news layout, does not render layout buttons", () => {
