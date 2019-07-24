@@ -10,6 +10,8 @@ pids
 logs
 results
 npm-debug.log
+manifest.json
+.cache
 .DS_Store
 dump.rdb
 .DS_Store
