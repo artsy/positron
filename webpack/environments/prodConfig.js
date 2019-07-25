@@ -24,8 +24,6 @@ module.exports.prodConfig = {
   optimization: {
     minimizer: [
       new TerserPlugin({
-        cache: false,
-        parallel: false,
         sourceMap: true, // Must be set to true if using source-maps in production
       }),
     ],
