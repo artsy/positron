@@ -1,10 +1,10 @@
 import express from "express"
 import webpack from "webpack"
 import path from "path"
-import webpackConfig from "../../../webpack"
 
 const app = (module.exports = express())
-const compiler = webpack(webpackConfig)
+const config = require(path.join(process.cwd(), "webpack.config"))
+const compiler = webpack(config)
 
 app.use(
   require("webpack-hot-middleware")(compiler, {
@@ -15,7 +15,7 @@ app.use(
 app.use(
   require("webpack-dev-middleware")(compiler, {
     quiet: true,
-    publicPath: webpackConfig.output.publicPath,
+    publicPath: config.output.publicPath,
     stats: {
       colors: true,
     },
