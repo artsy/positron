@@ -6,9 +6,12 @@ import artsyXapp from "artsy-xapp"
 import compression from "compression"
 import express from "express"
 import path from "path"
+import timeout from "connect-timeout"
 import { IpFilter } from "express-ipfilter"
 import { createReloadable, isDevelopment } from "@artsy/express-reloadable"
 import { init as initDataDogTracer } from "tracer"
+import { isProduction } from "lib/environment"
+import { assetMiddleware } from "./lib/assetMiddleware"
 
 const app = (module.exports = express())
 const debug = require("debug")("app")
@@ -16,12 +19,18 @@ const server = require("http").createServer(app)
 const io = require("socket.io")(server)
 
 const {
+  APP_TIMEOUT,
   ARTSY_URL,
   ARTSY_ID,
   ARTSY_SECRET,
   IP_BLACKLIST = "",
   PORT,
 } = process.env
+
+// Timeout middleware
+if (isProduction) {
+  app.use(timeout(APP_TIMEOUT || "29s"))
+}
 
 if (process.env.DATADOG_AGENT_HOSTNAME) {
   initDataDogTracer()
@@ -32,6 +41,8 @@ app.use(compression())
 
 // Blacklist ips
 app.use(IpFilter([IP_BLACKLIST.split(",")], { log: false, mode: "deny" }))
+
+app.use(assetMiddleware())
 
 // Get an xapp token
 const xappConfig = {
