@@ -21,7 +21,7 @@ const baseConfig = {
   output: {
     filename: "[name].js",
     path: path.resolve(basePath, "public/assets"),
-    publicPath: "/assets",
+    publicPath: "/assets/",
     sourceMapFilename: "[file].map?[contenthash]",
   },
   module: {
