@@ -111,7 +111,6 @@ describe("AdminVerticalsTags", () => {
         .find(IconRemove)
         .at(0)
         .simulate("click")
-
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("tags")
       expect(props.onChangeArticleAction.mock.calls[0][1].length).toBe(0)
     })
@@ -142,7 +141,7 @@ describe("AdminVerticalsTags", () => {
       const component = getWrapper()
       component
         .find(IconRemove)
-        .at(2)
+        .at(1)
         .simulate("click")
 
       expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("tracking_tags")
