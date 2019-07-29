@@ -1,7 +1,7 @@
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin")
-const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin")
+const ProgressBarPlugin = require("progress-bar-webpack-plugin")
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
 const WebpackNotifierPlugin = require("webpack-notifier")
 const fs = require("fs")
@@ -94,6 +94,7 @@ const config = {
         messages: [`[Positron] Listening on http://localhost:${PORT} \n`],
       },
     }),
+    new ProgressBarPlugin(),
     new WebpackNotifierPlugin(),
     new webpack.DefinePlugin({
       "process.env": {
@@ -126,11 +127,6 @@ const config = {
 // Development
 if (isDevelopment) {
   config.plugins.push(new webpack.HotModuleReplacementPlugin())
-  config.plugins.push(
-    new SimpleProgressWebpackPlugin({
-      format: "compact",
-    })
-  )
 
   // Staging
 } else if (isDeploy) {
