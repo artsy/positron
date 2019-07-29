@@ -17,7 +17,6 @@ const {
 } = require("./src/lib/environment")
 
 const config = {
-  mode: NODE_ENV,
   devtool: "cheap-module-eval-source-map",
   entry: {
     webpack: [
