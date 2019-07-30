@@ -41,15 +41,25 @@ const metaFields = {
     }),
   relatedArticles: array()
     .items(
-      object(Article.inputSchema).concat(
-        object({
-          authors: array()
-            .items(object(Author.schema))
-            .meta({
-              resolve: resolvers.relatedAuthors,
-            }),
-        })
-      )
+      object(Article.inputSchema)
+        .concat(
+          object({
+            authors: array()
+              .items(object(Author.schema))
+              .meta({
+                resolve: resolvers.relatedAuthors,
+              }),
+          })
+        )
+        .concat(
+          object({
+            relatedArticles: array()
+              .items(object(Article.inputSchema))
+              .meta({
+                resolve: resolvers.seriesRelatedSubArticles,
+              }),
+          })
+        )
     )
     .meta({
       name: "RelatedArticles",
