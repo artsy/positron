@@ -101,7 +101,6 @@ export class EditSeries extends Component<EditSeriesProps> {
             onUpload={src => this.onChangeHero(src)}
             prompt={`+ ${url ? "Change" : "Add"} Background`}
             onProgress={progress => this.setState({ uploadProgress: progress })}
-            video
           />
         </BackgroundInput>
 
