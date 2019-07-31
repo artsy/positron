@@ -5,8 +5,7 @@ orbs:
 
 jobs:
   build-and-test:
-    docker:
-      - image: artsy/hokusai
+    executor: hokusai/deploy
     steps:
       - add_ssh_keys
       - checkout
