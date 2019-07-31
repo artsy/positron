@@ -120,17 +120,25 @@ export const channels = (root, args, req, ast) => {
   })
 }
 
-export const relatedArticles = root => {
+export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
+  const relatedArticleArgs = {
+    ids: root.related_article_ids,
+    channel_id: ObjectId(root.channel_id),
+    // TODO: sort by order of passed ids
+  }
+  const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
+  if (unauthorized) {
+    relatedArticleArgs.published = true
+  }
 
   return new Promise(async (resolve, reject) => {
     let relatedArticles = []
 
     if (related_article_ids && related_article_ids.length) {
-      const relatedArticleResults = await promisedMongoFetch({
-        ids: root.related_article_ids,
-        published: true,
-      }).catch(e => reject(e))
+      const relatedArticleResults = await promisedMongoFetch(
+        relatedArticleArgs
+      ).catch(e => reject(e))
 
       relatedArticles = presentCollection(relatedArticleResults).results
     }

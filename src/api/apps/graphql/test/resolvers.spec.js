@@ -185,19 +185,57 @@ describe("resolvers", () => {
   describe("relatedArticles", () => {
     it("can find related articles for the series", async () => {
       promisedMongoFetch.onFirstCall().resolves(articles)
-      const results = await resolvers.relatedArticles({
-        id: "54276766fd4f50996aeca2b8",
-        related_article_ids: ["54276766fd4f50996aeca2b9"],
-      })
+      const results = await resolvers.relatedArticles(
+        {
+          id: "54276766fd4f50996aeca2b8",
+          related_article_ids: ["54276766fd4f50996aeca2b9"],
+        },
+        {},
+        { user: { id: "123" } }
+      )
       results.length.should.equal(1)
     })
 
     it("resolves null if it does not have related articles", async () => {
       promisedMongoFetch.onFirstCall().resolves({ results: [] })
-      const results = await resolvers.relatedArticles({
-        id: "54276766fd4f50996aeca2b8",
-      })
+      const results = await resolvers.relatedArticles(
+        {
+          id: "54276766fd4f50996aeca2b8",
+        },
+        {},
+        { user: { id: "123" } }
+      )
       _.isNull(results).should.be.true()
+    })
+
+    it("queries only published articles if user is unauthorized", async () => {
+      promisedMongoFetch.onFirstCall().resolves({ results: [] })
+      const results = await resolvers.relatedArticles(
+        {
+          id: "54276766fd4f50996aeca2b8",
+          related_article_ids: ["54276766fd4f50996aeca2b9"],
+          channel_id: "54276766fd4f50996aeca2b3",
+        },
+        {},
+        { user: { id: "123" } }
+      )
+      promisedMongoFetch.getCall(0).args[0].published.should.equal(true)
+    })
+
+    it("queries all articles if user is authorized", async () => {
+      promisedMongoFetch.onFirstCall().resolves({ results: [] })
+      const results = await resolvers.relatedArticles(
+        {
+          id: "54276766fd4f50996aeca2b8",
+          related_article_ids: ["54276766fd4f50996aeca2b9"],
+          channel_id: "54276766fd4f50996aeca2b3",
+        },
+        {},
+        { user: { id: "123", channel_ids: ["54276766fd4f50996aeca2b3"] } }
+      )
+      Object.keys(promisedMongoFetch.getCall(0).args[0]).should.not.containEql(
+        "published"
+      )
     })
   })
 

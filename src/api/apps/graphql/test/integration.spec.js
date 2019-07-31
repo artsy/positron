@@ -92,6 +92,7 @@ describe("graphql endpoint", () => {
               published: true,
               _id: ObjectId("5c9d3c1aa4ba105ad8336956"),
               author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
+              channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
             },
             {
               published: true,
