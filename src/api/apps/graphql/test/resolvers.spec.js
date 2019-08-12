@@ -237,6 +237,32 @@ describe("resolvers", () => {
         "published"
       )
     })
+
+    it("Sets limit arg to the number of articles to be fetched", async () => {
+      promisedMongoFetch.onFirstCall().resolves(articles)
+      const results = await resolvers.relatedArticles(
+        {
+          id: "54276766fd4f50996aeca2b8",
+          related_article_ids: [
+            "5d41a53f3eba8dbdd43f3537",
+            "5d51ad9c0240500023579175",
+            "5d51af002e1f0b002280551c",
+            "5d51af462e1f0b0022805553",
+            "5d51afd70240500023579224",
+            "5d51b03a2e1f0b00228055bf",
+            "5d51b0a0024050002357926e",
+            "5d51b03a0240500023579240",
+            "5d51b13302405000235792ab",
+            "5d51b13302405000235792ac",
+            "5d51b1ae2e1f0b002280566e",
+          ],
+          channel_id: "54276766fd4f50996aeca2b3",
+        },
+        {},
+        { user: { id: "123", channel_ids: ["54276766fd4f50996aeca2b3"] } }
+      )
+      promisedMongoFetch.getCall(0).args[0].limit.should.equal(11)
+    })
   })
 
   describe("relatedArticlesCanvas", () => {
