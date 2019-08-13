@@ -136,6 +136,7 @@ export const relatedArticles = (root, args, req) => {
     let relatedArticles = []
 
     if (related_article_ids && related_article_ids.length) {
+      relatedArticleArgs.limit = related_article_ids.length
       const relatedArticleResults = await promisedMongoFetch(
         relatedArticleArgs
       ).catch(e => reject(e))
