@@ -145,7 +145,13 @@ export const relatedArticles = (root, args, req) => {
     }
 
     if (relatedArticles.length) {
-      resolve(relatedArticles)
+      const relatedArticlesById = relatedArticles.reduce((acc, val) => ({
+        ...acc,
+        [val.id]: val,
+      }))
+
+      const output = related_article_ids.map(id => relatedArticlesById[id])
+      resolve(output)
     } else {
       resolve(null)
     }
