@@ -86,6 +86,9 @@ export const promisedMongoFetch = input => {
     .skip(offset || 0)
     .sort(sort)
     .limit(limit || 10)
+
+  const desired_sort_order = input.ids
+
   return new Promise((resolve, reject) => {
     async.parallel(
       [
@@ -108,8 +111,15 @@ export const promisedMongoFetch = input => {
         if (err) {
           return reject(err)
         }
+
+        const articles_by_id = articles.reduce((acc, val) => ({
+          ...acc,
+          [val.id]: val,
+        }))
+        const sorted_articles = desired_sort_order.map(id => articles_by_id[id])
+
         return resolve({
-          results: articles,
+          results: sorted_articles,
           total,
           count: articleCount,
         })
