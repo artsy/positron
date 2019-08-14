@@ -216,11 +216,6 @@ describe("resolvers", () => {
         related_article_ids: [],
       }
 
-      console.log("data:")
-      console.log(root)
-      console.log(related1)
-      console.log(related2)
-
       promisedMongoFetch.onFirstCall().resolves({
         total: 20,
         count: 2,
