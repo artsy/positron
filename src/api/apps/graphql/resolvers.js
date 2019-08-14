@@ -123,9 +123,8 @@ export const channels = (root, args, req, ast) => {
 export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
   const relatedArticleArgs = {
-    ids: root.related_article_ids,
+    ids: related_article_ids,
     channel_id: ObjectId(root.channel_id),
-    // TODO: sort by order of passed ids
   }
   const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
   if (unauthorized) {
@@ -140,16 +139,17 @@ export const relatedArticles = (root, args, req) => {
       const relatedArticleResults = await promisedMongoFetch(
         relatedArticleArgs
       ).catch(e => reject(e))
-
       relatedArticles = presentCollection(relatedArticleResults).results
     }
 
     if (relatedArticles.length) {
-      const relatedArticlesById = relatedArticles.reduce((acc, val) => ({
-        ...acc,
-        [val.id]: val,
-      }))
-
+      const relatedArticlesById = relatedArticles.reduce(
+        (lookupIndex, val) => ({
+          ...lookupIndex,
+          [val.id]: val,
+        }),
+        {}
+      )
       const output = related_article_ids.map(id => relatedArticlesById[id])
       resolve(output)
     } else {

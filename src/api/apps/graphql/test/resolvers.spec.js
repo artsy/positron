@@ -1,6 +1,7 @@
 import _ from "underscore"
 import rewire from "rewire"
 import sinon from "sinon"
+import { SeriesArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 const app = require("api/index.coffee")
 const { fixtures, fabricate, empty } = require("api/test/helpers/db.coffee")
 const resolvers = rewire("../resolvers.js")
@@ -182,7 +183,7 @@ describe("resolvers", () => {
     })
   })
 
-  describe("relatedArticles", () => {
+  describe.only("relatedArticles", () => {
     it("can find related articles for the series", async () => {
       promisedMongoFetch.onFirstCall().resolves(articles)
       const results = await resolvers.relatedArticles(
@@ -194,6 +195,43 @@ describe("resolvers", () => {
         { user: { id: "123" } }
       )
       results.length.should.equal(1)
+    })
+
+    it.only("preserves sort order of related articles", async () => {
+      const root = {
+        ...SeriesArticle,
+        related_article_ids: SeriesArticle.related_articles,
+      }
+
+      delete root.related_articles
+      const related1 = {
+        ...SeriesArticle,
+        _id: "594a7e2254c37f00177c0ea9",
+        id: "594a7e2254c37f00177c0ea9",
+        related_article_ids: [],
+      }
+
+      const related2 = {
+        ...SeriesArticle,
+        _id: "597b9f652d35b80017a2a6a7",
+        id: "597b9f652d35b80017a2a6a7",
+        related_article_ids: [],
+      }
+
+      promisedMongoFetch.onFirstCall().resolves({
+        total: 20,
+        count: 2,
+        results: [related2, related1],
+      })
+
+      const results = await resolvers.relatedArticles(
+        root,
+        {},
+        { user: { id: "123" } }
+      )
+
+      results[0].id.should.equal(related1.id)
+      results[1].id.should.equal(related2.id)
     })
 
     it("resolves null if it does not have related articles", async () => {
