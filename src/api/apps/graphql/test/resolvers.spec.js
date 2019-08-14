@@ -183,7 +183,7 @@ describe("resolvers", () => {
     })
   })
 
-  describe.only("relatedArticles", () => {
+  describe("relatedArticles", () => {
     it("can find related articles for the series", async () => {
       promisedMongoFetch.onFirstCall().resolves(articles)
       const results = await resolvers.relatedArticles(
@@ -197,7 +197,7 @@ describe("resolvers", () => {
       results.length.should.equal(1)
     })
 
-    it.only("preserves sort order of related articles", async () => {
+    it("preserves sort order of related articles", async () => {
       const root = {
         ...SeriesArticle,
         related_article_ids: SeriesArticle.related_articles,
