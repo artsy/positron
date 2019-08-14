@@ -197,13 +197,11 @@ describe("resolvers", () => {
       results.length.should.equal(1)
     })
 
-    it("preserves sort order of related articles", async () => {
+    it.only("preserves sort order of related articles", async () => {
       const root = {
         ...SeriesArticle,
-        related_article_ids: SeriesArticle.related_articles,
       }
 
-      delete root.related_articles
       const related1 = {
         ...SeriesArticle,
         _id: "594a7e2254c37f00177c0ea9",
@@ -217,6 +215,11 @@ describe("resolvers", () => {
         id: "597b9f652d35b80017a2a6a7",
         related_article_ids: [],
       }
+
+      console.log("data:")
+      console.log(root)
+      console.log(related1)
+      console.log(related2)
 
       promisedMongoFetch.onFirstCall().resolves({
         total: 20,
