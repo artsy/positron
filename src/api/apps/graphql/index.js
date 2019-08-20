@@ -53,17 +53,32 @@ const metaFields = {
         )
         .concat(
           object({
+            seriesArticle: object(Article.inputSchema).meta({
+              resolve: resolvers.seriesArticle,
+            }),
+          })
+        )
+        .concat(
+          object({
             relatedArticles: array()
               .items(
-                object(Article.inputSchema).concat(
-                  object({
-                    authors: array()
-                      .items(object(Author.schema))
-                      .meta({
-                        resolve: resolvers.relatedAuthors,
+                object(Article.inputSchema)
+                  .concat(
+                    object({
+                      authors: array()
+                        .items(object(Author.schema))
+                        .meta({
+                          resolve: resolvers.relatedAuthors,
+                        }),
+                    })
+                  )
+                  .concat(
+                    object({
+                      seriesArticle: object(Article.inputSchema).meta({
+                        resolve: resolvers.seriesArticle,
                       }),
-                  })
-                )
+                    })
+                  )
               )
               .meta({
                 resolve: resolvers.relatedArticles,

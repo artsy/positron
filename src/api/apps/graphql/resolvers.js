@@ -271,7 +271,6 @@ export const seriesArticle = root => {
   return new Promise(async (resolve, reject) => {
     const seriesArticles = await promisedMongoFetch({
       layout: "series",
-      published: true,
     }).catch(e => reject(e))
 
     seriesArticles.results.map(article => {

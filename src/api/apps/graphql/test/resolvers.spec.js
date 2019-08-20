@@ -197,7 +197,7 @@ describe("resolvers", () => {
       results.length.should.equal(1)
     })
 
-    it.only("preserves sort order of related articles", async () => {
+    it("preserves sort order of related articles", async () => {
       const root = {
         ...SeriesArticle,
       }
