@@ -115,6 +115,12 @@ export const RelatedArticlesQuery = `
         authors {
           name
         }
+        seriesArticle {
+          id
+        }
+        relatedArticles {
+          title
+        }
       }
     }
   }
