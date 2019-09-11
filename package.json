@@ -39,10 +39,10 @@
   },
   "dependencies": {
     "@artsy/bucket-assets": "1.0.3",
-    "@artsy/express-reloadable": "1.4.6",
+    "@artsy/express-reloadable": "1.4.7",
     "@artsy/gemup": "0.0.3",
-    "@artsy/palette": "4.16.3",
-    "@artsy/reaction": "17.7.3",
+    "@artsy/palette": "4.17.1",
+    "@artsy/reaction": "17.11.13",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
