@@ -57,10 +57,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@17.11.18":
-  version "17.11.18"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-17.11.18.tgz#7f675decaa466f8fa0f7b9ca7a2cab0860f2a105"
-  integrity sha512-jX71qop0IwfTr2Z1gBPmP8gJ0HVVlDiSfRLhMsBWI/33lX/dlrHu2b9K0lbON3CU2Tjqwb/GF+tMT5z1XMQRxw==
+"@artsy/reaction@18.0.2":
+  version "18.0.2"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-18.0.2.tgz#a262bbc3620ea6b6a52a2d9158228c56cff2def0"
+  integrity sha512-BduykZN16aEznS/zUWuCIqtDR96x6Q5nQbRYFzW/78rIreRIC8lu9n8XNRPEG6wSSa0VW0ePIxrJJLmd9B5oCw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/react-responsive-media" "^2.0.0-beta.5"
@@ -119,6 +119,7 @@
     unstated "^2.1.1"
     unstated-debug "^0.2.0"
     url "^0.11.0"
+    use-deep-compare-effect "^1.2.0"
     yup "^0.24.1"
 
 "@babel/cli@7.0.0":
@@ -857,6 +858,13 @@
   integrity sha512-xKnPpXG/pvK1B90JkwwxSGii90rQGKtzcMt2gI5G6+M0REXaq6rOHsGC2ay6/d0Uje7zzvSzjEzfR3ENhFlrfA==
   dependencies:
     regenerator-runtime "^0.12.0"
+
+"@babel/runtime@^7.2.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.0.tgz#4fc1d642a9fd0299754e8b5de62c631cf5568205"
+  integrity sha512-89eSBLJsxNxOERC0Op4vd+0Bqm6wRMqMbFtV3i0/fbaWw/mJ8Q3eBvgX0G4SyrOOLCtbu98HspF8o09MRT+KzQ==
+  dependencies:
+    regenerator-runtime "^0.13.2"
 
 "@babel/runtime@^7.3.1":
   version "7.4.5"
@@ -4292,6 +4300,11 @@ deprecated-decorator@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/deprecated-decorator/-/deprecated-decorator-0.1.6.tgz#00966317b7a12fe92f3cc831f7583af329b86c37"
   integrity sha1-AJZjF7ehL+kvPMgx91g68ym4bDc=
+
+dequal@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.0.tgz#41c6065e70de738541c82cdbedea5292277a017e"
+  integrity sha512-/Nd1EQbQbI9UbSHrMiKZjFLrXSnU328iQdZKPQf78XQI6C+gutkFUeoHpG5J08Ioa6HeRbRNFpSIclh1xyG0mw==
 
 des.js@^1.0.0:
   version "1.0.0"
@@ -14205,6 +14218,14 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-deep-compare-effect@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.2.0.tgz#41a52b3dea028c082b57e35050427b482237eb47"
+  integrity sha512-u45BDmcLgXErTR4y18bUW8j7SzrS85JMPSYKAbzPJwTs3W7+Am1L3xwDhwNEbek41qfp7yfh4B2br5hJk4Q+lA==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    dequal "^1.0.0"
 
 use@^2.0.0:
   version "2.0.2"
