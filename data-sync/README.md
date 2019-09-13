@@ -1,4 +1,6 @@
-## Data Sync Ops
+# Data Sync Ops
+
+## Updating the data synchronization process
 
 ### The Short
 
@@ -74,5 +76,23 @@ Do the following:
   Your latest sync build is now available at
   585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:data-sync and can be
   `docker pull`-ed or referenced via Kubernetes and Hokusai.
+
+## Running the data synchronization process
+
+  Positron is configured for daily data synchronization. [An export is scheduled from production](../hokusai/production.yml#L222), and [an import is scheduled for staging an hour later](../hokusai/staging.yml#L225).
+
+  If you need to run the data sync process on-demand, this can be done by pointing hokusai at the `data-sync` tag.
+
+  To export the data from production, run:
+
+  ```sh
+  hokusai production run --tag data-sync 'sh ./export-mongo.sh'
+  ```
+
+  This uploads the data to an S3 bucket, which can then be imported into staging:
+
+  ```sh
+  hokusai staging run --tag data-sync 'sh ./import-mongo.sh'
+  ```
 
 [0]:https://console.aws.amazon.com/ecr/get-started?region=us-east-1
