@@ -141,4 +141,4 @@ yarn task scripts/backfill.js
 
 ## Additional docs
 
-You can find additional documentation about Positron in [doc](/doc).
+You can find additional documentation about Positron in [doc](/doc) and [data-sync](/data-sync).
