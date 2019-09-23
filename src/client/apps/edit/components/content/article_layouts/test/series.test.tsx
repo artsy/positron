@@ -12,6 +12,22 @@ import React from "react"
 import { EditSeries } from "../series"
 require("typeahead.js")
 
+jest.mock("sharify", () => ({
+  data: {
+    USER: { access_token: "123" },
+  },
+}))
+
+jest.mock("superagent", () => {
+  return {
+    get: jest.fn().mockReturnThis(),
+    set: jest.fn().mockReturnThis(),
+    query: jest.fn().mockReturnValue({
+      end: jest.fn(),
+    }),
+  }
+})
+
 describe("EditSeries", () => {
   const getWrapper = (passedProps = props) => {
     return mount(<EditSeries {...passedProps} />)
@@ -107,13 +123,31 @@ describe("EditSeries", () => {
     expect(props.onChangeArticleAction.mock.calls[0][1].type).toBe("series")
   })
 
-  it("Renders a background image if url", () => {
-    props.article.hero_section = { url: "http://image.jpg" }
-    const component = getWrapper()
-    expect(component.find(FixedBackground).length).toBe(1)
-    expect(component.find(FixedBackground).props().backgroundUrl).toBe(
-      "http://image.jpg"
-    )
-    expect(component.text()).toMatch("+ Change Background")
+  describe("Image and Video Backgrounds", () => {
+    const videoUrl = "http://video.mp4"
+    const imageUrl = "http://image.jpg"
+
+    const render = url => {
+      props.article.hero_section = { url }
+      return getWrapper()
+    }
+
+    it("Passes a background URL to reaction if it contains an image", () => {
+      const component = render(imageUrl)
+      const bg = component.find(FixedBackground)
+      const url = bg.props().backgroundUrl
+      expect(bg.length).toBe(1)
+      expect(url).toBe("http://image.jpg")
+      expect(component.text()).toMatch("+ Change Background")
+    })
+
+    it("Passes a background URL to reaction if it contains a video", () => {
+      const component = render(videoUrl)
+      const bg = component.find(FixedBackground)
+      const url = bg.props().backgroundUrl
+      expect(bg.length).toBe(1)
+      expect(url).toBe(videoUrl)
+      expect(component.text()).toMatch("+ Change Background")
+    })
   })
 })

@@ -92,6 +92,7 @@ describe("graphql endpoint", () => {
               published: true,
               _id: ObjectId("5c9d3c1aa4ba105ad8336956"),
               author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
+              channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
             },
             {
               published: true,
@@ -121,6 +122,50 @@ describe("graphql endpoint", () => {
               })
           }
         )
+      }
+    )
+  })
+
+  it("can get seriesArticle in relatedArticles", done => {
+    fabricate(
+      "articles",
+      [
+        {
+          title: "Top Ten Booths",
+          published: true,
+          layout: "feature",
+          _id: ObjectId("5c9d3c1aa4ba105ad8336956"),
+          author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
+          channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
+        },
+        {
+          published: true,
+          featured: true,
+          vertical: {
+            name: "Culture",
+            id: ObjectId("55356a9deca560a0137bb4a7"),
+          },
+          _id: ObjectId("5ae762608cd4110038b40049"),
+          layout: "series",
+          channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
+          author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
+          related_article_ids: [ObjectId("5c9d3c1aa4ba105ad8336956")],
+        },
+      ],
+      (err, articles) => {
+        request
+          .post("http://localhost:5000/graphql")
+          .send({ query: RelatedArticlesQuery })
+          .end((err, res) => {
+            res.body.data.articles.length.should.equal(2)
+            res.body.data.articles[0].relatedArticles[0].title.should.equal(
+              "Top Ten Booths"
+            )
+            res.body.data.articles[0].relatedArticles[0].seriesArticle.id.should.equal(
+              "5ae762608cd4110038b40049"
+            )
+            done()
+          })
       }
     )
   })

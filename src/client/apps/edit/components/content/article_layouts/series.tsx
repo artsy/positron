@@ -9,6 +9,7 @@ import {
 } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
+import { RelatedArticles } from "client/apps/edit/components/content/sections/related_articles"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
 import FileInput from "client/components/file_input"
@@ -19,7 +20,6 @@ import {
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
-import { RelatedArticles } from "../sections/related_articles"
 
 interface EditSeriesProps {
   article: ArticleData
@@ -101,6 +101,7 @@ export class EditSeries extends Component<EditSeriesProps> {
             onUpload={src => this.onChangeHero(src)}
             prompt={`+ ${url ? "Change" : "Add"} Background`}
             onProgress={progress => this.setState({ uploadProgress: progress })}
+            video
           />
         </BackgroundInput>
 

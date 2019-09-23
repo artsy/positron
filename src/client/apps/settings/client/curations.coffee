@@ -6,7 +6,6 @@ _ = require('underscore')
 React = require 'react'
 ReactDOM = require 'react-dom'
 VeniceAdmin = React.createFactory require './curations/venice/venice_admin.coffee'
-DisplayAdmin = require './curations/display/index.tsx'
 { GucciAdmin } = require './curations/gucci/index.tsx'
 
 module.exports.CurationEditView = class CurationEditView extends Backbone.View
@@ -26,17 +25,12 @@ module.exports.CurationEditView = class CurationEditView extends Backbone.View
         React.createElement(GucciAdmin, { curation: @curation })
         $('#react-root')[0]
       )
-    else if @curation.get('type') is 'display-admin'
-      ReactDOM.render(
-        React.createElement(DisplayAdmin.default, { curation: @curation })
-        $('#react-root')[0]
-      )
     else
       new AdminEditView
         model: @curation
         el: $('body')
         onDeleteUrl: '/settings/curations'
-    @initMenuState() if @curation.get('type') is 'editorial-feature' or 'display-admin'
+    @initMenuState() if @curation.get('type') is 'editorial-feature'
 
   initMenuState: =>
     $('.page-header').addClass 'sticky'

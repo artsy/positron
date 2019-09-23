@@ -1,6 +1,4 @@
 import _ from "underscore"
-import moment from "moment"
-import { get } from "lodash"
 const Author = require("api/apps/authors/model.coffee")
 const Channel = require("api/apps/channels/model.coffee")
 const Curation = require("api/apps/curations/model.coffee")
@@ -14,9 +12,6 @@ const {
   find,
 } = require("api/apps/articles/model/index.js")
 const { ObjectId } = require("mongojs")
-const { DISPLAY_ID } = process.env
-
-let DISPLAY_COUNTER = 0
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -125,70 +120,38 @@ export const channels = (root, args, req, ast) => {
   })
 }
 
-export const display = (root, args, req, ast) => {
-  return new Promise((resolve, reject) => {
-    Curation.mongoFetch(
-      {
-        _id: ObjectId(DISPLAY_ID),
-      },
-      (err, { results }) => {
-        if (err) {
-          reject(new Error(err))
-        }
-        if (!results.length) {
-          resolve(null)
-        }
-
-        const firstResultCampaigns = get(results, "0.campaigns", [])
-
-        // Filter for campaigns that are available based on date
-        const now = moment(new Date())
-        const liveCampaigns = _.filter(firstResultCampaigns, campaign => {
-          const { start_date, end_date } = campaign
-
-          const startsAfterNow = moment(start_date).isAfter(now)
-          const endsBeforeNow = moment(end_date).isBefore(now)
-          return !(startsAfterNow || endsBeforeNow)
-        })
-
-        if (liveCampaigns.length > 5) {
-          reject(new Error("Share of voice sum cannot be greater than 100"))
-        } else {
-          const emptyCampaigns = _.times(5 - liveCampaigns.length, () => null)
-          liveCampaigns.push(...emptyCampaigns)
-
-          const result = liveCampaigns[DISPLAY_COUNTER]
-
-          if (DISPLAY_COUNTER === 4) {
-            DISPLAY_COUNTER = 0
-          } else {
-            DISPLAY_COUNTER = DISPLAY_COUNTER + 1
-          }
-
-          resolve(result)
-        }
-      }
-    )
-  })
-}
-
-export const relatedArticles = root => {
+export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
+  const relatedArticleArgs = {
+    ids: related_article_ids,
+    channel_id: ObjectId(root.channel_id),
+  }
+  const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
+  if (unauthorized) {
+    relatedArticleArgs.published = true
+  }
 
   return new Promise(async (resolve, reject) => {
     let relatedArticles = []
 
     if (related_article_ids && related_article_ids.length) {
-      const relatedArticleResults = await promisedMongoFetch({
-        ids: root.related_article_ids,
-        published: true,
-      }).catch(e => reject(e))
-
+      relatedArticleArgs.limit = related_article_ids.length
+      const relatedArticleResults = await promisedMongoFetch(
+        relatedArticleArgs
+      ).catch(e => reject(e))
       relatedArticles = presentCollection(relatedArticleResults).results
     }
 
     if (relatedArticles.length) {
-      resolve(relatedArticles)
+      const relatedArticlesById = relatedArticles.reduce(
+        (lookupIndex, val) => ({
+          ...lookupIndex,
+          [val.id]: val,
+        }),
+        {}
+      )
+      const output = related_article_ids.map(id => relatedArticlesById[id])
+      resolve(output)
     } else {
       resolve(null)
     }
@@ -308,7 +271,6 @@ export const seriesArticle = root => {
   return new Promise(async (resolve, reject) => {
     const seriesArticles = await promisedMongoFetch({
       layout: "series",
-      published: true,
     }).catch(e => reject(e))
 
     seriesArticles.results.map(article => {

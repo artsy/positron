@@ -7,7 +7,6 @@ import Article from "api/apps/articles/model/schema.coffee"
 import Author from "api/apps/authors/model.coffee"
 import Channel from "api/apps/channels/model.coffee"
 import Curation from "api/apps/curations/model.coffee"
-import Display from "api/apps/graphql/schemas/display.js"
 import * as resolvers from "api/apps/graphql/resolvers.js"
 import Tag from "api/apps/tags/model.coffee"
 import { setUser } from "api/apps/users/routes.coffee"
@@ -42,24 +41,55 @@ const metaFields = {
     }),
   relatedArticles: array()
     .items(
-      object(Article.inputSchema).concat(
-        object({
-          authors: array()
-            .items(object(Author.schema))
-            .meta({
-              resolve: resolvers.relatedAuthors,
+      object(Article.inputSchema)
+        .concat(
+          object({
+            authors: array()
+              .items(object(Author.schema))
+              .meta({
+                resolve: resolvers.relatedAuthors,
+              }),
+          })
+        )
+        .concat(
+          object({
+            seriesArticle: object(Article.inputSchema).meta({
+              resolve: resolvers.seriesArticle,
             }),
-        })
-      )
+          })
+        )
+        .concat(
+          object({
+            relatedArticles: array()
+              .items(
+                object(Article.inputSchema)
+                  .concat(
+                    object({
+                      authors: array()
+                        .items(object(Author.schema))
+                        .meta({
+                          resolve: resolvers.relatedAuthors,
+                        }),
+                    })
+                  )
+                  .concat(
+                    object({
+                      seriesArticle: object(Article.inputSchema).meta({
+                        resolve: resolvers.seriesArticle,
+                      }),
+                    })
+                  )
+              )
+              .meta({
+                resolve: resolvers.relatedArticles,
+              }),
+          })
+        )
     )
     .meta({
       name: "RelatedArticles",
       resolve: resolvers.relatedArticles,
     }),
-  display: Display.schema.meta({
-    args: Display.querySchema,
-    resolve: resolvers.display,
-  }),
   authors: array()
     .items(object(Author.schema))
     .meta({
@@ -103,10 +133,6 @@ const schema = joiql({
         args: Channel.querySchema,
         resolve: resolvers.channels,
       }),
-    display: Display.schema.meta({
-      args: Display.querySchema,
-      resolve: resolvers.display,
-    }),
     tags: array()
       .items(object(Tag.schema))
       .meta({

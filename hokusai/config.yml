@@ -2,4 +2,4 @@ git-remote: git@github.com:artsy/positron.git
 project-name: positron
 pre-build: export COMMIT_HASH=$(git rev-parse --short HEAD)
 pre-deploy: yarn publish-assets
-hokusai-required-version: ">=0.5.3"
+hokusai-required-version: "~=0.5"

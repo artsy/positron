@@ -13,6 +13,8 @@ import {
   DragTargetContainer,
 } from "../drag_target"
 
+jest.mock("lodash/debounce", () => jest.fn(e => e))
+
 describe("DragTarget", () => {
   let props
   const image: ArticleImage = extend(ImageCollection[0], { type: "image" })
@@ -63,14 +65,12 @@ describe("DragTarget", () => {
     const component = getWrapper()
     component.find(DragTarget).simulate("dragOver", { clientY: 300 })
 
-    setTimeout(() => {
-      expect(props.setDragTarget).toBeCalledWith(
-        2,
-        { bottom: 0, height: 0, left: 0, right: 0, top: 0, width: 0 },
-        100
-      )
-      done()
-    }, 4)
+    expect(props.setDragTarget).toBeCalledWith(
+      2,
+      { bottom: 0, height: 0, left: 0, right: 0, top: 0, width: 0 },
+      100
+    )
+    done()
   })
 
   it("#setDragTarget does not call props.setDragTarget if isActiveTarget", done => {
@@ -78,10 +78,8 @@ describe("DragTarget", () => {
     const component = getWrapper()
     component.find(DragTarget).simulate("dragOver", { clientY: 300 })
 
-    setTimeout(() => {
-      expect(props.setDragTarget).not.toBeCalled()
-      done()
-    }, 4)
+    expect(props.setDragTarget).not.toBeCalled()
+    done()
   })
 
   describe("#renderDropZone", () => {

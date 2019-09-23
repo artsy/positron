@@ -1,23 +1,36 @@
-import request from "superagent"
-import PropTypes from "prop-types"
-import React, { Component } from "react"
-import { difference, flatten, pluck, uniq, without } from "underscore"
-import { data as sd } from "sharify"
-import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
+import { color as Color, Flex } from "@artsy/palette"
+import {
+  ArticleCard,
+  ArticleCardImageContainer,
+} from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
+import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { DragDropList } from "client/components/drag_drop2"
 import { RelatedArticleQuery } from "client/queries/related_articles"
+import { difference, flatten, get, map, uniq, without } from "lodash"
+import React, { Component } from "react"
+import { data as sd } from "sharify"
+import styled from "styled-components"
+import request from "superagent"
 import { EditArticleCard } from "./components/edit_article_card"
 import { RelatedArticlesInput } from "./components/related_articles_input"
-import DraggableList from "../../../../../../components/drag_drop/index.coffee"
 
-export class RelatedArticles extends Component {
-  static propTypes = {
-    article: PropTypes.object.isRequired,
-    color: PropTypes.string,
-    onChange: PropTypes.func,
-  }
+export interface RelatedArticlesProps {
+  article: ArticleData
+  color?: string
+  onChange: (key: any, val: any) => void
+}
 
+interface RelatedArticlesState {
+  relatedArticles: any[]
+  loading: boolean
+}
+
+export class RelatedArticles extends Component<
+  RelatedArticlesProps,
+  RelatedArticlesState
+> {
   state = {
-    relatedArticles: [],
+    relatedArticles: [] as any[],
     loading: true,
   }
 
@@ -28,7 +41,7 @@ export class RelatedArticles extends Component {
   fetchArticles = () => {
     const { related_article_ids } = this.props.article
     const { relatedArticles } = this.state
-    const alreadyFetched = pluck(relatedArticles, "id")
+    const alreadyFetched = map(relatedArticles, "id")
     const idsToFetch = difference(related_article_ids, alreadyFetched)
 
     if (idsToFetch.length) {
@@ -41,9 +54,13 @@ export class RelatedArticles extends Component {
         .query({ query: RelatedArticleQuery(idsToFetch) })
         .end((err, res) => {
           if (err) {
-            console.error(err)
+            new Error(err)
           }
-          relatedArticles.push(res.body.data.articles)
+          const articles = res && get(res, "body.data.articles")
+
+          if (articles) {
+            relatedArticles.push(articles)
+          }
           this.setState({
             loading: false,
             relatedArticles: uniq(flatten(relatedArticles)),
@@ -77,7 +94,7 @@ export class RelatedArticles extends Component {
 
   onDragEnd = relatedArticles => {
     const { onChange } = this.props
-    const newRelatedIds = pluck(relatedArticles, "id")
+    const newRelatedIds = map(relatedArticles, "id")
 
     this.setState({ relatedArticles })
     onChange("related_article_ids", newRelatedIds)
@@ -88,10 +105,10 @@ export class RelatedArticles extends Component {
     const { relatedArticles } = this.state
 
     return (
-      <DraggableList
+      <DragDropList
         items={relatedArticles}
         onDragEnd={this.onDragEnd}
-        layout="vertical"
+        isVertical
         isDraggable
       >
         {relatedArticles.map((relatedArticle, i) => (
@@ -103,7 +120,7 @@ export class RelatedArticles extends Component {
             color={color}
           />
         ))}
-      </DraggableList>
+      </DragDropList>
     )
   }
 
@@ -111,17 +128,17 @@ export class RelatedArticles extends Component {
     const { article, color } = this.props
 
     return (
-      <div className="RelatedArticles__preview">
+      <RelatedArticlePreview>
         <ArticleCard
           editTitle="Title"
           editDescription="Article or video description..."
-          editImage={() => <div />}
+          editImage={<div />}
           editDate={!article.published && "Publish Date"}
           article={{}}
           series={article}
           color={color}
         />
-      </div>
+      </RelatedArticlePreview>
     )
   }
 
@@ -130,8 +147,8 @@ export class RelatedArticles extends Component {
     const { article, color } = this.props
 
     return (
-      <div className="RelatedArticles">
-        <div className="RelatedArticles__list">
+      <Flex flexDirection="column">
+        <div>
           {loading ? (
             <div className="loading-spinner" />
           ) : relatedArticles.length ? (
@@ -146,7 +163,18 @@ export class RelatedArticles extends Component {
           color={color}
           onChange={this.onAddArticle}
         />
-      </div>
+      </Flex>
     )
   }
 }
+
+const RelatedArticlePreview = styled.div`
+  ${ArticleCardImageContainer} {
+    min-height: 300px;
+    background: ${Color("black30")};
+  }
+
+  a {
+    cursor: default;
+  }
+`

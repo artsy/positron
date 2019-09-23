@@ -3,6 +3,7 @@ import Icon from "@artsy/reaction/dist/Components/Icon"
 import Input from "@artsy/reaction/dist/Components/Input"
 import { clone, compact, uniq } from "lodash"
 import React, { Component, ReactNode } from "react"
+import { data as sd } from "sharify"
 import styled from "styled-components"
 
 export interface Item {
@@ -79,6 +80,12 @@ export class Autocomplete extends Component<
       remote: {
         url,
         filter: filter || returnItems,
+        prepare: (_query, settings) => {
+          settings.headers = {
+            Accept: "application/json",
+            "X-Access-Token": sd.USER && sd.USER.access_token,
+          }
+        },
         ajax: {
           beforeSend: () => {
             this.setState({ loading: true })

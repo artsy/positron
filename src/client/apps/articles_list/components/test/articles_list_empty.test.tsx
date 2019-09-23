@@ -15,7 +15,7 @@ describe("ArticlesListEmpty", () => {
 
   it("renders expected content", () => {
     const component = mount(<ArticlesListEmpty {...props} />)
-    expect(component.text()).toBe(
+    expect(component.text()).toMatch(
       "You haven’t written any articles yet.Artsy Writer is a tool for writing stories about art on Artsy.Get started by writing an article or reaching out to your liaison for help.Write An Article"
     )
   })
