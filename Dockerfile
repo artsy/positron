@@ -8,6 +8,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apk add --no-cache --quiet \
   bash \
+  build-base \
   curl \
   dumb-init \
   git && \
