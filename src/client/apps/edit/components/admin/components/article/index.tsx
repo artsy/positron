@@ -125,7 +125,7 @@ export class AdminArticle extends Component<
                         <Button
                           onClick={() => onChangeArticleAction("tier", 1)}
                           variant={
-                            article.tier === 1 ? "primaryBlack" : "noOutline"
+                            article.tier !== 2 ? "primaryBlack" : "noOutline"
                           }
                         >
                           Tier 1
