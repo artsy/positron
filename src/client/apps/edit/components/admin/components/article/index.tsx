@@ -123,16 +123,18 @@ export class AdminArticle extends Component<
                       <FormLabel>Article Tier</FormLabel>
                       <ButtonGroup>
                         <Button
-                          color={article.tier === 1 ? "black100" : "black10"}
                           onClick={() => onChangeArticleAction("tier", 1)}
-                          variant="noOutline"
+                          variant={
+                            article.tier !== 2 ? "primaryBlack" : "noOutline"
+                          }
                         >
                           Tier 1
                         </Button>
                         <Button
-                          color={article.tier === 2 ? "black100" : "black10"}
                           onClick={() => onChangeArticleAction("tier", 2)}
-                          variant="noOutline"
+                          variant={
+                            article.tier === 2 ? "primaryBlack" : "noOutline"
+                          }
                         >
                           Tier 2
                         </Button>
@@ -143,20 +145,22 @@ export class AdminArticle extends Component<
                       <FormLabel>Magazine Feed</FormLabel>
                       <ButtonGroup>
                         <Button
-                          color={article.featured ? "black100" : "black10"}
                           onClick={() =>
                             onChangeArticleAction("featured", true)
                           }
-                          variant="noOutline"
+                          variant={
+                            article.featured ? "primaryBlack" : "noOutline"
+                          }
                         >
                           Yes
                         </Button>
                         <Button
-                          color={!article.featured ? "black100" : "black10"}
                           onClick={() =>
                             onChangeArticleAction("featured", false)
                           }
-                          variant="noOutline"
+                          variant={
+                            !article.featured ? "primaryBlack" : "noOutline"
+                          }
                         >
                           No
                         </Button>
@@ -173,27 +177,25 @@ export class AdminArticle extends Component<
                         <FormLabel>Article Layout</FormLabel>
                         <ButtonGroup>
                           <Button
-                            variant="noOutline"
                             onClick={() =>
                               onChangeArticleAction("layout", "standard")
                             }
-                            color={
+                            variant={
                               article.layout === "standard"
-                                ? "black100"
-                                : "black10"
+                                ? "primaryBlack"
+                                : "noOutline"
                             }
                           >
                             Standard
                           </Button>
                           <Button
-                            variant="noOutline"
-                            color={
-                              article.layout === "feature"
-                                ? "black100"
-                                : "black10"
-                            }
                             onClick={() =>
                               onChangeArticleAction("layout", "feature")
+                            }
+                            variant={
+                              article.layout === "feature"
+                                ? "primaryBlack"
+                                : "noOutline"
                             }
                           >
                             Feature
