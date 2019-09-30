@@ -75,92 +75,160 @@ describe("AdminArticle", () => {
       expect(component.find(ArticleAuthors).exists()).toBe(true)
     })
 
-    it("Renders tier buttons", () => {
-      const component = getWrapper()
+    describe("Tier buttons", () => {
+      it("Renders tier buttons", () => {
+        const component = getWrapper()
 
-      expect(component.html()).toMatch("Article Tier")
-      expect(
-        component
-          .find(Button)
-          .at(0)
-          .text()
-      ).toMatch("Tier 1")
-      expect(
-        component
-          .find("button")
-          .at(1)
-          .text()
-      ).toMatch("Tier 2")
+        expect(component.html()).toMatch("Article Tier")
+        expect(
+          component
+            .find(Button)
+            .at(0)
+            .text()
+        ).toMatch("Tier 1")
+        expect(
+          component
+            .find("button")
+            .at(1)
+            .text()
+        ).toMatch("Tier 2")
+      })
+
+      it("shows active state for tier buttons", () => {
+        const component = getWrapper()
+        expect(
+          component
+            .find(Button)
+            .at(0)
+            .props().variant
+        ).toBe("primaryBlack")
+        expect(
+          component
+            .find(Button)
+            .at(1)
+            .props().variant
+        ).toBe("noOutline")
+      })
+
+      it("if news layout, does not render tier buttons", () => {
+        props.article.layout = "news"
+        const component = getWrapper(props)
+
+        expect(component.html()).not.toMatch("Article Tier")
+        expect(component.find("button").length).toBe(1)
+      })
     })
 
-    it("if news layout, does not render tier buttons", () => {
-      props.article.layout = "news"
-      const component = getWrapper(props)
+    describe("featured/magazine buttons", () => {
+      it("Renders featured/magazine buttons if editorial", () => {
+        const component = getWrapper()
 
-      expect(component.html()).not.toMatch("Article Tier")
-      expect(component.find("button").length).toBe(1)
+        expect(component.html()).toMatch("Magazine Feed")
+        expect(
+          component
+            .find("button")
+            .at(2)
+            .text()
+        ).toMatch("Yes")
+        expect(
+          component
+            .find("button")
+            .at(3)
+            .text()
+        ).toMatch("No")
+      })
+
+      it("shows active state for featured/magazine buttons", () => {
+        const component = getWrapper()
+        expect(
+          component
+            .find(Button)
+            .at(2)
+            .props().variant
+        ).toBe("noOutline")
+        expect(
+          component
+            .find(Button)
+            .at(3)
+            .props().variant
+        ).toBe("primaryBlack")
+
+        expect(
+          component
+            .find(Button)
+            .at(2)
+            .props().variant
+        ).not.toBe(
+          component
+            .find(Button)
+            .at(3)
+            .props().variant
+        )
+      })
+
+      it("if news layout, does not render featured/magazine buttons", () => {
+        props.article.layout = "news"
+        const component = getWrapper(props)
+
+        expect(component.html()).not.toMatch("Magazine Feed")
+        expect(component.find("button").length).toBe(1)
+      })
     })
 
-    it("Renders featured/magazine buttons if editorial", () => {
-      const component = getWrapper()
+    describe("layout buttons", () => {
+      it("Renders layout buttons if editorial", () => {
+        const component = getWrapper()
 
-      expect(component.html()).toMatch("Magazine Feed")
-      expect(
-        component
-          .find("button")
-          .at(2)
-          .text()
-      ).toMatch("Yes")
-      expect(
-        component
-          .find("button")
-          .at(3)
-          .text()
-      ).toMatch("No")
-    })
+        expect(component.html()).toMatch("Article Layout")
+        expect(
+          component
+            .find("button")
+            .at(4)
+            .text()
+        ).toMatch("Standard")
+        expect(
+          component
+            .find("button")
+            .at(5)
+            .text()
+        ).toMatch("Feature")
+      })
 
-    it("if news layout, does not render featured/magazine buttons", () => {
-      props.article.layout = "news"
-      const component = getWrapper(props)
+      it("shows active state for layout buttons", () => {
+        const component = getWrapper()
 
-      expect(component.html()).not.toMatch("Magazine Feed")
-      expect(component.find("button").length).toBe(1)
-    })
+        expect(component.html()).toMatch("Article Layout")
+        expect(
+          component
+            .find(Button)
+            .at(4)
+            .props().variant
+        ).toMatch("primaryBlack")
+        expect(
+          component
+            .find(Button)
+            .at(5)
+            .props().variant
+        ).toMatch("noOutline")
+      })
 
-    it("Renders layout buttons if editorial", () => {
-      const component = getWrapper()
+      it("if news layout, does not render layout buttons", () => {
+        props.article.layout = "news"
+        const component = getWrapper(props)
 
-      expect(component.html()).toMatch("Article Layout")
-      expect(
-        component
-          .find("button")
-          .at(4)
-          .text()
-      ).toMatch("Standard")
-      expect(
-        component
-          .find("button")
-          .at(5)
-          .text()
-      ).toMatch("Feature")
-    })
+        expect(component.html()).not.toMatch("Article Layout")
+        expect(component.html()).not.toMatch("Standard")
+        expect(component.html()).not.toMatch("Feature")
+      })
 
-    it("if news layout, does not render layout buttons", () => {
-      props.article.layout = "news"
-      const component = getWrapper(props)
+      it("If not editorial, does not render layout buttons", () => {
+        props.isEditorial = false
+        const component = getWrapper(props)
 
-      expect(component.html()).not.toMatch("Article Layout")
-      expect(component.html()).not.toMatch("Standard")
-      expect(component.html()).not.toMatch("Feature")
-    })
-
-    it("If not editorial, does not render layout buttons", () => {
-      props.isEditorial = false
-      const component = getWrapper(props)
-
-      expect(component.html()).not.toMatch("Article Layout")
-      expect(component.html()).not.toMatch("Standard")
-      expect(component.html()).not.toMatch("Feature")
+        expect(component.html()).not.toMatch("Article Layout")
+        expect(component.html()).not.toMatch("Standard")
+        expect(component.html()).not.toMatch("Feature")
+      })
     })
 
     it("Renders indexable checkbox for editorial", () => {
