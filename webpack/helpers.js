@@ -4,11 +4,11 @@ const path = require("path")
 const { basePath, isDevelopment } = require("../src/lib/environment")
 
 // Helpers
-export function getEntrypoints() {
+function getEntrypoints() {
   return findAssets("src/client/assets")
 }
 
-export function findAssets(rootPath) {
+function findAssets(rootPath) {
   const files = fs.readdirSync(path.join(basePath, rootPath))
   // Filter out .styl files
   const validAssets = file => {
@@ -38,3 +38,5 @@ export function findAssets(rootPath) {
 
   return assets
 }
+
+module.exports.getEntrypoints = getEntrypoints
