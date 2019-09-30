@@ -7,6 +7,7 @@
   },
   "scripts": {
     "assets": "sh scripts/assets.sh",
+    "clean": "rm -rf public && mkdir -p public/assets && echo '[Positron] Cleaned build directory'",
     "dev": "sh scripts/dev.sh",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
