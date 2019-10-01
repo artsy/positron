@@ -4,11 +4,9 @@
 # -x: log commands
 set -e -x
 
-rm -rf public
-mkdir public
-mkdir public/assets
+yarn clean
 
-NODE_ENV=production node_modules/.bin/webpack
+NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --config ./webpack
 stylus \
   $(find src/client/assets -name '*.styl') \
   --compress \

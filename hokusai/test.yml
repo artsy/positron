@@ -6,6 +6,7 @@ services:
       file: build.yml
       service: positron
     environment:
+      - CI=true
       - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
     env_file: ../.env.test
