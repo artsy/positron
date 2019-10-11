@@ -44,7 +44,7 @@
     "@artsy/express-reloadable": "1.4.7",
     "@artsy/gemup": "0.0.3",
     "@artsy/palette": "4.17.16",
-    "@artsy/reaction": "21.7.1",
+    "@artsy/reaction": "21.7.4",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
     "@babel/node": "7.0.0",
