@@ -1,5 +1,5 @@
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import { Fixtures } from "@artsy/reaction/dist/Components/Publishing"
+import * as Fixtures from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { mount } from "enzyme"
 import { cloneDeep } from "lodash"
 import React from "react"
