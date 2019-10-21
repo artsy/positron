@@ -53,7 +53,7 @@
     "@babel/preset-env": "7.0.0",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.0.0",
-    "@babel/register": "7.0.0",
+    "@babel/register": "7.6.2",
     "@babel/runtime": "7.0.0",
     "airtable": "0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
