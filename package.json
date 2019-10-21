@@ -135,7 +135,7 @@
     "stylus": "0.54.5",
     "superagent": "3.7.0",
     "superagent-bluebird-promise": "3.0.2",
-    "ts-loader": "4.1.0",
+    "ts-loader": "6.2.0",
     "typescript": "3.0.1",
     "typescript-styled-plugin": "0.1.2",
     "uglifyify": "3.0.4",
