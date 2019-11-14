@@ -62,10 +62,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@21.17.10":
-  version "21.17.10"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-21.17.10.tgz#5babf2a0b450c3d36ce2379057d81113edef4c17"
-  integrity sha512-zR2WVWRAGGHloQgEhIRvXtiCH9kpnlqPrguyuZk4zuLIohJ6XMCwcxOik7cg40aDSz/07kbe/tcpCBJPugRUzg==
+"@artsy/reaction@22.0.4":
+  version "22.0.4"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-22.0.4.tgz#e56e4fedcbca48ee849fc98ef340a50b82784275"
+  integrity sha512-r3VwvmhO4dvMi5KJ8kPBmIM9fsNdmLpgP9fn2OI8JeBIpif3DloyviS4ZjkngdkctwXl5f79qldo8S9JPm7z4g==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/react-html-parser" "^3.0.2"
@@ -75,8 +75,8 @@
     currency.js "^1.2.1"
     farce "^0.2.6"
     formik "^1.5.8"
-    found "^0.3.14"
-    found-relay "^0.3.1"
+    found "^0.4.9"
+    found-relay "^0.5"
     found-scroll "^0.1.5"
     history "^4.6.1"
     isomorphic-fetch "^2.2.1"
@@ -98,7 +98,7 @@
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
     react-overlays "^0.8.3"
-    react-relay "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz"
+    react-relay "< 7"
     react-relay-network-modern "^2.5.1"
     react-relay-network-modern-ssr "^1.2.2"
     react-responsive-decorator "^0.0.1"
@@ -113,7 +113,7 @@
     react-url-query "^1.1.4"
     react-waypoint "^7.3.3"
     relay-mock-network-layer "^2.0.0"
-    relay-runtime "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz"
+    relay-runtime "< 7"
     serialize-javascript "^1.5.0"
     sharify "^0.1.6"
     styled-system "^3.1.11"
@@ -849,6 +849,14 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
+"@babel/runtime-corejs3@^7.5.5", "@babel/runtime-corejs3@^7.6.0":
+  version "7.7.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.7.2.tgz#2bf55c6cc576a7f54a40b970ea5215131abc1159"
+  integrity sha512-odQQZpujq0AHttKrvp4n2KGjK5b5cuq7LeEcsdadwZOemMkmJnlgTXMCf5fIixLLaBxUypwn0krKK51vVMA5cg==
+  dependencies:
+    core-js-pure "^3.0.0"
+    regenerator-runtime "^0.13.2"
+
 "@babel/runtime@7.0.0", "@babel/runtime@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
@@ -874,6 +882,13 @@
   version "7.4.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
   integrity sha512-TuI4qpWZP6lGOGIuGWtp9sPluqYICmbk8T/1vpSysqJxRPkudh/ofFWyqdcMsDf2s7KvDL4/YHgKyvcS3g9CJQ==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.5.5":
+  version "7.7.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.2.tgz#111a78002a5c25fc8e3361bedc9529c696b85a6a"
+  integrity sha512-JONRbXbTXc9WQE2mAZd1p0Z3DZ/6vaQIkgYMSTP3KjRCyd7rCZCcfhCyX+YjwcKxcZ82UrxbRD358bpExNgrjw==
   dependencies:
     regenerator-runtime "^0.13.2"
 
@@ -934,6 +949,11 @@
   dependencies:
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
+
+"@restart/context@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@restart/context/-/context-2.1.4.tgz#a99d87c299a34c28bd85bb489cb07bfd23149c02"
+  integrity sha512-INJYZQJP7g+IoDUh/475NlGiTeMfwTXUEr3tmRneckHIxNolGOW9CTq83S8cxq0CgJwwcMzMJFchxvlwe7Rk8Q==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
@@ -3850,6 +3870,11 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
+core-js-pure@^3.0.0:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.4.1.tgz#483dbc687016b45cab4c185cf998c2c59e772c2a"
+  integrity sha512-q3FgAYoFGS0LaqV4K7oMsJUpGU7Ud3IR6D2qcu7BAvg0OQPuwakrdNlal+0Zsm3bUPBpI5i/r9C6W3uQCcCrSw==
+
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
@@ -5583,7 +5608,7 @@ farce@^0.2.6:
     redux "^4.0.0"
     warning "^3.0.0"
 
-farce@^0.2.7:
+farce@^0.2.7, farce@^0.2.8:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/farce/-/farce-0.2.8.tgz#bd9c5343b5970357d9446d43212a2036f27886ed"
   integrity sha512-x4N70Ti9nOo6/waNJUZMLDd/U6+WA0gV+AUE1gFS/npD/FliTUCKbBLNQYbgeejzDdw0MgtPCCjRX8kPTHjspA==
@@ -6031,17 +6056,16 @@ forwarded@~0.1.0:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
-found-relay@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/found-relay/-/found-relay-0.3.1.tgz#b525339595e5b3aa24af555423e60fdb33a5cb16"
-  integrity sha512-N9lADMedKGkl+PNY/L/qf0rDy+3HRbO9IX8Gcvjpy2tgRmPy6Z2QM/zVOufCvvD8rYGP84CuqtmTWJvJrLPFYw==
+found-relay@^0.5:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/found-relay/-/found-relay-0.5.0.tgz#2046d0e5dbcfc9e16645e97967911b36f82f01b1"
+  integrity sha512-uGd4mgv0QzE2Yz8QKZS9KpB4UgnlrG40V80aoU4yAB1JxjouQZf6jHhBBu3L8glPMtSb/1NbFCsnDvtFb1qufA==
   dependencies:
-    babel-runtime "^6.26.0"
+    "@babel/runtime-corejs3" "^7.6.0"
     is-promise "^2.1.0"
-    lodash "^4.17.10"
-    prop-types "^15.6.2"
-    prop-types-extra "^1.1.0"
-    warning "^4.0.2"
+    lodash "^4.17.15"
+    prop-types "^15.7.2"
+    warning "^4.0.3"
 
 found-scroll@^0.1.5:
   version "0.1.6"
@@ -6052,22 +6076,23 @@ found-scroll@^0.1.5:
     prop-types "^15.7.2"
     scroll-behavior "^0.9.10"
 
-found@^0.3.14:
-  version "0.3.21"
-  resolved "https://registry.yarnpkg.com/found/-/found-0.3.21.tgz#9eebf2fb69f10259680762c62d10173efe740033"
-  integrity sha512-iaeGVTBirrTAravFPcIfWPuJHIaFNqnJ87AMvnpB4Ig8RTB97C4PipVopmSxK+lLeMdEybUwaW+BhNDhLPEUSw==
+found@^0.4.9:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/found/-/found-0.4.9.tgz#016f69026afa29290c09fb909f198b923a2878f3"
+  integrity sha512-6MEtaqmkkvcX92S3HxSZnoHhEOntNAh+sQglrfsYLbqIhyibUy9Udgbitw8oujGd445spPgCyKkPO3mSTdVAfQ==
   dependencies:
-    babel-runtime "^6.26.0"
-    farce "^0.2.6"
+    "@babel/runtime-corejs3" "^7.5.5"
+    "@restart/context" "^2.1.4"
+    farce "^0.2.8"
+    invariant "^2.2.4"
     is-promise "^2.1.0"
-    lodash "^4.17.11"
+    lodash "^4.17.15"
     path-to-regexp "^1.7.0"
-    prop-types "^15.6.2"
-    prop-types-extra "^1.1.0"
-    react-redux "^5.1.1"
+    prop-types "^15.7.2"
+    react-redux "^7.0.0"
     react-static-container "^1.0.2"
-    redux "^4.0.1"
-    warning "^4.0.2"
+    redux "^4.0.4"
+    warning "^4.0.3"
 
 fragment-cache@^0.2.1:
   version "0.2.1"
@@ -8973,7 +8998,7 @@ lodash@^3.10.0, lodash@^3.2.0, lodash@^3.7.0, lodash@~3.10.1:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
   integrity sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=
 
-lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15:
+lodash@^4.17.14, lodash@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -11204,14 +11229,6 @@ prop-types-extra@^1.0.1:
   dependencies:
     warning "^3.0.0"
 
-prop-types-extra@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/prop-types-extra/-/prop-types-extra-1.1.0.tgz#32609910ea2dcf190366bacd3490d5a6412a605f"
-  integrity sha512-QFyuDxvMipmIVKD2TwxLVPzMnO4e5oOf1vr3tJIomL8E7d0lr6phTHd5nkPhFIzTD1idBLLEPeylL9g+rrTzRg==
-  dependencies:
-    react-is "^16.3.2"
-    warning "^3.0.0"
-
 prop-types@15.6.0, prop-types@^15.0.0, prop-types@^15.5.1, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
@@ -11677,6 +11694,11 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.10.2.tgz#984120fd4d16800e9a738208ab1fba422d23b5ab"
   integrity sha512-INBT1QEgtcCCgvccr5/86CfD71fw9EPmDxgiJX4I2Ddr6ZsV6iFXsuby+qWJPtmNuMY0zByTsG4468P7nHuNWA==
 
+react-is@^16.9.0:
+  version "16.11.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.11.0.tgz#b85dfecd48ad1ce469ff558a882ca8e8313928fa"
+  integrity sha512-gbBVYR2p8mnriqAwWx9LbuUrShnAuSCNnuPGyc7GJrMVQtPDAh8iLpv7FRuMPFb56KkaVZIYSz1PrjI9q0QPCw==
+
 react-lazy-load-image-component@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.1.1.tgz#41e10defa52adf7c0ab9212cf0a94d46899ceff4"
@@ -11693,7 +11715,7 @@ react-lazy-load-image-component@^1.3.2:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
 
-react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
@@ -11772,18 +11794,17 @@ react-redux@5.0.6:
     loose-envify "^1.1.0"
     prop-types "^15.5.10"
 
-react-redux@^5.1.1:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.1.2.tgz#b19cf9e21d694422727bf798e934a916c4080f57"
-  integrity sha512-Ns1G0XXc8hDyH/OcBHOxNgQx9ayH3SPxBnFCOidGKSle8pKihysQw2rG/PmciUQRoclhVBO8HMhiRmGXnDja9Q==
+react-redux@^7.0.0:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.1.3.tgz#717a3d7bbe3a1b2d535c94885ce04cdc5a33fc79"
+  integrity sha512-uI1wca+ECG9RoVkWQFF4jDMqmaw0/qnvaSvOoL/GA4dNxf6LoV8sUAcNDvE5NWKs4hFpn0t6wswNQnY3f7HT3w==
   dependencies:
-    "@babel/runtime" "^7.1.2"
+    "@babel/runtime" "^7.5.5"
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
-    loose-envify "^1.1.0"
-    prop-types "^15.6.1"
-    react-is "^16.6.0"
-    react-lifecycles-compat "^3.0.0"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.9.0"
 
 react-relay-network-modern-ssr@^1.2.2:
   version "1.2.2"
@@ -11795,7 +11816,7 @@ react-relay-network-modern@^2.5.1:
   resolved "https://registry.yarnpkg.com/react-relay-network-modern/-/react-relay-network-modern-2.5.1.tgz#a081ae2691dbf2cfa53129cd6eb41a1e91a071aa"
   integrity sha512-Edp9XWAWLiAntrtNmfeLZMPMcwUmTpBhAoxHCaSKcet7gWN5RS0Z2OhKpVhKg3p1qZz+VLMMvWg8eQghBe0auQ==
 
-"react-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/react-relay-1.5.0-artsy.3.tgz", "react-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz":
+"react-relay@< 7", "react-relay@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
   resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/react-relay-1.5.0-artsy.5.tgz#956280da8d941af7f6f65f3831b01051ee2c32c7"
   dependencies:
@@ -12213,7 +12234,7 @@ redux@^4.0.0:
     loose-envify "^1.1.0"
     symbol-observable "^1.2.0"
 
-redux@^4.0.1:
+redux@^4.0.1, redux@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.4.tgz#4ee1aeb164b63d6a1bcc57ae4aa0b6e6fa7a3796"
   integrity sha512-vKv4WdiJxOWKxK0yRoaK3Y4pxxB0ilzVx6dszU2W8wLxlb2yikRph4iV/ymtdJ6ZxpBLFbyrxklnT5yBbQSl3Q==
@@ -12400,7 +12421,7 @@ relay-mock-network-layer@^2.0.0:
   dependencies:
     graphql-tools "^4.0.2"
 
-relay-runtime@1.5.0-artsy.5, "relay-runtime@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.3/relay-runtime-1.5.0-artsy.3.tgz", "relay-runtime@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz":
+relay-runtime@1.5.0-artsy.5, "relay-runtime@< 7", "relay-runtime@https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz":
   version "1.5.0-artsy.5"
   resolved "https://github.com/artsy/relay/releases/download/v1.5.0-artsy.5/relay-runtime-1.5.0-artsy.5.tgz#6f24fa3cd7dcfc58164ee1b21b059c535e6419bf"
   dependencies:
@@ -14887,13 +14908,6 @@ warning@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.1.tgz#66ce376b7fbfe8a887c22bdf0e7349d73d397745"
   integrity sha512-rAVtTNZw+cQPjvGp1ox0XC5Q2IBFyqoqh+QII4J/oguyu83Bax1apbo2eqB8bHRS+fqYUBagys6lqUoVwKSmXQ==
-  dependencies:
-    loose-envify "^1.0.0"
-
-warning@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.2.tgz#aa6876480872116fa3e11d434b0d0d8d91e44607"
-  integrity sha512-wbTp09q/9C+jJn4KKJfJfoS6VleK/Dti0yqWSm6KMvJ4MRCXFQNapHuJXutJIrWV0Cf4AhTdeIe4qdKHR1+Hug==
   dependencies:
     loose-envify "^1.0.0"
 
