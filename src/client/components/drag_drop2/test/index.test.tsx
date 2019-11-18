@@ -102,7 +102,7 @@ describe("DragDropList", () => {
       expect(instance.setDropZonePosition(dragTarget, 1, 400)).toBe("bottom")
     })
 
-    it("returns bottom if target is element after dragSource", () => {
+    it.only("returns bottom if target is element after dragSource", () => {
       props.isVertical = true
       const component = getWrapper()
       component.setState({ dragSource: 0 })
@@ -138,7 +138,7 @@ describe("DragDropList", () => {
       instance.onDragEnd()
 
       expect(component.state()).toEqual({
-        dragSource: null,
+        dragSource: undefined,
         dragTarget: null,
         dragStartY: 0,
         draggingHeight: 0,

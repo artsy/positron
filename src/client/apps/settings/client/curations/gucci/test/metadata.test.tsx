@@ -187,12 +187,12 @@ describe("Metadata", () => {
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
 
-    component
+    const input = component
       .find(TextArea)
       .at(0)
       .props()
-      // @ts-ignore - FIXME
-      .onChange(event)
+    // @ts-ignore - FIXME
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("description")
     expect(props.onChange.mock.calls[0][1]).toMatch("Description")
@@ -206,12 +206,12 @@ describe("Metadata", () => {
       },
     } as unknown) as React.FormEvent<HTMLInputElement>
 
-    component
+    const input = component
       .find(TextArea)
       .at(1)
       .props()
-      // @ts-ignore - FIXME
-      .onChange(event)
+    // @ts-ignore - FIXME
+    input.onChange && input.onChange(event)
 
     expect(props.onChange.mock.calls[0][0]).toMatch("social_description")
     expect(props.onChange.mock.calls[0][1]).toMatch("Social Description")

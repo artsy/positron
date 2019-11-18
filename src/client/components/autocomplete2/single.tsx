@@ -70,7 +70,6 @@ export class AutocompleteSingle extends Component<
 
     const props = {
       ...this.props,
-      items: item ? [item] : undefined,
       onSelect: this.onSelect,
     }
 
@@ -84,7 +83,7 @@ export class AutocompleteSingle extends Component<
         {item ? (
           <Box mt={2}>
             <ListItem>
-              {formatListItem ? formatListItem() : this.formatItem(item)}
+              {formatListItem ? formatListItem() : this.formatItem(item as any)}
               <button
                 className="remove-button"
                 onClick={() => this.onRemoveItem()}
