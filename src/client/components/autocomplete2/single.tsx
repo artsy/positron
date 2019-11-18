@@ -22,10 +22,6 @@ export class AutocompleteSingle extends Component<
   AutocompleteSingleProps,
   AutocompleteSingleState
 > {
-  state = {
-    item: undefined,
-  }
-
   componentWillMount = () => {
     this.fetchItem()
   }

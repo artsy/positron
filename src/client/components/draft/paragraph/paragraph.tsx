@@ -256,7 +256,8 @@ export class Paragraph extends Component<Props, State> {
   checkSelection = () => {
     let showNav = false
     let editorPosition: ClientRect | null = null
-    const hasSelection = !window.getSelection().isCollapsed
+    const selection = window.getSelection()
+    const hasSelection = selection && !selection.isCollapsed
 
     if (hasSelection) {
       showNav = true
