@@ -76,8 +76,10 @@ export class DragDropList extends React.Component<
     const dragTargetTop = dragTarget.top + 20 - window.scrollY
     const dragTargetCenter = dragTargetTop + dragTargetHeight / 2
     const mouseBelowCenter = mouseY > dragTargetCenter
-    // @ts-ignore - FIXME
-    const dragTargetIsNext = dragSource && dragTargetIndex === dragSource + 1
+
+    const dragTargetIsNext =
+      // @ts-ignore - FIXME
+      dragSource !== null && dragTargetIndex === dragSource + 1
     const dragTargetNotFirst = dragTargetIndex !== 0
     const dragSourceNotLast = dragSource !== children.length - 1
     const isBelow = dragTargetNotFirst && dragSourceNotLast && mouseBelowCenter

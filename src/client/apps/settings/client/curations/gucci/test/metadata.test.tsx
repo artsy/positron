@@ -208,7 +208,7 @@ describe("Metadata", () => {
 
     const input = component
       .find(TextArea)
-      .at(0)
+      .at(1)
       .props()
     // @ts-ignore - FIXME
     input.onChange && input.onChange(event)
