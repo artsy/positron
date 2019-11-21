@@ -4,6 +4,10 @@ import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
 import {
+  RemoveSimulatedDOMElements,
+  SimulateDOMElements,
+} from "test/helpers/document-elements"
+import {
   CloseIcon,
   ResolveMessage,
   Yoast,
@@ -14,10 +18,7 @@ import {
 
 describe("Yoast", () => {
   const getWrapper = (passedProps = props) => {
-    return mount(<Yoast {...passedProps} />, {
-      // yoast needs component to be attached to document.body or it breaks because it can't find #yoast-output and #yoast-snippet
-      attachTo: document.body,
-    })
+    return mount(<Yoast {...passedProps} />)
   }
 
   let props
@@ -28,6 +29,11 @@ describe("Yoast", () => {
       yoastKeyword: "ceramics",
       setYoastKeywordAction: jest.fn(),
     }
+    SimulateDOMElements()
+  })
+
+  afterEach(() => {
+    RemoveSimulatedDOMElements()
   })
 
   describe("Rendering", () => {

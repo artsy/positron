@@ -1,6 +1,10 @@
 import gemup from "@artsy/gemup"
 import { mount } from "enzyme"
 import React from "react"
+import {
+  RemoveSimulatedDOMElements,
+  SimulateDOMElements,
+} from "test/helpers/document-elements"
 import { ImageGenerator } from ".."
 
 jest.mock("@artsy/gemup")
@@ -14,10 +18,16 @@ describe("ImageGenerator", () => {
   let canvas: any
 
   const getWrapper = _props => {
-    return mount(<ImageGenerator {..._props} />, {
-      attachTo: document.body,
-    })
+    return mount(<ImageGenerator {..._props} />)
   }
+
+  beforeAll(() => {
+    SimulateDOMElements()
+  })
+
+  afterAll(() => {
+    RemoveSimulatedDOMElements()
+  })
 
   beforeEach(() => {
     const article = {
@@ -61,7 +71,7 @@ describe("ImageGenerator", () => {
   it("generates new image based on text", () => {
     component.find("button").simulate("click")
     expect(canvas.getContext.mock.calls.length).toBe(1)
-    expect(fillRect.mock.calls[0]).toEqual([0, 0, 1080, 470])
+    expect(fillRect.mock.calls.length).toEqual(1)
     expect(fillText.mock.calls[0]).toEqual(["News", 120, 62])
     expect(fillText.mock.calls[1]).toEqual(["Jan 01", 490, 62])
   })
