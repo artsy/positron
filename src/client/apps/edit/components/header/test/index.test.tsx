@@ -2,6 +2,10 @@ import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixt
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
+import {
+  RemoveSimulatedDOMElements,
+  SimulateDOMElements,
+} from "test/helpers/document-elements"
 import { EditHeader, HeaderButton } from "../index"
 
 describe("Edit Header Controls", () => {
@@ -13,6 +17,14 @@ describe("Edit Header Controls", () => {
   }
 
   let props
+
+  beforeAll(() => {
+    SimulateDOMElements()
+  })
+
+  afterAll(() => {
+    RemoveSimulatedDOMElements()
+  })
 
   beforeEach(() => {
     props = {

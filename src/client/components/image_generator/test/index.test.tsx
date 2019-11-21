@@ -1,6 +1,10 @@
 import gemup from "@artsy/gemup"
 import { mount } from "enzyme"
 import React from "react"
+import {
+  RemoveSimulatedDOMElements,
+  SimulateDOMElements,
+} from "test/helpers/document-elements"
 import { ImageGenerator } from ".."
 
 jest.mock("@artsy/gemup")
@@ -14,10 +18,16 @@ describe("ImageGenerator", () => {
   let canvas: any
 
   const getWrapper = _props => {
-    return mount(<ImageGenerator {..._props} />, {
-      attachTo: document.body,
-    })
+    return mount(<ImageGenerator {..._props} />)
   }
+
+  beforeAll(() => {
+    SimulateDOMElements()
+  })
+
+  afterAll(() => {
+    RemoveSimulatedDOMElements()
+  })
 
   beforeEach(() => {
     const article = {
