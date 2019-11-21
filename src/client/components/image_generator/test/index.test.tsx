@@ -71,7 +71,7 @@ describe("ImageGenerator", () => {
   it("generates new image based on text", () => {
     component.find("button").simulate("click")
     expect(canvas.getContext.mock.calls.length).toBe(1)
-    expect(fillRect.mock.calls[0]).toEqual([0, 0, 1080, 470])
+    expect(fillRect.mock.calls.length).toEqual(1)
     expect(fillText.mock.calls[0]).toEqual(["News", 120, 62])
     expect(fillText.mock.calls[1]).toEqual(["Jan 01", 490, 62])
   })

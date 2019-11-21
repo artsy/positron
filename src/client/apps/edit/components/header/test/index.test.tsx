@@ -177,12 +177,11 @@ describe("Edit Header Controls", () => {
       const component = getWrapper()
       const button = component.find(HeaderButton).at(0)
       button.simulate("click")
-      expect((window.removeEventListener as any).mock.calls[3][0]).toBe(
-        "beforeunload"
+      const call = (window.removeEventListener as any).mock.calls.find(
+        x => x[0] === "beforeunload"
       )
-      expect((window.removeEventListener as any).mock.calls[3][1]).toBe(
-        props.beforeUnload
-      )
+      expect(call).not.toBeUndefined()
+      expect(call[1]).toBe(props.beforeUnload)
     })
   })
 
