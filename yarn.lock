@@ -4944,7 +4944,7 @@ eslint-visitor-keys@^1.0.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
   integrity sha512-qzm/XxIbxm/FHyH341ZrbnMUpe+5Bocte9xkmFMzPMjRaZMcXww+MpBptFvtU+79L362nqiLhekCxCxDPaUMBQ==
 
-eslint@4.19.1:
+eslint@4.19.1, eslint@^4.19.1:
   version "4.19.1"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.19.1.tgz#32d1d653e1d90408854bfb296f076ec7e186a300"
   integrity sha512-bT3/1x1EbZB7phzYu7vCr1v3ONuzDtX8WjuM9c0iYxe+cq+pwcKEoQjl7zd3RpC6YOLgnSy3cTN58M2jcoPDIQ==
@@ -12462,10 +12462,12 @@ revalidator@0.1.x:
   resolved "https://registry.yarnpkg.com/revalidator/-/revalidator-0.1.8.tgz#fece61bfa0c1b52a206bd6b18198184bdd523a3b"
   integrity sha1-/s5hv6DBtSoga9axgZgYS91SOjs=
 
-rewire@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/rewire/-/rewire-2.2.0.tgz#15781a04a4cc807b246aa4a84cfda57992ee68b9"
-  integrity sha1-FXgaBKTMgHskaqSoTP2leZLuaLk=
+rewire@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/rewire/-/rewire-4.0.1.tgz#ba1100d400a9da759fe599fc6e0233f0879ed6da"
+  integrity sha512-+7RQ/BYwTieHVXetpKhT11UbfF6v1kGhKFrtZN7UDL2PybMsSt/rpLWeEUGF5Ndsl1D5BxiCB14VDJyoX+noYw==
+  dependencies:
+    eslint "^4.19.1"
 
 rewire@^2.3.1:
   version "2.5.2"
