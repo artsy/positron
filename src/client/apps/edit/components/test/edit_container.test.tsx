@@ -5,6 +5,10 @@ import { cloneDeep } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
+import {
+  RemoveSimulatedDOMElements,
+  SimulateDOMElements,
+} from "test/helpers/document-elements"
 import { EditAdmin } from "../admin"
 import { EditContent } from "../content"
 import { EditDisplay } from "../display"
@@ -47,17 +51,21 @@ describe("EditContainer", () => {
         <FullScreenProvider>
           <EditContainer {...passedProps} />
         </FullScreenProvider>
-      </Provider>,
-      {
-        // yoast needs component to be attached to document.body or it breaks because it can't find #yoast-output and #yoast-snippet
-        attachTo: document.body,
-      }
+      </Provider>
     )
   }
 
   const getShallowWrapper = (passedProps = props) => {
     return shallow(<EditContainer {...passedProps} />)
   }
+
+  beforeAll(() => {
+    SimulateDOMElements()
+  })
+
+  afterAll(() => {
+    RemoveSimulatedDOMElements()
+  })
 
   beforeEach(() => {
     props = {

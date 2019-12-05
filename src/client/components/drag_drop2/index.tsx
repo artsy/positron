@@ -22,7 +22,7 @@ interface DragItemDimensions {
 }
 
 interface DragDropListState {
-  dragSource: number | null
+  dragSource?: number
   dragTarget: any
   dragStartY: number
   draggingHeight: number
@@ -34,7 +34,7 @@ export class DragDropList extends React.Component<
   DragDropListState
 > {
   state = {
-    dragSource: null,
+    dragSource: undefined,
     dragTarget: null,
     dragStartY: 0,
     draggingHeight: 0,
@@ -76,7 +76,9 @@ export class DragDropList extends React.Component<
     const dragTargetTop = dragTarget.top + 20 - window.scrollY
     const dragTargetCenter = dragTargetTop + dragTargetHeight / 2
     const mouseBelowCenter = mouseY > dragTargetCenter
+
     const dragTargetIsNext =
+      // @ts-ignore - FIXME
       dragSource !== null && dragTargetIndex === dragSource + 1
     const dragTargetNotFirst = dragTargetIndex !== 0
     const dragSourceNotLast = dragSource !== children.length - 1
@@ -103,7 +105,7 @@ export class DragDropList extends React.Component<
       onDragEnd(newItems)
 
       this.setState({
-        dragSource: null,
+        dragSource: undefined,
         dragTarget: null,
         dragStartY: 0,
         draggingHeight: 0,

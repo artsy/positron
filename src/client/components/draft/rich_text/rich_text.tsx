@@ -446,7 +446,8 @@ export class RichText extends Component<Props, State> {
   checkSelection = () => {
     let editorPosition: ClientRect | null = null
     let showNav = false
-    const hasSelection = !window.getSelection().isCollapsed
+    const selection = window.getSelection()
+    const hasSelection = selection && !selection.isCollapsed
 
     if (hasSelection) {
       showNav = true
