@@ -19,7 +19,6 @@
     "start": "sh scripts/start.sh",
     "production": "sh scripts/production.sh",
     "publish-assets": "sh scripts/publish-assets.sh",
-    "report-coverage": "./node_modules/.bin/codecov -c $COMMIT_HASH_FULL -b $BRANCH_NAME",
     "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
@@ -66,7 +65,6 @@
     "bluebird-q": "1.0.3",
     "body-parser": "1.17.1",
     "cheerio": "0.19.0",
-    "codecov": "^3.3.0",
     "coffeescript": "1.11.1",
     "compression": "1.7.2",
     "cookie-parser": "1.4.3",
@@ -251,8 +249,7 @@
   },
   "nyc": {
     "check-coverage": true,
-    "temp-dir": "./.nyc_output/",
-    "report-dir": "./coverage/",
+    "report-dir": "./.nyc_output/",
     "reporter": [
       "lcov",
       "text-summary"

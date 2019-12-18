@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e -x
 
 trap "exit" INT
 
-nyc mocha \
+nyc --extension .coffee mocha \
   --require test.config.js \
   --timeout 10000 \
    $@ \
