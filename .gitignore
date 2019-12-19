@@ -22,5 +22,6 @@ data
 /src/client/public/assets
 /node_modules
 
-coverage.lcov
+# Codecov
+coverage*
 .nyc_output/
