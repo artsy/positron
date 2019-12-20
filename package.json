@@ -127,7 +127,7 @@
     "superagent": "3.7.0",
     "superagent-bluebird-promise": "3.0.2",
     "ts-loader": "6.2.1",
-    "typescript": "3.7.3",
+    "typescript": "3.7.4",
     "typescript-styled-plugin": "0.13.0",
     "uglifyify": "3.0.4",
     "underscore": "1.8.3",
