@@ -34,17 +34,17 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@5.1.11":
-  version "5.1.11"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-5.1.11.tgz#51ddc5a297a6842ea4fba6a82bbf77a6f3978281"
-  integrity sha512-8D77QBhXlntZsylCfedpcKgScnuo1psV3SYW/u+ljwGvdZeD3bWCyJd5vac+3s7PyLf5FLaeLtcCYME3HDmM0Q==
+"@artsy/palette@5.1.13":
+  version "5.1.13"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-5.1.13.tgz#1f7c055d2d1fea074b00a409811680fae48785de"
+  integrity sha512-W8l7vmgcFtv8LXMeRw2zubfqK9plCgLj50Hlf/gQVwxkTYEn+jG8/CtmRQf0Ip2ect+GRC9UyEEhYYAgcek61Q==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
     luxon "^1.15"
     rc-slider "^8.6.2"
-    react-lazy-load-image-component "^1.4.0-beta.1"
+    react-lazy-load-image-component "^1.4.0"
     react-live "^1.12.0"
     react-powerplug "^1.0.0"
     react-spring "^8.0.27"
@@ -62,10 +62,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-responsive-media/-/react-responsive-media-2.0.0-beta.5.tgz#d61e1a9f215d38d90ec2bb97dc1ff7409d0346fa"
   integrity sha512-XRYA77v/j3mVInwy5EYb8NtmMkkAD1/XDxDi45BO0oduv4hsljJfjtjK7jN0ziJ6JUm2QTx/t6QwuaT9E7vTuA==
 
-"@artsy/reaction@24.0.5":
-  version "24.0.5"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-24.0.5.tgz#50090dd8b4ab55b9789dfc0e013f2c3aa2e9c0e4"
-  integrity sha512-tzs8h7q2I40jfJeo4Em9YyKoXBnoTNmoioKXiKHBQTT6aLejmUgoG5tsi0CMH8iyaypfk9HCQPK5baN7w6gY+w==
+"@artsy/reaction@24.0.15":
+  version "24.0.15"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-24.0.15.tgz#b2752726287603b3306178b539f0f6ec50eee487"
+  integrity sha512-Q1HTDJaPalMvgzIWz8h3h4bBc/lAq7tiqr+VScnQ7QBn4GW3q9nsoHJ03o0KvE+eGZ/iaZvjy+sFPlXj5GIOgA==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/react-html-parser" "^3.0.2"
@@ -94,7 +94,7 @@
     react-css-transition-replace "^3.0.2"
     react-gpt "^2.0.1"
     react-head "^3.0.0"
-    react-lazy-load-image-component "^1.4.0-beta.1"
+    react-lazy-load-image-component "^1.4.0"
     react-lines-ellipsis "^0.14.0"
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
@@ -11410,10 +11410,10 @@ react-is@^16.10.2, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-react-lazy-load-image-component@^1.4.0-beta.1:
-  version "1.4.0-beta.1"
-  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.4.0-beta.1.tgz#9728b2de583cfee2146f4e81db60562b63fe866f"
-  integrity sha512-0hsmYC1aVbs2FiPaGli/kLBy/adrZWVDAond/vYZZA1i1pfA+pltT6TrIOmV1hzGhVwNHohkSzDqXvlgVelciQ==
+react-lazy-load-image-component@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.4.0.tgz#10c73ca46afc039864b395191d6b54a46a673b60"
+  integrity sha512-o/L93CyJVvXPuA2P/ouUZI7ZXJRrdE/eqP45AH5/SakOU0bzAk2ZP6qNT/WaaXhf+JtE7hhjXxMr7KGsLNX64w==
   dependencies:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
@@ -14074,10 +14074,10 @@ typescript-template-language-service-decorator@^2.0.0:
   resolved "https://registry.yarnpkg.com/typescript-template-language-service-decorator/-/typescript-template-language-service-decorator-2.2.0.tgz#4ee6d580f307fb9239978e69626f2775b8a59b2a"
   integrity sha512-xiolqt1i7e22rpqMaprPgSFVgU64u3b9n6EJlAaUYE61jumipKAdI1+O5khPlWslpTUj80YzjUKjJ2jxT0D74w==
 
-typescript@3.7.3:
-  version "3.7.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.3.tgz#b36840668a16458a7025b9eabfad11b66ab85c69"
-  integrity sha512-Mcr/Qk7hXqFBXMN7p7Lusj1ktCBydylfQM/FZCk5glCNQJrCUKPkMHdo9R0MTFWsC/4kPFvDS0fDPvukfCkFsw==
+typescript@3.7.4:
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
+  integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
 
 ua-parser-js@^0.7.18:
   version "0.7.19"
