@@ -17,7 +17,7 @@ export class EditArticleCard extends Component<EditArticleCardProps> {
     const { article, color, series, onRemoveArticle } = this.props
 
     return (
-      <Box pb={6}>
+      <Box pb={6} position="relative">
         <Sans size="3" weight="medium">
           <EditLink
             className="EditArticleCard__edit"
