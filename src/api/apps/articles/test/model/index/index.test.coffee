@@ -1,7 +1,7 @@
 _ = require 'underscore'
 sinon = require 'sinon'
 { db, fabricate, empty, fixtures } = require '../../../../../test/helpers/db'
-gravity = require('antigravity').server
+gravity = require('@artsy/antigravity').server
 express = require 'express'
 app = require('express')()
 Article = require '../../../model/index.js'
@@ -106,9 +106,9 @@ describe 'Article', ->
 
     it 'removes the article from elasticsearch', (done) ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000019'), title: 'quux' }, ->
-        setTimeout( =>
+        setTimeout( ->
           Article.destroy '5086df098523e60002000019', (err) ->
-            setTimeout( =>
+            setTimeout( ->
               search.client.search(
                 index: search.index
                 q: 'title:quux'
@@ -145,7 +145,7 @@ describe 'Article', ->
     it 'returns 0 if the id is invalid', ->
       id = '123'
       Article.getSuperArticleCount(id)
-      .then (count) =>
+      .then (count) ->
         count.should.equal 0
 
     it 'returns a count of super articles that have the given id as a related article', ->
@@ -157,14 +157,14 @@ describe 'Article', ->
       , ->
         id = '5086df098523e60002000018'
         Article.getSuperArticleCount(id)
-        .then (count) =>
+        .then (count) ->
           count.should.equal 1
 
   describe '#promisedMongoFetch', ->
     it 'returns results, counts, and totals', ->
       fabricate 'articles', { _id: ObjectId('5086df098523e60002000018') }, ->
         Article.promisedMongoFetch({ count: true, ids: [ObjectId('5086df098523e60002000018')] })
-        .then ({ count, total, results }) =>
+        .then ({ count, total, results }) ->
           count.should.equal 1
           total.should.equal 11
           results.length.should.equal 1

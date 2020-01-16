@@ -139,6 +139,7 @@
     "yoastseo": "artsy/YoastSEO.js#develop"
   },
   "devDependencies": {
+    "@artsy/antigravity": "^0.2.0",
     "@sentry/browser": "4.6.4",
     "@types/draft-js": "0.10.24",
     "@types/enzyme": "3.9.0",
@@ -150,7 +151,6 @@
     "@types/react-dom": "16.8.2",
     "@types/styled-components": "4.1.10",
     "@types/styled-system": "3.0.9",
-    "antigravity": "artsy/antigravity",
     "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
     "benv": "3.2.0",

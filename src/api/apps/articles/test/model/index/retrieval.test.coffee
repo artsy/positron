@@ -4,8 +4,8 @@ moment = require 'moment'
 Article = require '../../../model/index'
 { ObjectId } = require 'mongojs'
 express = require 'express'
-fabricateGravity = require('antigravity').fabricate
-gravity = require('antigravity').server
+fabricateGravity = require('@artsy/antigravity').fabricate
+gravity = require('@artsy/antigravity').server
 app = require('express')()
 bodyParser = require 'body-parser'
 sinon = require 'sinon'
@@ -242,7 +242,7 @@ describe 'Article Retrieval', ->
           author_id: ObjectId '4d8cd73191a5c50ce220002b'
           title: 'Hello Waaarld'
         }
-      ], =>
+      ], ->
         Article.where { all_by_author: '4d8cd73191a5c50ce220002b', count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 12
@@ -267,7 +267,7 @@ describe 'Article Retrieval', ->
           author_id: ObjectId '4d8cd73191a5c50ce220002b'
           title: 'Hello Waaarld'
         }
-      ], =>
+      ], ->
         Article.where { is_super_article: true, count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 13
@@ -293,7 +293,7 @@ describe 'Article Retrieval', ->
           super_article:
             related_articles: [childArticleId]
         }
-      ], =>
+      ], ->
         Article.where { super_article_for: childArticleId.toString(), count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 12
@@ -323,7 +323,7 @@ describe 'Article Retrieval', ->
           tags: [ 'radio', 'pixels' ]
           title: 'Hello I am Weiiird - Electronics'
         }
-      ], =>
+      ], ->
         Article.where { tags: ['pickle', 'muffin'], count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 14
@@ -355,7 +355,7 @@ describe 'Article Retrieval', ->
           tracking_tags: [ 'op-eds', 'explainers' ]
           title: 'NYC Releases Data That Will Help Shape the City’s Cultural Future'
         }
-      ], =>
+      ], ->
         Article.where { tracking_tags: ['video', 'evergreen'], count: true }, (err, res) ->
           { total, count, results } = res
           total.should.equal 14

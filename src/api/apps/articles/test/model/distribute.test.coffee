@@ -4,7 +4,7 @@ rewire = require 'rewire'
 { fabricate, empty } = require '../../../../test/helpers/db'
 Distribute = rewire '../../model/distribute'
 express = require 'express'
-gravity = require('antigravity').server
+gravity = require('@artsy/antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 
@@ -48,37 +48,37 @@ describe 'Save', ->
 
         it 'constructs the url for classic articles', (done) ->
           article.layout = 'classic'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
           done()
 
         it 'constructs the url for standard articles', (done) ->
           article.layout = 'standard'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
           done()
 
         it 'constructs the url for feature articles', (done) ->
           article.layout = 'feature'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('article/artsy-editorial-slug-two')
           done()
 
         it 'constructs the url for series articles', (done) ->
           article.layout = 'series'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('series/artsy-editorial-slug-two')
           done()
 
         it 'constructs the url for video articles', (done) ->
           article.layout = 'video'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('video/artsy-editorial-slug-two')
           done()
 
         it 'constructs the url for news articles', (done) ->
           article.layout = 'news'
-          Distribute.distributeArticle article, (err, article) =>
+          Distribute.distributeArticle article, (err, article) ->
           @sailthru.apiPost.args[0][1].url.should.containEql('news/artsy-editorial-slug-two')
           done()
 
@@ -199,7 +199,7 @@ describe 'Save', ->
           done()
 
       it 'deletes all previously formed slugs in Sailthru', (done) ->
-       Distribute.distributeArticle {
+        Distribute.distributeArticle {
           author_id: '5086df098523e60002000018'
           published: true
           slugs: [
@@ -224,15 +224,15 @@ describe 'Save', ->
     it 'Calls #deleteArticleFromSailthru on slugs that are not last', (done) ->
       Distribute.deleteArticleFromSailthru = sinon.stub()
       Distribute.cleanArticlesInSailthru({
-          author_id: '5086df098523e60002000018'
-          layout: 'video'
-          published: true
-          slugs: [
-            'artsy-editorial-slug-one'
-            'artsy-editorial-slug-two'
-            'artsy-editorial-slug-three'
-          ]
-        })
+        author_id: '5086df098523e60002000018'
+        layout: 'video'
+        published: true
+        slugs: [
+          'artsy-editorial-slug-one'
+          'artsy-editorial-slug-two'
+          'artsy-editorial-slug-three'
+        ]
+      })
       Distribute.deleteArticleFromSailthru.args[0][0].should.containEql '/video/artsy-editorial-slug-one'
       Distribute.deleteArticleFromSailthru.args[1][0].should.containEql '/video/artsy-editorial-slug-two'
       done()

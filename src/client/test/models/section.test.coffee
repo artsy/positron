@@ -3,7 +3,7 @@ Backbone = require 'backbone'
 Section = require '../../models/section.coffee'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 benv = require 'benv'
 
 describe "Article", ->
