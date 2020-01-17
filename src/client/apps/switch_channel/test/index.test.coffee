@@ -4,7 +4,7 @@ app = rewire '../'
 Backbone = require 'backbone'
 Channel = rewire '../../../models/channel.coffee'
 User = require '../../../models/user.coffee'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 fixtures = require '../../../../test/helpers/fixtures.coffee'
 
 describe 'authorized switch_channel (channel)', ->

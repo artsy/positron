@@ -2,7 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 Artwork = require '../../models/artwork.coffee'
 sinon = require 'sinon'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 
 describe "Artwork", ->
 

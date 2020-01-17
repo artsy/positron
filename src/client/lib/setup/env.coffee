@@ -16,4 +16,4 @@ module.exports = (app) ->
 
   # Mount antigravity in test
   if 'test' is NODE_ENV
-    app.use '/__gravity', require('antigravity').server
+    app.use '/__gravity', require('@artsy/antigravity').server

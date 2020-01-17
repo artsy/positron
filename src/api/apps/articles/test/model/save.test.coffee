@@ -4,14 +4,14 @@ rewire = require 'rewire'
 Save = rewire '../../model/save'
 Article = require '../../model/index'
 express = require 'express'
-gravity = require('antigravity').server
+gravity = require('@artsy/antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 moment = require 'moment'
 { ObjectId } = require 'mongojs'
 
 describe 'Save', ->
-  sandbox = sinon.sandbox.create();
+  sandbox = sinon.sandbox.create()
 
   before (done) ->
     app.use '/__gravity', gravity
@@ -54,14 +54,20 @@ describe 'Save', ->
   describe '#onPublish', (done) ->
 
     it 'generates slugs and published_at if not present', (done) ->
-      Save.onPublish { thumbnail_title: 'a title' }, (err, article) =>
+      Save.onPublish {
+        thumbnail_title: 'a title'
+      }, (err, article) ->
         article.slugs.length.should.equal 1
         moment(article.published_at).format('MM DD YYYY').should
           .equal moment().format('MM DD YYYY')
         done()
 
     it 'does not generate published_at if scheduled', (done) ->
-      Save.onPublish { thumbnail_title: 'a title', scheduled_publish_at: '2017-07-26T17:37:03.065Z', published_at: null }, (err, article) =>
+      Save.onPublish {
+        thumbnail_title: 'a title',
+        scheduled_publish_at: '2017-07-26T17:37:03.065Z',
+        published_at: null
+      }, (err, article) ->
         (article.published_at is null).should.be.true()
         done()
 
@@ -72,18 +78,18 @@ describe 'Save', ->
         thumbnail_title: 'Clockwork'
         published: true
         author: name: 'Molly'
-      }, (err, article) =>
+      }, (err, article) ->
         article.slugs[0].should.equal 'molly-clockwork'
         done()
 
     it 'appends a date to the slug if it exists in the database already', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs[0].should.equal 'molly-clockwork-07-26-17'
           done()
       )(null, {
@@ -91,14 +97,14 @@ describe 'Save', ->
       })
 
     it 'does not append a date to the slug if it exists in the slugs array for that article already', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           slugs: ['molly-clockwork']
           author: name: 'Molly'
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs.length.should.equal 1
           article.slugs[0].should.equal 'molly-clockwork'
           done()
@@ -107,13 +113,13 @@ describe 'Save', ->
       })
 
     it 'appends the current date to the slug if the slug exists in the database already but the date is invalid', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
           published_at: '2017-07-dsdfdf26T17:37:03.065Zsdfdf'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
@@ -121,12 +127,12 @@ describe 'Save', ->
       })
 
     it 'appends the current date to the slug if the slug exists in the database already but there is no publish date', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs[0].should.equal 'molly-clockwork-01-01-19'
           done()
       )(null, {
@@ -134,14 +140,14 @@ describe 'Save', ->
       })
 
     it 'moves the slug to the end of the slugs array and does not append a date if the slug is present elsewhere in the array', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
           slugs: ['molly-clockwork', 'molly-clockwork-2', 'molly-clockwork-3']
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs.length.should.equal 3
           article.slugs[article.slugs.length-1].should.equal 'molly-clockwork'
           done()
@@ -150,14 +156,14 @@ describe 'Save', ->
       })
 
     it 'does not append a date to the slug if a slug with that date exists in the slugs array for that article already', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
           slugs: ['molly-clockwork-07-26-17']
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs.length.should.equal 1
           article.slugs[0].should.equal 'molly-clockwork-07-26-17'
           done()
@@ -166,14 +172,14 @@ describe 'Save', ->
       })
 
     it 'it moves the slug with the appended date to the end of the slugs array if a slug with that date exists in the slugs array for that article already', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: true
           author: name: 'Molly'
           slugs: ['molly-clockwork-2','molly-clockwork-07-26-17', 'molly-clockwork-3']
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs.length.should.equal 3
           article.slugs[article.slugs.length-1].should.equal 'molly-clockwork-07-26-17'
           done()
@@ -182,31 +188,31 @@ describe 'Save', ->
       })
 
     it 'appends unix to the slug if it exists already and it is a draft', (done) ->
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: false
           author: name: 'Molly'
           published_at: '2017-07-26T17:37:03.065Z'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs[0].should.equal 'molly-clockwork-1501090623'
           done()
       )(null, {
         slugs: ['molly-clockwork']
       })
 
-    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->     
+    it 'appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date', (done) ->
       # removing date offset to account for different timezones
       now = new Date()
-      os = now.getTimezoneOffset()      
+      os = now.getTimezoneOffset()
       sandbox.clock.tick(os * -60000)
       
-      Save.sanitizeAndSave( =>
+      Save.sanitizeAndSave( ->
         Save.generateSlugs {
           thumbnail_title: 'Clockwork'
           published: false
           author: name: 'Molly'
-        }, (err, article) =>
+        }, (err, article) ->
           article.slugs[0].should.equal 'molly-clockwork-1546300800'
           done()
       )(null, {
@@ -219,7 +225,7 @@ describe 'Save', ->
         published: true
         author: name: 'Molly'
         layout: 'series'
-      }, (err, article) =>
+      }, (err, article) ->
         article.slugs[0].should.equal 'clockwork'
         done()
 
@@ -256,7 +262,7 @@ describe 'Save', ->
 
     it 'skips sanitizing links that do not have an href', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.sections[0].body.should.containEql '<a></a>'
           done()
       )(null, {
@@ -271,7 +277,7 @@ describe 'Save', ->
 
     it 'can save follow artist links (whitelist data-id)', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.sections[0].body.should.containEql '<a data-id="andy-warhol"></a>'
           done()
       )(null, {
@@ -286,7 +292,7 @@ describe 'Save', ->
 
     it 'can save layouts on text sections', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.sections[0].layout.should.eql 'blockquote'
           done()
       )(null, {
@@ -322,7 +328,7 @@ describe 'Save', ->
 
     it 'saves email metadata', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.email_metadata.image_url.should.containEql 'foo.png'
           article.email_metadata.author.should.containEql 'Kana'
           article.email_metadata.headline.should.containEql 'Thumbnail Title'
@@ -337,7 +343,7 @@ describe 'Save', ->
 
     it 'does not override email metadata', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.email_metadata.image_url.should.containEql 'bar.png'
           article.email_metadata.author.should.containEql 'Artsy Editorial'
           article.email_metadata.headline.should.containEql 'Custom Headline'
@@ -355,7 +361,7 @@ describe 'Save', ->
 
     it 'saves generated descriptions', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.description.should.containEql 'Testing 123'
           done()
       )(null, {
@@ -368,7 +374,7 @@ describe 'Save', ->
 
     it 'does not override description', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.description.should.containEql 'Do not override me'
           done()
       )(null, {
@@ -381,7 +387,7 @@ describe 'Save', ->
 
     it 'Strips linebreaks from titles', (done) ->
       Save.sanitizeAndSave( ->
-        Article.find '5086df098523e60002000011', (err, article) =>
+        Article.find '5086df098523e60002000011', (err, article) ->
           article.title.should.containEql 'A new title'
           done()
       )(null, {

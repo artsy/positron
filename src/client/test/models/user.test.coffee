@@ -7,7 +7,7 @@ request = require 'superagent'
 async = require 'async'
 User = rewire '../../models/user'
 Article = require '../../models/article.coffee'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 
 describe "User", ->
 
