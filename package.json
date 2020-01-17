@@ -139,7 +139,7 @@
     "yoastseo": "artsy/YoastSEO.js#develop"
   },
   "devDependencies": {
-    "@artsy/antigravity": "^0.2.0",
+    "@artsy/antigravity": "0.2.0",
     "@sentry/browser": "4.6.4",
     "@types/draft-js": "0.10.24",
     "@types/enzyme": "3.9.0",
