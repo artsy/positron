@@ -25,3 +25,5 @@ data
 # Codecov
 coverage*
 .nyc_output/
+
+cypress.env.json
