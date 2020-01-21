@@ -4,7 +4,7 @@ fixtures = require '../../../test/helpers/fixtures'
 rewire = require 'rewire'
 Article = rewire '../../models/article.coffee'
 sinon = require 'sinon'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 fixtures = require '../../../test/helpers/fixtures'
 moment = require 'moment'
 

@@ -1,7 +1,7 @@
 require '../../../test/helpers/db'
 _ = require 'underscore'
 Show = require '../model'
-gravityServer = require('antigravity').server
+gravityServer = require('@artsy/antigravity').server
 express = require 'express'
 app = require('express')()
 

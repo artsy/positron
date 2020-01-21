@@ -5,7 +5,7 @@ rewire = require 'rewire'
 Article = rewire '../../models/article.coffee'
 sinon = require 'sinon'
 moment = require 'moment'
-gravity = require('antigravity').server
+gravity = require('@artsy/antigravity').server
 app = require('express')()
 
 describe "Article", ->

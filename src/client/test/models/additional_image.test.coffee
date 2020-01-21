@@ -3,7 +3,7 @@ Backbone = require 'backbone'
 AdditionalImage = require '../../models/additional_image.coffee'
 AdditionalImages = require '../../collections/additional_images.coffee'
 sinon = require 'sinon'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 
 describe "AdditionalImage", ->
 

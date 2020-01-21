@@ -4,7 +4,7 @@ moment = require 'moment'
 Article = require '../../../model/index.js'
 { ObjectId } = require 'mongojs'
 express = require 'express'
-gravity = require('antigravity').server
+gravity = require('@artsy/antigravity').server
 app = require('express')()
 sinon = require 'sinon'
 search = require '../../../../../lib/elasticsearch'
@@ -168,7 +168,7 @@ describe 'Article Persistence', ->
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
         published: true
-      }, 'foo', {}, (err, article) =>
+      }, 'foo', {}, (err, article) ->
         return done err if err
         Article.save {
           id: article._id.toString()
@@ -197,7 +197,7 @@ describe 'Article Persistence', ->
         title: 'Top Ten Shows'
         thumbnail_title: 'Ten Shows'
         author_id: '5086df098523e60002000018'
-      }, 'foo', {}, (err, article) =>
+      }, 'foo', {}, (err, article) ->
         return done err if err
         article.indexable.should.eql true
         Article.save {
@@ -376,7 +376,7 @@ describe 'Article Persistence', ->
         channel_id: '5086df098523e60002000018'
       }, 'foo', {}, (err, article) ->
         return done err if err
-        setTimeout( =>
+        setTimeout( ->
           search.client.search(
             index: search.index
             q: 'name:foo'

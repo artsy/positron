@@ -1,9 +1,9 @@
 import { times } from "lodash"
 import { ObjectId } from "mongojs"
 import { toQuery } from "../../model/retrieve"
+import { server as gravity } from "@artsy/antigravity"
 
 const { empty, fabricate } = require("../../../../test/helpers/db.coffee")
-const gravity = require("antigravity").server
 const app = require("express")()
 
 describe("Retrieve", () => {

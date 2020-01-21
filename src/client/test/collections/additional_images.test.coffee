@@ -2,7 +2,7 @@ _ = require 'underscore'
 Backbone = require 'backbone'
 AdditionalImages = require '../../collections/additional_images.coffee'
 sinon = require 'sinon'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 
 describe "AdditionalImages", ->
 

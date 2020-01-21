@@ -5,7 +5,7 @@ Channel = rewire '../../models/channel.coffee'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 request = require 'superagent'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 
 describe "Channel", ->
 

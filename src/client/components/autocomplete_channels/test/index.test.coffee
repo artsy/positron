@@ -2,7 +2,7 @@ Backbone = require 'backbone'
 benv = require 'benv'
 sinon = require 'sinon'
 { resolve } = require 'path'
-{ fabricate } = require 'antigravity'
+{ fabricate } = require '@artsy/antigravity'
 User = require '../../../models/user.coffee'
 
 describe 'AutocompleteChannels', ->

@@ -27,7 +27,7 @@ app.use bodyParser.urlencoded limit:'5mb', extended: true
 app.use logger
 
 # Apps
-app.use '/__gravity', require('antigravity').server if NODE_ENV is 'test'
+app.use '/__gravity', require('@artsy/antigravity').server if NODE_ENV is 'test'
 app.use require './apps/articles'
 app.use require './apps/sections'
 app.use require './apps/shows'

@@ -4,8 +4,8 @@ rewire = require 'rewire'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 User = rewire '../model'
 { ObjectId } = require 'mongojs'
-gravity = require('antigravity').server
-gravityFabricate = require('antigravity').fabricate
+gravity = require('@artsy/antigravity').server
+gravityFabricate = require('@artsy/antigravity').fabricate
 express = require 'express'
 
 app = express()
@@ -23,7 +23,7 @@ describe 'User', ->
         partner_ids: ['5086df098523e60002000012']
       })
       fabricate 'channels', { id: '5086df098523e60002000018' }, (err, @channel) =>
-        @server = app.listen 5000, =>
+        @server = app.listen 5000, ->
           done()
 
   afterEach ->
