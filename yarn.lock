@@ -48,17 +48,17 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@5.1.15":
-  version "5.1.15"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-5.1.15.tgz#5ddc3403892c340ddc804e58336322aeffc954a3"
-  integrity sha512-Rk2T6yREaftRg0tDB/g70mGzld3gc0PD0Vy8MOTa5BYEUAFNm9Oq9uL+tFBbeAVMCa/PF6TZ4dVsepzTV406fw==
+"@artsy/palette@5.1.16":
+  version "5.1.16"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-5.1.16.tgz#d224ecc90f00a298244e1c667f04cc97db899057"
+  integrity sha512-21qZveD9aKboCOCGY7gPl/UIQVUG94Qmfv/WQ2CUUClCfoE7n5ogxkLNgYLOvSl2NnmH5x4Vo6lpLN+LxySF9A==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
     d3-shape "^1.3.5"
     luxon "^1.15"
     rc-slider "^8.6.2"
-    react-lazy-load-image-component "^1.4.0"
+    react-lazy-load-image-component "^1.4.1-beta.0"
     react-live "^1.12.0"
     react-powerplug "^1.0.0"
     react-spring "^8.0.27"
@@ -71,10 +71,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@24.1.1":
-  version "24.1.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-24.1.1.tgz#4d39fe9352c006fd574e53e20b495de69d85a705"
-  integrity sha512-EpMAe1hOEr/JhQPMKl1GTAqoEjWwQb7BhYswYWwA83PYxN1J6WfqOZUJFsb+dvj+Q7s2sGsa+ybfV3XffOsDoQ==
+"@artsy/reaction@24.1.8":
+  version "24.1.8"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-24.1.8.tgz#d3c104b543af8b1ca30e24871178ce8139c130dd"
+  integrity sha512-V5qnSSO8whBGTwlTrDyCjstUR0H0xMWlzaUz72RoqtMx9fCaySPOuzZSZ3Nxk8wgu7ICWD5SSy9E2luVmV258Q==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
@@ -103,7 +103,7 @@
     react-css-transition-replace "^3.0.2"
     react-gpt "^2.0.1"
     react-head "^3.0.0"
-    react-lazy-load-image-component "^1.4.0"
+    react-lazy-load-image-component "^1.4.1-beta.0"
     react-lines-ellipsis "^0.14.0"
     react-markdown "^2.5.0"
     react-oembed-container "^0.3.0"
@@ -11605,10 +11605,10 @@ react-is@^16.10.2, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
-react-lazy-load-image-component@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.4.0.tgz#10c73ca46afc039864b395191d6b54a46a673b60"
-  integrity sha512-o/L93CyJVvXPuA2P/ouUZI7ZXJRrdE/eqP45AH5/SakOU0bzAk2ZP6qNT/WaaXhf+JtE7hhjXxMr7KGsLNX64w==
+react-lazy-load-image-component@^1.4.1-beta.0:
+  version "1.4.1-beta.0"
+  resolved "https://registry.yarnpkg.com/react-lazy-load-image-component/-/react-lazy-load-image-component-1.4.1-beta.0.tgz#4b47fcda23b40412bc03f66442e419a23e5cae9d"
+  integrity sha512-SFYu44wAMRpN9afyoeerlSprjl3K/aokueZgTW/qbqmxkEbRLUSWubr5dM1cXEAcLxFruqGdjswzB8YI3KaPBQ==
   dependencies:
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
