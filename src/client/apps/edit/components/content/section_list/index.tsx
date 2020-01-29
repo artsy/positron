@@ -1,5 +1,6 @@
 import {
   ArticleData,
+  ArticleLayout,
   SectionData,
 } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import { onChangeArticle } from "client/actions/edit/articleActions"
@@ -115,7 +116,7 @@ export class SectionList extends Component<SectionListProps> {
   }
 }
 
-const SectionListContainer = styled.div<{ layout: string }>`
+const SectionListContainer = styled.div<{ layout?: ArticleLayout }>`
   width: 100%;
   position: relative;
 
@@ -131,7 +132,7 @@ const SectionListContainer = styled.div<{ layout: string }>`
   `};
 `
 
-const ListItemsContainer = styled.div<{ layout: string }>`
+const ListItemsContainer = styled.div<{ layout?: ArticleLayout }>`
   ${props =>
     props.layout === "standard" &&
     `

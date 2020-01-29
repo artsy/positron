@@ -183,7 +183,15 @@ export default connect(
   mapDispatchToProps
 )(SectionTool)
 
-const SectionToolContainer = styled.div`
+interface SectionToolProps {
+  width?: string
+  isEditing?: boolean
+  isOpen?: boolean
+  isVisible?: boolean
+  isHero?: boolean
+}
+
+const SectionToolContainer = styled.div<SectionToolProps>`
   z-index: 1;
   max-height: 0;
   position: relative;
@@ -215,7 +223,7 @@ const SectionToolContainer = styled.div`
   `};
 `
 
-export const SectionToolIcon = styled.div`
+export const SectionToolIcon = styled.div<SectionToolProps>`
   ${avantgarde("s13")};
   position: relative;
   cursor: pointer;
