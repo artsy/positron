@@ -1,3 +1,4 @@
+import { ActionButton } from "client/apps/edit/components/message"
 import { mount } from "enzyme"
 import React from "react"
 import { MessageModal } from "../index"
@@ -11,7 +12,7 @@ describe("MessageModal", () => {
 
     expect(component.text()).toContain(data.header.text)
     expect(component.text()).toContain(data.title)
-    expect(component.find("ActionButton").length).toEqual(1)
+    expect(component.find(ActionButton).length).toEqual(1)
   })
 
   it("renders timeout modal", () => {
@@ -21,7 +22,7 @@ describe("MessageModal", () => {
 
     expect(component.text()).toContain(data.header.text)
     expect(component.text()).toContain(data.title)
-    expect(component.find("ActionButton").length).toEqual(2)
+    expect(component.find(ActionButton).length).toEqual(2)
   })
 })
 

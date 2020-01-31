@@ -133,13 +133,11 @@ const Header = styled.div`
   text-transform: uppercase;
   color: ${p => p.color};
 `
-Header.displayName = "Header"
 
 export const Title = styled.h1`
   ${garamond("s30")};
   margin-bottom: 15px;
 `
-Title.displayName = "Title"
 
 const Description = styled.div`
   ${garamond("s19")};
@@ -158,10 +156,9 @@ const ActionsContainer = styled.div`
   margin-right: 20px;
 `
 
-const ActionButton = styled.button`
+export const ActionButton = styled.button`
   margin-right: 15px;
 `
-ActionButton.displayName = "ActionButton"
 
 const RedirectText = styled.span`
   ${avantgarde("s11")};
