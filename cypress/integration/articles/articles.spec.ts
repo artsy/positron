@@ -43,6 +43,29 @@ describe("Articles", () => {
     cy.log("Please verify that a tab opened with the title ending in a period!")
   })
 
+  it("gets seo warnings", () => {
+    cy.setLogin()
+
+    cy.visit("/articles")
+    cy.title().should("eq", "Artsy Writer")
+    cy.findByText(Cypress.env("RECENT_ARTICLE_TITLE"))
+
+    openMonkeyArticleForEdit()
+
+    cy.findByText("Set Target Keyword").click()
+
+    cy.findByPlaceholderText("A searchable term for this content")
+      .click()
+      .type("monkey")
+
+    cy.findByText(
+      "A meta description has been specified, but it does not contain the focus keyword."
+    )
+    cy.findByText(
+      "The focus keyword appears in the first paragraph of the copy."
+    )
+  })
+
   function saveArticle() {
     cy.findByText(/^Danish design-lovers can finally rest easy/).click({
       force: true,
