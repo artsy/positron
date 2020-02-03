@@ -210,7 +210,7 @@ export default connect(
 )(SectionHeader)
 
 const HeaderContainer = styled.div<{
-  layout: ArticleLayout
+  layout?: ArticleLayout
   heroType?: string
 }>`
   position: relative;

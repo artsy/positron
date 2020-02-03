@@ -1,6 +1,7 @@
 import { Text } from "@artsy/reaction/dist/Components/Publishing/Sections/Text"
 import {
   ArticleData,
+  ArticleLayout,
   SectionData,
 } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
@@ -220,7 +221,7 @@ export default connect(
 
 const SectionTextContainer = styled.div<{
   isEditing?: boolean
-  layout: string
+  layout?: ArticleLayout
 }>`
   position: relative;
   z-index: ${props => (props.isEditing ? 10 : -1)};
