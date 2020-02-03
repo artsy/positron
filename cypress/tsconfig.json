@@ -7,8 +7,13 @@
     "lib": ["dom", "es6"],
     "esModuleInterop": true,
     "noEmit": true,
-    "types": ["cypress", "cypress-wait-until", "node"]
+    "types": [
+      "cypress",
+      "cypress-wait-until",
+      "node",
+      "@types/testing-library__cypress"
+    ]
   },
-  "include": ["../node_modules/cypress", "*/*.ts"],
+  "include": ["**/*.ts"],
   "compileOnSave": false
 }

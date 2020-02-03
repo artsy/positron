@@ -143,6 +143,7 @@
   "devDependencies": {
     "@artsy/antigravity": "0.2.0",
     "@sentry/browser": "4.6.4",
+    "@testing-library/cypress": "^5.0.2",
     "@types/draft-js": "0.10.24",
     "@types/enzyme": "3.9.0",
     "@types/express": "4.17.2",
@@ -153,6 +154,7 @@
     "@types/react-dom": "16.8.2",
     "@types/styled-components": "4.4.2",
     "@types/styled-system": "3.0.9",
+    "@types/testing-library__cypress": "^5.0.1",
     "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
     "benv": "3.2.0",

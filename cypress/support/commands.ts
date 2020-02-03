@@ -1,3 +1,5 @@
+import "@testing-library/cypress/add-commands"
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -23,3 +25,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("setLogin", () => {
+  cy.log("Set logged in user")
+  cy.setCookie("positron.sess", Cypress.env("WRITER_SESSION"), { log: false })
+  cy.setCookie("positron.sess.sig", Cypress.env("WRITER_SESSION_SIG"), {
+    log: false,
+  })
+})

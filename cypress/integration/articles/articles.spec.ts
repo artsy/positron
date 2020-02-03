@@ -1,7 +1,9 @@
 describe("Articles", () => {
   it("does stuff", () => {
-    cy.visit("/")
+    cy.setLogin()
 
-    cy.title().should("eq", "adsfasdf")
+    cy.visit("/articles")
+
+    cy.title().should("eq", "Artsy Writer")
   })
 })
