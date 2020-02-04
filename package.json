@@ -48,7 +48,6 @@
     "@babel/preset-typescript": "7.0.0",
     "@babel/register": "7.7.0",
     "@babel/runtime": "7.0.0",
-    "@cypress/webpack-preprocessor": "^4.1.1",
     "airtable": "0.4.5",
     "artsy-backbone-mixins": "artsy/artsy-backbone-mixins",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
@@ -142,6 +141,7 @@
   },
   "devDependencies": {
     "@artsy/antigravity": "0.2.0",
+    "@cypress/webpack-preprocessor": "^4.1.1",
     "@sentry/browser": "4.6.4",
     "@testing-library/cypress": "^5.0.2",
     "@types/draft-js": "0.10.24",
