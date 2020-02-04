@@ -71,10 +71,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@25.2.0":
-  version "25.2.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-25.2.0.tgz#eafb27ad302c96702df4aae752ad4657fbb22ea1"
-  integrity sha512-LhAB+QJLM9K1syetTn/zgKdXrzHjbVdzS5VNKN2a74NeNIckO/GxPCYPn9EwjY1SAarsGd+9JEnwRXKlRnggfA==
+"@artsy/reaction@25.3.1":
+  version "25.3.1"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-25.3.1.tgz#76af3c50f67ebead21eca3237762da71d13a6ddf"
+  integrity sha512-sVdn+subEk5tFVc7iK4bgoUN9ntUVvx5Y9ALoUUNxnu/CdpH1ipfI+d9WoQhBhTa8f0fHVOmn/0Eg+Md5H9mEw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
@@ -4337,10 +4337,10 @@ domutils@1.5, domutils@1.5.1, domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
-dotenv@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
-  integrity sha1-hk7xN5rO1Vzm+V3r7NzhefegzR0=
+dotenv@8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 draft-convert@2.0.0:
   version "2.0.0"
