@@ -69,7 +69,7 @@
     "compression": "1.7.2",
     "cookie-parser": "1.4.3",
     "cookie-session": "1.2.0",
-    "cors": "2.8.4",
+    "cors": "2.8.5",
     "create-react-class": "15.6.2",
     "dd-trace": "0.7.1",
     "debug": "2.6.9",
