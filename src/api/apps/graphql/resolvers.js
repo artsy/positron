@@ -120,6 +120,20 @@ export const channels = (root, args, req, ast) => {
   })
 }
 
+export const articleChannel = root => {
+  const args = {
+    id: root.channel_id,
+  }
+  return new Promise((resolve, reject) => {
+    Channel.find(args.id, (err, results) => {
+      if (err) {
+        reject(new Error(err))
+      }
+      resolve(results)
+    })
+  })
+}
+
 export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
   const relatedArticleArgs = {
