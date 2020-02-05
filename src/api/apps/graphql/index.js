@@ -14,6 +14,15 @@ import { setUser } from "api/apps/users/routes.coffee"
 const app = (module.exports = express())
 
 const metaFields = {
+  authors: array()
+    .items(object(Author.schema))
+    .meta({
+      resolve: resolvers.relatedAuthors,
+    }),
+  channel: object(Channel.schema).meta({
+    name: "Channel",
+    resolve: resolvers.articleChannel,
+  }),
   is_super_sub_article: boolean().meta({
     resolve: async root => (await getSuperArticleCount(root.id)) > 0,
   }),
@@ -89,11 +98,6 @@ const metaFields = {
     .meta({
       name: "RelatedArticles",
       resolve: resolvers.relatedArticles,
-    }),
-  authors: array()
-    .items(object(Author.schema))
-    .meta({
-      resolve: resolvers.relatedAuthors,
     }),
   seriesArticle: object(Article.inputSchema).meta({
     name: "SeriesArticle",
