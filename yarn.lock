@@ -10927,10 +10927,10 @@ range_check@^1.2.0:
     ip6 "0.0.4"
     ipaddr.js "1.2"
 
-raven-js@3.15.0:
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.15.0.tgz#ebf95466b7d40fbbc3d6a5085af7c1431607926c"
-  integrity sha1-6/lUZrfUD7vD1qUIWvfBQxYHkmw=
+raven-js@3.27.2:
+  version "3.27.2"
+  resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.27.2.tgz#6c33df952026cd73820aa999122b7b7737a66775"
+  integrity sha512-mFWQcXnhRFEQe5HeFroPaEghlnqy7F5E2J3Fsab189ondqUzcjwSVi7el7F36cr6PvQYXoZ1P2F5CSF2/azeMQ==
 
 raven@2.0.2:
   version "2.0.2"
