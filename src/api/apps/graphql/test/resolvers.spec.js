@@ -50,6 +50,7 @@ describe("resolvers", () => {
     })
     resolvers.__set__("Channel", {
       mongoFetch: sinon.stub().yields(null, channels),
+      find: sinon.stub().yields(null, channels.results[0]),
     })
     resolvers.__set__("Curation", {
       mongoFetch: sinon.stub().yields(null, curations),
@@ -168,10 +169,18 @@ describe("resolvers", () => {
 
   describe("channels", () => {
     it("can find channels", async () => {
-      const results = await resolvers.channels({}, {}, req, {})
+      const results = await resolvers.channels(article, {}, req, {})
       results.length.should.equal(1)
       results[0].name.should.equal("Editorial")
       results[0].type.should.equal("editorial")
+    })
+  })
+
+  describe("articleChannel", () => {
+    it("can return article channel", async () => {
+      const results = await resolvers.articleChannel(article, {}, req, {})
+      results.name.should.equal("Editorial")
+      results.type.should.equal("editorial")
     })
   })
 
