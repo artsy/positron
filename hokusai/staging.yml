@@ -32,7 +32,7 @@ spec:
                 name: positron-environment
           env:
             - name: PORT
-              value: '8080'
+              value: "8080"
             - name: "DATADOG_AGENT_HOSTNAME"
               valueFrom:
                 fieldRef:
@@ -235,12 +235,15 @@ spec:
         spec:
           containers:
             - name: positron-data-import-cron
-              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:data-sync
+              image: artsy/mongo-data-sync
               imagePullPolicy: Always
+              env:
+                - name: APP_NAME
+                  value: "positron"
               envFrom:
                 - configMapRef:
                     name: positron-environment
-              args: ["sh", "./import-mongo.sh"]
+              args: ["sh", "./import-db.sh", "production"]
           restartPolicy: Never
           affinity:
             nodeAffinity:
