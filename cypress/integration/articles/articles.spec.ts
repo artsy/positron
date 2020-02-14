@@ -4,7 +4,7 @@ describe("Articles", () => {
 
     cy.visit("/articles")
     cy.title().should("eq", "Artsy Writer")
-    cy.findByText(Cypress.env("RECENT_ARTICLE_TITLE"))
+    cy.findByText("Latest Articles")
 
     openMonkeyArticleForEdit()
 
@@ -48,7 +48,7 @@ describe("Articles", () => {
 
     cy.visit("/articles")
     cy.title().should("eq", "Artsy Writer")
-    cy.findByText(Cypress.env("RECENT_ARTICLE_TITLE"))
+    cy.findByText("Latest Articles")
 
     openMonkeyArticleForEdit()
 
