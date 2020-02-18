@@ -138,7 +138,7 @@ export class SectionHeader extends Component<
     const { article, onChangeArticleAction } = this.props
 
     return (
-      <LeadParagraph>
+      <LeadParagraph size="4">
         <Paragraph
           html={article.lead_paragraph}
           onChange={input => onChangeArticleAction("lead_paragraph", input)}
