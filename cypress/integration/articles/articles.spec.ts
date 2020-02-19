@@ -8,6 +8,8 @@ describe("Articles", () => {
 
     openMonkeyArticleForEdit()
 
+    captureArticleIDFromURL()
+
     const question =
       "A stolen $15,000 wooden monkey was returned to a Danish art museum?"
     const statement =
@@ -18,29 +20,15 @@ describe("Articles", () => {
     body.click().type("{backspace}?")
 
     saveArticle()
-
-    openMonkeyArticleForEdit()
-
-    // view article
-    cy.findByText(question)
-    cy.findByText("View").click()
-    cy.log(
-      "Please verify that a tab opened with the title ending in a question mark!"
-    )
+    verifyMonkeyArticleHasTitle(question)
 
     // clean it up
+    openMonkeyArticleForEdit()
     const title = cy.findAllByText(question).first()
     title.click().type("{backspace}.")
 
     saveArticle()
-
-    openMonkeyArticleForEdit()
-
-    // view article
-    cy.findByText(statement)
-    cy.findByText("View").click()
-
-    cy.log("Please verify that a tab opened with the title ending in a period!")
+    verifyMonkeyArticleHasTitle(statement)
   })
 
   it("gets seo warnings", () => {
@@ -83,5 +71,23 @@ describe("Articles", () => {
 
     // wait for edit page to load
     cy.findAllByText("Unpublish")
+    cy.location("pathname").should("match", /^\/articles\/.*\/edit$/)
+  }
+
+  function captureArticleIDFromURL() {
+    cy.location("pathname").then(path => {
+      // path = "/articles/234234234"
+      const articleID = path.split("/")[2]
+      cy.wrap(articleID).as("articleID")
+    })
+  }
+
+  function verifyMonkeyArticleHasTitle(title: string) {
+    cy.get("@articleID").then(articleID => {
+      cy.request(`/api/articles/${articleID}`).then(response => {
+        expect(response.status).to.eq(200)
+        expect(response.body.title).to.eq(title)
+      })
+    })
   }
 })
