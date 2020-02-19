@@ -75,11 +75,10 @@ describe("Articles", () => {
   }
 
   function captureArticleIDFromURL() {
-    cy.location("pathname").then(path => {
-      // path = "/articles/234234234"
-      const articleID = path.split("/")[2]
-      cy.wrap(articleID).as("articleID")
-    })
+    cy.location("pathname")
+      .invoke("split", "/")
+      .its(2)
+      .as("articleID")
   }
 
   function verifyMonkeyArticleHasTitle(title: string) {
