@@ -8,6 +8,7 @@
   "scripts": {
     "assets": "sh scripts/assets.sh",
     "clean": "rm -rf public && mkdir -p public/assets && echo '[Positron] Cleaned build directory'",
+    "cypress": "cypress open",
     "dev": "sh scripts/dev.sh",
     "precommit": "lint-staged",
     "prepush": "yarn run type-check",
@@ -22,7 +23,6 @@
     "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
-    "test:e2e": "cypress open",
     "type-check": "tsc --pretty --noEmit",
     "webpack": "node --max_old_space_size=2048 -r dotenv/config -r @babel/register node_modules/.bin/webpack --config ./webpack"
   },
