@@ -2613,12 +2613,12 @@ bcryptjs@2.4.3:
   resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
   integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
 
-benv@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/benv/-/benv-3.2.0.tgz#87e8b4d277ef47db4ea6453739c92526cfb0527d"
-  integrity sha1-h+i00nfvR9tOpkU3OcklJs+wUn0=
+benv@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/benv/-/benv-3.3.0.tgz#7375ec01a95a00033eb980844883662852822435"
+  integrity sha1-c3XsAalaAAM+uYCESINmKFKCJDU=
   dependencies:
-    jsdom ">= 4.0"
+    jsdom ">= 10.0"
     rewire "^2.3.1"
 
 better-assert@~1.0.0:
@@ -8101,7 +8101,7 @@ jsdom@11.12.0, jsdom@^11.5.1:
     ws "^5.2.0"
     xml-name-validator "^3.0.0"
 
-"jsdom@>= 4.0":
+"jsdom@>= 10.0":
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-16.2.0.tgz#fc171c305635046c100708b1c7ea7820ba015164"
   integrity sha512-6VaW3UWyKbm9DFVIAgTfhuwnvqiqlRYNg5Rk6dINTVoZT0eKz+N86vQZr+nqt1ny1lSB1TWZJWSEWQAfu8oTpA==
