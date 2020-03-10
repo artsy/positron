@@ -1,13 +1,11 @@
 {
   "parser": "babel-eslint",
-  "extends": [
-    "standard",
-    "standard-react",
-    "prettier"
-  ],
+  "extends": ["standard", "standard-react", "prettier"],
   "globals": {
     "__dirname": true,
-    "$": true
+    "$": true,
+    "Cypress": true,
+    "cy": true
   },
   "env": {
     "browser": true,
@@ -22,9 +20,6 @@
     "react/jsx-indent": 0,
     "react/jsx-indent-props": 0,
     "react/jsx-no-bind": 0,
-    "space-before-function-paren": [
-      "error",
-      "never"
-    ]
+    "space-before-function-paren": ["error", "never"]
   }
 }

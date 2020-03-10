@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "inlineSourceMap": true,
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["dom", "es6"],
+    "esModuleInterop": true,
+    "noEmit": true,
+    "types": [
+      "cypress",
+      "cypress-wait-until",
+      "node",
+      "@types/testing-library__cypress"
+    ]
+  },
+  "include": ["**/*.ts"],
+  "compileOnSave": false
+}
