@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@artsy/bucket-assets": "1.0.3",
-    "@artsy/express-reloadable": "1.4.7",
+    "@artsy/express-reloadable": "1.4.8",
     "@artsy/gemup": "0.0.3",
     "@artsy/palette": "7.4.0",
     "@artsy/reaction": "25.35.1",
