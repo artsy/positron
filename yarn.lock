@@ -71,10 +71,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@25.27.1":
-  version "25.27.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-25.27.1.tgz#60450612738cb19db919e25270f136a4ffd5cacc"
-  integrity sha512-8hMoUtaUaQWgV92r6Pq8enxUkkLdlFYf353HOr+GiIrrDSOX4dc99kgsgUqfsm8e25dc5UGnIMTC5d94Yli9MQ==
+"@artsy/reaction@25.35.1":
+  version "25.35.1"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-25.35.1.tgz#b869f5ee8cc381b63bc56f5aba57f8510e403443"
+  integrity sha512-VvJVA17YTvj0Loj9lunJPGyU/QDaoe4QQdLss24/pYi3K9cZrsEun8nHVrXZBgRlPPXJUmveppqrMMw1YTBbcw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
@@ -97,7 +97,7 @@
     luxon "^1.15"
     memoize-one "^4.0.3"
     numeral "^2.0.4"
-    openseadragon "^2.3.1"
+    openseadragon "^2.4.2"
     prop-types "^15.5.10"
     qs "^6.5.0"
     rc-slider "^8.6.2"
@@ -9864,10 +9864,10 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-openseadragon@^2.3.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/openseadragon/-/openseadragon-2.4.1.tgz#91fda5245558f5e4f939c2173bdf582359154b21"
-  integrity sha512-7fWUnCkGvWcnoRxqeXcg4bSLPApWbI0hHumEZF8K2pziMfPNjvvHL5XB4oQeT2XfrGKfaasVrPe2XqhAr5kogA==
+openseadragon@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/openseadragon/-/openseadragon-2.4.2.tgz#f25d833d0ab9941599d65a3e2b44bec546c9f15c"
+  integrity sha512-398KbZwRtOYA6OmeWRY4Q0737NTacQ9Q6whmr9Lp1MNQO3p0eBz5LIASRne+4gwequcSM1vcHcjfy3dIndQziw==
 
 opentracing@0.14.1:
   version "0.14.1"
