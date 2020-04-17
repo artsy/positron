@@ -34,7 +34,7 @@
         include ../public/icons/layout_queue.svg
         br
         | Queue
-    if user.get('type') == 'Admin'
+    if user.isAdmin()
       a#layout-sidebar-settings( href='/settings'
          class=(sd.URL.match('/settings') ? 'is-active' : '') )
         include ../public/icons/layout_settings.svg

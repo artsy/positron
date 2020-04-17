@@ -22,7 +22,7 @@ describe 'AutocompleteChannels', ->
       sinon.stub Backbone, 'sync'
       @AutocompleteChannels = benv.require resolve __dirname, '../index'
       @AutocompleteChannels.__set__ 'Modal', sinon.stub().returns {m: ''}
-      @AutocompleteChannels.__set__ 'sd', { USER: { type: 'Admin', id: '123', name: 'Kana'} }
+      @AutocompleteChannels.__set__ 'sd', { USER: { roles: ['team'], id: '123', name: 'Kana'} }
       sinon.stub @AutocompleteChannels.prototype, 'setupTypeahead'
       sinon.stub(User.prototype, 'fetchPartners').yields [fabricate 'partner']
       done()
@@ -49,7 +49,7 @@ describe 'AutocompleteChannels', ->
       view.adminPartners.remote.url.should.containEql '/api/v1/match/partners?term=%QUERY'
 
     xit 'sets Bloodhound args for partner source as a partner', ->
-      @AutocompleteChannels.__set__ 'sd', { USER: { type: 'User', id: '123', name: 'Kana'} }
+      @AutocompleteChannels.__set__ 'sd', { USER: { roles: [], id: '123', name: 'Kana'} }
       view = new @AutocompleteChannels
       view.partners.local.length.should.equal 1
       view.partners.local[0].value.should.equal 'Gagosian Gallery'

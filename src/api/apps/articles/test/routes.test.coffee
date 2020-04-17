@@ -73,7 +73,6 @@ describe 'routes', ->
 
     it 'throws a 404 for articles from non channel members', ->
       @User.hasChannelAccess = sinon.stub().returns false
-      @req.user.type = 'User'
       @req.article = _.extend {}, fixtures().articles,
         published: false
         channel_id: ObjectId('4d8cd73191a5c50ce210002a')
@@ -137,7 +136,8 @@ describe 'routes', ->
       @req.article.title.should.equal 'Andy Foobar and The Gang'
 
     it 'shows unpublished articles to admins', ->
-      @req.user.type = 'Admin'
+      @req.user.roles = ['team']
+
       routes.find @req, @res, @next
       @Article.find.args[0][1] null, _.extend(fixtures().articles,
         author_id: ObjectId('4d8cd73191a5c50ce210002a')

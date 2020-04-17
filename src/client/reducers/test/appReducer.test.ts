@@ -26,7 +26,7 @@ describe("appReducer", () => {
       name: "User Name",
       email: "user@email.com",
       id: "5678",
-      type: "Admin",
+      roles: ["team"],
       partner_ids: ["12345"],
       channel_ids: [current_channel.id],
       current_channel,
@@ -72,7 +72,7 @@ describe("appReducer", () => {
     })
 
     it("sets initial state for non-admin users", () => {
-      delete sharify.data.USER.type
+      delete sharify.data.USER.roles
       const initialState = appReducer(undefined, { payload: {} })
       expect(initialState.isAdmin).toBe(false)
     })

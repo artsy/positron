@@ -23,7 +23,7 @@ setupPassport = ->
       error: (m, err) -> done err
       success: (user) ->
         id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
-        id = process.env.DEFAULT_PARTNER_ID if not id and user.get('type') is 'Admin'
+        id = process.env.DEFAULT_PARTNER_ID if not id and 'team' in user.get('roles')
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
           error: (m, err) ->
@@ -38,7 +38,7 @@ setupPassport = ->
     done null, new User(user)
 
 logoutOldSchema = (req, res, next) ->
-  if req.user and not req.user.get('type')
+  if req.user and not req.user.get('roles')
     res.redirect '/logout'
   else
     next()

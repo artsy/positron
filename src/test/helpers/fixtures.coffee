@@ -135,9 +135,9 @@ module.exports = ->
   fixtures.users =
     id: '4d8cd73191a5c50ce200002a'
     name: 'Craig Spaeth'
-    type: 'Admin'
+    roles: ['team']
     profile_icon_url: 'https://d32dm0rphc51dk.cloudfront.net/CJOHhrln8lwVAubiMIIYYA/square140.png'
-    access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsInBhcnRuZXJfaWRzIjpbXX0.-A-T4cwj1PFzuMhiHn9FYk8IBA0lIukzXKUNa43jjlQ'
+    access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZXMiOiJ0ZWFtIiwicGFydG5lcl9pZHMiOltdfQ.mBHDr2Hghu4cYkeF6AdsSmaV7R35Qv7rUcbAoKayZdY'
     current_channel:
       name: 'Editorial'
       type: 'editorial'

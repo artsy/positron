@@ -44,7 +44,9 @@ useragent = require 'useragent'
   next()
 
 @adminOnly = (req, res, next) ->
-  if req.user?.get('type') isnt 'Admin'
+  roles = req.user?.get('roles') or []
+
+  if 'team' not in roles
     err = new Error 'You must be logged in as an admin'
     err.status = 403
     next err

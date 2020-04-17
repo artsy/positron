@@ -27,7 +27,7 @@ describe "User", ->
       @user.isAdmin().should.be.true()
 
     it 'returns false for a non-Admin user', ->
-      @user = new User _.extend fixtures().users, type: 'User'
+      @user = new User _.extend fixtures().users, roles: []
       @user.isAdmin().should.be.false()
 
   describe '#hasChannel', ->
@@ -51,7 +51,7 @@ describe "User", ->
       @user.hasPartner('1234').should.be.true()
 
     it 'returns false for a user that does not have partner permissions', ->
-      @user = new User _.extend fixtures().users, { type: 'User', partner_ids: [] }
+      @user = new User _.extend fixtures().users, { roles: [], partner_ids: [] }
       @user.hasPartner('1234').should.be.false()
 
   describe '#hasArticleAccess', ->
@@ -76,7 +76,7 @@ describe "User", ->
 
     it 'returns false for a member of a channel on a partner article', ->
       @article = new Article _.extend fixtures().articles, { partner_channel_id: '1234' }
-      @user = new User _.extend fixtures().users, { channel_ids: ['12345'], type: 'User' }
+      @user = new User _.extend fixtures().users, { channel_ids: ['12345'], roles: [] }
       @user.hasArticleAccess(@article).should.be.false()
 
     it 'returns false for a member of a partner on a channel article', ->

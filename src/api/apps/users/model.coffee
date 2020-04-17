@@ -57,15 +57,17 @@ save = (user, accessToken, callback) ->
       bcrypt.hash accessToken, SALT, cb
   ], (err, results) ->
     return callback err if err
-    partner_ids = jwtDecode(accessToken)?.partner_ids or []
+    decodedJwt = jwtDecode(accessToken)
+    partner_ids = decodedJwt?.partner_ids or []
     user.partner_ids = _.map partner_ids, ObjectId
     user.channel_ids = _.pluck results[0], '_id'
+    user.roles = decodedJwt?.roles?.split(',') or []
     encryptedAccessToken = results[1]
     db.users.save {
       _id: ObjectId(user.id)
       name: user.name
       email: user.email
-      type: user.type
+      roles: user.roles
       access_token: encryptedAccessToken
       partner_ids: user.partner_ids
       channel_ids: user.channel_ids
@@ -84,7 +86,7 @@ save = (user, accessToken, callback) ->
     id.toString() is channel_id
 
   return true if @channels
-  return @partners? or user.type is 'Admin'
+  return @partners? or 'team' in user.roles
 
 #
 # JSON views

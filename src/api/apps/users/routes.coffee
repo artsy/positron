@@ -13,7 +13,8 @@
 
 # Require an admin middleware
 @adminOnly = (req, res, next) ->
-  return res.err 401, 'Must be an admin' unless req.user?.type is 'Admin'
+  roles = req.user?.get('roles') or []
+  return res.err 401, 'Must be an admin' unless 'team' in roles
   next()
 
 # Set the user from an access token and alias the `me` param

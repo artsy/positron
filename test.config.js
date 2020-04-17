@@ -48,5 +48,5 @@ try {
 sd.data = {
   ARTICLE: FeatureArticle,
   CHANNEL: {},
-  USER: { id: "57b5fc6acd530e65f8000406" },
+  USER: { id: "57b5fc6acd530e65f8000406", roles: [] },
 }

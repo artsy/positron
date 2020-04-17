@@ -13,7 +13,7 @@ describe 'authorized switch_channel (channel)', ->
     user = new User fixtures().users
     user.set channel_ids: ['1234']
     user.set partner_ids: []
-    user.set type: 'Admin'
+    user.set roles: ['team']
     @channel = new Channel(
       name: 'Artsy Editorial'
       id: '1234'
@@ -41,7 +41,7 @@ describe 'authorized switch_channel (partner)', ->
     user = new User fixtures().users
     user.set channel_ids: []
     user.set partner_ids: ['123']
-    user.set type: 'User'
+    user.set roles: []
     @partner = new Channel
       id: '123'
       name: 'Gagosian'
@@ -66,7 +66,7 @@ describe 'non authorized switch_channel', ->
     user = new User fixtures().users
     user.set channel_ids: []
     user.set partner_ids: []
-    user.set type: 'User'
+    user.set roles: []
     @req = user: user, login: sinon.stub(), params: id: 'foo'
     @res = redirect: sinon.stub()
     @next = sinon.stub()

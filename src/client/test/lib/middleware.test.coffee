@@ -50,7 +50,7 @@ describe 'middleware', ->
 
     describe 'is an admin', ->
       beforeEach ->
-        @req = user: new Backbone.Model type: 'Admin'
+        @req = user: new Backbone.Model roles: ['team']
 
       it 'passes through without error', ->
         middleware.adminOnly @req, {}, @next

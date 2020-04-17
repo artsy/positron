@@ -10,7 +10,9 @@ module.exports = class User extends Backbone.Model
   urlRoot: "#{sd.API_URL}/users/me"
 
   isAdmin: ->
-    @get('type') is 'Admin'
+    roles = @get('roles') or []
+
+    'team' in roles
 
   refresh: (cb) ->
     request.get("#{sd.API_URL}/users/me/refresh")

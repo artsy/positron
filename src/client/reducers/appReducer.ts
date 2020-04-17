@@ -42,7 +42,7 @@ export const getInitialState = () =>
     artsyURL: sd.ARTSY_URL,
     channel: sd.CURRENT_CHANNEL,
     forceURL: sd.FORCE_URL,
-    isAdmin: sd.USER && sd.USER.type === "Admin",
+    isAdmin: sd.USER && sd.USER.roles.includes("team"),
     isEditorial: sd.CURRENT_CHANNEL && sd.CURRENT_CHANNEL.type === "editorial",
     isPartnerChannel:
       sd.CURRENT_CHANNEL && sd.CURRENT_CHANNEL.type === "partner",

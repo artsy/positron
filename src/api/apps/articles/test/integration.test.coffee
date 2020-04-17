@@ -36,9 +36,9 @@ describe 'articles endpoints', ->
   describe 'as a non-admin', ->
 
     beforeEach (done) ->
-      @normieToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJVc2VyIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwidHlwZSI6IlVzZXIiLCJwYXJ0bmVyX2lkcyI6W10sImlhdCI6MTUxNjIzOTAyMn0.1ONei7j20cbeusjWiUvTt-CTDCdpewnj3mbmIA_-Hbs'
+      @normieToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJVc2VyIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwidHlwZSI6IlVzZXIiLCJyb2xlcyI6IiIsInBhcnRuZXJfaWRzIjpbXSwiaWF0IjoxNTE2MjM5MDIyfQ.uMBdEvBEVprixHImgNn2wed4WMi_G2E1aZ2Rj4xfSG0'
       fabricate 'users', {
-        type: 'User'
+        roles: [],
         name: 'Normie'
         access_token: @normieToken
         has_partner_access: false
