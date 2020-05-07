@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   codecov: codecov/codecov@1.0.5
-  hokusai: artsy/hokusai@0.7.2
+  hokusai: artsy/hokusai@0.7.3
   yarn: artsy/yarn@4.0.2
 
 not_staging_or_release: &not_staging_or_release
