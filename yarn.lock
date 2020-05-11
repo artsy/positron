@@ -24,10 +24,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-0.0.3.tgz#5d72b326ba2a5cb2c55c0f9be6907a2ef2bc6efa"
-  integrity sha512-A03aJmbwNnaTQceruZKjE1L2hCYDkshHM62rxl5BEQ6UmxhqmYRxqr5QEUk3n8Rz5l3rmdPNp2Fx4F6KL6HKmQ==
+"@artsy/cohesion@0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-0.2.9.tgz#1463a13b5b03aba63e81f884a0ebb31f5cdfc6fd"
+  integrity sha512-5Daoq9HMlKZJ5VWv/mcUH4sEwAVjqJ+K6SoYLNXSsXsFmUdY+JpL9Cw9NOMl5cPt80JalnhrCOaMK1RypGT/MA==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
@@ -53,10 +53,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
   integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
 
-"@artsy/palette@8.1.3":
-  version "8.1.3"
-  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-8.1.3.tgz#f858fd7ba5f17d62287c772ef66635a5f8637007"
-  integrity sha512-INWqPSvlbVGM1uUr3Q1Qak3aOSo1eNAvR+Y4f8IbAd34yBoQ2WTLv66OYfqRoWpdOtzFHoRB7005VY38PViDtA==
+"@artsy/palette@8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@artsy/palette/-/palette-8.2.3.tgz#fa038e7118464dc0d506a86de84cf17bea805f35"
+  integrity sha512-NMkYZFW6/Z6IqG139SE+SuSdOqf/aD6oPBMv/TaHBJSZzSocX8kTj542RsroiSM3FZgmensSR1TWygo3ucYFdw==
   dependencies:
     babel-plugin-styled-components "^1.10.0"
     d3-interpolate "^1.3.2"
@@ -76,12 +76,11 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@26.21.3":
-  version "26.21.3"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-26.21.3.tgz#837270db7dabb7fb5ccb826a3a0ed585f99a7b1e"
-  integrity sha512-cnoRzylqeNH7FiejqPalk29YnHh4Bwf91763iR3+dAPu0Rh4s3XrZxY+nDQpUHkln172pme4X+xtt8n40tKGYg==
+"@artsy/reaction@26.36.4":
+  version "26.36.4"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-26.36.4.tgz#9a9818e3739cfa83aaa81fb013e1504bb7755a3f"
+  integrity sha512-UKSVL7zOwSk83qkT/kn3icu+bPKCi12DBglbZo0IZHFMj+jSk8DX6P8qe0XveZsdVguYVSGLkus0dvQ0xJXFyQ==
   dependencies:
-    "@artsy/cohesion" "0.0.3"
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
     "@artsy/react-html-parser" "^3.0.2"
@@ -92,7 +91,7 @@
     cheerio "^1.0.0-rc.2"
     currency.js "^1.2.1"
     farce "^0.2.6"
-    formik "^1.5.8"
+    formik "^2.1.4"
     found "^0.4.9"
     found-relay "^0.5"
     found-scroll "^0.1.5"
@@ -133,7 +132,7 @@
     react-waypoint "^7.3.3"
     relay-mock-network-layer "^2.0.0"
     relay-runtime "^7.1.0"
-    serialize-javascript "^1.5.0"
+    serialize-javascript "^2.1.1"
     sharify "^0.1.6"
     styled-system "^3.1.11"
     superagent "^3.6.3"
@@ -3917,7 +3916,7 @@ create-react-context@^0.1.5:
   resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.1.6.tgz#0f425931d907741127acc6e31acb4f9015dd9fdc"
   integrity sha512-eCnYYEUEc5i32LHwpE/W7NlddOB9oHwsPaWtWzYtflNkkwa3IfindIcoXdVWs12zCbwaMCavKNu84EXogVIWHw==
 
-create-react-context@^0.2.2, create-react-context@^0.2.3:
+create-react-context@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.3.tgz#9ec140a6914a22ef04b8b09b7771de89567cb6f3"
   integrity sha512-CQBmD0+QGgTaxDL3OX1IDXYqjkp2It4RIbcb99jS6AEg27Ga+a9G3JtK6SIu0HBwPLZlmwt9F7UwWA4Bn92Rag==
@@ -6027,20 +6026,19 @@ formidable@~1.0.14:
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.0.17.tgz#ef5491490f9433b705faa77249c99029ae348559"
   integrity sha1-71SRSQ+UM7cF+qdyScmQKa40hVk=
 
-formik@^1.5.8:
-  version "1.5.8"
-  resolved "https://registry.yarnpkg.com/formik/-/formik-1.5.8.tgz#eee8cd345effe46839bc748c7f920486f12f14b0"
-  integrity sha512-fNvPe+ddbh+7xiByT25vuso2p2hseG/Yvuj211fV1DbCjljUEG9OpgRpcb7g7O3kxHX/q31cbZDzMxJXPWSNwA==
+formik@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/formik/-/formik-2.1.4.tgz#8deef07ec845ea98f75e03da4aad7aab4ac46570"
+  integrity sha512-oKz8S+yQBzuQVSEoxkqqJrKQS5XJASWGVn6mrs+oTWrBoHgByVwwI1qHiVc9GKDpZBU9vAxXYAKz2BvujlwunA==
   dependencies:
-    create-react-context "^0.2.2"
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.14"
     lodash-es "^4.17.14"
-    prop-types "^15.6.1"
     react-fast-compare "^2.0.1"
+    scheduler "^0.18.0"
     tiny-warning "^1.0.2"
-    tslib "^1.9.3"
+    tslib "^1.10.0"
 
 forwarded@~0.1.0, forwarded@~0.1.2:
   version "0.1.2"
@@ -12190,6 +12188,14 @@ scheduler@^0.13.3, scheduler@^0.13.4:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
+scheduler@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.18.0.tgz#5901ad6659bc1d8f3fdaf36eb7a67b0d6746b1c4"
+  integrity sha512-agTSHR1Nbfi6ulI0kYNK0203joW2Y5W4po4l+v03tOoiJKpTBbxpNhWDvqc/4IcOw+KLmSiQLTasZ4cab2/UWQ==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
 schema-utils@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.3.0.tgz#f5877222ce3e931edae039f17eb3716e7137f8cf"
@@ -12303,12 +12309,12 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-serialize-javascript@^1.4.0, serialize-javascript@^1.5.0:
+serialize-javascript@^1.4.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.9.1.tgz#cfc200aef77b600c47da9bb8149c943e798c2fdb"
   integrity sha512-0Vb/54WJ6k5v8sSWN09S0ora+Hnr+cX40r9F170nT+mSkaxltoE/7R3OrIdBSUv1OoiobH1QoWQbCnAO+e8J1A==
 
-serialize-javascript@^2.1.2:
+serialize-javascript@^2.1.1, serialize-javascript@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
   integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
