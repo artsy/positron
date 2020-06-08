@@ -1,6 +1,6 @@
 import { Box } from "@artsy/palette"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import { clone, compact, dropRight, uniq } from "lodash"
+import { clone, compact, dropRight, uniq, uniqBy } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import request from "superagent"
@@ -17,7 +17,7 @@ export interface AutocompleteListProps extends AutocompleteProps {
   artsyURL?: string
   field?: string
   label?: string
-  model?: string
+  model: string
   metaphysicsURL?: string
   onChangeArticleAction?: any
   type?: any
@@ -78,12 +78,14 @@ export class AutocompleteListMetaphysics extends Component<
     const newItems = clone(fetchedItems)
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
+    const versionedMPUrl =
+      model === "partner_shows" ? metaphysicsURL : `${metaphysicsURL}/v2`
     // TODO: Metaphysics only returns shows with "displayable: true"
     // and sales with "live: true", meaning shows and sales
     // will not display in UI once they have closed
     if (idsToFetch.length) {
       request
-        .get(`${metaphysicsURL}`)
+        .get(versionedMPUrl)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -91,11 +93,36 @@ export class AutocompleteListMetaphysics extends Component<
         .query({ query: query(idsToFetch) })
         .end((err, res) => {
           if (err) {
-            new Error(err)
+            return new Error(err)
           }
-          model && newItems.push(res.body.data[model])
-          const uniqItems = uniq(flatten(newItems))
-          cb(uniqItems)
+          let uniqItems
+          const getItemFromEdges = (edges: [any]) => {
+            return edges.map(item => {
+              return item.node
+            })
+          }
+          switch (model) {
+            case "sales":
+              res.body.data.salesConnection.edges.length &&
+                newItems.push(
+                  getItemFromEdges(res.body.data.salesConnection.edges)
+                )
+              break
+            case "artworks": {
+              res.body.data[model].edges.length &&
+                newItems.push(getItemFromEdges(res.body.data[model].edges))
+              break
+            }
+            case "partners": {
+              res.body.data._unused_gravity_partners.length &&
+                newItems.push(res.body.data._unused_gravity_partners)
+            }
+            default: {
+              newItems.push(res.body.data[model])
+            }
+          }
+          uniqItems = uniqBy(flatten(compact(newItems)), "id")
+          return cb(uniqItems)
         })
     } else {
       return fetchedItems
@@ -104,14 +131,12 @@ export class AutocompleteListMetaphysics extends Component<
 
   fetchItem = (_item, cb) => {
     const { article, field, metaphysicsURL, model, user } = this.props
-
     const query: any = this.getQuery()
-
     const idToFetch = article && field && article[field]
 
     if (idToFetch) {
       request
-        .get(`${metaphysicsURL}`)
+        .get(`${metaphysicsURL}/v2`)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -119,9 +144,9 @@ export class AutocompleteListMetaphysics extends Component<
         .query({ query: query(idToFetch) })
         .end((err, res) => {
           if (err) {
-            new Error(err)
+            return new Error(err)
           }
-          model && cb(res.body.data[model])
+          cb(res.body.data[model])
         })
     }
   }
@@ -208,6 +233,7 @@ export class AutocompleteListMetaphysics extends Component<
             onSelect={result => onChangeArticleAction(field, result)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+            model={model}
           />
         )
       }

@@ -72,7 +72,7 @@ export class AutocompleteList extends Component<
     const { items } = this.state
 
     return items.map((item, i) => {
-      const title = item ? item.title || item.name : ""
+      const title = item ? item.title || item.name || item.displayName : ""
       return (
         <ListItem key={i} isDraggable={isDraggable}>
           {formatListItem ? (

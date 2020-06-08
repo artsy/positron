@@ -4,7 +4,7 @@ export function ArtworkQuery(id) {
   return `
     {
       artwork(id: ${stringifyJSONForWeb(id)}) {
-        _id
+        id
         title
       }
     }
@@ -15,8 +15,12 @@ export function ArtworksQuery(ids) {
   return `
     {
       artworks(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        title
+        edges {
+          node {
+            id
+            title
+          }
+        }
       }
     }
   `
@@ -26,7 +30,7 @@ export function ArtistQuery(id) {
   return `
     {
       artist(id: ${stringifyJSONForWeb(id)}) {
-        _id
+        id
         name
       }
     }
@@ -37,7 +41,7 @@ export function ArtistsQuery(ids) {
   return `
     {
       artists(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        id
         name
       }
     }
@@ -47,9 +51,13 @@ export function ArtistsQuery(ids) {
 export function AuctionsQuery(ids) {
   return `
     {
-      sales(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        name
+      salesConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            id
+            name
+          }
+        }
       }
     }
   `
@@ -59,7 +67,7 @@ export function FairsQuery(ids) {
   return `
     {
       fairs(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        id
         name
       }
     }
@@ -67,17 +75,19 @@ export function FairsQuery(ids) {
 }
 
 export function PartnersQuery(ids) {
+  // FIXME: should be deprecated
   return `
     {
-      partners(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        name
+      _unused_gravity_partners(ids: ${stringifyJSONForWeb(ids)}) {
+        id
+        displayName
       }
     }
   `
 }
 
 export function ShowsQuery(ids) {
+  // FIXME: doesn't exist in v2
   return `
     {
       partner_shows(ids: ${stringifyJSONForWeb(ids)}) {

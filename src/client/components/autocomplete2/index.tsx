@@ -7,6 +7,7 @@ import { data as sd } from "sharify"
 import styled from "styled-components"
 
 export interface Item {
+  displayName?: string // partners only
   name?: string
   title?: string
 }

@@ -194,7 +194,9 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       component.fetchItem("123", jest.fn())
 
-      expect(request.get.mock.calls[0][0]).toBe(props.metaphysicsURL)
+      expect(request.get.mock.calls[0][0]).toBe(
+        "https://metaphysics-staging.artsy.net/v2"
+      )
       expect(request.query().end).toBeCalled()
     })
 
@@ -265,7 +267,9 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       component.fetchItems(["123"], jest.fn())
 
-      expect(request.get.mock.calls[0][0]).toBe(props.metaphysicsURL)
+      expect(request.get.mock.calls[0][0]).toBe(
+        "https://metaphysics-staging.artsy.net/v2"
+      )
       expect(request.query().end).toBeCalled()
     })
 
