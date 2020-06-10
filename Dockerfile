@@ -1,4 +1,4 @@
-FROM node:10.13-alpine
+FROM node:12.18-alpine
 
 ARG COMMIT_HASH
 ENV PORT 3005
@@ -16,7 +16,7 @@ RUN apk add --no-cache --quiet \
 
 # Install the packages
 COPY package.json yarn.lock ./
-RUN yarn install
+RUN yarn install --frozen-lockfile && yarn cache clear
 
 # Copy application code
 COPY . ./
