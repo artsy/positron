@@ -16,7 +16,7 @@ RUN apk add --no-cache --quiet \
 
 # Install the packages
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile && yarn cache clear
+RUN yarn install --frozen-lockfile && yarn cache clean
 
 # Copy application code
 COPY . ./
