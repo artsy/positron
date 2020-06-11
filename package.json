@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "scripts": {
     "assets": "sh scripts/assets.sh",
