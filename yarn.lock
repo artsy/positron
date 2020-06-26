@@ -24,10 +24,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.13.0.tgz#90308ee773786e0297bbf167f6db39d09339a851"
-  integrity sha512-nu/DsHuvpqFstO/glR8a1XVk9/iBgKliimLTGSzM3lOU7YAJXq8p0ziAx1sY4ySJZmrq6ruJdNWcd5RLZEb0kA==
+"@artsy/cohesion@1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.14.0.tgz#155564ef116d9d09edc7fd0b430706bc7772a1a4"
+  integrity sha512-NvIjxZ3gtlb69AVHfJnMO/Ae++fbLjEfdG2EuHKcduaomBO2ykanpNfSmk5Ubt+8AhD4qDZ+h7mKSbwOuyI6iA==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
