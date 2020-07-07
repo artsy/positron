@@ -80,6 +80,11 @@ export class AutocompleteListMetaphysics extends Component<
     }
   }
 
+  fieldIsMpConnection = () => {
+    const { model } = this.props
+    return this.getMpRootField().includes("Connection") || model === "artworks"
+  }
+
   idsToFetch = fetchedItems => {
     const { article, field, model } = this.props
     let alreadyFetched = uniq(pluck(fetchedItems, "_id"))
@@ -98,13 +103,7 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = [
-      "artists",
-      "partners",
-      "sales",
-      "partner_shows",
-      "fairs",
-    ].includes(model)
+    const isv2Query = model !== "users"
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
@@ -123,7 +122,7 @@ export class AutocompleteListMetaphysics extends Component<
             throw new Error(err)
           }
           if (isv2Query) {
-            if (rootField.includes("Connection")) {
+            if (this.fieldIsMpConnection()) {
               newItems.push(getItemsFromEdges(res.body.data[rootField].edges))
             } else {
               res.body.data[rootField].forEach(item => {
@@ -146,13 +145,7 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idToFetch = article[field]
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = [
-      "artists",
-      "partners",
-      "sales",
-      "partner_shows",
-      "fairs",
-    ].includes(model)
+    const isv2Query = model !== "users"
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
 
@@ -169,7 +162,7 @@ export class AutocompleteListMetaphysics extends Component<
             new Error(err)
           }
           if (isv2Query) {
-            if (rootField.includes("Connection")) {
+            if (this.fieldIsMpConnection()) {
               cb(getItemsFromEdges(res.body.data[rootField].edges))
             } else {
               res.body.data[rootField].forEach(item => {
