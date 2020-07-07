@@ -50,10 +50,10 @@ export class AutocompleteListMetaphysics extends Component<
         return Queries.PartnersConnectionQuery
       }
       case "partner_shows": {
-        return Queries.ShowsQuery
+        return Queries.ShowsConnectionQuery
       }
       case "sales": {
-        return Queries.AuctionsQuery
+        return Queries.SalesConnectionQuery
       }
       case "users": {
         return Queries.UsersQuery
@@ -65,8 +65,13 @@ export class AutocompleteListMetaphysics extends Component<
     const { model } = this.props
 
     switch (model) {
-      case "partners": {
-        return "partnersConnection"
+      case "partners":
+      case "sales": {
+        return `${model}Connection`
+        break
+      }
+      case "partner_shows": {
+        return "showsConnection"
         break
       }
       default: {
@@ -93,7 +98,7 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = model === "partners"
+    const isv2Query = ["partners", "sales", "partner_shows"].includes(model)
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
@@ -109,7 +114,7 @@ export class AutocompleteListMetaphysics extends Component<
         .query({ query: query(idsToFetch) })
         .end((err, res) => {
           if (err) {
-            new Error(err)
+            throw new Error(err)
           }
           if (isv2Query) {
             newItems.push(getItemFromEdges(res.body.data[rootField].edges))
@@ -129,7 +134,7 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idToFetch = article[field]
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = model === "partners"
+    const isv2Query = ["partners", "sales", "partner_shows"].includes(model)
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
 
@@ -208,11 +213,9 @@ export class AutocompleteListMetaphysics extends Component<
       article,
       artsyURL,
       field,
-      isDraggable,
       label,
       model,
       onChangeArticleAction,
-      onDragEnd,
       placeholder,
       type,
     } = this.props
@@ -221,7 +224,6 @@ export class AutocompleteListMetaphysics extends Component<
       case "single": {
         return (
           <AutocompleteSingle
-            article={article}
             fetchItem={(item, cb) => {
               this.fetchItem(item, cb)
             }}
@@ -234,7 +236,7 @@ export class AutocompleteListMetaphysics extends Component<
             onSelect={result => onChangeArticleAction(field, result)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
-            model={model}
+            {...this.props}
           />
         )
       }
@@ -245,14 +247,13 @@ export class AutocompleteListMetaphysics extends Component<
             formatSelected={
               model === "users" ? this.formatSelectedUser : undefined
             }
-            isDraggable={isDraggable}
-            onDragEnd={onDragEnd}
             items={article[field] || []}
             filter={this.getFilter()}
             label={capitalize(label || model)}
             onSelect={results => onChangeArticleAction(field, results)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+            {...this.props}
           />
         )
       }

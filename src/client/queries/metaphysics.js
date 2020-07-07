@@ -55,6 +55,21 @@ export function AuctionsQuery(ids) {
   `
 }
 
+export function SalesConnectionQuery(ids) {
+  return `
+    {
+      salesConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
+      }
+    }
+  `
+}
+
 export function FairsQuery(ids) {
   return `
     {
@@ -98,6 +113,21 @@ export function ShowsQuery(ids) {
       partner_shows(ids: ${stringifyJSONForWeb(ids)}) {
         _id
         name
+      }
+    }
+  `
+}
+
+export function ShowsConnectionQuery(ids) {
+  return `
+    {
+      showsConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
