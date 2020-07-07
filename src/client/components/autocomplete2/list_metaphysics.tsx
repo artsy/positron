@@ -98,7 +98,9 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = ["partners", "sales", "partner_shows"].includes(model)
+    const isv2Query = ["partners", "sales", "partner_shows", "fairs"].includes(
+      model
+    )
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
@@ -117,7 +119,13 @@ export class AutocompleteListMetaphysics extends Component<
             throw new Error(err)
           }
           if (isv2Query) {
-            newItems.push(getItemFromEdges(res.body.data[rootField].edges))
+            if (rootField.includes("Connection")) {
+              newItems.push(getItemsFromEdges(res.body.data[rootField].edges))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                newItems.push(formatMpItem(item))
+              })
+            }
           } else {
             newItems.push(res.body.data[rootField])
           }
@@ -134,7 +142,9 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idToFetch = article[field]
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = ["partners", "sales", "partner_shows"].includes(model)
+    const isv2Query = ["partners", "sales", "partner_shows", "fairs"].includes(
+      model
+    )
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
 
@@ -151,7 +161,13 @@ export class AutocompleteListMetaphysics extends Component<
             new Error(err)
           }
           if (isv2Query) {
-            cb(getItemFromEdges(res.body.data[rootField].edges))
+            if (rootField.includes("Connection")) {
+              cb(getItemsFromEdges(res.body.data[rootField].edges))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                cb(formatMpItem(item))
+              })
+            }
           }
           cb(res.body.data[rootField])
         })
@@ -282,15 +298,17 @@ export default connect(
 )(AutocompleteListMetaphysics)
 
 interface Edge {
-  node: {
-    internalID: string
-    name?: string
-    title?: string
-  }
+  node: Node
 }
-const getItemFromEdges = (edges: Edge[]) => {
-  return edges.map(({ node }) => ({
-    _id: node.internalID,
-    name: node.name || node.title,
-  }))
+interface Node {
+  internalID: string
+  name?: string
+  title?: string
 }
+const getItemsFromEdges = (edges: Edge[]) => {
+  return edges.map(({ node }) => formatMpItem(node))
+}
+const formatMpItem = (node: Node) => ({
+  _id: node.internalID,
+  name: node.name || node.title,
+})

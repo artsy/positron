@@ -74,7 +74,7 @@ export function FairsQuery(ids) {
   return `
     {
       fairs(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        internalID
         name
       }
     }
