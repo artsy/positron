@@ -98,9 +98,13 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = ["partners", "sales", "partner_shows", "fairs"].includes(
-      model
-    )
+    const isv2Query = [
+      "artists",
+      "partners",
+      "sales",
+      "partner_shows",
+      "fairs",
+    ].includes(model)
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
@@ -142,9 +146,13 @@ export class AutocompleteListMetaphysics extends Component<
     const query: any = this.getQuery()
     const idToFetch = article[field]
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = ["partners", "sales", "partner_shows", "fairs"].includes(
-      model
-    )
+    const isv2Query = [
+      "artists",
+      "partners",
+      "sales",
+      "partner_shows",
+      "fairs",
+    ].includes(model)
     const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
 

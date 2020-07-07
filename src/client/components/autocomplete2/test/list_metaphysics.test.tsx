@@ -93,7 +93,7 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       const query = component.getQuery()
 
-      expect(query).toBe(Queries.PartnersQuery)
+      expect(query).toBe(Queries.PartnersConnectionQuery)
     })
 
     it("Returns the correct query for shows", () => {
@@ -103,7 +103,7 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       const query = component.getQuery()
 
-      expect(query).toBe(Queries.ShowsQuery)
+      expect(query).toBe(Queries.ShowsConnectionQuery)
     })
 
     it("Returns the correct query for auctions", () => {
@@ -113,7 +113,7 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       const query = component.getQuery()
 
-      expect(query).toBe(Queries.AuctionsQuery)
+      expect(query).toBe(Queries.SalesConnectionQuery)
     })
 
     it("Returns the correct query for artists", () => {

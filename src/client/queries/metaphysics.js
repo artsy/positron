@@ -37,7 +37,7 @@ export function ArtistsQuery(ids) {
   return `
     {
       artists(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        internalID
         name
       }
     }
