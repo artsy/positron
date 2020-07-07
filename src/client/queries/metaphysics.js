@@ -77,6 +77,21 @@ export function PartnersQuery(ids) {
   `
 }
 
+export function PartnersConnectionQuery(ids) {
+  return `
+    {
+      partnersConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
+      }
+    }
+  `
+}
+
 export function ShowsQuery(ids) {
   return `
     {
