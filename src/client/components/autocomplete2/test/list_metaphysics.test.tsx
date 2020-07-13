@@ -6,7 +6,10 @@ import React from "react"
 import request from "superagent"
 import * as Queries from "../../../../client/queries/metaphysics"
 import { AutocompleteList } from "../list"
-import { AutocompleteListMetaphysics } from "../list_metaphysics"
+import {
+  AutocompleteListMetaphysics,
+  getItemsFromConnection,
+} from "../list_metaphysics"
 require("typeahead.js")
 
 jest.mock("superagent", () => {
@@ -44,7 +47,7 @@ describe("AutocompleteListMetaphysics", () => {
         data: {
           fairs: [
             {
-              _id: "123",
+              internalID: "123",
               name: "NADA New York",
             },
           ],
@@ -55,7 +58,7 @@ describe("AutocompleteListMetaphysics", () => {
     request.get = jest.fn().mockReturnThis()
     request.set = jest.fn().mockReturnThis()
     request.query = jest.fn().mockReturnValue({
-      end: jest.fn(),
+      end: jest.fn(cb => cb(null, response)),
     })
   })
 
@@ -152,11 +155,30 @@ describe("AutocompleteListMetaphysics", () => {
     props.model = "users"
     props.field = "contributing_authors"
     props.article.contributing_authors = [{ id: "123" }, { id: "456" }]
+    request.query = jest.fn().mockReturnValue({
+      end: jest.fn(cb =>
+        cb(null, {
+          body: {
+            data: {
+              usersConnection: {
+                edges: [
+                  {
+                    node: {
+                      internalID: "123",
+                      name: "Jane Doe",
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        })
+      ),
+    })
     const component = getWrapper(
       props
     ).instance() as AutocompleteListMetaphysics
-    const idsToFetch = component.idsToFetch([{ id: "123" }])
-
+    const idsToFetch = component.idsToFetch([{ _id: "123" }])
     expect(idsToFetch.length).toBe(1)
     expect(idsToFetch[0]).toBe("456")
   })
@@ -168,6 +190,23 @@ describe("AutocompleteListMetaphysics", () => {
       props.type = "single"
       props.model = "artists"
       props.field = "biography_for_artist_id"
+
+      request.query = jest.fn().mockReturnValue({
+        end: jest.fn(cb =>
+          cb(null, {
+            body: {
+              data: {
+                artists: [
+                  {
+                    internalID: "123",
+                    name: "Jane Doe",
+                  },
+                ],
+              },
+            },
+          })
+        ),
+      })
       const component = getWrapper(
         props
       ).instance() as AutocompleteListMetaphysics
@@ -186,9 +225,6 @@ describe("AutocompleteListMetaphysics", () => {
       props.type = "single"
       props.model = "fairs"
       props.field = "fair_id"
-      request.query().end.mockImplementation(() => {
-        return response.body.data.fairs
-      })
       const component = getWrapper(
         props
       ).instance() as AutocompleteListMetaphysics
@@ -222,7 +258,7 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       component.fetchItem("123", cb)
 
-      expect(cb.mock.calls[0][0][0]._id).toBe("123")
+      expect(cb.mock.calls[0][0][0].internalID).toBe("123")
       expect(cb.mock.calls[0][0][0].name).toBe("NADA New York")
     })
   })
@@ -290,7 +326,7 @@ describe("AutocompleteListMetaphysics", () => {
       ).instance() as AutocompleteListMetaphysics
       component.fetchItems(["123"], cb)
 
-      expect(cb.mock.calls[0][0][0]._id).toBe("123")
+      expect(cb.mock.calls[0][0][0].internalID).toBe("123")
       expect(cb.mock.calls[0][0][0].name).toBe("NADA New York")
     })
   })
@@ -361,6 +397,23 @@ describe("AutocompleteListMetaphysics", () => {
 
       expect(formattedItem.id).toBe(item.id)
       expect(formattedItem.name).toBe("Molly Gottschalk")
+    })
+  })
+
+  describe("#getItemsFromConnection", () => {
+    it("can format connection data as expected", () => {
+      const partnersConnection = {
+        edges: [
+          {
+            node: {
+              internalID: "123",
+              name: "CANADA",
+            },
+          },
+        ],
+      }
+      const formattedData = getItemsFromConnection(partnersConnection)
+      expect(formattedData).toEqual([{ _id: "123", name: "CANADA" }])
     })
   })
 })

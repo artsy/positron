@@ -102,14 +102,13 @@ export class AutocompleteListMetaphysics extends Component<
     const newItems = clone(fetchedItems)
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
-    const mpv2 = `${metaphysicsURL}/v2`
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
     // and sales with "live: true", meaning shows and sales
     // will not display in UI once they have closed
     if (idsToFetch.length) {
       request
-        .get(mpv2)
+        .get(metaphysicsURL)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -117,17 +116,19 @@ export class AutocompleteListMetaphysics extends Component<
         .query({ query: query(idsToFetch) })
         .end((err, res) => {
           if (err) {
-            throw new Error(err)
+            new Error(err)
           }
-          if (this.fieldIsMpConnection()) {
-            newItems.push(getItemsFromEdges(res.body.data[rootField].edges))
-          } else {
-            res.body.data[rootField].forEach(item => {
-              newItems.push(formatMpItem(item))
-            })
+          if (res.body.data) {
+            if (this.fieldIsMpConnection()) {
+              newItems.push(getItemsFromConnection(res.body.data[rootField]))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                newItems.push(formatMpItem(item))
+              })
+            }
+            const uniqItems = uniq(flatten(newItems))
+            cb(uniqItems)
           }
-          const uniqItems = uniq(flatten(newItems))
-          cb(uniqItems)
         })
     } else {
       return fetchedItems
@@ -138,12 +139,11 @@ export class AutocompleteListMetaphysics extends Component<
     const { article, field, metaphysicsURL, user } = this.props
     const query: any = this.getQuery()
     const idToFetch = article[field]
-    const mpv2 = `${metaphysicsURL}/v2`
     const rootField = this.getMpRootField()
 
     if (idToFetch) {
       request
-        .get(mpv2)
+        .get(metaphysicsURL)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -153,16 +153,17 @@ export class AutocompleteListMetaphysics extends Component<
           if (err) {
             new Error(err)
           }
+          if (res.body.data) {
+            if (this.fieldIsMpConnection()) {
+              cb(getItemsFromConnection(res.body.data[rootField]))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                cb(formatMpItem(item))
+              })
+            }
 
-          if (this.fieldIsMpConnection()) {
-            cb(getItemsFromEdges(res.body.data[rootField].edges))
-          } else {
-            res.body.data[rootField].forEach(item => {
-              cb(formatMpItem(item))
-            })
+            cb(res.body.data[rootField])
           }
-
-          cb(res.body.data[rootField])
         })
     }
   }
@@ -299,8 +300,9 @@ interface Node {
   name?: string
   title?: string
 }
-const getItemsFromEdges = (edges: Edge[]) => {
-  return edges.map(({ node }) => formatMpItem(node))
+
+export const getItemsFromConnection = (connection: { edges: Edge[] }) => {
+  return connection.edges.map(({ node }) => formatMpItem(node))
 }
 const formatMpItem = (node: Node) => ({
   _id: node.internalID,
