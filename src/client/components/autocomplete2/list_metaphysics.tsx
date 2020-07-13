@@ -66,7 +66,8 @@ export class AutocompleteListMetaphysics extends Component<
 
     switch (model) {
       case "partners":
-      case "sales": {
+      case "sales":
+      case "users": {
         return `${model}Connection`
         break
       }
@@ -87,31 +88,28 @@ export class AutocompleteListMetaphysics extends Component<
 
   idsToFetch = fetchedItems => {
     const { article, field, model } = this.props
-    let alreadyFetched = uniq(pluck(fetchedItems, "_id"))
     let allIds = clone(article[field])
 
     if (model === "users") {
       allIds = pluck(allIds, "id")
-      alreadyFetched = uniq(pluck(fetchedItems, "id"))
     }
+    const alreadyFetched = uniq(pluck(fetchedItems, "_id"))
     return difference(allIds, alreadyFetched)
   }
 
   fetchItems = (fetchedItems, cb) => {
-    const { metaphysicsURL, model, user } = this.props
+    const { metaphysicsURL, user } = this.props
     const newItems = clone(fetchedItems)
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = model !== "users"
-    const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
     // and sales with "live: true", meaning shows and sales
     // will not display in UI once they have closed
     if (idsToFetch.length) {
       request
-        .get(mpUrl)
+        .get(mpv2)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -121,16 +119,12 @@ export class AutocompleteListMetaphysics extends Component<
           if (err) {
             throw new Error(err)
           }
-          if (isv2Query) {
-            if (this.fieldIsMpConnection()) {
-              newItems.push(getItemsFromEdges(res.body.data[rootField].edges))
-            } else {
-              res.body.data[rootField].forEach(item => {
-                newItems.push(formatMpItem(item))
-              })
-            }
+          if (this.fieldIsMpConnection()) {
+            newItems.push(getItemsFromEdges(res.body.data[rootField].edges))
           } else {
-            newItems.push(res.body.data[rootField])
+            res.body.data[rootField].forEach(item => {
+              newItems.push(formatMpItem(item))
+            })
           }
           const uniqItems = uniq(flatten(newItems))
           cb(uniqItems)
@@ -141,17 +135,15 @@ export class AutocompleteListMetaphysics extends Component<
   }
 
   fetchItem = (_item, cb) => {
-    const { article, field, metaphysicsURL, model, user } = this.props
+    const { article, field, metaphysicsURL, user } = this.props
     const query: any = this.getQuery()
     const idToFetch = article[field]
     const mpv2 = `${metaphysicsURL}/v2`
-    const isv2Query = model !== "users"
-    const mpUrl = isv2Query ? mpv2 : metaphysicsURL
     const rootField = this.getMpRootField()
 
     if (idToFetch) {
       request
-        .get(mpUrl)
+        .get(mpv2)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -161,15 +153,15 @@ export class AutocompleteListMetaphysics extends Component<
           if (err) {
             new Error(err)
           }
-          if (isv2Query) {
-            if (this.fieldIsMpConnection()) {
-              cb(getItemsFromEdges(res.body.data[rootField].edges))
-            } else {
-              res.body.data[rootField].forEach(item => {
-                cb(formatMpItem(item))
-              })
-            }
+
+          if (this.fieldIsMpConnection()) {
+            cb(getItemsFromEdges(res.body.data[rootField].edges))
+          } else {
+            res.body.data[rootField].forEach(item => {
+              cb(formatMpItem(item))
+            })
           }
+
           cb(res.body.data[rootField])
         })
     }
@@ -253,7 +245,9 @@ export class AutocompleteListMetaphysics extends Component<
             onSelect={result => onChangeArticleAction(field, result)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
-            {...this.props}
+            article={this.props.article}
+            model={this.props.model}
+            field={this.props.field}
           />
         )
       }
@@ -270,7 +264,6 @@ export class AutocompleteListMetaphysics extends Component<
             onSelect={results => onChangeArticleAction(field, results)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
-            {...this.props}
           />
         )
       }

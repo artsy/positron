@@ -85,9 +85,13 @@ export function ShowsConnectionQuery(ids) {
 export function UsersQuery(ids) {
   return `
     {
-      users(ids: ${stringifyJSONForWeb(ids)}) {
-        id
-        name
+      usersConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
