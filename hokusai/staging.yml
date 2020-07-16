@@ -37,6 +37,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
+            - name: NODE_OPTIONS
+              value: "--max_old_space_size=256"
           image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
           imagePullPolicy: Always
           ports:
