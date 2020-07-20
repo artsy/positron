@@ -15,9 +15,9 @@ import { AutocompleteSingle } from "./single"
 export interface AutocompleteListProps extends AutocompleteProps {
   article: ArticleData
   artsyURL?: string
-  field?: string
+  field: string
   label?: string
-  model?: string
+  model: string
   metaphysicsURL?: string
   onChangeArticleAction?: any
   type?: any
@@ -47,13 +47,13 @@ export class AutocompleteListMetaphysics extends Component<
         return Queries.FairsQuery
       }
       case "partners": {
-        return Queries.PartnersQuery
+        return Queries.PartnersConnectionQuery
       }
       case "partner_shows": {
-        return Queries.ShowsQuery
+        return Queries.ShowsConnectionQuery
       }
       case "sales": {
-        return Queries.AuctionsQuery
+        return Queries.SalesConnectionQuery
       }
       case "users": {
         return Queries.UsersQuery
@@ -61,29 +61,54 @@ export class AutocompleteListMetaphysics extends Component<
     }
   }
 
+  getMpRootField = () => {
+    const { model } = this.props
+
+    switch (model) {
+      case "partners":
+      case "sales":
+      case "users": {
+        return `${model}Connection`
+        break
+      }
+      case "partner_shows": {
+        return "showsConnection"
+        break
+      }
+      default: {
+        return model
+      }
+    }
+  }
+
+  fieldIsMpConnection = () => {
+    const { model } = this.props
+    return this.getMpRootField().includes("Connection") || model === "artworks"
+  }
+
   idsToFetch = fetchedItems => {
     const { article, field, model } = this.props
-    let alreadyFetched = uniq(pluck(fetchedItems, "_id"))
-    let allIds = field && clone(article[field])
+    let allIds = clone(article[field])
 
     if (model === "users") {
       allIds = pluck(allIds, "id")
-      alreadyFetched = uniq(pluck(fetchedItems, "id"))
     }
+    const alreadyFetched = uniq(pluck(fetchedItems, "_id"))
     return difference(allIds, alreadyFetched)
   }
 
   fetchItems = (fetchedItems, cb) => {
-    const { metaphysicsURL, model, user } = this.props
+    const { metaphysicsURL, user } = this.props
     const newItems = clone(fetchedItems)
     const query: any = this.getQuery()
     const idsToFetch = this.idsToFetch(fetchedItems)
+    const rootField = this.getMpRootField()
     // TODO: Metaphysics only returns shows with "displayable: true"
     // and sales with "live: true", meaning shows and sales
     // will not display in UI once they have closed
     if (idsToFetch.length) {
       request
-        .get(`${metaphysicsURL}`)
+        .get(metaphysicsURL)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -93,9 +118,17 @@ export class AutocompleteListMetaphysics extends Component<
           if (err) {
             new Error(err)
           }
-          model && newItems.push(res.body.data[model])
-          const uniqItems = uniq(flatten(newItems))
-          cb(uniqItems)
+          if (res.body.data) {
+            if (this.fieldIsMpConnection()) {
+              newItems.push(getItemsFromConnection(res.body.data[rootField]))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                newItems.push(formatMpItem(item))
+              })
+            }
+            const uniqItems = uniq(flatten(newItems))
+            cb(uniqItems)
+          }
         })
     } else {
       return fetchedItems
@@ -103,15 +136,14 @@ export class AutocompleteListMetaphysics extends Component<
   }
 
   fetchItem = (_item, cb) => {
-    const { article, field, metaphysicsURL, model, user } = this.props
-
+    const { article, field, metaphysicsURL, user } = this.props
     const query: any = this.getQuery()
-
-    const idToFetch = article && field && article[field]
+    const idToFetch = article[field]
+    const rootField = this.getMpRootField()
 
     if (idToFetch) {
       request
-        .get(`${metaphysicsURL}`)
+        .get(metaphysicsURL)
         .set({
           Accept: "application/json",
           "X-Access-Token": user && user.access_token,
@@ -121,7 +153,17 @@ export class AutocompleteListMetaphysics extends Component<
           if (err) {
             new Error(err)
           }
-          model && cb(res.body.data[model])
+          if (res.body.data) {
+            if (this.fieldIsMpConnection()) {
+              cb(getItemsFromConnection(res.body.data[rootField]))
+            } else {
+              res.body.data[rootField].forEach(item => {
+                cb(formatMpItem(item))
+              })
+            }
+
+            cb(res.body.data[rootField])
+          }
         })
     }
   }
@@ -181,21 +223,17 @@ export class AutocompleteListMetaphysics extends Component<
       article,
       artsyURL,
       field,
-      isDraggable,
       label,
       model,
       onChangeArticleAction,
-      onDragEnd,
       placeholder,
       type,
     } = this.props
-    const idToFetch = article && field && article[field]
 
     switch (type) {
       case "single": {
         return (
           <AutocompleteSingle
-            article={article}
             fetchItem={(item, cb) => {
               this.fetchItem(item, cb)
             }}
@@ -203,11 +241,14 @@ export class AutocompleteListMetaphysics extends Component<
             formatSelected={
               model === "users" ? this.formatSelectedUser : undefined
             }
-            idToFetch={idToFetch || null}
+            idToFetch={article[field]}
             label={capitalize(label || model)}
             onSelect={result => onChangeArticleAction(field, result)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+            article={this.props.article}
+            model={this.props.model}
+            field={this.props.field}
           />
         )
       }
@@ -218,9 +259,7 @@ export class AutocompleteListMetaphysics extends Component<
             formatSelected={
               model === "users" ? this.formatSelectedUser : undefined
             }
-            isDraggable={isDraggable}
-            onDragEnd={onDragEnd}
-            items={idToFetch || []}
+            items={article[field] || []}
             filter={this.getFilter()}
             label={capitalize(label || model)}
             onSelect={results => onChangeArticleAction(field, results)}
@@ -252,3 +291,20 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(AutocompleteListMetaphysics)
+
+interface Edge {
+  node: Node
+}
+interface Node {
+  internalID: string
+  name?: string
+  title?: string
+}
+
+export const getItemsFromConnection = (connection: { edges: Edge[] }) => {
+  return connection.edges.map(({ node }) => formatMpItem(node))
+}
+const formatMpItem = (node: Node) => ({
+  _id: node.internalID,
+  name: node.name || node.title,
+})

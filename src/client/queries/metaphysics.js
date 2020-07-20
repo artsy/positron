@@ -1,33 +1,15 @@
 import { stringifyJSONForWeb } from "client/lib/utils/json"
 
-export function ArtworkQuery(id) {
-  return `
-    {
-      artwork(id: ${stringifyJSONForWeb(id)}) {
-        _id
-        title
-      }
-    }
-  `
-}
-
 export function ArtworksQuery(ids) {
   return `
     {
       artworks(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        title
-      }
-    }
-  `
-}
-
-export function ArtistQuery(id) {
-  return `
-    {
-      artist(id: ${stringifyJSONForWeb(id)}) {
-        _id
-        name
+        edges {
+          node {
+            internalID
+            title
+          }
+        }
       }
     }
   `
@@ -37,19 +19,23 @@ export function ArtistsQuery(ids) {
   return `
     {
       artists(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        internalID
         name
       }
     }
   `
 }
 
-export function AuctionsQuery(ids) {
+export function SalesConnectionQuery(ids) {
   return `
     {
-      sales(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        name
+      salesConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
@@ -59,30 +45,38 @@ export function FairsQuery(ids) {
   return `
     {
       fairs(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
+        internalID
         name
       }
     }
   `
 }
 
-export function PartnersQuery(ids) {
+export function PartnersConnectionQuery(ids) {
   return `
     {
-      partners(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        name
+      partnersConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
 }
 
-export function ShowsQuery(ids) {
+export function ShowsConnectionQuery(ids) {
   return `
     {
-      partner_shows(ids: ${stringifyJSONForWeb(ids)}) {
-        _id
-        name
+      showsConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
@@ -91,9 +85,13 @@ export function ShowsQuery(ids) {
 export function UsersQuery(ids) {
   return `
     {
-      users(ids: ${stringifyJSONForWeb(ids)}) {
-        id
-        name
+      usersConnection(ids: ${stringifyJSONForWeb(ids)}) {
+        edges {
+          node {
+            internalID
+            name
+          }
+        }
       }
     }
   `
