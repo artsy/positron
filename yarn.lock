@@ -24,10 +24,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@1.21.0":
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.21.0.tgz#7f56c9f3698a3f855f4df5b1db2db24a7411ec68"
-  integrity sha512-1H4TXf8Yn0gTan5p24nN71NIZxIze3RJ66+tlBqEeemWqhn77xrP0ks2zQ1anX2hR9OopEeOi83QgGw7EA2JAA==
+"@artsy/cohesion@1.22.0":
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.22.0.tgz#dc04e356edbef1b54d094766dc3d766e577fbfb8"
+  integrity sha512-awmF85+WJvqZjRFJ8a30jOm8ZOveQ4nkmm3i4Ddg5ZvEOzlJA63gaC/MbM400XaOC0mDXlT8lDLYSrfiX74apQ==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
@@ -8911,10 +8911,15 @@ lodash@2.4.1:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.1.tgz#5b7723034dda4d262e5a46fb2c58d7cc22f71420"
   integrity sha1-W3cjA03aTSYuWkb7LFjXzCL3FCA=
 
-lodash@4.17.15, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
+lodash@4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@4.17.19, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 lodash@^3.10.0, lodash@^3.2.0, lodash@^3.7.0, lodash@~3.10.1:
   version "3.10.1"
