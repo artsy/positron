@@ -48,10 +48,12 @@
   resolved "https://registry.yarnpkg.com/@artsy/fresnel/-/fresnel-1.1.0.tgz#9ad22eba6aea7931d044be651ebb8396951d3f43"
   integrity sha512-Kf0HaYmceuHoXpASYQ8B4EKqikOg5Ra2eYl2JYgjlawC6/E4JOGfnNlg9ITCcVf09kI3Ch23OFfcW4bQHvnAXQ==
 
-"@artsy/gemup@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.0.3.tgz#0397a472bb69432dab3d2d66ca30556815aa96e7"
-  integrity sha512-W///stXDTz3jSQw8UtT0BClVk4DLOsVp7a8v12efsEZvrZNT+85YBqPWq2DP1EX3ILZR1hGZhbKr/Gl5uti56Q==
+"@artsy/gemup@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/gemup/-/gemup-0.1.0.tgz#b1e25b2c225a0a457762791a456f7d075974fb7c"
+  integrity sha512-Ipzswe6djF3c1fbiZLnlX2XTUoOUHRFkkj7aQdJknabA6+/TCNYEt3f2GGd8TmjqC3dwc/PhoIyKfYJd8vAYdQ==
+  dependencies:
+    uuid "^8.3.0"
 
 "@artsy/palette@10.1.0":
   version "10.1.0"
@@ -14223,6 +14225,11 @@ uuid@^3.0.0, uuid@^3.1.0, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.0.tgz#ab738085ca22dc9a8c92725e459b1d507df5d6ea"
+  integrity sha512-fX6Z5o4m6XsXBdli9g7DtWgAx+osMsRRZFKma1mIUsLCz6vRvv+pz5VNbyu9UEDzpMWulZfvpgb/cmDXVulYFQ==
 
 uws@~9.14.0:
   version "9.14.0"
