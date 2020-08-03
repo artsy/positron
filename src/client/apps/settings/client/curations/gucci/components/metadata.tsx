@@ -1,7 +1,7 @@
 import { Box, Col, Row } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import TextArea from "@artsy/reaction/dist/Components/TextArea"
 import { FormLabel } from "client/components/form_label"
+import { TextArea } from "client/components/text_area"
 import React from "react"
 import { SectionAdminProps } from "./section"
 const ImageUpload = require("client/apps/edit/components/admin/components/image_upload.coffee")

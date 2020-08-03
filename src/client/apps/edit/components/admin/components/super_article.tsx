@@ -1,10 +1,10 @@
 import { Box, Checkbox, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
 import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
-import TextArea from "@artsy/reaction/dist/Components/TextArea"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { AutocompleteList } from "client/components/autocomplete2/list"
 import { FormLabel } from "client/components/form_label"
+import { TextArea } from "client/components/text_area"
 import { SubArticleQuery } from "client/queries/sub_articles"
 import { clone, uniq } from "lodash"
 import React, { Component } from "react"
@@ -173,7 +173,9 @@ export class AdminSuperArticle extends Component<AdminSuperArticleProps> {
                 block
                 defaultValue={footer_blurb || ""}
                 disabled={isDisabled}
-                onChange={e => this.onChange("footer_blurb", e.target.value)}
+                onChange={e =>
+                  this.onChange("footer_blurb", e.currentTarget.value)
+                }
               />
               <div className="supports-markdown" />
             </Box>
