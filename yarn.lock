@@ -14680,10 +14680,17 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@^5.1.1, ws@^5.2.0:
+ws@^5.2.0:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
   integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
+  dependencies:
+    async-limiter "~1.0.0"
+
+ws@^6.1.2:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
+  integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
 
@@ -14926,14 +14933,14 @@ zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zombie@6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/zombie/-/zombie-6.1.3.tgz#456af4ee01e5707cb49715d88be655357bacb287"
-  integrity sha512-CckDy0fjlx/sWOjG054DOaGKFFonLQQ4MPEJDbxPXE2r+aUAj97KZfGNQ3vyCXq64qPVk8b+9DUNzXRdc9KrhA==
+zombie@6.1.4:
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/zombie/-/zombie-6.1.4.tgz#9f0f53f3d9a032beb7f3fe5b382146a3475a4d47"
+  integrity sha512-yxNvKtyz3PP8lkr31AYh7vdbBD4is9hYXiOQKPp+k/7GiDiFQXX1Ex+peCl4ttodu/bHZcIluJ8lxMla5XefBQ==
   dependencies:
     babel-runtime "6.26.0"
     bluebird "^3.5.1"
-    debug "^3.1.0"
+    debug "^4.1.0"
     eventsource "^1.0.5"
     iconv-lite "^0.4.21"
     jsdom "11.12.0"
@@ -14942,4 +14949,4 @@ zombie@6.1.3:
     ms "^2.1.1"
     request "^2.85.0"
     tough-cookie "^2.3.4"
-    ws "^5.1.1"
+    ws "^6.1.2"
