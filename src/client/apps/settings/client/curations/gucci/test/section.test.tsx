@@ -1,7 +1,7 @@
 import { Checkbox } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import TextArea from "@artsy/reaction/dist/Components/TextArea"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
+import { TextArea } from "client/components/text_area"
 import { mount } from "enzyme"
 import React from "react"
 import { SectionAdmin } from "../components/section"

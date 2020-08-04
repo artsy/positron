@@ -24,10 +24,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@1.24.0":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.24.0.tgz#bd058c95907dab0138769694101fdddf17ca87a0"
-  integrity sha512-FDGipi91B1Dt5wdvOv4jIJMLtubP3tskijYh4JQn6YglkB3hfpKV5Tz2RkkMAbtOFNMBs3rMbiSmmHM3OEqdQg==
+"@artsy/cohesion@1.25.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.25.0.tgz#aa03d94fd8004ede569fc3f91ed0373b62133d73"
+  integrity sha512-dJ1rHX0f5wdcIVF9xR6y+CwiGNo1WlSVC6K221e9lSKZcH7Mu+WUu1D89E4Alddtj8FSkDWHGOdIYfkX2Y5ewg==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
@@ -81,10 +81,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@26.54.0":
-  version "26.54.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-26.54.0.tgz#369584721a1e0c59460096019633b83da230f850"
-  integrity sha512-KtDTaFJ2FcQr66JttbjhDYqiHdwVD/fAjkX1IUeRL+EW6AVPKcDCVQkAvwU3yN2bZqHfw9FS5Z1fje5KKT1G/Q==
+"@artsy/reaction@27.0.0":
+  version "27.0.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-27.0.0.tgz#d1e753dc2744ee5386c70ca66c7b3f2bf499ad58"
+  integrity sha512-LfMcejTijPi5H/89I2RaJVmcoUJrEfixurZfVzf85JxeJI15eOQzmiUGflIOTnRQlFM4J1tWbfvhSaubbHNHGQ==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
@@ -14680,10 +14680,17 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@^5.1.1, ws@^5.2.0:
+ws@^5.2.0:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
   integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==
+  dependencies:
+    async-limiter "~1.0.0"
+
+ws@^6.1.2:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.1.tgz#442fdf0a47ed64f59b6a5d8ff130f4748ed524fb"
+  integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
 
@@ -14926,14 +14933,14 @@ zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zombie@6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/zombie/-/zombie-6.1.3.tgz#456af4ee01e5707cb49715d88be655357bacb287"
-  integrity sha512-CckDy0fjlx/sWOjG054DOaGKFFonLQQ4MPEJDbxPXE2r+aUAj97KZfGNQ3vyCXq64qPVk8b+9DUNzXRdc9KrhA==
+zombie@6.1.4:
+  version "6.1.4"
+  resolved "https://registry.yarnpkg.com/zombie/-/zombie-6.1.4.tgz#9f0f53f3d9a032beb7f3fe5b382146a3475a4d47"
+  integrity sha512-yxNvKtyz3PP8lkr31AYh7vdbBD4is9hYXiOQKPp+k/7GiDiFQXX1Ex+peCl4ttodu/bHZcIluJ8lxMla5XefBQ==
   dependencies:
     babel-runtime "6.26.0"
     bluebird "^3.5.1"
-    debug "^3.1.0"
+    debug "^4.1.0"
     eventsource "^1.0.5"
     iconv-lite "^0.4.21"
     jsdom "11.12.0"
@@ -14942,4 +14949,4 @@ zombie@6.1.3:
     ms "^2.1.1"
     request "^2.85.0"
     tough-cookie "^2.3.4"
-    ws "^5.1.1"
+    ws "^6.1.2"
