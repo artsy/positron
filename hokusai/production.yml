@@ -254,3 +254,42 @@ spec:
                         operator: In
                         values:
                           - background
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: positron
+    component: web
+    layer: application
+  name: positron-web-internal
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http
+      targetPort: 8080
+  selector:
+    app: positron
+    layer: application
+    component: web
+  type: ClusterIP
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: positron
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "{{ cloudflareIpSourceRanges|join(',') }}"
+spec:
+  rules:
+    - host: writer.artsy.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: positron-web-internal
+              servicePort: http
