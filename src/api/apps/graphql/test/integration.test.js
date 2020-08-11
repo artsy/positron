@@ -15,7 +15,7 @@ const {
 describe("graphql endpoint", () => {
   let server
 
-  before(done => {
+  beforeAll(done => {
     server = app.listen(5000, () => {
       done()
     })
@@ -59,7 +59,7 @@ describe("graphql endpoint", () => {
     })
   })
 
-  after(() => {
+  afterAll(() => {
     server.close()
   })
 
@@ -76,10 +76,10 @@ describe("graphql endpoint", () => {
         .send({ query })
         .end((err, {body: { data: { articles } }}) => {
           if (err) { console.warn(err.message) }
-          articles.length.should.equal(3)
-          articles[0].title.should.equal("Top Twelve Booths")
-          articles[1].title.should.equal("Top Eleven Booths")
-          articles[2].title.should.equal("Top Ten Booths")
+          expect(articles.length).toBe(3)
+          expect(articles[0].title).toEqual("Top Twelve Booths")
+          expect(articles[1].title).toEqual("Top Eleven Booths")
+          expect(articles[2].title).toEqual("Top Ten Booths")
           done()
         })
       })
@@ -90,15 +90,15 @@ describe("graphql endpoint", () => {
         .send({ query: ArticleSectionsQuery })
         .end((err, {body: { data: { articles } }}) => {
           if (err) { console.warn(err.message) }
-          articles[0].sections[1].type.should.equal(
+          expect(articles[0].sections[1].type).toEqual(
             "image_collection"
           )
-          articles[0].sections[2].type.should.equal("text")
-          articles[0].sections[2].body.should.containEql(
+          expect(articles[0].sections[2].type).toEqual("text")
+          expect(articles[0].sections[2].body).toContain(
             "10. Lisson Gallery"
           )
-          articles[0].sections[5].type.should.equal("video")
-          articles[0].sections[5].url.should.equal(
+          expect(articles[0].sections[5].type).toEqual("video")
+          expect(articles[0].sections[5].url).toEqual(
             "http://youtu.be/yYjLrJRuMnY"
           )
           done()
@@ -111,11 +111,11 @@ describe("graphql endpoint", () => {
       .send({ query: RelatedArticlesQuery })
       .end((err, {body: { data: { articles } }}) => {
         if (err) { console.warn(err.message) }
-        articles.length.should.equal(3)
-        articles[0].relatedArticles[0].title.should.equal(
+        expect(articles.length).toEqual(3)
+        expect(articles[0].relatedArticles[0].title).toEqual(
           "Top Eleven Booths"
         )
-        articles[0].relatedArticles[0].authors[0].name.should.equal(
+        expect(articles[0].relatedArticles[0].authors[0].name).toEqual(
           "Kana"
         )
         done()
@@ -128,10 +128,10 @@ describe("graphql endpoint", () => {
         .send({ query: RelatedArticlesQuery })
         .end((err, {body: { data: { articles } }}) => {
           if (err) { console.warn(err.message) }
-          articles[0].relatedArticles[0].title.should.equal(
+          expect(articles[0].relatedArticles[0].title).toEqual(
             "Top Eleven Booths"
           )
-          articles[0].relatedArticles[0].seriesArticle.id.should.equal(
+          expect(articles[0].relatedArticles[0].seriesArticle.id).toEqual(
             "5f32e33bd273fe3b7f0e3f00"
           )
           done()
@@ -144,11 +144,11 @@ describe("graphql endpoint", () => {
         .send({ query: RelatedArticlesCanvasQuery })
         .end((err, {body: { data: { articles } }}) => {
           if (err) { console.warn(err.message) }
-          articles.length.should.equal(3)
-          articles[1].relatedArticlesCanvas[0].title.should.equal(
+          expect(articles.length).toEqual(3)
+          expect(articles[1].relatedArticlesCanvas[0].title).toEqual(
             "Top Twelve Booths"
           )
-          articles[1].relatedArticlesCanvas[0].authors[0].name.should.equal(
+          expect(articles[1].relatedArticlesCanvas[0].authors[0].name).toEqual(
             "Kana"
           )
           done()
