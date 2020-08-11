@@ -24,10 +24,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@1.26.0":
-  version "1.26.0"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.26.0.tgz#6b51002dd744fce632b55b645a4f938f59657219"
-  integrity sha512-/KPhWU9tZfpe1pzFFOmLrpZkV2l4Bnw4KeYY9wsCHt5+cZyL1dGzTJR/DYVCnS8HXXVkLvjP3uWAOw75uxJa4Q==
+"@artsy/cohesion@1.28.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.28.0.tgz#87e13daa69904ffea87df131189783ff90f1be2b"
+  integrity sha512-CukxzEPrBU1Y6ZQK59A8gMyPXHqXxJSKUwuCpHe9mrbPJ4uW4Eg+JtkZmPq/X4aWFgjnW4yf3Kb7fVX9OKS31w==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
@@ -81,10 +81,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@27.0.0":
-  version "27.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-27.0.0.tgz#d1e753dc2744ee5386c70ca66c7b3f2bf499ad58"
-  integrity sha512-LfMcejTijPi5H/89I2RaJVmcoUJrEfixurZfVzf85JxeJI15eOQzmiUGflIOTnRQlFM4J1tWbfvhSaubbHNHGQ==
+"@artsy/reaction@27.1.0":
+  version "27.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-27.1.0.tgz#69913624935836a40c4bf122674d3134f08a596e"
+  integrity sha512-OsupB5WH+mHPlzHKqgqRccHlRHiowV/JZcBpYVBakCOyr8nRC/WL1DP7FolNMg8OAtXi69eSdxu0GZvAWFJICw==
   dependencies:
     "@artsy/detect-responsive-traits" "^0.0.5"
     "@artsy/fresnel" "^1.0.13"
