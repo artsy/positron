@@ -1,26 +1,8 @@
-import { times } from "lodash"
+// @ts-check
 import { ObjectId } from "mongojs"
 import { toQuery } from "../../model/retrieve"
-import { server as gravity } from "@artsy/antigravity"
-
-const { empty, fabricate } = require("../../../../test/helpers/db.coffee")
-const app = require("express")()
 
 describe("Retrieve", () => {
-  let server
-  before(done => {
-    app.use("/__gravity", gravity)
-    server = app.listen(5000, () => done())
-    return server
-  })
-
-  after(() => {
-    return server.close()
-  })
-
-  beforeEach(done =>
-    empty(() => fabricate("articles", times(10, () => ({})), () => done())))
-
   describe("#toQuery", () => {
     it("aggregates the query for all_by_author", () => {
       const { query } = toQuery({
