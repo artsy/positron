@@ -67,7 +67,7 @@ yarn install
 brew install mongodb-community
 ```
 
-- Start the MongoDB database
+- Start the MongoDB server
 
 ```
 mongod
