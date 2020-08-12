@@ -1,28 +1,31 @@
 import * as resolvers from "../resolvers"
-import { StandardArticle, SeriesArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
+import {
+  StandardArticle,
+  SeriesArticle,
+} from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { ObjectId } from "mongojs"
 const { fixtures } = require("api/test/helpers/db.coffee")
 
 jest.mock("api/apps/articles/model/index.js", () => {
-  const original = jest.requireActual('../../articles/model/index.js')
+  const original = jest.requireActual("../../articles/model/index.js")
   return {
     promisedMongoFetch: jest.fn(),
     mongoFetch: jest.fn(),
     present: original.present,
     presentCollection: original.presentCollection,
-    find: jest.fn()
+    find: jest.fn(),
   }
 })
 const articleModel = require("../../articles/model/index.js")
 
 jest.mock("api/apps/authors/model.coffee", () => ({
-    mongoFetch: jest.fn(),
+  mongoFetch: jest.fn(),
 }))
 const authorModel = require("api/apps/authors/model.coffee")
 
 jest.mock("api/apps/channels/model.coffee", () => ({
   mongoFetch: jest.fn(),
-  find: jest.fn()
+  find: jest.fn(),
 }))
 const channelModel = require("api/apps/channels/model.coffee")
 
@@ -36,10 +39,8 @@ jest.mock("api/apps/tags/model.coffee", () => ({
 }))
 const tagModel = require("api/apps/tags/model.coffee")
 
-
-
 describe("resolvers", () => {
-  const req = { user: { channel_ids: [ "456" ] } }
+  const req = { user: { channel_ids: ["456"] } }
   let articleFixture
   let articlesFixture
 
@@ -48,7 +49,7 @@ describe("resolvers", () => {
       slugs: ["slug-1"],
       channel_id: "456",
       tags: ["dog"],
-      vertical: { name: 'Art Market', id: '54276766fd4f50996aeca2b3' },
+      vertical: { name: "Art Market", id: "54276766fd4f50996aeca2b3" },
       ...StandardArticle,
     }
     articlesFixture = {
@@ -63,7 +64,7 @@ describe("resolvers", () => {
     articleModel.promisedMongoFetch.mockClear()
     articleModel.find.mockImplementation((args, cb) => {
       cb(null, {
-        ...articleFixture
+        ...articleFixture,
       })
     })
   })
@@ -83,14 +84,14 @@ describe("resolvers", () => {
       )
     })
 
-    it("can view drafts", async() => {
+    it("can view drafts", async () => {
       const args = { published: false, channel_id: "456" }
       const results = await resolvers.articles({}, args, req, {})
       results.length.should.equal(1)
       results[0].slug.should.equal("slug-1")
     })
 
-    it("can view published articles", async() => {
+    it("can view published articles", async () => {
       const args = { published: true }
       const results = await resolvers.articles({}, args, req, {})
       results.length.should.equal(1)
@@ -101,7 +102,7 @@ describe("resolvers", () => {
   describe("article", () => {
     let args = { id: "123" }
 
-    it("rejects with an error when no article is found", async() => {
+    it("rejects with an error when no article is found", async () => {
       articleModel.find.mockImplementationOnce((args, cb) => {
         cb(null, null)
       })
@@ -112,11 +113,11 @@ describe("resolvers", () => {
       }
     })
 
-    it("rejects with an error when trying to view an unauthorized draft", async() => {
+    it("rejects with an error when trying to view an unauthorized draft", async () => {
       articleModel.find.mockImplementationOnce((args, cb) => {
         cb(null, {
           published: false,
-          ...articleFixture
+          ...articleFixture,
         })
       })
       try {
@@ -126,19 +127,19 @@ describe("resolvers", () => {
       }
     })
 
-    it("can view drafts", async() => {
+    it("can view drafts", async () => {
       args.channel_id = "456"
       articleModel.find.mockImplementationOnce((args, cb) => {
         cb(null, {
           published: false,
-          ...articleFixture
+          ...articleFixture,
         })
       })
       const results = await resolvers.article({}, args, req, {})
       results.slug.should.equal("slug-1")
     })
 
-    it("can view published articles", async() => {
+    it("can view published articles", async () => {
       const results = await resolvers.article({}, args, req, {})
       results.slug.should.equal("slug-1")
     })
@@ -151,7 +152,7 @@ describe("resolvers", () => {
       })
     })
 
-    it("can find authors", async() => {
+    it("can find authors", async () => {
       const results = await resolvers.authors({}, {}, req, {})
       results.length.should.equal(1)
       results[0].name.should.equal("Halley Johnson")
@@ -163,8 +164,8 @@ describe("resolvers", () => {
 
   describe("relatedAuthors", () => {
     let root = { author_ids: [{ id: "123" }] }
-    
-    it("can find authors", async() => {
+
+    it("can find authors", async () => {
       const results = await resolvers.relatedAuthors(root)
       results.length.should.equal(1)
       results[0].name.should.equal("Halley Johnson")
@@ -173,7 +174,7 @@ describe("resolvers", () => {
       results[0].image_url.should.equal("https://artsy-media.net/halley.jpg")
     })
 
-    it("returns null if there are no authors from fetch", async() => {
+    it("returns null if there are no authors from fetch", async () => {
       authorModel.mongoFetch.mockImplementationOnce((args, cb) => {
         cb(null, { total: 20, count: 1, results: [] })
       })
@@ -181,7 +182,7 @@ describe("resolvers", () => {
       expect(results).toBeNull()
     })
 
-    it("returns null if the article has no author_ids", async() => {
+    it("returns null if the article has no author_ids", async () => {
       root = { author_ids: null }
       const results = await resolvers.relatedAuthors(root)
       expect(results).toBeNull()
@@ -189,10 +190,10 @@ describe("resolvers", () => {
   })
 
   describe("channels", () => {
-    it("can find channels", async() => {
+    it("can find channels", async () => {
       channelModel.mongoFetch.mockImplementation((args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().channels] })
-      }) 
+      })
       const results = await resolvers.channels(articleFixture, {}, req, {})
       results.length.should.equal(1)
       results[0].name.should.equal("Editorial")
@@ -201,21 +202,26 @@ describe("resolvers", () => {
   })
 
   describe("articleChannel", () => {
-    it("can return article channel", async() => {
+    it("can return article channel", async () => {
       channelModel.find.mockImplementation((args, cb) => {
         cb(null, fixtures().channels)
       })
-      const results = await resolvers.articleChannel(articleFixture, {}, req, {})
+      const results = await resolvers.articleChannel(
+        articleFixture,
+        {},
+        req,
+        {}
+      )
       results.name.should.equal("Editorial")
       results.type.should.equal("editorial")
     })
   })
 
   describe("curations", () => {
-    it("can find curations", async() => {
+    it("can find curations", async () => {
       curationModel.mongoFetch.mockImplementation((args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().curations] })
-      }) 
+      })
       const results = await resolvers.curations({}, {}, req, {})
       results.length.should.equal(1)
       results[0].name.should.equal("Featured Articles")
@@ -223,20 +229,24 @@ describe("resolvers", () => {
   })
 
   describe("seriesArticle", () => {
-    it("can find a series article", async() => {
-      articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [SeriesArticle] })
+    it("can find a series article", async () => {
+      articleModel.promisedMongoFetch.mockResolvedValueOnce({
+        results: [SeriesArticle],
+      })
       const results = await resolvers.seriesArticle({
         id: SeriesArticle.id,
       })
       results.title.should.equal("The Future of Art")
     })
 
-    it("returns null if no series article is found", async() => {
+    it("returns null if no series article is found", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({
-        results: [{
-          related_article_ids: [],
-          ...SeriesArticle
-        }]
+        results: [
+          {
+            related_article_ids: [],
+            ...SeriesArticle,
+          },
+        ],
       })
       const results = await resolvers.seriesArticle({
         id: "123",
@@ -246,10 +256,10 @@ describe("resolvers", () => {
   })
 
   describe("tags", () => {
-    it("can find tags", async() => {
+    it("can find tags", async () => {
       tagModel.mongoFetch.mockImplementation((args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().tags] })
-      }) 
+      })
       const results = await resolvers.tags({}, {}, req, {})
       results.length.should.equal(1)
       results[0].name.should.equal("Show Reviews")
@@ -257,8 +267,10 @@ describe("resolvers", () => {
   })
 
   describe("relatedArticles", () => {
-    it("can find related articles for the series", async() => {
-      articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [SeriesArticle] })
+    it("can find related articles for the series", async () => {
+      articleModel.promisedMongoFetch.mockResolvedValueOnce({
+        results: [SeriesArticle],
+      })
       const results = await resolvers.relatedArticles(
         {
           id: SeriesArticle.id,
@@ -271,7 +283,7 @@ describe("resolvers", () => {
       results[0].id.should.equal("594a7e2254c37f00177c0ea9")
     })
 
-    it("preserves sort order of related articles", async() => {
+    it("preserves sort order of related articles", async () => {
       const related1 = {
         ...SeriesArticle,
         _id: "594a7e2254c37f00177c0ea9",
@@ -296,7 +308,7 @@ describe("resolvers", () => {
       results[1].id.should.equal(related2.id)
     })
 
-    it("resolves null if it does not have related articles", async() => {
+    it("resolves null if it does not have related articles", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [] })
       const results = await resolvers.relatedArticles(
         {
@@ -308,7 +320,7 @@ describe("resolvers", () => {
       expect(results).toBeNull()
     })
 
-    it("queries only published articles if user is unauthorized", async() => {
+    it("queries only published articles if user is unauthorized", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [] })
       await resolvers.relatedArticles(
         {
@@ -319,10 +331,12 @@ describe("resolvers", () => {
         {},
         { user: { id: "123" } }
       )
-      expect(articleModel.promisedMongoFetch.mock.calls[0][0].published).toBe(true)
+      expect(articleModel.promisedMongoFetch.mock.calls[0][0].published).toBe(
+        true
+      )
     })
 
-    it("queries all articles if user is authorized", async() => {
+    it("queries all articles if user is authorized", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [] })
       await resolvers.relatedArticles(
         {
@@ -333,10 +347,12 @@ describe("resolvers", () => {
         {},
         { user: { id: "123", channel_ids: ["54276766fd4f50996aeca2b3"] } }
       )
-      expect(articleModel.promisedMongoFetch.mock.calls[0][0].published).toBeUndefined()
+      expect(
+        articleModel.promisedMongoFetch.mock.calls[0][0].published
+      ).toBeUndefined()
     })
 
-    it("Sets limit arg to the number of articles to be fetched", async() => {
+    it("Sets limit arg to the number of articles to be fetched", async () => {
       await resolvers.relatedArticles(
         {
           id: "54276766fd4f50996aeca2b8",
@@ -362,9 +378,8 @@ describe("resolvers", () => {
     })
   })
 
-
   describe("relatedArticlesCanvas", () => {
-    xit("can find related articles for the canvas", async() => {
+    xit("can find related articles for the canvas", async () => {
       // articleModel.promisedMongoFetch.mockResolvedValueOnce(articlesFixture)
       const results = await resolvers.relatedArticlesCanvas({
         id: "54276766fd4f50996aeca2b8",
@@ -374,7 +389,7 @@ describe("resolvers", () => {
       results[0].vertical.id.should.equal("54276766fd4f50996aeca2b3")
     })
 
-    it("resolves null if it does not have articles", async() => {
+    it("resolves null if it does not have articles", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [] })
       const results = await resolvers.relatedArticlesCanvas({
         id: "54276766fd4f50996aeca2b8",
@@ -383,7 +398,7 @@ describe("resolvers", () => {
       expect(results).toBeNull()
     })
 
-    it("omits related articles and root article from fetch", async() => {
+    it("omits related articles and root article from fetch", async () => {
       articleFixture.id = "594a7e2254c37f00177c0ea9"
       articleFixture.related_article_ids = [
         ObjectId("5c40890f521d075876214805"),
@@ -398,28 +413,28 @@ describe("resolvers", () => {
       expect(args.omit[0]).toMatchObject(ObjectId("594a7e2254c37f00177c0ea9"))
       expect(args.omit[1]).toMatchObject(ObjectId("5c40890f521d075876214805"))
       expect(args.omit[2]).toMatchObject(ObjectId("5c472ea015f1e22de4eef4b0"))
-  })
-
-  it("makes fetch with relatedArticleArgs", async() => {
-    articleFixture.id = "594a7e2254c37f00177c0ea9"
-    articleFixture.related_article_ids = [
-      ObjectId("5c40890f521d075876214805"),
-      ObjectId("5c472ea015f1e22de4eef4b0"),
-    ]
-    articleFixture.channel_id = "f78859586db1ce9913107e1b"
-    await resolvers.relatedArticlesCanvas(articleFixture)
-    expect(articleModel.promisedMongoFetch).toHaveBeenCalledTimes(2)
-    expect(articleModel.promisedMongoFetch).toHaveBeenCalledWith({
-      ids: articleFixture.related_article_ids,
-      limit: 4,
-      published: true,
-      has_published_media: true,
     })
+
+    it("makes fetch with relatedArticleArgs", async () => {
+      articleFixture.id = "594a7e2254c37f00177c0ea9"
+      articleFixture.related_article_ids = [
+        ObjectId("5c40890f521d075876214805"),
+        ObjectId("5c472ea015f1e22de4eef4b0"),
+      ]
+      articleFixture.channel_id = "f78859586db1ce9913107e1b"
+      await resolvers.relatedArticlesCanvas(articleFixture)
+      expect(articleModel.promisedMongoFetch).toHaveBeenCalledTimes(2)
+      expect(articleModel.promisedMongoFetch).toHaveBeenCalledWith({
+        ids: articleFixture.related_article_ids,
+        limit: 4,
+        published: true,
+        has_published_media: true,
+      })
     })
   })
 
   describe("relatedArticlesPanel", () => {
-    it("can find related articles for the panel without related_article_ids", async() => {
+    it("can find related articles for the panel without related_article_ids", async () => {
       const results = await resolvers.relatedArticlesPanel({
         id: "54276766fd4f50996aeca2b8",
         tags: ["dog", "cat"],
@@ -428,12 +443,12 @@ describe("resolvers", () => {
       results[0].tags[0].should.equal("dog")
     })
 
-    it("can find related articles for the panel with related_article_ids", async() => {
+    it("can find related articles for the panel with related_article_ids", async () => {
       const relatedArticles = {
         results: [
           {
             title: "Related Article",
-            ...articlesFixture
+            ...articlesFixture,
           },
         ],
       }
@@ -450,8 +465,10 @@ describe("resolvers", () => {
       results[1].tags[0].should.equal("dog")
     })
 
-    it("returns an error on the mongo fetch", async() => {
-      articleModel.promisedMongoFetch.mockRejectedValueOnce({message: "Error"})
+    it("returns an error on the mongo fetch", async () => {
+      articleModel.promisedMongoFetch.mockRejectedValueOnce({
+        message: "Error",
+      })
       await resolvers
         .relatedArticlesPanel({
           id: "54276766fd4f50996aeca2b8",
@@ -463,7 +480,7 @@ describe("resolvers", () => {
         })
     })
 
-    it("resolves null if there are no articles", async() => {
+    it("resolves null if there are no articles", async () => {
       articleModel.promisedMongoFetch.mockResolvedValueOnce({ results: [] })
       const result = await resolvers.relatedArticlesPanel({
         id: "54276766fd4f50996aeca2b8",
@@ -472,15 +489,17 @@ describe("resolvers", () => {
       expect(result).toBeNull()
     })
 
-    it("strips tags from args when the article does not have tags", async() => {
+    it("strips tags from args when the article does not have tags", async () => {
       await resolvers.relatedArticlesPanel({
         id: "54276766fd4f50996aeca2b8",
         tags: [],
       })
-      Object.keys(articleModel.promisedMongoFetch.mock.calls[0][0]).should.not.containEql("tags")
+      Object.keys(
+        articleModel.promisedMongoFetch.mock.calls[0][0]
+      ).should.not.containEql("tags")
     })
 
-    it("presents related_article_ids and feed articles", async() => {
+    it("presents related_article_ids and feed articles", async () => {
       const relatedArticles = {
         results: [
           {
@@ -503,7 +522,7 @@ describe("resolvers", () => {
       results[0].updated_at.should.containEql("2017-01-01")
     })
 
-    it("omits related articles and root article from fetch", async() => {
+    it("omits related articles and root article from fetch", async () => {
       articleFixture.id = "594a7e2254c37f00177c0ea9"
       articleFixture.related_article_ids = [
         ObjectId("5c40890f521d075876214805"),
@@ -519,7 +538,7 @@ describe("resolvers", () => {
       expect(args.omit[2]).toMatchObject(ObjectId("5c472ea015f1e22de4eef4b0"))
     })
 
-    it("makes fetch with relatedArticleargs", async() => {
+    it("makes fetch with relatedArticleargs", async () => {
       articleFixture.related_article_ids = [
         ObjectId("5c40890f521d075876214805"),
         ObjectId("5c472ea015f1e22de4eef4b0"),
