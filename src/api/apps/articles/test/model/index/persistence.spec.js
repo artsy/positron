@@ -7,11 +7,13 @@
 const _ = require("underscore")
 const moment = require("moment")
 const { db, fabricate, empty } = require("../../../../../test/helpers/db")
-const Article = require("../../../model/index.js")
+const rewire = require("rewire")
+const Article = rewire("../../../model/index.js")
 const { ObjectId } = require("mongojs")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const search = require("../../../../../lib/elasticsearch")
+const sinon = require("sinon")
 
 describe("Article Persistence", function() {
   let server
@@ -32,8 +34,11 @@ describe("Article Persistence", function() {
     })
   })
 
-  beforeEach(done =>
-    empty(() => fabricate("articles", _.times(10, () => ({})), () => done())))
+  beforeEach(done => {
+    const deleteArticleFromSailthru = sinon.stub().yields()
+    Article.__set__('deleteArticleFromSailthru', deleteArticleFromSailthru)
+    empty(() => fabricate("articles", _.times(10, () => ({})), () => done()))
+  })
 
   describe("#save", function() {
     it("saves valid article input data", done =>

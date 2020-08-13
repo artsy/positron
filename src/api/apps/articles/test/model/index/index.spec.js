@@ -12,10 +12,12 @@ const {
 } = require("../../../../../test/helpers/db")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const Article = require("../../../model/index.js")
+const rewire = require("rewire")
+const Article = rewire("../../../model/index.js")
 const search = require("../../../../../lib/elasticsearch")
 const { ObjectId } = require("mongojs")
 const moment = require("moment")
+const sinon = require("sinon")
 
 describe("Article", function() {
   let server
@@ -37,8 +39,8 @@ describe("Article", function() {
   })
 
   beforeEach(done => {
-    // @deleteArticleFromSailthru = sinon.stub().yields()
-    // Article.__set__ 'deleteArticleFromSailthru', @deleteArticleFromSailthru
+    const deleteArticleFromSailthru = sinon.stub().yields()
+    Article.__set__('deleteArticleFromSailthru', deleteArticleFromSailthru)
     empty(() => fabricate("articles", _.times(10, () => ({})), () => done()))
   })
 
