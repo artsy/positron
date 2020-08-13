@@ -8,7 +8,6 @@ const _ = require("underscore")
 const rewire = require("rewire")
 const { fabricate, empty } = require("../../../../test/helpers/db")
 const Distribute = rewire("../../model/distribute")
-const express = require("express")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const sinon = require("sinon")
@@ -16,11 +15,11 @@ const sinon = require("sinon")
 describe("Save", function() {
   before(function(done) {
     app.use("/__gravity", gravity)
-    return (this.server = app.listen(5000, () => done()))
+    this.server = app.listen(5000, () => done())
   })
 
   after(function() {
-    return this.server.close()
+    this.server.close()
   })
 
   beforeEach(function(done) {
@@ -35,7 +34,7 @@ describe("Save", function() {
         }),
       }),
     })
-    return empty(() =>
+    empty(() =>
       fabricate("articles", _.times(10, () => ({})), () => done())
     )
   })
@@ -54,61 +53,61 @@ describe("Save", function() {
 
         it("constructs the url for classic articles", function(done) {
           article.layout = "classic"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "article/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
 
         it("constructs the url for standard articles", function(done) {
           article.layout = "standard"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "article/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
 
         it("constructs the url for feature articles", function(done) {
           article.layout = "feature"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "article/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
 
         it("constructs the url for series articles", function(done) {
           article.layout = "series"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "series/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
 
         it("constructs the url for video articles", function(done) {
           article.layout = "video"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "video/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
 
-        return it("constructs the url for news articles", function(done) {
+        it("constructs the url for news articles", function(done) {
           article.layout = "news"
-          Distribute.distributeArticle(article, function(err, article) {})
+          Distribute.distributeArticle(article, function() {})
           this.sailthru.apiPost.args[0][1].url.should.containEql(
             "news/artsy-editorial-slug-two"
           )
-          return done()
+          done()
         })
       })
 
       it("concats the article tag for a normal article", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -119,13 +118,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].tags.should.not.containEql(
               "artsy-editorial"
             )
-            return done()
+            done()
           }
         )
       })
 
       it("concats the article and artsy-editorial tag for editorial channel", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -137,13 +136,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].tags.should.containEql(
               "artsy-editorial"
             )
-            return done()
+            done()
           }
         )
       })
 
       it("does not send if it is scheduled", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: false,
@@ -151,13 +150,13 @@ describe("Save", function() {
           },
           (err, article) => {
             this.sailthru.apiPost.calledOnce.should.be.false()
-            return done()
+            done()
           }
         )
       })
 
       it("concats the tracking_tags and vertical", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -173,13 +172,13 @@ describe("Save", function() {
             )
             this.sailthru.apiPost.args[0][1].tags.should.containEql("profiles")
             this.sailthru.apiPost.args[0][1].tags.should.containEql("culture")
-            return done()
+            done()
           }
         )
       })
 
       it("sends vertical as a custom variable", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -190,13 +189,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].vars.vertical.should.equal(
               "culture"
             )
-            return done()
+            done()
           }
         )
       })
 
       it("sends layout as a custom variable", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -205,13 +204,13 @@ describe("Save", function() {
           (err, article) => {
             this.sailthru.apiPost.calledOnce.should.be.true()
             this.sailthru.apiPost.args[0][1].vars.layout.should.equal("news")
-            return done()
+            done()
           }
         )
       })
 
       it("concats the keywords at the end", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -223,13 +222,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].tags[1].should.equal("sofa")
             this.sailthru.apiPost.args[0][1].tags[2].should.equal("midcentury")
             this.sailthru.apiPost.args[0][1].tags[3].should.equal("knoll")
-            return done()
+            done()
           }
         )
       })
 
       it("uses email_metadata vars if provided", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -252,13 +251,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].images.thumb.url.should.containEql(
               "&width=900&height=530&quality=95&src=imageurl.com%2Fimage.jpg"
             )
-            return done()
+            done()
           }
         )
       })
 
       it("sends the article text body", function(done) {
-        return Distribute.distributeArticle(
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -286,13 +285,13 @@ describe("Save", function() {
             this.sailthru.apiPost.args[0][1].vars.html.should.not.containEql(
               "This Caption"
             )
-            return done()
+            done()
           }
         )
       })
 
-      return it("deletes all previously formed slugs in Sailthru", function(done) {
-        return Distribute.distributeArticle(
+      it("deletes all previously formed slugs in Sailthru", function(done) {
+        Distribute.distributeArticle(
           {
             author_id: "5086df098523e60002000018",
             published: true,
@@ -306,7 +305,7 @@ describe("Save", function() {
             this.sailthru.apiDelete.callCount.should.equal(2)
             this.sailthru.apiDelete.args[0][1].url.should.containEql("slug-one")
             this.sailthru.apiDelete.args[1][1].url.should.containEql("slug-two")
-            return done()
+            done()
           }
         )
       })
@@ -314,13 +313,13 @@ describe("Save", function() {
 
   describe("#deleteArticleFromSailthru", () =>
     it("deletes the article from sailthru", function(done) {
-      return Distribute.deleteArticleFromSailthru(
+      Distribute.deleteArticleFromSailthru(
         "artsy-editorial-delete-me",
         (err, article) => {
           this.sailthru.apiDelete.args[0][1].url.should.containEql(
             "artsy-editorial-delete-me"
           )
-          return done()
+          done()
         }
       )
     }))
@@ -344,26 +343,26 @@ describe("Save", function() {
       Distribute.deleteArticleFromSailthru.args[1][0].should.containEql(
         "/video/artsy-editorial-slug-two"
       )
-      return done()
+      done()
     }))
 
-  return describe("#getArticleUrl", function() {
+  describe("#getArticleUrl", function() {
     it("constructs the url for an article using the last slug by default", function() {
       const article = {
         layout: "classic",
         slugs: ["artsy-editorial-slug-one", "artsy-editorial-slug-two"],
       }
       const url = Distribute.getArticleUrl(article)
-      return url.should.containEql("article/artsy-editorial-slug-two")
+      url.should.containEql("article/artsy-editorial-slug-two")
     })
 
-    return it("Can use a specified slug if provided", function() {
+    it("Can use a specified slug if provided", function() {
       const article = {
         layout: "classic",
         slugs: ["artsy-editorial-slug-one", "artsy-editorial-slug-two"],
       }
       const url = Distribute.getArticleUrl(article, article.slugs[0])
-      return url.should.containEql("article/artsy-editorial-slug-one")
+      url.should.containEql("article/artsy-editorial-slug-one")
     })
   })
 })

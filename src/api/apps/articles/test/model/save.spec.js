@@ -8,7 +8,6 @@ const rewire = require("rewire")
 const { fabricate, empty } = require("../../../../test/helpers/db")
 const Save = rewire("../../model/save")
 const Article = require("../../model/index")
-const express = require("express")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const sinon = require("sinon")
@@ -23,12 +22,12 @@ describe("Save", function() {
     this.server = app.listen(5000, () => done())
 
     const date = new Date("Tue Jan 01 2019 00:00:00")
-    return sandbox.useFakeTimers(date)
+    sandbox.useFakeTimers(date)
   })
 
   after(function() {
     this.server.close()
-    return sandbox.restore()
+    sandbox.restore()
   })
 
   beforeEach(function(done) {
@@ -50,7 +49,7 @@ describe("Save", function() {
     )
     Save.__set__("indexForSearch", (this.indexForSearch = sinon.stub()))
 
-    return empty(() =>
+    empty(() =>
       fabricate("articles", _.times(10, () => ({})), () => done())
     )
   })
@@ -68,12 +67,12 @@ describe("Save", function() {
       this.removeStopWords(
         "Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week"
       ).should.containEql("helen marten wins uks art prize 9 news stories week")
-      return done()
+      done()
     })
 
-    return it("if all words are stop words, keep the title", function(done) {
+    it("if all words are stop words, keep the title", function(done) {
       this.removeStopWords("I’ll be there").should.containEql("Ill be there")
-      return done()
+      done()
     })
   })
 
@@ -84,15 +83,18 @@ describe("Save", function() {
           thumbnail_title: "a title",
         },
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.slugs.length.should.equal(1)
           moment(article.published_at)
             .format("MM DD YYYY")
             .should.equal(moment().format("MM DD YYYY"))
-          return done()
+          done()
         }
       ))
 
-    return it("does not generate published_at if scheduled", done =>
+    it("does not generate published_at if scheduled", done =>
       Save.onPublish(
         {
           thumbnail_title: "a title",
@@ -100,8 +102,11 @@ describe("Save", function() {
           published_at: null,
         },
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           ;(article.published_at === null).should.be.true()
-          return done()
+          done()
         }
       ))
   })
@@ -117,8 +122,11 @@ describe("Save", function() {
           },
         },
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.slugs[0].should.equal("molly-clockwork")
-          return done()
+          done()
         }
       ))
 
@@ -134,8 +142,11 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs[0].should.equal("molly-clockwork-07-26-17")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -155,9 +166,12 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs.length.should.equal(1)
             article.slugs[0].should.equal("molly-clockwork")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -176,8 +190,11 @@ describe("Save", function() {
             published_at: "2017-07-dsdfdf26T17:37:03.065Zsdfdf",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs[0].should.equal("molly-clockwork-01-01-19")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -195,8 +212,11 @@ describe("Save", function() {
             },
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs[0].should.equal("molly-clockwork-01-01-19")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -220,11 +240,14 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs.length.should.equal(3)
             article.slugs[article.slugs.length - 1].should.equal(
               "molly-clockwork"
             )
-            return done()
+            done()
           }
         )
       )(null, {
@@ -244,9 +267,12 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs.length.should.equal(1)
             article.slugs[0].should.equal("molly-clockwork-07-26-17")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -270,11 +296,14 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs.length.should.equal(3)
             article.slugs[article.slugs.length - 1].should.equal(
               "molly-clockwork-07-26-17"
             )
-            return done()
+            done()
           }
         )
       )(null, {
@@ -293,8 +322,11 @@ describe("Save", function() {
             published_at: "2017-07-26T17:37:03.065Z",
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs[0].should.equal("molly-clockwork-1501090623")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -307,7 +339,7 @@ describe("Save", function() {
       const os = now.getTimezoneOffset()
       sandbox.clock.tick(os * -60000)
 
-      return Save.sanitizeAndSave(() =>
+      Save.sanitizeAndSave(() =>
         Save.generateSlugs(
           {
             thumbnail_title: "Clockwork",
@@ -317,8 +349,11 @@ describe("Save", function() {
             },
           },
           function(err, article) {
+            if (err) {
+              done(err)
+            }
             article.slugs[0].should.equal("molly-clockwork-1546300800")
-            return done()
+            done()
           }
         )
       )(null, {
@@ -326,7 +361,7 @@ describe("Save", function() {
       })
     })
 
-    return it("does not append author if it is series layout", done =>
+    it("does not append author if it is series layout", done =>
       Save.generateSlugs(
         {
           thumbnail_title: "Clockwork",
@@ -337,15 +372,18 @@ describe("Save", function() {
           layout: "series",
         },
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.slugs[0].should.equal("clockwork")
-          return done()
+          done()
         }
       ))
   })
 
   describe("#onUnpublish", function() {
     it("generates slugs and deletes article from sailthru", function(done) {
-      return Save.onUnpublish(
+      Save.onUnpublish(
         {
           thumbnail_title: "delete me a title",
           author_id: "5086df098523e60002000018",
@@ -355,17 +393,20 @@ describe("Save", function() {
           layout: "video",
         },
         (err, article) => {
+          if (err) {
+            done(err)
+          }
           article.slugs.length.should.equal(1)
           this.deleteArticleFromSailthru.args[0][0].should.containEql(
             "video/artsy-editorial-delete-title"
           )
-          return done()
+          done()
         }
       )
     })
 
-    return it("Regenerates the slug with stop words removed", function(done) {
-      return Save.onUnpublish(
+    it("Regenerates the slug with stop words removed", function(done) {
+      Save.onUnpublish(
         {
           thumbnail_title:
             "One New York Building Changed the Way Art Is Made, Seen, and Sold",
@@ -376,22 +417,28 @@ describe("Save", function() {
           layout: "feature",
         },
         (err, article) => {
+          if (err) {
+            done(err)
+          }
           article.slugs.length.should.equal(1)
           this.deleteArticleFromSailthru.args[0][0].should.containEql(
             "article/artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold"
           )
-          return done()
+          done()
         }
       )
     })
   })
 
-  return describe("#sanitizeAndSave", function() {
+  describe("#sanitizeAndSave", function() {
     it("skips sanitizing links that do not have an href", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.sections[0].body.should.containEql("<a></a>")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -406,10 +453,13 @@ describe("Save", function() {
     it("can save follow artist links (whitelist data-id)", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.sections[0].body.should.containEql(
             '<a data-id="andy-warhol"></a>'
           )
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -424,8 +474,11 @@ describe("Save", function() {
     it("can save layouts on text sections", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.sections[0].layout.should.eql("blockquote")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -439,10 +492,13 @@ describe("Save", function() {
       }))
 
     it("indexes articles that are indexable", function(done) {
-      return Save.sanitizeAndSave(() => {
-        return Article.find("5086df098523e60002000011", (err, article) => {
+      Save.sanitizeAndSave(() => {
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
           this.indexForSearch.callCount.should.eql(1)
-          return done()
+          done()
         })
       })(null, {
         indexable: true,
@@ -451,10 +507,13 @@ describe("Save", function() {
     })
 
     it("skips indexing articles that are not indexable", function(done) {
-      return Save.sanitizeAndSave(() => {
-        return Article.find("5086df098523e60002000011", (err, article) => {
+       Save.sanitizeAndSave(() => {
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
           this.indexForSearch.callCount.should.eql(0)
-          return done()
+          done()
         })
       })(null, {
         indexable: false,
@@ -465,10 +524,13 @@ describe("Save", function() {
     it("saves email metadata", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.email_metadata.image_url.should.containEql("foo.png")
           article.email_metadata.author.should.containEql("Kana")
           article.email_metadata.headline.should.containEql("Thumbnail Title")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -483,10 +545,13 @@ describe("Save", function() {
     it("does not override email metadata", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.email_metadata.image_url.should.containEql("bar.png")
           article.email_metadata.author.should.containEql("Artsy Editorial")
           article.email_metadata.headline.should.containEql("Custom Headline")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -503,8 +568,11 @@ describe("Save", function() {
     it("saves generated descriptions", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.description.should.containEql("Testing 123")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -515,8 +583,11 @@ describe("Save", function() {
     it("does not override description", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.description.should.containEql("Do not override me")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -527,8 +598,11 @@ describe("Save", function() {
     it("Strips linebreaks from titles", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.title.should.containEql("A new title")
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
@@ -537,9 +611,12 @@ describe("Save", function() {
         title: "A new title \n",
       }))
 
-    return it("saves media", done =>
+    it("saves media", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.media.url.should.equal("https://media.artsy.net/video.mp4")
           article.media.cover_image_url.should.equal(
             "https://media.artsy.net/images.jpg"
@@ -553,7 +630,7 @@ describe("Save", function() {
           article.media.credits.should.equal(
             "<p><b>Director</b><br>Marina Cashdan</p>"
           )
-          return done()
+          done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),

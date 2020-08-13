@@ -6,34 +6,28 @@
  */
 const _ = require("underscore")
 const moment = require("moment")
-const {
-  db,
-  fabricate,
-  empty,
-  fixtures,
-} = require("../../../../../test/helpers/db")
+const { db, fabricate, empty } = require("../../../../../test/helpers/db")
 const Article = require("../../../model/index.js")
 const { ObjectId } = require("mongojs")
-const express = require("express")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const sinon = require("sinon")
 const search = require("../../../../../lib/elasticsearch")
 
 describe("Article Persistence", function() {
+  let server
   before(function(done) {
     app.use("/__gravity", gravity)
-    return (this.server = app.listen(5000, () =>
+    server = app.listen(5000, () =>
       search.client.indices.create(
         { index: "articles_" + process.env.NODE_ENV },
         () => done()
       )
-    ))
+    )
   })
 
   after(function() {
-    this.server.close()
-    return search.client.indices.delete({
+    server.close()
+    search.client.indices.delete({
       index: "articles_" + process.env.NODE_ENV,
     })
   })
@@ -41,7 +35,7 @@ describe("Article Persistence", function() {
   beforeEach(done =>
     empty(() => fabricate("articles", _.times(10, () => ({})), () => done())))
 
-  return describe("#save", function() {
+  describe("#save", function() {
     it("saves valid article input data", done =>
       Article.save(
         {
@@ -55,12 +49,18 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.title.should.equal("Top Ten Shows")
           article.channel_id.toString().should.equal("5086df098523e60002002223")
           article.vertical.name.should.eql("Culture")
-          return db.articles.count(function(err, count) {
+          db.articles.count(function(err, count) {
+            if (err) {
+              done(err)
+            }
             count.should.equal(11)
-            return done()
+            done()
           })
         }
       ))
@@ -75,11 +75,14 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.updated_at.should.be.an.instanceOf(Date)
           moment(article.updated_at)
             .format("YYYY-MM-DD")
             .should.equal(moment().format("YYYY-MM-DD"))
-          return done()
+          done()
         }
       ))
 
@@ -98,7 +101,7 @@ describe("Article Persistence", function() {
             '"updated_at" must be a number of milliseconds or valid date string'
           )
       )
-      return Article.save(
+      Article.save(
         {
           title: "Top Ten Shows",
           thumbnail_title: "Ten Shows",
@@ -108,10 +111,13 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           moment(article.updated_at)
             .format("YYYY-MM-DD")
             .should.equal(moment().format("YYYY-MM-DD"))
-          return done()
+          done()
         }
       )
     })
@@ -127,10 +133,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           (article._id != null).should.be.ok
-          return done()
+          done()
         }
       ))
 
@@ -148,77 +154,84 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.slugs[0].should.equal("craig-spaeth-ten-shows")
-          return done()
+          done()
         }
       ))
 
     it("adds a slug based off a user and thumbnail title", done =>
       fabricate("users", { name: "Molly" }, function(err, user) {
-        this.user = user
-        return Article.save(
+        if (err) {
+          done(err)
+        }
+        Article.save(
           {
             thumbnail_title: "Foo Baz",
-            author_id: this.user._id.toString(),
+            author_id: user._id.toString(),
             author: {
-              name: this.user.name,
+              name: user.name,
             },
           },
           "foo",
           {},
           function(err, article) {
             if (err) {
-              return done(err)
+              done(err)
             }
             article.slugs[0].should.equal("molly-foo-baz")
-            return done()
+            done()
           }
         )
       }))
 
     it("saves slug history when publishing", done =>
       fabricate("users", { name: "Molly" }, function(err, user) {
-        this.user = user
-        return Article.save(
+        if (err) {
+          done(err)
+        }
+        Article.save(
           {
             thumbnail_title: "Foo Baz",
-            author_id: this.user._id.toString(),
+            author_id: user._id.toString(),
             published: false,
             author: {
-              name: this.user.name,
+              name: user.name,
             },
           },
           "foo",
           {},
           (err, article) => {
             if (err) {
-              return done(err)
+              done(err)
             }
-            return Article.save(
+            Article.save(
               {
                 id: article._id.toString(),
                 thumbnail_title: "Foo Bar Baz",
-                author_id: this.user._id.toString(),
+                author_id: user._id.toString(),
                 published: true,
                 layout: "standard",
                 author: {
-                  name: this.user.name,
+                  name: user.name,
                 },
               },
               "foo",
               {},
               function(err, article) {
                 if (err) {
-                  return done(err)
+                  done(err)
                 }
                 article.slugs
                   .join("")
                   .should.equal("molly-foo-bazmolly-foo-bar-baz")
-                return Article.find(article.slugs[0], function(err, article) {
+                Article.find(article.slugs[0], function(err, article) {
+                  if (err) {
+                    done(err)
+                  }
                   article.thumbnail_title.should.equal("Foo Bar Baz")
-                  return done()
+                  done()
                 })
               }
             )
@@ -252,12 +265,15 @@ describe("Article Persistence", function() {
             {},
             function(err, article) {
               if (err) {
-                return done(err)
+                done(err)
               }
               article.slugs[0].should.equal("craig-spaeth-heyo-01-01-99")
-              return db.articles.count(function(err, count) {
+              db.articles.count(function(err, count) {
+                if (err) {
+                  done(err)
+                }
                 count.should.equal(12)
-                return done()
+                done()
               })
             }
           )
@@ -275,11 +291,14 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.published_at.should.be.an.instanceOf(Date)
           moment(article.published_at)
             .format("YYYY")
             .should.equal(moment().format("YYYY"))
-          return done()
+          done()
         }
       ))
 
@@ -295,9 +314,9 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
-          return Article.save(
+          Article.save(
             {
               id: article._id.toString(),
               author_id: "5086df098523e60002000018",
@@ -309,7 +328,7 @@ describe("Article Persistence", function() {
             {},
             function(err, updatedArticle) {
               if (err) {
-                return done(err)
+                done(err)
               }
               updatedArticle.published_at.should.be.an.instanceOf(Date)
               moment(updatedArticle.published_at)
@@ -319,7 +338,7 @@ describe("Article Persistence", function() {
                     .add(1, "year")
                     .format("YYYY")
                 )
-              return done()
+              done()
             }
           )
         }
@@ -337,8 +356,11 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.indexable.should.eql(true)
-          return done()
+          done()
         }
       ))
 
@@ -353,10 +375,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.indexable.should.eql(true)
-          return Article.save(
+          Article.save(
             {
               id: article._id.toString(),
               author_id: "5086df098523e60002000018",
@@ -366,10 +388,10 @@ describe("Article Persistence", function() {
             {},
             function(err, updatedArticle) {
               if (err) {
-                return done(err)
+                done(err)
               }
               updatedArticle.indexable.should.eql(false)
-              return done()
+              done()
             }
           )
         }
@@ -387,8 +409,11 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           ;(article.fair_ids != null).should.not.be.ok
-          return done()
+          done()
         }
       ))
 
@@ -397,7 +422,7 @@ describe("Article Persistence", function() {
         '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       const badBody =
         '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
-      return Article.save(
+      Article.save(
         {
           id: "5086df098523e60002000018",
           author_id: "5086df098523e60002000018",
@@ -448,6 +473,9 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.lead_paragraph.should.equal(
             '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
           )
@@ -468,7 +496,7 @@ describe("Article Persistence", function() {
           article.sections[4].height.should.equal("400")
           article.sections[4].mobile_height.should.equal("300")
           article.sections[5].url.should.equal("http://some-link.com")
-          return done()
+          done()
         }
       )
     })
@@ -483,9 +511,12 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.title.should.containEql("“")
           article.thumbnail_title.should.containEql("“")
-          return done()
+          done()
         }
       ))
 
@@ -507,13 +538,16 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.sections[0].body.should.equal(
             '<a href="http://foo.com">Foo</a>'
           )
           article.sections[1].body.should.equal(
             '<a href="http://www.bar.com">Foo</a>'
           )
-          return done()
+          done()
         }
       ))
 
@@ -544,49 +578,54 @@ describe("Article Persistence", function() {
         "foo",
         {},
         function(err, article) {
+          if (err) {
+            done(err)
+          }
           article.sections[0].body.should.equal(
             '<a href="http://foo.com">Foo</a>'
           )
           article.sections[1].images[0].url.should.equal("http://foo.com")
           article.sections[2].url.should.equal("http://foo.com/watch")
-          return done()
+          done()
         }
       ))
 
     it("maintains the original slug when publishing with a new title", done =>
       fabricate("users", { name: "Molly" }, function(err, user) {
-        this.user = user
-        return Article.save(
+        if (err) {
+          done(err)
+        }
+        Article.save(
           {
             thumbnail_title: "Foo Baz",
-            author_id: this.user._id.toString(),
+            author_id: user._id.toString(),
             published: true,
             author: {
-              name: this.user.name,
+              name: user.name,
             },
           },
           "foo",
           {},
           (err, article) => {
             if (err) {
-              return done(err)
+              done(err)
             }
-            return Article.save(
+            Article.save(
               {
                 id: article._id.toString(),
                 thumbnail_title: "Foo Bar Baz",
-                author_id: this.user._id.toString(),
+                author_id: user._id.toString(),
                 published: true,
               },
               "foo",
               {},
               function(err, article) {
                 if (err) {
-                  return done(err)
+                  done(err)
                 }
                 article.slugs.join("").should.equal("molly-foo-baz")
                 article.thumbnail_title.should.equal("Foo Bar Baz")
-                return done()
+                done()
               }
             )
           }
@@ -609,14 +648,14 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.keywords
             .join(",")
             .should.equal(
               "cool,art,Pablo Picasso,Pablo Picasso,Armory Show 2013,Gagosian Gallery,kana"
             )
-          return done()
+          done()
         }
       ))
 
@@ -632,9 +671,9 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
-          return setTimeout(
+          setTimeout(
             () =>
               search.client.search(
                 {
@@ -642,11 +681,14 @@ describe("Article Persistence", function() {
                   q: "name:foo",
                 },
                 function(error, response) {
+                  if (error) {
+                    done(err)
+                  }
                   response.hits.hits[0]._source.name.should.equal("foo article")
                   response.hits.hits[0]._source.visible_to_public.should.equal(
                     true
                   )
-                  return done()
+                  done()
                 }
               ),
             1000
@@ -679,7 +721,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.super_article.partner_link.should.equal(
             "http://partnerlink.com"
@@ -709,7 +751,7 @@ describe("Article Persistence", function() {
           article.is_super_article.should.equal(true)
           article.super_article.related_articles.length.should.equal(1)
           article.super_article.footer_title.should.equal("Footer Title")
-          return done()
+          done()
         }
       ))
 
@@ -729,13 +771,13 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           ;(article.author_id instanceof ObjectId).should.be.true()
           ;(
             article.super_article.related_articles[0] instanceof ObjectId
           ).should.be.true()
-          return done()
+          done()
         }
       ))
 
@@ -772,7 +814,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.sections[0].type.should.equal("callout")
           article.sections[0].text.should.equal("The Title Goes Here")
@@ -780,7 +822,7 @@ describe("Article Persistence", function() {
           article.sections[1].type.should.equal("text")
           article.sections[3].type.should.equal("text")
           article.sections[2].article.should.equal("53da550a726169083c0a0700")
-          return done()
+          done()
         }
       ))
 
@@ -813,12 +855,15 @@ describe("Article Persistence", function() {
             "foo",
             {},
             function(err, article) {
+              if (err) {
+                done(err)
+              }
               article.published.should.be.true()
               article.sections.length.should.equal(1)
               article.sections[0].body.should.containEql(
                 "The start of a new article"
               )
-              return done()
+              done()
             }
           )
       ))
@@ -855,7 +900,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.sections[0].type.should.equal("image_set")
           article.sections[0].layout.should.equal("mini")
@@ -866,7 +911,7 @@ describe("Article Persistence", function() {
           article.sections[0].images[1].id.should.equal("123")
           article.sections[0].images[1].slug.should.equal("andy-warhol")
           article.sections[0].images[1].credit.should.equal("Credit Line")
-          return done()
+          done()
         }
       ))
 
@@ -886,12 +931,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.sections[0].layout.should.equal("column_width")
           article.sections[0].url.should.equal("http://instagram.com/foo")
           article.sections[0].type.should.equal("social_embed")
-          return done()
+          done()
         }
       ))
 
@@ -905,10 +950,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.layout.should.equal("feature")
-          return done()
+          done()
         }
       ))
 
@@ -921,10 +966,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.layout.should.equal("classic")
-          return done()
+          done()
         }
       ))
 
@@ -938,10 +983,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.channel_id.toString().should.equal("5086df098523e60002000015")
-          return done()
+          done()
         }
       ))
 
@@ -955,12 +1000,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.partner_channel_id
             .toString()
             .should.equal("5086df098523e60002000015")
-          return done()
+          done()
         }
       ))
 
@@ -977,11 +1022,11 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.author.id.toString().should.equal("5086df098523e60002000018")
           article.author.name.should.equal("Jon Snow")
-          return done()
+          done()
         }
       ))
 
@@ -994,7 +1039,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.author_ids[0]
             .toString()
@@ -1002,7 +1047,7 @@ describe("Article Persistence", function() {
           article.author_ids[1]
             .toString()
             .should.equal("5086df098523e60002000015")
-          return done()
+          done()
         }
       ))
 
@@ -1018,10 +1063,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.description.should.containEql("lines start forming")
-          return done()
+          done()
         }
       ))
 
@@ -1036,12 +1081,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.postscript.should.eql(
             "<p>Here is some text that follows an article.</p>"
           )
-          return done()
+          done()
         }
       ))
 
@@ -1055,10 +1100,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.media.duration.should.equal(1000)
-          return done()
+          done()
         }
       ))
 
@@ -1074,12 +1119,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.series.description.should.equal(
             "<p>Here is some text describing a series.</p>"
           )
-          return done()
+          done()
         }
       ))
 
@@ -1095,10 +1140,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.series.sub_title.should.equal("About this feature")
-          return done()
+          done()
         }
       ))
 
@@ -1112,10 +1157,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.vertical.name.should.eql("Culture")
-          return done()
+          done()
         }
       ))
 
@@ -1129,10 +1174,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.tracking_tags.should.eql(["evergreen", "video"])
-          return done()
+          done()
         }
       ))
 
@@ -1149,12 +1194,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.social_title.should.containEql("social title")
           article.social_description.should.containEql("social description")
           article.social_image.should.containEql("social image")
-          return done()
+          done()
         }
       ))
 
@@ -1170,11 +1215,11 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.search_title.should.containEql("search title")
           article.search_description.should.containEql("search description")
-          return done()
+          done()
         }
       ))
 
@@ -1188,10 +1233,10 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.seo_keyword.should.equal("focus")
-          return done()
+          done()
         }
       ))
 
@@ -1204,7 +1249,7 @@ describe("Article Persistence", function() {
         published: false,
       }
       // Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
-      return fabricate(
+      fabricate(
         "articles",
         {
           _id: ObjectId("5086df098523e60002000018"),
@@ -1213,11 +1258,14 @@ describe("Article Persistence", function() {
           published: true,
         },
         () => {
-          return Article.save(article, "foo", {}, (err, article) => {
+          Article.save(article, "foo", {}, (err, article) => {
+            if (err) {
+              done(err)
+            }
             article.published.should.be.false()
             this.onUnpublish.callCount.should.equal(1)
             // Article.__ResetDependency__ 'onUnpublish'
-            return done()
+            done()
           })
         }
       )
@@ -1236,12 +1284,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://youtube.com")
           article.hero_section.type.should.equal("video")
           article.hero_section.caption.should.equal("This year was incredible.")
-          return done()
+          done()
         }
       ))
 
@@ -1258,12 +1306,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://image.com")
           article.hero_section.type.should.equal("fullscreen")
           article.hero_section.deck.should.equal("This year was incredible.")
-          return done()
+          done()
         }
       ))
 
@@ -1280,12 +1328,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://image.com")
           article.hero_section.type.should.equal("text")
           article.hero_section.deck.should.equal("This year was incredible.")
-          return done()
+          done()
         }
       ))
 
@@ -1302,12 +1350,12 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://image.com")
           article.hero_section.type.should.equal("split")
           article.hero_section.deck.should.equal("This year was incredible.")
-          return done()
+          done()
         }
       ))
 
@@ -1325,14 +1373,14 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://image.com")
           article.hero_section.type.should.equal("basic")
           article.hero_section.cover_image_url.should.equal(
             "http://some-cover-image.png"
           )
-          return done()
+          done()
         }
       ))
 
@@ -1348,11 +1396,11 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.hero_section.url.should.equal("http://image.com")
           article.hero_section.type.should.equal("series")
-          return done()
+          done()
         }
       ))
 
@@ -1373,7 +1421,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.media.url.should.equal("https://media.artsy.net/video.mp4")
           article.media.cover_image_url.should.equal(
@@ -1390,7 +1438,7 @@ describe("Article Persistence", function() {
           article.media.credits.should.equal(
             "<p><b>Director</b><br>Marina Cashdan</p>"
           )
-          return done()
+          done()
         }
       ))
 
@@ -1413,7 +1461,7 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.sponsor.description.should.equal(
             "<p>Here is some text describing a sponsor.</p>"
@@ -1430,11 +1478,11 @@ describe("Article Persistence", function() {
           )
           article.sponsor.partner_logo_link.should.equal("https://partner.com")
           article.sponsor.pixel_tracking_code.should.equal("tracking_image.jpg")
-          return done()
+          done()
         }
       ))
 
-    return it("saves a news_source", done =>
+    it("saves a news_source", done =>
       Article.save(
         {
           news_source: {
@@ -1446,11 +1494,11 @@ describe("Article Persistence", function() {
         {},
         function(err, article) {
           if (err) {
-            return done(err)
+            done(err)
           }
           article.news_source.title.should.equal("The New York Times")
           article.news_source.url.should.equal("https://nytimes.com")
-          return done()
+          done()
         }
       ))
   })
