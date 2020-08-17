@@ -431,9 +431,9 @@ describe("Article Persistence", () => {
 
     it("escapes xss", done => {
       const body =
-        '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+        '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="https://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="https://foo.com">Aloha</a></p>'
       const badBody =
-        '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+        '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="https://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="https://foo.com">Aloha</a></p>'
       Article.save(
         {
           id: "5086df098523e60002000018",
@@ -504,10 +504,10 @@ describe("Article Persistence", () => {
           article.sections[3].items[0].caption.should.equal(
             '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
           )
-          article.sections[4].url.should.equal("http://maps.google.com")
+          article.sections[4].url.should.equal("https://maps.google.com")
           article.sections[4].height.should.equal("400")
           article.sections[4].mobile_height.should.equal("300")
-          article.sections[5].url.should.equal("http://some-link.com")
+          article.sections[5].url.should.equal("https://some-link.com")
           done()
         }
       )
@@ -554,10 +554,10 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.sections[0].body.should.equal(
-            '<a href="http://foo.com">Foo</a>'
+            '<a href="https://foo.com">Foo</a>'
           )
           article.sections[1].body.should.equal(
-            '<a href="http://www.bar.com">Foo</a>'
+            '<a href="https://www.bar.com">Foo</a>'
           )
           done()
         }
@@ -577,7 +577,7 @@ describe("Article Persistence", () => {
               images: [
                 {
                   type: "image",
-                  url: "http://foo.com",
+                  url: "https://foo.com",
                 },
               ],
             },
@@ -594,10 +594,10 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.sections[0].body.should.equal(
-            '<a href="http://foo.com">Foo</a>'
+            '<a href="https://foo.com">Foo</a>'
           )
-          article.sections[1].images[0].url.should.equal("http://foo.com")
-          article.sections[2].url.should.equal("http://foo.com/watch")
+          article.sections[1].images[0].url.should.equal("https://foo.com")
+          article.sections[2].url.should.equal("https://foo.com/watch")
           done()
         }
       ))
@@ -714,15 +714,15 @@ describe("Article Persistence", () => {
           author_id: "5086df098523e60002000018",
           is_super_article: true,
           super_article: {
-            partner_link: "http://partnerlink.com",
-            partner_logo: "http://partnerlink.com/logo.jpg",
+            partner_link: "https://partnerlink.com",
+            partner_logo: "https://partnerlink.com/logo.jpg",
             partner_fullscreen_header_logo:
-              "http://partnerlink.com/blacklogo.jpg",
+              "https://partnerlink.com/blacklogo.jpg",
             partner_link_title: "Download The App",
-            partner_logo_link: "http://itunes",
-            secondary_partner_logo: "http://secondarypartner.com/logo.png",
+            partner_logo_link: "https://itunes",
+            secondary_partner_logo: "https://secondarypartner.com/logo.png",
             secondary_logo_text: "In Partnership With",
-            secondary_logo_link: "http://secondary",
+            secondary_logo_link: "https://secondary",
             footer_blurb: "This is a Footer Blurb",
             related_articles: ["5530e72f7261696238050000"],
             footer_title: "Footer Title",
@@ -736,26 +736,26 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.super_article.partner_link.should.equal(
-            "http://partnerlink.com"
+            "https://partnerlink.com"
           )
           article.super_article.partner_logo.should.equal(
-            "http://partnerlink.com/logo.jpg"
+            "https://partnerlink.com/logo.jpg"
           )
           article.super_article.partner_link_title.should.equal(
             "Download The App"
           )
-          article.super_article.partner_logo_link.should.equal("http://itunes")
+          article.super_article.partner_logo_link.should.equal("https://itunes")
           article.super_article.partner_fullscreen_header_logo.should.equal(
-            "http://partnerlink.com/blacklogo.jpg"
+            "https://partnerlink.com/blacklogo.jpg"
           )
           article.super_article.secondary_partner_logo.should.equal(
-            "http://secondarypartner.com/logo.png"
+            "https://secondarypartner.com/logo.png"
           )
           article.super_article.secondary_logo_text.should.equal(
             "In Partnership With"
           )
           article.super_article.secondary_logo_link.should.equal(
-            "http://secondary"
+            "https://secondary"
           )
           article.super_article.footer_blurb.should.equal(
             "This is a Footer Blurb"
@@ -803,7 +803,7 @@ describe("Article Persistence", () => {
               type: "callout",
               text: "The Title Goes Here",
               article: "",
-              thumbnail_url: "http://image.jpg",
+              thumbnail_url: "https://image.jpg",
               hide_image: false,
             },
             {
@@ -831,7 +831,7 @@ describe("Article Persistence", () => {
           }
           article.sections[0].type.should.equal("callout")
           article.sections[0].text.should.equal("The Title Goes Here")
-          article.sections[0].thumbnail_url.should.equal("http://image.jpg")
+          article.sections[0].thumbnail_url.should.equal("https://image.jpg")
           article.sections[1].type.should.equal("text")
           article.sections[3].type.should.equal("text")
           article.sections[2].article.should.equal("53da550a726169083c0a0700")
@@ -902,7 +902,7 @@ describe("Article Persistence", () => {
                   slug: "andy-warhol",
                   title: "The Piece",
                   date: "2015-04-01",
-                  image: "http://image.png",
+                  image: "https://image.png",
                   credit: "Credit Line",
                 },
               ],
@@ -936,7 +936,7 @@ describe("Article Persistence", () => {
             {
               type: "social_embed",
               layout: "column_width",
-              url: "http://instagram.com/foo",
+              url: "https://instagram.com/foo",
             },
           ],
         },
@@ -947,7 +947,7 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.sections[0].layout.should.equal("column_width")
-          article.sections[0].url.should.equal("http://instagram.com/foo")
+          article.sections[0].url.should.equal("https://instagram.com/foo")
           article.sections[0].type.should.equal("social_embed")
           done()
         }
@@ -1291,7 +1291,7 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://youtube.com",
+            url: "https://youtube.com",
             type: "video",
             caption: "This year was incredible.",
           },
@@ -1302,7 +1302,7 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://youtube.com")
+          article.hero_section.url.should.equal("https://youtube.com")
           article.hero_section.type.should.equal("video")
           article.hero_section.caption.should.equal("This year was incredible.")
           done()
@@ -1313,7 +1313,7 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://image.com",
+            url: "https://image.com",
             type: "fullscreen",
             deck: "This year was incredible.",
           },
@@ -1324,7 +1324,7 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://image.com")
+          article.hero_section.url.should.equal("https://image.com")
           article.hero_section.type.should.equal("fullscreen")
           article.hero_section.deck.should.equal("This year was incredible.")
           done()
@@ -1335,7 +1335,7 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://image.com",
+            url: "https://image.com",
             type: "text",
             deck: "This year was incredible.",
           },
@@ -1346,7 +1346,7 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://image.com")
+          article.hero_section.url.should.equal("https://image.com")
           article.hero_section.type.should.equal("text")
           article.hero_section.deck.should.equal("This year was incredible.")
           done()
@@ -1357,7 +1357,7 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://image.com",
+            url: "https://image.com",
             type: "split",
             deck: "This year was incredible.",
           },
@@ -1368,7 +1368,7 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://image.com")
+          article.hero_section.url.should.equal("https://image.com")
           article.hero_section.type.should.equal("split")
           article.hero_section.deck.should.equal("This year was incredible.")
           done()
@@ -1379,10 +1379,10 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://image.com",
+            url: "https://image.com",
             type: "basic",
             deck: "This year was incredible.",
-            cover_image_url: "http://some-cover-image.png",
+            cover_image_url: "https://some-cover-image.png",
           },
         },
         "foo",
@@ -1391,10 +1391,10 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://image.com")
+          article.hero_section.url.should.equal("https://image.com")
           article.hero_section.type.should.equal("basic")
           article.hero_section.cover_image_url.should.equal(
-            "http://some-cover-image.png"
+            "https://some-cover-image.png"
           )
           done()
         }
@@ -1404,7 +1404,7 @@ describe("Article Persistence", () => {
       Article.save(
         {
           hero_section: {
-            url: "http://image.com",
+            url: "https://image.com",
             type: "series",
           },
         },
@@ -1414,7 +1414,7 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          article.hero_section.url.should.equal("http://image.com")
+          article.hero_section.url.should.equal("https://image.com")
           article.hero_section.type.should.equal("series")
           done()
         }

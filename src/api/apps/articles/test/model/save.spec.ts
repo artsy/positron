@@ -447,6 +447,77 @@ describe("Save", () => {
         ],
       }))
 
+    it("repalaces http with https in sanitized links", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].body.should.containEql(
+            '<a href="https://insecure-website.com">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        sections: [
+          {
+            type: "text",
+            body: "<a href='http://insecure-website.com'>link</a>",
+          },
+        ],
+      }))
+
+    it("sanitizes lead_paragraph", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.lead_paragraph.should.containEql(
+            '<a href="https://insecure-website.com">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        lead_paragraph: "<a href='http://insecure-website.com'>link</a>",
+      }))
+
+    it("sanitizes postscript", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.postscript.should.containEql(
+            '<a href="https://insecure-website.com">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        postscript: "<a href='http://insecure-website.com'>link</a>",
+      }))
+
+    it("sanitizes news_source", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.news_source.url.should.containEql(
+            "https://insecure-website.com"
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        news_source: {
+          url: "http://insecure-website.com",
+        },
+      }))
+
     it("can save follow artist links (whitelist data-id)", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", (err, article) => {
