@@ -3,17 +3,17 @@ import app from "../../../"
 import request from "superagent"
 
 describe("sessions endpoints", () => {
+  let server
   beforeEach(function(done) {
     empty(() => {
-      fabricate("users", {}, (_, user) => {
-        this.user = user
-        this.server = app.listen(5000, () => done())
+      fabricate("users", {}, (_, _user) => {
+        server = app.listen(5000, () => done())
       })
     })
   })
 
   afterEach(function() {
-    this.server.close()
+    server.close()
   })
 
   it("gets a list of sessions", done =>

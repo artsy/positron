@@ -35,11 +35,11 @@ This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Pos
 ### Manually
 
 - Install [NVM](https://github.com/creationix/nvm)
-- Install Node 10
+- Install Node 12
 
 ```
-nvm install 10
-nvm alias default 10
+nvm install 12
+nvm alias default 12
 ```
 
 - Fork Positron to your Github account in the Github UI.
@@ -64,10 +64,10 @@ yarn install
 - Positron uses MongoDB as a database. To install MongoDB using homebrew do the following, if you would prefer to install manually check the documentation at [MongoDB](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/)
 
 ```
-brew install mongodb
+brew install mongodb-community
 ```
 
-- Start the MongoDB database
+- Start the MongoDB server
 
 ```
 mongod
